@@ -941,6 +941,7 @@ void Player::queryInterruptActions() {
 		if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD) {
 			firstAidTurnsLeft = -1;
 			eng->log->addMessage("You stop mending your wounds.", clrWhite, false);
+			eng->renderer->flip();
 		} else {
 			eng->renderer->drawMapAndInterface();
 			const string TURNS_STR = intToString(firstAidTurnsLeft);

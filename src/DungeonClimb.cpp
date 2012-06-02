@@ -61,19 +61,6 @@ void DungeonClimb::travelDown(const int levels) {
 	eng->map->incrDungeonLevel(levels);
 	makeLevel();
 
-	cout << endl << "Object count (spawned/live/destroyed)" << endl;
-	cout << "Actor  : " << Actor::getSpawned() << "/" << Actor::getLive() << "/" << Actor::getDestroyed() << "  (s-l = " << Actor::getSpawned()
-	     - Actor::getLive() << ")" << endl;
-
-	cout << "Feature: " << Feature::getSpawned() << "/" << Feature::getLive() << "/" << Feature::getDestroyed() << "  (s-l = "
-	     << Feature::getSpawned() - Feature::getLive() << ")" << endl;
-
-	cout << "Item   : " << Item::getSpawned() << "/" << Item::getLive() << "/" << Item::getDestroyed() << "  (s-l = " << Item::getSpawned()
-	     - Item::getLive() << ")" << endl << endl;
-
-	cout << "Size of time loop after build: " << eng->gameTime->getLoopSize() << endl << endl;
-
-	cout << "Entering dungeon level " << eng->map->getDungeonLevel() << " [DONE]" << endl;
 	eng->player->target = NULL;
 	eng->player->FOVupdate();
 	eng->renderer->drawMapAndInterface();
@@ -89,6 +76,7 @@ void DungeonClimb::useDownStairs() {
 		} else {
 			eng->log->addMessage("You descend the stairs.");
 		}
+		eng->renderer->flip();
 		travelDown();
 	} else {
 		if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
@@ -96,6 +84,7 @@ void DungeonClimb::useDownStairs() {
 		} else {
 			eng->log->addMessage("You see no stairs leading downwards here.");
 		}
+		eng->renderer->flip();
 	}
 }
 

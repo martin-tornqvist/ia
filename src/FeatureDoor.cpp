@@ -165,6 +165,7 @@ void Door::reveal(const bool PRINT_MESSAGE) {
 		eng->renderer->drawMapAndInterface();
 		if(PRINT_MESSAGE) {
 			eng->log->addMessage("A secret is revealed.");
+			eng->renderer->flip();
 		}
 	}
 }

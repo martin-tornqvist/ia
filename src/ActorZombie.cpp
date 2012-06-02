@@ -57,7 +57,7 @@ void MajorClaphamLee::actorSpecificAct() {
 					sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
 					const unsigned int NR_OF_SPAWNS = 5;
-					if(freeCells.size() >= NR_OF_SPAWNS) {
+					if(freeCells.size() >= NR_OF_SPAWNS + 1) {
 						eng->log->addMessage("Major Clapham Lee calls forth his Tomb-Legions!");
 						eng->player->shock(shockValue_heavy, 0);
 						for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
@@ -66,7 +66,7 @@ void MajorClaphamLee::actorSpecificAct() {
 								monster->playerAwarenessCounter = 999;
 								freeCells.erase(freeCells.begin());
 							} else {
-								const int ZOMBIE_TYPE = eng->dice(1, 3) - 1;
+								const int ZOMBIE_TYPE = eng->dice.getInRange(0, 2);
 								ActorDevNames_t devName = actor_zombie;
 								switch (ZOMBIE_TYPE) {
 								case 0:

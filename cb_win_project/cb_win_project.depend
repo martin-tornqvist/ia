@@ -2235,7 +2235,7 @@
 1338637187 source:f:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1338637187 source:f:\dev\ia\src\actorplayer.cpp
+1338645224 source:f:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -2300,7 +2300,7 @@
 	"monsterIncludeFiles.h"
 	"ActorFactory.h"
 
-1338637187 source:f:\dev\ia\src\actorzombie.cpp
+1338646619 source:f:\dev\ia\src\actorzombie.cpp
 	"monsterIncludeFiles.h"
 	"Log.h"
 	"ActorFactory.h"
@@ -2750,7 +2750,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1338637187 source:f:\dev\ia\src\featuredoor.cpp
+1338645753 source:f:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -2786,7 +2786,7 @@
 	"Explosion.h"
 	"Map.h"
 
-1338637187 source:f:\dev\ia\src\featureproxevent.cpp
+1338645753 source:f:\dev\ia\src\featureproxevent.cpp
 	"FeatureProxEvent.h"
 	"Engine.h"
 	"ActorPlayer.h"

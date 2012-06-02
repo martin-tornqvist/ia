@@ -61,6 +61,14 @@
 				</ExtraCommands>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="..\sdl\include" />
+			<Add directory="..\src" />
+		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lSDLmain -lSDL" />
+			<Add directory="..\sdl\lib" />
+		</Linker>
 		<Unit filename="..\src\AI_castRandomSpell.h" />
 		<Unit filename="..\src\AI_handleClosedBlockingDoor.h" />
 		<Unit filename="..\src\AI_listen_becomePlayerAware.h" />
