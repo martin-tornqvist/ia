@@ -14,9 +14,9 @@
 
 void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* ammoItem, ReloadResult_t result, bool isSwift) {
 	const string actorName = actorReloading->getNameThe();
-	const string weaponName = weapon->getInstanceDefinition().name.name;
-	const string ammoCapacity = intToString(weapon->ammoCapacity);
-	const string ammoCurrent = intToString(weapon->ammoLoaded);
+	const string weaponName = weapon == NULL ? "" : weapon->getInstanceDefinition().name.name;
+	const string ammoCapacity = weapon == NULL ? "" : intToString(weapon->ammoCapacity);
+	const string ammoCurrent = weapon == NULL ? "" : intToString(weapon->ammoLoaded);
 	const bool isPlayer = actorReloading == eng->player;
 	const int reloaderX = actorReloading->pos.x;
 	const int reloaderY = actorReloading->pos.y;
@@ -33,6 +33,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 	case reloadResult_weaponNotUsingAmmo: {
 		if(isPlayer == true) {
 			eng->log->addMessage("Weapon does not use ammo.");
+//			eng->renderer->flip();
 		}
 	}
 	break;
@@ -40,6 +41,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 	case reloadResult_alreadyFull: {
 		if(isPlayer == true) {
 			eng->log->addMessage("Weapon already loaded.");
+//			eng->renderer->flip();
 		}
 	}
 	break;
@@ -47,6 +49,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 	case reloadResult_noAmmo: {
 		if(isPlayer == true) {
 			eng->log->addMessage("You carry no ammunition for this weapon.");
+//			eng->renderer->flip();
 		}
 	}
 	break;
@@ -60,6 +63,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 			} else {
 				eng->log->addMessage("You" + swiftStr + " load " + ammoName + ".", messageColor);
 			}
+//			eng->renderer->flip();
 		} else {
 			if(eng->map->playerVision[reloaderX][reloaderY]) {
 				eng->log->addMessage(actorName + swiftStr + " reloads.");

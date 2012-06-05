@@ -10,8 +10,8 @@ class Weapon: public Item {
 public:
 	Weapon(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
 		Item(itemDefinition), m_ammoDefinition(ammoDefinition) {
-		ammoLoaded = 1;
-		ammoCapacity = 1;
+		ammoLoaded = 0;
+		ammoCapacity = 0;
 		effectiveRangeLimit = 3;
 		clip = false;
 	}

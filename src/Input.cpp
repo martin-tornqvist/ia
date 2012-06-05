@@ -663,6 +663,9 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		}
 		break;
 	}
+	if(eng->gameTime->getCurrentActor() == eng->player) {
+	   eng->renderer->flip();
+	}
 }
 
 void Input::read() {

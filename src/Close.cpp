@@ -20,7 +20,7 @@ void Close::playerClose() const {
 					const coord c(eng->player->pos + coord(dx, dy));
 					Feature* const f = eng->map->featuresStatic[c.x][c.y];
 					if(f->getId() == feature_door) {
-						Door* const door = dynamic_cast<Door*> (f);
+						Door* const door = dynamic_cast<Door*>(f);
 						if(door->isSecret() == false && eng->map->explored[c.x][c.y] == true) {
 							adjDoorPositions.push_back(c);
 						}
@@ -49,7 +49,7 @@ void Close::playerClose() const {
 
 		Feature* const f = eng->map->featuresStatic[closeInPos.x][closeInPos.y];
 		if(f->getId() == feature_door) {
-			Door* const door = dynamic_cast<Door*> (f);
+			Door* const door = dynamic_cast<Door*>(f);
 			closeAbleObjectFound = true;
 			door->tryClose(eng->player);
 		}
