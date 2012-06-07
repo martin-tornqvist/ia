@@ -57,10 +57,10 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
 	} else {
 		const string decorationLine(MAP_X_CELLS - 2, '-');
 
-      eng->renderer->drawText(decorationLine, renderArea_characterLines, 0, 1, clrWhite);
+		eng->renderer->drawText(decorationLine, renderArea_characterLines, 0, 1, clrWhite);
 		eng->renderer->drawText(" [2/8, Down/Up] to navigate  [Space/Esc] to exit. ", renderArea_characterLines, 3, 1, clrWhite);
 
-      int yPos = 1;
+		int yPos = 1;
 
 		eng->renderer->drawText(decorationLine, renderArea_screen, 1, yPos, clrWhite);
 		eng->renderer->drawText("Displaying High Score", renderArea_screen, 3, yPos, clrWhite);
@@ -152,6 +152,7 @@ void HighScore::runHighScoreScreen() {
 			break;
 			}
 		}
+		SDL_Delay(1);
 	}
 }
 
@@ -166,13 +167,13 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
 	for(unsigned int i = 0; i < entries.size(); i++) {
 		const HighScoreEntry& entry = entries.at(i);
 
-      const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
+		const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
 		file << VICTORY_STR << endl;
-      file << entry.getName() << endl;
-      file << entry.getXp() << endl;
-      file << entry.getLvl() << endl;
-      file << entry.getDlvl() << endl;
-      file << entry.getInsanity() << endl;
+		file << entry.getName() << endl;
+		file << entry.getXp() << endl;
+		file << entry.getLvl() << endl;
+		file << entry.getDlvl() << endl;
+		file << entry.getInsanity() << endl;
 	}
 }
 
@@ -186,16 +187,16 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
 		while(getline(file, line)) {
 			bool isVictory = line.at(0) == 'V';
 
-         getline(file, line);
-         const string NAME = line;
-         getline(file, line);
-         const int XP = stringToInt(line);
-         getline(file, line);
-         const int LVL = stringToInt(line);
-         getline(file, line);
-         const int DLVL = stringToInt(line);
-         getline(file, line);
-         const int INSANITY = stringToInt(line);
+			getline(file, line);
+			const string NAME = line;
+			getline(file, line);
+			const int XP = stringToInt(line);
+			getline(file, line);
+			const int LVL = stringToInt(line);
+			getline(file, line);
+			const int DLVL = stringToInt(line);
+			getline(file, line);
+			const int INSANITY = stringToInt(line);
 
 			entries.push_back(HighScoreEntry(NAME, XP, LVL, DLVL, INSANITY, isVictory));
 		}

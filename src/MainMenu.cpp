@@ -72,7 +72,7 @@ GameEntry_t MainMenu::run(bool* quit) {
 	bool proceed = false;
 	while(proceed == false) {
 		const MenuAction_t action = eng->menuInputHandler->getAction(browser);
-		switch (action) {
+		switch(action) {
 		case menuAction_browsed: {
 			draw(browser);
 		}

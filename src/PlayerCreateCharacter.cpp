@@ -53,7 +53,7 @@ void PlayerCreateCharacter::playerPickBackground(int& currentRenderYpos) {
 int PlayerCreateCharacter::drawAndReturnLastYpos(const int CURRENT_SELECTED_POS, const int RENDER_Y_POS_START) const {
 	eng->renderer->clearRenderArea(renderArea_screen);
 
-   const int Y_POS_START = 1;
+	const int Y_POS_START = 1;
 	int xPos = Y_POS_START;
 	int yPos = RENDER_Y_POS_START;
 
@@ -78,11 +78,11 @@ int PlayerCreateCharacter::drawAndReturnLastYpos(const int CURRENT_SELECTED_POS,
 		yPos++;
 	}
 
-   yPos++;
+	yPos++;
 
-   eng->renderer->drawText("Bla bla" , renderArea_screen, xPos, yPos, clrRedLight);
+	eng->renderer->drawText("Bla bla" , renderArea_screen, xPos, yPos, clrRedLight);
 
-   yPos += 2;
+	yPos += 2;
 
 	eng->renderer->flip();
 
@@ -92,15 +92,15 @@ int PlayerCreateCharacter::drawAndReturnLastYpos(const int CURRENT_SELECTED_POS,
 //-----------------------------------------------------PLAYER NAME ENTERING
 void PlayerEnterName::run(const int RENDER_Y_POS) {
 	string name = "";
+	draw(name, RENDER_Y_POS);
 	bool done = false;
 	while(done == false) {
 		if(eng->config->BOT_PLAYING == false) {
-			readKeys(name, done);
+			readKeys(name, done, RENDER_Y_POS);
 		} else {
 			name = "AZATHOTH";
 			done = true;
 		}
-		draw(name, RENDER_Y_POS);
 		SDL_Delay(1);
 	}
 
@@ -122,7 +122,7 @@ void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) 
 }
 
 
-void PlayerEnterName::readKeys(string& currentString, bool& done) {
+void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
 	SDL_Event event;
 
 	while(SDL_PollEvent(&event)) {
@@ -144,6 +144,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done) {
 				   (key >= int('0') && key <= int('9')))
 				{
 					currentString.push_back(char(key));
+					draw(currentString, RENDER_Y_POS);
 					return;
 				}
 			}
@@ -151,6 +152,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done) {
 			if(currentString.size() > 0) {
 				if(key == SDLK_BACKSPACE) {
 					currentString.erase(currentString.end()-1);
+					draw(currentString, RENDER_Y_POS);
 				}
 			}
 		}

@@ -52,7 +52,7 @@ void Postmortem::makeInfoLines() {
 	postmortemLines.push_back(StringAndColor(" ", clrRedLight));
 
 	postmortemLines.push_back(StringAndColor(" The last messages:", clrRedLight));
-	int historyElement = static_cast<unsigned int> (max(0, static_cast<int> (eng->log->history.size()) - 6));
+	int historyElement = static_cast<unsigned int>(max(0, static_cast<int>(eng->log->history.size()) - 6));
 	for(unsigned int i = historyElement; i < eng->log->history.size(); i++) {
 		string row = "";
 		for(unsigned int ii = 0; ii < eng->log->history.at(i).size(); ii++) {
@@ -109,7 +109,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
 	eng->renderer->drawText(" [2/8, Down/Up] to navigate  [Space/Esc] to exit. ", renderArea_characterLines, 3, 1, clrWhite);
 	int x = 0;
 	int y = 0;
-	for(unsigned int i = TOP_ELEMENT; i < postmortemLines.size() && (i - TOP_ELEMENT) <= static_cast<unsigned int> (MAP_Y_CELLS); i++) {
+	for(unsigned int i = TOP_ELEMENT; i < postmortemLines.size() && (i - TOP_ELEMENT) <= static_cast<unsigned int>(MAP_Y_CELLS); i++) {
 		eng->renderer->drawText(postmortemLines.at(i).str, renderArea_mainScreen, x, y, postmortemLines.at(i).clr);
 		y++;
 	}
@@ -126,24 +126,24 @@ void Postmortem::runInfo() {
 	bool done = false;
 	while(done == false) {
 		while(SDL_PollEvent(&event)) {
-			switch (event.type) {
+			switch(event.type) {
 			case SDL_KEYDOWN: {
 				int key = event.key.keysym.sym;
 
-				switch (key) {
+				switch(key) {
 				case SDLK_2:
 				case SDLK_KP2:
 				case SDLK_DOWN: {
-					topElement = max(0, min(topElement + static_cast<int> (MAP_Y_CELLS / 5), static_cast<int> (postmortemLines.size())
-							- static_cast<int> (MAP_Y_CELLS)));
+					topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
 					renderInfo(topElement);
 				}
 				break;
 				case SDLK_8:
 				case SDLK_KP8:
 				case SDLK_UP: {
-					topElement = max(0, min(topElement - static_cast<int> (MAP_Y_CELLS / 5), static_cast<int> (postmortemLines.size())
-							- static_cast<int> (MAP_Y_CELLS)));
+					topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
 					renderInfo(topElement);
 				}
 				break;
@@ -161,6 +161,7 @@ void Postmortem::runInfo() {
 			break;
 			}
 		}
+		SDL_Delay(1);
 	}
 }
 
@@ -184,7 +185,7 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
 	bool done = false;
 	while(done == false) {
 		const MenuAction_t action = eng->menuInputHandler->getAction(browser);
-		switch (action) {
+		switch(action) {
 		case menuAction_browsed: {
 			renderMenu(browser);
 		}

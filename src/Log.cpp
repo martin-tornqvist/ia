@@ -128,6 +128,7 @@ void MessageLog::displayHistory() {
 			break;
 			}
 		}
+		SDL_Delay(1);
 	}
 
 	eng->renderer->clearRenderArea(renderArea_screen);

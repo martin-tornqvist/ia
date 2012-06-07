@@ -161,6 +161,10 @@ class Incinerator: public Weapon {
 public:
 	Incinerator(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
 		Weapon(itemDefinition, ammoDefinition) {
+		ammoCapacity = 1;
+		ammoLoaded = ammoCapacity;
+		effectiveRangeLimit = 8;
+		clip = false;
 	}
 
 	void weaponSpecific_projectileObstructed(int originX, int originY, Actor* actorHit, Engine* engine);

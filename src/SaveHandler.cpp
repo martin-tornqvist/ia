@@ -61,8 +61,8 @@ void SaveHandler::collectLinesFromGame(vector<string>& linesCurrentSave)
 void SaveHandler::setGameParametersFromLines(vector<string>& linesCurrentSave) const
 {
 	string playerName = linesCurrentSave.front();
-	linesCurrentSave.erase(linesCurrentSave.begin() );
-	playerName.erase( playerName.begin() );
+	linesCurrentSave.erase(linesCurrentSave.begin());
+	playerName.erase(playerName.begin());
 	eng->player->getInstanceDefinition()->name_a	= playerName;
 	eng->player->getInstanceDefinition()->name_the	= playerName;
 	eng->player->getArchetypeDefinition()->name_a	= playerName;
@@ -99,50 +99,49 @@ bool SaveHandler::playerChooseLoad()
 	printSaveList(linesEntire, savePositions, browser);
 
 	bool done = false;
-		while(done == false)
-		{
-		while(SDL_PollEvent(&m_event))
-		{
+	while(done == false)	{
+		while(SDL_PollEvent(&m_event)) {
 			switch(m_event.type)
 			{
 			case SDL_KEYDOWN:
-				{
-					Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
+			{
+				Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
 
-					if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-						key = browser.enter();
-					}
-
-					if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
-						browser.navigate(direction_up);
-						printSaveList(linesEntire, savePositions, browser);
-					}
-
-					if(key == SDLK_DOWN || key == SDLK_KP2 ||key == SDLK_2) {
-						browser.navigate(direction_down);
-						printSaveList(linesEntire, savePositions, browser);
-					}
-
-					//If key corresponds to a save
-					if(key >= 'a' && key <= 'a' + static_cast<char>(savePositions.size()-1)) {
-						vector<string> linesCurrentSave;
-						//Store the save lines belonging to the current save in a separate vector, erase them from the big vector
-						getCurrentSaveLines(static_cast<char>(key), linesEntire, savePositions, linesCurrentSave);
-						setGameParametersFromLines(linesCurrentSave);
-						//Rebuild the external save file (with the current save removed)
-						writeFile(linesEntire);
-						done = true;
-						return true;
-					}
-
-					if(key == SDLK_SPACE || key == SDLK_ESCAPE) {
-						done = true;
-						return false;
-					}
+				if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
+					key = browser.enter();
 				}
+
+				if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
+					browser.navigate(direction_up);
+					printSaveList(linesEntire, savePositions, browser);
+				}
+
+				if(key == SDLK_DOWN || key == SDLK_KP2 ||key == SDLK_2) {
+					browser.navigate(direction_down);
+					printSaveList(linesEntire, savePositions, browser);
+				}
+
+				//If key corresponds to a save
+				if(key >= 'a' && key <= 'a' + static_cast<char>(savePositions.size()-1)) {
+					vector<string> linesCurrentSave;
+					//Store the save lines belonging to the current save in a separate vector, erase them from the big vector
+					getCurrentSaveLines(static_cast<char>(key), linesEntire, savePositions, linesCurrentSave);
+					setGameParametersFromLines(linesCurrentSave);
+					//Rebuild the external save file (with the current save removed)
+					writeFile(linesEntire);
+					done = true;
+					return true;
+				}
+
+				if(key == SDLK_SPACE || key == SDLK_ESCAPE) {
+					done = true;
+					return false;
+				}
+			}
 			default: {} break;
 			}
 		}
+		SDL_Delay(1);
 	}
 
 
@@ -150,7 +149,7 @@ bool SaveHandler::playerChooseLoad()
 }
 
 void SaveHandler::getCurrentSaveLines(const char key, vector<string>& linesEntire, const vector<unsigned int>& startPositions,
-	vector<string>& linesCurrentSave)
+                                      vector<string>& linesCurrentSave)
 {
 	linesCurrentSave.resize(0);
 
@@ -158,7 +157,7 @@ void SaveHandler::getCurrentSaveLines(const char key, vector<string>& linesEntir
 
 	const unsigned int START_POS_ENTIRE = startPositions.at(saveNr);
 
-	linesCurrentSave.push_back( linesEntire.at(START_POS_ENTIRE) );
+	linesCurrentSave.push_back(linesEntire.at(START_POS_ENTIRE));
 	linesEntire.erase(linesEntire.begin() + START_POS_ENTIRE);
 
 	bool done = false;
@@ -196,7 +195,7 @@ void SaveHandler::getSavePositions(const vector<string>& linesEntire, vector<uns
 }
 
 void SaveHandler::printSaveList(const vector<string>& linesEntire, const vector<unsigned int>& startPositions,
-	const MenuBrowser& browser) const
+                                const MenuBrowser& browser) const
 {
 	eng->renderer->clearRenderArea(renderArea_screen);
 
@@ -217,7 +216,7 @@ void SaveHandler::printSaveList(const vector<string>& linesEntire, const vector<
 
 			//Draw index
 			string s = "[";
-			s.push_back( ('a'+ static_cast<char>(i) ) );
+			s.push_back(('a'+ static_cast<char>(i)));
 			s += "] " ;
 
 			eng->renderer->drawText(s, renderArea_screen, xPos, yPos, browser.enter() == SDLK_a + i ? clrWhite : clrRedLight);
@@ -225,7 +224,7 @@ void SaveHandler::printSaveList(const vector<string>& linesEntire, const vector<
 			xPos += s.size();
 
 			//Save title
-			string saveTitle = linesEntire.at( startPositions.at(i) );
+			string saveTitle = linesEntire.at(startPositions.at(i));
 			//Remove new-save symbol
 			saveTitle.erase(saveTitle.begin());
 			eng->renderer->drawText(saveTitle, renderArea_screen, xPos, yPos, browser.enter() == SDLK_a + i ? clrWhite : clrRedLight);

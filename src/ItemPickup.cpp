@@ -44,6 +44,7 @@ void ItemPickup::tryPick() {
 				}
 			} else {
 				eng->log->addMessage("Use " + ITEM_NAME + " as thrown weapon (y/n)?");
+				eng->renderer->flip();
 				if(eng->query->yesOrNo() == true) {
 					eng->log->clearLog();
 					eng->log->addMessage("You pick up " + ITEM_NAME + ".");

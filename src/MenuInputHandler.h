@@ -41,6 +41,11 @@ private:
 
 	Engine* eng;
 
+	void clearKeyEvents() {
+		while(SDL_PollEvent(&m_event)) {
+		}
+	}
+
 	friend class Engine;
 	MenuInputHandler(Engine* engine) :
 		eng(engine) {

@@ -597,32 +597,32 @@ void Player::incrInsanityLong() {
 				popupMessage += "The shadows are closing in on you.";
 				eng->popup->showMessage(popupMessage);
 
-                bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-                eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+				bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+				eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-                int shadowsLeftToSpawn = eng->dice.getInRange(2, 3);
-                while(shadowsLeftToSpawn > 0) {
-                    const int D_MAX = 3;
-                    for(int dx = -D_MAX; dx <= D_MAX; dx++) {
-                        for(int dy = -D_MAX; dy <= D_MAX; dy++) {
-                            if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
-                                if(blockers[pos.x + dx][pos.y + dy] == false) {
-                                    if(eng->dice(1,100) < 10) {
-                                        Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, pos + coord(dx, dy)));
-                                        if(eng->dice.coinToss()) {
-                                            monster->isSneaking = true;
-                                        }
-                                        shadowsLeftToSpawn--;
-                                        if(shadowsLeftToSpawn <= 0) {
-                                            dx = 999;
-                                            dy = 999;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+				int shadowsLeftToSpawn = eng->dice.getInRange(2, 3);
+				while(shadowsLeftToSpawn > 0) {
+					const int D_MAX = 3;
+					for(int dx = -D_MAX; dx <= D_MAX; dx++) {
+						for(int dy = -D_MAX; dy <= D_MAX; dy++) {
+							if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
+								if(blockers[pos.x + dx][pos.y + dy] == false) {
+									if(eng->dice(1,100) < 10) {
+										Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, pos + coord(dx, dy)));
+										if(eng->dice.coinToss()) {
+											monster->isSneaking = true;
+										}
+										shadowsLeftToSpawn--;
+										if(shadowsLeftToSpawn <= 0) {
+											dx = 999;
+											dy = 999;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 
 				return;
 			}
@@ -1069,7 +1069,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 				eng->gameTime->letNextAct();
 			}
 		} else {
-         eng->renderer->flip();
+			eng->renderer->flip();
 		}
 	}
 }
@@ -1133,6 +1133,7 @@ void Player::kick() {
 	//If not exactly one adjacent visible actor was found, ask player for direction
 	if(actorToKick == NULL) {
 		eng->log->addMessage("Kick in what direction? [Space/Esc Cancel]", clrWhiteHigh);
+		eng->renderer->flip();
 		const coord delta = eng->query->direction();
 		eng->log->clearLog();
 		if(delta == coord(0, 0)) {

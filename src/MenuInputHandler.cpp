@@ -47,8 +47,8 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 					return menuAction_selected;
 				}
 			}
-			SDL_Delay(1);
 		}
+		SDL_Delay(1);
 	}
 	return menuAction_canceled;
 }

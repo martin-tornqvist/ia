@@ -58,7 +58,7 @@ void Manual::run() {
 	string str;
 
 	int topElement = 0;
-	int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (lines.size()) - 1);
+	int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
 
 	drawManualInterface();
 
@@ -75,18 +75,18 @@ void Manual::run() {
 	bool done = false;
 	while(done == false) {
 		while(SDL_PollEvent(&event)) {
-			switch (event.type) {
+			switch(event.type) {
 			case SDL_KEYDOWN: {
 				int key = event.key.keysym.sym;
 
-				switch (key) {
+				switch(key) {
 				case SDLK_2:
 				case SDLK_KP2:
 				case SDLK_DOWN: {
-					topElement = max(0, min(topElement + static_cast<int> (MAP_Y_CELLS / 5), static_cast<int> (lines.size())
-							- static_cast<int> (MAP_Y_CELLS)));
+					topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
 
-					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (lines.size()) - 1);
+					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
 
 					eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
 
@@ -104,10 +104,10 @@ void Manual::run() {
 				case SDLK_8:
 				case SDLK_KP8:
 				case SDLK_UP: {
-					topElement = max(0, min(topElement - static_cast<int> (MAP_Y_CELLS / 5), static_cast<int> (lines.size())
-							- static_cast<int> (MAP_Y_CELLS)));
+					topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
 
-					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (lines.size()) - 1);
+					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
 
 					eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
 
@@ -136,6 +136,7 @@ void Manual::run() {
 			break;
 			}
 		}
+		SDL_Delay(1);
 	}
 
 	eng->renderer->clearRenderArea(renderArea_screen);

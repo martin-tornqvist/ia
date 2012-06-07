@@ -44,7 +44,7 @@ private:
 	PlayerEnterName(Engine* engine) : eng(engine) {}
 	void run(const int RENDER_AT_Y_POS);
 	void draw(const string& currentString, const int RENDER_Y_POS);
-	void readKeys(string& currentString, bool& done);
+	void readKeys(string& currentString, bool& done, const int RENDER_Y_POS);
 	Engine* eng;
 };
 

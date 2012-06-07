@@ -421,7 +421,7 @@
 1333308540 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1338673030 source:c:\dev\ia\src\actorplayer.cpp
+1339102400 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -443,7 +443,7 @@
 	"ItemFactory.h"
 	"ActorFactory.h"
 
-1337709202 c:\dev\ia\src\playercreatecharacter.h
+1339102052 c:\dev\ia\src\playercreatecharacter.h
 	<string>
 	"SDL/SDL.h"
 
@@ -623,7 +623,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1338573494 source:c:\dev\ia\src\characterinfo.cpp
+1339101439 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -891,7 +891,7 @@
 	<math.h>
 	"ConstTypes.h"
 
-1323988860 c:\dev\ia\src\menuinputhandler.h
+1339100695 c:\dev\ia\src\menuinputhandler.h
 	<vector>
 	<string>
 	"MenuBrowser.h"
@@ -1017,7 +1017,7 @@
 	"Map.h"
 	"Populate.h"
 
-1338058268 source:c:\dev\ia\src\highscore.cpp
+1339101584 source:c:\dev\ia\src\highscore.cpp
 	"HighScore.h"
 	<algorithm>
 	<iostream>
@@ -1082,7 +1082,7 @@
 	"Render.h"
 	"ItemFactory.h"
 
-1338573495 source:c:\dev\ia\src\inventoryhandler.cpp
+1339100324 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemUsable.h"
@@ -1214,7 +1214,7 @@
 	"Log.h"
 	"Timer.h"
 
-1338573495 source:c:\dev\ia\src\log.cpp
+1339101611 source:c:\dev\ia\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Engine.h"
@@ -1236,7 +1236,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1338047470 source:c:\dev\ia\src\mainmenu.cpp
+1339101724 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1247,7 +1247,7 @@
 	"Highscore.h"
 	"Manual.h"
 
-1338573495 source:c:\dev\ia\src\manual.cpp
+1339101439 source:c:\dev\ia\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -1369,7 +1369,7 @@
 1323988860 source:c:\dev\ia\src\menubrowser.cpp
 	"MenuBrowser.h"
 
-1323988860 source:c:\dev\ia\src\menuinputhandler.cpp
+1339101285 source:c:\dev\ia\src\menuinputhandler.cpp
 	"MenuInputHandler.h"
 	"SDL/SDL.h"
 	"Engine.h"
@@ -1399,7 +1399,7 @@
 	"Engine.h"
 	"TextFormatting.h"
 
-1338048624 source:c:\dev\ia\src\playercreatecharacter.cpp
+1339102165 source:c:\dev\ia\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Render.h"
@@ -1441,7 +1441,7 @@
 	"Log.h"
 	"Query.h"
 
-1338048824 source:c:\dev\ia\src\postmortem.cpp
+1339101584 source:c:\dev\ia\src\postmortem.cpp
 	"Postmortem.h"
 	<fstream>
 	<iostream>
@@ -1494,7 +1494,7 @@
 	"Log.h"
 	"Render.h"
 
-1338057076 source:c:\dev\ia\src\savehandler.cpp
+1339101724 source:c:\dev\ia\src\savehandler.cpp
 	"SaveHandler.h"
 	"SDL/SDL.h"
 	<fstream>
