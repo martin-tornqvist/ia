@@ -40,7 +40,7 @@
 #include "ItemDrop.h"
 #include "ItemFactory.h"
 #include "ItemPickup.h"
-#include "itemPotion.h"
+#include "ItemPotion.h"
 #include "ItemScroll.h"
 #include "JamWithSpike.h"
 #include "FeatureData.h"

@@ -1,4 +1,4 @@
-#include "itemPotion.h"
+#include "ItemPotion.h"
 
 #include "Engine.h"
 #include "StatusEffects.h"

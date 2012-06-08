@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 #include "Item.h"
-#include "itemPotion.h"
+#include "ItemPotion.h"
 #include "ActorData.h"
 #include "ActorPlayer.h"
 #include "Render.h"
