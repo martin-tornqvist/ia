@@ -31,7 +31,7 @@
 #include "Explosion.h"
 #include "Fov.h"
 #include "GameTime.h"
-#include "HighScore.h"
+#include "Highscore.h"
 #include "Interface.h"
 #include "Input.h"
 #include "InventoryHandler.h"
