@@ -46,7 +46,7 @@
 #include "FeatureData.h"
 #include "FeatureTrap.h"
 #include "FovPreCalc.h"
-#include "KnockBack.h"
+#include "Knockback.h"
 #include "Log.h"
 #include "Look.h"
 #include "MainMenu.h"

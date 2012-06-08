@@ -8,9 +8,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option platforms="Windows;Unix;" />
-				<Option output="..\target\win\debug\ia" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="..\target\win\debug\" />
+				<Option platforms="Windows;" />
+				<Option output="..\target\debug\ia" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\target\debug\" />
 				<Option object_output="..\obj\debug\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -28,14 +28,14 @@
 					<Add option="-g" />
 				</Compiler>
 				<ExtraCommands>
-					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\win\debug\&quot;' />
+					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">
-				<Option platforms="Windows;Unix;" />
-				<Option output="..\target\win\release\ia" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="..\target\win\release\" />
+				<Option platforms="Windows;" />
+				<Option output="..\target\release\ia" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\target\release\" />
 				<Option object_output="..\obj\release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -56,7 +56,7 @@
 					<Add option="-s" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\win\release\&quot;' />
+					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
