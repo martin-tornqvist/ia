@@ -3,7 +3,7 @@
 
 #include <SDL/SDL.h>
 
-//STANDARD TERMINAL COLORS (modified...)
+//STANDARD TERMINAL COLORS (somewhat modified...)
 //===========================================================
 const SDL_Color clrBlack        = {  0,   0,   0,  0};
 const SDL_Color clrGray         = {128, 128, 128,  0};
@@ -18,8 +18,11 @@ const SDL_Color clrGreenLight   = {  0, 255,   0,  0};
 
 const SDL_Color clrYellow       = {255, 255,   0,  0};
 
-const SDL_Color clrBlue         = {  0,   0, 128,  0};
-const SDL_Color clrBlueLight    = { 32,  32, 255,  0};
+//const SDL_Color clrBlue         = {  0,   0, 128,  0};
+//const SDL_Color clrBlueLight    = { 32,  32, 255,  0};
+
+const SDL_Color clrBlue         = {  0,   0, 238,  0};
+const SDL_Color clrBlueLight    = { 92,  92, 255,  0};
 
 const SDL_Color clrMagenta      = {128,   0, 128,  0};
 const SDL_Color clrMagentaLight = {255,   0, 255,  0};

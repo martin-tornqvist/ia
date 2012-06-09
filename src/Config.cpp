@@ -8,7 +8,7 @@
 using namespace std;
 
 Config::Config() :
-	GAME_TITLE("Infra Arcana"), GAME_VERSION(" (v12.0, 2012.05.27)"),
+	GAME_TITLE("Infra Arcana"), GAME_VERSION(" (v12.1, 2012.06.09)"),
 
 	TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
 
@@ -177,7 +177,7 @@ void Config::trySetVariableFromLine(string line) {
 
 void Config::read() {
 	string curLine;
-	ifstream file("config.txt");
+	ifstream file("./config.txt");
 
 	if(file.is_open()) {
 		while(getline(file, curLine)) {
