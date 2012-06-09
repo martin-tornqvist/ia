@@ -682,7 +682,7 @@ void Input::read() {
 			SDLKey key = m_event.key.keysym.sym;
 
 			bool cheatKeyPressed = false;
-			/*
+//			/*
 			//----------------------------------------DESCEND CHEAT
 			if(key == SDLK_F2) {
 				cheatKeyPressed = true;
@@ -733,7 +733,7 @@ void Input::read() {
 				clearKeyEvents();
 			}
 
-			*/
+//			*/
 
 			if(cheatKeyPressed == false) {
 				if(key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN || key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key

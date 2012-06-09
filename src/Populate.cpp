@@ -38,26 +38,34 @@ bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const b
 
 		const int OUT_OF_DEPTH_OFFSET = getOutOfDepthOffset();
 
-		Actor* actor = NULL;
+		Actor* originActor = NULL;
 		if(belongingToSpecialRoomType == endOfSpecialRooms) {
-			actor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET, IS_AFTER_MAP_CREATION);
+			originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET, IS_AFTER_MAP_CREATION);
 		} else {
-			actor = eng->actorFactory->spawnRandomActorRelatedToSpecialRoom(pos, belongingToSpecialRoomType, OUT_OF_DEPTH_OFFSET);
+			originActor = eng->actorFactory->spawnRandomActorRelatedToSpecialRoom(pos, belongingToSpecialRoomType, OUT_OF_DEPTH_OFFSET);
 		}
 
-		if(actor != NULL) {
-			dynamic_cast<Monster*>(actor)->isRoamingAllowed = ALLOW_ROAM;
+		if(originActor != NULL) {
+			dynamic_cast<Monster*>(originActor)->isRoamingAllowed = ALLOW_ROAM;
+
 			freeCells.erase(freeCells.begin() + FREE_CELLS_ELEMENT);
+
 			const int DLVL_IS_ZERO = eng->map->getDungeonLevel() == 0;
-			const int CHANCE_FOR_EXTRA = dynamic_cast<Monster*>(actor)->getInstanceDefinition()->chanceToSpawnExtra;
+
+			const int CHANCE_FOR_EXTRA = dynamic_cast<Monster*>(originActor)->getInstanceDefinition()->chanceToSpawnExtra;
+
 			int baseChanceForExtra = CHANCE_FOR_EXTRA - 10 * DLVL_IS_ZERO;
+
 			IsCloserToOrigin isCloserToOrigin(pos, eng);
+
 			sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
+
 			while(eng->dice(1, 100) < baseChanceForExtra) {
 				if(freeCells.size() > 0) {
 					const coord posExtra = freeCells.front();
-					actor = eng->actorFactory->spawnActor(actor->getInstanceDefinition()->devName, posExtra);
+					Actor* const actor = eng->actorFactory->spawnActor(originActor->getInstanceDefinition()->devName, posExtra);
 					dynamic_cast<Monster*>(actor)->isRoamingAllowed = ALLOW_ROAM;
+					dynamic_cast<Monster*>(actor)->leader = originActor;
 					freeCells.erase(freeCells.begin());
 				}
 				baseChanceForExtra -= 5;

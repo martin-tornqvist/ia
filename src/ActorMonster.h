@@ -46,7 +46,7 @@ class Monster: public Actor {
 public:
 	Monster() :
 		playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0), shockDecrease(0),
-		isRoamingAllowed(true), isSneaking(false) {
+		isRoamingAllowed(true), isSneaking(false), leader(NULL) {
 	}
 
 	virtual ~Monster() {
@@ -91,6 +91,8 @@ public:
 	}
 
 	bool isSneaking;
+
+	Actor* leader;
 
 protected:
 	void monsterHit();

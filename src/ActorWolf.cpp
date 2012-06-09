@@ -17,13 +17,17 @@ void Wolf::actorSpecificAct() {
 		return;
 	}
 
-	vector<coord> path;
-	AI_setPathToPlayerIfAware::learn(this, &path, eng);
-
-	if(AI_stepPath::action(this, &path))
+	if(AI_look_moveTowardsTargetIfVision::action(this, eng))
 		return;
 
-	if(AI_look_moveTowardsTargetIfVision::action(this, eng))
+	vector<coord> path;
+
+   AI_setPathToLeaderIfNoLosToleader::learn(this, &path, eng);
+   if(AI_stepPath::action(this, &path))
+		return;
+
+	AI_setPathToPlayerIfAware::learn(this, &path, eng);
+	if(AI_stepPath::action(this, &path))
 		return;
 
 	if(AI_moveToRandomAdjacentCell::action(this, eng))

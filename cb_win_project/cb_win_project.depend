@@ -28,7 +28,7 @@
 	"Colors.h"
 	"Art.h"
 
-1323988860 c:\dev\ia\src\colors.h
+1339240029 c:\dev\ia\src\colors.h
 	<SDL/SDL.h>
 
 1335869110 c:\dev\ia\src\art.h
@@ -184,7 +184,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1337464950 c:\dev\ia\src\actormonster.h
+1339250492 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -272,7 +272,7 @@
 1338055106 source:c:\dev\ia\src\actorcultist.cpp
 	"monsterIncludeFiles.h"
 
-1338055134 c:\dev\ia\src\monsterincludefiles.h
+1339251412 c:\dev\ia\src\monsterincludefiles.h
 	"ActorMonster.h"
 	"Engine.h"
 	"AI_handleClosedBlockingDoor.h"
@@ -283,8 +283,10 @@
 	"AI_stepPath.h"
 	"AI_look_moveTowardsTargetIfVision.h"
 	"AI_stepToLairIfHasLosToLair.h"
+	"AI_stepToLeaderIfHasLosToLeader.h"
 	"AI_setPathToPlayerIfAware.h"
 	"AI_setPathToLairIfNoLosToLair.h"
+	"AI_setPathToLeaderIfNoLosToLeader.h"
 	"AI_moveToRandomAdjacentCell.h"
 	"AI_castRandomSpell.h"
 	"ItemFactory.h"
@@ -479,7 +481,7 @@
 1323988860 source:c:\dev\ia\src\actorspider.cpp
 	"monsterIncludeFiles.h"
 
-1323988860 source:c:\dev\ia\src\actorwolf.cpp
+1339254865 source:c:\dev\ia\src\actorwolf.cpp
 	"monsterIncludeFiles.h"
 
 1338042358 source:c:\dev\ia\src\actorwormmass.cpp
@@ -696,7 +698,7 @@
 	"FeatureData.h"
 	"MapArea.h"
 
-1336904288 c:\dev\ia\src\populate.h
+1339250277 c:\dev\ia\src\populate.h
 	<vector>
 	"ActorData.h"
 
@@ -1028,7 +1030,7 @@
 	"DungeonMaster.h"
 	"Map.h"
 
-1338674832 source:c:\dev\ia\src\input.cpp
+1339255009 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1303,7 +1305,7 @@
 	"FeatureFactory.h"
 	"ActorPlayer.h"
 
-1338047702 source:c:\dev\ia\src\mapbuildforest.cpp
+1339255528 source:c:\dev\ia\src\mapbuildforest.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -1422,7 +1424,7 @@
 	"Engine.h"
 	"Map.h"
 
-1338048726 source:c:\dev\ia\src\populate.cpp
+1339254962 source:c:\dev\ia\src\populate.cpp
 	"Populate.h"
 	<algorithm>
 	"Engine.h"
@@ -1472,7 +1474,7 @@
 	"Inventory.h"
 	"ItemFactory.h"
 
-1338573869 source:c:\dev\ia\src\render.cpp
+1339242746 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1627,7 +1629,7 @@
 
 1323988860 c:\dev\ia\src\declares.h
 
-1338483962 source:c:\dev\ia\src\config.cpp
+1339240029 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -3626,4 +3628,9 @@
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
+
+1339254713 c:\dev\ia\src\ai_steptoleaderifhaslostoleader.h
+
+1339254770 c:\dev\ia\src\ai_setpathtoleaderifnolostoleader.h
+	"Engine.h"
 

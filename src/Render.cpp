@@ -632,7 +632,7 @@ void Renderer::drawTiles() {
 
 			drawTileInMap(tempDrw.tile, x, y, tempDrw.color);
 
-			if(tempDrw.drawUnderscore == true) {
+			if(tempDrw.drawUnderscore) {
 				drawLineHorizontal(x * eng->config->CELL_WIDTH_MAP, eng->config->MAINSCREEN_Y_OFFSET + (y + 1) * eng->config->CELL_HEIGHT_MAP - 1,
 				                   eng->config->CELL_WIDTH_MAP, clrBlueLight);
 			}
