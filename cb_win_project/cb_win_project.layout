@@ -4,8 +4,8 @@
 	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="3657" topLine="120" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="677" topLine="0" />
+	<File name="..\src\ActorData.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="185" topLine="0" />
 	</File>
 	<File name="..\src\ActorKeziahMason.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="999" topLine="10" />
@@ -52,8 +52,11 @@
 	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="6410" topLine="147" />
 	</File>
-	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1103" topLine="13" />
+	<File name="..\src\Engine.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="950" topLine="25" />
+	</File>
+	<File name="..\src\Engine.h" open="0" top="0" tabpos="0">
+		<Cursor position="3260" topLine="117" />
 	</File>
 	<File name="..\src\Explosion.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="7487" topLine="191" />
@@ -79,8 +82,8 @@
 	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="4183" topLine="89" />
 	</File>
-	<File name="..\src\HighScore.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="4617" topLine="126" />
+	<File name="..\src\HighScore.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="434" topLine="0" />
 	</File>
 	<File name="..\src\Input.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="18019" topLine="616" />
@@ -199,14 +202,14 @@
 	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="0">
 		<Cursor position="6516" topLine="333" />
 	</File>
-	<File name="..\src\Thrower.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1183" topLine="22" />
+	<File name="..\src\Thrower.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="88" topLine="5" />
 	</File>
 	<File name="..\src\itemExplosive.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="996" topLine="1" />
 	</File>
-	<File name="..\src\itemPotion.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="958" topLine="0" />
+	<File name="..\src\itemPotion.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="914" topLine="15" />
 	</File>
 	<File name="..\src\main.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1580" topLine="49" />
