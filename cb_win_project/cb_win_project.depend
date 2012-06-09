@@ -519,8 +519,8 @@
 	"Blood.h"
 	"Knockback.h"
 
-1332273288 c:\dev\ia\src\knockback.h
-	"constTypes.h"
+1339191973 c:\dev\ia\src\knockback.h
+	"ConstTypes.h"
 
 1338573494 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
@@ -630,9 +630,9 @@
 	"ActorPlayer.h"
 	"Render.h"
 
-1336297116 c:\dev\ia\src\characterinfo.h
+1339191973 c:\dev\ia\src\characterinfo.h
 	<vector>
-	"constTypes.h"
+	"ConstTypes.h"
 
 1338674965 source:c:\dev\ia\src\close.cpp
 	"Close.h"
@@ -717,7 +717,7 @@
 	"Log.h"
 	"PlayerAllocBonus.h"
 
-1337972364 c:\dev\ia\src\highscore.h
+1339192253 c:\dev\ia\src\highscore.h
 	<vector>
 	<string>
 
@@ -732,7 +732,7 @@
 
 1323988860 source:c:\dev\ia\src\dungeonreadwrite.cpp
 
-1338041540 source:c:\dev\ia\src\engine.cpp
+1339192816 source:c:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -762,7 +762,7 @@
 	"Explosion.h"
 	"Fov.h"
 	"GameTime.h"
-	"HighScore.h"
+	"Highscore.h"
 	"Interface.h"
 	"Input.h"
 	"InventoryHandler.h"
@@ -771,13 +771,13 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 	"ItemPickup.h"
-	"itemPotion.h"
+	"ItemPotion.h"
 	"ItemScroll.h"
 	"JamWithSpike.h"
 	"FeatureData.h"
 	"FeatureTrap.h"
 	"FovPreCalc.h"
-	"KnockBack.h"
+	"Knockback.h"
 	"Log.h"
 	"Look.h"
 	"MainMenu.h"
@@ -830,7 +830,7 @@
 1323988860 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1337705956 c:\dev\ia\src\itempotion.h
+1339192781 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
@@ -1017,8 +1017,8 @@
 	"Map.h"
 	"Populate.h"
 
-1339101584 source:c:\dev\ia\src\highscore.cpp
-	"HighScore.h"
+1339192304 source:c:\dev\ia\src\highscore.cpp
+	"Highscore.h"
 	<algorithm>
 	<iostream>
 	<fstream>
@@ -1156,7 +1156,7 @@
 	"ItemPotion.h"
 	"ItemDrop.h"
 
-1338056810 source:c:\dev\ia\src\itempickup.cpp
+1339103256 source:c:\dev\ia\src\itempickup.cpp
 	"ItemPickup.h"
 	"Engine.h"
 	"Item.h"
@@ -1205,8 +1205,8 @@
 	"Query.h"
 	"Inventory.h"
 
-1338573495 source:c:\dev\ia\src\knockback.cpp
-	"KnockBack.h"
+1339191957 source:c:\dev\ia\src\knockback.cpp
+	"Knockback.h"
 	"Engine.h"
 	"Attack.h"
 	"ActorPlayer.h"
@@ -1560,11 +1560,11 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1338573495 source:c:\dev\ia\src\thrower.cpp
+1339192816 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
-	"itemPotion.h"
+	"ItemPotion.h"
 	"ActorData.h"
 	"ActorPlayer.h"
 	"Render.h"
@@ -1585,15 +1585,15 @@
 	"TrimTravelVector.h"
 	"Engine.h"
 
-1338573798 source:c:\dev\ia\src\itemexplosive.cpp
+1339192781 source:c:\dev\ia\src\itemexplosive.cpp
 	"ItemExplosive.h"
 	"Engine.h"
 	"ActorPlayer.h"
 	"Log.h"
 	"Render.h"
 
-1338573798 source:c:\dev\ia\src\itempotion.cpp
-	"itemPotion.h"
+1339192816 source:c:\dev\ia\src\itempotion.cpp
+	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
 	"ActorPlayer.h"
