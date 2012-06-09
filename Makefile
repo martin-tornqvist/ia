@@ -1,18 +1,20 @@
 CC=g++
 
+#Directiories
 SRC_DIR=src
 TARGET_DIR=target
 ASSETS_DIR=assets
 
+#Flags
 CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-#LDFLAGS=-lSDL
 LDFLAGS=$(shell sdl-config --libs)
 
+#Output and sources
 EXECUTABLE=ia
-
 SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 
+#Various bash commands
 RM_CMD=rm -rf
 MV_CMD=mv -f
 MKDIR_CMD=mkdir -p
