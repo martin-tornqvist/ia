@@ -8,7 +8,7 @@
 using namespace std;
 
 Config::Config() :
-	GAME_TITLE("Infra Arcana"), GAME_VERSION(" (v12.1, 2012.06.09)"),
+	GAME_TITLE("Infra Arcana"), GAME_VERSION(" (v12.2, 2012.06.10)"),
 
 	TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
 
