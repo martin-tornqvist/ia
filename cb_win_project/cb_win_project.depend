@@ -78,7 +78,7 @@
 
 1323988860 c:\dev\ia\src\spawncounter.h
 
-1338060418 c:\dev\ia\src\statuseffects.h
+1339345464 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -272,7 +272,7 @@
 1338055106 source:c:\dev\ia\src\actorcultist.cpp
 	"monsterIncludeFiles.h"
 
-1339251412 c:\dev\ia\src\monsterincludefiles.h
+1339344874 c:\dev\ia\src\monsterincludefiles.h
 	"ActorMonster.h"
 	"Engine.h"
 	"AI_handleClosedBlockingDoor.h"
@@ -283,7 +283,6 @@
 	"AI_stepPath.h"
 	"AI_look_moveTowardsTargetIfVision.h"
 	"AI_stepToLairIfHasLosToLair.h"
-	"AI_stepToLeaderIfHasLosToLeader.h"
 	"AI_setPathToPlayerIfAware.h"
 	"AI_setPathToLairIfNoLosToLair.h"
 	"AI_setPathToLeaderIfNoLosToLeader.h"
@@ -1546,7 +1545,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1338573495 source:c:\dev\ia\src\statuseffects.cpp
+1339345450 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"

@@ -198,11 +198,10 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_dodge: return 20; break;
-		case ability_accuracyRanged: return -20; break;
-		default: {} break;
-		}
+	   if(ability == ability_dodge)
+         return 20;
+      if(ability == ability_accuracyRanged)
+         return -20;
 		return 0;
 	}
 
@@ -356,15 +355,9 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_accuracyRanged:
-			return 10;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_accuracyRanged)
+         return 10;
+      return 0;
 	}
 
 	void newTurn(Engine* engine) {
@@ -441,24 +434,15 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_searching:
-			return -9999;
-			break;
-		case ability_dodge:
-			return -50;
-			break;
-		case ability_accuracyRanged:
-			return -50;
-			break;
-		case ability_accuracyMelee:
-			return -25;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_searching)
+         return -9999;
+      if(ability == ability_dodge)
+         return -50;
+      if(ability == ability_accuracyRanged)
+         return -50;
+      if(ability == ability_accuracyMelee)
+         return -25;
+      return 0;
 	}
 
 	void newTurn(Engine* engine) {
@@ -1261,14 +1245,8 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_dodge:
-			return -999;
-			break;
-		default: {
-		}
-		break;
-		}
+	   if(ability == ability_dodge)
+         return -999;
 		return 0;
 	}
 
@@ -1352,14 +1330,8 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_dodge:
-			return -999;
-			break;
-		default: {
-		}
-		break;
-		}
+	   if(ability == ability_dodge)
+         return -999;
 		return 0;
 	}
 
@@ -1518,15 +1490,9 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_dodge:
-			return 999;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_dodge)
+         return 999;
+      return 0;
 	}
 
 	void start() {
@@ -1599,18 +1565,11 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_accuracyMelee:
-			return 999;
-			break;
-		case ability_accuracyRanged:
-			return 999;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_accuracyMelee)
+         return 999;
+      if(ability == ability_accuracyRanged)
+         return 999;
+      return 0;
 	}
 
 	void start() {
@@ -1683,11 +1642,9 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_sneaking: return 999; break;
-		default: {} break;
-		}
-		return 0;
+	   if(ability == ability_sneaking)
+         return 999;
+      return 0;
 	}
 
 	void start() {
@@ -1760,15 +1717,9 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_resistStatusMindAndShock:
-			return 999;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_resistStatusMindAndShock)
+         return 999;
+	   return 0;
 	}
 
 	void start() {
@@ -1841,15 +1792,9 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		switch(ability) {
-		case ability_resistStatusBodyAndSense:
-			return 999;
-			break;
-		default: {
-		}
-		break;
-		}
-		return 0;
+	   if(ability == ability_resistStatusBodyAndSense)
+         return 999;
+      return 0;
 	}
 
 	void start() {

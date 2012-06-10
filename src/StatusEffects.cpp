@@ -224,7 +224,6 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
 	case statusPerfectToughness:
 		return new StatusPerfectToughness(TURNS_LEFT);
 		break;
-
 	case statusStill:
 		return new StatusStill(TURNS_LEFT);
 		break;
@@ -237,11 +236,13 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
 	case statusDisabledRanged:
 		return new StatusDisabledAttackRanged(TURNS_LEFT);
 		break;
-
-	default: {
-		cout << "[ERROR] no valid id given in StatusEffectsHandler::makeEffectFromId()" << endl;
-	}
-	break;
+   case statusBlessed:
+      return new StatusBlessed(TURNS_LEFT);
+      break;
+   case statusCursed:
+      return new StatusCursed(TURNS_LEFT);
+      break;
+	default: {} break;
 	}
 	return NULL;
 }

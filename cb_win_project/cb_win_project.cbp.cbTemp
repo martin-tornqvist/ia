@@ -79,7 +79,6 @@
 		<Unit filename="..\src\AI_moveToRandomAdjacentCell.h" />
 		<Unit filename="..\src\AI_moveTowardsInterest.h" />
 		<Unit filename="..\src\AI_setPathToLairIfNoLosToLair.h" />
-		<Unit filename="..\src\AI_setPathToLeaderIfNoLosToLeader.h" />
 		<Unit filename="..\src\AI_setPathToPlayerIfAware.h" />
 		<Unit filename="..\src\AI_stepPath.h" />
 		<Unit filename="..\src\AI_stepToLairIfHasLosToLair.h" />

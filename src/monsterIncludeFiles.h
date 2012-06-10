@@ -12,7 +12,6 @@
 #include "AI_stepPath.h"
 #include "AI_look_moveTowardsTargetIfVision.h"
 #include "AI_stepToLairIfHasLosToLair.h"
-#include "AI_stepToLeaderIfHasLosToLeader.h"
 #include "AI_setPathToPlayerIfAware.h"
 #include "AI_setPathToLairIfNoLosToLair.h"
 #include "AI_setPathToLeaderIfNoLosToLeader.h"
