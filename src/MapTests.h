@@ -96,6 +96,9 @@ public:
 	bool isCellsNeighbours(const int x1, const int y1, const int x2, const int y2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 	bool isCellsNeighbours(const coord c1, const coord c2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
+	coord getClosestPos(const coord c, const vector<coord>& positions) const;
+	Actor* getClosestActor(const coord c, const vector<Actor*>& actors) const;
+
 	//getLine stops at first travel limiter (stop at target, max travel distance.
 	vector<coord> getLine(int originX, int originY, int targetX, int targetY, bool stopAtTarget, int chebTravelLimit);
 

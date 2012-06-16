@@ -2,23 +2,7 @@
 
 #include "Log.h"
 
-void Ghost::actorSpecificAct() {
-	AI_look_becomePlayerAware::learn(this, eng);
-
-	AI_listen_becomePlayerAware::learn(this, soundsHeard);
-
-	if(AI_makeRoomForFriend::action(this, eng))
-		return;
-
-	if(eng->dice(1, 100) < m_instanceDefinition.erraticMovement)
-		if(AI_moveToRandomAdjacentCell::action(this, eng))
-			return;
-
-	if(eng->dice(1, 100) < 65) {
-		if(AI_castRandomSpellIfAware::action(this, eng))
-			return;
-	}
-
+bool Ghost::actorSpecificAct() {
 	if(deadState == actorDeadState_alive) {
 		if(playerAwarenessCounter > 0) {
 			if(eng->mapTests->isCellsNeighbours(pos, eng->player->pos, false)) {
@@ -57,28 +41,12 @@ void Ghost::actorSpecificAct() {
 						}
 					}
 					eng->gameTime->letNextAct();
-					return;
+					return true;
 				}
 			}
 		}
 	}
-
-	if(attemptAttack(eng->player->pos))
-		return;
-
-	if(AI_look_moveTowardsTargetIfVision::action(this, eng))
-		return;
-
-	if(AI_stepToLairIfHasLosToLair::action(this, lairCell, eng) == true)
-		return;
-
-	vector<coord> path;
-	AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell, eng);
-
-	if(AI_stepPath::action(this, &path))
-		return;
-
-	eng->gameTime->letNextAct();
+	return false;
 }
 
 void Ghost::actorSpecific_spawnStartItems() {

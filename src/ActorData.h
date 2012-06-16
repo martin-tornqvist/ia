@@ -53,12 +53,25 @@ enum ActorSpeed_t
 
 enum ActorErratic_t
 {
+	actorErratic_never = 0,
 	actorErratic_rare = 8,
 	actorErratic_somewhat = 25,
 	actorErratic_very = 50
 };
 
 enum ActorSizes_t {actorSize_none, actorSize_floor, actorSize_humanoid, actorSize_giant};
+
+struct AiBehavior {
+public:
+	AiBehavior() : looks(false), listens(false), respondsWithPhrase(false),
+		makesRoomForFriend(false), attemptsAttack(false), pathsToTargetWhenAware(false),
+		movesTowardTargetWhenVision(false), movesTowardLair(false),
+		movesTowardLeader(false) {}
+
+	bool looks, listens, respondsWithPhrase, makesRoomForFriend, attemptsAttack,
+	pathsToTargetWhenAware, movesTowardTargetWhenVision, movesTowardLair,
+	movesTowardLeader;
+};
 
 struct ActorDefinition
 {
@@ -69,44 +82,45 @@ public:
 
 	void reset();
 
-	ActorDevNames_t	devName;
-	ActorSpeed_t	speed;
-	MoveType_t		moveType;
-	int             HP_max;
-	int				HP;
-	string			name_a;
-	string			name_the;
-	AbilityValues	abilityValues;
-	PhraseSets_t    phraseSet;
-	char            glyph;
-	SDL_Color       color;
-	Tile_t			tile;
-	SpawnRate_t     spawnRate;
-	bool           isAllowedToSpawnAfterMapCreation;
-	int             spawnStandardMinLevel;
-	int             spawnStandardMaxLevel;
-	int             monsterLvl;
-	int             chanceToSpawnExtra;
-	ActorSizes_t    actorSize;
-	bool            isHumanoid;
-	string          description;
-	bool			allowAutoDescription;
-	string			deathMessageOverride;
-	int             nrOfKills;
-	bool            canOpenDoors;
-	bool            canBashDoors;
-	int             nrTurnsAwarePlayer;
-	int				nrLeftAllowedToSpawn;
-	bool			unique;
-	string			spellCastMessage;
-	int				spellCooldown;
-	ActorErratic_t	erraticMovement;
-	ShockValues_t	shockValue;
-	bool			isRat, isCanine, isSpider;
-	bool			isUndead;
-	bool			canBeSummoned;
-	bool			canBleed;
-	bool			canDodge;
+	ActorDevNames_t devName;
+	ActorSpeed_t speed;
+	MoveType_t moveType;
+	AiBehavior aiBehavior;
+	int HP_max;
+	int HP;
+	string name_a;
+	string name_the;
+	AbilityValues abilityValues;
+	PhraseSets_t phraseSet;
+	char glyph;
+	SDL_Color color;
+	Tile_t tile;
+	SpawnRate_t spawnRate;
+	bool isAllowedToSpawnAfterMapCreation;
+	int spawnStandardMinLevel;
+	int spawnStandardMaxLevel;
+	int monsterLvl;
+	int chanceToSpawnExtra;
+	ActorSizes_t actorSize;
+	bool isHumanoid;
+	string description;
+	bool allowAutoDescription;
+	string deathMessageOverride;
+	int nrOfKills;
+	bool canOpenDoors;
+	bool canBashDoors;
+	int nrTurnsAwarePlayer;
+	int nrLeftAllowedToSpawn;
+	bool unique;
+	string spellCastMessage;
+	int spellCooldown;
+	ActorErratic_t erraticMovement;
+	ShockValues_t shockValue;
+	bool isRat, isCanine, isSpider;
+	bool isUndead;
+	bool canBeSummoned;
+	bool canBleed;
+	bool canDodge;
 	vector<SpecialRoom_t> nativeRooms;
 };
 

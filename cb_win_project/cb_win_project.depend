@@ -15,14 +15,14 @@
 1338041540 c:\dev\ia\src\engine.h
 	"BasicUtils.h"
 
-1333833612 c:\dev\ia\src\basicutils.h
+1339708936 c:\dev\ia\src\basicutils.h
 	<vector>
 	<math.h>
 	"ConstTypes.h"
 	"Actor.h"
 	"MersenneTwister.h"
 
-1332280370 c:\dev\ia\src\consttypes.h
+1339616379 c:\dev\ia\src\consttypes.h
 	<string>
 	"SDL/SDL.h"
 	"Colors.h"
@@ -33,7 +33,7 @@
 
 1335869110 c:\dev\ia\src\art.h
 
-1337505360 c:\dev\ia\src\actor.h
+1339778856 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"SDL/SDL.h"
@@ -46,7 +46,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1338057634 c:\dev\ia\src\actordata.h
+1339442420 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Phrases.h"
@@ -115,7 +115,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1337798248 c:\dev\ia\src\maptests.h
+1339780618 c:\dev\ia\src\maptests.h
 	<vector>
 	"ConstTypes.h"
 	"Config.h"
@@ -127,7 +127,7 @@
 	<ctime>
 	<cmath>
 
-1336303698 c:\dev\ia\src\actorplayer.h
+1339778856 c:\dev\ia\src\actorplayer.h
 	"Actor.h"
 	"ConstTypes.h"
 
@@ -138,7 +138,7 @@
 	"Converters.h"
 	<math.h>
 
-1338577736 source:c:\dev\ia\src\actor.cpp
+1339790131 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -184,7 +184,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1339250492 c:\dev\ia\src\actormonster.h
+1339782664 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -269,10 +269,10 @@
 	"ItemData.h"
 	"Item.h"
 
-1338055106 source:c:\dev\ia\src\actorcultist.cpp
+1339441201 source:c:\dev\ia\src\actorcultist.cpp
 	"monsterIncludeFiles.h"
 
-1339344874 c:\dev\ia\src\monsterincludefiles.h
+1339782676 c:\dev\ia\src\monsterincludefiles.h
 	"ActorMonster.h"
 	"Engine.h"
 	"AI_handleClosedBlockingDoor.h"
@@ -281,7 +281,7 @@
 	"AI_listen_respondWithAggroPhrase.h"
 	"AI_makeRoomForFriend.h"
 	"AI_stepPath.h"
-	"AI_look_moveTowardsTargetIfVision.h"
+	"AI_moveTowardsTargetSimple.h"
 	"AI_stepToLairIfHasLosToLair.h"
 	"AI_setPathToPlayerIfAware.h"
 	"AI_setPathToLairIfNoLosToLair.h"
@@ -291,7 +291,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1338041870 c:\dev\ia\src\ai_handleclosedblockingdoor.h
+1339438804 c:\dev\ia\src\ai_handleclosedblockingdoor.h
 	"Map.h"
 	"FeatureDoor.h"
 
@@ -300,7 +300,7 @@
 	"SDL/SDL.h"
 	"Feature.h"
 
-1338041888 c:\dev\ia\src\ai_look_becomeplayeraware.h
+1339791336 c:\dev\ia\src\ai_look_becomeplayeraware.h
 	"Engine.h"
 	"ActorPlayer.h"
 
@@ -318,7 +318,7 @@
 1323988860 c:\dev\ia\src\ai_steppath.h
 	"Engine.h"
 
-1323988860 c:\dev\ia\src\ai_look_movetowardstargetifvision.h
+1339782108 c:\dev\ia\src\ai_look_movetowardstargetifvision.h
 	"Engine.h"
 	"Actor.h"
 
@@ -342,13 +342,13 @@
 	"Engine.h"
 	"Actor.h"
 
-1323988860 c:\dev\ia\src\ai_castrandomspell.h
+1339442418 c:\dev\ia\src\ai_castrandomspell.h
 
 1336151808 c:\dev\ia\src\itemfactory.h
 	<string>
 	"Item.h"
 
-1338065144 source:c:\dev\ia\src\actordata.cpp
+1339443712 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -370,33 +370,33 @@
 	<string>
 	"GameTime.h"
 
-1323988860 source:c:\dev\ia\src\actorfirehound.cpp
+1339441221 source:c:\dev\ia\src\actorfirehound.cpp
 	"monsterIncludeFiles.h"
 
-1338041988 source:c:\dev\ia\src\actorfirevampire.cpp
+1339441235 source:c:\dev\ia\src\actorfirevampire.cpp
 	"monsterIncludeFiles.h"
 	"Explosion.h"
 
-1338042004 source:c:\dev\ia\src\actorghost.cpp
+1339441278 source:c:\dev\ia\src\actorghost.cpp
 	"monsterIncludeFiles.h"
 	"Log.h"
 
-1335701934 source:c:\dev\ia\src\actorghoul.cpp
+1339441296 source:c:\dev\ia\src\actorghoul.cpp
 	"monsterIncludeFiles.h"
 
-1323988860 source:c:\dev\ia\src\actorgiantbat.cpp
+1339441376 source:c:\dev\ia\src\actorgiantbat.cpp
 	"monsterIncludeFiles.h"
 
-1338573494 source:c:\dev\ia\src\actorkeziahmason.cpp
+1339443730 source:c:\dev\ia\src\actorkeziahmason.cpp
 	"monsterIncludeFiles.h"
 	"Log.h"
 	"ActorFactory.h"
 	"Explosion.h"
 
-1337466034 source:c:\dev\ia\src\actormigo.cpp
+1339441467 source:c:\dev\ia\src\actormigo.cpp
 	"monsterIncludeFiles.h"
 
-1338055230 source:c:\dev\ia\src\actormonster.cpp
+1339789026 source:c:\dev\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -407,6 +407,19 @@
 	"Attack.h"
 	"Reload.h"
 	"Inventory.h"
+	"AI_handleClosedBlockingDoor.h"
+	"AI_look_becomePlayerAware.h"
+	"AI_listen_becomePlayerAware.h"
+	"AI_listen_respondWithAggroPhrase.h"
+	"AI_makeRoomForFriend.h"
+	"AI_stepPath.h"
+	"AI_moveTowardsTargetSimple.h"
+	"AI_stepToLairIfHasLosToLair.h"
+	"AI_setPathToPlayerIfAware.h"
+	"AI_setPathToLairIfNoLosToLair.h"
+	"AI_setPathToLeaderIfNoLosToLeader.h"
+	"AI_moveToRandomAdjacentCell.h"
+	"AI_castRandomSpell.h"
 
 1332024694 c:\dev\ia\src\attack.h
 	<vector>
@@ -419,10 +432,10 @@
 
 1332881556 c:\dev\ia\src\reload.h
 
-1333308540 source:c:\dev\ia\src\actorooze.cpp
+1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1339102400 source:c:\dev\ia\src\actorplayer.cpp
+1339778856 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -471,23 +484,23 @@
 1323988860 c:\dev\ia\src\query.h
 	"ConstTypes.h"
 
-1323988860 source:c:\dev\ia\src\actorrat.cpp
+1339441554 source:c:\dev\ia\src\actorrat.cpp
 	"monsterIncludeFiles.h"
 
-1335701936 source:c:\dev\ia\src\actorshadow.cpp
+1339441566 source:c:\dev\ia\src\actorshadow.cpp
 	"monsterIncludeFiles.h"
 
-1323988860 source:c:\dev\ia\src\actorspider.cpp
+1339441593 source:c:\dev\ia\src\actorspider.cpp
 	"monsterIncludeFiles.h"
 
-1339254865 source:c:\dev\ia\src\actorwolf.cpp
+1339441602 source:c:\dev\ia\src\actorwolf.cpp
 	"monsterIncludeFiles.h"
 
-1338042358 source:c:\dev\ia\src\actorwormmass.cpp
+1339441650 source:c:\dev\ia\src\actorwormmass.cpp
 	"monsterIncludeFiles.h"
 	"ActorFactory.h"
 
-1338673030 source:c:\dev\ia\src\actorzombie.cpp
+1339443766 source:c:\dev\ia\src\actorzombie.cpp
 	"monsterIncludeFiles.h"
 	"Log.h"
 	"ActorFactory.h"
@@ -733,7 +746,7 @@
 
 1323988860 source:c:\dev\ia\src\dungeonreadwrite.cpp
 
-1339192816 source:c:\dev\ia\src\engine.cpp
+1339615986 source:c:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -865,7 +878,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1323988860 c:\dev\ia\src\marker.h
+1339777987 c:\dev\ia\src\marker.h
 	<iostream>
 	<vector>
 	"SDL/SDL.h"
@@ -1029,7 +1042,7 @@
 	"DungeonMaster.h"
 	"Map.h"
 
-1339349049 source:c:\dev\ia\src\input.cpp
+1339616990 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1053,6 +1066,8 @@
 	"Query.h"
 	"SaveHandler.h"
 	"ItemFactory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
 
 1338573377 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
@@ -1347,14 +1362,14 @@
 	"MapTemplates.h"
 	"Engine.h"
 
-1338048320 source:c:\dev\ia\src\maptests.cpp
+1339780823 source:c:\dev\ia\src\maptests.cpp
 	"MapTests.h"
 	<cassert>
 	"Engine.h"
 	"Map.h"
 	"ActorPlayer.h"
 
-1338573495 source:c:\dev\ia\src\marker.cpp
+1339778574 source:c:\dev\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"InventoryHandler.h"
@@ -1473,7 +1488,7 @@
 	"Inventory.h"
 	"ItemFactory.h"
 
-1339242746 source:c:\dev\ia\src\render.cpp
+1339617533 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1628,7 +1643,7 @@
 
 1323988860 c:\dev\ia\src\declares.h
 
-1339240029 source:c:\dev\ia\src\config.cpp
+1339349736 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -3632,4 +3647,8 @@
 
 1339254770 c:\dev\ia\src\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
+
+1339782602 c:\dev\ia\src\ai_movetowardstargetsimple.h
+	"Engine.h"
+	"Actor.h"
 

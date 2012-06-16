@@ -20,7 +20,7 @@ public:
 		if(monster->deadState == actorDeadState_alive && path->size() != 0) {
 			Feature* const f = engine->map->featuresStatic[path->back().x][path->back().y];
 			if(f->getId() == feature_door) {
-				Door* const door = dynamic_cast<Door*> (f);
+				Door* const door = dynamic_cast<Door*>(f);
 				if(door->isMovePassable(monster) == false) {
 					if(door->isStuck() == false) {
 						if(monster->getInstanceDefinition()->canOpenDoors == true) {

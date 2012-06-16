@@ -12,24 +12,137 @@
 #include "Reload.h"
 #include "Inventory.h"
 
+#include "AI_handleClosedBlockingDoor.h"
+#include "AI_look_becomePlayerAware.h"
+#include "AI_listen_becomePlayerAware.h"
+#include "AI_listen_respondWithAggroPhrase.h"
+#include "AI_makeRoomForFriend.h"
+#include "AI_stepPath.h"
+#include "AI_moveTowardsTargetSimple.h"
+#include "AI_stepToLairIfHasLosToLair.h"
+#include "AI_setPathToPlayerIfAware.h"
+#include "AI_setPathToLairIfNoLosToLair.h"
+#include "AI_setPathToLeaderIfNoLosToLeader.h"
+#include "AI_moveToRandomAdjacentCell.h"
+#include "AI_castRandomSpell.h"
+
 void Monster::act() {
+
+	getSpotedEnemies();
+
+	target = eng->mapTests->getClosestActor(pos, spotedEnemies);
+
 	if(spellCoolDownCurrent != 0) {
 		spellCoolDownCurrent--;
 	}
 
 	if(playerAwarenessCounter > 0) {
-	   isRoamingAllowed = true;
+		isRoamingAllowed = true;
+		if(leader != NULL) {
+			if(leader->deadState == actorDeadState_alive) {
+				if(leader != eng->player) {
+					dynamic_cast<Monster*>(leader)->playerAwarenessCounter = leader->getInstanceDefinition()->nrTurnsAwarePlayer;
+				}
+			}
+		}
 	}
 
-	const bool HAS_SNEAK_SKILL = m_instanceDefinition.abilityValues.getAbilityValue(ability_sneaking, true) > 0;
+	const ActorDefinition& def = m_instanceDefinition;
+
+	const bool HAS_SNEAK_SKILL = def.abilityValues.getAbilityValue(ability_sneaking, true) > 0;
 	isSneaking = eng->player->checkIfSeeActor(*this, NULL) == false && HAS_SNEAK_SKILL;
 
-	actorSpecificAct();
-	/*
-	There should probably not be any code after "actorSpecificAct()", since it will
-	probably end this monster's turn, and newTurn() stuff may be called, which deletes this
-	monster if it didn't leave a corpse.
-	*/
+	const AiBehavior& ai = def.aiBehavior;
+
+	//------------------------------ INFORMATION GATHERING (LOOKING, LISTENING...)
+	if(ai.looks) {
+	   if(leader != eng->player) {
+         AI_look_becomePlayerAware::learn(this, eng);
+	   }
+	}
+	if(ai.listens) {
+	   if(leader != eng->player) {
+         AI_listen_becomePlayerAware::learn(this, soundsHeard);
+	   }
+	}
+	if(ai.respondsWithPhrase) {
+	   if(leader != eng->player) {
+         AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
+	   }
+	}
+
+	//------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
+	// TODO temporary restriction, allow this later
+	if(leader != eng->player) {
+      if(actorSpecificAct()) return;
+	}
+
+	//------------------------------ COMMON ACTIONS (MOVING, ATTACKING, CASTING SPELLS...)
+	if(ai.makesRoomForFriend) {
+	   if(leader != eng->player) {
+         if(AI_makeRoomForFriend::action(this, eng)) return;
+	   }
+	}
+
+	if(eng->dice(1, 100) < def.erraticMovement) {
+		if(AI_moveToRandomAdjacentCell::action(this, eng)) return;
+	}
+
+   if(target != NULL) {
+      const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
+      if(eng->dice(1, 100) < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
+         if(AI_castRandomSpellIfAware::action(this, eng)) return;
+      }
+   }
+
+	if(ai.attemptsAttack) {
+		if(target != NULL) {
+			if(attemptAttack(target->pos)) {
+				//TODO nrTurnsAttackDisablesRanged/Melee in actorData (ai?)
+				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(1));
+				return;
+			}
+		}
+	}
+
+   if(target != NULL) {
+      if(AI_castRandomSpellIfAware::action(this, eng)) return;
+   }
+
+	if(ai.movesTowardTargetWhenVision) {
+		if(AI_moveTowardsTargetSimple::action(this, eng)) return;
+	}
+
+	vector<coord> path;
+
+	if(ai.pathsToTargetWhenAware) {
+	   if(leader != eng->player) {
+         AI_setPathToPlayerIfAware::learn(this, &path, eng);
+	   }
+	}
+
+   if(leader != eng->player) {
+      if(AI_handleClosedBlockingDoor::action(this, &path, eng)) return;
+   }
+
+	if(AI_stepPath::action(this, &path)) return;
+
+	if(ai.movesTowardLeader) {
+		AI_setPathToLeaderIfNoLosToleader::learn(this, &path, eng);
+		if(AI_stepPath::action(this, &path)) return;
+	}
+
+	if(ai.movesTowardLair) {
+	   if(leader != eng->player) {
+         if(AI_stepToLairIfHasLosToLair::action(this, lairCell, eng)) return;
+         AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell, eng);
+         if(AI_stepPath::action(this, &path)) return;
+	   }
+	}
+
+	if(AI_moveToRandomAdjacentCell::action(this, eng)) return;
+
+	eng->gameTime->letNextAct();
 }
 
 void Monster::monsterHit() {
@@ -54,7 +167,7 @@ void Monster::registerHeardSound(const Sound& sound) {
 
 bool Monster::attemptAttack(const coord attackPos) {
 	if(deadState == actorDeadState_alive) {
-		if(playerAwarenessCounter > 0) {
+		if(playerAwarenessCounter > 0 || leader == eng->player) {
 
 			bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 			eng->mapTests->makeVisionBlockerArray(blockers);

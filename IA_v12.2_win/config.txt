@@ -13,12 +13,12 @@ FONT_IMAGE=2
 
 
 # Wall symbol. 0 = #, 1 = full square.
-WALL_SYMBOL_FULL_SQUARE=0
+WALL_SYMBOL_FULL_SQUARE=1
 
 
 # How to render the map. 0 = ASCII, 1 = Tiles
 # Setting this to 1 ovverides all the settings above
-USE_TILE_SET=0
+USE_TILE_SET=1
 
 
 # 0 = Windowed, 1 = Fullscreen.

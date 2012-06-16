@@ -42,12 +42,11 @@ public:
 		}
 	}
 
-	int chebyshevDistance(const int x1, const int y1, const int x2, const int y2) const {
-		if(x1 == x2 && y1 == y2)
+	int chebyshevDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+		if(X0 == X1 && Y0 == Y1) {
 			return 0;
-		const int xDifAbs = abs(x2 - x1);
-		const int yDifAbs = abs(y2 - y1);
-		return max(xDifAbs, yDifAbs);
+		}
+		return max(abs(X1 - X0), abs(Y1 - Y0));
 	}
 
 	int chebyshevDistance(const coord& c1, const coord& c2) const {

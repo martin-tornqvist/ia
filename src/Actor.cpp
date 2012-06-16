@@ -41,24 +41,79 @@ bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_C
 			return eng->map->playerVision[other.pos.x][other.pos.y] && IS_MONSTER_SNEAKING == false;
 		}
 
-		if(m_statusEffectsHandler->allowSee() == false)
-			return false;
+		if(dynamic_cast<const Monster*>(this)->leader == eng->player && &other != eng->player) {
+			const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isSneaking;
+			if(IS_MONSTER_SNEAKING) return false;
+		}
 
-		if(pos.x - other.pos.x > FOV_RADI_INT)
+		if(m_statusEffectsHandler->allowSee() == false) {
 			return false;
-		if(other.pos.x - pos.x > FOV_RADI_INT)
-			return false;
+		}
 
-		if(other.pos.y - pos.y > FOV_RADI_INT)
-			return false;
-		if(pos.y - other.pos.y > FOV_RADI_INT)
-			return false;
+		if(pos.x - other.pos.x > FOV_RADI_INT) return false;
+		if(other.pos.x - pos.x > FOV_RADI_INT)	return false;
+		if(other.pos.y - pos.y > FOV_RADI_INT)	return false;
+		if(pos.y - other.pos.y > FOV_RADI_INT)	return false;
 
 		if(visionBlockingCells != NULL) {
 			return eng->fov->checkOneCell(visionBlockingCells, other.pos.x, other.pos.y, pos.x, pos.y, true);
 		}
 	}
 	return false;
+}
+
+void Actor::getSpotedEnemies() {
+	spotedEnemies.resize(0);
+
+	const bool IS_SELF_PLAYER = this == eng->player;
+
+	bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+
+	if(IS_SELF_PLAYER == false) {
+		eng->mapTests->makeVisionBlockerArray(visionBlockers);
+	}
+
+	const unsigned int SIZE_OF_LOOP = eng->gameTime->getLoopSize();
+	for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
+		Actor* const actor = eng->gameTime->getActorAt(i);
+		if(actor != this && actor->deadState == actorDeadState_alive) {
+
+			if(IS_SELF_PLAYER) {
+				if(dynamic_cast<Monster*>(actor)->leader != this) {
+					if(checkIfSeeActor(*actor, NULL)) {
+						spotedEnemies.push_back(actor);
+					}
+				}
+			} else {
+				const bool IS_OTHER_PLAYER = actor == eng->player;
+				const bool IS_SELF_HOSTILE_TO_PLAYER = dynamic_cast<Monster*>(this)->leader != eng->player;
+				const bool IS_OTHER_HOSTILE_TO_PLAYER = IS_OTHER_PLAYER ? false : dynamic_cast<Monster*>(actor)->leader != eng->player;
+
+				//Note that IS_OTHER_HOSTILE_TO_PLAYER is false if the other IS the player,
+				//so there is no need to check if IS_SELF_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
+				if(
+				   (IS_SELF_HOSTILE_TO_PLAYER == true && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
+				   (IS_SELF_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER == true)) {
+					if(checkIfSeeActor(*actor, visionBlockers)) {
+						spotedEnemies.push_back(actor);
+					}
+				}
+			}
+		}
+	}
+}
+
+void Actor::getSpotedEnemiesPositions() {
+	spotedEnemiesPositions.resize(0);
+	getSpotedEnemies();
+
+	const unsigned int SIZE_OF_LOOP = spotedEnemies.size();
+	for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
+		const Actor* const actor = spotedEnemies.at(i);
+		if(actor != NULL) {
+			spotedEnemiesPositions.push_back(actor->pos);
+		}
+	}
 }
 
 void Actor::place(const coord pos_, ActorDefinition* const actorDefinition, Engine* engine) {

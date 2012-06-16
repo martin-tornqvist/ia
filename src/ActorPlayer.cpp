@@ -1166,33 +1166,6 @@ void Player::kick() {
 	}
 }
 
-void Player::getSpotedEnemies() {
-	spotedEnemies.resize(0);
-
-	const unsigned int SIZE_OF_LOOP = eng->gameTime->getLoopSize();
-	for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
-		Actor* const actor = eng->gameTime->getActorAt(i);
-		if(actor != this) {
-			if(checkIfSeeActor(*actor, NULL) && actor->deadState == actorDeadState_alive) {
-				spotedEnemies.push_back(actor);
-			}
-		}
-	}
-}
-
-void Player::getSpotedEnemiesPositions() {
-	spotedEnemiesPositions.resize(0);
-	getSpotedEnemies();
-
-	const unsigned int SIZE_OF_LOOP = spotedEnemies.size();
-	for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
-		const Actor* const actor = spotedEnemies.at(i);
-		if(actor != NULL) {
-			spotedEnemiesPositions.push_back(actor->pos);
-		}
-	}
-}
-
 void Player::FOVupdate() {
 	const unsigned int SIZE = eng->gameTime->getFeatureMobsSize();
 	for(unsigned int i = 0; i < SIZE; i++) {

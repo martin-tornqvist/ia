@@ -22,6 +22,8 @@
 #include "Query.h"
 #include "SaveHandler.h"
 #include "ItemFactory.h"
+#include "ActorFactory.h"
+#include "ActorMonster.h"
 
 extern void profiler(bool init);
 
@@ -664,7 +666,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		break;
 	}
 	if(eng->gameTime->getCurrentActor() == eng->player) {
-	   eng->renderer->flip();
+		eng->renderer->flip();
 	}
 }
 
@@ -682,7 +684,7 @@ void Input::read() {
 			SDLKey key = m_event.key.keysym.sym;
 
 			bool cheatKeyPressed = false;
-			/*
+//			/*
 			//----------------------------------------DESCEND CHEAT
 			if(key == SDLK_F2) {
 				cheatKeyPressed = true;
@@ -724,16 +726,17 @@ void Input::read() {
 			}
 			if(key == SDLK_F7) {
 				cheatKeyPressed = true;
-			       eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusBlessed(eng));
-				clearKeyEvents();
-			}
-			if(key == SDLK_F8) {
-				cheatKeyPressed = true;
-			       eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusCursed(eng));
+
+				const coord pos = eng->player->pos + coord(1,0);
+				if(eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(moveType_walk)) {
+               Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_zombieAxe, pos));
+               monster->leader = eng->player;
+				}
+
 				clearKeyEvents();
 			}
 
-			*/
+//			*/
 
 			if(cheatKeyPressed == false) {
 				if(key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN || key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key

@@ -12,6 +12,36 @@ bool IsCloserToOrigin::operator()(const coord& c1, const coord& c2) {
 	return chebDist1 < chebDist2;
 }
 
+coord MapTests::getClosestPos(const coord c, const vector<coord>& positions) const {
+	int distToNearest = 99999;
+	int closestElement = 0;
+	for(unsigned int i = 0; i < positions.size(); i++) {
+		const int CUR_DIST = eng->basicUtils->chebyshevDistance(c, positions.at(i));
+		if(CUR_DIST < distToNearest) {
+			distToNearest = CUR_DIST;
+			closestElement = i;
+		}
+	}
+
+	return positions.at(closestElement);
+}
+
+Actor* MapTests::getClosestActor(const coord c, const vector<Actor*>& actors) const {
+   if(actors.size() == 0) return NULL;
+
+	int distToNearest = 99999;
+	int closestElement = 0;
+	for(unsigned int i = 0; i < actors.size(); i++) {
+		const int CUR_DIST = eng->basicUtils->chebyshevDistance(c, actors.at(i)->pos);
+		if(CUR_DIST < distToNearest) {
+			distToNearest = CUR_DIST;
+			closestElement = i;
+		}
+	}
+
+	return actors.at(closestElement);
+}
+
 void MapTests::makeVisionBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 	for(int y = 0; y < MAP_Y_CELLS; y++) {
 		for(int x = 0; x < MAP_X_CELLS; x++) {

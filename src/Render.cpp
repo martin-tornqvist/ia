@@ -365,7 +365,7 @@ void Renderer::drawMapAndInterface(const bool FLIP_SCREEN) {
 		drawASCII();
 	}
 
-   eng->interfaceRenderer->drawInfoLines();
+	eng->interfaceRenderer->drawInfoLines();
 
 	if(FLIP_SCREEN) {
 		flip();
@@ -385,7 +385,7 @@ void Renderer::drawASCII() {
 			currentDrw = &renderArray[x][y];
 			currentDrw->color = clrBlack;
 			currentDrw->glyph = ' ';
-			currentDrw->drawUnderscore = false;
+			currentDrw->underscoreClr = clrBlack;
 
 			if(eng->map->playerVision[x][y] == true) {
 				//Static features
@@ -460,8 +460,13 @@ void Renderer::drawASCII() {
 			currentDrw->glyph = actor->getGlyph();
 
 			if(actor != eng->player) {
-				if(dynamic_cast<Monster*>(actor)->playerAwarenessCounter == 0) {
-					currentDrw->drawUnderscore = true;
+				const Monster* const monster = dynamic_cast<const Monster*>(actor);
+				if(monster->leader == eng->player) {
+					currentDrw->underscoreClr = clrGreen;
+				} else {
+					if(monster->playerAwarenessCounter == 0) {
+						currentDrw->underscoreClr = clrBlueLight;
+					}
 				}
 			}
 		}
@@ -485,9 +490,9 @@ void Renderer::drawASCII() {
 
 			drawCharacter(tempDrw.glyph, renderArea_mainScreen, x, y, tempDrw.color);
 
-			if(tempDrw.drawUnderscore == true) {
-				drawLineHorizontal(x * eng->config->CELL_WIDTH_MAP, eng->config->MAINSCREEN_Y_OFFSET + (y + 1) * eng->config->CELL_HEIGHT_MAP - 1,
-				                   eng->config->CELL_WIDTH_MAP, clrBlueLight);
+			if(tempDrw.underscoreClr.r != 0 || tempDrw.underscoreClr.g != 0 || tempDrw.underscoreClr.b != 0) {
+				drawLineHorizontal(x * eng->config->CELL_WIDTH_MAP, eng->config->MAINSCREEN_Y_OFFSET + (y + 1) * eng->config->CELL_HEIGHT_MAP - 2,
+				                   eng->config->CELL_WIDTH_MAP, tempDrw.underscoreClr);
 			}
 		}
 	}
@@ -506,7 +511,7 @@ void Renderer::drawTiles() {
 			currentDrw = &renderArrayTiles[x][y];
 			currentDrw->color = clrBlack;
 			currentDrw->tile = tile_empty;
-			currentDrw->drawUnderscore = false;
+			currentDrw->underscoreClr = clrBlack;
 
 			if(eng->map->playerVision[x][y] == true) {
 
@@ -587,8 +592,13 @@ void Renderer::drawTiles() {
 				currentDrw->tile = isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee;
 			} else {
 				currentDrw->tile = actor->getTile();
-				if(dynamic_cast<Monster*>(actor)->playerAwarenessCounter == 0) {
-					currentDrw->drawUnderscore = true;
+				const Monster* const monster = dynamic_cast<const Monster*>(actor);
+				if(monster->leader == eng->player) {
+					currentDrw->underscoreClr = clrGreen;
+				} else {
+					if(monster->playerAwarenessCounter == 0) {
+						currentDrw->underscoreClr = clrBlueLight;
+					}
 				}
 			}
 		}
@@ -632,9 +642,9 @@ void Renderer::drawTiles() {
 
 			drawTileInMap(tempDrw.tile, x, y, tempDrw.color);
 
-			if(tempDrw.drawUnderscore) {
-				drawLineHorizontal(x * eng->config->CELL_WIDTH_MAP, eng->config->MAINSCREEN_Y_OFFSET + (y + 1) * eng->config->CELL_HEIGHT_MAP - 1,
-				                   eng->config->CELL_WIDTH_MAP, clrBlueLight);
+			if(tempDrw.underscoreClr.r != 0 || tempDrw.underscoreClr.g != 0 || tempDrw.underscoreClr.b != 0) {
+				drawLineHorizontal(x * eng->config->CELL_WIDTH_MAP, eng->config->MAINSCREEN_Y_OFFSET + (y + 1) * eng->config->CELL_HEIGHT_MAP - 2,
+				                   eng->config->CELL_WIDTH_MAP, tempDrw.underscoreClr);
 			}
 		}
 	}

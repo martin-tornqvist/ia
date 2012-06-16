@@ -46,7 +46,7 @@ class Monster: public Actor {
 public:
 	Monster() :
 		playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0), shockDecrease(0),
-		isRoamingAllowed(true), isSneaking(false), leader(NULL) {
+		isRoamingAllowed(true), isSneaking(false), leader(NULL), target(NULL) {
 	}
 
 	virtual ~Monster() {
@@ -71,7 +71,9 @@ public:
 
 	void act();
 
-	virtual void actorSpecificAct() = 0;
+	virtual bool actorSpecificAct() {
+		return false;
+	}
 
 	int playerAwarenessCounter;
 
@@ -93,6 +95,7 @@ public:
 	bool isSneaking;
 
 	Actor* leader;
+	Actor* target;
 
 protected:
 	void monsterHit();
@@ -107,7 +110,6 @@ public:
 	}
 	~Rat() {
 	}
-	void actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems();
 };
 
@@ -128,7 +130,6 @@ public:
 	}
 	~BrownJenkin() {
 	}
-	void actorSpecificAct();
 };
 
 class Spider: public Monster {
@@ -138,7 +139,7 @@ public:
 	}
 	virtual ~Spider() {
 	}
-	void actorSpecificAct();
+	bool actorSpecificAct();
 };
 
 class GreenSpider: public Spider {
@@ -190,7 +191,7 @@ public:
 	}
 	virtual ~Zombie() {
 	}
-	virtual void actorSpecificAct();
+	virtual bool actorSpecificAct();
 	void actorSpecificDie();
 protected:
 	bool attemptResurrect();
@@ -237,7 +238,7 @@ public:
 	~MajorClaphamLee() {
 	}
 
-	void actorSpecificAct();
+	bool actorSpecificAct();
 private:
 	bool hasSummonedTombLegions;
 };
@@ -260,7 +261,7 @@ public:
 	~KeziahMason() {
 	}
 
-	void actorSpecificAct();
+	bool actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 private:
 	bool hasSummonedJenkin;
@@ -273,7 +274,6 @@ public:
 	}
 	virtual ~Cultist() {
 	}
-	void actorSpecificAct();
 };
 
 class CultistShotgun: public Cultist {
@@ -343,7 +343,6 @@ public:
 	}
 	~FireHound() {
 	}
-	void actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 };
 
@@ -354,7 +353,7 @@ public:
 	}
 	~Ghost() {
 	}
-	void actorSpecificAct();
+	bool actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems();
 };
 
@@ -385,7 +384,6 @@ public:
 	}
 	~GiantBat() {
 	}
-	void actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 };
 
@@ -416,7 +414,6 @@ public:
 	}
 	~Wolf() {
 	}
-	void actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 };
 
@@ -427,7 +424,6 @@ public:
 	}
 	~MiGo() {
 	}
-	void actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 };
 
@@ -438,7 +434,6 @@ public:
 	}
 	~Ghoul() {
 	}
-	virtual void actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems();
 };
 
@@ -480,7 +475,6 @@ public:
 	~Shadow() {
 	}
 
-	virtual void actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems();
 };
 
@@ -491,7 +485,7 @@ public:
 	}
 	~WormMass() {
 	}
-	void actorSpecificAct();
+	bool actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems();
 private:
 	int chanceToSpawnNew;
@@ -504,7 +498,6 @@ public:
 	}
 	~FireVampire() {
 	}
-	void actorSpecificAct();
 	void actorSpecific_spawnStartItems();
 	void monsterDeath();
 };
@@ -516,7 +509,6 @@ public:
 	}
 	~Ooze() {
 	}
-	void actorSpecificAct();
 	virtual void actorSpecific_spawnStartItems() = 0;
 };
 

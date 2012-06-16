@@ -170,29 +170,6 @@ void Marker::drawMarker(const MarkerTask_t markerTask) const {
 	eng->renderer->drawMarker(trace, effectiveRange);
 }
 
-coord Marker::getClosestEnemy(vector<coord>* positions) const {
-	const unsigned int nrOfEnemies = positions->size();
-
-	int distToNearest = 99999;
-	int distToCurrent = 99999;
-	int element = 0;
-
-	int playerX = eng->player->pos.x;
-	int playerY = eng->player->pos.y;
-
-	for(unsigned int i = 0; i < nrOfEnemies; i++) {
-
-		distToCurrent = eng->basicUtils->chebyshevDistance(playerX, playerY, positions->at(i).x, positions->at(i).y);
-
-		if(distToCurrent < distToNearest) {
-			distToNearest = distToCurrent;
-			element = i;
-		}
-	}
-
-	return positions->at(element);
-}
-
 void Marker::place(const MarkerTask_t markerTask) {
 	m_xPos = eng->player->pos.x;
 	m_yPos = eng->player->pos.y;
@@ -229,9 +206,9 @@ void Marker::setCoordToClosestEnemyIfVisible() {
 	eng->player->getSpotedEnemiesPositions();
 
 	//If player sees enemies, suggest one for targeting
-	vector<coord>* positions = &(eng->player->spotedEnemiesPositions);
-	if(positions->size() != 0) {
-		coord pos = getClosestEnemy(positions);
+	const vector<coord>& positions = eng->player->spotedEnemiesPositions;
+	if(positions.size() != 0) {
+		coord pos = eng->mapTests->getClosestPos(eng->player->pos, positions);
 
 		m_xPos = pos.x;
 		m_yPos = pos.y;

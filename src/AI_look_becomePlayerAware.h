@@ -8,17 +8,27 @@ class AI_look_becomePlayerAware {
 public:
 	static void learn(Monster* monster, Engine* engine) {
 		if(monster->deadState == actorDeadState_alive) {
-			const int PLAYER_SNEAK = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_sneaking, true);
 
-			if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall || monster->playerAwarenessCounter > 0) {
+		   monster->getSpotedEnemies();
 
-				bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-				engine->mapTests->makeVisionBlockerArray(blockers);
+		   if(monster->spotedEnemies.size() > 0 && monster->playerAwarenessCounter > 0) {
+		      monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
+		      return;
+		   }
 
-				if(monster->checkIfSeeActor(*engine->player, blockers)) {
-					monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
-				}
-			}
+		   for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
+		      Actor* const actor = monster->spotedEnemies.at(i);
+            if(actor == engine->player) {
+               const int PLAYER_SNEAK = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_sneaking, true);
+               if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
+                  monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
+                  return;
+               }
+            } else {
+               monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
+               return;
+            }
+		   }
 		}
 	}
 

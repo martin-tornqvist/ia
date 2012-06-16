@@ -11,10 +11,10 @@
 using namespace std;
 
 enum MarkerTask_t {markerTask_aim,
-	markerTask_look,
-	markerTask_throw,
-	markerTask_throwLitExplosive
-};
+                   markerTask_look,
+                   markerTask_throw,
+                   markerTask_throwLitExplosive
+                  };
 
 
 class Engine;
@@ -33,7 +33,7 @@ public:
 private:
 	coord m_lastKnownPlayerPos;
 
-	coord getClosestEnemy(vector<coord>* positions) const;
+	coord getClosestPos(const coord c, const vector<coord>& positions) const;
 	void setCoordToClosestEnemyIfVisible();
 	bool setCoordToTargetIfVisible();
 

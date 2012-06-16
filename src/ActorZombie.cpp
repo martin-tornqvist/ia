@@ -4,44 +4,15 @@
 #include "ActorFactory.h"
 #include "Blood.h"
 
-void Zombie::actorSpecificAct() {
-	AI_look_becomePlayerAware::learn(this, eng);
-
-	if(AI_makeRoomForFriend::action(this, eng))
-		return;
-
-	if(eng->dice(1, 100) < m_instanceDefinition.erraticMovement)
-		if(AI_moveToRandomAdjacentCell::action(this, eng))
-			return;
-
-	if(attemptAttack(eng->player->pos)) {
-		m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(20));
-		return;
-	}
-
-	vector<coord> path;
-	AI_setPathToPlayerIfAware::learn(this, &path, eng);
-
-	if(AI_handleClosedBlockingDoor::action(this, &path, eng) == true)
-		return;
-
-	if(AI_stepPath::action(this, &path))
-		return;
-
-	if(AI_look_moveTowardsTargetIfVision::action(this, eng)) {
-		return;
-	}
-
-	if(attemptResurrect())
-		return;
-
-	if(AI_moveToRandomAdjacentCell::action(this, eng))
-		return;
-
-	eng->gameTime->letNextAct();
+bool Zombie::actorSpecificAct() {
+	return attemptResurrect();
 }
 
-void MajorClaphamLee::actorSpecificAct() {
+bool MajorClaphamLee::actorSpecificAct() {
+	if(attemptResurrect()) {
+		return true;
+	}
+
 	if(deadState == actorDeadState_alive) {
 		if(playerAwarenessCounter > 0) {
 			if(hasSummonedTombLegions == false) {
@@ -62,74 +33,41 @@ void MajorClaphamLee::actorSpecificAct() {
 						eng->player->shock(shockValue_heavy, 0);
 						for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
 							if(i == 0) {
-								Monster* monster = dynamic_cast<Monster*> (eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
+								Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
 								monster->playerAwarenessCounter = 999;
+								monster->leader = this;
 								freeCells.erase(freeCells.begin());
 							} else {
 								const int ZOMBIE_TYPE = eng->dice.getInRange(0, 2);
 								ActorDevNames_t devName = actor_zombie;
-								switch (ZOMBIE_TYPE) {
+								switch(ZOMBIE_TYPE) {
 								case 0:
 									devName = actor_zombie;
-								break;
+									break;
 								case 1:
 									devName = actor_zombieAxe;
-								break;
+									break;
 								case 2:
 									devName = actor_bloatedZombie;
-								break;
-								default: {
+									break;
 								}
-								break;
-								}
-								Monster* monster = dynamic_cast<Monster*> (eng->actorFactory->spawnActor(devName, freeCells.at(0)));
+								Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(devName, freeCells.at(0)));
 								monster->playerAwarenessCounter = 999;
+								monster->leader = this;
 								freeCells.erase(freeCells.begin());
 							}
 						}
 						eng->renderer->drawMapAndInterface();
 						hasSummonedTombLegions = true;
 						eng->gameTime->letNextAct();
-						return;
+						return true;
 					}
 				}
 			}
 		}
 	}
 
-	AI_look_becomePlayerAware::learn(this, eng);
-
-	if(AI_makeRoomForFriend::action(this, eng))
-		return;
-
-	if(eng->dice(1, 100) < m_instanceDefinition.erraticMovement)
-		if(AI_moveToRandomAdjacentCell::action(this, eng))
-			return;
-
-	if(attemptAttack(eng->player->pos)) {
-		m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(20));
-		return;
-	}
-
-	vector<coord> path;
-	AI_setPathToPlayerIfAware::learn(this, &path, eng);
-
-	if(AI_handleClosedBlockingDoor::action(this, &path, eng) == true)
-		return;
-
-	if(AI_stepPath::action(this, &path))
-		return;
-
-	if(AI_look_moveTowardsTargetIfVision::action(this, eng))
-		return;
-
-	if(attemptResurrect())
-		return;
-
-	if(AI_moveToRandomAdjacentCell::action(this, eng))
-		return;
-
-	eng->gameTime->letNextAct();
+	return false;
 }
 
 bool Zombie::attemptResurrect() {

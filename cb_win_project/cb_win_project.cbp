@@ -74,10 +74,10 @@
 		<Unit filename="..\src\AI_listen_becomePlayerAware.h" />
 		<Unit filename="..\src\AI_listen_respondWithAggroPhrase.h" />
 		<Unit filename="..\src\AI_look_becomePlayerAware.h" />
-		<Unit filename="..\src\AI_look_moveTowardsTargetIfVision.h" />
 		<Unit filename="..\src\AI_makeRoomForFriend.h" />
 		<Unit filename="..\src\AI_moveToRandomAdjacentCell.h" />
 		<Unit filename="..\src\AI_moveTowardsInterest.h" />
+		<Unit filename="..\src\AI_moveTowardsTargetSimple.h" />
 		<Unit filename="..\src\AI_setPathToLairIfNoLosToLair.h" />
 		<Unit filename="..\src\AI_setPathToLeaderIfNoLosToLeader.h" />
 		<Unit filename="..\src\AI_setPathToPlayerIfAware.h" />

@@ -42,12 +42,6 @@ public:
 	}
 	void moveDirection(const int X_DIR, int Y_DIR);
 
-	void getSpotedEnemies();
-	vector<Actor*> spotedEnemies;
-
-	void getSpotedEnemiesPositions();
-	vector<coord> spotedEnemiesPositions;
-
 	void actorSpecific_init() {}
 
 	void actorSpecific_spawnStartItems();

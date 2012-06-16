@@ -1,48 +1,5 @@
 #include "monsterIncludeFiles.h"
 
-void Cultist::actorSpecificAct() {
-	AI_look_becomePlayerAware::learn(this, eng);
-	AI_listen_becomePlayerAware::learn(this, soundsHeard);
-	AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
-
-	if(AI_makeRoomForFriend::action(this, eng))
-		return;
-
-	if(eng->dice(1, 100) < m_instanceDefinition.erraticMovement)
-		if(AI_moveToRandomAdjacentCell::action(this, eng))
-			return;
-
-	if(eng->dice(1, 100) < 65) {
-		if(AI_castRandomSpellIfAware::action(this, eng))
-			return;
-	}
-
-	if(attemptAttack(eng->player->pos)) {
-		m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(1));
-		return;
-	}
-
-	if(AI_castRandomSpellIfAware::action(this, eng))
-		return;
-
-	vector<coord> path;
-	AI_setPathToPlayerIfAware::learn(this, &path, eng);
-
-	if(AI_handleClosedBlockingDoor::action(this, &path, eng) == true)
-		return;
-
-	if(AI_stepPath::action(this, &path))
-		return;
-
-	if(AI_look_moveTowardsTargetIfVision::action(this, eng))
-		return;
-
-	if(AI_moveToRandomAdjacentCell::action(this, eng))
-		return;
-
-	eng->gameTime->letNextAct();
-}
-
 void CultistShotgun::actorSpecific_spawnStartItems() {
 	Item* item = eng->itemFactory->spawnItem(item_sawedOff);
 	m_inventory->putItemInSlot(slot_wielded, item, true);
@@ -94,10 +51,10 @@ void CultistTeslaCannon::actorSpecific_spawnStartItems() {
 }
 
 void CultistSpikeGun::actorSpecific_spawnStartItems() {
-    m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_spikeGun), true);
-   Item* item = eng->itemFactory->spawnItem(item_ironSpike);
-   item->numberOfItems = 8 + eng->dice(1, 8);
-   m_inventory->putItemInGeneral(item);
+	m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_spikeGun), true);
+	Item* item = eng->itemFactory->spawnItem(item_ironSpike);
+	item->numberOfItems = 8 + eng->dice(1, 8);
+	m_inventory->putItemInGeneral(item);
 }
 
 void CultistPistol::actorSpecific_spawnStartItems() {
@@ -116,7 +73,7 @@ void CultistPistol::actorSpecific_spawnStartItems() {
 	if(eng->dice(1, 100) < 10) {
 		spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 		spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-}
+	}
 }
 
 void CultistPriest::actorSpecific_spawnStartItems() {

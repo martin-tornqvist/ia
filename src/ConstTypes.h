@@ -24,30 +24,30 @@ enum GameEntry_t {
 
 struct GlyphAndColor {
 	GlyphAndColor() :
-		color(clrBlack), glyph(' '), drawUnderscore(false) {
+		color(clrBlack), glyph(' '), underscoreClr(clrBlack) {
 	}
 	void clear() {
 		color = clrBlack;
 		glyph = ' ';
-		drawUnderscore = false;
+		underscoreClr = clrBlack;
 	}
 	SDL_Color color;
 	char glyph;
-	bool drawUnderscore;
+	SDL_Color underscoreClr;
 };
 
 struct TileAndColor {
 	TileAndColor() :
-		color(clrBlack), tile(tile_empty), drawUnderscore(false) {
+		color(clrBlack), tile(tile_empty), underscoreClr(clrBlack) {
 	}
 	void clear() {
 		color = clrBlack;
 		tile = tile_empty;
-		drawUnderscore = false;
+		underscoreClr = clrBlack;
 	}
 	SDL_Color color;
 	Tile_t tile;
-	bool drawUnderscore;
+	SDL_Color underscoreClr;
 };
 
 struct StringAndColor {
