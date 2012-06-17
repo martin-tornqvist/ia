@@ -355,7 +355,7 @@ void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int 
 	}
 }
 
-void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryElement, Engine* engine) {
+void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine) {
 	const bool IS_PLAYER = this == engine->player->getInventory();
 
 	bool isEndingTurn = true;
@@ -366,8 +366,10 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 	}
 
 	Item* item = m_general.at(generalInventoryElement);
+    const ItemDefinition& d = item->getInstanceDefinition();
 
-	if(item->getInstanceDefinition().isMeleeWeapon || item->getInstanceDefinition().isRangedWeapon) {
+//	if(d.isMeleeWeapon || d.isRangedWeapon) {
+    if(purpose == inventoryPurpose_wieldWear && (d.isMeleeWeapon || d.isRangedWeapon)) {
 		Item* const itemBefore = getItemInSlot(slot_wielded);
 		moveItemToSlot(getSlot(slot_wielded), generalInventoryElement);
 		Item* const itemAfter = getItemInSlot(slot_wielded);
@@ -379,7 +381,8 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 			engine->log->addMessage("You are now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".", clr);
 		}
 	}
-	if(item->getInstanceDefinition().isArmor) {
+
+	if(purpose == inventoryPurpose_wieldWear && d.isArmor) {
 		Item* const itemBefore = getItemInSlot(slot_armorBody);
 		moveItemToSlot(getSlot(slot_armorBody), generalInventoryElement);
 		Item* const itemAfter = getItemInSlot(slot_armorBody);
@@ -392,7 +395,7 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 		isEndingTurn = true;
 	}
 
-	if(item->getInstanceDefinition().isMissileWeapon) {
+	if(purpose == inventoryPurpose_missileSelect) {
 		Item* const itemBefore = getItemInSlot(slot_missiles);
 		moveItemToSlot(getSlot(slot_missiles), generalInventoryElement);
 		Item* const itemAfter = getItemInSlot(slot_missiles);
@@ -581,4 +584,17 @@ void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGenera
 		m_general.push_back(item);
 
 	//cout << "ID: " << item->id << endl;
+}
+
+int Inventory::getTotalItemWeight() const {
+    int weight = 0;
+    for(unsigned int i = 0; i < m_slots.size(); i++) {
+        if(m_slots.at(i).item != NULL) {
+            weight += m_slots.at(i).item->getWeight();
+        }
+    }
+    for(unsigned int i = 0; i < m_general.size(); i++) {
+        weight += m_general.at(i)->getWeight();
+    }
+    return weight;
 }

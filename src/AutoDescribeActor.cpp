@@ -11,7 +11,9 @@ void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line
 		line += " and are normally found " + getDwellingLevelStr(def) + ".";
 		line += " They move " + getSpeedStr(archeTypeDef) + ". ";
 	} else {
-		line += " " + def.name_the + " is normally found " + getDwellingLevelStr(def) + ". ";
+	    if(def.spawnStandardMinLevel < LAST_CAVERN_LEVEL) {
+            line += " " + def.name_the + " is normally found " + getDwellingLevelStr(def) + ". ";
+	    }
 	}
 
 	if(def.unique == false) {

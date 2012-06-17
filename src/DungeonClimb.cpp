@@ -63,6 +63,7 @@ void DungeonClimb::travelDown(const int levels) {
 
 	eng->player->target = NULL;
 	eng->player->FOVupdate();
+	eng->player->updateColor();
 	eng->renderer->drawMapAndInterface();
 }
 

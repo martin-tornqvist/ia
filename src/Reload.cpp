@@ -63,7 +63,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 			} else {
 				eng->log->addMessage("You" + swiftStr + " load " + ammoName + ".", messageColor);
 			}
-//			eng->renderer->flip();
+			eng->renderer->drawMapAndInterface();
 		} else {
 			if(eng->map->playerVision[reloaderX][reloaderY]) {
 				eng->log->addMessage(actorName + swiftStr + " reloads.");

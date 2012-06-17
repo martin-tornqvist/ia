@@ -105,11 +105,11 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 }
 
 void StatusBurning::start() {
-	owningActor->setColor(clrRedLight);
+//	owningActor->setColor(clrRedLight);
 }
 
 void StatusBurning::end() {
-	owningActor->resetColor();
+//	owningActor->resetColor();
 }
 
 void StatusBurning::newTurn(Engine* engine) {
@@ -123,16 +123,16 @@ void StatusBurning::newTurn(Engine* engine) {
 		}
 	}
 
-	owningActor->setColor(clrRedLight);
+//	owningActor->setColor(clrRedLight);
 	turnsLeft--;
 }
 
 void StatusFlared::start() {
-	owningActor->setColor(clrRedLight);
+//	owningActor->setColor(clrRedLight);
 }
 
 void StatusFlared::end() {
-	owningActor->resetColor();
+//	owningActor->resetColor();
 }
 
 void StatusFlared::newTurn(Engine* engine) {
@@ -143,7 +143,7 @@ void StatusFlared::newTurn(Engine* engine) {
 		}
 	}
 
-	owningActor->setColor(clrRedLight);
+//	owningActor->setColor(clrRedLight);
 	turnsLeft--;
 }
 
@@ -323,8 +323,9 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
 		effects.push_back(effect);
 		effect->start();
 
+        owningActor->updateColor();
 		eng->player->FOVupdate();
-		eng->renderer->drawMapAndInterface();
+		eng->renderer->drawMapAndInterface(true);
 
 		if(OWNER_IS_PLAYER) {
 			if(NO_MESSAGES == false) {

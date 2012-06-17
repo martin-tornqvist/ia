@@ -48,10 +48,20 @@ void Interface::drawInfoLines() {
 	str = intToString(INS_LONG) + "%";
 	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
 	xPos += str.length();
-	const SDL_Color shortSanClr = INS_SHORT < 50 ? clrGreenLight : INS_SHORT < 75 ? clrYellow : clrRedLight;
+	const SDL_Color shortSanClr = INS_SHORT < 50 ? clrGreenLight : INS_SHORT < 75 ? clrYellow : clrMagenta;
 	str = "(" + intToString(INS_SHORT) + "%)";
 	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
 	xPos += 1 + str.length();
+
+    //Encumbrance
+    eng->renderer->drawText("ENC:", renderArea_characterLines, xPos, yPos, clrGray);
+    xPos += 4;
+    const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
+    const int MAX_W = PLAYER_CARRY_WEIGHT_STANDARD;
+    const int ENC = static_cast<int>((static_cast<double>(TOTAL_W) / static_cast<double>(MAX_W)) * 100.0);
+    str = intToString(ENC) + "%";
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLight : clrWhite);
+    xPos += 1 + str.length();
 
 	//Wielded weapon
 	xPos += 10; //Moving right a bit so missile info fits on the second line later

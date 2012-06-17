@@ -281,16 +281,18 @@ void RenderInventory::drawSlots(vector<InventorySlotButton>* slotButtons, const 
 		slotString += slot->interfaceName;
 
 		const SDL_Color clr = DRAW_BROWSER && browser.getPos().x == 0 && browser.isPosAtKey('a' + i) ? clrWhite : clrRedLight;
-
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft1, yPos, clr);
-
 		slotString = ": ";
-
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft2, yPos, clr);
-
 		slotString = slot->item == NULL ? "(empty)" : eng->itemData->itemInterfaceName(slot->item, false);
-
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft3, yPos, clr);
+
+        if(slot->item != NULL) {
+            const string itemWeightLabel = slot->item->getWeightLabel();
+            if(itemWeightLabel != "") {
+                eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, xPosListsRightStandardOffset - 4, yPos, clrGray);
+            }
+        }
 
 		yPos += 1;
 	}
@@ -314,11 +316,8 @@ void RenderInventory::drawGeneralItems(const int xPosOffset, const InventoryPurp
 		                                  browser.getNrOfItemsInSecondList() == 0) &&
 		                                 browser.getPos().y == static_cast<int>(i);
 		const SDL_Color clr = DRAW_BROWSER && ELEMENT_IS_SELECTED ? clrWhite : clrRedLight;
-
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight1, yPos, clr);
-
 		slotString = eng->itemData->itemInterfaceName(generalItems->at(currentElement), false);
-
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight2, yPos, clr);
 
 		if(purpose == inventoryPurpose_wieldWear || purpose == inventoryPurpose_wieldAlt) {
@@ -336,22 +335,11 @@ void RenderInventory::drawGeneralItems(const int xPosOffset, const InventoryPurp
 				eng->renderer->drawText(weaponDataLine, renderArea_mainScreen, x, yPos, clrWhite);
 			}
 		}
-//        if(purpose == inventoryPurpose_read) {
-//            Scroll* scroll = dynamic_cast<Scroll*> (generalItems->at(currentElement));
-//            const bool IS_IDENTIFIED = scroll->getInstanceDefinition().isIdentified;
-//            const string chance = intToString(scroll->getChanceToLearnOrCastFromMemory(false, eng));
-//
-//            string fill;
-//            fill.resize(0);
-//            const unsigned int FILL_SIZE = 42 - slotString.size();
-//            for(unsigned int i = 0; i < FILL_SIZE; i++) {
-//                fill.push_back('.');
-//            }
-//            eng->renderer->drawText(fill, renderArea_mainScreen, xPosOffset + xPosListsRight2 + slotString.size(), yPos, clrGray);
-//            const int x = 42;
-//            const string info = "(" + chance + "% chance to " + (IS_IDENTIFIED == false ? "identify" : "learn") + ")";
-//            eng->renderer->drawText(info, renderArea_mainScreen, x, yPos, clrWhite);
-//        }
+
+		const string itemWeightLabel = generalItems->at(currentElement)->getWeightLabel();
+		if(itemWeightLabel != "") {
+            eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, MAP_X_CELLS - 5, yPos, clrGray);
+		}
 
 		yPos += 1;
 	}

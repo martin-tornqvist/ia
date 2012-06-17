@@ -70,7 +70,7 @@ public:
 
 	void moveItemToSlot(InventorySlot* inventoryslot, const unsigned int generalInventoryElement);
 
-	void equipGeneralItemAndEndTurn(const unsigned int generalInventoryElement, Engine* engine);
+	void equipGeneralItemAndEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine);
 	void equipGeneralItemToAltAndEndTurn(const unsigned int generalInventoryElement, Engine* engine);
 	void swapWieldedAndPrepared(const bool END_TURN, Engine* engine);
 
@@ -118,6 +118,8 @@ public:
 	vector<Item*>* getGeneral() {
 		return &m_general;
 	}
+
+	int getTotalItemWeight() const;
 
 	void addSaveLines(vector<string>& lines) const;
 	void setParametersFromSaveLines(vector<string>& lines, Engine* const engine);

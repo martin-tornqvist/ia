@@ -13,6 +13,7 @@ void Weapon::setRandomMeleePlus(Engine* const engine) {
 	}
 
 	m_instanceDefinition.meleeDmg.plus = plus;
+	m_instanceDefinition.missileDmg.plus = plus;
 }
 
 void Incinerator::weaponSpecific_projectileObstructed(int originX, int originY, Actor* actorHit, Engine* engine) {

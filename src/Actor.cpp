@@ -27,6 +27,7 @@ void Actor::newTurn() {
 	if(m_statusEffectsHandler->allowAct() == false) {
 		eng->gameTime->letNextAct();
 	} else {
+	    updateColor();
 		act();
 	}
 }
@@ -131,6 +132,8 @@ void Actor::place(const coord pos_, ActorDefinition* const actorDefinition, Engi
 	if(this != eng->player) {
 		actorSpecific_spawnStartItems();
 	}
+
+	updateColor();
 }
 
 void Actor::teleportToRandom() {
@@ -158,12 +161,19 @@ void Actor::teleportToRandom() {
 	}
 }
 
-void Actor::resetColor() {
-	if(deadState == actorDeadState_alive) {
-		m_instanceDefinition.color = m_archetypeDefinition->color;
-	} else {
-		m_instanceDefinition.color = clrRedLight;
-	}
+void Actor::updateColor() {
+    if(deadState != actorDeadState_alive) {
+        m_instanceDefinition.color = clrRedLight;
+        return;
+    }
+
+    const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+    if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+        m_instanceDefinition.color = clrFromStatusEffect;
+        return;
+    }
+
+    m_instanceDefinition.color = m_archetypeDefinition->color;
 }
 
 bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {

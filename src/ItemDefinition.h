@@ -12,8 +12,14 @@ enum NutritionValue_t {
 };
 
 enum ItemWeight_t {
-	itemWeight_feather, itemWeight_light, itemWeight_medium, itemWeight_heavy
+    itemWeight_none = 0,
+	itemWeight_extraLight = 1, //Ammo...
+	itemWeight_light = 10, //Dynamite, daggers...
+	itemWeight_medium = 60, //Most firearms, leather jackets...
+	itemWeight_heavy = 170 //Heavy armor, heavy weapons...
 };
+
+const int PLAYER_CARRY_WEIGHT_STANDARD = 500;
 
 enum ItemDefArchetypes_t {
 	itemDef_general,

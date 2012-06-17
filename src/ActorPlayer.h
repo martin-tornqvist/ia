@@ -76,6 +76,8 @@ public:
 
 	void kick();
 
+	void updateColor();
+
 private:
 	//void decreaseHungerByNumber(const int satiate);
 	//int hungerLevel;

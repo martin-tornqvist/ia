@@ -20,7 +20,7 @@ using namespace std;
 void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const {
 	switch(archetype) {
 	case itemDef_general: {
-		d->itemWeight = itemWeight_medium;
+		d->itemWeight = itemWeight_none;
 		d->spawnStandardMinDLVL = 1;
 		d->spawnStandardMaxDLVL = 999999;
 		d->maxStackSizeAtSpawn = 1;
@@ -103,6 +103,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 	case itemDef_rangedWpn: {
 		resetDef(d, itemDef_general);
 		d->isStackable = false;
+		d->itemWeight = itemWeight_medium;
 		d->glyph = '}';
 		d->color = clrWhite;
 		d->isMeleeWeapon = true;
@@ -127,6 +128,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
 	case itemDef_missileWeapon: {
 		resetDef(d, itemDef_general);
+		d->itemWeight = itemWeight_extraLight;
 		d->isStackable = true;
 		d->isMissileWeapon = true;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
@@ -135,7 +137,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
 	case itemDef_ammo: {
 		resetDef(d, itemDef_general);
-		d->itemWeight = itemWeight_light;
+		d->itemWeight = itemWeight_extraLight;
 		d->glyph = '{';
 		d->color = clrWhite;
 		d->tile = tile_ammo;
@@ -146,6 +148,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
 	case itemDef_ammoClip: {
 		resetDef(d, itemDef_ammo);
+		d->itemWeight = itemWeight_light;
 		d->isStackable = false;
 		d->isAmmoClip = true;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
@@ -155,7 +158,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 	case itemDef_scroll: {
 		resetDef(d, itemDef_general);
 		d->chanceToIncludeInSpawnList = 75;
-		d->itemWeight = itemWeight_feather;
+		d->itemWeight = itemWeight_none;
 		d->isIdentified = false;
 		d->glyph = '?';
 		d->color = clrWhite;
@@ -205,6 +208,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
 	case itemDef_explosive: {
 		resetDef(d, itemDef_general);
+		d->itemWeight = itemWeight_light;
 		d->isExplosive = true;
 		d->glyph = '-';
 		d->maxStackSizeAtSpawn = 3;
@@ -258,6 +262,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_sawedOff);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_shotgun;
 	d->isShotgun = true;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a shotgun");
@@ -268,7 +273,6 @@ void ItemData::makeList() {
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	d->causeOfDeathMessage = "Shotgun";
 	d->reloadAudio = audio_shotgun_load_shell;
 	itemDefinitions[d->devName] = d;
@@ -276,6 +280,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_pumpShotgun);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_shotgun;
 	d->isShotgun = true;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a shotgun");
@@ -286,7 +291,6 @@ void ItemData::makeList() {
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	d->causeOfDeathMessage = "Shotgun";
 	d->rangedAudio = audio_shotgunPump_fire;
 	d->reloadAudio = audio_shotgun_load_shell;
@@ -301,6 +305,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_incinerator);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
+	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_incinerator;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with an Incinerator");
 	d->rangedDmg = DiceParam(1, 3);
@@ -314,12 +319,12 @@ void ItemData::makeList() {
 	d->rangedMissileColor = clrRedLight;
 	d->spawnStandardMinDLVL = 4;
 	d->rangedDmgLabelOverRide = "?";
-	d->itemWeight = itemWeight_heavy;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_incineratorShell);
 	resetDef(d, itemDef_ammo);
 	d->name = ItemName("Napalm shell", "Napalm shells", "a Napalm shell");
+	d->itemWeight = itemWeight_light;
 	d->spawnStandardMinDLVL = 3;
 	d->maxStackSizeAtSpawn = 2;
 	itemDefinitions[d->devName] = d;
@@ -327,6 +332,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_machineGun);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_tommyGun;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Tommy Gun");
 	d->isMachineGun = true;
@@ -338,7 +344,6 @@ void ItemData::makeList() {
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
 	d->rangedSoundMessage = "You hear the burst of a machine gun.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
-	d->itemWeight = itemWeight_medium;
 	d->causeOfDeathMessage = "Machine gun fire";
 	d->rangedAudio = audio_tommygun_fire;
 	itemDefinitions[d->devName] = d;
@@ -352,6 +357,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_pistol);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_pistol;
 	d->rangedDmg = DiceParam(1, 8, 4);
 	d->rangedAmmoTypeUsed = item_pistolClip;
@@ -361,7 +367,6 @@ void ItemData::makeList() {
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
 	d->rangedSoundMessage = "You hear a pistol being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
-	d->itemWeight = itemWeight_light;
 	d->causeOfDeathMessage = "Shot with a pistol";
 	d->rangedAudio = audio_pistol_fire;
 	d->reloadAudio = audio_pistol_reload;
@@ -370,6 +375,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_flareGun);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_flareGun;
 	d->rangedDmg = DiceParam(1, 3, 0);
 	d->rangedDmgLabelOverRide = "?";
@@ -380,7 +386,6 @@ void ItemData::makeList() {
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
 	d->rangedSoundMessage = "You hear a flare gun being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
-	d->itemWeight = itemWeight_light;
 	d->causeOfDeathMessage = "Shot with a flare gun";
 	d->rangedStatusEffect = new StatusFlared(eng);
 	//d->rangedAudio = audio_pistol_fire;
@@ -396,6 +401,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_teslaCanon);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Tesla Canon", "Tesla Canons", "a Tesla Canon");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_teslaCannon;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Tesla Cannon");
 	d->isMachineGun = true;
@@ -411,13 +417,13 @@ void ItemData::makeList() {
 	d->rangedMissileGlyph = '*';
 	d->rangedMissileColor = clrYellow;
 	d->spawnStandardMinDLVL = 7;
-	d->itemWeight = itemWeight_heavy;
 	d->causeOfDeathMessage = "Fried by a Tesla Cannon";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_spikeGun);
 	resetDef(d, itemDef_rangedWpn);
 	d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_tommyGun;
 	d->color = clrBlueLight;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Spike Gun");
@@ -435,7 +441,6 @@ void ItemData::makeList() {
 	d->rangedMissileGlyph = '/';
 	d->rangedMissileColor = clrGray;
 	d->spawnStandardMinDLVL = 4;
-	d->itemWeight = itemWeight_heavy;
 	d->causeOfDeathMessage = "Perforated by a Spike Gun";
 	itemDefinitions[d->devName] = d;
 
@@ -449,34 +454,34 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_dynamite);
 	resetDef(d, itemDef_explosive);
 	d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_dynamite;
 	d->color = clrRedLight;
-	d->itemWeight = itemWeight_light;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_flare);
 	resetDef(d, itemDef_explosive);
 	d->name = ItemName("Flare", "Flares", "a Flare");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_flare;
 	d->color = clrGray;
 	d->glyph = '{';
-	d->itemWeight = itemWeight_light;
 	d->isAmmo = true;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_molotov);
 	resetDef(d, itemDef_explosive);
 	d->name = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_molotov;
 	d->color = clrWhite;
-	d->itemWeight = itemWeight_light;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_throwingKnife);
 	resetDef(d, itemDef_missileWeapon);
 	d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
+	d->itemWeight = itemWeight_extraLight;
 	d->tile = tile_dagger;
-	d->itemWeight = itemWeight_light;
 	d->glyph = '/';
 	d->color = clrWhite;
 	d->missileBaseAttackSkill = 0;
@@ -487,8 +492,8 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_rock);
 	resetDef(d, itemDef_missileWeapon);
 	d->name = ItemName("Rock", "Rocks", "a Rock");
+	d->itemWeight = itemWeight_extraLight;
 	d->tile = tile_rock;
-	d->itemWeight = itemWeight_light;
 	d->glyph = '*';
 	d->color = clrGray;
 	d->missileBaseAttackSkill = 10;
@@ -499,101 +504,104 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_dagger);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Dagger", "Daggers", "a Dagger");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_dagger;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Dagger");
 	d->meleeDmg = DiceParam(1, 4);
 	d->meleeBaseAttackSkill = 20;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_light;
 	d->causeOfDeathMessage = "Stabbed with a dagger";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_hatchet);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Hatchet", "Hatchets", "a Hatchet");
+	d->itemWeight = itemWeight_light;
 	d->tile = tile_axe;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Hatchet");
 	d->meleeDmg = DiceParam(1, 5);
 	d->meleeBaseAttackSkill = 15;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_light;
+	d->missileBaseAttackSkill = -5;
+	d->missileDmg = DiceParam(1, 10);
+	d->isMissileWeapon = true;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_club);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Club", "Clubs", "a Club");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_club;
 	d->color = clrBrown;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Club");
 	d->meleeDmg = DiceParam(2, 3);
 	d->meleeBaseAttackSkill = 10;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_hammer);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Hammer", "Hammers", "a Hammer");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_hammer;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Hammer");
 	d->meleeDmg = DiceParam(2, 4);
 	d->meleeBaseAttackSkill = 5;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_machete);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Machete", "Machetes", "a Machete");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_machete;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Machete");
 	d->meleeDmg = DiceParam(2, 5);
 	d->meleeBaseAttackSkill = 0;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_axe);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Axe", "Axes", "an Axe");
+	d->itemWeight = itemWeight_medium;
 	d->tile = tile_axe;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with an axe");
 	d->meleeDmg = DiceParam(2, 6);
 	d->meleeBaseAttackSkill = -5;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_medium;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_pitchFork);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
+	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_pitchfork;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Pitchfork");
 	d->meleeDmg = DiceParam(3, 4);
 	d->meleeBaseAttackSkill = -10;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_heavy;
 	d->meleeCausesKnockBack = true;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_sledgeHammer);
 	resetDef(d, itemDef_meleeWpn);
 	d->name = ItemName("Sledge Hammer", "Sledge Hammers", "a Sledge Hammer");
+	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_sledgeHammer;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Sledge Hammer");
 	d->meleeDmg = DiceParam(3, 5);
 	d->meleeBaseAttackSkill = -15;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->itemWeight = itemWeight_heavy;
 	d->meleeCausesKnockBack = true;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_ironSpike);
 	resetDef(d, itemDef_ammo);
 	d->name = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
+	d->itemWeight = itemWeight_extraLight;
 	d->tile = tile_ironSpike;
 	d->isStackable = true;
-	d->itemWeight = itemWeight_light;
 	d->color = clrGray;
 	d->glyph = '|';
 	d->maxStackSizeAtSpawn = 12;
@@ -881,6 +889,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_armorLeatherJacket);
 	resetDef(d, itemDef_armor);
 	d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
+	d->itemWeight = itemWeight_medium;
 	d->color = clrGray;
 	d->spawnStandardMinDLVL = 1;
 	d->armorData.absorptionPoints[damageType_acid] = 1;
@@ -897,6 +906,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_armorIronSuit);
 	resetDef(d, itemDef_armor);
 	d->name = ItemName("Iron Suit", "", "an Iron Suit");
+	d->itemWeight = itemWeight_heavy;
 	d->color = clrWhite;
 	d->spawnStandardMinDLVL = 2;
 	d->armorData.absorptionPoints[damageType_acid] = 1;
@@ -913,6 +923,7 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_armorFlackJacket);
 	resetDef(d, itemDef_armor);
 	d->name = ItemName("Flak Jacket", "", "a Flak Jacket");
+	d->itemWeight = itemWeight_heavy;
 	d->color = clrGreen;
 	d->spawnStandardMinDLVL = 3;
 	d->armorData.absorptionPoints[damageType_acid] = 1;

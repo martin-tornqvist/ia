@@ -419,7 +419,10 @@ void Player::incrInsanityLong() {
 
 	insanityLong += eng->dice(1, 4) + 2;
 
-	insanityShort = max(0, insanityShort - 40);
+	insanityShort = max(0, insanityShort - 60);
+
+	updateColor();
+	eng->renderer->drawMapAndInterface();
 
 	if(insanityLong >= 100) {
 		popupMessage += "Your mind can no longer withstand what it has grasped. You are hopelessly lost.";
@@ -703,6 +706,44 @@ void Player::testPhobias() {
 	}
 }
 
+void Player::updateColor() {
+    SDL_Color& clr = m_instanceDefinition.color;
+
+    if(deadState != actorDeadState_alive) {
+        clr = clrRedLight;
+        return;
+    }
+
+    const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+    if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+        clr = clrFromStatusEffect;
+        return;
+    }
+
+    if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
+        clr = clrYellow;
+        return;
+    }
+
+    const SDL_Color& archetypeClr = m_archetypeDefinition->color;
+
+    const int CUR_SHOCK = insanityShort + insanityShortTemp;
+
+    if(CUR_SHOCK > 60) {
+        const SDL_Color insaneClr = clrMagenta;
+
+        const double fIns = static_cast<double>((CUR_SHOCK * 2) - 100) / 100;
+        const double fArc = 1.0 - fIns;
+
+        clr.r = (static_cast<double>(archetypeClr.r) * fArc) + (static_cast<double>(insaneClr.r) * fIns);
+        clr.g = (static_cast<double>(archetypeClr.g) * fArc) + (static_cast<double>(insaneClr.g) * fIns);
+        clr.b = (static_cast<double>(archetypeClr.b) * fArc) + (static_cast<double>(insaneClr.b) * fIns);
+        return;
+    }
+
+    clr = archetypeClr;
+}
+
 void Player::act() {
 	// Dynamite
 	if(dynamiteFuseTurns > 0) {
@@ -719,7 +760,7 @@ void Player::act() {
 	if(dynamiteFuseTurns == 0) {
 		eng->log->addMessage("The dynamite explodes in your hands!");
 		eng->explosionMaker->runExplosion(pos);
-		resetColor();
+		updateColor();
 		dynamiteFuseTurns = -1;
 	}
 
@@ -729,7 +770,7 @@ void Player::act() {
 	}
 	if(molotovFuseTurns == 0) {
 		eng->log->addMessage("The Molotov Cocktail explodes in your hands!");
-		resetColor();
+		updateColor();
 		eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng));
 		molotovFuseTurns = -1;
 	}
@@ -740,7 +781,7 @@ void Player::act() {
 	}
 	if(flareFuseTurns == 0) {
 		eng->log->addMessage("The flare is extinguished.");
-		resetColor();
+		updateColor();
 		flareFuseTurns = -1;
 	}
 
@@ -775,6 +816,7 @@ void Player::act() {
 			}
 			shock(shockValue_heavy, 0);
 			shock(shockValue_heavy, 0);
+			eng->renderer->drawMapAndInterface(true);
 		} else {
 			if(eng->map->getDungeonLevel() != 0) {
 				shock(shockValue_mild, 0);
@@ -960,7 +1002,7 @@ void Player::explosiveThrown() {
 	dynamiteFuseTurns = -1;
 	molotovFuseTurns = -1;
 	flareFuseTurns = -1;
-	resetColor();
+	updateColor();
 	eng->renderer->drawMapAndInterface();
 }
 
@@ -994,6 +1036,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 		bool isSwiftMoveAlloed = false;
 
 		if(dest != pos) {
+		    // Attack?
 			Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
 			if(actorAtDest != NULL) {
 				if(m_statusEffectsHandler->allowAttackMelee(true) == true) {
@@ -1015,6 +1058,8 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 			}
 
 			// This point reached means no actor in the destination cell.
+
+			// Blocking mobile or static features?
 			bool featuresAllowMove = eng->map->featuresStatic[dest.x][dest.y]->isMovePassable(this);
 			vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(dest);
 			if(featuresAllowMove) {
@@ -1027,6 +1072,14 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 			}
 
 			if(featuresAllowMove) {
+
+			    // Encumbered?
+			    if(m_inventory->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
+                    eng->log->addMessage("You care too encumbered to move.");
+                    eng->renderer->flip();
+                    return;
+			    }
+
 				isSwiftMoveAlloed = true;
 				const coord oldPos = pos;
 				pos = dest;

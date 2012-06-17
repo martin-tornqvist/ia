@@ -69,7 +69,7 @@ public:
 
 	virtual void registerHeardSound(const Sound& sound) = 0;
 
-	virtual void resetColor();
+	virtual void updateColor();
 
 	//Function taking into account FOV, invisibility, status, etc
 	//This is the final word on wether an actor can visually percieve another actor.
@@ -102,9 +102,9 @@ public:
 	const SDL_Color& getColor() const {
 		return m_instanceDefinition.color;
 	}
-	void setColor(const SDL_Color color) {
-		m_instanceDefinition.color = color;
-	}
+//	void setColor(const SDL_Color color) {
+//		m_instanceDefinition.color = color;
+//	}
 	const Tile_t& getTile() const {
 		return m_instanceDefinition.tile;
 	}

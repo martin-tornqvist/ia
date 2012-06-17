@@ -45,8 +45,6 @@ public:
       return *m_archetypeDefinition;
 	}
 
-	int numberOfItems;
-
 	SDL_Color getColor() {
 		return m_instanceDefinition.color;
 	}
@@ -77,6 +75,20 @@ public:
 	virtual void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
 		(void)lines;
 	}
+
+	int getWeight() const {
+        return m_instanceDefinition.itemWeight * numberOfItems;
+	}
+
+	string getWeightLabel() const {
+        const int WEIGHT = getWeight();
+        if(WEIGHT <= (itemWeight_extraLight + itemWeight_light)/2) return " - ";
+        if(WEIGHT <= (itemWeight_light + itemWeight_medium)/2) return "LGT";
+        if(WEIGHT <= (itemWeight_medium + itemWeight_heavy)/2) return "MED";
+        return "HVY";
+	}
+
+	int numberOfItems;
 
 protected:
 	ItemDefinition m_instanceDefinition;

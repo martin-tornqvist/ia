@@ -115,6 +115,10 @@ public:
 	virtual void isHit() {
 	}
 
+	virtual SDL_Color getColorOwningActor() {
+        return clrBlack;
+	}
+
 	virtual bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
 		(void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
 		return true;
@@ -653,6 +657,10 @@ public:
 		return 0;
 	}
 
+	SDL_Color getColorOwningActor() {
+        return clrRedLight;
+	}
+
 	void start();
 	void end();
 	void newTurn(Engine* engine);
@@ -714,6 +722,10 @@ public:
 	}
 	int getSaveAbilityModifier() {
 		return 0;
+	}
+
+    SDL_Color getColorOwningActor() {
+        return clrRedLight;
 	}
 
 	void start();
@@ -1951,6 +1963,16 @@ public:
 			}
 		}
 	}
+
+    SDL_Color getColor() {
+        for(unsigned int i = 0; i < effects.size(); i++) {
+            const SDL_Color& clr = effects.at(i)->getColorOwningActor();
+            if(clr.r != 0 || clr.g != 0 || clr.b != 0) {
+                return effects.at(i)->getColorOwningActor();
+            }
+        }
+        return clrBlack;
+    }
 
 	vector<StatusEffect*> effects;
 

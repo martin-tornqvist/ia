@@ -18,32 +18,32 @@ struct ActorDefinition;
 
 class ItemData {
 public:
-	ItemData(Engine* engine) :
-		eng(engine) {
-		makeList();
-	}
-	~ItemData() {
-		for(unsigned int i = 1; i < endOfItemDevNames; i++)
-			delete itemDefinitions[i];
-	}
+    ItemData(Engine* engine) :
+        eng(engine) {
+        makeList();
+    }
+    ~ItemData() {
+        for(unsigned int i = 1; i < endOfItemDevNames; i++)
+            delete itemDefinitions[i];
+    }
 
-	ItemDefinition* itemDefinitions[endOfItemDevNames];
+    ItemDefinition* itemDefinitions[endOfItemDevNames];
 
-	string itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const;
+    string itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const;
 
-	bool isWeaponStronger(const ItemDefinition& oldDef, const ItemDefinition& newDef, bool melee);
+    bool isWeaponStronger(const ItemDefinition& oldDef, const ItemDefinition& newDef, bool melee);
 
-	void addSaveLines(vector<string>& lines) const;
-	void setParametersFromSaveLines(vector<string>& lines);
+    void addSaveLines(vector<string>& lines) const;
+    void setParametersFromSaveLines(vector<string>& lines);
 
 private:
-	void makeList();
+    void makeList();
 
-	void setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor, const EntityStrength_t dmgStrength) const;
+    void setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor, const EntityStrength_t dmgStrength) const;
 
-	void resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const;
+    void resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const;
 
-	Engine* eng;
+    Engine* eng;
 };
 
 #endif
