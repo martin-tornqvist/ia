@@ -25,7 +25,7 @@ struct ShotGunProjectile {
 	double xIncr, yIncr;
 };
 
-bool isCellOnLine(vector<coord> line, int x, int y) {
+bool Attack::isCellOnLine(vector<coord> line, int x, int y) {
 	for(unsigned int i = 0; i < line.size(); i++) {
 		if(line.at(i).x == x && line.at(i).y == y) {
 			return true;

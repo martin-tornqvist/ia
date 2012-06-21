@@ -122,7 +122,7 @@ void Populate::populate() const {
 		}
 
 		int n = 0;
-		for(int i = 0; i < nrOfTrapsOnMap; i++) {
+		for(int ii = 0; ii < nrOfTrapsOnMap; ii++) {
 			if(freeCellsTraps.size() > 0) {
 				n = eng->dice(1, freeCellsTraps.size()) - 1;
 				const coord pos(freeCellsTraps.at(n));
@@ -144,8 +144,8 @@ void Populate::populate() const {
 	nrOfMonstersOnMap += eng->dice(1, nrOfMonstersOnMap / 4);
 
 	//Spawn monsters randomly from the coord-vector
-	for(int i = 0; i < nrOfMonstersOnMap; i++) {
-		i -= spawnGroupOfMonstersAtFreeCells(freeCells, false, true) == false ? 1 : 0;
+	for(int ii = 0; ii < nrOfMonstersOnMap; ii++) {
+		ii -= spawnGroupOfMonstersAtFreeCells(freeCells, false, true) == false ? 1 : 0;
 	}
 }
 

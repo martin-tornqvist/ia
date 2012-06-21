@@ -29,9 +29,9 @@ public:
 
 	void clearLog();
 
-	void addLineToHistory(const string line) {
+	void addLineToHistory(const string lineToAdd) {
 		vector<Message> historyLine;
-		historyLine.push_back(Message(line, clrWhite));
+		historyLine.push_back(Message(lineToAdd, clrWhite));
 		history.push_back(historyLine);
 	}
 
@@ -60,7 +60,7 @@ private:
 	void drawHistoryInterface(const int topLine, const int bottomLine) const;
 
 	//Used by normal log, and history viewer
-	void drawLine(const vector<Message>& line, const int yCell) const;
+	void drawLine(const vector<Message>& lineToDraw, const int yCell) const;
 
 	vector<Message> line;
 

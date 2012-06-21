@@ -30,19 +30,19 @@ public:
 		return xp + (isVictory ? xp / 5 : 0);
 	}
 	int getXp() const {
-	   return xp;
+		return xp;
 	}
 	string getName() const {
 		return name;
 	}
 	int getLvl() const {
-	   return lvl;
+		return lvl;
 	}
 	int getDlvl() const {
-	   return dlvl;
+		return dlvl;
 	}
 	int getInsanity() const {
-	   return insanity;
+		return insanity;
 	}
 	bool isVictoryGame() const {
 		return isVictory;
@@ -72,6 +72,8 @@ private:
 	void readFile(vector<HighScoreEntry>& entries);
 
 	void renderHighScoreScreen(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) const;
+
+	static bool isEntryHigher(const HighScoreEntry& current, const HighScoreEntry& other);
 
 	Engine* eng;
 };

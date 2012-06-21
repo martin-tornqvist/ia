@@ -60,12 +60,12 @@ public:
 
 										bool goodCandidateFound = true;
 
-										for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-											actor = engine->gameTime->getActorAt(i);
+										for(unsigned int iii = 0; iii < LOOP_SIZE; iii++) {
+											actor = engine->gameTime->getActorAt(iii);
 											if(actor != engine->player && actor != monsterActing) {
 												otherMonster = dynamic_cast<Monster*>(actor);
-												bool foundNeighbourWithoutPlayerVis = isNeighbourAndWithoutVision(monsterActing, otherMonster,
-												                                      blockersVision, engine);
+												foundNeighbourWithoutPlayerVis =
+												   isNeighbourAndWithoutVision(monsterActing, otherMonster, blockersVision, engine);
 												if(otherMonster->checkIfSeeActor(*engine->player, blockersVision) || foundNeighbourWithoutPlayerVis) {
 													if(checkIfBlockingMonster(candidates.at(ii), otherMonster, engine)
 													      || foundNeighbourWithoutPlayerVis) {

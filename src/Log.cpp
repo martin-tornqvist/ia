@@ -24,22 +24,22 @@ void MessageLog::clearLog() {
 	}
 }
 
-void MessageLog::drawLine(const vector<Message>& line, const int yCell) const {
+void MessageLog::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
 	SDL_Color clr;
 	string str;
 	int drawXpos;
 
-	const unsigned int LINE_SIZE = line.size();
+	const unsigned int LINE_SIZE = lineToDraw.size();
 
 	for(unsigned int i = 0; i < LINE_SIZE; i++) {
-		const Message& curMessage = line.at(i);
+		const Message& curMessage = lineToDraw.at(i);
 		clr = curMessage.clr;
 		str = curMessage.str;
 		if(curMessage.repeats > 1) {
 			str += curMessage.strRepeats;
 		}
 
-		drawXpos = findCurXpos(line, i);
+		drawXpos = findCurXpos(lineToDraw, i);
 
 		eng->renderer->drawText(str, renderArea_log, drawXpos, yCell, clr);
 	}
@@ -59,12 +59,12 @@ void MessageLog::displayHistory() {
 
 	string str;
 
-	int topElement = max(0, static_cast<int> (history.size()) - static_cast<int> (MAP_Y_CELLS));
-	int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (history.size()) - 1);
+	int topElement = max(0, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS));
+	int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
 	drawHistoryInterface(topElement, btmElement);
 	int yCell = 1;
 	for(int i = topElement; i <= btmElement; i++) {
-		drawLine(history.at(static_cast<unsigned int> (i)), yCell);
+		drawLine(history.at(static_cast<unsigned int>(i)), yCell);
 		yCell++;
 	}
 
@@ -75,24 +75,24 @@ void MessageLog::displayHistory() {
 	bool done = false;
 	while(done == false) {
 		while(SDL_PollEvent(&event)) {
-			switch (event.type) {
+			switch(event.type) {
 			case SDL_KEYDOWN: {
 				int key = event.key.keysym.sym;
 
-				switch (key) {
+				switch(key) {
 				case SDLK_2:
 				case SDLK_KP2:
 				case SDLK_DOWN: {
-					topElement = max(0, min(topElement + static_cast<int> (MAP_Y_CELLS), static_cast<int> (history.size())
-							- static_cast<int> (MAP_Y_CELLS)));
-					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (history.size()) - 1);
+					topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS), static_cast<int>(history.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
+					btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
 
 					eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
 
 					drawHistoryInterface(topElement, btmElement);
 					yCell = 1;
 					for(int i = topElement; i <= btmElement; i++) {
-						drawLine(history.at(static_cast<unsigned int> (i)), yCell);
+						drawLine(history.at(static_cast<unsigned int>(i)), yCell);
 						yCell++;
 					}
 					eng->renderer->flip();
@@ -101,14 +101,14 @@ void MessageLog::displayHistory() {
 				case SDLK_8:
 				case SDLK_KP8:
 				case SDLK_UP: {
-					topElement = max(0, min(topElement - static_cast<int> (MAP_Y_CELLS), static_cast<int> (history.size())
-							- static_cast<int> (MAP_Y_CELLS)));
-					int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int> (history.size()) - 1);
+					topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS), static_cast<int>(history.size())
+					                        - static_cast<int>(MAP_Y_CELLS)));
+					btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
 					eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
 					drawHistoryInterface(topElement, btmElement);
 					yCell = 1;
 					for(int i = topElement; i <= btmElement; i++) {
-						drawLine(history.at(static_cast<unsigned int> (i)), yCell);
+						drawLine(history.at(static_cast<unsigned int>(i)), yCell);
 						yCell++;
 					}
 					eng->renderer->flip();
@@ -144,32 +144,35 @@ void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) c
 		eng->renderer->drawText(" No message history ", renderArea_screen, 3, 1, clrWhite);
 	} else {
 		eng ->renderer->drawText(" Displaying messages " + intToString(topLine) + "-" + intToString(bottomLine) + " of "
-				+ intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
+		                         + intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
 	}
 
 	eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
 	eng->renderer->drawText(" [2/8, Down/Up] to navigate  [Space/Esc] to exit. ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
-int MessageLog::findCurXpos(const vector<Message>& line, const unsigned int messageNr) const {
-	if(messageNr == 0)
+int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int messageNr) const {
+	if(messageNr == 0) {
 		return 0;
+	}
 
-	const unsigned int LINE_SIZE = line.size();
+	const unsigned int LINE_SIZE = afterLine.size();
 
-	if(LINE_SIZE == 0)
+	if(LINE_SIZE == 0) {
 		return 0;
+	}
 
 	int xPos = 0;
 
 	for(unsigned int i = 0; i < messageNr; i++) {
 
-		const Message& curMessage = line.at(i);
+		const Message& curMessage = afterLine.at(i);
 
-		xPos += static_cast<int> (curMessage.str.length());
+		xPos += static_cast<int>(curMessage.str.length());
 
-		if(curMessage.repeats > 1)
+		if(curMessage.repeats > 1) {
 			xPos += 4;
+		}
 
 		xPos++;
 	}
@@ -194,7 +197,7 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, bool quer
 
 		const int CUR_X_POS = findCurXpos(line, line.size());
 
-		const bool MESSAGE_FITS = CUR_X_POS + static_cast<int> (text.size()) + REPEAT_LABEL_LENGTH + MORE_PROMPT_LENGTH < MAP_X_CELLS;
+		const bool MESSAGE_FITS = CUR_X_POS + static_cast<int>(text.size()) + REPEAT_LABEL_LENGTH + MORE_PROMPT_LENGTH < MAP_X_CELLS;
 
 		if(MESSAGE_FITS == false) {
 			eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS, 0, clrCyanLight);

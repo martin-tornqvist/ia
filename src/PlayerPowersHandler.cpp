@@ -148,7 +148,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
 		string fill;
 		fill.resize(0);
 		const unsigned int FILL_SIZE = 28 - str.size();
-		for(unsigned int i = 0; i < FILL_SIZE; i++) {
+		for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {
 			fill.push_back('.');
 		}
 		eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, clrGray);

@@ -10,7 +10,7 @@ public:
 		if(monster->deadState == actorDeadState_alive && monster->isRoamingAllowed) {
 			if(soundsHeard.size() != 0) {
 				for(unsigned int i = 0; i < soundsHeard.size(); i++) {
-					if(soundsHeard.at(i).isAlertingMonsters()) {
+					if(soundsHeard.at(i).getIsAlertingMonsters()) {
 						monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
 					}
 				}

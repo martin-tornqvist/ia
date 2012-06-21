@@ -330,14 +330,14 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
 
 	if(MANGLED == false) {
 		coord newCoord;
-		Feature* f = eng->map->featuresStatic[pos.x][pos.y];
+		Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
 		//TODO this should be decided with a floodfill instead
-		if(f->canHaveCorpse() == false) {
+		if(featureHere->canHaveCorpse() == false) {
 			for(int dx = -1; dx <= 1; dx++) {
 				for(int dy = -1; dy <= 1; dy++) {
 					newCoord = pos + coord(dx, dy);
-					f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-					if(f->canHaveCorpse() == true) {
+					featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+					if(featureHere->canHaveCorpse() == true) {
 						pos.set(newCoord);
 						dx = 9999;
 						dy = 9999;

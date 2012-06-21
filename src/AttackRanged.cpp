@@ -193,9 +193,9 @@ void Attack::projectileFire(const coord origin, coord target, Weapon* const weap
 				//PROJECTILE HIT FEATURE?
 				vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(projectiles.at(p)->pos);
 				Feature* featureBlockingShot = NULL;
-				for(unsigned int i = 0; i < featureMobs.size(); i++) {
-					if(featureMobs.at(i)->isShootPassable() == false) {
-						featureBlockingShot = featureMobs.at(i);
+				for(unsigned int featMobIndex = 0; featMobIndex < featureMobs.size(); featMobIndex++) {
+					if(featureMobs.at(featMobIndex)->isShootPassable() == false) {
+						featureBlockingShot = featureMobs.at(featMobIndex);
 					}
 				}
 				FeatureStatic* featureStatic = eng->map->featuresStatic[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y];
@@ -244,11 +244,11 @@ void Attack::projectileFire(const coord origin, coord target, Weapon* const weap
 
 				//RENDER FLYING PROJECTILES
 				if(eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y] == true) {
-					const coord drawPos(projectiles.at(p)->pos.x, projectiles.at(p)->pos.y);
+					const coord projDrawPos(projectiles.at(p)->pos.x, projectiles.at(p)->pos.y);
 					if(eng->config->USE_TILE_SET) {
-						eng->renderer->drawTileInMap(projectileTile, drawPos.x, drawPos.y, projectileColor);
+						eng->renderer->drawTileInMap(projectileTile, projDrawPos.x, projDrawPos.y, projectileColor);
 					} else {
-						eng->renderer->drawCharacter(projectileGlyph, renderArea_mainScreen, drawPos.x, drawPos.y, projectileColor);
+						eng->renderer->drawCharacter(projectileGlyph, renderArea_mainScreen, projDrawPos.x, projDrawPos.y, projectileColor);
 					}
 				}
 			}

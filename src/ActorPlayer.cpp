@@ -441,7 +441,7 @@ void Player::incrInsanityLong() {
 
 		//When long term sanity decreases something happens (mostly bad mmkay)
 		//(Reroll until something actually happens)
-		for(unsigned int i = 0; i < 1000; i++) {
+		for(unsigned int insAttemptCount = 0; insAttemptCount < 1000; insAttemptCount++) {
 			const int ROLL = eng->dice(1, 8);
 			switch(ROLL) {
 			case 1: {
@@ -1012,7 +1012,9 @@ void Player::registerHeardSound(const Sound& sound) {
 	if(message != "") {
 		//Display the message if player does not see origin cell,
 		//or if the message should be displayed despite this.
-		const bool DISPLAY_MESSAGE = eng->map->playerVision[origin.x][origin.y] == false || sound.isMessageIgnoredIfPlayerSeeCell() == false;
+		const bool DISPLAY_MESSAGE =
+         eng->map->playerVision[origin.x][origin.y] == false ||
+         sound.getIsMessageIgnoredIfPlayerSeeCell() == false;
 
 		if(DISPLAY_MESSAGE == true)
 			eng->log->addMessage(message, clrYellow);
@@ -1095,7 +1097,6 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 					eng->map->playerVision[oldPos.x][oldPos.y] = true;
 					FOVupdate();
 					eng->map->playerVision[oldPos.x][oldPos.y] = false;
-//					eng->renderer->drawMapAndInterface();
 				}
 			}
 

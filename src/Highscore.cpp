@@ -18,7 +18,7 @@ const int X_POS_INSANITY = 42;
 const int X_POS_RANK = 52;
 
 
-bool isEntryHigher(const HighScoreEntry& current, const HighScoreEntry& other) {
+bool HighScore::isEntryHigher(const HighScoreEntry& current, const HighScoreEntry& other) {
 	return other.getScore() < current.getScore();
 }
 
@@ -157,7 +157,7 @@ void HighScore::runHighScoreScreen() {
 }
 
 void HighScore::sortEntries(vector<HighScoreEntry>& entries) {
-	sort(entries.begin(), entries.end(), isEntryHigher);
+	sort(entries.begin(), entries.end(), HighScore::isEntryHigher);
 }
 
 void HighScore::writeFile(vector<HighScoreEntry>& entries) {

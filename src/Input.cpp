@@ -159,7 +159,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 	case int('>'): {
 		clearMessages();
 		if(eng->player->deadState == actorDeadState_alive) {
-			eng->dungeonClimb->useDownStairs();
+			eng->dungeonClimb->attemptUseDownStairs();
 		}
 		clearKeyEvents();
 	}

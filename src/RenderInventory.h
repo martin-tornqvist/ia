@@ -17,11 +17,13 @@ public:
 	string getWeaponDataLine(Weapon* const weapon) const;
 
 private:
-	RenderInventory& operator=(const RenderInventory& other) {(void)other; return *this;}
+	RenderInventory& operator=(const RenderInventory& other) {
+	   (void)other; return *this;
+   }
 
 	void drawSlots(vector<InventorySlotButton>* slotButtons, const MenuBrowser& browser, const bool DRAW_BROWSER);
 	void drawGeneralItems(const int xPosOffset, const InventoryPurpose_t purpose, const MenuBrowser& browser, const bool DRAW_BROWSER);
-	
+
 	Engine* eng;
 
 	const int xPosListsLeft1;

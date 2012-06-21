@@ -13,11 +13,12 @@ class DungeonClimb
 public:
 	DungeonClimb(Engine* engine) {eng = engine;}
 
-	void useDownStairs();
+	void attemptUseDownStairs();
 
 	void travelDown(const int levels = 1);
+
 private:
-	Engine  *eng;
+	Engine* eng;
 
 	void makeLevel();
 };

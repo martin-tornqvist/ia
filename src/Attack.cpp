@@ -63,9 +63,7 @@ void Attack::getAttackData(AttackData& data, const coord target, const coord cur
 		if(data.currentDefender->getInstanceDefinition()->canDodge == true) {
 			const int DEFENDER_DODGE_SKILL = data.currentDefender->getInstanceDefinition()->abilityValues.getAbilityValue(ability_dodge, true);
 
-			const Engine* const eng = data.attacker->eng;
-
-			const coord defenderPos = data.currentDefender->pos;
+         const coord defenderPos = data.currentDefender->pos;
 			const int DODGE_MOD_AT_FEATURE = eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();
 
 			const int TOTAL_DODGE = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;

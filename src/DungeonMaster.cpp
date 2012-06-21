@@ -50,11 +50,6 @@ const int XP_STEP = 60;
 // xp deterioration?
 const int BASE_MONSTERS_TO_LVL = 40;
 
-//Monster dLvl spawn intervall should be set manually to get full controll
-//over the dungeon theme.
-//Should monsterLvl be set manually or be based on dungeonLvl?
-
-
 void DungeonMaster::init() {
 	playerExp = 0;
 	playerLvl = 1;
@@ -105,7 +100,7 @@ void DungeonMaster::winGame() {
 	for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
 		eng->renderer->drawTextCentered(winMessageLines.at(i), renderArea_screen, MAP_X_CELLS_HALF, Y0 + i, clrMessageBad);
 		eng->renderer->flip();
-		Timer t;
+		t.stop();
 		t.start();
 		while(t.get_ticks() < DELAY_BETWEEN_LINES) {
 		}

@@ -327,7 +327,7 @@ void RenderInventory::drawGeneralItems(const int xPosOffset, const InventoryPurp
 				string fill;
 				fill.resize(0);
 				const unsigned int FILL_SIZE = 29 - slotString.size();
-				for(unsigned int i = 0; i < FILL_SIZE; i++) {
+				for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {
 					fill.push_back('.');
 				}
 				eng->renderer->drawText(fill, renderArea_mainScreen, xPosOffset + xPosListsRight2 + slotString.size(), yPos, clrGray);

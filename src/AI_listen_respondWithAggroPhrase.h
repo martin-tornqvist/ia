@@ -21,7 +21,7 @@ public:
 					for(unsigned int i = 0; i < soundsHeard.size(); i++) {
 						curSound = &(soundsHeard.at(i));
 
-						if(curSound->isAlertingMonsters()) {
+						if(curSound->getIsAlertingMonsters()) {
 							const string* const phrase = engine->phrases->getRandomAggroPhrase(monster);
 							if(phrase != NULL) {
 								const bool SEEN_BY_PLAYER = engine->player->checkIfSeeActor(*monster, blockers);

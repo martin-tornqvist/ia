@@ -355,7 +355,6 @@ void Door::tryClose(Actor* actorTrying) {
 
 	//Blocked?
 	if(closable) {
-		bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 		eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 		eng->mapTests->addItemsToBlockerArray(blockers);
 		const bool BLOCKED = blockers[pos_.x][pos_.y];

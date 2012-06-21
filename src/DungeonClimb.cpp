@@ -11,6 +11,8 @@
 #include "Log.h"
 #include "Item.h"
 
+#include "PlayerAllocBonus.h"
+
 extern void profiler(bool init);
 
 void DungeonClimb::makeLevel() {
@@ -67,7 +69,7 @@ void DungeonClimb::travelDown(const int levels) {
 	eng->renderer->drawMapAndInterface();
 }
 
-void DungeonClimb::useDownStairs() {
+void DungeonClimb::attemptUseDownStairs() {
 	const int DLVL = eng->map->getDungeonLevel();
 
 	const coord playerPos = eng->player->pos;

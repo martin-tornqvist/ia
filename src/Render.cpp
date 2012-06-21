@@ -340,14 +340,14 @@ void Renderer::drawLineHorizontal(const int x0, const int y0, const int w, SDL_C
 }
 
 void Renderer::drawRectangle(const int x, const int y, const int w, const int h, SDL_Color clr) {
-	SDL_Rect dsrect;
+	SDL_Rect curRect;
 
-	dsrect.x = static_cast<Sint16>(x);
-	dsrect.y = static_cast<Sint16>(y);
-	dsrect.w = static_cast<Sint16>(w);
-	dsrect.h = static_cast<Sint16>(h);
+	curRect.x = static_cast<Sint16>(x);
+	curRect.y = static_cast<Sint16>(y);
+	curRect.w = static_cast<Sint16>(w);
+	curRect.h = static_cast<Sint16>(h);
 
-	SDL_FillRect(m_screen, &dsrect, SDL_MapRGB(m_screen->format, clr.r, clr.g, clr.b));
+	SDL_FillRect(m_screen, &curRect, SDL_MapRGB(m_screen->format, clr.r, clr.g, clr.b));
 }
 
 void Renderer::clearCharacterAtPixel(const int X, const int Y) {

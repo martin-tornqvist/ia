@@ -29,7 +29,7 @@ public:
 		return message_;
 	}
 
-	bool isMessageIgnoredIfPlayerSeeCell() const {
+	bool getIsMessageIgnoredIfPlayerSeeCell() const {
 		return isMessageIgnoredIfPlayerSeeCell_;
 	}
 
@@ -41,7 +41,7 @@ public:
 		return strength_;
 	}
 
-	bool isAlertingMonsters() const {
+	bool getIsAlertingMonsters() const {
 		return isAlertingMonsters_;
 	}
 

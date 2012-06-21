@@ -23,6 +23,7 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
 	const int X_POS_GROUP_TITLE = 1;
 
    eng->renderer->drawText("--- Choose ability to improve (" + intToString(PICKS_LEFT) + ") ---", renderArea_screen, xPos, yPos, clrWhite);
+//   eng->renderer->drawText("--- Choose ability to improve ---", renderArea_screen, xPos, yPos, clrWhite);
 
 	const unsigned int NR_OF_BONUSES = eng->playerBonusHandler->getNrOfBonuses();
 

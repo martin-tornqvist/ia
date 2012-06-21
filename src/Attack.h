@@ -71,6 +71,8 @@ private:
 
     void shotgun(const coord origin, const coord target, Weapon* const weapon);
 
+    bool isCellOnLine(vector<coord> line, int x, int y);
+
     Engine* eng;
 };
 

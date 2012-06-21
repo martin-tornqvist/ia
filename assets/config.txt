@@ -18,7 +18,7 @@ WALL_SYMBOL_FULL_SQUARE=0
 
 # How to render the map. 0 = ASCII, 1 = Tiles
 # Setting this to 1 ovverides all the settings above
-USE_TILE_SET=0
+USE_TILE_SET=1
 
 
 # 0 = Windowed, 1 = Fullscreen.
@@ -42,12 +42,12 @@ KEY_REPEAT_INTERVAL=50
 
 
 # Ammount of time per cell to show travelling projectiles (ms).
-DELAY_PROJECTILE_DRAW=18
+DELAY_PROJECTILE_DRAW=15
 
 
 # Ammount of time to show shotgun hit marks (ms).
-DELAY_SHOTGUN=100
+DELAY_SHOTGUN=85
 
 
 # Ammount of time to show explosions.
-DELAY_EXPLOSION=175
+DELAY_EXPLOSION=150

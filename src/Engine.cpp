@@ -7,7 +7,6 @@
 #include "Config.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
-#include "IntroText.h"
 #include "SpawnCounter.h"
 
 #include "AbilityValues.h"
@@ -26,9 +25,9 @@
 #include "PlayerAllocBonus.h"
 #include "Map.h"
 #include "DungeonClimb.h"
-#include "FeatureFactory.h"
 #include "DungeonMaster.h"
 #include "Explosion.h"
+#include "FeatureFactory.h"
 #include "Fov.h"
 #include "GameTime.h"
 #include "Highscore.h"

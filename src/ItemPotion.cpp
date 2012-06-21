@@ -174,9 +174,9 @@ void PotionOfAiming::specificCollide(const coord pos, Actor* const actor, Engine
 void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
 	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
 	for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
-		Actor* actor = engine->gameTime->getActorAt(i);
-		if(actor != engine->player) {
-			dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 0;
+		Actor* otherActor = engine->gameTime->getActorAt(i);
+		if(otherActor != engine->player) {
+			dynamic_cast<Monster*>(otherActor)->playerAwarenessCounter = 0;
 		}
 	}
 	setRealDefinitionNames(engine, false);
