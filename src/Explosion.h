@@ -26,7 +26,7 @@ public:
 	}
 
 	void runExplosion(const coord origin, const bool DO_EXPLOSION_DMG = true, StatusEffect* const effect = NULL,
-			const bool OVERRIDE_EXPLOSION_RENDERING = false, const SDL_Color colorOverride = clrWhite);
+	                  const bool OVERRIDE_EXPLOSION_RENDERING = false, const SDL_Color colorOverride = clrWhite);
 
 	void runSmokeExplosion(const coord origin, const bool SMALL_RADIUS = false);
 

@@ -11,10 +11,11 @@ using namespace std;
 class InventoryIndexes {
 public:
 
-	void setIndexes(const bool includeSlots, const unsigned int nrOfSlots, const vector<unsigned int>& generalSlotsShown) {
+	void setIndexes(const bool IS_SLOTS_INCLUDED, const unsigned int nrOfSlots, const vector<unsigned int>& generalSlotsShown) {
 		char charIndex = 'a';
-		if(includeSlots == true)
-			charIndex += static_cast<char> (nrOfSlots);
+		if(IS_SLOTS_INCLUDED) {
+			charIndex += static_cast<char>(nrOfSlots);
+		}
 
 		const unsigned int NR_OF_GEN_SLOTS = generalSlotsShown.size();
 
@@ -22,7 +23,7 @@ public:
 
 		for(unsigned int i = 0; i < NR_OF_GEN_SLOTS; i++) {
 			genInvCharIndexes.at(i) = charIndex;
-			charIndex = charIndex == 'z' ? '0' : charIndex + 1;
+			charIndex = charIndex == 'z' ? 'A' : charIndex + 1;
 		}
 	}
 

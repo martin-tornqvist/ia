@@ -18,8 +18,9 @@ class PlayerBonusGroup;
 
 class PlayerBonus {
 public:
-	PlayerBonus(Abilities_t ability, string groupTitle, string title, string description, Engine* engine, int startSkill, int bon1 = 0, int bon2 = 0, int bon3 = 0,
-	            int bon4 = 0, int bon5 = 0);
+	PlayerBonus(Abilities_t ability, string groupTitle, string title, string descriptionGeneral,
+	            Engine* engine, int startSkill, int bon1 = 0, string descrBon1 = "",
+	            int bon2 = 0, string descrBon2 = "", int bon3 = 0, string descrBon3 = "");
 
 	PlayerBonus() {
 	}
@@ -68,9 +69,9 @@ protected:
 	int rank_;
 	bool picked_;
 	Abilities_t ability_;
-	string titleGroup_;
-	string title_;
-	vector<string> description_;
+	string titleGroup_, string title_;
+	vector<string> descriptionRanks_;
+	vector<string> descriptionGeneral_;
 	vector<int> abilityBonusAtRanks_;
 };
 

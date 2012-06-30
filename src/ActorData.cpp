@@ -70,7 +70,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
 	d.HP_max = HP_AFTER_CAP;
 
 	//Set weapon abilities from progression formula
-	const int ATTACK_BASE = 10;
+	const int ATTACK_BASE = 15;
 	const double ATTACK_INCR = 4.5;
 	const int ATTACK_CAP = 50;
 

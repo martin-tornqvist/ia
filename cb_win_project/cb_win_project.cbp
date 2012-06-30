@@ -16,9 +16,14 @@
 				<Option compiler="gcc" />
 				<Option projectCompilerOptionsRelation="1" />
 				<Compiler>
+					<Add option="-Wshadow" />
 					<Add option="-Winit-self" />
 					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Wundef" />
 					<Add option="-Wfloat-equal" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
 					<Add option="-pedantic-errors" />
 					<Add option="-pedantic" />
 					<Add option="-std=c++98" />
@@ -42,9 +47,14 @@
 				<Option projectCompilerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-Wshadow" />
 					<Add option="-Winit-self" />
 					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Wundef" />
 					<Add option="-Wfloat-equal" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
 					<Add option="-pedantic-errors" />
 					<Add option="-pedantic" />
 					<Add option="-std=c++98" />
@@ -181,8 +191,6 @@
 		<Unit filename="..\src\Input.h" />
 		<Unit filename="..\src\Interface.cpp" />
 		<Unit filename="..\src\Interface.h" />
-		<Unit filename="..\src\IntroText.cpp" />
-		<Unit filename="..\src\IntroText.h" />
 		<Unit filename="..\src\Inventory.cpp" />
 		<Unit filename="..\src\Inventory.h" />
 		<Unit filename="..\src\InventoryHandler.cpp" />

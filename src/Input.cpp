@@ -729,8 +729,8 @@ void Input::read() {
 
 				const coord pos = eng->player->pos + coord(1,0);
 				if(eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(moveType_walk)) {
-               Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_zombieAxe, pos));
-               monster->leader = eng->player;
+					Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_zombieAxe, pos));
+					monster->leader = eng->player;
 				}
 
 				clearKeyEvents();
@@ -739,8 +739,9 @@ void Input::read() {
 //			*/
 
 			if(cheatKeyPressed == false) {
-				if(key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN || key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key
-				      == SDLK_HOME || key == SDLK_END) {
+				if(
+				   key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN ||
+				   key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key == SDLK_HOME || key == SDLK_END) {
 					handleKeyPress(static_cast<Uint16>(m_event.key.keysym.sym), SHIFT, CTRL);
 				} else {
 					handleKeyPress(m_event.key.keysym.unicode, SHIFT, CTRL);

@@ -9,8 +9,6 @@
 #include "Colors.h"
 #include "Converters.h"
 
-class PlayerAllocStats;
-
 class Engine;
 
 class DungeonMaster
@@ -59,8 +57,7 @@ public:
 private:
 	void init();
 
-	int playerExp;
-	int playerLvl;
+	int playerExp, playerLvl;
 
 	void initExpTable();
 

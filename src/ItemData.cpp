@@ -226,8 +226,8 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
 
 	//Set 1dY dmg from formula
 	const int DMG_Y_CAP = 999;
-	const int DMG_Y_BASE = 3;
-	const double DMG_Y_INCR = 0.25;
+	const int DMG_Y_BASE = 2;
+	const double DMG_Y_INCR = 0.2;
 	const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
 	const double DMG_Y_BEFORE_STR = DMG_Y_BASE + static_cast<double>(ACTOR_LEVEL - 1) * DMG_Y_INCR;
 	const int DMG_Y_AFTER_STR = static_cast<int>(ceil(DMG_Y_BEFORE_STR * DMG_STRENGTH_FACTOR));

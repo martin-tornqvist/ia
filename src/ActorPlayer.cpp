@@ -707,41 +707,43 @@ void Player::testPhobias() {
 }
 
 void Player::updateColor() {
-    SDL_Color& clr = m_instanceDefinition.color;
+	SDL_Color& clr = m_instanceDefinition.color;
 
-    if(deadState != actorDeadState_alive) {
-        clr = clrRedLight;
-        return;
-    }
+	if(deadState != actorDeadState_alive) {
+		clr = clrRedLight;
+		return;
+	}
 
-    const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
-    if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
-        clr = clrFromStatusEffect;
-        return;
-    }
+	const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+	if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+		clr = clrFromStatusEffect;
+		return;
+	}
 
-    if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
-        clr = clrYellow;
-        return;
-    }
+	if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
+		clr = clrYellow;
+		return;
+	}
 
-    const SDL_Color& archetypeClr = m_archetypeDefinition->color;
+	const SDL_Color& archetypeClr = m_archetypeDefinition->color;
 
-    const int CUR_SHOCK = insanityShort + insanityShortTemp;
+	const int CUR_SHOCK = insanityShort + insanityShortTemp;
 
-    if(CUR_SHOCK > 60) {
-        const SDL_Color insaneClr = clrMagenta;
+	if(CUR_SHOCK >= 75) {
+      clr = clrMagenta;
 
-        const double fIns = static_cast<double>((CUR_SHOCK * 2) - 100) / 100;
-        const double fArc = 1.0 - fIns;
+//		const SDL_Color insaneClr = clrMagenta;
+//
+//		const double fIns = static_cast<double>((CUR_SHOCK * 2) - 100) / 100;
+//		const double fArc = 1.0 - fIns;
+//
+//		clr.r = (static_cast<double>(archetypeClr.r) * fArc) + (static_cast<double>(insaneClr.r) * fIns);
+//		clr.g = (static_cast<double>(archetypeClr.g) * fArc) + (static_cast<double>(insaneClr.g) * fIns);
+//		clr.b = (static_cast<double>(archetypeClr.b) * fArc) + (static_cast<double>(insaneClr.b) * fIns);
+		return;
+	}
 
-        clr.r = (static_cast<double>(archetypeClr.r) * fArc) + (static_cast<double>(insaneClr.r) * fIns);
-        clr.g = (static_cast<double>(archetypeClr.g) * fArc) + (static_cast<double>(insaneClr.g) * fIns);
-        clr.b = (static_cast<double>(archetypeClr.b) * fArc) + (static_cast<double>(insaneClr.b) * fIns);
-        return;
-    }
-
-    clr = archetypeClr;
+	clr = archetypeClr;
 }
 
 void Player::act() {
@@ -1013,8 +1015,8 @@ void Player::registerHeardSound(const Sound& sound) {
 		//Display the message if player does not see origin cell,
 		//or if the message should be displayed despite this.
 		const bool DISPLAY_MESSAGE =
-         eng->map->playerVision[origin.x][origin.y] == false ||
-         sound.getIsMessageIgnoredIfPlayerSeeCell() == false;
+		   eng->map->playerVision[origin.x][origin.y] == false ||
+		   sound.getIsMessageIgnoredIfPlayerSeeCell() == false;
 
 		if(DISPLAY_MESSAGE == true)
 			eng->log->addMessage(message, clrYellow);
@@ -1038,7 +1040,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 		bool isSwiftMoveAlloed = false;
 
 		if(dest != pos) {
-		    // Attack?
+			// Attack?
 			Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
 			if(actorAtDest != NULL) {
 				if(m_statusEffectsHandler->allowAttackMelee(true) == true) {
@@ -1075,12 +1077,12 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
 			if(featuresAllowMove) {
 
-			    // Encumbered?
-			    if(m_inventory->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
-                    eng->log->addMessage("You care too encumbered to move.");
-                    eng->renderer->flip();
-                    return;
-			    }
+				// Encumbered?
+				if(m_inventory->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
+					eng->log->addMessage("You care too encumbered to move.");
+					eng->renderer->flip();
+					return;
+				}
 
 				isSwiftMoveAlloed = true;
 				const coord oldPos = pos;

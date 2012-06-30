@@ -27,7 +27,7 @@ coord MapTests::getClosestPos(const coord c, const vector<coord>& positions) con
 }
 
 Actor* MapTests::getClosestActor(const coord c, const vector<Actor*>& actors) const {
-   if(actors.size() == 0) return NULL;
+	if(actors.size() == 0) return NULL;
 
 	int distToNearest = 99999;
 	int closestElement = 0;
@@ -89,7 +89,7 @@ void MapTests::makeMoveBlockerArrayForMoveTypeFeaturesOnly(const MoveType_t move
 void MapTests::makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 	for(int y = 0; y < MAP_Y_CELLS; y++) {
 		for(int x = 0; x < MAP_X_CELLS; x++) {
-			arrayToFill[x][y] = !eng->map->featuresStatic[x][y]->isShootPassable();
+			arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isShootPassable() == false;
 		}
 	}
 	FeatureMob* f = NULL;
@@ -97,7 +97,7 @@ void MapTests::makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y
 	for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 		f = eng->gameTime->getFeatureMobAt(i);
 		if(arrayToFill[f->getX()][f->getY()] == false) {
-			arrayToFill[f->getX()][f->getY()] = !f->isShootPassable();
+			arrayToFill[f->getX()][f->getY()] = f->isShootPassable() == false;
 		}
 	}
 }

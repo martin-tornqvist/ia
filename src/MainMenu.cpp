@@ -32,15 +32,13 @@ void MainMenu::draw(const MenuBrowser& browser) {
 	eng->renderer->drawTextCentered("m.tornq@gmail.com", renderArea_screen, x_pos, y_pos, clrDark);
 	y_pos += 2;
 
-	eng->renderer->drawTextCentered("The game's webpage is located at:", renderArea_screen, x_pos, y_pos, clrDark);
-	y_pos += 1;
 	eng->renderer->drawTextCentered("http://infraarcana.wikispaces.com", renderArea_screen, x_pos, y_pos, clrDark);
 	y_pos += 2;
 
-	eng->renderer->drawTextCentered("You can set various options by editing config.txt", renderArea_screen, x_pos, y_pos, clrDark);
+	eng->renderer->drawTextCentered("You can set options by editing config.txt", renderArea_screen, x_pos, y_pos, clrDark);
 	y_pos += 1;
 	eng->renderer->drawTextCentered("(switch between tile/ASCII mode, skip intro level, etc)", renderArea_screen, x_pos, y_pos, clrDark);
-	y_pos += 3;
+	y_pos += 5;
 
 	eng->renderer->drawText("a) Start a new game", renderArea_screen, X_POS_LEFT, y_pos, browser.isPosAtKey('a') ? clrBright : clr);
 	y_pos += 1;

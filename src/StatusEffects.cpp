@@ -116,7 +116,7 @@ void StatusBurning::newTurn(Engine* engine) {
 	if(owningActor == engine->player) {
 		engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
 	}
-	bool DIED = owningActor->hit(engine->dice(1, 6), damageType_fire);
+	bool DIED = owningActor->hit(engine->dice(1, 4), damageType_fire);
 	if(DIED) {
 		if(owningActor == engine->player) {
 			engine->postmortem->setCauseOfDeath("Burning");

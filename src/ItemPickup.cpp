@@ -78,11 +78,12 @@ void ItemPickup::tryPick() {
 
 bool ItemPickup::isInventoryFull(Inventory* inventory, Item* item) const {
 	//If item can be stacked, the inventory is not considered full.
-	if(inventory->getElementToStackItem(item) != -1)
+	if(inventory->getElementToStackItem(item) != -1) {
 		return false;
+	}
 
-	//Else, check if the size of the general slots is small enough.
-	return static_cast<char> (inventory->getSlots()->size() + inventory->getGeneral()->size()) + 'a' - 1 >= 'z';
+	const int NR_ITEMS = inventory->getSlots()->size() + inventory->getGeneral()->size();
+	return NR_ITEMS + static_cast<int>('a') - 1 >= static_cast<int>('z') + 4;
 }
 
 void ItemPickup::tryUnloadWeaponFromGround() {
@@ -90,7 +91,7 @@ void ItemPickup::tryUnloadWeaponFromGround() {
 	bool unloadedSomething = false;
 	if(item != NULL) {
 		if(item->getInstanceDefinition().isRangedWeapon == true) {
-			Weapon* const weapon = dynamic_cast<Weapon*> (item);
+			Weapon* const weapon = dynamic_cast<Weapon*>(item);
 			const int ammoLoaded = weapon->ammoLoaded;
 
 			if(ammoLoaded > 0 && weapon->getInstanceDefinition().rangedHasInfiniteAmmo == false) {
@@ -103,7 +104,7 @@ void ItemPickup::tryUnloadWeaponFromGround() {
 
 				if(ammoDef->isAmmoClip == true) {
 					//Unload a clip
-					dynamic_cast<ItemAmmoClip*> (spawnedAmmo)->ammo = ammoLoaded;
+					dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = ammoLoaded;
 				} else {
 					//Unload loose ammo
 					spawnedAmmo->numberOfItems = ammoLoaded;
@@ -118,8 +119,8 @@ void ItemPickup::tryUnloadWeaponFromGround() {
 					eng->log->addMessage("You have no room to keep the unloaded ammunition, item dropped on floor.");
 				}
 
-				dynamic_cast<Weapon*> (item)->ammoLoaded = 0;
-				dynamic_cast<Weapon*> (item)->setColorForAmmoStatus();
+				dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
+				dynamic_cast<Weapon*>(item)->setColorForAmmoStatus();
 				unloadedSomething = true;
 
 				eng->gameTime->letNextAct();

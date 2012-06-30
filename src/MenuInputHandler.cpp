@@ -9,7 +9,11 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 	while(done == false) {
 		while(SDL_PollEvent(&m_event)) {
 			if(m_event.type == SDL_KEYDOWN) {
-				Uint16 key = static_cast<Uint16> (m_event.key.keysym.sym);
+				Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
+
+				if(key >= 'a' && key <= 'z') {
+				   key = static_cast<Uint16>(m_event.key.keysym.unicode);
+				}
 
 				if(key == SDLK_RIGHT || key == SDLK_KP6 || key == SDLK_6) {
 					browser.navigate(direction_right);
@@ -42,7 +46,11 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 				const int SIZE_OF_FIRST_LIST = browser.getNrOfItemsInFirstList();
 				const int SIZE_OF_SECOND_LIST = browser.getNrOfItemsInSecondList();
 
-				if(key >= 'a' && key < 'a' + static_cast<char> (SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST)) {
+				const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
+
+				if(
+				   (key >= 'a' && static_cast<int>(key - 'a') < TOT_SIZE_OF_LISTS) ||
+				   (key >= 'A' && TOT_SIZE_OF_LISTS > static_cast<int>('z' - 'a') && static_cast<int>(key - 'A') < TOT_SIZE_OF_LISTS - static_cast<int>('z' - 'a') - 1)) {
 					browser.navigate(key);
 					return menuAction_selected;
 				}

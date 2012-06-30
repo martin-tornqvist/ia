@@ -82,8 +82,8 @@ void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
 
 void Renderer::drawBlastAnimationAtField(const coord center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
       const SDL_Color colorInner, const SDL_Color colorOuter, const int DURATION) {
-	for(int y = center.y - RADIUS; y <= center.y + RADIUS; y++) {
-		for(int x = center.x - RADIUS; x <= center.x + RADIUS; x++) {
+	for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
+		for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
 			if(forbiddenCells[x][y] == false) {
 				const bool IS_OUTER = x == center.x - RADIUS || x == center.x + RADIUS || y == center.y - RADIUS || y == center.y + RADIUS;
 				const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
@@ -97,8 +97,8 @@ void Renderer::drawBlastAnimationAtField(const coord center, const int RADIUS, b
 	while(t.get_ticks() < DURATION / 2) {
 	}
 	drawMapAndInterface();
-	for(int y = center.y - RADIUS; y <= center.y + RADIUS; y++) {
-		for(int x = center.x - RADIUS; x <= center.x + RADIUS; x++) {
+	for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
+		for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
 			if(forbiddenCells[x][y] == false) {
 				const bool IS_OUTER = x == center.x - RADIUS || x == center.x + RADIUS || y == center.y - RADIUS || y == center.y + RADIUS;
 				const SDL_Color color = IS_OUTER ? colorOuter : colorInner;

@@ -89,7 +89,6 @@ void Engine::initRenderer() {
 }
 
 void Engine::cleanupRenderer() {
-	cout << "Quiting SDL" << endl;
 	SDL_Quit();
 
 	delete renderer;

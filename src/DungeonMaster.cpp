@@ -116,7 +116,7 @@ void DungeonMaster::winGame() {
 void DungeonMaster::initExpTable() {
 	expTable[1] = XP_STEP;
 
-	for(int i = 2; i <= PLAYER_MAX_LEVEL + 1; i++) {
+	for(int i = 2; i <= PLAYER_MAX_LEVEL; i++) {
 		expTable[i] = i * XP_STEP + expTable[i - 1];
 	}
 }
@@ -152,7 +152,7 @@ void DungeonMaster::playerGainsExp(int exp) {
 				if(playerLvl < PLAYER_MAX_LEVEL) {
 
 					if(playerExp >= getXpToNextLvl()) {
-					   eng->renderer->drawMapAndInterface();
+						eng->renderer->drawMapAndInterface();
 						playerLvl++;
 						eng->log->addMessage("You have reached level " + intToString(playerLvl) + "!", clrGreen);
 						eng->log->addMessage("You gain new abilities, press any key to select...", clrGreen);
