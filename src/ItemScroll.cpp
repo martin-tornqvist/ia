@@ -330,14 +330,18 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 //	return returnData;
 //}
 
-int Scroll::getChanceToLearnOrCastFromMemory(const bool CASTING_FROM_MEMORY, Engine* const engine) const {
-	const Abilities_t abilityUsed = CASTING_FROM_MEMORY ? ability_loreArcana : ability_loreLanguage;
-
-	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(abilityUsed, true);
+int Scroll::getChanceToLearn(Engine* const engine) const {
+	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
 	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
-	const int CAST_FROM_MEMORY_CHANCE_MODIFIER = CASTING_FROM_MEMORY ? 10 : 0;
 
-	return ((PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100) + CAST_FROM_MEMORY_CHANCE_MODIFIER;
+	return ((PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100) + 10;
+}
+
+int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
+	const int PLAYER_SKILL = engine->player->arcaneKnowledge;
+	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
+
+	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
 }
 
 void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
@@ -370,7 +374,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 	engine->renderer->drawMapAndInterface();
 
 	if(IS_FROM_MEMORY) {
-		const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToLearnOrCastFromMemory(IS_FROM_MEMORY, engine));
+		const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToCastFromMemory(engine));
 		if(rollResult >= successSmall) {
 			engine->log->addMessage("You cast " + getRealTypeName() + "...");
 			specificRead(IS_FROM_MEMORY, engine);
@@ -391,7 +395,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 			specificRead(IS_FROM_MEMORY, engine);
 
 			if(m_archetypeDefinition->isScrollLearned == false) {
-				const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearnOrCastFromMemory(IS_FROM_MEMORY, engine));
+				const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
 				if(identifyRollResult >= successSmall) {
 					engine->log->addMessage("You learn to cast this incantation by heart!");
 					m_instanceDefinition.isScrollLearned = true;
@@ -403,7 +407,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 			return true;
 
 		} else {
-			const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearnOrCastFromMemory(IS_FROM_MEMORY, engine));
+			const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
 			if(identifyRollResult >= successSmall) {
 				setRealDefinitionNames(engine, false);
 

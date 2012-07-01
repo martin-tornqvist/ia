@@ -518,7 +518,7 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-		if(ability == ability_loreArcana || ability == ability_loreLanguage) {
+		if(ability == ability_language) {
 			return 0;
 		}
 		return 10;

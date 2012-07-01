@@ -167,7 +167,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isScroll = true;
 		d->isScrollLearnable = true;
 		d->isScrollLearned = 0;
-		d->abilityToIdentify = ability_loreLanguage;
+		d->abilityToIdentify = ability_language;
 		d->identifySkillFactor = eng->dice.getInRange(40, 100);
 		d->maxStackSizeAtSpawn = 2;
 		d->nativeRooms.push_back(specialRoom_tombs);
@@ -184,7 +184,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->glyph = '!';
 		d->tile = tile_potion;
 		d->isQuaffable = true;
-		d->abilityToIdentify = ability_loreArcana;
 		d->identifySkillFactor = eng->dice.getInRange(10, 100);
 		d->isMissileWeapon = true;
 		d->missileBaseAttackSkill = -5;

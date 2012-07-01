@@ -16,7 +16,8 @@ public:
 	virtual ~Scroll() {
 	}
 
-    int getChanceToLearnOrCastFromMemory(const bool CASTING_FROM_MEMORY, Engine* const engine) const;
+    int getChanceToCastFromMemory(Engine* const engine) const;
+    int getChanceToLearn(Engine* const engine) const;
 
 	bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 

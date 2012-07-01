@@ -57,6 +57,8 @@ public:
 
 	int insanityLong, insanityShort, insanityShortTemp;
 
+	int arcaneKnowledge;
+
 	void shock(const ShockValues_t shockValue, const int MODIFIER);
 	void incrInsanityLong();
 

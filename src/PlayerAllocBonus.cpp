@@ -84,21 +84,45 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
 			xPosTemp++;
 		}
 
-		int yPosDescr = -2;
 		xPos = 1;
-
-		//Draw description
-		if(CURRENT_ELEMENT == CURRENT_POS) {
-			const vector<string>& description = eng->playerBonusHandler->getBonusDescriptionAt(CURRENT_ELEMENT);
-			for(unsigned int i_descr = 0; i_descr < description.size(); i_descr++) {
-				s = description.at(i_descr);
-				eng->renderer->drawText(s, renderArea_characterLines, xPos, yPosDescr, clrWhite);
-				yPosDescr += 1;
-			}
-		}
 
 		yPos++;
 	}
+
+    yPos += 2;
+
+    int& yPosRankDescr = yPos;//yPos + 4;
+
+    //Draw description
+    const vector<string>& description = eng->playerBonusHandler->getBonusDescriptionGeneralAt(CURRENT_POS);
+    for(unsigned int i_descr = 0; i_descr < description.size(); i_descr++) {
+        string s = description.at(i_descr);
+        eng->renderer->drawText(s, renderArea_screen, xPos, yPos, clrWhite);
+        yPos++;
+    }
+
+    yPos++;
+
+    const vector< vector<string> >& rankDescriptions = eng->playerBonusHandler->getBonusDescriptionRanksAt(CURRENT_POS);
+
+    for(unsigned int i = 0; i < rankDescriptions.size(); i++) {
+        const vector<string>& currentRankDescr = rankDescriptions.at(i);
+        for(unsigned int ii = 0; ii < currentRankDescr.size(); ii++) {
+            const string s = currentRankDescr.at(ii);
+
+            const string compareSizeStr = "Rank x: ";
+            const bool IS_CURRENT_RANK_DESCRIBED = s.size() > compareSizeStr.size();
+
+            if(IS_CURRENT_RANK_DESCRIBED) {
+                const bool HAS_RANK = eng->playerBonusHandler->getBonusRankAt(CURRENT_POS) > static_cast<int>(i);
+                const SDL_Color drwClr = HAS_RANK ? clrGreenLight : clrWhite;
+                eng->renderer->drawText(s, renderArea_screen, xPos, yPosRankDescr, drwClr);
+
+                yPosRankDescr++;
+            }
+        }
+    }
+
 	eng->renderer->flip();
 }
 

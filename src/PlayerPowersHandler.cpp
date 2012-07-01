@@ -154,7 +154,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
 		eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, clrGray);
 		const int x = 28;
 
-		const int CHANCE_OF_SUCCESS = scroll->getChanceToLearnOrCastFromMemory(true, eng);
+		const int CHANCE_OF_SUCCESS = scroll->getChanceToCastFromMemory(eng);
 		const string info = "(" + intToString(CHANCE_OF_SUCCESS) + "% chance)";
 		eng->renderer->drawText(info, renderArea_mainScreen, x, currentListPos, clrWhite);
 

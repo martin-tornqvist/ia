@@ -48,8 +48,12 @@ public:
 		return title_;
 	}
 
-	const vector<string>& getDescription() const {
-		return description_;
+	const vector<string>& getDescriptionGeneral() const {
+		return descriptionGeneral_;
+	}
+
+	const vector< vector<string> >& getDescriptionRanks() const {
+		return descriptionRanks_;
 	}
 
 	bool isPickable() const {
@@ -69,8 +73,8 @@ protected:
 	int rank_;
 	bool picked_;
 	Abilities_t ability_;
-	string titleGroup_, string title_;
-	vector<string> descriptionRanks_;
+	string titleGroup_, title_;
+	vector< vector<string> > descriptionRanks_;
 	vector<string> descriptionGeneral_;
 	vector<int> abilityBonusAtRanks_;
 };
@@ -148,8 +152,12 @@ public:
 		return getBonusAt(ELEMENT).getRankLimit();
 	}
 
-	const vector<string>& getBonusDescriptionAt(const unsigned int ELEMENT) {
-		return getBonusAt(ELEMENT).getDescription();
+	const vector<string>& getBonusDescriptionGeneralAt(const unsigned int ELEMENT) {
+		return getBonusAt(ELEMENT).getDescriptionGeneral();
+	}
+
+	const vector< vector<string> >& getBonusDescriptionRanksAt(const unsigned int ELEMENT) {
+		return getBonusAt(ELEMENT).getDescriptionRanks();
 	}
 
 	bool canAnyBonusBePicked() {

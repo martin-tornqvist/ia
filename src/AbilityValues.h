@@ -23,8 +23,7 @@ enum Abilities_t {
 	ability_mobility,
 	ability_backstabbing,
 	ability_firstAid,
-	ability_loreArcana,
-	ability_loreLanguage,
+	ability_language,
 	endOfAbilities
 };
 

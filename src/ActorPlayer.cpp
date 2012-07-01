@@ -22,7 +22,8 @@
 #include "ActorFactory.h"
 
 Player::Player() :
-	firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0), insanityShortTemp(0), dynamiteFuseTurns(-1), molotovFuseTurns(-1),
+	firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0), insanityShortTemp(0), arcaneKnowledge(0),
+	dynamiteFuseTurns(-1), molotovFuseTurns(-1),
 	flareFuseTurns(-1), target(NULL) {
 }
 
@@ -316,6 +317,7 @@ void Player::addSaveLines(vector<string>& lines) const {
 
 	lines.push_back(intToString(insanityLong));
 	lines.push_back(intToString(insanityShort));
+	lines.push_back(intToString(arcaneKnowledge));
 	lines.push_back(intToString(m_instanceDefinition.HP));
 	lines.push_back(intToString(m_instanceDefinition.HP_max));
 	lines.push_back(intToString(pos.x));
@@ -360,6 +362,8 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 	insanityLong = stringToInt(lines.front());
 	lines.erase(lines.begin());
 	insanityShort = stringToInt(lines.front());
+	lines.erase(lines.begin());
+	arcaneKnowledge = stringToInt(lines.front());
 	lines.erase(lines.begin());
 	m_instanceDefinition.HP = stringToInt(lines.front());
 	lines.erase(lines.begin());
