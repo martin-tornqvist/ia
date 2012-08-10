@@ -107,7 +107,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage("Displaying inventory.", clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsLeft1, yPosLists, MAP_X_CELLS - 1, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawSlots(slotButtons, browser, DRAW_BROWSER);
 		drawGeneralItems(xPosListsRightStandardOffset, purpose, browser, DRAW_BROWSER);
@@ -122,7 +122,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage(cmdString, clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsLeft1, yPosLists, MAP_X_CELLS - 1, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawSlots(slotButtons, browser, DRAW_BROWSER);
 		drawGeneralItems(xPosListsRightStandardOffset, purpose, browser, DRAW_BROWSER);
@@ -137,7 +137,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage(cmdString, clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsLeft1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
@@ -151,7 +151,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage(cmdString, clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsLeft1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
@@ -165,7 +165,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage(cmdString, clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsLeft1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
@@ -181,27 +181,11 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsRight1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
 	break;
-
-//    case inventoryPurpose_read: {
-//        const int INVENTORY_HEIGHT = generalItemsToShow->size();
-//
-//        if(DRAW_CMD_PROMPT == true) {
-//            eng->log->addMessage("Study what text", clrWhiteHigh);
-//            string endLetter = "a";
-//            endLetter[0] += static_cast<char> (generalItemsToShow->size()) - 1;
-//            eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
-//        }
-//
-//        eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsRight1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
-//
-//        drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
-//    }
-//    break;
 
 	case inventoryPurpose_readyExplosive: {
 		const int INVENTORY_HEIGHT = generalItemsToShow->size();
@@ -213,7 +197,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsRight1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
@@ -229,7 +213,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsRight1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
@@ -245,16 +229,13 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
 			eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
 		}
 
-		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, xPosListsRight1, yPosLists, xPosListsRightStandardOffset, INVENTORY_HEIGHT);
+		eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
 		drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
 	}
 	break;
 
-	default:
-		cout << "[ERROR] Wrong purpose in Interface::drawInventory()" << endl;
-		break;
-
+	default: {} break;
 	}
 
 	if(DRAW_CMD_PROMPT == true) {
@@ -287,12 +268,12 @@ void RenderInventory::drawSlots(vector<InventorySlotButton>* slotButtons, const 
 		slotString = slot->item == NULL ? "(empty)" : eng->itemData->itemInterfaceName(slot->item, false);
 		eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft3, yPos, clr);
 
-        if(slot->item != NULL) {
-            const string itemWeightLabel = slot->item->getWeightLabel();
-            if(itemWeightLabel != "") {
-                eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, xPosListsRightStandardOffset - 4, yPos, clrGray);
-            }
-        }
+		if(slot->item != NULL) {
+			const string itemWeightLabel = slot->item->getWeightLabel();
+			if(itemWeightLabel != "") {
+				eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, xPosListsRightStandardOffset - 4, yPos, clrGray);
+			}
+		}
 
 		yPos += 1;
 	}
@@ -338,7 +319,7 @@ void RenderInventory::drawGeneralItems(const int xPosOffset, const InventoryPurp
 
 		const string itemWeightLabel = generalItems->at(currentElement)->getWeightLabel();
 		if(itemWeightLabel != "") {
-            eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, MAP_X_CELLS - 5, yPos, clrGray);
+			eng->renderer->drawText(itemWeightLabel + "  ", renderArea_mainScreen, MAP_X_CELLS - 5, yPos, clrGray);
 		}
 
 		yPos += 1;

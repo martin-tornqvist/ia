@@ -16,14 +16,16 @@ void PlayerAllocBonus::run() {
 }
 
 void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS, const unsigned int TOP_BONUS) const {
+   (void)PICKS_LEFT;
+
 	eng->renderer->clearRenderArea(renderArea_screen);
 
 	int xPos = 1;
 	int yPos = 1;
 	const int X_POS_GROUP_TITLE = 1;
 
-   eng->renderer->drawText("--- Choose ability to improve (" + intToString(PICKS_LEFT) + ") ---", renderArea_screen, xPos, yPos, clrWhite);
-//   eng->renderer->drawText("--- Choose ability to improve ---", renderArea_screen, xPos, yPos, clrWhite);
+//	eng->renderer->drawText("--- Choose ability to improve (" + intToString(PICKS_LEFT) + ") ---", renderArea_screen, xPos, yPos, clrWhite);
+   eng->renderer->drawText("--- Choose ability to improve ---", renderArea_screen, xPos, yPos, clrWhite);
 
 	const unsigned int NR_OF_BONUSES = eng->playerBonusHandler->getNrOfBonuses();
 
@@ -89,39 +91,50 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
 		yPos++;
 	}
 
-    yPos += 2;
+	yPos += 2;
 
-    int& yPosRankDescr = yPos;//yPos + 4;
+	int& yPosRankDescr = yPos;//yPos + 4;
 
-    //Draw description
-    const vector<string>& description = eng->playerBonusHandler->getBonusDescriptionGeneralAt(CURRENT_POS);
-    for(unsigned int i_descr = 0; i_descr < description.size(); i_descr++) {
-        string s = description.at(i_descr);
-        eng->renderer->drawText(s, renderArea_screen, xPos, yPos, clrWhite);
-        yPos++;
-    }
+	//Draw description
+	const vector<string>& description = eng->playerBonusHandler->getBonusDescriptionGeneralAt(CURRENT_POS);
+	for(unsigned int i_descr = 0; i_descr < description.size(); i_descr++) {
+		string s = description.at(i_descr);
+		eng->renderer->drawText(s, renderArea_screen, xPos, yPos, clrWhite);
+		yPos++;
+	}
 
-    yPos++;
+	yPos++;
 
-    const vector< vector<string> >& rankDescriptions = eng->playerBonusHandler->getBonusDescriptionRanksAt(CURRENT_POS);
+	const vector< vector<string> >& rankDescriptions = eng->playerBonusHandler->getBonusDescriptionRanksAt(CURRENT_POS);
 
-    for(unsigned int i = 0; i < rankDescriptions.size(); i++) {
-        const vector<string>& currentRankDescr = rankDescriptions.at(i);
-        for(unsigned int ii = 0; ii < currentRankDescr.size(); ii++) {
-            const string s = currentRankDescr.at(ii);
 
-            const string compareSizeStr = "Rank x: ";
-            const bool IS_CURRENT_RANK_DESCRIBED = s.size() > compareSizeStr.size();
 
-            if(IS_CURRENT_RANK_DESCRIBED) {
-                const bool HAS_RANK = eng->playerBonusHandler->getBonusRankAt(CURRENT_POS) > static_cast<int>(i);
-                const SDL_Color drwClr = HAS_RANK ? clrGreenLight : clrWhite;
-                eng->renderer->drawText(s, renderArea_screen, xPos, yPosRankDescr, drwClr);
+   bool isRankBonusTitleDrawn = false;
 
-                yPosRankDescr++;
+   for(unsigned int ii = 0; ii < rankDescriptions.size(); ii++) {
+      const vector<string>& currentRankDescr = rankDescriptions.at(ii);
+      for(unsigned int iii = 0; iii < currentRankDescr.size(); iii++) {
+         const string s = currentRankDescr.at(iii);
+
+         const string compareSizeStr = "Rank x: ";
+         const bool IS_CURRENT_RANK_DESCRIBED = s.size() > compareSizeStr.size();
+
+         if(IS_CURRENT_RANK_DESCRIBED) {
+
+            if(isRankBonusTitleDrawn == false) {
+               eng->renderer->drawText("Additional bonuses:", renderArea_screen, xPos, yPos, clrWhite);
+               yPos++;
+               isRankBonusTitleDrawn = true;
             }
-        }
-    }
+
+            const bool HAS_RANK = eng->playerBonusHandler->getBonusRankAt(CURRENT_POS) > static_cast<int>(ii);
+            const SDL_Color drwClr = HAS_RANK ? clrGreenLight : clrWhite;
+            eng->renderer->drawText(s, renderArea_screen, xPos, yPosRankDescr, drwClr);
+
+            yPosRankDescr++;
+         }
+      }
+   }
 
 	eng->renderer->flip();
 }
@@ -161,8 +174,8 @@ void PlayerAllocBonus::readKeys() {
 	unsigned int topBonus = 0;
 	unsigned int currentPos = 0;
 
-	const int LVL = eng->dungeonMaster->getLevel();
-	int nrOfPicksLeft = ((LVL + 1) % 2 == 0) ? 2 : 1;
+//	const int LVL = eng->dungeonMaster->getLevel();
+	int nrOfPicksLeft = 1; //((LVL + 1) % 2 == 0) ? 2 : 1;
 
 	eng->playerBonusHandler->setAllToUnpicked();
 

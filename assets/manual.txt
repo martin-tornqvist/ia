@@ -36,41 +36,39 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 
 2. COMMAND LIST
 ------------------------------------------------
-Aside from movement and the "bump" interactions described in the previous section, the following commands are available:
-
-$  TAB    Attack adjacent monster
-$    @    Display character information
-$    >    Go down staircase
-$    b    Bash (doors)
-$    c    Close (doors)
-$    d    Drop item
-$    e    Ready/aim/throw explosive
-$    f    Aim/fire ranged weapon
-$    g    Pick up item
-$    h    Heal/Rest
-$    i    Display inventory
-$    j    Jam a door
-$    k    Kick attack
-$    K    Print kick data
-$    l    Look around
-$    L    Display message history
-$    m    Choose missiles to use
-$    M    Quit using current missiles
-$    r    Reload wielded firearm
-$    R    Study texts (e.g. to learn spells)
-$    s    Wait/Search for 10 turns
-$    S    Save (must be on stairs)
-$    t    Throw missile
-$    T    Trigger trap you stand on
-$    u    Unload ammunition (from ground)
-$    w    Wield/Wear
-$    q    Quaff potion
-$    Q    Quit
-$    x    Cast memorized spells
-$    X    Cast written spells
-$    z    Swap to prepared weapon
-$    Z    Choose prepared weapon
-$    ?    Display manual
+$      @    Display character information
+$      TAB  Melee attack adjacent monster
+$      >    Go down staircase
+$      a    Examine/use/apply something on the map
+$      b    Bash (doors)
+$      c    Close (doors)
+$      d    Drop item
+$      e    Ready/aim/throw explosive
+$      f    Aim/fire ranged weapon
+$      g    Pick up item
+$      h    Heal/rest
+$      i    Display inventory
+$      j    Jam a door
+$      k    Kick
+$      K    Display kick stats
+$      l    Display descriptions of things in view
+$      L    Display message history
+$      m    Choose missiles to use
+$      M    Quit using current missiles
+$      r    Reload wielded firearm
+$      R    Read
+$      s    Wait/Search for 10 turns
+$      S    Save (must stand on stairs)
+$      t    Throw missile
+$      T    Trigger trap you stand on
+$      u    Unload ammunition from a weapon on the ground
+$      w    Wield/Wear
+$      q    Quaff potion
+$      Q    Quit
+$      x    Cast memorized spells
+$      z    Swap to prepared weapon
+$      Z    Choose prepared weapon
+$      ?    Display manual
 
 
 3. THE INTERFACE

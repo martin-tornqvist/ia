@@ -1,30 +1,24 @@
-/*-----------------------------------------
-Class for bashing doors, chests(?), etc(?).
-The bashed object handles success chance,
-setting of traps, and various failure modes.
-This class works only as a "bridge" between
-basher and bashee.
-------------------------------------------*/
-
 #ifndef BASH_H
 #define BASH_H
 
 #include "FeatureDoor.h"
 
 class Engine;
+class Feature;
 
 class Bash
 {
-   public:
-      Bash(Engine* engine) : eng(engine) {}
-      ~Bash() {}
+public:
+	Bash(Engine* engine) : eng(engine) {}
+	~Bash() {}
 
-      void playerBash() const;
+	void playerBash() const;
 
-      //void monsterBashDirection(Actor* const actorBashing, const coord dir) const;
+private:
+   friend class Feature;
+   void playerBashFeature(Feature* const feature) const;
 
-   private:
-      Engine* eng;
+	Engine* eng;
 };
 
 #endif

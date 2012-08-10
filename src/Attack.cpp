@@ -63,7 +63,7 @@ void Attack::getAttackData(AttackData& data, const coord target, const coord cur
 		if(data.currentDefender->getInstanceDefinition()->canDodge == true) {
 			const int DEFENDER_DODGE_SKILL = data.currentDefender->getInstanceDefinition()->abilityValues.getAbilityValue(ability_dodge, true);
 
-         const coord defenderPos = data.currentDefender->pos;
+			const coord defenderPos = data.currentDefender->pos;
 			const int DODGE_MOD_AT_FEATURE = eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();
 
 			const int TOTAL_DODGE = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
@@ -118,22 +118,22 @@ void Attack::getAttackData(AttackData& data, const coord target, const coord cur
 		}
 
 		if(isDefenderAware == false) {
-			data.totalSkill += 50;
+			data.totalSkill += 30;
 			data.attackResult = eng->abilityRoll->roll(data.totalSkill);
-			if(data.attackResult == successCritical) {
+//			if(data.attackResult == successCritical) {
+//				data.dmgRoll = data.dmgRolls * data.dmgSides;
+//				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
+//			} else {
+//				data.dmgRoll = eng->dice(data.dmgRolls, data.dmgSides);
+//				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
+//			}
+//			const int BACKSTAB_SKILL = data.attacker->getInstanceDefinition()->abilityValues.getAbilityValue(ability_backstabbing, true);
+//			const AbilityRollResult_t BACKSTAB_ROLL = eng->abilityRoll->roll(BACKSTAB_SKILL);
+//			if(BACKSTAB_ROLL >= successSmall) {
 				data.dmgRoll = data.dmgRolls * data.dmgSides;
-				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-			} else {
-				data.dmgRoll = eng->dice(data.dmgRolls, data.dmgSides);
-				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-			}
-			const int BACKSTAB_SKILL = data.attacker->getInstanceDefinition()->abilityValues.getAbilityValue(ability_backstabbing, true);
-			const AbilityRollResult_t BACKSTAB_ROLL = eng->abilityRoll->roll(BACKSTAB_SKILL);
-			if(BACKSTAB_ROLL >= successSmall) {
-				data.dmgRoll = data.dmgRolls * data.dmgSides;
-				data.dmg = (data.dmgRoll + data.dmgPlus) * 3 / 2;
+				data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
 				data.isBackStab = true;
-			}
+//			}
 		}
 
 		// Attack bonus from light or heavy melee weapon?

@@ -29,10 +29,6 @@ FULLSCREEN=0
 SKIP_INTRO_LEVEL=1
 
 
-# Always ask for direction for 'Close, 'Bash', 'Kick' etc? 0 = no, 1 = yes.
-ALWAYS_ASK_DIRECTION=0
-
-
 # Delay before key repeat starts when holding down a key (ms).
 KEY_REPEAT_DELAY=180
 

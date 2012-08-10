@@ -24,6 +24,8 @@
 #include "ItemFactory.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
+#include "PlayerBonuses.h"
+#include "Examine.h"
 
 extern void profiler(bool init);
 
@@ -160,6 +162,17 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		clearMessages();
 		if(eng->player->deadState == actorDeadState_alive) {
 			eng->dungeonClimb->attemptUseDownStairs();
+		}
+		clearKeyEvents();
+	}
+	break;
+
+	//----------------------------------------APPLY/USE/EXAMINE
+	case int('a'): {
+		clearMessages();
+		if(eng->player->deadState == actorDeadState_alive) {
+			eng->examine->playerExamine();
+			eng->renderer->flip();
 		}
 		clearKeyEvents();
 	}
@@ -530,8 +543,10 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 				eng->player->getSpotedEnemies();
 				if(eng->player->spotedEnemies.size() == 0) {
 					const int TURNS_BEFORE_BON = 70;
-					const int PLAYER_FIRST_AID_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_firstAid, true);
-					const int TURNS_AFTER_BON = max(20, static_cast<int>(static_cast<float>(TURNS_BEFORE_BON * (100 - PLAYER_FIRST_AID_SKILL)) / 100.0));
+//					const int PLAYER_FIRST_AID_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_firstAid, true);
+//               const int TURNS_AFTER_BON = max(20, static_cast<int>(static_cast<float>(TURNS_BEFORE_BON * (100 - PLAYER_FIRST_AID_SKILL)) / 100.0));
+					const int PLAYER_HEALING_RANK = eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid);
+					const int TURNS_AFTER_BON = PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 					const string TURNS_STR = intToString(TURNS_AFTER_BON);
 					eng->log->addMessage("You rest here and attend your wounds (" + TURNS_STR + " turns)...");
 					eng->player->firstAidTurnsLeft = TURNS_AFTER_BON;

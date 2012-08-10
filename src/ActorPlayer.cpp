@@ -20,6 +20,7 @@
 #include "Fov.h"
 #include "ItemFactory.h"
 #include "ActorFactory.h"
+#include "PlayerBonuses.h"
 
 Player::Player() :
 	firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0), insanityShortTemp(0), arcaneKnowledge(0),
@@ -734,7 +735,7 @@ void Player::updateColor() {
 	const int CUR_SHOCK = insanityShort + insanityShortTemp;
 
 	if(CUR_SHOCK >= 75) {
-      clr = clrMagenta;
+		clr = clrMagenta;
 
 //		const SDL_Color insaneClr = clrMagenta;
 //
@@ -832,28 +833,6 @@ void Player::act() {
 
 	//Lose long-term sanity from high short-term sanity?
 	if(insanityShort + insanityShortTemp >= 100) {
-		/*Examples:
-		 (divided by 10)
-		 sanityShort		Risk (%)
-		 --------------------
-		 50				0
-		 40				1
-		 25				2.5 (2)
-		 20				3
-		 10				4
-		 0				5
-
-		 (divided by 5)
-		 sanityShort		Risk (%)
-		 --------------------
-		 50				0
-		 40				2
-		 25				5
-		 20				6
-		 10				8
-		 0				10
-		 */
-
 		incrInsanityLong();
 		eng->gameTime->letNextAct();
 		return;
@@ -862,7 +841,7 @@ void Player::act() {
 	const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
 	for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-		//If auto-traveling or applying first aid etc, messages may be printed for monsters that comes into view.
+		//If applying first aid etc, messages may be printed for monsters that comes into view.
 		//Only print monster-comes-into-view-messages if player is busy with something (first aid, auto travel etc).
 
 		Actor* const actor = eng->gameTime->getActorAt(i);
@@ -906,8 +885,20 @@ void Player::act() {
 	}
 
 	if(firstAidTurnsLeft == -1) {
-		if(m_statusEffectsHandler->allowSee()) {
 
+		//Passive HP-regeneration from high first aid?
+		if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 3) {
+			if(m_statusEffectsHandler->hasEffect(statusDiseased) == false) {
+				const int REGEN_N_TURN = 8;
+				if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
+					if(getHP() < getHP_max()) {
+						m_instanceDefinition.HP++;
+					}
+				}
+			}
+		}
+
+		if(m_statusEffectsHandler->allowSee()) {
 			//Look for secret doors and traps
 			for(int dx = -1; dx <= 1; dx++) {
 				for(int dy = -1; dy <= 1; dy++) {
@@ -932,6 +923,9 @@ void Player::act() {
 		eng->log->addMessage("You finish applying first aid.");
 		eng->renderer->flip();
 		restoreHP(99999);
+		if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 2) {
+			m_statusEffectsHandler->endEffect(statusDiseased);
+		}
 		firstAidTurnsLeft = -1;
 	}
 	if(firstAidTurnsLeft > 0) {
@@ -1167,42 +1161,16 @@ void Player::kick() {
 
 	Actor* actorToKick = NULL;
 
-	//If there is only one adjacent visible actor, kick it
-	if(eng->config->ALWAYS_ASK_DIRECTION == false) {
-		int adjacentActorCount = 0;
-		for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-			Actor* actor = eng->gameTime->getActorAt(i);
-			if(actor != this) {
-				if(actor->deadState == actorDeadState_alive) {
-					if(eng->mapTests->isCellsNeighbours(pos, actor->pos, false)) {
-						if(checkIfSeeActor(*actor, blockers)) {
-							adjacentActorCount++;
-							if(adjacentActorCount == 1) {
-								actorToKick = actor;
-							} else {
-								actorToKick = NULL;
-								i = 9999999;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	eng->log->addMessage("Kick in what direction? [Space/Esc Cancel]", clrWhiteHigh);
+	eng->renderer->flip();
+	const coord delta = eng->query->direction();
+	eng->log->clearLog();
+	if(delta == coord(0, 0)) {
+		return;
+	} else {
+		const coord kickPos = pos + delta;
+		actorToKick = eng->mapTests->getActorAtPos(kickPos);
 
-	//If not exactly one adjacent visible actor was found, ask player for direction
-	if(actorToKick == NULL) {
-		eng->log->addMessage("Kick in what direction? [Space/Esc Cancel]", clrWhiteHigh);
-		eng->renderer->flip();
-		const coord delta = eng->query->direction();
-		eng->log->clearLog();
-		if(delta == coord(0, 0)) {
-			return;
-		} else {
-			const coord kickPos = pos + delta;
-			actorToKick = eng->mapTests->getActorAtPos(kickPos);
-
-		}
 	}
 
 	if(actorToKick == NULL) {

@@ -23,15 +23,6 @@
 #include "Highscore.h"
 #include "Postmortem.h"
 
-double clo;
-void profiler(bool init) {
-	if(init) {
-		clo = double(clock()) / double(CLOCKS_PER_SEC);
-	} else {
-		cout << (double(clock()) / double(CLOCKS_PER_SEC) - clo) * 1000 << endl;
-	}
-}
-
 //FILE * ctt = fopen("CON", "w" );
 #undef main
 int main(int argc, char* argv[]) {
@@ -148,11 +139,7 @@ int main(int argc, char* argv[]) {
 	}
 	engine->cleanupRenderer();
 	engine->cleanupAudio();
-
-	cout << "Deleting engine" << endl;
 	delete engine;
-
-	cout << "Exiting game" << endl;
 	return 0;
 }
 

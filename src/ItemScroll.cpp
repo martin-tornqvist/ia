@@ -394,9 +394,9 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 
 			specificRead(IS_FROM_MEMORY, engine);
 
-			if(m_archetypeDefinition->isScrollLearned == false) {
-				const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
-				if(identifyRollResult >= successSmall) {
+			if(m_archetypeDefinition->isScrollLearned == false && m_archetypeDefinition->isScrollLearnable) {
+				const AbilityRollResult_t learnRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
+				if(learnRollResult >= successSmall) {
 					engine->log->addMessage("You learn to cast this incantation by heart!");
 					m_instanceDefinition.isScrollLearned = true;
 					m_archetypeDefinition->isScrollLearned = true;

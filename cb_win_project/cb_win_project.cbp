@@ -161,6 +161,8 @@
 		<Unit filename="..\src\DungeonReadWrite.h" />
 		<Unit filename="..\src\Engine.cpp" />
 		<Unit filename="..\src\Engine.h" />
+		<Unit filename="..\src\Examine.cpp" />
+		<Unit filename="..\src\Examine.h" />
 		<Unit filename="..\src\Explosion.cpp" />
 		<Unit filename="..\src\Explosion.h" />
 		<Unit filename="..\src\Feature.cpp" />
@@ -179,6 +181,8 @@
 		<Unit filename="..\src\FeatureSmoke.h" />
 		<Unit filename="..\src\FeatureTrap.cpp" />
 		<Unit filename="..\src\FeatureTrap.h" />
+		<Unit filename="..\src\FeatureVariousExaminable.cpp" />
+		<Unit filename="..\src\FeatureVariousExaminable.h" />
 		<Unit filename="..\src\Fov.cpp" />
 		<Unit filename="..\src\Fov.h" />
 		<Unit filename="..\src\FovPreCalc.cpp" />

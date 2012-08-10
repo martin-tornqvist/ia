@@ -4,6 +4,7 @@
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
+#include "Render.h"
 
 Feature::Feature(Feature_t id, coord pos, Engine* engine, FeatureSpawnData* spawnData) :
 	pos_(pos), eng(engine), def_(eng->featureData->getFeatureDef(id)), hasBlood_(false) {
@@ -109,6 +110,11 @@ Feature_t Feature::getId() const {
 
 int Feature::getDodgeModifier() const {
 	return def_->dodgeModifier;
+}
+
+void Feature::examine() {
+   eng->log->addMessage("You find nothing specific there to examine or use.");
+   eng->renderer->flip();
 }
 
 void FeatureStatic::setGoreIfPossible() {

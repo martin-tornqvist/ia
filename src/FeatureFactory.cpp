@@ -10,12 +10,14 @@
 #include "FeatureSmoke.h"
 #include "FeatureProxEvent.h"
 #include "Map.h"
+#include "FeatureVariousExaminable.h"
 
 using namespace std;
 
 Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord pos, FeatureSpawnData* spawnData) {
 	const FeatureDef* const def = eng->featureData->getFeatureDef(id);
 
+   //General (simple) features
 	if(def->spawnType == featureSpawnType_static) {
 		assert(spawnData == NULL);
 		FeatureStatic* feature = new FeatureStatic(id, pos, eng);
@@ -29,6 +31,8 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord pos, Fea
 		eng->gameTime->addFeatureMob(feature);
 		return feature;
 	}
+
+	//Features with specific class
 	switch (id) {
 	case feature_door: {
 		assert(spawnData != NULL);
@@ -83,6 +87,14 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord pos, Fea
 		eng->gameTime->addFeatureMob(proxEvent);
 		delete spawnData;
 		return proxEvent;
+	}
+	break;
+	case feature_tomb: {
+		assert(spawnData == NULL);
+		Tomb* tomb = new Tomb(id, pos, eng);
+		replaceStaticFeatureAt(tomb, pos);
+		assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+		return tomb;
 	}
 	break;
 	default: {

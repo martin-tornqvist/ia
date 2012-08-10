@@ -161,7 +161,7 @@ void DungeonMaster::playerGainsExp(int exp) {
 
 						int& hp_max = eng->player->getInstanceDefinition()->HP_max;
 
-						hp_max += 3; //eng->dice(1, 4);
+						hp_max += 2;
 
 						eng->player->restoreHP(hp_max / 2, false);
 

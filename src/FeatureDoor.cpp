@@ -73,6 +73,9 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
 	break;
 
 	}
+
+	const int CHANCE_FOR_METAL = 20;
+	material_ = eng->dice(1, 100) < CHANCE_FOR_METAL ? doorMaterial_metal : doorMaterial_wood;
 }
 
 bool Door::isMovePassable(Actor* const actorMoving) const {
@@ -114,7 +117,10 @@ bool Door::isSmokePassable() const {
 }
 
 SDL_Color Door::getColor() const {
-	return isSecret_ ? mimicFeature_->color : clrBrownDark;
+   if(isSecret_) {
+      return mimicFeature_->color;
+   }
+	return material_ == doorMaterial_metal ? clrGray : clrBrownDark;
 }
 
 char Door::getGlyph() const {
@@ -361,9 +367,12 @@ void Door::tryClose(Actor* actorTrying) {
 		if(BLOCKED) {
 			closable = false;
 			if(IS_PLAYER) {
-				if(TRYER_IS_BLIND == false)
+				if(TRYER_IS_BLIND == false) {
 					eng->log->addMessage("The door is blocked.");
-				else eng->log->addMessage("Something is blocking the door.");
+				}
+				else {
+               eng->log->addMessage("Something is blocking the door.");
+				}
 			}
 		}
 	}

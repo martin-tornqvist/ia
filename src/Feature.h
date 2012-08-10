@@ -50,6 +50,7 @@ public:
 	void setHasBlood(const bool HAS_BLOOD);
 	Feature_t getId() const;
 	virtual int getDodgeModifier() const;
+	virtual void examine();
 protected:
 	friend class Map;
 	Feature(Feature_t id, coord pos, Engine* engine, FeatureSpawnData* spawnData = NULL);

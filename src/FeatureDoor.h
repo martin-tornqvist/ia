@@ -17,6 +17,11 @@ enum DoorSpawnState_t {
 	doorSpawnState_secretAndStuck
 };
 
+enum DoorMaterial_t {
+   doorMaterial_wood,
+   doorMaterial_metal
+};
+
 class Engine;
 class DoorSpawnData;
 
@@ -69,6 +74,8 @@ protected:
 	int nrOfSpikes_;
 
 	bool isOpen_, isBroken_, isStuck_, isSecret_;
+
+	DoorMaterial_t material_;
 
 	friend class Player;
 	void playerTrySpotHidden();

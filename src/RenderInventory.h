@@ -18,14 +18,15 @@ public:
 
 private:
 	RenderInventory& operator=(const RenderInventory& other) {
-	   (void)other; return *this;
-   }
+		(void)other; return *this;
+	}
 
 	void drawSlots(vector<InventorySlotButton>* slotButtons, const MenuBrowser& browser, const bool DRAW_BROWSER);
 	void drawGeneralItems(const int xPosOffset, const InventoryPurpose_t purpose, const MenuBrowser& browser, const bool DRAW_BROWSER);
 
 	Engine* eng;
 
+	friend class Examine;
 	const int xPosListsLeft1;
 	const int xPosListsLeft2;
 	const int xPosListsLeft3;

@@ -72,6 +72,7 @@ class MenuInputHandler;
 class PlayerPowersHandler;
 class KnockBack;
 class CharacterInfo;
+class Examine;
 class PlayerCreateCharacter;
 
 class Player;
@@ -161,6 +162,7 @@ public:
 	PlayerPowersHandler* playerPowersHandler;
 	KnockBack* knockBack;
 	CharacterInfo* characterInfo;
+	Examine* examine;
 	PlayerCreateCharacter* playerCreateCharacter;
 
 	Player* player;

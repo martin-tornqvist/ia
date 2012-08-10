@@ -16,8 +16,6 @@ Config::Config() :
 
 	LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
 
-	MAINSCREEN_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1),
-
 	CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
 
 	CHARACTER_LINES_Y_CELLS(3),
@@ -30,7 +28,9 @@ Config::Config() :
 
 	PLAYER_START_Y(MAP_Y_CELLS_HALF),
 
-	BOT_PLAYING(false) {
+	BOT_PLAYING(false),
+
+	MAINSCREEN_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1) {
 
 	read();
 
@@ -132,12 +132,12 @@ void Config::trySetVariableFromLine(string line) {
 		SKIP_INTRO_LEVEL = line.at(0) == '0' ? false : true;
 	}
 
-	varName = "ALWAYS_ASK_DIRECTION=";
-	foundPos = line.find(varName);
-	if(foundPos != string::npos) {
-		line = line.substr(foundPos + varName.size());
-		ALWAYS_ASK_DIRECTION = line.at(0) == '0' ? false : true;
-	}
+//	varName = "ALWAYS_ASK_DIRECTION=";
+//	foundPos = line.find(varName);
+//	if(foundPos != string::npos) {
+//		line = line.substr(foundPos + varName.size());
+//		ALWAYS_ASK_DIRECTION = line.at(0) == '0' ? false : true;
+//	}
 
 	varName = "KEY_REPEAT_DELAY=";
 	foundPos = line.find(varName);

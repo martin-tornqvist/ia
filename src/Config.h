@@ -32,7 +32,7 @@ public:
 
 	bool SKIP_INTRO_LEVEL;
 
-	bool ALWAYS_ASK_DIRECTION;
+//	bool ALWAYS_ASK_DIRECTION;
 
 	bool AUTO_RELOAD_GUNS;
 

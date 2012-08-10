@@ -393,6 +393,7 @@ void FeatureData::makeList() {
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_tomb;
+	d.spawnType = featureSpawnType_other;
 	d.name_a = "a tomb";
 	d.name_the = "the tomb";
 	d.glyph = '&';//4;

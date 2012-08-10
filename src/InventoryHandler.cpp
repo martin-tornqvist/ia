@@ -27,11 +27,6 @@ void InventoryHandler::activateItem(const InventoryPurpose_t purpose, const unsi
 		decrease = activateReturnValue == itemActivate_destroyed;
 	}
 	break;
-//    case inventoryPurpose_read: {
-//        const ItemActivateReturn_t activateReturnValue = dynamic_cast<Scroll*> (item)->study(eng);
-//        decrease = activateReturnValue == itemActivate_destroyed;
-//    }
-	break;
 	case inventoryPurpose_readyExplosive: {
 		dynamic_cast<Explosive*>(item)->setPlayerExplosive(eng);
 	}
@@ -106,12 +101,6 @@ void InventoryHandler::showGeneralItemsFiltered(const GeneralInventoryFilters_t 
 				generalItemsToShow.push_back(i);
 		}
 		break;
-
-//        case generalInventoryFilter_readable: {
-//            if(curDef->isReadable && !curDef->isScrollLearned /*&& curDef->isScrollLearnable*/)
-//                generalItemsToShow.push_back(i);
-//        }
-		break;
 		}
 	}
 }
@@ -174,10 +163,6 @@ void InventoryHandler::updatePlayerGeneralSlotButtons(const InventoryPurpose_t p
 		areSlotsShown = false;
 	}
 
-//    if(purpose == inventoryPurpose_read) {
-//        showGeneralItemsFiltered(generalInventoryFilter_readable);
-//    }
-
 	if(purpose == inventoryPurpose_quaff) {
 		showGeneralItemsFiltered(generalInventoryFilter_quaffable);
 	}
@@ -212,7 +197,6 @@ void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
 	const bool DRAW_BROWSER = purpose != inventoryPurpose_look;
 
 	if(generalItemsToShow.size() == 0 && (
-//	         purpose == inventoryPurpose_read ||
 	         purpose == inventoryPurpose_use ||
 	         purpose == inventoryPurpose_quaff ||
 	         purpose == inventoryPurpose_eat ||
@@ -224,8 +208,6 @@ void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
 
 		if(purpose == inventoryPurpose_use)
 			eng->log->addMessage("You have nothing to use.");
-//		if(purpose == inventoryPurpose_read)
-//			eng->log->addMessage("You have nothing to study.");
 		if(purpose == inventoryPurpose_quaff)
 			eng->log->addMessage("You have nothing to drink.");
 		if(purpose == inventoryPurpose_eat)
@@ -277,7 +259,6 @@ void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
 				}
 			}
 			break;
-//			case inventoryPurpose_read:
 			case inventoryPurpose_eat:
 			case inventoryPurpose_use:
 			case inventoryPurpose_quaff:

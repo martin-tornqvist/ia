@@ -70,8 +70,8 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
 	d.HP_max = HP_AFTER_CAP;
 
 	//Set weapon abilities from progression formula
-	const int ATTACK_BASE = 15;
-	const double ATTACK_INCR = 4.5;
+	const int ATTACK_BASE = 10;
+	const double ATTACK_INCR = 5.0;
 	const int ATTACK_CAP = 50;
 
 	const int ATTACK = static_cast<int>(ceil(static_cast<double>(ATTACK_BASE) + ATTACK_INCR * static_cast<double>(EFFECTIVE_LEVEL - 1)));
@@ -1131,7 +1131,7 @@ void ActorData::defineAllActors() {
 	d.shockValue = shockValue_heavy;
 	setStrengthsFromFormula(d, weak);
 	d.abilityValues.setAbilityValue(ability_sneaking, 80);
-	d.abilityValues.setAbilityValue(ability_backstabbing, 60);
+//	d.abilityValues.setAbilityValue(ability_backstabbing, 60);
 	finalizeDefinition(d);
 	d.reset();
 

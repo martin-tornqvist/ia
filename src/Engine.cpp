@@ -27,6 +27,7 @@
 #include "DungeonClimb.h"
 #include "DungeonMaster.h"
 #include "Explosion.h"
+#include "Examine.h"
 #include "FeatureFactory.h"
 #include "Fov.h"
 #include "GameTime.h"
@@ -176,6 +177,7 @@ void Engine::initGame() {
 	menuInputHandler = new MenuInputHandler(this);
 	playerPowersHandler = new PlayerPowersHandler(this);
 	knockBack = new KnockBack(this);
+	examine = new Examine(this);
 	characterInfo = new CharacterInfo(this);
 }
 
@@ -246,6 +248,7 @@ void Engine::cleanupGame() {
 	delete menuInputHandler;
 	delete playerPowersHandler;
 	delete knockBack;
+	delete examine;
 	delete characterInfo;
 
 	delete marker;

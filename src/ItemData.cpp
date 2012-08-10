@@ -109,7 +109,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isMeleeWeapon = true;
 		d->meleeDmg = DiceParam(1, 6);
 		d->isRangedWeapon = true;
-		d->rangedMissileGlyph = '/';
+		d->rangedMissileGlyph = '\\';
 		d->rangedMissileColor = clrWhite;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
 	}
@@ -437,7 +437,7 @@ void ItemData::makeList() {
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
 	d->rangedSoundMessage = "You hear a very crude gun being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE + 1;
-	d->rangedMissileGlyph = '/';
+	d->rangedMissileGlyph = '\\';
 	d->rangedMissileColor = clrGray;
 	d->spawnStandardMinDLVL = 4;
 	d->causeOfDeathMessage = "Perforated by a Spike Gun";
@@ -481,7 +481,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
 	d->itemWeight = itemWeight_extraLight;
 	d->tile = tile_dagger;
-	d->glyph = '/';
+	d->glyph = '\\';
 	d->color = clrWhite;
 	d->missileBaseAttackSkill = 0;
 	d->missileDmg = DiceParam(2, 4);
@@ -797,7 +797,7 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_rangedWpnIntr);
 	d->rangedMissileLeavesTrail = true;
 	d->rangedMissileColor = clrYellow;
-	d->rangedMissileGlyph = '/';
+	d->rangedMissileGlyph = '\\';
 	d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
 	d->rangedDamageType = damageType_electricity;
 	d->rangedStatusEffect = new StatusParalyzed(2);
@@ -843,7 +843,7 @@ void ItemData::makeList() {
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
 	d->rangedSoundMessage = "You hear something being thrown your way.";
 	d->rangedMissileColor = clrBrown;
-	d->rangedMissileGlyph = '/';
+	d->rangedMissileGlyph = '\\';
 	d->causeOfDeathMessage = "Hit by a Javelin from a Deep One";
 	d->rangedSoundStrength = 3;
 	itemDefinitions[d->devName] = d;

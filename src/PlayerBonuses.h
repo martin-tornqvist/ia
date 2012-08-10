@@ -136,12 +136,21 @@ public:
 		getBonusAt(ELEMENT).picked_ = true;
 	}
 
-	void increaseBonus(const Abilities_t ability) {
+	void increaseBonusForAbility(const Abilities_t ability) {
 		for(unsigned int i = 0; i < bonuses_.size(); i++) {
 			if(bonuses_.at(i).getAbility() == ability) {
 				bonuses_.at(i).incrRank();
 			}
 		}
+	}
+
+	int getBonusRankForAbility(const Abilities_t ability) {
+		for(unsigned int i = 0; i < bonuses_.size(); i++) {
+			if(bonuses_.at(i).getAbility() == ability) {
+				return bonuses_.at(i).rank_;
+			}
+		}
+		return -1;
 	}
 
 	bool isBonusPickableAt(const unsigned int ELEMENT) {
