@@ -598,7 +598,6 @@ void SpecialRoom::attemptRunEvents() {
 
 		//New turn
 		for(unsigned int i = 0; i < modules.size(); i++) {
-			eng->player->insanityShortTemp += modules.at(i)->getTempInsanity();
 			modules.at(i)->newTurn();
 		}
 	}

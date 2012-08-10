@@ -51,22 +51,12 @@ void GameTime::letNextAct() {
 		eng->playerVisualMemory->updateVisualMemory();
 		eng->player->FOVupdate();
 		eng->specialRoomHandler->runRoomEvents();
-		const coord c = eng->player->pos;
-		if(eng->map->darkness[c.x][c.y] & ! eng->map->light[c.x][c.y]) {
-			eng->player->insanityShortTemp += 16;
-		}
+		eng->player->setTempShockFromFeatures();
 	} else {
 		// Monster turn ends
 		Monster* monster = dynamic_cast<Monster*>(currentActor);
-		if(monster->playerAwarenessCounter <= 0) {
-			// Monsters who are unaware of the player skips every other turn. This makes stuff
-			// like healing for 70 turns run faster. It also looks cool when monsters turn aware
-			//  and they move faster (as if running)
-//            if(monster->getStatusEffectsHandler()->hasEffect(statusWaiting) == false) {
-//                monster->getStatusEffectsHandler()->attemptAddEffect(new StatusWaiting(1), true, true);
-//            }
-		} else {
-			monster->playerAwarenessCounter -= 1;
+		if(monster->playerAwarenessCounter > 0) {
+		    monster->playerAwarenessCounter -= 1;
 		}
 		monster->clearHeardSounds();
 	}
@@ -78,13 +68,14 @@ void GameTime::letNextAct() {
 		currentTurnType = static_cast<TurnType_t>(currentTurnTypePos_);
 
 		currentActorVectorPos_++;
+
 		if(static_cast<unsigned int>(currentActorVectorPos_) >= actors_.size()) {
 			currentActorVectorPos_ = 0;
 			currentTurnTypePos_++;
 			if(currentTurnTypePos_ == endOfTurnType) {
 				currentTurnTypePos_ = 0;
 			}
-			if(currentTurnType == turnType_normal1 || currentTurnType == turnType_normal2) {
+			if(currentTurnType != turnType_fast && currentTurnType != turnType_fastest) {
 				runNewTurnEvents();
 			}
 		}
@@ -96,11 +87,11 @@ void GameTime::letNextAct() {
 		const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
 		switch(realSpeed) {
 		case actorSpeed_sluggish: {
-			actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal2) && eng->dice(1,100) < 65;
+			actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice(1,100) < 65;
 		}
 		break;
 		case actorSpeed_slow: {
-			actorWhoCanActThisTurnFound = currentTurnType == turnType_slow || currentTurnType == turnType_normal2;
+			actorWhoCanActThisTurnFound = currentTurnType == turnType_slow || currentTurnType == turnType_normal_2;
 		}
 		break;
 		case actorSpeed_normal: {
@@ -120,8 +111,6 @@ void GameTime::letNextAct() {
 
 	// Player turn begins?
 	if(currentActor == eng->player) {
-		// Try to spot sneaking monsters
-
 		eng->renderer->drawMapAndInterface();
 		eng->player->newTurn();
 	}

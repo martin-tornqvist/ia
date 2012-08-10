@@ -1664,12 +1664,12 @@
 	"PlayerBonuses.h"
 	"BasicUtils.h"
 
-1341078482 f:\dev\ia\src\abilityvalues.h
+1344610856 f:\dev\ia\src\abilityvalues.h
 	<vector>
 	<string>
 	<iostream>
 
-1338637187 f:\dev\ia\src\engine.h
+1344610856 f:\dev\ia\src\engine.h
 	"BasicUtils.h"
 
 1339842083 f:\dev\ia\src\basicutils.h
@@ -1899,13 +1899,13 @@
 1338637187 f:\dev\ia\src\converters.h
 	<string>
 
-1338637187 f:\dev\ia\src\specialroom.h
+1344615296 f:\dev\ia\src\specialroom.h
 	<vector>
 	<string>
 	"ConstTypes.h"
 	"FeatureData.h"
 
-1338637187 f:\dev\ia\src\featuredata.h
+1344616789 f:\dev\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -1947,7 +1947,7 @@
 
 1338637187 f:\dev\ia\src\constdungeonsettings.h
 
-1338637187 f:\dev\ia\src\config.h
+1344610856 f:\dev\ia\src\config.h
 	<string>
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
@@ -1964,11 +1964,11 @@
 	<ctime>
 	<cmath>
 
-1341078562 f:\dev\ia\src\actorplayer.h
+1344615909 f:\dev\ia\src\actorplayer.h
 	"Actor.h"
 	"ConstTypes.h"
 
-1341080758 f:\dev\ia\src\playerbonuses.h
+1344610856 f:\dev\ia\src\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -2003,13 +2003,13 @@
 	"SpawnCounter.h"
 	"Art.h"
 
-1338637187 f:\dev\ia\src\gametime.h
+1344628203 f:\dev\ia\src\gametime.h
 	<vector>
 	<stdexcept>
 	"Feature.h"
 	"ActorData.h"
 
-1338637187 f:\dev\ia\src\feature.h
+1344616929 f:\dev\ia\src\feature.h
 	<vector>
 	<string>
 	"SDL/SDL.h"
@@ -2132,7 +2132,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1338637187 f:\dev\ia\src\featuredoor.h
+1344610856 f:\dev\ia\src\featuredoor.h
 	<iostream>
 	"SDL/SDL.h"
 	"Feature.h"
@@ -2185,7 +2185,7 @@
 	<string>
 	"Item.h"
 
-1341062745 source:f:\dev\ia\src\actordata.cpp
+1344610856 source:f:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -2272,7 +2272,7 @@
 1339842083 source:f:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1341078630 source:f:\dev\ia\src\actorplayer.cpp
+1344628845 source:f:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -2293,6 +2293,7 @@
 	"Fov.h"
 	"ItemFactory.h"
 	"ActorFactory.h"
+	"PlayerBonuses.h"
 
 1339842083 f:\dev\ia\src\playercreatecharacter.h
 	<string>
@@ -2347,7 +2348,7 @@
 	"Art.h"
 	"Engine.h"
 
-1341062745 source:f:\dev\ia\src\attack.cpp
+1344610856 source:f:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -2373,7 +2374,7 @@
 1339842083 f:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1341062745 source:f:\dev\ia\src\attackranged.cpp
+1344610856 source:f:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -2419,7 +2420,7 @@
 	<string>
 	"ActorData.h"
 
-1338637187 source:f:\dev\ia\src\bash.cpp
+1344610856 source:f:\dev\ia\src\bash.cpp
 	"Bash.h"
 	"Engine.h"
 	"GameTime.h"
@@ -2429,7 +2430,7 @@
 	"Log.h"
 	"Query.h"
 
-1338637187 f:\dev\ia\src\bash.h
+1344610856 f:\dev\ia\src\bash.h
 	"FeatureDoor.h"
 
 1338637187 source:f:\dev\ia\src\basicutils.cpp
@@ -2485,7 +2486,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1339842083 source:f:\dev\ia\src\close.cpp
+1344610856 source:f:\dev\ia\src\close.cpp
 	"Close.h"
 	"Engine.h"
 	"GameTime.h"
@@ -2497,10 +2498,10 @@
 	"Log.h"
 	"Query.h"
 
-1338637187 f:\dev\ia\src\close.h
+1344610856 f:\dev\ia\src\close.h
 	"ConstTypes.h"
 
-1339842083 source:f:\dev\ia\src\config.cpp
+1344610856 source:f:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -2563,7 +2564,7 @@
 	<vector>
 	"ItemData.h"
 
-1341062745 source:f:\dev\ia\src\dungeonmaster.cpp
+1344610856 source:f:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -2591,7 +2592,7 @@
 
 1338637187 source:f:\dev\ia\src\dungeonreadwrite.cpp
 
-1341062745 source:f:\dev\ia\src\engine.cpp
+1344610856 source:f:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -2617,6 +2618,7 @@
 	"DungeonClimb.h"
 	"DungeonMaster.h"
 	"Explosion.h"
+	"Examine.h"
 	"FeatureFactory.h"
 	"Fov.h"
 	"GameTime.h"
@@ -2696,7 +2698,7 @@
 	"Item.h"
 	"StatusEffects.h"
 
-1338637187 f:\dev\ia\src\jamwithspike.h
+1344610856 f:\dev\ia\src\jamwithspike.h
 	"FeatureDoor.h"
 
 1338637187 f:\dev\ia\src\fovprecalc.h
@@ -2732,7 +2734,7 @@
 	<vector>
 	"MenuBrowser.h"
 
-1341062745 f:\dev\ia\src\renderinventory.h
+1344610856 f:\dev\ia\src\renderinventory.h
 	"InventoryHandler.h"
 	"ItemData.h"
 	"MenuBrowser.h"
@@ -2775,20 +2777,21 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1338637187 source:f:\dev\ia\src\feature.cpp
+1344616929 source:f:\dev\ia\src\feature.cpp
 	"Feature.h"
 	"Engine.h"
 	"Actor.h"
 	"ActorPlayer.h"
 	"Log.h"
+	"Render.h"
 
-1338637187 source:f:\dev\ia\src\featuredata.cpp
+1344617309 source:f:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
 	"Colors.h"
 
-1341062745 source:f:\dev\ia\src\featuredoor.cpp
+1344610856 source:f:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -2799,7 +2802,7 @@
 	"Log.h"
 	"Postmortem.h"
 
-1338637187 source:f:\dev\ia\src\featurefactory.cpp
+1344610856 source:f:\dev\ia\src\featurefactory.cpp
 	"FeatureFactory.h"
 	<cassert>
 	"Engine.h"
@@ -2809,6 +2812,7 @@
 	"FeatureSmoke.h"
 	"FeatureProxEvent.h"
 	"Map.h"
+	"FeatureVariousExaminable.h"
 
 1338637187 f:\dev\ia\src\featurelitdynamite.h
 	"Feature.h"
@@ -2864,7 +2868,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1338637187 source:f:\dev\ia\src\gametime.cpp
+1344628673 source:f:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -2886,7 +2890,7 @@
 	"DungeonMaster.h"
 	"Map.h"
 
-1341062745 source:f:\dev\ia\src\input.cpp
+1344629000 source:f:\dev\ia\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -2912,8 +2916,10 @@
 	"ItemFactory.h"
 	"ActorFactory.h"
 	"ActorMonster.h"
+	"PlayerBonuses.h"
+	"Examine.h"
 
-1339948248 source:f:\dev\ia\src\interface.cpp
+1344628097 source:f:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"SDL/SDL.h"
 	"Engine.h"
@@ -2942,7 +2948,7 @@
 	"Render.h"
 	"ItemFactory.h"
 
-1339950185 source:f:\dev\ia\src\inventoryhandler.cpp
+1344610856 source:f:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemUsable.h"
@@ -2975,7 +2981,7 @@
 	"Engine.h"
 	"Log.h"
 
-1341079113 source:f:\dev\ia\src\itemdata.cpp
+1344610856 source:f:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -3029,7 +3035,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1341079459 source:f:\dev\ia\src\itemscroll.cpp
+1344610856 source:f:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -3053,7 +3059,7 @@
 	"Engine.h"
 	"Explosion.h"
 
-1338637187 source:f:\dev\ia\src\jamwithspike.cpp
+1344610856 source:f:\dev\ia\src\jamwithspike.cpp
 	"JamWithSpike.h"
 	"Engine.h"
 	"GameTime.h"
@@ -3243,7 +3249,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1341085023 source:f:\dev\ia\src\playerallocbonus.cpp
+1344610856 source:f:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -3253,7 +3259,7 @@
 	"Render.h"
 	"DungeonMaster.h"
 
-1341085332 source:f:\dev\ia\src\playerbonuses.cpp
+1344610856 source:f:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	"Engine.h"
@@ -3345,7 +3351,7 @@
 	"ActorPlayer.h"
 	"ActorMonster.h"
 
-1341062745 source:f:\dev\ia\src\renderinventory.cpp
+1344610856 source:f:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -3379,7 +3385,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1338637187 source:f:\dev\ia\src\specialroom.cpp
+1344615587 source:f:\dev\ia\src\specialroom.cpp
 	"SpecialRoom.h"
 	"Engine.h"
 	"MapArea.h"
@@ -3461,7 +3467,7 @@
 	"Map.h"
 	"ActorMonster.h"
 
-1338637187 source:f:\dev\ia\src\main.cpp
+1344610856 source:f:\dev\ia\src\main.cpp
 	<cassert>
 	"SDL/SDL.h"
 	"Declares.h"
@@ -3705,4 +3711,27 @@
 
 1344546805 c:\dev\ia\src\featurevariousexaminable.h
 	"Feature.h"
+
+1344610856 f:\dev\ia\src\examine.h
+	<vector>
+	<string>
+
+1344610856 source:f:\dev\ia\src\examine.cpp
+	"Examine.h"
+	"Engine.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+
+1344610856 f:\dev\ia\src\featurevariousexaminable.h
+	"Feature.h"
+
+1344610856 source:f:\dev\ia\src\featurevariousexaminable.cpp
+	"FeatureVariousExaminable.h"
+	"Engine.h"
+	"Log.h"
+	"Render.h"
 

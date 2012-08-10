@@ -85,6 +85,7 @@ struct FeatureDef {
 	string messageOnPlayerBlockedBlind;
 	string messageOnPlayerEnter;
 	int dodgeModifier;
+	int shockWhenAdjacent;
 	vector<Feature_t> featuresOnDestroyed;
 };
 

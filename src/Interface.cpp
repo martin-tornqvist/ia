@@ -236,5 +236,10 @@ void Interface::drawInfoLines() {
 
 	const string statusLine = eng->player->getStatusEffectsHandler()->getStatusLine();
 	eng->renderer->drawText(statusLine, renderArea_characterLines, xPos, yPos, clrWhite);
+
+	// Turn number
+	str = "TRN:" + intToString(eng->gameTime->getTurn());
+	xPos = MAP_X_CELLS - str.size() - 1;
+	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
 }
 

@@ -112,6 +112,10 @@ int Feature::getDodgeModifier() const {
 	return def_->dodgeModifier;
 }
 
+int Feature::getShockWhenAdjacent() const {
+    return def_->shockWhenAdjacent;
+}
+
 void Feature::examine() {
    eng->log->addMessage("You find nothing specific there to examine or use.");
    eng->renderer->flip();

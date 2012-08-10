@@ -13,10 +13,10 @@ class Engine;
 
 enum TurnType_t {
 	turnType_fast,
-	turnType_normal1,
+	turnType_normal_1,
 	turnType_slow,
 	turnType_fastest,
-	turnType_normal2,
+	turnType_normal_2,
 	endOfTurnType
 };
 

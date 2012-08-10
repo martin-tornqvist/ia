@@ -50,6 +50,7 @@ public:
 	void setHasBlood(const bool HAS_BLOOD);
 	Feature_t getId() const;
 	virtual int getDodgeModifier() const;
+	int getShockWhenAdjacent() const;
 	virtual void examine();
 protected:
 	friend class Map;

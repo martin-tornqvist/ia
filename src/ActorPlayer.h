@@ -61,6 +61,7 @@ public:
 
 	void shock(const ShockValues_t shockValue, const int MODIFIER);
 	void incrInsanityLong();
+    void setTempShockFromFeatures();
 
 	int dynamiteFuseTurns;
 	int molotovFuseTurns;

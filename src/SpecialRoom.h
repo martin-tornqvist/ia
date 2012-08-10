@@ -22,10 +22,7 @@ enum SpecialRoom_t {
 	specialRoom_ritualChamber,
 	specialRoom_shallowWater,
 	specialRoom_shallowMud,
-	//	specialRoom_poolOfAcid,
-	//specialRoom_poolOfLava,
 	specialRoom_poolOfBlood,
-//	specialRoom_chasm,
 	specialRoom_pits,
 	//specialRoom_temple,
 //	specialRoom_armory,
@@ -104,10 +101,6 @@ public:
 		return coord((x1y1.x + x0y0.x) / 2, (x1y1.y + x0y0.y) / 2);
 	}
 
-	virtual int getTempInsanity() const {
-		return 0;
-	}
-
 protected:
 	void clearGoreAt(const int X, const int Y);
 	void clearGoreAt(const coord c);
@@ -129,7 +122,6 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "Somehow, a tiny forest has grown in this room.";
 		return "";
 	}
 };
@@ -144,7 +136,6 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "There is a statue garden in this room.";
 		return "";
 	}
 };
@@ -159,11 +150,7 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "This room is splattered with the remains of slaughtered victims.";
 		return "";
-	}
-	int getTempInsanity() const {
-		return 16;
 	}
 };
 
@@ -177,12 +164,8 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "There is an impenetrable darkness here.";
 		return "";
 	}
-//	int getTempInsanity() const {
-//		return 16;
-//	}
 };
 
 class RoomDescriptModuleSpiderLair: public RoomDescriptModule {
@@ -196,10 +179,6 @@ public:
 	void makeRoom();
 	string getDescript() {
 		return "";
-		//return "There are crawling things stirring in every shadow and crevice. The room is thick with webs. A colony of spiders evidently has their lair here.";
-	}
-	int getTempInsanity() const {
-		return 8;
 	}
 };
 
@@ -214,10 +193,6 @@ public:
 	void makeRoom();
 	string getDescript() {
 		return "";
-//		return "There is a collection of incredibly grotesque statues in this room.";
-	}
-	int getTempInsanity() const {
-		return 40;
 	}
 };
 
@@ -231,11 +206,7 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "This room's floor is covered with loose, rich soil about two feet deep, and headstones are placed in regular rows. There is a scent of rot and mildew hanging in the air.";
 		return "";
-	}
-	int getTempInsanity() const {
-		return 8;
 	}
 };
 
@@ -254,9 +225,6 @@ public:
 	string getDescript() {
 		return "The walls here reaches far upward towards a dark domed ceiling, where wooden beams extend across the room.";
 	}
-	int getTempInsanity() const {
-		return 8;
-	}
 private:
 	void creaturesComeDown();
 	bool allowCreaturesComeDown;
@@ -273,11 +241,7 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "This room has served as a ritual chamber. There is an altar carved out of stone.";
 		return "";
-	}
-	int getTempInsanity() const {
-		return 8;
 	}
 };
 
@@ -308,9 +272,6 @@ public:
 		//return "There is a pond here.";
 		return "";
 	}
-	int getTempInsanity() const {
-		return 4;
-	}
 private:
 	virtual Feature_t getPoolFeatureId() {
 		return feature_shallowWater;
@@ -330,40 +291,11 @@ public:
 		//return "There is a swamp here.";
 		return "";
 	}
-	int getTempInsanity() const {
-		return 4;
-	}
 private:
 	virtual Feature_t getPoolFeatureId() {
 		return feature_shallowMud;
 	}
 };
-
-//class RoomDescriptModulePoolOfAcid: public RoomDescriptModulePool
-//{
-//public:
-//	RoomDescriptModulePoolOfAcid() : RoomDescriptModulePool() {}
-//	RoomDescriptModule* copy() {return new RoomDescriptModulePoolOfAcid(*this);}
-//	void makeRoom();
-//	string getDescript() {return "There is a pool of acid here.";}
-//	int getTempInsanity() const {return 4;}
-//private:
-//	virtual LandscapeDevName_t getPoolFeatureId() {return landscapeDevName_poolAcid;}
-//};
-
-/*
- class RoomDescriptModulePoolOfLava: public RoomDescriptModulePool
- {
- public:
- RoomDescriptModulePoolOfLava() : RoomDescriptModulePool() {}
- RoomDescriptModule* copy() {return new RoomDescriptModulePoolOfLava(*this);}
- void makeRoom();
- string getDescript() {return "There is a pool of lava here.";}
- int getTempInsanity() const {return 4;}
- private:
- virtual LandscapeDevName_t getPoolFeatureId() {return landscapeDevName_poolLava;}
- };
- */
 
 class RoomDescriptModulePoolOfBlood: public RoomDescriptModulePool {
 public:
@@ -375,35 +307,13 @@ public:
 	}
 	void makeRoom();
 	string getDescript() {
-		//return "There is a pool of blood here.";
 		return "";
-	}
-	int getTempInsanity() const {
-		return 24;
 	}
 private:
 	virtual Feature_t getPoolFeatureId() {
 		return feature_poolBlood;
 	}
 };
-
-//class RoomDescriptModuleChasm: public RoomDescriptModule {
-//public:
-//	RoomDescriptModuleChasm() :
-//		RoomDescriptModule() {
-//	}
-//	RoomDescriptModule* copy() {
-//		return new RoomDescriptModuleChasm(*this);
-//	}
-//	void makeRoom();
-//	string getDescript() {
-//		//return "An abyss lies before you.";
-//		return "";
-//	}
-//	int getTempInsanity() const {
-//		return 0;
-//	}
-//};
 
 class RoomDescriptModulePits: public RoomDescriptModule {
 public:
@@ -419,10 +329,6 @@ public:
 
 	string getDescript() {
 		return "";
-		//return "The floor is curiously pierced by cylindrical wells in no definite arrangement. There is a faint odour here.";
-	}
-	int getTempInsanity() const {
-		return 8;
 	}
 };
 

@@ -643,6 +643,19 @@ void Player::incrInsanityLong() {
 	}
 }
 
+void Player::setTempShockFromFeatures() {
+    for(int dy = -1; dy <= 1; dy++) {
+        for(int dx = -1; dx <= 1; dx++) {
+            const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+            insanityShortTemp += f->getShockWhenAdjacent();
+            if(eng->map->darkness[pos.x + dx][pos.y + dy] && eng->map->light[pos.x + dx][pos.y + dy] == false) {
+                insanityShortTemp += 16;
+            }
+        }
+    }
+    insanityShortTemp = min(99, insanityShortTemp);
+}
+
 bool Player::isStandingInOpenPlace() const {
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 	eng->mapTests->makeMoveBlockerArrayFeaturesOnly(this, blockers);
@@ -852,7 +865,6 @@ void Player::act() {
 				const bool IS_MONSTER_SEEN = checkIfSeeActor(*actor, NULL);
 				if(IS_MONSTER_SEEN) {
 					if(monster->messageMonsterInViewPrinted == false) {
-
 						if(firstAidTurnsLeft > 0 || waitTurnsLeft > 0) {
 							eng->renderer->drawMapAndInterface();
 							const string MONSTER_NAME = actor->getNameA();

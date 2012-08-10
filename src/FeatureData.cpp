@@ -29,6 +29,7 @@ void FeatureData::resetDef(FeatureDef& d) {
 	d.messageOnPlayerBlockedBlind = "You bump into something.";
 	d.messageOnPlayerEnter = "";
 	d.dodgeModifier = 0;
+	d.shockWhenAdjacent = 0;
 	d.featuresOnDestroyed.resize(0);
 }
 
@@ -122,6 +123,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 1;
 	d.messageOnPlayerBlocked = "There is a tree in the way.";
 	addToListAndReset(d);
 	/*---------------------------------------------*/
@@ -253,10 +255,10 @@ void FeatureData::makeList() {
 	d.glyph = '~';
 	d.color = clrBlue;
 	d.tile = tile_water1;
-   d.isMovePassable[moveType_walk] = false;
-   d.isMovePassable[moveType_fly] = true;
-   d.isMovePassable[moveType_ooze] = true;
-   d.isMovePassable[moveType_ethereal] = true;
+    d.isMovePassable[moveType_walk] = false;
+    d.isMovePassable[moveType_fly] = true;
+    d.isMovePassable[moveType_ooze] = true;
+    d.isMovePassable[moveType_ethereal] = true;
 	d.isShootPassable = true;
 	d.isVisionPassable = true;
 	d.canHaveBlood = false;
@@ -265,6 +267,7 @@ void FeatureData::makeList() {
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = true;
 	d.dodgeModifier = -10;
+	d.shockWhenAdjacent = 8;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_shallowMud;
@@ -312,6 +315,7 @@ void FeatureData::makeList() {
 	d.canHaveItem = true;
 	d.messageOnPlayerEnter = "*glop*";
 	d.dodgeModifier = -10;
+	d.shockWhenAdjacent = 3;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_chasm;
@@ -333,6 +337,7 @@ void FeatureData::makeList() {
 	d.isBottomless = true;
 	d.messageOnPlayerBlocked = "A chasm lies in your way.";
 	d.messageOnPlayerBlockedBlind = "You realize you are standing on the edge of a chasm.";
+	d.shockWhenAdjacent = 3;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_caveWall;
@@ -376,7 +381,7 @@ void FeatureData::makeList() {
 	d.id = feature_gravestone;
 	d.name_a = "a gravestone";
 	d.name_the = "the gravestone";
-	d.glyph = '&';//4;
+	d.glyph = '&';
 	d.color = clrWhite;
 	d.tile = tile_graveStone;
 	d.isMovePassable[moveType_walk] = false;
@@ -390,13 +395,14 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 2;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_tomb;
 	d.spawnType = featureSpawnType_other;
 	d.name_a = "a tomb";
 	d.name_the = "the tomb";
-	d.glyph = '&';//4;
+	d.glyph = '&';
 	d.color = clrGray;
 	d.tile = tile_tomb;
 	d.isMovePassable[moveType_walk] = false;
@@ -410,6 +416,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 3;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_churchBench;
@@ -444,6 +451,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 10;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_churchCarpet;
@@ -529,12 +537,13 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 4;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_cocoon;
 	d.name_a = "a cocoon";
 	d.name_the = "the cocoon";
-	d.glyph = '8';//7;
+	d.glyph = '8';
 	d.color = clrWhite;
 	d.tile = tile_cocoon;
 	d.isShootPassable = true;
@@ -544,12 +553,13 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
+	d.shockWhenAdjacent = 3;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_pit;
 	d.name_a = "a pit";
 	d.name_the = "the pit";
-	d.glyph = '^';//9;
+	d.glyph = '^';
 	d.color = clrGray;
 	d.tile = tile_pit;
 	d.isMovePassable[moveType_walk] = false;
@@ -566,6 +576,7 @@ void FeatureData::makeList() {
 	d.canHaveItem = true;
 	d.messageOnPlayerBlocked = "A pit lies in your way.";
 	d.messageOnPlayerBlockedBlind = "You realize you are standing on the edge of a pit.";
+	d.shockWhenAdjacent = 5;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_door;

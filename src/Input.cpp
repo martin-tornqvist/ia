@@ -413,7 +413,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 				const int TURNS_TO_APPLY = 10;
 				const string TURNS_STR = intToString(TURNS_TO_APPLY);
 				eng->log->addMessage("You pause for a while and search around (" + TURNS_STR + " turns).");
-				eng->player->waitTurnsLeft = TURNS_TO_APPLY;
+				eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
 				eng->gameTime->letNextAct();
 			} else {
 				eng->log->addMessage("Not while an enemy is near.");
@@ -549,7 +549,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 					const int TURNS_AFTER_BON = PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 					const string TURNS_STR = intToString(TURNS_AFTER_BON);
 					eng->log->addMessage("You rest here and attend your wounds (" + TURNS_STR + " turns)...");
-					eng->player->firstAidTurnsLeft = TURNS_AFTER_BON;
+					eng->player->firstAidTurnsLeft = TURNS_AFTER_BON - 1;
 					eng->gameTime->letNextAct();
 				} else {
 					eng->log->addMessage("Not while an enemy is near.");
