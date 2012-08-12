@@ -36,9 +36,9 @@ void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
 
 	if((CAST_FROM_MEMORY && LIST_SIZE_MEMORY == 0) || (!CAST_FROM_MEMORY && LIST_SIZE_SCROLLS == 0)) {
 		if(CAST_FROM_MEMORY) {
-			eng->log->addMessage("You do not know any spells to invoke.");
+			eng->log->addMessage("I do not know any spells to invoke.");
 		} else {
-			eng->log->addMessage("You do not possess any written powers to invoke.");
+			eng->log->addMessage("I do not possess any written powers to invoke.");
 		}
 	} else {
 		MenuBrowser browser(CAST_FROM_MEMORY ? LIST_SIZE_MEMORY : LIST_SIZE_SCROLLS, 0);

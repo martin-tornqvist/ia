@@ -264,11 +264,11 @@ void ItemData::makeList() {
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_shotgun;
 	d->isShotgun = true;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a shotgun");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a shotgun");
 	d->rangedDmg = DiceParam(8, 3);
 	d->rangedAmmoTypeUsed = item_shotgunShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
-	d->rangedSoundMessage = "You hear a shotgun blast.";
+	d->rangedSoundMessage = "I hear a shotgun blast.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -282,11 +282,11 @@ void ItemData::makeList() {
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_shotgun;
 	d->isShotgun = true;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a shotgun");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a shotgun");
 	d->rangedDmg = DiceParam(7, 3);
 	d->rangedAmmoTypeUsed = item_shotgunShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
-	d->rangedSoundMessage = "You hear a shotgun blast.";
+	d->rangedSoundMessage = "I hear a shotgun blast.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -306,13 +306,13 @@ void ItemData::makeList() {
 	d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
 	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_incinerator;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with an Incinerator");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an Incinerator");
 	d->rangedDmg = DiceParam(1, 3);
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->rangedAmmoTypeUsed = item_incineratorShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
-	d->rangedSoundMessage = "You hear the blast of a launched missile.";
+	d->rangedSoundMessage = "I hear the blast of a launched missile.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedMissileGlyph = '*';
 	d->rangedMissileColor = clrRedLight;
@@ -333,7 +333,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_tommyGun;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Tommy Gun");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tommy Gun");
 	d->isMachineGun = true;
 	d->rangedDmg = DiceParam(2, 2, 2);
 	d->rangedBaseAttackSkill = -10;
@@ -341,7 +341,7 @@ void ItemData::makeList() {
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->rangedAmmoTypeUsed = item_drumOfBullets;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
-	d->rangedSoundMessage = "You hear the burst of a machine gun.";
+	d->rangedSoundMessage = "I hear the burst of a machine gun.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Machine gun fire";
 	d->rangedAudio = audio_tommygun_fire;
@@ -362,9 +362,9 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_pistolClip;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a pistol");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
-	d->rangedSoundMessage = "You hear a pistol being fired.";
+	d->rangedSoundMessage = "I hear a pistol being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Shot with a pistol";
 	d->rangedAudio = audio_pistol_fire;
@@ -381,9 +381,9 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_flare;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a flare gun");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a flare gun");
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
-	d->rangedSoundMessage = "You hear a flare gun being fired.";
+	d->rangedSoundMessage = "I hear a flare gun being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Shot with a flare gun";
 	d->rangedStatusEffect = new StatusFlared(eng);
@@ -402,7 +402,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Tesla Canon", "Tesla Canons", "a Tesla Canon");
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_teslaCannon;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Tesla Cannon");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tesla Cannon");
 	d->isMachineGun = true;
 	d->rangedBaseAttackSkill = -15;
 	d->rangedAbilityUsed = ability_accuracyRanged;
@@ -411,7 +411,7 @@ void ItemData::makeList() {
 	d->rangedDamageType = damageType_electricity;
 	d->rangedAmmoTypeUsed = item_teslaCanister;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
-	d->rangedSoundMessage = "You hear loud electric crackle.";
+	d->rangedSoundMessage = "I hear loud electric crackle.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedMissileGlyph = '*';
 	d->rangedMissileColor = clrYellow;
@@ -425,7 +425,7 @@ void ItemData::makeList() {
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_tommyGun;
 	d->color = clrBlueLight;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Spike Gun");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
 	d->isMachineGun = false;
 	d->rangedBaseAttackSkill = 0;
 	d->rangedAbilityUsed = ability_accuracyRanged;
@@ -435,7 +435,7 @@ void ItemData::makeList() {
 	d->rangedCausesKnockBack = true;
 	d->rangedAmmoTypeUsed = item_ironSpike;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
-	d->rangedSoundMessage = "You hear a very crude gun being fired.";
+	d->rangedSoundMessage = "I hear a very crude gun being fired.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE + 1;
 	d->rangedMissileGlyph = '\\';
 	d->rangedMissileColor = clrGray;
@@ -505,7 +505,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Dagger", "Daggers", "a Dagger");
 	d->itemWeight = itemWeight_light;
 	d->tile = tile_dagger;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Dagger");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
 	d->meleeDmg = DiceParam(1, 4);
 	d->meleeBaseAttackSkill = 20;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -517,7 +517,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Hatchet", "Hatchets", "a Hatchet");
 	d->itemWeight = itemWeight_light;
 	d->tile = tile_axe;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Hatchet");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hatchet");
 	d->meleeDmg = DiceParam(1, 5);
 	d->meleeBaseAttackSkill = 15;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -532,7 +532,7 @@ void ItemData::makeList() {
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_club;
 	d->color = clrBrown;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Club");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
 	d->meleeDmg = DiceParam(2, 3);
 	d->meleeBaseAttackSkill = 10;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -543,7 +543,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Hammer", "Hammers", "a Hammer");
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_hammer;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Hammer");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hammer");
 	d->meleeDmg = DiceParam(2, 4);
 	d->meleeBaseAttackSkill = 5;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -554,7 +554,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Machete", "Machetes", "a Machete");
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_machete;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Machete");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
 	d->meleeDmg = DiceParam(2, 5);
 	d->meleeBaseAttackSkill = 0;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -565,7 +565,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Axe", "Axes", "an Axe");
 	d->itemWeight = itemWeight_medium;
 	d->tile = tile_axe;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with an axe");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
 	d->meleeDmg = DiceParam(2, 6);
 	d->meleeBaseAttackSkill = -5;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -576,7 +576,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
 	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_pitchfork;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Pitchfork");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Pitchfork");
 	d->meleeDmg = DiceParam(3, 4);
 	d->meleeBaseAttackSkill = -10;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -588,7 +588,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Sledge Hammer", "Sledge Hammers", "a Sledge Hammer");
 	d->itemWeight = itemWeight_heavy;
 	d->tile = tile_sledgeHammer;
-	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes you with a Sledge Hammer");
+	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledge Hammer");
 	d->meleeDmg = DiceParam(3, 5);
 	d->meleeBaseAttackSkill = -15;
 	d->meleeAbilityUsed = ability_accuracyMelee;
@@ -626,14 +626,14 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_zombieClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
 	d->causeOfDeathMessage = "Clawed by an undead creature";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_zombieClawDiseased);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
 	d->meleeStatusEffect = new StatusDiseased(eng);
 	d->causeOfDeathMessage = "Clawed by a diseased undead creature";
@@ -641,14 +641,14 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_zombieAxe);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "chops you with a rusty axe");
+	d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
 	d->causeOfDeathMessage = "Chopped with an axe by an undead creature";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_bloatedZombiePunch);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "mauls you");
+	d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_bloatedZombie], strong);
 	d->meleeCausesKnockBack = true;
 	d->causeOfDeathMessage = "Mauled by an undead creature";
@@ -656,9 +656,9 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_bloatedZombieSpit);
 	resetDef(d, itemDef_rangedWpnIntr);
-	d->rangedAttackMessages = ItemAttackMessages("", "spits a gob of puke at you");
+	d->rangedAttackMessages = ItemAttackMessages("", "spits a gob of puke at me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
-	d->rangedSoundMessage = "You hear spitting.";
+	d->rangedSoundMessage = "I hear spitting.";
 	d->rangedMissileColor = clrGreenLight;
 	d->rangedDamageType = damageType_acid;
 	d->rangedMissileGlyph = '*';
@@ -668,14 +668,14 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_ratBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
 	d->causeOfDeathMessage = "Gnawed by a rat";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_ratBiteDiseased);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
 	d->meleeStatusEffect = new StatusDiseased(eng);
 	d->causeOfDeathMessage = "Gnawed by a diseased rat";
@@ -683,28 +683,28 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_ratThingBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ratThing], strong);
 	d->causeOfDeathMessage = "Gnawed by a very strange rat";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_wormMassBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wormMass], weak);
 	d->causeOfDeathMessage = "Eaten by worms";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_wolfBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wolf], normal);
 	d->causeOfDeathMessage = "Bitten by a wolf";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_greenSpiderBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_greenSpider], normal);
 	d->meleeStatusEffect = new StatusBlind(4);
 	d->causeOfDeathMessage = "Bitten by a green spider";
@@ -712,7 +712,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_whiteSpiderBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_whiteSpider], normal);
 	d->meleeStatusEffect = new StatusParalyzed(3);
 	d->causeOfDeathMessage = "Bitten by a white spider";
@@ -720,22 +720,22 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_blackSpiderBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_blackSpider], normal);
 	d->causeOfDeathMessage = "Bitten by a black spider";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_lengSpiderBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_lengSpider], strong);
 	d->causeOfDeathMessage = "Bitten by a Leng-Spider";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_hellHoundFireBreath);
 	resetDef(d, itemDef_rangedWpnIntr);
-	d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at you");
-	d->rangedSoundMessage = "You hear a burst of flames.";
+	d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
+	d->rangedSoundMessage = "I hear a burst of flames.";
 	d->rangedSoundStrength = 3;
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
 	d->rangedStatusEffect = new StatusBurning(eng);
@@ -749,14 +749,14 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_hellHoundBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
 	d->causeOfDeathMessage = "Bitten by a fire hound";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_fireVampireTouch);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "touches you you");
+	d->meleeAttackMessages = ItemAttackMessages("", "touches me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireVampire], weak);
 	d->meleeStatusEffect = new StatusBurning(eng);
 	d->causeOfDeathMessage = "Touched by a Fire Vampire";
@@ -764,7 +764,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_ghostClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghost], normal);
 	d->meleeStatusEffect = new StatusTerrified(4);
 	d->causeOfDeathMessage = "Clawed by a ghostly figure";
@@ -772,7 +772,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_phantasmSickle);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "cuts you with a sickle");
+	d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_phantasm], normal);
 	d->meleeStatusEffect = new StatusTerrified(4);
 	d->causeOfDeathMessage = "Sliced by a sickle";
@@ -780,7 +780,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_wraithClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wraith], normal);
 	d->meleeStatusEffect = new StatusTerrified(4);
 	d->causeOfDeathMessage = "Clawed by a great ghostly figure";
@@ -788,7 +788,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_giantBatBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantBat], weak);
 	d->causeOfDeathMessage = "Bitten by a giant bat";
 	itemDefinitions[d->devName] = d;
@@ -801,7 +801,7 @@ void ItemData::makeList() {
 	d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
 	d->rangedDamageType = damageType_electricity;
 	d->rangedStatusEffect = new StatusParalyzed(2);
-	d->rangedSoundMessage = "You hear a bolt of electricity.";
+	d->rangedSoundMessage = "I hear a bolt of electricity.";
 	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
 	d->causeOfDeathMessage = "Electrocuted by an alien weapon";
@@ -809,7 +809,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_ghoulClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghoul], normal);
 	d->meleeStatusEffect = new StatusDiseased(eng);
 	d->causeOfDeathMessage = "Clawed by a ghoul";
@@ -817,21 +817,21 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_shadowClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadow], normal);
 	d->causeOfDeathMessage = "Clawed by a Shadow";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_byakheeClaw);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "claws you");
+	d->meleeAttackMessages = ItemAttackMessages("", "claws me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_byakhee], normal);
 	d->causeOfDeathMessage = "Clawed by a Byakhee";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_mummyMaul);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "mauls you");
+	d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_mummy], strong);
 	d->meleeCausesKnockBack = true;
 	d->causeOfDeathMessage = "Mauled by a mummy";
@@ -839,9 +839,9 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_deepOneJavelinAttack);
 	resetDef(d, itemDef_rangedWpnIntr);
-	d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at you");
+	d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
-	d->rangedSoundMessage = "You hear something being thrown your way.";
+	d->rangedSoundMessage = "I hear something being thrown my way.";
 	d->rangedMissileColor = clrBrown;
 	d->rangedMissileGlyph = '\\';
 	d->causeOfDeathMessage = "Hit by a Javelin from a Deep One";
@@ -850,28 +850,28 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_deepOneSpearAttack);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "thrusts a spear at you");
+	d->meleeAttackMessages = ItemAttackMessages("", "thrusts a spear at me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
 	d->causeOfDeathMessage = "Impaled on a spear by a Deep One";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_oozeGraySpewPus);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "spews pus on you");
+	d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeGray], strong);
 	d->causeOfDeathMessage = "Drenched in slime";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_oozeClearSpewPus);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "spews pus on you");
+	d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeClear], strong);
 	d->causeOfDeathMessage = "Drenched in slime";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_oozePutridSpewPus);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on you");
+	d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozePutrid], strong);
 	d->meleeStatusEffect = new StatusDiseased(eng);
 	d->causeOfDeathMessage = "Drenched in infected slime";
@@ -879,7 +879,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_huntingHorrorBite);
 	resetDef(d, itemDef_meleeWpnIntr);
-	d->meleeAttackMessages = ItemAttackMessages("", "bites you");
+	d->meleeAttackMessages = ItemAttackMessages("", "bites me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_huntingHorror], strong);
 	d->meleeStatusEffect = new StatusParalyzed(eng);
 	d->causeOfDeathMessage = "Eaten by a Hunting Horror";

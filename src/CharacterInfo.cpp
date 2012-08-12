@@ -28,28 +28,28 @@ void CharacterInfo::makeLines() {
 	lines.push_back(StringAndColor("Mental conditions", colorHeader));
 	const int NR_LINES_BEFORE_MENTAL = lines.size();
 	if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of enclosed spaces", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of enclosed spaces", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_dog])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of dogs", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of dogs", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_rat])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of rats", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of rats", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_undead])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of the dead", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of the dead", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_openPlace])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of open places", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of open places", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_spider])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of spiders", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of spiders", clrRedLight));
 	if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a phobia of deep places", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a phobia of deep places", clrRedLight));
 
 	if(eng->player->insanityCompulsions[insanityCompulsion_masochism])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a masochistic compulsion", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a masochistic compulsion", clrRedLight));
 	if(eng->player->insanityCompulsions[insanityCompulsion_sadism])
-		lines.push_back(StringAndColor(offsetSpaces + "You have a sadistic compulsion", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have a sadistic compulsion", clrRedLight));
 	const int NR_LINES_AFTER_MENTAL = lines.size();
 
 	if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
-		lines.push_back(StringAndColor(offsetSpaces + "You have no mental conditions", clrRedLight));
+		lines.push_back(StringAndColor(offsetSpaces + "I have no mental conditions", clrRedLight));
 	}
 
 	lines.push_back(StringAndColor(" ", clrRedLight));

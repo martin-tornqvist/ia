@@ -26,7 +26,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const D
 	durability = max(0, durability - static_cast<int> (DAMAGE_BEFORE * DDF_INTRINSIC * DDF_RANDOM * DDF_ADJUST));
 
 	if(getAbsorptionPoints(damageType_physical) < ABSORPTION_POINTS_BEFORE) {
-		eng->log->addMessage("Your " + m_instanceDefinition.name.name + " is damaged!");
+		eng->log->addMessage("My " + m_instanceDefinition.name.name + " is damaged!");
 	}
 
 	return max(1, DAMAGE_BEFORE - ABSORPTION_POINTS_BEFORE);

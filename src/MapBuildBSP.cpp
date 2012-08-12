@@ -436,6 +436,7 @@ void MapBuildBSP::buildRoomsInRooms() {
 									const bool IS_SPECIAL_ROOM_CREATED = eng->specialRoomHandler->attemptMakeSpecialRoom(specialRoomType, *(mapAreas_.at(i)));
 									const int OUT_OF_DEPTH_OFFSET = eng->dice.getInRange(2, 5);
 									if(IS_SPECIAL_ROOM_CREATED) {
+									    Monster* firstMonster = NULL;
 										for(int y = Y0 + 1; y <= Y1 - 1; y++) {
 											for(int x = X0 + 1; x <= X1 - 1; x++) {
 
@@ -447,6 +448,11 @@ void MapBuildBSP::buildRoomsInRooms() {
 														Monster* monster = dynamic_cast<Monster*>(actor);
 														monster->isRoamingAllowed = false;
 														monster->shockDecrease += 4;
+                                                        if(firstMonster == NULL) {
+                                                            firstMonster = monster;
+                                                        } else {
+                                                            monster->leader = firstMonster;
+                                                        }
 													}
 												}
 
@@ -524,19 +530,6 @@ void MapBuildBSP::placeStairs() {
 			}
 		}
 	}
-
-//	const unsigned int NR_OF_SPECIAL_ROOMS = eng->specialRoomHandler->getNrOfRooms();
-//	for(unsigned int i = 0; i < NR_OF_SPECIAL_ROOMS; i++) {
-//		const SpecialRoom* const specialRoom = eng->specialRoomHandler->getRoomAtIndex(i);
-//		if(specialRoom->isTreasureRoom() == true) {
-//			const Rectangle dims(specialRoom->getX0Y0(), specialRoom->getX1Y1());
-//			for(int x = dims.x0y0.x - 1; x <= dims.x1y1.x + 1; x++) {
-//				for(int y = dims.x0y0.y - 1; y <= dims.x1y1.y + 1; y++) {
-//					forbiddenStairCells[x][y] = true;
-//				}
-//			}
-//		}
-//	}
 
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 

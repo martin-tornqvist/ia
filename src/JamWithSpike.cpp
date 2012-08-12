@@ -12,7 +12,7 @@
 
 void JamWithSpike::playerJam() const {
 	if(eng->player->getInventory()->hasItemInGeneral(item_ironSpike) == false) {
-		eng->log->addMessage("You have no spikes to jam with.", clrWhite);
+		eng->log->addMessage("I have no spikes to jam with.", clrWhite);
 		return;
 	}
 
@@ -40,9 +40,9 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
 			eng->player->getInventory()->decreaseItemTypeInGeneral(item_ironSpike);
 			const int SPIKES_LEFT = eng->player->getInventory()->getItemStackSizeInGeneral(item_ironSpike);
 			if(SPIKES_LEFT == 0) {
-				eng->log->addMessage("You have no iron spikes left.");
+				eng->log->addMessage("I have no iron spikes left.");
 			} else {
-				eng->log->addMessage("You have " + intToString(SPIKES_LEFT) + " iron spikes left.");
+				eng->log->addMessage("I have " + intToString(SPIKES_LEFT) + " iron spikes left.");
 			}
 		}
 	}
@@ -50,9 +50,9 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
 	if(jamableObjectFound == false) {
 		const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
 		if(PLAYER_IS_BLIND == false) {
-			eng->log->addMessage("You see nothing there to jam with a spike.");
+			eng->log->addMessage("I see nothing there to jam with a spike.");
 		} else {
-			eng->log->addMessage("You find nothing there to jam with a spike.");
+			eng->log->addMessage("I find nothing there to jam with a spike.");
 		}
 	}
 }

@@ -13,7 +13,7 @@ void PotionOfClairvoyance::specificQuaff(Actor* const actor, Engine* const engin
 	engine->mapTests->makeVisionBlockerArray(blockers);
 
 	if(actor == engine->player) {
-		engine->log->addMessage("A vision comes to you, the area is revealed.");
+		engine->log->addMessage("A vision comes to me, the area is revealed.");
 
 		for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
 			for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
@@ -195,7 +195,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
 		}
 	}
 	if(isPhobiasCured) {
-		engine->log->addMessage("All your phobias are cured!");
+		engine->log->addMessage("All my phobias are cured!");
 	}
 
 	bool isCompulsionsCured = false;
@@ -206,13 +206,13 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
 		}
 	}
 	if(isCompulsionsCured) {
-		engine->log->addMessage("All your compulsions are cured!");
+		engine->log->addMessage("All my compulsions are cured!");
 	}
 
 	const bool IS_SHOCK_RESTORED = engine->player->insanityShort > 0;
 	if(IS_SHOCK_RESTORED) {
 		engine->player->insanityShort = 0;
-		engine->log->addMessage("You feel at ease. ");
+		engine->log->addMessage("I feel at ease. ");
 	}
 
 	setRealDefinitionNames(engine, false);
@@ -343,9 +343,9 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
 		engine->player->shock(shockValue_heavy, 0);
 
 		if(m_archetypeDefinition->isIdentified) {
-			engine->log->addMessage("You drink " + m_instanceDefinition.name.name_a + "...");
+			engine->log->addMessage("I drink " + m_instanceDefinition.name.name_a + "...");
 		} else {
-			engine->log->addMessage("You drink an unknown " + m_instanceDefinition.name.name + "...");
+			engine->log->addMessage("I drink an unknown " + m_instanceDefinition.name.name + "...");
 		}
 	}
 
@@ -361,7 +361,7 @@ void Potion::failedToLearnRealName(Engine* const engine, const string overrideFa
 		if(overrideFailString != "") {
 			engine->log->addMessage(overrideFailString);
 		} else {
-			engine->log->addMessage("It doesn't seem to affect you.");
+			engine->log->addMessage("It doesn't seem to affect me.");
 		}
 	}
 }

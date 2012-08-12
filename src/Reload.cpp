@@ -48,7 +48,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 
 	case reloadResult_noAmmo: {
 		if(isPlayer == true) {
-			eng->log->addMessage("You carry no ammunition for this weapon.");
+			eng->log->addMessage("I carry no ammunition for this weapon.");
 //			eng->renderer->flip();
 		}
 	}
@@ -59,9 +59,9 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 		if(isPlayer) {
 			const SDL_Color messageColor = isSwift ? clrMagenta : clrWhite;
 			if(isClip) {
-				eng->log->addMessage("You" + swiftStr + " reload the " + weaponName + ".", messageColor);
+				eng->log->addMessage("I" + swiftStr + " reload the " + weaponName + ".", messageColor);
 			} else {
-				eng->log->addMessage("You" + swiftStr + " load " + ammoName + ".", messageColor);
+				eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".", messageColor);
 			}
 			eng->renderer->drawMapAndInterface();
 		} else {

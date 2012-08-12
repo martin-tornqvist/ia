@@ -207,17 +207,17 @@ void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
 		done = true;
 
 		if(purpose == inventoryPurpose_use)
-			eng->log->addMessage("You have nothing to use.");
+			eng->log->addMessage("I have nothing to use.");
 		if(purpose == inventoryPurpose_quaff)
-			eng->log->addMessage("You have nothing to drink.");
+			eng->log->addMessage("I have nothing to drink.");
 		if(purpose == inventoryPurpose_eat)
-			eng->log->addMessage("You have nothing to eat.");
+			eng->log->addMessage("I have nothing to eat.");
 		if(purpose == inventoryPurpose_wieldWear || purpose == inventoryPurpose_wieldAlt)
-			eng->log->addMessage("You have nothing to wield or wear.");
+			eng->log->addMessage("I have nothing to wield or wear.");
 		if(purpose == inventoryPurpose_readyExplosive)
-			eng->log->addMessage("You have no explosives.");
+			eng->log->addMessage("I have no explosives.");
 		if(purpose == inventoryPurpose_missileSelect)
-			eng->log->addMessage("You have nothing in your inventory to use as a thrown weapon.");
+			eng->log->addMessage("I have nothing to use as a thrown weapon.");
 	} else {
 		eng->renderInventory->draw(purpose, browser, true, DRAW_BROWSER);
 	}

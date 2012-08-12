@@ -173,22 +173,22 @@ public:
 		return "Terrified";
 	}
 	string messageWhenStart() {
-		return "You are terrified!";
+		return "I am terrified!";
 	}
 	string messageWhenStartOther() {
 		return "is terrified.";
 	}
 	string messageWhenMore() {
-		return "You are more terrified.";
+		return "I am more terrified.";
 	}
 	string messageWhenMoreOther() {
 		return "is more terrified.";
 	}
 	string messageWhenEnd() {
-		return "You are no longer terrified!";
+		return "I am no longer terrified!";
 	}
 	string messageWhenSaves() {
-		return "You resist fear.";
+		return "I resist fear.";
 	}
 	string messageWhenSavesOther() {
 		return "resists fear.";
@@ -252,22 +252,22 @@ public:
 		return "Diseased";
 	}
 	string messageWhenStart() {
-		return "You are diseased!";
+		return "I am diseased!";
 	}
 	string messageWhenStartOther() {
 		return "is diseased.";
 	}
 	string messageWhenMore() {
-		return "You are more diseased.";
+		return "I am more diseased.";
 	}
 	string messageWhenMoreOther() {
 		return "is more diseased.";
 	}
 	string messageWhenEnd() {
-		return "You are no longer diseased!";
+		return "My disease is cured!";
 	}
 	string messageWhenSaves() {
-		return "You resist disease.";
+		return "I resist disease.";
 	}
 	string messageWhenSavesOther() {
 		return "resists disease.";
@@ -396,19 +396,19 @@ public:
 		return "Blind";
 	}
 	string messageWhenStart() {
-		return "You are blind!";
+		return "I am blind!";
 	}
 	string messageWhenMore() {
-		return "You are more blind.";
+		return "I am more blind.";
 	}
 	string messageWhenMoreOther() {
 		return "is more blind.";
 	}
 	string messageWhenEnd() {
-		return "You can see again!";
+		return "I can see again!";
 	}
 	string messageWhenSaves() {
-		return "You resist blindness.";
+		return "I resist blindness.";
 	}
 	string messageWhenStartOther() {
 		return "is blinded.";
@@ -481,16 +481,16 @@ public:
 		return "Blessed";
 	}
 	string messageWhenStart() {
-		return "You feel luckier.";
+		return "I feel luckier.";
 	}
 	string messageWhenMore() {
-		return "You feel luckier.";
+		return "I feel luckier.";
 	}
 	string messageWhenMoreOther() {
 		return "is luckier.";
 	}
 	string messageWhenEnd() {
-		return "Your good luck ends.";
+		return "My good luck ends.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -556,16 +556,16 @@ public:
 		return "Cursed";
 	}
 	string messageWhenStart() {
-		return "You feel misfortunate.";
+		return "I feel misfortunate.";
 	}
 	string messageWhenMore() {
-		return "You feel more misfortunate.";
+		return "I feel more misfortunate.";
 	}
 	string messageWhenMoreOther() {
 		return "is misfortunate.";
 	}
 	string messageWhenEnd() {
-		return "Your misfortune ends.";
+		return "My misfortune ends.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -626,10 +626,10 @@ public:
 		return "Burning";
 	}
 	string messageWhenStart() {
-		return "You are Burning!";
+		return "I am Burning!";
 	}
 	string messageWhenMore() {
-		return "You burn more.";
+		return "I am further engulfed by flames!";
 	}
 	string messageWhenMoreOther() {
 		return "is burning more.";
@@ -638,7 +638,7 @@ public:
 		return "The flames are put out.";
 	}
 	string messageWhenSaves() {
-		return "You resist burning.";
+		return "I resist burning.";
 	}
 	string messageWhenStartOther() {
 		return "is burning.";
@@ -763,25 +763,25 @@ public:
 		return "Confused";
 	}
 	string messageWhenStart() {
-		return "You are confused!";
+		return "I am confused!";
 	}
 	string messageWhenStartOther() {
 		return "is confused.";
 	}
 	string messageWhenMore() {
-		return "You are more confused.";
+		return "I am more confused.";
 	}
 	string messageWhenMoreOther() {
 		return "is more confused.";
 	}
 	string messageWhenEnd() {
-		return "You are no longer confused";
+		return "I am no longer confused";
 	}
 	string messageWhenEndOther() {
 		return "is no longer confused.";
 	}
 	string messageWhenSaves() {
-		return "You resist confusion.";
+		return "I resist confusion.";
 	}
 	string messageWhenSavesOther() {
 		return "resists confusion.";
@@ -838,19 +838,19 @@ public:
 		return "Nailed(" + intToString(nrOfSpikes) + ")";
 	}
 	string messageWhenStart() {
-		return "You are fastened by a spike!";
+		return "I am fastened by a spike!";
 	}
 	string messageWhenStartOther() {
 		return "is fastened by a spike.";
 	}
 	string messageWhenMore() {
-		return "You are fastened by another spike.";
+		return "I am fastened by another spike.";
 	}
 	string messageWhenMoreOther() {
 		return "is fastened by another spike.";
 	}
 	string messageWhenEnd() {
-		return "You tear free!";
+		return "I tear free!";
 	}
 	string messageWhenEndOther() {
 		return "tears free!";
@@ -1215,19 +1215,19 @@ public:
 		return "Paralyzed";
 	}
 	string messageWhenStart() {
-		return "You are paralyzed!";
+		return "I am paralyzed!";
 	}
 	string messageWhenMore() {
-		return "You are more paralyzed.";
+		return "I am more paralyzed.";
 	}
 	string messageWhenMoreOther() {
 		return "is more paralyzed.";
 	}
 	string messageWhenEnd() {
-		return "You can move again!";
+		return "I can move again!";
 	}
 	string messageWhenSaves() {
-		return "You resist paralyzation.";
+		return "I resist paralyzation.";
 	}
 	string messageWhenStartOther() {
 		return "is paralyzed.";
@@ -1300,19 +1300,19 @@ public:
 		return "Fainted";
 	}
 	string messageWhenStart() {
-		return "You faint!";
+		return "I faint!";
 	}
 	string messageWhenMore() {
-		return "You faint deeper.";
+		return "I faint deeper.";
 	}
 	string messageWhenMoreOther() {
 		return "faints deeper.";
 	}
 	string messageWhenEnd() {
-		return "You are awake.";
+		return "I am awake.";
 	}
 	string messageWhenSaves() {
-		return "You resist fainting.";
+		return "I resist fainting.";
 	}
 	string messageWhenStartOther() {
 		return "faints.";
@@ -1397,19 +1397,19 @@ public:
 		return "Slowed";
 	}
 	string messageWhenStart() {
-		return "Everything around you seems to speed up.";
+		return "Everything around me seems to speed up.";
 	}
 	string messageWhenMore() {
-		return "You are more slowed.";
+		return "I am more slowed.";
 	}
 	string messageWhenMoreOther() {
 		return "slows down more.";
 	}
 	string messageWhenEnd() {
-		return "Everything around you seems to slow down.";
+		return "Everything around me seems to slow down.";
 	}
 	string messageWhenSaves() {
-		return "You resist slowness.";
+		return "I resist slowness.";
 	}
 	string messageWhenStartOther() {
 		return "slows down.";
@@ -1470,16 +1470,16 @@ public:
 		return "PerfReflex";
 	}
 	string messageWhenStart() {
-		return "You have godlike reflexes!";
+		return "I have godlike reflexes!";
 	}
 	string messageWhenMore() {
-		return "You have godlike reflexes!";
+		return "I have godlike reflexes!";
 	}
 	string messageWhenMoreOther() {
 		return "has godlike reflexes.";
 	}
 	string messageWhenEnd() {
-		return "Your reflexes are normal.";
+		return "My reflexes are normal.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -1545,16 +1545,16 @@ public:
 		return "PerfAiming";
 	}
 	string messageWhenStart() {
-		return "You have godlike aiming!";
+		return "I have godlike aiming!";
 	}
 	string messageWhenMore() {
-		return "You have godlike aiming!";
+		return "I have godlike aiming!";
 	}
 	string messageWhenMoreOther() {
 		return "has godlike aiming.";
 	}
 	string messageWhenEnd() {
-		return "Your aiming is normal.";
+		return "My aiming is normal.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -1622,16 +1622,16 @@ public:
 		return "PerfStealth";
 	}
 	string messageWhenStart() {
-		return "You move silent like a ghost!";
+		return "I move silent like a ghost!";
 	}
 	string messageWhenMore() {
-		return "You move silent like a ghost!";
+		return "I move silent like a ghost!";
 	}
 	string messageWhenMoreOther() {
 		return "";
 	}
 	string messageWhenEnd() {
-		return "Your movements make noises again.";
+		return "My movements make noises again.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -1697,16 +1697,16 @@ public:
 		return "PerfFort";
 	}
 	string messageWhenStart() {
-		return "You have godlike fortitude!";
+		return "I have godlike fortitude!";
 	}
 	string messageWhenMore() {
-		return "You have godlike fortitude!";
+		return "I have godlike fortitude!";
 	}
 	string messageWhenMoreOther() {
 		return "has godlike fortitude!";
 	}
 	string messageWhenEnd() {
-		return "Your fortitude is normal.";
+		return "My fortitude is normal.";
 	}
 	string messageWhenSaves() {
 		return "";
@@ -1772,16 +1772,16 @@ public:
 		return "PerfTough";
 	}
 	string messageWhenStart() {
-		return "You have godlike toughness!";
+		return "I have godlike toughness!";
 	}
 	string messageWhenMore() {
-		return "You have godlike toughness!";
+		return "I have godlike toughness!";
 	}
 	string messageWhenMoreOther() {
 		return "has godlike toughness!";
 	}
 	string messageWhenEnd() {
-		return "Your toughness is normal.";
+		return "My toughness is normal.";
 	}
 	string messageWhenSaves() {
 		return "";

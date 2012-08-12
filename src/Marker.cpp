@@ -95,7 +95,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
 							eng->log->addMessage("No ammunition loaded.");
 						}
 					} else {
-						eng->log->addMessage("You should find another monster to shoot at.");
+						eng->log->addMessage("I think I can persevere a little longer.");
 					}
 					done();
 				}

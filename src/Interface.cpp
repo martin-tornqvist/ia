@@ -64,7 +64,7 @@ void Interface::drawInfoLines() {
     xPos += 1 + str.length();
 
 	//Wielded weapon
-	xPos += 10; //Moving right a bit so missile info fits on the second line later
+	xPos += 4;
 	//Store x position, because missile wpn info will be directly beaneath wielded wpn info
 	const int X_POS_MISSILE = xPos;
 
@@ -72,13 +72,19 @@ void Interface::drawInfoLines() {
 	if(weapon == NULL) {
 		eng->renderer->drawText("Unarmed", renderArea_characterLines, xPos, yPos, clrWhite);
 	} else {
-		string wpnName, wpnDmgStr, wpnSkillStr, wpnAmmoStr;
+		string wpnDmgStr, wpnSkillStr, wpnAmmoStr;
 		Abilities_t abilityUsed;
 		int dmgRolls, dmgSides, dmgPlus, actorAttackSkill, baseAttackSkill, totalAttackSkill;
 
 		const ItemDefinition* itemDef = &(weapon->getInstanceDefinition());
 
-		wpnName = itemDef->name.name;
+        //Weapon name
+//        eng->renderer->drawText("WPN:", renderArea_characterLines, xPos, yPos, clrGray);
+//        xPos += 4;
+//
+//        const string wpnName = eng->itemData->itemInterfaceName(weapon, false);
+//        eng->renderer->drawText(wpnName, renderArea_characterLines, xPos, yPos, clrWhite);
+//        xPos += 1 + wpnName.size();
 
 		//Firearm info
 		eng->renderer->drawText("FIR:", renderArea_characterLines, xPos, yPos, clrGray);

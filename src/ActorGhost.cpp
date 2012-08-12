@@ -12,12 +12,12 @@ bool Ghost::actorSpecificAct() {
 					eng->mapTests->makeVisionBlockerArray(blockers);
 					const bool PLAYER_SEES_ME = eng->player->checkIfSeeActor(*this, blockers);
 					const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
-					eng->log->addMessage(refer + " reaches for you... ");
+					eng->log->addMessage(refer + " reaches for me... ");
 					const AbilityRollResult_t rollResult = eng->abilityRoll->roll(
 					      eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_dodge, true));
 					const bool PLAYER_DODGES = rollResult >= successSmall;
 					if(PLAYER_DODGES) {
-						eng->log->addMessage("You dodge!", clrMessageGood);
+						eng->log->addMessage("I dodge!", clrMessageGood);
 					} else {
 						bool deflectedByArmor = false;
 						Item* const playerArmor = eng->player->getInventory()->getItemInSlot(slot_armorBody);
@@ -30,7 +30,7 @@ bool Ghost::actorSpecificAct() {
 
 						if(deflectedByArmor) {
 							const string armorName = playerArmor->getInstanceDefinition().name.name;
-							eng->log->addMessage("The touch is deflected by your " + armorName + "!");
+							eng->log->addMessage("The touch is deflected by my " + armorName + "!");
 						} else {
 							if(eng->dice.coinToss()) {
 								eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusSlowed(eng));

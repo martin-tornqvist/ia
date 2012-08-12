@@ -35,9 +35,9 @@ void Close::playerCloseFeature(Feature* const feature) const {
 	if(closeAbleObjectFound == false) {
 		const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
 		if(PLAYER_IS_BLIND == false) {
-			eng->log->addMessage("You see nothing there to close.");
+			eng->log->addMessage("I see nothing there to close.");
 		} else {
-			eng->log->addMessage("You find nothing there to close.");
+			eng->log->addMessage("I find nothing there to close.");
 		}
 	}
 }

@@ -35,7 +35,7 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
 					if(DEFENDER_IS_MONSTER) {
 						eng->log->addMessage(defender->getNameThe() + " is knocked back!");
 					} else {
-						eng->log->addMessage("You are knocked back!");
+						eng->log->addMessage("I am knocked back!");
 					}
 				}
 
@@ -51,7 +51,7 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
 					if(DEFENDER_IS_MONSTER) {
 						eng->log->addMessage(defender->getNameThe() + " plummets down the depths.", clrMessageGood);
 					} else {
-						eng->log->addMessage("You plummet down the depths!", clrMessageBad);
+						eng->log->addMessage("I plummet down the depths!", clrMessageBad);
 					}
 					defender->die(true, false, false);
 					i = 99999;

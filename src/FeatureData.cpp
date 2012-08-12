@@ -26,7 +26,7 @@ void FeatureData::resetDef(FeatureDef& d) {
 	d.name_a = "";
 	d.name_the = "";
 	d.messageOnPlayerBlocked = "The way is blocked.";
-	d.messageOnPlayerBlockedBlind = "You bump into something.";
+	d.messageOnPlayerBlockedBlind = "I bump into something.";
 	d.messageOnPlayerEnter = "";
 	d.dodgeModifier = 0;
 	d.shockWhenAdjacent = 0;
@@ -296,7 +296,7 @@ void FeatureData::makeList() {
 	//	d.isVisionPassable = true;
 	//	d.canHaveBlood= false;
 	//	d.damageToActor = 1;
-	//	d.damageToPlayerMessage = "Acid corrodes your flesh!";
+	//	d.damageToPlayerMessage = "Acid corrodes my flesh!";
 	//
 	//	addToListAndReset(d);
 	/*---------------------------------------------*/
@@ -335,8 +335,8 @@ void FeatureData::makeList() {
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = true;
 	d.isBottomless = true;
-	d.messageOnPlayerBlocked = "A chasm lies in your way.";
-	d.messageOnPlayerBlockedBlind = "You realize you are standing on the edge of a chasm.";
+	d.messageOnPlayerBlocked = "A chasm lies in my way.";
+	d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a chasm.";
 	d.shockWhenAdjacent = 3;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
@@ -537,7 +537,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = false;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = false;
-	d.shockWhenAdjacent = 4;
+	d.shockWhenAdjacent = 6;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_cocoon;
@@ -574,8 +574,8 @@ void FeatureData::makeList() {
 	d.canHaveStaticFeature = false;
 	d.isBottomless = true;
 	d.canHaveItem = true;
-	d.messageOnPlayerBlocked = "A pit lies in your way.";
-	d.messageOnPlayerBlockedBlind = "You realize you are standing on the edge of a pit.";
+	d.messageOnPlayerBlocked = "A pit lies in my way.";
+	d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a pit.";
 	d.shockWhenAdjacent = 5;
 	addToListAndReset(d);
 	/*---------------------------------------------*/

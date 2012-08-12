@@ -67,9 +67,9 @@ void SpellShriveling::specificCast(const SpellData& d, Engine* const eng) {
 
 		if(actor == eng->player) {
 			if(actor->getStatusEffectsHandler()->allowSee() == true) {
-				eng->log->addMessage("You feel a terrible pain as your skin suddenly shrivel and blacken!", clrMessageBad);
+				eng->log->addMessage("I feel a terrible pain as my skin suddenly shrivel and blacken!", clrMessageBad);
 			} else {
-				eng->log->addMessage("You suddenly feel a terrible pain over your skin!", clrMessageBad);
+				eng->log->addMessage("I suddenly feel a terrible pain over my skin!", clrMessageBad);
 			}
 		}
 
@@ -120,7 +120,7 @@ void SpellKnockBack::specificCast(const SpellData& d, Engine* const eng) {
 
 	if(actor != NULL) {
 		if(actor == eng->player) {
-			eng->log->addMessage("A force pushes you!", clrMessageBad);
+			eng->log->addMessage("A force pushes me!", clrMessageBad);
 		}
 		eng->knockBack->attemptKnockBack(eng->player, d.caster_->pos, false);
 	}
@@ -143,10 +143,10 @@ void SpellConfuse::specificCast(const SpellData& d, Engine* const eng) {
 	if(actor != NULL) {
 
 		if(actor == eng->player) {
-			eng->log->addMessage("Scales starts to grow over your eyes!");
+			eng->log->addMessage("My mind is reeling!");
 		}
 
-		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
+		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng->dice(3, 6)));
 	}
 }
 
@@ -170,7 +170,7 @@ void SpellBlind::specificCast(const SpellData& d, Engine* const eng) {
 	if(actor != NULL) {
 
 		if(actor == eng->player) {
-			eng->log->addMessage("Scales starts to grow over your eyes!");
+			eng->log->addMessage("Scales starts to grow over my eyes!");
 		}
 
 		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
@@ -197,7 +197,7 @@ void SpellFear::specificCast(const SpellData& d, Engine* const eng) {
 	if(actor != NULL) {
 
 		if(actor == eng->player) {
-			eng->log->addMessage("Your mind is besieged by terror.");
+			eng->log->addMessage("My mind is besieged by terror.");
 		}
 
 		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusTerrified(eng->dice(3, 6)));
@@ -221,7 +221,7 @@ void SpellSlow::specificCast(const SpellData& d, Engine* const eng) {
 	if(actor != NULL) {
 
 		if(actor == eng->player) {
-			eng->log->addMessage("You start to feel bogged down.");
+			eng->log->addMessage("I start to feel bogged down.");
 		}
 
 		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusSlowed(eng->dice(3, 6)));
@@ -245,7 +245,7 @@ void SpellDisease::specificCast(const SpellData& d, Engine* const eng) {
 	if(actor != NULL) {
 
 		if(actor == eng->player) {
-			eng->log->addMessage("A disease is starting to afflict your body.", clrMessageBad);
+			eng->log->addMessage("A disease is starting to afflict my body!", clrMessageBad);
 		}
 
 		actor->getStatusEffectsHandler()->attemptAddEffect(new StatusDiseased(eng));

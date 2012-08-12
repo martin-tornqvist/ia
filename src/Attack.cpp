@@ -178,7 +178,7 @@ void Attack::getAttackData(AttackData& data, const coord target, const coord cur
 
 void Attack::printRangedInitiateMessages(AttackData data) {
 	if(data.isPlayerAttacking == true)
-		eng->log->addMessage("You " + data.verbPlayerAttacksMissile + ".");
+		eng->log->addMessage("I " + data.verbPlayerAttacksMissile + ".");
 	else {
 		if(eng->map->playerVision[data.attackerX][data.attackerY] == true) {
 			const string attackerName = data.attacker->getNameThe();
@@ -213,7 +213,7 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
 
 			if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {
 				if(data.currentDefender == eng->player) {
-					eng->log->addMessage("You are hit" + data.dmgDescript, clrMessageBad, false);
+					eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, false);
 
 					if(data.attackResult == successCritical) {
 						eng->log->addMessage("It was a great hit!", clrMessageBad, false);
@@ -250,7 +250,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 
 	if(data.isTargetEthereal == true) {
 		if(data.isPlayerAttacking == true) {
-			eng->log->addMessage("You hit nothing but void" + data.dmgDescript);
+			eng->log->addMessage("I hit nothing but void" + data.dmgDescript);
 		} else {
 			if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
 				otherName = data.attacker->getNameThe();
@@ -258,13 +258,13 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 				otherName = "its";
 			}
 
-			eng->log->addMessage("You are unaffected by " + otherName + " attack" + data.dmgDescript);
+			eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript);
 		}
 	} else {
 		//----- ATTACK FUMBLE -----
 		if(data.attackResult == failCritical) {
 			if(data.isPlayerAttacking) {
-				eng->log->addMessage("You fumble.");
+				eng->log->addMessage("I fumble!");
 			} else {
 				if(eng->player->checkIfSeeActor(*data.attacker, NULL))
 					otherName = data.attacker->getNameThe();
@@ -278,22 +278,22 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 		if(data.attackResult > failCritical && data.attackResult <= failSmall) {
 			if(data.isPlayerAttacking) {
 				if(data.attackResult == failSmall)
-					eng->log->addMessage("You barely miss" + data.dmgDescript);
+					eng->log->addMessage("I barely miss" + data.dmgDescript);
 				if(data.attackResult == failNormal)
-					eng->log->addMessage("You miss" + data.dmgDescript);
+					eng->log->addMessage("I miss" + data.dmgDescript);
 				if(data.attackResult == failBig)
-					eng->log->addMessage("You miss completely" + data.dmgDescript);
+					eng->log->addMessage("I miss completely" + data.dmgDescript);
 			} else {
 				if(eng->player->checkIfSeeActor(*data.attacker, NULL))
 					otherName = data.attacker->getNameThe();
 				else otherName = "It";
 
 				if(data.attackResult == failSmall)
-					eng->log->addMessage(otherName + " barely misses you" + data.dmgDescript);
+					eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript);
 				if(data.attackResult == failNormal)
-					eng->log->addMessage(otherName + " misses you" + data.dmgDescript);
+					eng->log->addMessage(otherName + " misses me" + data.dmgDescript);
 				if(data.attackResult == failBig)
-					eng->log->addMessage(otherName + " misses you completely" + data.dmgDescript);
+					eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript);
 			}
 		}
 
@@ -306,14 +306,14 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 					} else {
 						otherName = "It ";
 					}
-					eng->log->addMessage(otherName + " dodges your attack.");
+					eng->log->addMessage(otherName + " dodges my attack.");
 				} else {
 					if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
 						otherName = data.attacker->getNameThe();
 					} else {
 						otherName = "It";
 					}
-					eng->log->addMessage("You dodge an attack from " + otherName + ".", clrMessageGood);
+					eng->log->addMessage("I dodge an attack from " + otherName + ".", clrMessageGood);
 				}
 			} else {
 				if(data.isPlayerAttacking) {
@@ -326,11 +326,11 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 					}
 
 					if(data.isIntrinsic) {
-						eng->log->addMessage("You " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
+						eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
 					} else {
 						const string BONUS_STR = data.isBackStab ? "covertly " : data.isSwiftAttack ? "swiftly " : data.isMightyAttack ? "mightily " : "";
 						const SDL_Color clr = data.isBackStab || data.isSwiftAttack || data.isMightyAttack ? clrMagenta : clrMessageGood;
-						eng->log->addMessage("You " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
+						eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
 					}
 				} else {
 					const string wpnVerb = weapon->getInstanceDefinition().meleeAttackMessages.other;

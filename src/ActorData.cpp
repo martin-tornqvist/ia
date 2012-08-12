@@ -278,7 +278,7 @@ void ActorData::defineAllActors() {
 	d.canBashDoors = true;
 	d.nrTurnsAwarePlayer = 999;
 	d.description
-	= "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior you now see before you.";
+	= "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
 	d.erraticMovement = actorErratic_rare;
 	d.shockValue = shockValue_heavy;
 	d.isUndead = true;
@@ -1200,7 +1200,7 @@ void ActorData::defineAllActors() {
 	d.canOpenDoors = true;
 	d.nrTurnsAwarePlayer = 9999;
 	d.description
-	= "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond your guess. His name means \"Rise, Ra!\"";
+	= "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
 	d.spellCastMessage = "Khephren casts a spell.";
 	d.spellCooldown = 5;
 	d.erraticMovement = actorErratic_rare;
@@ -1239,7 +1239,7 @@ void ActorData::defineAllActors() {
 	d.canOpenDoors = true;
 	d.nrTurnsAwarePlayer = 9999;
 	d.description
-	= "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond your guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
+	= "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
 	d.spellCastMessage = "Nitokris casts a spell.";
 	d.spellCooldown = 5;
 	d.erraticMovement = actorErratic_rare;

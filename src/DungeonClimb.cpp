@@ -75,17 +75,17 @@ void DungeonClimb::attemptUseDownStairs() {
 	const coord playerPos = eng->player->pos;
 	if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
 		if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-			eng->log->addMessage("You climb downwards.");
+			eng->log->addMessage("I climb downwards.");
 		} else {
-			eng->log->addMessage("You descend the stairs.");
+			eng->log->addMessage("I descend the stairs.");
 		}
 		eng->renderer->flip();
 		travelDown();
 	} else {
 		if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-			eng->log->addMessage("You see no path leading downwards here.");
+			eng->log->addMessage("I see no path leading downwards here.");
 		} else {
-			eng->log->addMessage("You see no stairs leading downwards here.");
+			eng->log->addMessage("I see no stairs leading downwards here.");
 		}
 		eng->renderer->flip();
 	}

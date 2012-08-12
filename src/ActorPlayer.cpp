@@ -343,7 +343,7 @@ void Player::actorSpecific_hit(const int DMG) {
 	//Hit aborts first aid
 	if(firstAidTurnsLeft != -1) {
 		firstAidTurnsLeft = -1;
-		eng->log->addMessage("Your applying of first aid is disrupted.", clrWhite, false);
+		eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, false);
 	}
 
 	eng->renderer->drawMapAndInterface(true);
@@ -430,7 +430,7 @@ void Player::incrInsanityLong() {
 	eng->renderer->drawMapAndInterface();
 
 	if(insanityLong >= 100) {
-		popupMessage += "Your mind can no longer withstand what it has grasped. You are hopelessly lost.";
+		popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
 		eng->popup->showMessage(popupMessage);
 		eng->postmortem->setCauseOfDeath("Insanity");
 		die(true, false, false);
@@ -452,9 +452,9 @@ void Player::incrInsanityLong() {
 			case 1: {
 				if(playerSeeShockingMonster == true) {
 					if(eng->dice.coinToss()) {
-						popupMessage += "You let out a terrified shriek.";
+						popupMessage += "I let out a terrified shriek.";
 					} else {
-						popupMessage += "You scream in terror.";
+						popupMessage += "I scream in terror.";
 					}
 					eng->popup->showMessage(popupMessage);
 					eng->soundEmitter->emitSound(Sound("", true, pos, 5, true));
@@ -463,7 +463,7 @@ void Player::incrInsanityLong() {
 			}
 			break;
 			case 2: {
-				popupMessage += "You find yourself babbling incoherently.";
+				popupMessage += "I find myself babbling incoherently.";
 				eng->popup->showMessage(popupMessage);
 				for(int i = eng->dice(1, 3); i > 0; i--) {
 					const string* const phrase = eng->phrases->getAggroPhraseFromPhraseSet(phraseSet_cultist);
@@ -474,14 +474,14 @@ void Player::incrInsanityLong() {
 			}
 			break;
 			case 3: {
-				popupMessage += "You struggle to not fall into a stupor.";
+				popupMessage += "I struggle to not fall into a stupor.";
 				eng->popup->showMessage(popupMessage);
 				m_statusEffectsHandler->attemptAddEffect(new StatusFainted(eng));
 				return;
 			}
 			break;
 			case 4: {
-				popupMessage += "You laugh nervously.";
+				popupMessage += "I laugh nervously.";
 				eng->popup->showMessage(popupMessage);
 				eng->soundEmitter->emitSound(Sound("", true, pos, 3, true));
 				return;
@@ -507,28 +507,28 @@ void Player::incrInsanityLong() {
 						if(spotedEnemies.size() > 0) {
 							const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
-								popupMessage += "You are afflicted by Murophobia. Rats suddenly seem terrifying.";
+								popupMessage += "I are afflicted by Murophobia. Rats suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_rat] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isSpider == true && insanityPhobias[insanityPhobia_spider]
 							      == false) {
-								popupMessage += "You are afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
+								popupMessage += "I are afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_spider] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isCanine == true && insanityPhobias[insanityPhobia_dog]
 							      == false) {
-								popupMessage += "You are afflicted by Cynophobia. Dogs suddenly seem terrifying.";
+								popupMessage += "I are afflicted by Cynophobia. Dogs suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_dog] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isUndead == true && insanityPhobias[insanityPhobia_undead]
 							      == false) {
-								popupMessage += "You are afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
+								popupMessage += "I are afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_undead] = true;
 								return;
@@ -538,14 +538,14 @@ void Player::incrInsanityLong() {
 						if(eng->dice(1, 2) == 1) {
 							if(isStandingInOpenPlace() == true) {
 								if(insanityPhobias[insanityPhobia_openPlace] == false) {
-									popupMessage += "You are afflicted by Agoraphobia. Open places suddenly seem terrifying.";
+									popupMessage += "I are afflicted by Agoraphobia. Open places suddenly seem terrifying.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_openPlace] = true;
 									return;
 								}
 							} else {
 								if(insanityPhobias[insanityPhobia_closedPlace] == false) {
-									popupMessage += "You are afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
+									popupMessage += "I are afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_closedPlace] = true;
 									return;
@@ -554,7 +554,7 @@ void Player::incrInsanityLong() {
 						} else {
 							if(eng->map->getDungeonLevel() >= 5) {
 								if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
-									popupMessage += "You are afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
+									popupMessage += "I are afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_deepPlaces] = true;
 									return;
@@ -578,7 +578,7 @@ void Player::incrInsanityLong() {
 						switch(compulsion) {
 						case insanityCompulsion_masochism: {
 							popupMessage
-							+= "To your alarm, you find yourself encouraged by the sensation of pain. Every time you are hurt, you find a little relief. However, your depraved mind decays faster over time now.";
+							+= "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, I find a little relief. However, my depraved mind decays faster over time now.";
 							eng->popup->showMessage(popupMessage);
 							insanityCompulsions[insanityCompulsion_masochism] = true;
 							return;
@@ -586,7 +586,7 @@ void Player::incrInsanityLong() {
 						break;
 						case insanityCompulsion_sadism: {
 							popupMessage
-							+= "To your alarm, you find yourself encouraged by the pain you cause in others. For every life you take, you find a little relief. However, your depraved mind decays faster over time now.";
+							+= "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, I find a little relief. However, my depraved mind decays faster over time now.";
 							eng->popup->showMessage(popupMessage);
 							insanityCompulsions[insanityCompulsion_sadism] = true;
 							return;
@@ -602,7 +602,7 @@ void Player::incrInsanityLong() {
 			break;
 
 			case 8: {
-				popupMessage += "The shadows are closing in on you.";
+				popupMessage += "The shadows are closing in on me!";
 				eng->popup->showMessage(popupMessage);
 
 				bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -644,13 +644,14 @@ void Player::incrInsanityLong() {
 }
 
 void Player::setTempShockFromFeatures() {
+    if(eng->map->darkness[pos.x][pos.y] && eng->map->light[pos.x][pos.y] == false) {
+        insanityShortTemp += 20;
+    }
+
     for(int dy = -1; dy <= 1; dy++) {
         for(int dx = -1; dx <= 1; dx++) {
             const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
             insanityShortTemp += f->getShockWhenAdjacent();
-            if(eng->map->darkness[pos.x + dx][pos.y + dy] && eng->map->light[pos.x + dx][pos.y + dy] == false) {
-                insanityShortTemp += 16;
-            }
         }
     }
     insanityShortTemp = min(99, insanityShortTemp);
@@ -680,22 +681,22 @@ void Player::testPhobias() {
 	if(ROLL < 10) {
 		for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
 			if(spotedEnemies.at(0)->getInstanceDefinition()->isCanine == true && insanityPhobias[insanityPhobia_dog] == true) {
-				eng->log->addMessage("You are plagued by your canine phobia!");
+				eng->log->addMessage("I am plagued by my canine phobia!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
 			if(spotedEnemies.at(0)->getInstanceDefinition()->isRat == true && insanityPhobias[insanityPhobia_rat] == true) {
-				eng->log->addMessage("You are plagued by your rat phobia!");
+				eng->log->addMessage("I am plagued by my rat phobia!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
 			if(spotedEnemies.at(0)->getInstanceDefinition()->isUndead == true && insanityPhobias[insanityPhobia_undead] == true) {
-				eng->log->addMessage("You are plagued by your phobia of the dead!");
+				eng->log->addMessage("I am plagued by my phobia of the dead!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
 			if(spotedEnemies.at(0)->getInstanceDefinition()->isSpider == true && insanityPhobias[insanityPhobia_spider] == true) {
-				eng->log->addMessage("You are plagued by your spider phobia!");
+				eng->log->addMessage("I am plagued by my spider phobia!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
@@ -704,13 +705,13 @@ void Player::testPhobias() {
 	if(ROLL < 5) {
 		if(isStandingInOpenPlace() == true) {
 			if(insanityPhobias[insanityPhobia_openPlace] == true) {
-				eng->log->addMessage("You are plagued by your phobia of open places!");
+				eng->log->addMessage("I am plagued by my phobia of open places!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
 		} else {
 			if(insanityPhobias[insanityPhobia_closedPlace] == true) {
-				eng->log->addMessage("You are plagued by your phobia of closed places!");
+				eng->log->addMessage("I am plagued by my phobia of closed places!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
@@ -718,7 +719,7 @@ void Player::testPhobias() {
 	}
 
 	if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown && insanityPhobias[insanityPhobia_deepPlaces]) {
-		eng->log->addMessage("You are plagued by your phobia of deep places!");
+		eng->log->addMessage("I am plagued by my phobia of deep places!");
 		m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(2, 6) + 6));
 		return;
 	}
@@ -738,30 +739,23 @@ void Player::updateColor() {
 		return;
 	}
 
-	if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
-		clr = clrYellow;
-		return;
-	}
+    if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
+        clr = clrYellow;
+        return;
+    }
 
-	const SDL_Color& archetypeClr = m_archetypeDefinition->color;
+    if(getHP() <= getHP_max()/3 + 1) {
+        clr = clrRed;
+        return;
+    }
 
-	const int CUR_SHOCK = insanityShort + insanityShortTemp;
+    const int CUR_SHOCK = insanityShort + insanityShortTemp;
+    if(CUR_SHOCK >= 75) {
+        clr = clrMagenta;
+        return;
+    }
 
-	if(CUR_SHOCK >= 75) {
-		clr = clrMagenta;
-
-//		const SDL_Color insaneClr = clrMagenta;
-//
-//		const double fIns = static_cast<double>((CUR_SHOCK * 2) - 100) / 100;
-//		const double fArc = 1.0 - fIns;
-//
-//		clr.r = (static_cast<double>(archetypeClr.r) * fArc) + (static_cast<double>(insaneClr.r) * fIns);
-//		clr.g = (static_cast<double>(archetypeClr.g) * fArc) + (static_cast<double>(insaneClr.g) * fIns);
-//		clr.b = (static_cast<double>(archetypeClr.b) * fArc) + (static_cast<double>(insaneClr.b) * fIns);
-		return;
-	}
-
-	clr = archetypeClr;
+	clr = m_archetypeDefinition->color;
 }
 
 void Player::act() {
@@ -778,7 +772,7 @@ void Player::act() {
 		}
 	}
 	if(dynamiteFuseTurns == 0) {
-		eng->log->addMessage("The dynamite explodes in your hands!");
+		eng->log->addMessage("The dynamite explodes in my hands!");
 		eng->explosionMaker->runExplosion(pos);
 		updateColor();
 		dynamiteFuseTurns = -1;
@@ -789,7 +783,7 @@ void Player::act() {
 		molotovFuseTurns--;
 	}
 	if(molotovFuseTurns == 0) {
-		eng->log->addMessage("The Molotov Cocktail explodes in your hands!");
+		eng->log->addMessage("The Molotov Cocktail explodes in my hands!");
 		updateColor();
 		eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng));
 		molotovFuseTurns = -1;
@@ -830,9 +824,9 @@ void Player::act() {
 	if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
 		if(eng->dice(1, 1000) <= 3) {
 			if(eng->dice.coinToss()) {
-				eng->popup->showMessage("You have a bad feeling...");
+				eng->popup->showMessage("I have a bad feeling...");
 			} else {
-				eng->popup->showMessage("A chill runs down your spine...");
+				eng->popup->showMessage("A chill runs down my spine...");
 			}
 			shock(shockValue_heavy, 0);
 			shock(shockValue_heavy, 0);
@@ -868,7 +862,7 @@ void Player::act() {
 						if(firstAidTurnsLeft > 0 || waitTurnsLeft > 0) {
 							eng->renderer->drawMapAndInterface();
 							const string MONSTER_NAME = actor->getNameA();
-							eng->log->addMessage(MONSTER_NAME + " comes into view.");
+							eng->log->addMessage(MONSTER_NAME + " comes into my view.");
 						}
 						monster->messageMonsterInViewPrinted = true;
 					}
@@ -881,13 +875,13 @@ void Player::act() {
 							const int PLAYER_SEARCH_SKILL = m_instanceDefinition.abilityValues.getAbilityValue(ability_searching, true);
 							const AbilityRollResult_t rollResult = eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
 							if(rollResult == successSmall) {
-								eng->log->addMessage("You see something moving in the shadows.");
+								eng->log->addMessage("I see something moving in the shadows.");
 							}
 							else if(rollResult > successSmall) {
 								monster->isSneaking = false;
 								FOVupdate();
 								eng->renderer->drawMapAndInterface();
-								eng->log->addMessage("You spot " + monster->getNameA() + "!");
+								eng->log->addMessage("I spot " + monster->getNameA() + "!");
 							}
 						}
 					}
@@ -901,7 +895,7 @@ void Player::act() {
 		//Passive HP-regeneration from high first aid?
 		if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 3) {
 			if(m_statusEffectsHandler->hasEffect(statusDiseased) == false) {
-				const int REGEN_N_TURN = 8;
+				const int REGEN_N_TURN = 10;
 				if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
 					if(getHP() < getHP_max()) {
 						m_instanceDefinition.HP++;
@@ -932,7 +926,7 @@ void Player::act() {
 
 	//First aid?
 	if(firstAidTurnsLeft == 0) {
-		eng->log->addMessage("You finish applying first aid.");
+		eng->log->addMessage("I finish applying first aid.");
 		eng->renderer->flip();
 		restoreHP(99999);
 		if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 2) {
@@ -968,7 +962,7 @@ void Player::attemptIdentifyItems() {
 					const int SKILL = m_instanceDefinition.abilityValues.getAbilityValue(def.abilityToIdentify, true);
 					if(SKILL > (100 - def.identifySkillFactor)) {
 						item->setRealDefinitionNames(eng, false);
-						eng->log->addMessage("You recognize " + def.name.name_a + " in your inventory.", clrWhite, true);
+						eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
 					}
 				}
 			}
@@ -980,7 +974,7 @@ void Player::queryInterruptActions() {
 	//Abort searching
 	if(waitTurnsLeft > 0) {
 		eng->renderer->drawMapAndInterface();
-		eng->log->addMessage("You stop waiting.", clrWhite, false);
+		eng->log->addMessage("I stop waiting.", clrWhite, false);
 		eng->renderer->flip();
 	}
 	waitTurnsLeft = -1;
@@ -994,7 +988,7 @@ void Player::queryInterruptActions() {
 		getSpotedEnemies();
 		if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD) {
 			firstAidTurnsLeft = -1;
-			eng->log->addMessage("You stop mending your wounds.", clrWhite, false);
+			eng->log->addMessage("I stop mending my wounds.", clrWhite, false);
 			eng->renderer->flip();
 		} else {
 			eng->renderer->drawMapAndInterface();
@@ -1089,7 +1083,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
 				// Encumbered?
 				if(m_inventory->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
-					eng->log->addMessage("You care too encumbered to move.");
+					eng->log->addMessage("I am too encumbered to move!");
 					eng->renderer->flip();
 					return;
 				}
@@ -1100,7 +1094,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
 				Item* const item = eng->map->items[pos.x][pos.y];
 				if(item != NULL) {
-					string message = m_statusEffectsHandler->allowSee() == false ? "You feel here: " : "You see here: ";
+					string message = m_statusEffectsHandler->allowSee() == false ? "I feel here: " : "I see here: ";
 					message += eng->itemData->itemInterfaceName(item, true);
 					eng->log->addMessage(message + ".");
 				}
@@ -1125,7 +1119,6 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 				const int MOBILITY_SKILL = m_instanceDefinition.abilityValues.getAbilityValue(ability_mobility, true);
 				if(eng->abilityRoll->roll(MOBILITY_SKILL) >= successSmall) {
 					isFreeTurn = true;
-//                    eng->log->addMessage("You move swiftly.", clrMagenta);
 					eng->playerVisualMemory->updateVisualMemory();
 					eng->player->FOVupdate();
 					eng->renderer->drawMapAndInterface();
@@ -1187,9 +1180,9 @@ void Player::kick() {
 
 	if(actorToKick == NULL) {
 		if(eng->player->getStatusEffectsHandler()->allowSee() == true) {
-			eng->log->addMessage("You see no one there to kick.");
+			eng->log->addMessage("I see no one there to kick.");
 		} else {
-			eng->log->addMessage("You find no one there to kick.");
+			eng->log->addMessage("I find no one there to kick.");
 		}
 	} else {
 		//Spawn a temporary kick weapon to attack with

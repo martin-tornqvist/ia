@@ -61,6 +61,6 @@ string AutoDescribeActor::getDwellingLevelStr(const ActorDefinition& def) const 
 
 string AutoDescribeActor::getNrOfKillsStr(const ActorDefinition& def) const {
 	const int KILLS = def.nrOfKills;
-	return KILLS == 0 ? "You do not recall having dispatched any of these before" : "You have killed " + intToString(KILLS) + " of these before";
+	return KILLS == 0 ? "I do not recall having dispatched any of these before" : "I have killed " + intToString(KILLS) + " of these before";
 }
 

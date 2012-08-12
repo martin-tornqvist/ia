@@ -85,7 +85,7 @@ void Trap::bump(Actor* actorBumping) {
 			if(isHidden_ == false) {
 				if(IS_PLAYER) {
 					if(CAN_SEE) {
-						actorBumping->eng->log->addMessage("You avoid a " + name + ".", clrMessageGood);
+						actorBumping->eng->log->addMessage("I avoid a " + name + ".", clrMessageGood);
 					}
 				}
 			}
@@ -112,7 +112,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE) {
 
 		if(PRINT_MESSSAGE) {
 			const string name = specificTrap_->getTrapSpecificTitle();
-			eng->log->addMessage("You spot a " + name + ".");
+			eng->log->addMessage("I spot a " + name + ".");
 		}
 	}
 }
@@ -192,9 +192,9 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
 	if(dodgeResult >= successSmall) {
 		if(IS_PLAYER) {
 			if(CAN_SEE) {
-				eng->log->addMessage("You dodge a dart!", clrMessageGood);
+				eng->log->addMessage("I dodge a dart!", clrMessageGood);
 			} else {
-				eng->log->addMessage("You feel a mechanism trigger and quickly leap aside!", clrMessageGood);
+				eng->log->addMessage("I feel a mechanism trigger and quickly leap aside!", clrMessageGood);
 			}
 		}
 	} else {
@@ -203,18 +203,18 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
 		if(eng->dice(1, 100) > CHANCE_TO_HIT) {
 			if(IS_PLAYER) {
 				if(CAN_SEE) {
-					eng->log->addMessage("A dart barely misses you!", clrMessageGood);
+					eng->log->addMessage("A dart barely misses me!", clrMessageGood);
 				} else {
-					eng->log->addMessage("A mechanism triggers, you sense something fly by!", clrMessageGood);
+					eng->log->addMessage("A mechanism triggers, I sense something fly by!", clrMessageGood);
 				}
 			}
 		} else {
 			//Dodge failed and trap hits
 			if(IS_PLAYER) {
 				if(CAN_SEE) {
-					eng->log->addMessage("You are hit by a dart!", clrMessageBad, false);
+					eng->log->addMessage("I am hit by a dart!", clrMessageBad, false);
 				} else {
-					eng->log->addMessage("A mechanism triggers, you feel a needle piercing your skin!", clrMessageBad, false);
+					eng->log->addMessage("A mechanism triggers, I feel a needle piercing my skin!", clrMessageBad, false);
 				}
 			}
 
@@ -236,9 +236,9 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
 	if(dodgeResult >= successSmall) {
 		if(IS_PLAYER) {
 			if(CAN_SEE) {
-				eng->log->addMessage("You dodge a spear!", clrMessageGood);
+				eng->log->addMessage("I dodge a spear!", clrMessageGood);
 			} else {
-				eng->log->addMessage("You feel a mechanism trigger and quickly leap aside!", clrMessageGood);
+				eng->log->addMessage("I feel a mechanism trigger and quickly leap aside!", clrMessageGood);
 			}
 		}
 	} else {
@@ -247,18 +247,18 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
 		if(eng->dice(1, 100) > CHANCE_TO_HIT) {
 			if(IS_PLAYER) {
 				if(CAN_SEE) {
-					eng->log->addMessage("A spear barely misses you!", clrMessageGood);
+					eng->log->addMessage("A spear barely misses me!", clrMessageGood);
 				} else {
-					eng->log->addMessage("A mechanism triggers, you hear a *swoosh*!", clrMessageGood);
+					eng->log->addMessage("A mechanism triggers, I hear a *swoosh*!", clrMessageGood);
 				}
 			}
 		} else {
 			//Dodge failed and trap hits
 			if(IS_PLAYER) {
 				if(CAN_SEE) {
-					eng->log->addMessage("You are hit by a spear!", clrMessageBad, false);
+					eng->log->addMessage("I am hit by a spear!", clrMessageBad, false);
 				} else {
-					eng->log->addMessage("A mechanism triggers, something sharp pierces your skin!", clrMessageBad, false);
+					eng->log->addMessage("A mechanism triggers, something sharp pierces my skin!", clrMessageBad, false);
 				}
 			}
 
@@ -281,9 +281,9 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor, const AbilityRoll
 
 	if(IS_PLAYER) {
 		if(CAN_SEE) {
-			eng->log->addMessage("You are hit by a burst of gas!");
+			eng->log->addMessage("I am hit by a burst of gas!");
 		} else {
-			eng->log->addMessage("A mechanism triggers, you are hit by a burst of gas!");
+			eng->log->addMessage("A mechanism triggers, I am hit by a burst of gas!");
 		}
 	}
 
@@ -298,9 +298,9 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityR
 
 	if(IS_PLAYER) {
 		if(CAN_SEE) {
-			eng->log->addMessage("You are hit by a burst of gas!");
+			eng->log->addMessage("I am hit by a burst of gas!");
 		} else {
-			eng->log->addMessage("A mechanism triggers, you are hit by a burst of gas!");
+			eng->log->addMessage("A mechanism triggers, I am hit by a burst of gas!");
 		}
 	}
 
@@ -315,9 +315,9 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResul
 
 	if(IS_PLAYER) {
 		if(CAN_SEE) {
-			eng->log->addMessage("You are hit by a burst of gas!");
+			eng->log->addMessage("I am hit by a burst of gas!");
 		} else {
-			eng->log->addMessage("A mechanism triggers, you are hit by a burst of gas!");
+			eng->log->addMessage("A mechanism triggers, I am hit by a burst of gas!");
 		}
 	}
 
@@ -331,19 +331,19 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRol
 	if(dodgeResult >= successSmall) {
 		if(IS_PLAYER) {
 			if(CAN_SEE) {
-				eng->log->addMessage("You cover your eyes just in time to avoid an intense flash!", clrMessageGood);
+				eng->log->addMessage("I cover my eyes just in time to avoid an intense flash!", clrMessageGood);
 			} else {
-				eng->log->addMessage("You feel a mechanism trigger!", clrMessageGood);
+				eng->log->addMessage("I feel a mechanism trigger!", clrMessageGood);
 			}
 		}
 	} else {
 		//Dodge failed
 		if(IS_PLAYER) {
 			if(CAN_SEE) {
-				eng->log->addMessage("A sharp flash of light pierces your eyes!", clrWhite, false);
+				eng->log->addMessage("A sharp flash of light pierces my eyes!", clrWhite, false);
 				actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
 			} else {
-				eng->log->addMessage("You feel a mechanism trigger!", clrWhite, false);
+				eng->log->addMessage("I feel a mechanism trigger!", clrWhite, false);
 			}
 		}
 	}
@@ -360,7 +360,7 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
 		if(CAN_SEE) {
 			eng->log->addMessage("A curious shape on the floor starts to glow!");
 		} else {
-			eng->log->addMessage("Something triggers, you feel a peculiar energy around you!");
+			eng->log->addMessage("Something triggers, I feel a peculiar energy around me!");
 		}
 	}
 
@@ -394,9 +394,9 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
 
 	if(IS_PLAYER) {
 		if(CAN_SEE) {
-			eng->log->addMessage("You find yourself entangled in a huge spider web!");
+			eng->log->addMessage("I find myself entangled in a huge spider web!");
 		} else {
-			eng->log->addMessage("You are entangled by a sticky mass of threads!");
+			eng->log->addMessage("I am entangled by a sticky mass of threads!");
 		}
 	}
 }
@@ -410,7 +410,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
 
 			isHoldingActor = false;
 
-			eng->log->addMessage("You break free.");
+			eng->log->addMessage("I break free.");
 
 			if(eng->dice(1, 100) <= 50) {
 
@@ -422,50 +422,10 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
 			}
 			return dest;
 		} else {
-			eng->log->addMessage("You struggle to break free.");
+			eng->log->addMessage("I struggle to break free.");
 			return pos;
 		}
 	}
 	return dest;
 }
-
-/*
- void TrapTrapDoor::trigger(Actor* const actor, const AbilityRollResult_t dodgeResult)
- {
- const bool IS_PLAYER = actor == eng->player;
- const bool CAN_SEE   = actor->getStatusEffectsHandler()->allowSee();
- //Dodge?
- if(dodgeResult >= successSmall) {
- if(IS_PLAYER) {
- if(CAN_SEE) {
- eng->log->addMessage("A trap door opens, you react in time to grab the ledge and climb up!", clrMessageGood);
- } else {
- eng->log->addMessage("A trap door opens, you react in time to grab the ledge and climb up!", clrMessageGood);
- }
- }
- } else {
- //Dodge failed
- if(IS_PLAYER) {
- if(CAN_SEE) {
- eng->log->addMessage("A trap door opens, you are falling!", clrWhite, false);
- } else {
- eng->log->addMessage("You feel the floor open beneath you, you are falling!", clrWhite, false);
- }
-
- //When falling to the next level, make dodge roll to determine if landing on feet
- const int DODGE_SKILL_VALUE = actor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_evade, true);
- const AbilityRollResult_t DODGE_RESULT = actor->eng->abilityRoll->roll(DODGE_SKILL_VALUE);
-
- if(DODGE_RESULT >= successSmall) {
- eng->log->addMessage("...you land on your feet", clrMessageGood, false);
- } else {
- eng->log->addMessage("...you land badly.", clrMessageBad, false);
- actor->hit(eng->dice(2,6));
- }
-
- playerFallDownOnNextTurn = true;
- }
- }
- }
- */
 

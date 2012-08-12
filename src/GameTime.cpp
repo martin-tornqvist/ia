@@ -111,8 +111,8 @@ void GameTime::letNextAct() {
 
 	// Player turn begins?
 	if(currentActor == eng->player) {
-		eng->renderer->drawMapAndInterface();
 		eng->player->newTurn();
+		eng->renderer->drawMapAndInterface();
 	}
 }
 

@@ -26,7 +26,7 @@ Entity::Entity(FeatureStatic* feature_) :
 void Look::markerAtCoord(const coord pos) {
 	eng->log->clearLog();
 	if(eng->map->playerVision[pos.x][pos.y] == true) {
-		eng->log->addMessage("You see here:");
+		eng->log->addMessage("I see here:");
 
 		entityDescribed = getEntityToDescribe(pos);
 

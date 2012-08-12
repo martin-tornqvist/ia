@@ -136,19 +136,18 @@ void RoomDescriptModuleHighCeil::newTurn() {
 }
 
 void RoomDescriptModuleHighCeil::creaturesComeDown() {
-	bool blockCells[MAP_X_CELLS][MAP_Y_CELLS];
-	eng->basicUtils->resetBoolArray(blockCells, true);
+	bool blockedCells[MAP_X_CELLS][MAP_Y_CELLS];
+	eng->basicUtils->resetBoolArray(blockedCells, true);
 	for(int x = x0y0.x; x <= x1y1.x; x++) {
 		for(int y = x0y0.y; y <= x1y1.y; y++) {
-			blockCells[x][y] = false;
+			blockedCells[x][y] = false;
 		}
 	}
 
-	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-	eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_fly, blockers);
-	eng->basicUtils->reverseBoolArray(blockers);
+	eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_fly, blockedCells);
+	eng->basicUtils->reverseBoolArray(blockedCells);
 	vector<coord> freeCells;
-	eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+	eng->mapTests->makeMapVectorFromArray(blockedCells, freeCells);
 
 	if(eng->populate->spawnGroupOfMonstersAtFreeCells(freeCells, specialRoom_highCeil, true)) {
 		eng->popup->showMessage("Something descends from the haze of the domed ceiling.");

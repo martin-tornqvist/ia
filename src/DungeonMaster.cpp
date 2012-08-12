@@ -72,18 +72,18 @@ void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
 void DungeonMaster::winGame() {
 	eng->highScore->gameOver(true);
 
-	string winMessage = "As you touch the crystal, there is a jolt of electricity. A surreal glow suddenly illuminates the area. ";
-	winMessage += "You feel as if you have stirred something. You notice a dark figure observing you from the edge of the light. ";
-	winMessage += "It is the shape of a human. The figure approaches you, but still no light falls on it as it enters. ";
-	winMessage += "There is no doubt in your mind concerning the nature of this entity; It is the Faceless God who dwells in the depths of ";
+	string winMessage = "As I touch the crystal, there is a jolt of electricity. A surreal glow suddenly illuminates the area. ";
+	winMessage += "I feel as if I have stirred something. I notice a dark figure observing me from the edge of the light. ";
+	winMessage += "It is the shape of a human. The figure approaches me, but still no light falls on it as it enters. ";
+	winMessage += "There is no doubt in my mind concerning the nature of this entity; It is the Faceless God who dwells in the depths of ";
 	winMessage += "the earth, it is the Crawling Chaos, the 'Black Man' of the witch-cult, the Devil - NYARLATHOTEP! ";
-	winMessage += "You panic. Why is it you find yourself here, stumbling around in darkness? ";
-	winMessage += "The being beckons you to gaze into the stone. In the divine radiance you see visions beyond eternity, ";
+	winMessage += "I panic. Why is it I find myself here, stumbling around in darkness? ";
+	winMessage += "The being beckons me to gaze into the stone. In the divine radiance I see visions beyond eternity, ";
 	winMessage += "visions of unreal reality, visions of the brightest light of day and the darkest night of madness. ";
-	winMessage += "The torrent of revelations does not seem unwelcome - You feel as if under a spell. There is only onward now. ";
-	winMessage += "You demand to attain more - everything! So you make a pact with the Fiend......... ";
-	winMessage += "You now harness the shadows that stride from world to world to sow death and madness. ";
-	winMessage += "The destinies of all things on earth, living and dead, are yours. ";
+	winMessage += "The torrent of revelations does not seem unwelcome - I feel as if under a spell. There is only onward now. ";
+	winMessage += "I demand to attain more - everything! So I make a pact with the Fiend......... ";
+	winMessage += "I now harness the shadows that stride from world to world to sow death and madness. ";
+	winMessage += "The destinies of all things on earth, living and dead, are mine. ";
 
 	const vector<string> winMessageLines = eng->textFormatting->lineToLines(winMessage, 68);
 
@@ -154,8 +154,8 @@ void DungeonMaster::playerGainsExp(int exp) {
 					if(playerExp >= getXpToNextLvl()) {
 						eng->renderer->drawMapAndInterface();
 						playerLvl++;
-						eng->log->addMessage("You have reached level " + intToString(playerLvl) + "!", clrGreen);
-						eng->log->addMessage("You gain new abilities, press any key to select...", clrGreen);
+						eng->log->addMessage("I have reached level " + intToString(playerLvl) + "!", clrGreen);
+						eng->log->addMessage("I gain new abilities, press any key to select...", clrGreen);
 						eng->renderer->flip();
 						eng->query->waitForKeyPress();
 

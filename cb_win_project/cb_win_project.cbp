@@ -157,8 +157,6 @@
 		<Unit filename="..\src\DungeonClimb.h" />
 		<Unit filename="..\src\DungeonMaster.cpp" />
 		<Unit filename="..\src\DungeonMaster.h" />
-		<Unit filename="..\src\DungeonReadWrite.cpp" />
-		<Unit filename="..\src\DungeonReadWrite.h" />
 		<Unit filename="..\src\Engine.cpp" />
 		<Unit filename="..\src\Engine.h" />
 		<Unit filename="..\src\Examine.cpp" />
@@ -218,8 +216,6 @@
 		<Unit filename="..\src\ItemPickup.h" />
 		<Unit filename="..\src\ItemScroll.cpp" />
 		<Unit filename="..\src\ItemScroll.h" />
-		<Unit filename="..\src\ItemUsable.cpp" />
-		<Unit filename="..\src\ItemUsable.h" />
 		<Unit filename="..\src\ItemWeapon.cpp" />
 		<Unit filename="..\src\ItemWeapon.h" />
 		<Unit filename="..\src\JamWithSpike.cpp" />

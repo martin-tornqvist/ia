@@ -84,10 +84,12 @@ int main(int argc, char* argv[]) {
 
 			if(ENTRY_TYPE == gameEntry_new) {
 				if(engine->config->SKIP_INTRO_LEVEL == 0) {
-					string introMessage = "You stand on a cobbled forest path, a shunned and abandoned church building lies ahead. ";
-					introMessage += "From years of investigation and discreet inquiries, you know this to be the access point to the abhorred ";
-					introMessage += "\"Cult of Starry Wisdom\". Your plan is to infiltrate these sprawling catacombs and rob them of treasure and ";
-					introMessage += "knowledge. The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
+					string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
+					introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
+					introMessage += "\"Cult of Starry Wisdom\". Its occupants have grown demented and disorganized ";
+					introMessage += "with the powers they could not control; Reduced to beasts, roaming the tunnels without purpose. ";
+					introMessage += "I intend to infiltrate these sprawling catacombs and rob them of treasures and knowledge. ";
+					introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
 					introMessage += "- a window to all secrets of the universe.";
 					engine->popup->showMessage(introMessage);
 				}
@@ -124,7 +126,7 @@ int main(int argc, char* argv[]) {
 				//If player has died, run postmortem, then return to main menu
 				if(engine->player->deadState != actorDeadState_alive) {
 					dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
-					engine->log->addMessage("===YOU DIE=== (press any key to view postmortem information)", clrMessageBad);
+					engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
 					engine->renderer->flip();
 					engine->query->waitForKeyPress();
 					engine->highScore->gameOver(false);

@@ -34,7 +34,7 @@ void StatusDiseased::newTurn(Engine* engine) {
 bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
 	if(ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
 		if(owningActor == owningActor->eng->player) {
-			owningActor->eng->log->addMessage("You are too afraid to attack!");
+			owningActor->eng->log->addMessage("I am too terrified to engage in close combat!");
 		}
 	}
 	return false;
@@ -43,12 +43,6 @@ bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 bool StatusTerrified::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
     return true;
-//	if(ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-//		if(owningActor == owningActor->eng->player) {
-//			owningActor->eng->log->addMessage("You are too afraid to attack!");
-//		}
-//	}
-//	return false;
 }
 
 coord StatusNailed::changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine) {
@@ -57,7 +51,7 @@ coord StatusNailed::changeMoveCoord(const coord actorPos, const coord movePos, E
 	Actor* const player = owningActor->eng->player;
 
 	if(owningActor == player) {
-		engine->log->addMessage("You struggle to tear out the spike!", clrMessageBad);
+		engine->log->addMessage("I struggle to tear out the spike!", clrMessageBad);
 		engine->postmortem->setCauseOfDeath("Attempting to tear out a spike from the flesh");
 	} else {
 		if(player->checkIfSeeActor(*owningActor, NULL)) {
@@ -73,7 +67,7 @@ coord StatusNailed::changeMoveCoord(const coord actorPos, const coord movePos, E
 			nrOfSpikes--;
 			if(nrOfSpikes > 0) {
 				if(owningActor == player) {
-					engine->log->addMessage("You rip out a spike from your flesh!");
+					engine->log->addMessage("I rip out a spike from my flesh!");
 				} else {
 					if(engine->player->checkIfSeeActor(*owningActor, NULL)) {
 						engine->log->addMessage(owningActor->getNameThe() + " tears out a spike!");

@@ -31,9 +31,9 @@ void Bash::playerBashFeature(Feature* const feature) const {
 	if(bashableObjectFound == false) {
 		const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
 		if(PLAYER_IS_BLIND == false) {
-			eng->log->addMessage("You see nothing there to bash.");
+			eng->log->addMessage("I see nothing there to bash.");
 		} else {
-			eng->log->addMessage("You find nothing there to bash.");
+			eng->log->addMessage("I find nothing there to bash.");
 		}
 	}
 }

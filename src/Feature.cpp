@@ -117,7 +117,7 @@ int Feature::getShockWhenAdjacent() const {
 }
 
 void Feature::examine() {
-   eng->log->addMessage("You find nothing specific there to examine or use.");
+   eng->log->addMessage("I find nothing specific there to examine or use.");
    eng->renderer->flip();
 }
 

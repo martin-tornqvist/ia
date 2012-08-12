@@ -375,10 +375,10 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 		Item* const itemAfter = getItemInSlot(slot_wielded);
 		if(IS_PLAYER == true) {
 			if(itemBefore != NULL) {
-				engine->log->addMessage("You were wielding " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
+				engine->log->addMessage("I was wielding " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
 			}
 			const SDL_Color clr = isEndingTurn ? clrWhite : clrMagenta;
-			engine->log->addMessage("You are now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".", clr);
+			engine->log->addMessage("I am now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".", clr);
 		}
 	}
 
@@ -388,9 +388,9 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 		Item* const itemAfter = getItemInSlot(slot_armorBody);
 		if(IS_PLAYER == true) {
 			if(itemBefore != NULL) {
-				engine->log->addMessage("You wore " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
+				engine->log->addMessage("I wore " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
 			}
-			engine->log->addMessage("You are now wearing " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
+			engine->log->addMessage("I am now wearing " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
 		}
 		isEndingTurn = true;
 	}
@@ -401,10 +401,10 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 		Item* const itemAfter = getItemInSlot(slot_missiles);
 		if(IS_PLAYER == true) {
 			if(itemBefore != NULL) {
-				engine->log->addMessage("You were using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as missile weapon.");
+				engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as missile weapon.");
 			}
 			const SDL_Color clr = isEndingTurn ? clrWhite : clrMagenta;
-			engine->log->addMessage("You are now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as missile weapon.", clr);
+			engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as missile weapon.", clr);
 		}
 	}
 	if(isEndingTurn) {
@@ -425,9 +425,9 @@ void Inventory::equipGeneralItemToAltAndEndTurn(const unsigned int generalInvent
 	engine->renderer->drawMapAndInterface();
 
 	if(itemBefore != NULL) {
-		engine->log->addMessage("You were using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.", clr);
+		engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.", clr);
 	}
-	engine->log->addMessage("You are now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.", clr);
+	engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.", clr);
 
 	if(IS_FREE_TURN_DUE_TO_SKILL == false) {
 		engine->gameTime->letNextAct();

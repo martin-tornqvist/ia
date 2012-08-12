@@ -35,7 +35,7 @@ void ItemPickup::tryPick() {
 			Item* const carriedMissile = playerInventory->getItemInSlot(slot_missiles);
 			if(carriedMissile != NULL) {
 				if(item->getInstanceDefinition().devName == carriedMissile->getInstanceDefinition().devName) {
-					eng->log->addMessage("You add " + ITEM_NAME + " to your missile stack.");
+					eng->log->addMessage("I add " + ITEM_NAME + " to my missile stack.");
 					carriedMissile->numberOfItems += item->numberOfItems;
 					delete item;
 					eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
@@ -47,7 +47,7 @@ void ItemPickup::tryPick() {
 				eng->renderer->flip();
 				if(eng->query->yesOrNo() == true) {
 					eng->log->clearLog();
-					eng->log->addMessage("You pick up " + ITEM_NAME + ".");
+					eng->log->addMessage("I pick up " + ITEM_NAME + ".");
 					eng->renderer->flip();
 					playerInventory->putItemInSlot(slot_missiles, item, true, true);
 					eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
@@ -59,7 +59,7 @@ void ItemPickup::tryPick() {
 
 		if(isInventoryFull(playerInventory, item) == false) {
 			eng->log->clearLog();
-			eng->log->addMessage("You pick up " + ITEM_NAME + ".");
+			eng->log->addMessage("I pick up " + ITEM_NAME + ".");
 
 			playerInventory->putItemInGeneral(item);
 
@@ -68,11 +68,11 @@ void ItemPickup::tryPick() {
 			eng->gameTime->letNextAct();
 		} else {
 			eng->log->clearLog();
-			eng->log->addMessage("You can not carry more.");
+			eng->log->addMessage("I can not carry more.");
 		}
 	} else {
 		eng->log->clearLog();
-		eng->log->addMessage("You see nothing to pick up here.");
+		eng->log->addMessage("I see nothing to pick up here.");
 	}
 }
 
@@ -110,13 +110,13 @@ void ItemPickup::tryUnloadWeaponFromGround() {
 					spawnedAmmo->numberOfItems = ammoLoaded;
 				}
 				const string WEAPON_REF_A = weapon->getInstanceDefinition().name.name_a;
-				eng->log->addMessage("You unload " + WEAPON_REF_A);
+				eng->log->addMessage("I unload " + WEAPON_REF_A);
 
 				if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
 					playerInventory->putItemInGeneral(spawnedAmmo);
 				} else {
 					eng->itemDrop->dropItemOnMap(eng->player->pos, &spawnedAmmo);
-					eng->log->addMessage("You have no room to keep the unloaded ammunition, item dropped on floor.");
+					eng->log->addMessage("I have no room to keep the unloaded ammunition, item dropped on floor.");
 				}
 
 				dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
@@ -128,7 +128,7 @@ void ItemPickup::tryUnloadWeaponFromGround() {
 		}
 	}
 	if(unloadedSomething == false) {
-		eng->log->addMessage("You see nothing to unload here.");
+		eng->log->addMessage("I see nothing to unload here.");
 	}
 }
 

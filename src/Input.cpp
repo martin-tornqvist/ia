@@ -275,7 +275,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 				}
 
 				if(firearm == NULL) {
-					eng->log->addMessage("You are not wielding a firearm (press 'w').");
+					eng->log->addMessage("I am not wielding a firearm (press 'w').");
 				}
 			}
 		}
@@ -349,15 +349,15 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 			const string ITEM_ALT_NAME = itemAlt == NULL ? "" : eng->itemData->itemInterfaceName(itemAlt, true);
 
 			if(itemWielded == NULL && itemAlt == NULL) {
-				eng->log->addMessage("You have neither a wielded nor a prepared weapon.");
+				eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
 			} else {
 				if(itemWielded == NULL) {
-					eng->log->addMessage("You" + swiftStr + " wield your prepared weapon (" + ITEM_ALT_NAME + ").", clr);
+					eng->log->addMessage("I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").", clr);
 				} else {
 					if(itemAlt == NULL) {
-						eng->log->addMessage("You" + swiftStr + " put away your weapon (" + ITEM_WIELDED_NAME + ").", clr);
+						eng->log->addMessage("I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").", clr);
 					} else {
-						eng->log->addMessage("You" + swiftStr + " swap to your prepared weapon (" + ITEM_ALT_NAME + ").", clr);
+						eng->log->addMessage("I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").", clr);
 					}
 				}
 				eng->player->getInventory()->swapWieldedAndPrepared(IS_FREE_TURN_DUE_TO_SKILL == false, eng);
@@ -385,7 +385,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 			Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
 			const bool ITEM_MOVED = eng->player->getInventory()->moveItemToGeneral(missileSlot);
 			if(ITEM_MOVED == true) {
-				eng->log->addMessage("You quit using " + eng->itemData->itemInterfaceName(item, true) + " as missile weapon.");
+				eng->log->addMessage("I quit using " + eng->itemData->itemInterfaceName(item, true) + " as missile weapon.");
 			} else {
 				eng->log->addMessage("There is no missile weapon to quit using.");
 			}
@@ -412,7 +412,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 			if(eng->player->spotedEnemies.size() == 0) {
 				const int TURNS_TO_APPLY = 10;
 				const string TURNS_STR = intToString(TURNS_TO_APPLY);
-				eng->log->addMessage("You pause for a while and search around (" + TURNS_STR + " turns).");
+				eng->log->addMessage("I pause for a while and search around (" + TURNS_STR + " turns).");
 				eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
 				eng->gameTime->letNextAct();
 			} else {
@@ -441,7 +441,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 			if(eng->player->getStatusEffectsHandler()->allowSee()) {
 				eng->playerPowersHandler->run(false);
 			} else {
-				eng->log->addMessage("You can not read while blind.");
+				eng->log->addMessage("I can not read while blind.");
 			}
 		}
 		clearKeyEvents();
@@ -477,7 +477,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 				Item* item = eng->player->getInventory()->getItemInSlot(slot_missiles);
 
 				if(item == NULL) {
-					eng->log->addMessage("You have no weapon selected for throwing (press 'm').");
+					eng->log->addMessage("I have no weapon chosen for throwing (press 'm').");
 				} else {
 					eng->marker->place(markerTask_throw);
 				}
@@ -504,7 +504,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 			if(eng->player->getStatusEffectsHandler()->allowSee() == true) {
 				eng->marker->place(markerTask_look);
 			} else {
-				eng->log->addMessage("You are blind.");
+				eng->log->addMessage("I am blind.");
 			}
 		}
 		clearKeyEvents();
@@ -522,10 +522,10 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		//					trap->triggerOnPurpose(eng->player);
 		//					eng->gameTime->letNextAct();
 		//				} else {
-		//					eng->log->addMessage("You find no trap here to trigger.");
+		//					eng->log->addMessage("I find no trap here to trigger.");
 		//				}
 		//			} else {
-		//				eng->log->addMessage("You find no trap here to trigger.");
+		//				eng->log->addMessage("I find no trap here to trigger.");
 		//			}
 		//		}
 		//		clearKeyEvents();
@@ -537,7 +537,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		clearMessages();
 		if(eng->player->deadState == actorDeadState_alive) {
 			if(eng->player->getHP() >= eng->player->getHP_max()) {
-				eng->log->addMessage("You are already at good health.");
+				eng->log->addMessage("I am already at good health.");
 				eng->renderer->flip();
 			} else {
 				eng->player->getSpotedEnemies();
@@ -548,7 +548,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 					const int PLAYER_HEALING_RANK = eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid);
 					const int TURNS_AFTER_BON = PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 					const string TURNS_STR = intToString(TURNS_AFTER_BON);
-					eng->log->addMessage("You rest here and attend your wounds (" + TURNS_STR + " turns)...");
+					eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
 					eng->player->firstAidTurnsLeft = TURNS_AFTER_BON - 1;
 					eng->gameTime->letNextAct();
 				} else {

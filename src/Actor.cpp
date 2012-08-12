@@ -156,7 +156,7 @@ void Actor::teleportToRandom() {
 		eng->player->FOVupdate();
 		eng->renderer->drawMapAndInterface();
 		eng->playerVisualMemory->updateVisualMemory();
-		eng->log->addMessage("You suddenly find yourself in a different location!");
+		eng->log->addMessage("I suddenly find myself in a different location!");
 		m_statusEffectsHandler->attemptAddEffect(new StatusConfused(8 + eng->dice(1, 8)));
 	}
 }
@@ -198,7 +198,7 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
 	if(ALLOW_MESSAGE) {
 		if(gainedHP) {
 			if(this == eng->player) {
-				eng->log->addMessage("You feel healthier!", clrMessageGood);
+				eng->log->addMessage("I feel healthier!", clrMessageGood);
 			} else {
 				if(eng->player->checkIfSeeActor(*this, NULL)) {
 					eng->log->addMessage(m_instanceDefinition.name_the + " looks healthier.");
@@ -221,9 +221,9 @@ void Actor::changeMaxHP(const int change, const bool ALLOW_MESSAGES) {
 	if(ALLOW_MESSAGES == true) {
 		if(this == eng->player) {
 			if(change > 0)
-				eng->log->addMessage("You feel more vigorous!", clrMessageGood);
+				eng->log->addMessage("I feel more vigorous!", clrMessageGood);
 			if(change < 0)
-				eng->log->addMessage("You feel frailer!", clrMessageBad);
+				eng->log->addMessage("I feel frailer!", clrMessageBad);
 		} else {
 			if(eng->map->playerVision[pos.x][pos.y] == true) {
 				if(change > 0)
@@ -286,7 +286,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
 void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS) {
 	if(this != eng->player) {
 		if(isHumanoid() == true) {
-			eng->soundEmitter->emitSound(Sound("You hear agonised screaming.", true, pos, 3, false));
+			eng->soundEmitter->emitSound(Sound("I hear agonised screaming.", true, pos, 3, false));
 		}
 	}
 

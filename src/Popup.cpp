@@ -51,18 +51,13 @@ Popup::BoxReturnData Popup::printBox(const int BOX_HALF_WIDTH) const {
 }
 
 void Popup::showMessage(const string message) const {
-	const int BOX_HALF_WIDTH = message.length() >= 250 ? 22 : 18;
-
+	const int BOX_HALF_WIDTH = message.length() >= 250 ? 28 : 18;
 	const BoxReturnData box = printBox(BOX_HALF_WIDTH);
-
 	const int W = box.x1y1Text.x - box.x0y0Text.x + 1;
-
 	vector<string> lines = eng->textFormatting->lineToLines(message, W);
 
 	for(unsigned int i = 0; i < lines.size(); i++) {
-		eng->renderer->drawText(lines.at(i), renderArea_screen, box.x0y0Text.x, (i + box.x0y0Text.y) + eng->config->MAINSCREEN_Y_CELLS_OFFSET,
-				clrRedLight);
-
+		eng->renderer->drawText(lines.at(i), renderArea_screen, box.x0y0Text.x, (i + box.x0y0Text.y) + eng->config->MAINSCREEN_Y_CELLS_OFFSET, clrRedLight);
 		//Copy the messages to the log history
 		eng->log->addLineToHistory(lines.at(i));
 	}
@@ -71,8 +66,6 @@ void Popup::showMessage(const string message) const {
 			+ eng->config->MAINSCREEN_Y_CELLS_OFFSET, clrWhiteHigh);
 
 	eng->renderer->flip();
-
 	eng->query->waitForEscOrSpace();
-
 	eng->renderer->drawMapAndInterface();
 }

@@ -30,12 +30,12 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT) {
 		const Actor* const curActor = eng->gameTime->getCurrentActor();
 		if(curActor == eng->player) {
 			eng->log->clearLog();
-			eng->log->addMessage("You drop " + itemRef + ".");
+			eng->log->addMessage("I drop " + itemRef + ".");
 		} else {
 			bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 			eng->mapTests->makeVisionBlockerArray(blockers);
 			if(eng->player->checkIfSeeActor(*curActor, blockers)) {
-				eng->log->addMessage("You see " + curActor->getNameThe() + " throw " + itemRef + ".");
+				eng->log->addMessage("I see " + curActor->getNameThe() + " throw " + itemRef + ".");
 			}
 		}
 
@@ -104,7 +104,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
 			eng->map->items[curX][curY] = *item;
 			if(eng->player->pos == coord(curX, curY)) {
 				if(curX != pos.x || curY != pos.y) {
-					eng->log->addMessage("You feel something roll by your feet.");
+					eng->log->addMessage("I feel something roll by my feet.");
 				}
 			}
 

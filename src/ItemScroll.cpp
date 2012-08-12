@@ -12,48 +12,12 @@
 #include "Postmortem.h"
 #include "Query.h"
 
-//void scrollOfSummoning::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-//	engine->mapTests->makeFreeCellsVector(LandscBlockData(true, true, false, false, false), actorsBlock_all, true, trapsBlock_never,
-//			false, NULL);
-//	const unsigned int NR_ELEMENTS = engine->mapTests->freeCellsVector.size();
-//	const unsigned int ELEMENT = engine->dice(1, NR_ELEMENTS) - 1;
-//	const coord CELL = engine->mapTests->freeCellsVector.at(ELEMENT);
-//
-//	engine->actorFactory->spawnActor(actor_giantBat, CELL);
-//
-//	const bool PLAYER_SEE_CELL = engine->map->playerVision[CELL.x][CELL.y] == true;
-//	if(PLAYER_SEE_CELL == true) {
-//		engine->log->addMessage("You see a creature appear!");
-//	} else {
-//		engine->log->addMessage("A creature appears somewhere...");
-//	}
-//	setRealDefinitionNames(engine, false);
-//}
-//
-//void scrollOfGreaterSummoning::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-//	engine->mapTests->makeFreeCellsVector(LandscBlockData(true, true, false, false, false), actorsBlock_all, true, trapsBlock_never,
-//			false, NULL);
-//	const unsigned int NR_ELEMENTS = engine->mapTests->freeCellsVector.size();
-//	const unsigned int ELEMENT = engine->dice(1, NR_ELEMENTS) - 1;
-//	const coord CELL = engine->mapTests->freeCellsVector.at(ELEMENT);
-//
-//	engine->actorFactory->spawnActor(actor_fireHound, CELL);
-//
-//	const bool PLAYER_SEE_CELL = engine->map->playerVision[CELL.x][CELL.y] == true;
-//	if(PLAYER_SEE_CELL == true) {
-//		engine->log->addMessage("You see a powerful creature appear!");
-//	} else {
-//		engine->log->addMessage("A powerful creature appears somewhere...");
-//	}
-//	setRealDefinitionNames(engine, false);
-//}
-
 void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) {
 	(void)FROM_MEMORY;
 
 	const int NR_OF_SWEEPS = 5;
 
-	engine->log->addMessage("Destruction rages around you!");
+	engine->log->addMessage("Destruction rages around me!");
 
 	for(int i = 0; i < NR_OF_SWEEPS; i++) {
 		for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
@@ -132,7 +96,7 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
 		}
 	}
 
-	engine->log->addMessage("Disgusting critters appear around you!");
+	engine->log->addMessage("Disgusting critters appear around me!");
 	setRealDefinitionNames(engine, false);
 }
 
@@ -140,7 +104,7 @@ void ScrollOfDeepDescent::specificRead(const bool FROM_MEMORY, Engine* const eng
 	(void)FROM_MEMORY;
 	if(engine->map->getDungeonLevel() <= LAST_CAVERN_LEVEL - 3) {
 		engine->dungeonClimb->travelDown(1);
-		engine->log->addMessage("You sink downwards!");
+		engine->log->addMessage("I sink downwards!");
 		setRealDefinitionNames(engine, false);
 	} else {
 		engine->log->addMessage("Nothing happens.");
@@ -205,7 +169,7 @@ void ScrollOfDetectItems::specificRead(const bool FROM_MEMORY, Engine* const eng
 	engine->player->FOVupdate();
 	engine->renderer->drawMapAndInterface();
 
-	engine->log->addMessage("All items are revealed to you.");
+	engine->log->addMessage("All items are revealed to me.");
 	setRealDefinitionNames(engine, false);
 }
 
@@ -232,7 +196,7 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
 	}
 
 	if(somethingRevealed) {
-		engine->log->addMessage("All traps are revealed to you.");
+		engine->log->addMessage("All traps are revealed to me.");
 		setRealDefinitionNames(engine, false);
 	} else {
 		failedToLearnRealName(engine);
@@ -281,55 +245,6 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 	}
 }
 
-//ItemActivateReturn_t Scroll::study(Engine* const engine) {
-//	engine->renderer->drawMapAndInterface();
-//	engine->log->addMessage("You study the manuscript...");
-//
-//	ItemActivateReturn_t returnData = itemActivate_keep;
-//
-//	const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToLearnOrCastFromMemory(false, engine));
-//
-//	int chanceToDestroy = 35;
-//
-//	if(rollResult >= successSmall) {
-//		if(m_archetypeDefinition->isIdentified == false) {
-//			setRealDefinitionNames(engine, false);
-//			engine->log->addMessage("It is " + m_archetypeDefinition->name.name_a + ".", clrWhite, true);
-//		} else {
-//			m_instanceDefinition.isScrollLearned = true;
-//			m_archetypeDefinition->isScrollLearned = true;
-//			engine->log->addMessage("The deeper meaning of this text becomes clear to you...");
-//			chanceToDestroy = 100;
-//			engine->player->shock(shockValue_heavy, 0);
-//			engine->player->shock(shockValue_heavy, 0);
-//		}
-//	} else {
-//		if(m_archetypeDefinition->isIdentified == true) {
-//			engine->log->addMessage("You fail to comprehend the essence of it.");
-//		} else {
-//			engine->log->addMessage("You fail to decipher it.");
-//		}
-//	}
-//
-//	if(rollResult < successBig) {
-//		//Insert bad stuff ***
-//		//logMessagesAddedBetweenRefer = true:
-//	}
-//
-//	if(engine->dice(1, 100) < chanceToDestroy) {
-//		returnData = itemActivate_destroyed;
-//		if(m_archetypeDefinition->isScrollLearned == true) {
-//			engine->log->addMessage("The manuscript suddenly crumbles, but you retain it in your memory.");
-//		} else {
-//			engine->log->addMessage("The manuscript suddenly crumbles.");
-//		}
-//	}
-//
-//	engine->gameTime->letNextAct();
-//
-//	return returnData;
-//}
-
 int Scroll::getChanceToLearn(Engine* const engine) const {
 	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
 	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
@@ -376,12 +291,12 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 	if(IS_FROM_MEMORY) {
 		const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToCastFromMemory(engine));
 		if(rollResult >= successSmall) {
-			engine->log->addMessage("You cast " + getRealTypeName() + "...");
+			engine->log->addMessage("I cast " + getRealTypeName() + "...");
 			specificRead(IS_FROM_MEMORY, engine);
 		} else {
-			engine->log->addMessage("You miscast it!");
+			engine->log->addMessage("I miscast it!");
 			if(engine->dice.coinToss()) {
-				engine->log->addMessage("You feel a sharp pain as if from a surge of electricity.", clrMessageBad);
+				engine->log->addMessage("I feel a sharp pain as if from a surge of electricity.", clrMessageBad);
 				engine->postmortem->setCauseOfDeath("Miscast a spell");
 				engine->player->hit(engine->dice(1, 6), damageType_direct);
 			}
@@ -397,7 +312,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 			if(m_archetypeDefinition->isScrollLearned == false && m_archetypeDefinition->isScrollLearnable) {
 				const AbilityRollResult_t learnRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
 				if(learnRollResult >= successSmall) {
-					engine->log->addMessage("You learn to cast this incantation by heart!");
+					engine->log->addMessage("I learn to cast this incantation by heart!");
 					m_instanceDefinition.isScrollLearned = true;
 					m_archetypeDefinition->isScrollLearned = true;
 				}
@@ -412,7 +327,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 				setRealDefinitionNames(engine, false);
 
 				if(engine->player->deadState == actorDeadState_alive) {
-					engine->log->addMessage("You identify it as " + m_instanceDefinition.name.name_a + "!");
+					engine->log->addMessage("I identify it as " + m_instanceDefinition.name.name_a + "!");
                engine->renderer->flip();
 					engine->log->addMessage("Perform the incantation (y/n)?", clrWhiteHigh);
 					engine->renderer->flip();
@@ -429,7 +344,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 					}
 				}
 			} else {
-				engine->log->addMessage("You recite forbidden incantations...");
+				engine->log->addMessage("I recite forbidden incantations...");
 				specificRead(IS_FROM_MEMORY, engine);
 				engine->player->shock(shockValue_heavy, 0);
 				engine->gameTime->letNextAct();

@@ -41,17 +41,17 @@ void Thrower::playerThrowLitExplosive(const coord aimCell) {
 	}
 
 	if(DYNAMITE_FUSE != -1) {
-		eng->log->addMessage("You throw a lit dynamite stick.");
+		eng->log->addMessage("I throw a lit dynamite stick.");
 		if(eng->map->featuresStatic[path.back().x][path.back().y]->isBottomless() == false) {
 			eng->featureFactory->spawnFeatureAt(feature_litDynamite, path.back(), new DynamiteSpawnData(DYNAMITE_FUSE));
 		}
 	} else if(FLARE_FUSE != -1) {
-		eng->log->addMessage("You throw a lit flare.");
+		eng->log->addMessage("I throw a lit flare.");
 		if(eng->map->featuresStatic[path.back().x][path.back().y]->isBottomless() == false) {
 			eng->featureFactory->spawnFeatureAt(feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
 		}
 	} else {
-		eng->log->addMessage("You throw a lit Molotov Cocktail.");
+		eng->log->addMessage("I throw a lit Molotov Cocktail.");
 		if(eng->map->featuresStatic[path.back().x][path.back().y]->isBottomless() == false) {
 			eng->audio->playSound(audio_molotovExplosion);
 			eng->explosionMaker->runExplosion(path.back(), false, new StatusBurning(eng));
@@ -96,10 +96,10 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		const string itemRef = eng->itemData->itemInterfaceName(itemThrown, true);
 		if(actorThrowing == eng->player) {
 			eng->log->clearLog();
-			eng->log->addMessage("You throw " + itemRef + ".");
+			eng->log->addMessage("I throw " + itemRef + ".");
 		} else {
 			if(eng->map->playerVision[path.front().x][path.front().y] == true) {
-				eng->log->addMessage("You see " + actorThrowing->getNameThe() + " throw " + itemRef + ".");
+				eng->log->addMessage("I see " + actorThrowing->getNameThe() + " throw " + itemRef + ".");
 			}
 		}
 
