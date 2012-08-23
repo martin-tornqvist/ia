@@ -100,10 +100,10 @@ void Monster::act() {
 			if(attemptAttack(target->pos)) {
 				//TODO nrTurnsAttackDisablesRanged/Melee in actorData (ai?)
 				//(And this should of course go in the attemptAttack() method, not here)
-				const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
-				const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
-				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_MELEE));
-				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_RANGED));
+//				const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
+//				const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
+//				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_MELEE));
+//				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_RANGED));
 				return;
 			}
 		}

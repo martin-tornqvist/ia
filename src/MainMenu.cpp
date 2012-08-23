@@ -13,6 +13,15 @@
 using namespace std;
 
 void MainMenu::draw(const MenuBrowser& browser) {
+
+	vector<string> logo;
+
+   logo.push_back("        ___  __                __   __                  ");
+	logo.push_back("| |\\  | |   |  |  /\\      /\\  |  | /    /\\  |\\  |  /\\   ");
+	logo.push_back("| | \\ | |-- |--  ____    ____ |--  -   ____ | \\ | ____  ");
+	logo.push_back("| |  \\| |   |\\  /    \\  /    \\|\\   \\__/    \\|  \\|/    \\ ");
+	logo.push_back("              \\                 \\                       ");
+
 	int x_pos = MAP_X_CELLS / 2;
 	int y_pos = 3;
 	const int X_POS_LEFT = x_pos - 11;
@@ -23,7 +32,15 @@ void MainMenu::draw(const MenuBrowser& browser) {
 	SDL_Color clrDark = clrRed;
 	SDL_Color clrBright = clrWhite;
 
-	eng->renderer->drawTextCentered(eng->config->GAME_TITLE + eng->config->GAME_VERSION, renderArea_screen, x_pos, y_pos, clr);
+	for(unsigned int i = 0; i < logo.size(); i++) {
+		const SDL_Color c = i == 0 ? clrCyanLight : i == 1 ? clrCyanLight : i == 2 ? clrBlueLight : i == 3 ? clrBlue : clrBlue;
+//      const SDL_Color c = i == 0 ? clrWhiteHigh : i == 1 ? clrWhiteHigh : i == 2 ? clrWhite : i == 3 ? clrGray : clrGray;
+
+		eng->renderer->drawTextCentered(logo.at(i), renderArea_screen, x_pos, y_pos, c);
+		y_pos += 1;
+	}
+
+	eng->renderer->drawTextCentered(eng->config->GAME_VERSION, renderArea_screen, x_pos, y_pos, clr);
 	y_pos += 1;
 
 	eng->renderer->drawTextCentered("(c) 2011-2012 Martin Tornqvist", renderArea_screen, x_pos, y_pos, clrDark);
@@ -38,7 +55,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 	eng->renderer->drawTextCentered("You can set options by editing config.txt", renderArea_screen, x_pos, y_pos, clrDark);
 	y_pos += 1;
 	eng->renderer->drawTextCentered("(switch between tile/ASCII mode, skip intro level, etc)", renderArea_screen, x_pos, y_pos, clrDark);
-	y_pos += 5;
+	y_pos += 3;
 
 	eng->renderer->drawText("a) Start a new game", renderArea_screen, X_POS_LEFT, y_pos, browser.isPosAtKey('a') ? clrBright : clr);
 	y_pos += 1;

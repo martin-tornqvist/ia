@@ -4,7 +4,6 @@
 
 #include "ItemWeapon.h"
 #include "ItemAmmoClip.h"
-#include "ItemUsable.h"
 #include "ItemExplosive.h"
 #include "ItemArmor.h"
 #include "ItemScroll.h"

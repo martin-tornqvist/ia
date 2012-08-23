@@ -47,7 +47,7 @@
 		<Cursor position="36" topLine="0" />
 	</File>
 	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="44704" topLine="109" />
+		<Cursor position="17594" topLine="470" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="1">
 		<Cursor position="2175" topLine="75" />
@@ -76,8 +76,8 @@
 	<File name="..\src\ActorMiGo.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="499" topLine="0" />
 	</File>
-	<File name="..\src\ActorMonster.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="2906" topLine="85" />
+	<File name="..\src\ActorMonster.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="2845" topLine="79" />
 	</File>
 	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="1">
 		<Cursor position="1884" topLine="64" />
@@ -85,7 +85,7 @@
 	<File name="..\src\ActorOoze.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="36" topLine="0" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="1" top="0" tabpos="2">
+	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="31865" topLine="878" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="3">
@@ -157,11 +157,11 @@
 	<File name="..\src\Colors.h" open="0" top="0" tabpos="6">
 		<Cursor position="209" topLine="3" />
 	</File>
-	<File name="..\src\Config.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="529" topLine="9" />
+	<File name="..\src\Config.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="170" topLine="0" />
 	</File>
-	<File name="..\src\Config.h" open="0" top="0" tabpos="0">
-		<Cursor position="642" topLine="26" />
+	<File name="..\src\Config.h" open="1" top="0" tabpos="3">
+		<Cursor position="202" topLine="0" />
 	</File>
 	<File name="..\src\ConstDungeonSettings.h" open="0" top="0" tabpos="0">
 		<Cursor position="352" topLine="6" />
@@ -274,8 +274,8 @@
 	<File name="..\src\Inventory.h" open="0" top="0" tabpos="0">
 		<Cursor position="2096" topLine="46" />
 	</File>
-	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="6705" topLine="196" />
+	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="870" topLine="7" />
 	</File>
 	<File name="..\src\InventoryHandler.h" open="0" top="0" tabpos="0">
 		<Cursor position="510" topLine="3" />
@@ -303,6 +303,9 @@
 	</File>
 	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="3379" topLine="85" />
+	</File>
+	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="389" topLine="0" />
 	</File>
 	<File name="..\src\ItemPickup.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="1786" topLine="26" />
@@ -343,8 +346,8 @@
 	<File name="..\src\Look.h" open="0" top="0" tabpos="7">
 		<Cursor position="1329" topLine="36" />
 	</File>
-	<File name="..\src\MainMenu.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1040" topLine="20" />
+	<File name="..\src\MainMenu.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="922" topLine="10" />
 	</File>
 	<File name="..\src\Manual.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="3010" topLine="92" />
@@ -352,7 +355,7 @@
 	<File name="..\src\MapBuild.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="458" topLine="0" />
 	</File>
-	<File name="..\src\MapBuildBSP.cpp" open="1" top="0" tabpos="1">
+	<File name="..\src\MapBuildBSP.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="16140" topLine="431" />
 	</File>
 	<File name="..\src\MapBuildForest.cpp" open="0" top="0" tabpos="11">
@@ -424,8 +427,8 @@
 	<File name="..\src\Reload.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1911" topLine="33" />
 	</File>
-	<File name="..\src\Render.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="12079" topLine="343" />
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="6352" topLine="63" />
 	</File>
 	<File name="..\src\Render.h" open="0" top="0" tabpos="11">
 		<Cursor position="511" topLine="4" />

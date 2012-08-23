@@ -2,7 +2,6 @@
 
 #include "Engine.h"
 
-#include "ItemUsable.h"
 #include "ItemScroll.h"
 #include "ItemExplosive.h"
 #include "ActorPlayer.h"
@@ -22,11 +21,6 @@ void InventoryHandler::activateItem(const InventoryPurpose_t purpose, const unsi
 	bool decrease = true;
 
 	switch(purpose) {
-	case inventoryPurpose_use: {
-		const ItemActivateReturn_t activateReturnValue = dynamic_cast<ItemUsable*>(item)->use(eng->player, eng);
-		decrease = activateReturnValue == itemActivate_destroyed;
-	}
-	break;
 	case inventoryPurpose_readyExplosive: {
 		dynamic_cast<Explosive*>(item)->setPlayerExplosive(eng);
 	}
@@ -37,10 +31,7 @@ void InventoryHandler::activateItem(const InventoryPurpose_t purpose, const unsi
 		dynamic_cast<Potion*>(item)->quaff(eng->player, eng);
 	}
 	break;
-	default: {
-		cout << "[ERROR] Bad purpose in InventoryHandler::activateItem()" << endl;
-	}
-	break;
+	default: {} break;
 	}
 
 	if(decrease == true) {

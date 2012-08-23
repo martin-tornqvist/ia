@@ -14,7 +14,6 @@ public:
 
 	~Config() {
 	}
-	const string GAME_TITLE;
 	const string GAME_VERSION;
 
 	const string TILES_IMAGE_NAME;

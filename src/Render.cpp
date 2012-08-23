@@ -193,7 +193,7 @@ bool Renderer::SDL_init() {
 	if(m_screen == NULL) {
 		return false;
 	}
-	SDL_WM_SetCaption((eng->config->GAME_TITLE + eng->config->GAME_VERSION).c_str(), NULL);
+	SDL_WM_SetCaption(("Infra Arcana " + eng->config->GAME_VERSION).c_str(), NULL);
 
 	if(eng->config->FULLSCREEN) {
 		SDL_ShowCursor(SDL_DISABLE);

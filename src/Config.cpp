@@ -8,7 +8,7 @@
 using namespace std;
 
 Config::Config() :
-	GAME_TITLE("Infra Arcana"), GAME_VERSION(" (v12.2, 2012.06.10)"),
+	GAME_VERSION(" v12.2, 2012.??.??"),
 
 	TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
 
@@ -73,19 +73,19 @@ void Config::trySetVariableFromLine(string line) {
 		}
 		break;
 		case 1: {
-			FONT_IMAGE_NAME = "images/9x17.bmp";
-			CELL_WIDTH_TEXT = 9;
-			CELL_HEIGHT_TEXT = 17;
-		}
-		break;
-		case 2: {
 			FONT_IMAGE_NAME = "images/11x19.bmp";
 			CELL_WIDTH_TEXT = 11;
 			CELL_HEIGHT_TEXT = 19;
 		}
 		break;
-		case 3: {
+		case 2: {
 			FONT_IMAGE_NAME = "images/16x24.bmp";
+			CELL_WIDTH_TEXT = 16;
+			CELL_HEIGHT_TEXT = 24;
+		}
+		break;
+		case 3: {
+			FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
 			CELL_WIDTH_TEXT = 16;
 			CELL_HEIGHT_TEXT = 24;
 		}
@@ -102,12 +102,14 @@ void Config::trySetVariableFromLine(string line) {
 			CELL_WIDTH_MAP = CELL_WIDTH_TEXT;
 			CELL_HEIGHT_MAP = CELL_HEIGHT_TEXT;
 		} else {
-			USE_TILE_SET = true;
-			FONT_IMAGE_NAME = "images/16x24.bmp";
-			CELL_WIDTH_TEXT = 16;
-			CELL_HEIGHT_TEXT = 24;
-			CELL_WIDTH_MAP = 16;
-			CELL_HEIGHT_MAP = 24;
+			if(CELL_WIDTH_TEXT != CELL_WIDTH_MAP || CELL_HEIGHT_TEXT != CELL_HEIGHT_TEXT) {
+				USE_TILE_SET = true;
+				FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
+				CELL_WIDTH_TEXT = 16;
+				CELL_HEIGHT_TEXT = 24;
+				CELL_WIDTH_MAP = 16;
+				CELL_HEIGHT_MAP = 24;
+			}
 		}
 	}
 
