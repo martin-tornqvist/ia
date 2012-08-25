@@ -19,6 +19,15 @@ public:
 
 	int takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const DamageTypes_t damageType);
 
+	void itemSpecificAddSaveLines(vector<string>& lines) {
+		lines.push_back(intToString(durability));
+	}
+
+	void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+		durability = stringToInt(lines.front());
+		lines.erase(lines.begin());
+	}
+
 private:
 	int getAbsorptionPoints(const DamageTypes_t damageType) const;
 

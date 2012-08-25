@@ -198,7 +198,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusMindAndShock;
+		return ability_resistStatusMind;
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
@@ -277,7 +277,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 10;
@@ -421,7 +421,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -651,7 +651,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -718,7 +718,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -788,7 +788,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusMindAndShock;
+		return ability_resistStatusMind;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -863,7 +863,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 27;
@@ -1240,7 +1240,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -1325,7 +1325,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusMindAndShock;
+		return ability_resistStatusMind;
 	}
 	int getSaveAbilityModifier() {
 		return -15;
@@ -1422,7 +1422,7 @@ public:
 	}
 
 	Abilities_t getSaveAbility() {
-		return ability_resistStatusBodyAndSense;
+		return ability_resistStatusBody;
 	}
 	int getSaveAbilityModifier() {
 		return 0;
@@ -1729,7 +1729,7 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-	   if(ability == ability_resistStatusMindAndShock)
+	   if(ability == ability_resistStatusMind)
          return 999;
 	   return 0;
 	}
@@ -1804,7 +1804,7 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-	   if(ability == ability_resistStatusBodyAndSense)
+	   if(ability == ability_resistStatusBody)
          return 999;
       return 0;
 	}

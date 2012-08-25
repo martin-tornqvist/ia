@@ -71,20 +71,15 @@ public:
 
 	bool USE_TILE_SET;
 
-private:
-	friend class Renderer;
-	friend class Art;
-	friend class Popup;
-
 	int LOG_X_OFFSET, LOG_Y_OFFSET;
 	const int MAINSCREEN_Y_CELLS_OFFSET;
 	int MAINSCREEN_Y_OFFSET;
-
 
 	int CHARACTER_LINES_Y_OFFSET;
 	int CELL_WIDTH_TEXT, CELL_HEIGHT_TEXT;
 	int CELL_WIDTH_MAP, CELL_HEIGHT_MAP;
 
+private:
 	Config& operator=(const Config& other) {
 		(void)other;
 		return *this;

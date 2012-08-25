@@ -14,6 +14,8 @@ using namespace std;
 void ActorDefinition::reset() {
 	devName = actor_empty;
 	speed = actorSpeed_normal;
+	nrTurnsAttackDisablesMelee = 0;
+	nrTurnsAttackDisablesRanged = 0;
 	moveType = moveType_walk;
 	HP_max = 0;
 	HP = 0;
@@ -115,6 +117,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.phraseSet = phraseSet_zombie;
 	d.glyph = 'Z';
 	d.color = clrBrown;
@@ -153,6 +157,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.phraseSet = phraseSet_zombie;
 	d.glyph = 'Z';
 	d.color = clrGray;
@@ -190,6 +196,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 20;
 	d.phraseSet = phraseSet_silent;
 	d.glyph = 'Z';
 	d.color = clrWhiteHigh;
@@ -228,6 +236,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.phraseSet = phraseSet_zombie;
 	d.glyph = 'Z';
 	d.color = clrCyanLight;
@@ -265,6 +275,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.phraseSet = phraseSet_zombie;
 	d.glyph = 'Z';
 	d.color = clrCyan;
@@ -302,6 +314,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 2;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrBrown;
@@ -340,6 +354,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 2;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrGray;
@@ -378,6 +394,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 2;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrGreen;
@@ -416,6 +434,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 2;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrYellow;
@@ -454,6 +474,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 2;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrBlueLight;
@@ -491,6 +513,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'P';
 	d.color = clrMagenta;
 	d.tile = tile_witchOrWarlock;
@@ -527,6 +551,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.phraseSet = phraseSet_cultist;
 	d.glyph = 'P';
 	d.color = clrCyanLight;
@@ -566,6 +592,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 's';
 	d.color = clrGreenLight;
 	d.tile = tile_spider;
@@ -598,6 +626,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 's';
 	d.color = clrWhiteHigh;
 	d.tile = tile_spider;
@@ -630,6 +660,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 's';
 	d.color = clrGray;
 	d.tile = tile_spider;
@@ -662,6 +694,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_fast;
+	d.nrTurnsAttackDisablesMelee = 2;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'S';
 	d.color = clrMagenta;
 	d.tile = tile_spiderLeng;
@@ -697,6 +731,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLeader = true;
 	d.abilityValues.setAbilityValue(ability_dodge, 35);
 	d.speed = actorSpeed_fast;
+	d.nrTurnsAttackDisablesMelee = 2;
+	d.nrTurnsAttackDisablesRanged = 10;
 	d.glyph = 'd';
 	d.color = clrRed;
 	d.tile = tile_hound;
@@ -730,6 +766,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'G';
 	d.color = clrGray;
 	d.tile = tile_ghost;
@@ -765,6 +803,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'G';
 	d.color = clrWhite;
 	d.tile = tile_phantasm;
@@ -801,6 +841,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'G';
 	d.color = clrRed;
 	d.tile = tile_wraith;
@@ -838,6 +880,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_sluggish;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'r';
 	d.color = clrGray;
 	d.tile = tile_rat;
@@ -869,6 +913,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'r';
 	d.color = clrBrown;
 	d.tile = tile_ratThing;
@@ -902,6 +948,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'r';
 	d.color = clrBrownDark;
 	d.tile = tile_ratThing;
@@ -937,6 +985,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLeader = true;
 	d.abilityValues.setAbilityValue(ability_dodge, 20);
 	d.speed = actorSpeed_fast;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'd';
 	d.color = clrGray;
 	d.tile = tile_wolf;
@@ -971,6 +1021,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLeader = true;
 	d.abilityValues.setAbilityValue(ability_dodge, 40);
 	d.speed = actorSpeed_fastest;
+	d.nrTurnsAttackDisablesMelee = 3;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'B';
 	d.color = clrGray;
 	d.tile = tile_bat;
@@ -1040,6 +1092,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_fast;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 4;
 	d.glyph = 'E';
 	d.color = clrMagentaLight;
 	d.tile = tile_migo;
@@ -1076,6 +1130,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'M';
 	d.color = clrGreen;
 	d.tile = tile_ghoul;
@@ -1111,6 +1167,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'M';
 	d.color = clrGray;
 	d.tile = tile_ghoul;
@@ -1149,6 +1207,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'P';
 	d.color = clrMagenta;
 	d.tile = tile_mummy;
@@ -1186,6 +1246,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.unique = true;
 	d.nrLeftAllowedToSpawn = 0;
 	d.glyph = 'P';
@@ -1225,6 +1287,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.unique = true;
 	d.nrLeftAllowedToSpawn = 1;
 	d.glyph = 'P';
@@ -1264,6 +1328,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = true;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_normal;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 15;
 	d.glyph = 'F';
 	d.color = clrWhite;
 	d.spawnRate = spawnRare;
@@ -1300,6 +1366,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 1;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'w';
 	d.color = clrWhite;
 	d.tile = tile_massOfWorms;
@@ -1336,6 +1404,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_slow;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'C';
 	d.color = clrRed;
 	d.tile = tile_fireVampire;
@@ -1374,6 +1444,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_sluggish;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'o';
 	d.color = clrGray;
 	d.tile = tile_ooze;
@@ -1416,6 +1488,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_sluggish;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'o';
 	d.color = clrWhiteHigh;
 	d.tile = tile_ooze;
@@ -1458,6 +1532,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
 	d.speed = actorSpeed_sluggish;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'o';
 	d.color = clrGreenLight;
 	d.tile = tile_ooze;;
@@ -1500,6 +1576,8 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = false;
 	d.speed = actorSpeed_fastest;
+	d.nrTurnsAttackDisablesMelee = 0;
+	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'W';
 	d.color = clrGray;
 	d.tile = tile_huntingHorror;

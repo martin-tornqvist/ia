@@ -126,12 +126,12 @@ void MapBuildBSP::run() {
 		eng->player->pos = freeCells.front();
 
 		for(unsigned int i = 0; i < mapAreas_.size(); i++) {
-		    MapArea* const m = mapAreas_.at(i);
-		    if(m != NULL) {
-                if(eng->mapTests->isCellInside(eng->player->pos, m->x0y0, m->x1y1)) {
-                    m->isSpecialRoomAllowed = false;
-                }
-		    }
+			MapArea* const m = mapAreas_.at(i);
+			if(m != NULL) {
+				if(eng->mapTests->isCellInside(eng->player->pos, m->x0y0, m->x1y1)) {
+					m->isSpecialRoomAllowed = false;
+				}
+			}
 		}
 
 		eng->specialRoomHandler->makeSpecialRooms(mapAreas_);
@@ -436,7 +436,7 @@ void MapBuildBSP::buildRoomsInRooms() {
 									const bool IS_SPECIAL_ROOM_CREATED = eng->specialRoomHandler->attemptMakeSpecialRoom(specialRoomType, *(mapAreas_.at(i)));
 									const int OUT_OF_DEPTH_OFFSET = eng->dice.getInRange(2, 5);
 									if(IS_SPECIAL_ROOM_CREATED) {
-									    Monster* firstMonster = NULL;
+										Monster* firstMonster = NULL;
 										for(int y = Y0 + 1; y <= Y1 - 1; y++) {
 											for(int x = X0 + 1; x <= X1 - 1; x++) {
 
@@ -448,11 +448,11 @@ void MapBuildBSP::buildRoomsInRooms() {
 														Monster* monster = dynamic_cast<Monster*>(actor);
 														monster->isRoamingAllowed = false;
 														monster->shockDecrease += 4;
-                                                        if(firstMonster == NULL) {
-                                                            firstMonster = monster;
-                                                        } else {
-                                                            monster->leader = firstMonster;
-                                                        }
+														if(firstMonster == NULL) {
+															firstMonster = monster;
+														} else {
+															monster->leader = firstMonster;
+														}
 													}
 												}
 

@@ -185,7 +185,7 @@ void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
 void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
 	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectFortitude(24 + engine->dice(3, 8)));
 
-	actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusMindAndShock);
+	actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusMind);
 
 	bool isPhobiasCured = false;
 	for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -228,7 +228,7 @@ void PotionOfFortitude::specificCollide(const coord pos, Actor* const actor, Eng
 void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
 	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectToughness(24 + engine->dice(3, 8)));
 
-	actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBodyAndSense);
+	actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBody);
 
 	if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
 		setRealDefinitionNames(engine, false);
@@ -297,7 +297,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 		m_archetypeDefinition->name.name_plural = REAL_NAME_PLURAL;
 		m_archetypeDefinition->name.name_a = REAL_NAME_A;
 
-		//engine->log->addMessage("It was a " + REAL_NAME + ".");
+		engine->log->addMessage("It was a " + REAL_NAME + ".");
 
 		if(IS_SILENT_IDENTIFY == false) {
 			engine->player->shock(shockValue_heavy, 0);

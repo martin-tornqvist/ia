@@ -48,7 +48,7 @@ const int XP_STEP = 60;
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
 // perhaps divide the right hand "monsterLvl" by 2, to not have such a steep
 // xp deterioration?
-const int BASE_MONSTERS_TO_LVL = 40;
+const int BASE_MONSTERS_TO_LVL = 30;
 
 void DungeonMaster::init() {
 	playerExp = 0;

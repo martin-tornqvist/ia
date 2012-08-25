@@ -103,7 +103,7 @@ void Player::actorSpecific_spawnStartItems() {
 //		eng->playerBonusHandler->increaseBonus(ability_accuracyRanged);
 //		eng->playerBonusHandler->increaseBonus(ability_weaponHandling);
 //		eng->playerBonusHandler->increaseBonus(ability_mobility);
-//		eng->playerBonusHandler->increaseBonus(ability_resistStatusBodyAndSense);
+//		eng->playerBonusHandler->increaseBonus(ability_resistStatusBody);
 //
 //		m_instanceDefinition.HP_max = 18;
 //		m_instanceDefinition.HP = m_instanceDefinition.HP_max;
@@ -173,8 +173,8 @@ void Player::actorSpecific_spawnStartItems() {
 //		eng->playerBonusHandler->increaseBonus(ability_loreArcana);
 //		eng->playerBonusHandler->increaseBonus(ability_loreLanguage);
 //		eng->playerBonusHandler->increaseBonus(ability_loreLanguage);
-//		eng->playerBonusHandler->increaseBonus(ability_resistStatusMindAndShock);
-//		eng->playerBonusHandler->increaseBonus(ability_resistStatusMindAndShock);
+//		eng->playerBonusHandler->increaseBonus(ability_resistStatusMind);
+//		eng->playerBonusHandler->increaseBonus(ability_resistStatusMind);
 //
 //		m_instanceDefinition.HP_max = 14;
 //		m_instanceDefinition.HP = m_instanceDefinition.HP_max;
@@ -392,30 +392,35 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
-	//const int ABILITY_PENALTY = 10;
-	const int PLAYER_ABILITY = m_instanceDefinition.abilityValues.getAbilityValue(ability_resistStatusMindAndShock, true);
-	const int ABILITY = max(5, PLAYER_ABILITY);
-	if(eng->abilityRoll->roll(ABILITY) <= failSmall) {
-		int baseInsIncr = 0;
+	const int PLAYER_FORTITUDE = m_instanceDefinition.abilityValues.getAbilityValue(ability_resistStatusMind, true);
+
+	if(PLAYER_FORTITUDE < 99) {
+	   const int FORTITUDE_AT_RANK_ZERO = eng->playerBonusHandler->getBonusAbilityModifierAtRank(ability_resistStatusMind, 0);
+		const int SHOCK_REDUCTION_PERCENT = min(100, max(0, PLAYER_FORTITUDE - FORTITUDE_AT_RANK_ZERO));
+
+		int baseIncr = 0;
 		switch(shockValue) {
 		case shockValue_none: {
-			baseInsIncr = 0;
+			baseIncr = 0;
 		}
 		break;
 		case shockValue_mild: {
-			baseInsIncr = eng->dice(1, 2);
+			baseIncr = eng->dice(1, 2);
 		}
 		break;
 		case shockValue_some: {
-			baseInsIncr = eng->dice(1, 4);
+			baseIncr = eng->dice(1, 4);
 		}
 		break;
 		case shockValue_heavy: {
-			baseInsIncr = eng->dice(2, 4) + 4;
+			baseIncr = eng->dice(2, 4) + 4;
 		}
 		break;
 		}
-		insanityShort = min(100, insanityShort + max(0, baseInsIncr + MODIFIER));
+
+      const int SHOCK_AFTER_FORTITUDE = (baseIncr * (100 - SHOCK_REDUCTION_PERCENT)) / 100;
+
+		insanityShort = min(100, insanityShort + max(1, SHOCK_AFTER_FORTITUDE + MODIFIER));
 	}
 }
 
@@ -644,17 +649,17 @@ void Player::incrInsanityLong() {
 }
 
 void Player::setTempShockFromFeatures() {
-    if(eng->map->darkness[pos.x][pos.y] && eng->map->light[pos.x][pos.y] == false) {
-        insanityShortTemp += 20;
-    }
+	if(eng->map->darkness[pos.x][pos.y] && eng->map->light[pos.x][pos.y] == false) {
+		insanityShortTemp += 20;
+	}
 
-    for(int dy = -1; dy <= 1; dy++) {
-        for(int dx = -1; dx <= 1; dx++) {
-            const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-            insanityShortTemp += f->getShockWhenAdjacent();
-        }
-    }
-    insanityShortTemp = min(99, insanityShortTemp);
+	for(int dy = -1; dy <= 1; dy++) {
+		for(int dx = -1; dx <= 1; dx++) {
+			const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+			insanityShortTemp += f->getShockWhenAdjacent();
+		}
+	}
+	insanityShortTemp = min(99, insanityShortTemp);
 }
 
 bool Player::isStandingInOpenPlace() const {
@@ -739,21 +744,21 @@ void Player::updateColor() {
 		return;
 	}
 
-    if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
-        clr = clrYellow;
-        return;
-    }
+	if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
+		clr = clrYellow;
+		return;
+	}
 
-    if(getHP() <= getHP_max()/3 + 1) {
-        clr = clrRed;
-        return;
-    }
+	if(getHP() <= getHP_max()/3 + 1) {
+		clr = clrRed;
+		return;
+	}
 
-    const int CUR_SHOCK = insanityShort + insanityShortTemp;
-    if(CUR_SHOCK >= 75) {
-        clr = clrMagenta;
-        return;
-    }
+	const int CUR_SHOCK = insanityShort + insanityShortTemp;
+	if(CUR_SHOCK >= 75) {
+		clr = clrMagenta;
+		return;
+	}
 
 	clr = m_archetypeDefinition->color;
 }

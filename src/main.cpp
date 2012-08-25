@@ -86,9 +86,8 @@ int main(int argc, char* argv[]) {
 				if(engine->config->SKIP_INTRO_LEVEL == 0) {
 					string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
 					introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
-					introMessage += "\"Cult of Starry Wisdom\". Its occupants have grown demented and disorganized ";
-					introMessage += "with the powers they could not control; Reduced to beasts, roaming the tunnels without purpose. ";
-					introMessage += "I intend to infiltrate these sprawling catacombs and rob them of treasures and knowledge. ";
+					introMessage += "\"Cult of Starry Wisdom\". ";
+					introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
 					introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
 					introMessage += "- a window to all secrets of the universe.";
 					engine->popup->showMessage(introMessage);

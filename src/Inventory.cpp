@@ -366,10 +366,10 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 	}
 
 	Item* item = m_general.at(generalInventoryElement);
-    const ItemDefinition& d = item->getInstanceDefinition();
+	const ItemDefinition& d = item->getInstanceDefinition();
 
 //	if(d.isMeleeWeapon || d.isRangedWeapon) {
-    if(purpose == inventoryPurpose_wieldWear && (d.isMeleeWeapon || d.isRangedWeapon)) {
+	if(purpose == inventoryPurpose_wieldWear && (d.isMeleeWeapon || d.isRangedWeapon)) {
 		Item* const itemBefore = getItemInSlot(slot_wielded);
 		moveItemToSlot(getSlot(slot_wielded), generalInventoryElement);
 		Item* const itemAfter = getItemInSlot(slot_wielded);
@@ -587,14 +587,14 @@ void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGenera
 }
 
 int Inventory::getTotalItemWeight() const {
-    int weight = 0;
-    for(unsigned int i = 0; i < m_slots.size(); i++) {
-        if(m_slots.at(i).item != NULL) {
-            weight += m_slots.at(i).item->getWeight();
-        }
-    }
-    for(unsigned int i = 0; i < m_general.size(); i++) {
-        weight += m_general.at(i)->getWeight();
-    }
-    return weight;
+	int weight = 0;
+	for(unsigned int i = 0; i < m_slots.size(); i++) {
+		if(m_slots.at(i).item != NULL) {
+			weight += m_slots.at(i).item->getWeight();
+		}
+	}
+	for(unsigned int i = 0; i < m_general.size(); i++) {
+		weight += m_general.at(i)->getWeight();
+	}
+	return weight;
 }

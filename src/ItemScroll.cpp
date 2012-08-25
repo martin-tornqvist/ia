@@ -249,7 +249,7 @@ int Scroll::getChanceToLearn(Engine* const engine) const {
 	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
 	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
 
-	return ((PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100) + 10;
+	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
 }
 
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
@@ -275,7 +275,7 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 		m_archetypeDefinition->name.name_plural = REAL_NAME_PLURAL;
 		m_archetypeDefinition->name.name_a = REAL_NAME_A;
 
-		//engine->log->addMessage("It was a " + REAL_NAME + ".");
+		engine->log->addMessage("It was a " + REAL_NAME + ".");
 
 		if(IS_SILENT_IDENTIFY == false) {
 			engine->player->shock(shockValue_heavy, 0);

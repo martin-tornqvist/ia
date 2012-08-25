@@ -56,62 +56,56 @@ void Monster::act() {
 
 	//------------------------------ INFORMATION GATHERING (LOOKING, LISTENING...)
 	if(ai.looks) {
-	   if(leader != eng->player) {
-         AI_look_becomePlayerAware::learn(this, eng);
-	   }
+		if(leader != eng->player) {
+			AI_look_becomePlayerAware::learn(this, eng);
+		}
 	}
 	if(ai.listens) {
-	   if(leader != eng->player) {
-         AI_listen_becomePlayerAware::learn(this, soundsHeard);
-	   }
+		if(leader != eng->player) {
+			AI_listen_becomePlayerAware::learn(this, soundsHeard);
+		}
 	}
 	if(ai.respondsWithPhrase) {
-	   if(leader != eng->player) {
-         AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
-	   }
+		if(leader != eng->player) {
+			AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
+		}
 	}
 
 	//------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
-	// TODO temporary restriction, allow this later
+	// TODO temporary restriction, allow this later(?)
 	if(leader != eng->player) {
-      if(actorSpecificAct()) return;
+		if(actorSpecificAct()) return;
 	}
 
 	//------------------------------ COMMON ACTIONS (MOVING, ATTACKING, CASTING SPELLS...)
 	if(ai.makesRoomForFriend) {
-	   if(leader != eng->player) {
-         if(AI_makeRoomForFriend::action(this, eng)) return;
-	   }
+		if(leader != eng->player) {
+			if(AI_makeRoomForFriend::action(this, eng)) return;
+		}
 	}
 
 	if(eng->dice(1, 100) < def.erraticMovement) {
 		if(AI_moveToRandomAdjacentCell::action(this, eng)) return;
 	}
 
-   if(target != NULL) {
-      const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
-      if(eng->dice(1, 100) < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
-         if(AI_castRandomSpellIfAware::action(this, eng)) return;
-      }
-   }
+	if(target != NULL) {
+		const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
+		if(eng->dice(1, 100) < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
+			if(AI_castRandomSpellIfAware::action(this, eng)) return;
+		}
+	}
 
 	if(ai.attemptsAttack) {
 		if(target != NULL) {
 			if(attemptAttack(target->pos)) {
-				//TODO nrTurnsAttackDisablesRanged/Melee in actorData (ai?)
-				//(And this should of course go in the attemptAttack() method, not here)
-//				const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
-//				const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
-//				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_MELEE));
-//				m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_RANGED));
 				return;
 			}
 		}
 	}
 
-   if(target != NULL) {
-      if(AI_castRandomSpellIfAware::action(this, eng)) return;
-   }
+	if(target != NULL) {
+		if(AI_castRandomSpellIfAware::action(this, eng)) return;
+	}
 
 	if(ai.movesTowardTargetWhenVision) {
 		if(AI_moveTowardsTargetSimple::action(this, eng)) return;
@@ -120,14 +114,14 @@ void Monster::act() {
 	vector<coord> path;
 
 	if(ai.pathsToTargetWhenAware) {
-	   if(leader != eng->player) {
-         AI_setPathToPlayerIfAware::learn(this, &path, eng);
-	   }
+		if(leader != eng->player) {
+			AI_setPathToPlayerIfAware::learn(this, &path, eng);
+		}
 	}
 
-   if(leader != eng->player) {
-      if(AI_handleClosedBlockingDoor::action(this, &path, eng)) return;
-   }
+	if(leader != eng->player) {
+		if(AI_handleClosedBlockingDoor::action(this, &path, eng)) return;
+	}
 
 	if(AI_stepPath::action(this, &path)) return;
 
@@ -137,11 +131,11 @@ void Monster::act() {
 	}
 
 	if(ai.movesTowardLair) {
-	   if(leader != eng->player) {
-         if(AI_stepToLairIfHasLosToLair::action(this, lairCell, eng)) return;
-         AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell, eng);
-         if(AI_stepPath::action(this, &path)) return;
-	   }
+		if(leader != eng->player) {
+			if(AI_stepToLairIfHasLosToLair::action(this, lairCell, eng)) return;
+			AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell, eng);
+			if(AI_stepPath::action(this, &path)) return;
+		}
 	}
 
 	if(AI_moveToRandomAdjacentCell::action(this, eng)) return;
@@ -181,18 +175,22 @@ bool Monster::attemptAttack(const coord attackPos) {
 				BestAttack attack = getBestAttack(opport);
 
 				if(attack.weapon != NULL) {
-					if(attack.melee == true) {
-						if(attack.weapon->getInstanceDefinition().isMeleeWeapon == true) {
+					if(attack.melee) {
+						if(attack.weapon->getInstanceDefinition().isMeleeWeapon) {
 							eng->attack->melee(attackPos.x, attackPos.y, attack.weapon);
+							const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
+							m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_MELEE));
 							return true;
 						}
 					} else {
-						if(attack.weapon->getInstanceDefinition().isRangedWeapon == true) {
-							if(opport.timeToReload == false) {
-								eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
+						if(attack.weapon->getInstanceDefinition().isRangedWeapon) {
+							if(opport.timeToReload) {
+								eng->reload->reloadWeapon(this);
 								return true;
 							} else {
-								eng->reload->reloadWeapon(this);
+								eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
+								const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
+								m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
 								return true;
 							}
 						}
@@ -206,20 +204,18 @@ bool Monster::attemptAttack(const coord attackPos) {
 
 AttackOpport Monster::getAttackOpport(const coord attackPos) {
 	AttackOpport opport;
-	if(m_statusEffectsHandler->allowAttack(false) == true) {
+	if(m_statusEffectsHandler->allowAttack(false)) {
 		opport.melee = eng->mapTests->isCellsNeighbours(pos, attackPos, false);
 
 		Weapon* weapon = NULL;
 		const unsigned nrOfIntrinsics = m_inventory->getIntrinsicsSize();
 		if(opport.melee == true) {
-			//If melee attacks aren't disabled because of status
-			if(m_statusEffectsHandler->allowAttackMelee(false) == true) {
-				//GET POSSIBLE MELEE ATTACKS
+			if(m_statusEffectsHandler->allowAttackMelee(false)) {
 
 				//Melee weapon in wielded slot?
 				weapon = dynamic_cast<Weapon*>(m_inventory->getItemInSlot(slot_wielded));
 				if(weapon != NULL) {
-					if(weapon->getInstanceDefinition().isMeleeWeapon == true) {
+					if(weapon->getInstanceDefinition().isMeleeWeapon) {
 						opport.weapons.push_back(weapon);
 					}
 				}
@@ -227,17 +223,13 @@ AttackOpport Monster::getAttackOpport(const coord attackPos) {
 				//Intrinsic melee attacks?
 				for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
 					weapon = dynamic_cast<Weapon*>(m_inventory->getIntrinsicInElement(i));
-					if(weapon->getInstanceDefinition().isMeleeWeapon == true) {
+					if(weapon->getInstanceDefinition().isMeleeWeapon) {
 						opport.weapons.push_back(weapon);
 					}
 				}
 			}
 		} else {
-			//If ranged attacks aren't disabled because of status
-			if(m_statusEffectsHandler->allowAttackRanged(false) == true && m_statusEffectsHandler->hasEffect(statusBurning) == false) {
-
-				//GET POSSIBLE RANGED ATTACKS
-
+			if(m_statusEffectsHandler->allowAttackRanged(false) && m_statusEffectsHandler->hasEffect(statusBurning) == false) {
 				//Ranged weapon in wielded slot?
 				weapon = dynamic_cast<Weapon*>(m_inventory->getItemInSlot(slot_wielded));
 
@@ -245,9 +237,9 @@ AttackOpport Monster::getAttackOpport(const coord attackPos) {
 					if(weapon->getInstanceDefinition().isRangedWeapon == true) {
 						opport.weapons.push_back(weapon);
 
-						//Check if reload time
+						//Check if reload time instead
 						if(weapon->ammoLoaded == 0 && weapon->getInstanceDefinition().rangedHasInfiniteAmmo == false) {
-							if(m_inventory->hasAmmoForFirearmInInventory() == true) {
+							if(m_inventory->hasAmmoForFirearmInInventory()) {
 								opport.timeToReload = true;
 							}
 						}
@@ -257,7 +249,7 @@ AttackOpport Monster::getAttackOpport(const coord attackPos) {
 				//Intrinsic ranged attacks?
 				for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
 					weapon = dynamic_cast<Weapon*>(m_inventory->getIntrinsicInElement(i));
-					if(weapon->getInstanceDefinition().isRangedWeapon == true) {
+					if(weapon->getInstanceDefinition().isRangedWeapon) {
 						opport.weapons.push_back(weapon);
 					}
 				}

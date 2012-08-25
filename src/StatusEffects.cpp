@@ -62,7 +62,7 @@ coord StatusNailed::changeMoveCoord(const coord actorPos, const coord movePos, E
 	owningActor->hit(engine->dice(1,2), damageType_physical);
 
 	if(owningActor->deadState == actorDeadState_alive) {
-		const int ACTOR_TOUGHNESS = owningActor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBodyAndSense, true);
+		const int ACTOR_TOUGHNESS = owningActor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBody, true);
 		if(engine->abilityRoll->roll(ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
 			nrOfSpikes--;
 			if(nrOfSpikes > 0) {

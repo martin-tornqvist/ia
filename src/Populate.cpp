@@ -19,8 +19,8 @@ int Populate::getOutOfDepthOffset() const {
 
 	const int RND = eng->dice(1, 1000);
 
-	if(RND <= 5) {
-		return eng->dice.getInRange(1, 5);
+	if(RND <= 7) {
+		return eng->dice.getInRange(1, 6);
 	}
 
 	if(RND <= 75) {

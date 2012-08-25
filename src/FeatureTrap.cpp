@@ -12,6 +12,7 @@
 #include "ItemDrop.h"
 #include "Postmortem.h"
 #include "Explosion.h"
+#include "Popup.h"
 
 Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
 	FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), isHidden_(true) {
@@ -358,9 +359,9 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
 	if(IS_PLAYER) {
 		eng->player->FOVupdate();
 		if(CAN_SEE) {
-			eng->log->addMessage("A curious shape on the floor starts to glow!");
+			eng->popup->showMessage("A curious shape on the floor starts to glow!");
 		} else {
-			eng->log->addMessage("Something triggers, I feel a peculiar energy around me!");
+			eng->popup->showMessage("I feel a peculiar energy around me!");
 		}
 	}
 
@@ -403,7 +404,7 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
 
 coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coord pos, const coord dest) {
 	if(isHoldingActor == true) {
-		const int ABILITY_VALUE = max(30, actor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBodyAndSense, true));
+		const int ABILITY_VALUE = max(30, actor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBody, true));
 
 		const AbilityRollResult_t rollResult = eng->abilityRoll->roll(ABILITY_VALUE);
 		if(rollResult >= successSmall) {

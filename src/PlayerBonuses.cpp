@@ -96,7 +96,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
 //	r1 = "";
 //	r2 = "Can not faint.";
 //	r3 = "Can not be confused.";
-	bonuses_.push_back(PlayerBonus(ability_resistStatusMindAndShock, TITLE_SURVIVAL, "Fortitude", s, eng, 25, 40, r1, 55, r2, 70, r3));
+	bonuses_.push_back(PlayerBonus(ability_resistStatusMind, TITLE_SURVIVAL, "Fortitude", s, eng, 25, 45, r1, 65, r2, 85, r3));
 
 	s = "Your healing skills improve. With the first rank, healing takes half time. With the second rank, ";
 	s += "you are able to heal disease. With the third rank, you regenerate hit points passively over time.";
@@ -110,6 +110,6 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
 //	r1 = "";
 //	r2 = "No sprains from bashing objects.";
 //	r3 = "";
-	bonuses_.push_back(PlayerBonus(ability_resistStatusBodyAndSense, TITLE_SURVIVAL, "Toughness", s, eng, 25, 40, r1, 55, r2, 70, r3));
+	bonuses_.push_back(PlayerBonus(ability_resistStatusBody, TITLE_SURVIVAL, "Toughness", s, eng, 25, 45, r1, 65, r2, 85, r3));
 }
 

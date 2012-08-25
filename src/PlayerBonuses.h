@@ -68,6 +68,10 @@ public:
 		return abilityBonusAtRanks_.at(rank_);
 	}
 
+	int getAbilityBonusAtRank(const int RANK) const {
+		return abilityBonusAtRanks_.at(RANK);
+	}
+
 protected:
 	friend class PlayerBonusHandler;
 	int rank_;
@@ -111,6 +115,16 @@ public:
 		for(unsigned int i = 0; i < bonuses_.size(); i++) {
 			if(bonuses_.at(i).getAbility() == ability) {
 				modifier += bonuses_.at(i).getAbilityBonus();
+			}
+		}
+		return modifier;
+	}
+
+	int getBonusAbilityModifierAtRank(const Abilities_t ability, const int RANK) {
+		int modifier = 0;
+		for(unsigned int i = 0; i < bonuses_.size(); i++) {
+			if(bonuses_.at(i).getAbility() == ability) {
+				modifier += bonuses_.at(i).getAbilityBonusAtRank(RANK);
 			}
 		}
 		return modifier;

@@ -18,6 +18,15 @@ ItemAmmoClip(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
 
    void setFullAmmo() {ammo = m_archetypeDefinition->ammoContainedInClip;}
 
+	void itemSpecificAddSaveLines(vector<string>& lines) {
+		lines.push_back(intToString(m_instanceDefinition.ammoContainedInClip));
+	}
+
+	void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+		m_instanceDefinition.ammoContainedInClip = stringToInt(lines.front());
+		lines.erase(lines.begin());
+	}
+
 private:
 };
 

@@ -84,6 +84,8 @@ public:
 
 	ActorDevNames_t devName;
 	ActorSpeed_t speed;
+	int nrTurnsAttackDisablesMelee;
+	int nrTurnsAttackDisablesRanged;
 	MoveType_t moveType;
 	AiBehavior aiBehavior;
 	int HP_max;
