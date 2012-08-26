@@ -408,3 +408,21 @@ void StatusEffectsHandler::newTurnAllEffects() {
 	}
 }
 
+bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+    for(unsigned int i = 0; i < effects.size(); i++) {
+        if(effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+    for(unsigned int i = 0; i < effects.size(); i++) {
+        if(effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+            return false;
+        }
+    }
+    return true;
+}
+

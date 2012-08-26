@@ -42,13 +42,13 @@ void FovPreCalc::calcLineTravelVectors() {
 				currentDelta.set(static_cast<int> (floor(incrInX)), static_cast<int> (floor(incrInY)));
 
 				//Add position to current vector if vector is empty, or if pos not equal to previous.
-				bool add = currentPath.size() == 0;
+				bool isPositionGoodToAdd = currentPath.empty();
 
-				if(add == false) {
-					add = currentDelta != currentPath.back();
+				if(isPositionGoodToAdd == false) {
+					isPositionGoodToAdd = currentDelta != currentPath.back();
 				}
 
-				if(add == true) {
+				if(isPositionGoodToAdd == true) {
 					currentPath.push_back(currentDelta);
 				}
 

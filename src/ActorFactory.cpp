@@ -5,7 +5,7 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 
-Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord pos) {
+Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord& pos) {
 	Monster* monster = NULL;
 
 	switch(characterType) {
@@ -21,7 +21,19 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
 	case actor_majorClaphamLee:
 		monster = new MajorClaphamLee;
 		break;
-	case actor_deanHalsey:
+	case actor_lordOfPestilence:
+		monster = new LordOfPestilence;
+		break;
+    case actor_lordOfShadows:
+		monster = new LordOfShadows;
+		break;
+    case actor_lordOfSpiders:
+		monster = new LordOfSpiders;
+		break;
+    case actor_lordOfSpirits:
+		monster = new LordOfSpirits;
+		break;
+    case actor_deanHalsey:
 		monster = new DeanHalsey;
 		break;
 	case actor_rat:
@@ -143,7 +155,7 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
 	return monster;
 }
 
-Actor* ActorFactory::spawnRandomActor(const coord pos, const int SPAWN_LVL_OFFSET, const bool IS_AFTER_MAP_CREATION) {
+Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET, const bool IS_AFTER_MAP_CREATION) {
    const int DLVL = eng->map->getDungeonLevel();
 	vector<ActorDevNames_t> monsterCandidates;
 	const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
@@ -166,7 +178,7 @@ Actor* ActorFactory::spawnRandomActor(const coord pos, const int SPAWN_LVL_OFFSE
 		}
 	}
 
-	if(monsterCandidates.size() > 0) {
+	if(monsterCandidates.empty() == false) {
 		const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
 		const ActorDevNames_t monsterType = monsterCandidates.at(ELEMENT);
 		return spawnActor(monsterType, pos);
@@ -175,7 +187,7 @@ Actor* ActorFactory::spawnRandomActor(const coord pos, const int SPAWN_LVL_OFFSE
 	return NULL;
 }
 
-Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord pos, const SpecialRoom_t roomType, const int SPAWN_LVL_OFFSET) {
+Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LVL_OFFSET) {
    const int DLVL = eng->map->getDungeonLevel();
 	vector<ActorDevNames_t> monsterCandidates;
 	const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
@@ -202,7 +214,7 @@ Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord pos, const
 		}
 	}
 
-	if(monsterCandidates.size() > 0) {
+	if(monsterCandidates.empty() == false) {
 		const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
 		const ActorDevNames_t monsterType = monsterCandidates.at(ELEMENT);
 		return spawnActor(monsterType, pos);

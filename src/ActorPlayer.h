@@ -37,7 +37,7 @@ public:
 
 	void FOVupdate();
 
-	void moveDirection(const coord dir) {
+	void moveDirection(const coord& dir) {
 		moveDirection(dir.x, dir.y);
 	}
 	void moveDirection(const int X_DIR, int Y_DIR);

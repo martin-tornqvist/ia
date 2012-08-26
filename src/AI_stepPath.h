@@ -8,7 +8,7 @@ class AI_stepPath
 public:
    static bool action(Monster* monster, vector<coord>* path) {
       if(monster->deadState == actorDeadState_alive) {
-         if(path->size() > 0) {
+         if(path->empty() == false) {
             monster->moveToCell(path->back());
             return true;
          }

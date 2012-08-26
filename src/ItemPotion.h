@@ -17,12 +17,12 @@ public:
 
 	void quaff(Actor* const actor, Engine* const engine);
 
-	void collide(const coord pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);
+	void collide(const coord& pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);
 
 	void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
 
 protected:
-	virtual void specificCollide(const coord pos, Actor* const actor, Engine* const engine) = 0;
+	virtual void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) = 0;
 
 	virtual void specificQuaff(Actor* const actor, Engine* const engine) {
 		(void) actor;
@@ -45,7 +45,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Healing";
 	}
@@ -60,7 +60,10 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine) {(void)pos; (void)actor; (void)engine;}
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+	    (void)pos; (void)actor; (void)engine;
+    }
+
 	const string getRealTypeName() {
 		return "Clairvoyance";
 	}
@@ -75,7 +78,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Blindness";
 	}
@@ -90,7 +93,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Paralyzation";
 	}
@@ -105,7 +108,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine) {(void)pos; (void)actor; (void)engine;}
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {(void)pos; (void)actor; (void)engine;}
 	const string getRealTypeName() {
 		return "Disease";
 	}
@@ -120,7 +123,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Fear";
 	}
@@ -135,7 +138,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Confusion";
 	}
@@ -150,7 +153,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Corruption";
 	}
@@ -165,7 +168,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Reflexes";
 	}
@@ -180,7 +183,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Aiming";
 	}
@@ -195,7 +198,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine) {(void)pos; (void)actor; (void)engine;}
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {(void)pos; (void)actor; (void)engine;}
 	const string getRealTypeName() {
 		return "Ghostly Stealth";
 	}
@@ -210,7 +213,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Fortitude";
 	}
@@ -225,7 +228,7 @@ public:
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-	void specificCollide(const coord pos, Actor* const actor, Engine* const engine);
+	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
 		return "Toughness";
 	}

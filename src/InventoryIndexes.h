@@ -28,7 +28,7 @@ public:
 	}
 
 	bool isGeneralInventoryEmpty() const {
-		return genInvCharIndexes.size() == 0;
+		return genInvCharIndexes.empty() == false;
 	}
 
 	char getLastCharIndex() const {
@@ -63,7 +63,7 @@ public:
 
 	bool isCharIndexInRange(const char charIndex) const {
 
-		if(genInvCharIndexes.size() == 0)
+		if(genInvCharIndexes.empty() == false)
 			return false;
 
 		const unsigned int SIZE_OF_GEN_INV = genInvCharIndexes.size();

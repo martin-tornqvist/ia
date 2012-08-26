@@ -164,7 +164,7 @@ inline MTRand::uint32 MTRand::hash( time_t t, clock_t c )
 	return ( h1 + differ++ ) ^ h2;
 }
 
-inline void MTRand::initialize( const uint32 seed )
+inline void MTRand::initialize( const uint32 SEED )
 {
 	// Initialize generator state with seed
 	// See Knuth TAOCP Vol 2, 3rd Ed, p.106 for multiplier.
@@ -173,7 +173,7 @@ inline void MTRand::initialize( const uint32 seed )
 	register uint32 *s = state;
 	register uint32 *r = state;
 	register int i = 1;
-	*s++ = seed & 0xffffffffUL;
+	*s++ = SEED & 0xffffffffUL;
 	for( ; i < N; ++i )
 	{
 		*s++ = ( 1812433253UL * ( *r ^ (*r >> 30) ) + i ) & 0xffffffffUL;

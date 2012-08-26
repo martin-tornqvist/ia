@@ -3734,3 +3734,1864 @@
 	"Log.h"
 	"Render.h"
 
+1345892684 source:c:\_martin_\dev\ia\src\abilityvalues.cpp
+	"AbilityValues.h"
+	<math.h>
+	"Engine.h"
+	"ActorPlayer.h"
+	"PlayerBonuses.h"
+	"BasicUtils.h"
+
+1345900961 c:\_martin_\dev\ia\src\abilityvalues.h
+	<vector>
+	<string>
+	<iostream>
+
+1345892684 c:\_martin_\dev\ia\src\engine.h
+	"BasicUtils.h"
+
+1345895848 c:\_martin_\dev\ia\src\basicutils.h
+	<vector>
+	<math.h>
+	"ConstTypes.h"
+	"Actor.h"
+	"MersenneTwister.h"
+
+1345895733 c:\_martin_\dev\ia\src\consttypes.h
+	<string>
+	"SDL/SDL.h"
+	"Colors.h"
+	"Art.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_platform.h
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\begin_code.h
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\close_code.h
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_keysym.h
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\sdl\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1345892684 c:\_martin_\dev\ia\src\colors.h
+	<SDL/SDL.h>
+
+1345892684 c:\_martin_\dev\ia\src\art.h
+
+1345901520 c:\_martin_\dev\ia\src\actor.h
+	<string>
+	<vector>
+	"SDL/SDL.h"
+	"ConstTypes.h"
+	"ActorData.h"
+	"SpawnCounter.h"
+	"StatusEffects.h"
+	"Sound.h"
+	"Config.h"
+	"MapTests.h"
+	"Art.h"
+
+1345929230 c:\_martin_\dev\ia\src\actordata.h
+	<string>
+	<vector>
+	"Phrases.h"
+	"Converters.h"
+	"SpecialRoom.h"
+	"AbilityValues.h"
+
+1345892684 c:\_martin_\dev\ia\src\phrases.h
+	<iostream>
+	<vector>
+	<string>
+
+1345892684 c:\_martin_\dev\ia\src\converters.h
+	<string>
+
+1345895387 c:\_martin_\dev\ia\src\specialroom.h
+	<vector>
+	<string>
+	"ConstTypes.h"
+	"FeatureData.h"
+
+1345892684 c:\_martin_\dev\ia\src\featuredata.h
+	<vector>
+	<string>
+	<iostream>
+	"SDL/SDL.h"
+	"Art.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\spawncounter.h
+
+1345908318 c:\_martin_\dev\ia\src\statuseffects.h
+	<string>
+	"AbilityValues.h"
+	"ConstTypes.h"
+	"Converters.h"
+
+1345892684 c:\_martin_\dev\ia\src\sound.h
+	<string>
+	"ConstTypes.h"
+	"ItemData.h"
+	"ConstDungeonSettings.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemdata.h
+	"SDL/SDL.h"
+	<vector>
+	<string>
+	"ConstTypes.h"
+	"AbilityValues.h"
+	"ItemDefinition.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemdefinition.h
+	"Sound.h"
+	"AbilityValues.h"
+	"StatusEffects.h"
+	"Audio.h"
+	"SpecialRoom.h"
+
+1345892684 c:\_martin_\dev\ia\src\audio.h
+	<string>
+
+1345892684 c:\_martin_\dev\ia\src\constdungeonsettings.h
+
+1345892684 c:\_martin_\dev\ia\src\config.h
+	<string>
+	"ConstTypes.h"
+	"ConstDungeonSettings.h"
+
+1345895783 c:\_martin_\dev\ia\src\maptests.h
+	<vector>
+	"ConstTypes.h"
+	"Config.h"
+
+1345893890 c:\_martin_\dev\ia\src\mersennetwister.h
+	<iostream>
+	<climits>
+	<cstdio>
+	<ctime>
+	<cmath>
+
+1345895870 c:\_martin_\dev\ia\src\actorplayer.h
+	"Actor.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\playerbonuses.h
+	<string>
+	<vector>
+	"AbilityValues.h"
+	"Converters.h"
+	<math.h>
+
+1345901520 source:c:\_martin_\dev\ia\src\actor.cpp
+	"Actor.h"
+	"Engine.h"
+	"ItemArmor.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Fov.h"
+	"PlayerVisualMemory.h"
+	"Log.h"
+	"Blood.h"
+	"FeatureTrap.h"
+	"ItemDrop.h"
+	"Explosion.h"
+	"DungeonMaster.h"
+	"Inventory.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemarmor.h
+	"Engine.h"
+	"Item.h"
+
+1345892684 c:\_martin_\dev\ia\src\item.h
+	<iostream>
+	"ItemData.h"
+	"SpawnCounter.h"
+	"Art.h"
+
+1345903494 c:\_martin_\dev\ia\src\gametime.h
+	<vector>
+	<stdexcept>
+	"Feature.h"
+	"ActorData.h"
+
+1345972371 c:\_martin_\dev\ia\src\feature.h
+	<vector>
+	<string>
+	"SDL/SDL.h"
+	<iostream>
+	"Colors.h"
+	"SpawnCounter.h"
+	"ConstTypes.h"
+	"ActorData.h"
+	"FeatureData.h"
+	"ConstDungeonSettings.h"
+
+1345929798 c:\_martin_\dev\ia\src\actormonster.h
+	"ConstTypes.h"
+	"Actor.h"
+	"ItemWeapon.h"
+	"Sound.h"
+	"Spells.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemweapon.h
+	"Item.h"
+	"Converters.h"
+
+1345901491 c:\_martin_\dev\ia\src\spells.h
+	<vector>
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\map.h
+	<vector>
+	<iostream>
+	"ConstDungeonSettings.h"
+	"ConstTypes.h"
+	"Colors.h"
+	"ItemData.h"
+	"Feature.h"
+	"Config.h"
+	"Render.h"
+
+1345892684 c:\_martin_\dev\ia\src\render.h
+	<vector>
+	<iostream>
+	"SDL/SDL.h"
+	"ConstTypes.h"
+	"GameTime.h"
+	"Config.h"
+	"Art.h"
+
+1345892684 c:\_martin_\dev\ia\src\fov.h
+	"Map.h"
+
+1345892684 c:\_martin_\dev\ia\src\playervisualmemory.h
+
+1345892684 c:\_martin_\dev\ia\src\log.h
+	<SDL/SDL.h>
+	<string>
+	<vector>
+	<iostream>
+	"Colors.h"
+	"Converters.h"
+
+1345902975 c:\_martin_\dev\ia\src\blood.h
+	"ConstTypes.h"
+
+1345903393 c:\_martin_\dev\ia\src\featuretrap.h
+	"Feature.h"
+	"AbilityValues.h"
+	"Art.h"
+	"Feature.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemdrop.h
+	<iostream>
+	"ConstTypes.h"
+
+1345903295 c:\_martin_\dev\ia\src\explosion.h
+	"SDL/SDL.h"
+	<vector>
+	"ConstTypes.h"
+	"StatusEffects.h"
+	"Config.h"
+	"Colors.h"
+
+1345892684 c:\_martin_\dev\ia\src\dungeonmaster.h
+	<iostream>
+	<math.h>
+	"ConstDungeonSettings.h"
+	"AbilityValues.h"
+	"Colors.h"
+	"Converters.h"
+
+1345892684 c:\_martin_\dev\ia\src\inventory.h
+	<vector>
+	<string>
+	<iostream>
+	"ItemData.h"
+	"Item.h"
+
+1345904091 source:c:\_martin_\dev\ia\src\actorcultist.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 c:\_martin_\dev\ia\src\monsterincludefiles.h
+	"ActorMonster.h"
+	"Engine.h"
+	"AI_handleClosedBlockingDoor.h"
+	"AI_look_becomePlayerAware.h"
+	"AI_listen_becomePlayerAware.h"
+	"AI_listen_respondWithAggroPhrase.h"
+	"AI_makeRoomForFriend.h"
+	"AI_stepPath.h"
+	"AI_moveTowardsTargetSimple.h"
+	"AI_stepToLairIfHasLosToLair.h"
+	"AI_setPathToPlayerIfAware.h"
+	"AI_setPathToLairIfNoLosToLair.h"
+	"AI_setPathToLeaderIfNoLosToLeader.h"
+	"AI_moveToRandomAdjacentCell.h"
+	"AI_castRandomSpell.h"
+	"ItemFactory.h"
+	"Inventory.h"
+
+1345901693 c:\_martin_\dev\ia\src\ai_handleclosedblockingdoor.h
+	"Map.h"
+	"FeatureDoor.h"
+
+1345892684 c:\_martin_\dev\ia\src\featuredoor.h
+	<iostream>
+	"SDL/SDL.h"
+	"Feature.h"
+
+1345892684 c:\_martin_\dev\ia\src\ai_look_becomeplayeraware.h
+	"Engine.h"
+	"ActorPlayer.h"
+
+1345901710 c:\_martin_\dev\ia\src\ai_listen_becomeplayeraware.h
+	"Engine.h"
+	"Actor.h"
+
+1345901741 c:\_martin_\dev\ia\src\ai_listen_respondwithaggrophrase.h
+	"Engine.h"
+	"Actor.h"
+
+1345901605 c:\_martin_\dev\ia\src\ai_makeroomforfriend.h
+	<algorithm>
+
+1345901763 c:\_martin_\dev\ia\src\ai_steppath.h
+	"Engine.h"
+
+1345892684 c:\_martin_\dev\ia\src\ai_movetowardstargetsimple.h
+	"Engine.h"
+	"Actor.h"
+
+1345901640 c:\_martin_\dev\ia\src\ai_steptolairifhaslostolair.h
+	"Engine.h"
+	"Fov.h"
+
+1345892684 c:\_martin_\dev\ia\src\ai_setpathtoplayerifaware.h
+	"Engine.h"
+	"Pathfinding.h"
+
+1345892684 c:\_martin_\dev\ia\src\pathfinding.h
+	<queue>
+	"ConstTypes.h"
+	"Config.h"
+
+1345901649 c:\_martin_\dev\ia\src\ai_setpathtolairifnolostolair.h
+	"Engine.h"
+
+1345892684 c:\_martin_\dev\ia\src\ai_setpathtoleaderifnolostoleader.h
+	"Engine.h"
+
+1345892684 c:\_martin_\dev\ia\src\ai_movetorandomadjacentcell.h
+	"Engine.h"
+	"Actor.h"
+
+1345902568 c:\_martin_\dev\ia\src\ai_castrandomspell.h
+
+1345892684 c:\_martin_\dev\ia\src\itemfactory.h
+	<string>
+	"Item.h"
+
+1345972680 source:c:\_martin_\dev\ia\src\actordata.cpp
+	<string>
+	<vector>
+	<math.h>
+	"ActorData.h"
+	"ConstDungeonSettings.h"
+	"Converters.h"
+	"Item.h"
+	"Engine.h"
+
+1345929926 source:c:\_martin_\dev\ia\src\actorfactory.cpp
+	"ActorFactory.h"
+	"Engine.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"Map.h"
+
+1345902695 c:\_martin_\dev\ia\src\actorfactory.h
+	<vector>
+	<string>
+	"GameTime.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorfirehound.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorfirevampire.cpp
+	"monsterIncludeFiles.h"
+	"Explosion.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorghost.cpp
+	"monsterIncludeFiles.h"
+	"Log.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorghoul.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorgiantbat.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorkeziahmason.cpp
+	"monsterIncludeFiles.h"
+	"Log.h"
+	"ActorFactory.h"
+	"Explosion.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actormigo.cpp
+	"monsterIncludeFiles.h"
+
+1345907197 source:c:\_martin_\dev\ia\src\actormonster.cpp
+	"ActorMonster.h"
+	<iostream>
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"GameTime.h"
+	"Attack.h"
+	"Reload.h"
+	"Inventory.h"
+	"AI_handleClosedBlockingDoor.h"
+	"AI_look_becomePlayerAware.h"
+	"AI_listen_becomePlayerAware.h"
+	"AI_listen_respondWithAggroPhrase.h"
+	"AI_makeRoomForFriend.h"
+	"AI_stepPath.h"
+	"AI_moveTowardsTargetSimple.h"
+	"AI_stepToLairIfHasLosToLair.h"
+	"AI_setPathToPlayerIfAware.h"
+	"AI_setPathToLairIfNoLosToLair.h"
+	"AI_setPathToLeaderIfNoLosToLeader.h"
+	"AI_moveToRandomAdjacentCell.h"
+	"AI_castRandomSpell.h"
+
+1345902956 c:\_martin_\dev\ia\src\attack.h
+	<vector>
+	<math.h>
+	<iostream>
+	"SDL/SDL.h"
+	"AbilityValues.h"
+	"ItemData.h"
+	"ActorData.h"
+
+1345892684 c:\_martin_\dev\ia\src\reload.h
+
+1345892684 source:c:\_martin_\dev\ia\src\actorooze.cpp
+	"monsterIncludeFiles.h"
+
+1345930642 source:c:\_martin_\dev\ia\src\actorplayer.cpp
+	"ActorPlayer.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"FeatureTrap.h"
+	"PlayerCreateCharacter.h"
+	"Log.h"
+	"Interface.h"
+	"Popup.h"
+	"Postmortem.h"
+	"DungeonMaster.h"
+	"Map.h"
+	"Explosion.h"
+	"ActorMonster.h"
+	"FeatureDoor.h"
+	"Query.h"
+	"Attack.h"
+	"PlayerVisualMemory.h"
+	"Fov.h"
+	"ItemFactory.h"
+	"ActorFactory.h"
+	"PlayerBonuses.h"
+
+1345892684 c:\_martin_\dev\ia\src\playercreatecharacter.h
+	<string>
+	"SDL/SDL.h"
+
+1345892684 c:\_martin_\dev\ia\src\interface.h
+	"InventoryHandler.h"
+
+1345892684 c:\_martin_\dev\ia\src\inventoryhandler.h
+	"Inventory.h"
+
+1345892684 c:\_martin_\dev\ia\src\popup.h
+	<vector>
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\postmortem.h
+	"SDL/SDL.h"
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1345892684 c:\_martin_\dev\ia\src\menubrowser.h
+	"ConstTypes.h"
+	"SDL/SDL.h"
+
+1345892684 c:\_martin_\dev\ia\src\query.h
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorrat.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorshadow.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorspider.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorwolf.cpp
+	"monsterIncludeFiles.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorwormmass.cpp
+	"monsterIncludeFiles.h"
+	"ActorFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\actorzombie.cpp
+	"monsterIncludeFiles.h"
+	"Log.h"
+	"ActorFactory.h"
+	"Blood.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\art.cpp
+	"Art.h"
+	"Engine.h"
+
+1345902853 source:c:\_martin_\dev\ia\src\attack.cpp
+	"Attack.h"
+	<cassert>
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Log.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\attackmelee.cpp
+	"Attack.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"Render.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Postmortem.h"
+	"Blood.h"
+	"Knockback.h"
+
+1345892684 c:\_martin_\dev\ia\src\knockback.h
+	"ConstTypes.h"
+
+1345902911 source:c:\_martin_\dev\ia\src\attackranged.cpp
+	"Attack.h"
+	"Engine.h"
+	"ConstDungeonSettings.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"Render.h"
+	"Map.h"
+	"Timer.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Postmortem.h"
+	"Knockback.h"
+	"Input.h"
+
+1345892684 c:\_martin_\dev\ia\src\timer.h
+
+1345892684 c:\_martin_\dev\ia\src\input.h
+	"SDL/SDL.h"
+	"ConstTypes.h"
+
+1345902935 source:c:\_martin_\dev\ia\src\attackshotgun.cpp
+	"Attack.h"
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Postmortem.h"
+	"Timer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\audio.cpp
+	"Audio.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\autodescribeactor.cpp
+	"AutoDescribeActor.h"
+	"Engine.h"
+
+1345892684 c:\_martin_\dev\ia\src\autodescribeactor.h
+	<vector>
+	<string>
+	"ActorData.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\bash.cpp
+	"Bash.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+
+1345892684 c:\_martin_\dev\ia\src\bash.h
+	"FeatureDoor.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\basicutils.cpp
+	"BasicUtils.h"
+	<stdlib.h>
+	<iostream>
+	"Engine.h"
+
+1345902974 source:c:\_martin_\dev\ia\src\blood.cpp
+	"Blood.h"
+	"Engine.h"
+	"Map.h"
+
+1345903024 source:c:\_martin_\dev\ia\src\bot.cpp
+	"Bot.h"
+	<cassert>
+	"Engine.h"
+	"StatusEffects.h"
+	"Actor.h"
+	"Feature.h"
+	"Input.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorFactory.h"
+	"Attack.h"
+	"ItemWeapon.h"
+	"FeatureDoor.h"
+	"Pathfinding.h"
+	"Inventory.h"
+
+1345903024 c:\_martin_\dev\ia\src\bot.h
+	<iostream>
+	<vector>
+	"SDL/SDL.h"
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\bresenhamline.cpp
+	"BresenhamLine.h"
+	<cstdlib>
+
+1345892684 c:\_martin_\dev\ia\src\bresenhamline.h
+	<vector>
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\characterinfo.cpp
+	"CharacterInfo.h"
+	"Engine.h"
+	"PlayerBonuses.h"
+	"ActorPlayer.h"
+	"Render.h"
+
+1345892684 c:\_martin_\dev\ia\src\characterinfo.h
+	<vector>
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\close.cpp
+	"Close.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"FeatureDoor.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+
+1345892684 c:\_martin_\dev\ia\src\close.h
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\converters.cpp
+	"Converters.h"
+	<string>
+	<sstream>
+	<iostream>
+
+1345892684 source:c:\_martin_\dev\ia\src\dungeonclimb.cpp
+	"DungeonClimb.h"
+	"Engine.h"
+	"SpawnCounter.h"
+	"Map.h"
+	"MapBuildBSP.h"
+	"MapBuild.h"
+	"Populate.h"
+	"MapBuildSpawnItems.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Item.h"
+	"PlayerAllocBonus.h"
+
+1345892684 c:\_martin_\dev\ia\src\dungeonclimb.h
+	<iostream>
+
+1345971467 c:\_martin_\dev\ia\src\mapbuildbsp.h
+	<vector>
+	"ConstTypes.h"
+	"FeatureData.h"
+	"MapArea.h"
+
+1345903043 c:\_martin_\dev\ia\src\maparea.h
+	<vector>
+	"ConstTypes.h"
+	"Map.h"
+
+1345892684 c:\_martin_\dev\ia\src\mapbuild.h
+	<algorithm>
+	"MapArea.h"
+	"MapTemplates.h"
+	"GameTime.h"
+	"ConstTypes.h"
+	"ConstDungeonSettings.h"
+
+1345892684 c:\_martin_\dev\ia\src\maptemplates.h
+	<vector>
+	<string>
+	<iostream>
+	"FeatureData.h"
+	"MapArea.h"
+
+1345892684 c:\_martin_\dev\ia\src\populate.h
+	<vector>
+	"ActorData.h"
+
+1345892684 c:\_martin_\dev\ia\src\mapbuildspawnitems.h
+	<vector>
+	"ItemData.h"
+
+1345892684 c:\_martin_\dev\ia\src\playerallocbonus.h
+	"SDL/SDL.h"
+	"PlayerBonuses.h"
+	"MenuBrowser.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\dungeonmaster.cpp
+	"DungeonMaster.h"
+	"Engine.h"
+	"Highscore.h"
+	"TextFormatting.h"
+	"Render.h"
+	"Timer.h"
+	"Query.h"
+	"ActorPlayer.h"
+	"Interface.h"
+	"Log.h"
+	"PlayerAllocBonus.h"
+
+1345892684 c:\_martin_\dev\ia\src\highscore.h
+	<vector>
+	<string>
+
+1345892684 c:\_martin_\dev\ia\src\textformatting.h
+	<vector>
+	<string>
+
+1345892684 source:c:\_martin_\dev\ia\src\engine.cpp
+	"Engine.h"
+	<iostream>
+	"Converters.h"
+	"Config.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"SpawnCounter.h"
+	"AbilityValues.h"
+	"ActorData.h"
+	"ActorFactory.h"
+	"Art.h"
+	"Attack.h"
+	"Audio.h"
+	"AutoDescribeActor.h"
+	"Bash.h"
+	"Blood.h"
+	"Bot.h"
+	"BresenhamLine.h"
+	"CharacterInfo.h"
+	"Close.h"
+	"PlayerAllocBonus.h"
+	"Map.h"
+	"DungeonClimb.h"
+	"DungeonMaster.h"
+	"Explosion.h"
+	"Examine.h"
+	"FeatureFactory.h"
+	"Fov.h"
+	"GameTime.h"
+	"Highscore.h"
+	"Interface.h"
+	"Input.h"
+	"InventoryHandler.h"
+	"InventoryIndexes.h"
+	"ItemData.h"
+	"ItemDrop.h"
+	"ItemFactory.h"
+	"ItemPickup.h"
+	"ItemPotion.h"
+	"ItemScroll.h"
+	"JamWithSpike.h"
+	"FeatureData.h"
+	"FeatureTrap.h"
+	"FovPreCalc.h"
+	"Knockback.h"
+	"Log.h"
+	"Look.h"
+	"MainMenu.h"
+	"Manual.h"
+	"MapPatterns.h"
+	"MapTests.h"
+	"MapBuild.h"
+	"MapBuildBSP.h"
+	"MapBuildSpawnItems.h"
+	"MapTemplates.h"
+	"Marker.h"
+	"Pathfinding.h"
+	"Phrases.h"
+	"PlayerCreateCharacter.h"
+	"PlayerBonuses.h"
+	"PlayerPowersHandler.h"
+	"PlayerVisualMemory.h"
+	"Populate.h"
+	"Popup.h"
+	"Postmortem.h"
+	"Query.h"
+	"Reload.h"
+	"Render.h"
+	"RenderInventory.h"
+	"SaveHandler.h"
+	"Sound.h"
+	"SpecialRoom.h"
+	"Spells.h"
+	"StatusEffects.h"
+	"TextFormatting.h"
+	"Thrower.h"
+	"Timer.h"
+	"MenuInputHandler.h"
+	"TrimTravelVector.h"
+
+1345892684 c:\_martin_\dev\ia\src\examine.h
+	<vector>
+	<string>
+
+1345903335 c:\_martin_\dev\ia\src\featurefactory.h
+	<vector>
+	<string>
+	<iostream>
+	"GameTime.h"
+	"FeatureTrap.h"
+
+1345903244 c:\_martin_\dev\ia\src\inventoryindexes.h
+	"Inventory.h"
+	<vector>
+	<iostream>
+
+1345892684 c:\_martin_\dev\ia\src\itempickup.h
+	"Inventory.h"
+
+1345903147 c:\_martin_\dev\ia\src\itempotion.h
+	"Item.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemscroll.h
+	"Item.h"
+	"StatusEffects.h"
+
+1345892684 c:\_martin_\dev\ia\src\jamwithspike.h
+	"FeatureDoor.h"
+
+1345892684 c:\_martin_\dev\ia\src\fovprecalc.h
+	<vector>
+	<iostream>
+	"ConstTypes.h"
+	"ConstDungeonSettings.h"
+
+1345892684 c:\_martin_\dev\ia\src\look.h
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\mainmenu.h
+	"SDL/SDL.h"
+	"MenuBrowser.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\manual.h
+	<vector>
+	<string>
+
+1345892684 c:\_martin_\dev\ia\src\mappatterns.h
+	<vector>
+	"ConstTypes.h"
+	"ConstDungeonSettings.h"
+
+1345892684 c:\_martin_\dev\ia\src\marker.h
+	<iostream>
+	<vector>
+	"SDL/SDL.h"
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\playerpowershandler.h
+	<vector>
+	"MenuBrowser.h"
+
+1345892684 c:\_martin_\dev\ia\src\renderinventory.h
+	"InventoryHandler.h"
+	"ItemData.h"
+	"MenuBrowser.h"
+
+1345892684 c:\_martin_\dev\ia\src\savehandler.h
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1345892684 c:\_martin_\dev\ia\src\thrower.h
+	<iostream>
+	<vector>
+	<iostream>
+	<math.h>
+	"ConstTypes.h"
+
+1345892684 c:\_martin_\dev\ia\src\menuinputhandler.h
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1345892684 c:\_martin_\dev\ia\src\trimtravelvector.h
+	<vector>
+	"ConstTypes.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\examine.cpp
+	"Examine.h"
+	"Engine.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+
+1345903295 source:c:\_martin_\dev\ia\src\explosion.cpp
+	"Explosion.h"
+	"Engine.h"
+	"FeatureData.h"
+	"FeatureSmoke.h"
+	"Render.h"
+	"Map.h"
+	"Timer.h"
+	"Fov.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Postmortem.h"
+
+1345892684 c:\_martin_\dev\ia\src\featuresmoke.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\feature.cpp
+	"Feature.h"
+	"Engine.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Render.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featuredata.cpp
+	"FeatureData.h"
+	<cassert>
+	"Engine.h"
+	"Colors.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featuredoor.cpp
+	"FeatureDoor.h"
+	"Engine.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+	"FeatureData.h"
+	"Map.h"
+	"Log.h"
+	"Postmortem.h"
+
+1345903335 source:c:\_martin_\dev\ia\src\featurefactory.cpp
+	"FeatureFactory.h"
+	<cassert>
+	"Engine.h"
+	"FeatureDoor.h"
+	"FeatureLitDynamite.h"
+	"FeatureTrap.h"
+	"FeatureSmoke.h"
+	"FeatureProxEvent.h"
+	"Map.h"
+	"FeatureVariousExaminable.h"
+
+1345892684 c:\_martin_\dev\ia\src\featurelitdynamite.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1345892684 c:\_martin_\dev\ia\src\featureproxevent.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1345892684 c:\_martin_\dev\ia\src\featurevariousexaminable.h
+	"Feature.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featurelitdynamite.cpp
+	"FeatureLitDynamite.h"
+	"Engine.h"
+	"Explosion.h"
+	"Map.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featureproxevent.cpp
+	"FeatureProxEvent.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Blood.h"
+	"ActorFactory.h"
+	"MapTests.h"
+	"Log.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featuresmoke.cpp
+	"FeatureSmoke.h"
+	"Engine.h"
+
+1345903393 source:c:\_martin_\dev\ia\src\featuretrap.cpp
+	"FeatureTrap.h"
+	<cassert>
+	"Engine.h"
+	"FeatureFactory.h"
+	"FeatureData.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"ItemDrop.h"
+	"Postmortem.h"
+	"Explosion.h"
+	"Popup.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\featurevariousexaminable.cpp
+	"FeatureVariousExaminable.h"
+	"Engine.h"
+	"Log.h"
+	"Render.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\fov.cpp
+	"Fov.h"
+	<math.h>
+	<iostream>
+	"Engine.h"
+	"FovPreCalc.h"
+	"ConstDungeonSettings.h"
+
+1345905129 source:c:\_martin_\dev\ia\src\fovprecalc.cpp
+	"FovPreCalc.h"
+	"Engine.h"
+
+1345903494 source:c:\_martin_\dev\ia\src\gametime.cpp
+	"GameTime.h"
+	"Engine.h"
+	"ConstDungeonSettings.h"
+	"Feature.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"PlayerVisualMemory.h"
+	"Map.h"
+	"Populate.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\highscore.cpp
+	"Highscore.h"
+	<algorithm>
+	<iostream>
+	<fstream>
+	"Engine.h"
+	"Highscore.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"Map.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\input.cpp
+	"Input.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"DungeonClimb.h"
+	"Input.h"
+	"Reload.h"
+	"Bash.h"
+	"Render.h"
+	"Close.h"
+	"JamWithSpike.h"
+	"ItemPickup.h"
+	"InventoryHandler.h"
+	"Marker.h"
+	"Map.h"
+	"DungeonMaster.h"
+	"PlayerPowersHandler.h"
+	"Manual.h"
+	"CharacterInfo.h"
+	"Query.h"
+	"SaveHandler.h"
+	"ItemFactory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"PlayerBonuses.h"
+	"Examine.h"
+
+1345930503 source:c:\_martin_\dev\ia\src\interface.cpp
+	"Interface.h"
+	"SDL/SDL.h"
+	"Engine.h"
+	"ConstTypes.h"
+	"Colors.h"
+	"ItemWeapon.h"
+	"ItemArmor.h"
+	"Render.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"DungeonMaster.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\inventoryhandler.cpp
+	"InventoryHandler.h"
+	"Engine.h"
+	"ItemScroll.h"
+	"ItemExplosive.h"
+	"ActorPlayer.h"
+	"ItemPotion.h"
+	"InventoryIndexes.h"
+	"MenuBrowser.h"
+	"Log.h"
+	"RenderInventory.h"
+	"MenuInputHandler.h"
+	"Render.h"
+	"ItemDrop.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemexplosive.h
+	"StatusEffects.h"
+	"Item.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\item.cpp
+
+1345892684 source:c:\_martin_\dev\ia\src\itemammoclip.cpp
+
+1345892684 source:c:\_martin_\dev\ia\src\itemarmor.cpp
+	"ItemArmor.h"
+	"Engine.h"
+	"Log.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itemdata.cpp
+	"ItemData.h"
+	<iostream>
+	"Engine.h"
+	"Colors.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmoClip.h"
+	"ConstTypes.h"
+	"ActorData.h"
+	"ItemArmor.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+
+1345892684 c:\_martin_\dev\ia\src\itemammoclip.h
+	"Item.h"
+	"Converters.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itemdrop.cpp
+	"ItemDrop.h"
+	"Engine.h"
+	"ConstDungeonSettings.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Inventory.h"
+	<algorithm>
+
+1345892684 source:c:\_martin_\dev\ia\src\itemfactory.cpp
+	"ItemFactory.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ItemAmmoClip.h"
+	"ItemExplosive.h"
+	"ItemArmor.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"ItemDrop.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itempickup.cpp
+	"ItemPickup.h"
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmoClip.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Query.h"
+	"ItemDrop.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itemscroll.cpp
+	"ItemScroll.h"
+	"ItemData.h"
+	"Engine.h"
+	"StatusEffects.h"
+	"Log.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorFactory.h"
+	"DungeonClimb.h"
+	"FeatureTrap.h"
+	"Postmortem.h"
+	"Query.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itemweapon.cpp
+	"ItemWeapon.h"
+	"Engine.h"
+	"Explosion.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\jamwithspike.cpp
+	"JamWithSpike.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Query.h"
+	"Inventory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\knockback.cpp
+	"Knockback.h"
+	"Engine.h"
+	"Attack.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Timer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\log.cpp
+	"Log.h"
+	<algorithm>
+	"Engine.h"
+	"Converters.h"
+	"Render.h"
+	"Query.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\look.cpp
+	"Look.h"
+	"Engine.h"
+	"ActorMonster.h"
+	"Feature.h"
+	"Item.h"
+	"Log.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"AutoDescribeActor.h"
+	"TextFormatting.h"
+	"Query.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mainmenu.cpp
+	"MainMenu.h"
+	<string>
+	"Engine.h"
+	"Colors.h"
+	"Render.h"
+	"MenuInputHandler.h"
+	"SaveHandler.h"
+	"Highscore.h"
+	"Manual.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\manual.cpp
+	"Manual.h"
+	<fstream>
+	<iostream>
+	"SDL/SDL.h"
+	"Engine.h"
+	"TextFormatting.h"
+	"Render.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\map.cpp
+	"Map.h"
+	<cassert>
+	"Engine.h"
+	"Feature.h"
+	"FeatureFactory.h"
+	"ActorFactory.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\maparea.cpp
+	"MapArea.h"
+	"BasicUtils.h"
+	"MapBuild.h"
+	"BasicUtils.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuild.cpp
+	"MapBuild.h"
+	"Engine.h"
+	"Pathfinding.h"
+	"FeatureFactory.h"
+
+1345971485 source:c:\_martin_\dev\ia\src\mapbuildbsp.cpp
+	"MapBuildBSP.h"
+	"algorithm"
+	<stdlib.h>
+	<cassert>
+	"Engine.h"
+	"MapBuild.h"
+	"FeatureProxEvent.h"
+	"ActorPlayer.h"
+	"FeatureDoor.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"ItemDrop.h"
+	"Pathfinding.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuildcavern.cpp
+	"MapBuild.h"
+	<iostream>
+	<vector>
+	"Engine.h"
+	"Converters.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuildforest.cpp
+	"MapBuild.h"
+	<iostream>
+	<vector>
+	"Engine.h"
+	"Converters.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+	"Pathfinding.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuildkingstomb.cpp
+	"MapBuild.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuildroomsandcorridors.cpp
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuildspawnitems.cpp
+	"MapBuildSpawnItems.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mapbuild_trapezohedronlevel.cpp
+	"MapBuild.h"
+	"Engine.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\mappatterns.cpp
+	"MapPatterns.h"
+	"Engine.h"
+	"Map.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\maptemplates.cpp
+	"MapTemplates.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\maptests.cpp
+	"MapTests.h"
+	<cassert>
+	"Engine.h"
+	"Map.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\marker.cpp
+	"Marker.h"
+	"Engine.h"
+	"InventoryHandler.h"
+	"ItemWeapon.h"
+	"Input.h"
+	"ActorPlayer.h"
+	"Attack.h"
+	"Log.h"
+	"Look.h"
+	"Thrower.h"
+	"Render.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\menubrowser.cpp
+	"MenuBrowser.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\menuinputhandler.cpp
+	"MenuInputHandler.h"
+	"SDL/SDL.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\pathfinding.cpp
+	"Pathfinding.h"
+	<iostream>
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\phrases.cpp
+	"Phrases.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\playerallocbonus.cpp
+	"PlayerAllocBonus.h"
+	<math.h>
+	<iostream>
+	"Engine.h"
+	"Colors.h"
+	"Log.h"
+	"Render.h"
+	"DungeonMaster.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\playerbonuses.cpp
+	"PlayerBonuses.h"
+	<cassert>
+	"Engine.h"
+	"TextFormatting.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\playercreatecharacter.cpp
+	"PlayerCreateCharacter.h"
+	"Engine.h"
+	"Render.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\playerpowershandler.cpp
+	"PlayerPowersHandler.h"
+	"SDL/SDL.h"
+	"Engine.h"
+	"ItemScroll.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"MenuInputHandler.h"
+	"Render.h"
+	"Inventory.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\playervisualmemory.cpp
+	"PlayerVisualMemory.h"
+	"Engine.h"
+	"Map.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\populate.cpp
+	"Populate.h"
+	<algorithm>
+	"Engine.h"
+	"FeatureTrap.h"
+	"Map.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\popup.cpp
+	"Popup.h"
+	"Engine.h"
+	"Render.h"
+	"TextFormatting.h"
+	"Log.h"
+	"Query.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\postmortem.cpp
+	"Postmortem.h"
+	<fstream>
+	<iostream>
+	"Engine.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"Map.h"
+	"Log.h"
+	"MenuInputHandler.h"
+	"Highscore.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\query.cpp
+	"Query.h"
+	<SDL/SDL.h>
+	<iostream>
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\reload.cpp
+	"Reload.h"
+	"Engine.h"
+	"Converters.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmoClip.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Inventory.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\render.cpp
+	"Render.h"
+	<vector>
+	<iostream>
+	"Engine.h"
+	"Item.h"
+	"Interface.h"
+	"Marker.h"
+	"Timer.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\renderinventory.cpp
+	"RenderInventory.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"InventoryIndexes.h"
+	"Log.h"
+	"Render.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\savehandler.cpp
+	"SaveHandler.h"
+	"SDL/SDL.h"
+	<fstream>
+	<iostream>
+	"Engine.h"
+	"Log.h"
+	"Render.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"PlayerBonuses.h"
+	"Map.h"
+	"DungeonClimb.h"
+	"Inventory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\sound.cpp
+	"Sound.h"
+	<iostream>
+	"Engine.h"
+	"Feature.h"
+	"Map.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\specialroom.cpp
+	"SpecialRoom.h"
+	"Engine.h"
+	"MapArea.h"
+	"MapPatterns.h"
+	"FeatureDoor.h"
+	"FeatureFactory.h"
+	"Blood.h"
+	"Populate.h"
+	"Popup.h"
+	"MapBuild.h"
+	"ActorPlayer.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\spells.cpp
+	"Spells.h"
+	<algorithm>
+	"Engine.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Postmortem.h"
+	"Knockback.h"
+	"Map.h"
+	"ActorFactory.h"
+
+1345908318 source:c:\_martin_\dev\ia\src\statuseffects.cpp
+	"StatusEffects.h"
+	"Engine.h"
+	"ItemArmor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Postmortem.h"
+	"Render.h"
+	"ItemWeapon.h"
+	"ActorMonster.h"
+	"Inventory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\textformatting.cpp
+	"TextFormatting.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\thrower.cpp
+	"Thrower.h"
+	"Engine.h"
+	"Item.h"
+	"ItemPotion.h"
+	"ActorData.h"
+	"ActorPlayer.h"
+	"Render.h"
+	"Map.h"
+	"Timer.h"
+	"Log.h"
+	"FeatureFactory.h"
+	"Explosion.h"
+	"ItemDrop.h"
+	"Inventory.h"
+	"ItemFactory.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\timer.cpp
+	"Timer.h"
+	"SDL/SDL.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\trimtravelvector.cpp
+	"TrimTravelVector.h"
+	"Engine.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\itemexplosive.cpp
+	"ItemExplosive.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Render.h"
+
+1345903194 source:c:\_martin_\dev\ia\src\itempotion.cpp
+	"ItemPotion.h"
+	"Engine.h"
+	"StatusEffects.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"ActorMonster.h"
+
+1345892684 source:c:\_martin_\dev\ia\src\main.cpp
+	<cassert>
+	"SDL/SDL.h"
+	"Declares.h"
+	"Engine.h"
+	"MainMenu.h"
+	"Render.h"
+	"InventoryHandler.h"
+	"PlayerBonuses.h"
+	"PlayerCreateCharacter.h"
+	"ActorPlayer.h"
+	"PlayerAllocBonus.h"
+	"MapBuild.h"
+	"Populate.h"
+	"DungeonClimb.h"
+	"Bot.h"
+	"Popup.h"
+	"Input.h"
+	"Interface.h"
+	"Log.h"
+	"Query.h"
+	"Highscore.h"
+	"Postmortem.h"
+
+1345892684 c:\_martin_\dev\ia\src\declares.h
+
+1345895268 source:c:\_martin_\dev\ia\src\config.cpp
+	"Config.h"
+	<fstream>
+	<iostream>
+	"Converters.h"
+
+1345895029 source:c:\_martin_\dev\ia\src\inventory.cpp
+	"Inventory.h"
+	"ItemWeapon.h"
+	"Engine.h"
+	"ItemDrop.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"GameTime.h"
+	"Render.h"
+	"ItemFactory.h"
+
+1345972987 source:c:\_martin_\dev\ia\src\actormonsterspecific.cpp
+	"ActorMonster.h"
+	<algorithm>
+	"Engine.h"
+	"ItemFactory.h"
+	"Inventory.h"
+	"Explosion.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"GameTime.h"
+	"ActorFactory.h"
+	"Render.h"
+	"ConstTypes.h"
+	"Map.h"
+	"Blood.h"
+	"FeatureFactory.h"
+

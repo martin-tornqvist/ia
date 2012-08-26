@@ -8,7 +8,7 @@ class AI_listen_becomePlayerAware {
 public:
 	static void learn(Monster* monster, const vector<Sound>& soundsHeard) {
 		if(monster->deadState == actorDeadState_alive && monster->isRoamingAllowed) {
-			if(soundsHeard.size() != 0) {
+			if(soundsHeard.empty() == false) {
 				for(unsigned int i = 0; i < soundsHeard.size(); i++) {
 					if(soundsHeard.at(i).getIsAlertingMonsters()) {
 						monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;

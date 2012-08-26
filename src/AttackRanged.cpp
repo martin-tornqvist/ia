@@ -30,7 +30,7 @@ struct Projectile {
 	coord pos;
 };
 
-void Attack::projectileFire(const coord origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES) {
+void Attack::projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES) {
 	vector<Projectile*> projectiles;
 
 	for(unsigned int i = 0; i < NR_OF_PROJECTILES; i++) {
@@ -113,12 +113,12 @@ void Attack::projectileFire(const coord origin, coord target, Weapon* const weap
 				//HIT ACTOR?
 				if(projectiles.at(p)->data.currentDefender != NULL && projectiles.at(p)->obstructed == false) {
 
-					ProjectileHitType_t hitType = projectileHitType_miss;
-
 					const bool AIMED_FOR_THIS_ACTOR = (projectiles.at(p)->pos == target);
 
 					//Floor-sized actors never obstruct projectiles when not aimed for
 					if(projectiles.at(p)->data.currentDefenderSize > actorSize_floor || AIMED_FOR_THIS_ACTOR == true) {
+
+                        ProjectileHitType_t hitType = projectileHitType_miss;
 
 						//If this is the actor aimed for, check skill roll for hit
 						if(AIMED_FOR_THIS_ACTOR == true) {

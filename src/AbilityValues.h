@@ -39,6 +39,7 @@ public:
 		for(unsigned int i = 0; i < endOfAbilities; i++) {
 			abilityList[i] = other.abilityList[i];
 		}
+		m_actor = other.m_actor;
 		return *this;
 	}
 

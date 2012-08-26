@@ -49,7 +49,7 @@ public:
 		return isHidden_;
 	}
 
-	coord actorAttemptLeave(Actor* const actor, const coord pos, const coord dest);
+	coord actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest);
 
 protected:
 	friend class FeatureFactory;
@@ -78,7 +78,7 @@ protected:
 	~SpecificTrapBase() {
 	}
 
-	virtual coord specificTrapActorAttemptLeave(Actor* const actor, const coord pos, const coord dest) {
+	virtual coord specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
 		(void)actor;
 		(void)pos;
 		return dest;
@@ -272,7 +272,7 @@ private:
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
-	coord specificTrapActorAttemptLeave(Actor* const actor, const coord pos, const coord dest);
+	coord specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest);
 private:
 	friend class Trap;
 	TrapSpiderWeb(coord pos, Engine* engine) :

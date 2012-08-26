@@ -91,11 +91,10 @@ public:
 		eng = engine;
 	}
 
-	Feature* spawnFeatureAt(const Feature_t id, const coord pos, FeatureSpawnData* spawnData = NULL);
-
+	Feature* spawnFeatureAt(const Feature_t id, const coord& pos, FeatureSpawnData* spawnData = NULL);
 
 private:
-	void replaceStaticFeatureAt(FeatureStatic* const newFeature, const coord pos);
+	void replaceStaticFeatureAt(FeatureStatic* const newFeature, const coord& pos);
 
 	Engine* eng;
 };

@@ -179,7 +179,7 @@ bool Trap::canHaveItem() const {
 	return isHidden_;
 }
 
-coord Trap::actorAttemptLeave(Actor* const actor, const coord pos, const coord dest) {
+coord Trap::actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
 	assert(specificTrap_ != NULL);
 	return specificTrap_->specificTrapActorAttemptLeave(actor, pos, dest);
 }
@@ -402,7 +402,7 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
 	}
 }
 
-coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coord pos, const coord dest) {
+coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
 	if(isHoldingActor == true) {
 		const int ABILITY_VALUE = max(30, actor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBody, true));
 

@@ -526,7 +526,6 @@ Item* Inventory::getItemInSlot(SlotTypes_t slotName) {
 		for(unsigned int i = 0; i < m_slots.size(); i++) {
 			if(m_slots[i].devName == slotName) {
 				return m_slots[i].item;
-				break;
 			}
 		}
 	}

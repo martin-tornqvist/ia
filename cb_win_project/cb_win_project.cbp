@@ -97,29 +97,15 @@
 		<Unit filename="..\src\AbilityValues.h" />
 		<Unit filename="..\src\Actor.cpp" />
 		<Unit filename="..\src\Actor.h" />
-		<Unit filename="..\src\ActorCultist.cpp" />
 		<Unit filename="..\src\ActorData.cpp" />
 		<Unit filename="..\src\ActorData.h" />
 		<Unit filename="..\src\ActorFactory.cpp" />
 		<Unit filename="..\src\ActorFactory.h" />
-		<Unit filename="..\src\ActorFireHound.cpp" />
-		<Unit filename="..\src\ActorFireVampire.cpp" />
-		<Unit filename="..\src\ActorGhost.cpp" />
-		<Unit filename="..\src\ActorGhoul.cpp" />
-		<Unit filename="..\src\ActorGiantBat.cpp" />
-		<Unit filename="..\src\ActorKeziahMason.cpp" />
-		<Unit filename="..\src\ActorMiGo.cpp" />
 		<Unit filename="..\src\ActorMonster.cpp" />
 		<Unit filename="..\src\ActorMonster.h" />
-		<Unit filename="..\src\ActorOoze.cpp" />
+		<Unit filename="..\src\ActorMonsterSpecific.cpp" />
 		<Unit filename="..\src\ActorPlayer.cpp" />
 		<Unit filename="..\src\ActorPlayer.h" />
-		<Unit filename="..\src\ActorRat.cpp" />
-		<Unit filename="..\src\ActorShadow.cpp" />
-		<Unit filename="..\src\ActorSpider.cpp" />
-		<Unit filename="..\src\ActorWolf.cpp" />
-		<Unit filename="..\src\ActorWormMass.cpp" />
-		<Unit filename="..\src\ActorZombie.cpp" />
 		<Unit filename="..\src\Art.cpp" />
 		<Unit filename="..\src\Art.h" />
 		<Unit filename="..\src\Attack.cpp" />
@@ -309,7 +295,6 @@
 		<Unit filename="..\src\itemPotion.cpp" />
 		<Unit filename="..\src\itemPotion.h" />
 		<Unit filename="..\src\main.cpp" />
-		<Unit filename="..\src\monsterIncludeFiles.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

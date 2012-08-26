@@ -51,7 +51,7 @@ public:
 		return m_inventory;
 	}
 
-	void place(const coord pos_, ActorDefinition* const actorDefinition, Engine* engine);
+	void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
 
 	bool hit(int dmg, const DamageTypes_t damageType);
 

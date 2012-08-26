@@ -19,7 +19,7 @@ public:
 							indexes.push_back(i);
 						}
 
-						while(indexes.size() > 0) {
+						while(indexes.empty() == false) {
 							//ii is a random index of the vector of indexes
 							const unsigned int ii = engine->dice(1, indexes.size()) - 1;
 							//i is an index of the spell list

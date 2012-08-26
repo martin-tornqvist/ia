@@ -60,16 +60,16 @@ public:
 private:
     double shotgunSpreadAngleHalf;
 
-    void getAttackData(AttackData &data, const coord target, const coord currentPos, Weapon* const weapon, const bool IS_MELEE);
+    void getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE);
 
     void printMeleeMessages(AttackData data, Weapon* weapon);
 
     void printRangedInitiateMessages(AttackData data);
     void printProjectileAtActorMessages(AttackData data, ProjectileHitType_t hitType);
 
-    void projectileFire(const coord origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES);
+    void projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES);
 
-    void shotgun(const coord origin, const coord target, Weapon* const weapon);
+    void shotgun(const coord& origin, const coord& target, Weapon* const weapon);
 
     bool isCellOnLine(vector<coord> line, int x, int y);
 

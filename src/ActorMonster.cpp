@@ -147,7 +147,7 @@ void Monster::monsterHit() {
 	playerAwarenessCounter = m_instanceDefinition.nrTurnsAwarePlayer;
 }
 
-void Monster::moveToCell(const coord targetCell) {
+void Monster::moveToCell(const coord& targetCell) {
 	const coord targetCellReal = getStatusEffectsHandler()->changeMoveCoord(pos, targetCell);
 
 	// Movement direction is stored for AI purposes
@@ -163,7 +163,7 @@ void Monster::registerHeardSound(const Sound& sound) {
 	}
 }
 
-bool Monster::attemptAttack(const coord attackPos) {
+bool Monster::attemptAttack(const coord& attackPos) {
 	if(deadState == actorDeadState_alive) {
 		if(playerAwarenessCounter > 0 || leader == eng->player) {
 
@@ -172,14 +172,14 @@ bool Monster::attemptAttack(const coord attackPos) {
 
 			if(checkIfSeeActor(*eng->player, blockers)) {
 				AttackOpport opport = getAttackOpport(attackPos);
-				BestAttack attack = getBestAttack(opport);
+				BestAttack const attack = getBestAttack(opport);
 
 				if(attack.weapon != NULL) {
 					if(attack.melee) {
 						if(attack.weapon->getInstanceDefinition().isMeleeWeapon) {
-							eng->attack->melee(attackPos.x, attackPos.y, attack.weapon);
-							const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
+						    const int NR_TURNS_DISABLED_MELEE = m_instanceDefinition.nrTurnsAttackDisablesMelee;
 							m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_MELEE));
+							eng->attack->melee(attackPos.x, attackPos.y, attack.weapon);
 							return true;
 						}
 					} else {
@@ -188,9 +188,9 @@ bool Monster::attemptAttack(const coord attackPos) {
 								eng->reload->reloadWeapon(this);
 								return true;
 							} else {
-								eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
-								const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
+							    const int NR_TURNS_DISABLED_RANGED = m_instanceDefinition.nrTurnsAttackDisablesRanged;
 								m_statusEffectsHandler->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
+								eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
 								return true;
 							}
 						}
@@ -202,14 +202,14 @@ bool Monster::attemptAttack(const coord attackPos) {
 	return false;
 }
 
-AttackOpport Monster::getAttackOpport(const coord attackPos) {
+AttackOpport Monster::getAttackOpport(const coord& attackPos) {
 	AttackOpport opport;
 	if(m_statusEffectsHandler->allowAttack(false)) {
 		opport.melee = eng->mapTests->isCellsNeighbours(pos, attackPos, false);
 
 		Weapon* weapon = NULL;
 		const unsigned nrOfIntrinsics = m_inventory->getIntrinsicsSize();
-		if(opport.melee == true) {
+		if(opport.melee) {
 			if(m_statusEffectsHandler->allowAttackMelee(false)) {
 
 				//Melee weapon in wielded slot?
@@ -260,7 +260,7 @@ AttackOpport Monster::getAttackOpport(const coord attackPos) {
 	return opport;
 }
 
-BestAttack Monster::getBestAttack(AttackOpport attackOpport) {
+BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 	BestAttack attack;
 	attack.melee = attackOpport.melee;
 
@@ -295,3 +295,5 @@ BestAttack Monster::getBestAttack(AttackOpport attackOpport) {
 
 	return attack;
 }
+
+

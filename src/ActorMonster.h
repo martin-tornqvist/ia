@@ -59,11 +59,11 @@ public:
 		}
 	}
 
-	void moveToCell(const coord targetCell);
+	void moveToCell(const coord& targetCell);
 
-	AttackOpport getAttackOpport(const coord attackPos);
-	BestAttack getBestAttack(AttackOpport attackOpport);
-	bool attemptAttack(const coord attackPos);
+	AttackOpport getAttackOpport(const coord& attackPos);
+	BestAttack getBestAttack(const AttackOpport& attackOpport);
+	bool attemptAttack(const coord& attackPos);
 
 	virtual void actorSpecific_spawnStartItems() = 0;
 
@@ -336,6 +336,50 @@ public:
 	void actorSpecific_spawnStartItems();
 };
 
+class LordOfShadows: public Monster {
+public:
+	LordOfShadows() :
+		Monster() {
+	}
+	~LordOfShadows() {
+	}
+	bool actorSpecificAct();
+	void actorSpecific_spawnStartItems();
+};
+
+class LordOfSpiders: public Monster {
+public:
+	LordOfSpiders() :
+		Monster() {
+	}
+	~LordOfSpiders() {
+	}
+	bool actorSpecificAct();
+	void actorSpecific_spawnStartItems();
+};
+
+class LordOfSpirits: public Monster {
+public:
+	LordOfSpirits() :
+		Monster() {
+	}
+	~LordOfSpirits() {
+	}
+	bool actorSpecificAct();
+	void actorSpecific_spawnStartItems();
+};
+
+class LordOfPestilence: public Monster {
+public:
+	LordOfPestilence() :
+		Monster() {
+	}
+	~LordOfPestilence() {
+	}
+	bool actorSpecificAct();
+	void actorSpecific_spawnStartItems();
+};
+
 class FireHound: public Monster {
 public:
 	FireHound() :
@@ -437,20 +481,20 @@ public:
 	virtual void actorSpecific_spawnStartItems();
 };
 
-class DeepOne: public Ghoul {
+class DeepOne: public Monster {
 public:
 	DeepOne() :
-		Ghoul() {
+		Monster() {
 	}
 	~DeepOne() {
 	}
 	void actorSpecific_spawnStartItems();
 };
 
-class Mummy: public Ghoul {
+class Mummy: public Monster {
 public:
 	Mummy() :
-		Ghoul() {
+		Monster() {
 	}
 	~Mummy() {
 	}
