@@ -17,7 +17,7 @@ void MapBuild::buildCavern() {
 		}
 	}
 
-	const coord playerCoord(eng->player->pos.x, eng->player->pos.y);
+	const coord& playerCoord = eng->player->pos;
 	coord preCenter(playerCoord);
 	coord curCenter;
 

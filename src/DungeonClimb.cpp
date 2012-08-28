@@ -72,7 +72,7 @@ void DungeonClimb::travelDown(const int levels) {
 void DungeonClimb::attemptUseDownStairs() {
 	const int DLVL = eng->map->getDungeonLevel();
 
-	const coord playerPos = eng->player->pos;
+	const coord& playerPos = eng->player->pos;
 	if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
 		if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
 			eng->log->addMessage("I climb downwards.");

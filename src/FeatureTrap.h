@@ -49,6 +49,8 @@ public:
 		return isHidden_;
 	}
 
+	MaterialType_t getMaterialType() const;
+
 	coord actorAttemptLeave(Actor* const actor, const coord pos, const coord dest);
 
 protected:

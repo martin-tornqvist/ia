@@ -131,6 +131,10 @@ Tile_t Door::getTile() const {
 	return isSecret_ ? mimicFeature_->tile : (isOpen_ ? (isBroken_ ? tile_doorBroken : tile_doorOpen) : tile_doorClosed);
 }
 
+MaterialType_t Door::getMaterialType() const {
+	return isSecret_ ? mimicFeature_->materialType : def_->materialType;
+}
+
 void Door::bump(Actor* actorBumping) {
 	if(isSecret_) {
 		if(eng->map->playerVision[pos_.x][pos_.y]) {
@@ -207,7 +211,7 @@ bool Door::trySpike(Actor* actorTrying) {
 		} else {
 			eng->log->addMessage("I jam a door with a spike.");
 		}
-		eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), 2, IS_PLAYER));
+		eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 	}
 	eng->gameTime->letNextAct();
 	return true;
@@ -245,7 +249,7 @@ void Door::tryBash(Actor* actorTrying) {
 			} else {
 				eng->log->addMessage("I smash into a door!");
 			}
-			eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), 3, IS_PLAYER));
+			eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 		} else {
 			if(PLAYER_SEE_TRYER) {
 				eng->log->addMessage(actorTrying->getNameThe() + " bashes at a door!");
@@ -253,7 +257,7 @@ void Door::tryBash(Actor* actorTrying) {
 			//(the sound emits from the actor instead of the door here, because the sound should
 			//be heard even if the door is seen, and the parameter for muting messages from seen sounds
 			//should be off)
-			eng->soundEmitter->emitSound(Sound("I hear a loud *THUD* at a door.", true, actorTrying->pos, 3, IS_PLAYER));
+			eng->soundEmitter->emitSound(Sound("I hear a loud *THUD* at a door.", true, actorTrying->pos, false, IS_PLAYER));
 		}
 
 		//Various things that can happen...
@@ -302,7 +306,7 @@ void Door::tryBash(Actor* actorTrying) {
 				} else {
 					eng->log->addMessage("I feel the door crashing open!");
 				}
-				eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), 3, IS_PLAYER));
+				eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 			} else {
 				if(PLAYER_SEE_TRYER) {
 					eng->log->addMessage(actorTrying->getNameThe() + " smashes into a door.");
@@ -310,7 +314,7 @@ void Door::tryBash(Actor* actorTrying) {
 				} else if(PLAYER_SEE_DOOR) {
 					eng->log->addMessage("A door crashes open!");
 				}
-				eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, coord(pos_.x, pos_.y), 3, IS_PLAYER));
+				eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 			}
 		}
 
@@ -425,33 +429,33 @@ void Door::tryOpen(Actor* actorTrying) {
 			isOpen_ = true;
 			if(IS_PLAYER) {
 				eng->log->addMessage("I open the door.");
-				eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), 2, IS_PLAYER));
+				eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 			} else {
 				if(PLAYER_SEE_TRYER) {
 					eng->log->addMessage(actorTrying->getNameThe() + " opens a door.");
 				} else if(PLAYER_SEE_DOOR) {
 					eng->log->addMessage("I see a door opening.");
 				}
-				eng->soundEmitter->emitSound(Sound("I hear a door open.", true, coord(pos_.x, pos_.y), 2, IS_PLAYER));
+				eng->soundEmitter->emitSound(Sound("I hear a door open.", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
 			}
 		} else {
 			if(eng->dice(1, 100) < 50) {
 				isOpen_ = true;
 				if(IS_PLAYER) {
 					eng->log->addMessage("I fumble with a door and succeed to open it.");
-					eng->soundEmitter->emitSound(Sound("", true, pos_, 3, IS_PLAYER));
+					eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
 				} else {
 					if(PLAYER_SEE_TRYER) {
 						eng->log->addMessage(actorTrying->getNameThe() + "fumbles about and succeeds to open a door.");
 					} else if(PLAYER_SEE_DOOR) {
 						eng->log->addMessage("I see a door open clumsily.");
 					}
-					eng->soundEmitter->emitSound(Sound("I hear something open a door clumsily.", true, pos_, 3, IS_PLAYER));
+					eng->soundEmitter->emitSound(Sound("I hear something open a door clumsily.", true, pos_, false, IS_PLAYER));
 				}
 			} else {
 				if(IS_PLAYER) {
 					eng->log->addMessage("I fumble blindly with a door and fail to open it.");
-					eng->soundEmitter->emitSound(Sound("", true, pos_, 3, IS_PLAYER));
+					eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
 				} else {
 					if(PLAYER_SEE_TRYER) {
 						eng->log->addMessage(actorTrying->getNameThe() + " fumbles blindly and fails to open a door.");
@@ -459,7 +463,7 @@ void Door::tryOpen(Actor* actorTrying) {
 					//(emitting the sound from the actor instead of the door here, beacause the sound should
 					//be heard even if the door is seen, and the parameter for muting messages from seen sounds
 					//should be off)
-					eng->soundEmitter->emitSound(Sound("I hear something attempting to open a door.", true, actorTrying->pos, 3, IS_PLAYER));
+					eng->soundEmitter->emitSound(Sound("I hear something attempting to open a door.", true, actorTrying->pos, false, IS_PLAYER));
 				}
 			}
 		}

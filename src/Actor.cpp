@@ -27,7 +27,7 @@ void Actor::newTurn() {
 	if(m_statusEffectsHandler->allowAct() == false) {
 		eng->gameTime->letNextAct();
 	} else {
-	    updateColor();
+		updateColor();
 		act();
 	}
 }
@@ -162,18 +162,18 @@ void Actor::teleportToRandom() {
 }
 
 void Actor::updateColor() {
-    if(deadState != actorDeadState_alive) {
-        m_instanceDefinition.color = clrRedLight;
-        return;
-    }
+	if(deadState != actorDeadState_alive) {
+		m_instanceDefinition.color = clrRedLight;
+		return;
+	}
 
-    const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
-    if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
-        m_instanceDefinition.color = clrFromStatusEffect;
-        return;
-    }
+	const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+	if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+		m_instanceDefinition.color = clrFromStatusEffect;
+		return;
+	}
 
-    m_instanceDefinition.color = m_archetypeDefinition->color;
+	m_instanceDefinition.color = m_archetypeDefinition->color;
 }
 
 bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
@@ -286,7 +286,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
 void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS) {
 	if(this != eng->player) {
 		if(isHumanoid() == true) {
-			eng->soundEmitter->emitSound(Sound("I hear agonised screaming.", true, pos, 3, false));
+			eng->soundEmitter->emitSound(Sound("I hear agonised screaming.", true, pos, false, false));
 		}
 	}
 

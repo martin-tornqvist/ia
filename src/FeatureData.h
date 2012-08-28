@@ -63,6 +63,10 @@ enum FeatureSpawnType_t {
 	featureSpawnType_mob, featureSpawnType_static, featureSpawnType_other
 };
 
+enum MaterialType_t {
+   materialType_empty, materialType_soft, materialType_hard, materialType_fluid
+};
+
 struct FeatureDef {
 	Feature_t id;
 	FeatureSpawnType_t spawnType;
@@ -79,6 +83,7 @@ struct FeatureDef {
 	bool canHaveStaticFeature;
 	bool canHaveItem;
 	bool isBottomless;
+	MaterialType_t materialType;
 	string name_a;
 	string name_the;
 	string messageOnPlayerBlocked;

@@ -140,27 +140,15 @@ string Trap::getDescription(const bool DEFINITE_ARTICLE) const {
 }
 
 SDL_Color Trap::getColor() const {
-	if(isHidden_) {
-		return mimicFeature_->color;
-	} else {
-		return specificTrap_->getTrapSpecificColor();
-	}
+   return isHidden_ ? mimicFeature_->color : specificTrap_->getTrapSpecificColor();
 }
 
 char Trap::getGlyph() const {
-	if(isHidden_) {
-		return mimicFeature_->glyph;
-	} else {
-		return specificTrap_->getTrapSpecificGlyph();
-	}
+   return isHidden_ ? mimicFeature_->glyph : specificTrap_->getTrapSpecificGlyph();
 }
 
 Tile_t Trap::getTile() const {
-	if(isHidden_) {
-		return mimicFeature_->tile;
-	} else {
-		return specificTrap_->getTrapSpecificTile();
-	}
+   return isHidden_ ? mimicFeature_->tile : specificTrap_->getTrapSpecificTile();
 }
 
 bool Trap::canHaveCorpse() const {
@@ -182,6 +170,10 @@ bool Trap::canHaveItem() const {
 coord Trap::actorAttemptLeave(Actor* const actor, const coord pos, const coord dest) {
 	assert(specificTrap_ != NULL);
 	return specificTrap_->specificTrapActorAttemptLeave(actor, pos, dest);
+}
+
+MaterialType_t Trap::getMaterialType() const {
+   return isHidden_ ? mimicFeature_->materialType : def_->materialType;
 }
 
 //============================================================= TRAP LIST

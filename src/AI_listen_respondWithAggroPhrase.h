@@ -26,7 +26,7 @@ public:
 							if(phrase != NULL) {
 								const bool SEEN_BY_PLAYER = engine->player->checkIfSeeActor(*monster, blockers);
 								const string prePhrase = SEEN_BY_PLAYER == true ? "[" + monster->getNameThe() + "]" : "[Voice]";
-								engine->soundEmitter->emitSound(Sound(prePhrase + *phrase, false, monster->pos, 3, false));
+								engine->soundEmitter->emitSound(Sound(prePhrase + *phrase, false, monster->pos, false, false));
 								break;
 							}
 						}

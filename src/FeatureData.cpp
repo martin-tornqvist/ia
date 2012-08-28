@@ -23,6 +23,7 @@ void FeatureData::resetDef(FeatureDef& d) {
 	d.canHaveStaticFeature = true;
 	d.canHaveItem = true;
 	d.isBottomless = false;
+	d.materialType = materialType_hard;
 	d.name_a = "";
 	d.name_the = "";
 	d.messageOnPlayerBlocked = "The way is blocked.";
@@ -140,6 +141,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = true;
 	d.canHaveStaticFeature = true;
 	d.canHaveItem = true;
+	d.materialType = materialType_soft;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_grassWithered;
@@ -155,6 +157,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = true;
 	d.canHaveStaticFeature = true;
 	d.canHaveItem = true;
+	d.materialType = materialType_soft;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_bush;
@@ -170,6 +173,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = true;
 	d.canHaveStaticFeature = true;
 	d.canHaveItem = true;
+	d.materialType = materialType_soft;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_bushWithered;
@@ -185,6 +189,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = true;
 	d.canHaveStaticFeature = true;
 	d.canHaveItem = true;
+	d.materialType = materialType_soft;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_forestPath;
@@ -247,6 +252,7 @@ void FeatureData::makeList() {
 	d.canHaveItem = true;
 	d.messageOnPlayerEnter = "*splosh*";
 	d.dodgeModifier = -10;
+	d.materialType = materialType_fluid;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_deepWater;
@@ -268,6 +274,7 @@ void FeatureData::makeList() {
 	d.canHaveItem = true;
 	d.dodgeModifier = -10;
 	d.shockWhenAdjacent = 8;
+	d.materialType = materialType_fluid;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_shallowMud;
@@ -285,6 +292,7 @@ void FeatureData::makeList() {
 	d.canHaveItem = true;
 	d.messageOnPlayerEnter = "*glop*";
 	d.dodgeModifier = -20;
+	d.materialType = materialType_fluid;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	//	d.id = feature_shallowAcid;
@@ -316,6 +324,7 @@ void FeatureData::makeList() {
 	d.messageOnPlayerEnter = "*glop*";
 	d.dodgeModifier = -10;
 	d.shockWhenAdjacent = 3;
+	d.materialType = materialType_fluid;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_chasm;
@@ -338,6 +347,7 @@ void FeatureData::makeList() {
 	d.messageOnPlayerBlocked = "A chasm lies in my way.";
 	d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a chasm.";
 	d.shockWhenAdjacent = 3;
+	d.materialType = materialType_empty;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_caveWall;
@@ -467,6 +477,7 @@ void FeatureData::makeList() {
 	d.canHaveCorpse = true;
 	d.canHaveStaticFeature = false;
 	d.canHaveItem = true;
+	d.materialType = materialType_soft;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
 	d.id = feature_rubbleHigh;

@@ -14,11 +14,11 @@ const int PLAYER_MAX_LEVEL = 30;//10;
 const int FIRST_CAVERN_LEVEL = 15;
 const int LAST_CAVERN_LEVEL = 25;
 
-const double FOV_RADI = 7.0;
-const double FOV_WIDTH = 2.0 * FOV_RADI + 1.0;
-
-const int FOV_RADI_INT = 7;
+const int FOV_RADI_INT = 6;
 const int FOV_WIDTH_INT = 2 * FOV_RADI_INT + 1;
+
+const double FOV_RADI = static_cast<const double>(FOV_RADI_INT);
+const double FOV_WIDTH = static_cast<const double>(FOV_WIDTH_INT);
 
 //Base delay for actor actions (this is divided by speed attribute)
 //const float BASE_DELAY = 100.0;

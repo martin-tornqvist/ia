@@ -395,7 +395,7 @@ void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
 	const int PLAYER_FORTITUDE = m_instanceDefinition.abilityValues.getAbilityValue(ability_resistStatusMind, true);
 
 	if(PLAYER_FORTITUDE < 99) {
-	   const int FORTITUDE_AT_RANK_ZERO = eng->playerBonusHandler->getBonusAbilityModifierAtRank(ability_resistStatusMind, 0);
+		const int FORTITUDE_AT_RANK_ZERO = eng->playerBonusHandler->getBonusAbilityModifierAtRank(ability_resistStatusMind, 0);
 		const int SHOCK_REDUCTION_PERCENT = min(100, max(0, PLAYER_FORTITUDE - FORTITUDE_AT_RANK_ZERO));
 
 		int baseIncr = 0;
@@ -418,9 +418,9 @@ void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
 		break;
 		}
 
-      const int SHOCK_AFTER_FORTITUDE = (baseIncr * (100 - SHOCK_REDUCTION_PERCENT)) / 100;
+		const int SHOCK_AFTER_FORTITUDE = (baseIncr * (100 - SHOCK_REDUCTION_PERCENT)) / 100;
 
-		insanityShort = min(100, insanityShort + max(1, SHOCK_AFTER_FORTITUDE + MODIFIER));
+		insanityShort = min(100, insanityShort + max(0, SHOCK_AFTER_FORTITUDE + MODIFIER));
 	}
 }
 
@@ -462,7 +462,7 @@ void Player::incrInsanityLong() {
 						popupMessage += "I scream in terror.";
 					}
 					eng->popup->showMessage(popupMessage);
-					eng->soundEmitter->emitSound(Sound("", true, pos, 5, true));
+					eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
 					return;
 				}
 			}
@@ -470,11 +470,11 @@ void Player::incrInsanityLong() {
 			case 2: {
 				popupMessage += "I find myself babbling incoherently.";
 				eng->popup->showMessage(popupMessage);
-				for(int i = eng->dice(1, 3); i > 0; i--) {
+				for(int i = eng->dice(1, 3) + 2; i > 0; i--) {
 					const string* const phrase = eng->phrases->getAggroPhraseFromPhraseSet(phraseSet_cultist);
-					eng->log->addMessage("[" + getNameThe() + "]" + *phrase, clrYellow);
+					eng->log->addMessage("[" + getNameThe() + "]" + *phrase);
 				}
-				eng->soundEmitter->emitSound(Sound("", true, pos, 3, true));
+				eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
 				return;
 			}
 			break;
@@ -488,7 +488,7 @@ void Player::incrInsanityLong() {
 			case 4: {
 				popupMessage += "I laugh nervously.";
 				eng->popup->showMessage(popupMessage);
-				eng->soundEmitter->emitSound(Sound("", true, pos, 3, true));
+				eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
 				return;
 			}
 			break;
@@ -512,45 +512,46 @@ void Player::incrInsanityLong() {
 						if(spotedEnemies.size() > 0) {
 							const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
-								popupMessage += "I are afflicted by Murophobia. Rats suddenly seem terrifying.";
+								popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_rat] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isSpider == true && insanityPhobias[insanityPhobia_spider]
 							      == false) {
-								popupMessage += "I are afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
+								popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_spider] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isCanine == true && insanityPhobias[insanityPhobia_dog]
 							      == false) {
-								popupMessage += "I are afflicted by Cynophobia. Dogs suddenly seem terrifying.";
+								popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_dog] = true;
 								return;
 							}
 							if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isUndead == true && insanityPhobias[insanityPhobia_undead]
 							      == false) {
-								popupMessage += "I are afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
+								popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
 								eng->popup->showMessage(popupMessage);
 								insanityPhobias[insanityPhobia_undead] = true;
 								return;
 							}
 						}
 					} else {
-						if(eng->dice(1, 2) == 1) {
-							if(isStandingInOpenPlace() == true) {
+						if(eng->dice.coinToss()) {
+							if(isStandingInOpenSpace()) {
 								if(insanityPhobias[insanityPhobia_openPlace] == false) {
-									popupMessage += "I are afflicted by Agoraphobia. Open places suddenly seem terrifying.";
+									popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_openPlace] = true;
 									return;
 								}
-							} else {
+							}
+							if(isStandingInCrampedSpace()) {
 								if(insanityPhobias[insanityPhobia_closedPlace] == false) {
-									popupMessage += "I are afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
+									popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_closedPlace] = true;
 									return;
@@ -559,7 +560,7 @@ void Player::incrInsanityLong() {
 						} else {
 							if(eng->map->getDungeonLevel() >= 5) {
 								if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
-									popupMessage += "I are afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
+									popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
 									eng->popup->showMessage(popupMessage);
 									insanityPhobias[insanityPhobia_deepPlaces] = true;
 									return;
@@ -662,22 +663,36 @@ void Player::setTempShockFromFeatures() {
 	insanityShortTemp = min(99, insanityShortTemp);
 }
 
-bool Player::isStandingInOpenPlace() const {
+bool Player::isStandingInOpenSpace() const {
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 	eng->mapTests->makeMoveBlockerArrayFeaturesOnly(this, blockers);
-	int nrBlockingCells = 0;
-	for(int x = pos.x - 1; x <= pos.x + 1; x++) {
-		for(int y = pos.y - 1; y <= pos.y + 1; y++) {
+	for(int y = pos.y - 1; y <= pos.y + 1; y++) {
+		for(int x = pos.x - 1; x <= pos.x + 1; x++) {
 			if(blockers[x][y]) {
-				nrBlockingCells++;
-				if(nrBlockingCells >= 4) {
-					return false;
-				}
+				return false;
 			}
 		}
 	}
 
 	return true;
+}
+
+bool Player::isStandingInCrampedSpace() const {
+	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+	eng->mapTests->makeMoveBlockerArrayFeaturesOnly(this, blockers);
+	int blockCount = 0;
+	for(int y = pos.y - 1; y <= pos.y + 1; y++) {
+		for(int x = pos.x - 1; x <= pos.x + 1; x++) {
+			if(blockers[x][y]) {
+				blockCount++;
+				if(blockCount >= 6) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 void Player::testPhobias() {
@@ -708,14 +723,16 @@ void Player::testPhobias() {
 		}
 	}
 	if(ROLL < 5) {
-		if(isStandingInOpenPlace() == true) {
-			if(insanityPhobias[insanityPhobia_openPlace] == true) {
+		if(insanityPhobias[insanityPhobia_openPlace] == true) {
+			if(isStandingInOpenSpace()) {
 				eng->log->addMessage("I am plagued by my phobia of open places!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
 			}
-		} else {
-			if(insanityPhobias[insanityPhobia_closedPlace] == true) {
+		}
+
+		if(insanityPhobias[insanityPhobia_closedPlace] == true) {
+			if(isStandingInCrampedSpace()) {
 				eng->log->addMessage("I am plagued by my phobia of closed places!");
 				m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
 				return;
@@ -900,7 +917,7 @@ void Player::act() {
 		//Passive HP-regeneration from high first aid?
 		if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 3) {
 			if(m_statusEffectsHandler->hasEffect(statusDiseased) == false) {
-				const int REGEN_N_TURN = 10;
+				const int REGEN_N_TURN = 8;
 				if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
 					if(getHP() < getHP_max()) {
 						m_instanceDefinition.HP++;
@@ -1021,14 +1038,10 @@ void Player::registerHeardSound(const Sound& sound) {
 	const coord origin = sound.getOrigin();
 	const string message = sound.getMessage();
 	if(message != "") {
-		//Display the message if player does not see origin cell,
-		//or if the message should be displayed despite this.
-		const bool DISPLAY_MESSAGE =
-		   eng->map->playerVision[origin.x][origin.y] == false ||
-		   sound.getIsMessageIgnoredIfPlayerSeeCell() == false;
-
-		if(DISPLAY_MESSAGE == true)
-			eng->log->addMessage(message, clrYellow);
+		//Display the message if player does not see origin cell, or if the message should be displayed despite this.
+		if(eng->map->playerVision[origin.x][origin.y] == false || sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
+			eng->log->addMessage(message);
+		}
 	}
 }
 

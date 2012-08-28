@@ -72,7 +72,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->meleeAudio = audio_none;
 		d->reloadAudio = audio_none;
 		d->rangedSoundMessage = "";
-		d->rangedSoundStrength = 0;
+		d->rangedSoundIsLoud = false;
+		d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
 		d->rangedStatusEffect = NULL;
 		d->isExplosive = false;
 		d->abilityToIdentify = ability_empty;
@@ -112,6 +113,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->rangedMissileGlyph = '\\';
 		d->rangedMissileColor = clrWhite;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+		d->rangedSoundIsLoud = true;
 	}
 	break;
 
@@ -123,6 +125,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->spawnStandardMaxDLVL = -1;
 		d->isMeleeWeapon = false; //(Extrinsic ranged weapons tend to double as melee weapons, while intrinsics do not)
 		d->rangedMissileGlyph = '*';
+		d->rangedSoundIsLoud = false;
 	}
 	break;
 
@@ -132,6 +135,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isStackable = true;
 		d->isMissileWeapon = true;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+		d->rangedSoundIsLoud = false;
 	}
 	break;
 
@@ -172,6 +176,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->maxStackSizeAtSpawn = 2;
 		d->nativeRooms.push_back(specialRoom_tombs);
 		d->nativeRooms.push_back(specialRoom_ritualChamber);
+		d->landOnHardSurfaceSoundMessage = "";
 		eng->scrollNameHandler->setFalseScrollName(d);
 	}
 	break;
@@ -191,6 +196,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->maxStackSizeAtSpawn = 1;
 		d->nativeRooms.push_back(specialRoom_tombs);
 		d->nativeRooms.push_back(specialRoom_ritualChamber);
+		d->landOnHardSurfaceSoundMessage = "";
 		eng->potionNameHandler->setColorAndFalseName(d);
 	}
 	break;
@@ -211,16 +217,16 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isExplosive = true;
 		d->glyph = '-';
 		d->maxStackSizeAtSpawn = 3;
+		d->landOnHardSurfaceSoundMessage = "";
 	}
 	break;
 
-	default: {
-	}
-	break;
+	default: {} break;
 	}
 }
 
-void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor, const EntityStrength_t dmgStrength) const {
+void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor,
+                                 const EntityStrength_t dmgStrength) const {
 	const int ACTOR_LEVEL = owningActor.monsterLvl;
 
 	//Set 1dY dmg from formula
@@ -269,7 +275,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_shotgunShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
 	d->rangedSoundMessage = "I hear a shotgun blast.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->causeOfDeathMessage = "Shotgun";
@@ -287,7 +292,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_shotgunShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
 	d->rangedSoundMessage = "I hear a shotgun blast.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedAbilityUsed = ability_accuracyRanged;
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->causeOfDeathMessage = "Shotgun";
@@ -313,7 +317,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_incineratorShell;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
 	d->rangedSoundMessage = "I hear the blast of a launched missile.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedMissileGlyph = '*';
 	d->rangedMissileColor = clrRedLight;
 	d->spawnStandardMinDLVL = 4;
@@ -342,7 +345,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_drumOfBullets;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
 	d->rangedSoundMessage = "I hear the burst of a machine gun.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Machine gun fire";
 	d->rangedAudio = audio_tommygun_fire;
 	itemDefinitions[d->devName] = d;
@@ -365,7 +367,6 @@ void ItemData::makeList() {
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
 	d->rangedSoundMessage = "I hear a pistol being fired.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Shot with a pistol";
 	d->rangedAudio = audio_pistol_fire;
 	d->reloadAudio = audio_pistol_reload;
@@ -384,7 +385,6 @@ void ItemData::makeList() {
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a flare gun");
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
 	d->rangedSoundMessage = "I hear a flare gun being fired.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->causeOfDeathMessage = "Shot with a flare gun";
 	d->rangedStatusEffect = new StatusFlared(eng);
 	//d->rangedAudio = audio_pistol_fire;
@@ -412,7 +412,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_teslaCanister;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
 	d->rangedSoundMessage = "I hear loud electric crackle.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	d->rangedMissileGlyph = '*';
 	d->rangedMissileColor = clrYellow;
 	d->spawnStandardMinDLVL = 7;
@@ -436,7 +435,6 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_ironSpike;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
 	d->rangedSoundMessage = "I hear a very crude gun being fired.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE + 1;
 	d->rangedMissileGlyph = '\\';
 	d->rangedMissileColor = clrGray;
 	d->spawnStandardMinDLVL = 4;
@@ -486,6 +484,7 @@ void ItemData::makeList() {
 	d->missileBaseAttackSkill = 0;
 	d->missileDmg = DiceParam(2, 4);
 	d->maxStackSizeAtSpawn = 12;
+	d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_rock);
@@ -663,7 +662,6 @@ void ItemData::makeList() {
 	d->rangedDamageType = damageType_acid;
 	d->rangedMissileGlyph = '*';
 	d->causeOfDeathMessage = "Spat upon by an undead creature";
-	d->rangedSoundStrength = 3;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_ratBite);
@@ -736,7 +734,6 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_rangedWpnIntr);
 	d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
 	d->rangedSoundMessage = "I hear a burst of flames.";
-	d->rangedSoundStrength = 3;
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
 	d->rangedStatusEffect = new StatusBurning(eng);
 	d->rangedMissileColor = clrRedLight;
@@ -802,9 +799,9 @@ void ItemData::makeList() {
 	d->rangedDamageType = damageType_electricity;
 	d->rangedStatusEffect = new StatusParalyzed(2);
 	d->rangedSoundMessage = "I hear a bolt of electricity.";
-	d->rangedSoundStrength = SOUND_STANDARD_STRENGTH_GUNFIRE;
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
 	d->causeOfDeathMessage = "Electrocuted by an alien weapon";
+	d->rangedSoundIsLoud = true;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_ghoulClaw);
@@ -841,11 +838,11 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_rangedWpnIntr);
 	d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
-	d->rangedSoundMessage = "I hear something being thrown my way.";
+	d->rangedSoundMessage = "";
 	d->rangedMissileColor = clrBrown;
 	d->rangedMissileGlyph = '\\';
-	d->causeOfDeathMessage = "Hit by a Javelin from a Deep One";
-	d->rangedSoundStrength = 3;
+	d->causeOfDeathMessage = "Hit by a Javelin";
+	d->rangedSoundIsLoud = false;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_deepOneSpearAttack);
@@ -900,6 +897,7 @@ void ItemData::makeList() {
 	d->armorData.absorptionPoints[damageType_physical] = 1;
 	d->armorData.damageToDurabilityFactors[damageType_physical] = 1.0;
 	d->armorData.chanceToDeflectTouchAttacks = 20;
+	d->landOnHardSurfaceSoundMessage = "";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_armorIronSuit);
@@ -917,6 +915,7 @@ void ItemData::makeList() {
 	d->armorData.absorptionPoints[damageType_physical] = 4;
 	d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
 	d->armorData.chanceToDeflectTouchAttacks = 80;
+	d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_armorFlackJacket);
@@ -934,6 +933,7 @@ void ItemData::makeList() {
 	d->armorData.absorptionPoints[damageType_physical] = 3;
 	d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
 	d->armorData.chanceToDeflectTouchAttacks = 20;
+	d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
 	itemDefinitions[d->devName] = d;
 
 //	d = new ItemDefinition(item_armorAsbestosSuit);
@@ -954,7 +954,7 @@ void ItemData::makeList() {
 //	d->armorData.overRideAbsorptionPointLabel = "?";
 //	itemDefinitions[d->devName] = d;
 
-   d = new ItemDefinition(item_scrollOfMayhem);
+	d = new ItemDefinition(item_scrollOfMayhem);
 	resetDef(d, itemDef_scroll);
 	itemDefinitions[d->devName] = d;
 
@@ -994,7 +994,7 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_scroll);
 	itemDefinitions[d->devName] = d;
 
-    d = new ItemDefinition(item_scrollOfBlessing);
+	d = new ItemDefinition(item_scrollOfBlessing);
 	resetDef(d, itemDef_scroll);
 	itemDefinitions[d->devName] = d;
 
@@ -1038,7 +1038,7 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_potion);
 	itemDefinitions[d->devName] = d;
 
-   d = new ItemDefinition(item_potionOfFear);
+	d = new ItemDefinition(item_potionOfFear);
 	resetDef(d, itemDef_potion);
 	itemDefinitions[d->devName] = d;
 

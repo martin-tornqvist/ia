@@ -74,7 +74,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
 	for(unsigned int i = 0; i < vectorSize; i++) {
 		//First look in all cells that has distance to origin equal to cell i
 		//to try and merge the item if it stacks
-		if(ITEM_STACKS == true) {
+		if(ITEM_STACKS) {
 			//While ii cell is not further away than i cell
 			while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
 				stackX = freeCells.at(ii).x;
@@ -83,7 +83,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
 				if(stackItem != NULL) {
 					if(stackItem->getInstanceDefinition().devName == (*item)->getInstanceDefinition().devName) {
 						stackItem->numberOfItems += (*item)->numberOfItems;
-						delete (*item);
+						delete(*item);
 						*item = NULL;
 						i = 999999;
 						break;
@@ -95,8 +95,9 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
 			(*item)->appplyDropEffects();
 		}
 
-		if(*item == NULL)
+		if(*item == NULL) {
 			break;
+		}
 
 		curX = freeCells.at(i).x;
 		curY = freeCells.at(i).y;
@@ -104,7 +105,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
 			eng->map->items[curX][curY] = *item;
 			if(eng->player->pos == coord(curX, curY)) {
 				if(curX != pos.x || curY != pos.y) {
-					eng->log->addMessage("I feel something roll by my feet.");
+					eng->log->addMessage("I feel something by my feet.");
 				}
 			}
 

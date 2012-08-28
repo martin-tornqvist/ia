@@ -68,7 +68,7 @@
 	"ConstTypes.h"
 	"FeatureData.h"
 
-1344777396 c:\dev\ia\src\featuredata.h
+1346164769 c:\dev\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -84,7 +84,7 @@
 	"ConstTypes.h"
 	"Converters.h"
 
-1340305326 c:\dev\ia\src\sound.h
+1346163354 c:\dev\ia\src\sound.h
 	<string>
 	"ConstTypes.h"
 	"ItemData.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1345882209 c:\dev\ia\src\itemdefinition.h
+1346161084 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -108,7 +108,7 @@
 1323988860 c:\dev\ia\src\audio.h
 	<string>
 
-1336671616 c:\dev\ia\src\constdungeonsettings.h
+1346165931 c:\dev\ia\src\constdungeonsettings.h
 
 1345830962 c:\dev\ia\src\config.h
 	<string>
@@ -127,7 +127,7 @@
 	<ctime>
 	<cmath>
 
-1344777396 c:\dev\ia\src\actorplayer.h
+1345993570 c:\dev\ia\src\actorplayer.h
 	"Actor.h"
 	"ConstTypes.h"
 
@@ -138,7 +138,7 @@
 	"Converters.h"
 	<math.h>
 
-1344777396 source:c:\dev\ia\src\actor.cpp
+1346174630 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -172,7 +172,7 @@
 	"Feature.h"
 	"ActorData.h"
 
-1344777396 c:\dev\ia\src\feature.h
+1346164691 c:\dev\ia\src\feature.h
 	<vector>
 	<string>
 	"SDL/SDL.h"
@@ -235,7 +235,7 @@
 1323988860 c:\dev\ia\src\blood.h
 	"ConstTypes.h"
 
-1337720202 c:\dev\ia\src\featuretrap.h
+1346164947 c:\dev\ia\src\featuretrap.h
 	"Feature.h"
 	"AbilityValues.h"
 	"Art.h"
@@ -295,7 +295,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1344521714 c:\dev\ia\src\featuredoor.h
+1346164762 c:\dev\ia\src\featuredoor.h
 	<iostream>
 	"SDL/SDL.h"
 	"Feature.h"
@@ -308,7 +308,7 @@
 	"Engine.h"
 	"Actor.h"
 
-1340305271 c:\dev\ia\src\ai_listen_respondwithaggrophrase.h
+1346174575 c:\dev\ia\src\ai_listen_respondwithaggrophrase.h
 	"Engine.h"
 	"Actor.h"
 
@@ -435,7 +435,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1345883151 source:c:\dev\ia\src\actorplayer.cpp
+1346177900 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -537,7 +537,7 @@
 1339191973 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1344522064 source:c:\dev\ia\src\attackranged.cpp
+1346163107 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -670,7 +670,7 @@
 	<sstream>
 	<iostream>
 
-1344777396 source:c:\dev\ia\src\dungeonclimb.cpp
+1345989272 source:c:\dev\ia\src\dungeonclimb.cpp
 	"DungeonClimb.h"
 	"Engine.h"
 	"SpawnCounter.h"
@@ -917,7 +917,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1344777396 source:c:\dev\ia\src\explosion.cpp
+1346174540 source:c:\dev\ia\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -934,7 +934,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1344777396 source:c:\dev\ia\src\feature.cpp
+1346165033 source:c:\dev\ia\src\feature.cpp
 	"Feature.h"
 	"Engine.h"
 	"Actor.h"
@@ -942,13 +942,13 @@
 	"Log.h"
 	"Render.h"
 
-1344777396 source:c:\dev\ia\src\featuredata.cpp
+1346164543 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
 	"Colors.h"
 
-1344777396 source:c:\dev\ia\src\featuredoor.cpp
+1346174540 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1000,7 +1000,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1345838318 source:c:\dev\ia\src\featuretrap.cpp
+1346164947 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -1138,7 +1138,7 @@
 	"Engine.h"
 	"Log.h"
 
-1344777396 source:c:\dev\ia\src\itemdata.cpp
+1346166086 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1156,7 +1156,7 @@
 	"Item.h"
 	"Converters.h"
 
-1344777396 source:c:\dev\ia\src\itemdrop.cpp
+1346164327 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1316,7 +1316,7 @@
 	"Pathfinding.h"
 	"ItemFactory.h"
 
-1338047668 source:c:\dev\ia\src\mapbuildcavern.cpp
+1345993123 source:c:\dev\ia\src\mapbuildcavern.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -1533,7 +1533,7 @@
 	"DungeonClimb.h"
 	"Inventory.h"
 
-1338049146 source:c:\dev\ia\src\sound.cpp
+1346174397 source:c:\dev\ia\src\sound.cpp
 	"Sound.h"
 	<iostream>
 	"Engine.h"
@@ -1582,7 +1582,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1344777396 source:c:\dev\ia\src\thrower.cpp
+1346165516 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"

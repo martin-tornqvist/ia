@@ -86,7 +86,7 @@ void ExplosionMaker::runExplosion(const coord origin, const bool DO_EXPLOSION_DM
 	//Should explosions alert monsters? Very tricky to know if they are caused by player.
 	//Assuming all explosions alerts monsters to player.
 	if(DO_EXPLOSION_DMG) {
-		eng->soundEmitter->emitSound(Sound("I hear an explosion!", true, origin, 5, true));
+		eng->soundEmitter->emitSound(Sound("I hear an explosion!", true, origin, true, true));
 		eng->audio->playSound(audio_explosion);
 	}
 

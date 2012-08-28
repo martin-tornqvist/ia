@@ -322,17 +322,18 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 
 	const bool infAmmo = weapon->getInstanceDefinition().rangedHasInfiniteAmmo;
 
-	//If it's a shotgun, run special shotgun program instead of common projectile
-	if(weapon->getInstanceDefinition().isShotgun == true) {
+	//If it's a shotgun, run shotgun function instead of common projectile
+	if(weapon->getInstanceDefinition().isShotgun) {
 		if(weapon->ammoLoaded != 0 || infAmmo == true) {
+			const string soundMessage = weapon->getInstanceDefinition().rangedSoundMessage;
+			if(soundMessage != "") {
+            const bool IS_LOUD = weapon->getInstanceDefinition().rangedSoundIsLoud;
+            bool IS_ALERTING_MONSTERS = attacker == eng->player;
+            eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ALERTING_MONSTERS));
+			}
 			shotgun(attacker->pos, coord(attackX, attackY), weapon);
 			attacked = true;
 			weapon->ammoLoaded -= 1;
-
-			const string soundMessage = weapon->getInstanceDefinition().rangedSoundMessage;
-			const int SND_STRENGTH = weapon->getInstanceDefinition().rangedSoundStrength;
-			bool IS_ALERTING_MONSTERS = attacker == eng->player;
-			eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, SND_STRENGTH, IS_ALERTING_MONSTERS));
 		}
 	} else {
 		int nrOfProjectiles = 1;
@@ -344,6 +345,13 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 
 		//If weapon has more ammo loaded than projectiles to be fired -
 		if(weapon->ammoLoaded >= nrOfProjectiles || infAmmo == true) {
+			const string soundMessage = weapon->getInstanceDefinition().rangedSoundMessage;
+			if(soundMessage != "") {
+            const bool IS_LOUD = weapon->getInstanceDefinition().rangedSoundIsLoud;
+            bool IS_ALERTING_MONSTERS = attacker == eng->player;
+            eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ALERTING_MONSTERS));
+			}
+
 			// - Shoot.
 			projectileFire(attacker->pos, coord(attackX, attackY), weapon, nrOfProjectiles);
 
@@ -353,16 +361,11 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 			if(infAmmo == false) {
 				weapon->ammoLoaded -= nrOfProjectiles;
 			}
-
-			const string soundMessage = weapon->getInstanceDefinition().rangedSoundMessage;
-			const int SND_STRENGTH = weapon->getInstanceDefinition().rangedSoundStrength;
-			bool IS_ALERTING_MONSTERS = attacker == eng->player;
-			eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, SND_STRENGTH, IS_ALERTING_MONSTERS));
 		}
 	}
 
 	//Report that actor has used its action
-	if(attacked == true) {
+	if(attacked) {
 		eng->gameTime->letNextAct();
 	}
 

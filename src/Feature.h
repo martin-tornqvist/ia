@@ -52,6 +52,7 @@ public:
 	virtual int getDodgeModifier() const;
 	int getShockWhenAdjacent() const;
 	virtual void examine();
+	virtual MaterialType_t getMaterialType() const;
 protected:
 	friend class Map;
 	Feature(Feature_t id, coord pos, Engine* engine, FeatureSpawnData* spawnData = NULL);

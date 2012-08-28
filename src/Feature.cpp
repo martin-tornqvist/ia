@@ -116,6 +116,10 @@ int Feature::getShockWhenAdjacent() const {
     return def_->shockWhenAdjacent;
 }
 
+MaterialType_t Feature::getMaterialType() const {
+   return def_->materialType;
+}
+
 void Feature::examine() {
    eng->log->addMessage("I find nothing specific there to examine or use.");
    eng->renderer->flip();

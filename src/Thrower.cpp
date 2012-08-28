@@ -85,10 +85,10 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
 		path = getFlightPath(actorThrowing->pos.x, actorThrowing->pos.y, aim.x, aim.y, INCLUDE_BLOCKED_CELL, continueUntilSolid);
 
-        // Copy item stack to a new item, and decrease stack by 1 (possibly destroying it)
+		// Copy item stack to a new item, and decrease stack by 1 (possibly destroying it)
 		Item* itemThrown = eng->itemFactory->copyItem(itemStack);
 		itemThrown->numberOfItems = 1;
-        const ItemDefinition& itemDefThrown = itemThrown->getInstanceDefinition();
+		const ItemDefinition& itemDefThrown = itemThrown->getInstanceDefinition();
 
 		inventory->decreaseItemInSlot(slot_missiles);
 
@@ -151,7 +151,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
 						//If the thing that hit an actor is a potion, let it make stuff happen...
 						if(itemDefThrown.isQuaffable == true) {
-							dynamic_cast<Potion*> (itemThrown)->collide(path.at(i), actorHere, itemDefThrown, eng);
+							dynamic_cast<Potion*>(itemThrown)->collide(path.at(i), actorHere, itemDefThrown, eng);
 							delete itemThrown;
 							return;
 						}
@@ -178,7 +178,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
 					//If the thing that hit an actor is a potion, let it make stuff happen...
 					if(itemDefThrown.isQuaffable == true) {
-						dynamic_cast<Potion*> (itemThrown)->collide(path.at(i), actorHere, itemDefThrown, eng);
+						dynamic_cast<Potion*>(itemThrown)->collide(path.at(i), actorHere, itemDefThrown, eng);
 						delete itemThrown;
 						return;
 					}
@@ -193,7 +193,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		//If no actor blocked the potion, collide it on the landscape
 		if(itemThrown->getInstanceDefinition().isQuaffable == true) {
 			if(blockedInElement == -1) {
-				dynamic_cast<Potion*> (itemThrown)->collide(path.back(), NULL, itemDefThrown, eng);
+				dynamic_cast<Potion*>(itemThrown)->collide(path.back(), NULL, itemDefThrown, eng);
 				delete itemThrown;
 				return;
 			}
@@ -203,7 +203,14 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 			delete itemThrown;
 		} else {
 			const int DROP_ELEMENT = blockedInElement == -1 ? path.size() - 1 : blockedInElement;
-			eng->itemDrop->dropItemOnMap(path.at(DROP_ELEMENT), &itemThrown);
+			const coord dropPos = path.at(DROP_ELEMENT);
+			eng->itemDrop->dropItemOnMap(dropPos, &itemThrown);
+			const MaterialType_t materialAtDropPos = eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
+			if(materialAtDropPos == materialType_hard) {
+			   const bool IS_ALERTING_MONSTERS = actorThrowing == eng->player;
+            Sound sound(itemThrown->getInstanceDefinition().landOnHardSurfaceSoundMessage, true, dropPos, false, IS_ALERTING_MONSTERS);
+            eng->soundEmitter->emitSound(sound);
+			}
 		}
 
 		eng->renderer->drawMapAndInterface();
@@ -253,7 +260,7 @@ vector<coord> Thrower::getFlightPath(int originX, int originY, int aimX, int aim
 	return obj.flightPath;
 }
 
-void Thrower::setLineUntilSolidAndDeductCells(ThrownObject &obj, const bool INCLUDE_BLOCKED_CELL, const bool CONTINUE_UNTUL_BLOCKED) {
+void Thrower::setLineUntilSolidAndDeductCells(ThrownObject& obj, const bool INCLUDE_BLOCKED_CELL, const bool CONTINUE_UNTUL_BLOCKED) {
 	coord c;
 
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];

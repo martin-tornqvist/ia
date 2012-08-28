@@ -12,13 +12,13 @@ using namespace std;
 class Engine;
 class Actor;
 
-const int SOUND_STANDARD_STRENGTH_GUNFIRE = 4;
-
 class Sound {
 public:
-	Sound(string message, bool isMessageIgnoredIfPlayerSeeCell, coord origin, int strength, bool isAlertingMonsters) :
-		message_(message), isMessageIgnoredIfPlayerSeeCell_(isMessageIgnoredIfPlayerSeeCell), origin_(origin), strength_(strength),
-		isAlertingMonsters_(isAlertingMonsters) {}
+	Sound(
+	   const string& message, const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN, const coord& origin,
+	   const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
+		message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
+		origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
 
 	Sound() {
 	}
@@ -29,31 +29,31 @@ public:
 		return message_;
 	}
 
-	bool getIsMessageIgnoredIfPlayerSeeCell() const {
-		return isMessageIgnoredIfPlayerSeeCell_;
+	bool getIsMessageIgnoredIfPlayerSeeOrigin() const {
+		return isMessageIgnoredIfPlayerSeeOrigin_;
 	}
 
 	coord getOrigin() const {
 		return origin_;
 	}
 
-	int getStrength() const {
-		return strength_;
+	int isLoud() const {
+		return isLoud_;
 	}
 
 	bool getIsAlertingMonsters() const {
 		return isAlertingMonsters_;
 	}
 
-	void addDirectionString(const string directionString) {
-		message_ += directionString;
+	void addString(const string str) {
+		message_ += str;
 	}
 
 private:
 	string message_;
-	bool isMessageIgnoredIfPlayerSeeCell_;
+	bool isMessageIgnoredIfPlayerSeeOrigin_;
 	coord origin_;
-	int strength_;
+	bool isLoud_;
 	bool isAlertingMonsters_;
 };
 
@@ -66,9 +66,9 @@ public:
 	void emitSound(Sound sound) const;
 
 private:
-	string getPlayerToOriginDirectionString(const int floodValueAtPlayer, const coord origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
+	string getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER, const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-	bool isSoundHeardAtRange(const int range, const int soundStrengthRating) const;
+	bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
 
 	DirectionNames directionNames;
 

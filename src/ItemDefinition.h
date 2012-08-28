@@ -225,10 +225,11 @@ public:
 	bool rangedMissileLeavesSmoke;
 	ItemAttackMessages rangedAttackMessages;
 	string rangedSoundMessage;
+	bool rangedSoundIsLoud;
+	string landOnHardSurfaceSoundMessage;
 	Audio_t rangedAudio;
 	Audio_t meleeAudio;
 	Audio_t reloadAudio;
-	int rangedSoundStrength;
 	StatusEffect* rangedStatusEffect; //TODO This requires deep copy of items
 	string causeOfDeathMessage;
 	Abilities_t abilityToIdentify;

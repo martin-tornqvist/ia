@@ -91,7 +91,8 @@ private:
 	void FOVhack();
 	void queryInterruptActions();
 	friend class MessageLog;
-	bool isStandingInOpenPlace() const;
+	bool isStandingInOpenSpace() const;
+	bool isStandingInCrampedSpace() const;
 };
 
 

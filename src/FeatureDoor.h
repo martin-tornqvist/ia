@@ -58,6 +58,8 @@ public:
 
 	string getDescription(const bool DEFINITE_ARTICLE) const;
 
+   MaterialType_t getMaterialType() const;
+
 	void reveal(const bool PRINT_MESSAGE);
 
 	void setToSecret() {

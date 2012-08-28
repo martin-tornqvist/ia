@@ -7,38 +7,8 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 
-bool SoundEmitter::isSoundHeardAtRange(const int range, const int soundStrengthRating) const {
-	switch (soundStrengthRating) {
-	case 1:
-		return range <= 1;
-	break; //whispering, soft material, lockpicking, disarming traps...
-	case 2:
-		return range <= 6;
-	break; //opening and closing doors...
-	case 3:
-		return range <= 9;
-	break; //throwing heavy objects, bashing doors, yelling...
-	case 4:
-		return range <= 12;
-	break; //gunfire...
-	case 5:
-		return range <= 16;
-	break; //explosions...
-
-	default: {
-		if(soundStrengthRating < 0) {
-			cout << "[WARNING] sound strength rating < 0, in isSoundHeardAtRange()" << endl;
-			return false;
-		}
-		if(soundStrengthRating > 5) {
-			cout << "[WARNING] sound strength rating > 5, in isSoundHeardAtRange()" << endl;
-			return true;
-		}
-	}
-	break;
-	}
-
-	return false;
+bool SoundEmitter::isSoundHeardAtRange(const int RANGE, const Sound& sound) const {
+	return sound.isLoud() ? RANGE <= 20 : RANGE <= 10;
 }
 
 void SoundEmitter::emitSound(Sound sound) const {
@@ -47,7 +17,8 @@ void SoundEmitter::emitSound(Sound sound) const {
 	for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
 		for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
 			f = eng->map->featuresStatic[x][y];
-			blockers[x][y] = !f->isMoveTypePassable(moveType_ooze) && !f->isBottomless();
+			const bool SOUND_CAN_PASS_CELL = f->isMoveTypePassable(moveType_ooze) == true || f->isBottomless() == true;
+			blockers[x][y] = SOUND_CAN_PASS_CELL == false;
 		}
 	}
 	int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
@@ -60,13 +31,11 @@ void SoundEmitter::emitSound(Sound sound) const {
 
 		const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
-		if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, sound.getStrength())) {
+		if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, sound)) {
 			if(actor == eng->player) {
 				//If player, add a direction string to the message (i.e. "(NW)", "(E)" , etc)
 				if(sound.getMessage() != "") {
-					string directionMessage = getPlayerToOriginDirectionString(FLOOD_VALUE_AT_ACTOR, sound.getOrigin(), floodFill);
-					directionMessage = "(" + directionMessage + ")";
-					sound.addDirectionString(directionMessage);
+					sound.addString("(" + getPlayerToOriginDirectionString(FLOOD_VALUE_AT_ACTOR, sound.getOrigin(), floodFill) + ")");
 				}
 			}
 			actor->registerHeardSound(sound);
@@ -74,25 +43,28 @@ void SoundEmitter::emitSound(Sound sound) const {
 	}
 }
 
-string SoundEmitter::getPlayerToOriginDirectionString(const int floodValueAtPlayer, const coord origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
-	const int playerX = eng->player->pos.x;
-	const int playerY = eng->player->pos.y;
+string SoundEmitter::getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER,
+      const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
+	const coord& playerPos = eng->player->pos;
 	string sourceDirectionName = "";
 
-	for(int i = -1; i <= 1; i++) {
-		for(int j = -1; j <= 1; j++) {
+	for(int dx = -1; dx <= 1; dx++) {
+		for(int dy = -1; dy <= 1; dy++) {
+
+			const coord checkedCoord = playerPos + coord(dx, dy);
+
 			//If player is next to origin, simply return the direction checked in.
-			if(playerX + i == origin.x && playerY + j == origin.y) {
-				return directionNames.directions[i + 1][j + 1];
+			if(checkedCoord == origin) {
+				return directionNames.directions[dx + 1][dy + 1];
 			} else {
 				//Origin is further away
-				const int currentValue = floodFill[playerX + i][playerY + j];
+				const int currentValue = floodFill[checkedCoord.x][checkedCoord.y];
 				//If current value is less than players, this is the direction of the sound.
-				if(currentValue < floodValueAtPlayer && currentValue != 0) {
-					sourceDirectionName = directionNames.directions[i + 1][j + 1];
+				if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
+					sourceDirectionName = directionNames.directions[dx + 1][dy + 1];
 					//If cardinal direction, stop search (To give priority to cardinal directions)
-					if(i == 0 || j == 0)
+					if(dx == 0 || dy == 0)
 						return sourceDirectionName;
 				}
 			}
