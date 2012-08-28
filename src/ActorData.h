@@ -25,6 +25,7 @@ enum ActorDevNames_t {
 	actor_mummy, actor_khephren, actor_nitokris,
 	actor_deepOne,
 	actor_keziahMason, actor_brownJenkin,
+    actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
 	actor_majorClaphamLee, actor_deanHalsey,
 	actor_wormMass,
 	actor_fireVampire,

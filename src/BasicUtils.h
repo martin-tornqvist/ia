@@ -75,7 +75,7 @@ public:
 	int operator()(const int ROLLS, const int SIDES) {
 		return roll(ROLLS, SIDES);
 	}
-	int operator()(DiceParam const p) {
+	int operator()(const DiceParam& p) {
 		return roll(p.rolls, p.sides);
 	}
 	bool coinToss() {

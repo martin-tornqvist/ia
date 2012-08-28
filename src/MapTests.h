@@ -14,7 +14,7 @@ class Feature;
 //Function object for sorting containers by distance to origin
 struct IsCloserToOrigin {
 public:
-	IsCloserToOrigin(const coord c, const Engine* engine) :
+	IsCloserToOrigin(const coord& c, const Engine* engine) :
 		c_(c), eng(engine) {
 	}
 	bool operator()(const coord& c1, const coord& c2);
@@ -79,11 +79,11 @@ public:
 		return true;
 	}
 
-	bool isCellInside(const coord pos, const coord x0y0, const coord x1y1) {
+	bool isCellInside(const coord& pos, const coord& x0y0, const coord& x1y1) {
 		return isCellInside(pos, Rectangle(x0y0, x1y1));
 	}
 
-	bool isCellInside(const coord pos, const Rectangle area) {
+	bool isCellInside(const coord& pos, const Rectangle& area) {
 		return pos.x >= area.x0y0.x && pos.x <= area.x1y1.x && pos.y >= area.x0y0.y && pos.y <= area.x1y1.y;
 	}
 

@@ -6,7 +6,7 @@
 
 class AI_stepToLairIfHasLosToLair {
 public:
-	static bool action(Monster* monster, const coord lairCell, Engine* engine) {
+	static bool action(Monster* monster, const coord& lairCell, Engine* engine) {
 		if(monster->deadState == actorDeadState_alive) {
 			bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 			engine->mapTests->makeVisionBlockerArray(blockers);

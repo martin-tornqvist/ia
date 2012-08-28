@@ -66,7 +66,7 @@ void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, con
 	eng->renderer->flip();
 }
 
-void ExplosionMaker::runExplosion(const coord origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
+void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
                                   const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
 	BasicData data(origin, width, height);
 
@@ -195,7 +195,7 @@ void ExplosionMaker::runExplosion(const coord origin, const bool DO_EXPLOSION_DM
 	}
 }
 
-void ExplosionMaker::runSmokeExplosion(const coord origin, const bool SMALL_RADIUS) {
+void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RADIUS) {
 	const int RADIUS = SMALL_RADIUS == true ? 3 : width;
 	BasicData data(origin, RADIUS, RADIUS);
 

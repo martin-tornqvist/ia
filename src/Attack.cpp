@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void Attack::getAttackData(AttackData& data, const coord target, const coord currentPos, Weapon* const weapon, const bool IS_MELEE) {
+void Attack::getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE) {
 	data.isMelee = IS_MELEE;
 	data.attacker = eng->gameTime->getCurrentActor();
 	data.currentDefender = eng->mapTests->getActorAtPos(currentPos);

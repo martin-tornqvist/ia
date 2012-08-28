@@ -35,7 +35,7 @@ bool Attack::isCellOnLine(vector<coord> line, int x, int y) {
 	return false;
 }
 
-void Attack::shotgun(const coord origin, const coord target, Weapon* const weapon) {
+void Attack::shotgun(const coord& origin, const coord& target, Weapon* const weapon) {
 	AttackData data;
 	getAttackData(data, target, origin, weapon, false);
 	printRangedInitiateMessages(data);

@@ -11,9 +11,9 @@ public:
 		eng(engine) {
 	}
 
-	void makeBlood(const coord origin);
+	void makeBlood(const coord& origin);
 
-	void makeGore(const coord origin);
+	void makeGore(const coord& origin);
 
 private:
 	Engine* eng;

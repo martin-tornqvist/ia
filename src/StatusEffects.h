@@ -132,7 +132,7 @@ public:
 		(void)ability;
 		return 0;
 	}
-	virtual coord changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine) {
+	virtual coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
 		(void)actorPos;
 		(void)engine;
 		return movePos;
@@ -1114,7 +1114,7 @@ public:
 	void end() {
 	}
 
-	bool allowAttackMleee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+	bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
 		(void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
 		return false;
 	}
@@ -1855,7 +1855,7 @@ public:
 
 	void attemptAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE);
 
-	coord changeMoveCoord(const coord actorPos, const coord movePos) {
+	coord changeMoveCoord(const coord& actorPos, const coord& movePos) {
 		coord ret = movePos;
 		for(unsigned int i = 0; i < effects.size(); i++) {
 			ret = effects.at(i)->changeMoveCoord(actorPos, movePos, eng);
@@ -1864,28 +1864,19 @@ public:
 	}
 
 	bool allowAttack(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-		for(unsigned int i = 0; i < effects.size(); i++)
-			if(effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false && effects.at(i)->allowAttackRanged(
-			         ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false)
-				return false;
-		return true;
-	}
-
-	bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-		for(unsigned int i = 0; i < effects.size(); i++)
-			if(effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false)
-				return false;
-		return true;
-	}
-
-	bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
 		for(unsigned int i = 0; i < effects.size(); i++) {
-			if(effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+			if(
+            effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false &&
+            effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
 				return false;
-			}
+            }
 		}
 		return true;
 	}
+
+	bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+
+	bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
 	bool isSlowed() {
 		for(unsigned int i = 0; i < effects.size(); i++) {

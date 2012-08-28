@@ -25,7 +25,7 @@ public:
 private:
 	void findPathToNextStairs();
 	coord findNextStairs();
-	bool walkToAdjacentCell(const coord cell);
+	bool walkToAdjacentCell(const coord& cell);
 
 	void runFunctionTests();
 

@@ -117,7 +117,7 @@ void Actor::getSpotedEnemiesPositions() {
 	}
 }
 
-void Actor::place(const coord pos_, ActorDefinition* const actorDefinition, Engine* engine) {
+void Actor::place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine) {
 	eng = engine;
 	pos = pos_;
 	m_archetypeDefinition = actorDefinition;

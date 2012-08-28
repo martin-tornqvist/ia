@@ -5,7 +5,7 @@
 
 class AI_setPathToLairIfNoLosToLair {
 public:
-	static void learn(Monster* monster, vector<coord>* path, const coord lairCell, Engine* engine) {
+	static void learn(Monster* monster, vector<coord>* path, const coord& lairCell, Engine* engine) {
 
 		if(monster->deadState == actorDeadState_alive) {
 

@@ -72,7 +72,9 @@ private:
 
 	void decorateWalls();
 
-	void placeStairs();
+	coord placeStairs();
+
+	void revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord);
 
 //	void buildNaturalArea(Region* regions[3][3]);
 //	void makeRiver(Region* regions[3][3]);

@@ -49,7 +49,7 @@ public:
 		m_junctions.resize(0);
 	}
 
-	bool isPosOnEdge(const coord pos) {
+	bool isPosOnEdge(const coord& pos) {
 		for(unsigned int i = 0; i < roomEdges.size(); i++) {
 			if(roomEdges.at(i) == pos) {
 				return true;

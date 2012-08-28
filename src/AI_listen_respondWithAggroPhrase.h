@@ -13,7 +13,7 @@ public:
 	static void learn(Actor* const monster, const vector<Sound>& soundsHeard, Engine* const engine) {
 		if(monster->deadState == actorDeadState_alive && dynamic_cast<Monster*>(monster)->isRoamingAllowed == true) {
 			if(engine->dice(1, 100) < 75) {
-				if(soundsHeard.size() != 0) {
+				if(soundsHeard.empty() == false) {
 					const Sound* curSound = NULL;
 					bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 					engine->mapTests->makeVisionBlockerArray(blockers);

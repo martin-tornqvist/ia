@@ -102,7 +102,7 @@ void Config::trySetVariableFromLine(string line) {
 			CELL_WIDTH_MAP = CELL_WIDTH_TEXT;
 			CELL_HEIGHT_MAP = CELL_HEIGHT_TEXT;
 		} else {
-			if(CELL_WIDTH_TEXT != CELL_WIDTH_MAP || CELL_HEIGHT_TEXT != CELL_HEIGHT_TEXT) {
+			if(CELL_WIDTH_TEXT != CELL_WIDTH_MAP || CELL_HEIGHT_TEXT != CELL_HEIGHT_MAP) {
 				USE_TILE_SET = true;
 				FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
 				CELL_WIDTH_TEXT = 16;

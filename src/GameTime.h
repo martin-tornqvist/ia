@@ -53,12 +53,12 @@ public:
 	}
 
 	void eraseElement(const unsigned int i) {
-		if(actors_.size() > 0) {
+		if(actors_.empty() == false) {
 			actors_.erase(actors_.begin() + i);
 		}
 	}
 
-	vector<FeatureMob*> getFeatureMobsAtPos(const coord pos);
+	vector<FeatureMob*> getFeatureMobsAtPos(const coord& pos);
 
 	void addFeatureMob(FeatureMob* const feature) {
 		featureMobs_.push_back(feature);

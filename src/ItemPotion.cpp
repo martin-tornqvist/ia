@@ -51,7 +51,7 @@ void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
 	}
 }
 
-void PotionOfHealing::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfHealing::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -65,7 +65,7 @@ void PotionOfBlindness::specificQuaff(Actor* const actor, Engine* const engine) 
 	}
 }
 
-void PotionOfBlindness::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfBlindness::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -79,7 +79,7 @@ void PotionOfParalyzation::specificQuaff(Actor* const actor, Engine* const engin
 	}
 }
 
-void PotionOfParalyzation::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfParalyzation::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -100,7 +100,7 @@ void PotionOfFear::specificQuaff(Actor* const actor, Engine* const engine) {
 	}
 }
 
-void PotionOfFear::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfFear::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -114,7 +114,7 @@ void PotionOfConfusion::specificQuaff(Actor* const actor, Engine* const engine) 
 	}
 }
 
-void PotionOfConfusion::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfConfusion::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -131,7 +131,7 @@ void PotionOfCorruption::specificQuaff(Actor* const actor, Engine* const engine)
 	}
 }
 
-void PotionOfCorruption::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
 	} else {
@@ -149,7 +149,7 @@ void PotionOfReflexes::specificQuaff(Actor* const actor, Engine* const engine) {
 		setRealDefinitionNames(engine, false);
 	}
 }
-void PotionOfReflexes::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfReflexes::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 
 	(void)pos;
 	if(actor != NULL) {
@@ -164,7 +164,7 @@ void PotionOfAiming::specificQuaff(Actor* const actor, Engine* const engine) {
 	}
 }
 
-void PotionOfAiming::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfAiming::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -218,7 +218,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
 	setRealDefinitionNames(engine, false);
 }
 
-void PotionOfFortitude::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfFortitude::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -235,7 +235,7 @@ void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) 
 	}
 }
 
-void PotionOfToughness::specificCollide(const coord pos, Actor* const actor, Engine* const engine) {
+void PotionOfToughness::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -308,7 +308,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 	}
 }
 
-void Potion::collide(const coord pos, Actor* const actor, const ItemDefinition& itemDef, Engine* const engine) {
+void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition& itemDef, Engine* const engine) {
 	if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false || actor != NULL) {
 		ItemDefinition* const potionDef = engine->itemData->itemDefinitions[itemDef.devName];
 

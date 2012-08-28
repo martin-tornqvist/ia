@@ -455,7 +455,7 @@ void Player::incrInsanityLong() {
 			const int ROLL = eng->dice(1, 8);
 			switch(ROLL) {
 			case 1: {
-				if(playerSeeShockingMonster == true) {
+				if(playerSeeShockingMonster) {
 					if(eng->dice.coinToss()) {
 						popupMessage += "I let out a terrified shriek.";
 					} else {
@@ -830,8 +830,10 @@ void Player::act() {
 	for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
 		Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
 		const ActorDefinition* const def = monster->getInstanceDefinition();
-		shock(def->shockValue, -(monster->shockDecrease));
-		monster->shockDecrease++;
+		if(def->shockValue != shockValue_none) {
+            shock(def->shockValue, -(monster->shockDecrease));
+            monster->shockDecrease++;
+		}
 	}
 
 	//Some short term sanity is lost every x turn

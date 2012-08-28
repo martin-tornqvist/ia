@@ -10,7 +10,7 @@
 #include "Map.h"
 #include "Populate.h"
 
-vector<FeatureMob*> GameTime::getFeatureMobsAtPos(const coord pos) {
+vector<FeatureMob*> GameTime::getFeatureMobsAtPos(const coord& pos) {
 	vector<FeatureMob*> returnVector;
 	for(unsigned int i = 0; i < featureMobs_.size(); i++) {
 		if(featureMobs_.at(i)->getPos() == pos) {

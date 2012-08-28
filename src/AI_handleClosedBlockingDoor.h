@@ -17,7 +17,7 @@
 class AI_handleClosedBlockingDoor {
 public:
 	static bool action(Monster* monster, vector<coord>* path, Engine* engine) {
-		if(monster->deadState == actorDeadState_alive && path->size() != 0) {
+		if(monster->deadState == actorDeadState_alive && path->empty() == false) {
 			Feature* const f = engine->map->featuresStatic[path->back().x][path->back().y];
 			if(f->getId() == feature_door) {
 				Door* const door = dynamic_cast<Door*>(f);

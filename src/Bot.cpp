@@ -63,7 +63,7 @@ void Bot::runFunctionTests() {
 	hitChanceReal *= 100;
 	const double RATIO = static_cast<double> (HIT_CHANCE_TOTAL) / hitChanceReal;
 
-	assert( RATIO > 0.95 || RATIO < 1.05 );
+	assert( RATIO > 0.95 && RATIO < 1.05 );
 }
 
 void Bot::act() {
@@ -107,7 +107,7 @@ void Bot::act() {
 
 		findPathToNextStairs();
 
-		if(currentPath_.size() > 0) {
+		if(currentPath_.empty() == false) {
 			const coord nextCell = currentPath_.at(currentPath_.size() - 1);
 			if(walkToAdjacentCell(nextCell)) {
 				SDL_Delay(ACTION_DELAY);
@@ -123,7 +123,7 @@ void Bot::act() {
 	}
 }
 
-bool Bot::walkToAdjacentCell(const coord cell) {
+bool Bot::walkToAdjacentCell(const coord& cell) {
 	bool playerWalkedIntoCell = false;
 
 	coord playerCell(eng->player->pos);

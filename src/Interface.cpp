@@ -178,7 +178,7 @@ void Interface::drawInfoLines() {
 	eng->renderer->drawText("DLVL:", renderArea_characterLines, xPos, yPos, clrGray);
 	xPos += 5;
 	const int DLVL = eng->map->getDungeonLevel();
-	str = DLVL > 0 ? intToString(DLVL) : "?";
+	str = DLVL >= 0 ? intToString(DLVL) : "?";
 	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
 
 	DungeonMaster* const dm = eng->dungeonMaster;

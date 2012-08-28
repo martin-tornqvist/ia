@@ -57,13 +57,13 @@ public:
 
 	virtual RoomDescriptModule* copy() = 0;
 
-	void initRoomData(const coord x0y0_, const coord x1y1_, Engine* engine) {
+	void initRoomData(const coord& x0y0_, const coord& x1y1_, Engine* engine) {
 		x0y0 = x0y0_;
 		x1y1 = x1y1_;
 		eng = engine;
 	}
 
-	virtual bool isRoomDataAcceptedByModule(const Rectangle coords) {
+	virtual bool isRoomDataAcceptedByModule(const Rectangle& coords) {
 		(void) coords;
 		return true;
 	}
@@ -493,7 +493,7 @@ public:
 
 	void attemptRunEvents(); //Descriptions and new turn
 
-	bool isCellInside(const coord pos) const {
+	bool isCellInside(const coord& pos) const {
 		return pos.x >= x0y0.x && pos.x <= x1y1.x && pos.y >= x0y0.y && pos.y <= x1y1.y;
 	}
 

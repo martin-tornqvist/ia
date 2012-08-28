@@ -138,7 +138,12 @@ void MapBuildBSP::run() {
 
 		done = true; //blockers[eng->player->pos.x][eng->player->pos.y] == false;
 
-		placeStairs();
+		const coord stairsCoord = placeStairs();
+
+        const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 5;
+        if(eng->map->getDungeonLevel() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
+            revealAllDoorsBetweenPlayerAndStairs(stairsCoord);
+        }
 
 		// Note: This must be run last, everything else depends on all walls being common stone walls
 		decorateWalls();
@@ -512,7 +517,7 @@ void MapBuildBSP::buildRoomsInRooms() {
 //	}
 //}
 
-void MapBuildBSP::placeStairs() {
+coord MapBuildBSP::placeStairs() {
 
 	bool forbiddenStairCells[MAP_X_CELLS][MAP_Y_CELLS];
 	eng->basicUtils->resetBoolArray(forbiddenStairCells, true);
@@ -574,27 +579,32 @@ void MapBuildBSP::placeStairs() {
 	Feature* f = eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsCoord);
 	f->setHasBlood(false);
 
-	const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 5;
+	return stairsCoord;
+}
 
-	if(eng->map->getDungeonLevel() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
-		eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
-		for(int y = 0; y < MAP_Y_CELLS; y++) {
-			for(int x = 0; x < MAP_X_CELLS; x++) {
-				if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
-					blockers[x][y] = false;
-				}
-			}
-		}
+void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord) {
+	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
-		vector<coord> path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsCoord);
+    eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-		const unsigned int PATH_SIZE = path.size();
-		for(unsigned int i = 0; i < PATH_SIZE; i++) {
-			if(eng->map->featuresStatic[path.at(i).x][path.at(i).y]->getId() == feature_door) {
-				dynamic_cast<Door*>(eng->map->featuresStatic[path.at(i).x][path.at(i).y])->reveal(false);
-			}
-		}
-	}
+    for(int y = 0; y < MAP_Y_CELLS; y++) {
+        for(int x = 0; x < MAP_X_CELLS; x++) {
+            if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
+                blockers[x][y] = false;
+            }
+        }
+    }
+
+    vector<coord> path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsCoord);
+
+    assert(path.empty() == false);
+
+    const unsigned int PATH_SIZE = path.size();
+    for(unsigned int i = 0; i < PATH_SIZE; i++) {
+        if(eng->map->featuresStatic[path.at(i).x][path.at(i).y]->getId() == feature_door) {
+            dynamic_cast<Door*>(eng->map->featuresStatic[path.at(i).x][path.at(i).y])->reveal(false);
+        }
+    }
 }
 
 void MapBuildBSP::decorateWalls() {
