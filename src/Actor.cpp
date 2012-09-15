@@ -24,11 +24,11 @@ Actor::~Actor() {
 }
 
 void Actor::newTurn() {
-	if(m_statusEffectsHandler->allowAct() == false) {
-		eng->gameTime->letNextAct();
-	} else {
+	if(m_statusEffectsHandler->allowAct()) {
 		updateColor();
 		act();
+	} else {
+		eng->gameTime->letNextAct();
 	}
 }
 
@@ -284,10 +284,22 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
 }
 
 void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS) {
+	//Check all monsters and unset this actor as leader
+	for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
+		Actor* const actor = eng->gameTime->getActorAt(i);
+		if(actor != this && actor != eng->player) {
+			Monster* const monster = dynamic_cast<Monster*>(actor);
+			if(monster->leader == this) {
+				monster->leader = NULL;
+			}
+		}
+	}
+
 	if(this != eng->player) {
 		if(isHumanoid() == true) {
 			eng->soundEmitter->emitSound(Sound("I hear agonised screaming.", true, pos, false, false));
 		}
+		dynamic_cast<Monster*>(this)->leader = NULL;
 	}
 
 	bool diedOnVisibleTrap = false;

@@ -17,7 +17,7 @@ public:
 	}
 
     int getChanceToCastFromMemory(Engine* const engine) const;
-    int getChanceToLearn(Engine* const engine) const;
+//    int getChanceToLearn(Engine* const engine) const;
 
 	bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 
@@ -36,6 +36,8 @@ protected:
 		(void)engine;
 		(void)FROM_MEMORY;
 	}
+
+	void attemptMemorizeIfLearnable(Engine* const engine);
 
 	void failedToLearnRealName(Engine* const engine, const string overrideFailString = "");
 };

@@ -54,7 +54,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
 	const SDL_Color projectileColor = weapon->getInstanceDefinition().rangedMissileColor;
 	char projectileGlyph = weapon->getInstanceDefinition().rangedMissileGlyph;
-	if(projectileGlyph == '\\') {
+	if(projectileGlyph == '/') {
 		const int i = projectilePath.size() > 2 ? 2 : 1;
 		if(projectilePath.at(i).y == origin.y)
 			projectileGlyph = '-';

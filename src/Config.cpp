@@ -8,7 +8,7 @@
 using namespace std;
 
 Config::Config() :
-	GAME_VERSION(" v13.0, 2012.??.??"),
+	GAME_VERSION(" v13.0, 2012.09.15"),
 
 	TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
 

@@ -85,11 +85,11 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
 	bonuses_.push_back(PlayerBonus(ability_sneaking, TITLE_EXPLORATION_MOVEMENT, "Sneaking", s, eng, 30, 75, r1, 90, r2));
 
 	s = "You have a better grasp of ancient language and esoteric symbolism. ";
-	s += "You understand more difficult texts.";
+	s += "Your chances to identify and memorize manuscripts increases.";
 //	r1 = "";
 //	r2 = "";
 //	r3 = "";
-	bonuses_.push_back(PlayerBonus(ability_language, TITLE_LORE, "Language", s, eng, 0, 30, r1, 60, r2, 90, r3));
+	bonuses_.push_back(PlayerBonus(ability_language, TITLE_LORE, "Language", s, eng, 0, 40, r1, 80, r2));
 
 	s = "You have more focus and will, and are less likely to succumb to fear, confusion, etc. ";
 	s += "You are also better able to keep your composure when facing hideous revelations.";
@@ -105,8 +105,8 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
 //	r3 = "Regenerate hit points passively.";
 	bonuses_.push_back(PlayerBonus(ability_firstAid, TITLE_SURVIVAL, "Healing", s, eng, 0, 1, r1, 2, r2, 3, r3));
 
-	s = "You have better physical endurance. You are less likely to be afflicted by diseases, ";
-	s += "stunning, blindness, etc. You also gain a one-time bonus of 2 hit points per rank.";
+	s = "You have better physical endurance. You are less likely to be afflicted by diseases, stunning, ";
+	s += "blindness, etc. You also gain a one-time bonus of 2 hit points each time this ability is picked.";
 //	r1 = "";
 //	r2 = "No sprains from bashing objects.";
 //	r3 = "";

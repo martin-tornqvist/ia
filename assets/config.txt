@@ -14,7 +14,7 @@ FONT_IMAGE=1
 
 # How to render the map. 0 = ASCII, 1 = Tiles
 # Setting this to 1 also forces 16x24 font for text
-USE_TILE_SET=0
+USE_TILE_SET=1
 
 
 # Wall symbol used in ASCII mode. 0 = #, 1 = full square.
@@ -26,7 +26,7 @@ FULLSCREEN=0
 
 
 # Skip intro level (forest). 0 = no, 1 = yes.
-SKIP_INTRO_LEVEL=0
+SKIP_INTRO_LEVEL=1
 
 
 # Delay before key repeat starts when holding down a key (ms).

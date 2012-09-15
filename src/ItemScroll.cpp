@@ -245,18 +245,18 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 	}
 }
 
-int Scroll::getChanceToLearn(Engine* const engine) const {
-	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
-	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
-
-	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
-}
+//int Scroll::getChanceToLearn(Engine* const engine) const {
+//	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
+//	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
+//
+//	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
+//}
 
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
 	const int PLAYER_SKILL = engine->player->arcaneKnowledge;
-	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
+	const int BASE_CHANCE = m_archetypeDefinition->castFromMemoryChance;
 
-	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
+	return BASE_CHANCE + PLAYER_SKILL;
 }
 
 void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
@@ -275,14 +275,28 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 		m_archetypeDefinition->name.name_plural = REAL_NAME_PLURAL;
 		m_archetypeDefinition->name.name_a = REAL_NAME_A;
 
-		engine->log->addMessage("It was a " + REAL_NAME + ".");
-
 		if(IS_SILENT_IDENTIFY == false) {
 			engine->player->shock(shockValue_heavy, 0);
 		}
 
 		m_archetypeDefinition->isIdentified = true;
 	}
+}
+
+void Scroll::attemptMemorizeIfLearnable(Engine* const engine) {
+   if(m_archetypeDefinition->isScrollLearned == false && m_archetypeDefinition->isScrollLearnable) {
+      const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
+      if(PLAYER_SKILL > 0) {
+         const AbilityRollResult_t learnRollResult = engine->abilityRoll->roll(PLAYER_SKILL);
+         if(learnRollResult >= successSmall) {
+            engine->log->addMessage("I learn to cast this incantation by heart!");
+            m_instanceDefinition.isScrollLearned = true;
+            m_archetypeDefinition->isScrollLearned = true;
+         } else {
+            engine->log->addMessage("I failed to memorize the incantation.");
+         }
+      }
+   }
 }
 
 bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
@@ -294,45 +308,56 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 			engine->log->addMessage("I cast " + getRealTypeName() + "...");
 			specificRead(IS_FROM_MEMORY, engine);
 		} else {
-			engine->log->addMessage("I miscast it!");
+			engine->log->addMessage("I miscast it.");
 			if(engine->dice.coinToss()) {
-				engine->log->addMessage("I feel a sharp pain as if from a surge of electricity.", clrMessageBad);
+			   if(engine->dice.coinToss()) {
+               engine->log->addMessage("I feel a sharp pain in my head!", clrMessageBad);
+			   } else {
+			      engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
+			   }
 				engine->postmortem->setCauseOfDeath("Miscast a spell");
+				engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
 				engine->player->hit(engine->dice(1, 6), damageType_direct);
 			}
 		}
-		engine->player->shock(shockValue_heavy, 0);
-		engine->gameTime->letNextAct();
+		if(engine->player->deadState == actorDeadState_alive) {
+         engine->player->shock(shockValue_heavy, 0);
+         engine->gameTime->letNextAct();
+
+         const int CHANCE_TO_MODIDY_SPELL_HARDNESS = 50;
+         if(engine->dice(1, 100) <= CHANCE_TO_MODIDY_SPELL_HARDNESS) {
+            engine->log->addMessage("My alignment with this spell is shifting...");
+            int& chance = m_archetypeDefinition->castFromMemoryChance;
+            const bool PLAYER_IS_BLESSED = engine->player->getStatusEffectsHandler()->hasEffect(statusBlessed);
+            const bool PLAYER_IS_CURSED = engine->player->getStatusEffectsHandler()->hasEffect(statusCursed);
+            const int NEW_MIN = PLAYER_IS_BLESSED ? 75 : PLAYER_IS_CURSED ? 1 : 30;
+            const int NEW_MAX = PLAYER_IS_CURSED ? 50 : 100;
+            chance = engine->dice.getInRange(NEW_MIN, NEW_MAX);
+            engine->log->addMessage("It now has " + intToString(chance) + "% chance for a successful casting.");
+         }
+		}
 		return true;
 	} else {
 		if(m_archetypeDefinition->isIdentified) {
-
 			specificRead(IS_FROM_MEMORY, engine);
-
-			if(m_archetypeDefinition->isScrollLearned == false && m_archetypeDefinition->isScrollLearnable) {
-				const AbilityRollResult_t learnRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
-				if(learnRollResult >= successSmall) {
-					engine->log->addMessage("I learn to cast this incantation by heart!");
-					m_instanceDefinition.isScrollLearned = true;
-					m_archetypeDefinition->isScrollLearned = true;
-				}
-			}
+         attemptMemorizeIfLearnable(engine);
 			engine->player->shock(shockValue_heavy, 0);
 			engine->gameTime->letNextAct();
 			return true;
-
 		} else {
-			const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(getChanceToLearn(engine));
+		   const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
+			const AbilityRollResult_t identifyRollResult = engine->abilityRoll->roll(PLAYER_SKILL);
 			if(identifyRollResult >= successSmall) {
 				setRealDefinitionNames(engine, false);
 
 				if(engine->player->deadState == actorDeadState_alive) {
-					engine->log->addMessage("I identify it as " + m_instanceDefinition.name.name_a + "!");
-               engine->renderer->flip();
+					engine->log->addMessage("I identify it as a " + m_instanceDefinition.name.name_a + "!");
+					engine->renderer->flip();
 					engine->log->addMessage("Perform the incantation (y/n)?", clrWhiteHigh);
 					engine->renderer->flip();
 					if(engine->query->yesOrNo()) {
 						specificRead(IS_FROM_MEMORY, engine);
+						attemptMemorizeIfLearnable(engine);
 						engine->player->shock(shockValue_heavy, 0);
 						engine->gameTime->letNextAct();
 						return true;
@@ -346,6 +371,10 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
 			} else {
 				engine->log->addMessage("I recite forbidden incantations...");
 				specificRead(IS_FROM_MEMORY, engine);
+				if(m_archetypeDefinition->isIdentified) {
+               engine->log->addMessage("It was " + m_archetypeDefinition->name.name_a + ".");
+               attemptMemorizeIfLearnable(engine);
+				}
 				engine->player->shock(shockValue_heavy, 0);
 				engine->gameTime->letNextAct();
 				return true;

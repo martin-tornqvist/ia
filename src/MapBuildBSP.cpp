@@ -597,7 +597,7 @@ void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord)
 
     vector<coord> path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsCoord);
 
-    assert(path.empty() == false);
+//    assert(path.empty() == false);
 
     const unsigned int PATH_SIZE = path.size();
     for(unsigned int i = 0; i < PATH_SIZE; i++) {

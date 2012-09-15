@@ -168,15 +168,15 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 	break;
 
 	//----------------------------------------APPLY/USE/EXAMINE
-	case int('a'): {
-		clearMessages();
-		if(eng->player->deadState == actorDeadState_alive) {
-			eng->examine->playerExamine();
-			eng->renderer->flip();
-		}
-		clearKeyEvents();
-	}
-	break;
+//	case int('a'): {
+//		clearMessages();
+//		if(eng->player->deadState == actorDeadState_alive) {
+//			eng->examine->playerExamine();
+//			eng->renderer->flip();
+//		}
+//		clearKeyEvents();
+//	}
+//	break;
 
 	//----------------------------------------RELOAD
 	case SDLK_r: {

@@ -76,8 +76,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
 		d->rangedStatusEffect = NULL;
 		d->isExplosive = false;
-		d->abilityToIdentify = ability_empty;
-		d->identifySkillFactor = 100;
+		d->castFromMemoryChance = 0;
 		d->armorData = ArmorData();
 		d->nativeRooms.resize(0);
 	}
@@ -110,7 +109,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isMeleeWeapon = true;
 		d->meleeDmg = DiceParam(1, 6);
 		d->isRangedWeapon = true;
-		d->rangedMissileGlyph = '\\';
+		d->rangedMissileGlyph = '/';
 		d->rangedMissileColor = clrWhite;
 		d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
 		d->rangedSoundIsLoud = true;
@@ -171,8 +170,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->isScroll = true;
 		d->isScrollLearnable = true;
 		d->isScrollLearned = 0;
-		d->abilityToIdentify = ability_language;
-		d->identifySkillFactor = eng->dice.getInRange(40, 100);
+		d->castFromMemoryChance = eng->dice.getInRange(1, 100);
 		d->maxStackSizeAtSpawn = 2;
 		d->nativeRooms.push_back(specialRoom_tombs);
 		d->nativeRooms.push_back(specialRoom_ritualChamber);
@@ -189,7 +187,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 		d->glyph = '!';
 		d->tile = tile_potion;
 		d->isQuaffable = true;
-		d->identifySkillFactor = eng->dice.getInRange(10, 100);
 		d->isMissileWeapon = true;
 		d->missileBaseAttackSkill = -5;
 		d->missileDmg = DiceParam(1, 3, 0);
@@ -435,7 +432,7 @@ void ItemData::makeList() {
 	d->rangedAmmoTypeUsed = item_ironSpike;
 	d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
 	d->rangedSoundMessage = "I hear a very crude gun being fired.";
-	d->rangedMissileGlyph = '\\';
+	d->rangedMissileGlyph = '/';
 	d->rangedMissileColor = clrGray;
 	d->spawnStandardMinDLVL = 4;
 	d->causeOfDeathMessage = "Perforated by a Spike Gun";
@@ -479,7 +476,7 @@ void ItemData::makeList() {
 	d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
 	d->itemWeight = itemWeight_extraLight;
 	d->tile = tile_dagger;
-	d->glyph = '\\';
+	d->glyph = '/';
 	d->color = clrWhite;
 	d->missileBaseAttackSkill = 0;
 	d->missileDmg = DiceParam(2, 4);
@@ -577,7 +574,7 @@ void ItemData::makeList() {
 	d->tile = tile_pitchfork;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Pitchfork");
 	d->meleeDmg = DiceParam(3, 4);
-	d->meleeBaseAttackSkill = -10;
+	d->meleeBaseAttackSkill = -5;
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->meleeCausesKnockBack = true;
 	itemDefinitions[d->devName] = d;
@@ -589,7 +586,7 @@ void ItemData::makeList() {
 	d->tile = tile_sledgeHammer;
 	d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledge Hammer");
 	d->meleeDmg = DiceParam(3, 5);
-	d->meleeBaseAttackSkill = -15;
+	d->meleeBaseAttackSkill = -10;
 	d->meleeAbilityUsed = ability_accuracyMelee;
 	d->meleeCausesKnockBack = true;
 	itemDefinitions[d->devName] = d;
@@ -794,7 +791,7 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_rangedWpnIntr);
 	d->rangedMissileLeavesTrail = true;
 	d->rangedMissileColor = clrYellow;
-	d->rangedMissileGlyph = '\\';
+	d->rangedMissileGlyph = '/';
 	d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
 	d->rangedDamageType = damageType_electricity;
 	d->rangedStatusEffect = new StatusParalyzed(2);
@@ -840,7 +837,7 @@ void ItemData::makeList() {
 	setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
 	d->rangedSoundMessage = "";
 	d->rangedMissileColor = clrBrown;
-	d->rangedMissileGlyph = '\\';
+	d->rangedMissileGlyph = '/';
 	d->causeOfDeathMessage = "Hit by a Javelin";
 	d->rangedSoundIsLoud = false;
 	itemDefinitions[d->devName] = d;
@@ -965,7 +962,6 @@ void ItemData::makeList() {
 	d = new ItemDefinition(item_scrollOfDeepDescent);
 	resetDef(d, itemDef_scroll);
 	d->spawnStandardMinDLVL = 6;
-	d->identifySkillFactor = 40;
 	d->isScrollLearnable = false;
 	itemDefinitions[d->devName] = d;
 
@@ -1060,26 +1056,22 @@ void ItemData::makeList() {
 
 void ItemData::addSaveLines(vector<string>& lines) const {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-		lines.push_back(itemDefinitions[i]->isIdentified == false ? "0" : "1");
-		if(itemDefinitions[i]->abilityToIdentify != ability_empty) {
-			lines.push_back(intToString(itemDefinitions[i]->identifySkillFactor));
-		}
-		if(itemDefinitions[i]->isScroll == true) {
-			lines.push_back(itemDefinitions[i]->isScrollLearned == false ? "0" : "1");
+		if(itemDefinitions[i]->isScroll) {
+		   lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
+			lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
+			lines.push_back(intToString(itemDefinitions[i]->castFromMemoryChance));
 		}
 	}
 }
 
 void ItemData::setParametersFromSaveLines(vector<string>& lines) {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-		itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
-		lines.erase(lines.begin());
-		if(itemDefinitions[i]->abilityToIdentify != ability_empty) {
-			itemDefinitions[i]->identifySkillFactor = stringToInt(lines.front());
-			lines.erase(lines.begin());
-		}
-		if(itemDefinitions[i]->isScroll == true) {
+		if(itemDefinitions[i]->isScroll) {
+		   itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
+		   lines.erase(lines.begin());
 			itemDefinitions[i]->isScrollLearned = lines.front() == "0" ? false : true;
+			lines.erase(lines.begin());
+			itemDefinitions[i]->castFromMemoryChance = stringToInt(lines.front());
 			lines.erase(lines.begin());
 		}
 	}

@@ -12,7 +12,7 @@ enum NutritionValue_t {
 };
 
 enum ItemWeight_t {
-    itemWeight_none = 0,
+	itemWeight_none = 0,
 	itemWeight_extraLight = 1, //Ammo...
 	itemWeight_light = 10, //Dynamite, daggers...
 	itemWeight_medium = 60, //Most firearms, leather jackets...
@@ -232,8 +232,9 @@ public:
 	Audio_t reloadAudio;
 	StatusEffect* rangedStatusEffect; //TODO This requires deep copy of items
 	string causeOfDeathMessage;
-	Abilities_t abilityToIdentify;
-	int identifySkillFactor;
+//	Abilities_t abilityToIdentify;
+//	int abilityValueRequiredToIdentify;
+	int castFromMemoryChance;
 	vector<SpecialRoom_t> nativeRooms;
 
 private:

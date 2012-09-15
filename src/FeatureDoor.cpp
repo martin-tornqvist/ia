@@ -120,11 +120,11 @@ SDL_Color Door::getColor() const {
    if(isSecret_) {
       return mimicFeature_->color;
    }
-	return material_ == doorMaterial_metal ? clrGray : clrBrownDark;
+	return clrBrownDark; /*material_ == doorMaterial_metal ? clrGray : clrBrownDark;*/
 }
 
 char Door::getGlyph() const {
-	return isSecret_ ? mimicFeature_->glyph : (isOpen_ ? '/' : '+');
+	return isSecret_ ? mimicFeature_->glyph : (isOpen_ ? 39 : '+');
 }
 
 Tile_t Door::getTile() const {

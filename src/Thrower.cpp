@@ -204,13 +204,13 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		} else {
 			const int DROP_ELEMENT = blockedInElement == -1 ? path.size() - 1 : blockedInElement;
 			const coord dropPos = path.at(DROP_ELEMENT);
-			eng->itemDrop->dropItemOnMap(dropPos, &itemThrown);
 			const MaterialType_t materialAtDropPos = eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
 			if(materialAtDropPos == materialType_hard) {
 			   const bool IS_ALERTING_MONSTERS = actorThrowing == eng->player;
             Sound sound(itemThrown->getInstanceDefinition().landOnHardSurfaceSoundMessage, true, dropPos, false, IS_ALERTING_MONSTERS);
             eng->soundEmitter->emitSound(sound);
 			}
+			eng->itemDrop->dropItemOnMap(dropPos, &itemThrown);
 		}
 
 		eng->renderer->drawMapAndInterface();

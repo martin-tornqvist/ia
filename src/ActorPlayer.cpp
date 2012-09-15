@@ -974,24 +974,24 @@ void Player::act() {
 }
 
 void Player::attemptIdentifyItems() {
-	const vector<Item*>* const general = m_inventory->getGeneral();
-	for(unsigned int i = 0; i < general->size(); i++) {
-		Item* const item = general->at(i);
-		const ItemDefinition& def = item->getInstanceDefinition();
-
-		//It must not be a readable item (those must be actively identified)
-		if(def.isReadable == false) {
-			if(def.isIdentified == false) {
-				if(def.abilityToIdentify != ability_empty) {
-					const int SKILL = m_instanceDefinition.abilityValues.getAbilityValue(def.abilityToIdentify, true);
-					if(SKILL > (100 - def.identifySkillFactor)) {
-						item->setRealDefinitionNames(eng, false);
-						eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
-					}
-				}
-			}
-		}
-	}
+//	const vector<Item*>* const general = m_inventory->getGeneral();
+//	for(unsigned int i = 0; i < general->size(); i++) {
+//		Item* const item = general->at(i);
+//		const ItemDefinition& def = item->getInstanceDefinition();
+//
+//		//It must not be a readable item (those must be actively identified)
+//		if(def.isReadable == false) {
+//			if(def.isIdentified == false) {
+//				if(def.abilityToIdentify != ability_empty) {
+//					const int SKILL = m_instanceDefinition.abilityValues.getAbilityValue(def.abilityToIdentify, true);
+//					if(SKILL > (100 - def.identifySkillFactor)) {
+//						item->setRealDefinitionNames(eng, false);
+//						eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
+//					}
+//				}
+//			}
+//		}
+//	}
 }
 
 void Player::queryInterruptActions() {
