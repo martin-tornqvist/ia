@@ -28,7 +28,7 @@ void Interface::drawInfoLines() {
 
 	//Name
 	str = eng->player->getNameA();
-	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrCyanLight);
+	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
 
 	//Health
 	xPos += 1 + str.length();

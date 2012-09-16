@@ -39,7 +39,6 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 $      @    Display character information
 $      TAB  Melee attack adjacent monster
 $      >    Go down staircase
-$      a    Examine/use/apply something on the map
 $      b    Bash (doors)
 $      c    Close (doors)
 $      d    Drop item
@@ -56,11 +55,10 @@ $      L    Display message history
 $      m    Choose missiles to use
 $      M    Quit using current missiles
 $      r    Reload wielded firearm
-$      R    Read
+$      R    Read (manuscripts)
 $      s    Wait/Search for 10 turns
 $      S    Save (must stand on stairs)
 $      t    Throw missile
-$      T    Trigger trap you stand on
 $      u    Unload ammunition from a weapon on the ground
 $      w    Wield/Wear
 $      q    Quaff potion
@@ -75,17 +73,17 @@ $      ?    Display manual
 ------------------------------------------------
 The following is an example of how the interface lines read:
 
-$   Player HP:9/14 INS:8%(45%)   FIR:2d6+2 40% 3/7 MEL:1d3+1 40%
-$   DLVL:1 LVL:1 NXT:45 ARM:[1]  MIS:12 Throwing Knives 2d4 45%
+$   Player HP:9/16 INS:8%(45%) ENC:30%  FIR:2d6+2 55% 3/7 MEL:1d3+1 35%
+$   DLVL:1 LVL:1 NXT:45 ARM:[1]         MIS:2d4 55% 7
 $   Blind Diseased
 
-From left to right, the first line displays player name, Hit Points (current/max), insanity state (see section 4: "INSANITY"), damage with ranged attack, hit chance with ranged attack, ammunition (loaded/capacity), damage with melee attack, and hit chance with melee attack.
+From left to right, the first line displays player name, Hit Points (current/max), insanity state (see section 4: "INSANITY"), encumbrance from carrying items (100% or more means you can not move), damage with ranged attack, hit chance with ranged attack, ammunition (loaded/capacity), damage with melee attack, and hit chance with melee attack.
 
-The second line displays the dungeon level, player level, experience points needed for next level, armor value, and damage and hit chance for your thrown weapon.
+The second line displays the dungeon level, player level, experience points needed for next level, armor value, and your damage and hit chance with your throwing weapon.
 
 The third line displays status effects currently affecting you.
 
-The attack hit chances are shown modified by various bonuses and status effects (blindness et c).
+The attack hit chances shown are the values after they are modified by bonuses and status effects (blindness etc).
 
 
 4. INSANITY
@@ -130,7 +128,7 @@ For each turn you spend in a monsters unblocked visual range, there is a certain
 
 When you stay out of an aware monsters vision for a certain number of turns (and don't do anyhing to alert it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
 
-If you have spent points in 'Backstabbing', any attack made with a melee weapon against an unaware opponent gets a big bonus to damage and hit chance.
+If you attack an anaware opponent in melee, the attack gets a big bonus to damage and hit chance.
 
 
 7. USING EXPLOSIVES

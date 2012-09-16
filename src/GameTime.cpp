@@ -163,3 +163,8 @@ void GameTime::runNewTurnEvents() {
 		}
 	}
 }
+
+Actor* GameTime::getCurrentActor() {
+//   const int VECTOR_SIZE = actors_.size();
+   return actors_.at(currentActorVectorPos_);
+}

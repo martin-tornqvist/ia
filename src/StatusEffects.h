@@ -132,6 +132,7 @@ public:
 		(void)ability;
 		return 0;
 	}
+
 	virtual coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
 		(void)actorPos;
 		(void)engine;
@@ -794,7 +795,7 @@ public:
 		return 0;
 	}
 
-	coord changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine);
+	coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine);
 
 	bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 	bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
@@ -869,7 +870,7 @@ public:
 		return 27;
 	}
 
-	coord changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine);
+	coord changeMoveCoord(const coord& actorPos , const coord& movePos, Engine* engine);
 
 	void more() {
 		nrOfSpikes++;

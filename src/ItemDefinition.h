@@ -16,7 +16,7 @@ enum ItemWeight_t {
 	itemWeight_extraLight = 1, //Ammo...
 	itemWeight_light = 10, //Dynamite, daggers...
 	itemWeight_medium = 60, //Most firearms, leather jackets...
-	itemWeight_heavy = 170 //Heavy armor, heavy weapons...
+	itemWeight_heavy = 140 //Heavy armor, heavy weapons...
 };
 
 const int PLAYER_CARRY_WEIGHT_STANDARD = 500;
@@ -125,8 +125,7 @@ enum ItemDevNames_t {
 	item_potionOfHealing,
 	item_potionOfBlindness,
 	item_potionOfCorruption,
-	item_potionOfReflexes,
-	item_potionOfAiming,
+	item_potionOfTheCobra,
 	item_potionOfStealth,
 	item_potionOfFortitude,
 	item_potionOfToughness,

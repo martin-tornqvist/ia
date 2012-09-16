@@ -157,6 +157,7 @@ void Actor::teleportToRandom() {
 		eng->renderer->drawMapAndInterface();
 		eng->playerVisualMemory->updateVisualMemory();
 		eng->log->addMessage("I suddenly find myself in a different location!");
+      eng->renderer->flip();
 		m_statusEffectsHandler->attemptAddEffect(new StatusConfused(8 + eng->dice(1, 8)));
 	}
 }

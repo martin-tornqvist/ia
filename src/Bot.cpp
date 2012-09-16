@@ -15,6 +15,8 @@
 #include "FeatureDoor.h"
 #include "Pathfinding.h"
 #include "Inventory.h"
+#include "FeatureFactory.h"
+#include "ActorMonster.h"
 
 //TODO reimplement
 
@@ -23,12 +25,12 @@ void Bot::init() {
 
 	if(eng->config->BOT_PLAYING == true) {
 		//Switch to melee weapon
-		eng->input->handleKeyPress('z', false, false);
+//		eng->input->handleKeyPress('z', false, false);
 		//Make sure it's my turn
-		while(eng->gameTime->getCurrentActor() != eng->player) {
-			eng->gameTime->letNextAct();
-		}
-		runFunctionTests();
+//		while(eng->gameTime->getCurrentActor() != eng->player) {
+//			eng->gameTime->letNextAct();
+//		}
+//		runFunctionTests();
 	}
 }
 
@@ -41,11 +43,16 @@ void Bot::runFunctionTests() {
 	const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
 	const int NUMBER_OF_ATTACKS = 100;
 	double hitChanceReal = 0;
+
+	//Make sure an actor can be spawned next to the player
+	eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + coord(1,0));
+
 	for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
 		Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + coord(1, 0));
-		eng->attack->melee(eng->player->pos.x + 1, eng->player->pos.y, dynamic_cast<Weapon*> (weaponUsed));
+		dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
+		eng->attack->melee(eng->player->pos.x + 1, eng->player->pos.y, dynamic_cast<Weapon*>(weaponUsed));
 		if(actor->getHP() < actor->getHP_max()) {
-			hitChanceReal++;
+			hitChanceReal += 1.0;
 		}
 		for(unsigned int ii = 0; ii < eng->gameTime->getLoopSize(); ii++) {
 			if(eng->gameTime->getActorAt(ii) == actor) {
@@ -59,11 +66,11 @@ void Bot::runFunctionTests() {
 			eng->gameTime->letNextAct();
 		}
 	}
-	hitChanceReal /= NUMBER_OF_ATTACKS;
+	hitChanceReal /= static_cast<double>(NUMBER_OF_ATTACKS);
 	hitChanceReal *= 100;
-	const double RATIO = static_cast<double> (HIT_CHANCE_TOTAL) / hitChanceReal;
+	const double RATIO = static_cast<double>(HIT_CHANCE_TOTAL) / hitChanceReal;
 
-	assert( RATIO > 0.95 && RATIO < 1.05 );
+	assert(RATIO > 0.80 && RATIO < 1.20);
 }
 
 void Bot::act() {
@@ -81,15 +88,15 @@ void Bot::act() {
 			return;
 		}
 
-		//To simplify things, adjacent doors get revealed
+		//To simplify things, adjacent doors gets revealed
 		for(int dx = -1; dx <= 1; dx++) {
 			for(int dy = -1; dy <= 1; dy++) {
 				FeatureStatic* f = eng->map->featuresStatic[eng->player->pos.x + dx][eng->player->pos.y + dy];
 				if(f->getId() == feature_door) {
-					dynamic_cast<Door*> (f)->reveal(false);
+					dynamic_cast<Door*>(f)->reveal(false);
 					//If adjacent door is stuck, bash at it
-					if(dynamic_cast<Door*> (f)->isStuck()) {
-						dynamic_cast<Door*> (f)->tryBash(eng->player);
+					if(dynamic_cast<Door*>(f)->isStuck()) {
+						dynamic_cast<Door*>(f)->tryBash(eng->player);
 						SDL_Delay(ACTION_DELAY);
 						return;
 					}
@@ -99,7 +106,7 @@ void Bot::act() {
 
 		//If afraid, wait it out
 		if(eng->player->getStatusEffectsHandler()->hasEffect(statusTerrified) == true) {
-			if(walkToAdjacentCell(eng->player->pos) == true) {
+			if(walkToAdjacentCell(eng->player->pos)) {
 				SDL_Delay(ACTION_DELAY);
 				return;
 			}
@@ -107,67 +114,56 @@ void Bot::act() {
 
 		findPathToNextStairs();
 
-		if(currentPath_.empty() == false) {
-			const coord nextCell = currentPath_.at(currentPath_.size() - 1);
-			if(walkToAdjacentCell(nextCell)) {
-				SDL_Delay(ACTION_DELAY);
-				return;
-			}
-		}
+      const coord nextCell = currentPath_.back();
 
-		// Try to pick something up
-		eng->input->handleKeyPress('g', false, false);
-		currentPath_.resize(currentPath_.size() - 1);
+      walkToAdjacentCell(nextCell);
+
+//      assert(eng->gameTime->getCurrentActor() != eng->player);
 
 		SDL_Delay(botDelay_);
 	}
 }
 
-bool Bot::walkToAdjacentCell(const coord& cell) {
-	bool playerWalkedIntoCell = false;
+bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
 
 	coord playerCell(eng->player->pos);
 
+	assert(eng->mapTests->isCellsNeighbours(playerCell, cellToGoTo, true));
+
 	//Get relative coordinates
-	int xRel = 0;
-	int yRel = 0;
+   const int xRel = cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
+   const int yRel = cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
-	if(cell.x > playerCell.x)
-		xRel = 1;
-	if(cell.x < playerCell.x)
-		xRel = -1;
+   if(cellToGoTo != playerCell) {
+      assert(xRel != 0 || yRel != 0);
+   }
 
-	if(cell.y > playerCell.y)
-		yRel = 1;
-	if(cell.y < playerCell.y)
-		yRel = -1;
+   char key = ' ';
 
 	if(xRel == 0 && yRel == 0)
-		eng->input->handleKeyPress('5', false, false);
+      key = '5';
 	if(xRel == 1 && yRel == 0)
-		eng->input->handleKeyPress('6', false, false);
+		key = '6';
 	if(xRel == 1 && yRel == -1)
-		eng->input->handleKeyPress('9', false, false);
+		key = '9';
 	if(xRel == 0 && yRel == -1)
-		eng->input->handleKeyPress('8', false, false);
+		key = '8';
 	if(xRel == -1 && yRel == -1)
-		eng->input->handleKeyPress('7', false, false);
+		key = '7';
 	if(xRel == -1 && yRel == 0)
-		eng->input->handleKeyPress('4', false, false);
+		key = '4';
 	if(xRel == -1 && yRel == 1)
-		eng->input->handleKeyPress('1', false, false);
+		key = '1';
 	if(xRel == 0 && yRel == 1)
-		eng->input->handleKeyPress('2', false, false);
+		key = '2';
 	if(xRel == 1 && yRel == 1)
-		eng->input->handleKeyPress('3', false, false);
+		key = '3';
 
-	playerCell.x = eng->player->pos.x;
-	playerCell.y = eng->player->pos.y;
+   assert(key >= '0' && key <= '9');
 
-	if(playerCell.x == cell.x && playerCell.y == cell.y)
-		playerWalkedIntoCell = true;
+   eng->input->handleKeyPress(key, false, false);
 
-	return playerWalkedIntoCell;
+	return playerCell == cellToGoTo;
 }
 
 coord Bot::findNextStairs() {
@@ -187,20 +183,21 @@ void Bot::findPathToNextStairs() {
 
 	const coord stairPos = findNextStairs();
 
-	if(stairPos == coord(-1, -1)) {
-	} else {
-		bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-		eng->mapTests->makeMoveBlockerArray(eng->player, blockers);
-		//Consider all doors passable
-		for(int x = 0; x < MAP_X_CELLS; x++) {
-			for(int y = 0; y < MAP_Y_CELLS; y++) {
-				FeatureStatic* f = eng->map->featuresStatic[x][y];
-				if(f->getId() == feature_door) {
-					blockers[x][y] = false;
-				}
+	assert(stairPos != coord(-1, -1));
+
+	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+	eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
+
+	//Consider all doors passable
+   for(int y = 0; y < MAP_Y_CELLS; y++) {
+      for(int x = 0; x < MAP_X_CELLS; x++) {
+			FeatureStatic* f = eng->map->featuresStatic[x][y];
+			if(f->getId() == feature_door) {
+				blockers[x][y] = false;
 			}
 		}
-		currentPath_ = eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
 	}
+	currentPath_ = eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
+	assert(currentPath_.size() > 0);
 }
 

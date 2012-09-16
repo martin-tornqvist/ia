@@ -953,6 +953,7 @@ void ItemData::makeList() {
 
 	d = new ItemDefinition(item_scrollOfMayhem);
 	resetDef(d, itemDef_scroll);
+	d->isScrollLearnable = false;
 	itemDefinitions[d->devName] = d;
 
 	d = new ItemDefinition(item_scrollOfTeleportation);
@@ -1010,11 +1011,7 @@ void ItemData::makeList() {
 	resetDef(d, itemDef_potion);
 	itemDefinitions[d->devName] = d;
 
-	d = new ItemDefinition(item_potionOfReflexes);
-	resetDef(d, itemDef_potion);
-	itemDefinitions[d->devName] = d;
-
-	d = new ItemDefinition(item_potionOfAiming);
+	d = new ItemDefinition(item_potionOfTheCobra);
 	resetDef(d, itemDef_potion);
 	itemDefinitions[d->devName] = d;
 
@@ -1056,6 +1053,9 @@ void ItemData::makeList() {
 
 void ItemData::addSaveLines(vector<string>& lines) const {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+		if(itemDefinitions[i]->isQuaffable) {
+		   lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
+		}
 		if(itemDefinitions[i]->isScroll) {
 		   lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
 			lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
@@ -1066,6 +1066,10 @@ void ItemData::addSaveLines(vector<string>& lines) const {
 
 void ItemData::setParametersFromSaveLines(vector<string>& lines) {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+      if(itemDefinitions[i]->isQuaffable) {
+         itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
+         lines.erase(lines.begin());
+      }
 		if(itemDefinitions[i]->isScroll) {
 		   itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
 		   lines.erase(lines.begin());

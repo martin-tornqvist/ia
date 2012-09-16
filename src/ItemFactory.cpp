@@ -263,11 +263,8 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
 	case item_potionOfCorruption:
 		item = new PotionOfCorruption(d);
 		break;
-	case item_potionOfReflexes:
-		item = new PotionOfReflexes(d);
-		break;
-	case item_potionOfAiming:
-		item = new PotionOfAiming(d);
+	case item_potionOfTheCobra:
+		item = new PotionOfTheCobra(d);
 		break;
 	case item_potionOfStealth:
 		item = new PotionOfStealth(d);

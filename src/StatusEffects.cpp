@@ -45,7 +45,7 @@ bool StatusTerrified::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALS
     return true;
 }
 
-coord StatusNailed::changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine) {
+coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
 	(void)movePos;
 
 	Actor* const player = owningActor->eng->player;
@@ -141,7 +141,7 @@ void StatusFlared::newTurn(Engine* engine) {
 	turnsLeft--;
 }
 
-coord StatusConfused::changeMoveCoord(const coord actorPos, const coord movePos, Engine* engine) {
+coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
 
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 	engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
@@ -173,6 +173,9 @@ void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
 //================================================================ STATUS EFFECTS HANDLER
 StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT) {
 	switch(id) {
+	case statusNailed:
+		return new StatusNailed(TURNS_LEFT);
+		break;
 	case statusBlind:
 		return new StatusBlind(TURNS_LEFT);
 		break;

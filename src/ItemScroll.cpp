@@ -324,7 +324,7 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
          engine->player->shock(shockValue_heavy, 0);
          engine->gameTime->letNextAct();
 
-         const int CHANCE_TO_MODIDY_SPELL_HARDNESS = 50;
+         const int CHANCE_TO_MODIDY_SPELL_HARDNESS = 40;
          if(engine->dice(1, 100) <= CHANCE_TO_MODIDY_SPELL_HARDNESS) {
             engine->log->addMessage("My alignment with this spell is shifting...");
             int& chance = m_archetypeDefinition->castFromMemoryChance;

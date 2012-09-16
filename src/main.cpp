@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 
 						engine->input->read();
 
-						if(engine->config->BOT_PLAYING == true) {
+						if(engine->config->BOT_PLAYING) {
 							engine->bot->act();
 						}
 

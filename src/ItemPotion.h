@@ -159,33 +159,18 @@ private:
 	}
 };
 
-class PotionOfReflexes: public Potion {
+class PotionOfTheCobra: public Potion {
 public:
-	PotionOfReflexes(ItemDefinition* const itemDefinition) :
+	PotionOfTheCobra(ItemDefinition* const itemDefinition) :
 		Potion(itemDefinition) {
 	}
-	~PotionOfReflexes() {
+	~PotionOfTheCobra() {
 	}
 	void specificQuaff(Actor* const actor, Engine* const engine);
 private:
 	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
 	const string getRealTypeName() {
-		return "Reflexes";
-	}
-};
-
-class PotionOfAiming: public Potion {
-public:
-	PotionOfAiming(ItemDefinition* const itemDefinition) :
-		Potion(itemDefinition) {
-	}
-	~PotionOfAiming() {
-	}
-	void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
-	const string getRealTypeName() {
-		return "Aiming";
+		return "the Cobra";
 	}
 };
 

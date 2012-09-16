@@ -40,9 +40,7 @@ public:
 		return turn_;
 	}
 
-	Actor* getCurrentActor() {
-		return actors_.at(currentActorVectorPos_);
-	}
+	Actor* getCurrentActor();
 
 	unsigned int getLoopSize() const {
 		return actors_.size();

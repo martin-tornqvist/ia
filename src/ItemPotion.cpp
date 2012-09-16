@@ -143,28 +143,16 @@ void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, E
 	}
 }
 
-void PotionOfReflexes::specificQuaff(Actor* const actor, Engine* const engine) {
-	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(24 + engine->dice(3, 8)));
-	if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
-		setRealDefinitionNames(engine, false);
-	}
-}
-void PotionOfReflexes::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
-
-	(void)pos;
-	if(actor != NULL) {
-		specificQuaff(actor, engine);
-	}
-}
-
-void PotionOfAiming::specificQuaff(Actor* const actor, Engine* const engine) {
-	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(24 + engine->dice(3, 8)));
+void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
+   const int TURNS = engine->dice(3,8) + 24;
+	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(TURNS));
+	actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(TURNS));
 	if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
 		setRealDefinitionNames(engine, false);
 	}
 }
 
-void PotionOfAiming::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
 	(void)pos;
 	if(actor != NULL) {
 		specificQuaff(actor, engine);
@@ -260,22 +248,33 @@ void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
 
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-		if(eng->itemData->itemDefinitions[i]->isQuaffable == true) {
-			lines.push_back(eng->itemData->itemDefinitions[i]->name.name);
-			lines.push_back(eng->itemData->itemDefinitions[i]->name.name_plural);
-			lines.push_back(eng->itemData->itemDefinitions[i]->name.name_a);
+	   ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+		if(d->isQuaffable) {
+			lines.push_back(d->name.name);
+			lines.push_back(d->name.name_plural);
+			lines.push_back(d->name.name_a);
+			lines.push_back(intToString(d->color.r));
+			lines.push_back(intToString(d->color.g));
+			lines.push_back(intToString(d->color.b));
 		}
 	}
 }
 
 void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 	for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-		if(eng->itemData->itemDefinitions[i]->isQuaffable == true) {
-			eng->itemData->itemDefinitions[i]->name.name = lines.front();
+	   ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+		if(d->isQuaffable) {
+			d->name.name = lines.front();
 			lines.erase(lines.begin());
-			eng->itemData->itemDefinitions[i]->name.name_plural = lines.front();
+			d->name.name_plural = lines.front();
 			lines.erase(lines.begin());
-			eng->itemData->itemDefinitions[i]->name.name_a = lines.front();
+			d->name.name_a = lines.front();
+			lines.erase(lines.begin());
+			d->color.r = stringToInt(lines.front());
+			lines.erase(lines.begin());
+			d->color.g = stringToInt(lines.front());
+			lines.erase(lines.begin());
+			d->color.b = stringToInt(lines.front());
 			lines.erase(lines.begin());
 		}
 	}

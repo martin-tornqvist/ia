@@ -512,7 +512,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 	break;
 
 	//---------------------------------------- TRIGGER TRAP ON PURPOSE
-	case int('T'): {
+//	case int('T'): {
 		//TODO reimplement
 		//		clearMessages();
 		//		if(eng->player->deadState == actorDeadState_alive) {
@@ -529,8 +529,8 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
 		//			}
 		//		}
 		//		clearKeyEvents();
-	}
-	break;
+//	}
+//	break;
 
 	//----------------------------------------FIRST AID
 	case SDLK_h: {
@@ -699,7 +699,7 @@ void Input::read() {
 			SDLKey key = m_event.key.keysym.sym;
 
 			bool cheatKeyPressed = false;
-//			/*
+			/*
 			//----------------------------------------DESCEND CHEAT
 			if(key == SDLK_F2) {
 				cheatKeyPressed = true;
@@ -751,7 +751,7 @@ void Input::read() {
 				clearKeyEvents();
 			}
 
-//			*/
+			*/
 
 			if(cheatKeyPressed == false) {
 				if(
