@@ -100,10 +100,6 @@ private:
 			}
 		}
 
-		if(translations != NULL) {
-			cout << "[WARNING] char '" << cha << "' not in translations, in MapTemplateHandler::translate()" << endl;
-		}
-
 		return feature_empty;
 	}
 

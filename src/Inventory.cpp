@@ -256,9 +256,8 @@ bool Inventory::hasAmmoForFirearmInInventory() {
 	if(weapon != NULL) {
 
 		//If weapon has infinite ammo, return true but with a warning
-		if(weapon->getInstanceDefinition().rangedHasInfiniteAmmo == true) {
-			cout << "[WARNING] Inventory::hasAmmoForFirearm...()" << "ran on weapon with infinite ammo" << endl;
-
+		if(weapon->getInstanceDefinition().rangedHasInfiniteAmmo) {
+			tracer << "[WARNING] Inventory::hasAmmoForFirearm...() ran on weapon with infinite ammo" << endl;
 			return true;
 		}
 
@@ -541,9 +540,12 @@ Item* Inventory::getIntrinsicInElement(int element) {
 }
 
 void Inventory::putItemInIntrinsics(Item* item) {
-	if(item->getInstanceDefinition().isIntrinsicWeapon == true)
-		m_intrinsics.push_back(item);
-	else cout << "[ERROR] ITEM IS NOT AN INTRINSIC - " << "IN putItemInIntrinsics()" << endl;
+  if(item->getInstanceDefinition().isIntrinsicWeapon) {
+    m_intrinsics.push_back(item);
+  }
+  else {
+    tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
+  }
 }
 
 Item* Inventory::getLastItemInGeneral() {
@@ -579,10 +581,9 @@ void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGenera
 		}
 	}
 
-	if(putInGeneral_ifSlotNotFound == true && hasSlot == false)
+	if(putInGeneral_ifSlotNotFound == true && hasSlot == false) {
 		m_general.push_back(item);
-
-	//cout << "ID: " << item->id << endl;
+	}
 }
 
 int Inventory::getTotalItemWeight() const {

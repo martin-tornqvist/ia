@@ -416,9 +416,9 @@ MapTemplate* MapTemplateHandler::getTemplate(TemplateDevName_t templateDevName, 
         }
     }
 
-    if (te == NULL)
-        cout << "[ERROR] Invalid maptemplate or wrong section (general or not?), in getTemplate()" << endl;
-
+    if (te == NULL) {
+      tracer << "[WARNING] Invalid maptemplate or wrong section (general or not?), in getTemplate()" << endl;
+    }
     return te;
 }
 
@@ -430,7 +430,7 @@ MapTemplate* MapTemplateHandler::getRandomTemplateForMapBuilder()
     const int pos = siz == 0 ? -1 : (siz == 1 ? 0 : eng->dice(1,siz)-1);
 
     if (pos == -1) {
-        cout <<"[ERROR] No templates exists, in getRandomTemplateForMapbuilder()" << endl;
+        tracer <<"[WARNING] No templates exists, in getRandomTemplateForMapbuilder()" << endl;
         return NULL;
     }
 

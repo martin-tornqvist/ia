@@ -1,6 +1,15 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "DebugMode.h"
+
+#ifdef DEBUG
+#define tracer if (0) ; else cerr
+#else
+#define tracer if (1) ; else cerr
+#endif
+
+
 #include "BasicUtils.h"
 
 class PlayerVisualMemory;

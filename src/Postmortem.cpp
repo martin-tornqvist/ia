@@ -238,7 +238,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 			}
 		}
 	} else {
-		cout << "[WARNING] could not open ascii graveyard file, in Postmortem::renderMenu()" << endl;
+		tracer << "[WARNING] Could not open ascii graveyard file, in Postmortem::renderMenu()" << endl;
 	}
 
 	file.close();

@@ -130,36 +130,36 @@ void Renderer::drawBlastAnimationAt(const coord pos, const SDL_Color color, cons
 void Renderer::loadFontSheet() {
 	const char* IMAGE_NAME = (eng->config->FONT_IMAGE_NAME).data();
 
-	cout << "Loding image: " << IMAGE_NAME << endl;
-	cout << "SDL_LoadBMP()..." << endl;
+	tracer << "Loding image: " << IMAGE_NAME << endl;
+	tracer << "SDL_LoadBMP()..." << endl;
 	SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
-	cout << "SDL_LoadBMP() [DONE]" << endl;
+	tracer << "SDL_LoadBMP() [DONE]" << endl;
 
-	cout << "SDL_DisplayFormat()..." << endl;
+	tracer << "SDL_DisplayFormat()..." << endl;
 	m_glyphSheet = SDL_DisplayFormat(loadedImage);
-	cout << "SDL_DisplayFormat [DONE]" << endl;
+	tracer << "SDL_DisplayFormat [DONE]" << endl;
 
-	cout << "SDL_SetColorKey..." << endl;
+	tracer << "SDL_SetColorKey..." << endl;
 	SDL_SetColorKey(m_glyphSheet, SDL_SRCCOLORKEY, SDL_MapRGB(m_glyphSheet->format, 0xFF, 0xFF, 0xFF));
-	cout << "SDL_SetColorKey [DONE]" << endl;
+	tracer << "SDL_SetColorKey [DONE]" << endl;
 	SDL_FreeSurface(loadedImage);
 }
 
 void Renderer::loadTiles() {
 	const char* IMAGE_NAME = (eng->config->TILES_IMAGE_NAME).data();
 
-	cout << "Loding tile image: " << IMAGE_NAME << endl;
-	cout << "SDL_LoadBMP()..." << endl;
+	tracer << "Loding tile image: " << IMAGE_NAME << endl;
+	tracer << "SDL_LoadBMP()..." << endl;
 	SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
-	cout << "SDL_LoadBMP() [DONE]" << endl;
+	tracer << "SDL_LoadBMP() [DONE]" << endl;
 
-	cout << "SDL_DisplayFormat()..." << endl;
+	tracer << "SDL_DisplayFormat()..." << endl;
 	m_tileSheet = SDL_DisplayFormat(loadedImage);
-	cout << "SDL_DisplayFormat [DONE]" << endl;
+	tracer << "SDL_DisplayFormat [DONE]" << endl;
 
-	cout << "SDL_SetColorKey..." << endl;
+	tracer << "SDL_SetColorKey..." << endl;
 	SDL_SetColorKey(m_tileSheet, SDL_SRCCOLORKEY, SDL_MapRGB(m_tileSheet->format, 0xB3, 0xB3, 0xB3));
-	cout << "SDL_SetColorKey [DONE]" << endl;
+	tracer << "SDL_SetColorKey [DONE]" << endl;
 	SDL_FreeSurface(loadedImage);
 }
 
@@ -193,7 +193,7 @@ bool Renderer::SDL_init() {
 	if(m_screen == NULL) {
 		return false;
 	}
-	SDL_WM_SetCaption(("Infra Arcana " + eng->config->GAME_VERSION).c_str(), NULL);
+	SDL_WM_SetCaption(("IA " + eng->config->GAME_VERSION).c_str(), NULL);
 
 	if(eng->config->FULLSCREEN) {
 		SDL_ShowCursor(SDL_DISABLE);

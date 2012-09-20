@@ -1,7 +1,9 @@
 CC=g++
 
-#Directiories
+# Directiories
 SRC_DIR=src
+DEBUG_MODE_INC_DIR=$(SRC_DIR)/debugModeIncl
+RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
 TARGET_DIR=target
 ASSETS_DIR=assets
 
@@ -9,18 +11,32 @@ ASSETS_DIR=assets
 CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
 LDFLAGS=$(shell sdl-config --libs)
 
-#Output and sources
+# Output and sources
 EXECUTABLE=ia
 SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 
-#Various bash commands
+# Various bash commands
 RM_CMD=rm -rf
 MV_CMD=mv -f
 MKDIR_CMD=mkdir -p
 CP_CMD=cp -r
 
-all: $(SOURCES) $(EXECUTABLE)
+# Target specific include files
+_INCLUDES=
+
+debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
+release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
+
+# Dependencies 
+debug: $(SOURCES) $(EXECUTABLE)
+release: $(SOURCES) $(EXECUTABLE)
+
+# Make targets
+.DEFAULT_GOAL=default_target
+.PHONY: default_target
+default_target:
+	@echo "Use \"make debug\" or \"make release\""
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
@@ -30,11 +46,11 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CP_CMD) $(ASSETS_DIR)/* $(TARGET_DIR)
 
 $(OBJECTS): $(SOURCES)
-	$(CC) $(CFLAGS) $(SOURCES) -c
+	$(CC) $(CFLAGS) $(_INCLUDES) $(SOURCES) -c
 	$(MV_CMD) *.o ./$(SRC_DIR)/
 
 .PHONY: clean
 clean:
-	$(RM_CMD) *~ *.o $(SRC_DIR)/*.o $(SRC_DIR)/*~ $(TARGET_DIR)
-
-
+	find . -type f -name '*~' | xargs $(RM_CMD)
+	find . -type f -name '*.o' | xargs $(RM_CMD)
+	$(RM_CMD) $(TARGET_DIR)

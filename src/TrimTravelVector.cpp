@@ -31,3 +31,4 @@ vector<bool> TrimTravelVector::trimVector(const vector<coord>& path) {
 
 	return elementsToUse;
 }
+

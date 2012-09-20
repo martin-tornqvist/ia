@@ -81,6 +81,9 @@ public:
 	void getSpotedEnemiesPositions();
 
 	//Various "shortcuts" to the instance definition
+	ActorDevNames_t getDevName() const {
+	  return m_instanceDefinition.devName;
+	}
 	int getHP() const {
 		return m_instanceDefinition.HP;
 	}

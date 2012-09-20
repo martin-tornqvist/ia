@@ -30,7 +30,6 @@ private:
 	void runFunctionTests();
 
 	vector<coord> currentPath_;
-	int botDelay_;
 	Engine* eng;
 };
 

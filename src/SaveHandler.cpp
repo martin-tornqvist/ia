@@ -254,7 +254,7 @@ void SaveHandler::readFile(vector<string>& linesEntire)
 		}
 	}
 	else {
-		cout << "[WARNING] could not open save file, in SaveHandler::readFile()" << endl;
+		tracer << "[WARNING] Could not open save file, in SaveHandler::readFile()" << endl;
 	}
 
 	file.close();

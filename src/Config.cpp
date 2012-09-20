@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Converters.h"
+#include "Engine.h"
 
 using namespace std;
 
@@ -191,7 +192,7 @@ void Config::read() {
 			curLine = "";
 		}
 	} else {
-		cout << "[WARNING] could not open config file, in ConfigFile::read()" << endl;
+		tracer << "[WARNING] could not open config file, in Config::read()" << endl;
 	}
 
 	file.close();

@@ -23,124 +23,128 @@
 #include "Highscore.h"
 #include "Postmortem.h"
 
+
 //FILE * ctt = fopen("CON", "w" );
 #undef main
 int main(int argc, char* argv[]) {
-	bool quitToMainMenu = false;
+  tracer << "main()..." << endl;
 
-	Engine* const engine = new Engine(&quitToMainMenu);
-	engine->initRenderer();
-	engine->initAudio();
+  bool quitToMainMenu = false;
 
-	bool quitGame = false;
-	while(quitGame == false) {
-		engine->initGame();
+  Engine* const engine = new Engine(&quitToMainMenu);
+  engine->initRenderer();
+  engine->initAudio();
 
-		if(argc > 1) {
-			const string arg1 = argv[1];
-			if(arg1 == "-b") {
-				engine->config->BOT_PLAYING = true;
-			}
-		}
+  bool quitGame = false;
+  while(quitGame == false) {
+    engine->initGame();
 
-		const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(&quitGame);
+    if(argc > 1) {
+      const string arg1 = argv[1];
+      if(arg1 == "-b") {
+	engine->config->BOT_PLAYING = true;
+      }
+    }
 
-		if(quitGame == false) {
-			quitToMainMenu = false;
+    const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(&quitGame);
 
-			engine->renderer->clearRenderArea(renderArea_screen);
-			engine->inventoryHandler->initPlayerSlotButtons();
+    if(quitGame == false) {
+      quitToMainMenu = false;
 
-			if(ENTRY_TYPE == gameEntry_new) {
-				if(engine->config->BOT_PLAYING == true) {
-					engine->playerBonusHandler->setAllBonusesToMax();
-				}
-//				engine->playerEnterName->run();
-				engine->playerCreateCharacter->run();
-				engine->player->actorSpecific_spawnStartItems();
-				engine->playerAllocBonus->run();
+      engine->renderer->clearRenderArea(renderArea_screen);
+      engine->inventoryHandler->initPlayerSlotButtons();
 
-				engine->gameTime->insertActorInLoop(engine->player);
-
-				if(engine->config->SKIP_INTRO_LEVEL == false) {
-					//If intro level is used, build forest.
-					engine->renderer->clearRenderArea(renderArea_screen);
-					engine->renderer->flip();
-					engine->mapBuild->buildForest();
-					engine->populate->populate();
-				} else {
-					//Else build first dungeon level
-					engine->dungeonClimb->travelDown();
-				}
-
-				engine->bot->init();
-			}
-
-			engine->player->FOVupdate();
-			//engine->gameTime->letNextAct();
-			engine->renderer->clearAreaPixel(0, 0, engine->config->SCREEN_WIDTH, engine->config->SCREEN_HEIGHT);
-			engine->renderer->drawMapAndInterface();
-			//engine->interfaceRenderer->drawInterface();
-
-			if(ENTRY_TYPE == gameEntry_new) {
-				if(engine->config->SKIP_INTRO_LEVEL == 0) {
-					string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
-					introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
-					introMessage += "\"Cult of Starry Wisdom\". ";
-					introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
-					introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
-					introMessage += "- a window to all secrets of the universe.";
-					engine->popup->showMessage(introMessage);
-				}
-			}
-
-			/*
-			 * ========== M A I N   L O O P ==========
-			 */
-			while(quitToMainMenu == false) {
-				//------------------------------------------------ ACT
-				if(engine->gameTime->getLoopSize() != 0) {
-					if(engine->gameTime->getCurrentActor() == engine->player) {
-
-						engine->input->read();
-
-						if(engine->config->BOT_PLAYING) {
-							engine->bot->act();
-						}
-
-//						engine->interfaceRenderer->drawInterface();
-
-						SDL_Delay(1);
-
-					} else {
-						//If not player turn, run AI
-						if(engine->player->deadState == actorDeadState_alive) {
-							engine->gameTime->getCurrentActor()->newTurn();
-						} else {
-							engine->gameTime->letNextAct();
-						}
-					}
-				}
-
-				//If player has died, run postmortem, then return to main menu
-				if(engine->player->deadState != actorDeadState_alive) {
-					dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
-					engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
-					engine->renderer->flip();
-					engine->query->waitForKeyPress();
-					engine->highScore->gameOver(false);
-					engine->postmortem->run(&quitGame);
-					quitToMainMenu = true;
-				}
-
-				//engine->audio->updateSystem();
-			}
-		}
-		engine->cleanupGame();
+      if(ENTRY_TYPE == gameEntry_new) {
+	if(engine->config->BOT_PLAYING == true) {
+	  engine->playerBonusHandler->setAllBonusesToMax();
 	}
-	engine->cleanupRenderer();
-	engine->cleanupAudio();
-	delete engine;
-	return 0;
+	//				engine->playerEnterName->run();
+	engine->playerCreateCharacter->run();
+	engine->player->actorSpecific_spawnStartItems();
+	engine->playerAllocBonus->run();
+
+	engine->gameTime->insertActorInLoop(engine->player);
+
+	if(engine->config->SKIP_INTRO_LEVEL == false) {
+	  //If intro level is used, build forest.
+	  engine->renderer->clearRenderArea(renderArea_screen);
+	  engine->renderer->flip();
+	  engine->mapBuild->buildForest();
+	  engine->populate->populate();
+	} else {
+	  //Else build first dungeon level
+	  engine->dungeonClimb->travelDown();
+	}
+
+	engine->bot->init();
+      }
+
+      engine->player->FOVupdate();
+      //engine->gameTime->letNextAct();
+      engine->renderer->clearAreaPixel(0, 0, engine->config->SCREEN_WIDTH, engine->config->SCREEN_HEIGHT);
+      engine->renderer->drawMapAndInterface();
+      //engine->interfaceRenderer->drawInterface();
+
+      if(ENTRY_TYPE == gameEntry_new) {
+	if(engine->config->SKIP_INTRO_LEVEL == 0) {
+	  string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
+	  introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
+	  introMessage += "\"Cult of Starry Wisdom\". ";
+	  introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
+	  introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
+	  introMessage += "- a window to all secrets of the universe.";
+	  engine->popup->showMessage(introMessage);
+	}
+      }
+
+      /*
+       * ========== M A I N   L O O P ==========
+       */
+      while(quitToMainMenu == false) {
+	//------------------------------------------------ ACT
+	if(engine->gameTime->getLoopSize() != 0) {
+	  if(engine->gameTime->getCurrentActor() == engine->player) {
+
+	    engine->input->read();
+
+	    if(engine->config->BOT_PLAYING) {
+	      engine->bot->act();
+	    }
+
+	    //						engine->interfaceRenderer->drawInterface();
+
+	    SDL_Delay(1);
+
+	  } else {
+	    //If not player turn, run AI
+	    if(engine->player->deadState == actorDeadState_alive) {
+	      engine->gameTime->getCurrentActor()->newTurn();
+	    } else {
+	      engine->gameTime->letNextAct();
+	    }
+	  }
+	}
+
+	//If player has died, run postmortem, then return to main menu
+	if(engine->player->deadState != actorDeadState_alive) {
+	  dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
+	  engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
+	  engine->renderer->flip();
+	  engine->query->waitForKeyPress();
+	  engine->highScore->gameOver(false);
+	  engine->postmortem->run(&quitGame);
+	  quitToMainMenu = true;
+	}
+
+	//engine->audio->updateSystem();
+      }
+    }
+    engine->cleanupGame();
+  }
+  engine->cleanupRenderer();
+  engine->cleanupAudio();
+  delete engine;
+  tracer << "main() [DONE]" << endl;
+  return 0;
 }
 

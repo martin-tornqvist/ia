@@ -52,14 +52,14 @@ public:
 		lines.erase(lines.begin());
 	}
 
-	friend class Renderer;
-
 private:
 	void clearGrids(const bool DELETE_INSTANCES);
 
 	Engine* eng;
 
 	friend class SaveHandler;
+	friend class Bot;
+	friend class Renderer;
 	int dungeonLevel_;
 };
 
