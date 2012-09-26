@@ -262,13 +262,13 @@ void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
 			case inventoryPurpose_wieldWear:
 			case inventoryPurpose_missileSelect: {
 				eng->log->clearLog();
-				eng->player->getInventory()->equipGeneralItemAndEndTurn(generalItemsToShow.at(browser.getPos().y), purpose, eng);
+				eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(generalItemsToShow.at(browser.getPos().y), purpose, eng);
 				return;
 			}
 			break;
 			case inventoryPurpose_wieldAlt: {
 				eng->log->clearLog();
-				eng->player->getInventory()->equipGeneralItemToAltAndEndTurn(generalItemsToShow.at(browser.getPos().y), eng);
+				eng->player->getInventory()->equipGeneralItemToAltAndPossiblyEndTurn(generalItemsToShow.at(browser.getPos().y), eng);
 				return;
 			}
 			break;

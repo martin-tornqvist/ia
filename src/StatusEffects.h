@@ -1655,7 +1655,7 @@ public:
 	}
 
 	int getAbilityModifier(const Abilities_t ability) {
-	   if(ability == ability_sneaking)
+	   if(ability == ability_stealth)
          return 999;
       return 0;
 	}

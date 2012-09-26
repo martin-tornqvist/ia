@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "Colors.h"
-#include "SpawnCounter.h"
 #include "ConstTypes.h"
 #include "ActorData.h"
 #include "FeatureData.h"
@@ -20,10 +19,7 @@ class Actor;
 class FeatureFactory;
 class FeatureSpawnData;
 
-//struct FeatureDef;
-
-
-class Feature: public SpawnCounter<Feature> {
+class Feature {
 public:
 	virtual ~Feature() {
 	}

@@ -38,12 +38,12 @@ bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_C
       return true;
 
     if(this == eng->player) {
-      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isSneaking;
+      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isStealth;
       return eng->map->playerVision[other.pos.x][other.pos.y] && IS_MONSTER_SNEAKING == false;
     }
 
     if(dynamic_cast<const Monster*>(this)->leader == eng->player && &other != eng->player) {
-      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isSneaking;
+      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
     }
 
@@ -195,9 +195,9 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
     m_instanceDefinition.HP += hpRestored;
     gainedHP = true;
   }
-  
+
   updateColor();
-  
+
   if(ALLOW_MESSAGE) {
     if(gainedHP) {
       if(this == eng->player) {

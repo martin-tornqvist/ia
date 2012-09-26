@@ -214,6 +214,8 @@ coord Art::getColumnAndRowTile(const Tile_t tile)
 	case tile_smoke: return coord(9,8); break;
 	case tile_trapezohedron: return coord(11,8); break;
 	case tile_pit: return coord(12,8); break;
+	case tile_lever_left: return coord(13,8); break;
+	case tile_lever_right: return coord(14,8); break;
 	case tile_empty: return coord(18,8); break;
 	default: return coord(18, 8); break;
 	}

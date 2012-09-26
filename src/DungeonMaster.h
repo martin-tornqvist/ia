@@ -8,6 +8,7 @@
 #include "AbilityValues.h"
 #include "Colors.h"
 #include "Converters.h"
+#include "PlayerCreateCharacter.h"
 
 class Engine;
 
@@ -53,6 +54,8 @@ public:
 	void setParametersFromSaveLines(vector<string>& lines);
 
 	void winGame();
+
+	bool hasClassBonusAtRank(const PlayerBackgrounds_t background, const PlayerClassBonusRanks_t rank);
 
 private:
 	void init();

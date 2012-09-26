@@ -4,14 +4,13 @@
 #include <iostream>
 
 #include "ItemData.h"
-#include "SpawnCounter.h"
 #include "Art.h"
 
 enum ItemActivateReturn_t {
 	itemActivate_keep, itemActivate_destroyed
 };
 
-class Item: public SpawnCounter<Item> {
+class Item {
 public:
 	Item(ItemDefinition* const itemDefinition) :
 		numberOfItems(1), m_instanceDefinition(*itemDefinition), m_archetypeDefinition(itemDefinition) {

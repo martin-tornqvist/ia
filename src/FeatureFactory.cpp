@@ -5,6 +5,7 @@
 #include "Engine.h"
 
 #include "FeatureDoor.h"
+#include "FeatureLever.h"
 #include "FeatureLitDynamite.h"
 #include "FeatureTrap.h"
 #include "FeatureSmoke.h"
@@ -42,6 +43,15 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord& pos, Fe
 		delete spawnData;
 		assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
 		return door;
+	}
+	case feature_lever: {
+		assert(spawnData != NULL);
+		assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
+		FeatureLever* lever = new FeatureLever(id, pos, eng, dynamic_cast<LeverSpawnData*> (spawnData));
+		replaceStaticFeatureAt(lever, pos);
+		delete spawnData;
+		assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+		return lever;
 	}
 	case feature_trap: {
 		assert(spawnData != NULL);

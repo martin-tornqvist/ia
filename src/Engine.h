@@ -9,7 +9,6 @@
 #define tracer if (1) ; else cerr
 #endif
 
-
 #include "BasicUtils.h"
 
 class PlayerVisualMemory;

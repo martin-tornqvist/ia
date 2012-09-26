@@ -6,7 +6,7 @@
 
 void PlayerCreateCharacter::run() {
 	int currentRenderYpos = 3; //1;
-//	playerPickBackground(currentRenderYpos);
+	playerPickBackground(currentRenderYpos);
 
 	PlayerEnterName playerEnterName(eng);
 	playerEnterName.run(currentRenderYpos);

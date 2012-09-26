@@ -15,15 +15,15 @@ enum Abilities_t {
 	ability_searching,
 	ability_accuracyRanged,
 	ability_accuracyMelee,
-	ability_weaponHandling,
 	ability_dodge,
 	ability_resistStatusBody,
 	ability_resistStatusMind,
-	ability_sneaking,
+	ability_stealth,
 	ability_mobility,
 //	ability_backstabbing,
 	ability_firstAid,
 	ability_language,
+//  ability_weaponHandling,
 	endOfAbilities
 };
 

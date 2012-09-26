@@ -17,6 +17,7 @@ enum FeatureSpawnData_t {
 	featureSpawnData_dynamite,
 	featureSpawnData_trap,
 	featureSpawnData_door,
+	featureSpawnData_lever,
 	featureSpawnData_smoke,
 	featureSpawnData_proxEventWallCrumble
 };
@@ -83,6 +84,14 @@ public:
 		FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {
 	}
 	const FeatureDef* const mimicFeature_;
+};
+
+class LeverSpawnData: public FeatureSpawnData {
+public:
+	LeverSpawnData(Door* const doorLinkedTo) :
+		FeatureSpawnData(featureSpawnData_lever), doorLinkedTo_(doorLinkedTo) {
+	}
+	Door* const doorLinkedTo_;
 };
 
 class FeatureFactory {

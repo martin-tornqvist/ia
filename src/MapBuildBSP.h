@@ -74,6 +74,8 @@ private:
 
 	coord placeStairs();
 
+  void makeLeverPuzzle();
+
 	void revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord);
 
 //	void buildNaturalArea(Region* regions[3][3]);

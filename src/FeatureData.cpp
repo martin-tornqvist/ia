@@ -222,6 +222,22 @@ void FeatureData::makeList() {
 	d.canHaveItem = false;
 	addToListAndReset(d);
 	/*---------------------------------------------*/
+	d.id = feature_lever;
+	d.spawnType = featureSpawnType_other;
+	d.name_a = "a lever";
+	d.name_the = "the lever";
+	d.glyph = '%';
+	d.color = clrWhite;
+	d.tile = tile_lever_left;
+	d.isShootPassable = true;
+	d.isVisionPassable = true;
+	d.canHaveBlood = false;
+	d.canHaveGore = false;
+	d.canHaveCorpse = false;
+	d.canHaveStaticFeature = false;
+	d.canHaveItem = false;
+	addToListAndReset(d);
+	/*---------------------------------------------*/
 	d.id = feature_brazierGolden;
 	d.name_a = "a golden brazier";
 	d.name_the = "the golden brazier";

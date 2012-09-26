@@ -9,7 +9,6 @@
 #include "ConstTypes.h"
 
 #include "ActorData.h"
-#include "SpawnCounter.h"
 #include "StatusEffects.h"
 #include "Sound.h"
 #include "Config.h"
@@ -23,7 +22,7 @@ class Engine;
 class TimedEntity;
 class Inventory;
 
-class Actor: public SpawnCounter<Actor> {
+class Actor {
 public:
 	Actor() {
 	}

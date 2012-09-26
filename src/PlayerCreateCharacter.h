@@ -1,5 +1,5 @@
-#ifndef PLAYER_CREATE_CHARACTER_H
-#define PLAYER_CREATE_CHARACTER_H
+#ifndef PLAYER_CHARACTER_HANDLER_H
+#define PLAYER_CHARACTER_HANDLER_H
 
 #include <string>
 
@@ -8,6 +8,16 @@
 using namespace std;
 
 class Engine;
+
+const int CLASS_BONUS_LEVEL_FIRST = 3;
+const int CLASS_BONUS_LEVEL_SECOND = 6;
+const int CLASS_BONUS_LEVEL_THIRD = 9;
+
+enum PlayerClassBonusRanks_t {
+  playerClassBonusRanks_one,
+  playerClassBonusRanks_two,
+  playerClassBonusRanks_three
+};
 
 enum PlayerBackgrounds_t {
 	playerBackground_soldier,
@@ -22,9 +32,9 @@ public:
 
 	void run();
 
-//	PlayerBackgrounds_t getPlayerBackground() const {
-//		return playerBackground_;
-//	}
+	PlayerBackgrounds_t getPlayerBackground() const {
+		return playerBackground_;
+	}
 
 private:
 	void playerPickBackground(int& currentRenderYpos);

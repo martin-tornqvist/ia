@@ -43,7 +43,7 @@ public:
 
 	void triggerOnPurpose(Actor* actorTriggering);
 
-	void reveal(const bool PRINT_MESSSAGE);
+	void reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES);
 
 	bool isHidden() const {
 		return isHidden_;

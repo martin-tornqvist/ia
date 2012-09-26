@@ -56,7 +56,7 @@ void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
 	} else {
 		if(data.attackResult >= failSmall) {
 			Monster* const monster = dynamic_cast<Monster*>(data.attacker);
-			monster->isSneaking = false;
+			monster->isStealth = false;
 		}
 	}
 

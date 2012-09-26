@@ -66,6 +66,8 @@ enum Tile_t {
 	tile_rubbleHigh,
 	tile_rubbleLow,
 	tile_stairsDown,
+  tile_lever_left,
+  tile_lever_right,
 	tile_brazier,
 	tile_altar,
 	tile_spiderWeb,

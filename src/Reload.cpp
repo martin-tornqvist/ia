@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
+#include "DungeonMaster.h"
 
 void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* ammoItem, ReloadResult_t result, bool isSwift) {
 	const string actorName = actorReloading->getNameThe();
@@ -57,11 +58,10 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
 	case reloadResult_success: {
 		const string swiftStr = isSwift ? " swiftly" : "";
 		if(isPlayer) {
-			const SDL_Color messageColor = isSwift ? clrMagenta : clrWhite;
 			if(isClip) {
-				eng->log->addMessage("I" + swiftStr + " reload the " + weaponName + ".", messageColor);
+				eng->log->addMessage("I" + swiftStr + " reload the " + weaponName + ".");
 			} else {
-				eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".", messageColor);
+				eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".");
 			}
 			eng->renderer->drawMapAndInterface();
 		} else {
@@ -88,15 +88,14 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
 	bool isSwiftReload = false;
 	const bool IS_PLAYER = actorReloading == eng->player;
 	if(IS_PLAYER) {
-		const int PLAYER_RELOAD_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_weaponHandling, true);
-		isSwiftReload = eng->abilityRoll->roll(PLAYER_RELOAD_SKILL) >= successSmall;
+		isSwiftReload = eng->dungeonMaster->hasClassBonusAtRank(playerBackground_soldier, playerClassBonusRanks_one) && eng->dice.coinToss();
 	}
 
 	if(weaponToReload != NULL) {
 		const int weaponAmmoCap = weaponToReload->ammoCapacity;
 
 		if(weaponAmmoCap == 0) {
-		   printReloadMessages(actorReloading, NULL, NULL, reloadResult_weaponNotUsingAmmo, false);
+			printReloadMessages(actorReloading, NULL, NULL, reloadResult_weaponNotUsingAmmo, false);
 		} else {
 			const ItemDevNames_t ammoType = weaponToReload->getInstanceDefinition().rangedAmmoTypeUsed;
 			Item* ammoItem = NULL;

@@ -9,11 +9,11 @@
 using namespace std;
 
 Config::Config() :
-	GAME_VERSION(" v13.0, 2012.09.15"),
+	GAME_VERSION(" v14.0 pre-release"),
 
 	TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
 
-	LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
+  LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
 
 	LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
 

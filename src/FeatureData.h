@@ -25,6 +25,7 @@ enum Feature_t {
 	feature_bushWithered,
 	feature_forestPath,
 	feature_stairsDown,
+	feature_lever,
 	feature_brazierGolden,
 	feature_caveWall,
 	feature_caveFloor,

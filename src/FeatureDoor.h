@@ -1,9 +1,6 @@
 #ifndef FEATURE_DOOR_H
 #define FEATURE_DOOR_H
 
-#include <iostream>
-
-#include "SDL/SDL.h"
 #include "Feature.h"
 
 using namespace std;
@@ -25,7 +22,6 @@ enum DoorMaterial_t {
 class Engine;
 class DoorSpawnData;
 
-//TODO When additional doortypes are introduced, see traps for an excellent way of implementing them
 class Door: public FeatureStatic {
 public:
 	~Door() {
@@ -70,6 +66,7 @@ public:
 protected:
 	friend class FeatureFactory;
 	friend class MapBuildBSP;
+  friend class FeatureLever;
 	Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData);
 
 	const FeatureDef* const mimicFeature_;

@@ -130,22 +130,20 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
 //			const int BACKSTAB_SKILL = data.attacker->getInstanceDefinition()->abilityValues.getAbilityValue(ability_backstabbing, true);
 //			const AbilityRollResult_t BACKSTAB_ROLL = eng->abilityRoll->roll(BACKSTAB_SKILL);
 //			if(BACKSTAB_ROLL >= successSmall) {
-				data.dmgRoll = data.dmgRolls * data.dmgSides;
-				data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
-				data.isBackStab = true;
+			data.dmgRoll = data.dmgRolls * data.dmgSides;
+			data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
+			data.isBackStab = true;
 //			}
 		}
 
-		// Attack bonus from light or heavy melee weapon?
-		// (can not happen if backstab, to simplify the rules)
+		// Special attack from light or heavy melee weapon? (can not happen if backstab, to simplify the rules)
 		if(data.attacker == eng->player && data.isBackStab == false) {
-			const int PLAYER_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_weaponHandling, true);
-			const bool SUCCESS = eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall;
+			const int CHANCE_FOR_SPECIAL_ATTACK = 10;
 
-			if(SUCCESS) {
+			if(eng->abilityRoll->roll(CHANCE_FOR_SPECIAL_ATTACK) >= successSmall) {
 				const ItemWeight_t realWeight = weapon->getInstanceDefinition().itemWeight;
-				const ItemWeight_t effectiveWeight = realWeight == itemWeight_medium ?
-                                     eng->dice.coinToss() ? itemWeight_light : itemWeight_heavy : realWeight;
+				const ItemWeight_t effectiveWeight = realWeight == itemWeight_medium ? eng->dice.coinToss() ?
+                                     itemWeight_light : itemWeight_heavy : realWeight;
 
 				if(effectiveWeight == itemWeight_light) {
 					data.isSwiftAttack = true;
@@ -158,7 +156,6 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
 			}
 		}
 	}
-
 
 
 	data.weaponName_a = weapon->getInstanceDefinition().name.name_a;
@@ -329,7 +326,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 						eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
 					} else {
 						const string BONUS_STR = data.isBackStab ? "covertly " : data.isSwiftAttack ? "swiftly " : data.isMightyAttack ? "mightily " : "";
-						const SDL_Color clr = data.isBackStab || data.isSwiftAttack || data.isMightyAttack ? clrMagenta : clrMessageGood;
+						const SDL_Color clr = data.isBackStab || data.isSwiftAttack || data.isMightyAttack ? clrBlueLight : clrMessageGood;
 						eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
 					}
 				} else {

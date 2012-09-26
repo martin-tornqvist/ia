@@ -98,7 +98,7 @@ void Trap::bump(Actor* actorBumping) {
 	}
 }
 
-void Trap::reveal(const bool PRINT_MESSSAGE) {
+void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 	isHidden_ = false;
 	clearGore();
 
@@ -111,7 +111,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE) {
 	if(eng->map->playerVision[pos_.x][pos_.y] == true) {
 		eng->renderer->drawMapAndInterface();
 
-		if(PRINT_MESSSAGE) {
+		if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 			const string name = specificTrap_->getTrapSpecificTitle();
 			eng->log->addMessage("I spot a " + name + ".");
 		}

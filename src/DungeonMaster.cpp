@@ -11,7 +11,7 @@
 #include "Log.h"
 #include "PlayerAllocBonus.h"
 
-//This number represents how much extra xp is needed per level
+//This number represents how much extra xp is needed per level (purely aesthetical)
 const int XP_STEP = 60;
 //Example
 //-------
@@ -46,9 +46,9 @@ const int XP_STEP = 60;
 
 //This gives the following formula for monster exp:
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
-// perhaps divide the right hand "monsterLvl" by 2, to not have such a steep
-// xp deterioration?
-const int BASE_MONSTERS_TO_LVL = 30;
+
+// - THIS NUMBER AFFECTS LEVELING RATE -
+const int BASE_MONSTERS_TO_LVL = 40;
 
 void DungeonMaster::init() {
 	playerExp = 0;
@@ -124,7 +124,8 @@ void DungeonMaster::initExpTable() {
 void DungeonMaster::monsterKilled(Actor* monster) {
 	const int MONSTER_LVL = monster->getInstanceDefinition()->monsterLvl;
 
-	const int MONSTER_XP = getXpToNextLvlAtLvl(MONSTER_LVL) / (BASE_MONSTERS_TO_LVL + MONSTER_LVL / 2);
+	// Dividing monster level by 2, to not have such a steep XP increase with monster levels
+	const int MONSTER_XP = getXpToNextLvlAtLvl(MONSTER_LVL) / (BASE_MONSTERS_TO_LVL + (MONSTER_LVL / 2));
 
 	eng->renderer->drawMapAndInterface();
 
@@ -174,4 +175,18 @@ void DungeonMaster::playerGainsExp(int exp) {
 		}
 	}
 }
+
+bool DungeonMaster::hasClassBonusAtRank(const PlayerBackgrounds_t background, const PlayerClassBonusRanks_t rank) {
+	if(eng->playerCreateCharacter->getPlayerBackground() == background) {
+		switch(rank) {
+		case playerClassBonusRanks_one: {return playerLvl >= CLASS_BONUS_LEVEL_FIRST;} break;
+		case playerClassBonusRanks_two: {return playerLvl >= CLASS_BONUS_LEVEL_SECOND;} break;
+		case playerClassBonusRanks_three: {return playerLvl >= CLASS_BONUS_LEVEL_THIRD;} break;
+		default: {tracer << "[WARNING] Illegal rank level, in DungeonMaster::hasClassBonusAtRank()" << endl;} break;
+		}
+	}
+	return false;
+}
+
+
 

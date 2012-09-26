@@ -8,6 +8,8 @@
 #include "GameTime.h"
 #include "Render.h"
 #include "ItemFactory.h"
+#include "PlayerCreateCharacter.h"
+#include "DungeonMaster.h"
 
 Inventory::Inventory(bool humanoid) {
 	InventorySlot invSlot;
@@ -354,20 +356,20 @@ void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int 
 	}
 }
 
-void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine) {
+void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine) {
 	const bool IS_PLAYER = this == engine->player->getInventory();
 
-	bool isEndingTurn = true;
-	if(IS_PLAYER) {
-		const AbilityRollResult_t rollResult = engine->abilityRoll->roll(engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(
-		      ability_weaponHandling, true));
-		isEndingTurn = rollResult < successSmall;
-	}
+	bool isFreeTurn = false;
 
 	Item* item = m_general.at(generalInventoryElement);
 	const ItemDefinition& d = item->getInstanceDefinition();
 
-//	if(d.isMeleeWeapon || d.isRangedWeapon) {
+	if(IS_PLAYER) {
+		if(d.isArmor == false) {
+			isFreeTurn = engine->dungeonMaster->hasClassBonusAtRank(playerBackground_soldier, playerClassBonusRanks_one);
+		}
+	}
+
 	if(purpose == inventoryPurpose_wieldWear && (d.isMeleeWeapon || d.isRangedWeapon)) {
 		Item* const itemBefore = getItemInSlot(slot_wielded);
 		moveItemToSlot(getSlot(slot_wielded), generalInventoryElement);
@@ -376,8 +378,7 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 			if(itemBefore != NULL) {
 				engine->log->addMessage("I was wielding " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
 			}
-			const SDL_Color clr = isEndingTurn ? clrWhite : clrMagenta;
-			engine->log->addMessage("I am now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".", clr);
+			engine->log->addMessage("I am now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
 		}
 	}
 
@@ -391,7 +392,7 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 			}
 			engine->log->addMessage("I am now wearing " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
 		}
-		isEndingTurn = true;
+		isFreeTurn = false;
 	}
 
 	if(purpose == inventoryPurpose_missileSelect) {
@@ -402,20 +403,17 @@ void Inventory::equipGeneralItemAndEndTurn(const unsigned int generalInventoryEl
 			if(itemBefore != NULL) {
 				engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as missile weapon.");
 			}
-			const SDL_Color clr = isEndingTurn ? clrWhite : clrMagenta;
-			engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as missile weapon.", clr);
+
+			engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as missile weapon.");
 		}
 	}
-	if(isEndingTurn) {
+	if(isFreeTurn == false) {
 		engine->gameTime->letNextAct();
 	}
 }
 
-void Inventory::equipGeneralItemToAltAndEndTurn(const unsigned int generalInventoryElement, Engine* engine) {
-	const AbilityRollResult_t rollResult = engine->abilityRoll->roll(engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(
-	      ability_weaponHandling, true));
-	const bool IS_FREE_TURN_DUE_TO_SKILL = rollResult >= successSmall;
-	const SDL_Color clr = IS_FREE_TURN_DUE_TO_SKILL ? clrMagenta : clrWhite;
+void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int generalInventoryElement, Engine* engine) {
+	const bool IS_FREE_TURN = engine->dungeonMaster->hasClassBonusAtRank(playerBackground_soldier, playerClassBonusRanks_one);
 
 	Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
 	moveItemToSlot(getSlot(slot_wieldedAlt), generalInventoryElement);
@@ -424,11 +422,11 @@ void Inventory::equipGeneralItemToAltAndEndTurn(const unsigned int generalInvent
 	engine->renderer->drawMapAndInterface();
 
 	if(itemBefore != NULL) {
-		engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.", clr);
+		engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
 	}
-	engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.", clr);
+	engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
 
-	if(IS_FREE_TURN_DUE_TO_SKILL == false) {
+	if(IS_FREE_TURN == false) {
 		engine->gameTime->letNextAct();
 	}
 }
@@ -540,12 +538,12 @@ Item* Inventory::getIntrinsicInElement(int element) {
 }
 
 void Inventory::putItemInIntrinsics(Item* item) {
-  if(item->getInstanceDefinition().isIntrinsicWeapon) {
-    m_intrinsics.push_back(item);
-  }
-  else {
-    tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
-  }
+	if(item->getInstanceDefinition().isIntrinsicWeapon) {
+		m_intrinsics.push_back(item);
+	}
+	else {
+		tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
+	}
 }
 
 Item* Inventory::getLastItemInGeneral() {

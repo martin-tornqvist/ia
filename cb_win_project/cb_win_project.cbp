@@ -12,7 +12,7 @@
 				<Option output="..\target\debug\ia" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="..\target\debug\" />
 				<Option object_output="..\obj\debug\" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option projectCompilerOptionsRelation="1" />
 				<Compiler>
@@ -31,6 +31,7 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add directory="..\src\debugModeIncl" />
 				</Compiler>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
@@ -61,6 +62,7 @@
 					<Add option="-Wfatal-errors" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add directory="..\src\releaseModeIncl" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -157,6 +159,7 @@
 		<Unit filename="..\src\FeatureDoor.h" />
 		<Unit filename="..\src\FeatureFactory.cpp" />
 		<Unit filename="..\src\FeatureFactory.h" />
+		<Unit filename="..\src\FeatureLever.cpp" />
 		<Unit filename="..\src\FeatureLitDynamite.cpp" />
 		<Unit filename="..\src\FeatureLitDynamite.h" />
 		<Unit filename="..\src\FeatureProxEvent.cpp" />
@@ -173,8 +176,8 @@
 		<Unit filename="..\src\FovPreCalc.h" />
 		<Unit filename="..\src\GameTime.cpp" />
 		<Unit filename="..\src\GameTime.h" />
-		<Unit filename="..\src\HighScore.cpp" />
-		<Unit filename="..\src\HighScore.h" />
+		<Unit filename="..\src\Highscore.cpp" />
+		<Unit filename="..\src\Highscore.h" />
 		<Unit filename="..\src\Input.cpp" />
 		<Unit filename="..\src\Input.h" />
 		<Unit filename="..\src\Interface.cpp" />
@@ -183,6 +186,7 @@
 		<Unit filename="..\src\Inventory.h" />
 		<Unit filename="..\src\InventoryHandler.cpp" />
 		<Unit filename="..\src\InventoryHandler.h" />
+		<Unit filename="..\src\InventoryIndexes.cpp" />
 		<Unit filename="..\src\InventoryIndexes.h" />
 		<Unit filename="..\src\Item.cpp" />
 		<Unit filename="..\src\Item.h" />
@@ -195,19 +199,22 @@
 		<Unit filename="..\src\ItemDefinition.h" />
 		<Unit filename="..\src\ItemDrop.cpp" />
 		<Unit filename="..\src\ItemDrop.h" />
+		<Unit filename="..\src\ItemExplosive.cpp" />
 		<Unit filename="..\src\ItemExplosive.h" />
 		<Unit filename="..\src\ItemFactory.cpp" />
 		<Unit filename="..\src\ItemFactory.h" />
 		<Unit filename="..\src\ItemPickup.cpp" />
 		<Unit filename="..\src\ItemPickup.h" />
+		<Unit filename="..\src\ItemPotion.cpp" />
+		<Unit filename="..\src\ItemPotion.h" />
 		<Unit filename="..\src\ItemScroll.cpp" />
 		<Unit filename="..\src\ItemScroll.h" />
 		<Unit filename="..\src\ItemWeapon.cpp" />
 		<Unit filename="..\src\ItemWeapon.h" />
 		<Unit filename="..\src\JamWithSpike.cpp" />
 		<Unit filename="..\src\JamWithSpike.h" />
-		<Unit filename="..\src\KnockBack.cpp" />
-		<Unit filename="..\src\KnockBack.h" />
+		<Unit filename="..\src\Knockback.cpp" />
+		<Unit filename="..\src\Knockback.h" />
 		<Unit filename="..\src\Log.cpp" />
 		<Unit filename="..\src\Log.h" />
 		<Unit filename="..\src\Look.cpp" />
@@ -291,9 +298,6 @@
 		<Unit filename="..\src\Timer.h" />
 		<Unit filename="..\src\TrimTravelVector.cpp" />
 		<Unit filename="..\src\TrimTravelVector.h" />
-		<Unit filename="..\src\itemExplosive.cpp" />
-		<Unit filename="..\src\itemPotion.cpp" />
-		<Unit filename="..\src\itemPotion.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Extensions>
 			<code_completion />

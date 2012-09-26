@@ -608,7 +608,7 @@ void ActorData::defineAllActors() {
 	d.erraticMovement = actorErratic_rare;
 	d.shockValue = shockValue_some;
 	setStrengthsFromFormula(d, weak);
-	d.abilityValues.setAbilityValue(ability_sneaking, 90);
+	d.abilityValues.setAbilityValue(ability_stealth, 90);
 	finalizeDefinition(d);
 	d.reset();
 
@@ -1339,7 +1339,7 @@ void ActorData::defineAllActors() {
 	d.erraticMovement = actorErratic_somewhat;
 	d.shockValue = shockValue_heavy;
 	setStrengthsFromFormula(d, weak);
-	d.abilityValues.setAbilityValue(ability_sneaking, 80);
+	d.abilityValues.setAbilityValue(ability_stealth, 80);
 //	d.abilityValues.setAbilityValue(ability_backstabbing, 60);
 	finalizeDefinition(d);
 	d.reset();
@@ -1665,7 +1665,7 @@ void ActorData::defineAllActors() {
 	setStrengthsFromFormula(d, strong);
 	d.shockValue = shockValue_some;
 	d.erraticMovement = actorErratic_somewhat;
-	d.abilityValues.setAbilityValue(ability_sneaking, 100);
+	d.abilityValues.setAbilityValue(ability_stealth, 100);
 	finalizeDefinition(d);
 	d.reset();
 
