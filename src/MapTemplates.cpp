@@ -358,7 +358,7 @@ void MapTemplateHandler::initTemplates()
         string(".,X.X.X..[.[.[.[...[.[.....X,;")+
         string(".,X...XI.................IXX,;")+
         string(",,XI.IXXXXXXXX.X....X.XXXXXX,;")+
-        string(",,XXXXX,X,,X,X_X....X.X,,,,,_;")+
+        string(",,XXXXX,X,,X,X.X....X.X,,,,,_;")+
         string(",,,,,,,,,,,,,XXX....XXX,,,,__;")+
         string("_,,,,,,,,,,,,,,XI..IX,,,,,___;")+
         string("_________,,,,,,XXXXXX,,,_____;")+

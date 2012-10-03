@@ -5,13 +5,12 @@
 
 class Tomb: public FeatureStatic {
 public:
-	~Tomb() {
-	}
-	void examine();
+  ~Tomb() {
+  }
+  void examine();
 private:
-	friend class FeatureFactory;
-	friend class MapBuildBSP;
-	Tomb(Feature_t id, coord pos, Engine* engine);
+  friend class FeatureFactory;
+  Tomb(Feature_t id, coord pos, Engine* engine);
 };
 
 #endif

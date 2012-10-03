@@ -9,7 +9,7 @@
 # 1 = font/11x19.bmp
 # 2 = font/16x24.bmp
 # 3 = font/16x24_typewriter.bmp
-FONT_IMAGE=3
+FONT_IMAGE=1
 
 
 # How to render the map. 0 = ASCII, 1 = Tiles
@@ -26,7 +26,7 @@ FULLSCREEN=0
 
 
 # Skip intro level (forest). 0 = no, 1 = yes.
-SKIP_INTRO_LEVEL=1
+SKIP_INTRO_LEVEL=0
 
 
 # Delay before key repeat starts when holding down a key (ms).

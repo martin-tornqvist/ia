@@ -7,18 +7,25 @@ void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line
 	const ActorDefinition archeTypeDef = *(actor->getArchetypeDefinition());
 
 	if(def.unique == false) {
-		line += " They tend to dwell " + getNormalGroupSizeStr(def) + ",";
-		line += " and are normally found " + getDwellingLevelStr(def) + ".";
+		line += " They tend to dwell " + getNormalGroupSizeStr(def);
+		line += " beneath level " + getDwellingLevelStr(def) + ".";
 		line += " They move " + getSpeedStr(archeTypeDef) + ". ";
 	} else {
 	    if(def.spawnStandardMinLevel < LAST_CAVERN_LEVEL) {
-            line += " " + def.name_the + " is normally found " + getDwellingLevelStr(def) + ". ";
+            line += " " + def.name_the + " is normally found beneath level " + getDwellingLevelStr(def) + ". ";
 	    }
 	}
 
-	if(def.unique == false) {
-		line += getNrOfKillsStr(def) + ".";
-	}
+//	if(def.unique == false) {
+//		line += getNrOfKillsStr(def) + ".";
+//	}
+}
+
+string AutoDescribeActor::getNormalGroupSizeStr(const ActorDefinition& def) const {
+	const int CHANCE = def.chanceToSpawnExtra;
+
+	return CHANCE >= 100 ? "in swarms" : CHANCE >= 95 ? "in large groups" : CHANCE >= 80 ? "in small or large groups"
+			: CHANCE >= 70 ? "in small groups" : CHANCE >= 30 ? "alone or in small groups" : "alone";
 }
 
 string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {
@@ -47,16 +54,8 @@ string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {
 	return "";
 }
 
-string AutoDescribeActor::getNormalGroupSizeStr(const ActorDefinition& def) const {
-	const int CHANCE = def.chanceToSpawnExtra;
-
-	return CHANCE >= 100 ? "in swarms" : CHANCE >= 95 ? "in large groups" : CHANCE >= 80 ? "in small or large groups"
-			: CHANCE >= 70 ? "in small groups" : CHANCE >= 30 ? "alone or in small groups" : "alone";
-}
-
 string AutoDescribeActor::getDwellingLevelStr(const ActorDefinition& def) const {
-	const int DLVL_MIN = def.spawnStandardMinLevel;
-	return "beneath depth level " + intToString(max(1, DLVL_MIN));
+	return intToString(max(1, def.spawnStandardMinLevel));
 }
 
 string AutoDescribeActor::getNrOfKillsStr(const ActorDefinition& def) const {

@@ -1931,7 +1931,7 @@ public:
 		return line;
 	}
 
-	bool hasEffect(const StatusEffects_t effect) {
+	bool hasEffect(const StatusEffects_t effect) const {
 		for(unsigned int i = 0; i < effects.size(); i++) {
 			if(effects.at(i)->getEffectId() == effect) {
 				return true;

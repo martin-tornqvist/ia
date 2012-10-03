@@ -149,7 +149,7 @@ void RoomDescriptModuleHighCeil::creaturesComeDown() {
 	}
 
 	if(eng->populate->spawnGroupOfMonstersAtFreeCells(freeCells, specialRoom_highCeil, true)) {
-		eng->popup->showMessage("Something descends from the haze of the ceiling!");
+		eng->popup->showMessage("Something descends from the haze of the ceiling!", true);
 	}
 }
 
@@ -589,7 +589,7 @@ void SpecialRoom::attemptRunEvents() {
 				}
 			}
 			if(line != "") {
-				eng->popup->showMessage(line);
+				eng->popup->showMessage(line, true);
 			}
 			hasShownDescript = true;
 		}

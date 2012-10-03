@@ -10,34 +10,27 @@ using namespace std;
 
 class Engine;
 
-class SaveHandler
-{
+class SaveHandler {
 public:
-	SaveHandler(Engine* engine) : eng(engine) {}
+  SaveHandler(Engine* engine) : eng(engine) {}
 
-	bool playerChooseLoad();
+  void load();
+  void save();
 
-	bool save();
+  bool isSaveAvailable();
 
 private:
-	void getSavePositions(const vector<string>& linesEntire, vector<unsigned int>& startPositions);
+  void collectLinesFromGame(vector<string>& lines);
 
-	void printSaveList(const vector<string>& linesEntire, const vector<unsigned int>& startPositions, const MenuBrowser& browser) const;
+  void setGameParametersFromLines(vector<string>& lines) const;
 
-	void collectLinesFromGame(vector<string>& linesCurrentSave);
+  void readFile(vector<string>& lines);
 
-	void setGameParametersFromLines(vector<string>& linesCurrentSave) const;
+  void writeFile(const vector<string>& lines) const;
 
-	void readFile(vector<string>& linesEntire);
+  Engine* eng;
 
-	void writeFile(const vector<string>& linesEntire) const;
-
-	void getCurrentSaveLines(const char key, vector<string>& linesEntire, const vector<unsigned int>& startPositions,
-		vector<string>& linesCurrentSave);
-
-	Engine* eng;
-
-	SDL_Event m_event;
+  SDL_Event m_event;
 };
 
 #endif

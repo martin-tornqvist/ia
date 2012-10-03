@@ -11,31 +11,31 @@ using namespace std;
 
 class Popup {
 public:
-	Popup(Engine* engine) :
-		eng(engine) {
-	}
+  Popup(Engine* engine) :
+    eng(engine) {
+  }
 
-	void showMessage(const string message) const;
+  void showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE_AFTER) const;
 
 private:
-	struct BoxReturnData {
-	public:
-		BoxReturnData(coord x0y0Text_, coord x1y1Text_) :
-			x0y0Text(x0y0Text_), x1y1Text(x1y1Text_) {
-		}
+  struct BoxReturnData {
+public:
+    BoxReturnData(coord x0y0Text_, coord x1y1Text_) :
+      x0y0Text(x0y0Text_), x1y1Text(x1y1Text_) {
+    }
 
-		const coord x0y0Text;
-		const coord x1y1Text;
-	private:
-		BoxReturnData& operator=(BoxReturnData& other) {
-			(void)other;
-			return *this;
-		}
-	};
+    const coord x0y0Text;
+    const coord x1y1Text;
+private:
+    BoxReturnData& operator=(BoxReturnData& other) {
+      (void)other;
+      return *this;
+    }
+  };
 
-	BoxReturnData printBox(const int BOX_HALF_WIDTH) const;
+  BoxReturnData printBox(const int BOX_HALF_WIDTH) const;
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

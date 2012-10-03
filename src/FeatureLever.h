@@ -8,19 +8,19 @@ class LeverSpawnData;
 
 class FeatureLever: public FeatureStatic {
 public:
-	~FeatureLever() {
-	}
-	SDL_Color getColor() const;
-	Tile_t getTile() const;
+  ~FeatureLever() {
+  }
+  SDL_Color getColor() const;
+  Tile_t getTile() const;
 
-	void pull();
-
-//	void examine();
+  void examine();
 
 protected:
-	friend class FeatureFactory;
-	friend class MapBuildBSP;
-	FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnData* spawnData);
+  friend class FeatureFactory;
+  friend class MapBuildBSP;
+  FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnData* spawnData);
+
+  void pull();
 
   bool isPositionLeft_;
   Door* const doorLinkedTo_;

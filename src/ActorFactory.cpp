@@ -141,7 +141,7 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
 
   default: {
   }
-    break;
+  break;
   }
 
   monster->place(pos, &(eng->actorData->actorDefinitions[characterType]), eng);
@@ -205,7 +205,7 @@ Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, cons
     bool isBelongToRoomType = false;
     for(unsigned int ii = 0; ii < def.nativeRooms.size(); ii++) {
       if(def.nativeRooms.at(ii) == roomType) {
-	isBelongToRoomType = true;
+        isBelongToRoomType = true;
       }
     }
 

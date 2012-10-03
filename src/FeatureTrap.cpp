@@ -351,9 +351,9 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
 	if(IS_PLAYER) {
 		eng->player->FOVupdate();
 		if(CAN_SEE) {
-			eng->popup->showMessage("A curious shape on the floor starts to glow!");
+			eng->popup->showMessage("A curious shape on the floor starts to glow!", true);
 		} else {
-			eng->popup->showMessage("I feel a peculiar energy around me!");
+			eng->popup->showMessage("I feel a peculiar energy around me!", true);
 		}
 	}
 

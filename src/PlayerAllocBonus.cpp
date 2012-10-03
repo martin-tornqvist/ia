@@ -121,17 +121,17 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
 
       if(IS_CURRENT_RANK_DESCRIBED) {
 
-	if(isRankBonusTitleDrawn == false) {
-	  eng->renderer->drawText("Additional bonuses:", renderArea_screen, xPos, yPos, clrWhite);
-	  yPos++;
-	  isRankBonusTitleDrawn = true;
-	}
+        if(isRankBonusTitleDrawn == false) {
+          eng->renderer->drawText("Additional bonuses:", renderArea_screen, xPos, yPos, clrWhite);
+          yPos++;
+          isRankBonusTitleDrawn = true;
+        }
 
-	const bool HAS_RANK = eng->playerBonusHandler->getBonusRankAt(CURRENT_POS) > static_cast<int>(ii);
-	const SDL_Color drwClr = HAS_RANK ? clrGreenLight : clrWhite;
-	eng->renderer->drawText(s, renderArea_screen, xPos, yPosRankDescr, drwClr);
+        const bool HAS_RANK = eng->playerBonusHandler->getBonusRankAt(CURRENT_POS) > static_cast<int>(ii);
+        const SDL_Color drwClr = HAS_RANK ? clrGreenLight : clrWhite;
+        eng->renderer->drawText(s, renderArea_screen, xPos, yPosRankDescr, drwClr);
 
-	yPosRankDescr++;
+        yPosRankDescr++;
       }
     }
   }
@@ -191,33 +191,33 @@ void PlayerAllocBonus::readKeys() {
     while(SDL_PollEvent(&m_event)) {
       switch(m_event.type) {
       case SDL_KEYDOWN: {
-	Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
+        Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
 
-	if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-	  if(eng->playerBonusHandler->isBonusPickableAt(currentPos)) {
-	    nrOfPicksLeft--;
-	    eng->playerBonusHandler->increaseBonusAt(currentPos, eng);
-	    if(nrOfPicksLeft > 0) {
-	      draw(nrOfPicksLeft, currentPos, topBonus);
-	    } else {
-	      return;
-	    }
-	  }
-	}
+        if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
+          if(eng->playerBonusHandler->isBonusPickableAt(currentPos)) {
+            nrOfPicksLeft--;
+            eng->playerBonusHandler->increaseBonusAt(currentPos, eng);
+            if(nrOfPicksLeft > 0) {
+              draw(nrOfPicksLeft, currentPos, topBonus);
+            } else {
+              return;
+            }
+          }
+        }
 
-	if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
-	  browseUp(currentPos, topBonus, NR_OF_BONUSES_DEFINED);
-	  draw(nrOfPicksLeft, currentPos, topBonus);
-	}
+        if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
+          browseUp(currentPos, topBonus, NR_OF_BONUSES_DEFINED);
+          draw(nrOfPicksLeft, currentPos, topBonus);
+        }
 
-	if(key == SDLK_DOWN || key == SDLK_KP2 || key == SDLK_2) {
-	  browseDown(currentPos, topBonus, NR_OF_BONUSES_DEFINED);
-	  draw(nrOfPicksLeft, currentPos, topBonus);
-	}
+        if(key == SDLK_DOWN || key == SDLK_KP2 || key == SDLK_2) {
+          browseDown(currentPos, topBonus, NR_OF_BONUSES_DEFINED);
+          draw(nrOfPicksLeft, currentPos, topBonus);
+        }
       }
       default: {
       }
-	break;
+      break;
       }
     }
     SDL_Delay(1);

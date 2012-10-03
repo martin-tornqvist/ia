@@ -14,22 +14,30 @@ string Armor::getArmorDataLine() const {
 }
 
 int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const DamageTypes_t damageType) {
+  tracer << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
 	//Absorption points = damage soaked up by armor instead of hitting the player
 	//DDF = Damage (to) Durability Factor, how much damage the durability takes per attack damage point
 
 	const int ABSORPTION_POINTS_BEFORE = getAbsorptionPoints(damageType);
 
 	const double DDF_INTRINSIC = m_instanceDefinition.armorData.damageToDurabilityFactors[damageType];
-	const double DDF_RANDOM = static_cast<float> (eng->dice(1, 100)) / 100.0;
+	const double DDF_RANDOM = static_cast<float>(eng->dice(1, 100)) / 100.0;
 	const double DDF_ADJUST = 5.0;
 
-	durability = max(0, durability - static_cast<int> (DAMAGE_BEFORE * DDF_INTRINSIC * DDF_RANDOM * DDF_ADJUST));
+	durability = max(0, durability - static_cast<int>(static_cast<double>(DAMAGE_BEFORE) * DDF_INTRINSIC * DDF_RANDOM * DDF_ADJUST));
 
 	if(getAbsorptionPoints(damageType_physical) < ABSORPTION_POINTS_BEFORE) {
 		eng->log->addMessage("My " + m_instanceDefinition.name.name + " is damaged!");
 	}
 
-	return max(1, DAMAGE_BEFORE - ABSORPTION_POINTS_BEFORE);
+  tracer << "Armor: Damage before: " + intToString(DAMAGE_BEFORE);
+
+  const int DAMAGE_REDUCTION = max(1, DAMAGE_BEFORE - ABSORPTION_POINTS_BEFORE);
+
+  tracer << "Armor: Damage reduction: " + intToString(DAMAGE_REDUCTION) << endl;
+
+  tracer << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
+	return DAMAGE_REDUCTION;
 }
 
 int Armor::getAbsorptionPoints(const DamageTypes_t damageType) const {

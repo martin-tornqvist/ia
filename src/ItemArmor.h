@@ -28,6 +28,10 @@ public:
 		lines.erase(lines.begin());
 	}
 
+	bool isDestroyed() {
+	  return getAbsorptionPoints(damageType_physical) == 0;
+	}
+
 private:
 	int getAbsorptionPoints(const DamageTypes_t damageType) const;
 

@@ -109,7 +109,7 @@ void GameTime::letNextAct() {
 	}
 
 	if(currentActor == eng->player) {
-		tracer << "Player turn begins" << endl;
+//		tracer << "Player turn begins" << endl;
 		eng->player->newTurn();
 		eng->renderer->drawMapAndInterface();
 	}
@@ -118,7 +118,7 @@ void GameTime::letNextAct() {
 void GameTime::runNewTurnEvents() {
 	turn_++;
 
-	tracer << "=== TURN " << turn_ << " begins ===" << endl;
+//	tracer << "=== TURN " << turn_ << " begins ===" << endl;
 
 	eng->basicUtils->resetBoolArray(eng->map->light, false);
 

@@ -18,7 +18,7 @@ bool MapBuild::isAreaFree(const int x0, const int y0, const int x1, const int y1
   return true;
 }
 
-void MapBuild::makeStraightPathByPathfinder(const coord origin, const coord target, Feature_t feature, 
+void MapBuild::makeStraightPathByPathfinder(const coord origin, const coord target, Feature_t feature,
 					    const bool SMOOTH, const bool TUNNEL_THROUGH_ANY_FEATURE) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(blockers, false);

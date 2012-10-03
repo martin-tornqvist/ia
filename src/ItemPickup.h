@@ -10,19 +10,19 @@ class Actor;
 
 class ItemPickup
 {
-    public:
-        ItemPickup(Engine* engine) {eng = engine;}
+public:
+  ItemPickup(Engine* engine) {eng = engine;}
 
-        void tryPick();
+  void tryPick();
 
-        void tryUnloadWeaponFromGround();
+  void tryUnloadWeaponOrPickupAmmoFromGround();
 
-    private:
-        void pickupEffects(Actor* actor, Item* item);
+private:
+  void pickupEffects(Actor* actor, Item* item);
 
-		bool isInventoryFull(Inventory* inventory, Item* item) const;
+  bool isInventoryFull(Inventory* inventory, Item* item) const;
 
-        Engine* eng;
+  Engine* eng;
 };
 
 #endif

@@ -12,15 +12,12 @@
 #include "TextFormatting.h"
 #include "Query.h"
 
-//TODO The code in this file will need to be examined, plus it's kind of wonky in terms of functionality
-
-
 Entity::Entity(FeatureMob* feature_) :
-	feature(dynamic_cast<Feature*> (feature_)), entityType(entityType_featureMob) {
+	feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureMob) {
 }
 
 Entity::Entity(FeatureStatic* feature_) :
-	feature(dynamic_cast<Feature*> (feature_)), entityType(entityType_featureStatic) {
+	feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureStatic) {
 }
 
 void Look::markerAtCoord(const coord pos) {
@@ -30,19 +27,19 @@ void Look::markerAtCoord(const coord pos) {
 
 		entityDescribed = getEntityToDescribe(pos);
 
-		switch (entityDescribed.entityType) {
+		switch(entityDescribed.entityType) {
 		case entityType_actor:
 			describeBriefActor(entityDescribed.actor);
-		break;
+			break;
 		case entityType_featureStatic:
 			describeBriefFeatureStatic(entityDescribed.feature);
-		break;
+			break;
 		case entityType_featureMob:
 			describeBriefFeatureMob(entityDescribed.feature);
-		break;
+			break;
 		case entityType_item:
 			describeBriefItem(entityDescribed.item);
-		break;
+			break;
 		}
 	}
 }
@@ -53,12 +50,7 @@ void Look::describeBriefActor(const Actor* const actor) const {
 }
 
 void Look::describeBriefFeatureMob(const Feature* const feature) const {
-	//	for(unsigned int i = 0; i < eng->gameTime->getFeatureMobsSize(); i++) {
-	//		FeatureMob* f = eng->gameTime->getFeatureMobAt(i);
-	//		if(f->getPos() == pos) {
 	eng->log->addMessage(feature->getDescription(false) + ".");
-	//		}
-	//	}
 }
 
 void Look::describeBriefItem(Item* const item) const {

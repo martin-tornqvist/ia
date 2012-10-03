@@ -44,31 +44,10 @@ Popup::BoxReturnData Popup::printBox(const int BOX_HALF_WIDTH) const {
 		}
 	}
 
-//	eng->renderer->drawLineVertical(PIXEL_X0, PIXEL_Y0, PIXEL_H, clrBox);
-//	eng->renderer->drawLineVertical(PIXEL_X0 + CELL_W - 1 - 2, PIXEL_Y0, PIXEL_H, clrBox);
-//
-//	eng->renderer->drawLineVertical(PIXEL_X1 - CELL_W + 1 + 2, PIXEL_Y0, PIXEL_H, clrBox);
-//	eng->renderer->drawLineVertical(PIXEL_X1, PIXEL_Y0, PIXEL_H, clrBox);
-//
-//	eng->renderer->drawLineHorizontal(PIXEL_X0, PIXEL_Y0, PIXEL_W, clrBox);
-//	eng->renderer->drawLineHorizontal(PIXEL_X0, PIXEL_Y0 + CELL_H - 3, PIXEL_W, clrBox);
-//
-//	eng->renderer->drawLineHorizontal(PIXEL_X0, PIXEL_Y1 - CELL_H + 1 + 2, PIXEL_W, clrBox);
-//	eng->renderer->drawLineHorizontal(PIXEL_X0, PIXEL_Y1, PIXEL_W, clrBox);
-
-//	const SDL_Color clr1 = clrRed;
-//	const SDL_Color clr2 = clrBlueLight;
-//	const SDL_Color clr3 = clrBlue;
-//	const SDL_Color clr4 = clrBrownDark;
-//	eng->renderer->drawRectangle(PIXEL_X0 + 1, PIXEL_Y0 + 1, CELL_W - 4, CELL_H - 4, clr1);
-//	eng->renderer->drawRectangle(PIXEL_X1 - CELL_W + 4, PIXEL_Y0 + 1, CELL_W - 4, CELL_H - 4, clr2);
-//	eng->renderer->drawRectangle(PIXEL_X0 + 1, PIXEL_Y1 - CELL_H + 4, CELL_W - 4, CELL_H - 4, clr3);
-//	eng->renderer->drawRectangle(PIXEL_X1 - CELL_W + 4, PIXEL_Y1 - CELL_H + 4, CELL_W - 4, CELL_H - 4, clr4);
-
 	return BoxReturnData(x0y0 + coord(1, 1), x1y1 - coord(1, 1));
 }
 
-void Popup::showMessage(const string message) const {
+void Popup::showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE_AFTER) const {
 	const int BOX_HALF_WIDTH = message.length() >= 250 ? 23 : 18;
 	const BoxReturnData box = printBox(BOX_HALF_WIDTH);
 	const int W = box.x1y1Text.x - box.x0y0Text.x + 1;
@@ -88,5 +67,7 @@ void Popup::showMessage(const string message) const {
 
 	eng->renderer->flip();
 	eng->query->waitForEscOrSpace();
-	eng->renderer->drawMapAndInterface();
+	if(DRAW_MAP_AND_INTERFACE_AFTER) {
+	  eng->renderer->drawMapAndInterface(true);
+	}
 }
