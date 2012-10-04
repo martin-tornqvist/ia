@@ -155,8 +155,7 @@ void DungeonMaster::playerGainsExp(int exp) {
 					if(playerExp >= getXpToNextLvl()) {
 						eng->renderer->drawMapAndInterface();
 						playerLvl++;
-						eng->log->addMessage("I have reached level " + intToString(playerLvl) + "!", clrGreen);
-						eng->log->addMessage("I gain new abilities, press any key to select...", clrGreen);
+						eng->log->addMessage("I have reached level " + intToString(playerLvl) + "! Press any key to pick ability...", clrGreen);
 						eng->renderer->flip();
 						eng->query->waitForKeyPress();
 
