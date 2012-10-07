@@ -130,7 +130,7 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
 		projectileActive = true;
 
-		for(double i = 0; i <= FOV_RADI; i += 0.004) {
+		for(double i = 0; i <= FOV_STANDARD_RADI_FLO; i += 0.004) {
 			curX_prec += projectiles.at(pElement).xIncr * 0.004;
 			curY_prec += projectiles.at(pElement).yIncr * 0.004;
 			curX = int(curX_prec);

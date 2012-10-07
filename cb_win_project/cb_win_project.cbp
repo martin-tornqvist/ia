@@ -81,7 +81,9 @@
 			<Add option="-lmingw32 -lSDLmain -lSDL" />
 			<Add directory="..\sdl\lib" />
 		</Linker>
-		<Unit filename="..\assets\icon.ico" />
+		<Unit filename="..\icon\resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="..\src\AI_castRandomSpell.h" />
 		<Unit filename="..\src\AI_handleClosedBlockingDoor.h" />
 		<Unit filename="..\src\AI_listen_becomePlayerAware.h" />

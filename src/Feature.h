@@ -36,7 +36,7 @@ public:
   virtual SDL_Color getColor() const;
   virtual char getGlyph() const;
   virtual Tile_t getTile() const;
-  virtual void getLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  virtual void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
   virtual bool canHaveCorpse() const;
   virtual bool canHaveStaticFeature() const;
   virtual bool canHaveBlood() const;

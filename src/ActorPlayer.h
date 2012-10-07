@@ -83,6 +83,8 @@ public:
 
   int getHealingTimeTotal() const;
 
+  void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+
 private:
   //void decreaseHungerByNumber(const int satiate);
   //int hungerLevel;

@@ -8,35 +8,39 @@ using namespace std;
 
 class LitDynamite: public FeatureMob {
 public:
-	~LitDynamite() {
-	}
+  ~LitDynamite() {
+  }
 
-	void newTurn();
+  void newTurn();
 
 private:
-	friend class FeatureFactory;
-	LitDynamite(Feature_t id, coord pos, Engine* engine, DynamiteSpawnData* spawnData) :
-		FeatureMob(id, pos, engine), turnsLeftToExplosion_(spawnData->turnsLeftToExplosion_) {
-	}
+  friend class FeatureFactory;
+  LitDynamite(Feature_t id, coord pos, Engine* engine, DynamiteSpawnData* spawnData) :
+    FeatureMob(id, pos, engine), turnsLeftToExplosion_(spawnData->turnsLeftToExplosion_) {
+  }
 
-	int turnsLeftToExplosion_;
+  int turnsLeftToExplosion_;
 };
 
 class LitFlare: public FeatureMob {
 public:
-	~LitFlare() {
-	}
+  ~LitFlare() {
+  }
 
-	void newTurn();
+  void newTurn();
 
-	void getLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+
+  static int getLightRadius() {
+    return FOV_STANDARD_RADI_INT;
+  }
 
 private:
-	friend class FeatureFactory;
-	LitFlare(Feature_t id, coord pos, Engine* engine, DynamiteSpawnData* spawnData);
+  friend class FeatureFactory;
+  LitFlare(Feature_t id, coord pos, Engine* engine, DynamiteSpawnData* spawnData);
 
-	vector<coord> light_;
-	int life_;
+//  vector<coord> light_;
+  int life_;
 };
 
 #endif

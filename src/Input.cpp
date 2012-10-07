@@ -665,9 +665,12 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->log->clearLog();
         eng->log->addMessage("Save and quit (y/n)?", clrWhiteHigh);
         eng->renderer->flip();
-        if(eng->query->yesOrNo() == true) {
+        if(eng->query->yesOrNo()) {
           eng->saveHandler->save();
           *quitToMainMenu_ = true;
+        } else {
+          eng->log->clearLog();
+          eng->renderer->drawMapAndInterface();
         }
       } else {
         eng->log->clearLog();
@@ -681,21 +684,21 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
   break;
 
   //----------------------------------------UNDEFINED COMMANDS
-default:
-  if(key < SDLK_UP) {
-    str[0] = char(key);
+  default:
+    if(key < SDLK_UP) {
+      str[0] = char(key);
+    }
+    str[1] = '\0';
+    if(str[0] >= 33) { //&& str[0] <= 126) {
+      clearMessages();
+      string cmdTried = str;
+      eng->log->addMessage("Unknown command '" + cmdTried + "'. Press '?' for commands.");
+    }
+    break;
   }
-  str[1] = '\0';
-  if(str[0] >= 33) { //&& str[0] <= 126) {
-    clearMessages();
-    string cmdTried = str;
-    eng->log->addMessage("Unknown command '" + cmdTried + "'. Press '?' for commands.");
+  if(eng->gameTime->getCurrentActor() == eng->player) {
+    eng->renderer->flip();
   }
-  break;
-}
-if(eng->gameTime->getCurrentActor() == eng->player) {
-  eng->renderer->flip();
-}
 }
 
 void Input::read() {

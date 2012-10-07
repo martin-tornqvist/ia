@@ -29,6 +29,10 @@ FULLSCREEN=0
 SKIP_INTRO_LEVEL=0
 
 
+# Melee attack with ranged weapon cause prompt. 0 = no, 1 = yes
+RANGED_WPN_MELEE_PROMPT=1
+
+
 # Delay before key repeat starts when holding down a key (ms).
 KEY_REPEAT_DELAY=180
 

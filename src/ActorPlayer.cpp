@@ -21,6 +21,7 @@
 #include "ItemFactory.h"
 #include "ActorFactory.h"
 #include "PlayerBonuses.h"
+#include "FeatureLitDynamite.h"
 
 Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0), insanityShortTemp(0), arcaneKnowledge(0),
@@ -818,8 +819,9 @@ void Player::act() {
 
   getSpotedEnemies();
 
-  //Any phobia that causes fear?
-  testPhobias();
+  if(firstAidTurnsLeft == -1) {
+    testPhobias();
+  }
 
   //Lose short-term sanity from seen monsters?
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
@@ -945,6 +947,7 @@ void Player::act() {
   //First aid?
   // Old way:
   if(firstAidTurnsLeft == 0) {
+    eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
     eng->renderer->flip();
     restoreHP(99999);
@@ -953,21 +956,7 @@ void Player::act() {
     }
     firstAidTurnsLeft = -1;
   }
-  // New system with partial healing:
-//	if(firstAidTurnsLeft == 0) {
-//		eng->log->addMessage("I finish applying first aid.");
-//		eng->renderer->flip();
-//
-//		const int HEALING_RANK = eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid);
-//		const int PERCENT_HEALED = 33 + (HEALING_RANK * 10);
-//
-//		restoreHP((getHP_max() * PERCENT_HEALED) / 100);
-//
-//		if(HEALING_RANK >= 2 && getHP() >= getHP_max()) {
-//			m_statusEffectsHandler->endEffect(statusDiseased);
-//		}
-//		firstAidTurnsLeft = -1;
-//	}
+
   if(firstAidTurnsLeft > 0) {
     firstAidTurnsLeft--;
     eng->gameTime->letNextAct();
@@ -980,7 +969,6 @@ void Player::act() {
   }
 
   //When this function ends, the system starts reading keys.
-
 }
 
 void Player::attemptIdentifyItems() {
@@ -1102,6 +1090,18 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           Weapon* weapon = dynamic_cast<Weapon*>(m_inventory->getItemInSlot(slot_wielded));
           if(weapon != NULL) {
             if(weapon->getInstanceDefinition().isMeleeWeapon) {
+              if(eng->config->RANGED_WPN_MELEE_PROMPT) {
+                if(weapon->getInstanceDefinition().isRangedWeapon) {
+                  const string wpnName = weapon->getInstanceDefinition().name.name_a;
+                  eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
+                  eng->renderer->flip();
+                  if(eng->query->yesOrNo() == false) {
+                    eng->log->clearLog();
+                    eng->renderer->flip();
+                    return;
+                  }
+                }
+              }
               hasMeleeWeapon = true;
               eng->attack->melee(dest.x, dest.y, weapon);
               target = actorAtDest;
@@ -1249,19 +1249,49 @@ void Player::kick() {
   }
 }
 
-void Player::FOVupdate() {
-  const unsigned int SIZE = eng->gameTime->getFeatureMobsSize();
-  for(unsigned int i = 0; i < SIZE; i++) {
-    eng->gameTime->getFeatureMobAt(i)->getLight(eng->map->light);
-  }
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->featuresStatic[x][y]->getLight(eng->map->light);
+void Player::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  if(flareFuseTurns > 0) {
+    bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->basicUtils->resetBoolArray(myLight, false);
+    const int RADI = LitFlare::getLightRadius();
+    int x0 = pos.x - RADI;
+    int y0 = pos.y - RADI;
+    int x1 = pos.x + RADI;
+    int y1 = pos.y + RADI;
+    x0 = max(0, x0);
+    y0 = max(0, y0);
+    x1 = min(MAP_X_CELLS - 1, x1);
+    y1 = min(MAP_Y_CELLS - 1, y1);
+    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+    for(int y = y0; y <= y1; y++) {
+      for(int x = x0; x <= x1; x++) {
+        visionBlockers[x][y] = !eng->map->featuresStatic[x][y]->isVisionPassable();
+      }
+    }
+
+    eng->fov->runFovOnArray(visionBlockers, pos, myLight, false);
+    for(int y = y0; y <= y1; y++) {
+      for(int x = x0; x <= x1; x++) {
+        if(myLight[x][y]) {
+          light[x][y] = true;
+        }
+      }
     }
   }
+}
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+void Player::FOVupdate() {
+  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+
+  addLight(eng->map->light);
+
+  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
+    eng->gameTime->getFeatureMobAt(i)->addLight(eng->map->light);
+  }
+
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      eng->map->featuresStatic[x][y]->addLight(eng->map->light);
       eng->map->playerVision[x][y] = false;
     }
   }
@@ -1269,7 +1299,7 @@ void Player::FOVupdate() {
   if(m_statusEffectsHandler->allowSee()) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeVisionBlockerArray(blockers);
-    eng->fov->runPlayerFov(blockers, pos.x, pos.y);
+    eng->fov->runPlayerFov(blockers, pos);
     FOVhack();
   }
 
@@ -1305,7 +1335,7 @@ void Player::FOVhack() {
       if(visionBlocked[x][y] && moveBlocked[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if(eng->mapTests->isCellInsideMainScreen(coord(x + dx, y + dy)) == true) {
+            if(eng->mapTests->isCellInsideMainScreen(coord(x + dx, y + dy))) {
               if(eng->map->playerVision[x + dx][y + dy] == true && moveBlocked[x + dx][y + dy] == false) {
                 eng->map->playerVision[x][y] = true;
                 dx = 999;

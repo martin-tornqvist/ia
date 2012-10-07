@@ -419,7 +419,7 @@ void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int gener
 	moveItemToSlot(getSlot(slot_wieldedAlt), generalInventoryElement);
 	Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
 
-	engine->renderer->drawMapAndInterface();
+	engine->renderer->drawMapAndInterface(true);
 
 	if(itemBefore != NULL) {
 		engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
@@ -438,6 +438,8 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* engine) {
 	Item* item2 = slot2->item;
 	slot1->item = item2;
 	slot2->item = item1;
+
+  engine->renderer->drawMapAndInterface(true);
 
 	if(END_TURN) {
 		engine->gameTime->letNextAct();

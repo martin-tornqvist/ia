@@ -634,7 +634,7 @@ coord MapBuildBSP::placeStairs() {
   vector<coord> freeCells;
   eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
 
-  tracer << "MapBuildBSP: Sorting the free cells vector(size:" << freeCells.size() << "), and removing the furthest cells" << endl;
+  tracer << "MapBuildBSP: Sorting the free cells vector (size:" << freeCells.size() << "), and removing the furthest cells" << endl;
   const unsigned int FREE_STAIR_CELLS_DIV = 4;
   if(freeCells.size() > FREE_STAIR_CELLS_DIV) {
     IsCloserToOrigin isCloserToOrigin(eng->player->pos, eng);

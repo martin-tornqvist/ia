@@ -68,12 +68,11 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
 
     yPos++;
 
-    eng->renderer->drawText("NAME", renderArea_screen, X_POS_NAME, yPos, clrWhite);
-    eng->renderer->drawText("SCORE", renderArea_screen, X_POS_SCORE, yPos, clrWhite);
-    eng->renderer->drawText("LVL", renderArea_screen, X_POS_LVL, yPos, clrWhite);
-    eng->renderer->drawText("DLVL", renderArea_screen, X_POS_DLVL, yPos, clrWhite);
-    eng->renderer->drawText("INSANITY", renderArea_screen, X_POS_INSANITY, yPos, clrWhite);
-//		eng->renderer->drawText("RANK", renderArea_screen, X_POS_RANK, yPos, clrWhite);
+    eng->renderer->drawText("NAME", renderArea_screen, X_POS_NAME, yPos, clrGray);
+    eng->renderer->drawText("SCORE", renderArea_screen, X_POS_SCORE, yPos, clrGray);
+    eng->renderer->drawText("LVL", renderArea_screen, X_POS_LVL, yPos, clrGray);
+    eng->renderer->drawText("DLVL", renderArea_screen, X_POS_DLVL, yPos, clrGray);
+    eng->renderer->drawText("INSANITY", renderArea_screen, X_POS_INSANITY, yPos, clrGray);
 
     yPos++;
 
@@ -90,7 +89,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
 //			for(unsigned int xx = 0; xx < FILL_LENGTH; xx++) {
 //				eng->renderer->drawText(".", renderArea_screen, FILL_START + xx, y, clrGray);
 //			}
-      const SDL_Color clr = clrCyanLight;
+      const SDL_Color clr = clrRedLight;
       eng->renderer->drawText(NAME, renderArea_screen, X_POS_NAME, yPos, clr);
       eng->renderer->drawText(SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);
       eng->renderer->drawText(LVL, renderArea_screen, X_POS_LVL, yPos, clr);

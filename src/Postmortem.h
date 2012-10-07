@@ -14,44 +14,44 @@ class Engine;
 
 class Postmortem {
 public:
-	Postmortem(Engine* engine) :
-		causeOfDeath("Unknown"), eng(engine) {
-	}
+  Postmortem(Engine* engine) :
+    causeOfDeath("Unknown"), eng(engine) {
+  }
 
-	void run(bool* const quitGame);
+  void run(bool* const quitGame);
 
-	void setCauseOfDeath(const string cause) {
-		causeOfDeath = cause;
-	}
+  void setCauseOfDeath(const string cause) {
+    causeOfDeath = cause;
+  }
 
 private:
-	struct StringAndColor {
-		StringAndColor(const string str_, const SDL_Color clr_) :
-			str(str_), clr(clr_) {
-		}
-		StringAndColor() {
-		}
-		string str;
-		SDL_Color clr;
-	};
+  struct StringAndColor {
+    StringAndColor(const string str_, const SDL_Color clr_) :
+      str(str_), clr(clr_) {
+    }
+    StringAndColor() {
+    }
+    string str;
+    SDL_Color clr;
+  };
 
-	vector<StringAndColor> postmortemLines;
+  vector<StringAndColor> postmortemLines;
 
-	void readKeysMenu(bool* const quitGame);
+  void readKeysMenu(bool* const quitGame);
 
-	void renderMenu(const MenuBrowser& browser);
+  void renderMenu(const MenuBrowser& browser);
 
-	void runInfo();
+  void runInfo();
 
-	void renderInfo(const int TOP_ELEMENT);
+  void renderInfo(const int TOP_ELEMENT);
 
-	void makeMemorialFile(const string path);
+  void makeMemorialFile(const string path);
 
-	void makeInfoLines();
+  void makeInfoLines();
 
-	string causeOfDeath;
+  string causeOfDeath;
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

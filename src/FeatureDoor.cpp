@@ -276,15 +276,19 @@ void Door::tryBash(Actor* actorTrying) {
       const bool TRYER_OFF_BALANCE = eng->abilityRoll->roll(SKILL_VALUE_BALANCE) <= failSmall;
 
       if(TRYER_SPRAINED) {
-        if(IS_PLAYER)
+        if(IS_PLAYER) {
           eng->log->addMessage("I sprain myself.", clrMessageBad);
-        else if(PLAYER_SEE_TRYER)
-          eng->log->addMessage(actorTrying->getNameThe() + " is hurt.");
-        const int SPRAIN_DMG = 1;
-        const bool DIED = actorTrying->hit(SPRAIN_DMG, damageType_direct);
-        if(DIED) {
-          if(actorTrying == eng->player) {
-            eng->postmortem->setCauseOfDeath("Killed by a door");
+        }
+        else {
+          if(PLAYER_SEE_TRYER) {
+            eng->log->addMessage(actorTrying->getNameThe() + " is hurt.");
+          }
+          const int SPRAIN_DMG = 1;
+          const bool DIED = actorTrying->hit(SPRAIN_DMG, damageType_direct);
+          if(DIED) {
+            if(actorTrying == eng->player) {
+              eng->postmortem->setCauseOfDeath("Killed by a door");
+            }
           }
         }
       }
@@ -298,6 +302,10 @@ void Door::tryBash(Actor* actorTrying) {
         }
 
         actorTrying->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(2));
+      }
+
+      if(IS_PLAYER && material_ == doorMaterial_metal) {
+        eng->log->addMessage("It seems futile.");
       }
     }
 
@@ -322,10 +330,6 @@ void Door::tryBash(Actor* actorTrying) {
           eng->log->addMessage("A door crashes open!");
         }
         eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
-      }
-    } else {
-      if(IS_PLAYER) {
-        eng->log->addMessage("It seems futile.");
       }
     }
 

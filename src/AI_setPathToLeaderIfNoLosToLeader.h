@@ -14,7 +14,7 @@ public:
                bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
                engine->mapTests->makeVisionBlockerArray(blockers);
 
-               if(engine->fov->checkOneCell(blockers, leader->pos.x, leader->pos.y, monster->pos.x, monster->pos.y, true)) {
+               if(engine->fov->checkOneCell(blockers, leader->pos, monster->pos, true)) {
                   path->resize(0);
                   return;
                }

@@ -23,7 +23,7 @@ void Feature::bump(Actor* actorBumping) {
 	}
 }
 
-void Feature::getLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+void Feature::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
    (void)light;
 }
 

@@ -83,7 +83,7 @@ void Populate::populate() const {
 	vector<coord> freeCells;
 	eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
 
-	const int MIN_DIST_FROM_PLAYER = eng->map->getDungeonLevel() == 0 ? static_cast<int>(FOV_RADI + 1) : 6;
+	const int MIN_DIST_FROM_PLAYER = eng->map->getDungeonLevel() == 0 ? FOV_STANDARD_RADI_INT + 1 : 6;
 
 	const unsigned int NR_OF_SPECIAL_ROOMS = eng->specialRoomHandler->getNrOfRooms();
 	unsigned int i = 0;
@@ -156,7 +156,7 @@ void Populate::spawnOneMonster(const bool IS_AFTER_MAP_CREATION) const {
 	vector<coord> freeCells;
 	eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
 
-	const int MIN_DIST_FROM_PLAYER = static_cast<int>(FOV_RADI) + 4;
+	const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 4;
 
 	if(freeCells.size() > 0) {
 		bool done = false;

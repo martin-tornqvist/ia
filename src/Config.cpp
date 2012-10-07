@@ -135,6 +135,13 @@ void Config::trySetVariableFromLine(string line) {
 		SKIP_INTRO_LEVEL = line.at(0) == '0' ? false : true;
 	}
 
+	varName = "RANGED_WPN_MELEE_PROMPT=";
+	foundPos = line.find(varName);
+	if(foundPos != string::npos) {
+		line = line.substr(foundPos + varName.size());
+		RANGED_WPN_MELEE_PROMPT = line.at(0) == '0' ? false : true;
+	}
+
 //	varName = "ALWAYS_ASK_DIRECTION=";
 //	foundPos = line.find(varName);
 //	if(foundPos != string::npos) {

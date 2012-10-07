@@ -27,7 +27,7 @@ void Molotov::setPlayerExplosive(Engine* const engine) const
 
 void Flare::setPlayerExplosive(Engine* const engine) const
 {
-	engine->player->flareFuseTurns = 100;
+	engine->player->flareFuseTurns = 200;
 
 	engine->player->getInstanceDefinition()->color = clrYellow;
 	engine->log->addMessage("I light a Flare.");

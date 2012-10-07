@@ -11,17 +11,14 @@ class MainMenu {
 public:
 	MainMenu(Engine* engine) {
 		eng = engine;
-		pickHplQuote();
 	}
 	GameEntry_t run(bool *quit);
 
 private:
 	Engine* eng;
 	void draw(const MenuBrowser& browser);
-	
-	void pickHplQuote();
 
-	string hplQuote;
+	string getHplQuote();
 };
 
 #endif

@@ -32,6 +32,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
   const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_WIDTH_TEXT;
   const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_HEIGHT_TEXT;
 
+  const int BG_BRIGHTNESS = eng->dice.getInRange(9, 15);
+
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
@@ -39,16 +41,15 @@ void MainMenu::draw(const MenuBrowser& browser) {
         cha = 'a' + eng->dice.getInRange(0, 25);
       }
       SDL_Color bgClr = clrGray;
-      const int BG_BRIGHTNESS = eng->dice.getInRange(6, 15);
       bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
       eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
     }
   }
-  
+
   SDL_Color quoteClr = clrGray;
-  const int QUOTE_BRIGHTNESS = 42;
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 9;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(hplQuote, 28);
+  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng->renderer->drawTextCentered(quoteLines.at(i), renderArea_screen, 15, 11 + i, quoteClr);
   }
@@ -115,7 +116,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
 //	eng->renderer->drawTextCentered("Tile set provided by Oryx (www.oryxdesignlab.com)", renderArea_characterLines, xPos, 1, clrGeneral);
 
-
   eng->renderer->flip();
 }
 
@@ -175,70 +175,38 @@ GameEntry_t MainMenu::run(bool* quit) {
   return gameEntry_new;
 }
 
-void MainMenu::pickHplQuote() {
+string MainMenu::getHplQuote() {
   vector<string> quotes;
   quotes.resize(0);
-
-
-quotes.push_back("Our means of receiving impressions are absurdly few, and our notions of surrounding objects infinitely narrow. We see things only as we are constructed to see them, and can gain no idea of their absolute nature. With five feeble senses we pretend to comprehend the boundlessly complex cosmos...");
-
-quotes.push_back("Disintegration is quite painless, I assure you.");
-
-quotes.push_back("...the prosaic materialism of the majority condemns as madness the flashes of super-sight which penetrate the common veil of obvious empiricism...");
-
-quotes.push_back("I am writing this under an appreciable mental strain, since by tonight I shall be no more...");
-
-quotes.push_back("The end is near. I hear a noise at the door, as of some immense slippery body lumbering against it. It shall not find me...");
-
-quotes.push_back("In broad daylight, and at most seasons I am apt to think the greater part of it a mere dream; but sometimes in the autumn, about two in the morning when winds and animals howl dismally, there comes from inconceivable depths below a damnable suggestions of rhythmical throbbing ... and I feel that the transition of Juan Romero was a terrible one indeed...");
-
-quotes.push_back("Sometimes I believe that this less material life is our truer life, and that our vain presence on the terraqueous globe is itself the secondary or merely virtual phenomenon.");
-
-quotes.push_back("Life is a hideous thing, and from the background behind what we know of it peer daemoniacal hints of truth which make it sometimes a thousandfold more hideous. Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
-
-quotes.push_back("Madness rides the star-wind... claws and teeth sharpened on centuries of corpses... dripping death astride a bacchanale of bats from nigh-black ruins of buried temples of Belial...");
-
-quotes.push_back("Memories and possibilities are ever more hideous than realities.");
-
-quotes.push_back("The only saving grace of the present is that it's too damned stupid to question the past very closely.");
-
-quotes.push_back("Yog-Sothoth knows the gate. Yog-Sothoth is the gate. Yog-Sothoth is the key and guardian of the gate. Past, present, future, all are one in Yog-Sothoth. He knows where the Old Ones broke through of old, and where They shall break through again. He knows where They have trod earth's fields, and where They still tread them, and why no one can behold Them as They tread.");
-
-quotes.push_back("Slowly but inexorably crawling upon my consciousness and rising above every other impression, came a dizzying fear of the unknown; a fear all the greater because I could not analyse it, and seeming to concern a stealthily approaching menace; not death, but some nameless, unheard-of thing inexpressibly more ghastly and abhorrent.");
-
-quotes.push_back("I felt that some horrible scene or object lurked beyond the silk-hung walls, and shrank from glancing through the arched, latticed windows that opened so bewilderingly on every hand.");
-
-quotes.push_back("There now ensued a series of incidents which transported me to the opposite extremes of ecstasy and horror; incidents which I tremble to recall and dare not seek to interpret...");
-
-quotes.push_back("From the new-flooded lands it flowed again, uncovering death and decay; and from its ancient and immemorial bed it trickled loathsomely, uncovering nighted secrets of the years when Time was young and the gods unborn.");
-
-quotes.push_back("The moon is dark, and the gods dance in the night; there is terror in the sky, for upon the moon hath sunk an eclipse foretold in no books of men or of earth's gods...");
-
-quotes.push_back("May the merciful gods, if indeed there be such, guard those hours when no power of the will, or drug that the cunning of man devises, can keep me from the chasm of sleep. Death is merciful, for there is no return therefrom, but with him who has come back out of the nethermost chambers of night, haggard and knowing, peace rests nevermore.");
-
-quotes.push_back("What I learned and saw in those hours of impious exploration can never be told, for want of symbols or suggestions in any language.");
-
-quotes.push_back("From even the greatest of horrors irony is seldom absent.");
-
-quotes.push_back("The most merciful thing in the world, I think, is the inability of the human mind to correlate all its contents.");
-
-quotes.push_back("In his house at R'lyeh dead Cthulhu waits dreaming.");
-
-quotes.push_back("Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn");
-
-quotes.push_back("They worshipped, so they said, the Great Old Ones who lived ages before there were any men, and who came to the young world out of the sky...");
-
-quotes.push_back("That is not dead which can eternal lie, and with strange aeons even death may die.");
-
-quotes.push_back("I have looked upon all that the universe has to hold of horror, and even the skies of spring and the flowers of summer must ever afterward be poison to me. But I do not think my life will be long. (...) I know too much, and the cult still lives.");
-
-quotes.push_back("Something terrible came to the hills and valleys on that meteor, and something terrible — though I know not in what proportion — still remains.");
-
-quotes.push_back("Man's respect for the imponderables varies according to his mental constitution and environment. Through certain modes of thought and training it can be elevated tremendously, yet there is always a limit.");
-
-quotes.push_back("As human beings, our only sensible scale of values is one based on lessening the agony of existence.");
-
-quotes.push_back("The oldest and strongest emotion of mankind is fear, and the oldest and strongest kind of fear is fear of the unknown.");
-
- hplQuote = "\"" + quotes.at(eng->dice.getInRange(0, quotes.size() - 1)) + "\"";
+  quotes.push_back("Our means of receiving impressions are absurdly few, and our notions of surrounding objects infinitely narrow. We see things only as we are constructed to see them, and can gain no idea of their absolute nature. With five feeble senses we pretend to comprehend the boundlessly complex cosmos...");
+  quotes.push_back("Disintegration is quite painless, I assure you.");
+  quotes.push_back("...the prosaic materialism of the majority condemns as madness the flashes of super-sight which penetrate the common veil of obvious empiricism...");
+  quotes.push_back("I am writing this under an appreciable mental strain, since by tonight I shall be no more...");
+  quotes.push_back("The end is near. I hear a noise at the door, as of some immense slippery body lumbering against it. It shall not find me...");
+  quotes.push_back("In broad daylight, and at most seasons I am apt to think the greater part of it a mere dream; but sometimes in the autumn, about two in the morning when winds and animals howl dismally, there comes from inconceivable depths below a damnable suggestions of rhythmical throbbing ... and I feel that the transition of Juan Romero was a terrible one indeed...");
+  quotes.push_back("Sometimes I believe that this less material life is our truer life, and that our vain presence on the terraqueous globe is itself the secondary or merely virtual phenomenon.");
+  quotes.push_back("Life is a hideous thing, and from the background behind what we know of it peer daemoniacal hints of truth which make it sometimes a thousandfold more hideous. Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
+  quotes.push_back("Madness rides the star-wind... claws and teeth sharpened on centuries of corpses... dripping death astride a bacchanale of bats from nigh-black ruins of buried temples of Belial...");
+  quotes.push_back("Memories and possibilities are ever more hideous than realities.");
+  quotes.push_back("The only saving grace of the present is that it's too damned stupid to question the past very closely.");
+  quotes.push_back("Yog-Sothoth knows the gate. Yog-Sothoth is the gate. Yog-Sothoth is the key and guardian of the gate. Past, present, future, all are one in Yog-Sothoth. He knows where the Old Ones broke through of old, and where They shall break through again. He knows where They have trod earth's fields, and where They still tread them, and why no one can behold Them as They tread.");
+  quotes.push_back("Slowly but inexorably crawling upon my consciousness and rising above every other impression, came a dizzying fear of the unknown; a fear all the greater because I could not analyse it, and seeming to concern a stealthily approaching menace; not death, but some nameless, unheard-of thing inexpressibly more ghastly and abhorrent.");
+  quotes.push_back("I felt that some horrible scene or object lurked beyond the silk-hung walls, and shrank from glancing through the arched, latticed windows that opened so bewilderingly on every hand.");
+  quotes.push_back("There now ensued a series of incidents which transported me to the opposite extremes of ecstasy and horror; incidents which I tremble to recall and dare not seek to interpret...");
+  quotes.push_back("From the new-flooded lands it flowed again, uncovering death and decay; and from its ancient and immemorial bed it trickled loathsomely, uncovering nighted secrets of the years when Time was young and the gods unborn.");
+  quotes.push_back("The moon is dark, and the gods dance in the night; there is terror in the sky, for upon the moon hath sunk an eclipse foretold in no books of men or of earth's gods...");
+  quotes.push_back("May the merciful gods, if indeed there be such, guard those hours when no power of the will, or drug that the cunning of man devises, can keep me from the chasm of sleep. Death is merciful, for there is no return therefrom, but with him who has come back out of the nethermost chambers of night, haggard and knowing, peace rests nevermore.");
+  quotes.push_back("What I learned and saw in those hours of impious exploration can never be told, for want of symbols or suggestions in any language.");
+  quotes.push_back("From even the greatest of horrors irony is seldom absent.");
+  quotes.push_back("The most merciful thing in the world, I think, is the inability of the human mind to correlate all its contents.");
+  quotes.push_back("In his house at R'lyeh dead Cthulhu waits dreaming.");
+  quotes.push_back("Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn");
+  quotes.push_back("They worshipped, so they said, the Great Old Ones who lived ages before there were any men, and who came to the young world out of the sky...");
+  quotes.push_back("That is not dead which can eternal lie, and with strange aeons even death may die.");
+  quotes.push_back("I have looked upon all that the universe has to hold of horror, and even the skies of spring and the flowers of summer must ever afterward be poison to me. But I do not think my life will be long. (...) I know too much, and the cult still lives.");
+  quotes.push_back("Something terrible came to the hills and valleys on that meteor, and something terrible, though I know not in what proportion, still remains.");
+  quotes.push_back("Man's respect for the imponderables varies according to his mental constitution and environment. Through certain modes of thought and training it can be elevated tremendously, yet there is always a limit.");
+  quotes.push_back("As human beings, our only sensible scale of values is one based on lessening the agony of existence.");
+  quotes.push_back("The oldest and strongest emotion of mankind is fear, and the oldest and strongest kind of fear is fear of the unknown.");
+  return "\"" + quotes.at(eng->dice.getInRange(0, quotes.size() - 1)) + "\"";
 }

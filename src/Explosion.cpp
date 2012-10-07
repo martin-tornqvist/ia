@@ -78,7 +78,7 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
 
 	for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
 		for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
-			reach[x][y] = eng->fov->checkOneCell(blockers, x, y, origin.x, origin.y, false) && !blockers[x][y];
+			reach[x][y] = eng->fov->checkOneCell(blockers, coord(x,y), origin, false) && !blockers[x][y];
 		}
 	}
 	reach[origin.x][origin.y] = true;
@@ -211,7 +211,7 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
 	for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
 		for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
 			//As opposed to the explosion reach, the smoke explosion must not reach into walls and other solid objects
-			reach[x][y] = !blockers[x][y] && eng->fov->checkOneCell(blockers, x, y, origin.x, origin.y, false);
+			reach[x][y] = !blockers[x][y] && eng->fov->checkOneCell(blockers, coord(x, y), origin, false);
 		}
 	}
 	reach[origin.x][origin.y] = true;

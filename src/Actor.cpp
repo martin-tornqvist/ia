@@ -51,13 +51,13 @@ bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_C
 			return false;
 		}
 
-		if(pos.x - other.pos.x > FOV_RADI_INT) return false;
-		if(other.pos.x - pos.x > FOV_RADI_INT)	return false;
-		if(other.pos.y - pos.y > FOV_RADI_INT)	return false;
-		if(pos.y - other.pos.y > FOV_RADI_INT)	return false;
+		if(pos.x - other.pos.x > FOV_STANDARD_RADI_INT) return false;
+		if(other.pos.x - pos.x > FOV_STANDARD_RADI_INT)	return false;
+		if(other.pos.y - pos.y > FOV_STANDARD_RADI_INT)	return false;
+		if(pos.y - other.pos.y > FOV_STANDARD_RADI_INT)	return false;
 
 		if(visionBlockingCells != NULL) {
-			return eng->fov->checkOneCell(visionBlockingCells, other.pos.x, other.pos.y, pos.x, pos.y, true);
+			return eng->fov->checkOneCell(visionBlockingCells, other.pos, pos, true);
 		}
 	}
 	return false;
