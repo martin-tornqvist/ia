@@ -226,8 +226,8 @@ coord Art::getGlyphCoords(const char glyph, Engine* engine)
 {
 	coord c = getColumnAndRow(glyph);
 
-	c.x *= engine->config->CELL_WIDTH_TEXT;
-	c.y *= engine->config->CELL_HEIGHT_TEXT;
+	c.x *= engine->config->CELL_W;
+	c.y *= engine->config->CELL_H;
 
 	return c;
 }
@@ -236,8 +236,8 @@ coord Art::getTileCoords(const Tile_t tile, Engine* engine)
 {
 	coord c = getColumnAndRowTile(tile);
 
-	c.x *= engine->config->CELL_WIDTH_MAP;
-	c.y *= engine->config->CELL_HEIGHT_MAP;
+	c.x *= engine->config->CELL_W;
+	c.y *= engine->config->CELL_H;
 
 	return c;
 }

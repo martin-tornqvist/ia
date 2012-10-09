@@ -110,7 +110,7 @@
 
 1349515715 c:\dev\ia\src\constdungeonsettings.h
 
-1349514571 c:\dev\ia\src\config.h
+1349720754 c:\dev\ia\src\config.h
 	<string>
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
@@ -208,7 +208,7 @@
 	"Config.h"
 	"Render.h"
 
-1349366933 c:\dev\ia\src\render.h
+1349721218 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
 	"SDL/SDL.h"
@@ -506,7 +506,7 @@
 	"ActorFactory.h"
 	"Blood.h"
 
-1349366928 source:c:\dev\ia\src\art.cpp
+1349720467 source:c:\dev\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
@@ -1263,7 +1263,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1349520110 source:c:\dev\ia\src\mainmenu.cpp
+1349720635 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1414,7 +1414,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1349513500 source:c:\dev\ia\src\playerallocbonus.cpp
+1349605619 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1424,7 +1424,7 @@
 	"Render.h"
 	"DungeonMaster.h"
 
-1349603727 source:c:\dev\ia\src\playerbonuses.cpp
+1349605536 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	"Engine.h"
@@ -1465,7 +1465,7 @@
 	"ActorPlayer.h"
 	"FeatureFactory.h"
 
-1349366930 source:c:\dev\ia\src\popup.cpp
+1349720635 source:c:\dev\ia\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Render.h"
@@ -1505,7 +1505,7 @@
 	"ItemFactory.h"
 	"DungeonMaster.h"
 
-1349366930 source:c:\dev\ia\src\render.cpp
+1349727883 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1660,7 +1660,7 @@
 
 1349366931 c:\dev\ia\src\declares.h
 
-1349514608 source:c:\dev\ia\src\config.cpp
+1349726962 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>

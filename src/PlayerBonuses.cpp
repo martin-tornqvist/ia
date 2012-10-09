@@ -53,13 +53,13 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
   //	r1 = "Attacks using light weapons are occasionally free.";
   //	r2 = "When \"Charging\", medium & heavy weapons do full damage.";
   //	r3 = "No weapon degradation from normal hits.";
-  bonuses_.push_back(PlayerBonus(ability_accuracyMelee, TITLE_COMBAT, "Melee Accuracy", s, eng, 35, 45, r1, 55, r2, 65, r3));
+  bonuses_.push_back(PlayerBonus(ability_accuracyMelee, TITLE_COMBAT, "Melee combat", s, eng, 35, 45, r1, 55, r2, 65, r3));
 
   s = "You have better accuracy with firearms and thrown weapons.";
   //	r1 = "Being \"Still\" gives aim bonus.";
   //	r2 = "Thrown weapons have a chance to do double damage.";
   //	r3 = "Occasionally reload instantly.";
-  bonuses_.push_back(PlayerBonus(ability_accuracyRanged, TITLE_COMBAT, "Ranged Accuracy", s, eng, 40, 55, r1, 70, r2, 85, r3));
+  bonuses_.push_back(PlayerBonus(ability_accuracyRanged, TITLE_COMBAT, "Ranged combat", s, eng, 40, 55, r1, 70, r2, 85, r3));
 
   //	s = "You are quicker at drawing your weapons. "
   //	r1 = "";

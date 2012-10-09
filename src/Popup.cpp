@@ -12,8 +12,8 @@ Popup::BoxReturnData Popup::printBox(const int BOX_HALF_WIDTH) const {
 	const int CELLS_Y_OFFSET = -2;
 	const coord x0y0(MAP_X_CELLS_HALF - CELLS_FROM_MID_X, MAP_Y_CELLS_HALF - CELLS_FROM_MID_Y + CELLS_Y_OFFSET);
 	const coord x1y1(MAP_X_CELLS_HALF + CELLS_FROM_MID_X, MAP_Y_CELLS_HALF + CELLS_FROM_MID_Y + CELLS_Y_OFFSET);
-//	const int CELL_W = eng->config->CELL_WIDTH_TEXT;
-//	const int CELL_H = eng->config->CELL_HEIGHT_TEXT;
+//	const int CELL_W = eng->config->CELL_W;
+//	const int CELL_H = eng->config->CELL_H;
 //	const int MAIN_Y_OFFS = eng->config->MAINSCREEN_Y_OFFSET;
 //	const int PIXEL_X0 = x0y0.x * CELL_W;
 //	const int PIXEL_Y0 = x0y0.y * CELL_H + MAIN_Y_OFFS;

@@ -48,13 +48,8 @@ public:
 	const int CHARACTER_LINES_Y_CELLS;
 	int CHARACTER_LINES_HEIGHT;
 
-	//int SCREEN_X_CELLS;
-	//int SCREEN_Y_CELLS;
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
-
-	//int SCREEN_X_CELLS_HALF;
-	//int SCREEN_Y_CELLS_HALF;
 
 	const int SCREEN_BPP;
 	const int FRAMES_PER_SECOND;
@@ -78,8 +73,8 @@ public:
 	int MAINSCREEN_Y_OFFSET;
 
 	int CHARACTER_LINES_Y_OFFSET;
-	int CELL_WIDTH_TEXT, CELL_HEIGHT_TEXT;
-	int CELL_WIDTH_MAP, CELL_HEIGHT_MAP;
+
+	int CELL_W, CELL_H;
 
 private:
 	Config& operator=(const Config& other) {
@@ -89,7 +84,6 @@ private:
 
 	void read();
 	void trySetVariableFromLine(string line);
-
 };
 
 #endif

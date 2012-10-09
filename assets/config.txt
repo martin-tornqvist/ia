@@ -9,16 +9,16 @@
 # 1 = font/11x19.bmp
 # 2 = font/16x24.bmp
 # 3 = font/16x24_typewriter.bmp
-FONT_IMAGE=1
+FONT_IMAGE=0
 
 
 # How to render the map. 0 = ASCII, 1 = Tiles
 # Setting this to 1 also forces 16x24 font for text
-USE_TILE_SET=1
+USE_TILE_SET=0
 
 
 # Wall symbol used in ASCII mode. 0 = #, 1 = full square.
-WALL_SYMBOL_FULL_SQUARE=1
+WALL_SYMBOL_FULL_SQUARE=0
 
 
 # 0 = Windowed, 1 = Fullscreen.

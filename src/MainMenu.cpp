@@ -29,8 +29,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->clearRenderArea(renderArea_screen);
 
-  const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_WIDTH_TEXT;
-  const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_HEIGHT_TEXT;
+  const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
+  const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
 
   const int BG_BRIGHTNESS = eng->dice.getInRange(9, 15);
 
@@ -47,13 +47,12 @@ void MainMenu::draw(const MenuBrowser& browser) {
   }
 
   SDL_Color quoteClr = clrGray;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 9;
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 10;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawTextCentered(quoteLines.at(i), renderArea_screen, 15, 11 + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 3, 12 + i, quoteClr);
   }
-
 
   SDL_Color clrGeneral = clrRedLight;
   SDL_Color clrDark = clrRed;
