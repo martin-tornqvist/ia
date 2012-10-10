@@ -14,10 +14,13 @@ public:
 
 	~Config() {
 	}
+
+	void setCellDimDependentVariables();
+
 	const string GAME_VERSION;
 
 	const string TILES_IMAGE_NAME;
-
+	const string MAIN_MENU_LOGO_IMAGE_NAME;
 	string FONT_IMAGE_NAME;
 
 private:
@@ -29,7 +32,7 @@ public:
 
 	char WALL_SYMBOL_FULL_SQUARE;
 
-  bool RANGED_WPN_MELEE_PROMPT;
+	bool RANGED_WPN_MELEE_PROMPT;
 
 	bool SKIP_INTRO_LEVEL;
 

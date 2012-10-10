@@ -7,6 +7,14 @@ RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
 TARGET_DIR=target
 ASSETS_DIR=assets
 
+# Includes
+INCLUDES=
+
+# Target specific include files
+_INCLUDES=
+debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
+release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
+
 #Flags
 CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
 LDFLAGS=$(shell sdl-config --libs)
@@ -17,16 +25,10 @@ SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 
 # Various bash commands
-RM_CMD=rm -rf
-MV_CMD=mv -f
-MKDIR_CMD=mkdir -p
-CP_CMD=cp -r
-
-# Target specific include files
-_INCLUDES=
-
-debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
-release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
+RM=rm -rf
+MV=mv -f
+MKDIR=mkdir -p
+CP=cp -r
 
 # Dependencies 
 debug: $(SOURCES) $(EXECUTABLE)
@@ -40,17 +42,17 @@ default_target:
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
-	$(RM_CMD) $(TARGET_DIR)
-	$(MKDIR_CMD) $(TARGET_DIR)
-	$(MV_CMD) $(EXECUTABLE) $(TARGET_DIR)
-	$(CP_CMD) $(ASSETS_DIR)/* $(TARGET_DIR)
+	$(RM) $(TARGET_DIR)
+	$(MKDIR) $(TARGET_DIR)
+	$(MV) $(EXECUTABLE) $(TARGET_DIR)
+	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
 $(OBJECTS): $(SOURCES)
-	$(CC) $(CFLAGS) $(_INCLUDES) $(SOURCES) -c
-	$(MV_CMD) *.o ./$(SRC_DIR)/
+	$(CC) $(CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
+	$(MV) *.o ./$(SRC_DIR)/
 
 .PHONY: clean
 clean:
-	find . -type f -name '*~' | xargs $(RM_CMD)
-	find . -type f -name '*.o' | xargs $(RM_CMD)
-	$(RM_CMD) $(TARGET_DIR)
+	find . -type f -name '*~' | xargs $(RM)
+	find . -type f -name '*.o' | xargs $(RM)
+	$(RM) $(TARGET_DIR)

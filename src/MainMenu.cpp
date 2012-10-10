@@ -17,11 +17,13 @@ using namespace std;
 void MainMenu::draw(const MenuBrowser& browser) {
   vector<string> logo;
 
-  logo.push_back("        ___  __                __  __                  ");
-  logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
-  logo.push_back("| | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
-  logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
-  logo.push_back("               \\                 \\                      ");
+  if(eng->config->USE_TILE_SET == false) {
+    logo.push_back("        ___  __                __  __                  ");
+    logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
+    logo.push_back("| | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
+    logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
+    logo.push_back("               \\                 \\                      ");
+  }
 
   int xPos = MAP_X_CELLS / 2;
   int yPos = 3;
@@ -32,7 +34,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
   const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
 
-  const int BG_BRIGHTNESS = eng->dice.getInRange(9, 15);
+  const int BG_BRIGHTNESS = eng->dice.getInRange(9, 13);
 
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
@@ -47,73 +49,60 @@ void MainMenu::draw(const MenuBrowser& browser) {
   }
 
   SDL_Color quoteClr = clrGray;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 10;
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 11;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
+  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 27);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 3, 12 + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 1, 13 + i, quoteClr);
   }
 
   SDL_Color clrGeneral = clrRedLight;
   SDL_Color clrDark = clrRed;
   SDL_Color clrBright = clrWhite;
 
-  const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
-
-  for(unsigned int i = 0; i < logo.size(); i++) {
-    xPos = LOGO_X_POS_LEFT;
-    for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
-      if(logo.at(i).at(ii) != ' ') {
-        SDL_Color clr = clrBlueLight;
-        clr.b += eng->dice.getInRange(-110, 0);
-        eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
+  if(eng->config->USE_TILE_SET) {
+    eng->renderer->drawMainMenuLogo(1);
+    yPos += 11;
+  } else {
+    const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
+    for(unsigned int i = 0; i < logo.size(); i++) {
+      xPos = LOGO_X_POS_LEFT;
+      for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
+	if(logo.at(i).at(ii) != ' ') {
+	  SDL_Color clr = clrBlueLight;
+	  clr.b += eng->dice.getInRange(-110, 0);
+	  eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
+	}
+	xPos++;
       }
-      xPos++;
+      yPos += 1;
     }
-    yPos += 1;
   }
+
   xPos = MAP_X_CELLS / 2;
 
   if(IS_DEBUG_MODE) {
     eng->renderer->drawText("DEBUG MODE", renderArea_screen, 1, 1, clrYellow);
   }
 
-  eng->renderer->drawTextCentered(eng->config->GAME_VERSION, renderArea_screen, xPos, yPos, clrGeneral);
-  yPos += 1;
-
-  eng->renderer->drawTextCentered("(c) 2011-2012 Martin Tornqvist", renderArea_screen, xPos, yPos, clrDark);
-  yPos += 1;
-
-  eng->renderer->drawTextCentered("m.tornq@gmail.com", renderArea_screen, xPos, yPos, clrDark);
   yPos += 2;
 
-//	eng->renderer->drawTextCentered("http://infraarcana.wikispaces.com", renderArea_screen, xPos, yPos, clrDark);
-//	yPos += 2;
-
-//	eng->renderer->drawTextCentered("You can set options by editing config.txt", renderArea_screen, xPos, yPos, clrDark);
-//	yPos += 1;
-//	eng->renderer->drawTextCentered("(switch between tile/ASCII mode, skip intro level, etc)", renderArea_screen, xPos, yPos, clrDark);
-//	yPos += 3;
-
-  yPos += 3;
-
-  eng->renderer->drawTextCentered("Start new character", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Continue game", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("View the High Score", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Keyboard commands", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Read the manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Exit game", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
   yPos += 1;
 
-
-//	eng->renderer->drawTextCentered("Tile set provided by Oryx (www.oryxdesignlab.com)", renderArea_characterLines, xPos, 1, clrGeneral);
+  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2012 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
   eng->renderer->flip();
 }
@@ -153,11 +142,11 @@ GameEntry_t MainMenu::run(bool* quit) {
         }
       }
       if(browser.isPosAtKey('c')) {
-        eng->highScore->runHighScoreScreen();
+        eng->manual->run();
         draw(browser);
       }
       if(browser.isPosAtKey('d')) {
-        eng->manual->run();
+        eng->highScore->runHighScoreScreen();
         draw(browser);
       }
       if(browser.isPosAtKey('e')) {

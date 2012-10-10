@@ -9,7 +9,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Windows;" />
-				<Option output="..\target\debug\ia" prefix_auto="1" extension_auto="1" />
+				<Option output="..\target\debug\Infra Arcana Debug" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="..\target\debug\" />
 				<Option object_output="..\obj\debug\" />
 				<Option type="1" />
@@ -40,7 +40,7 @@
 			</Target>
 			<Target title="Release">
 				<Option platforms="Windows;" />
-				<Option output="..\target\release\ia" prefix_auto="1" extension_auto="1" />
+				<Option output="..\target\release\Infra Arcana" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="..\target\release\" />
 				<Option object_output="..\obj\release\" />
 				<Option type="0" />

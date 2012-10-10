@@ -46,6 +46,8 @@ public:
   void drawBlastAnimationAtField(const coord center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color colorInner, const SDL_Color colorOuter, const int DURATION);
   void drawBlastAnimationAt(const coord pos, const SDL_Color color, const int DURATION);
 
+  void drawMainMenuLogo(const int Y_POS);
+
   void flip() {
     SDL_Flip(m_screen);
   }
@@ -67,6 +69,7 @@ private:
 
   void loadFontSheet();
   void loadTiles();
+  void loadMainMenuLogo();
 
   void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL);
   void drawASCII();
@@ -74,15 +77,15 @@ private:
 
   bool SDL_init();
 
-  SDL_Surface* scaleSurface(SDL_Surface* surface, const double SCALE_FACTOR);
-  Uint32 getPixel(SDL_Surface* surface, int x, int y);
-  void putPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+  SDL_Surface* scaleSurface(SDL_Surface* surface, Uint16 Width, Uint16 Height);
+  Uint32 ReadPixel(SDL_Surface* surface, int x, int y);
+  void DrawPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 
   SDL_Rect dsrect;
   SDL_Rect cell_rect;
-//  SDL_Rect cell_rectTiles;
+  //  SDL_Rect cell_rectTiles;
   SDL_Rect clipRect;
-//  SDL_Rect clipRectTiles;
+  //  SDL_Rect clipRectTiles;
 
   bool drwLandscape;
 
@@ -90,6 +93,7 @@ private:
   SDL_Surface* m_glyphSheet;
   SDL_Surface* m_tileSheet;
   SDL_Surface* m_drw;
+  SDL_Surface* m_mainMenuLogo;
 
   Engine* eng;
 };

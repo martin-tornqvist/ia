@@ -16,18 +16,6 @@ using namespace std;
 
 Renderer::Renderer(Engine* engine) :
   eng(engine) {
-  dsrect.x = 0;
-  dsrect.y = static_cast<Sint16>(eng->config->MAINSCREEN_Y_OFFSET);
-  dsrect.w = static_cast<Sint16>(eng->config->MAINSCREEN_WIDTH);
-  dsrect.h = static_cast<Sint16>(eng->config->MAINSCREEN_HEIGHT);
-  cell_rect.w = static_cast<Sint16>(eng->config->CELL_W);
-  cell_rect.h = static_cast<Sint16>(eng->config->CELL_H);
-//  cell_rectTiles.w = static_cast<Sint16>(eng->config->CELL_W);
-//  cell_rectTiles.h = static_cast<Sint16>(eng->config->CELL_H);
-  clipRect.w = cell_rect.w;
-  clipRect.h = cell_rect.h;
-//  clipRectTiles.w = cell_rectTiles.w;
-//  clipRectTiles.h = cell_rectTiles.h;
 
   SDL_init();
 
@@ -35,6 +23,7 @@ Renderer::Renderer(Engine* engine) :
 
   if(eng->config->USE_TILE_SET) {
     loadTiles();
+    loadMainMenuLogo();
   }
 }
 
@@ -42,45 +31,53 @@ void Renderer::loadFontSheet() {
   tracer << "Renderer::loadFontSheet()..." << endl;
   const char* IMAGE_NAME = (eng->config->FONT_IMAGE_NAME).data();
 
-  tracer << "Loding image: " << IMAGE_NAME << endl;
-  tracer << "SDL_LoadBMP()..." << endl;
+  tracer << "Renderer: SDL_LoadBMP()..." << endl;
   SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
-  tracer << "SDL_LoadBMP() [DONE]" << endl;
-
+  tracer << "Renderer: SDL_LoadBMP() [DONE]" << endl;
   if(loadedImage == NULL) {
     tracer << "[WARNING] NULL image returned from SDL_LoadBMP(), in Renderer::loadFontSheet()" << endl;
     return;
   }
 
-  tracer << "SDL_DisplayFormat()..." << endl;
-  m_glyphSheet = SDL_DisplayFormat(loadedImage);
-  tracer << "SDL_DisplayFormat [DONE]" << endl;
+  dsrect.x = 0;
+  dsrect.y = static_cast<Sint16>(eng->config->MAINSCREEN_Y_OFFSET);
+  dsrect.w = static_cast<Sint16>(eng->config->MAINSCREEN_WIDTH);
+  dsrect.h = static_cast<Sint16>(eng->config->MAINSCREEN_HEIGHT);
+  cell_rect.w = static_cast<Sint16>(eng->config->CELL_W);
+  cell_rect.h = static_cast<Sint16>(eng->config->CELL_H);
+  clipRect.w = cell_rect.w;
+  clipRect.h = cell_rect.h;
+
+  SDL_Surface* scaledImage = loadedImage;
+
+  tracer << "Renderer: SDL_SetColorKey()..." << endl;
+  SDL_SetColorKey(scaledImage, SDL_SRCCOLORKEY, SDL_MapRGB(scaledImage->format, 0xFF, 0xFF, 0xFF));
+  tracer << "Renderer: SDL_SetColorKey() [DONE]" << endl;
+  if(scaledImage == NULL) {
+    tracer << "[WARNING] NULL image returned from SDL_SetColorKey(), in Renderer::loadFontSheet()" << endl;
+    return;
+  }
+
+  tracer << "Renderer: SDL_DisplayFormat()..." << endl;
+  m_glyphSheet = SDL_DisplayFormat(scaledImage);
+  tracer << "Renderer: SDL_DisplayFormat [DONE]" << endl;
+
+  SDL_FreeSurface(scaledImage);
 
   if(m_glyphSheet == NULL) {
     tracer << "[WARNING] NULL image returned from SDL_DisplayFormat(), in Renderer::loadFontSheet()" << endl;
     return;
   }
 
-  tracer << "scaleSurface()..." << endl;
-  m_glyphSheet = scaleSurface(m_glyphSheet, 2.0);
-  tracer << "scaleSurface() [DONE]" << endl;
+  tracer << "Image W,H: " << m_glyphSheet->w << "," << m_glyphSheet->h << endl;
 
-  if(m_glyphSheet == NULL) {
-    tracer << "[WARNING] NULL image returned from scaleSurface(), in Renderer::loadFontSheet()" << endl;
-    return;
-  }
-
-  tracer << "SDL_SetColorKey()..." << endl;
-  SDL_SetColorKey(m_glyphSheet, SDL_SRCCOLORKEY, SDL_MapRGB(m_glyphSheet->format, 0xFF, 0xFF, 0xFF));
-  tracer << "SDL_SetColorKey() [DONE]" << endl;
-  SDL_FreeSurface(loadedImage);
   tracer << "Renderer::loadFontSheet() [DONE]" << endl;
 }
 
 void Renderer::loadTiles() {
   const char* IMAGE_NAME = (eng->config->TILES_IMAGE_NAME).data();
 
-  tracer << "Loding tile image: " << IMAGE_NAME << endl;
+  tracer << "Loding image: " << IMAGE_NAME << endl;
   tracer << "SDL_LoadBMP()..." << endl;
   SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
   tracer << "SDL_LoadBMP() [DONE]" << endl;
@@ -89,21 +86,41 @@ void Renderer::loadTiles() {
   m_tileSheet = SDL_DisplayFormat(loadedImage);
   tracer << "SDL_DisplayFormat [DONE]" << endl;
 
+  SDL_FreeSurface(loadedImage);
+
   tracer << "SDL_SetColorKey..." << endl;
   SDL_SetColorKey(m_tileSheet, SDL_SRCCOLORKEY, SDL_MapRGB(m_tileSheet->format, 0xB3, 0xB3, 0xB3));
   tracer << "SDL_SetColorKey [DONE]" << endl;
+}
+
+void Renderer::loadMainMenuLogo() {
+  tracer << "Renderer::loadMainMenuLogo()..." << endl;
+
+  const char* IMAGE_NAME = (eng->config->MAIN_MENU_LOGO_IMAGE_NAME).data();
+
+  tracer << "Loding image: " << IMAGE_NAME << endl;
+
+  tracer << "SDL_LoadBMP()..." << endl;
+  SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
+  tracer << "SDL_LoadBMP() [DONE]" << endl;
+
+  tracer << "SDL_DisplayFormat()..." << endl;
+  m_mainMenuLogo = SDL_DisplayFormat(loadedImage);
+  tracer << "SDL_DisplayFormat [DONE]" << endl;
+
   SDL_FreeSurface(loadedImage);
+
+  tracer << "SDL_SetColorKey..." << endl;
+  SDL_SetColorKey(m_mainMenuLogo, SDL_SRCCOLORKEY, SDL_MapRGB(m_mainMenuLogo->format, 0x00, 0x00, 0x00));
+  tracer << "SDL_SetColorKey [DONE]" << endl;
+
+  tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
 
 void Renderer::applySurface(int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip) {
-  //Make a temporary rectangle to hold the offsets
   SDL_Rect offset;
-
-  //Give the offsets to the rectangle
   offset.x = static_cast<Sint16>(x);
   offset.y = static_cast<Sint16>(y);
-
-  //Blit the surface
   SDL_BlitSurface(source, clip, destination, &offset);
 }
 
@@ -134,41 +151,30 @@ bool Renderer::SDL_init() {
   return true;
 }
 
-SDL_Surface* Renderer::scaleSurface(SDL_Surface* surface, const double SCALE_FACTOR) {
-  if(surface == NULL) {
-    tracer << "[WARNING] NULL surface provided, in Renderer::scaleSurface()" << endl;
-    return NULL;
-  }
-  const double NEW_W = static_cast<double>(surface->w) * SCALE_FACTOR;
-  const double NEW_H = static_cast<double>(surface->h) * SCALE_FACTOR;
+SDL_Surface* Renderer::scaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)
+{
+  if(!Surface || !Width || !Height)
+    return 0;
 
-  SDL_Surface* ret =
-    SDL_CreateRGBSurface(surface->flags, NEW_W, NEW_H, surface->format->BitsPerPixel, surface->format->Rmask,
-                         surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+  SDL_Surface* _ret = SDL_CreateRGBSurface(Surface->flags, Width, Height, Surface->format->BitsPerPixel,
+                      Surface->format->Rmask, Surface->format->Gmask, Surface->format->Bmask, Surface->format->Amask);
 
-//  const double WIDTH_FLO = static_cast<double>(WIDTH);
-//  const double HEIGHT_FLO = static_cast<double>(HEIGHT);
-//  const double SCALE_FACTOR_WIDTH = (WIDTH_FLO / static_cast<double>(surface->w));
-//  const double SCALE_FACTOR_HEIGHT = (HEIGHT_FLO / static_cast<double>(surface->h));
+  double    _stretch_factor_x = (static_cast<double>(Width)  / static_cast<double>(Surface->w)),
+                                _stretch_factor_y = (static_cast<double>(Height) / static_cast<double>(Surface->h));
 
-  for(Sint32 y = 0; y < surface->h; y++) {
-    for(Sint32 x = 0; x < surface->w; x++) {
-      for(Sint32 oY = 0; oY < SCALE_FACTOR; ++oY) {
-        for(Sint32 oX = 0; oX < SCALE_FACTOR; ++oX) {
-          const Sint32 newW =  static_cast<Sint32>(SCALE_FACTOR * x);
-          const Sint32 newH =  static_cast<Sint32>(SCALE_FACTOR * y);
-          putPixel(ret, newW + oX, newH + oY, getPixel(surface, x, y));
-        }
-      }
-    }
-  }
+  for(Sint32 y = 0; y < Surface->h; y++)
+    for(Sint32 x = 0; x < Surface->w; x++)
+      for(Sint32 o_y = 0; o_y < _stretch_factor_y; ++o_y)
+        for(Sint32 o_x = 0; o_x < _stretch_factor_x; ++o_x)
+          DrawPixel(_ret, static_cast<Sint32>(_stretch_factor_x * x) + o_x,
+                    static_cast<Sint32>(_stretch_factor_y * y) + o_y, ReadPixel(Surface, x, y));
 
-  return ret;
+  return _ret;
 }
 
-Uint32 Renderer::getPixel(SDL_Surface* surface, int x, int y) {
+
+Uint32 Renderer::ReadPixel(SDL_Surface* surface, int x, int y) {
   int bpp = surface->format->BytesPerPixel;
-  /* Here p is the address to the pixel we want to retrieve */
   Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
 
   switch(bpp) {
@@ -192,13 +198,12 @@ Uint32 Renderer::getPixel(SDL_Surface* surface, int x, int y) {
     break;
 
   default:
-    return 0;       /* shouldn't happen, but avoids warnings */
+    return 0;
   }
 }
 
-void Renderer::putPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
+void Renderer::DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
   int bpp = surface->format->BytesPerPixel;
-  /* Here p is the address to the pixel we want to set */
   Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
 
   switch(bpp) {
@@ -226,6 +231,13 @@ void Renderer::putPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
     *(Uint32 *)p = pixel;
     break;
   }
+}
+
+void Renderer::drawMainMenuLogo(const int Y_POS) {
+  const int IMG_W = m_mainMenuLogo->w;
+  const int X = (eng->config->SCREEN_WIDTH - IMG_W) / 2;
+  const int Y = eng->config->CELL_H * Y_POS;
+  applySurface(X, Y, m_mainMenuLogo, m_screen);
 }
 
 void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
@@ -329,11 +341,11 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
 
   clearTileAtPixel(X_PIXEL, Y_PIXEL);
 
-//  clipRectTiles.x = static_cast<Sint16>(tileCoords.x);
-//  clipRectTiles.y = static_cast<Sint16>(tileCoords.y);
+  clipRect.x = static_cast<Sint16>(tileCoords.x);
+  clipRect.y = static_cast<Sint16>(tileCoords.y);
 
-//  cell_rectTiles.x = static_cast<Sint16>(X_PIXEL);
-//  cell_rectTiles.y = static_cast<Sint16>(Y_PIXEL);
+  cell_rect.x = static_cast<Sint16>(X_PIXEL);
+  cell_rect.y = static_cast<Sint16>(Y_PIXEL);
 
   SDL_FillRect(m_screen, &cell_rect, SDL_MapRGB(m_screen->format, clr.r, clr.g, clr.b));
 
