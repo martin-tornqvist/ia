@@ -1249,7 +1249,7 @@ void Player::kick() {
   }
 }
 
-void Player::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
   if(flareFuseTurns > 0) {
     bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
     eng->basicUtils->resetBoolArray(myLight, false);

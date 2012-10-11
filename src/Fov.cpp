@@ -21,19 +21,18 @@ void Fov::performCheck(bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const coord&
   vector<coord> pathDeltas;
   eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_FLO);
 
-//  const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
+  const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 
   coord curPos;
   const unsigned int PATH_SIZE = pathDeltas.size();
 
-//  if(eng->basicUtils->chebyshevDistance(_originX, _originY, _checkX, _checkY) <= FOV_STANDARD_RADI_INT) {
   for(unsigned int i = 0; i < PATH_SIZE; i++) {
     curPos.set(origin + pathDeltas.at(i));
     if(i > 1) {
       const bool CURRENT_CELL_IS_DARK = eng->map->darkness[curPos.x][curPos.y];
       const bool CURRENT_CELL_IS_LIGHT = eng->map->light[curPos.x][curPos.y];
-//      if(CURRENT_CELL_IS_LIGHT == false && TARGET_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
-      if(CURRENT_CELL_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
+      //      if(CURRENT_CELL_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
+      if(CURRENT_CELL_IS_LIGHT == false && TARGET_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
         return;
       }
     }
@@ -47,7 +46,6 @@ void Fov::performCheck(bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const coord&
       }
     }
   }
-//  }
 }
 
 bool Fov::checkOneCell(bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const coord& cellToCheck,
@@ -60,7 +58,7 @@ bool Fov::checkOneCell(bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const coord&
   vector<coord> pathDeltas;
   eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_FLO);
 
-//  const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
+  const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 
   coord curPos;
   const unsigned int PATH_SIZE = pathDeltas.size();
@@ -70,8 +68,8 @@ bool Fov::checkOneCell(bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const coord&
     if(i > 1) {
       const bool CURRENT_CELL_IS_DARK = eng->map->darkness[curPos.x][curPos.y];
       const bool CURRENT_CELL_IS_LIGHT = eng->map->light[curPos.x][curPos.y];
-//      if(CURRENT_CELL_IS_LIGHT == false && TARGET_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
-      if(CURRENT_CELL_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
+      //      if(CURRENT_CELL_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
+      if(CURRENT_CELL_IS_LIGHT == false && TARGET_IS_LIGHT == false && CURRENT_CELL_IS_DARK && IS_AFFECTED_BY_DARKNESS) {
         return false;
       }
     }

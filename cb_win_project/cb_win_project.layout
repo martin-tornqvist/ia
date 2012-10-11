@@ -214,8 +214,8 @@
 	<File name="..\src\Look.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="2150" topLine="57" />
 	</File>
-	<File name="..\src\MainMenu.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="4630" topLine="80" />
+	<File name="..\src\MainMenu.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="1598" topLine="29" />
 	</File>
 	<File name="..\src\MainMenu.h" open="0" top="0" tabpos="3">
 		<Cursor position="316" topLine="0" />
@@ -280,8 +280,8 @@
 	<File name="..\src\Reload.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="88" topLine="0" />
 	</File>
-	<File name="..\src\Render.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="10625" topLine="324" />
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="10178" topLine="324" />
 	</File>
 	<File name="..\src\Render.h" open="1" top="0" tabpos="1">
 		<Cursor position="1874" topLine="66" />

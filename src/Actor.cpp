@@ -398,3 +398,14 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
 	}
 }
 
+void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  if(m_statusEffectsHandler->hasEffect(statusBurning)) {
+    for(int dy = -1; dy <= 1; dy++) {
+      for(int dx = -1; dx <= 1; dx++) {
+	light[pos.x + dx][pos.y + dy] = true;
+      }
+    }
+  }
+  
+  actorSpecific_addLight(light);
+}

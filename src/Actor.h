@@ -115,6 +115,12 @@ public:
 		return m_instanceDefinition.moveType;
 	}
 
+	void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+
+	virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+	  (void)light;
+	}
+
 	Engine* eng;
 
 	void teleportToRandom();

@@ -12,7 +12,7 @@ const int MAP_Y_CELLS_HALF = MAP_Y_CELLS / 2;
 const int PLAYER_MAX_LEVEL = 30;//10;
 
 const int FIRST_CAVERN_LEVEL = 15;
-const int LAST_CAVERN_LEVEL = 25;
+const int LAST_CAVERN_LEVEL = 24;
 
 const int FOV_STANDARD_RADI_INT = 6;
 const int FOV_STANDARD_WIDTH_INT = 2 * FOV_STANDARD_RADI_INT + 1;

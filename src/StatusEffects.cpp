@@ -9,6 +9,7 @@
 #include "ItemWeapon.h"
 #include "ActorMonster.h"
 #include "Inventory.h"
+#include "Map.h"
 
 using namespace std;
 
@@ -99,14 +100,16 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 }
 
 void StatusBurning::start() {
-//	owningActor->setColor(clrRedLight);
+  owningActor->addLight(owningActor->eng->map->light);
 }
 
 void StatusBurning::end() {
-//	owningActor->resetColor();
+
 }
 
 void StatusBurning::newTurn(Engine* engine) {
+  owningActor->addLight(owningActor->eng->map->light);
+
   if(owningActor == engine->player) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
   }
@@ -117,7 +120,6 @@ void StatusBurning::newTurn(Engine* engine) {
     }
   }
 
-//	owningActor->setColor(clrRedLight);
   turnsLeft--;
 }
 

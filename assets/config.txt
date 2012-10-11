@@ -26,7 +26,7 @@ FULLSCREEN=0
 
 
 # Skip intro level (forest). 0 = no, 1 = yes.
-SKIP_INTRO_LEVEL=0
+SKIP_INTRO_LEVEL=1
 
 
 # Melee attack with ranged weapon cause prompt. 0 = no, 1 = yes

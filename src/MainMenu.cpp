@@ -48,8 +48,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
     }
   }
 
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
   SDL_Color quoteClr = clrGray;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 11;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 27);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
