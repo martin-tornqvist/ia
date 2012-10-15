@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "Colors.h"
 #include "Art.h"
@@ -137,14 +137,14 @@ struct coord {
   int x, y;
 };
 
-struct Rectangle {
-  Rectangle() :
+struct Rect {
+  Rect() :
     x0y0(coord()), x1y1(coord()) {
   }
-  Rectangle(const coord& x0y0_, const coord& x1y1_) :
+  Rect(const coord& x0y0_, const coord& x1y1_) :
     x0y0(x0y0_), x1y1(x1y1_) {
   }
-  Rectangle(const Rectangle& other) :
+  Rect(const Rect& other) :
     x0y0(other.x0y0), x1y1(other.x1y1) {
   }
 

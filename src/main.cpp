@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "Declares.h"
 #include "Engine.h"

@@ -29,19 +29,19 @@ public:
 	}
 	void run();
 
-	void coverAreaWithFeature(const Rectangle area, const Feature_t feature);
+	void coverAreaWithFeature(const Rect area, const Feature_t feature);
 
 	int getNrStepsInDirectionUntilWallFound(coord c, const Directions_t dir) const;
 
 private:
 	bool isAllRoomsConnected();
 
-	MapArea* buildRoom(const Rectangle roomCoords);
+	MapArea* buildRoom(const Rect roomCoords);
 
 	bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for helping to build the map
    bool regionsToBuildCave[3][3];
 
-   void makeCrumbleRoom(const Rectangle roomAreaIncludingWalls, const coord proxEventPos);
+   void makeCrumbleRoom(const Rect roomAreaIncludingWalls, const coord proxEventPos);
 
 	void connectRegions(Region* regions[3][3]);
 	void buildAuxRooms(Region* regions[3][3]);
@@ -62,12 +62,12 @@ private:
 
 	bool doorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 
-	void findEdgesOfRoom(const Rectangle roomCoords, vector<coord>& vectorToFill);
+	void findEdgesOfRoom(const Rect roomCoords, vector<coord>& vectorToFill);
 
 	bool isRegionFoundInCardinalDirection(const coord pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-	bool isAreaFree(const Rectangle& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
-	bool isAreaAndBorderFree(const Rectangle& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+	bool isAreaFree(const Rect& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+	bool isAreaAndBorderFree(const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
 	bool isAreaFree(const int X0, const int Y0, const int X1, const int Y1, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
 
 	void decorateWalls();
@@ -107,9 +107,9 @@ public:
 	Region();
 	~Region();
 
-	Rectangle getRandomCoordsForRoom(Engine* eng) const;
-	Rectangle getRegionCoords() const {
-		return Rectangle(x0y0_, x1y1_);
+	Rect getRandomCoordsForRoom(Engine* eng) const;
+	Rect getRegionCoords() const {
+		return Rect(x0y0_, x1y1_);
 	}
 
 	bool isRegionNeighbour(const Region& other, Engine* const engine);

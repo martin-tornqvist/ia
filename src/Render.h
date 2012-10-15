@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "ConstTypes.h"
 #include "GameTime.h"
@@ -58,6 +58,8 @@ public:
   GlyphAndColor renderArray[MAP_X_CELLS][MAP_Y_CELLS];
   TileAndColor renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
+  void setGfxAnVideoMode();
+
 private:
   friend class Postmortem;
 
@@ -77,9 +79,9 @@ private:
 
   bool SDL_init();
 
-  SDL_Surface* scaleSurface(SDL_Surface* surface, Uint16 Width, Uint16 Height);
-  Uint32 ReadPixel(SDL_Surface* surface, int x, int y);
-  void DrawPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+//  SDL_Surface* scaleSurface(SDL_Surface* surface, Uint16 Width, Uint16 Height);
+//  Uint32 ReadPixel(SDL_Surface* surface, int x, int y);
+//  void DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel);
 
   SDL_Rect dsrect;
   SDL_Rect cell_rect;

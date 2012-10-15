@@ -5,7 +5,7 @@
 #include <math.h>
 #include <iostream>
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "AbilityValues.h"
 #include "ItemData.h"

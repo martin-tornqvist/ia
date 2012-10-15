@@ -1210,43 +1210,18 @@ void Player::autoMelee() {
   }
 }
 
-void Player::kick() {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+void Player::kick(Actor& actorToKick) {
+  //Spawn a temporary kick weapon to attack with
+  Weapon* kickWeapon = NULL;
 
-  Actor* actorToKick = NULL;
-
-  eng->log->addMessage("Kick in what direction? [Space/Esc Cancel]", clrWhiteHigh);
-  eng->renderer->flip();
-  const coord delta = eng->query->direction();
-  eng->log->clearLog();
-  if(delta == coord(0, 0)) {
-    return;
+  const ActorDefinition* const d = actorToKick.getInstanceDefinition();
+  //If kicking critters, call it a stomp instead and give it bonus hit chance
+  if(d->actorSize == actorSize_floor && (d->isSpider == true || d->isRat == true)) {
+    kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerStomp));
   } else {
-    const coord kickPos = pos + delta;
-    actorToKick = eng->mapTests->getActorAtPos(kickPos);
-
+    kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
-
-  if(actorToKick == NULL) {
-    if(eng->player->getStatusEffectsHandler()->allowSee() == true) {
-      eng->log->addMessage("I see no one there to kick.");
-    } else {
-      eng->log->addMessage("I find no one there to kick.");
-    }
-  } else {
-    //Spawn a temporary kick weapon to attack with
-    Weapon* kickWeapon = NULL;
-
-    const ActorDefinition* const d = actorToKick->getInstanceDefinition();
-    //If kicking critters, call it a stomp instead and give it bonus hit chance
-    if(d->actorSize == actorSize_floor && (d->isSpider == true || d->isRat == true)) {
-      kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerStomp));
-    } else {
-      kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
-    }
-    eng->attack->melee(actorToKick->pos.x, actorToKick->pos.y, kickWeapon);
-  }
+  eng->attack->melee(actorToKick.pos.x, actorToKick.pos.y, kickWeapon);
 }
 
 void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {

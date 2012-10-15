@@ -184,7 +184,7 @@
 //		okToBuildHere = isAreaFree(upperLeft.x - 1, upperLeft.y - 1, lowerRight.x + 1, lowerRight.y + 1);
 //
 //		if(okToBuildHere) {
-//			coverAreaWithFeaturecoverAreaWithFeature(Rectangle(upperLeft, lowerRight), feature_stoneFloor);
+//			coverAreaWithFeaturecoverAreaWithFeature(Rect(upperLeft, lowerRight), feature_stoneFloor);
 //
 //			junction->hasTarget = true;
 //
@@ -726,7 +726,7 @@
 ///*
 // * The parameter rectangle does not have to go up-left to bottom-right, the method adjusts the order
 // */
-//void MapBuild::coverAreaWithFeaturecoverAreaWithFeature(const Rectangle area, const Feature_t feature) {
+//void MapBuild::coverAreaWithFeaturecoverAreaWithFeature(const Rect area, const Feature_t feature) {
 //	const coord x0y0 = coord(min(area.x0y0.x, area.x1y1.x), min(area.x0y0.y, area.x1y1.y));
 //	const coord x1y1 = coord(max(area.x0y0.x, area.x1y1.x), max(area.x0y0.y, area.x1y1.y));
 //

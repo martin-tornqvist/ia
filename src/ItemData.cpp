@@ -1112,6 +1112,7 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
 	return newWeaponIsStronger;
 }
 
+// TODO This function SUCKS! More parameters needed
 string ItemData::itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const {
 	const ItemDefinition& d = item->getInstanceDefinition();
 

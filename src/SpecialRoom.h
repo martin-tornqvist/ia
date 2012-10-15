@@ -63,7 +63,7 @@ public:
 		eng = engine;
 	}
 
-	virtual bool isRoomDataAcceptedByModule(const Rectangle& coords) {
+	virtual bool isRoomDataAcceptedByModule(const Rect& coords) {
 		(void) coords;
 		return true;
 	}

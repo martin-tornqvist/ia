@@ -69,7 +69,7 @@ private:
 
   bool buildRectangularArea(MapJunction* const junction, const MapAreaType_t areaType, const int forcedCorridorLength = -1);
 
-  void coverAreaWithFeaturecoverAreaWithFeature(const Rectangle area, const Feature_t feature);
+  void coverAreaWithFeaturecoverAreaWithFeature(const Rect area, const Feature_t feature);
 
   void addJunction(MapArea& area, const coord upperLeft, const coord lowerRight, const int width, const int height,
                    const Directions_t junctionDirection);

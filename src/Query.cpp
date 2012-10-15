@@ -1,10 +1,11 @@
 #include "Query.h"
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 
 #include <iostream>
 
 #include "Engine.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -22,9 +23,17 @@ int Query::readKeys() const {
       switch(event.type) {
       case SDL_KEYDOWN: {
         Uint16 key = static_cast<Uint16>(event.key.keysym.sym);
-
-        if(key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN || key == SDLK_SPACE || key
-            == SDLK_ESCAPE || key == SDLK_PAGEUP || key == SDLK_HOME || key == SDLK_END || key == SDLK_PAGEDOWN) {
+        if(
+          key == SDLK_RIGHT ||
+          key == SDLK_UP ||
+          key == SDLK_LEFT ||
+          key == SDLK_DOWN ||
+          key == SDLK_SPACE ||
+          key == SDLK_ESCAPE ||
+          key == SDLK_PAGEUP ||
+          key == SDLK_HOME ||
+          key == SDLK_END ||
+          key == SDLK_PAGEDOWN) {
           return key;
         } else {
           return event.key.keysym.unicode;
@@ -51,6 +60,52 @@ bool Query::yesOrNo() const {
   }
 
   return false;
+}
+
+int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MIN, const int MAX_NR_DIGITS, const int DEFAULT) const {
+  int retNum = max(MIN, DEFAULT);
+
+  eng->renderer->clearAreaWithTextDimensions(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+  eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+  eng->renderer->flip();
+
+  while(true) {
+    int key = int('a');
+    while((key < int('0') || key > int('9')) && key != SDLK_RETURN && key != SDLK_SPACE && key != SDLK_ESCAPE && key != SDLK_BACKSPACE) {
+      tracer << "key: " << key << endl;
+      key = readKeys();
+    }
+
+    if(key == SDLK_RETURN) {
+      eng->renderer->clearAreaWithTextDimensions(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+      eng->renderer->flip();
+      return max(MIN, retNum);
+    }
+
+    if(key == SDLK_ESCAPE || key == SDLK_SPACE) {
+      return DEFAULT;
+    }
+
+    const string retNumStr = intToString(retNum);
+    const int CUR_NUM_DIGITS = retNumStr.size();
+
+    if(key == SDLK_BACKSPACE) {
+      retNum = retNum / 10;
+      eng->renderer->clearAreaWithTextDimensions(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+      eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+      eng->renderer->flip();
+      continue;
+    }
+
+    if(CUR_NUM_DIGITS < MAX_NR_DIGITS) {
+      int curDigit = int(key - '0');
+      retNum = max(MIN, retNum * 10 + curDigit);
+      eng->renderer->clearAreaWithTextDimensions(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+      eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+      eng->renderer->flip();
+    }
+  }
+  return -1;
 }
 
 void Query::waitForEscOrSpace() const {

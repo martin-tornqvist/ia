@@ -44,7 +44,7 @@ public:
 	MapArea() : m_areaType(mapArea_none), x0y0(coord(0,0)), x1y1(coord(0,0)), isSpecialRoomAllowed(true), isCave(false) {
 		m_junctions.resize(0);
 	}
-	MapArea(MapAreaType_t areaType, Rectangle coords) :
+	MapArea(MapAreaType_t areaType, Rect coords) :
 		m_areaType(areaType), x0y0(coords.x0y0), x1y1(coords.x1y1), isSpecialRoomAllowed(true), isCave(false) {
 		m_junctions.resize(0);
 	}

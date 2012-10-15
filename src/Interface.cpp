@@ -1,6 +1,6 @@
 #include "Interface.h"
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "Engine.h"
 
@@ -27,11 +27,11 @@ void Interface::drawInfoLines() {
 	string str = "";
 
 	//Name
-	str = eng->player->getNameA();
-	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+	//	str = eng->player->getNameA();
+	//	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
 
 	//Health
-	xPos += 1 + str.length();
+	//	xPos += 1 + str.length();
 	const string hp = intToString(eng->player->getHP());
 	const string hpMax = intToString(eng->player->getHP_max());
 	eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGray);
@@ -63,7 +63,7 @@ void Interface::drawInfoLines() {
     eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLight : clrWhite);
     xPos += 1 + str.length();
 
-	//Wielded weapon
+    //Wielded weapon
 	xPos += 4;
 	//Store x position, because missile wpn info will be directly beaneath wielded wpn info
 	const int X_POS_MISSILE = xPos;
@@ -79,12 +79,14 @@ void Interface::drawInfoLines() {
 		const ItemDefinition* itemDef = &(weapon->getInstanceDefinition());
 
         //Weapon name
-//        eng->renderer->drawText("WPN:", renderArea_characterLines, xPos, yPos, clrGray);
-//        xPos += 4;
-//
-//        const string wpnName = eng->itemData->itemInterfaceName(weapon, false);
-//        eng->renderer->drawText(wpnName, renderArea_characterLines, xPos, yPos, clrWhite);
-//        xPos += 1 + wpnName.size();
+		//		eng->renderer->drawText("WPN:", renderArea_characterLines, xPos, yPos, clrGray);
+		//		xPos += 4;
+
+		string wpnName = itemDef->name.name;
+		const int PLUS = itemDef->meleeDmg.plus;
+		wpnName += PLUS > 0 ? " +" + intToString(PLUS) : PLUS < 0 ? " -" + intToString(PLUS) : "";
+		eng->renderer->drawText(wpnName, renderArea_characterLines, xPos, yPos, clrWhite);
+		xPos += 1 + wpnName.size();
 
 		//Firearm info
 		eng->renderer->drawText("FIR:", renderArea_characterLines, xPos, yPos, clrGray);
@@ -166,12 +168,6 @@ void Interface::drawInfoLines() {
 		}
 	}
 
-	//Turn
-	//    const string turn = intToString( eng->gameTime->getTurn() );
-	//    eng->renderer->drawText            ("TURN",       INTERFACE_X_POS_LEFT,               y_pos, clrGrayLight);
-	//    eng->renderer->drawTextAlignRight  (turn,          MAINSCREEN_X_OFFSET - CELL_WIDTH,   y_pos, clrGrayLight);
-
-
 	//Dungeon level
 	xPos = CHARACTER_LINE_X0;
 	yPos += 1;
@@ -207,14 +203,19 @@ void Interface::drawInfoLines() {
 
 	//Missile weapon
 	xPos = X_POS_MISSILE;
-	eng->renderer->drawText("MIS:", renderArea_characterLines, xPos, yPos, clrGray);
-	xPos += 4;
+	//	eng->renderer->drawText("MIS:", renderArea_characterLines, xPos, yPos, clrGray);
+	//	xPos += 4;
 
 	Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
 	if(item == NULL) {
 		eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
 	} else {
 		const ItemDefinition* itemDef = &(item->getInstanceDefinition());
+
+		const string misWpnName = item->numberOfItems == 1 ? itemDef->name.name : itemDef->name.name_plural;
+
+		eng->renderer->drawText(misWpnName, renderArea_characterLines, xPos, yPos, clrWhite);
+		xPos += 1 + misWpnName.size();
 
 		//Dmg
 		DiceParam dmg = itemDef->missileDmg;

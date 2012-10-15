@@ -77,7 +77,7 @@ public:
 
   void autoMelee();
 
-  void kick();
+  void kick(Actor& actorToKick);
 
   void updateColor();
 

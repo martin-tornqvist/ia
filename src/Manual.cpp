@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 #include "Engine.h"
 #include "TextFormatting.h"
 #include "Render.h"

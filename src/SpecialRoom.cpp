@@ -335,7 +335,7 @@ void RoomDescriptModulePoolOfBlood::makeRoom() {
 //	coord c(getRoomMid());
 //	if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
 //		//TODO implement better pattern(s) for the chasm
-//		//		vector<coord> chasmCoords = eng->mapPatterns->getAllCellsExceptEdge(Rectangle(x0y0, x1y1), 1);
+//		//		vector<coord> chasmCoords = eng->mapPatterns->getAllCellsExceptEdge(Rect(x0y0, x1y1), 1);
 //		//		for(unsigned int i = 0; i < chasmCoords.size(); i++) {
 //		//			*(eng->map->getLandscape(c)) = landscapeDevName_chasm;
 //		//			clearGoreAt(c);
@@ -543,7 +543,7 @@ void SpecialRoomHandler::addModulesToRoom(SpecialRoom* const room, const coord r
 			if(eng->dice(1, 100) <= assoc.chanceToOccur) {
 				RoomDescriptModule* moduleCandidate = moduleCandidates.at(modules_i)->copy();
 				moduleCandidate->initRoomData(roomX0Y0, roomX1Y1, eng);
-				if(moduleCandidate->isRoomDataAcceptedByModule(Rectangle(roomX0Y0, roomX1Y1))) {
+				if(moduleCandidate->isRoomDataAcceptedByModule(Rect(roomX0Y0, roomX1Y1))) {
 					room->addModule(moduleCandidate);
 				} else {
 					delete moduleCandidate;

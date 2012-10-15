@@ -1,6 +1,6 @@
 #include "PlayerPowersHandler.h"
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "Engine.h"
 #include "ItemScroll.h"

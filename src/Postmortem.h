@@ -1,7 +1,7 @@
 #ifndef POSTMORTEM_H
 #define POSTMORTEM_H
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include <vector>
 #include <string>

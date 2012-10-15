@@ -14,16 +14,52 @@
 
 using namespace std;
 
-Renderer::Renderer(Engine* engine) :
-  eng(engine) {
+
+Renderer::Renderer(Engine* engine) : eng(engine),
+  m_glyphSheet(NULL), m_tileSheet(NULL), m_mainMenuLogo(NULL)  {
 
   SDL_init();
+  setGfxAnVideoMode();
+}
+
+void Renderer::setGfxAnVideoMode() {
+  if(m_glyphSheet != NULL) {
+    SDL_FreeSurface(m_glyphSheet);
+    m_glyphSheet = NULL;
+  }
+
+  if(m_tileSheet != NULL) {
+    SDL_FreeSurface(m_tileSheet);
+    m_tileSheet = NULL;
+  }
+
+  if(m_mainMenuLogo != NULL) {
+    SDL_FreeSurface(m_mainMenuLogo);
+    m_mainMenuLogo = NULL;
+  }
 
   loadFontSheet();
 
   if(eng->config->USE_TILE_SET) {
     loadTiles();
     loadMainMenuLogo();
+  }
+
+  if(eng->config->FULLSCREEN) {
+    m_screen = SDL_SetVideoMode(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT, 0, SDL_FULLSCREEN | SDL_SWSURFACE);
+  } else {
+    m_screen = SDL_SetVideoMode(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT, 0, SDL_SWSURFACE);
+  }
+
+  loadFontSheet();
+
+  if(eng->config->USE_TILE_SET) {
+    loadTiles();
+    loadMainMenuLogo();
+  }
+
+  if(eng->config->FULLSCREEN) {
+    SDL_ShowCursor(SDL_DISABLE);
   }
 }
 
@@ -82,15 +118,15 @@ void Renderer::loadTiles() {
   SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
   tracer << "SDL_LoadBMP() [DONE]" << endl;
 
+  tracer << "SDL_SetColorKey..." << endl;
+  SDL_SetColorKey(loadedImage, SDL_SRCCOLORKEY, SDL_MapRGB(loadedImage->format, 0xB3, 0xB3, 0xB3));
+  tracer << "SDL_SetColorKey [DONE]" << endl;
+
   tracer << "SDL_DisplayFormat()..." << endl;
   m_tileSheet = SDL_DisplayFormat(loadedImage);
   tracer << "SDL_DisplayFormat [DONE]" << endl;
 
   SDL_FreeSurface(loadedImage);
-
-  tracer << "SDL_SetColorKey..." << endl;
-  SDL_SetColorKey(m_tileSheet, SDL_SRCCOLORKEY, SDL_MapRGB(m_tileSheet->format, 0xB3, 0xB3, 0xB3));
-  tracer << "SDL_SetColorKey [DONE]" << endl;
 }
 
 void Renderer::loadMainMenuLogo() {
@@ -104,15 +140,15 @@ void Renderer::loadMainMenuLogo() {
   SDL_Surface* loadedImage = SDL_LoadBMP(IMAGE_NAME);
   tracer << "SDL_LoadBMP() [DONE]" << endl;
 
+  tracer << "SDL_SetColorKey..." << endl;
+  SDL_SetColorKey(loadedImage, SDL_SRCCOLORKEY, SDL_MapRGB(loadedImage->format, 0x00, 0x00, 0x00));
+  tracer << "SDL_SetColorKey [DONE]" << endl;
+
   tracer << "SDL_DisplayFormat()..." << endl;
   m_mainMenuLogo = SDL_DisplayFormat(loadedImage);
   tracer << "SDL_DisplayFormat [DONE]" << endl;
 
   SDL_FreeSurface(loadedImage);
-
-  tracer << "SDL_SetColorKey..." << endl;
-  SDL_SetColorKey(m_mainMenuLogo, SDL_SRCCOLORKEY, SDL_MapRGB(m_mainMenuLogo->format, 0x00, 0x00, 0x00));
-  tracer << "SDL_SetColorKey [DONE]" << endl;
 
   tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
@@ -129,109 +165,96 @@ bool Renderer::SDL_init() {
     return false;
   }
 
-  if(eng->config->FULLSCREEN) {
-    m_screen = SDL_SetVideoMode(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT, eng->config->SCREEN_BPP, SDL_FULLSCREEN | SDL_SWSURFACE);
-  } else {
-    m_screen = SDL_SetVideoMode(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT, eng->config->SCREEN_BPP, SDL_SWSURFACE);
-  }
+  SDL_EnableKeyRepeat(eng->config->KEY_REPEAT_DELAY, eng->config->KEY_REPEAT_INTERVAL);
 
   SDL_EnableUNICODE(1);
 
-  SDL_EnableKeyRepeat(eng->config->KEY_REPEAT_DELAY, eng->config->KEY_REPEAT_INTERVAL);
-
-  if(m_screen == NULL) {
-    return false;
-  }
   SDL_WM_SetCaption(("IA " + eng->config->GAME_VERSION).c_str(), NULL);
-
-  if(eng->config->FULLSCREEN) {
-    SDL_ShowCursor(SDL_DISABLE);
-  }
 
   return true;
 }
 
-SDL_Surface* Renderer::scaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)
-{
-  if(!Surface || !Width || !Height)
-    return 0;
-
-  SDL_Surface* _ret = SDL_CreateRGBSurface(Surface->flags, Width, Height, Surface->format->BitsPerPixel,
-                      Surface->format->Rmask, Surface->format->Gmask, Surface->format->Bmask, Surface->format->Amask);
-
-  double    _stretch_factor_x = (static_cast<double>(Width)  / static_cast<double>(Surface->w)),
-                                _stretch_factor_y = (static_cast<double>(Height) / static_cast<double>(Surface->h));
-
-  for(Sint32 y = 0; y < Surface->h; y++)
-    for(Sint32 x = 0; x < Surface->w; x++)
-      for(Sint32 o_y = 0; o_y < _stretch_factor_y; ++o_y)
-        for(Sint32 o_x = 0; o_x < _stretch_factor_x; ++o_x)
-          DrawPixel(_ret, static_cast<Sint32>(_stretch_factor_x * x) + o_x,
-                    static_cast<Sint32>(_stretch_factor_y * y) + o_y, ReadPixel(Surface, x, y));
-
-  return _ret;
-}
-
-
-Uint32 Renderer::ReadPixel(SDL_Surface* surface, int x, int y) {
-  int bpp = surface->format->BytesPerPixel;
-  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-
-  switch(bpp) {
-  case 1:
-    return *p;
-    break;
-
-  case 2:
-    return *(Uint16 *)p;
-    break;
-
-  case 3:
-    if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-      return p[0] << 16 | p[1] << 8 | p[2];
-    else
-      return p[0] | p[1] << 8 | p[2] << 16;
-    break;
-
-  case 4:
-    return *(Uint32 *)p;
-    break;
-
-  default:
-    return 0;
-  }
-}
-
-void Renderer::DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
-  int bpp = surface->format->BytesPerPixel;
-  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-
-  switch(bpp) {
-  case 1:
-    *p = pixel;
-    break;
-
-  case 2:
-    *(Uint16 *)p = pixel;
-    break;
-
-  case 3:
-    if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-      p[0] = (pixel >> 16) & 0xff;
-      p[1] = (pixel >> 8) & 0xff;
-      p[2] = pixel & 0xff;
-    } else {
-      p[0] = pixel & 0xff;
-      p[1] = (pixel >> 8) & 0xff;
-      p[2] = (pixel >> 16) & 0xff;
-    }
-    break;
-
-  case 4:
-    *(Uint32 *)p = pixel;
-    break;
-  }
-}
+//SDL_Surface* Renderer::scaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)
+//{
+//  if(!Surface || !Width || !Height)
+//    return 0;
+//
+//  SDL_Surface* _ret = SDL_CreateRGBSurface(Surface->flags, Width, Height, Surface->format->BitsPerPixel,
+//                      Surface->format->Rmask, Surface->format->Gmask, Surface->format->Bmask, Surface->format->Amask);
+//
+//  double    _stretch_factor_x = (static_cast<double>(Width)  / static_cast<double>(Surface->w)),
+//                                _stretch_factor_y = (static_cast<double>(Height) / static_cast<double>(Surface->h));
+//
+//  for(Sint32 y = 0; y < Surface->h; y++)
+//    for(Sint32 x = 0; x < Surface->w; x++)
+//      for(Sint32 o_y = 0; o_y < _stretch_factor_y; ++o_y)
+//        for(Sint32 o_x = 0; o_x < _stretch_factor_x; ++o_x)
+//          DrawPixel(_ret, static_cast<Sint32>(_stretch_factor_x * x) + o_x,
+//                    static_cast<Sint32>(_stretch_factor_y * y) + o_y, ReadPixel(Surface, x, y));
+//
+//  return _ret;
+//}
+//
+//
+//Uint32 Renderer::ReadPixel(SDL_Surface* surface, int x, int y) {
+//  int bpp = surface->format->BytesPerPixel;
+//  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+//
+//  switch(bpp) {
+//  case 1:
+//    return *p;
+//    break;
+//
+//  case 2:
+//    return *(Uint16 *)p;
+//    break;
+//
+//  case 3:
+//    if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+//      return p[0] << 16 | p[1] << 8 | p[2];
+//    else
+//      return p[0] | p[1] << 8 | p[2] << 16;
+//    break;
+//
+//  case 4:
+//    return *(Uint32 *)p;
+//    break;
+//
+//  default:
+//    return 0;
+//  }
+//}
+//
+//void Renderer::DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
+//  int bpp = surface->format->BytesPerPixel;
+//  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+//
+//  switch(bpp) {
+//  case 1:
+//    *p = pixel;
+//    break;
+//
+//  case 2:
+//    *(Uint16 *)p = pixel;
+//    break;
+//
+//  case 3:
+//    if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+//      p[0] = (pixel >> 16) & 0xff;
+//      p[1] = (pixel >> 8) & 0xff;
+//      p[2] = pixel & 0xff;
+//    } else {
+//      p[0] = pixel & 0xff;
+//      p[1] = (pixel >> 8) & 0xff;
+//      p[2] = (pixel >> 16) & 0xff;
+//    }
+//    break;
+//
+//  case 4:
+//    *(Uint32 *)p = pixel;
+//    break;
+//  }
+//}
 
 void Renderer::drawMainMenuLogo(const int Y_POS) {
   const int IMG_W = m_mainMenuLogo->w;
@@ -339,7 +362,7 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
   const int X_PIXEL = X * W_PIXEL;
   const int Y_PIXEL = Y * H_PIXEL + eng->config->MAINSCREEN_Y_OFFSET;
 
-  clearTileAtPixel(X_PIXEL, Y_PIXEL);
+//  clearTileAtPixel(X_PIXEL, Y_PIXEL);
 
   clipRect.x = static_cast<Sint16>(tileCoords.x);
   clipRect.y = static_cast<Sint16>(tileCoords.y);
@@ -355,7 +378,7 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
 void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const SDL_Color clr) {
   coord glyphCoords = eng->art->getGlyphCoords(CHARACTER, eng);
 
-  clearCharacterAtPixel(X, Y);
+//  clearCharacterAtPixel(X, Y);
 
   clipRect.x = static_cast<Sint16>(glyphCoords.x);
   clipRect.y = static_cast<Sint16>(glyphCoords.y);

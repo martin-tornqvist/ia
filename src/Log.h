@@ -1,7 +1,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 
 #include <string>
 #include <vector>

@@ -84,7 +84,7 @@
 using namespace std;
 
 void Engine::initRenderer() {
-	config = new Config();
+	config = new Config(this);
 	renderer = new Renderer(this);
 }
 

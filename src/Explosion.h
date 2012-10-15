@@ -1,7 +1,7 @@
 #ifndef EXPLOSION_H
 #define EXPLOSION_H
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 #include <vector>
 
 #include "ConstTypes.h"

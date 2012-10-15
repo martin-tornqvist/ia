@@ -1,7 +1,7 @@
 #ifndef ITEM_DATA_H
 #define ITEM_DATA_H
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 #include <vector>
 #include <string>
 #include "ConstTypes.h"

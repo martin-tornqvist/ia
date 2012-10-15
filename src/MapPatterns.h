@@ -19,7 +19,7 @@ public:
 	/*
 	 * Assumptions: No isolated pillars
 	 */
-	vector<coord> getAllCellsExceptEdge(Rectangle bounds, const int EDGE_DIST);
+	vector<coord> getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST);
 
 private:
 	Engine* eng;

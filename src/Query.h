@@ -17,6 +17,8 @@ public:
 
   void waitForEscOrSpace() const;
 
+  int number(const coord& cellToRenderAt, const SDL_Color clr, const int MIN, const int MAX_NR_DIGITS, const int DEFAULT) const;
+
 private:
   int readKeys() const;
 

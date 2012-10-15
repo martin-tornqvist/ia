@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Map.h"
 
-vector<coord> MapPatterns::getAllCellsExceptEdge(Rectangle bounds, const int EDGE_DIST) {
+vector<coord> MapPatterns::getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST) {
 
 	//TODO MapAeas are now supposed to store their edge coords, see if it works and can be used here
 

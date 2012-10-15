@@ -586,16 +586,16 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
   break;
 
   //----------------------------------------KICK
-  case SDLK_k: {
-    clearMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
-        eng->player->kick();
-      }
-      clearKeyEvents();
-    }
-  }
-  break;
+  //  case SDLK_k: {
+  //    clearMessages();
+  //    if(eng->player->deadState == actorDeadState_alive) {
+  //      if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
+  //        eng->player->kick();
+  //      }
+  //      clearKeyEvents();
+  //    }
+  //  }
+  //  break;
 
   //----------------------------------------KICK STATS
   case int('K'): {

@@ -76,7 +76,7 @@ public:
 	}
 
 	int getWeight() const {
-        return m_instanceDefinition.itemWeight * numberOfItems;
+	  return m_instanceDefinition.itemWeight * numberOfItems;
 	}
 
 	string getWeightLabel() const {

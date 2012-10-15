@@ -167,7 +167,7 @@ void HighScore::sortEntries(vector<HighScoreEntry>& entries) {
 
 void HighScore::writeFile(vector<HighScoreEntry>& entries) {
   ofstream file;
-  file.open("highscore", ios::trunc);
+  file.open("highscores", ios::trunc);
 
   for(unsigned int i = 0; i < entries.size(); i++) {
     const HighScoreEntry& entry = entries.at(i);
@@ -184,14 +184,13 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
 
 void HighScore::readFile(vector<HighScoreEntry>& entries) {
   ifstream file;
-  file.open("highscore");
+  file.open("highscores");
 
   if(file.is_open()) {
     string line;
 
     while(getline(file, line)) {
       bool isVictory = line.at(0) == 'V';
-
       getline(file, line);
       const string NAME = line;
       getline(file, line);
@@ -202,8 +201,8 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       const int DLVL = stringToInt(line);
       getline(file, line);
       const int INSANITY = stringToInt(line);
-
       entries.push_back(HighScoreEntry(NAME, XP, LVL, DLVL, INSANITY, isVictory));
     }
+    file.close();
   }
 }

@@ -1,7 +1,7 @@
 #ifndef PLAYER_ALLOC_BONUS_H
 #define PLAYER_ALLOC_BONUS_H
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "PlayerBonuses.h"
 #include "MenuBrowser.h"

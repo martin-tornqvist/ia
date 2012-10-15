@@ -96,10 +96,13 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered("Keyboard commands", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  yPos += 1;
+
+  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
   yPos += 1;
 
   eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2012 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
@@ -108,7 +111,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 }
 
 GameEntry_t MainMenu::run(bool* quit) {
-  MenuBrowser browser(5, 0);
+  MenuBrowser browser(6, 0);
 
   const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();
 
@@ -136,7 +139,7 @@ GameEntry_t MainMenu::run(bool* quit) {
           proceed = true;
           return gameEntry_load;
         } else {
-          eng->popup->showMessage("Sorry, no save available. Starting a new character instead...", false);
+          eng->popup->showMessage("Sorry, no save available. Starting a new character instead.", false);
           proceed = true;
           return gameEntry_new;
         }
@@ -146,10 +149,14 @@ GameEntry_t MainMenu::run(bool* quit) {
         draw(browser);
       }
       if(browser.isPosAtKey('d')) {
-        eng->highScore->runHighScoreScreen();
+        eng->config->runOptionsMenu();
         draw(browser);
       }
       if(browser.isPosAtKey('e')) {
+        eng->highScore->runHighScoreScreen();
+        draw(browser);
+      }
+      if(browser.isPosAtKey('f')) {
         proceed = true;
         *quit = true;
       }

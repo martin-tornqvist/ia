@@ -170,7 +170,7 @@ private:
 		SpecificTrapBase(pos, engine) {
 	}
 	void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-	SDL_Color getTrapSpecificColor() const {
+  SDL_Color getTrapSpecificColor() const {
 		return clrCyan;
 	}
 	string getTrapSpecificTitle() const {
