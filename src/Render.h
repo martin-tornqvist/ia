@@ -59,6 +59,7 @@ public:
   TileAndColor renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
   void setGfxAnVideoMode();
+  void setKeyDelays();
 
 private:
   friend class Postmortem;

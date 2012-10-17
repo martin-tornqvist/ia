@@ -35,6 +35,7 @@
 				</Compiler>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\sdl\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -69,6 +70,7 @@
 				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\sdl\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>

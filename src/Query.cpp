@@ -78,7 +78,6 @@ int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MI
 
     if(key == SDLK_RETURN) {
       eng->renderer->clearAreaWithTextDimensions(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
-      eng->renderer->flip();
       return max(MIN, retNum);
     }
 

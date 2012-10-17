@@ -33,15 +33,21 @@ int Populate::getOutOfDepthOffset() const {
 bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const bool IS_AFTER_MAP_CREATION, const bool ALLOW_ROAM,
       const SpecialRoom_t belongingToSpecialRoomType) const {
 	if(freeCells.size() > 0) {
+    tracer << "Populate::spawnGroupOfMonstersAtFreeCells()" << endl;
+
 		const int FREE_CELLS_ELEMENT = eng->dice(1, freeCells.size()) - 1;
 		const coord pos(freeCells.at(FREE_CELLS_ELEMENT));
 
 		const int OUT_OF_DEPTH_OFFSET = getOutOfDepthOffset();
 
+    tracer << "Populate: belongingToSpecialRoomType: " << belongingToSpecialRoomType << endl;
+
 		Actor* originActor = NULL;
 		if(belongingToSpecialRoomType == endOfSpecialRooms) {
+		  tracer << "Populate: no special room set, spawning any random actor" << endl;
 			originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET, IS_AFTER_MAP_CREATION);
 		} else {
+		  tracer << "Populate: special room is set, spawning random actor belonging to room" << endl;
 			originActor = eng->actorFactory->spawnRandomActorRelatedToSpecialRoom(pos, belongingToSpecialRoomType, OUT_OF_DEPTH_OFFSET);
 		}
 

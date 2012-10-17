@@ -188,6 +188,7 @@ Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFS
 }
 
 Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LVL_OFFSET) {
+  tracer << "ActorFactory::spawnRandomActorRelatedToSpecialRoom()" << endl;
   const int DLVL = eng->map->getDungeonLevel();
   vector<ActorDevNames_t> monsterCandidates;
   const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
@@ -215,9 +216,15 @@ Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, cons
   }
 
   if(monsterCandidates.empty() == false) {
+    tracer << "ActorFactory: Successfully made list of spawn candidates" << endl;
+
     const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
     const ActorDevNames_t monsterType = monsterCandidates.at(ELEMENT);
-    return spawnActor(monsterType, pos);
+
+    Actor* const actor = spawnActor(monsterType, pos);
+    tracer << "ActorFactory: Spawned " << actor->getNameA() << endl;
+
+    return actor;
   }
 
   return NULL;

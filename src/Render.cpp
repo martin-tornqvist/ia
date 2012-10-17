@@ -165,13 +165,17 @@ bool Renderer::SDL_init() {
     return false;
   }
 
-  SDL_EnableKeyRepeat(eng->config->KEY_REPEAT_DELAY, eng->config->KEY_REPEAT_INTERVAL);
+  setKeyDelays();
 
   SDL_EnableUNICODE(1);
 
   SDL_WM_SetCaption(("IA " + eng->config->GAME_VERSION).c_str(), NULL);
 
   return true;
+}
+
+void Renderer::setKeyDelays() {
+  SDL_EnableKeyRepeat(eng->config->KEY_REPEAT_DELAY, eng->config->KEY_REPEAT_INTERVAL);
 }
 
 //SDL_Surface* Renderer::scaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)

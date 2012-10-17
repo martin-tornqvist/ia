@@ -84,7 +84,7 @@ public:
 
 private:
   void playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS);
-  void draw(const vector<string>& lines, const MenuBrowser& browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS);
+  void draw(const MenuBrowser& browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS);
   void readFile(vector<string>& lines);
   void setAllVariablesFromLines(vector<string>& lines);
   void writeLinesToFile(vector<string>& lines);

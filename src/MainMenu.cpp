@@ -68,12 +68,12 @@ void MainMenu::draw(const MenuBrowser& browser) {
     for(unsigned int i = 0; i < logo.size(); i++) {
       xPos = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
-	if(logo.at(i).at(ii) != ' ') {
-	  SDL_Color clr = clrBlueLight;
-	  clr.b += eng->dice.getInRange(-110, 0);
-	  eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
-	}
-	xPos++;
+        if(logo.at(i).at(ii) != ' ') {
+          SDL_Color clr = clrBlueLight;
+          clr.b += eng->dice.getInRange(-110, 0);
+          eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
+        }
+        xPos++;
       }
       yPos += 1;
     }

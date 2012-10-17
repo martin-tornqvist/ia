@@ -65,19 +65,19 @@ void Config::setCellDimDependentVariables() {
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(11, 0);
+  MenuBrowser browser(12, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
   const int OPTIONS_Y_POS = 3;
 
-  draw(lines, browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+  draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
     case menuAction_browsed: {
-      draw(lines, browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+      draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
     }
     break;
 
@@ -88,10 +88,9 @@ void Config::runOptionsMenu() {
 
     case menuAction_selected: {
       playerSetsOption(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-      setCellDimDependentVariables();
       collectLinesFromVariables(lines);
       writeLinesToFile(lines);
-      draw(lines, browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+      draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
     }
     }
   }
@@ -132,9 +131,9 @@ void Config::parseFontNameAndSetCellDims() {
 }
 
 void Config::setDefaultVariables() {
+  USE_TILE_SET = true;
   FONT_IMAGE_NAME = fontImageNames.back();
   parseFontNameAndSetCellDims();
-  USE_TILE_SET = true;
   FULLSCREEN = false;
   WALL_SYMBOL_FULL_SQUARE = true;
   SKIP_INTRO_LEVEL = false;
@@ -148,8 +147,8 @@ void Config::setDefaultVariables() {
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.resize(0);
-  lines.push_back(FONT_IMAGE_NAME);
   lines.push_back(USE_TILE_SET == false ? "0" : "1");
+  lines.push_back(FONT_IMAGE_NAME);
   lines.push_back(FULLSCREEN == false ? "0" : "1");
   lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
   lines.push_back(SKIP_INTRO_LEVEL == false ? "0" : "1");
@@ -161,8 +160,9 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(intToString(DELAY_EXPLOSION));
 }
 
-void Config::draw(const vector<string>& lines, const MenuBrowser& browser,
-                  const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
+void Config::draw(const MenuBrowser& browser, const int OPTION_VALUES_X_POS,
+                  const int OPTIONS_Y_POS) {
+
   const SDL_Color clrSelected = clrWhite;
   const SDL_Color clrGeneral = clrRedLight;
 
@@ -174,17 +174,19 @@ void Config::draw(const vector<string>& lines, const MenuBrowser& browser,
   const int X1 = OPTION_VALUES_X_POS;
   const int Y0 = OPTIONS_Y_POS;
 
-  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(FONT_IMAGE_NAME, renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  optionNr++;
+  eng->renderer->drawText("-OPTIONS-", renderArea_screen, X0, Y0 - 1, clrWhite);
 
   eng->renderer->drawText("TILE MODE (16x24 FONT REQUIRED)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(USE_TILE_SET ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("FULLSCREEN", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(FONT_IMAGE_NAME, renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  optionNr++;
+
+  eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(FULLSCREEN ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
@@ -229,12 +231,28 @@ void Config::draw(const vector<string>& lines, const MenuBrowser& browser,
   eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
+  eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+
+  eng->renderer->drawText("[space/esc] done", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
+
   eng->renderer->flip();
 }
 
 void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
   switch(browser.getPos().y) {
   case 0: {
+    USE_TILE_SET = !USE_TILE_SET;
+    if(USE_TILE_SET) {
+      if(CELL_W != 16 || CELL_H != 24) {
+        FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
+      }
+    }
+    parseFontNameAndSetCellDims();
+    setCellDimDependentVariables();
+    eng->renderer->setGfxAnVideoMode();
+  } break;
+
+  case 1: {
     for(unsigned int i = 0; i < fontImageNames.size(); i++) {
       if(FONT_IMAGE_NAME == fontImageNames.at(i)) {
         FONT_IMAGE_NAME = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
@@ -243,22 +261,18 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
     }
     parseFontNameAndSetCellDims();
 
-    if(CELL_W != 16 || CELL_H != 24) {
-      USE_TILE_SET = false;
-    }
-
-    setCellDimDependentVariables();
-    eng->renderer->setGfxAnVideoMode();
-  } break;
-
-  case 1: {
-    USE_TILE_SET = !USE_TILE_SET;
     if(USE_TILE_SET) {
-      if(CELL_W != 16 || CELL_H != 24) {
-        FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
+      while(CELL_W != 16 && CELL_H != 24) {
+        for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+          if(FONT_IMAGE_NAME == fontImageNames.at(i)) {
+            FONT_IMAGE_NAME = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+            break;
+          }
+        }
+        parseFontNameAndSetCellDims();
       }
     }
-    parseFontNameAndSetCellDims();
+
     setCellDimDependentVariables();
     eng->renderer->setGfxAnVideoMode();
   } break;
@@ -286,6 +300,7 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
                      clrWhite, 1, 3, KEY_REPEAT_DELAY);
     if(NR != -1) {
       KEY_REPEAT_DELAY = NR;
+      eng->renderer->setKeyDelays();
     }
   } break;
 
@@ -295,6 +310,7 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
                      clrWhite, 1, 3, KEY_REPEAT_INTERVAL);
     if(NR != -1) {
       KEY_REPEAT_INTERVAL = NR;
+      eng->renderer->setKeyDelays();
     }
   } break;
 
@@ -324,36 +340,19 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
       DELAY_EXPLOSION = NR;
     }
   } break;
+
+  case 11: {
+    setDefaultVariables();
+    parseFontNameAndSetCellDims();
+    setCellDimDependentVariables();
+    eng->renderer->setGfxAnVideoMode();
+  } break;
   }
 }
 
 void Config::setAllVariablesFromLines(vector<string>& lines) {
-  string curLine = lines.front();
+  string curLine = "";
 
-//  switch(stringToInt(curLine)) {
-//  case 0: {
-//    FONT_IMAGE_NAME = fontImageNames.at(0);
-//  }
-//  break;
-//  case 1: {
-//    FONT_IMAGE_NAME = fontImageNames.at(1);
-//  }
-//  break;
-//  case 2: {
-//    FONT_IMAGE_NAME = fontImageNames.at(2);
-//  }
-//  break;
-//  case 3: {
-//    FONT_IMAGE_NAME = fontImageNames.at(3);
-//  }
-//  break;
-//  }
-
-  FONT_IMAGE_NAME = curLine;
-
-  parseFontNameAndSetCellDims();
-
-  lines.erase(lines.begin());
   curLine = lines.front();
   if(curLine == "0") {
     USE_TILE_SET = false;
@@ -364,42 +363,48 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
       parseFontNameAndSetCellDims();
     }
   }
-
   lines.erase(lines.begin());
+
+  curLine = lines.front();
+  FONT_IMAGE_NAME = curLine;
+  parseFontNameAndSetCellDims();
+  lines.erase(lines.begin());
+
   curLine = lines.front();
   FULLSCREEN = curLine == "0" ? false : true;
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   WALL_SYMBOL_FULL_SQUARE = curLine == "0" ? false : true;
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   SKIP_INTRO_LEVEL = curLine == "0" ? false : true;
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   RANGED_WPN_MELEE_PROMPT = curLine == "0" ? false : true;
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   KEY_REPEAT_DELAY = stringToInt(curLine);
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   KEY_REPEAT_INTERVAL = stringToInt(curLine);
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   DELAY_PROJECTILE_DRAW = stringToInt(curLine);
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   DELAY_SHOTGUN = stringToInt(curLine);
-
   lines.erase(lines.begin());
+
   curLine = lines.front();
   DELAY_EXPLOSION = stringToInt(curLine);
+  lines.erase(lines.begin());
 }
 
 void Config::writeLinesToFile(vector<string>& lines) {

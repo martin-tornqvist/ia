@@ -340,6 +340,9 @@ void Player::actorSpecific_hit(const int DMG) {
     eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, false);
   }
 
+  //Hit gives a little shock
+  shock(shockValue_mild, 0);
+
   eng->renderer->drawMapAndInterface(true);
 }
 
