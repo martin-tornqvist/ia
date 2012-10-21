@@ -359,17 +359,27 @@ void Renderer::drawBlastAnimationAt(const coord pos, const SDL_Color color, cons
 
 void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const SDL_Color clr) {
   coord tileCoords = eng->art->getTileCoords(tile, eng);
-
-  const int W_PIXEL = eng->config->CELL_W;
-  const int H_PIXEL = eng->config->CELL_H;
-
-  const int X_PIXEL = X * W_PIXEL;
-  const int Y_PIXEL = Y * H_PIXEL + eng->config->MAINSCREEN_Y_OFFSET;
-
-//  clearTileAtPixel(X_PIXEL, Y_PIXEL);
-
   clipRect.x = static_cast<Sint16>(tileCoords.x);
   clipRect.y = static_cast<Sint16>(tileCoords.y);
+
+  const int X_PIXEL = X * eng->config->CELL_W;
+  const int Y_PIXEL = Y * eng->config->CELL_H + eng->config->MAINSCREEN_Y_OFFSET;
+
+  cell_rect.x = static_cast<Sint16>(X_PIXEL);
+  cell_rect.y = static_cast<Sint16>(Y_PIXEL);
+
+  SDL_FillRect(m_screen, &cell_rect, SDL_MapRGB(m_screen->format, clr.r, clr.g, clr.b));
+
+  applySurface(X_PIXEL, Y_PIXEL, m_tileSheet, m_screen, &clipRect);
+}
+
+void Renderer::drawTileOnScreen(const Tile_t tile, const coord pos, const SDL_Color clr) {
+  coord tileCoords = eng->art->getTileCoords(tile, eng);
+  clipRect.x = static_cast<Sint16>(tileCoords.x);
+  clipRect.y = static_cast<Sint16>(tileCoords.y);
+
+  const int X_PIXEL = pos.x * eng->config->CELL_W;
+  const int Y_PIXEL = pos.y * eng->config->CELL_H;
 
   cell_rect.x = static_cast<Sint16>(X_PIXEL);
   cell_rect.y = static_cast<Sint16>(Y_PIXEL);
@@ -634,7 +644,7 @@ void Renderer::drawASCII() {
       tempDrw = renderArray[x][y];
 
       //If outside FOV and explored, draw player memory instead
-      if(eng->map->playerVision[x][y] == false && eng->map->explored[x][y] == true) {
+      if(eng->map->playerVision[x][y] == false && eng->map->explored[x][y]) {
         renderArray[x][y] = eng->map->playerVisualMemory[x][y];
         tempDrw = renderArray[x][y];
 
@@ -652,6 +662,9 @@ void Renderer::drawASCII() {
       }
     }
   }
+
+  //-------------------------------------------- FINALLY, DRAW PLAYER CHARACTER (SHOULD ALWAYS BE VISIBLE)
+  drawCharacter(eng->player->getGlyph(), renderArea_mainScreen, eng->player->pos.x, eng->player->pos.y, eng->player->getColor());
 }
 
 void Renderer::drawTiles() {
@@ -805,5 +818,8 @@ void Renderer::drawTiles() {
       }
     }
   }
+
+  //-------------------------------------------- FINALLY, DRAW PLAYER CHARACTER (SHOULD ALWAYS BE VISIBLE)
+  drawTileInMap(eng->player->getTile(), eng->player->pos.x, eng->player->pos.y, eng->player->getColor());
 }
 

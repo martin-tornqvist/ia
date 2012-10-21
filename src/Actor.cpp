@@ -34,8 +34,9 @@ void Actor::newTurn() {
 
 bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
   if(other.deadState == actorDeadState_alive) {
-    if(this == &other)
+    if(this == &other) {
       return true;
+    }
 
     if(this == eng->player) {
       const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isStealth;

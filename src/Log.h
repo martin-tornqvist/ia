@@ -14,6 +14,12 @@ using namespace std;
 
 class Engine;
 
+enum MessageInterrupt_t {
+  messageInterrupt_never,
+  messageInterrupt_query,
+  messageInterrupt_force
+};
+
 class MessageLog {
 public:
   MessageLog(Engine* engine) :
@@ -21,7 +27,7 @@ public:
     clearLog();
   }
 
-  void addMessage(const string& text, const SDL_Color = clrWhite, bool queryInterruptPlayerAction = true);
+  void addMessage(const string& text, const SDL_Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never);
 
   void drawLog() const;
 

@@ -398,7 +398,7 @@ void StatusEffectsHandler::newTurnAllEffects() {
       eng->renderer->drawMapAndInterface();
 
       if(OWNER_IS_PLAYER && curEffect->messageWhenEnd() != "") {
-        eng->log->addMessage(curEffect->messageWhenEnd(), clrWhite, false);
+        eng->log->addMessage(curEffect->messageWhenEnd(), clrWhite);
       } else {
         if(PLAYER_SEE_OWNER && curEffect->messageWhenEndOther() != "") {
           eng->log->addMessage(owningActor->getNameThe() + " " + curEffect->messageWhenEndOther());

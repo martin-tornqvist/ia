@@ -283,13 +283,11 @@ void Door::tryBash(Actor* actorTrying) {
           if(PLAYER_SEE_TRYER) {
             eng->log->addMessage(actorTrying->getNameThe() + " is hurt.");
           }
-          const int SPRAIN_DMG = 1;
-          const bool DIED = actorTrying->hit(SPRAIN_DMG, damageType_direct);
-          if(DIED) {
-            if(actorTrying == eng->player) {
-              eng->postmortem->setCauseOfDeath("Killed by a door");
-            }
-          }
+        }
+        const int SPRAIN_DMG = 1;
+        const bool DIED = actorTrying->hit(SPRAIN_DMG, damageType_direct);
+        if(DIED && IS_PLAYER) {
+          eng->postmortem->setCauseOfDeath("Killed by a door");
         }
       }
 

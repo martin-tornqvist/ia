@@ -337,7 +337,7 @@ void Player::actorSpecific_hit(const int DMG) {
   //Hit aborts first aid
   if(firstAidTurnsLeft != -1) {
     firstAidTurnsLeft = -1;
-    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, false);
+    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
   }
 
   //Hit gives a little shock
@@ -1001,11 +1001,11 @@ int Player::getHealingTimeTotal() const {
   return PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 }
 
-void Player::queryInterruptActions() {
+void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
   //Abort searching
   if(waitTurnsLeft > 0) {
     eng->renderer->drawMapAndInterface();
-    eng->log->addMessage("I stop waiting.", clrWhite, false);
+    eng->log->addMessage("I stop waiting.", clrWhite);
     eng->renderer->flip();
   }
   waitTurnsLeft = -1;
@@ -1023,23 +1023,26 @@ void Player::queryInterruptActions() {
     const int HP_HEALED_IF_ABORTED = IS_ENOUGH_TIME_PASSED ? (MISSING_HP * (TOTAL_TURNS - firstAidTurnsLeft)) / TOTAL_TURNS  : 0;
 
     bool isAborted = false;
-    if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD) {
+    if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD || PROMPT_FOR_ABORT == false) {
       firstAidTurnsLeft = -1;
       isAborted = true;
-      eng->log->addMessage("I stop tending to my wounds.", clrWhite, false);
+      eng->log->addMessage("I stop tending to my wounds.", clrWhite);
       eng->renderer->flip();
     } else {
       eng->renderer->drawMapAndInterface();
+
       const string TURNS_STR = intToString(firstAidTurnsLeft);
       const string ABORTED_HP_STR = intToString(HP_HEALED_IF_ABORTED);
       string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
       abortStr += ABORTED_HP_STR + " HP restored if canceled.";
-      eng->log->addMessage(abortStr , clrWhiteHigh, false);
+      eng->log->addMessage(abortStr , clrWhiteHigh);
       eng->renderer->flip();
+
       if(eng->query->yesOrNo() == false) {
         firstAidTurnsLeft = -1;
         isAborted = true;
       }
+
       eng->log->clearLog();
       eng->renderer->flip();
     }
@@ -1072,13 +1075,11 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
   if(deadState == actorDeadState_alive) {
     coord dest = m_statusEffectsHandler->changeMoveCoord(pos, pos + coord(X_DIR, Y_DIR));
 
-    //See if trap affects leaving
+    //Trap affects leaving?
     if(dest != pos) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
-        //TODO Consider moving actorAttemptLeave to base class
-        Trap* trap = dynamic_cast<Trap*>(f);
-        dest = trap->actorAttemptLeave(this, pos, dest);
+        dest = dynamic_cast<Trap*>(f)->actorAttemptLeave(this, pos, dest);
       }
     }
 
@@ -1093,7 +1094,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           Weapon* weapon = dynamic_cast<Weapon*>(m_inventory->getItemInSlot(slot_wielded));
           if(weapon != NULL) {
             if(weapon->getInstanceDefinition().isMeleeWeapon) {
-              if(eng->config->RANGED_WPN_MELEE_PROMPT) {
+              if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getInstanceDefinition().isRangedWeapon) {
                   const string wpnName = weapon->getInstanceDefinition().name.name_a;
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
@@ -1145,6 +1146,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         const coord oldPos = pos;
         pos = dest;
 
+        // Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
           string message = m_statusEffectsHandler->allowSee() == false ? "I feel here: " : "I see here: ";
@@ -1153,9 +1155,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         }
 
         if(m_statusEffectsHandler->allowSee() == false) {
-          eng->map->playerVision[oldPos.x][oldPos.y] = true;
-          FOVupdate();
-          eng->map->playerVision[oldPos.x][oldPos.y] = false;
+//          FOVupdate();
         }
       }
 
@@ -1165,7 +1165,8 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       }
       eng->map->featuresStatic[dest.x][dest.y]->bump(this);
     }
-    //If moved successfully or for example was held by a spider web, end turn.
+    // If destination reached, then we either moved or were held by something.
+    // End turn (unless free turn due to bonus).
     if(pos == dest) {
       bool isFreeTurn = false;
       if(isSwiftMoveAlloed) {
@@ -1278,10 +1279,9 @@ void Player::FOVupdate() {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeVisionBlockerArray(blockers);
     eng->fov->runPlayerFov(blockers, pos);
+    eng->map->playerVision[pos.x][pos.y] = true;
     FOVhack();
   }
-
-  eng->map->playerVision[pos.x][pos.y] = true;
 
   if(eng->cheat_vision) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {

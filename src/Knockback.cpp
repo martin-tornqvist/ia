@@ -21,54 +21,70 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
-	const coord c = defender->pos + delta;
+        const coord c = defender->pos + delta;
 
-	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-	eng->mapTests->makeMoveBlockerArray(defender, blockers);
-	const bool CELL_BLOCKED = blockers[c.x][c.y];
-	const bool CELL_IS_BOTTOMLESS = eng->map->featuresStatic[c.x][c.y]->isBottomless();
+        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        eng->mapTests->makeMoveBlockerArray(defender, blockers);
+        const bool CELL_BLOCKED = blockers[c.x][c.y];
+        const bool CELL_IS_BOTTOMLESS = eng->map->featuresStatic[c.x][c.y]->isBottomless();
 
-	if(WALKTYPE_CAN_BE_KNOCKED_BACK && (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
-	  if(i == 0) {
-	    if(IS_SPIKE_GUN == false) {
-	      defender->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, true);
-	    }
+        if(WALKTYPE_CAN_BE_KNOCKED_BACK && (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
+          if(i == 0) {
+            if(IS_SPIKE_GUN == false) {
+              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, true);
+            }
 
-	    if(DEFENDER_IS_MONSTER) {
-	      eng->log->addMessage(defender->getNameThe() + " is knocked back!");
-	    } else {
-	      eng->log->addMessage("I am knocked back!");
-	    }
-	  }
+            if(DEFENDER_IS_MONSTER) {
+              eng->log->addMessage(defender->getNameThe() + " is knocked back!");
+            } else {
+              eng->log->addMessage("I am knocked back!");
+            }
+          }
 
-	  defender->pos = c;
+          defender->pos = c;
 
-	  eng->renderer->drawMapAndInterface();
-	  Timer t;
-	  t.start();
-	  while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
-	  }
+          eng->renderer->drawMapAndInterface();
+          Timer t;
+          t.start();
+          while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
+          }
 
-	  if(CELL_IS_BOTTOMLESS) {
-	    if(DEFENDER_IS_MONSTER) {
-	      eng->log->addMessage(defender->getNameThe() + " plummets down the depths.", clrMessageGood);
-	    } else {
-	      eng->log->addMessage("I plummet down the depths!", clrMessageBad);
-	    }
-	    defender->die(true, false, false);
-	    i = 99999;
-	  }
+          if(CELL_IS_BOTTOMLESS) {
+            if(DEFENDER_IS_MONSTER) {
+              eng->log->addMessage(defender->getNameThe() + " plummets down the depths.", clrMessageGood);
+            } else {
+              eng->log->addMessage("I plummet down the depths!", clrMessageBad);
+            }
+            defender->die(true, false, false);
+            return;
+          }
 
-	} else {
-	  // Defender nailed to a wall from a  spike gun?
-	  if(IS_SPIKE_GUN) {
-	    if(eng->map->featuresStatic[c.x][c.y]->isVisionPassable() == false) {
-	      defender->getStatusEffectsHandler()->attemptAddEffect(new StatusNailed(eng));
-	    }
-	  }
+          // Bump features on the way (so for example monsters can be knocked back into traps)
+          vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(defender->pos);
+          for(unsigned int featureMobIndex = 0; featureMobIndex < featureMobs.size(); featureMobIndex++) {
+            featureMobs.at(featureMobIndex)->bump(defender);
+          }
 
-	  i = 9999;
-	}
+          if(defender->deadState != actorDeadState_alive) {
+            return;
+          }
+
+          eng->map->featuresStatic[defender->pos.x][defender->pos.y]->bump(defender);
+
+          if(defender->deadState != actorDeadState_alive) {
+            return;
+          }
+
+        } else {
+          // Defender nailed to a wall from a  spike gun?
+          if(IS_SPIKE_GUN) {
+            if(eng->map->featuresStatic[c.x][c.y]->isVisionPassable() == false) {
+              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusNailed(eng));
+            }
+          }
+
+          return;
+        }
       }
     }
   }

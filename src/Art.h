@@ -21,6 +21,7 @@ enum Tile_t {
 	tile_potion,
 	tile_ammo,
 	tile_scroll,
+	tile_elderSign,
 	tile_rat,
 	tile_spider,
 	tile_wolf,

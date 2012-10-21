@@ -165,6 +165,8 @@
 		<Unit filename="..\src\FeatureFactory.cpp" />
 		<Unit filename="..\src\FeatureFactory.h" />
 		<Unit filename="..\src\FeatureLever.cpp" />
+		<Unit filename="..\src\FeatureLiquid.cpp" />
+		<Unit filename="..\src\FeatureLiquid.h" />
 		<Unit filename="..\src\FeatureLitDynamite.cpp" />
 		<Unit filename="..\src\FeatureLitDynamite.h" />
 		<Unit filename="..\src\FeatureProxEvent.cpp" />

@@ -93,7 +93,7 @@ private:
   void testPhobias();
   void actorSpecific_hit(const int DMG);
   void FOVhack();
-  void queryInterruptActions();
+  void interruptActions(const bool PROMPT_FOR_ABORT);
   friend class MessageLog;
   bool isStandingInOpenSpace() const;
   bool isStandingInCrampedSpace() const;

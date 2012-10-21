@@ -22,7 +22,7 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
 
   int xPos = 1;
   int yPos = 1;
-  const int X_POS_GROUP_TITLE = 1;
+  const int X_POS_GROUP_TITLE = 9;
 
   //	eng->renderer->drawText("--- Choose ability to improve (" + intToString(PICKS_LEFT) + ") ---", renderArea_screen, xPos, yPos, clrWhite);
   eng->renderer->drawText("--- Choose ability to improve ---", renderArea_screen, xPos, yPos, clrWhite);
@@ -80,9 +80,13 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
     const int RANK_LIMIT = eng->playerBonusHandler->getBonusRankLimitAt(CURRENT_ELEMENT);
     int xPosTemp = xPos;
     for(int ii = 1; ii <= RANK_LIMIT; ii++) {
-      s = RANK >= ii ? "*" : "-";
       drwClr = RANK >= ii ? clrRedLight : clrBlue;
-      eng->renderer->drawText(s, renderArea_screen, xPosTemp, yPos, drwClr);
+      if(eng->config->USE_TILE_SET) {
+        eng->renderer->drawTileOnScreen(tile_elderSign, coord(xPosTemp, yPos), drwClr);
+      } else {
+        s = RANK >= ii ? "*" : "-";
+        eng->renderer->drawText(s, renderArea_screen, xPosTemp, yPos, drwClr);
+      }
       xPosTemp++;
     }
 

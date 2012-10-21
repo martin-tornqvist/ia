@@ -180,7 +180,7 @@ void Attack::printRangedInitiateMessages(AttackData data) {
 		if(eng->map->playerVision[data.attackerX][data.attackerY] == true) {
 			const string attackerName = data.attacker->getNameThe();
 			const string attackVerb = data.verbOtherAttacksMissile;
-			eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, false);
+			eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
 		}
 	}
 
@@ -210,10 +210,10 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
 
 			if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {
 				if(data.currentDefender == eng->player) {
-					eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, false);
+					eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, messageInterrupt_force);
 
 					if(data.attackResult == successCritical) {
-						eng->log->addMessage("It was a great hit!", clrMessageBad, false);
+						eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
 					}
 				} else {
 					string otherName = "It";
@@ -255,7 +255,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 				otherName = "its";
 			}
 
-			eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript);
+			eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript, clrWhite, messageInterrupt_force);
 		}
 	} else {
 		//----- ATTACK FUMBLE -----
@@ -267,7 +267,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 					otherName = data.attacker->getNameThe();
 				else otherName = "It";
 
-				eng->log->addMessage(otherName + " fumbles.");
+				eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
 			}
 		}
 
@@ -286,11 +286,11 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 				else otherName = "It";
 
 				if(data.attackResult == failSmall)
-					eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript);
+					eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
 				if(data.attackResult == failNormal)
-					eng->log->addMessage(otherName + " misses me" + data.dmgDescript);
+					eng->log->addMessage(otherName + " misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
 				if(data.attackResult == failBig)
-					eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript);
+					eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript, clrWhite, messageInterrupt_force);
 			}
 		}
 
@@ -338,7 +338,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 						otherName = "It";
 					}
 
-					eng->log->addMessage(otherName + " " + wpnVerb + data.dmgDescript, clrMessageBad, false);
+					eng->log->addMessage(otherName + " " + wpnVerb + data.dmgDescript, clrMessageBad, messageInterrupt_force);
 				}
 			}
 		}

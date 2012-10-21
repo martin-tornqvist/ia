@@ -42,6 +42,7 @@ void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   eng->playerBonusHandler->addSaveLines(lines);
   eng->map->addSaveLines(lines);
   eng->actorData->addSaveLines(lines);
+  eng->gameTime->addSaveLines(lines);
 }
 
 void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
@@ -62,9 +63,9 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   eng->playerBonusHandler->setParametersFromSaveLines(lines);
   eng->map->setParametersFromSaveLines(lines);
   eng->actorData->setParametersFromSaveLines(lines);
+  eng->gameTime->setParametersFromSaveLines(lines);
 
   eng->gameTime->insertActorInLoop(eng->player);
-
   eng->dungeonClimb->travelDown();
 }
 

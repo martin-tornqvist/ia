@@ -1134,7 +1134,7 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardLeader = true;
 	d.abilityValues.setAbilityValue(ability_dodge, 20);
 	d.speed = actorSpeed_fast;
-	d.nrTurnsAttackDisablesMelee = 2;
+	d.nrTurnsAttackDisablesMelee = 1;
 	d.nrTurnsAttackDisablesRanged = 0;
 	d.glyph = 'd';
 	d.color = clrGray;

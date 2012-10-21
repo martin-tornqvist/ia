@@ -180,7 +180,7 @@ int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int
   return xPos;
 }
 
-void MessageLog::addMessage(const string& text, const SDL_Color color, bool queryInterruptPlayerAction) {
+void MessageLog::addMessage(const string& text, const SDL_Color color, MessageInterrupt_t interrupt) {
   bool repeated = false;
 
   //New message equal to previous?
@@ -213,8 +213,8 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, bool quer
   drawLog();
 
   //Messages may stop long actions like first aid and auto travel.
-  if(queryInterruptPlayerAction == true) {
-    eng->player->queryInterruptActions();
+  if(interrupt != messageInterrupt_never) {
+    eng->player->interruptActions(interrupt == messageInterrupt_query);
   }
 }
 
