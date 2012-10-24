@@ -33,7 +33,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT) {
       eng->log->addMessage("I drop " + itemRef + ".");
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(blockers);
+      eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
       if(eng->player->checkIfSeeActor(*curActor, blockers)) {
         eng->log->addMessage("I see " + curActor->getNameThe() + " throw " + itemRef + ".");
       }

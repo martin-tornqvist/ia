@@ -178,88 +178,6 @@ void Renderer::setKeyDelays() {
   SDL_EnableKeyRepeat(eng->config->KEY_REPEAT_DELAY, eng->config->KEY_REPEAT_INTERVAL);
 }
 
-//SDL_Surface* Renderer::scaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)
-//{
-//  if(!Surface || !Width || !Height)
-//    return 0;
-//
-//  SDL_Surface* _ret = SDL_CreateRGBSurface(Surface->flags, Width, Height, Surface->format->BitsPerPixel,
-//                      Surface->format->Rmask, Surface->format->Gmask, Surface->format->Bmask, Surface->format->Amask);
-//
-//  double    _stretch_factor_x = (static_cast<double>(Width)  / static_cast<double>(Surface->w)),
-//                                _stretch_factor_y = (static_cast<double>(Height) / static_cast<double>(Surface->h));
-//
-//  for(Sint32 y = 0; y < Surface->h; y++)
-//    for(Sint32 x = 0; x < Surface->w; x++)
-//      for(Sint32 o_y = 0; o_y < _stretch_factor_y; ++o_y)
-//        for(Sint32 o_x = 0; o_x < _stretch_factor_x; ++o_x)
-//          DrawPixel(_ret, static_cast<Sint32>(_stretch_factor_x * x) + o_x,
-//                    static_cast<Sint32>(_stretch_factor_y * y) + o_y, ReadPixel(Surface, x, y));
-//
-//  return _ret;
-//}
-//
-//
-//Uint32 Renderer::ReadPixel(SDL_Surface* surface, int x, int y) {
-//  int bpp = surface->format->BytesPerPixel;
-//  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-//
-//  switch(bpp) {
-//  case 1:
-//    return *p;
-//    break;
-//
-//  case 2:
-//    return *(Uint16 *)p;
-//    break;
-//
-//  case 3:
-//    if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-//      return p[0] << 16 | p[1] << 8 | p[2];
-//    else
-//      return p[0] | p[1] << 8 | p[2] << 16;
-//    break;
-//
-//  case 4:
-//    return *(Uint32 *)p;
-//    break;
-//
-//  default:
-//    return 0;
-//  }
-//}
-//
-//void Renderer::DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel) {
-//  int bpp = surface->format->BytesPerPixel;
-//  Uint8* p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-//
-//  switch(bpp) {
-//  case 1:
-//    *p = pixel;
-//    break;
-//
-//  case 2:
-//    *(Uint16 *)p = pixel;
-//    break;
-//
-//  case 3:
-//    if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-//      p[0] = (pixel >> 16) & 0xff;
-//      p[1] = (pixel >> 8) & 0xff;
-//      p[2] = pixel & 0xff;
-//    } else {
-//      p[0] = pixel & 0xff;
-//      p[1] = (pixel >> 8) & 0xff;
-//      p[2] = (pixel >> 16) & 0xff;
-//    }
-//    break;
-//
-//  case 4:
-//    *(Uint32 *)p = pixel;
-//    break;
-//  }
-//}
-
 void Renderer::drawMainMenuLogo(const int Y_POS) {
   const int IMG_W = m_mainMenuLogo->w;
   const int X = (eng->config->SCREEN_WIDTH - IMG_W) / 2;
@@ -358,7 +276,7 @@ void Renderer::drawBlastAnimationAt(const coord pos, const SDL_Color color, cons
 
 
 void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const SDL_Color clr) {
-  coord tileCoords = eng->art->getTileCoords(tile, eng);
+  const coord tileCoords = eng->art->getTileCoords(tile, eng);
   clipRect.x = static_cast<Sint16>(tileCoords.x);
   clipRect.y = static_cast<Sint16>(tileCoords.y);
 
@@ -374,7 +292,7 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
 }
 
 void Renderer::drawTileOnScreen(const Tile_t tile, const coord pos, const SDL_Color clr) {
-  coord tileCoords = eng->art->getTileCoords(tile, eng);
+  const coord tileCoords = eng->art->getTileCoords(tile, eng);
   clipRect.x = static_cast<Sint16>(tileCoords.x);
   clipRect.y = static_cast<Sint16>(tileCoords.y);
 
@@ -391,8 +309,6 @@ void Renderer::drawTileOnScreen(const Tile_t tile, const coord pos, const SDL_Co
 
 void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const SDL_Color clr) {
   coord glyphCoords = eng->art->getGlyphCoords(CHARACTER, eng);
-
-//  clearCharacterAtPixel(X, Y);
 
   clipRect.x = static_cast<Sint16>(glyphCoords.x);
   clipRect.y = static_cast<Sint16>(glyphCoords.y);
@@ -432,7 +348,7 @@ coord Renderer::getPixelCoordsForCharacter(const RenderArea_t renderArea, const 
 
 void Renderer::drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
   const coord pixelCoord = getPixelCoordsForCharacter(renderArea, X, Y);
-  clearCharacterAtPixel(pixelCoord.x, pixelCoord.y);
+//  clearCharacterAtPixel(pixelCoord.x, pixelCoord.y);
   drawCharacterAtPixel(CHARACTER, pixelCoord.x, pixelCoord.y, clr);
 }
 
@@ -617,14 +533,13 @@ void Renderer::drawASCII() {
   //-------------------------------------------- INSERT LIVING ACTORS INTO TILE ARRAY
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     actor = eng->gameTime->getActorAt(i);
-    xPos = actor->pos.x;
-    yPos = actor->pos.y;
-    if(actor->deadState == actorDeadState_alive && actor->getGlyph() != ' ' && eng->player->checkIfSeeActor(*actor, NULL)) {
-      currentDrw = &renderArray[xPos][yPos];
-      currentDrw->color = actor->getColor();
-      currentDrw->glyph = actor->getGlyph();
-
-      if(actor != eng->player) {
+    if(actor != eng->player) {
+      xPos = actor->pos.x;
+      yPos = actor->pos.y;
+      if(actor->deadState == actorDeadState_alive && actor->getGlyph() != ' ' && eng->player->checkIfSeeActor(*actor, NULL)) {
+        currentDrw = &renderArray[xPos][yPos];
+        currentDrw->color = actor->getColor();
+        currentDrw->glyph = actor->getGlyph();
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
         if(monster->leader == eng->player) {
           currentDrw->underscoreClr = clrGreen;
@@ -676,26 +591,27 @@ void Renderer::drawTiles() {
   //-------------------------------------------- INSERT STATIC FEATURES AND BLOOD INTO TILE ARRAY
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
+      if(eng->map->playerVision[x][y]) {
+        currentDrw = &renderArrayTiles[x][y];
+        currentDrw->color = clrBlack;
+        currentDrw->tile = tile_empty;
+        currentDrw->underscoreClr = clrBlack;
 
-      currentDrw = &renderArrayTiles[x][y];
-      currentDrw->color = clrBlack;
-      currentDrw->tile = tile_empty;
-      currentDrw->underscoreClr = clrBlack;
+        if(eng->map->playerVision[x][y]) {
 
-      if(eng->map->playerVision[x][y] == true) {
-
-        //Static features
-        Tile_t goreTile = tile_empty;
-        if(eng->map->featuresStatic[x][y]->canHaveGore()) {
-          goreTile = eng->map->featuresStatic[x][y]->getGoreTile();
-        }
-        if(goreTile == tile_empty) {
-          currentDrw->tile = eng->map->featuresStatic[x][y]->getTile();
-          const SDL_Color featStdClr = eng->map->featuresStatic[x][y]->getColor();
-          currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featStdClr;
-        } else {
-          currentDrw->tile = goreTile;
-          currentDrw->color = clrRed;
+          //Static features
+          Tile_t goreTile = tile_empty;
+          if(eng->map->featuresStatic[x][y]->canHaveGore()) {
+            goreTile = eng->map->featuresStatic[x][y]->getGoreTile();
+          }
+          if(goreTile == tile_empty) {
+            currentDrw->tile = eng->map->featuresStatic[x][y]->getTile();
+            const SDL_Color featStdClr = eng->map->featuresStatic[x][y]->getColor();
+            currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featStdClr;
+          } else {
+            currentDrw->tile = goreTile;
+            currentDrw->color = clrRed;
+          }
         }
       }
     }
@@ -719,7 +635,7 @@ void Renderer::drawTiles() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       currentDrw = &renderArrayTiles[x][y];
-      if(eng->map->playerVision[x][y] == true) {
+      if(eng->map->playerVision[x][y]) {
         //-------------------------------------------- INSERT ITEMS INTO TILE ARRAY
         if(eng->map->items[x][y] != NULL) {
           currentDrw->color = eng->map->items[x][y]->getColor();
@@ -737,7 +653,7 @@ void Renderer::drawTiles() {
     FeatureMob* feature = eng->gameTime->getFeatureMobAt(i);
     xPos = feature->getX();
     yPos = feature->getY();
-    if(feature->getGlyph() != ' ' && eng->map->playerVision[xPos][yPos] == true) {
+    if(feature->getGlyph() != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayTiles[xPos][yPos];
       currentDrw->color = feature->getColor();
       currentDrw->tile = feature->getTile();
@@ -747,19 +663,12 @@ void Renderer::drawTiles() {
   //-------------------------------------------- INSERT LIVING ACTORS INTO TILE ARRAY
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     actor = eng->gameTime->getActorAt(i);
-    xPos = actor->pos.x;
-    yPos = actor->pos.y;
-    if(actor->deadState == actorDeadState_alive && actor->getTile() != tile_empty && eng->player->checkIfSeeActor(*actor, NULL)) {
-      currentDrw = &renderArrayTiles[xPos][yPos];
-      currentDrw->color = actor->getColor();
-      if(actor == eng->player) {
-        bool isWieldingRangedWeapon = false;
-        Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
-        if(item != NULL) {
-          isWieldingRangedWeapon = item->getInstanceDefinition().isRangedWeapon;
-        }
-        currentDrw->tile = isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee;
-      } else {
+    if(actor != eng->player) {
+      xPos = actor->pos.x;
+      yPos = actor->pos.y;
+      if(actor->deadState == actorDeadState_alive && actor->getTile() != tile_empty && eng->player->checkIfSeeActor(*actor, NULL)) {
+        currentDrw = &renderArrayTiles[xPos][yPos];
+        currentDrw->color = actor->getColor();
         currentDrw->tile = actor->getTile();
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
         if(monster->leader == eng->player) {
@@ -776,16 +685,18 @@ void Renderer::drawTiles() {
   //-------------------------------------------- DRAW THE TILE GRID
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
+
       tempDrw = renderArrayTiles[x][y];
 
-      //If outside FOV and explored, draw player memory instead
-      if(eng->map->playerVision[x][y] == false && eng->map->explored[x][y] == true) {
-        renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
-        tempDrw = renderArrayTiles[x][y];
+      if(eng->map->playerVision[x][y] == false) {
+        if(eng->map->explored[x][y]) {
+          renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
+          tempDrw = renderArrayTiles[x][y];
 
-        tempDrw.color.r /= 3;
-        tempDrw.color.g /= 3;
-        tempDrw.color.b /= 3;
+          tempDrw.color.r /= 3;
+          tempDrw.color.g /= 3;
+          tempDrw.color.b /= 3;
+        }
       }
 
       /*
@@ -820,6 +731,12 @@ void Renderer::drawTiles() {
   }
 
   //-------------------------------------------- FINALLY, DRAW PLAYER CHARACTER (SHOULD ALWAYS BE VISIBLE)
-  drawTileInMap(eng->player->getTile(), eng->player->pos.x, eng->player->pos.y, eng->player->getColor());
+  bool isWieldingRangedWeapon = false;
+  Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
+  if(item != NULL) {
+    isWieldingRangedWeapon = item->getInstanceDefinition().isRangedWeapon;
+  }
+  drawTileInMap(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
+                eng->player->pos.x, eng->player->pos.y, eng->player->getColor());
 }
 

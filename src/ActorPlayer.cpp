@@ -1277,7 +1277,7 @@ void Player::FOVupdate() {
 
   if(m_statusEffectsHandler->allowSee()) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeVisionBlockerArray(blockers);
+    eng->mapTests->makeVisionBlockerArray(pos, blockers);
     eng->fov->runPlayerFov(blockers, pos);
     eng->map->playerVision[pos.x][pos.y] = true;
     FOVhack();
@@ -1302,15 +1302,15 @@ void Player::FOVupdate() {
 }
 
 void Player::FOVhack() {
-  bool visionBlocked[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(visionBlocked);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(pos, visionBlockers, 9999);
 
   bool moveBlocked[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, moveBlocked);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(visionBlocked[x][y] && moveBlocked[x][y]) {
+      if(visionBlockers[x][y] && moveBlocked[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             if(eng->mapTests->isCellInsideMainScreen(coord(x + dx, y + dy))) {

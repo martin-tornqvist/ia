@@ -117,7 +117,7 @@
 	"ConstDungeonSettings.h"
 	"MenuBrowser.h"
 
-1350580594 c:\dev\ia\src\maptests.h
+1350927987 c:\dev\ia\src\maptests.h
 	<vector>
 	"ConstTypes.h"
 	"Config.h"
@@ -140,7 +140,7 @@
 	"Converters.h"
 	<math.h>
 
-1350731963 source:c:\dev\ia\src\actor.cpp
+1350927485 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -210,7 +210,7 @@
 	"Config.h"
 	"Render.h"
 
-1350811365 c:\dev\ia\src\render.h
+1350845253 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
 	"SDL.h"
@@ -308,11 +308,11 @@
 	"Engine.h"
 	"Actor.h"
 
-1350580591 c:\dev\ia\src\ai_listen_respondwithaggrophrase.h
+1350928034 c:\dev\ia\src\ai_listen_respondwithaggrophrase.h
 	"Engine.h"
 	"Actor.h"
 
-1350580591 c:\dev\ia\src\ai_makeroomforfriend.h
+1350927681 c:\dev\ia\src\ai_makeroomforfriend.h
 	<algorithm>
 
 1350580591 c:\dev\ia\src\ai_steppath.h
@@ -322,7 +322,7 @@
 	"Engine.h"
 	"Actor.h"
 
-1350580591 c:\dev\ia\src\ai_steptolairifhaslostolair.h
+1350927709 c:\dev\ia\src\ai_steptolairifhaslostolair.h
 	"Engine.h"
 	"Fov.h"
 
@@ -335,7 +335,7 @@
 	"ConstTypes.h"
 	"Config.h"
 
-1350580591 c:\dev\ia\src\ai_setpathtolairifnolostolair.h
+1350927762 c:\dev\ia\src\ai_setpathtolairifnolostolair.h
 	"Engine.h"
 
 1350580591 c:\dev\ia\src\ai_movetorandomadjacentcell.h
@@ -397,7 +397,7 @@
 1339441467 source:c:\dev\ia\src\actormigo.cpp
 	"monsterIncludeFiles.h"
 
-1350742083 source:c:\dev\ia\src\actormonster.cpp
+1350927836 source:c:\dev\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1350733741 source:c:\dev\ia\src\actorplayer.cpp
+1350928022 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -586,7 +586,7 @@
 	<string>
 	"ActorData.h"
 
-1350580592 source:c:\dev\ia\src\bash.cpp
+1350928073 source:c:\dev\ia\src\bash.cpp
 	"Bash.h"
 	"Engine.h"
 	"GameTime.h"
@@ -950,7 +950,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1350746118 source:c:\dev\ia\src\featuredoor.cpp
+1350928127 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1166,7 +1166,7 @@
 	"Item.h"
 	"Converters.h"
 
-1350580593 source:c:\dev\ia\src\itemdrop.cpp
+1350928162 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1269,7 +1269,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1350580594 source:c:\dev\ia\src\mainmenu.cpp
+1350839055 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1383,7 +1383,7 @@
 	"MapTemplates.h"
 	"Engine.h"
 
-1350580594 source:c:\dev\ia\src\maptests.cpp
+1350927999 source:c:\dev\ia\src\maptests.cpp
 	"MapTests.h"
 	<cassert>
 	"Engine.h"
@@ -1420,7 +1420,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1350812377 source:c:\dev\ia\src\playerallocbonus.cpp
+1350838899 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1512,7 +1512,7 @@
 	"ItemFactory.h"
 	"DungeonMaster.h"
 
-1350811567 source:c:\dev\ia\src\render.cpp
+1350924305 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1572,7 +1572,7 @@
 	"MapBuild.h"
 	"ActorPlayer.h"
 
-1350580595 source:c:\dev\ia\src\spells.cpp
+1350928427 source:c:\dev\ia\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -1584,7 +1584,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1350731060 source:c:\dev\ia\src\statuseffects.cpp
+1350928330 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1633,7 +1633,7 @@
 	"Log.h"
 	"Render.h"
 
-1350580593 source:c:\dev\ia\src\itempotion.cpp
+1350928207 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -3697,7 +3697,7 @@
 
 1339254713 c:\dev\ia\src\ai_steptoleaderifhaslostoleader.h
 
-1350580591 c:\dev\ia\src\ai_setpathtoleaderifnolostoleader.h
+1350927782 c:\dev\ia\src\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
 
 1350580591 c:\dev\ia\src\ai_movetowardstargetsimple.h
@@ -5618,7 +5618,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1350580591 source:c:\dev\ia\src\actormonsterspecific.cpp
+1350927876 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"

@@ -85,7 +85,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
     eng->renderer->drawText("DEBUG MODE", renderArea_screen, 1, 1, clrYellow);
   }
 
-  yPos += 2;
+  yPos += 3;
 
   eng->renderer->drawTextCentered("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
   yPos += 1;

@@ -28,7 +28,7 @@ public:
     eng = engine;
   }
 
-  void makeVisionBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeVisionBlockerArray(const coord& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS], const int MAX_VISION_RANMGE = FOV_MAX_RADI_INT);
   void makeMoveBlockerArray(const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
   void makeMoveBlockerArrayForMoveType(const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
   void makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);

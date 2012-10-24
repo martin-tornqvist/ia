@@ -259,7 +259,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
   const bool PLAYER_SEE_OWNER = eng->player->checkIfSeeActor(*owningActor, blockers);
 
   const Abilities_t saveAbility = effect->getSaveAbility();
@@ -380,7 +380,7 @@ void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const boo
 void StatusEffectsHandler::newTurnAllEffects() {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
   const bool PLAYER_SEE_OWNER = OWNER_IS_PLAYER ? true : eng->player->checkIfSeeActor(*owningActor, blockers);
 
   for(unsigned int i = 0; i < effects.size();) {

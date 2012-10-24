@@ -10,7 +10,7 @@ public:
     if(monster->deadState == actorDeadState_alive) {
 
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(blockers);
+      engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
 
       if(engine->fov->checkOneCell(blockers, lairCell, monster->pos, true)) {
         path->resize(0);

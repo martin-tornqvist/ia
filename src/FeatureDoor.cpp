@@ -226,7 +226,7 @@ void Door::tryBash(Actor* actorTrying) {
   const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
   const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
 
@@ -344,7 +344,7 @@ void Door::tryClose(Actor* actorTrying) {
   const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
   const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
 
@@ -432,7 +432,7 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(blockers);
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
   const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
 

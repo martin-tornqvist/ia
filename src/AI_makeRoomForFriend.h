@@ -16,7 +16,7 @@ public:
 		if(monsterActing->deadState == actorDeadState_alive) {
 
 			bool blockersVision[MAP_X_CELLS][MAP_Y_CELLS];
-			engine->mapTests->makeVisionBlockerArray(blockersVision);
+			engine->mapTests->makeVisionBlockerArray(monsterActing->pos, blockersVision);
 
 			if(monsterActing->checkIfSeeActor(*engine->player, blockersVision)) {
 				const unsigned int LOOP_SIZE = engine->gameTime->getLoopSize();

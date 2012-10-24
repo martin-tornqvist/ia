@@ -229,7 +229,7 @@ bool Monster::attemptAttack(const coord& attackPos) {
     if(playerAwarenessCounter > 0 || leader == eng->player) {
 
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(blockers);
+      eng->mapTests->makeVisionBlockerArray(pos, blockers);
 
       if(checkIfSeeActor(*eng->player, blockers)) {
         AttackOpport opport = getAttackOpport(attackPos);

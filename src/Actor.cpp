@@ -72,7 +72,7 @@ void Actor::getSpotedEnemies() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
 
   if(IS_SELF_PLAYER == false) {
-    eng->mapTests->makeVisionBlockerArray(visionBlockers);
+    eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
   }
 
   const unsigned int SIZE_OF_LOOP = eng->gameTime->getLoopSize();

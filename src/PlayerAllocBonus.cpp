@@ -80,7 +80,7 @@ void PlayerAllocBonus::draw(const int PICKS_LEFT, const unsigned int CURRENT_POS
     const int RANK_LIMIT = eng->playerBonusHandler->getBonusRankLimitAt(CURRENT_ELEMENT);
     int xPosTemp = xPos;
     for(int ii = 1; ii <= RANK_LIMIT; ii++) {
-      drwClr = RANK >= ii ? clrRedLight : clrBlue;
+      drwClr = RANK >= ii ? clrRedLight : clrGray;
       if(eng->config->USE_TILE_SET) {
         eng->renderer->drawTileOnScreen(tile_elderSign, coord(xPosTemp, yPos), drwClr);
       } else {
