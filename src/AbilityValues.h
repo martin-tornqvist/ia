@@ -11,64 +11,57 @@ class Engine;
 class Actor;
 
 enum Abilities_t {
-	ability_empty,
-	ability_searching,
-	ability_accuracyRanged,
-	ability_accuracyMelee,
-	ability_dodge,
-	ability_resistStatusBody,
-	ability_resistStatusMind,
-	ability_stealth,
-	ability_mobility,
-//	ability_backstabbing,
-	ability_firstAid,
-	ability_language,
-//  ability_weaponHandling,
-	endOfAbilities
+  ability_empty,
+  ability_searching,
+  ability_accuracyRanged,
+  ability_accuracyMelee,
+  ability_dodgeTrap,
+  ability_dodgeAttack,
+  ability_resistStatusBody,
+  ability_resistStatusMind,
+  ability_stealth,
+  endOfAbilities
 };
 
 //Each actor has an instance of this class
-class AbilityValues
-{
+class AbilityValues {
 public:
-	AbilityValues() : m_actor(NULL) {
-		reset();
-	}
+  AbilityValues() : eng(NULL) {
+    reset();
+  }
 
-	AbilityValues& operator=(const AbilityValues& other) {
-		for(unsigned int i = 0; i < endOfAbilities; i++) {
-			abilityList[i] = other.abilityList[i];
-		}
-		m_actor = other.m_actor;
-		return *this;
-	}
+  AbilityValues& operator=(const AbilityValues& other) {
+    for(unsigned int i = 0; i < endOfAbilities; i++) {
+      abilityList[i] = other.abilityList[i];
+    }
+    return *this;
+  }
 
-	void reset();
-	void setOwningActor(Actor* const actor) {m_actor = actor;}
-	int getAbilityValue(const Abilities_t devName, const bool affectedByStatusEffects) const;
-	void setAbilityValue(const Abilities_t devName, const int value);
-	void changeAbilityValue(const Abilities_t devName, const int change);
+  void reset();
+  int getAbilityValue(const Abilities_t ability,
+                      const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+                      Actor& actor) const;
 
 private:
-	int abilityList[endOfAbilities];
-	Actor* m_actor;
+  friend class ActorData;
+  void setAbilityValue(const Abilities_t ability, const int VAL);
+  int abilityList[endOfAbilities];
+  Engine* eng;
 };
 
 enum AbilityRollResult_t {
-	failCritical, failBig, failNormal, failSmall,
-	successSmall, successNormal, successBig, successCritical
+  failCritical, failBig, failNormal, failSmall,
+  successSmall, successNormal, successBig, successCritical
 };
 
-
 //This is a single global class
-class AbilityRoll
-{
+class AbilityRoll {
 public:
-	AbilityRoll(Engine* engine) : eng(engine) {}
-	AbilityRollResult_t roll(const int totalSkillValue) const;
+  AbilityRoll(Engine* engine) : eng(engine) {}
+  AbilityRollResult_t roll(const int TOTAL_SKILL_VALUE) const;
 
 private:
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

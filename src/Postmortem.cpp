@@ -298,7 +298,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   x = 45;
   y = 18;
-  const string NAME_STR = eng->player->getArchetypeDefinition()->name_a;
+  const string NAME_STR = eng->player->getDef()->name_a;
   eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x, y, clrWhiteHigh);
 
   y += 2;

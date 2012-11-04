@@ -68,7 +68,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
   int curX, curY, stackX, stackY;
-  const bool ITEM_STACKS = (*item)->getInstanceDefinition().isStackable;
+  const bool ITEM_STACKS = (*item)->getDef().isStackable;
   int ii = 0;
   Item* stackItem;
   const unsigned int vectorSize = freeCells.size();
@@ -82,7 +82,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
         stackY = freeCells.at(ii).y;
         stackItem = eng->map->items[stackX][stackY];
         if(stackItem != NULL) {
-          if(stackItem->getInstanceDefinition().devName == (*item)->getInstanceDefinition().devName) {
+          if(stackItem->getDef().devName == (*item)->getDef().devName) {
             stackItem->numberOfItems += (*item)->numberOfItems;
             delete(*item);
             *item = NULL;

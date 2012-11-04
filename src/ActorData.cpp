@@ -17,8 +17,7 @@ void ActorDefinition::reset() {
 	nrTurnsAttackDisablesMelee = 0;
 	nrTurnsAttackDisablesRanged = 0;
 	moveType = moveType_walk;
-	HP_max = 0;
-	HP = 0;
+	hpMax = 0;
 	name_a = "A ";
 	phraseSet = phraseSet_silent;
 	glyph = '?';
@@ -69,7 +68,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
 	const double STRENGTH_FACTOR = EntityStrength::getFactor(hpStrength);
 	const int HP_AFTER_STRENGTH = static_cast<int>(ceil(static_cast<double>(HP_BEFORE_STRENGTH) * STRENGTH_FACTOR));
 	const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
-	d.HP_max = HP_AFTER_CAP;
+	d.hpMax = HP_AFTER_CAP;
 
 	//Set weapon abilities from progression formula
 	const int ATTACK_BASE = 10;
@@ -92,7 +91,7 @@ void ActorData::defineAllActors() {
 	d.name_the = "Player";
 	d.moveType = moveType_walk;
 	d.devName = actor_player;
-	d.HP_max = 14;
+	d.hpMax = 12;
 	d.speed = actorSpeed_normal;
 	d.glyph = '@';
 	d.color = clrWhiteHigh;
@@ -878,7 +877,7 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardTargetWhenVision = true;
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
-	d.abilityValues.setAbilityValue(ability_dodge, 35);
+	d.abilityValues.setAbilityValue(ability_dodgeAttack, 35);
 	d.speed = actorSpeed_fast;
 	d.nrTurnsAttackDisablesMelee = 2;
 	d.nrTurnsAttackDisablesRanged = 10;
@@ -1132,7 +1131,7 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardTargetWhenVision = true;
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
-	d.abilityValues.setAbilityValue(ability_dodge, 20);
+	d.abilityValues.setAbilityValue(ability_dodgeAttack, 20);
 	d.speed = actorSpeed_fast;
 	d.nrTurnsAttackDisablesMelee = 1;
 	d.nrTurnsAttackDisablesRanged = 0;
@@ -1168,7 +1167,7 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardTargetWhenVision = true;
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
-	d.abilityValues.setAbilityValue(ability_dodge, 50);
+	d.abilityValues.setAbilityValue(ability_dodgeAttack, 75);
 	d.speed = actorSpeed_fastest;
 	d.nrTurnsAttackDisablesMelee = 3;
 	d.nrTurnsAttackDisablesRanged = 0;
@@ -1205,7 +1204,7 @@ void ActorData::defineAllActors() {
 	d.aiBehavior.movesTowardTargetWhenVision = true;
 	d.aiBehavior.movesTowardLair = false;
 	d.aiBehavior.movesTowardLeader = true;
-	d.abilityValues.setAbilityValue(ability_dodge, 40);
+	d.abilityValues.setAbilityValue(ability_dodgeAttack, 40);
 	d.speed = actorSpeed_fastest;
 	d.nrTurnsAttackDisablesMelee = 0;
 	d.nrTurnsAttackDisablesRanged = 0;
@@ -1577,7 +1576,6 @@ void ActorData::defineAllActors() {
 	d.erraticMovement = actorErratic_rare;
 	setStrengthsFromFormula(d, weak);
 	d.shockValue = shockValue_mild;
-	d.HP_max = 1;
 	finalizeDefinition(d);
 	d.reset();
 

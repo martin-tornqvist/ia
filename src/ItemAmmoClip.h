@@ -8,24 +8,26 @@
 class ItemAmmoClip: public Item
 {
 public:
-ItemAmmoClip(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
-      setFullAmmo();
-   }
+  ItemAmmoClip(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
+    setFullAmmo();
+  }
 
-   ~ItemAmmoClip() {}
+  ~ItemAmmoClip() {}
 
-   int ammo;
+  int ammo;
 
-   void setFullAmmo() {ammo = m_archetypeDefinition->ammoContainedInClip;}
+  void setFullAmmo() {
+    ammo = def_->ammoContainedInClip;
+  }
 
-	void itemSpecificAddSaveLines(vector<string>& lines) {
-		lines.push_back(intToString(m_instanceDefinition.ammoContainedInClip));
-	}
+  void itemSpecificAddSaveLines(vector<string>& lines) {
+    lines.push_back(intToString(def_->ammoContainedInClip));
+  }
 
-	void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-		m_instanceDefinition.ammoContainedInClip = stringToInt(lines.front());
-		lines.erase(lines.begin());
-	}
+  void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+    def_->ammoContainedInClip = stringToInt(lines.front());
+    lines.erase(lines.begin());
+  }
 
 private:
 };

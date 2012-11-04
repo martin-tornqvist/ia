@@ -6,123 +6,106 @@
 #include "TextFormatting.h"
 #include "ActorPlayer.h"
 
-PlayerBonus::PlayerBonus(Abilities_t ability,  string titleGroup, string title, string descriptionGeneral,
-                         Engine* engine, int startSkill, int bon1, string descrBon1, int bon2,
-                         string descrBon2, int bon3, string descrBon3) :
-  rank_(0), picked_(false), ability_(ability), titleGroup_(titleGroup), title_(title) {
-
-  abilityBonusAtRanks_.push_back(startSkill);
-
-  if(bon1 != 0) {
-    abilityBonusAtRanks_.push_back(bon1);
-  }
-  if(bon2 != 0) {
-    abilityBonusAtRanks_.push_back(bon2);
-  }
-  if(bon3 != 0) {
-    abilityBonusAtRanks_.push_back(bon3);
-  }
-
-  descriptionRanks_.push_back(engine->textFormatting->lineToLines("Rank 1: " + descrBon1, MAP_X_CELLS - 2));
-  descriptionRanks_.push_back(engine->textFormatting->lineToLines("Rank 2: " + descrBon2, MAP_X_CELLS - 2));
-  descriptionRanks_.push_back(engine->textFormatting->lineToLines("Rank 3: " + descrBon3, MAP_X_CELLS - 2));
-
-  //descriptionGeneral = bon2 == 0 ? descriptionGeneral : "For each rank: " + descriptionGeneral;
-  descriptionGeneral_ = engine->textFormatting->lineToLines(descriptionGeneral, MAP_X_CELLS - 2);
+PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
+  setBonus(playerBonus_agile, "Agile", "+20% chance to evade attacks and traps");
+  setBonus(playerBonus_athletic, "Athletic", "+20% chance to evade attacks and traps", playerBonus_agile);
+//  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
+  setBonus(playerBonus_elusive, "Elusive", "+25% chance to evade attacks while moving", playerBonus_agile, playerBonus_quick);
+//  setBonus(playerBonus_tumbler, "Tumbler", "Can evade explosions", playerBonus_athletic);
+  setBonus(playerBonus_adeptMeleeCombatant, "Adept melee combatant", "+15% hit chance with melee weapons");
+  setBonus(playerBonus_masterfulMeleeCombatant, "Masterful melee combatant", "+15% hit chance with melee weapons", playerBonus_adeptMeleeCombatant);
+//  setBonus(playerBonus_swiftAssailant, "Swift assailant", "Killing a monster with a melee weapon is considered a free turn");
+//  setBonus(playerBonus_aggressive, "Aggressive", "+X melee dmg when attacking in same direction as previous move");
+  setBonus(playerBonus_adeptRangedCombatant, "Adept ranged combatant", "+15% hit chance with firearms and thrown wepaons");
+  setBonus(playerBonus_masterfulRangedCombatant, "Masterful ranged combatant", "+15% hit chance with firearms and thrown wepaons", playerBonus_adeptRangedCombatant);
+  setBonus(playerBonus_steadyAimer, "Steady aimer", "Waiting a turn gives 100% hit chance with firearms and thrown weapons", playerBonus_adeptRangedCombatant);
+//  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
+  setBonus(playerBonus_nimble, "Nimble", "X% chance to reload instantly, swapping is always instant", playerBonus_quick, playerBonus_adeptMeleeCombatant, playerBonus_adeptRangedCombatant);
+  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
+  setBonus(playerBonus_observant, "Observant", "+5% chance to spot hidden things");
+  setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);
+//  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed");
+  setBonus(playerBonus_stealthy, "Stealthy", "+40% chance to avoid being spoted by monsters");
+  setBonus(playerBonus_imperceptible, "Imperceptible", "+25% chance to avoid being spoted by monsters", playerBonus_stealthy);
+  setBonus(playerBonus_learned, "Learned", "You can read and memorize manuscripts, and examine more difficult texts");
+  setBonus(playerBonus_erudite, "Erudite", "+20% chance to cast spells from memory, can examine all texts", playerBonus_learned);
+  setBonus(playerBonus_strongMinded, "Strong-minded", "+20% chance to resist mental status effects");
+  setBonus(playerBonus_unyielding, "Unyielding", "+20% chance to resist mental status effects", playerBonus_strongMinded);
+  setBonus(playerBonus_coolHeaded, "Cool-headed", "20% less shock received", playerBonus_strongMinded);
+//  setBonus(playerBonus_wakeful, "Wakeful", "Can not faint");
+//  setBonus(playerBonus_clearThinker, "Clear thinker", "Can not be confused");
+//  setBonus(playerBonus_courageous, "Courageous", "Can not be terrified");
+  setBonus(playerBonus_adeptWoundTreater, "Adept wound treater", "Healing takes half the normal time");
+  setBonus(playerBonus_curer, "Curer", "Can heal disease", playerBonus_adeptWoundTreater);
+  setBonus(playerBonus_rapidRejuvenator, "Rapid rejuvenator", "Passive HP regeneration", playerBonus_curer, playerBonus_healthy);
+  setBonus(playerBonus_tough, "Tough", "+20% chance to resist physical status effects, +20% chance to bash doors");
+  setBonus(playerBonus_rugged, "Rugged", "+20% chance to resist physical status effects", playerBonus_tough);
+  setBonus(playerBonus_healthy, "Healthy", "+2 HP", playerBonus_tough);
+  setBonus(playerBonus_vigorous, "Vigorous", "+2 HP", playerBonus_healthy);
+//  setBonus(playerBonus_strongBacked, "Strong-backed", "Encumbrance limit is increased to X%, carry limit is increased to Y%", playerBonus_tough);
 }
 
-PlayerBonusHandler::PlayerBonusHandler(Engine* eng) {
-  const string TITLE_COMBAT = "COMBAT";
-  const string TITLE_EXPLORATION_MOVEMENT = "EXPLORATION & MOVEMENT";
-  const string TITLE_LORE = "LORE";
-  const string TITLE_SURVIVAL = "SURVIVAL";
+void PlayerBonusHandler::setBonus(const PlayerBonuses_t bonus, const string title, const string description,
+                                  const PlayerBonuses_t prereq1, const PlayerBonuses_t prereq2, const PlayerBonuses_t prereq3) {
 
-  string s = "";
-  string r1, r2, r3;
+  vector<PlayerBonuses_t> prereqs;
+  prereqs.resize(0);
+  if(prereq1 != endOfPlayerBonuses) {
+    prereqs.push_back(prereq1);
+  }
+  if(prereq2 != endOfPlayerBonuses) {
+    prereqs.push_back(prereq2);
+  }
+  if(prereq3 != endOfPlayerBonuses) {
+    prereqs.push_back(prereq3);
+  }
 
-  //	s = "You are occasionally able to do extra damage to unaware creatures in melee.";
-  //	bonuses_.push_back(PlayerBonus(ability_backstabbing, TITLE_COMBAT, "Backstabbing", s, eng, 0, 75));
-
-  s = "You have better chances to evade melee attacks and traps.";
-  //	r1 = "Being \"Still\" gives higher dodge chance.";
-  //	r2 = "Dodging causes retaliation attacks.";
-  //	r3 = "Can evade explosions for halved damage.";
-  bonuses_.push_back(PlayerBonus(ability_dodge, TITLE_COMBAT, "Evasion", s, eng, 5, 25, r1, 45, r2, 65, r3));
-
-  s = "You have better accuracy with melee attacks.";
-  //	r1 = "Attacks using light weapons are occasionally free.";
-  //	r2 = "When \"Charging\", medium & heavy weapons do full damage.";
-  //	r3 = "No weapon degradation from normal hits.";
-  bonuses_.push_back(PlayerBonus(ability_accuracyMelee, TITLE_COMBAT, "Melee combat", s, eng, 35, 45, r1, 55, r2, 65, r3));
-
-  s = "You have better accuracy with firearms and thrown weapons.";
-  //	r1 = "Being \"Still\" gives aim bonus.";
-  //	r2 = "Thrown weapons have a chance to do double damage.";
-  //	r3 = "Occasionally reload instantly.";
-  bonuses_.push_back(PlayerBonus(ability_accuracyRanged, TITLE_COMBAT, "Ranged combat", s, eng, 40, 55, r1, 70, r2, 85, r3));
-
-  //	s = "You are quicker at drawing your weapons. "
-  //	r1 = "";
-  //	r2 = "";
-  //	r3 = "";
-  //	bonuses_.push_back(PlayerBonus(ability_weaponHandling, TITLE_COMBAT, "Weapon Handling", s, eng, 0, 75));
-
-  s = "You get around more effectively. You occasionally get a free turn when moving.";
-  //	r1 = "";
-  //	r2 = "";
-  //	r3 = "";
-  bonuses_.push_back(PlayerBonus(ability_mobility, TITLE_EXPLORATION_MOVEMENT, "Mobility", s, eng, 0, 20, r1));
-
-  s = "You have better chances of spotting hidden things. You also tend to find more items.";
-  //	r1 = "";
-  //	r2 = "Can spot hidden constructions from two moves distance.";
-  //	r3 = "Can not be backstabbed.";
-  bonuses_.push_back(PlayerBonus(ability_searching, TITLE_EXPLORATION_MOVEMENT, "Searching", s, eng, 1, 6, r1, 12, r2, 18, r3));
-
-  s = "You are more adept at moving unseen. Attacking unaware creatures does extra damage.";
-  //	r1 = "Attacking an unaware creature does double damage.";
-  //	r2 = "Unaware opponents makes no sound when you dispatch them.";
-  //	r3 = "";
-  bonuses_.push_back(PlayerBonus(ability_stealth, TITLE_EXPLORATION_MOVEMENT, "Stealth", s, eng, 30, 75, r1, 90, r2));
-
-  s = "You have a better grasp of ancient language and esoteric symbolism. ";
-  s += "Your chances to identify and memorize manuscripts increases.";
-  //	r1 = "";
-  //	r2 = "";
-  //	r3 = "";
-  bonuses_.push_back(PlayerBonus(ability_language, TITLE_LORE, "Language", s, eng, 0, 40, r1, 80, r2));
-
-  s = "You have more focus and will, and are less likely to succumb to fear, confusion, etc. ";
-  s += "You are also better able to keep your composure when facing hideous revelations.";
-  //	r1 = "";
-  //	r2 = "Can not faint.";
-  //	r3 = "Can not be confused.";
-  bonuses_.push_back(PlayerBonus(ability_resistStatusMind, TITLE_SURVIVAL, "Fortitude", s, eng, 25, 40, r1, 55, r2, 70, r3));
-
-  s = "Your healing skills improve. With the first rank, healing takes half time. With the second rank, ";
-  s += "you are able to heal disease. With the third rank, you regenerate hit points passively over time.";
-  //	r1 = "Healing takes half time.";
-  //	r2 = "Can heal disease.";
-  //	r3 = "Regenerate hit points passively.";
-  bonuses_.push_back(PlayerBonus(ability_firstAid, TITLE_SURVIVAL, "Healing", s, eng, 0, 1, r1, 2, r2, 3, r3));
-
-  s = "You have better physical endurance. You are less likely to be afflicted by diseases, stunning, ";
-  s += "blindness, etc. Each rank also increases your hit points by 2.";
-  //s += "You also gain a one-time bonus of 2 hit points each time this ability is picked.";
-  //	r1 = "";
-  //	r2 = "No sprains from bashing objects.";
-  //	r3 = "";
-  bonuses_.push_back(PlayerBonus(ability_resistStatusBody, TITLE_SURVIVAL, "Toughness", s, eng, 25, 45, r1, 65, r2, 85, r3));
+  bonuses_[bonus] = PlayerBonus(title, description, prereqs);
 }
 
-void PlayerBonusHandler::increaseBonusAt(const unsigned int ELEMENT, Engine* const engine) {
-  if(getBonusAt(ELEMENT).incrRank()) {
-    getBonusAt(ELEMENT).picked_ = true;
+void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
+  bonuses_[bonus].isPicked_ = true;
 
-    if(getBonusAt(ELEMENT).getAbility() == ability_resistStatusBody) {
-      tracer << "PlayerBonusHandler: Toughness bonus increased, raising player HP" << endl;
-      const int HP_INCR = 2;
-      engine->player->changeMaxHP(HP_INCR, false);
+  switch(bonus) {
+  case playerBonus_healthy: {
+    eng->player->changeMaxHP(2, false);
+  } break;
+  case playerBonus_vigorous: {
+    eng->player->changeMaxHP(2, false);
+  } break;
+  default: {
+  } break;
+  }
+}
+
+vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
+  vector<PlayerBonuses_t> candidates;
+  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    const PlayerBonus& bon = bonuses_[i];
+    if(bon.isPicked_ == false) {
+      bool isPrereqsMet = true;
+      for(unsigned int ii = 0; ii < bon.prereqs_.size(); ii++) {
+        if(bonuses_[bon.prereqs_.at(ii)].isPicked_ == false) {
+          isPrereqsMet = false;
+        }
+      }
+      if(isPrereqsMet) {
+        candidates.push_back(static_cast<PlayerBonuses_t>(i));
+      }
     }
   }
+
+  const int NR_OF_CHOICES = 4;
+  vector<PlayerBonuses_t> ret;
+  for(int i = 0; i < NR_OF_CHOICES; i++) {
+    if(candidates.empty()) {
+      tracer << "[WARNING] Could not choose " << NR_OF_CHOICES << " pickable bonuses, in PlayerBonusHandler::getBonusChoices()" << endl;
+      return ret;
+    }
+    const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);
+    ret.push_back(candidates.at(ELEMENT));
+    candidates.erase(candidates.begin() + ELEMENT);
+  }
+  return ret;
 }
+

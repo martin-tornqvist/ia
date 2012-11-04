@@ -4,19 +4,18 @@
 #include "Explosion.h"
 
 void Weapon::setRandomMeleePlus(Engine* const engine) {
-	int plus = 0;
+  int plus = 0;
 
-	int chance = 45;
-	while(engine->dice(1,100) < chance) {
-		plus++;
-		chance -= 5;
-	}
+  int chance = 45;
+  while(engine->dice(1, 100) < chance) {
+    plus++;
+    chance -= 5;
+  }
 
-	m_instanceDefinition.meleeDmg.plus = plus;
-	m_instanceDefinition.missileDmg.plus = plus;
+  meleeDmgPlus = plus;
 }
 
 void Incinerator::weaponSpecific_projectileObstructed(int originX, int originY, Actor* actorHit, Engine* engine) {
-    (void)actorHit;
-	engine->explosionMaker->runExplosion(coord(originX, originY), true, new StatusBurning(engine));
+  (void)actorHit;
+  engine->explosionMaker->runExplosion(coord(originX, originY), true, new StatusBurning(engine));
 }

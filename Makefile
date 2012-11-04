@@ -23,6 +23,7 @@ LDFLAGS=$(shell sdl-config --libs)
 EXECUTABLE=ia
 SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
+GAME_DOC_FILE=auto_game_doc.txt
 
 # Various bash commands
 RM=rm -rf
@@ -31,7 +32,7 @@ MKDIR=mkdir -p
 CP=cp -r
 
 # Dependencies 
-debug: $(SOURCES) $(EXECUTABLE)
+debug: $(SOURCES) $(EXECUTABLE) $(GAME_DOC_FILE)
 release: $(SOURCES) $(EXECUTABLE)
 
 # Make targets
@@ -39,6 +40,28 @@ release: $(SOURCES) $(EXECUTABLE)
 .PHONY: default_target
 default_target:
 	@echo "Use \"make debug\" or \"make release\""
+
+.PHONY: $(GAME_DOC_FILE)
+$(GAME_DOC_FILE):
+	echo "This is a generated document containing game mechanics information for Infra Arcana." > $@ && \
+	echo "" >> $@ && \
+	echo "Information is added here in two steps:" >> $@ && \
+	echo "1. When making the debug target, all files in the source folder are parsed" >> $@ && \
+	echo "for lines containing double percentage signs. These lines are handwritten" >> $@ && \
+	echo "descriptions of various game mechanics." >> $@ && \
+	echo "2. When the game is started in debug mode, it appends monster and item info." >> $@ && \
+	echo "This is only done if there is no previous such information appended." >> $@ && \
+	echo "" >> $@ && \
+	echo "" >> $@ && \
+	echo "1. STATIC SOURCE FILES DOCUMENTATION" >> $@ && \
+	echo "------------------------------------------------" >> $@ && \
+	grep -ri %% $(SRC_DIR)/* >> $@ && \
+	sed -i 's/%%//g' $@ && \
+	echo "" >> $@ && \
+	echo "" >> $@ && \
+	echo "" >> $@ && \
+	echo "2. RUN-TIME GENERATED INFORMATION" >> $@ && \
+	echo "------------------------------------------------" >> $@
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)

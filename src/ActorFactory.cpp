@@ -146,8 +146,8 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
 
   monster->place(pos, &(eng->actorData->actorDefinitions[characterType]), eng);
 
-  if(monster->getArchetypeDefinition()->nrLeftAllowedToSpawn != -1) {
-    monster->getArchetypeDefinition()->nrLeftAllowedToSpawn--;
+  if(monster->getDef()->nrLeftAllowedToSpawn != -1) {
+    monster->getDef()->nrLeftAllowedToSpawn--;
   }
 
   eng->gameTime->insertActorInLoop(monster);

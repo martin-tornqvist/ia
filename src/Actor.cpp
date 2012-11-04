@@ -19,12 +19,12 @@
 using namespace std;
 
 Actor::~Actor() {
-  delete m_statusEffectsHandler;
-  delete m_inventory;
+  delete statusEffectsHandler_;
+  delete inventory_;
 }
 
 void Actor::newTurn() {
-  if(m_statusEffectsHandler->allowAct()) {
+  if(statusEffectsHandler_->allowAct()) {
     updateColor();
     act();
   } else {
@@ -48,7 +48,7 @@ bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_C
       if(IS_MONSTER_SNEAKING) return false;
     }
 
-    if(m_statusEffectsHandler->allowSee() == false) {
+    if(statusEffectsHandler_->allowSee() == false) {
       return false;
     }
 
@@ -121,20 +121,47 @@ void Actor::getSpotedEnemiesPositions() {
 void Actor::place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine) {
   eng = engine;
   pos = pos_;
-  m_archetypeDefinition = actorDefinition;
-  m_instanceDefinition = *actorDefinition;
-  m_inventory = new Inventory(m_instanceDefinition.isHumanoid);
-  m_statusEffectsHandler = new StatusEffectsHandler(this, eng);
+  def_ = actorDefinition;
+  inventory_ = new Inventory(def_->isHumanoid);
+  statusEffectsHandler_ = new StatusEffectsHandler(this, eng);
   deadState = actorDeadState_alive;
-  lairCell = pos;
-
-  m_instanceDefinition.abilityValues.setOwningActor(this);
+  clr_ = def_->color;
+  glyph_ = def_->glyph;
+  tile_ = def_->tile;
+  hp_ = def_->hpMax;
+  hpMax_ = def_->hpMax;
+  lairCell_ = pos;
 
   if(this != eng->player) {
     actorSpecific_spawnStartItems();
   }
 
   updateColor();
+}
+
+void Actor::changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES) {
+  hpMax_ = max(1, getHpMax());
+  hp_ = max(1, getHp());
+
+  if(ALLOW_MESSAGES) {
+    if(this == eng->player) {
+      if(CHANGE > 0) {
+        eng->log->addMessage("I feel more vigorous!", clrMessageGood);
+      }
+      if(CHANGE < 0) {
+        eng->log->addMessage("I feel frailer!", clrMessageBad);
+      }
+    } else {
+      if(eng->map->playerVision[pos.x][pos.y] == true) {
+        if(CHANGE > 0) {
+          eng->log->addMessage(getNameThe() + " looks more vigorous.");
+        }
+        if(CHANGE < 0) {
+          eng->log->addMessage(getNameThe() + " looks frailer.");
+        }
+      }
+    }
+  }
 }
 
 void Actor::teleportToRandom() {
@@ -159,84 +186,60 @@ void Actor::teleportToRandom() {
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
     eng->renderer->flip();
-    m_statusEffectsHandler->attemptAddEffect(new StatusConfused(8 + eng->dice(1, 8)));
+    statusEffectsHandler_->attemptAddEffect(new StatusConfused(8 + eng->dice(1, 8)));
   }
 }
 
 void Actor::updateColor() {
   if(deadState != actorDeadState_alive) {
-    m_instanceDefinition.color = clrRedLight;
+    clr_ = clrRed;
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
-    m_instanceDefinition.color = clrFromStatusEffect;
+    clr_ = clrFromStatusEffect;
     return;
   }
 
-  m_instanceDefinition.color = m_archetypeDefinition->color;
+  clr_ = def_->color;
 }
 
 bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
-  bool gainedHP = false;
+  bool IS_HP_GAINED = false;
 
-  int difFromMax = m_instanceDefinition.HP_max - hpRestored;
+  const int DIF_FROM_MAX = hpMax_ - hpRestored;
 
   //If hp is below limit, but restored hp will push it
   //over the limit - hp is set to max.
-  if(getHP() > difFromMax && getHP() < getHP_max()) {
-    m_instanceDefinition.HP = getHP_max();
-    gainedHP = true;
+  if(getHp() > DIF_FROM_MAX && getHp() < getHpMax()) {
+    hp_ = getHpMax();
+    IS_HP_GAINED = true;
   }
 
   //If hp is below limit, and restored hp will NOT push it
   //over the limit - restored hp is added to current.
-  if(getHP() <= difFromMax) {
-    m_instanceDefinition.HP += hpRestored;
-    gainedHP = true;
+  if(getHp() <= DIF_FROM_MAX) {
+    hp_ += hpRestored;
+    IS_HP_GAINED = true;
   }
 
   updateColor();
 
   if(ALLOW_MESSAGE) {
-    if(gainedHP) {
+    if(IS_HP_GAINED) {
       if(this == eng->player) {
         eng->log->addMessage("I feel healthier!", clrMessageGood);
       } else {
         if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMessage(m_instanceDefinition.name_the + " looks healthier.");
+          eng->log->addMessage(def_->name_the + " looks healthier.");
         }
       }
       eng->renderer->drawMapAndInterface();
     }
   }
 
-  return gainedHP;
-}
-
-void Actor::changeMaxHP(const int change, const bool ALLOW_MESSAGES) {
-  m_instanceDefinition.HP_max += change;
-  m_instanceDefinition.HP += change;
-
-  m_instanceDefinition.HP_max = max(1, getHP_max());
-  m_instanceDefinition.HP = max(1, getHP());
-
-  if(ALLOW_MESSAGES) {
-    if(this == eng->player) {
-      if(change > 0)
-        eng->log->addMessage("I feel more vigorous!", clrMessageGood);
-      if(change < 0)
-        eng->log->addMessage("I feel frailer!", clrMessageBad);
-    } else {
-      if(eng->map->playerVision[pos.x][pos.y] == true) {
-        if(change > 0)
-          eng->log->addMessage(getNameThe() + " looks more vigorous.");
-        if(change < 0)
-          eng->log->addMessage(getNameThe() + " looks frailer.");
-      }
-    }
-  }
+  return IS_HP_GAINED;
 }
 
 bool Actor::hit(int dmg, const DamageTypes_t damageType) {
@@ -247,7 +250,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
 
   //Filter damage through worn armor
   if(isHumanoid()) {
-    Armor* armor = dynamic_cast<Armor*>(m_inventory->getItemInSlot(slot_armorBody));
+    Armor* armor = dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
       tracer << "Actor: Has armor, running hit on armor" << endl;
 
@@ -256,11 +259,11 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + armor->getInstanceDefinition().name.name + " is torn apart!");
+          eng->log->addMessage("My " + armor->getDef().name.name + " is torn apart!");
         }
         delete armor;
         armor = NULL;
-        m_inventory->getSlot(slot_armorBody)->item = NULL;
+        inventory_->getSlot(slot_armorBody)->item = NULL;
       }
     }
   }
@@ -269,15 +272,15 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   // [TODOO] Stuff goes here
 
 
-  m_statusEffectsHandler->isHit();
+  statusEffectsHandler_->isHit();
 
   actorSpecific_hit(dmg);
 
   //Damage to corpses
   if(deadState != actorDeadState_alive) {
-    if(dmg >= getHP_max() / 2) {
+    if(dmg >= getHpMax() / 2) {
       deadState = actorDeadState_mangled;
-      m_instanceDefinition.glyph = ' ';
+      glyph_ = ' ';
       if(isHumanoid()) {
         eng->gore->makeGore(pos);
       }
@@ -287,12 +290,12 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   }
 
   if(this != eng->player || eng->config->BOT_PLAYING == false) {
-    m_instanceDefinition.HP -= dmg;
+    hp_ -= dmg;
   }
 
   const bool IS_ON_BOTTOMLESS = eng->map->featuresStatic[pos.x][pos.y]->isBottomless();
-  const bool IS_MANGLED = IS_ON_BOTTOMLESS == true ? true : (dmg > ((getHP_max() * 5) / 4) ? true : false);
-  if(getHP() <= 0) {
+  const bool IS_MANGLED = IS_ON_BOTTOMLESS == true ? true : (dmg > ((getHpMax() * 5) / 4) ? true : false);
+  if(getHp() <= 0) {
     die(IS_MANGLED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     actorSpecificDie();
     tracer << "Actor::hit() [DONE]" << endl;
@@ -336,7 +339,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   if(this != eng->player) {
     //Only print if visible
     if(eng->player->checkIfSeeActor(*this, NULL)) {
-      const string deathMessageOverride = m_instanceDefinition.deathMessageOverride;
+      const string deathMessageOverride = def_->deathMessageOverride;
       if(deathMessageOverride != "") {
         eng->log->addMessage(deathMessageOverride);
       } else {
@@ -353,8 +356,8 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   }
 
   //Died with a flare inside?
-  if(m_instanceDefinition.actorSize > actorSize_floor) {
-    if(m_statusEffectsHandler->hasEffect(statusFlared)) {
+  if(def_->actorSize > actorSize_floor) {
+    if(statusEffectsHandler_->hasEffect(statusFlared)) {
       eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng));
       deadState = actorDeadState_mangled;
     }
@@ -377,11 +380,11 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
         }
       }
     }
-    m_instanceDefinition.glyph = '&';
-    m_instanceDefinition.tile = tile_corpse;
+    glyph_ = '&';
+    tile_ = tile_corpse;
   } else {
-    m_instanceDefinition.glyph = ' ';
-    m_instanceDefinition.tile = tile_empty;
+    glyph_ = ' ';
+    tile_ = tile_empty;
     if(isHumanoid() == true) {
       if(ALLOW_GORE) {
         eng->gore->makeGore(pos);
@@ -389,7 +392,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
     }
   }
 
-  m_instanceDefinition.color = clrRedLight;
+  clr_ = clrRedLight;
 
   monsterDeath();
 
@@ -400,7 +403,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
 }
 
 void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-  if(m_statusEffectsHandler->hasEffect(statusBurning)) {
+  if(statusEffectsHandler_->hasEffect(statusBurning)) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         light[pos.x + dx][pos.y + dy] = true;

@@ -36,8 +36,11 @@ enum StatusEffects_t {
 
   statusNailed,
 
-  //Added when pressing the wait key, gives better aim with ranged weapons
+  //Status for the steady aimer ability
   statusStill,
+
+  //Status for the elusive ability
+  statusElusive,
 
   //The following are mostly used as AI nerfs
   statusDisabledAttack,
@@ -203,7 +206,7 @@ public:
   }
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodge)
+    if(ability == ability_dodgeAttack)
       return 20;
     if(ability == ability_accuracyRanged)
       return -20;
@@ -361,7 +364,82 @@ public:
 
   int getAbilityModifier(const Abilities_t ability) {
     if(ability == ability_accuracyRanged)
-      return 10;
+      return 999;
+    return 0;
+  }
+
+  void newTurn(Engine* engine) {
+    (void)engine;
+    turnsLeft--;
+  }
+
+private:
+  DiceParam getRandomStandardNrTurns() {
+    return DiceParam(0, 0, 1);
+  }
+};
+
+class StatusElusive: public StatusEffect {
+public:
+  StatusElusive(Engine* const engine) :
+    StatusEffect(statusElusive) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusElusive(const int turns) :
+    StatusEffect(turns, statusElusive) {
+  }
+  ~StatusElusive() {
+  }
+
+  StatusElusive* copy() {
+    StatusElusive* cpy = new StatusElusive(turnsLeft);
+    return cpy;
+  }
+
+  string getInterfaceName() {
+    return "Moving";
+  }
+  string messageWhenStart() {
+    return "";
+  }
+  string messageWhenMore() {
+    return "";
+  }
+  string messageWhenMoreOther() {
+    return "";
+  }
+  string messageWhenEnd() {
+    return "";
+  }
+  string messageWhenSaves() {
+    return "";
+  }
+  string messageWhenStartOther() {
+    return "";
+  }
+  string messageWhenEndOther() {
+    return "";
+  }
+  string messageWhenSavesOther() {
+    return "";
+  }
+
+  Abilities_t getSaveAbility() {
+    return ability_empty;
+  }
+  int getSaveAbilityModifier() {
+    return -9999;
+  }
+
+  void start() {
+  }
+
+  void end() {
+  }
+
+  int getAbilityModifier(const Abilities_t ability) {
+    if(ability == ability_dodgeAttack)
+      return 25;
     return 0;
   }
 
@@ -441,7 +519,7 @@ public:
   int getAbilityModifier(const Abilities_t ability) {
     if(ability == ability_searching)
       return -9999;
-    if(ability == ability_dodge)
+    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
       return -50;
     if(ability == ability_accuracyRanged)
       return -50;
@@ -519,7 +597,7 @@ public:
   }
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_language) {
+    if(ability == ability_searching) {
       return 0;
     }
     return 10;
@@ -1258,7 +1336,7 @@ public:
   }
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodge)
+    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
       return -999;
     return 0;
   }
@@ -1343,7 +1421,7 @@ public:
   }
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodge)
+    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
       return -999;
     return 0;
   }
@@ -1503,7 +1581,7 @@ public:
   }
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodge)
+    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
       return 999;
     return 0;
   }

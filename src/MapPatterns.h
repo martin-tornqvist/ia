@@ -12,17 +12,15 @@ class Engine;
 
 class MapPatterns {
 public:
-	MapPatterns(Engine* engine) :
-		eng(engine) {
-	}
+  MapPatterns(Engine* engine) :
+    eng(engine) {
+  }
 
-	/*
-	 * Assumptions: No isolated pillars
-	 */
-	vector<coord> getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST);
+  // Assumptions: No isolated pillars
+  vector<coord> getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST);
 
 private:
-	Engine* eng;
+  Engine* eng;
 
 };
 

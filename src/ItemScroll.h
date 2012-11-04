@@ -9,37 +9,40 @@ class Actor;
 
 class Scroll: public Item {
 public:
-	Scroll(ItemDefinition* const itemDefinition) :
-		Item(itemDefinition) {
-	}
+  Scroll(ItemDefinition* const itemDefinition) :
+    Item(itemDefinition) {
+  }
 
-	virtual ~Scroll() {
-	}
+  virtual ~Scroll() {
+  }
 
-    int getChanceToCastFromMemory(Engine* const engine) const;
+  int getChanceToCastFromMemory(Engine* const engine) const;
 //    int getChanceToLearn(Engine* const engine) const;
 
-	bool read(const bool IS_FROM_MEMORY, Engine* const engine);
+  bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 
 //	ItemActivateReturn_t study(Engine* const engine);
 
-	virtual const string getRealTypeName() {
-		return "[ERROR]";
-	}
+  virtual const string getRealTypeName() {
+    return "[ERROR]";
+  }
 
-	virtual DiceParam getCastFromMemorySpiritCost() {return DiceParam(1, 4);}
+  virtual DiceParam getCastFromMemorySpiritCost() {return DiceParam(1, 4);}
 
-	void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
+  void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
 
 protected:
-	virtual void specificRead(const bool FROM_MEMORY, Engine* const engine) {
-		(void)engine;
-		(void)FROM_MEMORY;
-	}
+  virtual void specificRead(const bool FROM_MEMORY, Engine* const engine) {
+    (void)engine;
+    (void)FROM_MEMORY;
+  }
 
-	void attemptMemorizeIfLearnable(Engine* const engine);
+  bool attemptReadFromMemory(Engine* const engine);
+  bool attemptReadFromScroll(Engine* const engine);
 
-	void failedToLearnRealName(Engine* const engine, const string overrideFailString = "");
+  void attemptMemorizeIfLearnable(Engine* const engine);
+
+  void failedToLearnRealName(Engine* const engine, const string overrideFailString = "");
 };
 
 //class scrollOfSummoning: public Scroll {
@@ -74,89 +77,89 @@ protected:
 
 class ScrollOfMayhem: public Scroll {
 public:
-	ScrollOfMayhem(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfMayhem() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfMayhem(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfMayhem() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Mayhem";
-	}
+  const string getRealTypeName() {
+    return "Mayhem";
+  }
 private:
 };
 
 class ScrollOfPestilence: public Scroll {
 public:
-	ScrollOfPestilence(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfPestilence() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfPestilence(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfPestilence() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Pestilence";
-	}
+  const string getRealTypeName() {
+    return "Pestilence";
+  }
 private:
 };
 
 class ScrollOfTeleportation: public Scroll {
 public:
-	ScrollOfTeleportation(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfTeleportation() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfTeleportation(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfTeleportation() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Teleportation";
-	}
+  const string getRealTypeName() {
+    return "Teleportation";
+  }
 private:
 };
 
 class ScrollOfDeepDescent: public Scroll {
 public:
-	ScrollOfDeepDescent(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfDeepDescent() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfDeepDescent(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfDeepDescent() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Deep Descent";
-	}
+  const string getRealTypeName() {
+    return "Deep Descent";
+  }
 private:
 };
 
 class ScrollOfStatusOnAllVisibleMonsters: public Scroll {
 public:
-	ScrollOfStatusOnAllVisibleMonsters(ItemDefinition* const ItemDefinition) :
-		Scroll(ItemDefinition) {
-	}
-	~ScrollOfStatusOnAllVisibleMonsters() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfStatusOnAllVisibleMonsters(ItemDefinition* const ItemDefinition) :
+    Scroll(ItemDefinition) {
+  }
+  ~ScrollOfStatusOnAllVisibleMonsters() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 protected:
-	virtual StatusEffect* getStatusEffect(Engine* const engine) = 0;
+  virtual StatusEffect* getStatusEffect(Engine* const engine) = 0;
 };
 
 class ScrollOfConfuseEnemies: public ScrollOfStatusOnAllVisibleMonsters {
 public:
-	ScrollOfConfuseEnemies(ItemDefinition* const ItemDefinition) :
-		ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-	}
-	~ScrollOfConfuseEnemies() {
-	}
+  ScrollOfConfuseEnemies(ItemDefinition* const ItemDefinition) :
+    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
+  }
+  ~ScrollOfConfuseEnemies() {
+  }
 
-	const string getRealTypeName() {
-		return "Confuse Enemies";
-	}
+  const string getRealTypeName() {
+    return "Confuse Enemies";
+  }
 private:
-	StatusEffect* getStatusEffect(Engine* const engine);
+  StatusEffect* getStatusEffect(Engine* const engine);
 };
 
 //class ScrollOfBlindEnemies: public ScrollOfStatusOnAllVisibleMonsters {
@@ -176,76 +179,76 @@ private:
 
 class ScrollOfParalyzeEnemies: public ScrollOfStatusOnAllVisibleMonsters {
 public:
-	ScrollOfParalyzeEnemies(ItemDefinition* const ItemDefinition) :
-		ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-	}
-	~ScrollOfParalyzeEnemies() {
-	}
+  ScrollOfParalyzeEnemies(ItemDefinition* const ItemDefinition) :
+    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
+  }
+  ~ScrollOfParalyzeEnemies() {
+  }
 
-	const string getRealTypeName() {
-		return "Paralyze Enemies";
-	}
+  const string getRealTypeName() {
+    return "Paralyze Enemies";
+  }
 private:
-	StatusEffect* getStatusEffect(Engine* const engine);
+  StatusEffect* getStatusEffect(Engine* const engine);
 };
 
 class ScrollOfSlowEnemies: public ScrollOfStatusOnAllVisibleMonsters {
 public:
-	ScrollOfSlowEnemies(ItemDefinition* const ItemDefinition) :
-		ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-	}
-	~ScrollOfSlowEnemies() {
-	}
+  ScrollOfSlowEnemies(ItemDefinition* const ItemDefinition) :
+    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
+  }
+  ~ScrollOfSlowEnemies() {
+  }
 
-	const string getRealTypeName() {
-		return "Slow Enemies";
-	}
+  const string getRealTypeName() {
+    return "Slow Enemies";
+  }
 private:
-	StatusEffect* getStatusEffect(Engine* const engine);
+  StatusEffect* getStatusEffect(Engine* const engine);
 };
 
 class ScrollOfBlessing: public Scroll {
 public:
-	ScrollOfBlessing(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfBlessing() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfBlessing(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfBlessing() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Blessing";
-	}
+  const string getRealTypeName() {
+    return "Blessing";
+  }
 private:
 };
 
 class ScrollOfDetectItems: public Scroll {
 public:
-	ScrollOfDetectItems(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfDetectItems() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfDetectItems(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfDetectItems() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Detect Items";
-	}
+  const string getRealTypeName() {
+    return "Detect Items";
+  }
 private:
 };
 
 class ScrollOfDetectTraps: public Scroll {
 public:
-	ScrollOfDetectTraps(ItemDefinition* const itemDefinition) :
-		Scroll(itemDefinition) {
-	}
-	~ScrollOfDetectTraps() {
-	}
-	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  ScrollOfDetectTraps(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfDetectTraps() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-	const string getRealTypeName() {
-		return "Detect Traps";
-	}
+  const string getRealTypeName() {
+    return "Detect Traps";
+  }
 private:
 };
 
@@ -265,80 +268,80 @@ private:
 
 class ScrollNameHandler {
 public:
-	ScrollNameHandler(Engine* engine) :
-		eng(engine) {
-		m_falseNames.resize(0);
-		m_falseNames.push_back("Cruensseasrjit");
-		m_falseNames.push_back("Rudsceleratus");
-		m_falseNames.push_back("Rudminuox");
-		m_falseNames.push_back("Cruo-stragaraNa");
-		m_falseNames.push_back("PrayaNavita");
-		m_falseNames.push_back("Pretiacruento");
-		m_falseNames.push_back("Pestis cruento");
-		m_falseNames.push_back("Cruento pestis");
-		m_falseNames.push_back("Domus-bhaava");
-		m_falseNames.push_back("Acerbus-shatruex");
-		m_falseNames.push_back("Pretaanluxis");
-		m_falseNames.push_back("PraaNsilenux");
-		m_falseNames.push_back("Quodpipax");
-		m_falseNames.push_back("lokemundux");
-		m_falseNames.push_back("Profanuxes");
-		m_falseNames.push_back("Shaantitus");
-		m_falseNames.push_back("Geropayati");
-		m_falseNames.push_back("Vilomaxus");
-		m_falseNames.push_back("Bhuudesco");
-		m_falseNames.push_back("Durbentia");
-		m_falseNames.push_back("Bhuuesco");
-		m_falseNames.push_back("Maravita");
-		m_falseNames.push_back("Infirmux");
+  ScrollNameHandler(Engine* engine) :
+    eng(engine) {
+    m_falseNames.resize(0);
+    m_falseNames.push_back("Cruensseasrjit");
+    m_falseNames.push_back("Rudsceleratus");
+    m_falseNames.push_back("Rudminuox");
+    m_falseNames.push_back("Cruo-stragaraNa");
+    m_falseNames.push_back("PrayaNavita");
+    m_falseNames.push_back("Pretiacruento");
+    m_falseNames.push_back("Pestis cruento");
+    m_falseNames.push_back("Cruento pestis");
+    m_falseNames.push_back("Domus-bhaava");
+    m_falseNames.push_back("Acerbus-shatruex");
+    m_falseNames.push_back("Pretaanluxis");
+    m_falseNames.push_back("PraaNsilenux");
+    m_falseNames.push_back("Quodpipax");
+    m_falseNames.push_back("lokemundux");
+    m_falseNames.push_back("Profanuxes");
+    m_falseNames.push_back("Shaantitus");
+    m_falseNames.push_back("Geropayati");
+    m_falseNames.push_back("Vilomaxus");
+    m_falseNames.push_back("Bhuudesco");
+    m_falseNames.push_back("Durbentia");
+    m_falseNames.push_back("Bhuuesco");
+    m_falseNames.push_back("Maravita");
+    m_falseNames.push_back("Infirmux");
 
-		vector<string> cmb;
-		cmb.resize(0);
-		cmb.push_back("Cruo");
-		cmb.push_back("Cruonit");
-		cmb.push_back("Cruentu");
-		cmb.push_back("Marana");
-		cmb.push_back("Domus");
-		cmb.push_back("Malax");
-		cmb.push_back("Caecux");
-		cmb.push_back("Eximha");
-		cmb.push_back("Vorox");
-		cmb.push_back("Bibox");
-		cmb.push_back("Pallex");
-		cmb.push_back("Profanx");
-		cmb.push_back("Invisuu");
-		cmb.push_back("Invisux");
-		cmb.push_back("Odiosuu");
-		cmb.push_back("Odiosux");
-		cmb.push_back("Vigra");
-		cmb.push_back("Crudux");
-		cmb.push_back("Desco");
-		cmb.push_back("Esco");
-		cmb.push_back("Gero");
+    vector<string> cmb;
+    cmb.resize(0);
+    cmb.push_back("Cruo");
+    cmb.push_back("Cruonit");
+    cmb.push_back("Cruentu");
+    cmb.push_back("Marana");
+    cmb.push_back("Domus");
+    cmb.push_back("Malax");
+    cmb.push_back("Caecux");
+    cmb.push_back("Eximha");
+    cmb.push_back("Vorox");
+    cmb.push_back("Bibox");
+    cmb.push_back("Pallex");
+    cmb.push_back("Profanx");
+    cmb.push_back("Invisuu");
+    cmb.push_back("Invisux");
+    cmb.push_back("Odiosuu");
+    cmb.push_back("Odiosux");
+    cmb.push_back("Vigra");
+    cmb.push_back("Crudux");
+    cmb.push_back("Desco");
+    cmb.push_back("Esco");
+    cmb.push_back("Gero");
 
-		const unsigned int CMB_SIZ = cmb.size();
-		for(unsigned int i = 0; i < CMB_SIZ; i++) {
-			for(unsigned int ii = 0; ii < CMB_SIZ; ii++) {
-				if(i != ii) {
-					m_falseNames.push_back(cmb.at(i) + " " + cmb.at(ii));
-				}
-			}
-		}
+    const unsigned int CMB_SIZ = cmb.size();
+    for(unsigned int i = 0; i < CMB_SIZ; i++) {
+      for(unsigned int ii = 0; ii < CMB_SIZ; ii++) {
+        if(i != ii) {
+          m_falseNames.push_back(cmb.at(i) + " " + cmb.at(ii));
+        }
+      }
+    }
 
-	}
-	~ScrollNameHandler() {
-		m_falseNames.resize(0);
-	}
+  }
+  ~ScrollNameHandler() {
+    m_falseNames.resize(0);
+  }
 
-	void setFalseScrollName(ItemDefinition* d);
+  void setFalseScrollName(ItemDefinition* d);
 
-	void addSaveLines(vector<string>& lines) const;
-	void setParametersFromSaveLines(vector<string>& lines);
+  void addSaveLines(vector<string>& lines) const;
+  void setParametersFromSaveLines(vector<string>& lines);
 
 private:
-	vector<string> m_falseNames;
+  vector<string> m_falseNames;
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

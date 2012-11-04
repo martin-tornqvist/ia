@@ -5,97 +5,19 @@
 #include "ActorPlayer.h"
 
 void PlayerCreateCharacter::run() {
-  int currentRenderYpos = 3;
-  playerPickBackground(currentRenderYpos);
-
+  int currentRenderYpos = 8;
   PlayerEnterName playerEnterName(eng);
   playerEnterName.run(currentRenderYpos);
 }
 
-void PlayerCreateCharacter::playerPickBackground(int& currentRenderYpos) {
-  int currentSelectedPos = 0;
-
-  int lastRenderYpos = drawAndReturnLastYpos(currentSelectedPos, currentRenderYpos);
-
-  bool done = false;
-  while(done == false) {
-    while(SDL_PollEvent(&m_event)) {
-      switch(m_event.type) {
-      case SDL_KEYDOWN: {
-        Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
-
-        if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-          playerBackground_ = static_cast<PlayerBackgrounds_t>(currentSelectedPos);
-          currentRenderYpos = lastRenderYpos;
-          return;
-        }
-
-        if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
-          currentSelectedPos = currentSelectedPos == 0 ? endOfPlayerBackgrounds - 1 : currentSelectedPos - 1;
-          lastRenderYpos = drawAndReturnLastYpos(currentSelectedPos, currentRenderYpos);
-        }
-
-        if(key == SDLK_DOWN || key == SDLK_KP2 || key == SDLK_2) {
-          currentSelectedPos = currentSelectedPos == endOfPlayerBackgrounds - 1 ? 0 : currentSelectedPos + 1;
-          lastRenderYpos = drawAndReturnLastYpos(currentSelectedPos, currentRenderYpos);
-        }
-
-      }
-      default: {
-      }
-      break;
-      }
-    }
-    SDL_Delay(1);
-  }
-}
-
-int PlayerCreateCharacter::drawAndReturnLastYpos(const int CURRENT_SELECTED_POS, const int RENDER_Y_POS_START) const {
-  eng->renderer->clearRenderArea(renderArea_screen);
-
-  int xPos = 1;
-  int yPos = RENDER_Y_POS_START;
-
-  eng->renderer->drawText("--- Choose character background ---", renderArea_screen, xPos, yPos, clrWhite);
-  yPos++;
-
-  for(int i = 0; i < endOfPlayerBackgrounds; i++) {
-    string backgroundTitle;
-
-    const PlayerBackgrounds_t currentBackground = static_cast<PlayerBackgrounds_t>(i);
-
-    switch(currentBackground) {
-    case playerBackground_soldier: backgroundTitle = "Soldier"; break;
-    case playerBackground_occultScholar: backgroundTitle = "Occult scholar"; break;
-    case playerBackground_tombRaider: backgroundTitle = "Tomb raider"; break;
-    default: {} break;
-    }
-    const SDL_Color clr = i == CURRENT_SELECTED_POS ? clrRedLight : clrRed;
-
-    eng->renderer->drawText(backgroundTitle , renderArea_screen, xPos, yPos, clr);
-
-    yPos++;
-  }
-
-  yPos++;
-
-  eng->renderer->drawText("Bla bla" , renderArea_screen, xPos, yPos, clrRedLight);
-
-  yPos += 2;
-
-  eng->renderer->flip();
-
-  return yPos;
-}
-
 //-----------------------------------------------------PLAYER NAME ENTERING
-void PlayerEnterName::run(const int RENDER_Y_POS) {
+void PlayerEnterName::run(int& yPos) {
   string name = "";
-  draw(name, RENDER_Y_POS);
+  draw(name, yPos);
   bool done = false;
   while(done == false) {
     if(eng->config->BOT_PLAYING == false) {
-      readKeys(name, done, RENDER_Y_POS);
+      readKeys(name, done, yPos);
     } else {
       name = "AZATHOTH";
       done = true;
@@ -103,23 +25,21 @@ void PlayerEnterName::run(const int RENDER_Y_POS) {
     SDL_Delay(1);
   }
 
-  ActorDefinition& iDef = *(eng->player->getInstanceDefinition());
-  ActorDefinition& aDef = *(eng->player->getArchetypeDefinition());
-  iDef.name_a = iDef.name_the = aDef.name_a = aDef.name_the = name;
-}
+  ActorDefinition& iDef = *(eng->player->getDef());
+  iDef.name_a = iDef.name_the = name;
 
+  yPos++;
+}
 
 void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) {
   eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, RENDER_Y_POS, MAP_X_CELLS, RENDER_Y_POS + 1);
-  int x0 = 1;
-  const string LABEL = "Enter character name: ";
-  eng->renderer->drawText(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
-  x0 += LABEL.size();
+  int x0 = MAP_X_CELLS_HALF; //1;
+  const string LABEL = "Enter character name";
+  eng->renderer->drawTextCentered(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
   const string NAME_STR = currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" : currentString;
-  eng->renderer->drawText(NAME_STR, renderArea_screen, x0, RENDER_Y_POS, clrRedLight);
+  eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x0, RENDER_Y_POS + 1, clrRedLight);
   eng->renderer->flip();
 }
-
 
 void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
   SDL_Event event;

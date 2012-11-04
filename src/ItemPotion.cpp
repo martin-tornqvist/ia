@@ -281,20 +281,16 @@ void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
-  if(m_archetypeDefinition->isIdentified == false) {
+  if(def_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
     const string REAL_NAME = "Potion of " + REAL_TYPE_NAME;
     const string REAL_NAME_PLURAL = "Potions of " + REAL_TYPE_NAME;
     const string REAL_NAME_A = "a potion of " + REAL_TYPE_NAME;
 
-    m_instanceDefinition.name.name = REAL_NAME;
-    m_instanceDefinition.name.name_plural = REAL_NAME_PLURAL;
-    m_instanceDefinition.name.name_a = REAL_NAME_A;
-
-    m_archetypeDefinition->name.name = REAL_NAME;
-    m_archetypeDefinition->name.name_plural = REAL_NAME_PLURAL;
-    m_archetypeDefinition->name.name_a = REAL_NAME_A;
+    def_->name.name = REAL_NAME;
+    def_->name.name_plural = REAL_NAME_PLURAL;
+    def_->name.name_a = REAL_NAME_A;
 
     engine->log->addMessage("It was a " + REAL_NAME + ".");
 
@@ -302,8 +298,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
       engine->player->shock(shockValue_heavy, 0);
     }
 
-    m_instanceDefinition.isIdentified = true;
-    m_archetypeDefinition->isIdentified = true;
+    def_->isIdentified = true;
   }
 }
 
@@ -341,10 +336,10 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   if(actor == engine->player) {
     engine->player->shock(shockValue_heavy, 0);
 
-    if(m_archetypeDefinition->isIdentified) {
-      engine->log->addMessage("I drink " + m_instanceDefinition.name.name_a + "...");
+    if(def_->isIdentified) {
+      engine->log->addMessage("I drink " + def_->name.name_a + "...");
     } else {
-      engine->log->addMessage("I drink an unknown " + m_instanceDefinition.name.name + "...");
+      engine->log->addMessage("I drink an unknown " + def_->name.name + "...");
     }
   }
 
@@ -356,7 +351,7 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
 }
 
 void Potion::failedToLearnRealName(Engine* const engine, const string overrideFailString) {
-  if(m_archetypeDefinition->isIdentified == false) {
+  if(def_->isIdentified == false) {
     if(overrideFailString != "") {
       engine->log->addMessage(overrideFailString);
     } else {

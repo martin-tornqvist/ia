@@ -11,337 +11,327 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "Log.h"
+#include "FeatureTrap.h"
 
 using namespace std;
 
 void Attack::getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE) {
-	data.isMelee = IS_MELEE;
-	data.attacker = eng->gameTime->getCurrentActor();
-	data.currentDefender = eng->mapTests->getActorAtPos(currentPos);
-	assert(data.currentDefender != NULL || IS_MELEE == false);
+  data.isMelee = IS_MELEE;
+  data.attacker = eng->gameTime->getCurrentActor();
+  data.currentDefender = eng->mapTests->getActorAtPos(currentPos);
+  assert(data.currentDefender != NULL || IS_MELEE == false);
 
-	if(data.currentDefender != NULL) {
-		data.currentDefenderSize = data.currentDefender->getInstanceDefinition()->actorSize;
-	} else {
-		data.currentDefenderSize = actorSize_none;
-	}
+  if(data.currentDefender != NULL) {
+    data.currentDefenderSize = data.currentDefender->getDef()->actorSize;
+  } else {
+    data.currentDefenderSize = actorSize_none;
+  }
 
-	Actor* const aimedActor = eng->mapTests->getActorAtPos(target);
+  Actor* const aimedActor = eng->mapTests->getActorAtPos(target);
 
-	//Get intended aim level
-	if(aimedActor != NULL) {
-		//aimedActorSize = aimedActor->getInstanceDefinition()->actorSize;
-		data.aimLevel = aimedActor->getInstanceDefinition()->actorSize;
-	} else {
-		bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-		eng->mapTests->makeShootBlockerFeaturesArray(blockers);
-		data.aimLevel = blockers[target.x][target.y] ? actorSize_humanoid : actorSize_floor;
-	}
+  //Get intended aim level
+  if(aimedActor != NULL) {
+    //aimedActorSize = aimedActor->getInstanceDefinition()->actorSize;
+    data.aimLevel = aimedActor->getDef()->actorSize;
+  } else {
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+    data.aimLevel = blockers[target.x][target.y] ? actorSize_humanoid : actorSize_floor;
+  }
 
-	assert(data.aimLevel != actorSize_none);
+  assert(data.aimLevel != actorSize_none);
 
-	data.attackerX = data.attacker->pos.x;
-	data.attackerY = data.attacker->pos.y;
+  data.attackerX = data.attacker->pos.x;
+  data.attackerY = data.attacker->pos.y;
 
-	if(data.isMelee == true) {
-		data.abilityUsed = weapon->getInstanceDefinition().meleeAbilityUsed;
-		data.wpnBaseSkill = weapon->getInstanceDefinition().meleeBaseAttackSkill;
-	} else {
-		data.abilityUsed = weapon->getInstanceDefinition().rangedAbilityUsed;
-		data.wpnBaseSkill = weapon->getInstanceDefinition().rangedBaseAttackSkill;
-	}
+  if(data.isMelee == true) {
+    data.abilityUsed = weapon->getDef().meleeAbilityUsed;
+    data.wpnBaseSkill = weapon->getDef().meleeBaseAttackSkill;
+  } else {
+    data.abilityUsed = weapon->getDef().rangedAbilityUsed;
+    data.wpnBaseSkill = weapon->getDef().rangedBaseAttackSkill;
+  }
 
-	data.isIntrinsic = weapon->getInstanceDefinition().isIntrinsicWeapon;
-	data.attackSkill = data.attacker->getInstanceDefinition()->abilityValues.getAbilityValue(data.abilityUsed, true);
-	data.totalSkill = data.wpnBaseSkill + data.attackSkill;
-	data.attackResult = eng->abilityRoll->roll(data.totalSkill);
-	data.isPlayerAttacking = data.attacker == eng->player;
+  data.isIntrinsic = weapon->getDef().isIntrinsicWeapon;
+  data.attackSkill = data.attacker->getDef()->abilityValues.getAbilityValue(data.abilityUsed, true, *(data.attacker));
+  data.totalSkill = data.wpnBaseSkill + data.attackSkill;
+  data.attackResult = eng->abilityRoll->roll(data.totalSkill);
+  data.isPlayerAttacking = data.attacker == eng->player;
 
-	//Dodge melee attack?
-	data.isDefenderDodging = false;
-	if(data.currentDefender != NULL && IS_MELEE == true) {
-		if(data.currentDefender->getInstanceDefinition()->canDodge == true) {
-			const int DEFENDER_DODGE_SKILL = data.currentDefender->getInstanceDefinition()->abilityValues.getAbilityValue(ability_dodge, true);
+  //Dodge melee attack?
+  data.isDefenderDodging = false;
+  if(data.currentDefender != NULL && IS_MELEE == true) {
+    if(data.currentDefender->getDef()->canDodge == true) {
+      const int DEFENDER_DODGE_SKILL =
+        data.currentDefender->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, true, *(data.currentDefender));
 
-			const coord defenderPos = data.currentDefender->pos;
-			const int DODGE_MOD_AT_FEATURE = eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();
+      const coord defenderPos = data.currentDefender->pos;
+      const int DODGE_MOD_AT_FEATURE = eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();
 
-			const int TOTAL_DODGE = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
+      const int TOTAL_DODGE = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
-			if(TOTAL_DODGE > 0) {
-				bool isDefenderAware = true;
+      if(TOTAL_DODGE > 0) {
+        bool isDefenderAware = true;
 
-				if(data.attacker == eng->player) {
-					isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
-				} else {
-					isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL);
-				}
+        if(data.attacker == eng->player) {
+          isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
+        } else {
+          isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL);
+        }
 
-				if(isDefenderAware == true) {
-					data.isDefenderDodging = eng->abilityRoll->roll(TOTAL_DODGE) >= successSmall;
-				}
-			}
-		}
-	}
+        if(isDefenderAware) {
+          data.isDefenderDodging = eng->abilityRoll->roll(TOTAL_DODGE) >= successSmall;
+        }
+      }
+    }
+  }
 
-	//Get weapon damage properties
-	if(IS_MELEE == true) {
-		data.dmgRolls = weapon->getInstanceDefinition().meleeDmg.rolls;
-		data.dmgSides = weapon->getInstanceDefinition().meleeDmg.sides;
-		data.dmgPlus = weapon->getInstanceDefinition().meleeDmg.plus;
-	} else {
-		data.dmgRolls = weapon->getInstanceDefinition().rangedDmg.rolls;
-		data.dmgSides = weapon->getInstanceDefinition().rangedDmg.sides;
-		data.dmgPlus = weapon->getInstanceDefinition().rangedDmg.plus;
-	}
+  //Get weapon damage properties
+  if(IS_MELEE == true) {
+    data.dmgRolls = weapon->getDef().meleeDmg.first;
+    data.dmgSides = weapon->getDef().meleeDmg.second;
+    data.dmgPlus = weapon->meleeDmgPlus;
+  } else {
+    data.dmgRolls = weapon->getDef().rangedDmg.rolls;
+    data.dmgSides = weapon->getDef().rangedDmg.sides;
+    data.dmgPlus = weapon->getDef().rangedDmg.plus;
+  }
 
-	if(data.attackResult == successCritical) {
-		data.dmgRoll = data.dmgRolls * data.dmgSides;
-		data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-	} else {
-		data.dmgRoll = eng->dice(data.dmgRolls, data.dmgSides);
-		data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-	}
+  if(data.attackResult == successCritical) {
+    data.dmgRoll = data.dmgRolls * data.dmgSides;
+    data.dmg = max(0, data.dmgRoll + data.dmgPlus);
+  } else {
+    data.dmgRoll = eng->dice(data.dmgRolls, data.dmgSides);
+    data.dmg = max(0, data.dmgRoll + data.dmgPlus);
+  }
 
-	data.isSwiftAttack = false;
-	data.isMightyAttack = false;
-	data.isBackStab = false;
+  data.isBackStab = false;
 
+  if(IS_MELEE) {
+    // Check if defender is in a bad situation (stuck, blind, fainted, confused...)
+    // If so, give hit chance bonus to attacker
+    bool isDefenderAware = true;
+    if(data.attacker == eng->player) {
+      isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
+    } else {
+      isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL);
+    }
+    bool isDefenderHeldByWeb = false;
+    const FeatureStatic* const f = eng->map->featuresStatic[target.x][target.y];
+    if(f->getId() == feature_trap) {
+      const Trap* const t = dynamic_cast<const Trap*>(f);
+      if(t->getTrapType() == trap_spiderWeb) {
+        const TrapSpiderWeb* const web = dynamic_cast<const TrapSpiderWeb*>(t);
+        if(web->isHolding()) {
+          isDefenderHeldByWeb = true;
+        }
+      }
+    }
+    const StatusEffectsHandler* const status = data.currentDefender->getStatusEffectsHandler();
+    if(isDefenderAware == false || isDefenderHeldByWeb || status->hasEffect(statusParalyzed) ||
+        status->hasEffect(statusNailed) || status->hasEffect(statusFainted)) {
+      data.totalSkill += 50;
+    }
+    if(status->hasEffect(statusBlind) || status->hasEffect(statusConfused) ||
+        status->hasEffect(statusSlowed) || status->hasEffect(statusBurning)) {
+      data.totalSkill += 20;
+    }
 
-	if(IS_MELEE) {
-		//Back-stab and/or bonus to attack skill from unaware defender?
-		bool isDefenderAware = true;
-		if(data.attacker == eng->player) {
-			isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
-		} else {
-			isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL);
-		}
+    // Rolling attack result again after "situation" modifiers
+    data.attackResult = eng->abilityRoll->roll(data.totalSkill);
 
-		if(isDefenderAware == false) {
-			data.totalSkill += 30;
-			data.attackResult = eng->abilityRoll->roll(data.totalSkill);
-//			if(data.attackResult == successCritical) {
-//				data.dmgRoll = data.dmgRolls * data.dmgSides;
-//				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-//			} else {
-//				data.dmgRoll = eng->dice(data.dmgRolls, data.dmgSides);
-//				data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-//			}
-//			const int BACKSTAB_SKILL = data.attacker->getInstanceDefinition()->abilityValues.getAbilityValue(ability_backstabbing, true);
-//			const AbilityRollResult_t BACKSTAB_ROLL = eng->abilityRoll->roll(BACKSTAB_SKILL);
-//			if(BACKSTAB_ROLL >= successSmall) {
-			data.dmgRoll = data.dmgRolls * data.dmgSides;
-			data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
-			data.isBackStab = true;
-//			}
-		}
+    // Backstab damage bonus against unaware monster?
+    if(isDefenderAware == false) {
+      data.dmgRoll = data.dmgRolls * data.dmgSides;
+      data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
+      data.isBackStab = true;
+    }
+  }
 
-		// Special attack from light or heavy melee weapon? (can not happen if backstab, to simplify the rules)
-		if(data.attacker == eng->player && data.isBackStab == false) {
-			const int CHANCE_FOR_SPECIAL_ATTACK = 10;
+  data.weaponName_a = weapon->getDef().name.name_a;
+  data.verbPlayerAttacksMissile = weapon->getDef().rangedAttackMessages.player;
+  data.verbOtherAttacksMissile = weapon->getDef().rangedAttackMessages.other;
 
-			if(eng->abilityRoll->roll(CHANCE_FOR_SPECIAL_ATTACK) >= successSmall) {
-				const ItemWeight_t realWeight = weapon->getInstanceDefinition().itemWeight;
-				const ItemWeight_t effectiveWeight = realWeight == itemWeight_medium ? eng->dice.coinToss() ?
-                                     itemWeight_light : itemWeight_heavy : realWeight;
+  if(data.currentDefender != NULL) {
+    data.isTargetEthereal = data.currentDefender->getStatusEffectsHandler()->isEthereal();
+  } else {
+    data.isTargetEthereal = false;
+  }
 
-				if(effectiveWeight == itemWeight_light) {
-					data.isSwiftAttack = true;
-				}
-				if(effectiveWeight == itemWeight_heavy) {
-					data.isMightyAttack = true;
-					data.dmgRoll = data.dmgRolls * data.dmgSides;
-					data.dmg = max(0, data.dmgRoll + data.dmgPlus);
-				}
-			}
-		}
-	}
-
-
-	data.weaponName_a = weapon->getInstanceDefinition().name.name_a;
-	data.verbPlayerAttacksMissile = weapon->getInstanceDefinition().rangedAttackMessages.player;
-	data.verbOtherAttacksMissile = weapon->getInstanceDefinition().rangedAttackMessages.other;
-
-	if(data.currentDefender != NULL) {
-		data.isTargetEthereal = data.currentDefender->getStatusEffectsHandler()->isEthereal();
-	} else {
-		data.isTargetEthereal = false;
-	}
-
-	if(data.isTargetEthereal == true) {
-		data.attackResult = failSmall;
-	}
+  if(data.isTargetEthereal == true) {
+    data.attackResult = failSmall;
+  }
 }
 
 void Attack::printRangedInitiateMessages(AttackData data) {
-	if(data.isPlayerAttacking == true)
-		eng->log->addMessage("I " + data.verbPlayerAttacksMissile + ".");
-	else {
-		if(eng->map->playerVision[data.attackerX][data.attackerY] == true) {
-			const string attackerName = data.attacker->getNameThe();
-			const string attackVerb = data.verbOtherAttacksMissile;
-			eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
-		}
-	}
+  if(data.isPlayerAttacking == true)
+    eng->log->addMessage("I " + data.verbPlayerAttacksMissile + ".");
+  else {
+    if(eng->map->playerVision[data.attackerX][data.attackerY] == true) {
+      const string attackerName = data.attacker->getNameThe();
+      const string attackVerb = data.verbOtherAttacksMissile;
+      eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
+    }
+  }
 
-	eng->renderer->flip();
+  eng->renderer->flip();
 }
 
 void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t hitType) {
-	//Only print messages if player can see the cell
-	const int defX = data.currentDefender->pos.x;
-	const int defY = data.currentDefender->pos.y;
-	if(eng->map->playerVision[defX][defY] == true) {
-		if(data.isTargetEthereal == true) {
-			if(data.currentDefender == eng->player) {
-				//Perhaps no text is needed here?
-			} else {
-				eng->log->addMessage("Projectile hits nothing but void.");
-			}
-		} else {
-			//Punctuation or exclamation marks depending on attack strength
-			data.dmgDescript = ".";
-			if(data.dmgRolls* data.dmgSides >= 4) {
-				if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
-					data.dmgDescript = "!";
-				if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
-					data.dmgDescript = "!!!";
-			}
+  //Only print messages if player can see the cell
+  const int defX = data.currentDefender->pos.x;
+  const int defY = data.currentDefender->pos.y;
+  if(eng->map->playerVision[defX][defY] == true) {
+    if(data.isTargetEthereal == true) {
+      if(data.currentDefender == eng->player) {
+        //Perhaps no text is needed here?
+      } else {
+        eng->log->addMessage("Projectile hits nothing but void.");
+      }
+    } else {
+      //Punctuation or exclamation marks depending on attack strength
+      data.dmgDescript = ".";
+      if(data.dmgRolls* data.dmgSides >= 4) {
+        if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
+          data.dmgDescript = "!";
+        if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
+          data.dmgDescript = "!!!";
+      }
 
-			if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {
-				if(data.currentDefender == eng->player) {
-					eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, messageInterrupt_force);
+      if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {
+        if(data.currentDefender == eng->player) {
+          eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, messageInterrupt_force);
 
-					if(data.attackResult == successCritical) {
-						eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
-					}
-				} else {
-					string otherName = "It";
+          if(data.attackResult == successCritical) {
+            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
+          }
+        } else {
+          string otherName = "It";
 
-					if(eng->map->playerVision[defX][defY] == true)
-						otherName = data.currentDefender->getNameThe();
+          if(eng->map->playerVision[defX][defY] == true)
+            otherName = data.currentDefender->getNameThe();
 
-					eng->log->addMessage(otherName + " is hit" + data.dmgDescript, clrMessageGood);
+          eng->log->addMessage(otherName + " is hit" + data.dmgDescript, clrMessageGood);
 
-					if(data.attackResult == successCritical) {
-						eng->log->addMessage("It was a great hit!", clrMessageGood);
-					}
-				}
-			}
-		}
-		eng->renderer->flip();
-	}
+          if(data.attackResult == successCritical) {
+            eng->log->addMessage("It was a great hit!", clrMessageGood);
+          }
+        }
+      }
+    }
+    eng->renderer->flip();
+  }
 }
 
 void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
-	string otherName;
+  string otherName;
 
-	//Punctuation or exclamation marks depending on attack strength
-	data.dmgDescript = ".";
-	if(data.dmgRolls* data.dmgSides >= 4) {
-		if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
-			data.dmgDescript = "!";
-		if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
-			data.dmgDescript = "!!!";
-	}
+  //Punctuation or exclamation marks depending on attack strength
+  data.dmgDescript = ".";
+  if(data.dmgRolls* data.dmgSides >= 4) {
+    if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
+      data.dmgDescript = "!";
+    if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
+      data.dmgDescript = "!!!";
+  }
 
-	if(data.isTargetEthereal == true) {
-		if(data.isPlayerAttacking == true) {
-			eng->log->addMessage("I hit nothing but void" + data.dmgDescript);
-		} else {
-			if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
-				otherName = data.attacker->getNameThe();
-			} else {
-				otherName = "its";
-			}
+  if(data.isTargetEthereal == true) {
+    if(data.isPlayerAttacking == true) {
+      eng->log->addMessage("I hit nothing but void" + data.dmgDescript);
+    } else {
+      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+        otherName = data.attacker->getNameThe();
+      } else {
+        otherName = "its";
+      }
 
-			eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript, clrWhite, messageInterrupt_force);
-		}
-	} else {
-		//----- ATTACK FUMBLE -----
-		if(data.attackResult == failCritical) {
-			if(data.isPlayerAttacking) {
-				eng->log->addMessage("I fumble!");
-			} else {
-				if(eng->player->checkIfSeeActor(*data.attacker, NULL))
-					otherName = data.attacker->getNameThe();
-				else otherName = "It";
+      eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript, clrWhite, messageInterrupt_force);
+    }
+  } else {
+    //----- ATTACK FUMBLE -----
+    if(data.attackResult == failCritical) {
+      if(data.isPlayerAttacking) {
+        eng->log->addMessage("I fumble!");
+      } else {
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL))
+          otherName = data.attacker->getNameThe();
+        else otherName = "It";
 
-				eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
-			}
-		}
+        eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
+      }
+    }
 
-		//----- ATTACK MISS -------
-		if(data.attackResult > failCritical && data.attackResult <= failSmall) {
-			if(data.isPlayerAttacking) {
-				if(data.attackResult == failSmall)
-					eng->log->addMessage("I barely miss" + data.dmgDescript);
-				if(data.attackResult == failNormal)
-					eng->log->addMessage("I miss" + data.dmgDescript);
-				if(data.attackResult == failBig)
-					eng->log->addMessage("I miss completely" + data.dmgDescript);
-			} else {
-				if(eng->player->checkIfSeeActor(*data.attacker, NULL))
-					otherName = data.attacker->getNameThe();
-				else otherName = "It";
+    //----- ATTACK MISS -------
+    if(data.attackResult > failCritical && data.attackResult <= failSmall) {
+      if(data.isPlayerAttacking) {
+        if(data.attackResult == failSmall)
+          eng->log->addMessage("I barely miss" + data.dmgDescript);
+        if(data.attackResult == failNormal)
+          eng->log->addMessage("I miss" + data.dmgDescript);
+        if(data.attackResult == failBig)
+          eng->log->addMessage("I miss completely" + data.dmgDescript);
+      } else {
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL))
+          otherName = data.attacker->getNameThe();
+        else otherName = "It";
 
-				if(data.attackResult == failSmall)
-					eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
-				if(data.attackResult == failNormal)
-					eng->log->addMessage(otherName + " misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
-				if(data.attackResult == failBig)
-					eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript, clrWhite, messageInterrupt_force);
-			}
-		}
+        if(data.attackResult == failSmall)
+          eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
+        if(data.attackResult == failNormal)
+          eng->log->addMessage(otherName + " misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
+        if(data.attackResult == failBig)
+          eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript, clrWhite, messageInterrupt_force);
+      }
+    }
 
-		//----- ATTACK HIT -------- //----- ATTACK CRITICAL ---
-		if(data.attackResult >= successSmall) {
-			if(data.isDefenderDodging) {
-				if(data.isPlayerAttacking) {
-					if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
-						otherName = data.currentDefender->getNameThe();
-					} else {
-						otherName = "It ";
-					}
-					eng->log->addMessage(otherName + " dodges my attack.");
-				} else {
-					if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
-						otherName = data.attacker->getNameThe();
-					} else {
-						otherName = "It";
-					}
-					eng->log->addMessage("I dodge an attack from " + otherName + ".", clrMessageGood);
-				}
-			} else {
-				if(data.isPlayerAttacking) {
-					const string wpnVerb = weapon->getInstanceDefinition().meleeAttackMessages.player;
+    //----- ATTACK HIT -------- //----- ATTACK CRITICAL ---
+    if(data.attackResult >= successSmall) {
+      if(data.isDefenderDodging) {
+        if(data.isPlayerAttacking) {
+          if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+            otherName = data.currentDefender->getNameThe();
+          } else {
+            otherName = "It ";
+          }
+          eng->log->addMessage(otherName + " dodges my attack.");
+        } else {
+          if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+            otherName = data.attacker->getNameThe();
+          } else {
+            otherName = "It";
+          }
+          eng->log->addMessage("I dodge an attack from " + otherName + ".", clrMessageGood);
+        }
+      } else {
+        if(data.isPlayerAttacking) {
+          const string wpnVerb = weapon->getDef().meleeAttackMessages.player;
 
-					if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
-						otherName = data.currentDefender->getNameThe();
-					} else {
-						otherName = "it";
-					}
+          if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+            otherName = data.currentDefender->getNameThe();
+          } else {
+            otherName = "it";
+          }
 
-					if(data.isIntrinsic) {
-						eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
-					} else {
-						const string BONUS_STR = data.isBackStab ? "covertly " : data.isSwiftAttack ? "swiftly " : data.isMightyAttack ? "mightily " : "";
-						const SDL_Color clr = data.isBackStab || data.isSwiftAttack || data.isMightyAttack ? clrBlueLight : clrMessageGood;
-						eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
-					}
-				} else {
-					const string wpnVerb = weapon->getInstanceDefinition().meleeAttackMessages.other;
+          if(data.isIntrinsic) {
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
+          } else {
+            const string BONUS_STR = data.isBackStab ? "covertly " : "";
+            const SDL_Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
+          }
+        } else {
+          const string wpnVerb = weapon->getDef().meleeAttackMessages.other;
 
-					if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
-						otherName = data.attacker->getNameThe();
-					} else {
-						otherName = "It";
-					}
+          if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+            otherName = data.attacker->getNameThe();
+          } else {
+            otherName = "It";
+          }
 
-					eng->log->addMessage(otherName + " " + wpnVerb + data.dmgDescript, clrMessageBad, messageInterrupt_force);
-				}
-			}
-		}
-	}
+          eng->log->addMessage(otherName + " " + wpnVerb + data.dmgDescript, clrMessageBad, messageInterrupt_force);
+        }
+      }
+    }
+  }
 }
 

@@ -66,10 +66,10 @@ void Look::printExtraActorDescription(const coord pos) const {
 	if(actor != NULL) {
 		if(actor != eng->player) {
 			//Add written description.
-			string description = actor->getInstanceDefinition()->description;
+			string description = actor->getDef()->description;
 
 			//Add auto-description.
-			if(actor->getInstanceDefinition()->allowAutoDescription == true) {
+			if(actor->getDef()->allowAutoDescription) {
 				eng->autoDescribeActor->addAutoDescriptionLines(actor, description);
 			}
 

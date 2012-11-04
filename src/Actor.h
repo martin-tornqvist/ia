@@ -24,136 +24,125 @@ class Inventory;
 
 class Actor {
 public:
-	Actor() {
-	}
+  Actor() {
+  }
 
-	StatusEffectsHandler* getStatusEffectsHandler() {
-		return m_statusEffectsHandler;
-	}
+  StatusEffectsHandler* getStatusEffectsHandler() {
+    return statusEffectsHandler_;
+  }
 
-	ActorDefinition* getInstanceDefinition() {
-		m_instanceDefinition.nrOfKills = m_archetypeDefinition->nrOfKills;
-		return &m_instanceDefinition;
-	}
+  ActorDefinition* getDef() {
+    return def_;
+  }
 
-	ActorDefinition* getArchetypeDefinition() {
-		m_instanceDefinition.nrOfKills = m_archetypeDefinition->nrOfKills;
-		return m_archetypeDefinition;
-	}
+  virtual ~Actor();
 
-	virtual ~Actor();
+  coord pos;
+  ActorDeadState_t deadState;
 
-	coord pos;
-	ActorDeadState_t deadState;
+  Inventory* getInventory() {
+    return inventory_;
+  }
 
-	Inventory* getInventory() {
-		return m_inventory;
-	}
+  void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
 
-	void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
+  bool hit(int dmg, const DamageTypes_t damageType);
 
-	bool hit(int dmg, const DamageTypes_t damageType);
+  bool restoreHP(int hpRestored, const bool ALLOW_MESSAGE = true);
+  void changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES);
 
-	bool restoreHP(int hpRestored, const bool ALLOW_MESSAGE = true);
+  void die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
 
-	//void boostHP(int hpBoosted) {m_instanceDefinition.HP += hpBoosted;}
+  void newTurn();
 
-	void changeMaxHP(const int increase, const bool ALLOW_MESSAGES);
+  virtual void act() = 0;
 
-	void die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
+  virtual void registerHeardSound(const Sound& sound) = 0;
 
-	void newTurn();
+  virtual void updateColor();
 
-	virtual void act() = 0;
+  //Function taking into account FOV, invisibility, status, etc
+  //This is the final word on wether an actor can visually percieve another actor.
+  bool checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-	virtual void registerHeardSound(const Sound& sound) = 0;
+  vector<Actor*> spotedEnemies;
+  vector<coord> spotedEnemiesPositions;
+  void getSpotedEnemies();
+  void getSpotedEnemiesPositions();
 
-	virtual void updateColor();
+  //Various "shortcuts" to the instance definition
+  ActorDevNames_t getDevName() const {
+    return def_->devName;
+  }
+  int getHp() const {
+    return hp_;
+  }
+  int getHpMax() const {
+    return hpMax_;
+  }
+  string getNameThe() const {
+    return def_->name_the;
+  }
+  string getNameA() const {
+    return def_->name_a;
+  }
+  bool isHumanoid() const {
+    return def_->isHumanoid;
+  }
+  char getGlyph() const {
+    return glyph_;
+  }
+  const SDL_Color& getColor() const {
+    return clr_;
+  }
 
-	//Function taking into account FOV, invisibility, status, etc
-	//This is the final word on wether an actor can visually percieve another actor.
-	bool checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  const Tile_t& getTile() const {
+    return tile_;
+  }
 
-   vector<Actor*> spotedEnemies;
-	vector<coord> spotedEnemiesPositions;
-	void getSpotedEnemies();
-	void getSpotedEnemiesPositions();
+  MoveType_t getMoveType() const {
+    return def_->moveType;
+  }
 
-	//Various "shortcuts" to the instance definition
-	ActorDevNames_t getDevName() const {
-	  return m_instanceDefinition.devName;
-	}
-	int getHP() const {
-		return m_instanceDefinition.HP;
-	}
-	int getHP_max() const {
-		return m_instanceDefinition.HP_max;
-	}
-	string getNameThe() const {
-		return m_instanceDefinition.name_the;
-	}
-	string getNameA() const {
-		return m_instanceDefinition.name_a;
-	}
-	bool isHumanoid() const {
-		return m_instanceDefinition.isHumanoid;
-	}
-	char getGlyph() const {
-		return m_instanceDefinition.glyph;
-	}
-	const SDL_Color& getColor() const {
-		return m_instanceDefinition.color;
-	}
-//	void setColor(const SDL_Color color) {
-//		m_instanceDefinition.color = color;
-//	}
-	const Tile_t& getTile() const {
-		return m_instanceDefinition.tile;
-	}
+  void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-	MoveType_t getMoveType() const {
-		return m_instanceDefinition.moveType;
-	}
+  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+    (void)light;
+  }
 
-	void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  Engine* eng;
 
-	virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-	  (void)light;
-	}
-
-	Engine* eng;
-
-	void teleportToRandom();
+  void teleportToRandom();
 
 protected:
-	virtual void actorSpecificDie() {
-	}
+  //TODO Remove these friend declarations
+  friend class AbilityValues;
+  friend class DungeonMaster;
+  friend class Dynamite;
+  friend class Molotov;
+  friend class Flare;
+  friend class StatusDiseased;
 
-	virtual void actorSpecific_hit(const int DMG) {
-		(void)DMG;
-	}
+  virtual void actorSpecificDie() {}
+  virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
+  virtual void actorSpecific_spawnStartItems() = 0;
 
-	virtual void actorSpecific_spawnStartItems() = 0;
+  //Called from within the normal hit function to set monsters playerAwareness
+  virtual void monsterHit() {}
+  //Monsters may have special stuff happening when they die (such as fire vampire explosion)
+  virtual void monsterDeath() {}
 
-	//Called from within the normal hit function to set monsters playerAwareness
-	virtual void monsterHit() {
-	}
+  SDL_Color clr_;
+  char glyph_;
+  Tile_t tile_;
 
-	//Monsters may have special stuff happening when they die (such as fire vampire explosion)
-	virtual void monsterDeath() {
+  int hp_, hpMax_;
 
-	}
+  coord lairCell_;
 
-	coord lairCell;
-
-	StatusEffectsHandler* m_statusEffectsHandler;
-
-	ActorDefinition m_instanceDefinition;
-	ActorDefinition* m_archetypeDefinition;
-
-	Inventory* m_inventory;
-
-	friend class AbilityValues;
+  StatusEffectsHandler* statusEffectsHandler_;
+  ActorDefinition* def_;
+  Inventory* inventory_;
 };
 
 #endif

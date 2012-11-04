@@ -49,10 +49,8 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   string playerName = lines.front();
   lines.erase(lines.begin());
   playerName.erase(playerName.begin());
-  eng->player->getInstanceDefinition()->name_a	= playerName;
-  eng->player->getInstanceDefinition()->name_the	= playerName;
-  eng->player->getArchetypeDefinition()->name_a	= playerName;
-  eng->player->getArchetypeDefinition()->name_the	= playerName;
+  eng->player->getDef()->name_a	= playerName;
+  eng->player->getDef()->name_the	= playerName;
 
   eng->dungeonMaster->setParametersFromSaveLines(lines);
   eng->scrollNameHandler->setParametersFromSaveLines(lines);

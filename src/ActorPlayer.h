@@ -9,8 +9,7 @@
 //const int HUNGER_LEVEL_FIRST_WARNING    = 400;
 //const int HUNGER_LEVEL_FINAL_WARNING    = 200;
 
-enum InsanityPhobias_t
-{
+enum InsanityPhobias_t {
   insanityPhobia_rat,
   insanityPhobia_spider,
   insanityPhobia_dog,
@@ -21,8 +20,7 @@ enum InsanityPhobias_t
   endOfInsanityPhobias
 };
 
-enum InsanityCompulsions_t
-{
+enum InsanityCompulsions_t {
   insanityCompulsion_sadism,
   insanityCompulsion_masochism,
   endOfInsanityCompulsions
@@ -57,7 +55,7 @@ public:
 
   int insanityLong, insanityShort, insanityShortTemp;
 
-  int arcaneKnowledge;
+  int mythosKnowledge;
 
   void shock(const ShockValues_t shockValue, const int MODIFIER);
   void incrInsanityLong();
@@ -84,6 +82,7 @@ public:
   int getHealingTimeTotal() const;
 
   void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+
 
 private:
   //void decreaseHungerByNumber(const int satiate);

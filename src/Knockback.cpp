@@ -10,10 +10,10 @@
 
 void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN) {
   if(defender != eng->player || eng->config->BOT_PLAYING == false) {
-    if(defender->getInstanceDefinition()->actorSize <= actorSize_giant) {
+    if(defender->getDef()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
 
-      const MoveType_t defenderMoveType = defender->getInstanceDefinition()->moveType;
+      const MoveType_t defenderMoveType = defender->getDef()->moveType;
       const bool WALKTYPE_CAN_BE_KNOCKED_BACK = defenderMoveType != moveType_ethereal && defenderMoveType != moveType_ooze;
 
       const coord delta = (defender->pos - attackedFromPos).getSigns();

@@ -10,7 +10,7 @@ public:
     if(monster->deadState == actorDeadState_alive) {
       if(monster->playerAwarenessCounter > 0) {
 
-        const ActorDefinition* const d = monster->getInstanceDefinition();
+        const ActorDefinition* const d = monster->getDef();
         const bool CONSIDER_NORMAL_DOORS_FREE = d->canOpenDoors || d->canBashDoors;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];

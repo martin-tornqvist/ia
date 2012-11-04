@@ -49,7 +49,7 @@ void InventoryHandler::showGeneralItemsFiltered(const GeneralInventoryFilters_t 
 	const ItemDefinition* curDef = NULL;
 
 	for(unsigned int i = 0; i < general->size(); i++) {
-		curDef = &(general->at(i)->getInstanceDefinition());
+		curDef = &(general->at(i)->getDef());
 		switch(filter) {
 		case generalInventoryFilter_wieldableAndWearable: {
 			if(curDef->isMeleeWeapon || curDef->isRangedWeapon || curDef->isAmulet || curDef->isArmor || curDef->isCloak || curDef->isRing)

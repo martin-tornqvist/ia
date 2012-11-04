@@ -57,11 +57,10 @@ int main(int argc, char* argv[]) {
 
       if(ENTRY_TYPE == gameEntry_new) {
         if(engine->config->BOT_PLAYING == true) {
-          engine->playerBonusHandler->setAllBonusesToMax();
+          engine->playerBonusHandler->setAllBonusesToPicked();
         }
         engine->playerCreateCharacter->run();
         engine->player->actorSpecific_spawnStartItems();
-//	engine->playerAllocBonus->run();
 
         engine->gameTime->insertActorInLoop(engine->player);
 
@@ -80,10 +79,8 @@ int main(int argc, char* argv[]) {
       }
 
       engine->player->FOVupdate();
-      //engine->gameTime->letNextAct();
       engine->renderer->clearAreaPixel(0, 0, engine->config->SCREEN_WIDTH, engine->config->SCREEN_HEIGHT);
       engine->renderer->drawMapAndInterface();
-      //engine->interfaceRenderer->drawInterface();
 
       if(ENTRY_TYPE == gameEntry_new) {
         if(engine->config->SKIP_INTRO_LEVEL == 0) {

@@ -6,207 +6,119 @@
 
 #include "AbilityValues.h"
 #include "Converters.h"
+#include "Engine.h"
 
 #include <math.h>
 
 using namespace std;
 
-class Engine;
-
-class PlayerBonusHandler;
-class PlayerBonusGroup;
+enum PlayerBonuses_t {
+  playerBonus_agile,
+  playerBonus_athletic,
+//  playerBonus_swiftRetaliator,
+  playerBonus_elusive,
+//  playerBonus_tumbler,
+  playerBonus_adeptMeleeCombatant,
+  playerBonus_masterfulMeleeCombatant,
+//  playerBonus_swiftAssailant,
+//  playerBonus_aggressive,
+  playerBonus_adeptRangedCombatant,
+  playerBonus_masterfulRangedCombatant,
+  playerBonus_steadyAimer,
+//  playerBonus_deadlyThrower,
+  playerBonus_nimble,
+  playerBonus_quick,
+  playerBonus_observant,
+  playerBonus_treasureHunter,
+//  playerBonus_vigilant,
+  playerBonus_stealthy,
+  playerBonus_imperceptible,
+  playerBonus_learned,
+  playerBonus_erudite,
+  playerBonus_strongMinded,
+  playerBonus_unyielding,
+  playerBonus_coolHeaded,
+//  playerBonus_wakeful,
+//  playerBonus_clearThinker,
+//  playerBonus_courageous,
+  playerBonus_adeptWoundTreater,
+  playerBonus_curer,
+  playerBonus_rapidRejuvenator,
+  playerBonus_tough,
+  playerBonus_rugged,
+  playerBonus_healthy,
+  playerBonus_vigorous,
+//  playerBonus_strongBacked,
+  endOfPlayerBonuses
+};
 
 class PlayerBonus {
 public:
-  PlayerBonus(Abilities_t ability, string groupTitle, string title, string descriptionGeneral,
-              Engine* engine, int startSkill, int bon1 = 0, string descrBon1 = "",
-              int bon2 = 0, string descrBon2 = "", int bon3 = 0, string descrBon3 = "");
-
+  PlayerBonus(string title, string description, vector<PlayerBonuses_t> prereqs) :
+    title_(title), description_(description), prereqs_(prereqs), isPicked_(false) {
+  }
   PlayerBonus() {
   }
-
-  ~PlayerBonus() {
-  }
-
-  int getRank() const {
-    return rank_;
-  }
-
-  int getRankLimit() const {
-    return abilityBonusAtRanks_.size() - 1;
-  }
-
-  bool incrRank() {
-    if(rank_ < getRankLimit()) {
-      rank_++;
-      return true;
-    }
-    return false;
-  }
-
-  const string& getTitleGroup() const {
-    return titleGroup_;
-  }
-
-  const string& getTitle() const {
-    return title_;
-  }
-
-  const vector<string>& getDescriptionGeneral() const {
-    return descriptionGeneral_;
-  }
-
-  const vector< vector<string> >& getDescriptionRanks() const {
-    return descriptionRanks_;
-  }
-
-  bool isPickable() const {
-    return rank_ < getRankLimit() && !picked_;
-  }
-
-  Abilities_t getAbility() const {
-    return ability_;
-  }
-
-  int getAbilityBonus() const {
-    return abilityBonusAtRanks_.at(rank_);
-  }
-
-  int getAbilityBonusAtRank(const int RANK) const {
-    return abilityBonusAtRanks_.at(RANK);
-  }
-
+  string title_;
+  string description_;
+  vector<PlayerBonuses_t> prereqs_;
+  bool isPicked_;
 protected:
-  friend class PlayerBonusHandler;
-  int rank_;
-  bool picked_;
-  Abilities_t ability_;
-  string titleGroup_, title_;
-  vector< vector<string> > descriptionRanks_;
-  vector<string> descriptionGeneral_;
-  vector<int> abilityBonusAtRanks_;
 };
 
 class PlayerBonusHandler {
 public:
-  PlayerBonusHandler(Engine* eng);
+  PlayerBonusHandler(Engine* engine);
 
   void addSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      lines.push_back(intToString(bonuses_.at(i).getRank()));
+    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+      lines.push_back(bonuses_[i].isPicked_ ? intToString(1) : intToString(0));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      bonuses_.at(i).rank_ = stringToInt(lines.front());
+    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+      bonuses_[i].isPicked_ = lines.front() == intToString(0) ? false : true;
       lines.erase(lines.begin());
     }
   }
 
+  bool isBonusPicked(const PlayerBonuses_t bonus) {
+    return bonuses_[bonus].isPicked_;
+  }
+
   void setAllToUnpicked() {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      bonuses_.at(i).picked_ = false;
+    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+      bonuses_[i].isPicked_ = false;
     }
   }
 
-  unsigned int getNrOfBonuses() const {
-    return bonuses_.size();
+  vector<PlayerBonuses_t> getBonusChoices() const;
+
+  string getBonusTitle(const PlayerBonuses_t bonus) const {
+    return bonuses_[bonus].title_;
   }
 
-  int getBonusAbilityModifier(const Abilities_t ability) {
-    int modifier = 0;
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      if(bonuses_.at(i).getAbility() == ability) {
-        modifier += bonuses_.at(i).getAbilityBonus();
-      }
-    }
-    return modifier;
+  string getBonusDescription(const PlayerBonuses_t bonus) const {
+    return bonuses_[bonus].description_;
   }
 
-  int getBonusAbilityModifierAtRank(const Abilities_t ability, const int RANK) {
-    int modifier = 0;
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      if(bonuses_.at(i).getAbility() == ability) {
-        modifier += bonuses_.at(i).getAbilityBonusAtRank(RANK);
-      }
-    }
-    return modifier;
-  }
+  void pickBonus(const PlayerBonuses_t bonus);
 
-  string getBonusGroupTitleAt(const unsigned int ELEMENT) {
-    const PlayerBonus& bonus = getBonusAt(ELEMENT);
-    return bonus.getTitleGroup();
-  }
-
-  string getBonusTitleAt(const unsigned int ELEMENT) {
-    const PlayerBonus& bonus = getBonusAt(ELEMENT);
-    return bonus.getTitle();
-  }
-
-  int getBonusRankAt(const unsigned int ELEMENT) {
-    const PlayerBonus& bonus = getBonusAt(ELEMENT);
-    return bonus.getRank();
-  }
-
-  void increaseBonusAt(const unsigned int ELEMENT, Engine* const engine);
-
-  void increaseBonusForAbility(const Abilities_t ability) {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      if(bonuses_.at(i).getAbility() == ability) {
-        bonuses_.at(i).incrRank();
-      }
-    }
-  }
-
-  int getBonusRankForAbility(const Abilities_t ability) {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      if(bonuses_.at(i).getAbility() == ability) {
-        return bonuses_.at(i).rank_;
-      }
-    }
-    return -1;
-  }
-
-  bool isBonusPickableAt(const unsigned int ELEMENT) {
-    return getBonusAt(ELEMENT).isPickable();
-  }
-
-  int getBonusRankLimitAt(const unsigned int ELEMENT) {
-    return getBonusAt(ELEMENT).getRankLimit();
-  }
-
-  const vector<string>& getBonusDescriptionGeneralAt(const unsigned int ELEMENT) {
-    return getBonusAt(ELEMENT).getDescriptionGeneral();
-  }
-
-  const vector< vector<string> >& getBonusDescriptionRanksAt(const unsigned int ELEMENT) {
-    return getBonusAt(ELEMENT).getDescriptionRanks();
-  }
-
-  bool canAnyBonusBePicked() {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      if(isBonusPickableAt(i)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  void setAllBonusesToMax() {
-    for(unsigned int i = 0; i < bonuses_.size(); i++) {
-      bonuses_.at(i).rank_ = bonuses_.at(i).getRankLimit();
+  void setAllBonusesToPicked() {
+    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+      bonuses_[i].isPicked_ = true;
     }
   }
 
 private:
-  bool isPicked_;
+  Engine* eng;
 
-  PlayerBonus& getBonusAt(const unsigned int ELEMENT) {
-    return bonuses_.at(ELEMENT);
-  }
+  void setBonus(const PlayerBonuses_t bonus, const string title, const string description,
+                const PlayerBonuses_t prereq1 = endOfPlayerBonuses, const PlayerBonuses_t prereq2 = endOfPlayerBonuses,
+                const PlayerBonuses_t prereq3 = endOfPlayerBonuses);
 
-  vector<PlayerBonus> bonuses_;
+  PlayerBonus bonuses_[endOfPlayerBonuses];
 };
 
 #endif

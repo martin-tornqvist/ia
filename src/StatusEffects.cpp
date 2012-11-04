@@ -22,11 +22,11 @@ void StatusCursed::start() {
 }
 
 void StatusDiseased::newTurn(Engine* engine) {
-  int* const hp = &(owningActor->getInstanceDefinition()->HP);
-  int* const hp_max = &(owningActor->getInstanceDefinition()->HP_max);
+  int& hp = engine->player->hp_;
+  int& hpMax = engine->player->hpMax_;
 
-  if(*hp > ((*hp_max) * 3) / 4) {
-    *hp = (*hp) - engine->dice(1, 2);
+  if(hp > (hpMax * 3) / 4) {
+    hp -= engine->dice(1, 2);
   }
 
   turnsLeft--;
@@ -63,7 +63,7 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
   owningActor->hit(engine->dice(1, 2), damageType_physical);
 
   if(owningActor->deadState == actorDeadState_alive) {
-    const int ACTOR_TOUGHNESS = owningActor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBody, true);
+    const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *(owningActor));
     if(engine->abilityRoll->roll(ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
       nrOfSpikes--;
       if(nrOfSpikes > 0) {
@@ -226,6 +226,9 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
   case statusStill:
     return new StatusStill(TURNS_LEFT);
     break;
+  case statusElusive:
+    return new StatusElusive(TURNS_LEFT);
+    break;
   case statusDisabledAttack:
     return new StatusDisabledAttack(TURNS_LEFT);
     break;
@@ -263,7 +266,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   const bool PLAYER_SEE_OWNER = eng->player->checkIfSeeActor(*owningActor, blockers);
 
   const Abilities_t saveAbility = effect->getSaveAbility();
-  const int ACTOR_ABILITY = owningActor->getInstanceDefinition()->abilityValues.getAbilityValue(saveAbility, true);
+  const int ACTOR_ABILITY = owningActor->getDef()->abilityValues.getAbilityValue(saveAbility, true, *(owningActor));
   const int SAVE_ABILITY_MOD = effect->getSaveAbilityModifier();
   int statusProtectionFromArmor = 0;
 
@@ -271,7 +274,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
     if(OWNER_IS_PLAYER) {
       Item* const armor = owningActor->getInventory()->getItemInSlot(slot_armorBody);
       if(armor != NULL) {
-        const bool ARMOR_PROTECTS_FROM_BURNING = armor->getInstanceDefinition().armorData.protectsAgainstStatusBurning;
+        const bool ARMOR_PROTECTS_FROM_BURNING = armor->getDef().armorData.protectsAgainstStatusBurning;
         if(ARMOR_PROTECTS_FROM_BURNING) {
           statusProtectionFromArmor = max(0, dynamic_cast<Armor*>(armor)->getDurability());
         }
@@ -364,7 +367,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
 }
 
 void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE) {
-  const ItemDefinition& wpnDef = weapon->getInstanceDefinition();
+  const ItemDefinition& wpnDef = weapon->getDef();
   StatusEffect* wpnEffect = IS_MELEE ? wpnDef.meleeStatusEffect : wpnDef.rangedStatusEffect;
 
   if(wpnEffect != NULL) {
@@ -385,7 +388,7 @@ void StatusEffectsHandler::newTurnAllEffects() {
 
   for(unsigned int i = 0; i < effects.size();) {
     if(OWNER_IS_PLAYER == false) {
-      dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter = owningActor->getInstanceDefinition()->nrTurnsAwarePlayer;
+      dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter = owningActor->getDef()->nrTurnsAwarePlayer;
     }
 
     StatusEffect* const curEffect = effects.at(i);

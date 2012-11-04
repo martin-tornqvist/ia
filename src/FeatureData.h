@@ -105,10 +105,10 @@ public:
   const FeatureDef* getFeatureDef(const Feature_t id) const {
     return &(featureDefs[id]);
   }
+  void makeList();
 private:
   void addToListAndReset(FeatureDef& d);
   FeatureDef featureDefs[endOfFeatures];
-  void makeList();
   void resetDef(FeatureDef& d);
   Engine* eng;
 };

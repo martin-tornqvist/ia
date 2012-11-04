@@ -74,7 +74,8 @@ private:
 
 	coord placeStairs();
 
-  void makeLeverPuzzle();
+  void makeLevers();
+  void spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door);
 
 	void revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord);
 

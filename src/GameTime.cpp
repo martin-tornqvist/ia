@@ -91,7 +91,7 @@ void GameTime::letNextAct() {
     currentActor = getCurrentActor();
 
     const bool IS_SLOWED = currentActor->getStatusEffectsHandler()->hasEffect(statusSlowed);
-    const ActorSpeed_t defSpeed = currentActor->getInstanceDefinition()->speed;
+    const ActorSpeed_t defSpeed = currentActor->getDef()->speed;
     const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
     switch(realSpeed) {
     case actorSpeed_sluggish: {

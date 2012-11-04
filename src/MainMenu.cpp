@@ -20,7 +20,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   if(eng->config->USE_TILE_SET == false) {
     logo.push_back("        ___  __                __  __                  ");
     logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
-    logo.push_back("| | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
+    logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
     logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
     logo.push_back("               \\                 \\                      ");
   }
@@ -69,14 +69,16 @@ void MainMenu::draw(const MenuBrowser& browser) {
       xPos = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
-          SDL_Color clr = clrBlueLight;
-          clr.b += eng->dice.getInRange(-110, 0);
+          SDL_Color clr = clrRed;
+          clr.r += eng->dice.getInRange(-60, 100);
+          clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
         }
         xPos++;
       }
       yPos += 1;
     }
+    yPos += 3;
   }
 
   xPos = MAP_X_CELLS / 2;

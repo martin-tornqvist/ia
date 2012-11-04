@@ -152,7 +152,9 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearMessages();
       eng->player->moveDirection(0, 0);
-      eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusStill(1));
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_steadyAimer)) {
+        eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusStill(1));
+      }
     }
     clearKeyEvents();
   }
@@ -263,9 +265,9 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         firearm = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
 
         if(firearm != NULL) {
-          if(firearm->getInstanceDefinition().isRangedWeapon == true) {
-            if(firearm->ammoLoaded >= 1 || firearm->getInstanceDefinition().rangedHasInfiniteAmmo) {
-              if(firearm->getInstanceDefinition().isMachineGun && firearm->ammoLoaded < 5) {
+          if(firearm->getDef().isRangedWeapon == true) {
+            if(firearm->ammoLoaded >= 1 || firearm->getDef().rangedHasInfiniteAmmo) {
+              if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
               } else {
                 eng->marker->place(markerTask_aim);
@@ -292,7 +294,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
     if(eng->player->deadState == actorDeadState_alive) {
       Item* const itemAtPlayer = eng->map->items[eng->player->pos.x][eng->player->pos.y];
       if(itemAtPlayer != NULL) {
-        if(itemAtPlayer->getInstanceDefinition().devName == item_trapezohedron) {
+        if(itemAtPlayer->getDef().devName == item_trapezohedron) {
           eng->dungeonMaster->winGame();
           *quitToMainMenu_ = true;
         }
@@ -340,7 +342,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
     clearMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      const bool IS_FREE_TURN = eng->dungeonMaster->hasClassBonusAtRank(playerBackground_soldier, playerClassBonusRanks_one);
+      const bool IS_FREE_TURN = eng->playerBonusHandler->isBonusPicked(playerBonus_nimble);
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 
@@ -528,7 +530,7 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
   case SDLK_h: {
     clearMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getHP() >= eng->player->getHP_max()) {
+      if(eng->player->getHp() >= eng->player->getHpMax()) {
         eng->log->addMessage("I am already at good health.");
         eng->renderer->flip();
       } else {
@@ -596,23 +598,6 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
   //    }
   //  }
   //  break;
-
-  //----------------------------------------KICK STATS
-  case int('K'): {
-    clearMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      const ItemDefinition* const d = eng->itemData->itemDefinitions[item_playerKick];
-      const DiceParam dmg = d->meleeDmg;
-      const Abilities_t abilityUsed = d->meleeAbilityUsed;
-      const int PLAYER_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(abilityUsed, true);
-      const int TOTAL_SKILL = PLAYER_SKILL + d->meleeBaseAttackSkill;
-      const string DMG_STR = intToString(dmg.rolls) + "d" + intToString(dmg.sides);
-      eng->log->addMessage("Kick stats: " + DMG_STR + "  " + intToString(TOTAL_SKILL) + "%");
-
-    }
-    clearKeyEvents();
-  }
-  break;
 
   //----------------------------------------POWERS - MEMORIZED
   case SDLK_x: {

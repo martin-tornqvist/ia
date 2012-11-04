@@ -109,7 +109,7 @@ void SpellTeleport::specificMonsterCast(Monster* const monster, Engine* const en
 bool SpellTeleport::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
-  return monster->checkIfSeeActor(*(engine->player), blockers) && monster->getHP() < (monster->getHP_max() / 2) && engine->dice.coinToss();
+  return monster->checkIfSeeActor(*(engine->player), blockers) && monster->getHp() <= (monster->getHpMax() / 2) && engine->dice.coinToss();
 }
 
 
@@ -270,14 +270,14 @@ void SpellSummonRandom::specificCast(const SpellData& d, Engine* const eng) {
     if(def.canBeSummoned == true) {
       //Monster summoned must be equal or lower level to the caster.
       //(No checks needed for available summons, since wolves (lvl 2) can be summoned)
-      if(def.monsterLvl <= d.caster_->getInstanceDefinition()->monsterLvl) {
+      if(def.monsterLvl <= d.caster_->getDef()->monsterLvl) {
         summonCandidates.push_back(static_cast<ActorDevNames_t>(i));
       }
     }
   }
   const ActorDevNames_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
   Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, d.targetCell_));
-  monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
+  monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
   if(eng->map->playerVision[d.targetCell_.x][d.targetCell_.y] == true) {
     eng->log->addMessage(monster->getNameA() + " appears.");
   }
@@ -337,11 +337,11 @@ void Spell::cast(const SpellData& d, Engine* const eng) {
 
 void Spell::monsterCast(Monster* const monster, Engine* const eng) {
   if(eng->map->playerVision[monster->pos.x][monster->pos.y] == true) {
-    const string SPELL_MESSAGE = monster->getInstanceDefinition()->spellCastMessage;
+    const string SPELL_MESSAGE = monster->getDef()->spellCastMessage;
     eng->log->addMessage(SPELL_MESSAGE);
   }
 
-  monster->spellCoolDownCurrent = monster->getInstanceDefinition()->spellCooldown;
+  monster->spellCoolDownCurrent = monster->getDef()->spellCooldown;
   specificMonsterCast(monster, eng);
   eng->gameTime->letNextAct();
 }
@@ -358,5 +358,5 @@ void SpellHealSelf::specificMonsterCast(Monster* const monster, Engine* const en
 
 bool SpellHealSelf::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
   (void)engine;
-  return monster->getHP() < monster->getHP_max();
+  return monster->getHp() < monster->getHpMax();
 }

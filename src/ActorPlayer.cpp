@@ -24,13 +24,13 @@
 #include "FeatureLitDynamite.h"
 
 Player::Player() :
-  firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0), insanityShortTemp(0), arcaneKnowledge(0),
-  dynamiteFuseTurns(-1), molotovFuseTurns(-1),
-  flareFuseTurns(-1), target(NULL) {
+  firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0),
+  insanityShortTemp(0), mythosKnowledge(0), dynamiteFuseTurns(-1),
+  molotovFuseTurns(-1), flareFuseTurns(-1), target(NULL) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
-  m_instanceDefinition.abilityValues.reset();
+  def_->abilityValues.reset();
 
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
     insanityPhobias[i] = false;
@@ -39,282 +39,81 @@ void Player::actorSpecific_spawnStartItems() {
     insanityCompulsions[i] = false;
   }
 
-  const PlayerBackgrounds_t background = eng->playerCreateCharacter->getPlayerBackground();
-  switch(background) {
-  case playerBackground_soldier: {
-    m_inventory->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorFlackJacket), true, true);
+  int NR_OF_CARTRIDGES = eng->dice.getInRange(1, 3);
+  int NR_OF_DYNAMITE = eng->dice.getInRange(2, 4);
+  int NR_OF_MOLOTOV = eng->dice.getInRange(2, 4);
+  int NR_OF_FLARES = eng->dice.getInRange(3, 5);
+  int NR_OF_THROWING_KNIVES = eng->dice.getInRange(7, 12);
+  int NR_OF_SPIKES = eng->dice.getInRange(3, 4);
 
-    ItemDevNames_t weaponId;
-    int wpnNr = eng->dice(1, 4);
-    switch(wpnNr) {
-    case 1: weaponId = item_hatchet; break;
-    case 2: weaponId = item_machete; break;
-    case 3: weaponId = item_club; break;
-    case 4: weaponId = item_axe; break;
-    }
-    m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+  const int NR_OF_POSSIBLE_WEAPONS = 5;
 
-    wpnNr = eng->dice(1, 3);
-    switch(wpnNr) {
-    case 1: {
-      m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_machineGun), true, true);
-      m_inventory->putItemInGeneral(eng->itemFactory->spawnItem(item_drumOfBullets));
-    }
+  const int WEAPON_CHOICE = eng->dice.getInRange(1, NR_OF_POSSIBLE_WEAPONS);
+  ItemDevNames_t weaponId = item_dagger;
+  switch(WEAPON_CHOICE) {
+  case 1:
+    weaponId = item_dagger;
     break;
-    case 2: {
-      m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_sawedOff), true, true);
-      Item* item = eng->itemFactory->spawnItem(item_shotgunShell);
-      item->numberOfItems = eng->dice.getInRange(12, 16);
-      m_inventory->putItemInGeneral(item);
-    }
+  case 2:
+    weaponId = item_hatchet;
     break;
-    case 3: {
-      m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
-      Item* item = eng->itemFactory->spawnItem(item_shotgunShell);
-      item->numberOfItems = eng->dice.getInRange(6, 10);
-      m_inventory->putItemInGeneral(item);
-    }
+  case 3:
+    weaponId = item_hammer;
     break;
-    }
+  case 4:
+    weaponId = item_machete;
+    break;
+  case 5:
+    weaponId = item_axe;
+    break;
 
-    m_inventory->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
-    m_inventory->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
-
-    Item* item = eng->itemFactory->spawnItem(item_dynamite);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_molotov);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_ironSpike);
-    item->numberOfItems = eng->dice.getInRange(5, 8);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_flare);
-    item->numberOfItems = eng->dice.getInRange(3, 5);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_throwingKnife);
-    item->numberOfItems = eng->dice.getInRange(8, 12);
-    m_inventory->putItemInSlot(slot_missiles, item, true, true);
-
-    eng->playerBonusHandler->increaseBonusForAbility(ability_accuracyRanged);
-    eng->playerBonusHandler->increaseBonusForAbility(ability_resistStatusBody);
-
-    m_instanceDefinition.HP_max = 18;
-    m_instanceDefinition.HP = m_instanceDefinition.HP_max;
-  }
-  break;
-
-  case playerBackground_occultScholar: {
-    for(int i = 0; i < 2; i++) {
-      bool done = false;
-      while(done == false) {
-        Item* item = eng->itemFactory->spawnRandomScrollOrPotion(true, false);
-        ItemDefinition& archDef = item->getArchetypeDefinition();
-        if(archDef.isScrollLearned == false && archDef.isScrollLearnable) {
-          item->setRealDefinitionNames(eng, true);
-          done = archDef.isScrollLearned = true;
-        }
-        delete item;
-        item = NULL;
-      }
-    }
-
-    ItemDevNames_t weaponId;
-    int wpnNr = eng->dice(1, 2);
-    switch(wpnNr) {
-    case 1: weaponId = item_dagger; break;
-    case 2: weaponId = item_hatchet; break;
-    }
-    m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-
-    m_inventory->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
-    m_inventory->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
-
-    Item* item = eng->itemFactory->spawnItem(item_dynamite);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_molotov);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_ironSpike);
-    item->numberOfItems = eng->dice.getInRange(5, 8);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_flare);
-    item->numberOfItems = eng->dice.getInRange(3, 5);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(true, false);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(true, false);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    item->setRealDefinitionNames(eng, true);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(false, true);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(false, true);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    item->setRealDefinitionNames(eng, true);
-    m_inventory->putItemInGeneral(item);
-
-    eng->playerBonusHandler->increaseBonusForAbility(ability_language);
-    eng->playerBonusHandler->increaseBonusForAbility(ability_resistStatusMind);
-
-    m_instanceDefinition.HP_max = 14;
-    m_instanceDefinition.HP = m_instanceDefinition.HP_max;
-  }
-  break;
-
-  case playerBackground_tombRaider: {
-    m_inventory->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
-
-    Item* item = eng->itemFactory->spawnItem(item_dagger);
-    dynamic_cast<Weapon*>(item)->setMeleePlus(2);
-    m_inventory->putItemInSlot(slot_wielded, item, true, true);
-
-    m_inventory->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
-    m_inventory->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
-
-    item = eng->itemFactory->spawnItem(item_dynamite);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_molotov);
-    item->numberOfItems = eng->dice.getInRange(2, 3);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_ironSpike);
-    item->numberOfItems = eng->dice.getInRange(5, 8);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_flare);
-    item->numberOfItems = eng->dice.getInRange(3, 5);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnItem(item_throwingKnife);
-    item->numberOfItems = eng->dice.getInRange(8, 12);
-    m_inventory->putItemInSlot(slot_missiles, item, true, true);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(true, false);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(true, false);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    item->setRealDefinitionNames(eng, true);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(false, true);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    m_inventory->putItemInGeneral(item);
-
-    item = eng->itemFactory->spawnRandomScrollOrPotion(false, true);
-    item->numberOfItems = eng->dice.getInRange(1, 2);
-    item->setRealDefinitionNames(eng, true);
-    m_inventory->putItemInGeneral(item);
-
-    eng->playerBonusHandler->increaseBonusForAbility(ability_searching);
-    eng->playerBonusHandler->increaseBonusForAbility(ability_stealth);
-
-    m_instanceDefinition.HP_max = 16;
-    m_instanceDefinition.HP = m_instanceDefinition.HP_max;
-  }
-  break;
-
-  default: {} break;
+  default:
+    weaponId = item_dagger;
+    break;
   }
 
+  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
 
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
-//	int NR_OF_CARTRIDGES = eng->dice.getInRange(1, 3);
-//	int NR_OF_DYNAMITE = eng->dice.getInRange(2, 4);
-//	int NR_OF_MOLOTOV = eng->dice.getInRange(2, 4);
-//	int NR_OF_FLARES = eng->dice.getInRange(3, 5);
-//	int NR_OF_THROWING_KNIVES = eng->dice.getInRange(7, 12);
-//	int NR_OF_SPIKES = eng->dice.getInRange(3, 4);
-//
-//	const int NR_OF_POSSIBLE_WEAPONS = 6;
-//
-//	const int WEAPON_CHOICE = eng->dice.getInRange(1, NR_OF_POSSIBLE_WEAPONS);
-//	ItemDevNames_t weaponId = item_dagger;
-//	switch(WEAPON_CHOICE) {
-//	case 1:
-//		weaponId = item_dagger;
-//		break;
-//	case 2:
-//		weaponId = item_hatchet;
-//		break;
-//	case 3:
-//		weaponId = item_club;
-//		break;
-//	case 4:
-//		weaponId = item_hammer;
-//		break;
-//	case 5:
-//		weaponId = item_machete;
-//		break;
-//	case 6:
-//		weaponId = item_axe;
-//		break;
-//
-//	default:
-//		weaponId = item_dagger;
-//		break;
-//	}
-//
-//	m_inventory->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-//
-//	m_inventory->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
-//
-//	for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
-//		m_inventory->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
-//	}
-//
-//	Item* item = eng->itemFactory->spawnItem(item_dynamite);
-//	item->numberOfItems = NR_OF_DYNAMITE;
-//	m_inventory->putItemInGeneral(item);
-//
-//	item = eng->itemFactory->spawnItem(item_molotov);
-//	item->numberOfItems = NR_OF_MOLOTOV;
-//	m_inventory->putItemInGeneral(item);
-//
-//	item = eng->itemFactory->spawnItem(item_flare);
-//	item->numberOfItems = NR_OF_FLARES;
-//	m_inventory->putItemInGeneral(item);
-//
-//	item = eng->itemFactory->spawnItem(item_throwingKnife);
-//	item->numberOfItems = NR_OF_THROWING_KNIVES;
-//	m_inventory->putItemInSlot(slot_missiles, item, true, true);
-//
-//	item = eng->itemFactory->spawnItem(item_ironSpike);
-//	item->numberOfItems = NR_OF_SPIKES;
-//	m_inventory->putItemInGeneral(item);
+  for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
+    inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
+  }
+
+  Item* item = eng->itemFactory->spawnItem(item_dynamite);
+  item->numberOfItems = NR_OF_DYNAMITE;
+  inventory_->putItemInGeneral(item);
+
+  item = eng->itemFactory->spawnItem(item_molotov);
+  item->numberOfItems = NR_OF_MOLOTOV;
+  inventory_->putItemInGeneral(item);
+
+  item = eng->itemFactory->spawnItem(item_flare);
+  item->numberOfItems = NR_OF_FLARES;
+  inventory_->putItemInGeneral(item);
+
+  item = eng->itemFactory->spawnItem(item_throwingKnife);
+  item->numberOfItems = NR_OF_THROWING_KNIVES;
+  inventory_->putItemInSlot(slot_missiles, item, true, true);
+
+  item = eng->itemFactory->spawnItem(item_ironSpike);
+  item->numberOfItems = NR_OF_SPIKES;
+  inventory_->putItemInGeneral(item);
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
-  const unsigned int NR_OF_STATUS_EFFECTS = m_statusEffectsHandler->effects.size();
+  const unsigned int NR_OF_STATUS_EFFECTS = statusEffectsHandler_->effects.size();
   lines.push_back(intToString(NR_OF_STATUS_EFFECTS));
   for(unsigned int i = 0; i < NR_OF_STATUS_EFFECTS; i++) {
-    lines.push_back(intToString(m_statusEffectsHandler->effects.at(i)->getEffectId()));
-    lines.push_back(intToString(m_statusEffectsHandler->effects.at(i)->turnsLeft));
+    lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->getEffectId()));
+    lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->turnsLeft));
   }
 
   lines.push_back(intToString(insanityLong));
   lines.push_back(intToString(insanityShort));
-  lines.push_back(intToString(arcaneKnowledge));
-  lines.push_back(intToString(m_instanceDefinition.HP));
-  lines.push_back(intToString(m_instanceDefinition.HP_max));
+  lines.push_back(intToString(mythosKnowledge));
+  lines.push_back(intToString(hp_));
+  lines.push_back(intToString(hpMax_));
   lines.push_back(intToString(pos.x));
   lines.push_back(intToString(pos.y));
   lines.push_back(intToString(dynamiteFuseTurns));
@@ -341,7 +140,9 @@ void Player::actorSpecific_hit(const int DMG) {
   }
 
   //Hit gives a little shock
-  shock(shockValue_mild, 0);
+  if(insanityCompulsions[insanityCompulsion_masochism] == false) {
+    shock(shockValue_mild, 0);
+  }
 
   eng->renderer->drawMapAndInterface(true);
 }
@@ -354,18 +155,18 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
     const int TURNS = stringToInt(lines.front());
     lines.erase(lines.begin());
-    m_statusEffectsHandler->attemptAddEffect(m_statusEffectsHandler->makeEffectFromId(id, TURNS), true, true);
+    statusEffectsHandler_->attemptAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
   }
 
   insanityLong = stringToInt(lines.front());
   lines.erase(lines.begin());
   insanityShort = stringToInt(lines.front());
   lines.erase(lines.begin());
-  arcaneKnowledge = stringToInt(lines.front());
+  mythosKnowledge = stringToInt(lines.front());
   lines.erase(lines.begin());
-  m_instanceDefinition.HP = stringToInt(lines.front());
+  hp_ = stringToInt(lines.front());
   lines.erase(lines.begin());
-  m_instanceDefinition.HP_max = stringToInt(lines.front());
+  hpMax_ = stringToInt(lines.front());
   lines.erase(lines.begin());
   pos.x = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -389,12 +190,9 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
-  const int PLAYER_FORTITUDE = m_instanceDefinition.abilityValues.getAbilityValue(ability_resistStatusMind, true);
+  const int PLAYER_FORTITUDE = def_->abilityValues.getAbilityValue(ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
-    const int FORTITUDE_AT_RANK_ZERO = eng->playerBonusHandler->getBonusAbilityModifierAtRank(ability_resistStatusMind, 0);
-    const int SHOCK_REDUCTION_PERCENT = min(100, max(0, PLAYER_FORTITUDE - FORTITUDE_AT_RANK_ZERO));
-
     int baseIncr = 0;
     switch(shockValue) {
     case shockValue_none: {
@@ -415,9 +213,10 @@ void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
     break;
     }
 
-    const int SHOCK_AFTER_FORTITUDE = (baseIncr * (100 - SHOCK_REDUCTION_PERCENT)) / 100;
+    const bool IS_SHOCK_REDUCED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
+    const int SHOCK_TAKEN = IS_SHOCK_REDUCED ? (baseIncr * (100 - 20)) / 100 : baseIncr;
 
-    insanityShort = min(100, insanityShort + max(0, SHOCK_AFTER_FORTITUDE + MODIFIER));
+    insanityShort = min(100, insanityShort + max(0, SHOCK_TAKEN + MODIFIER));
   }
 }
 
@@ -442,7 +241,7 @@ void Player::incrInsanityLong() {
     bool playerSeeShockingMonster = false;
     getSpotedEnemies();
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      const ActorDefinition* const def = spotedEnemies.at(i)->getInstanceDefinition();
+      const ActorDefinition* const def = spotedEnemies.at(i)->getDef();
       if(def->shockValue > shockValue_none) {
         playerSeeShockingMonster = true;
       }
@@ -480,7 +279,7 @@ void Player::incrInsanityLong() {
       case 3: {
         popupMessage += "I struggle to not fall into a stupor.";
         eng->popup->showMessage(popupMessage, true);
-        m_statusEffectsHandler->attemptAddEffect(new StatusFainted(eng));
+        statusEffectsHandler_->attemptAddEffect(new StatusFainted(eng));
         return;
       }
       break;
@@ -510,28 +309,25 @@ void Player::incrInsanityLong() {
           if(eng->dice(1, 2) == 1) {
             if(spotedEnemies.size() > 0) {
               const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
-              if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
+              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
                 popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
                 eng->popup->showMessage(popupMessage, true);
                 insanityPhobias[insanityPhobia_rat] = true;
                 return;
               }
-              if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isSpider == true && insanityPhobias[insanityPhobia_spider]
-                  == false) {
+              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
                 popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
                 eng->popup->showMessage(popupMessage, true);
                 insanityPhobias[insanityPhobia_spider] = true;
                 return;
               }
-              if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isCanine == true && insanityPhobias[insanityPhobia_dog]
-                  == false) {
+              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
                 popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
                 eng->popup->showMessage(popupMessage, true);
                 insanityPhobias[insanityPhobia_dog] = true;
                 return;
               }
-              if(spotedEnemies.at(MONSTER_ROLL)->getInstanceDefinition()->isUndead == true && insanityPhobias[insanityPhobia_undead]
-                  == false) {
+              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
                 popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
                 eng->popup->showMessage(popupMessage, true);
                 insanityPhobias[insanityPhobia_undead] = true;
@@ -699,24 +495,24 @@ void Player::testPhobias() {
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      if(spotedEnemies.at(0)->getInstanceDefinition()->isCanine == true && insanityPhobias[insanityPhobia_dog] == true) {
+      if(spotedEnemies.at(0)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == true) {
         eng->log->addMessage("I am plagued by my canine phobia!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getInstanceDefinition()->isRat == true && insanityPhobias[insanityPhobia_rat] == true) {
+      if(spotedEnemies.at(0)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == true) {
         eng->log->addMessage("I am plagued by my rat phobia!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getInstanceDefinition()->isUndead == true && insanityPhobias[insanityPhobia_undead] == true) {
+      if(spotedEnemies.at(0)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == true) {
         eng->log->addMessage("I am plagued by my phobia of the dead!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getInstanceDefinition()->isSpider == true && insanityPhobias[insanityPhobia_spider] == true) {
+      if(spotedEnemies.at(0)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == true) {
         eng->log->addMessage("I am plagued by my spider phobia!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -725,7 +521,7 @@ void Player::testPhobias() {
     if(insanityPhobias[insanityPhobia_openPlace] == true) {
       if(isStandingInOpenSpace()) {
         eng->log->addMessage("I am plagued by my phobia of open places!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -733,7 +529,7 @@ void Player::testPhobias() {
     if(insanityPhobias[insanityPhobia_closedPlace] == true) {
       if(isStandingInCrampedSpace()) {
         eng->log->addMessage("I am plagued by my phobia of closed places!");
-        m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -741,42 +537,40 @@ void Player::testPhobias() {
 
   if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown && insanityPhobias[insanityPhobia_deepPlaces]) {
     eng->log->addMessage("I am plagued by my phobia of deep places!");
-    m_statusEffectsHandler->attemptAddEffect(new StatusTerrified(eng->dice(2, 6) + 6));
+    statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(2, 6) + 6));
     return;
   }
 }
 
 void Player::updateColor() {
-  SDL_Color& clr = m_instanceDefinition.color;
-
   if(deadState != actorDeadState_alive) {
-    clr = clrRedLight;
+    clr_ = clrRed;
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = m_statusEffectsHandler->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
-    clr = clrFromStatusEffect;
+    clr_ = clrFromStatusEffect;
     return;
   }
 
   if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
-    clr = clrYellow;
+    clr_ = clrYellow;
     return;
   }
 
-  if(getHP() <= getHP_max() / 3 + 1) {
-    clr = clrRed;
+  if(getHp() <= getHpMax() / 3 + 1) {
+    clr_ = clrRed;
     return;
   }
 
   const int CUR_SHOCK = insanityShort + insanityShortTemp;
   if(CUR_SHOCK >= 75) {
-    clr = clrMagenta;
+    clr_ = clrMagenta;
     return;
   }
 
-  clr = m_archetypeDefinition->color;
+  clr_ = def_->color;
 }
 
 void Player::act() {
@@ -829,7 +623,7 @@ void Player::act() {
   //Lose short-term sanity from seen monsters?
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
-    const ActorDefinition* const def = monster->getInstanceDefinition();
+    const ActorDefinition* const def = monster->getDef();
     if(def->shockValue != shockValue_none) {
       shock(def->shockValue, -(monster->shockDecrease));
       monster->shockDecrease++;
@@ -886,7 +680,7 @@ void Player::act() {
             if(firstAidTurnsLeft > 0 || waitTurnsLeft > 0) {
               eng->renderer->drawMapAndInterface();
               const string MONSTER_NAME = actor->getNameA();
-              eng->log->addMessage(MONSTER_NAME + " comes into my view.");
+              eng->log->addMessage(MONSTER_NAME + " comes into my view.", clrWhite, messageInterrupt_force);
             }
             monster->messageMonsterInViewPrinted = true;
           }
@@ -896,7 +690,7 @@ void Player::act() {
           //Is the monster sneaking? Try to spot it
           if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
             if(monster->isStealth) {
-              const int PLAYER_SEARCH_SKILL = m_instanceDefinition.abilityValues.getAbilityValue(ability_searching, true);
+              const int PLAYER_SEARCH_SKILL = def_->abilityValues.getAbilityValue(ability_searching, true, *this);
               const AbilityRollResult_t rollResult = eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
               if(rollResult == successSmall) {
                 eng->log->addMessage("I see something moving in the shadows.");
@@ -916,19 +710,18 @@ void Player::act() {
 
   if(firstAidTurnsLeft == -1) {
 
-    //Passive HP-regeneration from high first aid?
-    if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 3) {
-      if(m_statusEffectsHandler->hasEffect(statusDiseased) == false) {
+    if(eng->playerBonusHandler->isBonusPicked(playerBonus_rapidRejuvenator)) {
+      if(statusEffectsHandler_->hasEffect(statusDiseased) == false) {
         const int REGEN_N_TURN = 8;
         if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
-          if(getHP() < getHP_max()) {
-            m_instanceDefinition.HP++;
+          if(getHp() < getHpMax()) {
+            hp_++;
           }
         }
       }
     }
 
-    if(m_statusEffectsHandler->allowSee()) {
+    if(statusEffectsHandler_->allowSee()) {
       //Look for secret doors and traps
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
@@ -954,8 +747,8 @@ void Player::act() {
     eng->log->addMessage("I finish applying first aid.");
     eng->renderer->flip();
     restoreHP(99999);
-    if(eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid) >= 2) {
-      m_statusEffectsHandler->endEffect(statusDiseased);
+    if(eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
+      statusEffectsHandler_->endEffect(statusDiseased);
     }
     firstAidTurnsLeft = -1;
   }
@@ -975,7 +768,7 @@ void Player::act() {
 }
 
 void Player::attemptIdentifyItems() {
-  //	const vector<Item*>* const general = m_inventory->getGeneral();
+  //	const vector<Item*>* const general = inventory_->getGeneral();
   //	for(unsigned int i = 0; i < general->size(); i++) {
   //		Item* const item = general->at(i);
   //		const ItemDefinition& def = item->getInstanceDefinition();
@@ -997,7 +790,7 @@ void Player::attemptIdentifyItems() {
 
 int Player::getHealingTimeTotal() const {
   const int TURNS_BEFORE_BON = 70;
-  const int PLAYER_HEALING_RANK = eng->playerBonusHandler->getBonusRankForAbility(ability_firstAid);
+  const int PLAYER_HEALING_RANK = eng->playerBonusHandler->isBonusPicked(playerBonus_adeptWoundTreater);
   return PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 }
 
@@ -1010,8 +803,8 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
   }
   waitTurnsLeft = -1;
 
-  const bool IS_FAINTED = m_statusEffectsHandler->hasEffect(statusFainted);
-  const bool IS_PARALYSED = m_statusEffectsHandler->hasEffect(statusParalyzed);
+  const bool IS_FAINTED = statusEffectsHandler_->hasEffect(statusFainted);
+  const bool IS_PARALYSED = statusEffectsHandler_->hasEffect(statusParalyzed);
   const bool IS_DEAD = deadState != actorDeadState_alive;
 
   //If monster is in view, or player is paralysed, fainted or dead, abort first aid - else query abort
@@ -1019,7 +812,7 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
     getSpotedEnemies();
     const int TOTAL_TURNS = getHealingTimeTotal();
     const bool IS_ENOUGH_TIME_PASSED = firstAidTurnsLeft < TOTAL_TURNS - 10;
-    const int MISSING_HP = getHP_max() - getHP();
+    const int MISSING_HP = getHpMax() - getHp();
     const int HP_HEALED_IF_ABORTED = IS_ENOUGH_TIME_PASSED ? (MISSING_HP * (TOTAL_TURNS - firstAidTurnsLeft)) / TOTAL_TURNS  : 0;
 
     bool isAborted = false;
@@ -1073,7 +866,7 @@ void Player::registerHeardSound(const Sound& sound) {
 
 void Player::moveDirection(const int X_DIR, const int Y_DIR) {
   if(deadState == actorDeadState_alive) {
-    coord dest = m_statusEffectsHandler->changeMoveCoord(pos, pos + coord(X_DIR, Y_DIR));
+    coord dest = statusEffectsHandler_->changeMoveCoord(pos, pos + coord(X_DIR, Y_DIR));
 
     //Trap affects leaving?
     if(dest != pos) {
@@ -1083,20 +876,20 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       }
     }
 
-    bool isSwiftMoveAlloed = false;
+    bool isSwiftMoveAllowed = false;
 
     if(dest != pos) {
       // Attack?
       Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
       if(actorAtDest != NULL) {
-        if(m_statusEffectsHandler->allowAttackMelee(true) == true) {
+        if(statusEffectsHandler_->allowAttackMelee(true) == true) {
           bool hasMeleeWeapon = false;
-          Weapon* weapon = dynamic_cast<Weapon*>(m_inventory->getItemInSlot(slot_wielded));
+          Weapon* weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
           if(weapon != NULL) {
-            if(weapon->getInstanceDefinition().isMeleeWeapon) {
+            if(weapon->getDef().isMeleeWeapon) {
               if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
-                if(weapon->getInstanceDefinition().isRangedWeapon) {
-                  const string wpnName = weapon->getInstanceDefinition().name.name_a;
+                if(weapon->getDef().isRangedWeapon) {
+                  const string wpnName = weapon->getDef().name.name_a;
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng->renderer->flip();
                   if(eng->query->yesOrNo() == false) {
@@ -1134,28 +927,28 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       }
 
       if(featuresAllowMove) {
-
         // Encumbered?
-        if(m_inventory->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
+        if(inventory_->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
           eng->log->addMessage("I am too encumbered to move!");
           eng->renderer->flip();
           return;
         }
 
-        isSwiftMoveAlloed = true;
+        isSwiftMoveAllowed = true;
         const coord oldPos = pos;
         pos = dest;
+
+        // Player bonus gives dodge chance when moving?
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_elusive)) {
+          statusEffectsHandler_->attemptAddEffect(new StatusElusive(eng), true, true);
+        }
 
         // Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
-          string message = m_statusEffectsHandler->allowSee() == false ? "I feel here: " : "I see here: ";
+          string message = statusEffectsHandler_->allowSee() == false ? "I feel here: " : "I see here: ";
           message += eng->itemData->itemInterfaceName(item, true);
           eng->log->addMessage(message + ".");
-        }
-
-        if(m_statusEffectsHandler->allowSee() == false) {
-//          FOVupdate();
         }
       }
 
@@ -1169,13 +962,15 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     // End turn (unless free turn due to bonus).
     if(pos == dest) {
       bool isFreeTurn = false;
-      if(isSwiftMoveAlloed) {
-        const int MOBILITY_SKILL = m_instanceDefinition.abilityValues.getAbilityValue(ability_mobility, true);
-        if(eng->abilityRoll->roll(MOBILITY_SKILL) >= successSmall) {
-          isFreeTurn = true;
-          eng->playerVisualMemory->updateVisualMemory();
-          eng->player->FOVupdate();
-          eng->renderer->drawMapAndInterface();
+      if(isSwiftMoveAllowed) {
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_quick)) {
+          const int CHANCE_FOR_SWIFT_MOVE = 10;
+          if(eng->dice.getInRange(0, 100) < CHANCE_FOR_SWIFT_MOVE) {
+            isFreeTurn = true;
+            eng->playerVisualMemory->updateVisualMemory();
+            eng->player->FOVupdate();
+            eng->renderer->drawMapAndInterface();
+          }
         }
       }
       if(isFreeTurn == false) {
@@ -1218,7 +1013,8 @@ void Player::kick(Actor& actorToKick) {
   //Spawn a temporary kick weapon to attack with
   Weapon* kickWeapon = NULL;
 
-  const ActorDefinition* const d = actorToKick.getInstanceDefinition();
+  const ActorDefinition* const d = actorToKick.getDef();
+
   //If kicking critters, call it a stomp instead and give it bonus hit chance
   if(d->actorSize == actorSize_floor && (d->isSpider == true || d->isRat == true)) {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerStomp));
@@ -1275,7 +1071,7 @@ void Player::FOVupdate() {
     }
   }
 
-  if(m_statusEffectsHandler->allowSee()) {
+  if(statusEffectsHandler_->allowSee()) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeVisionBlockerArray(pos, blockers);
     eng->fov->runPlayerFov(blockers, pos);

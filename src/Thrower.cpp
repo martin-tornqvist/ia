@@ -68,7 +68,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
 	if(itemStack != NULL) {
 
-		const ItemDefinition& itemDefStack = itemStack->getInstanceDefinition();
+		const ItemDefinition& itemDefStack = itemStack->getDef();
 
 		//Get path
 		vector<coord> path;
@@ -78,7 +78,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
 		Actor* const actorAtAimPos = eng->mapTests->getActorAtPos(aim);
 		if(actorAtAimPos != NULL) {
-			if(actorAtAimPos->getInstanceDefinition()->actorSize >= actorSize_humanoid) {
+			if(actorAtAimPos->getDef()->actorSize >= actorSize_humanoid) {
 				continueUntilSolid = true;
 			}
 		}
@@ -88,7 +88,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		// Copy item stack to a new item, and decrease stack by 1 (possibly destroying it)
 		Item* itemThrown = eng->itemFactory->copyItem(itemStack);
 		itemThrown->numberOfItems = 1;
-		const ItemDefinition& itemDefThrown = itemThrown->getInstanceDefinition();
+		const ItemDefinition& itemDefThrown = itemThrown->getDef();
 
 		inventory->decreaseItemInSlot(slot_missiles);
 
@@ -106,7 +106,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		int blockedInElement = -1;
 
 		const int WPN_BASE_ABILITY = itemDefThrown.missileBaseAttackSkill;
-		const int ACTOR_ABILITY = actorThrowing->getInstanceDefinition()->abilityValues.getAbilityValue(ability_accuracyRanged, true);
+		const int ACTOR_ABILITY = actorThrowing->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, true, *(actorThrowing));
 		const int TOTAL_ABILITY = WPN_BASE_ABILITY + ACTOR_ABILITY;
 		const AbilityRollResult_t rollResult = eng->abilityRoll->roll(TOTAL_ABILITY);
 
@@ -163,7 +163,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 				}
 
 				//If actor hit by accident
-				if(actorHere->getInstanceDefinition()->actorSize >= actorSize_humanoid && eng->dice(1, 100) < 25) {
+				if(actorHere->getDef()->actorSize >= actorSize_humanoid && eng->dice(1, 100) < 25) {
 					if(eng->map->playerVision[path.at(i).x][path.at(i).y] == true) {
 						eng->renderer->drawCharacter('*', renderArea_mainScreen, path.at(i).x, path.at(i).y, clrRedLight);
 						eng->renderer->flip();
@@ -191,7 +191,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 		}
 
 		//If no actor blocked the potion, collide it on the landscape
-		if(itemThrown->getInstanceDefinition().isQuaffable == true) {
+		if(itemThrown->getDef().isQuaffable == true) {
 			if(blockedInElement == -1) {
 				dynamic_cast<Potion*>(itemThrown)->collide(path.back(), NULL, itemDefThrown, eng);
 				delete itemThrown;
@@ -207,7 +207,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 			const MaterialType_t materialAtDropPos = eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
 			if(materialAtDropPos == materialType_hard) {
 			   const bool IS_ALERTING_MONSTERS = actorThrowing == eng->player;
-            Sound sound(itemThrown->getInstanceDefinition().landOnHardSurfaceSoundMessage, true, dropPos, false, IS_ALERTING_MONSTERS);
+            Sound sound(itemThrown->getDef().landOnHardSurfaceSoundMessage, true, dropPos, false, IS_ALERTING_MONSTERS);
             eng->soundEmitter->emitSound(sound);
 			}
 			eng->itemDrop->dropItemOnMap(dropPos, &itemThrown);

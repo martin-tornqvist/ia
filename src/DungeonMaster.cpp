@@ -48,7 +48,7 @@ const int XP_STEP = 60;
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
 
 // - THIS NUMBER AFFECTS LEVELING RATE -
-const int BASE_MONSTERS_TO_LVL = 40;
+const int BASE_MONSTERS_TO_LVL = 35;
 
 void DungeonMaster::init() {
 	playerExp = 0;
@@ -122,7 +122,7 @@ void DungeonMaster::initExpTable() {
 }
 
 void DungeonMaster::monsterKilled(Actor* monster) {
-	const int MONSTER_LVL = monster->getInstanceDefinition()->monsterLvl;
+	const int MONSTER_LVL = monster->getDef()->monsterLvl;
 
 	// Dividing monster level by 2, to not have such a steep XP increase with monster levels
 	const int MONSTER_XP = getXpToNextLvlAtLvl(MONSTER_LVL) / (BASE_MONSTERS_TO_LVL + (MONSTER_LVL / 2));
@@ -133,8 +133,7 @@ void DungeonMaster::monsterKilled(Actor* monster) {
 		playerGainsExp(MONSTER_XP);
 	}
 
-	monster->getArchetypeDefinition()->nrOfKills += 1;
-	monster->getInstanceDefinition() ->nrOfKills += 1;
+	monster->getDef()->nrOfKills += 1;
 
 	if(MONSTER_LVL > 1) {
 		if(eng->player->insanityCompulsions[insanityCompulsion_sadism] == true) {
@@ -159,11 +158,9 @@ void DungeonMaster::playerGainsExp(int exp) {
 						eng->renderer->flip();
 						eng->query->waitForKeyPress();
 
-						int& hp_max = eng->player->getInstanceDefinition()->HP_max;
+						eng->player->hpMax_ += 2;
 
-						hp_max += 2;
-
-						eng->player->restoreHP(hp_max / 2, false);
+						eng->player->restoreHP(eng->player->hpMax_ / 2, false);
 
 						eng->playerAllocBonus->run();
 						eng->log->clearLog();
@@ -173,18 +170,6 @@ void DungeonMaster::playerGainsExp(int exp) {
 			}
 		}
 	}
-}
-
-bool DungeonMaster::hasClassBonusAtRank(const PlayerBackgrounds_t background, const PlayerClassBonusRanks_t rank) {
-	if(eng->playerCreateCharacter->getPlayerBackground() == background) {
-		switch(rank) {
-		case playerClassBonusRanks_one: {return playerLvl >= CLASS_BONUS_LEVEL_FIRST;} break;
-		case playerClassBonusRanks_two: {return playerLvl >= CLASS_BONUS_LEVEL_SECOND;} break;
-		case playerClassBonusRanks_three: {return playerLvl >= CLASS_BONUS_LEVEL_THIRD;} break;
-		default: {tracer << "[WARNING] Illegal rank level, in DungeonMaster::hasClassBonusAtRank()" << endl;} break;
-		}
-	}
-	return false;
 }
 
 

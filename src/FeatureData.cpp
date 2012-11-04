@@ -62,7 +62,7 @@ void FeatureData::makeList() {
   d.id = feature_stoneWall;
   d.name_a = "a stone wall";
   d.name_the = "the stone wall";
-  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == 0 ? '#' : 10;
+  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_wall;
   d.isMovePassable[moveType_walk] = false;
@@ -86,7 +86,7 @@ void FeatureData::makeList() {
   d.id = feature_stoneWallSlimy;
   d.name_a = "a slimy stone wall";
   d.name_the = "the slimy stone wall";
-  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == 0 ? '#' : 10;
+  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
   d.color = clrGreen;
   d.tile = tile_wall;
   d.isMovePassable[moveType_walk] = false;
@@ -369,7 +369,7 @@ void FeatureData::makeList() {
   d.id = feature_caveWall;
   d.name_a = "a cavern wall";
   d.name_the = "the cavern wall";
-  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == 0 ? '#' : 10;
+  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_squareCheckered;
   d.isMovePassable[moveType_walk] = false;

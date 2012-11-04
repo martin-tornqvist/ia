@@ -11,7 +11,7 @@ public:
 			if(soundsHeard.empty() == false) {
 				for(unsigned int i = 0; i < soundsHeard.size(); i++) {
 					if(soundsHeard.at(i).getIsAlertingMonsters()) {
-						monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
+						monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
 					}
 				}
 			}

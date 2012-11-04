@@ -6,31 +6,31 @@
 
 class AI_look_becomePlayerAware {
 public:
-	static void learn(Monster* monster, Engine* engine) {
-		if(monster->deadState == actorDeadState_alive) {
+  static void learn(Monster* monster, Engine* engine) {
+    if(monster->deadState == actorDeadState_alive) {
 
-			monster->getSpotedEnemies();
+      monster->getSpotedEnemies();
 
-			if(monster->spotedEnemies.size() > 0 && monster->playerAwarenessCounter > 0) {
-				monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
-				return;
-			}
+      if(monster->spotedEnemies.size() > 0 && monster->playerAwarenessCounter > 0) {
+        monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+        return;
+      }
 
-			for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
-				Actor* const actor = monster->spotedEnemies.at(i);
-				if(actor == engine->player) {
-					const int PLAYER_SNEAK = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_stealth, true);
-					if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
-						monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
-						return;
-					}
-				} else {
-					monster->playerAwarenessCounter = monster->getInstanceDefinition()->nrTurnsAwarePlayer;
-					return;
-				}
-			}
-		}
-	}
+      for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
+        Actor* const actor = monster->spotedEnemies.at(i);
+        if(actor == engine->player) {
+          const int PLAYER_SNEAK = engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *monster);
+          if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
+            monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+            return;
+          }
+        } else {
+          monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+          return;
+        }
+      }
+    }
+  }
 
 private:
 

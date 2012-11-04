@@ -11,24 +11,24 @@ class Engine;
 
 class ItemFactory {
 public:
-	ItemFactory(Engine* engine) {
-		eng = engine;
-	}
+  ItemFactory(Engine* engine) {
+    eng = engine;
+  }
 
-	Item* spawnItem(ItemDevNames_t devName);
+  Item* spawnItem(ItemDevNames_t devName);
 
-	Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
+  Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
 
-	Item* spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType);
+  Item* spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType);
 
-	Item* spawnItemOnMap(ItemDevNames_t devName, const coord pos);
+  Item* spawnItemOnMap(ItemDevNames_t devName, const coord pos);
 
-	Item* copyItem(Item* oldItem);
+  Item* copyItem(Item* oldItem);
 
-	//void deleteAllItemsOnGround();
+  //void deleteAllItemsOnGround();
 
 private:
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

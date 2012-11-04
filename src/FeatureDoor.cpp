@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Postmortem.h"
+#include "PlayerBonuses.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
@@ -186,7 +187,7 @@ void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(abilityUsed, true);
+      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
 
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
@@ -265,7 +266,8 @@ void Door::tryBash(Actor* actorTrying) {
     }
 
     //Various things that can happen...
-    const int SKILL_VALUE_SMASH = actorTrying == eng->player ? 60 - min(58, nrOfSpikes_ * 20) : 10 - min(9, nrOfSpikes_ * 3);
+    const int BON = eng->playerBonusHandler->isBonusPicked(playerBonus_tough) ? 20 : 0;
+    const int SKILL_VALUE_SMASH = actorTrying == eng->player ? 60 + BON - min(58, nrOfSpikes_ * 20) : 10 - min(9, nrOfSpikes_ * 3);
     const bool DOOR_SMASHED = material_ == doorMaterial_metal ? false : eng->abilityRoll->roll(SKILL_VALUE_SMASH) >= successSmall;
 
     if(IS_PLAYER) {
@@ -350,6 +352,14 @@ void Door::tryClose(Actor* actorTrying) {
 
   bool closable = true;
 
+  if(isOpenedAndClosedExternally_) {
+    if(IS_PLAYER) {
+      eng->log->addMessage("This door refuses to be closed, perhaps it is handled elsewhere?");
+      eng->renderer->flip();
+    }
+    return;
+  }
+
   //Broken?
   if(isBroken_) {
     closable = false;
@@ -390,7 +400,6 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   if(closable) {
-
     //Door is in correct state for closing (open, working, not blocked)
 
     // TODO need sound

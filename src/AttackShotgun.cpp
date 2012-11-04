@@ -169,10 +169,10 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 									printProjectileAtActorMessages(data, projectileHitType_cleanHit);
 
 									//Damage
-									const bool DIED = data.currentDefender->hit(data.dmg, weapon->getInstanceDefinition().rangedDamageType);
+									const bool DIED = data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
 									if(DIED == true) {
 										if(data.currentDefender == eng->player) {
-											eng->postmortem->setCauseOfDeath(weapon->getInstanceDefinition().causeOfDeathMessage);
+											eng->postmortem->setCauseOfDeath(weapon->getDef().causeOfDeathMessage);
 										}
 									}
 
@@ -213,7 +213,7 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 								printProjectileAtActorMessages(data, projectileHitType_strayHit);
 
 								//Damage
-								data.currentDefender->hit(data.dmg / strayShotDivide, weapon->getInstanceDefinition().rangedDamageType);
+								data.currentDefender->hit(data.dmg / strayShotDivide, weapon->getDef().rangedDamageType);
 
 								blockingArray[curX][curY] = 1;
 

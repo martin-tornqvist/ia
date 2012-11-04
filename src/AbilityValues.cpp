@@ -7,80 +7,138 @@
 #include "PlayerBonuses.h"
 #include "BasicUtils.h"
 
-//Return ability values for owning actor. Values are either returned
-//affected by owned actors current status effects (like harder to hit
-//when blinded), or as base value only, which is used for example when
-//picking skills at level up. Players skills are affected by hunger.
-int AbilityValues::getAbilityValue(const Abilities_t devName, const bool affectedByStatusEffects) const {
-	int val = abilityList[devName];
+int AbilityValues::getAbilityValue(const Abilities_t ability,
+                                   const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+                                   Actor& actor) const {
+  int val = abilityList[ability];
 
-	if(affectedByStatusEffects) {
-		val += m_actor->getStatusEffectsHandler()->getAbilityModifier(devName);
-	}
+  if(IS_AFFECTED_BY_STATUS_EFFECTS) {
+    val += actor.getStatusEffectsHandler()->getAbilityModifier(ability);
+  }
 
-	const bool IS_PLAYER = m_actor == m_actor->eng->player;
-	if(IS_PLAYER) {
-		val += m_actor->eng->playerBonusHandler->getBonusAbilityModifier(devName);
+  if(&actor == eng->player) {
+    switch(ability) {
+    case ability_searching: {
+      val += 1;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_observant))
+        val += 5;
+    } break;
 
-		//Searching must be at least 1
-		if(devName == ability_searching) {
-			val = max(1, val);
-		}
-	}
+    case ability_accuracyMelee: {
+      val += 35;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptMeleeCombatant))
+        val += 15;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulMeleeCombatant))
+        val += 15;
+    } break;
 
-	val = max(0, min(99, val));
+    case ability_accuracyRanged: {
+      val += 40;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptRangedCombatant))
+        val += 15;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulRangedCombatant))
+        val += 15;
+    } break;
 
-	return val;
+    case ability_dodgeTrap: {
+      val += 5;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
+        val += 20;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_athletic))
+        val += 20;
+    } break;
+
+    case ability_dodgeAttack: {
+      val += 5;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
+        val += 20;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_athletic))
+        val += 20;
+    } break;
+
+    case ability_resistStatusBody: {
+      val += 25;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_tough))
+        val += 20;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_rugged))
+        val += 20;
+    } break;
+
+    case ability_resistStatusMind: {
+      val += 25;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_strongMinded))
+        val += 20;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_unyielding))
+        val += 20;
+    } break;
+
+    case ability_stealth: {
+      val += 30;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_stealthy))
+        val += 40;
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_imperceptible))
+        val += 25;
+    } break;
+    default: {
+    } break;
+    }
+
+    //Searching must be at least 1
+    if(ability == ability_searching) {
+      val = max(1, val);
+    }
+  }
+
+  val = max(0, val);
+
+  return val;
 }
 
-AbilityRollResult_t AbilityRoll::roll(const int totalAbilityValue) const {
-    const int ROLL = eng->dice(1,100);
+AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
+  const int ROLL = eng->dice(1, 100);
 
-	const int successCriticalLimit  = static_cast<int>(ceil(static_cast<float>(totalAbilityValue)/20.0));
-	const int successBigLimit       = static_cast<int>(ceil(static_cast<float>(totalAbilityValue)/5.0));
-	const int successNormalLimit    = static_cast<int>(ceil(static_cast<float>(totalAbilityValue)*4.0/5.0));
-	const int successSmallLimit     = totalAbilityValue;
-	const int failSmallLimit        = 2 * totalAbilityValue - successNormalLimit;
-	const int failNormalLimit       = 2 * totalAbilityValue - successBigLimit;
-	const int failBigLimit          = 98;
+  const int successCriticalLimit  = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) / 20.0));
+  const int successBigLimit       = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) / 5.0));
+  const int successNormalLimit    = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) * 4.0 / 5.0));
+  const int successSmallLimit     = TOTAL_SKILL_VALUE;
+  const int failSmallLimit        = 2 * TOTAL_SKILL_VALUE - successNormalLimit;
+  const int failNormalLimit       = 2 * TOTAL_SKILL_VALUE - successBigLimit;
+  const int failBigLimit          = 98;
 
-	if(ROLL <= successCriticalLimit)	return successCritical;
-	if(ROLL <= successBigLimit)			return successBig;
-	if(ROLL <= successNormalLimit)		return successNormal;
-	if(ROLL <= successSmallLimit)		return successSmall;
-	if(ROLL <= failSmallLimit)			return failSmall;
-	if(ROLL <= failNormalLimit)			return failNormal;
-	if(ROLL <= failBigLimit)			return failBig;
+  if(ROLL <= successCriticalLimit)	return successCritical;
+  if(ROLL <= successBigLimit)			return successBig;
+  if(ROLL <= successNormalLimit)		return successNormal;
+  if(ROLL <= successSmallLimit)		return successSmall;
+  if(ROLL <= failSmallLimit)			return failSmall;
+  if(ROLL <= failNormalLimit)			return failNormal;
+  if(ROLL <= failBigLimit)			return failBig;
 
-	return failCritical;
+  return failCritical;
 
-	/* Example:
-	-----------
-	Ability = 50
+  /* Example:
+  -----------
+  Ability = 50
 
-	Roll:
-	1  -   3: Critical  success
-	4  -  10: Big       success
-	11 -  40: Normal    success
-	41 -  50: Small     Success
-	51 -  60: Small     Fail
-	61 -  90: Normal    Fail
-	91 -  98: Big       Fail
-	99 - 100: Critical  Fail */
+  Roll:
+  1  -   3: Critical  success
+  4  -  10: Big       success
+  11 -  40: Normal    success
+  41 -  50: Small     Success
+  51 -  60: Small     Fail
+  61 -  90: Normal    Fail
+  91 -  98: Big       Fail
+  99 - 100: Critical  Fail */
 }
 
 
 void AbilityValues::reset() {
-	for(unsigned int i = 0; i < endOfAbilities; i++) {
-		abilityList[i] = 0;
-	}
+  for(unsigned int i = 0; i < endOfAbilities; i++) {
+    abilityList[i] = 0;
+  }
 }
 
-void AbilityValues::setAbilityValue(const Abilities_t devName, const int value) {
-	abilityList[devName] = value;
+void AbilityValues::setAbilityValue(const Abilities_t ability, const int VAL) {
+  abilityList[ability] = VAL;
 }
 
-void AbilityValues::changeAbilityValue(const Abilities_t devName, const int change) {
-	abilityList[devName] += change;
-}
 

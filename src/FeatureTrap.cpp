@@ -93,18 +93,22 @@ void Trap::setSpecificTrapFromId(const Trap_t id) {
   }
 }
 
+Trap_t Trap::getTrapType() const {
+  return specificTrap_->trapType_;
+}
+
 void Trap::triggerOnPurpose(Actor* actorTriggering) {
   const AbilityRollResult_t DODGE_RESULT = failSmall;
   specificTrap_->trapSpecificTrigger(actorTriggering, DODGE_RESULT);
 }
 
 void Trap::bump(Actor* actorBumping) {
-  const ActorDefinition* const d = actorBumping->getInstanceDefinition();
+  const ActorDefinition* const d = actorBumping->getDef();
 
   if(d->moveType == moveType_walk) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
     const bool ACTOR_CAN_SEE = actorBumping->getStatusEffectsHandler()->allowSee();
-    const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodge, true);
+    const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodgeTrap, true, *actorBumping);
     const int BASE_CHANCE_TO_AVOID = 40;
 
     const string trapName = specificTrap_->getTrapSpecificTitle();
@@ -178,7 +182,7 @@ void Trap::playerTrySpotHidden() {
   if(isHidden_) {
     if(eng->mapTests->isCellsNeighbours(pos_, eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(abilityUsed, true);
+      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
 
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
@@ -534,7 +538,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
     const bool PLAYER_CAN_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
     const string actorName = actor->getNameThe();
 
-    const int ABILITY_VALUE = max(30, actor->getInstanceDefinition()->abilityValues.getAbilityValue(ability_resistStatusBody, true));
+    const int ABILITY_VALUE = max(30, actor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *actor));
 
     const AbilityRollResult_t rollResult = eng->abilityRoll->roll(ABILITY_VALUE);
     if(rollResult >= successSmall) {
@@ -571,4 +575,3 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
   }
   return dest;
 }
-

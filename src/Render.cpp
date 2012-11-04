@@ -494,7 +494,7 @@ void Renderer::drawASCII() {
     actor = eng->gameTime->getActorAt(i);
     xPos = actor->pos.x;
     yPos = actor->pos.y;
-    if(actor->deadState == actorDeadState_corpse && actor->getInstanceDefinition()->glyph != ' ' && eng->map->playerVision[xPos][yPos]) {
+    if(actor->deadState == actorDeadState_corpse && actor->getDef()->glyph != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArray[xPos][yPos];
       currentDrw->color = actor->getColor();
       currentDrw->glyph = actor->getGlyph();
@@ -734,7 +734,7 @@ void Renderer::drawTiles() {
   bool isWieldingRangedWeapon = false;
   Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
   if(item != NULL) {
-    isWieldingRangedWeapon = item->getInstanceDefinition().isRangedWeapon;
+    isWieldingRangedWeapon = item->getDef().isRangedWeapon;
   }
   drawTileInMap(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
                 eng->player->pos.x, eng->player->pos.y, eng->player->getColor());

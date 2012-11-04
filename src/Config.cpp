@@ -82,6 +82,8 @@ void Config::runOptionsMenu() {
     break;
 
     case menuAction_canceled: {
+      // Since ASCII mode wall symbol may have changed, we need to redefine the feature data list
+      eng->featureData->makeList();
       return;
     }
     break;

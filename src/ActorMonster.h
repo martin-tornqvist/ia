@@ -50,8 +50,8 @@ public:
   }
 
   virtual ~Monster() {
-    if(deadState == actorDeadState_alive && m_archetypeDefinition->nrLeftAllowedToSpawn == 0) {
-      m_archetypeDefinition->nrLeftAllowedToSpawn = 1;
+    if(deadState == actorDeadState_alive && def_->nrLeftAllowedToSpawn == 0) {
+      def_->nrLeftAllowedToSpawn = 1;
     }
 
     for(unsigned int i = 0; i < spellsKnown.size(); i++) {

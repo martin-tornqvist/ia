@@ -35,9 +35,9 @@ void Bot::init() {
 void Bot::runFunctionTests() {
   //TEST HIT CHANCE
   Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
-  const Abilities_t weaponAbilityUsed = weaponUsed->getInstanceDefinition().meleeAbilityUsed;
-  const int HIT_CHANCE_WEAPON = weaponUsed->getInstanceDefinition().meleeBaseAttackSkill;
-  const int HIT_CHANCE_SKILL = eng->player->getInstanceDefinition()->abilityValues.getAbilityValue(weaponAbilityUsed, true);
+  const Abilities_t weaponAbilityUsed = weaponUsed->getDef().meleeAbilityUsed;
+  const int HIT_CHANCE_WEAPON = weaponUsed->getDef().meleeBaseAttackSkill;
+  const int HIT_CHANCE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(weaponAbilityUsed, true, *(eng->player));
   const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
   const int NUMBER_OF_ATTACKS = 100;
   double hitChanceReal = 0;
@@ -49,7 +49,7 @@ void Bot::runFunctionTests() {
     Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + coord(1, 0));
     dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
     eng->attack->melee(eng->player->pos.x + 1, eng->player->pos.y, dynamic_cast<Weapon*>(weaponUsed));
-    if(actor->getHP() < actor->getHP_max()) {
+    if(actor->getHp() < actor->getHpMax()) {
       hitChanceReal += 1.0;
     }
     for(unsigned int ii = 0; ii < eng->gameTime->getLoopSize(); ii++) {
@@ -73,7 +73,7 @@ void Bot::runFunctionTests() {
 
 void Bot::act() {
   tracer << "Bot::act()" << endl;
-  
+
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
   const int NR_OF_RUNS = 100;
   int runCount = 1;
@@ -82,7 +82,7 @@ void Bot::act() {
   assert(eng->player->pos.y > 0);
   assert(eng->player->pos.x < MAP_X_CELLS - 1);
   assert(eng->player->pos.y < MAP_Y_CELLS - 1);
-  
+
   tracer << "Bot: Checking if can use stairs here" << endl;
   if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
     if(eng->map->getDungeonLevel() >= PLAY_TO_DLVL) {
@@ -134,11 +134,11 @@ void Bot::act() {
 
 bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
   tracer << "Bot::walkToAdjacentCell()..." << endl;
-  
+
   coord playerCell(eng->player->pos);
-  
+
   assert(eng->mapTests->isCellsNeighbours(playerCell, cellToGoTo, true));
-  
+
   //Get relative coordinates
   const int xRel = cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
   const int yRel = cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
@@ -148,7 +148,7 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
   }
 
   char key = ' ';
-  
+
   if(xRel == 0 && yRel == 0) {
     key = '5';
   }
@@ -176,16 +176,16 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
   if(xRel == 1 && yRel == 1) {
     key = '3';
   }
-  
+
   const int CHANCE_FOR_RANDOM_DIRECTION = 50;
   if(eng->dice(1,100) < CHANCE_FOR_RANDOM_DIRECTION) {
     key = '0' + eng->dice.getInRange(1, 9);
   }
 
   assert(key >= '1' && key <= '9');
-   
+
   eng->input->handleKeyPress(key, false, false);
-   
+
   tracer << "Bot::walkToAdjacentCell() [DONE]" << endl;
   return playerCell == cellToGoTo;
 }
