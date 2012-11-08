@@ -8,7 +8,6 @@
 
 FeatureLever::FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
-
 }
 
 SDL_Color FeatureLever::getColor() const {
@@ -16,7 +15,7 @@ SDL_Color FeatureLever::getColor() const {
 }
 
 Tile_t FeatureLever::getTile() const {
-  return isPositionLeft_ ? tile_lever_left : tile_lever_right;
+  return isPositionLeft_ ? tile_leverLeft : tile_leverRight;
 }
 
 void FeatureLever::examine() {

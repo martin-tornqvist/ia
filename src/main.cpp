@@ -108,8 +108,6 @@ int main(int argc, char* argv[]) {
               engine->bot->act();
             }
 
-            //						engine->interfaceRenderer->drawInterface();
-
             SDL_Delay(1);
 
           } else {

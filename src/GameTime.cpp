@@ -59,7 +59,6 @@ void GameTime::letNextAct() {
     eng->player->insanityShortTemp = 0;
     eng->playerVisualMemory->updateVisualMemory();
     eng->player->FOVupdate();
-    eng->specialRoomHandler->runRoomEvents();
     eng->player->setTempShockFromFeatures();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
@@ -174,6 +173,18 @@ void GameTime::runNewTurnEvents() {
     const int SPAWN_N_TURN = 55;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       eng->populate->spawnOneMonster(true);
+    }
+  }
+
+  //Player spell cooldowns
+  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+    ItemDefinition& d = *(eng->itemData->itemDefinitions[i]);
+    if(d.isScroll) {
+      if(d.isScrollLearned) {
+        if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
+          d.castFromMemoryChance++;
+        }
+      }
     }
   }
 }

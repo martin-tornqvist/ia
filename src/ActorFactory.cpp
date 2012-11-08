@@ -187,48 +187,48 @@ Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFS
   return NULL;
 }
 
-Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LVL_OFFSET) {
-  tracer << "ActorFactory::spawnRandomActorRelatedToSpecialRoom()" << endl;
-  const int DLVL = eng->map->getDungeonLevel();
-  vector<ActorDevNames_t> monsterCandidates;
-  const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
-  for(unsigned int i = 1; i < ACTORS_DEFINED; i++) {
-    const ActorDefinition& def = eng->actorData->actorDefinitions[i];
-
-    const bool IS_LVL_OK = DLVL + SPAWN_LVL_OFFSET >= def.spawnStandardMinLevel && DLVL <= def.spawnStandardMaxLevel;
-
-    const bool IS_ALLOWED_TO_SPAWN = def.spawnRate != spawnNever && def.nrLeftAllowedToSpawn != 0;
-
-    const bool IS_FEATURE_PASSABLE = eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
-
-    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
-
-    bool isBelongToRoomType = false;
-    for(unsigned int ii = 0; ii < def.nativeRooms.size(); ii++) {
-      if(def.nativeRooms.at(ii) == roomType) {
-        isBelongToRoomType = true;
-      }
-    }
-
-    if(IS_LVL_OK && IS_ALLOWED_TO_SPAWN && IS_FEATURE_PASSABLE && IS_NO_ACTOR_AT_POS && isBelongToRoomType) {
-      monsterCandidates.push_back(static_cast<ActorDevNames_t>(i));
-    }
-  }
-
-  if(monsterCandidates.empty() == false) {
-    tracer << "ActorFactory: Successfully made list of spawn candidates" << endl;
-
-    const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
-    const ActorDevNames_t monsterType = monsterCandidates.at(ELEMENT);
-
-    Actor* const actor = spawnActor(monsterType, pos);
-    tracer << "ActorFactory: Spawned " << actor->getNameA() << endl;
-
-    return actor;
-  }
-
-  return NULL;
-}
+//Actor* ActorFactory::spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LVL_OFFSET) {
+//  tracer << "ActorFactory::spawnRandomActorRelatedToSpecialRoom()" << endl;
+//  const int DLVL = eng->map->getDungeonLevel();
+//  vector<ActorDevNames_t> monsterCandidates;
+//  const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
+//  for(unsigned int i = 1; i < ACTORS_DEFINED; i++) {
+//    const ActorDefinition& def = eng->actorData->actorDefinitions[i];
+//
+//    const bool IS_LVL_OK = DLVL + SPAWN_LVL_OFFSET >= def.spawnStandardMinLevel && DLVL <= def.spawnStandardMaxLevel;
+//
+//    const bool IS_ALLOWED_TO_SPAWN = def.spawnRate != spawnNever && def.nrLeftAllowedToSpawn != 0;
+//
+//    const bool IS_FEATURE_PASSABLE = eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
+//
+//    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
+//
+//    bool isBelongToRoomType = false;
+//    for(unsigned int ii = 0; ii < def.nativeRooms.size(); ii++) {
+//      if(def.nativeRooms.at(ii) == roomType) {
+//        isBelongToRoomType = true;
+//      }
+//    }
+//
+//    if(IS_LVL_OK && IS_ALLOWED_TO_SPAWN && IS_FEATURE_PASSABLE && IS_NO_ACTOR_AT_POS && isBelongToRoomType) {
+//      monsterCandidates.push_back(static_cast<ActorDevNames_t>(i));
+//    }
+//  }
+//
+//  if(monsterCandidates.empty() == false) {
+//    tracer << "ActorFactory: Successfully made list of spawn candidates" << endl;
+//
+//    const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
+//    const ActorDevNames_t monsterType = monsterCandidates.at(ELEMENT);
+//
+//    Actor* const actor = spawnActor(monsterType, pos);
+//    tracer << "ActorFactory: Spawned " << actor->getNameA() << endl;
+//
+//    return actor;
+//  }
+//
+//  return NULL;
+//}
 
 
 void ActorFactory::deleteAllMonsters() {

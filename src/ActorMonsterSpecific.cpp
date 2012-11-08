@@ -54,9 +54,7 @@ void CultistTeslaCannon::actorSpecific_spawnStartItems() {
   Item* item = eng->itemFactory->spawnItem(item_teslaCanon);
   inventory_->putItemInSlot(slot_wielded, item, true);
 
-  item = eng->itemFactory->spawnItem(item_teslaCanister);
-  item->numberOfItems = 4;
-  inventory_->putItemInGeneral(item);
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_teslaCanister));
 
   if(eng->dice(1, 100) < 33) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));

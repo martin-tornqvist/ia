@@ -28,7 +28,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_stealthy, "Stealthy", "+40% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+25% chance to avoid being spoted by monsters", playerBonus_stealthy);
   setBonus(playerBonus_learned, "Learned", "You can read and memorize manuscripts, and examine more difficult texts");
-  setBonus(playerBonus_erudite, "Erudite", "+20% chance to cast spells from memory, can examine all texts", playerBonus_learned);
+  setBonus(playerBonus_erudite, "Erudite", "Spell cooldowns starts from 20% instead of 0%, can examine all texts", playerBonus_learned);
   setBonus(playerBonus_strongMinded, "Strong-minded", "+20% chance to resist mental status effects");
   setBonus(playerBonus_unyielding, "Unyielding", "+20% chance to resist mental status effects", playerBonus_strongMinded);
   setBonus(playerBonus_coolHeaded, "Cool-headed", "20% less shock received", playerBonus_strongMinded);

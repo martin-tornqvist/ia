@@ -326,18 +326,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     engine->player->shock(shockValue_heavy, 0);
     engine->gameTime->letNextAct();
 
-    const int CHANCE_TO_MODIDY_SPELL_HARDNESS = 40;
-    if(engine->dice(1, 100) <= CHANCE_TO_MODIDY_SPELL_HARDNESS) {
-      engine->log->addMessage("My alignment with this spell is shifting...");
-      int& chance = def_->castFromMemoryChance;
-      const bool PLAYER_IS_BLESSED = engine->player->getStatusEffectsHandler()->hasEffect(statusBlessed);
-      const bool PLAYER_IS_CURSED = engine->player->getStatusEffectsHandler()->hasEffect(statusCursed);
-      const int BON_FROM_ABILITY = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;
-      const int NEW_MIN = BON_FROM_ABILITY + (PLAYER_IS_BLESSED ? 60 : PLAYER_IS_CURSED ? 1 : 30);
-      const int NEW_MAX = BON_FROM_ABILITY + (PLAYER_IS_CURSED ? 25 : 80);
-      chance = engine->dice.getInRange(NEW_MIN, NEW_MAX);
-      engine->log->addMessage("It now has " + intToString(chance) + "% chance for a successful casting.");
-    }
+    def_->castFromMemoryChance = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;
   }
   return true;
 }

@@ -336,32 +336,32 @@ Item* ItemFactory::copyItem(Item* oldItem) {
   return newItem;
 }
 
-Item* ItemFactory::spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType) {
-  vector<ItemDevNames_t> itemCandidates;
-
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-
-    bool isNative = false;
-    for(unsigned int ii = 0; ii < d->nativeRooms.size(); ii++) {
-      if(d->nativeRooms.at(ii) == roomType) {
-        isNative = true;
-        ii = 999999;
-      }
-    }
-
-    if(isNative) {
-      itemCandidates.push_back(static_cast<ItemDevNames_t>(i));
-    }
-  }
-
-  if(itemCandidates.size() > 0) {
-    const unsigned int ELEMENT = eng->dice.getInRange(0, itemCandidates.size() - 1);
-    return spawnItem(itemCandidates.at(ELEMENT));
-  }
-
-  return NULL;
-}
+//Item* ItemFactory::spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType) {
+//  vector<ItemDevNames_t> itemCandidates;
+//
+//  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+//    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+//
+//    bool isNative = false;
+//    for(unsigned int ii = 0; ii < d->nativeRooms.size(); ii++) {
+//      if(d->nativeRooms.at(ii) == roomType) {
+//        isNative = true;
+//        ii = 999999;
+//      }
+//    }
+//
+//    if(isNative) {
+//      itemCandidates.push_back(static_cast<ItemDevNames_t>(i));
+//    }
+//  }
+//
+//  if(itemCandidates.size() > 0) {
+//    const unsigned int ELEMENT = eng->dice.getInRange(0, itemCandidates.size() - 1);
+//    return spawnItem(itemCandidates.at(ELEMENT));
+//  }
+//
+//  return NULL;
+//}
 
 Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS) {
   vector<ItemDevNames_t> itemCandidates;

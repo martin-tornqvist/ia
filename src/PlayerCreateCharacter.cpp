@@ -3,11 +3,13 @@
 #include "Engine.h"
 #include "Render.h"
 #include "ActorPlayer.h"
+#include "PlayerAllocBonus.h"
 
 void PlayerCreateCharacter::run() {
   int currentRenderYpos = 8;
   PlayerEnterName playerEnterName(eng);
   playerEnterName.run(currentRenderYpos);
+  eng->playerAllocBonus->run();
 }
 
 //-----------------------------------------------------PLAYER NAME ENTERING

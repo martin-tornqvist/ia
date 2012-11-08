@@ -82,6 +82,7 @@ class KnockBack;
 class CharacterInfo;
 class Examine;
 class PlayerCreateCharacter;
+class RoomThemeMaker;
 
 class Player;
 
@@ -163,7 +164,6 @@ public:
 	Audio* audio;
 	Popup* popup;
 	SaveHandler* saveHandler;
-	SpecialRoomHandler* specialRoomHandler;
 	JamWithSpike* jamWithSpike;
 	TrimTravelVector* trimTravelVector;
 	MenuInputHandler* menuInputHandler;
@@ -172,6 +172,7 @@ public:
 	CharacterInfo* characterInfo;
 	Examine* examine;
 	PlayerCreateCharacter* playerCreateCharacter;
+	RoomThemeMaker* roomThemeMaker;
 
 	Player* player;
 

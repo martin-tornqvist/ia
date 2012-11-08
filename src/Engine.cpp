@@ -70,9 +70,9 @@
 #include "Reload.h"
 #include "Render.h"
 #include "RenderInventory.h"
+#include "RoomTheme.h"
 #include "SaveHandler.h"
 #include "Sound.h"
-#include "SpecialRoom.h"
 #include "Spells.h"
 #include "StatusEffects.h"
 #include "TextFormatting.h"
@@ -170,7 +170,6 @@ void Engine::initGame() {
 	highScore = new HighScore(this);
 	popup = new Popup(this);
 	saveHandler = new SaveHandler(this);
-	specialRoomHandler = new SpecialRoomHandler(this);
 	jamWithSpike = new JamWithSpike(this);
 	trimTravelVector = new TrimTravelVector(this);
 	menuInputHandler = new MenuInputHandler(this);
@@ -178,6 +177,7 @@ void Engine::initGame() {
 	knockBack = new KnockBack(this);
 	examine = new Examine(this);
 	characterInfo = new CharacterInfo(this);
+	roomThemeMaker = new RoomThemeMaker(this);
 }
 
 void Engine::cleanupGame() {
@@ -239,7 +239,6 @@ void Engine::cleanupGame() {
 	delete highScore;
 	delete popup;
 	delete saveHandler;
-	delete specialRoomHandler;
 	delete bresenhamLine;
 	delete playerAllocBonus;
 	delete jamWithSpike;
@@ -249,6 +248,7 @@ void Engine::cleanupGame() {
 	delete knockBack;
 	delete examine;
 	delete characterInfo;
+	delete roomThemeMaker;
 
 	delete marker;
 }

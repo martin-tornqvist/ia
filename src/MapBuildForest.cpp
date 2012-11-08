@@ -10,6 +10,7 @@
 #include "Pathfinding.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
+#include "Map.h"
 
 void MapBuild::buildForestLimit() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {

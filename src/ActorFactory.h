@@ -20,7 +20,7 @@ public:
 
 	Actor* spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET, const bool IS_AFTER_MAP_CREATION);
 
-	Actor* spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LEVEL_OFFSET);
+//	Actor* spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LEVEL_OFFSET);
 
 private:
 	Engine* eng;

@@ -19,7 +19,7 @@ public:
 
   Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
 
-  Item* spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType);
+//  Item* spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType);
 
   Item* spawnItemOnMap(ItemDevNames_t devName, const coord pos);
 

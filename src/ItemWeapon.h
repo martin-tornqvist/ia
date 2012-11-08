@@ -64,7 +64,7 @@ public:
 
   SDL_Color getColor() const {
     if(def_->isRangedWeapon && def_->rangedHasInfiniteAmmo == false) {
-      if(ammoLoaded < ammoCapacity) {
+      if(ammoLoaded == 0) {
         SDL_Color ret = def_->color;
         ret.r /= 2;
         ret.g /= 2;

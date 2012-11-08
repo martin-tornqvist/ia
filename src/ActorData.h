@@ -6,8 +6,9 @@
 
 #include "Phrases.h"
 #include "Converters.h"
-#include "SpecialRoom.h"
 #include "AbilityValues.h"
+#include "RoomTheme.h"
+#include "ConstTypes.h"
 
 enum ActorDevNames_t {
   actor_empty,
@@ -122,7 +123,7 @@ public:
   bool canBeSummoned;
   bool canBleed;
   bool canDodge;
-  vector<SpecialRoom_t> nativeRooms;
+  vector<RoomTheme_t> nativeRooms;
 };
 
 class ActorData {

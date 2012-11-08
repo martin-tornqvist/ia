@@ -70,8 +70,6 @@ void Map::switchToDestroyedFeatAt(const coord pos) {
 void Map::clearDungeon() {
 	eng->actorFactory->deleteAllMonsters();
 
-	eng->specialRoomHandler->deleteAllSpecialRooms();
-
 	clearGrids(true);
 	eng->gameTime->eraseAllFeatureMobs();
 	eng->gameTime->resetTurnTypeAndActorCounters();

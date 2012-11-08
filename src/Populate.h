@@ -18,8 +18,8 @@ public:
 	void spawnOneMonster(const bool IS_AFTER_MAP_CREATION) const;
 
 	bool spawnGroupOfMonstersAtFreeCells(
-	   vector<coord>& freeCells, const bool IS_AFTER_MAP_CREATION, const bool ALLOW_ROAM,
-	   const SpecialRoom_t belongingToSpecialRoomType = endOfSpecialRooms) const;
+	   vector<coord>& freeCells, const bool IS_AFTER_MAP_CREATION, const bool ALLOW_ROAM /*,
+	   const RoomTheme_t belongingToSpecialRoomType = endOfRoomThemes */) const;
 
 private:
 	int getOutOfDepthOffset() const;

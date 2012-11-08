@@ -7,6 +7,7 @@
 
 #include "GameTime.h"
 #include "FeatureTrap.h"
+#include "FeatureDoor.h"
 
 using namespace std;
 

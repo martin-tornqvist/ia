@@ -8,6 +8,7 @@
 
 #include "Art.h"
 #include "ConstTypes.h"
+#include "RoomTheme.h"
 
 using namespace std;
 
@@ -39,12 +40,15 @@ enum Feature_t {
   feature_statue,
   feature_ghoulStatue,
   feature_cocoon,
+  feature_chest,
+  feature_cabinet,
+  feature_barrel,
+  feature_pillarCarved,
   feature_chasm,
   feature_shallowWater,
   feature_deepWater,
   feature_poolBlood,
   feature_shallowMud,
-  //	feature_poolAcid,
 
   feature_door,
   feature_litDynamite,
@@ -66,6 +70,52 @@ enum FeatureSpawnType_t {
 
 enum MaterialType_t {
   materialType_empty, materialType_soft, materialType_hard, materialType_fluid
+};
+
+struct ThemedFeatureSpawnRules {
+public:
+  ThemedFeatureSpawnRules() : maxNrInRoom_(-1) {
+    themesBelongingTo_.resize(0);
+  }
+
+  void set(
+    const int MAX_NR_IN_ROOM,
+    RoomTheme_t theme1 = endOfRoomThemes,
+    RoomTheme_t theme2 = endOfRoomThemes,
+    RoomTheme_t theme3 = endOfRoomThemes,
+    RoomTheme_t theme4 = endOfRoomThemes) {
+    maxNrInRoom_ = MAX_NR_IN_ROOM;
+    themesBelongingTo_.resize(0);
+    if(theme1 != endOfRoomThemes) {
+      themesBelongingTo_.push_back(theme1);
+    }
+    if(theme2 != endOfRoomThemes) {
+      themesBelongingTo_.push_back(theme2);
+    }
+    if(theme3 != endOfRoomThemes) {
+      themesBelongingTo_.push_back(theme3);
+    }
+    if(theme4 != endOfRoomThemes) {
+      themesBelongingTo_.push_back(theme4);
+    }
+  }
+
+  bool isBelongingToTheme(const RoomTheme_t theme) const {
+    for(unsigned int i = 0; i < themesBelongingTo_.size(); i++) {
+      if(themesBelongingTo_.at(i) == theme) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  int getMaxNrInRoom() const {
+    return maxNrInRoom_;
+  }
+
+private:
+  vector<RoomTheme_t> themesBelongingTo_;
+  int maxNrInRoom_;
 };
 
 struct FeatureDef {
@@ -91,6 +141,7 @@ struct FeatureDef {
   string messageOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
+  ThemedFeatureSpawnRules themedFeatureSpawnRules;
   vector<Feature_t> featuresOnDestroyed;
 };
 

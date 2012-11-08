@@ -6,7 +6,6 @@
 #include <iostream>
 
 #include "FeatureData.h"
-#include "MapArea.h"
 
 using namespace std;
 

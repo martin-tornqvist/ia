@@ -227,7 +227,7 @@ void FeatureData::makeList() {
   d.name_the = "the lever";
   d.glyph = '%';
   d.color = clrWhite;
-  d.tile = tile_lever_left;
+  d.tile = tile_leverLeft;
   d.isShootPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -250,6 +250,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(999, roomTheme_ritual);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_shallowWater;
@@ -310,19 +311,6 @@ void FeatureData::makeList() {
   d.dodgeModifier = -20;
   d.materialType = materialType_fluid;
   addToListAndReset(d);
-  /*---------------------------------------------*/
-  //	d.id = feature_shallowAcid;
-  //	d.name_a = "a pool of acid";
-  //	d.name_the = "the pool of acid";
-  //	d.glyph = '~';
-  //	d.color = clrGreenLight;
-  //	d.isShootPassable = true;
-  //	d.isVisionPassable = true;
-  //	d.canHaveBlood= false;
-  //	d.damageToActor = 1;
-  //	d.damageToPlayerMessage = "Acid corrodes my flesh!";
-  //
-  //	addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_poolBlood;
   d.spawnType = featureSpawnType_other;
@@ -424,27 +412,6 @@ void FeatureData::makeList() {
   d.shockWhenAdjacent = 2;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_tomb;
-  d.spawnType = featureSpawnType_other;
-  d.name_a = "a tomb";
-  d.name_the = "the tomb";
-  d.glyph = '&';
-  d.color = clrGray;
-  d.tile = tile_tomb;
-  d.isMovePassable[moveType_walk] = false;
-  d.isMovePassable[moveType_ethereal] = true;
-  d.isMovePassable[moveType_fly] = true;
-  d.isMovePassable[moveType_ooze] = false;
-  d.isShootPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
-  d.canHaveItem = false;
-  d.shockWhenAdjacent = 3;
-  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = feature_churchBench;
   d.name_a = "a church bench";
   d.name_the = "the church bench";
@@ -462,22 +429,6 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  addToListAndReset(d);
-  /*---------------------------------------------*/
-  d.id = feature_altar;
-  d.name_a = "an altar";
-  d.name_the = "the altar";
-  d.glyph = '_';
-  d.color = clrWhiteHigh;
-  d.tile = tile_altar;
-  d.isShootPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = false;
-  d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
-  d.canHaveItem = false;
-  d.shockWhenAdjacent = 10;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_churchCarpet;
@@ -547,6 +498,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(2, roomTheme_human, roomTheme_ritual, roomTheme_tomb);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_ghoulStatue;
@@ -565,6 +517,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 6;
+  d.themedFeatureSpawnRules.set(2, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cocoon;
@@ -581,6 +534,115 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
+  d.themedFeatureSpawnRules.set(3, roomTheme_spider);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_chest;
+  d.name_a = "a chest";
+  d.name_the = "the chest";
+  d.glyph = '4';
+  d.color = clrBrown;
+  d.tile = tile_chestClosed;
+  d.isMovePassable[moveType_walk] = false;
+  d.isShootPassable = true;
+  d.isVisionPassable = true;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(1, roomTheme_human, roomTheme_tomb, roomTheme_jail, roomTheme_ritual);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_barrel;
+  d.name_a = "a barrel";
+  d.name_the = "the barrel";
+  d.glyph = '0';
+  d.color = clrBrown;
+  d.tile = tile_barrel;
+  d.isMovePassable[moveType_walk] = false;
+  d.isShootPassable = true;
+  d.isVisionPassable = true;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(2, roomTheme_human, roomTheme_tomb, roomTheme_ritual, roomTheme_jail);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_cabinet;
+  d.name_a = "a cabinet";
+  d.name_the = "the cabinet";
+  d.glyph = '7';
+  d.color = clrBrown;
+  d.tile = tile_cabinetClosd;
+  d.isMovePassable[moveType_walk] = false;
+  d.isMovePassable[moveType_ooze] = false;
+  d.isShootPassable = false;
+  d.isVisionPassable = false;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(1, roomTheme_human, roomTheme_ritual);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_pillarCarved;
+  d.name_a = "a carved pillar";
+  d.name_the = "the carved pillar";
+  d.glyph = '1';
+  d.color = clrGray;
+  d.tile = tile_pillarCarved;
+  d.isMovePassable[moveType_walk] = false;
+  d.isMovePassable[moveType_ooze] = false;
+  d.isShootPassable = false;
+  d.isVisionPassable = false;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(1, roomTheme_tomb, roomTheme_ritual, roomTheme_monster);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_altar;
+  d.name_a = "an altar";
+  d.name_the = "the altar";
+  d.glyph = '_';
+  d.color = clrWhiteHigh;
+  d.tile = tile_altar;
+  d.isShootPassable = true;
+  d.isVisionPassable = true;
+  d.canHaveBlood = true;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.shockWhenAdjacent = 10;
+  d.themedFeatureSpawnRules.set(1, roomTheme_ritual);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_tomb;
+  d.name_a = "a tomb";
+  d.name_the = "the tomb";
+  d.glyph = '&';
+  d.color = clrGray;
+  d.tile = tile_tomb;
+  d.isMovePassable[moveType_walk] = false;
+  d.isMovePassable[moveType_ethereal] = true;
+  d.isMovePassable[moveType_fly] = true;
+  d.isMovePassable[moveType_ooze] = false;
+  d.isShootPassable = true;
+  d.isVisionPassable = true;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.shockWhenAdjacent = 3;
+  d.themedFeatureSpawnRules.set(3, roomTheme_tomb);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pit;

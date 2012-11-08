@@ -5,11 +5,7 @@
 #include "AbilityValues.h"
 #include "StatusEffects.h"
 #include "Audio.h"
-#include "SpecialRoom.h"
-
-enum NutritionValue_t {
-  NutritionValue_none, NutritionValue_waterGlass, NutritionValue_mushroomBig, NutritionValue_egg, NutritionValue_dinner
-};
+#include "RoomTheme.h"
 
 enum ItemWeight_t {
   itemWeight_none = 0,
@@ -185,7 +181,6 @@ public:
   bool isScrollLearnable;
   bool isQuaffable;
   bool isEatable;
-  NutritionValue_t nutritionValue;
   bool isArmor;
   ArmorData armorData;
   bool isCloak;
@@ -234,7 +229,8 @@ public:
 //	Abilities_t abilityToIdentify;
 //	int abilityValueRequiredToIdentify;
   int castFromMemoryChance;
-  vector<SpecialRoom_t> nativeRooms;
+  int spellTurnsPerPercentCooldown;
+  vector<RoomTheme_t> nativeRooms;
 
 private:
 };

@@ -13,4 +13,54 @@ private:
   Tomb(Feature_t id, coord pos, Engine* engine);
 };
 
+class Cabinet: public FeatureStatic {
+public:
+  ~Cabinet() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Cabinet(Feature_t id, coord pos, Engine* engine);
+};
+
+class Chest: public FeatureStatic {
+public:
+  ~Chest() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Chest(Feature_t id, coord pos, Engine* engine);
+};
+
+class Cocoon: public FeatureStatic {
+public:
+  ~Cocoon() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Cocoon(Feature_t id, coord pos, Engine* engine);
+};
+
+class Altar: public FeatureStatic {
+public:
+  ~Altar() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Altar(Feature_t id, coord pos, Engine* engine);
+};
+
+class CarvedPillar: public FeatureStatic {
+public:
+  ~CarvedPillar() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  CarvedPillar(Feature_t id, coord pos, Engine* engine);
+};
+
 #endif

@@ -130,11 +130,14 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_ghoul: return coord(8, 0); break;
   case tile_mummy: return coord(9, 0); break;
   case tile_deepOne: return coord(10, 0); break;
+  case tile_shadow: return coord(11, 0); break;
   case tile_armor: return coord(0, 1); break;
   case tile_potion: return coord(2, 1); break;
   case tile_ammo: return coord(4, 1); break;
   case tile_scroll: return coord(8, 1); break;
   case tile_elderSign: return coord(10, 1); break;
+  case tile_chestClosed: return coord(11, 1); break;
+  case tile_chestOpen: return coord(12, 1); break;
   case tile_rat: return coord(1, 2); break;
   case tile_spider: return coord(2, 2); break;
   case tile_wolf: return coord(3, 2); break;
@@ -213,8 +216,15 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_smoke: return coord(9, 8); break;
   case tile_trapezohedron: return coord(11, 8); break;
   case tile_pit: return coord(12, 8); break;
-  case tile_lever_left: return coord(13, 8); break;
-  case tile_lever_right: return coord(14, 8); break;
+  case tile_leverRight: return coord(13, 8); break;
+  case tile_leverLeft: return coord(14, 8); break;
+  case tile_cabinetClosd: return coord(3, 9); break;
+  case tile_cabinetOpen: return coord(4, 9); break;
+  case tile_pillarBroken: return coord(5, 9); break;
+  case tile_pillar: return coord(6, 9); break;
+  case tile_pillarCarved: return coord(7, 9); break;
+  case tile_barrel: return coord(8, 9); break;
+  case tile_sarcophagus: return coord(9, 9); break;
   case tile_empty: return coord(18, 8); break;
   default: return coord(18, 8); break;
   }

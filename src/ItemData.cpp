@@ -37,7 +37,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isScrollLearnable = false;
     d->isQuaffable = false;
     d->isEatable = false;
-    d->nutritionValue = NutritionValue_none;
     d->isArmor = false;
     d->isCloak = false;
     d->isRing = false;
@@ -77,6 +76,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->rangedStatusEffect = NULL;
     d->isExplosive = false;
     d->castFromMemoryChance = 0;
+    d->spellTurnsPerPercentCooldown = 10;
     d->armorData = ArmorData();
     d->nativeRooms.resize(0);
   }
@@ -172,8 +172,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isScrollLearned = 0;
     d->castFromMemoryChance = eng->dice.getInRange(1, 100);
     d->maxStackSizeAtSpawn = 2;
-    d->nativeRooms.push_back(specialRoom_tombs);
-    d->nativeRooms.push_back(specialRoom_ritualChamber);
+    //d->nativeRooms.push_back(specialRoom_tombs);
+    //d->nativeRooms.push_back(specialRoom_ritualChamber);
     d->landOnHardSurfaceSoundMessage = "";
     eng->scrollNameHandler->setFalseScrollName(d);
   }
@@ -191,8 +191,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->missileBaseAttackSkill = -5;
     d->missileDmg = DiceParam(1, 3, 0);
     d->maxStackSizeAtSpawn = 1;
-    d->nativeRooms.push_back(specialRoom_tombs);
-    d->nativeRooms.push_back(specialRoom_ritualChamber);
+    //d->nativeRooms.push_back(specialRoom_tombs);
+    //d->nativeRooms.push_back(specialRoom_ritualChamber);
     d->landOnHardSurfaceSoundMessage = "";
     eng->potionNameHandler->setColorAndFalseName(d);
   }
@@ -884,7 +884,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_armorLeatherJacket);
   resetDef(d, itemDef_armor);
   d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = itemWeight_light;
   d->color = clrGray;
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints[damageType_acid] = 1;
@@ -955,7 +955,6 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
-  d->isScrollLearnable = false;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfTeleportation);

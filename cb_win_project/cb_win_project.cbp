@@ -232,8 +232,6 @@
 		<Unit filename="..\src\Manual.h" />
 		<Unit filename="..\src\Map.cpp" />
 		<Unit filename="..\src\Map.h" />
-		<Unit filename="..\src\MapArea.cpp" />
-		<Unit filename="..\src\MapArea.h" />
 		<Unit filename="..\src\MapBuild.cpp" />
 		<Unit filename="..\src\MapBuild.h" />
 		<Unit filename="..\src\MapBuildBSP.cpp" />
@@ -286,13 +284,13 @@
 		<Unit filename="..\src\Render.h" />
 		<Unit filename="..\src\RenderInventory.cpp" />
 		<Unit filename="..\src\RenderInventory.h" />
+		<Unit filename="..\src\RoomTheme.cpp" />
+		<Unit filename="..\src\RoomTheme.h" />
 		<Unit filename="..\src\SaveHandler.cpp" />
 		<Unit filename="..\src\SaveHandler.h" />
 		<Unit filename="..\src\Sound.cpp" />
 		<Unit filename="..\src\Sound.h" />
 		<Unit filename="..\src\SpawnCounter.h" />
-		<Unit filename="..\src\SpecialRoom.cpp" />
-		<Unit filename="..\src\SpecialRoom.h" />
 		<Unit filename="..\src\Spells.cpp" />
 		<Unit filename="..\src\Spells.h" />
 		<Unit filename="..\src\StatusEffects.cpp" />
@@ -305,6 +303,10 @@
 		<Unit filename="..\src\Timer.h" />
 		<Unit filename="..\src\TrimTravelVector.cpp" />
 		<Unit filename="..\src\TrimTravelVector.h" />
+		<Unit filename="..\src\_MapArea.cpp" />
+		<Unit filename="..\src\_MapArea.h" />
+		<Unit filename="..\src\_SpecialRoom.cpp" />
+		<Unit filename="..\src\_SpecialRoom.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Extensions>
 			<code_completion />

@@ -155,8 +155,14 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     const int x = 28;
 
     const int CHANCE_OF_SUCCESS = scroll->getChanceToCastFromMemory(eng);
-    const string info = "(" + intToString(CHANCE_OF_SUCCESS) + "% chance)";
-    eng->renderer->drawText(info, renderArea_mainScreen, x, currentListPos, clrWhite);
+    string s = intToString(CHANCE_OF_SUCCESS) + "% ";
+    const int TURNS_PER_PERCENT = scroll->getDef().spellTurnsPerPercentCooldown;
+    const int TURN = eng->gameTime->getTurn();
+    const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT ) * TURNS_PER_PERCENT );
+    const int TURNS_LEFT = ((100 - CHANCE_OF_SUCCESS) * TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK;
+    s += "(" + intToString(TURNS_LEFT) + " turns left)";
+
+    eng->renderer->drawText(s, renderArea_mainScreen, x, currentListPos, clrWhite);
 
     currentListPos++;
   }
