@@ -51,23 +51,23 @@ private:
 	}
 };
 
-class PotionOfClairvoyance: public Potion {
-public:
-	PotionOfClairvoyance(ItemDefinition* const itemDefinition) :
-		Potion(itemDefinition) {
-	}
-	~PotionOfClairvoyance() {
-	}
-	void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
-	    (void)pos; (void)actor; (void)engine;
-    }
-
-	const string getRealTypeName() {
-		return "Clairvoyance";
-	}
-};
+//class PotionOfClairvoyance: public Potion {
+//public:
+//	PotionOfClairvoyance(ItemDefinition* const itemDefinition) :
+//		Potion(itemDefinition) {
+//	}
+//	~PotionOfClairvoyance() {
+//	}
+//	void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//	void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+//	    (void)pos; (void)actor; (void)engine;
+//    }
+//
+//	const string getRealTypeName() {
+//		return "Clairvoyance";
+//	}
+//};
 
 class PotionOfBlindness: public Potion {
 public:

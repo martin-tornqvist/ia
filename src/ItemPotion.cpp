@@ -7,35 +7,35 @@
 #include "Map.h"
 #include "ActorMonster.h"
 
-void PotionOfClairvoyance::specificQuaff(Actor* const actor, Engine* const engine) {
-
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(actor->pos, blockers);
-
-  if(actor == engine->player) {
-    engine->log->addMessage("A vision comes to me, the area is revealed.");
-
-    for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
-      for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-        if(blockers[x][y] == false) {
-          engine->map->playerVision[x][y] = true;
-          engine->map->explored[x][y] = true;
-        }
-        //TODO reimplement
-        //				Door* door = engine->map->doors[x][y];
-        //				if(door != NULL) {
-        //					if(door->isSecret() == true) {
-        //						door->reveal(false, engine);
-        //					}
-        //				}
-      }
-    }
-
-    engine->renderer->drawMapAndInterface();
-
-    setRealDefinitionNames(engine, false);
-  }
-}
+//void PotionOfClairvoyance::specificQuaff(Actor* const actor, Engine* const engine) {
+//
+//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  engine->mapTests->makeVisionBlockerArray(actor->pos, blockers);
+//
+//  if(actor == engine->player) {
+//    engine->log->addMessage("A vision comes to me, the area is revealed.");
+//
+//    for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
+//      for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
+//        if(blockers[x][y] == false) {
+//          engine->map->playerVision[x][y] = true;
+//          engine->map->explored[x][y] = true;
+//        }
+//        //TODO reimplement
+//        //				Door* door = engine->map->doors[x][y];
+//        //				if(door != NULL) {
+//        //					if(door->isSecret() == true) {
+//        //						door->reveal(false, engine);
+//        //					}
+//        //				}
+//      }
+//    }
+//
+//    engine->renderer->drawMapAndInterface();
+//
+//    setRealDefinitionNames(engine, false);
+//  }
+//}
 
 void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   //Attempt to heal the actor. If no hp was healed (already at full hp), boost the hp instead.

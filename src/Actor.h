@@ -115,7 +115,7 @@ public:
   void teleportToRandom();
 
 protected:
-  //TODO Remove these friend declarations
+  //TODO Try to get rid of these friend declarations
   friend class AbilityValues;
   friend class DungeonMaster;
   friend class Dynamite;

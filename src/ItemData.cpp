@@ -996,15 +996,15 @@ void ItemData::makeList() {
   resetDef(d, itemDef_scroll);
   itemDefinitions[d->devName] = d;
 
+  d = new ItemDefinition(item_scrollOfClairvoyance);
+  resetDef(d, itemDef_potion);
+  itemDefinitions[d->devName] = d;
+
   d = new ItemDefinition(item_potionOfHealing);
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_potionOfBlindness);
-  resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
-
-  d = new ItemDefinition(item_potionOfClairvoyance);
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 

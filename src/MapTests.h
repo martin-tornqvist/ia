@@ -79,6 +79,11 @@ public:
     return true;
   }
 
+  bool isAreaStrictlyInsideOrSameAsArea(const Rect& innerArea, const Rect& outerArea) {
+    return innerArea.x0y0.x >= outerArea.x0y0.x && innerArea.x1y1.x <= outerArea.x1y1.x &&
+           innerArea.x0y0.y >= outerArea.x0y0.y && innerArea.x1y1.y <= outerArea.x1y1.y;
+  }
+
   bool isCellInside(const coord& pos, const coord& x0y0, const coord& x1y1) {
     return isCellInside(pos, Rect(x0y0, x1y1));
   }

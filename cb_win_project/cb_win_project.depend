@@ -34,7 +34,7 @@
 
 1352026778 c:\dev\ia\src\art.h
 
-1351969162 c:\dev\ia\src\actor.h
+1352657444 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"SDL.h"
@@ -69,7 +69,7 @@
 	"ConstTypes.h"
 	"FeatureData.h"
 
-1352404732 c:\dev\ia\src\featuredata.h
+1352656025 c:\dev\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -77,10 +77,11 @@
 	"Art.h"
 	"ConstTypes.h"
 	"RoomTheme.h"
+	"MapPatterns.h"
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1352025434 c:\dev\ia\src\statuseffects.h
+1352666125 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -92,7 +93,7 @@
 	"ItemData.h"
 	"ConstDungeonSettings.h"
 
-1350576993 c:\dev\ia\src\itemdata.h
+1352652308 c:\dev\ia\src\itemdata.h
 	"SDL.h"
 	<vector>
 	<string>
@@ -100,7 +101,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1352318593 c:\dev\ia\src\itemdefinition.h
+1352661167 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -119,7 +120,7 @@
 	"ConstDungeonSettings.h"
 	"MenuBrowser.h"
 
-1350924387 c:\dev\ia\src\maptests.h
+1352587821 c:\dev\ia\src\maptests.h
 	<vector>
 	"ConstTypes.h"
 	"Config.h"
@@ -143,7 +144,7 @@
 	"Engine.h"
 	<math.h>
 
-1351953986 source:c:\dev\ia\src\actor.cpp
+1352657960 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -165,7 +166,7 @@
 	"Engine.h"
 	"Item.h"
 
-1351350784 c:\dev\ia\src\item.h
+1352666042 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -696,7 +697,7 @@
 1350576992 c:\dev\ia\src\dungeonclimb.h
 	<iostream>
 
-1352316459 c:\dev\ia\src\mapbuildbsp.h
+1352554269 c:\dev\ia\src\mapbuildbsp.h
 	<vector>
 	"ConstTypes.h"
 	"FeatureData.h"
@@ -853,11 +854,11 @@
 1350576993 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1350576993 c:\dev\ia\src\itempotion.h
+1352661250 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
-1351939089 c:\dev\ia\src\itemscroll.h
+1352665949 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -882,7 +883,7 @@
 	<vector>
 	<string>
 
-1351419685 c:\dev\ia\src\mappatterns.h
+1352561569 c:\dev\ia\src\mappatterns.h
 	<vector>
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
@@ -948,7 +949,7 @@
 	"Log.h"
 	"Render.h"
 
-1352404925 source:c:\dev\ia\src\featuredata.cpp
+1352657517 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -1141,11 +1142,12 @@
 	"Item.h"
 	"Actor.h"
 
-1350576993 c:\dev\ia\src\itemexplosive.h
+1352666315 c:\dev\ia\src\itemexplosive.h
 	"StatusEffects.h"
 	"Item.h"
 
-1350576993 source:c:\dev\ia\src\item.cpp
+1352666042 source:c:\dev\ia\src\item.cpp
+	"Item.h"
 
 1350576993 source:c:\dev\ia\src\itemammoclip.cpp
 
@@ -1154,7 +1156,7 @@
 	"Engine.h"
 	"Log.h"
 
-1352398394 source:c:\dev\ia\src\itemdata.cpp
+1352661281 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1183,7 +1185,7 @@
 	"Inventory.h"
 	<algorithm>
 
-1352048487 source:c:\dev\ia\src\itemfactory.cpp
+1352661219 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1207,7 +1209,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1352318056 source:c:\dev\ia\src\itemscroll.cpp
+1352665964 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1321,7 +1323,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1352316665 source:c:\dev\ia\src\mapbuildbsp.cpp
+1352585165 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -1388,7 +1390,7 @@
 	"ItemFactory.h"
 	"Map.h"
 
-1351419669 source:c:\dev\ia\src\mappatterns.cpp
+1352657218 source:c:\dev\ia\src\mappatterns.cpp
 	"MapPatterns.h"
 	"Engine.h"
 	"Map.h"
@@ -1445,7 +1447,7 @@
 	"DungeonMaster.h"
 	"MenuInputHandler.h"
 
-1352318203 source:c:\dev\ia\src\playerbonuses.cpp
+1352657323 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	"Engine.h"
@@ -1601,7 +1603,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1352024674 source:c:\dev\ia\src\statuseffects.cpp
+1352665991 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1650,7 +1652,7 @@
 	"Log.h"
 	"Render.h"
 
-1351355619 source:c:\dev\ia\src\itempotion.cpp
+1352661242 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -3742,13 +3744,13 @@
 	<vector>
 	<string>
 
-1350576993 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1352553456 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"
 	"Render.h"
 
-1352400309 c:\dev\ia\src\featurevariousexaminable.h
+1352553455 c:\dev\ia\src\featurevariousexaminable.h
 	"Feature.h"
 
 1344610856 f:\dev\ia\src\examine.h
@@ -7707,13 +7709,16 @@
 	"Render.h"
 	"PlayerBonuses.h"
 
-1352403006 c:\dev\ia\src\roomtheme.h
+1352569615 c:\dev\ia\src\roomtheme.h
 	<vector>
+	"ConstTypes.h"
 
-1352316222 source:c:\dev\ia\src\roomtheme.cpp
+1352658258 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
+	"FeatureData.h"
+	"FeatureFactory.h"
 
 1352038075 source:c:\dev\ia\src\_maparea.cpp
 

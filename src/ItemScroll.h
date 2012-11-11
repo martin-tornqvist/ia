@@ -13,21 +13,15 @@ public:
     Item(itemDefinition) {
   }
 
-  virtual ~Scroll() {
-  }
+  virtual ~Scroll();
 
   int getChanceToCastFromMemory(Engine* const engine) const;
-//    int getChanceToLearn(Engine* const engine) const;
 
   bool read(const bool IS_FROM_MEMORY, Engine* const engine);
-
-//	ItemActivateReturn_t study(Engine* const engine);
 
   virtual const string getRealTypeName() {
     return "[ERROR]";
   }
-
-  virtual DiceParam getCastFromMemorySpiritCost() {return DiceParam(1, 4);}
 
   void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
 
@@ -252,19 +246,20 @@ public:
 private:
 };
 
-//class ScrollOfDoorObstruction: public Scroll {
-//public:
-//	ScrollOfDoorObstruction(ItemDefinition* const itemDefinition) :
-//		Scroll(itemDefinition) {
-//	}
-//	~ScrollOfDoorObstruction() {
-//	}
-//	void specificRead(const bool FROM_MEMORY, Engine* const engine);
-//private:
-//	const string getRealTypeName() {
-//		return "Door Obstruction";
-//	}
-//};
+class ScrollOfClairvoyance: public Scroll {
+public:
+  ScrollOfClairvoyance(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfClairvoyance() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Clairvoyance";
+  }
+private:
+};
 
 class ScrollNameHandler {
 public:

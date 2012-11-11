@@ -30,6 +30,7 @@ void FeatureData::resetDef(FeatureDef& d) {
   d.messageOnPlayerBlockedBlind = "I bump into something.";
   d.dodgeModifier = 0;
   d.shockWhenAdjacent = 0;
+  d.themedFeatureSpawnRules.reset();
   d.featuresOnDestroyed.resize(0);
 }
 
@@ -250,7 +251,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(999, roomTheme_ritual);
+  d.themedFeatureSpawnRules.set(999, placementRule_awayFromWalls, roomTheme_ritual);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_shallowWater;
@@ -487,7 +488,7 @@ void FeatureData::makeList() {
   d.name_a = "a statue";
   d.name_the = "the statue";
   d.glyph = 5;
-  d.color = clrGray;
+  d.color = clrWhite;
   d.tile = tile_witchOrWarlock;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ooze] = false;
@@ -498,14 +499,14 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, roomTheme_human, roomTheme_ritual, roomTheme_tomb);
+  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_ritual, roomTheme_tomb);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_ghoulStatue;
   d.name_a = "a statue of a ghoulish creature";
   d.name_the = "the statue of a ghoulish creature";
   d.glyph = 'M';
-  d.color = clrGray;
+  d.color = clrWhite;
   d.tile = tile_ghoul;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ooze] = false;
@@ -517,7 +518,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 6;
-  d.themedFeatureSpawnRules.set(2, roomTheme_ritual, roomTheme_monster);
+  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cocoon;
@@ -534,14 +535,14 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.themedFeatureSpawnRules.set(3, roomTheme_spider);
+  d.themedFeatureSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls, roomTheme_spider);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_chest;
   d.name_a = "a chest";
   d.name_the = "the chest";
-  d.glyph = '4';
-  d.color = clrBrown;
+  d.glyph = '+';
+  d.color = clrGray;
   d.tile = tile_chestClosed;
   d.isMovePassable[moveType_walk] = false;
   d.isShootPassable = true;
@@ -551,7 +552,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, roomTheme_human, roomTheme_tomb, roomTheme_jail, roomTheme_ritual);
+  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human, roomTheme_tomb, roomTheme_jail, roomTheme_ritual);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_barrel;
@@ -568,14 +569,14 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, roomTheme_human, roomTheme_tomb, roomTheme_ritual, roomTheme_jail);
+  d.themedFeatureSpawnRules.set(2, placementRule_nextToWalls, roomTheme_human, roomTheme_tomb, roomTheme_ritual, roomTheme_jail);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cabinet;
   d.name_a = "a cabinet";
   d.name_the = "the cabinet";
   d.glyph = '7';
-  d.color = clrBrown;
+  d.color = clrBrownDark;
   d.tile = tile_cabinetClosd;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ooze] = false;
@@ -586,7 +587,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, roomTheme_human, roomTheme_ritual);
+  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pillarCarved;
@@ -604,7 +605,25 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, roomTheme_tomb, roomTheme_ritual, roomTheme_monster);
+  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_tomb, roomTheme_ritual, roomTheme_monster);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
+  d.id = feature_pillar;
+  d.name_a = "a pillar";
+  d.name_the = "the pillar";
+  d.glyph = '|';
+  d.color = clrGray;
+  d.tile = tile_pillar;
+  d.isMovePassable[moveType_walk] = false;
+  d.isMovePassable[moveType_ooze] = false;
+  d.isShootPassable = false;
+  d.isVisionPassable = false;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_tomb, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_altar;
@@ -621,7 +640,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.themedFeatureSpawnRules.set(1, roomTheme_ritual);
+  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_ritual);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_tomb;
@@ -642,7 +661,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.themedFeatureSpawnRules.set(3, roomTheme_tomb);
+  d.themedFeatureSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls, roomTheme_tomb);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pit;

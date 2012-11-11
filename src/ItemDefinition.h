@@ -11,7 +11,7 @@ enum ItemWeight_t {
   itemWeight_none = 0,
   itemWeight_extraLight = 1, //Ammo...
   itemWeight_light = 10, //Dynamite, daggers...
-  itemWeight_medium = 60, //Most firearms, leather jackets...
+  itemWeight_medium = 60, //Most firearms...
   itemWeight_heavy = 140 //Heavy armor, heavy weapons...
 };
 
@@ -116,8 +116,8 @@ enum ItemDevNames_t {
   item_scrollOfDetectItems,
   item_scrollOfBlessing,
   item_scrollOfMayhem,
+  item_scrollOfClairvoyance,
 
-  item_potionOfClairvoyance,
   item_potionOfHealing,
   item_potionOfBlindness,
   item_potionOfCorruption,

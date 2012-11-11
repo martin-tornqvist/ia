@@ -13,6 +13,10 @@
 
 using namespace std;
 
+StatusEffect::~StatusEffect() {
+
+}
+
 void StatusBlessed::start() {
   owningActor->getStatusEffectsHandler()->endEffect(statusCursed);
 }
@@ -123,12 +127,43 @@ void StatusBurning::newTurn(Engine* engine) {
   turnsLeft--;
 }
 
+void StatusClairvoyant::newTurn(Engine* engine) {
+  runClairvoyantEffect(engine);
+  turnsLeft--;
+}
+
+void StatusClairvoyant::start() {
+  runClairvoyantEffect(owningActor->eng);
+}
+
+void StatusClairvoyant::runClairvoyantEffect(Engine* const engine) {
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_fly, blockers);
+
+  const coord& playerPos = engine->player->pos;
+  int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
+  const int FLOODFILL_TRAVEL_LIMIT = 20;
+  engine->mapTests->makeFloodFill(playerPos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
+
+  const int X0 = max(0, playerPos.x - FLOODFILL_TRAVEL_LIMIT);
+  const int Y0 = max(0, playerPos.x - FLOODFILL_TRAVEL_LIMIT);
+  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + FLOODFILL_TRAVEL_LIMIT);
+  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.x + FLOODFILL_TRAVEL_LIMIT);
+  for(int y = Y0; y <= Y1; y++) {
+    for(int x = X0; x <= X1; x++) {
+      if(floodFillValues[x][y]) {
+        engine->map->playerVision[x][y] = true;
+      }
+    }
+  }
+}
+
 void StatusFlared::start() {
-//	owningActor->setColor(clrRedLight);
+
 }
 
 void StatusFlared::end() {
-//	owningActor->resetColor();
+
 }
 
 void StatusFlared::newTurn(Engine* engine) {
@@ -243,6 +278,9 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
     break;
   case statusCursed:
     return new StatusCursed(TURNS_LEFT);
+    break;
+  case statusClairvoyant:
+    return new StatusClairvoyant(TURNS_LEFT);
     break;
   default: {} break;
   }

@@ -16,8 +16,7 @@ public:
     numberOfItems(1), def_(itemDefinition) {
   }
 
-  virtual ~Item() {
-  }
+  virtual ~Item();
 
   virtual void reset() {
     numberOfItems = 1;

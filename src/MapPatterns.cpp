@@ -3,31 +3,96 @@
 #include "Engine.h"
 #include "Map.h"
 
-vector<coord> MapPatterns::getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST) {
+void MapPatterns::setPositionsInArea(const Rect& area, vector<coord>& nextToWalls, vector<coord>& awayFromWalls) {
+  tracer << "MapPatterns::setPositionsInArea()..." << endl;
+  vector<coord> positionCandidates;
+  positionCandidates.resize(0);
 
-  //TODO MapAeas are now supposed to store their edge coords, see if it works and can be used here
-
-  vector<coord> returnVector;
-
-  for(int x = bounds.x0y0.x; x <= bounds.x1y1.x; x++) {
-    for(int y = bounds.x0y0.y; y <= bounds.x1y1.y; y++) {
-      bool posOk = true;
-      for(int dx = -1 - EDGE_DIST; dx <= 1 + EDGE_DIST; dx++) {
-        for(int dy = -1 - EDGE_DIST; dy <= 1 + EDGE_DIST; dy++) {
-          if(dx != 0 || dy != 0) {
-            const coord c(x + dx, y + dy);
-            if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneWall) {
-              posOk = false;
-              dx = 9999;
-              dy = 9999;
-            }
-          }
-        }
-      }
-      if(posOk) {
-        returnVector.push_back(coord(x, y));
+  for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
+    for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
+      FeatureStatic* const f = eng->map->featuresStatic[x][y];
+      if(f->isMoveTypePassable(moveType_walk) && f->canHaveStaticFeature()) {
+        positionCandidates.push_back(coord(x, y));
       }
     }
   }
-  return returnVector;
+
+  nextToWalls.resize(0);
+  awayFromWalls.resize(0);
+
+  for(unsigned int i = 0; i < positionCandidates.size(); i++) {
+    const coord pos = positionCandidates.at(i);
+
+    const int BLOCKERS_RIGHT = getWalkBlockersInDirection(direction_right, pos);
+    const int BLOCKERS_DOWN = getWalkBlockersInDirection(direction_down, pos);
+    const int BLOCKERS_LEFT = getWalkBlockersInDirection(direction_left, pos);
+    const int BLOCKERS_UP = getWalkBlockersInDirection(direction_up, pos);
+
+    const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 && BLOCKERS_DOWN == 0 && BLOCKERS_LEFT == 0 && BLOCKERS_UP == 0;
+
+    if(IS_ALL_BLOCKERS_ZERO) {
+      awayFromWalls.push_back(pos);
+      continue;
+    }
+
+    bool isDoorAdjacent = false;
+    for(int dy = -1; dy <= 1; dy++) {
+      for(int dx = -1; dx <= 1; dx++) {
+        if(eng->map->featuresStatic[pos.x + dx][pos.y + dy]->getId() == feature_door) {
+          isDoorAdjacent = true;
+        }
+      }
+    }
+
+    if(isDoorAdjacent) {
+      continue;
+    }
+
+    if(
+      (BLOCKERS_RIGHT == 3 && BLOCKERS_UP == 1 && BLOCKERS_DOWN == 1 && BLOCKERS_LEFT == 0) ||
+      (BLOCKERS_RIGHT == 1 && BLOCKERS_UP == 3 && BLOCKERS_DOWN == 0 && BLOCKERS_LEFT == 1) ||
+      (BLOCKERS_RIGHT == 1 && BLOCKERS_UP == 0 && BLOCKERS_DOWN == 3 && BLOCKERS_LEFT == 1) ||
+      (BLOCKERS_RIGHT == 0 && BLOCKERS_UP == 1 && BLOCKERS_DOWN == 1 && BLOCKERS_LEFT == 3)) {
+      nextToWalls.push_back(pos);
+      continue;
+    }
+
+  }
+
+  tracer << "MapPatterns::setPositionsInArea() [DONE]" << endl;
+}
+
+int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const coord pos) {
+  int nrBlockers = 0;
+  switch(dir) {
+  case direction_right: {
+    for(int dy = -1; dy <= 1; dy++) {
+      if(eng->map->featuresStatic[pos.x + 1][pos.y + dy]->isMoveTypePassable(moveType_walk) == false) {
+        nrBlockers += 1;
+      }
+    }
+  } break;
+  case direction_down: {
+    for(int dx = -1; dx <= 1; dx++) {
+      if(eng->map->featuresStatic[pos.x + dx][pos.y + 1]->isMoveTypePassable(moveType_walk) == false) {
+        nrBlockers += 1;
+      }
+    }
+  } break;
+  case direction_left: {
+    for(int dy = -1; dy <= 1; dy++) {
+      if(eng->map->featuresStatic[pos.x - 1][pos.y + dy]->isMoveTypePassable(moveType_walk) == false) {
+        nrBlockers += 1;
+      }
+    }
+  } break;
+  case direction_up: {
+    for(int dx = -1; dx <= 1; dx++) {
+      if(eng->map->featuresStatic[pos.x + dx][pos.y - 1]->isMoveTypePassable(moveType_walk) == false) {
+        nrBlockers += 1;
+      }
+    }
+  } break;
+  }
+  return nrBlockers;
 }

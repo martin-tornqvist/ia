@@ -9,6 +9,7 @@
 #include "Art.h"
 #include "ConstTypes.h"
 #include "RoomTheme.h"
+#include "MapPatterns.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ enum Feature_t {
   feature_chest,
   feature_cabinet,
   feature_barrel,
+  feature_pillar,
   feature_pillarCarved,
   feature_chasm,
   feature_shallowWater,
@@ -74,17 +76,25 @@ enum MaterialType_t {
 
 struct ThemedFeatureSpawnRules {
 public:
-  ThemedFeatureSpawnRules() : maxNrInRoom_(-1) {
+  ThemedFeatureSpawnRules() : maxNrInRoom_(-1), placementRule_(placementRule_nextToWalls) {
+    themesBelongingTo_.resize(0);
+  }
+
+  void reset() {
+    maxNrInRoom_ = -1;
+    placementRule_ = placementRule_awayFromWalls;
     themesBelongingTo_.resize(0);
   }
 
   void set(
     const int MAX_NR_IN_ROOM,
+    const PlacementRule_t placementRule,
     RoomTheme_t theme1 = endOfRoomThemes,
     RoomTheme_t theme2 = endOfRoomThemes,
     RoomTheme_t theme3 = endOfRoomThemes,
     RoomTheme_t theme4 = endOfRoomThemes) {
     maxNrInRoom_ = MAX_NR_IN_ROOM;
+    placementRule_ = placementRule;
     themesBelongingTo_.resize(0);
     if(theme1 != endOfRoomThemes) {
       themesBelongingTo_.push_back(theme1);
@@ -109,13 +119,18 @@ public:
     return false;
   }
 
+  PlacementRule_t getPlacementRule() const {
+    return placementRule_;
+  }
+
   int getMaxNrInRoom() const {
     return maxNrInRoom_;
   }
 
 private:
-  vector<RoomTheme_t> themesBelongingTo_;
   int maxNrInRoom_;
+  PlacementRule_t placementRule_;
+  vector<RoomTheme_t> themesBelongingTo_;
 };
 
 struct FeatureDef {

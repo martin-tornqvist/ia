@@ -1041,7 +1041,7 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
         const bool TRIM_ALL = false;
 
         if(TRIM_ALL || eng->dice.coinToss()) {
-          const coord upLeft(room.getX0() + W - 1,room.getY0() + H - 1);
+          const coord upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
           MapBuildBSP::coverAreaWithFeature(Rect(room.getX0Y0(), upLeft), feature_stoneWall);
         }
 

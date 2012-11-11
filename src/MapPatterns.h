@@ -10,16 +10,23 @@ using namespace std;
 
 class Engine;
 
+enum PlacementRule_t {
+  placementRule_nextToWalls,
+  placementRule_awayFromWalls,
+  placementRule_nextToWallsOrAwayFromWalls
+};
+
 class MapPatterns {
 public:
   MapPatterns(Engine* engine) :
     eng(engine) {
   }
 
-  // Assumptions: No isolated pillars
-  vector<coord> getAllCellsExceptEdge(Rect bounds, const int EDGE_DIST);
+  void setPositionsInArea(const Rect& area, vector<coord>& nextToWalls, vector<coord>& awayFromWalls);
 
 private:
+  int getWalkBlockersInDirection(const Directions_t dir, const coord pos);
+
   Engine* eng;
 
 };

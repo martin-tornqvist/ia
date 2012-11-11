@@ -95,7 +95,7 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
     }
   }
 
-  const int NR_OF_CHOICES = 4;
+  const int NR_OF_CHOICES = 5;
   vector<PlayerBonuses_t> ret;
   for(int i = 0; i < NR_OF_CHOICES; i++) {
     if(candidates.empty()) {

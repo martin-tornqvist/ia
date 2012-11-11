@@ -22,10 +22,10 @@ enum RoomReshape_t {
 
 struct Room {
 public:
-  Room(Rect dims) : dims_(dims) {
+  Room(Rect dims) : roomTheme(roomTheme_none), dims_(dims) {
   }
 
-  Room() : dims_(Rect(coord(-1, -1), coord(-1, -1))) {
+  Room() : roomTheme(roomTheme_none), dims_(Rect(coord(-1, -1), coord(-1, -1))) {
   }
 
   Rect getDims() const {return dims_;}
@@ -35,6 +35,8 @@ public:
   int getY1() const {return dims_.x1y1.y;}
   coord getX0Y0() const {return dims_.x0y0;}
   coord getX1Y1() const {return dims_.x1y1;}
+
+  RoomTheme_t roomTheme;
 
 private:
   Rect dims_;

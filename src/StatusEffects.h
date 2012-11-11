@@ -33,6 +33,7 @@ enum StatusEffects_t {
   statusPerfectToughness,
   statusCursed,
   statusBlessed,
+  statusClairvoyant,
 
   statusNailed,
 
@@ -59,8 +60,7 @@ public:
   StatusEffect(const StatusEffect& other) :
     turnsLeft(other.turnsLeft) {
   }
-  virtual ~StatusEffect() {
-  }
+  virtual ~StatusEffect();
 
   void setOwningActor(Actor* owningActor_) {
     owningActor = owningActor_;
@@ -687,6 +687,78 @@ private:
   }
 };
 
+class StatusClairvoyant: public StatusEffect {
+public:
+  StatusClairvoyant(Engine* const engine) :
+    StatusEffect(statusClairvoyant) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusClairvoyant(const int turns) :
+    StatusEffect(turns, statusClairvoyant) {
+  }
+  ~StatusClairvoyant() {
+  }
+
+  StatusClairvoyant* copy() {
+    StatusClairvoyant* cpy = new StatusClairvoyant(turnsLeft);
+    return cpy;
+  }
+
+  string getInterfaceName() {
+    return "Clairvoyant";
+  }
+  string messageWhenStart() {
+    return "[Clairvoyant message]";
+  }
+  string messageWhenMore() {
+    return "[Clairvoyant message]";
+  }
+  string messageWhenMoreOther() {
+    return "";
+  }
+  string messageWhenEnd() {
+    return "[Clairvoyant message]";
+  }
+  string messageWhenSaves() {
+    return "";
+  }
+  string messageWhenStartOther() {
+    return "";
+  }
+  string messageWhenEndOther() {
+    return "";
+  }
+  string messageWhenSavesOther() {
+    return "";
+  }
+
+  Abilities_t getSaveAbility() {
+    return ability_empty;
+  }
+  int getSaveAbilityModifier() {
+    return 0;
+  }
+
+  void start();
+
+  void end() {
+  }
+
+  int getAbilityModifier(const Abilities_t ability) {
+    (void)ability;
+    return 0;
+  }
+
+  void newTurn(Engine* engine);
+
+private:
+  void runClairvoyantEffect(Engine* const engine);
+
+  DiceParam getRandomStandardNrTurns() {
+    return DiceParam(0, 0, 500);
+  }
+};
+
 class StatusBurning: public StatusEffect {
 public:
   StatusBurning(Engine* const engine) :
@@ -891,7 +963,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 8, 8);
+    return DiceParam(4, 8, 24);
   }
 };
 
@@ -995,10 +1067,10 @@ public:
     return cpy;
   }
 
-  virtual Abilities_t getSaveAbility() {
+  Abilities_t getSaveAbility() {
     return ability_empty;
   }
-  virtual int getSaveAbilityModifier() {
+  int getSaveAbilityModifier() {
     return -999;
   }
 
@@ -1076,10 +1148,10 @@ public:
     return cpy;
   }
 
-  virtual Abilities_t getSaveAbility() {
+  Abilities_t getSaveAbility() {
     return ability_empty;
   }
-  virtual int getSaveAbilityModifier() {
+  int getSaveAbilityModifier() {
     return -999;
   }
 
@@ -1150,10 +1222,10 @@ public:
     return cpy;
   }
 
-  virtual Abilities_t getSaveAbility() {
+  Abilities_t getSaveAbility() {
     return ability_empty;
   }
-  virtual int getSaveAbilityModifier() {
+  int getSaveAbilityModifier() {
     return -999;
   }
 
@@ -1220,10 +1292,10 @@ public:
     return cpy;
   }
 
-  virtual Abilities_t getSaveAbility() {
+  Abilities_t getSaveAbility() {
     return ability_empty;
   }
-  virtual int getSaveAbilityModifier() {
+  int getSaveAbilityModifier() {
     return -999;
   }
 

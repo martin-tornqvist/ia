@@ -250,12 +250,11 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_scrollOfBlessing:
     item = new ScrollOfBlessing(d);
     break;
-
+  case item_scrollOfClairvoyance:
+    item = new ScrollOfClairvoyance(d);
+    break;
   case item_potionOfHealing:
     item = new PotionOfHealing(d);
-    break;
-  case item_potionOfClairvoyance:
-    item = new PotionOfClairvoyance(d);
     break;
   case item_potionOfBlindness:
     item = new PotionOfBlindness(d);

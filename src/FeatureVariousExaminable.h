@@ -63,4 +63,14 @@ private:
   CarvedPillar(Feature_t id, coord pos, Engine* engine);
 };
 
+class Barrel: public FeatureStatic {
+public:
+  ~Barrel() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Barrel(Feature_t id, coord pos, Engine* engine);
+};
+
 #endif

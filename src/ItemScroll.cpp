@@ -13,6 +13,10 @@
 #include "Query.h"
 #include "PlayerBonuses.h"
 
+Scroll::~Scroll() {
+
+}
+
 void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
 
@@ -204,10 +208,11 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
   }
 }
 
-/*void ScrollOfDoorObstruction::specificRead(const bool FROM_MEMORY, Actor* const  actor, Engine* const engine)
- {
-
- }*/
+ void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  (void)FROM_MEMORY;
+  engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusClairvoyant(engine), true, false);
+  setRealDefinitionNames(engine, false);
+}
 
 void ScrollNameHandler::setFalseScrollName(ItemDefinition* d) {
   const unsigned int NR_NAMES = m_falseNames.size();

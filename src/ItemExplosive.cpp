@@ -5,6 +5,14 @@
 #include "Log.h"
 #include "Render.h"
 
+Explosive::~Explosive() {
+
+}
+
+void Explosive::setPlayerExplosive(Engine* const engine) const {
+  (void)engine;
+}
+
 void Dynamite::setPlayerExplosive(Engine* const engine) const {
 	engine->player->dynamiteFuseTurns = 6;
 
