@@ -53,6 +53,16 @@ private:
   Altar(Feature_t id, coord pos, Engine* engine);
 };
 
+class Pillar: public FeatureStatic {
+public:
+  ~Pillar() {
+  }
+  void examine();
+private:
+  friend class FeatureFactory;
+  Pillar(Feature_t id, coord pos, Engine* engine);
+};
+
 class CarvedPillar: public FeatureStatic {
 public:
   ~CarvedPillar() {

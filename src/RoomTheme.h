@@ -36,8 +36,10 @@ private:
   void applyThemeToRoom(Room& room);
 
   void placeThemeFeatures(Room& room);
+
   int attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
-                                vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
+                               vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
+
   void eraseAdjacentCellsFromVectors(const coord& pos,  vector<coord>& nextToWalls, vector<coord>& awayFromWalls);
 
   void assignRoomThemes(const vector<Room*>& rooms);

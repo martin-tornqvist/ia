@@ -11,7 +11,7 @@
 using namespace std;
 
 void MessageLog::clearLog() {
-  if(line.size() != 0) {
+  if(line.empty() == false) {
 
     history.push_back(line);
 
@@ -140,7 +140,7 @@ void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) c
 
   eng->renderer->clearRenderArea(renderArea_log);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
-  if(history.size() == 0) {
+  if(history.empty()) {
     eng->renderer->drawText(" No message history ", renderArea_screen, 3, 1, clrWhite);
   } else {
     eng ->renderer->drawText(" Displaying messages " + intToString(topLine) + "-" + intToString(bottomLine) + " of "
@@ -184,7 +184,7 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, MessageIn
   bool repeated = false;
 
   //New message equal to previous?
-  if(line.size() > 0) {
+  if(line.empty() == false) {
     if(line.back().str.compare(text) == 0) {
       line.back().addRepeat();
       repeated = true;

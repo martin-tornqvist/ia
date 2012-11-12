@@ -23,7 +23,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1350576992 c:\dev\ia\src\consttypes.h
+1352668299 c:\dev\ia\src\consttypes.h
 	<string>
 	"SDL.h"
 	"Colors.h"
@@ -81,7 +81,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1352666125 c:\dev\ia\src\statuseffects.h
+1352744348 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -101,7 +101,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1352661167 c:\dev\ia\src\itemdefinition.h
+1352672612 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -166,7 +166,7 @@
 	"Engine.h"
 	"Item.h"
 
-1352666042 c:\dev\ia\src\item.h
+1352668829 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -214,7 +214,7 @@
 	"Config.h"
 	"Render.h"
 
-1350841653 c:\dev\ia\src\render.h
+1352668471 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
 	"SDL.h"
@@ -229,7 +229,7 @@
 
 1350576995 c:\dev\ia\src\playervisualmemory.h
 
-1350727201 c:\dev\ia\src\log.h
+1352668524 c:\dev\ia\src\log.h
 	"SDL.h"
 	<string>
 	<vector>
@@ -441,7 +441,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1352317298 source:c:\dev\ia\src\actorplayer.cpp
+1352738761 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -518,7 +518,7 @@
 	"Art.h"
 	"Engine.h"
 
-1352025046 source:c:\dev\ia\src\attack.cpp
+1352739020 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -854,11 +854,11 @@
 1350576993 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1352661250 c:\dev\ia\src\itempotion.h
+1352672516 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
-1352665949 c:\dev\ia\src\itemscroll.h
+1352672500 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -883,7 +883,7 @@
 	<vector>
 	<string>
 
-1352561569 c:\dev\ia\src\mappatterns.h
+1352671999 c:\dev\ia\src\mappatterns.h
 	<vector>
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
@@ -1142,11 +1142,11 @@
 	"Item.h"
 	"Actor.h"
 
-1352666315 c:\dev\ia\src\itemexplosive.h
+1352673070 c:\dev\ia\src\itemexplosive.h
 	"StatusEffects.h"
 	"Item.h"
 
-1352666042 source:c:\dev\ia\src\item.cpp
+1352673030 source:c:\dev\ia\src\item.cpp
 	"Item.h"
 
 1350576993 source:c:\dev\ia\src\itemammoclip.cpp
@@ -1156,7 +1156,7 @@
 	"Engine.h"
 	"Log.h"
 
-1352661281 source:c:\dev\ia\src\itemdata.cpp
+1352673440 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1185,7 +1185,7 @@
 	"Inventory.h"
 	<algorithm>
 
-1352661219 source:c:\dev\ia\src\itemfactory.cpp
+1352672628 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1209,7 +1209,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1352665964 source:c:\dev\ia\src\itemscroll.cpp
+1352672505 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1256,7 +1256,7 @@
 	"Timer.h"
 	"Config.h"
 
-1350727430 source:c:\dev\ia\src\log.cpp
+1352668699 source:c:\dev\ia\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Engine.h"
@@ -1531,7 +1531,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1351543299 source:c:\dev\ia\src\render.cpp
+1352668471 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1603,7 +1603,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1352665991 source:c:\dev\ia\src\statuseffects.cpp
+1352744694 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1645,14 +1645,14 @@
 	"TrimTravelVector.h"
 	"Engine.h"
 
-1351542808 source:c:\dev\ia\src\itemexplosive.cpp
+1352672534 source:c:\dev\ia\src\itemexplosive.cpp
 	"ItemExplosive.h"
 	"Engine.h"
 	"ActorPlayer.h"
 	"Log.h"
 	"Render.h"
 
-1352661242 source:c:\dev\ia\src\itempotion.cpp
+1352672520 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -3744,13 +3744,13 @@
 	<vector>
 	<string>
 
-1352553456 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1352667057 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"
 	"Render.h"
 
-1352553455 c:\dev\ia\src\featurevariousexaminable.h
+1352667034 c:\dev\ia\src\featurevariousexaminable.h
 	"Feature.h"
 
 1344610856 f:\dev\ia\src\examine.h
@@ -7709,7 +7709,7 @@
 	"Render.h"
 	"PlayerBonuses.h"
 
-1352569615 c:\dev\ia\src\roomtheme.h
+1352672585 c:\dev\ia\src\roomtheme.h
 	<vector>
 	"ConstTypes.h"
 

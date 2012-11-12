@@ -291,7 +291,7 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
   applySurface(X_PIXEL, Y_PIXEL, m_tileSheet, m_screen, &clipRect);
 }
 
-void Renderer::drawTileOnScreen(const Tile_t tile, const coord pos, const SDL_Color clr) {
+void Renderer::drawTileOnScreen(const Tile_t tile, const coord& pos, const SDL_Color clr) {
   const coord tileCoords = eng->art->getTileCoords(tile, eng);
   clipRect.x = static_cast<Sint16>(tileCoords.x);
   clipRect.y = static_cast<Sint16>(tileCoords.y);
@@ -352,7 +352,7 @@ void Renderer::drawCharacter(const char CHARACTER, const RenderArea_t renderArea
   drawCharacterAtPixel(CHARACTER, pixelCoord.x, pixelCoord.y, clr);
 }
 
-void Renderer::drawText(const string str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
+void Renderer::drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
   coord pixelCoord = getPixelCoordsForCharacter(renderArea, X, Y);
 
   if(pixelCoord.y < 0 || pixelCoord.y >= eng->config->SCREEN_HEIGHT) {
@@ -369,7 +369,7 @@ void Renderer::drawText(const string str, const RenderArea_t renderArea, const i
 }
 
 //TODO drawTextCentered must be able to draw centered on the actual screen
-void Renderer::drawTextCentered(const string str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
+void Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
   const int X_POS_LEFT = X - (str.size() / 2);
   drawText(str, renderArea, X_POS_LEFT, Y, clr);
 }

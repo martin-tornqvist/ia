@@ -1,12 +1,12 @@
 #ifndef MAP_PATTERNS_H
 #define MAP_PATTERNS_H
 
-using namespace std;
-
 #include <vector>
 
 #include "ConstTypes.h"
 #include "ConstDungeonSettings.h"
+
+using namespace std;
 
 class Engine;
 

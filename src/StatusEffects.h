@@ -506,8 +506,7 @@ public:
     return 0;
   }
 
-  void start() {
-  }
+  void start();
 
   void end() {
   }
@@ -708,16 +707,16 @@ public:
     return "Clairvoyant";
   }
   string messageWhenStart() {
-    return "[Clairvoyant message]";
+    return "I see far and beyond!";
   }
   string messageWhenMore() {
-    return "[Clairvoyant message]";
+    return "I see far and beyond!";
   }
   string messageWhenMoreOther() {
     return "";
   }
   string messageWhenEnd() {
-    return "[Clairvoyant message]";
+    return "My sight is limited.";
   }
   string messageWhenSaves() {
     return "";
@@ -752,8 +751,6 @@ public:
   void newTurn(Engine* engine);
 
 private:
-  void runClairvoyantEffect(Engine* const engine);
-
   DiceParam getRandomStandardNrTurns() {
     return DiceParam(0, 0, 500);
   }

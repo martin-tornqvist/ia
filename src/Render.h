@@ -30,10 +30,10 @@ public:
   void drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
 
   void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
-  void drawText(const string str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
-  void drawTextCentered(const string str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
+  void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
+  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
   void drawTileInMap(const Tile_t tile, const int X, const int Y, const SDL_Color clr);
-  void drawTileOnScreen(const Tile_t tile, const coord pos, const SDL_Color clr);
+  void drawTileOnScreen(const Tile_t tile, const coord& pos, const SDL_Color clr);
 
   void clearCellInMap(const int X, const int Y);
   void clearRenderArea(const RenderArea_t renderArea);

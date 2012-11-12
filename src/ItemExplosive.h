@@ -11,7 +11,7 @@ public:
   Explosive(ItemDefinition* const itemDefinition) : Item(itemDefinition) {}
   virtual ~Explosive();
 
-  virtual void setPlayerExplosive(Engine* const engine);
+  virtual void setPlayerExplosive(Engine* const engine) const;
 
 protected:
 };

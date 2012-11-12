@@ -1078,6 +1078,40 @@ void Player::FOVupdate() {
     eng->mapTests->makeVisionBlockerArray(pos, blockers);
     eng->fov->runPlayerFov(blockers, pos);
     eng->map->playerVision[pos.x][pos.y] = true;
+  }
+
+  if(statusEffectsHandler_->hasEffect(statusClairvoyant)) {
+    const int FLOODFILL_TRAVEL_LIMIT = FOV_STANDARD_RADI_INT + 2;
+
+    const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
+    const int Y0 = max(0, pos.y - FLOODFILL_TRAVEL_LIMIT);
+    const int X1 = min(MAP_X_CELLS - 1, pos.x + FLOODFILL_TRAVEL_LIMIT);
+    const int Y1 = min(MAP_Y_CELLS - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
+
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_fly, blockers);
+
+    for(int y = Y0; y <= Y1; y++) {
+      for(int x = X0; x <= X1; x++) {
+        if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
+          blockers[x][y] = false;
+        }
+      }
+    }
+
+    int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->mapTests->makeFloodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
+
+    for(int y = Y0; y <= Y1; y++) {
+      for(int x = X0; x <= X1; x++) {
+        if(floodFillValues[x][y]) {
+          eng->map->playerVision[x][y] = true;
+        }
+      }
+    }
+  }
+
+  if(statusEffectsHandler_->allowSee()) {
     FOVhack();
   }
 

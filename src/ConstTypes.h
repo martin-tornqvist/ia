@@ -55,7 +55,7 @@ struct StringAndColor {
     str(""), color(clrBlack) {
   }
 
-  StringAndColor(const string text, const SDL_Color clr) :
+  StringAndColor(const string& text, const SDL_Color& clr) :
     str(text), color(clr) {
   }
 
@@ -172,7 +172,7 @@ public:
   ItemName() :
     name(""), name_plural(""), name_a("") {
   }
-  ItemName(const string NAME, const string NAME_PLURAL, const string NAME_A) :
+  ItemName(const string& NAME, const string& NAME_PLURAL, const string& NAME_A) :
     name(NAME), name_plural(NAME_PLURAL), name_a(NAME_A) {
   }
 
@@ -184,7 +184,7 @@ public:
   ItemAttackMessages() :
     player(""), other("") {
   }
-  ItemAttackMessages(const string PLAYER, const string OTHER) :
+  ItemAttackMessages(const string& PLAYER, const string& OTHER) :
     player(PLAYER), other(OTHER) {
   }
 

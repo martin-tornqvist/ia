@@ -370,4 +370,3 @@ void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFa
     }
   }
 }
-

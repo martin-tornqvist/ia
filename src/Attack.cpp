@@ -127,12 +127,12 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
         }
       }
     }
-    const StatusEffectsHandler* const status = data.currentDefender->getStatusEffectsHandler();
+    StatusEffectsHandler* const status = data.currentDefender->getStatusEffectsHandler();
     if(isDefenderAware == false || isDefenderHeldByWeb || status->hasEffect(statusParalyzed) ||
         status->hasEffect(statusNailed) || status->hasEffect(statusFainted)) {
       data.totalSkill += 50;
     }
-    if(status->hasEffect(statusBlind) || status->hasEffect(statusConfused) ||
+    if(status->allowSee() == false || status->hasEffect(statusConfused) ||
         status->hasEffect(statusSlowed) || status->hasEffect(statusBurning)) {
       data.totalSkill += 20;
     }

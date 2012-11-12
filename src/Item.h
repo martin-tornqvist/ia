@@ -18,9 +18,7 @@ public:
 
   virtual ~Item();
 
-  virtual void reset() {
-    numberOfItems = 1;
-  }
+  virtual void reset();
 
   const ItemDefinition& getDef() const {
     return *def_;

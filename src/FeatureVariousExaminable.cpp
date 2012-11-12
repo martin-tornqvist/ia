@@ -49,6 +49,15 @@ void Altar::examine() {
 
 }
 
+Pillar::Pillar(Feature_t id, coord pos, Engine* engine) :
+  FeatureStatic(id, pos, engine) {
+
+}
+
+void Pillar::examine() {
+
+}
+
 CarvedPillar::CarvedPillar(Feature_t id, coord pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {
 

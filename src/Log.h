@@ -35,7 +35,7 @@ public:
 
   void clearLog();
 
-  void addLineToHistory(const string lineToAdd) {
+  void addLineToHistory(const string& lineToAdd) {
     vector<Message> historyLine;
     historyLine.push_back(Message(lineToAdd, clrWhite));
     history.push_back(historyLine);
