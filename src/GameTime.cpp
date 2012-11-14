@@ -172,7 +172,7 @@ void GameTime::runNewTurnEvents() {
   if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 55;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
-      eng->populate->spawnOneMonster(true);
+      eng->populate->spawnOneMonster();
     }
   }
 

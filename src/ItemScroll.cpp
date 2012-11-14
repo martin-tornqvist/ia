@@ -208,7 +208,7 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
   }
 }
 
- void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
   engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusClairvoyant(engine), true, false);
   setRealDefinitionNames(engine, false);
@@ -288,7 +288,7 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 void Scroll::attemptMemorizeIfLearnable(Engine* const engine) {
   if(def_->isScrollLearned == false && def_->isScrollLearnable) {
     if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned)) {
-      const int CHANCE_TO_LEARN = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 100 : 70;
+      const int CHANCE_TO_LEARN = 75;
       if(engine->dice.getInRange(0, 100) < CHANCE_TO_LEARN) {
         engine->log->addMessage("I learn to cast this incantation by heart!");
         def_->isScrollLearned = true;
@@ -324,7 +324,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
       }
       engine->postmortem->setCauseOfDeath("Miscast a spell");
       engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
-      engine->player->hit(engine->dice(1, 6), damageType_direct);
+      engine->player->hit(engine->dice(1, 6), damageType_pure);
     }
   }
   if(engine->player->deadState == actorDeadState_alive) {
@@ -342,23 +342,24 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     return false;
   }
 
-  if(def_->isIdentified) {
+  const bool IS_IDENTIFIED_BEFORE_READING = def_->isIdentified;
+
+  if(IS_IDENTIFIED_BEFORE_READING) {
+    engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
     specificRead(false, engine);
     attemptMemorizeIfLearnable(engine);
     engine->player->shock(shockValue_heavy, 0);
-    engine->gameTime->letNextAct();
-    return true;
   } else {
     engine->log->addMessage("I recite forbidden incantations...");
+    def_->isTried = true;
     specificRead(false, engine);
+    engine->player->shock(shockValue_heavy, 0);
     if(def_->isIdentified) {
       engine->log->addMessage("It was " + def_->name.name_a + ".");
-      attemptMemorizeIfLearnable(engine);
     }
-    engine->player->shock(shockValue_heavy, 0);
-    engine->gameTime->letNextAct();
-    return true;
   }
+  engine->gameTime->letNextAct();
+  return true;
 }
 
 void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFailString) {

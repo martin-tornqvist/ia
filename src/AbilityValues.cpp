@@ -25,7 +25,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     } break;
 
     case ability_accuracyMelee: {
-      val += 35;
+      val += 55;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptMeleeCombatant))
         val += 15;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulMeleeCombatant))
@@ -75,9 +75,9 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     case ability_stealth: {
       val += 30;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_stealthy))
-        val += 40;
+        val += 45;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_imperceptible))
-        val += 25;
+        val += 20;
     } break;
     default: {
     } break;

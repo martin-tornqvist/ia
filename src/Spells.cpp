@@ -73,7 +73,7 @@ void SpellShriveling::specificCast(const SpellData& d, Engine* const eng) {
       }
     }
 
-    const bool DIED = actor->hit(eng->dice(1, 6), damageType_direct);
+    const bool DIED = actor->hit(eng->dice(1, 6), damageType_pure);
     if(DIED == true) {
       if(actor == eng->player) {
         eng->postmortem->setCauseOfDeath("Killed by shriveling spell");
@@ -341,7 +341,7 @@ void Spell::monsterCast(Monster* const monster, Engine* const eng) {
     eng->log->addMessage(SPELL_MESSAGE);
   }
 
-  monster->spellCoolDownCurrent = monster->getDef()->spellCooldown;
+  monster->spellCoolDownCurrent = monster->getDef()->spellCooldownTurns;
   specificMonsterCast(monster, eng);
   eng->gameTime->letNextAct();
 }

@@ -5,22 +5,21 @@
 void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line) const {
   const ActorDefinition* const def = actor->getDef();
 
-  if(def->unique == false) {
+  if(def->isUnique) {
+    if(def->spawnMinLevel < LAST_CAVERN_LEVEL) {
+      line += " " + def->name_the + " is normally found beneath level " + getDwellingLevelStr(*def) + ". ";
+    }
+  } else {
     line += " They tend to dwell " + getNormalGroupSizeStr(*def);
     line += " beneath level " + getDwellingLevelStr(*def) + ".";
     line += " They move " + getSpeedStr(*def) + ". ";
-  } else {
-    if(def->spawnStandardMinLevel < LAST_CAVERN_LEVEL) {
-      line += " " + def->name_the + " is normally found beneath level " + getDwellingLevelStr(*def) + ". ";
-    }
   }
 }
 
 string AutoDescribeActor::getNormalGroupSizeStr(const ActorDefinition& def) const {
-  const int CHANCE = def.chanceToSpawnExtra;
+  const MonsterGroupSize_t s = def.groupSize;
 
-  return CHANCE >= 100 ? "in swarms" : CHANCE >= 95 ? "in large groups" : CHANCE >= 80 ? "in small or large groups"
-         : CHANCE >= 70 ? "in small groups" : CHANCE >= 30 ? "alone or in small groups" : "alone";
+  return s == monsterGroupSize_alone ? "alone" : s == monsterGroupSize_few ? "in groups of a few" : "in hordes";
 }
 
 string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {
@@ -50,7 +49,7 @@ string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {
 }
 
 string AutoDescribeActor::getDwellingLevelStr(const ActorDefinition& def) const {
-  return intToString(max(1, def.spawnStandardMinLevel));
+  return intToString(max(1, def.spawnMinLevel));
 }
 
 string AutoDescribeActor::getNrOfKillsStr(const ActorDefinition& def) const {

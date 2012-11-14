@@ -234,7 +234,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 8);
+    return DiceParam(1, 8, 4);
   }
 };
 

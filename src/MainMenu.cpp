@@ -62,7 +62,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   if(eng->config->USE_TILE_SET) {
     eng->renderer->drawMainMenuLogo(1);
-    yPos += 11;
+    yPos += 10;
   } else {
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
     for(unsigned int i = 0; i < logo.size(); i++) {

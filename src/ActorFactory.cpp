@@ -155,19 +155,16 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
   return monster;
 }
 
-Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET, const bool IS_AFTER_MAP_CREATION) {
+Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET) {
   const int DLVL = eng->map->getDungeonLevel();
   vector<ActorDevNames_t> monsterCandidates;
   const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorDevNames);
   for(unsigned int i = 1; i < ACTORS_DEFINED; i++) {
     const ActorDefinition& def = eng->actorData->actorDefinitions[i];
 
-    const bool IS_LVL_OK = DLVL + SPAWN_LVL_OFFSET >= def.spawnStandardMinLevel && DLVL <= def.spawnStandardMaxLevel;
+    const bool IS_LVL_OK = DLVL + SPAWN_LVL_OFFSET >= def.spawnMinLevel && DLVL <= def.spawnMaxLevel;
 
-    const bool IS_ALLOWED_TO_SPAWN =
-      def.spawnRate != spawnNever &&
-      def.nrLeftAllowedToSpawn != 0 &&
-      (IS_AFTER_MAP_CREATION == false || def.isAllowedToSpawnAfterMapCreation);
+    const bool IS_ALLOWED_TO_SPAWN = def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
 
     const bool IS_FEATURE_PASSABLE = eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
 

@@ -15,7 +15,23 @@ enum MoveType_t {
 };
 
 enum DamageTypes_t {
-  damageType_physical, damageType_fire, damageType_electricity, damageType_acid, damageType_direct, endOfDamageTypes
+  damageType_physical,
+  damageType_fire,
+  damageType_cold,
+  damageType_acid,
+  damageType_electric,
+  damageType_spirit,
+  damageType_light,
+  damageType_pure,
+  endOfDamageTypes
+};
+
+enum ShockValues_t
+{
+  shockValue_none,
+  shockValue_mild,
+  shockValue_some,
+  shockValue_heavy
 };
 
 enum GameEntry_t {

@@ -27,6 +27,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->chanceToIncludeInSpawnList = 100;
     d->isStackable = true;
     d->isIdentified = true;
+    d->isTried = false;
     d->glyph = 'X';
     d->color = clrWhite;
     d->tile = tile_empty;
@@ -228,12 +229,12 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
 
   //Set 1dY dmg from formula
   const int DMG_Y_CAP = 999;
-  const int DMG_Y_BASE = 2;
+  const int DMG_Y_BASE = 1;
   const double DMG_Y_INCR = 0.2;
   const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
   const double DMG_Y_BEFORE_STR = DMG_Y_BASE + static_cast<double>(ACTOR_LEVEL - 1) * DMG_Y_INCR;
   const int DMG_Y_AFTER_STR = static_cast<int>(ceil(DMG_Y_BEFORE_STR * DMG_STRENGTH_FACTOR));
-  const int DMG_Y_AFTER_CAP = min(DMG_Y_CAP, DMG_Y_AFTER_STR);
+  const int DMG_Y_AFTER_CAP = max(1, min(DMG_Y_CAP, DMG_Y_AFTER_STR));
 
   //Set + dmg from formula
 //  const int DMG_PLUS_CAP = 6;
@@ -405,7 +406,7 @@ void ItemData::makeList() {
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(2, 3, 2);
-  d->rangedDamageType = damageType_electricity;
+  d->rangedDamageType = damageType_electric;
   d->rangedAmmoTypeUsed = item_teslaCanister;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
   d->rangedSoundMessage = "I hear loud electric crackle.";
@@ -583,10 +584,10 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_sledgeHammer);
   resetDef(d, itemDef_meleeWpn);
-  d->name = ItemName("Sledge Hammer", "Sledge Hammers", "a Sledge Hammer");
+  d->name = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
   d->itemWeight = itemWeight_heavy;
   d->tile = tile_sledgeHammer;
-  d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledge Hammer");
+  d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledgehammer");
   d->meleeDmg = pair<int, int>(3, 5);
   d->meleeBaseAttackSkill = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
@@ -795,7 +796,7 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrYellow;
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
-  d->rangedDamageType = damageType_electricity;
+  d->rangedDamageType = damageType_electric;
   d->rangedStatusEffect = new StatusParalyzed(2);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
@@ -889,8 +890,8 @@ void ItemData::makeList() {
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints[damageType_acid] = 1;
   d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electricity] = 2;
-  d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
+  d->armorData.absorptionPoints[damageType_electric] = 2;
+  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
   d->armorData.absorptionPoints[damageType_fire] = 1;
   d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
   d->armorData.absorptionPoints[damageType_physical] = 1;
@@ -907,8 +908,8 @@ void ItemData::makeList() {
   d->spawnStandardMinDLVL = 2;
   d->armorData.absorptionPoints[damageType_acid] = 1;
   d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electricity] = 0;
-  d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
+  d->armorData.absorptionPoints[damageType_electric] = 0;
+  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
   d->armorData.absorptionPoints[damageType_fire] = 1;
   d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
   d->armorData.absorptionPoints[damageType_physical] = 4;
@@ -925,8 +926,8 @@ void ItemData::makeList() {
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints[damageType_acid] = 1;
   d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electricity] = 0;
-  d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
+  d->armorData.absorptionPoints[damageType_electric] = 0;
+  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
   d->armorData.absorptionPoints[damageType_fire] = 1;
   d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
   d->armorData.absorptionPoints[damageType_physical] = 3;
@@ -1060,6 +1061,7 @@ void ItemData::addSaveLines(vector<string>& lines) const {
     if(itemDefinitions[i]->isScroll) {
       lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
       lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
+      lines.push_back(itemDefinitions[i]->isTried ? "1" : "0");
       lines.push_back(intToString(itemDefinitions[i]->castFromMemoryChance));
     }
   }
@@ -1075,6 +1077,8 @@ void ItemData::setParametersFromSaveLines(vector<string>& lines) {
       itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
       itemDefinitions[i]->isScrollLearned = lines.front() == "0" ? false : true;
+      lines.erase(lines.begin());
+      itemDefinitions[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
       itemDefinitions[i]->castFromMemoryChance = stringToInt(lines.front());
       lines.erase(lines.begin());
@@ -1117,7 +1121,6 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
   return false;
 }
 
-// TODO This function SUCKS! More parameters needed
 string ItemData::itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const {
   const ItemDefinition& d = item->getDef();
 
@@ -1136,9 +1139,15 @@ string ItemData::itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_F
       const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
       str += PLUS > 0 ? " (+" + intToString(PLUS) + ")" : PLUS < 0 ? " (-" + intToString(PLUS) + ")" : "";
     }
-    if(d.isArmor == true) {
+    if(d.isArmor) {
       str += " " + dynamic_cast<Armor*>(item)->getArmorDataLine();
     }
   }
+
+  if((d.isScroll || d.isQuaffable) && d.isIdentified == false && d.isTried) {
+    str += " {tried}";
+  }
+
   return str;
 }
+

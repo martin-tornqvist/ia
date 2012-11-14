@@ -334,6 +334,8 @@ void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition&
 
 void Potion::quaff(Actor* const actor, Engine* const engine) {
   if(actor == engine->player) {
+    def_->isTried = true;
+
     engine->player->shock(shockValue_heavy, 0);
 
     if(def_->isIdentified) {

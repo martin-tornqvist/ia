@@ -544,7 +544,7 @@ void FeatureData::makeList() {
   d.glyph = '+';
   d.color = clrGray;
   d.tile = tile_chestClosed;
-  d.isMovePassable[moveType_walk] = false;
+  d.isMovePassable[moveType_walk] = true;
   d.isShootPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;

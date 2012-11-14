@@ -169,6 +169,7 @@ public:
   int chanceToIncludeInSpawnList;
   bool isStackable;
   bool isIdentified;
+  bool isTried;
   ItemName name;
   char glyph;
   SDL_Color color;
@@ -226,8 +227,6 @@ public:
   Audio_t reloadAudio;
   StatusEffect* rangedStatusEffect;
   string causeOfDeathMessage;
-//	Abilities_t abilityToIdentify;
-//	int abilityValueRequiredToIdentify;
   int castFromMemoryChance;
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;

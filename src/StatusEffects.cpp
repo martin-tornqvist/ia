@@ -165,7 +165,8 @@ coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePo
   engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
 
   if(actorPos != movePos) {
-    if(engine->dice(1, 100) < 50) {
+    const int CHANCE_TO_MOVE_WRONG = 60;
+    if(engine->dice(1, 100) < CHANCE_TO_MOVE_WRONG) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y

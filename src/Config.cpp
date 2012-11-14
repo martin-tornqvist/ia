@@ -137,7 +137,7 @@ void Config::setDefaultVariables() {
   FONT_IMAGE_NAME = fontImageNames.back();
   parseFontNameAndSetCellDims();
   FULLSCREEN = false;
-  WALL_SYMBOL_FULL_SQUARE = true;
+  WALL_SYMBOL_FULL_SQUARE = false;
   SKIP_INTRO_LEVEL = false;
   RANGED_WPN_MELEE_PROMPT = true;
   KEY_REPEAT_DELAY = 180;

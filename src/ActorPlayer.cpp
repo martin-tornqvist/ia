@@ -965,15 +965,15 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     if(pos == dest) {
       bool isFreeTurn = false;
       if(isSwiftMoveAllowed) {
-        if(eng->playerBonusHandler->isBonusPicked(playerBonus_quick)) {
-          const int CHANCE_FOR_SWIFT_MOVE = 10;
-          if(eng->dice.getInRange(0, 100) < CHANCE_FOR_SWIFT_MOVE) {
-            isFreeTurn = true;
-            eng->playerVisualMemory->updateVisualMemory();
-            eng->player->FOVupdate();
-            eng->renderer->drawMapAndInterface();
-          }
-        }
+//        if(eng->playerBonusHandler->isBonusPicked(playerBonus_quick)) {
+//          const int CHANCE_FOR_SWIFT_MOVE = 10;
+//          if(eng->dice.getInRange(0, 100) < CHANCE_FOR_SWIFT_MOVE) {
+//            isFreeTurn = true;
+//            eng->playerVisualMemory->updateVisualMemory();
+//            eng->player->FOVupdate();
+//            eng->renderer->drawMapAndInterface();
+//          }
+//        }
       }
       if(isFreeTurn == false) {
         eng->gameTime->letNextAct();

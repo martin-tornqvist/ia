@@ -36,16 +36,14 @@ enum ActorDevNames_t {
   endOfActorDevNames
 };
 
-enum ShockValues_t
-{
-  shockValue_none,
-  shockValue_mild,
-  shockValue_some,
-  shockValue_heavy
+enum MonsterGroupSize_t {
+  monsterGroupSize_alone,
+  monsterGroupSize_few,
+  monsterGroupSize_group,
+  monsterGroupSize_horde
 };
 
-enum ActorSpeed_t
-{
+enum ActorSpeed_t {
   actorSpeed_sluggish,
   actorSpeed_slow,
   actorSpeed_normal,
@@ -53,15 +51,19 @@ enum ActorSpeed_t
   actorSpeed_fastest
 };
 
-enum ActorErratic_t
-{
+enum ActorErratic_t {
   actorErratic_never = 0,
   actorErratic_rare = 8,
   actorErratic_somewhat = 25,
   actorErratic_very = 50
 };
 
-enum ActorSizes_t {actorSize_none, actorSize_floor, actorSize_humanoid, actorSize_giant};
+enum ActorSizes_t {
+  actorSize_none,
+  actorSize_floor,
+  actorSize_humanoid,
+  actorSize_giant
+};
 
 struct AiBehavior {
 public:
@@ -69,6 +71,11 @@ public:
     makesRoomForFriend(false), attemptsAttack(false), pathsToTargetWhenAware(false),
     movesTowardTargetWhenVision(false), movesTowardLair(false),
     movesTowardLeader(false) {}
+
+  void reset() {
+    looks = listens = respondsWithPhrase = makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware =
+        movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
+  }
 
   bool looks, listens, respondsWithPhrase, makesRoomForFriend, attemptsAttack,
   pathsToTargetWhenAware, movesTowardTargetWhenVision, movesTowardLair,
@@ -84,46 +91,41 @@ public:
   void reset();
 
   ActorDevNames_t devName;
-  ActorSpeed_t speed;
-  int nrTurnsAttackDisablesMelee;
-  int nrTurnsAttackDisablesRanged;
-  MoveType_t moveType;
-  AiBehavior aiBehavior;
-  int hpMax;
   string name_a;
   string name_the;
-  AbilityValues abilityValues;
-  PhraseSets_t phraseSet;
+  Tile_t tile;
   char glyph;
   SDL_Color color;
-  Tile_t tile;
-  SpawnRate_t spawnRate;
-  bool isAllowedToSpawnAfterMapCreation;
-  int spawnStandardMinLevel;
-  int spawnStandardMaxLevel;
   int monsterLvl;
-  int chanceToSpawnExtra;
+  MonsterGroupSize_t groupSize;
+  int hpMax;
+  ActorSpeed_t speed;
+  MoveType_t moveType;
+  int rangedCooldownTurns, spellCooldownTurns;
+  int dmgResPhys, dmgResFire, dmgResCold, dmgResAcid, dmgResElectric, dmgResSpirit, dmgResLight;
+  AbilityValues abilityValues;
+  AiBehavior aiBehavior;
+  int nrTurnsAwarePlayer;
+  int spawnMinLevel, spawnMaxLevel;
   ActorSizes_t actorSize;
   bool isHumanoid;
-  string description;
-  bool allowAutoDescription;
+  bool isAutoDescriptionAllowed;
   string deathMessageOverride;
   int nrOfKills;
-  bool canOpenDoors;
-  bool canBashDoors;
-  int nrTurnsAwarePlayer;
+  bool canOpenDoors, canBashDoors;
   int nrLeftAllowedToSpawn;
-  bool unique;
+  bool isUnique;
+  bool isAutoSpawnAllowed;
   string spellCastMessage;
-  int spellCooldown;
   ActorErratic_t erraticMovement;
   ShockValues_t shockValue;
-  bool isRat, isCanine, isSpider;
-  bool isUndead;
+  bool isRat, isCanine, isSpider, isUndead;
   bool canBeSummoned;
   bool canBleed;
   bool canDodge;
   vector<RoomTheme_t> nativeRooms;
+  string description;
+  PhraseSets_t phraseSet;
 };
 
 class ActorData {

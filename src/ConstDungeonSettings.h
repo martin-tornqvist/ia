@@ -9,7 +9,7 @@ const int MAP_X_CELLS_HALF = MAP_X_CELLS / 2;
 const int MAP_Y_CELLS_HALF = MAP_Y_CELLS / 2;
 
 //Maximum player experience level
-const int PLAYER_MAX_LEVEL = 30;//10;
+const int PLAYER_MAX_LEVEL = 21;
 
 const int FIRST_CAVERN_LEVEL = 15;
 const int LAST_CAVERN_LEVEL = 24;

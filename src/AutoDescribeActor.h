@@ -18,19 +18,19 @@ class Actor;
 
 class AutoDescribeActor
 {
-   public:
-      AutoDescribeActor(Engine* engine) : eng(engine) {}
-      ~AutoDescribeActor() {}
+public:
+  AutoDescribeActor(Engine* engine) : eng(engine) {}
+  ~AutoDescribeActor() {}
 
-      void addAutoDescriptionLines(Actor* const actor, string& line) const;
+  void addAutoDescriptionLines(Actor* const actor, string& line) const;
 
-   private:
-      string getNormalGroupSizeStr(const ActorDefinition& def) const;
-      string getDwellingLevelStr(const ActorDefinition& def) const;
-      string getNrOfKillsStr(const ActorDefinition& def) const;
-      string getSpeedStr(const ActorDefinition& def) const;
+private:
+  string getNormalGroupSizeStr(const ActorDefinition& def) const;
+  string getDwellingLevelStr(const ActorDefinition& def) const;
+  string getNrOfKillsStr(const ActorDefinition& def) const;
+  string getSpeedStr(const ActorDefinition& def) const;
 
-      Engine* eng;
+  Engine* eng;
 };
 
 #endif

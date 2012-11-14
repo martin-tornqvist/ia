@@ -15,10 +15,9 @@ public:
 
 	void populate() const;
 
-	void spawnOneMonster(const bool IS_AFTER_MAP_CREATION) const;
+	void spawnOneMonster() const;
 
-	bool spawnGroupOfMonstersAtFreeCells(
-	   vector<coord>& freeCells, const bool IS_AFTER_MAP_CREATION, const bool ALLOW_ROAM /*,
+	bool spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const bool ALLOW_ROAM /*,
 	   const RoomTheme_t belongingToSpecialRoomType = endOfRoomThemes */) const;
 
 private:

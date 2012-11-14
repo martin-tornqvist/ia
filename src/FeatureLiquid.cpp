@@ -14,17 +14,13 @@ FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, coord pos, Engine* engi
 void FeatureLiquidShallow::bump(Actor* actorBumping) {
   if(actorBumping->getDef()->moveType == moveType_walk) {
 
-    const bool IS_PLAYER = actorBumping == eng->player;
-    const bool PLAYER_IS_QUICK = eng->playerBonusHandler->isBonusPicked(playerBonus_quick);
+    actorBumping->getStatusEffectsHandler()->attemptAddEffect(new StatusWaiting(eng));
 
-    if(IS_PLAYER == false || PLAYER_IS_QUICK == false) {
-      actorBumping->getStatusEffectsHandler()->attemptAddEffect(new StatusWaiting(eng));
-      if(IS_PLAYER) {
-        if(actorBumping->getStatusEffectsHandler()->hasEffect(statusWaiting)) {
-          eng->log->addMessage("*glop*");
-          eng->renderer->flip();
-        }
-      }
+    const bool IS_PLAYER = actorBumping == eng->player;
+
+    if(IS_PLAYER) {
+      eng->log->addMessage("*glop*");
+      eng->renderer->flip();
     }
   }
 }

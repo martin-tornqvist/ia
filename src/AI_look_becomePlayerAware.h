@@ -19,7 +19,7 @@ public:
       for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
         Actor* const actor = monster->spotedEnemies.at(i);
         if(actor == engine->player) {
-          const int PLAYER_SNEAK = engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *monster);
+          const int PLAYER_SNEAK = engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *(engine->player));
           if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
             monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
             return;

@@ -374,7 +374,7 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor, const AbilityRoll
     }
   }
 
-  actor->eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng->dice(3, 6)), true, getTrapSpecificColor());
+  actor->eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng), true, getTrapSpecificColor());
 }
 
 void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -397,7 +397,7 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityR
     }
   }
 
-  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng->dice(3, 6)), true, getTrapSpecificColor());
+  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng), true, getTrapSpecificColor());
 }
 
 void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -420,7 +420,7 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResul
     }
   }
 
-  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng->dice(3, 6)), true, getTrapSpecificColor());
+  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng), true, getTrapSpecificColor());
 }
 
 void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -447,14 +447,14 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRol
     if(IS_PLAYER) {
       if(CAN_SEE) {
         eng->log->addMessage("A sharp flash of light pierces my eyes!", clrWhite);
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
+        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng));
       } else {
         eng->log->addMessage("I feel a mechanism trigger!", clrWhite);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
         eng->log->addMessage(actorName + " is hit by a flash of blinding light!");
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
+        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng));
       }
     }
   }

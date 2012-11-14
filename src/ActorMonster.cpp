@@ -28,8 +28,6 @@
 #include "AI_castRandomSpell.h"
 
 void Monster::act() {
-//  tracer << "Monster::act(), " << m_instanceDefinition.name_a << ", x:" << pos.x << " y:" << pos.y << ", " << this << endl;
-
   getSpotedEnemies();
 
   target = eng->mapTests->getClosestActor(pos, spotedEnemies);
@@ -75,7 +73,6 @@ void Monster::act() {
   // TODO temporary restriction, allow this later(?)
   if(leader != eng->player) {
     if(actorSpecificAct()) {
-//      tracer << "   Monster: Ran actorSpecificAct()" << endl;
       return;
     }
   }
@@ -84,16 +81,8 @@ void Monster::act() {
   if(ai.makesRoomForFriend) {
     if(leader != eng->player) {
       if(AI_makeRoomForFriend::action(this, eng)) {
-//				tracer << "   Monster: Ran AI_makeRoomForFriend()" << endl;
         return;
       }
-    }
-  }
-
-  if(eng->dice(1, 100) < def_->erraticMovement) {
-    if(AI_moveToRandomAdjacentCell::action(this, eng)) {
-//			tracer << "   Monster: Ran AI_moveToRandomAdjacentCell() (first)" << endl;
-      return;
     }
   }
 
@@ -101,7 +90,6 @@ void Monster::act() {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
     if(eng->dice(1, 100) < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(AI_castRandomSpellIfAware::action(this, eng)) {
-//				tracer << "   Monster: Ran AI_castRandomSpellIfAware() (first)" << endl;
         return;
       }
     }
@@ -110,7 +98,6 @@ void Monster::act() {
   if(ai.attemptsAttack) {
     if(target != NULL) {
       if(attemptAttack(target->pos)) {
-//				tracer << "   Monster: Ran attemptAttack()" << endl;
         return;
       }
     }
@@ -118,14 +105,18 @@ void Monster::act() {
 
   if(target != NULL) {
     if(AI_castRandomSpellIfAware::action(this, eng)) {
-//			tracer << "   Monster: Ran AI_castRandomSpellIfAware() (second)" << endl;
+      return;
+    }
+  }
+
+  if(eng->dice(1, 100) < def_->erraticMovement) {
+    if(AI_moveToRandomAdjacentCell::action(this, eng)) {
       return;
     }
   }
 
   if(ai.movesTowardTargetWhenVision) {
     if(AI_moveTowardsTargetSimple::action(this, eng)) {
-//			tracer << "   Monster: Ran moveTowardsTargetSimple()" << endl;
       return;
     }
   }
@@ -140,20 +131,17 @@ void Monster::act() {
 
   if(leader != eng->player) {
     if(AI_handleClosedBlockingDoor::action(this, &path, eng)) {
-//			tracer << "   Monster: Ran AI_handleClosedBlockingDoor()" << endl;
       return;
     }
   }
 
   if(AI_stepPath::action(this, &path)) {
-//		tracer << "   Monster: Ran AI_stepPath() (after AI_setPathToPlayerIfAware())" << endl;
     return;
   }
 
   if(ai.movesTowardLeader) {
     AI_setPathToLeaderIfNoLosToleader::learn(this, &path, eng);
     if(AI_stepPath::action(this, &path)) {
-//			tracer << "   Monster: Ran AI_stepPath() (after AI_setPathToLeaderIfNoLosToLeader())" << endl;
       return;
     }
   }
@@ -161,23 +149,18 @@ void Monster::act() {
   if(ai.movesTowardLair) {
     if(leader != eng->player) {
       if(AI_stepToLairIfHasLosToLair::action(this, lairCell_, eng)) {
-//				tracer << "   Monster: Ran AI_stepToLairIfHasLosToLair()" << endl;
         return;
       }
       AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell_, eng);
       if(AI_stepPath::action(this, &path)) {
-//				tracer << "   Monster: Ran AI_stepPath() (after setPathToLairIfNoLosToLair())" << endl;
         return;
       }
     }
   }
 
   if(AI_moveToRandomAdjacentCell::action(this, eng)) {
-//		tracer << "   Monster: Ran AI_moveToRandomAdjacentCell() (second)" << endl;
     return;
   }
-
-//	tracer << "   Monster: No action taken" << endl;
 
   eng->gameTime->letNextAct();
 }
@@ -236,8 +219,6 @@ bool Monster::attemptAttack(const coord& attackPos) {
         if(attack.weapon != NULL) {
           if(attack.melee) {
             if(attack.weapon->getDef().isMeleeWeapon) {
-              const int NR_TURNS_DISABLED_MELEE = def_->nrTurnsAttackDisablesMelee;
-              statusEffectsHandler_->attemptAddEffect(new StatusDisabledAttackMelee(NR_TURNS_DISABLED_MELEE));
               eng->attack->melee(attackPos.x, attackPos.y, attack.weapon);
               return true;
             }
@@ -247,7 +228,7 @@ bool Monster::attemptAttack(const coord& attackPos) {
                 eng->reload->reloadWeapon(this);
                 return true;
               } else {
-                const int NR_TURNS_DISABLED_RANGED = def_->nrTurnsAttackDisablesRanged;
+                const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
                 statusEffectsHandler_->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
                 eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
                 return true;

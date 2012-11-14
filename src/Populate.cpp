@@ -30,7 +30,7 @@ int Populate::getOutOfDepthOffset() const {
   return 0;
 }
 
-bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const bool IS_AFTER_MAP_CREATION, const bool ALLOW_ROAM /*,
+bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const bool ALLOW_ROAM /*,
     const SpecialRoom_t belongingToSpecialRoomType */) const {
   if(freeCells.size() > 0) {
     tracer << "Populate::spawnGroupOfMonstersAtFreeCells()" << endl;
@@ -40,41 +40,41 @@ bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const b
 
     const int OUT_OF_DEPTH_OFFSET = getOutOfDepthOffset();
 
-//    tracer << "Populate: belongingToSpecialRoomType: " << belongingToSpecialRoomType << endl;
-
     Actor* originActor = NULL;
-//    if(belongingToSpecialRoomType == endOfSpecialRooms) {
-//      tracer << "Populate: no special room set, spawning any random actor" << endl;
-      originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET, IS_AFTER_MAP_CREATION);
-//    } else {
-//      tracer << "Populate: special room is set, spawning random actor belonging to room" << endl;
-//      originActor = eng->actorFactory->spawnRandomActorRelatedToSpecialRoom(pos, belongingToSpecialRoomType, OUT_OF_DEPTH_OFFSET);
-//    }
+    originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET);
 
     if(originActor != NULL) {
       dynamic_cast<Monster*>(originActor)->isRoamingAllowed = ALLOW_ROAM;
 
       freeCells.erase(freeCells.begin() + FREE_CELLS_ELEMENT);
 
-      const int DLVL_IS_ZERO = eng->map->getDungeonLevel() == 0;
+      int extraSpawns = 0;
 
-      const int CHANCE_FOR_EXTRA = dynamic_cast<Monster*>(originActor)->getDef()->chanceToSpawnExtra;
-
-      int baseChanceForExtra = CHANCE_FOR_EXTRA - 10 * DLVL_IS_ZERO;
+      const ActorDefinition* const d = originActor->getDef();
+      switch(d->groupSize) {
+      case monsterGroupSize_few: {
+        extraSpawns = eng->dice.getInRange(1, 2);
+      } break;
+      case monsterGroupSize_group: {
+        extraSpawns = eng->dice.getInRange(3, 6);
+      } break;
+      case monsterGroupSize_horde: {
+        extraSpawns = eng->dice.getInRange(7, 13);
+      } break;
+      default: {} break;
+      }
 
       IsCloserToOrigin isCloserToOrigin(pos, eng);
-
       sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
-      while(eng->dice(1, 100) < baseChanceForExtra) {
-        if(freeCells.size() > 0) {
+      for(int i = 0; i < extraSpawns; i++) {
+         if(freeCells.size() > 0) {
           const coord posExtra = freeCells.front();
-          Actor* const actor = eng->actorFactory->spawnActor(originActor->getDef()->devName, posExtra);
-          dynamic_cast<Monster*>(actor)->isRoamingAllowed = ALLOW_ROAM;
-          dynamic_cast<Monster*>(actor)->leader = originActor;
+          Actor* const actorExtra = eng->actorFactory->spawnActor(originActor->getDef()->devName, posExtra);
+          dynamic_cast<Monster*>(actorExtra)->isRoamingAllowed = ALLOW_ROAM;
+          dynamic_cast<Monster*>(actorExtra)->leader = originActor;
           freeCells.erase(freeCells.begin());
         }
-        baseChanceForExtra -= 5;
       }
       return true;
     }
@@ -92,7 +92,6 @@ void Populate::populate() const {
 
   const int MIN_DIST_FROM_PLAYER = eng->map->getDungeonLevel() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
 
-//  const unsigned int NR_OF_SPECIAL_ROOMS = eng->specialRoomHandler->getNrOfRooms();
   unsigned int i = 0;
   bool increaseIndex = true;
   while(i != freeCells.size()) {
@@ -102,15 +101,6 @@ void Populate::populate() const {
       increaseIndex = false;
     }
 
-//    if(i < freeCells.size()) {
-//      for(unsigned int room_i = 0; room_i < NR_OF_SPECIAL_ROOMS; room_i++) {
-//        if(eng->specialRoomHandler->getRoomAtIndex(room_i)->isCellInside(freeCells.at(i))) {
-//          freeCells.erase(freeCells.begin() + i);
-//          increaseIndex = false;
-//          room_i = 99999;
-//        }
-//      }
-//    }
     i += increaseIndex ? 1 : 0;
   }
 
@@ -143,7 +133,7 @@ void Populate::populate() const {
     }
   }
 
-  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 170 : 110;
+  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 750 : 110;
 
   tracer << "Populate: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 
@@ -156,12 +146,12 @@ void Populate::populate() const {
 
   //Spawn monsters randomly from the coord-vector
   for(int ii = 0; ii < nrMonsterGroupsOnMap; ii++) {
-    ii -= spawnGroupOfMonstersAtFreeCells(freeCells, false, true) == false ? 1 : 0;
+    ii -= spawnGroupOfMonstersAtFreeCells(freeCells, true) == false ? 1 : 0;
   }
   tracer << "Populate::populate() [DONE]" << endl;
 }
 
-void Populate::spawnOneMonster(const bool IS_AFTER_MAP_CREATION) const {
+void Populate::spawnOneMonster() const {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
   eng->basicUtils->reverseBoolArray(blockers);
@@ -190,7 +180,7 @@ void Populate::spawnOneMonster(const bool IS_AFTER_MAP_CREATION) const {
 
       if((dif.x >= MIN_DIST_FROM_PLAYER || dif.x <= -MIN_DIST_FROM_PLAYER) || (dif.y >= MIN_DIST_FROM_PLAYER || dif.y <= -MIN_DIST_FROM_PLAYER)) {
         const int OUT_OF_DEPTH_OFFSET = getOutOfDepthOffset();
-        eng->actorFactory->spawnRandomActor(freeCells.at(FREE_CELLS_ELEMENT), OUT_OF_DEPTH_OFFSET, IS_AFTER_MAP_CREATION);
+        eng->actorFactory->spawnRandomActor(freeCells.at(FREE_CELLS_ELEMENT), OUT_OF_DEPTH_OFFSET);
         done = true;
       } else {
         freeCells.erase(freeCells.begin() + FREE_CELLS_ELEMENT);

@@ -46,7 +46,7 @@ class Monster: public Actor {
 public:
   Monster() :
     playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0), shockDecrease(0),
-    isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL) {
+    isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL), waiting_(false) {
   }
 
   virtual ~Monster() {
@@ -96,6 +96,8 @@ public:
 
   Actor* leader;
   Actor* target;
+
+  bool waiting_;
 
 protected:
   void monsterHit();
