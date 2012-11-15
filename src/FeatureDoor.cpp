@@ -17,6 +17,8 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
 
   isOpenedAndClosedExternally_ = false;
 
+  isClued_ = false;
+
   const int ROLL = eng->dice(1, 100);
   const DoorSpawnState_t doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
@@ -120,7 +122,11 @@ bool Door::isSmokePassable() const {
 
 SDL_Color Door::getColor() const {
   if(isSecret_) {
-    return mimicFeature_->color;
+    if(isClued_) {
+      return clrYellow;
+    } else {
+      return mimicFeature_->color;
+    }
   }
   return material_ == doorMaterial_metal ? clrGray : clrBrownDark;
 }
@@ -160,7 +166,8 @@ string Door::getDescription(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? "the broken door" : "a broken door";
   }
   if(isSecret_) {
-    return DEFINITE_ARTICLE ? mimicFeature_->name_the : mimicFeature_->name_a;
+    const string cluedStr = isClued_ ? " {strange}" : "";
+    return (DEFINITE_ARTICLE ? mimicFeature_->name_the : mimicFeature_->name_a) + cluedStr;
   }
   if(isOpen_ == false) {
     return DEFINITE_ARTICLE ? "the closed door" : "a closed door";
@@ -183,14 +190,36 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
   }
 }
 
+void Door::clue() {
+  isClued_ = true;
+  if(eng->dice.coinToss()) {
+    eng->log->addMessage("Something seems odd about the wall here...");
+  } else {
+    eng->log->addMessage("I sense a draft here...");
+  }
+  eng->renderer->drawMapAndInterface(true);
+}
+
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
       const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
-
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
+      }
+    }
+  }
+}
+
+void Door::playerTryClueHidden() {
+  if(isSecret_ && isClued_ == false) {
+    if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
+      const Abilities_t abilityUsed = ability_searching;
+      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+      const int BONUS = 6;
+      if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
+        clue();
       }
     }
   }

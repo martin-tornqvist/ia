@@ -19,9 +19,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
   if(&actor == eng->player) {
     switch(ability) {
     case ability_searching: {
-      val += 1;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_observant))
-        val += 5;
+      val += 2;
     } break;
 
     case ability_accuracyMelee: {

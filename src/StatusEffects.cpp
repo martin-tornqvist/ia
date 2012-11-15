@@ -132,6 +132,7 @@ void StatusBlind::start() {
 }
 
 void StatusClairvoyant::newTurn(Engine* engine) {
+  (void)engine;
   turnsLeft--;
 }
 

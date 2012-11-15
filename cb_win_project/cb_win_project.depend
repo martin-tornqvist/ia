@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1352838866 source:c:\dev\ia\src\abilityvalues.cpp
+1353013402 source:c:\dev\ia\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -144,7 +144,7 @@
 	"Engine.h"
 	<math.h>
 
-1352841382 source:c:\dev\ia\src\actor.cpp
+1353007848 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -301,7 +301,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1351415900 c:\dev\ia\src\featuredoor.h
+1353007261 c:\dev\ia\src\featuredoor.h
 	"Feature.h"
 
 1352838832 c:\dev\ia\src\ai_look_becomeplayeraware.h
@@ -401,7 +401,7 @@
 1339441467 source:c:\dev\ia\src\actormigo.cpp
 	"monsterIncludeFiles.h"
 
-1352827394 source:c:\dev\ia\src\actormonster.cpp
+1353007788 source:c:\dev\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -441,7 +441,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1352827458 source:c:\dev\ia\src\actorplayer.cpp
+1353013454 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -955,7 +955,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1352759515 source:c:\dev\ia\src\featuredoor.cpp
+1353013147 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1156,7 +1156,7 @@
 	"Engine.h"
 	"Log.h"
 
-1352835215 source:c:\dev\ia\src\itemdata.cpp
+1352923144 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1447,7 +1447,7 @@
 	"DungeonMaster.h"
 	"MenuInputHandler.h"
 
-1352917437 source:c:\dev\ia\src\playerbonuses.cpp
+1353013504 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1605,7 +1605,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1352744694 source:c:\dev\ia\src\statuseffects.cpp
+1353011697 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"

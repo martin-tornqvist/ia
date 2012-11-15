@@ -724,10 +724,16 @@ void Player::act() {
     }
 
     if(statusEffectsHandler_->allowSee()) {
+
+      int x0 = pos.x - 1;
+      int y0 = pos.y - 1;
+      int x1 = pos.x + 1;
+      int y1 = pos.y + 1;
+
       //Look for secret doors and traps
-      for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
-          Feature* f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+      for(int y = y0; y <= y1; y++) {
+        for(int x = x0; x <= x1; x++) {
+          Feature* f = eng->map->featuresStatic[x][y];
 
           if(f->getId() == feature_trap) {
             dynamic_cast<Trap*>(f)->playerTrySpotHidden();
@@ -737,13 +743,31 @@ void Player::act() {
           }
         }
       }
+
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_observant)) {
+        const int CLUE_RADI = 3;
+        x0 = max(0, pos.x - CLUE_RADI);
+        y0 = max(0, pos.y - CLUE_RADI);
+        x1 = min(MAP_X_CELLS - 1, pos.x + CLUE_RADI);
+        y1 = max(MAP_Y_CELLS - 1, pos.y + CLUE_RADI);
+
+        for(int y = y0; y <= y1; y++) {
+          for(int x = x0; x <= x1; x++) {
+            Feature* f = eng->map->featuresStatic[x][y];
+            if(f->getId() == feature_door) {
+              Door* door = dynamic_cast<Door*>(f);
+              door->playerTryClueHidden();
+            }
+          }
+        }
+      }
+
       //Any item in the inventory that can be identified?
       attemptIdentifyItems();
     }
   }
 
   //First aid?
-  // Old way:
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");

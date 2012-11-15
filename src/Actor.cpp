@@ -26,25 +26,7 @@ Actor::~Actor() {
 void Actor::newTurn() {
   if(statusEffectsHandler_->allowAct()) {
     updateColor();
-
-    bool isActing = true;
-
-    if(this != eng->player) {
-      Monster* m = dynamic_cast<Monster*>(this);
-      if(m->playerAwarenessCounter <= 0) {
-        m->waiting_ = !m->waiting_;
-        if(m->waiting_) {
-          isActing = false;
-        }
-      }
-    }
-
-    if(isActing) {
-      act();
-    } else {
-      eng->gameTime->letNextAct();
-    }
-
+    act();
   } else {
     eng->gameTime->letNextAct();
   }

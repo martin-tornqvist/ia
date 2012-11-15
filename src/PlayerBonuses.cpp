@@ -26,7 +26,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
 //  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
   setBonus(playerBonus_nimble, "Nimble", "X% chance to reload instantly, swapping is always instant", playerBonus_adeptMeleeCombatant, playerBonus_adeptRangedCombatant);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
-  setBonus(playerBonus_observant, "Observant", "+5% chance to spot hidden things");
+  setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);
 //  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed");
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");

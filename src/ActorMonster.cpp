@@ -28,6 +28,15 @@
 #include "AI_castRandomSpell.h"
 
 void Monster::act() {
+  waiting_ = !waiting_;
+
+  if(waiting_) {
+    if(playerAwarenessCounter <= 0) {
+      eng->gameTime->letNextAct();
+      return;
+    }
+  }
+
   getSpotedEnemies();
 
   target = eng->mapTests->getClosestActor(pos, spotedEnemies);
