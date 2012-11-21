@@ -56,9 +56,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
     eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 1, 13 + i, quoteClr);
   }
 
-  SDL_Color clrGeneral = clrRedLight;
-  SDL_Color clrDark = clrRed;
-  SDL_Color clrBright = clrWhite;
+  SDL_Color clrGeneral = clrRed;
+  SDL_Color clrBright = clrRedLight;
 
   if(eng->config->USE_TILE_SET) {
     eng->renderer->drawMainMenuLogo(1);

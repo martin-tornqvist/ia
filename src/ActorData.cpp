@@ -24,8 +24,9 @@ void ActorDefinition::reset() {
   speed = actorSpeed_normal;
   moveType = moveType_walk;
   rangedCooldownTurns = spellCooldownTurns = 0;
-  dmgResPhys = dmgResFire = dmgResCold = dmgResAcid = dmgResElectric = dmgResSpirit = 0;
-  dmgResLight = 100;
+  isResPhys = isResFire = isResCold = isResAcid = isResElectric = isResSpirit = false;
+  isImmunePhys = isImmuneFire = isImmuneCold = isImmuneAcid = isImmuneElectric = isImmuneSpirit = false;
+  isResLight = isImmuneLight = true;
   abilityValues.reset();
   aiBehavior.reset();
   nrTurnsAwarePlayer = 0;

@@ -28,25 +28,13 @@ void ItemPickup::tryPick() {
     const string ITEM_NAME = eng->itemData->itemInterfaceName(item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
-    if(item->getDef().isMissileWeapon == true) {
+    if(item->getDef().isMissileWeapon) {
       Item* const carriedMissile = playerInventory->getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
         if(item->getDef().devName == carriedMissile->getDef().devName) {
           eng->log->addMessage("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->numberOfItems += item->numberOfItems;
           delete item;
-          eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
-          eng->gameTime->letNextAct();
-          return;
-        }
-      } else {
-        eng->log->addMessage("Use " + ITEM_NAME + " as thrown weapon (y/n)?");
-        eng->renderer->flip();
-        if(eng->query->yesOrNo() == true) {
-          eng->log->clearLog();
-          eng->log->addMessage("I pick up " + ITEM_NAME + ".");
-          eng->renderer->flip();
-          playerInventory->putItemInSlot(slot_missiles, item, true, true);
           eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
           eng->gameTime->letNextAct();
           return;

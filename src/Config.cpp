@@ -30,7 +30,8 @@ Config::Config(Engine* engine) :
   fontImageNames.resize(0);
   fontImageNames.push_back("images/8x12.bmp");
   fontImageNames.push_back("images/11x19.bmp");
-  fontImageNames.push_back("images/16x24.bmp");
+  fontImageNames.push_back("images/16x24_clean_v1.bmp");
+  fontImageNames.push_back("images/16x24_clean_v2.bmp");
   fontImageNames.push_back("images/16x24_typewriter.bmp");
 
   vector<string> lines;
@@ -246,7 +247,7 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
     USE_TILE_SET = !USE_TILE_SET;
     if(USE_TILE_SET) {
       if(CELL_W != 16 || CELL_H != 24) {
-        FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
+        FONT_IMAGE_NAME = "images/16x24_clean_v1.bmp";
       }
     }
     parseFontNameAndSetCellDims();
@@ -361,7 +362,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   } else {
     USE_TILE_SET = true;
     if(CELL_W != 16 || CELL_H != 24) {
-      FONT_IMAGE_NAME = "images/16x24_typewriter.bmp";
+      FONT_IMAGE_NAME = "images/16x24_clean_v1.bmp";
       parseFontNameAndSetCellDims();
     }
   }

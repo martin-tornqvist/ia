@@ -31,7 +31,7 @@ public:
 
   void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
   void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
-  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
+  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
   void drawTileInMap(const Tile_t tile, const int X, const int Y, const SDL_Color clr);
   void drawTileOnScreen(const Tile_t tile, const coord& pos, const SDL_Color clr);
 

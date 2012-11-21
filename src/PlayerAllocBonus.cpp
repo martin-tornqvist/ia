@@ -9,6 +9,7 @@
 #include "Render.h"
 #include "DungeonMaster.h"
 #include "MenuInputHandler.h"
+#include "TextFormatting.h"
 
 void PlayerAllocBonus::run() {
   const vector<PlayerBonuses_t> bonusesToChooseFrom = eng->playerBonusHandler->getBonusChoices();
@@ -39,32 +40,35 @@ void PlayerAllocBonus::run() {
 void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesToChooseFrom, const MenuBrowser& browser) const {
   eng->renderer->clearRenderArea(renderArea_screen);
 
-  const int X_POS_ABILITY = 1;
-  const int X_POS_DESCR = X_POS_ABILITY + 3;
-  const int X_POS_TOP = 1;
-
-  int yPos = eng->config->MAINSCREEN_Y_CELLS_OFFSET;
-  eng->renderer->drawText("--- Choose new ability ---", renderArea_screen, X_POS_TOP, yPos, clrWhite);
+  int yPos = 8;
+  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, yPos, clrWhite);
   const unsigned int NR_OF_BONUSES = bonusesToChooseFrom.size();
 
   yPos += 2;
+
+  //Draw bonuses
   for(unsigned int i = 0; i < NR_OF_BONUSES; i++) {
     const PlayerBonuses_t currentBonus = bonusesToChooseFrom.at(i);
-
-    //Draw bonus title
-    string s = "   ";
-    s[0] = 'a' + i;
-    s[1] = ')';
-    s += eng->playerBonusHandler->getBonusTitle(currentBonus);
-    SDL_Color drwClr = static_cast<unsigned int>(browser.getPos().y) == i ? clrWhite : clrRedLight;
-    eng->renderer->drawText(s, renderArea_screen, X_POS_ABILITY, yPos, drwClr);
+    string s = eng->playerBonusHandler->getBonusTitle(currentBonus);
+    const bool IS_MARKED_BONUS = static_cast<unsigned int>(browser.getPos().y) == i;
+    SDL_Color drwClr = IS_MARKED_BONUS ? clrWhite : clrRedLight;
+    eng->renderer->drawTextCentered(s, renderArea_screen, MAP_X_CELLS_HALF, yPos, drwClr);
     yPos++;
+  }
 
-    //Draw description
-    s = eng->playerBonusHandler->getBonusDescription(currentBonus);
-    eng->renderer->drawText(s, renderArea_screen, X_POS_DESCR, yPos, clrRed);
+  yPos++;
 
-    yPos += 2;
+  //Draw description
+  string descr = eng->playerBonusHandler->getBonusDescription(bonusesToChooseFrom.at(browser.getPos().y));
+  vector<string> descrLines = eng->textFormatting->lineToLines(descr, 50);
+  const int X_POS_DESCR_LEFT_AFTER_FIRST = MAP_X_CELLS_HALF - descrLines.at(0).size() / 2;
+  for(unsigned int iDescr = 0; iDescr < descrLines.size(); iDescr++) {
+    if(iDescr == 0) {
+      eng->renderer->drawTextCentered(descrLines.at(iDescr), renderArea_screen, MAP_X_CELLS_HALF, yPos, clrRed, false);
+    } else {
+      eng->renderer->drawText(descrLines.at(iDescr), renderArea_screen, X_POS_DESCR_LEFT_AFTER_FIRST, yPos, clrRed);
+    }
+    yPos++;
   }
 
   eng->renderer->flip();

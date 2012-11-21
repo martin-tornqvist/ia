@@ -98,7 +98,7 @@ void DungeonMaster::winGame() {
 	while(t.get_ticks() < DELAY_BETWEEN_LINES) {
 	}
 	for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
-		eng->renderer->drawTextCentered(winMessageLines.at(i), renderArea_screen, MAP_X_CELLS_HALF, Y0 + i, clrMessageBad);
+		eng->renderer->drawTextCentered(winMessageLines.at(i), renderArea_screen, MAP_X_CELLS_HALF, Y0 + i, clrMessageBad, true);
 		eng->renderer->flip();
 		t.stop();
 		t.start();
@@ -106,7 +106,7 @@ void DungeonMaster::winGame() {
 		}
 	}
 	const string CMD_LABEL = "[Space/Esc] Record high-score and return to main menu";
-	eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite);
+	eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
 	eng->renderer->flip();
 	eng->query->waitForEscOrSpace();
 	eng->renderer->clearRenderArea(renderArea_screen);

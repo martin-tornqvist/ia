@@ -50,7 +50,7 @@ const SDL_Color clrWhite = {192, 192, 192, 0};
 const SDL_Color clrWhiteHigh = {255, 255, 255, 0};
 
 const SDL_Color clrRed = {128, 0, 0, 0};
-const SDL_Color clrRedLight = {220, 0, 0, 0};
+const SDL_Color clrRedLight = {255, 0, 0, 0}; //{220, 0, 0, 0};
 
 const SDL_Color clrGreen = {0, 128, 0, 0};
 const SDL_Color clrGreenLight = {0, 255, 0, 0};

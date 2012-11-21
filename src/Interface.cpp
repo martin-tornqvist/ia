@@ -27,11 +27,11 @@ void Interface::drawInfoLines() {
   string str = "";
 
   //Name
-  //	str = eng->player->getNameA();
-  //	eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+  str = eng->player->getNameA();
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
 
   //Health
-  //	xPos += 1 + str.length();
+  xPos += 1 + str.length();
   const string hp = intToString(eng->player->getHp());
   const string hpMax = intToString(eng->player->getHpMax());
   eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGray);
@@ -85,8 +85,8 @@ void Interface::drawInfoLines() {
     xPos += 1 + wpnName.size();
 
     //Firearm info
-    eng->renderer->drawText("FIR:", renderArea_characterLines, xPos, yPos, clrGray);
-    xPos += 4;
+//    eng->renderer->drawText("FIR:", renderArea_characterLines, xPos, yPos, clrGray);
+//    xPos += 4;
 
     if(itemDef->isRangedWeapon) {
       //Weapon damage and skill used
@@ -125,16 +125,17 @@ void Interface::drawInfoLines() {
 
       eng->renderer->drawText(wpnAmmoStr, renderArea_characterLines, xPos, yPos, clrRedLight);
       xPos += 1 + wpnAmmoStr.size();
-    } else {
-      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 4;
     }
+//    else {
+//      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
+//      xPos += 4;
+//    }
 
     //Melee info
-    eng->renderer->drawText("MLE:", renderArea_characterLines, xPos, yPos, clrGray);
-    xPos += 4;
+//    eng->renderer->drawText("MLE:", renderArea_characterLines, xPos, yPos, clrGray);
+//    xPos += 4;
 
-    if(weapon->getDef().isMeleeWeapon) {
+    if(weapon->getDef().isMeleeWeapon && weapon->getDef().isRangedWeapon == false) {
       //Weapon damage and skill used
       abilityUsed = itemDef->meleeAbilityUsed;
       dmgRolls = itemDef->meleeDmg.first;
@@ -158,10 +159,11 @@ void Interface::drawInfoLines() {
 
       eng->renderer->drawText(wpnSkillStr, renderArea_characterLines, xPos, yPos, clrWhite);
       xPos += 1 + wpnSkillStr.size();
-    } else {
-      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 4;
     }
+//    else {
+//      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
+//      xPos += 4;
+//    }
   }
 
   //Dungeon level
@@ -180,7 +182,8 @@ void Interface::drawInfoLines() {
   str = "LVL:" + intToString(dm->getLevel());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
   xPos += str.size() + 1;
-  str = "NXT:" + intToString(dm->getXpToNextLvl() - dm->getXp());
+  str = "NXT:";
+  str += dm->getLevel() >= PLAYER_MAX_LEVEL ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
   xPos += str.size() + 1;
 
@@ -199,8 +202,6 @@ void Interface::drawInfoLines() {
 
   //Missile weapon
   xPos = X_POS_MISSILE;
-  //	eng->renderer->drawText("MIS:", renderArea_characterLines, xPos, yPos, clrGray);
-  //	xPos += 4;
 
   Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
   if(item == NULL) {

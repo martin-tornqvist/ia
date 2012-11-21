@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1353013402 source:c:\dev\ia\src\abilityvalues.cpp
+1353521536 source:c:\dev\ia\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -29,7 +29,7 @@
 	"Colors.h"
 	"Art.h"
 
-1350576992 c:\dev\ia\src\colors.h
+1353527138 c:\dev\ia\src\colors.h
 	"SDL.h"
 
 1352026778 c:\dev\ia\src\art.h
@@ -46,7 +46,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1352826941 c:\dev\ia\src\actordata.h
+1353171429 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Phrases.h"
@@ -214,7 +214,7 @@
 	"Config.h"
 	"Render.h"
 
-1352668471 c:\dev\ia\src\render.h
+1353525791 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
 	"SDL.h"
@@ -353,7 +353,7 @@
 	<string>
 	"Item.h"
 
-1352838256 source:c:\dev\ia\src\actordata.cpp
+1353171477 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -436,7 +436,7 @@
 	"ItemData.h"
 	"ActorData.h"
 
-1350576995 c:\dev\ia\src\reload.h
+1353172287 c:\dev\ia\src\reload.h
 
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
@@ -729,7 +729,7 @@
 	<vector>
 	"ItemData.h"
 
-1351969063 source:c:\dev\ia\src\dungeonmaster.cpp
+1353525566 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -949,7 +949,7 @@
 	"Log.h"
 	"Render.h"
 
-1352835634 source:c:\dev\ia\src\featuredata.cpp
+1353521322 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -1091,7 +1091,7 @@
 	"Examine.h"
 	"PlayerCreateCharacter.h"
 
-1352317093 source:c:\dev\ia\src\interface.cpp
+1353239316 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"SDL.h"
 	"Engine.h"
@@ -1196,7 +1196,7 @@
 	"ItemPotion.h"
 	"ItemDrop.h"
 
-1351189198 source:c:\dev\ia\src\itempickup.cpp
+1353172185 source:c:\dev\ia\src\itempickup.cpp
 	"ItemPickup.h"
 	"Engine.h"
 	"Item.h"
@@ -1278,7 +1278,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1352836190 source:c:\dev\ia\src\mainmenu.cpp
+1353515871 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1436,7 +1436,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1351950772 source:c:\dev\ia\src\playerallocbonus.cpp
+1353526662 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1446,6 +1446,7 @@
 	"Render.h"
 	"DungeonMaster.h"
 	"MenuInputHandler.h"
+	"TextFormatting.h"
 
 1353013504 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
@@ -1518,7 +1519,7 @@
 	"Engine.h"
 	"Render.h"
 
-1351945960 source:c:\dev\ia\src\reload.cpp
+1353435534 source:c:\dev\ia\src\reload.cpp
 	"Reload.h"
 	"Engine.h"
 	"Converters.h"
@@ -1533,7 +1534,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1352668471 source:c:\dev\ia\src\render.cpp
+1353526006 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1689,7 +1690,7 @@
 
 1350576992 c:\dev\ia\src\declares.h
 
-1352826830 source:c:\dev\ia\src\config.cpp
+1353521223 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>

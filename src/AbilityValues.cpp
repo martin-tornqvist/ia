@@ -31,7 +31,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     } break;
 
     case ability_accuracyRanged: {
-      val += 40;
+      val += 55;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptRangedCombatant))
         val += 15;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulRangedCombatant))

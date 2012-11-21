@@ -20,8 +20,6 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
   const string ammoCapacity = weapon == NULL ? "" : intToString(weapon->ammoCapacity);
   const string ammoCurrent = weapon == NULL ? "" : intToString(weapon->ammoLoaded);
   const bool isPlayer = actorReloading == eng->player;
-  const int reloaderX = actorReloading->pos.x;
-  const int reloaderY = actorReloading->pos.y;
 
   string ammoName = " ";
   bool isClip = false;
@@ -35,26 +33,20 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
   case reloadResult_weaponNotUsingAmmo: {
     if(isPlayer == true) {
       eng->log->addMessage("Weapon does not use ammo.");
-//			eng->renderer->flip();
     }
-  }
-  break;
+  } break;
 
   case reloadResult_alreadyFull: {
     if(isPlayer == true) {
       eng->log->addMessage("Weapon already loaded.");
-//			eng->renderer->flip();
     }
-  }
-  break;
+  } break;
 
   case reloadResult_noAmmo: {
     if(isPlayer == true) {
       eng->log->addMessage("I carry no ammunition for this weapon.");
-//			eng->renderer->flip();
     }
-  }
-  break;
+  } break;
 
   case reloadResult_success: {
     const string swiftStr = isSwift ? " swiftly" : "";
@@ -66,12 +58,21 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
       }
       eng->renderer->drawMapAndInterface();
     } else {
-      if(eng->map->playerVision[reloaderX][reloaderY]) {
+      if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
         eng->log->addMessage(actorName + swiftStr + " reloads.");
       }
     }
-  }
-  break;
+  } break;
+
+  case reloadResult_fumble: {
+    if(isPlayer) {
+      eng->log->addMessage("I fumble with the " + ammoName + ".");
+    } else {
+      if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
+        eng->log->addMessage(actorName + " fumbles with " + ammoName + ".");
+      }
+    }
+  } break;
 
   default:
     break;
@@ -107,51 +108,58 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
           ammoItem = genInv->at(i);
 
           if(ammoItem->getDef().devName == ammoType) {
-            result = reloadResult_success;
-            isClip = ammoItem->getDef().isAmmoClip;
+            const bool IS_RELOADER_BLIND = actorReloading->getStatusEffectsHandler()->allowSee() == false;
+            const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusEffectsHandler()->hasEffect(statusTerrified);
+            const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 40 : 0) + (IS_REALOADER_TERRIFIED ? 40 : 0);
 
-            //If ammo comes in clips
-            if(isClip == true) {
+            if(eng->dice(1, 100) < CHANCE_TO_FUMBLE) {
+              isSwiftReload = false;
+              result = reloadResult_fumble;
+              printReloadMessages(actorReloading, NULL, NULL, reloadResult_fumble, false);
+            } else {
+              result = reloadResult_success;
+              isClip = ammoItem->getDef().isAmmoClip;
 
-              const int previousAmmoCount = weaponToReload->ammoLoaded;
+              //If ammo comes in clips
+              if(isClip) {
+                const int previousAmmoCount = weaponToReload->ammoLoaded;
+                ItemAmmoClip* clipItem = dynamic_cast<ItemAmmoClip*>(ammoItem);
+                weaponToReload->ammoLoaded = clipItem->ammo;
 
-              ItemAmmoClip* clipItem = dynamic_cast<ItemAmmoClip*>(ammoItem);
+                const Audio_t reloadAudio = weaponToReload->getDef().reloadAudio;
+                if(reloadAudio != audio_none) {
+                  eng->audio->playSound(reloadAudio);
+                }
 
-              weaponToReload->ammoLoaded = clipItem->ammo;
+                printReloadMessages(actorReloading, weaponToReload, ammoItem, result, isSwiftReload);
 
-              const Audio_t reloadAudio = weaponToReload->getDef().reloadAudio;
-              if(reloadAudio != audio_none) {
-                eng->audio->playSound(reloadAudio);
+                //Erase loaded clip
+                inv->deleteItemInGeneral(i);
+
+                //If weapon previously contained ammo, create a new clip item
+                if(previousAmmoCount > 0) {
+                  ammoItem = eng->itemFactory->spawnItem(ammoType);
+                  clipItem = dynamic_cast<ItemAmmoClip*>(ammoItem);
+                  clipItem->ammo = previousAmmoCount;
+                  inv->putItemInGeneral(clipItem);
+                }
               }
+              //Else ammo is a pile
+              else {
+                weaponToReload->ammoLoaded += 1;
 
-              printReloadMessages(actorReloading, weaponToReload, ammoItem, result, isSwiftReload);
+                const Audio_t reloadAudio = weaponToReload->getDef().reloadAudio;
+                if(reloadAudio != audio_none) {
+                  eng->audio->playSound(reloadAudio);
+                }
 
-              //Erase loaded clip
-              inv->deleteItemInGeneral(i);
+                printReloadMessages(actorReloading, weaponToReload, ammoItem, result, isSwiftReload);
 
-              //If weapon previously contained ammo, create a new clip item
-              if(previousAmmoCount > 0) {
-                ammoItem = eng->itemFactory->spawnItem(ammoType);
-                clipItem = dynamic_cast<ItemAmmoClip*>(ammoItem);
-                clipItem->ammo = previousAmmoCount;
-                inv->putItemInGeneral(clipItem);
+                //Decrease ammo "number" by one
+                inv->decreaseItemInGeneral(i);
               }
             }
-            //Else ammo is a pile
-            else {
-              weaponToReload->ammoLoaded += 1;
-
-              const Audio_t reloadAudio = weaponToReload->getDef().reloadAudio;
-              if(reloadAudio != audio_none) {
-                eng->audio->playSound(reloadAudio);
-              }
-
-              printReloadMessages(actorReloading, weaponToReload, ammoItem, result, isSwiftReload);
-
-              //Decrease ammo "number" by one
-              inv->decreaseItemInGeneral(i);
-            }
-            i = 999999;
+            break;
           }
         }
         if(result == reloadResult_noAmmo) {
@@ -164,7 +172,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
     }
   }
 
-  if(result == reloadResult_success) {
+  if(result == reloadResult_success || result == reloadResult_fumble) {
     acted = true;
     if(isSwiftReload == false) {
       eng->gameTime->letNextAct();

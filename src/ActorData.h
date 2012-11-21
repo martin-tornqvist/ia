@@ -102,7 +102,8 @@ public:
   ActorSpeed_t speed;
   MoveType_t moveType;
   int rangedCooldownTurns, spellCooldownTurns;
-  int dmgResPhys, dmgResFire, dmgResCold, dmgResAcid, dmgResElectric, dmgResSpirit, dmgResLight;
+  bool isResPhys, isResFire, isResCold, isResAcid, isResElectric, isResSpirit, isResLight;
+  bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
   AbilityValues abilityValues;
   AiBehavior aiBehavior;
   int nrTurnsAwarePlayer;

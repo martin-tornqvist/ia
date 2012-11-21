@@ -593,7 +593,7 @@ void FeatureData::makeList() {
   d.id = feature_pillarCarved;
   d.name_a = "a carved pillar";
   d.name_the = "the carved pillar";
-  d.glyph = '1';
+  d.glyph = '|';
   d.color = clrGray;
   d.tile = tile_pillarCarved;
   d.isMovePassable[moveType_walk] = false;

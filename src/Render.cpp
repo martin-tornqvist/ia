@@ -368,10 +368,25 @@ void Renderer::drawText(const string& str, const RenderArea_t renderArea, const 
   }
 }
 
-//TODO drawTextCentered must be able to draw centered on the actual screen
-void Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr) {
-  const int X_POS_LEFT = X - (str.size() / 2);
-  drawText(str, renderArea, X_POS_LEFT, Y, clr);
+void Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr, const bool IS_PIXEL_POS_ADJ_ALLOWED) {
+  const unsigned int STR_LEN_HALF = str.size() / 2;
+  const int X_POS_LEFT = X - STR_LEN_HALF;
+  const int CELL_W = eng->config->CELL_W;
+
+  coord pixelCoord = getPixelCoordsForCharacter(renderArea, X_POS_LEFT, Y);
+
+  if(IS_PIXEL_POS_ADJ_ALLOWED) {
+    const int X_PIXEL_ADJ = STR_LEN_HALF * 2 == str.size() ? CELL_W / 2 : 0;
+    pixelCoord += coord(X_PIXEL_ADJ, 0);
+  }
+
+  for(unsigned int i = 0; i < str.size(); i++) {
+    if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->SCREEN_WIDTH) {
+      return;
+    }
+    drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr);
+    pixelCoord.x += eng->config->CELL_W;
+  }
 }
 
 void Renderer::clearRenderArea(const RenderArea_t renderArea) {
