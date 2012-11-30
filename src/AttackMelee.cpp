@@ -12,14 +12,13 @@
 using namespace std;
 
 void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
-  eng->renderer->drawMapAndInterface(false);
-
   //Get attack data
   AttackData data;
   getAttackData(data, coord(defenderX, defenderY), coord(defenderX, defenderY), weapon, true);
 
   //Print messages
   printMeleeMessages(data, weapon);
+  eng->renderer->drawMapAndInterface();
 
   if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
     //Do damage

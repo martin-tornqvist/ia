@@ -64,7 +64,7 @@ void Feature::hit(const int DAMAGE, const DamageTypes_t damageType) {
 	(void)damageType;
 }
 
-SDL_Color Feature::getColor() const {
+sf::Color Feature::getColor() const {
 	return def_->color;
 }
 
@@ -122,7 +122,7 @@ MaterialType_t Feature::getMaterialType() const {
 
 void Feature::examine() {
    eng->log->addMessage("I find nothing specific there to examine or use.");
-   eng->renderer->flip();
+   eng->renderer->updateWindow();
 }
 
 void FeatureStatic::setGoreIfPossible() {

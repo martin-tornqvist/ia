@@ -1,7 +1,5 @@
 #include "SaveHandler.h"
 
-#include "SDL.h"
-
 #include <fstream>
 #include <iostream>
 

@@ -146,7 +146,7 @@ void Player::actorSpecific_hit(const int DMG) {
     shock(shockValue_mild, 0);
   }
 
-  eng->renderer->drawMapAndInterface(true);
+  eng->renderer->drawMapAndInterface();
 }
 
 void Player::setParametersFromSaveLines(vector<string>& lines) {
@@ -550,7 +550,7 @@ void Player::updateColor() {
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
@@ -561,10 +561,10 @@ void Player::updateColor() {
     return;
   }
 
-  if(getHp() <= getHpMax() / 3 + 1) {
-    clr_ = clrRed;
-    return;
-  }
+//  if(getHp() <= getHpMax() / 3 + 1) {
+//    clr_ = clrRed;
+//    return;
+//  }
 
   const int CUR_SHOCK = insanityShort + insanityShortTemp;
   if(CUR_SHOCK >= 75) {
@@ -650,7 +650,7 @@ void Player::act() {
       }
       shock(shockValue_heavy, 0);
       shock(shockValue_heavy, 0);
-      eng->renderer->drawMapAndInterface(true);
+      eng->renderer->drawMapAndInterface();
     } else {
       if(eng->map->getDungeonLevel() != 0) {
         shock(shockValue_mild, 0);
@@ -680,9 +680,7 @@ void Player::act() {
         if(IS_MONSTER_SEEN) {
           if(monster->messageMonsterInViewPrinted == false) {
             if(firstAidTurnsLeft > 0 || waitTurnsLeft > 0) {
-              eng->renderer->drawMapAndInterface();
-              const string MONSTER_NAME = actor->getNameA();
-              eng->log->addMessage(MONSTER_NAME + " comes into my view.", clrWhite, messageInterrupt_force);
+              eng->log->addMessage(actor->getNameA() + " comes into my view.", clrWhite, messageInterrupt_force);
             }
             monster->messageMonsterInViewPrinted = true;
           }
@@ -771,7 +769,7 @@ void Player::act() {
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
-    eng->renderer->flip();
+    eng->renderer->updateWindow();
     restoreHP(99999);
     if(eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
       statusEffectsHandler_->endEffect(statusDiseased);
@@ -821,11 +819,12 @@ int Player::getHealingTimeTotal() const {
 }
 
 void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
+  eng->renderer->drawMapAndInterface();
+
   //Abort searching
   if(waitTurnsLeft > 0) {
-    eng->renderer->drawMapAndInterface();
     eng->log->addMessage("I stop waiting.", clrWhite);
-    eng->renderer->flip();
+    eng->renderer->drawMapAndInterface();
   }
   waitTurnsLeft = -1;
 
@@ -846,16 +845,14 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
       firstAidTurnsLeft = -1;
       isAborted = true;
       eng->log->addMessage("I stop tending to my wounds.", clrWhite);
-      eng->renderer->flip();
-    } else {
       eng->renderer->drawMapAndInterface();
-
+    } else {
       const string TURNS_STR = intToString(firstAidTurnsLeft);
       const string ABORTED_HP_STR = intToString(HP_HEALED_IF_ABORTED);
       string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
       abortStr += ABORTED_HP_STR + " HP restored if canceled.";
       eng->log->addMessage(abortStr , clrWhiteHigh);
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
 
       if(eng->query->yesOrNo() == false) {
         firstAidTurnsLeft = -1;
@@ -863,7 +860,7 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
       }
 
       eng->log->clearLog();
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
     if(isAborted && IS_ENOUGH_TIME_PASSED) {
       restoreHP(HP_HEALED_IF_ABORTED);
@@ -917,10 +914,10 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
                 if(weapon->getDef().isRangedWeapon) {
                   const string wpnName = weapon->getDef().name.name_a;
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
-                  eng->renderer->flip();
+                  eng->renderer->drawMapAndInterface();
                   if(eng->query->yesOrNo() == false) {
                     eng->log->clearLog();
-                    eng->renderer->flip();
+                    eng->renderer->drawMapAndInterface();
                     return;
                   }
                 }
@@ -956,7 +953,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         // Encumbered?
         if(inventory_->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
           eng->log->addMessage("I am too encumbered to move!");
-          eng->renderer->flip();
+          eng->renderer->updateWindow();
           return;
         }
 
@@ -1003,7 +1000,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         eng->gameTime->letNextAct();
       }
     } else {
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
   }
 }

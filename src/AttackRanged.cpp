@@ -7,7 +7,6 @@
 #include "ItemWeapon.h"
 #include "Render.h"
 #include "Map.h"
-#include "Timer.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Postmortem.h"
@@ -16,27 +15,13 @@
 
 using namespace std;
 
-struct Projectile {
-  Projectile() {
-    obstructed = false;
-    actorHit = NULL;
-    obstructedInElement = 0;
-  }
-
-  AttackData data;
-  bool obstructed;
-  Actor* actorHit;
-  int obstructedInElement;
-  coord pos;
-};
-
 void Attack::projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES) {
   vector<Projectile*> projectiles;
 
   for(unsigned int i = 0; i < NR_OF_PROJECTILES; i++) {
-    Projectile* currentProjectile = new Projectile;
-    getAttackData(currentProjectile->data, target, origin, weapon, false);
-    projectiles.push_back(currentProjectile);
+    Projectile* const p = new Projectile;
+    getAttackData(p->data, target, origin, weapon, false);
+    projectiles.push_back(p);
   }
 
   printRangedInitiateMessages(projectiles.at(0)->data);
@@ -52,7 +37,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
   //Get projectile path
   const vector<coord> projectilePath = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, stopAtTarget, chebTrvlLim);
 
-  const SDL_Color projectileColor = weapon->getDef().rangedMissileColor;
+  const sf::Color projectileColor = weapon->getDef().rangedMissileColor;
   char projectileGlyph = weapon->getDef().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;
@@ -84,15 +69,10 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE = projectilePath.size() + (NR_OF_PROJECTILES - 1) * NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
 
-  eng->renderer->drawMapAndInterface();
-
   //Run projectile path. The variable 'i' is the "global path element".
   //The individual projectiles are offset from this global element according
   //to their place in the projectile vector.
   for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
-    if(LEAVE_TRAIL == false) {
-      eng->renderer->drawMapAndInterface();
-    }
 
     for(unsigned int p = 0; p < NR_OF_PROJECTILES; p++) {
       //Current projectile's place in the path is the current global place (i)
@@ -101,8 +81,11 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
       //All the following collision checks etc are only made if the projectiles current path element
       //corresponds to an element in the real path vector
-      if(projectilePathElement >= 1 && projectilePathElement < int(projectilePath.size()) && projectiles.at(p)->obstructed == false) {
+      if(projectilePathElement >= 1 && projectilePathElement < int(projectilePath.size()) && projectiles.at(p)->isObstructed == false) {
         projectiles.at(p)->pos = projectilePath.at(projectilePathElement);
+
+        projectiles.at(p)->isVisibleToPlayer =
+          eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y];
 
         //Get attack data again for every cell traveled through,
         //Aim-level and such are only retrieved the first time
@@ -111,7 +94,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
         const coord drawPos(projectiles.at(p)->pos.x, projectiles.at(p)->pos.y);
 
         //HIT ACTOR?
-        if(projectiles.at(p)->data.currentDefender != NULL && projectiles.at(p)->obstructed == false) {
+        if(projectiles.at(p)->data.currentDefender != NULL && projectiles.at(p)->isObstructed == false) {
 
           const bool AIMED_FOR_THIS_ACTOR = (projectiles.at(p)->pos == target);
 
@@ -121,13 +104,12 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
             ProjectileHitType_t hitType = projectileHitType_miss;
 
             //If this is the actor aimed for, check skill roll for hit
-            if(AIMED_FOR_THIS_ACTOR == true) {
+            if(AIMED_FOR_THIS_ACTOR) {
               if(projectiles.at(p)->data.attackResult >= successSmall) {
                 hitType = projectileHitType_cleanHit;
               }
             }
-            //If clean hit failed (because of not cell aimed for, or failed skill roll),
-            //try a stray hit
+            //If clean hit failed (because of not cell aimed for, or failed skill roll), try a stray hit
             if(hitType == projectileHitType_miss) {
               //placeholder value, but it might do the trick?***
               if(eng->dice(1, 100) < 25) {
@@ -137,23 +119,28 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
             if(hitType >= projectileHitType_strayHit) {
               //RENDER ACTOR HIT
-              if(eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y] == true) {
+              if(projectiles.at(p)->isVisibleToPlayer) {
                 if(eng->config->USE_TILE_SET) {
-                  eng->renderer->drawBlastAnimationAt(drawPos, clrRedLight, eng->config->DELAY_PROJECTILE_DRAW);
+                  projectiles.at(p)->setTile(tile_blastAnimation1, clrRedLight);
+                  eng->renderer->drawProjectiles(projectiles);
+                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+                  projectiles.at(p)->setTile(tile_blastAnimation2, clrRedLight);
+                  eng->renderer->drawProjectiles(projectiles);
+                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
                 } else {
-                  eng->renderer->drawCharacter('*', renderArea_mainScreen, drawPos.x, drawPos.y, clrRedLight);
-                  eng->renderer->flip();
-                  Timer t;
-                  t.start();
-                  while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
-                  }
+                  projectiles.at(p)->setGlyph('*', clrRedLight);
+                  eng->renderer->drawProjectiles(projectiles);
+                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
                 }
+
+                //MESSAGES FOR ACTOR HIT
+                printProjectileAtActorMessages(projectiles.at(p)->data, hitType);
+                //Need to draw again here to show log message
+                eng->renderer->drawProjectiles(projectiles);
               }
 
-              //MESSAGES FOR ACTOR HIT
-              printProjectileAtActorMessages(projectiles.at(p)->data, hitType);
-
-              projectiles.at(p)->obstructed = true;
+              projectiles.at(p)->isDoneRendering = true;
+              projectiles.at(p)->isObstructed = true;
               projectiles.at(p)->actorHit = projectiles.at(p)->data.currentDefender;
               projectiles.at(p)->obstructedInElement = projectilePathElement;
 
@@ -180,10 +167,10 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
                     const bool IS_SPIKE_GUN = weapon->getDef().devName == item_spikeGun;
                     eng->knockBack->attemptKnockBack(currentAttData.currentDefender, currentAttData.attacker->pos, IS_SPIKE_GUN);
                   }
-                  // If target was knocked back, update target attack cell to defenders new pos
-                  if(target == defenderPosBefore) {
-                    target = projectiles.at(p)->data.currentDefender->pos;
-                  }
+//                  // If target was knocked back, update target attack cell to defenders new pos
+//                  if(target == defenderPosBefore) {
+//                    target = projectiles.at(p)->data.currentDefender->pos;
+//                  }
                 }
               }
             }
@@ -203,92 +190,85 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
           featureBlockingShot = featureStatic;
         }
 
-        if(featureBlockingShot != NULL && projectiles.at(p)->obstructed == false) {
+        if(featureBlockingShot != NULL && projectiles.at(p)->isObstructed == false) {
           projectiles.at(p)->obstructedInElement = projectilePathElement - 1;
-          projectiles.at(p)->obstructed = true;
+          projectiles.at(p)->isObstructed = true;
 
           //RENDER FEATURE HIT
-          if(eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y] == true) {
+          if(projectiles.at(p)->isVisibleToPlayer) {
             if(eng->config->USE_TILE_SET) {
-              eng->renderer->drawBlastAnimationAt(drawPos, clrYellow, eng->config->DELAY_PROJECTILE_DRAW);
+              projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
             } else {
-              eng->renderer->drawCharacter('*', renderArea_mainScreen, drawPos.x, drawPos.y, clrYellow);
-              eng->renderer->flip();
-              Timer t;
-              t.start();
-              while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
-              }
+              projectiles.at(p)->setGlyph('*', clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
             }
           }
         }
 
         //PROJECTILE HIT THE GROUND?
-        if(projectiles.at(p)->pos == target && projectiles.at(p)->data.aimLevel == actorSize_floor && projectiles.at(p)->obstructed == false) {
-          projectiles.at(p)->obstructed = true;
+        if(projectiles.at(p)->pos == target && projectiles.at(p)->data.aimLevel == actorSize_floor && projectiles.at(p)->isObstructed == false) {
+          projectiles.at(p)->isObstructed = true;
           projectiles.at(p)->obstructedInElement = projectilePathElement;
 
           //RENDER GROUND HITS
-          if(eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y] == true) {
+          if(projectiles.at(p)->isVisibleToPlayer) {
             if(eng->config->USE_TILE_SET) {
-              eng->renderer->drawBlastAnimationAt(drawPos, clrYellow, eng->config->DELAY_PROJECTILE_DRAW);
+              projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
             } else {
-              eng->renderer->drawCharacter('*', renderArea_mainScreen, drawPos.x, drawPos.y, clrYellow);
-              eng->renderer->flip();
-              Timer t;
-              t.start();
-              while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
-              }
+              projectiles.at(p)->setGlyph('*', clrYellow);
+              eng->renderer->drawProjectiles(projectiles);
+              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
             }
           }
         }
 
         //RENDER FLYING PROJECTILES
-        if(eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y] == true) {
-          const coord projDrawPos(projectiles.at(p)->pos.x, projectiles.at(p)->pos.y);
+        if(projectiles.at(p)->isObstructed == false && projectiles.at(p)->isVisibleToPlayer) {
           if(eng->config->USE_TILE_SET) {
-            eng->renderer->drawTileInMap(projectileTile, projDrawPos.x, projDrawPos.y, projectileColor);
+            projectiles.at(p)->setTile(projectileTile, projectileColor);
+            eng->renderer->drawProjectiles(projectiles);
+            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
           } else {
-            eng->renderer->drawCharacter(projectileGlyph, renderArea_mainScreen, projDrawPos.x, projDrawPos.y, projectileColor);
+            projectiles.at(p)->setGlyph(projectileGlyph, projectileColor);
+            eng->renderer->drawProjectiles(projectiles);
+            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
           }
         }
       }
     } //End projectile loop
 
-
-    eng->renderer->flip();
-
     //If any projectile can be seen and not obstructed, delay
-    bool delayProjectiles = false;
     for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
-      if(eng->map->playerVision[projectiles.at(nn)->pos.x][projectiles.at(nn)->pos.y] == true && projectiles.at(nn)->obstructed == false) {
-        delayProjectiles = true;
-      }
-    }
-
-    if(delayProjectiles == true) {
-      //If it's a machinegun, delay should be shorter
-      if(weapon->getDef().isMachineGun == true) {
-        Timer t;
-        t.start();
-        while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW / 2) {
-        }
-      } else {
-        Timer t;
-        t.start();
-        while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
+      if(eng->map->playerVision[projectiles.at(nn)->pos.x][projectiles.at(nn)->pos.y] &&
+          projectiles.at(nn)->isObstructed == false) {
+        if(weapon->getDef().isMachineGun) {
+          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW / 2);
+        } else {
+          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
         }
       }
     }
 
     //Check if all projectiles obstructed
-    bool allObstructed = true;
+    bool isAllObstructed = true;
     for(unsigned p = 0; p < projectiles.size(); p++) {
-      if(projectiles.at(p)->obstructed == false) {
-        allObstructed = false;
+      if(projectiles.at(p)->isObstructed == false) {
+        isAllObstructed = false;
       }
     }
-    if(allObstructed == true) {
-      i = 99999;
+    if(isAllObstructed) {
+      break;
     }
 
   } //End path-loop
@@ -300,7 +280,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
-  if(projectiles.at(0)->obstructed == false) {
+  if(projectiles.at(0)->isObstructed == false) {
     weapon->weaponSpecific_projectileObstructed(target.x, target.y, projectiles.at(0)->actorHit, eng);
   } else {
     const int element = projectiles.at(0)->obstructedInElement;
@@ -312,7 +292,6 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
   }
 
   eng->renderer->drawMapAndInterface();
-  eng->input->clearKeyEvents();
 }
 
 bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {

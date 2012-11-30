@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "ActorPlayer.h"
 #include "PlayerAllocBonus.h"
+#include "Input.h"
 
 void PlayerCreateCharacter::run() {
   int currentRenderYpos = 8;
@@ -24,7 +25,6 @@ void PlayerEnterName::run(int& yPos) {
       name = "AZATHOTH";
       done = true;
     }
-    SDL_Delay(1);
   }
 
   ActorDefinition& iDef = *(eng->player->getDef());
@@ -34,50 +34,44 @@ void PlayerEnterName::run(int& yPos) {
 }
 
 void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) {
-  eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, RENDER_Y_POS, MAP_X_CELLS, RENDER_Y_POS + 1);
+//  eng->renderer->coverArea(renderArea_screen, 0, RENDER_Y_POS, MAP_X_CELLS, RENDER_Y_POS + 1);
+  eng->renderer->coverRenderArea(renderArea_screen);
   int x0 = MAP_X_CELLS_HALF; //1;
   const string LABEL = "Enter character name";
   eng->renderer->drawTextCentered(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
   const string NAME_STR = currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" : currentString;
   eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x0, RENDER_Y_POS + 1, clrRedLight);
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
-  SDL_Event event;
+  const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-  while(SDL_PollEvent(&event)) {
-    switch(event.type) {
-    case SDL_KEYDOWN:
-    {
-      int key = event.key.keysym.unicode;
+  if(d.sfmlKey_ == sf::Keyboard::Return) {
+    done = true;
+    return;
+  }
 
-      if(key == SDLK_RETURN) {
-        done = true;
-        return;
+  if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
+    if(
+      d.sfmlKey_ == sf::Keyboard::Space ||
+      (d.key_ >= int('a') && d.key_ <= int('z')) ||
+      (d.key_ >= int('A') && d.key_ <= int('Z')) ||
+      (d.key_ >= int('0') && d.key_ <= int('9'))) {
+      if(d.sfmlKey_ == sf::Keyboard::Space) {
+        currentString.push_back(' ');
+      } else {
+        currentString.push_back(char(d.key_));
       }
-
-      if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
-        if(
-          key == int(' ') ||
-          (key >= int('a') && key <= int('z')) ||
-          (key >= int('A') && key <= int('Z')) ||
-          (key >= int('0') && key <= int('9')))
-        {
-          currentString.push_back(char(key));
-          draw(currentString, RENDER_Y_POS);
-          return;
-        }
-      }
-
-      if(currentString.size() > 0) {
-        if(key == SDLK_BACKSPACE) {
-          currentString.erase(currentString.end() - 1);
-          draw(currentString, RENDER_Y_POS);
-        }
-      }
+      draw(currentString, RENDER_Y_POS);
+      return;
     }
-    break;
+  }
+
+  if(currentString.size() > 0) {
+    if(d.sfmlKey_ == sf::Keyboard::Back) {
+      currentString.erase(currentString.end() - 1);
+      draw(currentString, RENDER_Y_POS);
     }
   }
 }

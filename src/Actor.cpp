@@ -28,6 +28,9 @@ void Actor::newTurn() {
     updateColor();
     act();
   } else {
+    if(this == eng->player) {
+      eng->renderer->drawMapAndInterface();
+    }
     eng->gameTime->letNextAct();
   }
 }
@@ -185,7 +188,7 @@ void Actor::teleportToRandom() {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
-    eng->renderer->flip();
+    eng->renderer->updateWindow();
     statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng));
   }
 }
@@ -196,7 +199,7 @@ void Actor::updateColor() {
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
@@ -349,7 +352,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   }
 
   //If mangled because of damage, or if a monster died on a visible trap, gib the corpse.
-  deadState = (MANGLED == true || (diedOnVisibleTrap == true && this != eng->player)) ? actorDeadState_mangled : actorDeadState_corpse;
+  deadState = (MANGLED || (diedOnVisibleTrap && this != eng->player)) ? actorDeadState_mangled : actorDeadState_corpse;
 
   if(ALLOW_DROP_ITEMS) {
     eng->itemDrop->dropAllCharactersItems(this, true);
@@ -400,6 +403,8 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   if(this != eng->player) {
     eng->dungeonMaster->monsterKilled(this);
   }
+
+  eng->renderer->drawMapAndInterface();
 }
 
 void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {

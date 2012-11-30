@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Engine.h"
+#include "Input.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
 #include "Map.h"
@@ -20,8 +21,8 @@ void Postmortem::run(bool* const quitGame) {
 void Postmortem::makeInfoLines() {
   tracer << "Postmortem::makeInfoLines()..." << endl;
 
-  const SDL_Color clrHeading = clrRedLight;
-  const SDL_Color clrInfo = clrRedLight;
+  const sf::Color clrHeading = clrRedLight;
+  const sf::Color clrInfo = clrRedLight;
 
   postmortemLines.push_back(StringAndColor(" " + eng->player->getNameA(), clrHeading));
 
@@ -144,7 +145,7 @@ void Postmortem::makeInfoLines() {
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->coverRenderArea(renderArea_screen);
   const string decorationLine(MAP_X_CELLS - 2, '-');
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
   eng->renderer->drawText("Displaying postmortem information", renderArea_screen, 3, 1, clrWhite);
@@ -157,7 +158,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     y++;
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 void Postmortem::runInfo() {
@@ -165,46 +166,21 @@ void Postmortem::runInfo() {
   renderInfo(topElement);
 
   //Read keys
-  SDL_Event event;
   bool done = false;
   while(done == false) {
-    while(SDL_PollEvent(&event)) {
-      switch(event.type) {
-      case SDL_KEYDOWN: {
-        int key = event.key.keysym.sym;
+    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-        switch(key) {
-        case SDLK_2:
-        case SDLK_KP2:
-        case SDLK_DOWN: {
-          topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size())
-                                  - static_cast<int>(MAP_Y_CELLS)));
-          renderInfo(topElement);
-        }
-        break;
-        case SDLK_8:
-        case SDLK_KP8:
-        case SDLK_UP: {
-          topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size())
-                                  - static_cast<int>(MAP_Y_CELLS)));
-          renderInfo(topElement);
-        }
-        break;
-        case SDLK_SPACE:
-        case SDLK_ESCAPE: {
-          done = true;
-        }
-        break;
-
-        }
-      }
-      break;
-      default: {
-      }
-      break;
-      }
+    if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+      topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      renderInfo(topElement);
     }
-    SDL_Delay(1);
+    else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+      topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      renderInfo(topElement);
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      done = true;
+    }
   }
 }
 
@@ -253,7 +229,7 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
         const string memorialFilePath = "memorial/" + eng->player->getNameA() + ".txt";
         makeMemorialFile(memorialFilePath);
         eng->renderer->drawText("Memorial file written at " + memorialFilePath, renderArea_characterLines, 1, 0, clrWhite);
-        eng->renderer->flip();
+        eng->renderer->updateWindow();
       }
       if(browser.isPosAtKey('e')) {
         done = true;
@@ -286,7 +262,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->coverRenderArea(renderArea_screen);
 
   int x = 1;
   int y = 1;
@@ -326,5 +302,5 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   eng->renderer->drawText("f) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('f') ? clrWhite : clrRedLight);
   y += 1;
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }

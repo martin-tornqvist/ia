@@ -94,12 +94,15 @@ public:
 	~Engine() {
 	}
 
-	void initRenderer();
+//  void initSDL();
+	void initConfigAndRenderer();
 	void initGame();
 	void initAudio();
 	void cleanupAudio();
 	void cleanupGame();
-	void cleanupRenderer();
+	void cleanupConfigAndRenderer();
+
+	void sleep(const int DURATION) const;
 
 	PlayerVisualMemory* playerVisualMemory;
 	Renderer* renderer;

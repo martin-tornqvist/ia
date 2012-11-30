@@ -15,7 +15,7 @@ public:
     eng(engine) {
   }
 
-  void showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE_AFTER) const;
+  void showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE) const;
 
 private:
   struct BoxReturnData {

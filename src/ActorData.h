@@ -95,7 +95,7 @@ public:
   string name_the;
   Tile_t tile;
   char glyph;
-  SDL_Color color;
+  sf::Color color;
   int monsterLvl;
   MonsterGroupSize_t groupSize;
   int hpMax;

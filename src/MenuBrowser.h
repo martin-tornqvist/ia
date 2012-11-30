@@ -2,7 +2,6 @@
 #define MENU_BROWSER_H
 
 #include "ConstTypes.h"
-#include "SDL.h"
 
 class MenuBrowser {
 public:
@@ -20,9 +19,7 @@ public:
   void navigate(const Directions_t direction);
   void navigate(const char KEY);
 
-  Uint16 enter() const {
-    return static_cast<Uint16>(SDLK_a + pos.y + pos.x * NR_ITEMS_FIRST);
-  }
+  char enter() const;
 
   int getNrOfItemsInFirstList() const {
     return NR_ITEMS_FIRST;

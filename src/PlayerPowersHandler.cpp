@@ -1,7 +1,5 @@
 #include "PlayerPowersHandler.h"
 
-#include "SDL.h"
-
 #include "Engine.h"
 #include "ItemScroll.h"
 #include "ActorPlayer.h"
@@ -104,12 +102,12 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
 
   const int LIST_HEIGHT = static_cast<int>(endLetter[0] - 'a') + 1;
 
-  eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, 0, MAP_X_CELLS, LIST_HEIGHT);
+  eng->renderer->coverArea(renderArea_mainScreen, 0, 0, MAP_X_CELLS, LIST_HEIGHT);
 
   int currentListPos = 0;
   for(unsigned int i = 0; i < NR_OF_ITEMS; i++) {
     const char CURRENT_KEY = 'a' + currentListPos;
-    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
+    const sf::Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
     Item* const item = eng->player->getInventory()->getGeneral()->at(generalInventorySlotsToShow.at(i));
     const string itemName = eng->itemData->itemInterfaceName(item, true);
     string str = "a";
@@ -136,7 +134,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
 
   for(unsigned int i = 0; i < NR_OF_MEMORIZED; i++) {
     const char CURRENT_KEY = 'a' + currentListPos;
-    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
+    const sf::Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
     Scroll* const scroll = scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(i));
     const string itemName = scroll->getRealTypeName();
     string str = "a";
@@ -167,7 +165,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     currentListPos++;
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :

@@ -16,29 +16,31 @@ void Bash::playerBash() const {
   coord bashInPos(eng->player->pos);
 
   eng->log->addMessage("Kick or bash in which direction? [space/esc] cancel", clrWhiteHigh);
-  eng->renderer->flip();
+  eng->renderer->drawMapAndInterface();
   bashInPos = eng->player->pos + eng->query->direction();
   eng->log->clearLog();
 
-  Actor* actor = eng->mapTests->getActorAtPos(bashInPos);
+  if(bashInPos != eng->player->pos) {
+    Actor* actor = eng->mapTests->getActorAtPos(bashInPos);
 
-  if(actor != NULL) {
-    tracer << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
-    if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
-      tracer << "Bash: Player is allowed to do melee attack" << endl;
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+    if(actor == NULL) {
+      tracer << "Bash: No actor at bash pos, attempting to bash feature instead" << endl;
+      playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
+    }  else {
+      tracer << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
+      if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
+        tracer << "Bash: Player is allowed to do melee attack" << endl;
+        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
-      if(eng->player->checkIfSeeActor(*actor, blockers)) {
-        tracer << "Bash: Player can see actor" << endl;
-        eng->player->kick(*actor);
-        return;
+        if(eng->player->checkIfSeeActor(*actor, blockers)) {
+          tracer << "Bash: Player can see actor" << endl;
+          eng->player->kick(*actor);
+          return;
+        }
       }
     }
   }
-
-  tracer << "Bash: No actor at bash pos, attempting to bash feature instead" << endl;
-  playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
 }
 
 void Bash::playerBashFeature(Feature* const feature) const {

@@ -10,7 +10,7 @@
 
 void Examine::playerExamine() const {
 	eng->log->addMessage("Examine/use/apply in what direction? [Space/Esc] Cancel", clrWhiteHigh);
-	eng->renderer->flip();
+	eng->renderer->updateWindow();
 	coord examineInPos = eng->player->pos + eng->query->direction();
 	eng->log->clearLog();
 

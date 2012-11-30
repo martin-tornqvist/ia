@@ -5,12 +5,13 @@
 #include "ActorPlayer.h"
 #include "Render.h"
 #include "TextFormatting.h"
+#include "Input.h"
 
 void CharacterInfo::makeLines() {
   lines.resize(0);
 
   const string offsetSpaces = "";
-  const SDL_Color colorHeader = clrCyanLight;
+  const sf::Color colorHeader = clrCyanLight;
 
   lines.push_back(StringAndColor(" ", clrRedLight));
 
@@ -79,7 +80,7 @@ void CharacterInfo::makeLines() {
 void CharacterInfo::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
+  eng->renderer->coverArea(renderArea_screen, coord(0, 1), MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
   eng->renderer->drawText("Displaying character info", renderArea_screen, 3, 1, clrWhite);
@@ -92,7 +93,7 @@ void CharacterInfo::drawInterface() {
 void CharacterInfo::run() {
   makeLines();
 
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->coverRenderArea(renderArea_screen);
 
   StringAndColor currentLine;
 
@@ -107,77 +108,42 @@ void CharacterInfo::run() {
     yCell++;
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 
   //Read keys
-  SDL_Event event;
   bool done = false;
   while(done == false) {
-    while(SDL_PollEvent(&event)) {
-      switch(event.type) {
-      case SDL_KEYDOWN: {
-        int key = event.key.keysym.sym;
+    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-        switch(key) {
-        case SDLK_2:
-        case SDLK_KP2:
-        case SDLK_DOWN: {
-          topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size())
-                                  - static_cast<int>(MAP_Y_CELLS)));
-
-          btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
-
-          eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
-
-          drawInterface();
-
-          yCell = 2;
-
-          for(int i = topElement; i <= btmElement; i++) {
-            eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
-            yCell++;
-          }
-          eng->renderer->flip();
-        }
-        break;
-        case SDLK_8:
-        case SDLK_KP8:
-        case SDLK_UP: {
-          topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size())
-                                  - static_cast<int>(MAP_Y_CELLS)));
-
-          btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
-
-          eng->renderer->clearAreaWithTextDimensions(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
-
-          drawInterface();
-
-          yCell = 2;
-
-          for(int i = topElement; i <= btmElement; i++) {
-            eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
-            yCell++;
-          }
-          eng->renderer->flip();
-        }
-        break;
-        case SDLK_SPACE:
-        case SDLK_ESCAPE: {
-          done = true;
-        }
-        break;
-
-        }
+    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+      topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+      eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
+      drawInterface();
+      yCell = 2;
+      for(int i = topElement; i <= btmElement; i++) {
+        eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
+        yCell++;
       }
-      break;
-      default: {
-      }
-      break;
-      }
+      eng->renderer->updateWindow();
     }
-    SDL_Delay(1);
-  }
+    else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+      topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+      eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
+      drawInterface();
+      yCell = 2;
+      for(int i = topElement; i <= btmElement; i++) {
+        eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
+        yCell++;
+      }
+      eng->renderer->updateWindow();
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      done = true;
+    }
 
-  eng->renderer->clearRenderArea(renderArea_screen);
+  }
+  eng->renderer->coverRenderArea(renderArea_screen);
   eng->renderer->drawMapAndInterface();
 }

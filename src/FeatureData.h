@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "SDL.h"
 
 #include "Art.h"
 #include "ConstTypes.h"
@@ -137,7 +136,7 @@ struct FeatureDef {
   Feature_t id;
   FeatureSpawnType_t spawnType;
   char glyph;
-  SDL_Color color;
+  sf::Color color;
   Tile_t tile;
   bool isMovePassable[endOfMoveType];
   bool isShootPassable;

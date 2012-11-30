@@ -5,11 +5,10 @@
 #include <math.h>
 #include <iostream>
 
-#include "SDL.h"
-
 #include "AbilityValues.h"
 #include "ItemData.h"
 #include "ActorData.h"
+#include "Art.h"
 
 class Engine;
 
@@ -23,27 +22,57 @@ enum ProjectileHitType_t {
 };
 
 struct AttackData {
-  AttackData() : aimLevel(actorSize_none) {}
-  bool				        isBackStab;
-  string              weaponName_a;
-  string              verbPlayerAttacksMissile;
-  string              verbOtherAttacksMissile;
-  Actor*              attacker;
-  Actor*              currentDefender;
-  int                 attackerX, attackerY;
-  Abilities_t         abilityUsed;
-  bool                isIntrinsic;
-  bool                isMelee;
-  int                 wpnBaseSkill, attackSkill, totalSkill;
+  AttackData() : aimLevel(actorSize_none) {
+  }
+
+  bool isBackStab;
+  string weaponName_a;
+  string verbPlayerAttacksMissile;
+  string verbOtherAttacksMissile;
+  Actor* attacker;
+  Actor* currentDefender;
+  int attackerX, attackerY;
+  Abilities_t abilityUsed;
+  bool isIntrinsic;
+  bool isMelee;
+  int wpnBaseSkill, attackSkill, totalSkill;
   AbilityRollResult_t attackResult;
-  int                 dmgRolls, dmgSides, dmgPlus;
-  int                 dmgRoll, dmg;
-  string              dmgDescript;
-  bool                isPlayerAttacking;
-  bool                isDefenderDodging;
-  ActorSizes_t        aimLevel;
-  ActorSizes_t        currentDefenderSize;
-  bool                isTargetEthereal;
+  int dmgRolls, dmgSides, dmgPlus;
+  int dmgRoll, dmg;
+  string dmgDescript;
+  bool isPlayerAttacking;
+  bool isDefenderDodging;
+  ActorSizes_t aimLevel;
+  ActorSizes_t currentDefenderSize;
+  bool isTargetEthereal;
+};
+
+struct Projectile {
+  Projectile() : pos(coord(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
+    actorHit(NULL), obstructedInElement(-1), isDoneRendering(false),
+    glyph(-1), tile(tile_empty), clr(clrWhite) {
+  }
+
+  void setTile(const Tile_t tileToRender, const sf::Color clrToRender) {
+    tile = tileToRender;
+    clr = clrToRender;
+  }
+
+  void setGlyph(const char GLYPH_TO_RENDER, const sf::Color clrToRender) {
+    glyph = GLYPH_TO_RENDER;
+    clr = clrToRender;
+  }
+
+  coord pos;
+  bool isObstructed;
+  bool isVisibleToPlayer;
+  Actor* actorHit;
+  int obstructedInElement;
+  bool isDoneRendering;
+  char glyph;
+  Tile_t tile;
+  sf::Color clr;
+  AttackData data;
 };
 
 class Attack {

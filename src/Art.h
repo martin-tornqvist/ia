@@ -1,8 +1,11 @@
 #ifndef ART_H
 #define ART_H
 
-const unsigned FONT_ARRAY_X_CELLS = 16;
-const unsigned FONT_ARRAY_Y_CELLS = 16;
+const int FONT_SHEET_X_CELLS = 16;
+const int FONT_SHEET_Y_CELLS = 7;
+const int TILE_SHEET_X_CELLS = 19;
+const int TILE_SHEET_Y_CELLS = 10;
+
 
 enum Tile_t {
 	tile_empty,

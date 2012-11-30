@@ -38,7 +38,7 @@ void PlayerAllocBonus::run() {
 }
 
 void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesToChooseFrom, const MenuBrowser& browser) const {
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->coverRenderArea(renderArea_screen);
 
   int yPos = 8;
   eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, yPos, clrWhite);
@@ -51,7 +51,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesToChooseFrom, 
     const PlayerBonuses_t currentBonus = bonusesToChooseFrom.at(i);
     string s = eng->playerBonusHandler->getBonusTitle(currentBonus);
     const bool IS_MARKED_BONUS = static_cast<unsigned int>(browser.getPos().y) == i;
-    SDL_Color drwClr = IS_MARKED_BONUS ? clrWhite : clrRedLight;
+    sf::Color drwClr = IS_MARKED_BONUS ? clrWhite : clrRedLight;
     eng->renderer->drawTextCentered(s, renderArea_screen, MAP_X_CELLS_HALF, yPos, drwClr);
     yPos++;
   }
@@ -71,7 +71,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesToChooseFrom, 
     yPos++;
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 

@@ -31,7 +31,7 @@ public:
   }
 
   void bump(Actor* actorBumping);
-  SDL_Color getColor() const;
+  sf::Color getColor() const;
   char getGlyph() const;
   Tile_t getTile() const;
   string getDescription(const bool DEFINITE_ARTICLE) const;
@@ -89,7 +89,7 @@ protected:
 
   virtual void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) = 0;
   virtual string getTrapSpecificTitle() const = 0;
-  virtual SDL_Color getTrapSpecificColor() const = 0;
+  virtual sf::Color getTrapSpecificColor() const = 0;
   virtual char getTrapSpecificGlyph() const = 0;
   virtual Tile_t getTrapSpecificTile() const = 0;
 
@@ -106,7 +106,7 @@ private:
     SpecificTrapBase(pos, trap_dart, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrWhiteHigh;
   }
   string getTrapSpecificTitle() const {
@@ -128,7 +128,7 @@ private:
     SpecificTrapBase(pos, trap_spear, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrWhiteHigh;
   }
   string getTrapSpecificTitle() const {
@@ -150,7 +150,7 @@ private:
     SpecificTrapBase(pos, trap_gasConfusion, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrMagenta;
   }
   string getTrapSpecificTitle() const {
@@ -172,7 +172,7 @@ private:
     SpecificTrapBase(pos, trap_gasParalyze, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrMagenta;
   }
   string getTrapSpecificTitle() const {
@@ -194,7 +194,7 @@ private:
     SpecificTrapBase(pos, trap_gasFear, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrMagenta;
   }
   string getTrapSpecificTitle() const {
@@ -216,7 +216,7 @@ private:
     SpecificTrapBase(pos, trap_blinding, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrYellow;
   }
   string getTrapSpecificTitle() const {
@@ -238,7 +238,7 @@ private:
     SpecificTrapBase(pos, trap_teleport, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrCyan;
   }
   string getTrapSpecificTitle() const {
@@ -260,7 +260,7 @@ private:
     SpecificTrapBase(pos, trap_smoke, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrGray;
   }
   string getTrapSpecificTitle() const {
@@ -288,7 +288,7 @@ private:
     SpecificTrapBase(pos, trap_spiderWeb, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  SDL_Color getTrapSpecificColor() const {
+  sf::Color getTrapSpecificColor() const {
     return clrWhiteHigh;
   }
   string getTrapSpecificTitle() const {

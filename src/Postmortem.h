@@ -1,8 +1,6 @@
 #ifndef POSTMORTEM_H
 #define POSTMORTEM_H
 
-#include "SDL.h"
-
 #include <vector>
 #include <string>
 
@@ -26,13 +24,13 @@ public:
 
 private:
   struct StringAndColor {
-    StringAndColor(const string str_, const SDL_Color clr_) :
+    StringAndColor(const string str_, const sf::Color clr_) :
       str(str_), clr(clr_) {
     }
     StringAndColor() {
     }
     string str;
-    SDL_Color clr;
+    sf::Color clr;
   };
 
   vector<StringAndColor> postmortemLines;

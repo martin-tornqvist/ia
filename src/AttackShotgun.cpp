@@ -9,7 +9,6 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "Postmortem.h"
-#include "Timer.h"
 
 struct ShotGunProjectile {
 	ShotGunProjectile() {
@@ -159,9 +158,9 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
 									if(eng->map->playerVision[curX][curY] == true) {
 										if(eng->config->USE_TILE_SET) {
-											eng->renderer->drawTileInMap(tile_blastAnimation2, curX, curY, clrRedLight);
+											eng->renderer->drawTileInMap(tile_blastAnimation2, coord(curX, curY), clrRedLight);
 										} else {
-											eng->renderer->drawCharacter('*', renderArea_mainScreen, curX, curY, clrRedLight);
+											eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(curX, curY), clrRedLight);
 										}
 									}
 
@@ -201,9 +200,9 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
 								if(eng->map->playerVision[curX][curY] == true) {
 									if(eng->config->USE_TILE_SET) {
-										eng->renderer->drawTileInMap(tile_blastAnimation2, curX, curY, clrRedLight);
+										eng->renderer->drawTileInMap(tile_blastAnimation2, coord(curX, curY), clrRedLight);
 									} else {
-										eng->renderer->drawCharacter('*', renderArea_mainScreen, curX, curY, clrRedLight);
+										eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(curX, curY), clrRedLight);
 									}
 								}
 
@@ -225,9 +224,9 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 								if(data.aimLevel == actorSize_floor) {
 									if(eng->map->playerVision[curX][curY] == true) {
 										if(eng->config->USE_TILE_SET) {
-											eng->renderer->drawTileInMap(tile_blastAnimation2, curX, curY, clrRedLight);
+											eng->renderer->drawTileInMap(tile_blastAnimation2, coord(curX, curY), clrRedLight);
 										} else {
-											eng->renderer->drawCharacter('*', renderArea_mainScreen, curX, curY, clrRedLight);
+											eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(curX, curY), clrRedLight);
 										}
 									}
 								}
@@ -264,22 +263,17 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 			if(hitArray[x][y] == true && actorArray[x][y] == NULL) {
 				if(eng->map->playerVision[x][y] == true) {
 					if(eng->config->USE_TILE_SET) {
-						eng->renderer->drawTileInMap(tile_blastAnimation2, x, y, clrYellow);
+						eng->renderer->drawTileInMap(tile_blastAnimation2, coord(x, y), clrYellow);
 					} else {
-						eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow);
+						eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(x, y), clrYellow);
 					}
 				}
 			}
 		}
 	}
 
-	eng->renderer->flip();
-
-	Timer t;
-	t.start();
-	while(t.get_ticks() < eng->config->DELAY_SHOTGUN) {
-	}
-
+	eng->renderer->updateWindow();
+  eng->sleep(eng->config->DELAY_SHOTGUN);
 	eng->renderer->drawMapAndInterface();
 }
 

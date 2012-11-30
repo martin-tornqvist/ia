@@ -107,7 +107,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage("Displaying inventory.", clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawSlots(slotButtons, browser, DRAW_BROWSER);
     drawGeneralItems(xPosListsRightStandardOffset, purpose, browser, DRAW_BROWSER);
@@ -122,7 +122,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage(cmdString, clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawSlots(slotButtons, browser, DRAW_BROWSER);
     drawGeneralItems(xPosListsRightStandardOffset, purpose, browser, DRAW_BROWSER);
@@ -137,7 +137,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage(cmdString, clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -151,7 +151,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage(cmdString, clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -165,7 +165,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage(cmdString, clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -181,7 +181,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -197,7 +197,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -213,7 +213,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -229,7 +229,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
       eng->log->addMessage("[a-" + endLetter + "]?", clrWhiteHigh);
     }
 
-    eng->renderer->clearAreaWithTextDimensions(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
+    eng->renderer->coverArea(renderArea_mainScreen, 0, yPosLists, MAP_X_CELLS, INVENTORY_HEIGHT);
 
     drawGeneralItems(0, purpose, browser, DRAW_BROWSER);
   }
@@ -242,7 +242,7 @@ void RenderInventory::draw(const InventoryPurpose_t purpose, const MenuBrowser& 
     eng->log->addMessage("[Space/esc] Exit", clrWhiteHigh);
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 void RenderInventory::drawSlots(vector<InventorySlotButton>* slotButtons, const MenuBrowser& browser, const bool DRAW_BROWSER) {
@@ -261,7 +261,7 @@ void RenderInventory::drawSlots(vector<InventorySlotButton>* slotButtons, const 
     slot = slotButton->inventorySlot;
     slotString += slot->interfaceName;
 
-    const SDL_Color clr = DRAW_BROWSER && browser.getPos().x == 0 && browser.isPosAtKey('a' + i) ? clrWhite : clrRedLight;
+    const sf::Color clr = DRAW_BROWSER && browser.getPos().x == 0 && browser.isPosAtKey('a' + i) ? clrWhite : clrRedLight;
     eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft1, yPos, clr);
     slotString = ": ";
     eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft2, yPos, clr);
@@ -296,7 +296,7 @@ void RenderInventory::drawGeneralItems(const int xPosOffset, const InventoryPurp
     const bool ELEMENT_IS_SELECTED = ((browser.getNrOfItemsInFirstList() > 0 && browser.getPos().x == 1) ||
                                       browser.getNrOfItemsInSecondList() == 0) &&
                                      browser.getPos().y == static_cast<int>(i);
-    const SDL_Color clr = DRAW_BROWSER && ELEMENT_IS_SELECTED ? clrWhite : clrRedLight;
+    const sf::Color clr = DRAW_BROWSER && ELEMENT_IS_SELECTED ? clrWhite : clrRedLight;
     eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight1, yPos, clr);
     slotString = eng->itemData->itemInterfaceName(generalItems->at(currentElement), false);
     eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight2, yPos, clr);

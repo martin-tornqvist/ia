@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "SFML/System/Sleep.hpp"
+
 #include "Converters.h"
 
 #include "Config.h"
@@ -77,178 +79,200 @@
 #include "StatusEffects.h"
 #include "TextFormatting.h"
 #include "Thrower.h"
-#include "Timer.h"
 #include "MenuInputHandler.h"
 #include "TrimTravelVector.h"
 
 using namespace std;
 
-void Engine::initRenderer() {
-	config = new Config(this);
-	renderer = new Renderer(this);
+//void Engine::initSDL() {
+//  tracer << "Engine::initSDL()..." << endl;
+//  SDL_Init(SDL_INIT_EVERYTHING);
+//  SDL_EnableUNICODE(1);
+//  tracer << "Engine::initSDL() [DONE]" << endl;
+//}
+
+void Engine::initConfigAndRenderer() {
+  tracer << "Engine::initConfigAndRenderer()..." << endl;
+  config = new Config(this);
+  renderer = new Renderer(this);
+  tracer << "Engine::initConfigAndRenderer() [DONE]" << endl;
 }
 
-void Engine::cleanupRenderer() {
-	SDL_Quit();
+void Engine::cleanupConfigAndRenderer() {
+  tracer << "Engine::cleanupConfigAndRenderer()..." << endl;
+//  SDL_Quit();
 
-	delete renderer;
-	delete config;
+  delete renderer;
+  delete config;
+  tracer << "Engine::cleanupConfigAndRenderer() [DONE]" << endl;
 }
 
 void Engine::initAudio() {
-	audio = new Audio(this);
+  audio = new Audio(this);
 }
 
 void Engine::cleanupAudio() {
-	delete audio;
+  delete audio;
 }
 
 void Engine::initGame() {
-	// ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
-	basicUtils = new BasicUtils(this);
-	actorData = new ActorData(this);
-	scrollNameHandler = new ScrollNameHandler(this);
-	potionNameHandler = new PotionNameHandler(this);
-	itemData = new ItemData(this);
-	abilityRoll = new AbilityRoll(this);
-	itemFactory = new ItemFactory(this);
-	inventoryHandler = new InventoryHandler(this);
-	playerBonusHandler = new PlayerBonusHandler(this);
-	playerCreateCharacter = new PlayerCreateCharacter(this);
-	player = new Player;
-	player->place(coord(config->PLAYER_START_X, config->PLAYER_START_Y), &(actorData->actorDefinitions[actor_player]), this);
+  tracer << "Engine::initGame()..." << endl;
+  // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
+  basicUtils = new BasicUtils(this);
+  actorData = new ActorData(this);
+  scrollNameHandler = new ScrollNameHandler(this);
+  potionNameHandler = new PotionNameHandler(this);
+  itemData = new ItemData(this);
+  abilityRoll = new AbilityRoll(this);
+  itemFactory = new ItemFactory(this);
+  inventoryHandler = new InventoryHandler(this);
+  playerBonusHandler = new PlayerBonusHandler(this);
+  playerCreateCharacter = new PlayerCreateCharacter(this);
+  player = new Player;
+  player->place(coord(config->PLAYER_START_X, config->PLAYER_START_Y), &(actorData->actorDefinitions[actor_player]), this);
 
-	// ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
-	marker = new Marker(this);
-	log = new MessageLog(this);
-	phrases = new Phrases(this);
-	pathfinder = new Pathfinder(this);
-	fov = new Fov(this);
-	mapBuild = new MapBuild(this);
-	mapBuildBSP = new MapBuildBSP(this);
-	mapPatterns = new MapPatterns(this);
-	soundEmitter = new SoundEmitter(this);
-	featureData = new FeatureData(this);
-	playerAllocBonus = new PlayerAllocBonus(this);
-	dungeonMaster = new DungeonMaster(this);
-	input = new Input(this, quitToMainMenu_);
-	dungeonClimb = new DungeonClimb(this);
-	actorFactory = new ActorFactory(this);
-	mapTemplateHandler = new MapTemplateHandler(this);
-	itemDrop = new ItemDrop(this);
-	itemPickup = new ItemPickup(this);
-	attack = new Attack(this);
-	interfaceRenderer = new Interface(this);
-	gameTime = new GameTime(this);
-	mainMenu = new MainMenu(this);
-	bot = new Bot(this);
-	featureFactory = new FeatureFactory(this);
-	art = new Art;
-	explosionMaker = new ExplosionMaker(this);
-	thrower = new Thrower(this);
-	reload = new Reload(this);
-	map = new Map(this);
-	mapTests = new MapTests(this);
-	playerVisualMemory = new PlayerVisualMemory(this);
-	gore = new Gore(this);
-	manual = new Manual(this);
-	fovPreCalc = new FovPreCalc(this);
-	bresenhamLine = new BresenhamLine(this);
-	populate = new Populate(this);
-	renderInventory = new RenderInventory(this);
-	inventoryIndexes = new InventoryIndexes;
-	query = new Query(this);
-	mapBuildSpawnItems = new MapBuildSpawnItems(this);
-	bash = new Bash(this);
-	close = new Close(this);
-	look = new Look(this);
-	autoDescribeActor = new AutoDescribeActor(this);
-	textFormatting = new TextFormatting();
-	//	trapFactory = new TrapFactory(this);
-	spellHandler = new SpellHandler(this);
-	postmortem = new Postmortem(this);
-	highScore = new HighScore(this);
-	popup = new Popup(this);
-	saveHandler = new SaveHandler(this);
-	jamWithSpike = new JamWithSpike(this);
-	trimTravelVector = new TrimTravelVector(this);
-	menuInputHandler = new MenuInputHandler(this);
-	playerPowersHandler = new PlayerPowersHandler(this);
-	knockBack = new KnockBack(this);
-	examine = new Examine(this);
-	characterInfo = new CharacterInfo(this);
-	roomThemeMaker = new RoomThemeMaker(this);
+  // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
+  marker = new Marker(this);
+  log = new MessageLog(this);
+  phrases = new Phrases(this);
+  pathfinder = new Pathfinder(this);
+  fov = new Fov(this);
+  mapBuild = new MapBuild(this);
+  mapBuildBSP = new MapBuildBSP(this);
+  mapPatterns = new MapPatterns(this);
+  soundEmitter = new SoundEmitter(this);
+  featureData = new FeatureData(this);
+  playerAllocBonus = new PlayerAllocBonus(this);
+  dungeonMaster = new DungeonMaster(this);
+  input = new Input(this, quitToMainMenu_);
+  dungeonClimb = new DungeonClimb(this);
+  actorFactory = new ActorFactory(this);
+  mapTemplateHandler = new MapTemplateHandler(this);
+  itemDrop = new ItemDrop(this);
+  itemPickup = new ItemPickup(this);
+  attack = new Attack(this);
+  interfaceRenderer = new Interface(this);
+  gameTime = new GameTime(this);
+  mainMenu = new MainMenu(this);
+  bot = new Bot(this);
+  featureFactory = new FeatureFactory(this);
+  art = new Art;
+  explosionMaker = new ExplosionMaker(this);
+  thrower = new Thrower(this);
+  reload = new Reload(this);
+  map = new Map(this);
+  mapTests = new MapTests(this);
+  playerVisualMemory = new PlayerVisualMemory(this);
+  gore = new Gore(this);
+  manual = new Manual(this);
+  fovPreCalc = new FovPreCalc(this);
+  bresenhamLine = new BresenhamLine(this);
+  populate = new Populate(this);
+  renderInventory = new RenderInventory(this);
+  inventoryIndexes = new InventoryIndexes;
+  query = new Query(this);
+  mapBuildSpawnItems = new MapBuildSpawnItems(this);
+  bash = new Bash(this);
+  close = new Close(this);
+  look = new Look(this);
+  autoDescribeActor = new AutoDescribeActor(this);
+  textFormatting = new TextFormatting();
+  spellHandler = new SpellHandler(this);
+  postmortem = new Postmortem(this);
+  highScore = new HighScore(this);
+  popup = new Popup(this);
+  saveHandler = new SaveHandler(this);
+  jamWithSpike = new JamWithSpike(this);
+  trimTravelVector = new TrimTravelVector(this);
+  menuInputHandler = new MenuInputHandler(this);
+  playerPowersHandler = new PlayerPowersHandler(this);
+  knockBack = new KnockBack(this);
+  examine = new Examine(this);
+  characterInfo = new CharacterInfo(this);
+  roomThemeMaker = new RoomThemeMaker(this);
+
+  tracer << "Engine::initGame() [DONE]" << endl;
 }
 
 void Engine::cleanupGame() {
-	map->clearDungeon();
+  tracer << "Engine::cleanupGame()..." << endl;
 
-	delete playerBonusHandler;
-	delete playerVisualMemory;
-	delete itemData;
-	delete map;
-	delete log;
-	delete phrases;
-	delete pathfinder;
-	delete fov;
-	delete mapBuild;
-	delete mapBuildBSP;
-	delete mapPatterns;
-	delete soundEmitter;
-	delete featureData;
-	delete dungeonMaster;
-	delete input;
-	delete dungeonClimb;
-	delete actorFactory;
-	delete mapTemplateHandler;
-	delete itemDrop;
-	delete itemPickup;
-	delete inventoryHandler;
-	delete attack;
-	delete interfaceRenderer;
-	delete gameTime;
-	delete mainMenu;
-	delete itemFactory;
-	delete bot;
-	delete abilityRoll;
-	delete featureFactory;
-	delete art;
-	delete explosionMaker;
-	delete thrower;
-	delete reload;
-	delete basicUtils;
-	delete mapTests;
-	delete gore;
-	delete manual;
-	delete fovPreCalc;
-	delete populate;
-	delete renderInventory;
-	delete inventoryIndexes;
-	delete query;
-	delete mapBuildSpawnItems;
-	delete actorData;
-	delete scrollNameHandler;
-	delete potionNameHandler;
-	delete bash;
-	delete close;
-	delete look;
-	delete autoDescribeActor;
-	delete textFormatting;
-	delete spellHandler;
-	delete postmortem;
-	delete highScore;
-	delete popup;
-	delete saveHandler;
-	delete bresenhamLine;
-	delete playerAllocBonus;
-	delete jamWithSpike;
-	delete trimTravelVector;
-	delete menuInputHandler;
-	delete playerPowersHandler;
-	delete knockBack;
-	delete examine;
-	delete characterInfo;
-	delete roomThemeMaker;
+  map->clearDungeon();
 
-	delete marker;
+  delete playerBonusHandler;
+  delete playerVisualMemory;
+  delete itemData;
+  delete map;
+  delete log;
+  delete phrases;
+  delete pathfinder;
+  delete fov;
+  delete mapBuild;
+  delete mapBuildBSP;
+  delete mapPatterns;
+  delete soundEmitter;
+  delete featureData;
+  delete dungeonMaster;
+  delete input;
+  delete dungeonClimb;
+  delete actorFactory;
+  delete mapTemplateHandler;
+  delete itemDrop;
+  delete itemPickup;
+  delete inventoryHandler;
+  delete attack;
+  delete interfaceRenderer;
+  delete gameTime;
+  delete mainMenu;
+  delete itemFactory;
+  delete bot;
+  delete abilityRoll;
+  delete featureFactory;
+  delete art;
+  delete explosionMaker;
+  delete thrower;
+  delete reload;
+  delete basicUtils;
+  delete mapTests;
+  delete gore;
+  delete manual;
+  delete fovPreCalc;
+  delete populate;
+  delete renderInventory;
+  delete inventoryIndexes;
+  delete query;
+  delete mapBuildSpawnItems;
+  delete actorData;
+  delete scrollNameHandler;
+  delete potionNameHandler;
+  delete bash;
+  delete close;
+  delete look;
+  delete autoDescribeActor;
+  delete textFormatting;
+  delete spellHandler;
+  delete postmortem;
+  delete highScore;
+  delete popup;
+  delete saveHandler;
+  delete bresenhamLine;
+  delete playerAllocBonus;
+  delete jamWithSpike;
+  delete trimTravelVector;
+  delete menuInputHandler;
+  delete playerPowersHandler;
+  delete knockBack;
+  delete examine;
+  delete characterInfo;
+  delete roomThemeMaker;
+
+  delete marker;
+
+  tracer << "Engine::cleanupGame() [DONE]" << endl;
 }
+
+void Engine::sleep(const int DURATION) const {
+  sf::sleep(sf::milliseconds(DURATION));
+}
+
+

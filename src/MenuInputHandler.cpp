@@ -1,62 +1,50 @@
 #include "MenuInputHandler.h"
 
-#include "SDL.h"
-
 #include "Engine.h"
+#include "Input.h"
 
 MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
   bool done = false;
   while(done == false) {
-    while(SDL_PollEvent(&m_event)) {
-      if(m_event.type == SDL_KEYDOWN) {
-        Uint16 key = static_cast<Uint16>(m_event.key.keysym.sym);
 
-        if(key >= 'a' && key <= 'z') {
-          key = static_cast<Uint16>(m_event.key.keysym.unicode);
-        }
+    KeyboardReadReturnData d = eng->input->readKeysUntilFound();
 
-        if(key == SDLK_RIGHT || key == SDLK_KP6 || key == SDLK_6) {
-          browser.navigate(direction_right);
-          return menuAction_browsed;
-        }
-
-        if(key == SDLK_LEFT || key == SDLK_KP4 || key == SDLK_4) {
-          browser.navigate(direction_left);
-          return menuAction_browsed;
-        }
-
-        if(key == SDLK_UP || key == SDLK_KP8 || key == SDLK_8) {
-          browser.navigate(direction_up);
-          return menuAction_browsed;
-        }
-
-        if(key == SDLK_DOWN || key == SDLK_KP2 || key == SDLK_2) {
-          browser.navigate(direction_down);
-          return menuAction_browsed;
-        }
-
-        if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-          key = browser.enter();
-        }
-
-        if(key == SDLK_SPACE || key == SDLK_ESCAPE) {
-          return menuAction_canceled;
-        }
-
-        const int SIZE_OF_FIRST_LIST = browser.getNrOfItemsInFirstList();
-        const int SIZE_OF_SECOND_LIST = browser.getNrOfItemsInSecondList();
-
-        const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
-
-        if(
-          (key >= 'a' && static_cast<int>(key - 'a') < TOT_SIZE_OF_LISTS) ||
-          (key >= 'A' && TOT_SIZE_OF_LISTS > static_cast<int>('z' - 'a') && static_cast<int>(key - 'A') < TOT_SIZE_OF_LISTS - static_cast<int>('z' - 'a') - 1)) {
-          browser.navigate(key);
-          return menuAction_selected;
-        }
-      }
+    if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
+      browser.navigate(direction_right);
+      return menuAction_browsed;
     }
-    SDL_Delay(1);
+    else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '6') {
+      browser.navigate(direction_left);
+      return menuAction_browsed;
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+      browser.navigate(direction_up);
+      return menuAction_browsed;
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+      browser.navigate(direction_down);
+      return menuAction_browsed;
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Return) {
+      d.key_ = browser.enter();
+    }
+    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      return menuAction_canceled;
+    }
+
+    const int SIZE_OF_FIRST_LIST = browser.getNrOfItemsInFirstList();
+    const int SIZE_OF_SECOND_LIST = browser.getNrOfItemsInSecondList();
+
+    const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
+
+    const int NR_LETTERS_A_TO_Z = static_cast<int>('z' - 'a');
+
+    if(
+      (d.key_ >= 'a' && static_cast<int>(d.key_ - 'a') < TOT_SIZE_OF_LISTS) ||
+      (d.key_ >= 'A' && TOT_SIZE_OF_LISTS > NR_LETTERS_A_TO_Z && static_cast<int>(d.key_ - 'A') < TOT_SIZE_OF_LISTS - NR_LETTERS_A_TO_Z - 1)) {
+      browser.navigate(d.key_);
+      return menuAction_selected;
+    }
   }
   return menuAction_canceled;
 }

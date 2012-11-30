@@ -4,8 +4,7 @@
 
 
 coord Art::getColumnAndRow(const char glyph) {
-  switch(glyph)
-  {
+  switch(glyph) {
   default:  return coord(-1, -1);  break;
   case ' ': return coord(0, 0);  break;
   case '!': return coord(1, 0); break;
@@ -117,8 +116,7 @@ coord Art::getColumnAndRow(const char glyph) {
 
 
 coord Art::getColumnAndRowTile(const Tile_t tile) {
-  switch(tile)
-  {
+  switch(tile) {
   case tile_playerFirearm: return coord(0, 0); break;
   case tile_playerMelee: return coord(1, 0); break;
   case tile_zombieUnarmed: return coord(2, 0); break;
@@ -233,18 +231,14 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
 
 coord Art::getGlyphCoords(const char glyph, Engine* engine) {
   coord c = getColumnAndRow(glyph);
-
-  c.x *= engine->config->CELL_W;
-  c.y *= engine->config->CELL_H;
-
+//  c.x *= engine->config->CELL_W;
+//  c.y *= engine->config->CELL_H;
   return c;
 }
 
 coord Art::getTileCoords(const Tile_t tile, Engine* engine) {
   coord c = getColumnAndRowTile(tile);
-
-  c.x *= engine->config->CELL_W;
-  c.y *= engine->config->CELL_H;
-
+//  c.x *= engine->config->CELL_W;
+//  c.y *= engine->config->CELL_H;
   return c;
 }

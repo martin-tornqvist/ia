@@ -24,7 +24,7 @@ public:
     return *def_;
   }
 
-  virtual SDL_Color getColor() const {
+  virtual sf::Color getColor() const {
     return def_->color;
   }
 

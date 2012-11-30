@@ -39,9 +39,6 @@ private:
 
 	void swapItems(Item** item1, Item** item2);
 
-	SDL_Event m_event;
-	Uint8* m_keystates;
-
 	Engine* eng;
 };
 

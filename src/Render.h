@@ -1,10 +1,12 @@
 #ifndef DRAW_MAINSCREEN_H
 #define DRAW_MAINSCREEN_H
 
+#include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Graphics/Texture.hpp"
+#include "SFML/Graphics/Sprite.hpp"
+
 #include <vector>
 #include <iostream>
-
-#include "SDL.h"
 
 #include "ConstTypes.h"
 #include "GameTime.h"
@@ -12,45 +14,86 @@
 #include "Art.h"
 
 class Engine;
+struct Projectile;
 
 enum RenderArea_t {
-  renderArea_screen, renderArea_mainScreen, renderArea_log, renderArea_characterLines
+  renderArea_screen,
+  renderArea_mainScreen,
+  renderArea_log,
+  renderArea_characterLines
 };
 
 class Renderer {
 public:
   Renderer(Engine* engine);
 
-  ~Renderer() {
-    SDL_FreeSurface(m_glyphSheet);
+  ~Renderer();
+
+  void drawMapAndInterface(const bool UPDATE_WINDOW = true);
+
+  void clearWindow() {
+    renderWindow_->clear();
   }
 
-  void drawMapAndInterface(const bool FLIP_SCREEN = true);
+  void addMarkerOverlay(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
 
-  void drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
+  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
 
-  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
-  void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr);
-  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y, const SDL_Color clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
-  void drawTileInMap(const Tile_t tile, const int X, const int Y, const SDL_Color clr);
-  void drawTileOnScreen(const Tile_t tile, const coord& pos, const SDL_Color clr);
+  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const coord& pos, const sf::Color& clr) {
+    drawCharacter(CHARACTER, renderArea, pos.x, pos.y, clr);
+  }
 
-  void clearCellInMap(const int X, const int Y);
-  void clearRenderArea(const RenderArea_t renderArea);
-  void clearAreaWithTextDimensions(const RenderArea_t renderArea, const int X, const int Y, const int W, const int H);
-  void clearAreaPixel(const int X, const int Y, const int W, const int H);
+  void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
 
-  void drawRectangle(const int x, const int y, const int w, const int h, SDL_Color clr);
-  void drawLineHorizontal(const int x0, const int y0, const int w, SDL_Color clr);
-  void drawLineVertical(const int x0, const int y0, const int h, SDL_Color clr);
+  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
+                        const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
-  void drawBlastAnimationAtField(const coord center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color colorInner, const SDL_Color colorOuter, const int DURATION);
-  void drawBlastAnimationAt(const coord pos, const SDL_Color color, const int DURATION);
+  void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr, const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+    drawTileInMap(tile, pos.x, pos.y, clr, drawBgClr, bgClr);
+  }
+
+  void drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr, const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+
+  void coverCellInMap(const coord& pos) {
+    coverCellInMap(pos.x, pos.y);
+  }
+
+  void coverCellInMap(const int X, const int Y);
+
+  void coverRenderArea(const RenderArea_t renderArea);
+
+  void coverArea(const RenderArea_t renderArea, const coord& pos, const int W, const int H) {
+    coverArea(renderArea, pos.x, pos.y, W, H);
+  }
+
+  void coverArea(const RenderArea_t renderArea, const int X, const int Y, const int W, const int H);
+
+  void coverAreaPixel(const coord& posPixel, const int W, const int H) {
+    coverAreaPixel(posPixel.x, posPixel.y, W, H);
+  }
+
+  void coverAreaPixel(const int X, const int Y, const int W, const int H);
+
+  void drawRectangleSolid(const coord& posPixel, const int w, const int h, const sf::Color& clr) {
+    drawRectangleSolid(posPixel.x, posPixel.y, w, h, clr);
+  }
+
+  void drawRectangleSolid(const int X, const int Y, const int W, const int H, const sf::Color& clr);
+
+  void drawLineHorizontal(const int x0, const int y0, const int w, const sf::Color& clr);
+
+  void drawLineVertical(const int x0, const int y0, const int h, const sf::Color& clr);
+
+  void drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+                                 const sf::Color& colorInner, const sf::Color& colorOuter, const int DURATION);
+
+//  void drawBlastAnimationAt(const coord& pos, const sf::Color& color, const int DURATION);
 
   void drawMainMenuLogo(const int Y_POS);
 
-  void flip() {
-    SDL_Flip(m_screen);
+  void updateWindow() {
+    renderWindow_->display();
+    clearWindow();
   }
 
   GlyphAndColor renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];
@@ -59,47 +102,63 @@ public:
   GlyphAndColor renderArray[MAP_X_CELLS][MAP_Y_CELLS];
   TileAndColor renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
-  void setGfxAnVideoMode();
-  void setKeyDelays();
+  void setupWindowAndImagesClearPrev();
+
+  void drawProjectiles(vector<Projectile*>& projectiles);
+
+  void clearOverlay();
+
+  void addOverlay(const coord& pos, const char GLYPH, const sf::Color& clr) {
+    overlayGlyphs[pos.x][pos.y].glyph = GLYPH;
+    overlayGlyphs[pos.x][pos.y].color = clr;
+  }
+
+  void addOverlay(const coord& pos, const Tile_t tile, const sf::Color& clr) {
+    overlayTiles[pos.x][pos.y].tile = tile;
+    overlayTiles[pos.x][pos.y].color = clr;
+  }
 
 private:
   friend class Postmortem;
+  friend class Input;
+  void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr);
 
-  void clearTileAtPixel(const int X, const int Y);
+  void coverCharacterAtPixel(const int X, const int Y);
+  void coverTileAtPixel(const int X, const int Y);
 
-  void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const SDL_Color clr);
-  void clearCharacterAtPixel(const int X, const int Y);
+  coord getPixelCoordsForCharacter(const RenderArea_t renderArea, const coord& pos) {
+    return getPixelCoordsForCharacter(renderArea, pos.x, pos.y);
+  }
+
   coord getPixelCoordsForCharacter(const RenderArea_t renderArea, const int X, const int Y);
 
-  void loadFontSheet();
+  int getLifebarLength(const Actor& actor) const;
+  void drawLifeBar(const int X_CELL, const int Y_CELL, const int LENGTH);
+
+  void loadFont();
   void loadTiles();
   void loadMainMenuLogo();
 
-  void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL);
+  void freeWindowAndImages();
+
+  void drawSprite(const coord& posPixel, sf::Sprite& sprite);
   void drawASCII();
   void drawTiles();
 
-  bool SDL_init();
-
-//  SDL_Surface* scaleSurface(SDL_Surface* surface, Uint16 Width, Uint16 Height);
-//  Uint32 ReadPixel(SDL_Surface* surface, int x, int y);
-//  void DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel);
-
-  SDL_Rect dsrect;
-  SDL_Rect cell_rect;
-  //  SDL_Rect cell_rectTiles;
-  SDL_Rect clipRect;
-  //  SDL_Rect clipRectTiles;
-
-  bool drwLandscape;
-
-  SDL_Surface* m_screen;
-  SDL_Surface* m_glyphSheet;
-  SDL_Surface* m_tileSheet;
-  SDL_Surface* m_drw;
-  SDL_Surface* m_mainMenuLogo;
-
   Engine* eng;
+
+  sf::RenderWindow* renderWindow_;
+
+  sf::Texture* textureFontSheet_;
+  sf::Texture* textureTileSheet_;
+  sf::Texture* textureMainMenuLogo_;
+
+  sf::Sprite* spritesFont_[FONT_SHEET_X_CELLS][FONT_SHEET_Y_CELLS];
+  sf::Sprite* spritesTiles_[TILE_SHEET_X_CELLS][TILE_SHEET_X_CELLS];
+  sf::Sprite* spriteMainMenuLogo_;
+
+  GlyphAndColor overlayGlyphs[MAP_X_CELLS][MAP_Y_CELLS];
+  TileAndColor overlayTiles[MAP_X_CELLS][MAP_Y_CELLS];
 };
 
 #endif

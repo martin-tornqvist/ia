@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "SDL.h"
-
 using namespace std;
 
 class Engine;
@@ -16,8 +14,6 @@ public:
   void run();
 
 private:
-  SDL_Event m_event;
-  Uint8* m_keystates;
   Engine* eng;
 };
 

@@ -15,6 +15,8 @@
 using namespace std;
 
 void MainMenu::draw(const MenuBrowser& browser) {
+  tracer << "MainMenu::draw()..." << endl;
+
   vector<string> logo;
 
   if(eng->config->USE_TILE_SET == false) {
@@ -29,37 +31,39 @@ void MainMenu::draw(const MenuBrowser& browser) {
   int yPos = 3;
 //  const int X_POS_LEFT = xPos - 11;
 
-  eng->renderer->clearRenderArea(renderArea_screen);
+  tracer << "MainMenu: Calling clearWindow()" << endl;
+  eng->renderer->clearWindow();
 
+  tracer << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
   const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
-
   const int BG_BRIGHTNESS = eng->dice.getInRange(9, 13);
-
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
       if(eng->dice.coinToss()) {
         cha = 'a' + eng->dice.getInRange(0, 25);
       }
-      SDL_Color bgClr = clrGray;
+      sf::Color bgClr = clrGray;
       bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
       eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
     }
   }
 
+  tracer << "MainMenu: Drawing HPL quote" << endl;
   const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
-  SDL_Color quoteClr = clrGray;
+  sf::Color quoteClr = clrGray;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 27);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 1, 13 + i, quoteClr);
   }
 
-  SDL_Color clrGeneral = clrRed;
-  SDL_Color clrBright = clrRedLight;
+  sf::Color clrGeneral = clrRed;
+  sf::Color clrBright = clrRedLight;
 
   if(eng->config->USE_TILE_SET) {
+    tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng->renderer->drawMainMenuLogo(1);
     yPos += 10;
   } else {
@@ -68,7 +72,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       xPos = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
-          SDL_Color clr = clrRed;
+          sf::Color clr = clrRed;
           clr.r += eng->dice.getInRange(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
@@ -108,10 +112,14 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2012 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
+
+  tracer << "MainMenu::draw() [DONE]" << endl;
 }
 
 GameEntry_t MainMenu::run(bool* quit) {
+  tracer << "MainMenu::run()" << endl;
+
   MenuBrowser browser(6, 0);
 
   const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();

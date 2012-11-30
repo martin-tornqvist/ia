@@ -31,11 +31,19 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-Wno-long-long" />
 					<Add directory="..\src\debugModeIncl" />
 				</Compiler>
+				<Linker>
+					<Add library="sfml-graphics-d" />
+					<Add library="sfml-window-d" />
+					<Add library="sfml-system-d" />
+				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\sdl\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-graphics-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-system-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-window-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -63,25 +71,31 @@
 					<Add option="-Wfatal-errors" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add option="-Wno-long-long" />
 					<Add directory="..\src\releaseModeIncl" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-system" />
 				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\sdl\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-graphics-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-system-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-window-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="..\sdl\include" />
 			<Add directory="..\src" />
+			<Add directory="..\API\SFML\include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32 -lSDLmain -lSDL" />
-			<Add directory="..\sdl\lib" />
+			<Add option="-lmingw32" />
+			<Add directory="..\API\SFML\lib" />
 		</Linker>
 		<Unit filename="..\icon\resource.rc">
 			<Option compilerVar="WINDRES" />
@@ -165,6 +179,7 @@
 		<Unit filename="..\src\FeatureFactory.cpp" />
 		<Unit filename="..\src\FeatureFactory.h" />
 		<Unit filename="..\src\FeatureLever.cpp" />
+		<Unit filename="..\src\FeatureLever.h" />
 		<Unit filename="..\src\FeatureLiquid.cpp" />
 		<Unit filename="..\src\FeatureLiquid.h" />
 		<Unit filename="..\src\FeatureLitDynamite.cpp" />
@@ -299,8 +314,6 @@
 		<Unit filename="..\src\TextFormatting.h" />
 		<Unit filename="..\src\Thrower.cpp" />
 		<Unit filename="..\src\Thrower.h" />
-		<Unit filename="..\src\Timer.cpp" />
-		<Unit filename="..\src\Timer.h" />
 		<Unit filename="..\src\TrimTravelVector.cpp" />
 		<Unit filename="..\src\TrimTravelVector.h" />
 		<Unit filename="..\src\_MapArea.cpp" />

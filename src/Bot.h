@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "SDL.h"
-
 #include "ConstTypes.h"
 
 using namespace std;

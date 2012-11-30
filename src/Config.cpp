@@ -6,15 +6,17 @@
 #include "Converters.h"
 #include "Engine.h"
 #include "MenuInputHandler.h"
+#include "MenuBrowser.h"
 #include "Query.h"
 #include "Render.h"
+#include "Input.h"
 
 using namespace std;
 
 Config::Config(Engine* engine) :
   GAME_VERSION("v14.0"),
-  TILES_IMAGE_NAME("images/gfx_16x24.bmp"),
-  MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.bmp"),
+  TILES_IMAGE_NAME("images/gfx_16x24.png"),
+  MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.png"),
   LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
   LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
   CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
@@ -28,11 +30,11 @@ Config::Config(Engine* engine) :
   eng(engine) {
 
   fontImageNames.resize(0);
-  fontImageNames.push_back("images/8x12.bmp");
-  fontImageNames.push_back("images/11x19.bmp");
-  fontImageNames.push_back("images/16x24_clean_v1.bmp");
-  fontImageNames.push_back("images/16x24_clean_v2.bmp");
-  fontImageNames.push_back("images/16x24_typewriter.bmp");
+  fontImageNames.push_back("images/8x12.png");
+  fontImageNames.push_back("images/11x19.png");
+  fontImageNames.push_back("images/16x24_clean_v1.png");
+  fontImageNames.push_back("images/16x24_clean_v2.png");
+  fontImageNames.push_back("images/16x24_typewriter.png");
 
   vector<string> lines;
   readFile(lines);
@@ -66,35 +68,33 @@ void Config::setCellDimDependentVariables() {
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(12, 0);
+  MenuBrowser browser(10, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
   const int OPTIONS_Y_POS = 3;
 
-  draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+  draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
     case menuAction_browsed: {
-      draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-    }
-    break;
+      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+    } break;
 
     case menuAction_canceled: {
       // Since ASCII mode wall symbol may have changed, we need to redefine the feature data list
       eng->featureData->makeList();
       return;
-    }
-    break;
+    } break;
 
     case menuAction_selected: {
-      playerSetsOption(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+      playerSetsOption(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
       collectLinesFromVariables(lines);
       writeLinesToFile(lines);
-      draw(browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-    }
+      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+    } break;
     }
   }
 }
@@ -135,17 +135,15 @@ void Config::parseFontNameAndSetCellDims() {
 
 void Config::setDefaultVariables() {
   USE_TILE_SET = true;
-  FONT_IMAGE_NAME = fontImageNames.back();
+  FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
   parseFontNameAndSetCellDims();
   FULLSCREEN = false;
   WALL_SYMBOL_FULL_SQUARE = false;
   SKIP_INTRO_LEVEL = false;
   RANGED_WPN_MELEE_PROMPT = true;
-  KEY_REPEAT_DELAY = 180;
-  KEY_REPEAT_INTERVAL = 50;
-  DELAY_PROJECTILE_DRAW = 13;
-  DELAY_SHOTGUN = 85;
-  DELAY_EXPLOSION = 180;
+  DELAY_PROJECTILE_DRAW = 60;
+  DELAY_SHOTGUN = 130;
+  DELAY_EXPLOSION = 250;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
@@ -156,20 +154,18 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
   lines.push_back(SKIP_INTRO_LEVEL == false ? "0" : "1");
   lines.push_back(RANGED_WPN_MELEE_PROMPT == false ? "0" : "1");
-  lines.push_back(intToString(KEY_REPEAT_DELAY));
-  lines.push_back(intToString(KEY_REPEAT_INTERVAL));
   lines.push_back(intToString(DELAY_PROJECTILE_DRAW));
   lines.push_back(intToString(DELAY_SHOTGUN));
   lines.push_back(intToString(DELAY_EXPLOSION));
 }
 
-void Config::draw(const MenuBrowser& browser, const int OPTION_VALUES_X_POS,
+void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
                   const int OPTIONS_Y_POS) {
 
-  const SDL_Color clrSelected = clrWhite;
-  const SDL_Color clrGeneral = clrRedLight;
+  const sf::Color clrSelected = clrWhite;
+  const sf::Color clrGeneral = clrRedLight;
 
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->clearWindow();
 
   int optionNr = 0;
 
@@ -179,80 +175,70 @@ void Config::draw(const MenuBrowser& browser, const int OPTION_VALUES_X_POS,
 
   eng->renderer->drawText("-OPTIONS-", renderArea_screen, X0, Y0 - 1, clrWhite);
 
-  eng->renderer->drawText("TILE MODE (16x24 FONT REQUIRED)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(USE_TILE_SET ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("TILE MODE (16x24 FONT REQUIRED)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(USE_TILE_SET ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(FONT_IMAGE_NAME, renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(FONT_IMAGE_NAME, renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("ASCII MODE WALL SYMBOL", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("ASCII MODE WALL SYMBOL", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("SKIP INTRO LEVEL", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(SKIP_INTRO_LEVEL ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("SKIP INTRO LEVEL", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(SKIP_INTRO_LEVEL ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("RANGED WEAPON MELEE WARNING", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(RANGED_WPN_MELEE_PROMPT ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("RANGED WEAPON MELEE WARNING", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(RANGED_WPN_MELEE_PROMPT ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("KEY REPEAT DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(KEY_REPEAT_DELAY), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("PROJECTILE DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("KEY REPEAT INTERVAL (ms)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(KEY_REPEAT_INTERVAL), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("SHOTGUN DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("PROJECTILE DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("EXPLOSION DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("SHOTGUN DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  optionNr++;
-
-  eng->renderer->drawText("EXPLOSION DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen, X1, Y0 + optionNr, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
-  optionNr++;
-
-  eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser.getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
 
   eng->renderer->drawText("[space/esc] done", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
-void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
-  switch(browser.getPos().y) {
+void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
+  switch(browser->getPos().y) {
   case 0: {
     USE_TILE_SET = !USE_TILE_SET;
     if(USE_TILE_SET) {
       if(CELL_W != 16 || CELL_H != 24) {
-        FONT_IMAGE_NAME = "images/16x24_clean_v1.bmp";
+        FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
       }
     }
     parseFontNameAndSetCellDims();
     setCellDimDependentVariables();
-    eng->renderer->setGfxAnVideoMode();
+    eng->renderer->setupWindowAndImagesClearPrev();
   } break;
 
   case 1: {
@@ -277,12 +263,12 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
     }
 
     setCellDimDependentVariables();
-    eng->renderer->setGfxAnVideoMode();
+    eng->renderer->setupWindowAndImagesClearPrev();
   } break;
 
   case 2: {
     FULLSCREEN = !FULLSCREEN;
-    eng->renderer->setGfxAnVideoMode();
+    eng->renderer->setupWindowAndImagesClearPrev();
   } break;
 
   case 3: {
@@ -299,56 +285,36 @@ void Config::playerSetsOption(const MenuBrowser& browser, const int OPTION_VALUE
 
   case 6: {
     const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser.getPos().y),
-                     clrWhite, 1, 3, KEY_REPEAT_DELAY);
-    if(NR != -1) {
-      KEY_REPEAT_DELAY = NR;
-      eng->renderer->setKeyDelays();
-    }
-  } break;
-
-  case 7: {
-    const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser.getPos().y),
-                     clrWhite, 1, 3, KEY_REPEAT_INTERVAL);
-    if(NR != -1) {
-      KEY_REPEAT_INTERVAL = NR;
-      eng->renderer->setKeyDelays();
-    }
-  } break;
-
-  case 8: {
-    const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser.getPos().y),
+                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                      clrWhite, 1, 3, DELAY_PROJECTILE_DRAW);
     if(NR != -1) {
       DELAY_PROJECTILE_DRAW = NR;
     }
   } break;
 
-  case 9: {
+  case 7: {
     const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser.getPos().y),
+                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                      clrWhite, 1, 3, DELAY_SHOTGUN);
     if(NR != -1) {
       DELAY_SHOTGUN = NR;
     }
   } break;
 
-  case 10: {
+  case 8: {
     const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser.getPos().y),
+                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                      clrWhite, 1, 3, DELAY_EXPLOSION);
     if(NR != -1) {
       DELAY_EXPLOSION = NR;
     }
   } break;
 
-  case 11: {
+  case 9: {
     setDefaultVariables();
     parseFontNameAndSetCellDims();
     setCellDimDependentVariables();
-    eng->renderer->setGfxAnVideoMode();
+    eng->renderer->setupWindowAndImagesClearPrev();
   } break;
   }
 }
@@ -362,7 +328,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   } else {
     USE_TILE_SET = true;
     if(CELL_W != 16 || CELL_H != 24) {
-      FONT_IMAGE_NAME = "images/16x24_clean_v1.bmp";
+      FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
       parseFontNameAndSetCellDims();
     }
   }
@@ -387,14 +353,6 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
 
   curLine = lines.front();
   RANGED_WPN_MELEE_PROMPT = curLine == "0" ? false : true;
-  lines.erase(lines.begin());
-
-  curLine = lines.front();
-  KEY_REPEAT_DELAY = stringToInt(curLine);
-  lines.erase(lines.begin());
-
-  curLine = lines.front();
-  KEY_REPEAT_INTERVAL = stringToInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();

@@ -174,14 +174,14 @@ void Attack::printRangedInitiateMessages(AttackData data) {
     }
   }
 
-  eng->renderer->flip();
+  eng->renderer->drawMapAndInterface();
 }
 
 void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t hitType) {
   //Only print messages if player can see the cell
   const int defX = data.currentDefender->pos.x;
   const int defY = data.currentDefender->pos.y;
-  if(eng->map->playerVision[defX][defY] == true) {
+  if(eng->map->playerVision[defX][defY]) {
     if(data.isTargetEthereal == true) {
       if(data.currentDefender == eng->player) {
         //Perhaps no text is needed here?
@@ -219,7 +219,6 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
         }
       }
     }
-    eng->renderer->flip();
   }
 }
 
@@ -316,7 +315,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
             eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
           } else {
             const string BONUS_STR = data.isBackStab ? "covertly " : "";
-            const SDL_Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
+            const sf::Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
             eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
           }
         } else {

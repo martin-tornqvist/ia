@@ -260,7 +260,7 @@ public:
 private:
 	vector<StringAndColor> m_falseNames;
 
-	void addFalse(const string& str, const SDL_Color clr) {
+	void addFalse(const string& str, const sf::Color clr) {
 		m_falseNames.push_back(StringAndColor(str, clr));
 	}
 

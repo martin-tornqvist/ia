@@ -120,7 +120,7 @@ bool Door::isSmokePassable() const {
   return isOpen_;
 }
 
-SDL_Color Door::getColor() const {
+sf::Color Door::getColor() const {
   if(isSecret_) {
     if(isClued_) {
       return clrYellow;
@@ -184,7 +184,7 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
       eng->renderer->drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         eng->log->addMessage("A secret is revealed.");
-        eng->renderer->flip();
+        eng->renderer->updateWindow();
       }
     }
   }
@@ -197,7 +197,7 @@ void Door::clue() {
   } else {
     eng->log->addMessage("I sense a draft here...");
   }
-  eng->renderer->drawMapAndInterface(true);
+  eng->renderer->drawMapAndInterface();
 }
 
 void Door::playerTrySpotHidden() {
@@ -362,7 +362,7 @@ void Door::tryBash(Actor* actorTrying) {
       }
     }
 
-    eng->renderer->flip();
+    eng->renderer->updateWindow();
 
     tracer << "Door: Calling GameTime::letNextAct()" << endl;
     eng->gameTime->letNextAct();
@@ -384,7 +384,7 @@ void Door::tryClose(Actor* actorTrying) {
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
       eng->log->addMessage("This door refuses to be closed, perhaps it is handled elsewhere?");
-      eng->renderer->flip();
+      eng->renderer->updateWindow();
     }
     return;
   }
@@ -477,7 +477,7 @@ void Door::tryOpen(Actor* actorTrying) {
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
       eng->log->addMessage("I see no way to open this door, perhaps it is opened elsewhere?");
-      eng->renderer->flip();
+      eng->renderer->updateWindow();
     }
     return;
   }

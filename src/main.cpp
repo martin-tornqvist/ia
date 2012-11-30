@@ -1,7 +1,5 @@
 #include <cassert>
 
-#include "SDL.h"
-
 #include "Declares.h"
 #include "Engine.h"
 #include "MainMenu.h"
@@ -32,7 +30,7 @@ int main(int argc, char* argv[]) {
   bool quitToMainMenu = false;
 
   Engine* const engine = new Engine(&quitToMainMenu);
-  engine->initRenderer();
+  engine->initConfigAndRenderer();
   engine->initAudio();
 
   bool quitGame = false;
@@ -51,12 +49,8 @@ int main(int argc, char* argv[]) {
     if(quitGame == false) {
       quitToMainMenu = false;
 
-      engine->renderer->clearRenderArea(renderArea_screen);
-      engine->renderer->flip();
-      engine->inventoryHandler->initPlayerSlotButtons();
-
       if(ENTRY_TYPE == gameEntry_new) {
-        if(engine->config->BOT_PLAYING == true) {
+        if(engine->config->BOT_PLAYING) {
           engine->playerBonusHandler->setAllBonusesToPicked();
         }
         engine->playerCreateCharacter->run();
@@ -66,8 +60,8 @@ int main(int argc, char* argv[]) {
 
         if(engine->config->SKIP_INTRO_LEVEL == false) {
           //If intro level is used, build forest.
-          engine->renderer->clearRenderArea(renderArea_screen);
-          engine->renderer->flip();
+          engine->renderer->coverRenderArea(renderArea_screen);
+          engine->renderer->updateWindow();
           engine->mapBuild->buildForest();
           engine->populate->populate();
         } else {
@@ -79,7 +73,6 @@ int main(int argc, char* argv[]) {
       }
 
       engine->player->FOVupdate();
-      engine->renderer->clearAreaPixel(0, 0, engine->config->SCREEN_WIDTH, engine->config->SCREEN_HEIGHT);
       engine->renderer->drawMapAndInterface();
 
       if(ENTRY_TYPE == gameEntry_new) {
@@ -102,13 +95,13 @@ int main(int argc, char* argv[]) {
         if(engine->gameTime->getLoopSize() != 0) {
           if(engine->gameTime->getCurrentActor() == engine->player) {
 
-            engine->input->read();
 
             if(engine->config->BOT_PLAYING) {
               engine->bot->act();
+            } else {
+              engine->renderer->drawMapAndInterface();
+              engine->input->handleMapModeInputUntilFound();
             }
-
-            SDL_Delay(1);
 
           } else {
             //If not player turn, run AI
@@ -124,7 +117,7 @@ int main(int argc, char* argv[]) {
         if(engine->player->deadState != actorDeadState_alive) {
           dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
           engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
-          engine->renderer->flip();
+          engine->renderer->updateWindow();
           engine->query->waitForKeyPress();
           engine->highScore->gameOver(false);
           engine->postmortem->run(&quitGame);
@@ -136,7 +129,7 @@ int main(int argc, char* argv[]) {
     }
     engine->cleanupGame();
   }
-  engine->cleanupRenderer();
+  engine->cleanupConfigAndRenderer();
   engine->cleanupAudio();
   delete engine;
   tracer << "main() [DONE]" << endl;

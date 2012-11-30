@@ -14,7 +14,7 @@ void Close::playerClose() const {
 	coord closeInPos(eng->player->pos);
 
 	eng->log->addMessage("Close in what direction? [Space/Esc] Cancel", clrWhiteHigh);
-	eng->renderer->flip();
+	eng->renderer->updateWindow();
 	closeInPos = eng->player->pos + eng->query->direction();
 	eng->log->clearLog();
 

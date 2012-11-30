@@ -12,8 +12,6 @@
 
 #include "PlayerAllocBonus.h"
 
-extern void profiler(bool init);
-
 void DungeonClimb::makeLevel() {
 	tracer << "DungeonClimb::makeLevel()..." << endl;
 	const int DLVL = eng->map->getDungeonLevel();
@@ -91,7 +89,7 @@ void DungeonClimb::attemptUseDownStairs() {
 		} else {
 			eng->log->addMessage("I descend the stairs.");
 		}
-		eng->renderer->flip();
+		eng->renderer->updateWindow();
 		travelDown();
 	} else {
 		if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
@@ -99,7 +97,7 @@ void DungeonClimb::attemptUseDownStairs() {
 		} else {
 			eng->log->addMessage("I see no stairs leading downwards here.");
 		}
-		eng->renderer->flip();
+		eng->renderer->updateWindow();
 	}
 	tracer << "DungeonClimb::attemptUseDownStairs() [DONE]" << endl;
 }

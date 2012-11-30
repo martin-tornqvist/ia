@@ -1,7 +1,5 @@
 #include "Interface.h"
 
-#include "SDL.h"
-
 #include "Engine.h"
 
 #include "ConstTypes.h"
@@ -17,7 +15,7 @@
 using namespace std;
 
 void Interface::drawInfoLines() {
-  eng->renderer->clearRenderArea(renderArea_characterLines);
+  eng->renderer->coverRenderArea(renderArea_characterLines);
 
   const int CHARACTER_LINE_X0 = 1;
   const int CHARACTER_LINE_Y0 = 0;
@@ -48,7 +46,7 @@ void Interface::drawInfoLines() {
   str = intToString(INS_LONG) + "%";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
   xPos += str.length();
-  const SDL_Color shortSanClr = INS_SHORT < 50 ? clrGreenLight : INS_SHORT < 75 ? clrYellow : clrMagenta;
+  const sf::Color shortSanClr = INS_SHORT < 50 ? clrGreenLight : INS_SHORT < 75 ? clrYellow : clrMagenta;
   str = "(" + intToString(INS_SHORT) + "%)";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
   xPos += 1 + str.length();

@@ -172,7 +172,7 @@ public:
   bool isTried;
   ItemName name;
   char glyph;
-  SDL_Color color;
+  sf::Color color;
   Tile_t tile;
   bool isExplosive;
   bool isUsable;
@@ -215,7 +215,7 @@ public:
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   Tile_t rangedMissileTile;
-  SDL_Color rangedMissileColor;
+  sf::Color rangedMissileColor;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttackMessages rangedAttackMessages;

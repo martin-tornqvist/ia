@@ -2,8 +2,7 @@
 #define CONST_TYPES_H
 
 #include <string>
-
-#include "SDL.h"
+#include <stdlib.h>
 
 #include "Colors.h"
 #include "Art.h"
@@ -40,30 +39,38 @@ enum GameEntry_t {
 
 struct GlyphAndColor {
   GlyphAndColor() :
-    color(clrBlack), glyph(' '), underscoreClr(clrBlack) {
+    color(clrBlack), bgColor(clrBlack), drawBgColor(false), glyph(' '), lifebarLength(-1) {
   }
   void clear() {
     color = clrBlack;
+    bgColor = clrBlack;
+    drawBgColor = false;
     glyph = ' ';
-    underscoreClr = clrBlack;
+    lifebarLength = -1;
   }
-  SDL_Color color;
+  sf::Color color;
+  sf::Color bgColor;
+  bool drawBgColor;
   char glyph;
-  SDL_Color underscoreClr;
+  int lifebarLength;
 };
 
 struct TileAndColor {
   TileAndColor() :
-    color(clrBlack), tile(tile_empty), underscoreClr(clrBlack) {
+    color(clrBlack), bgColor(clrBlack), drawBgColor(false), tile(tile_empty), lifebarLength(-1) {
   }
   void clear() {
     color = clrBlack;
+    bgColor = clrBlack;
+    drawBgColor = false;
     tile = tile_empty;
-    underscoreClr = clrBlack;
+    lifebarLength = -1;
   }
-  SDL_Color color;
+  sf::Color color;
+  sf::Color bgColor;
+  bool drawBgColor;
   Tile_t tile;
-  SDL_Color underscoreClr;
+  int lifebarLength;
 };
 
 struct StringAndColor {
@@ -71,7 +78,7 @@ struct StringAndColor {
     str(""), color(clrBlack) {
   }
 
-  StringAndColor(const string& text, const SDL_Color& clr) :
+  StringAndColor(const string& text, const sf::Color& clr) :
     str(text), color(clr) {
   }
 
@@ -82,7 +89,7 @@ struct StringAndColor {
   }
 
   string str;
-  SDL_Color color;
+  sf::Color color;
 };
 
 struct coord {

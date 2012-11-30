@@ -53,10 +53,10 @@ bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const b
       const ActorDefinition* const d = originActor->getDef();
       switch(d->groupSize) {
       case monsterGroupSize_few: {
-        extraSpawns = eng->dice.getInRange(1, 2);
+        extraSpawns = eng->dice.getInRange(0, 2);
       } break;
       case monsterGroupSize_group: {
-        extraSpawns = eng->dice.getInRange(3, 6);
+        extraSpawns = eng->dice.getInRange(2, 5);
       } break;
       case monsterGroupSize_horde: {
         extraSpawns = eng->dice.getInRange(7, 13);
@@ -133,7 +133,7 @@ void Populate::populate() const {
     }
   }
 
-  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 750 : 110;
+  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 900 : 110;
 
   tracer << "Populate: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 

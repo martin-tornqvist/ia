@@ -118,7 +118,7 @@ public:
   virtual void isHit() {
   }
 
-  virtual SDL_Color getColorOwningActor() {
+  virtual sf::Color getColorOwningActor() {
     return clrBlack;
   }
 
@@ -805,7 +805,7 @@ public:
     return 0;
   }
 
-  SDL_Color getColorOwningActor() {
+  sf::Color getColorOwningActor() {
     return clrRedLight;
   }
 
@@ -821,6 +821,8 @@ private:
   StatusBurning(const int turns) :
     StatusEffect(turns, statusBurning) {
   }
+
+  void doDamage(Engine* const engine);
 };
 
 class StatusFlared: public StatusEffect {
@@ -872,7 +874,7 @@ public:
     return 0;
   }
 
-  SDL_Color getColorOwningActor() {
+  sf::Color getColorOwningActor() {
     return clrRedLight;
   }
 
@@ -2103,9 +2105,9 @@ public:
     }
   }
 
-  SDL_Color getColor() {
+  sf::Color getColor() {
     for(unsigned int i = 0; i < effects.size(); i++) {
-      const SDL_Color& clr = effects.at(i)->getColorOwningActor();
+      const sf::Color& clr = effects.at(i)->getColorOwningActor();
       if(clr.r != 0 || clr.g != 0 || clr.b != 0) {
         return effects.at(i)->getColorOwningActor();
       }

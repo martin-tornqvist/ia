@@ -199,7 +199,7 @@ string Trap::getDescription(const bool DEFINITE_ARTICLE) const {
   }
 }
 
-SDL_Color Trap::getColor() const {
+sf::Color Trap::getColor() const {
   return isHidden_ ? mimicFeature_->color : specificTrap_->getTrapSpecificColor();
 }
 

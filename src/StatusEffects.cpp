@@ -30,7 +30,7 @@ void StatusDiseased::newTurn(Engine* engine) {
   int& hpMax = engine->player->hpMax_;
 
   if(hp > (hpMax * 3) / 4) {
-    hp -= engine->dice(1, 2);
+    hp -= 1;
   }
 
   turnsLeft--;
@@ -105,25 +105,29 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 
 void StatusBurning::start() {
   owningActor->addLight(owningActor->eng->map->light);
+  doDamage(owningActor->eng);
 }
 
 void StatusBurning::end() {
 
 }
 
-void StatusBurning::newTurn(Engine* engine) {
-  owningActor->addLight(owningActor->eng->map->light);
-
+void StatusBurning::doDamage(Engine* const engine) {
   if(owningActor == engine->player) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
+    owningActor->eng->renderer->drawMapAndInterface();
   }
-  bool DIED = owningActor->hit(engine->dice(1, 4), damageType_fire);
+  bool DIED = owningActor->hit(engine->dice(1, 3), damageType_fire);
   if(DIED) {
     if(owningActor == engine->player) {
       engine->postmortem->setCauseOfDeath("Burning");
     }
   }
+}
 
+void StatusBurning::newTurn(Engine* engine) {
+  owningActor->addLight(owningActor->eng->map->light);
+  doDamage(engine);
   turnsLeft--;
 }
 
@@ -166,7 +170,7 @@ coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePo
   engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
 
   if(actorPos != movePos) {
-    const int CHANCE_TO_MOVE_WRONG = 60;
+    const int CHANCE_TO_MOVE_WRONG = 40;
     if(engine->dice(1, 100) < CHANCE_TO_MOVE_WRONG) {
       int triesLeft = 100;
       while(triesLeft != 0) {

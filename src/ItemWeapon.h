@@ -62,10 +62,10 @@ public:
     lines.erase(lines.begin());
   }
 
-  SDL_Color getColor() const {
+  sf::Color getColor() const {
     if(def_->isRangedWeapon && def_->rangedHasInfiniteAmmo == false) {
       if(ammoLoaded == 0) {
-        SDL_Color ret = def_->color;
+        sf::Color ret = def_->color;
         ret.r /= 2;
         ret.g /= 2;
         ret.b /= 2;

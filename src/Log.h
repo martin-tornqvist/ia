@@ -1,8 +1,6 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include "SDL.h"
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -27,7 +25,7 @@ public:
     clearLog();
   }
 
-  void addMessage(const string& text, const SDL_Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never);
+  void addMessage(const string& text, const sf::Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never);
 
   void drawLog() const;
 
@@ -43,7 +41,7 @@ public:
 
 private:
   struct Message {
-    Message(const string& text, const SDL_Color color) :
+    Message(const string& text, const sf::Color color) :
       str(text), clr(color), repeats(1), strRepeats("") {
     }
 
@@ -58,7 +56,7 @@ private:
     }
 
     string str;
-    SDL_Color clr;
+    sf::Color clr;
     int repeats;
     string strRepeats;
   };

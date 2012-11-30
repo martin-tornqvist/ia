@@ -96,7 +96,7 @@ void Bot::act() {
 	eng->map->dungeonLevel_ = 0;
       }
     }
-    eng->input->handleKeyPress('>', false, false);
+    eng->input->handleKeyPress(KeyboardReadReturnData('>'));
     return;
   }
 
@@ -184,7 +184,7 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
 
   assert(key >= '1' && key <= '9');
 
-  eng->input->handleKeyPress(key, false, false);
+  eng->input->handleKeyPress(KeyboardReadReturnData(key));
 
   tracer << "Bot::walkToAdjacentCell() [DONE]" << endl;
   return playerCell == cellToGoTo;

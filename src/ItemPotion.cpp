@@ -236,7 +236,7 @@ void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
   const unsigned int ELEMENT = static_cast<unsigned int>(eng->dice(1, NR_NAMES) - 1);
 
   const string DESCRIPTION = m_falseNames.at(ELEMENT).str;
-  const SDL_Color clr = m_falseNames.at(ELEMENT).color;
+  const sf::Color clr = m_falseNames.at(ELEMENT).color;
 
   m_falseNames.erase(m_falseNames.begin() + ELEMENT);
 

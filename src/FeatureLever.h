@@ -10,7 +10,7 @@ class FeatureLever: public FeatureStatic {
 public:
   ~FeatureLever() {
   }
-  SDL_Color getColor() const;
+  sf::Color getColor() const;
   Tile_t getTile() const;
 
   void examine();

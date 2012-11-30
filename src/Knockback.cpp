@@ -5,7 +5,6 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "Log.h"
-#include "Timer.h"
 #include "Config.h"
 
 void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN) {
@@ -44,10 +43,8 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
           defender->pos = c;
 
           eng->renderer->drawMapAndInterface();
-          Timer t;
-          t.start();
-          while(t.get_ticks() < eng->config->DELAY_PROJECTILE_DRAW) {
-          }
+
+          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {

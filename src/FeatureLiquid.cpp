@@ -20,7 +20,7 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
 
     if(IS_PLAYER) {
       eng->log->addMessage("*glop*");
-      eng->renderer->flip();
+      eng->renderer->updateWindow();
     }
   }
 }

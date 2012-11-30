@@ -81,13 +81,13 @@ void Look::printExtraActorDescription(const coord pos) const {
       const int START_X = 1;
       const int START_Y = 2;
 
-      eng->renderer->clearAreaWithTextDimensions(renderArea_screen, START_X, START_Y, 1, NR_OF_LINES);
+      eng->renderer->coverArea(renderArea_screen, START_X, START_Y, 1, NR_OF_LINES);
 
       for(unsigned int i = 0; i < NR_OF_LINES; i++) {
         eng->renderer->drawText(formattedText.at(i), renderArea_screen, START_X, START_Y + i, clrWhiteHigh);
       }
 
-      eng->renderer->flip();
+      eng->renderer->updateWindow();
 
       eng->query->waitForKeyPress();
     }

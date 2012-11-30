@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "SFML/Window/Event.hpp"
+
 #include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
@@ -28,219 +30,187 @@
 #include "Examine.h"
 #include "PlayerCreateCharacter.h"
 
-extern void profiler(bool init);
-
-void Input::clearMessages() {
+void Input::clearLogMessages() {
   if(eng->player->deadState == actorDeadState_alive) {
     eng->log->clearLog();
   }
 }
 
-void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
-  char str[255];
+Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu_(quitToMainMenu)  {
 
-  switch(key) {
-    //----------------------------------------MOVEMENT
-  case SDLK_6:
-  case SDLK_KP6:
-  case SDLK_RIGHT: {
+}
+
+void Input::handleMapModeInputUntilFound() {
+  const KeyboardReadReturnData& d = readKeysUntilFound();
+  handleKeyPress(d);
+}
+
+void Input::handleKeyPress(const KeyboardReadReturnData& d) {
+  //----------------------------------------MOVEMENT
+  if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
     if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-
-      if(SHIFT == true) {
+      clearLogMessages();
+      if(d.isShiftHeld_) {
         eng->player->moveDirection(1, -1);
-      } else {
-        if(CTRL == true) {
-          eng->player->moveDirection(1, 1);
-        } else {
-          eng->player->moveDirection(1, 0);
-        }
+      }
+      else if(d.isCtrlHeld_) {
+        eng->player->moveDirection(1, 1);
+      }
+      else {
+        eng->player->moveDirection(1, 0);
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  case SDLK_9:
-  case SDLK_KP9:
-  case SDLK_PAGEUP: {
+  else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-      eng->player->moveDirection(1, -1);
-    }
-    clearKeyEvents();
-  }
-  break;
-
-  case SDLK_8:
-  case SDLK_KP8:
-  case SDLK_UP: {
-    if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-      eng->player->moveDirection(0, -1);
-    }
-    clearKeyEvents();
-  }
-  break;
-
-  case SDLK_7:
-  case SDLK_KP7:
-  case SDLK_HOME: {
-    if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-      eng->player->moveDirection(-1, -1);
-    }
-    clearKeyEvents();
-  }
-  break;
-
-  case SDLK_4:
-  case SDLK_KP4:
-  case SDLK_LEFT: {
-    if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-      if(SHIFT == true) {
-        eng->player->moveDirection(-1, -1);
-      } else {
-        if(CTRL == true) {
-          eng->player->moveDirection(-1, 1);
-        } else {
-          eng->player->moveDirection(-1, 0);
-        }
-      }
-    }
-    clearKeyEvents();
-  }
-  break;
-
-  case SDLK_1:
-  case SDLK_KP1:
-  case SDLK_END: {
-    if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
-      eng->player->moveDirection(-1, 1);
-    }
-    clearKeyEvents();
-  }
-  break;
-
-  case SDLK_2:
-  case SDLK_KP2:
-  case SDLK_DOWN: {
-    if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
+      clearLogMessages();
       eng->player->moveDirection(0, 1);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  case SDLK_3:
-  case SDLK_KP3:
-  case SDLK_PAGEDOWN: {
+  else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
     if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
+      clearLogMessages();
+      if(d.isShiftHeld_) {
+        eng->player->moveDirection(-1, -1);
+      }
+      else if(d.isCtrlHeld_) {
+        eng->player->moveDirection(-1, 1);
+      }
+      else {
+        eng->player->moveDirection(-1, 0);
+      }
+    }
+    clearEvents();
+    return;
+  }
+  else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+    if(eng->player->deadState == actorDeadState_alive) {
+      clearLogMessages();
+      eng->player->moveDirection(0, -1);
+    }
+    clearEvents();
+    return;
+  }
+  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+    if(eng->player->deadState == actorDeadState_alive) {
+      clearLogMessages();
+      eng->player->moveDirection(1, -1);
+    }
+    clearEvents();
+    return;
+  }
+  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '3') {
+    if(eng->player->deadState == actorDeadState_alive) {
+      clearLogMessages();
       eng->player->moveDirection(1, 1);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  case SDLK_5:
-  case SDLK_KP5:
-  case int('.'): {
+  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
-      clearMessages();
+      clearLogMessages();
+      eng->player->moveDirection(-1, 1);
+    }
+    clearEvents();
+    return;
+  }
+  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '7') {
+    if(eng->player->deadState == actorDeadState_alive) {
+      clearLogMessages();
+      eng->player->moveDirection(-1, -1);
+    }
+    clearEvents();
+    return;
+  }
+  else if(d.key_ == '5') {
+    if(eng->player->deadState == actorDeadState_alive) {
+      clearLogMessages();
       eng->player->moveDirection(0, 0);
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_steadyAimer)) {
         eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusStill(1));
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------DESCEND
-  case int('>'): {
+  else if(d.key_ == '>') {
     tracer << "Input: User pressed '>'" << endl;
-    clearMessages();
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       tracer << "Input: Calling DungeonClimb::attemptUseDownStairs()" << endl;
       eng->dungeonClimb->attemptUseDownStairs();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------EXAMINE
-  case int('a'): {
-    clearMessages();
+  else if(d.key_ == 'a') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->examine->playerExamine();
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------RELOAD
-  case SDLK_r: {
-    clearMessages();
+  else if(d.key_ == 'r') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->reload->reloadWeapon(eng->player);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------BASH
-  case int('b'): {
-    clearMessages();
+  else if(d.key_ == 'b') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->bash->playerBash();
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------CLOSE
-  case int('c'): {
-    clearMessages();
+  else if(d.key_ == 'c') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->close->playerClose();
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------JAM
-  case int('j'): {
-    clearMessages();
+  else if(d.key_ == 'j') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->jamWithSpike->playerJam();
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------UNLOAD AMMO FROM GROUND
-  case int('u'): {
-    clearMessages();
+  else if(d.key_ == 'u') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->itemPickup->tryUnloadWeaponOrPickupAmmoFromGround();
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------EXPLOSIVES
-  case SDLK_e: {
-    clearMessages();
+  else if(d.key_ == 'e') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-
       //If player has no explosive readied, ask player to select one
       if(eng->player->dynamiteFuseTurns == -1 && eng->player->molotovFuseTurns == -1 && eng->player->flareFuseTurns == -1) {
         eng->inventoryHandler->runPlayerInventory(inventoryPurpose_readyExplosive);
@@ -249,13 +219,12 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->marker->place(markerTask_throwLitExplosive);
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------AIM/FIRE FIREARM
-  case SDLK_f: {
-    clearMessages();
+  else if(d.key_ == 'f') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
       if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true) == true) {
@@ -284,13 +253,12 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         }
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------GET
-  case SDLK_g: {
-    clearMessages();
+  else if(d.key_ == 'g') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       Item* const itemAtPlayer = eng->map->items[eng->player->pos.x][eng->player->pos.y];
       if(itemAtPlayer != NULL) {
@@ -303,43 +271,39 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->itemPickup->tryPick();
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------EXAMINE INVENTORY
-  case SDLK_i: {
-    clearMessages();
+  else if(d.key_ == 'i') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_look);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------WIELD WEAPON
-  case SDLK_w: {
-    clearMessages();
+  else if(d.key_ == 'w') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldWear);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------PREPARE WEAPON
-  case int('W'): {
-    clearMessages();
+  else if(d.key_ == 'W') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldAlt);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------SWAP TO PREPARED ITEM
-  case int('z'): {
-    clearMessages();
+  else if(d.key_ == 'z') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
       const bool IS_FREE_TURN = eng->playerBonusHandler->isBonusPicked(playerBonus_nimble);
@@ -366,23 +330,21 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->player->getInventory()->swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------WIELD MISSILE WEAPON
-  case int('m'): {
-    clearMessages();
+  else if(d.key_ == 'm') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_missileSelect);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------UN-WIELD MISSILE WEAPON
-  case int('M'): {
-    clearMessages();
+  else if(d.key_ == 'M') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       InventorySlot* const missileSlot = eng->player->getInventory()->getSlot(slot_missiles);
       Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
@@ -393,13 +355,12 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->log->addMessage("There is no missile weapon to quit using.");
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------SEARCH (REALLY JUST A WAIT BUTTON)
-  case SDLK_s: {
-    clearMessages();
+  else if(d.key_ == 's') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->player->getSpotedEnemies();
       if(eng->player->spotedEnemies.size() == 0) {
@@ -410,26 +371,15 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->gameTime->letNextAct();
       } else {
         eng->log->addMessage("Not while an enemy is near.");
-        eng->renderer->flip();
+        eng->renderer->drawMapAndInterface();
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  //----------------------------------------USE ITEM
-  //	case int('U'): {
-  //		clearMessages();
-  //		if(eng->player->deadState == actorDeadState_alive) {
-  //			eng->inventoryHandler->runPlayerInventory(inventoryPurpose_use);
-  //		}
-  //		clearKeyEvents();
-  //	}
-  //	break;
-
   //----------------------------------------READ
-  case int('R'): {
-    clearMessages();
+  else if(d.key_ == 'R') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getStatusEffectsHandler()->allowSee()) {
         eng->playerPowersHandler->run(false);
@@ -437,33 +387,21 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->log->addMessage("I can not read while blind.");
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  //----------------------------------------EAT
-  //	case int('E'): {
-  //		clearMessages();
-  //		if(eng->player->deadState == actorDeadState_alive) {
-  //			eng->inventoryHandler->runPlayerInventory(inventoryPurpose_eat);
-  //		}
-  //		clearKeyEvents();
-  //	}
-  //	break;
-
   //----------------------------------------QUAFF
-  case SDLK_q: {
-    clearMessages();
+  else if(d.key_ == 'q') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_quaff);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------THROW ITEM
-  case SDLK_t: {
-    clearMessages();
+  else if(d.key_ == 't') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
       if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true)) {
@@ -476,23 +414,21 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         }
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------DROP ITEM
-  case SDLK_d: {
-    clearMessages();
+  else if(d.key_ == 'd') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runPlayerInventory(inventoryPurpose_selectDrop);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //---------------------------------------- LOOK AROUND
-  case SDLK_l: {
-    clearMessages();
+  else if(d.key_ == 'l') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getStatusEffectsHandler()->allowSee() == true) {
         eng->marker->place(markerTask_look);
@@ -500,39 +436,16 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
         eng->log->addMessage("I am blind.");
       }
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
-  //---------------------------------------- TRIGGER TRAP ON PURPOSE
-  //	case int('T'): {
-  //TODO reimplement
-  //		clearMessages();
-  //		if(eng->player->deadState == actorDeadState_alive) {
-  //			Trap* const trap = eng->map->traps[eng->player->pos.x][eng->player->pos.y];
-  //			if(trap != NULL) {
-  //				if(trap->isHidden() == false) {
-  //					trap->triggerOnPurpose(eng->player);
-  //					eng->gameTime->letNextAct();
-  //				} else {
-  //					eng->log->addMessage("I find no trap here to trigger.");
-  //				}
-  //			} else {
-  //				eng->log->addMessage("I find no trap here to trigger.");
-  //			}
-  //		}
-  //		clearKeyEvents();
-  //	}
-  //	break;
-
   //----------------------------------------FIRST AID
-  // Old way:
-  case SDLK_h: {
-    clearMessages();
+  else if(d.key_ == 'h') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getHp() >= eng->player->getHpMax()) {
         eng->log->addMessage("I am already at good health.");
-        eng->renderer->flip();
+        eng->renderer->drawMapAndInterface();
       } else {
         eng->player->getSpotedEnemies();
         if(eng->player->spotedEnemies.size() == 0) {
@@ -543,94 +456,56 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
           eng->gameTime->letNextAct();
         } else {
           eng->log->addMessage("Not while an enemy is near.");
-          eng->renderer->flip();
+          eng->renderer->drawMapAndInterface();
         }
       }
-      clearKeyEvents();
     }
+    clearEvents();
+    return;
   }
-  break;
-  // New system with partial healing:
-//	case SDLK_h: {
-//		clearMessages();
-//		if(eng->player->deadState == actorDeadState_alive) {
-//			if(eng->player->getHP() >= eng->player->getHP_max()) {
-//				eng->log->addMessage("I am already at good health.");
-//				eng->renderer->flip();
-//			} else {
-//				eng->player->getSpotedEnemies();
-//				if(eng->player->spotedEnemies.size() == 0) {
-//					const StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
-//					const bool IS_DISEASED_OR_SICK = statusHandler->hasEffect(statusDiseased);
-//					const int NR_OF_TURNS = IS_DISEASED_OR_SICK ? 50 : 25;
-//					const string TURNS_STR = intToString(NR_OF_TURNS);
-//					eng->log->addMessage("I rest here and tend to some of my wounds (" + TURNS_STR + " turns)...");
-//					eng->player->firstAidTurnsLeft = NR_OF_TURNS - 1;
-//					eng->gameTime->letNextAct();
-//				} else {
-//					eng->log->addMessage("Not while an enemy is near.");
-//					eng->renderer->flip();
-//				}
-//			}
-//			clearKeyEvents();
-//		}
-//	}
-//	break;
-
   //----------------------------------------AUTO MELEE
-  case SDLK_TAB: {
-    clearMessages();
+  else if(d.sfmlKey_ == sf::Keyboard::Tab) {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->player->autoMelee();
-      clearKeyEvents();
     }
+    clearEvents();
+    return;
   }
-  break;
-
-  //----------------------------------------KICK
-  //  case SDLK_k: {
-  //    clearMessages();
-  //    if(eng->player->deadState == actorDeadState_alive) {
-  //      if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
-  //        eng->player->kick();
-  //      }
-  //      clearKeyEvents();
-  //    }
-  //  }
-  //  break;
-
   //----------------------------------------POWERS - MEMORIZED
-  case SDLK_x: {
-    clearMessages();
+  else if(d.key_ == 'x') {
+    clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->playerPowersHandler->run(true);
     }
-    clearKeyEvents();
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------MANUAL
-  case int('?'):
+  else if(d.key_ == '?') {
     eng->manual->run();
-    break;
-
-    //----------------------------------------CHARACTER INFO
-  case int('@'):
+    eng->renderer->drawMapAndInterface();
+    clearEvents();
+    return;
+  }
+  //----------------------------------------CHARACTER INFO
+  else if(d.key_ == '@') {
     eng->characterInfo->run();
-    break;
-
-    //----------------------------------------LOG HISTORY
-  case int('L'):
+    clearEvents();
+    return;
+  }
+  //----------------------------------------LOG HISTORY
+  else if(d.key_ == 'L') {
     eng->log->displayHistory();
-    break;
-
-    //----------------------------------------QUIT
-  case SDLK_ESCAPE:
-  case int('Q'): {
+    clearEvents();
+    return;
+  }
+  //----------------------------------------QUIT
+  else if(d.sfmlKey_ == sf::Keyboard::Escape || d.key_ == 'Q') {
     if(eng->player->deadState == actorDeadState_alive) {
       eng->log->clearLog();
       eng->log->addMessage("Quit the current game (y/n)? Save and highscore are not kept.", clrWhiteHigh);
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
       if(eng->query->yesOrNo()) {
         *quitToMainMenu_ = true;
       } else {
@@ -640,16 +515,16 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
     } else {
       *quitToMainMenu_ = true;
     }
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------SAVE AND QUIT
-  case int('S'): {
+  else if(d.key_ == 'S') {
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
         eng->log->clearLog();
         eng->log->addMessage("Save and quit (y/n)?", clrWhiteHigh);
-        eng->renderer->flip();
+        eng->renderer->drawMapAndInterface();
         if(eng->query->yesOrNo()) {
           eng->saveHandler->save();
           *quitToMainMenu_ = true;
@@ -663,113 +538,171 @@ void Input::handleKeyPress(Uint16 key, const bool SHIFT, const bool CTRL) {
       }
     } else {
       eng->log->addMessage("Saving can only be done on stairs.");
-      eng->renderer->flip();
+      eng->renderer->drawMapAndInterface();
     }
+    clearEvents();
+    return;
   }
-  break;
-
   //----------------------------------------UNDEFINED COMMANDS
-  default:
-    if(key < SDLK_UP) {
-      str[0] = char(key);
-    }
-    str[1] = '\0';
-    if(str[0] >= 33) { //&& str[0] <= 126) {
-      clearMessages();
-      string cmdTried = str;
-      eng->log->addMessage("Unknown command '" + cmdTried + "'. Press '?' for commands.");
-    }
-    break;
-  }
-  if(eng->gameTime->getCurrentActor() == eng->player) {
-    eng->renderer->flip();
+  else if(d.key_ != -1) {
+    string cmdTried = " ";
+    cmdTried.at(0) = d.key_;
+    eng->log->addMessage("Unknown command '" + cmdTried + "'. Press '?' for commands.");
+    clearEvents();
+    return;
   }
 }
 
-void Input::read() {
-  const bool SHIFT = SDL_GetModState() & KMOD_SHIFT;
-  const bool CTRL = SDL_GetModState() & KMOD_CTRL;
+void Input::clearEvents() const {
+  sf::Event event;
+  while(eng->renderer->renderWindow_->pollEvent(event)) {
+  }
+}
 
-  while(SDL_PollEvent(&m_event)) {
-    switch(m_event.type) {
-    case SDL_QUIT:
-      *quitToMainMenu_ = true;
-      break;
-
-    case SDL_KEYDOWN: {
-      SDLKey key = m_event.key.keysym.sym;
-
-      bool isCheatKeyPressed = false;
-
-      if(IS_DEBUG_MODE) {
-        //----------------------------------------DESCEND CHEAT
-        if(key == SDLK_F2) {
-          isCheatKeyPressed = true;
-          eng->dungeonClimb->travelDown(1);
-          clearKeyEvents();
+KeyboardReadReturnData Input::readKeysUntilFound() const {
+  while(true) {
+    sf::Event event;
+    while(eng->renderer->renderWindow_->pollEvent(event)) {
+      if(event.type == sf::Event::TextEntered) {
+        // ASCII char entered?
+        // Decimal unicode:
+        // '!' = 33
+        // '~' = 126
+        if(event.text.unicode >= 33 && event.text.unicode <= 126) {
+          clearEvents();
+          return KeyboardReadReturnData(static_cast<char>(event.text.unicode));
         }
-
-        //----------------------------------------XP CHEAT
-        if(key == SDLK_F3) {
-          isCheatKeyPressed = true;
-          eng->dungeonMaster->playerGainsExp(500);
-          clearKeyEvents();
-        }
-
-        //----------------------------------------VISION CHEAT
-        if(key == SDLK_F4) {
-          isCheatKeyPressed = true;
-          eng->cheat_vision = !eng->cheat_vision;
-          clearKeyEvents();
-        }
-
-        //----------------------------------------INSANITY "CHEAT"
-        if(key == SDLK_F5) {
-          isCheatKeyPressed = true;
-          eng->player->shock(shockValue_heavy, 0);
-          clearKeyEvents();
-        }
-
-        //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-        if(key == SDLK_F6) {
-          isCheatKeyPressed = true;
-          for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-            const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
-            if(def->isQuaffable == true || def->isReadable == true) {
-              eng->itemFactory->spawnItemOnMap(static_cast<ItemDevNames_t>(i), eng->player->pos);
-            }
-          }
-          clearKeyEvents();
-        }
-
-//				if(key == SDLK_F7) {
-//					isCheatKeyPressed = true;
-//
-//					const coord pos = eng->player->pos + coord(1,0);
-//					if(eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(moveType_walk)) {
-//						Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_zombieAxe, pos));
-//						monster->leader = eng->player;
-//					}
-//
-//					clearKeyEvents();
-//				}
+        continue;
       }
+      else if(event.type == sf::Event::KeyPressed) {
+        // Other key pressed? (escape, return, space, etc)
+        const sf::Keyboard::Key sfmlKey = event.key.code;
 
-      if(isCheatKeyPressed == false) {
+        // Don't register shift, control or alt as actual key events
         if(
-          key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN ||
-          key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key == SDLK_HOME || key == SDLK_END) {
-          handleKeyPress(static_cast<Uint16>(m_event.key.keysym.sym), SHIFT, CTRL);
-        } else {
-          handleKeyPress(m_event.key.keysym.unicode, SHIFT, CTRL);
+          sfmlKey == sf::Keyboard::LShift ||
+          sfmlKey == sf::Keyboard::RShift ||
+          sfmlKey == sf::Keyboard::LControl ||
+          sfmlKey == sf::Keyboard::RControl ||
+          sfmlKey == sf::Keyboard::LAlt ||
+          sfmlKey == sf::Keyboard::RAlt) {
+          continue;
+        }
+
+        const bool IS_SHIFT_HELD =
+          sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+          sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+        const bool IS_CTRL_HELD =
+          sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
+          sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+
+        KeyboardReadReturnData ret(-1, sfmlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
+
+        if(sfmlKey >= sf::Keyboard::F1 && sfmlKey <= sf::Keyboard::F15) {
+          // F-keys
+          return ret;
+        }
+        else {
+          switch(sfmlKey) {
+          default: continue; break;
+          case sf::Keyboard::LSystem: continue; break;
+          case sf::Keyboard::RSystem: continue; break;
+          case sf::Keyboard::Menu: continue; break;
+          case sf::Keyboard::Pause: continue; break;
+          case sf::Keyboard::Space: return ret; break;
+          case sf::Keyboard::Return: return ret; break;
+          case sf::Keyboard::Back: return ret; break;
+          case sf::Keyboard::Tab: return ret; break;
+          case sf::Keyboard::PageUp: return ret; break;
+          case sf::Keyboard::PageDown: return ret; break;
+          case sf::Keyboard::End: return ret; break;
+          case sf::Keyboard::Home: return ret; break;
+          case sf::Keyboard::Insert: return ret; break;
+          case sf::Keyboard::Delete: return ret; break;
+          case sf::Keyboard::Left: return ret; break;
+          case sf::Keyboard::Right: return ret; break;
+          case sf::Keyboard::Up: return ret; break;
+          case sf::Keyboard::Down: return ret; break;
+          case sf::Keyboard::Escape: return ret; break;
+          }
         }
       }
     }
-    break;
-
-    default: {
-    }
-    break;
-    }
   }
 }
+
+//void Input::read() {
+//  const bool IS_SHIFT_HELD = SDL_GetModState() & KMOD_SHIFT;
+//  const bool IS_CTRL_HELD = SDL_GetModState() & KMOD_CTRL;
+//
+//  while(SDL_PollEvent(&m_event)) {
+//    switch(m_event.type) {
+//    case SDL_QUIT:
+//      *quitToMainMenu_ = true;
+//      break;
+//
+//    case SDL_KEYDOWN: {
+//      SDLKey key = m_event.key.keysym.sym;
+//
+//      bool isCheatKeyPressed = false;
+//
+//      if(IS_DEBUG_MODE) {
+//        //----------------------------------------DESCEND CHEAT
+//        if(key == SDLK_F2) {
+//          isCheatKeyPressed = true;
+//          eng->dungeonClimb->travelDown(1);
+//          clearKeyEvents();
+//        }
+//
+//        //----------------------------------------XP CHEAT
+//        if(key == SDLK_F3) {
+//          isCheatKeyPressed = true;
+//          eng->dungeonMaster->playerGainsExp(500);
+//          clearKeyEvents();
+//        }
+//
+//        //----------------------------------------VISION CHEAT
+//        if(key == SDLK_F4) {
+//          isCheatKeyPressed = true;
+//          eng->cheat_vision = !eng->cheat_vision;
+//          clearKeyEvents();
+//        }
+//
+//        //----------------------------------------INSANITY "CHEAT"
+//        if(key == SDLK_F5) {
+//          isCheatKeyPressed = true;
+//          eng->player->shock(shockValue_heavy, 0);
+//          clearKeyEvents();
+//        }
+//
+//        //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
+//        if(key == SDLK_F6) {
+//          isCheatKeyPressed = true;
+//          for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+//            const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
+//            if(def->isQuaffable == true || def->isReadable == true) {
+//              eng->itemFactory->spawnItemOnMap(static_cast<ItemDevNames_t>(i), eng->player->pos);
+//            }
+//          }
+//          clearKeyEvents();
+//        }
+//      }
+//
+//      if(isCheatKeyPressed == false) {
+//        if(
+//          key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN ||
+//          key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key == SDLK_HOME || key == SDLK_END) {
+//          handleKeyPress(static_cast<Uint16>(m_event.key.keysym.sym), IS_SHIFT_HELD, IS_CTRL_HELD);
+//        } else {
+//          handleKeyPress(m_event.key.keysym.unicode, IS_SHIFT_HELD, IS_CTRL_HELD);
+//        }
+//      }
+//    }
+//    break;
+//
+//    default: {
+//    }
+//    break;
+//    }
+//  }
+//}

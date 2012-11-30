@@ -10,7 +10,7 @@ FeatureLever::FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnDa
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 
-SDL_Color FeatureLever::getColor() const {
+sf::Color FeatureLever::getColor() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
@@ -35,7 +35,7 @@ void FeatureLever::pull() {
     doorLinkedTo_->isStuck_ = false;
   }
   eng->player->FOVupdate();
-  eng->renderer->drawMapAndInterface(true);
+  eng->renderer->drawMapAndInterface();
   tracer << "FeatureLever::pull() [DONE]" << endl;
 }
 

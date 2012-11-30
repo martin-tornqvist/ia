@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "SDL.h"
-
 #include "ConstTypes.h"
 
 #include "ActorData.h"
@@ -92,7 +90,7 @@ public:
   char getGlyph() const {
     return glyph_;
   }
-  const SDL_Color& getColor() const {
+  const sf::Color& getColor() const {
     return clr_;
   }
 
@@ -132,7 +130,7 @@ protected:
   //Monsters may have special stuff happening when they die (such as fire vampire explosion)
   virtual void monsterDeath() {}
 
-  SDL_Color clr_;
+  sf::Color clr_;
   char glyph_;
   Tile_t tile_;
 

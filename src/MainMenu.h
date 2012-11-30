@@ -1,7 +1,6 @@
 #ifndef MAIN_MENU_H
 #define MAIN_MENU_H
 
-#include "SDL.h"
 #include "MenuBrowser.h"
 #include "ConstTypes.h"
 

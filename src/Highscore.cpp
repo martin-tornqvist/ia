@@ -10,6 +10,7 @@
 #include "DungeonMaster.h"
 #include "Map.h"
 #include "Popup.h"
+#include "Input.h"
 
 const int X_POS_NAME = 1;
 const int X_POS_SCORE = 20;
@@ -49,7 +50,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
 }
 
 void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) const {
-  eng->renderer->clearRenderArea(renderArea_screen);
+  eng->renderer->clearWindow();
 
   if(entries.size() == 0) {
     const int X0 = 1;
@@ -89,7 +90,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
 //			for(unsigned int xx = 0; xx < FILL_LENGTH; xx++) {
 //				eng->renderer->drawText(".", renderArea_screen, FILL_START + xx, y, clrGray);
 //			}
-      const SDL_Color clr = clrRedLight;
+      const sf::Color clr = clrRedLight;
       eng->renderer->drawText(NAME, renderArea_screen, X_POS_NAME, yPos, clr);
       eng->renderer->drawText(SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);
       eng->renderer->drawText(LVL, renderArea_screen, X_POS_LVL, yPos, clr);
@@ -99,7 +100,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
     }
   }
 
-  eng->renderer->flip();
+  eng->renderer->updateWindow();
 }
 
 void HighScore::runHighScoreScreen() {
@@ -117,47 +118,21 @@ void HighScore::runHighScoreScreen() {
   renderHighScoreScreen(entries, topElement);
 
   //Read keys
-  SDL_Event event;
   bool done = false;
   while(done == false) {
-    while(SDL_PollEvent(&event)) {
-      switch(event.type) {
-      case SDL_KEYDOWN: {
-        int key = event.key.keysym.sym;
+    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-        switch(key) {
-        case SDLK_2:
-        case SDLK_KP2:
-        case SDLK_DOWN: {
-          topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size())
-                                  - static_cast<int>(MAP_Y_CELLS)));
-          renderHighScoreScreen(entries, topElement);
-        }
-        break;
-        case SDLK_8:
-        case SDLK_KP8:
-        case SDLK_UP: {
-          topElement =
-            max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size())
-                       - static_cast<int>(MAP_Y_CELLS)));
-          renderHighScoreScreen(entries, topElement);
-        }
-        break;
-        case SDLK_SPACE:
-        case SDLK_ESCAPE: {
-          done = true;
-        }
-        break;
-
-        }
-      }
-      break;
-      default: {
-      }
-      break;
-      }
+    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+      topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
+      renderHighScoreScreen(entries, topElement);
     }
-    SDL_Delay(1);
+    if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+      topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
+      renderHighScoreScreen(entries, topElement);
+    }
+    if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      done = true;
+    }
   }
 }
 
