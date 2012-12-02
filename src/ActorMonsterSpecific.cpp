@@ -151,7 +151,7 @@ bool Ghost::actorSpecificAct() {
             }
 
             if(deflectedByArmor) {
-              const string armorName = playerArmor->getDef().name.name;
+              const string armorName = eng->itemData->getItemRef(playerArmor, itemRef_plain);
               eng->log->addMessage("The touch is deflected by my " + armorName + "!");
             } else {
               if(eng->dice.coinToss()) {

@@ -54,7 +54,7 @@ void Look::describeBriefFeatureMob(const Feature* const feature) const {
 }
 
 void Look::describeBriefItem(Item* const item) const {
-  eng->log->addMessage(eng->itemData->itemInterfaceName(item, true) + ".");
+  eng->log->addMessage(eng->itemData->getItemInterfaceRef(item, true) + ".");
 }
 
 void Look::describeBriefFeatureStatic(const Feature* const feature) const {

@@ -912,7 +912,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
             if(weapon->getDef().isMeleeWeapon) {
               if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getDef().isRangedWeapon) {
-                  const string wpnName = weapon->getDef().name.name_a;
+                  const string wpnName = eng->itemData->getItemRef(weapon, itemRef_a);
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng->renderer->drawMapAndInterface();
                   if(eng->query->yesOrNo() == false) {
@@ -970,7 +970,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
           string message = statusEffectsHandler_->allowSee() == false ? "I feel here: " : "I see here: ";
-          message += eng->itemData->itemInterfaceName(item, true);
+          message += eng->itemData->getItemInterfaceRef(item, true);
           eng->log->addMessage(message + ".");
         }
       }

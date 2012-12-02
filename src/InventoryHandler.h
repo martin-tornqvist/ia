@@ -6,40 +6,36 @@
 class Engine;
 
 struct InventorySlotButton {
-	InventorySlot* inventorySlot;
-	char key;
+  InventorySlot* inventorySlot;
+  char key;
 };
 
 class InventoryHandler {
 public:
-	InventoryHandler(Engine* engine) :
-		eng(engine) {
-	}
+  InventoryHandler(Engine* engine);
 
-	void runPlayerInventory(InventoryPurpose_t purpose);
+  void runSlotsScreen();
+  void runUseScreen();
 
-	vector<InventorySlotButton> playerSlotButtons;
-
-	void updatePlayerGeneralSlotButtons(const InventoryPurpose_t purpose);
-
-	InventorySlot* getSlotPressed(const char charIndex);
-
-	//The int's in this vector are general inventory indexes.
-	vector<unsigned int> generalItemsToShow;
-
-	void initPlayerSlotButtons();
-
-	//Call item's default activation.
-	//This function is public because of forced eating before dieing of starvation (and perhaps more)
-	void activateItem(const InventoryPurpose_t purpose, const unsigned int genSlot);
+  void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
 
 private:
-	void showGeneralItemsFiltered(const GeneralInventoryFilters_t filter);
-	void showAllGeneralItems();
+  vector<InventorySlotButton> equipmentSlotButtons;
 
-	void swapItems(Item** item1, Item** item2);
+  //The values in this vector refer to general inventory elements
+  vector<unsigned int> generalItemsToShow;
 
-	Engine* eng;
+  void runDropScreen(Item* const itemToDrop);
+  void runEquipScreen(const SlotTypes_t slotToEquip);
+  void runBrowseInventoryMode();
+
+  void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);
+  void filterPlayerGeneralSlotButtonsUsable();
+  void filterPlayerGeneralSlotButtonsShowAll();
+
+  void swapItems(Item** item1, Item** item2);
+
+  Engine* eng;
 };
 
 #endif

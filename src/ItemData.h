@@ -15,6 +15,12 @@ class Engine;
 class Item;
 struct ActorDefinition;
 
+enum ItemRef_t {
+  itemRef_plain,
+  itemRef_a,
+  itemRef_plural
+};
+
 class ItemData {
 public:
   ItemData(Engine* engine) :
@@ -26,20 +32,18 @@ public:
       delete itemDefinitions[i];
   }
 
+  string getItemRef(Item* const item, const ItemRef_t itemRefForm, const bool SKIP_EXTRA_INFO = false) const;
+  string getItemInterfaceRef(Item* const item, const bool ADD_A) const;
+
   ItemDefinition* itemDefinitions[endOfItemDevNames];
 
-  string itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const;
-
   bool isWeaponStronger(const ItemDefinition& oldDef, const ItemDefinition& newDef, bool melee);
-
   void addSaveLines(vector<string>& lines) const;
   void setParametersFromSaveLines(vector<string>& lines);
 
 private:
   void makeList();
-
   void setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor, const EntityStrength_t dmgStrength) const;
-
   void resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const;
 
   Engine* eng;

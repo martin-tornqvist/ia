@@ -234,29 +234,29 @@ struct DirectionNames {
   string directions[3][3];
 };
 
-enum InventoryPurpose_t {
-  inventoryPurpose_look,
-  inventoryPurpose_wieldWear,
-  inventoryPurpose_wieldAlt,
-  inventoryPurpose_missileSelect,
-  inventoryPurpose_use,
-//	inventoryPurpose_read,
-  inventoryPurpose_quaff,
-  inventoryPurpose_eat,
-  inventoryPurpose_selectDrop,
-  inventoryPurpose_readyExplosive
-};
+//enum InventoryPurpose_t {
+//  inventoryPurpose_look,
+//  inventoryPurpose_wieldWear,
+//  inventoryPurpose_wieldAlt,
+//  inventoryPurpose_missileSelect,
+//  inventoryPurpose_use,
+////	inventoryPurpose_read,
+//  inventoryPurpose_quaff,
+//  inventoryPurpose_eat,
+//  inventoryPurpose_selectDrop,
+//  inventoryPurpose_readyExplosive
+//};
 
-enum GeneralInventoryFilters_t {
-  generalInventoryFilter_wieldable,
-  generalInventoryFilter_wieldableAndWearable,
-  generalInventoryFilter_missile,
-  generalInventoryFilter_usable,
-//	generalInventoryFilter_readable,
-  generalInventoryFilter_quaffable,
-  generalInventoryFilter_eatable,
-  generalInventoryFilter_explosives
-};
+//enum GeneralInventoryFilters_t {
+//  generalInventoryFilter_wieldable,
+//  generalInventoryFilter_wieldableAndWearable,
+//  generalInventoryFilter_missile,
+//  generalInventoryFilter_usable,
+////	generalInventoryFilter_readable,
+//  generalInventoryFilter_quaffable,
+//  generalInventoryFilter_eatable,
+//  generalInventoryFilter_explosives
+//};
 
 enum EntityStrength_t {
   weak, normal, strong, superStrong

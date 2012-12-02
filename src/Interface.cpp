@@ -66,102 +66,13 @@ void Interface::drawInfoLines() {
   //Store x position, because missile wpn info will be directly beaneath wielded wpn info
   const int X_POS_MISSILE = xPos;
 
-  Weapon* weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
-  if(weapon == NULL) {
+  Item* itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
+  if(itemWielded == NULL) {
     eng->renderer->drawText("Unarmed", renderArea_characterLines, xPos, yPos, clrWhite);
   } else {
-    string wpnDmgStr, wpnSkillStr, wpnAmmoStr;
-    Abilities_t abilityUsed;
-    int dmgRolls, dmgSides, dmgPlus, actorAttackSkill, baseAttackSkill, totalAttackSkill;
-
-    const ItemDefinition* itemDef = &(weapon->getDef());
-
-    string wpnName = itemDef->name.name;
-    const int PLUS = weapon->meleeDmgPlus;
-    wpnName += PLUS > 0 ? " +" + intToString(PLUS) : PLUS < 0 ? " -" + intToString(PLUS) : "";
-    eng->renderer->drawText(wpnName, renderArea_characterLines, xPos, yPos, clrWhite);
-    xPos += 1 + wpnName.size();
-
-    //Firearm info
-//    eng->renderer->drawText("FIR:", renderArea_characterLines, xPos, yPos, clrGray);
-//    xPos += 4;
-
-    if(itemDef->isRangedWeapon) {
-      //Weapon damage and skill used
-      const int multiplier = itemDef->isMachineGun == true ? NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
-      abilityUsed = itemDef->rangedAbilityUsed;
-      dmgRolls = itemDef->rangedDmg.rolls * multiplier;
-      dmgSides = itemDef->rangedDmg.sides;
-      dmgPlus = itemDef->rangedDmg.plus * multiplier;
-
-      //Damage
-      const string dmgStrOverRide = itemDef->rangedDmgLabelOverRide;
-      if(dmgStrOverRide == "") {
-        wpnDmgStr = intToString(dmgRolls) + "d" + intToString(dmgSides);
-        wpnDmgStr += dmgPlus > 0 ? "+" + intToString(dmgPlus) : (dmgPlus < 0 ? "-" + intToString(dmgPlus) : "");
-      } else {
-        wpnDmgStr = dmgStrOverRide;
-      }
-
-      //Total attack skill with weapon (base + actor skill)
-      actorAttackSkill = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
-      baseAttackSkill = itemDef->rangedBaseAttackSkill;
-      totalAttackSkill = min(100, baseAttackSkill + actorAttackSkill);
-      wpnSkillStr = intToString(totalAttackSkill) + "%";
-
-      //Remaining/total ammo
-      wpnAmmoStr = "";
-      if(itemDef->rangedHasInfiniteAmmo == false) {
-        wpnAmmoStr = intToString(weapon->ammoLoaded) + "/" + intToString(weapon->ammoCapacity);
-      }
-
-      eng->renderer->drawText(wpnDmgStr, renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 1 + wpnDmgStr.size();
-
-      eng->renderer->drawText(wpnSkillStr, renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 1 + wpnSkillStr.size();
-
-      eng->renderer->drawText(wpnAmmoStr, renderArea_characterLines, xPos, yPos, clrRedLight);
-      xPos += 1 + wpnAmmoStr.size();
-    }
-//    else {
-//      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
-//      xPos += 4;
-//    }
-
-    //Melee info
-//    eng->renderer->drawText("MLE:", renderArea_characterLines, xPos, yPos, clrGray);
-//    xPos += 4;
-
-    if(weapon->getDef().isMeleeWeapon && weapon->getDef().isRangedWeapon == false) {
-      //Weapon damage and skill used
-      abilityUsed = itemDef->meleeAbilityUsed;
-      dmgRolls = itemDef->meleeDmg.first;
-      dmgSides = itemDef->meleeDmg.second;
-      dmgPlus = weapon->meleeDmgPlus;
-
-      //Damage
-      wpnDmgStr = intToString(dmgRolls) + "d" + intToString(dmgSides);
-      wpnDmgStr += dmgPlus > 0 ? "+" + intToString(dmgPlus) : (dmgPlus < 0 ? "-" + intToString(dmgPlus) : "");
-
-      //Total attack skill with weapon (base + actor skill)
-      actorAttackSkill = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
-      baseAttackSkill = itemDef->meleeBaseAttackSkill;
-      totalAttackSkill = min(100, baseAttackSkill + actorAttackSkill);
-      wpnSkillStr = intToString(totalAttackSkill) + "%";
-
-      //Weapon health?
-
-      eng->renderer->drawText(wpnDmgStr, renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 1 + wpnDmgStr.size();
-
-      eng->renderer->drawText(wpnSkillStr, renderArea_characterLines, xPos, yPos, clrWhite);
-      xPos += 1 + wpnSkillStr.size();
-    }
-//    else {
-//      eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
-//      xPos += 4;
-//    }
+    str = eng->itemData->getItemInterfaceRef(itemWielded, false);
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+    xPos += 1 + str.length();
   }
 
   //Dungeon level
@@ -176,14 +87,14 @@ void Interface::drawInfoLines() {
   DungeonMaster* const dm = eng->dungeonMaster;
 
   //Level and xp
-  xPos += str.size() + 1;
+  xPos += str.length() + 1;
   str = "LVL:" + intToString(dm->getLevel());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
-  xPos += str.size() + 1;
+  xPos += str.length() + 1;
   str = "NXT:";
   str += dm->getLevel() >= PLAYER_MAX_LEVEL ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
-  xPos += str.size() + 1;
+  xPos += str.length() + 1;
 
   //Armor
   eng->renderer->drawText("ARM:", renderArea_characterLines, xPos, yPos, clrGray);
@@ -201,36 +112,13 @@ void Interface::drawInfoLines() {
   //Missile weapon
   xPos = X_POS_MISSILE;
 
-  Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
-  if(item == NULL) {
-    eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
+  Item* const itemMissiles = eng->player->getInventory()->getItemInSlot(slot_missiles);
+  if(itemMissiles == NULL) {
+    eng->renderer->drawText("No missile weapon", renderArea_characterLines, xPos, yPos, clrWhite);
   } else {
-    const ItemDefinition* itemDef = &(item->getDef());
-
-    const string misWpnName = item->numberOfItems == 1 ? itemDef->name.name : itemDef->name.name_plural;
-
-    eng->renderer->drawText(misWpnName, renderArea_characterLines, xPos, yPos, clrWhite);
-    xPos += 1 + misWpnName.size();
-
-    //Dmg
-    DiceParam dmg = itemDef->missileDmg;
-
-    string wpnDmgStr = intToString(dmg.rolls) + "d" + intToString(dmg.sides);
-    wpnDmgStr += dmg.plus > 0 ? "+" + intToString(dmg.plus) : (dmg.plus < 0 ? "-" + intToString(dmg.plus) : "");
-
-    //Total attack skill with item (base + actor skill)
-    const int actorAttackSkill = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, true, *(eng->player));
-    const int baseAttackSkill = itemDef->missileBaseAttackSkill;
-    const int totalAttackSkill = min(100, baseAttackSkill + actorAttackSkill);
-    const string wpnSkillStr = intToString(totalAttackSkill) + "%";
-
-    eng->renderer->drawText(wpnDmgStr, renderArea_characterLines, xPos, yPos, clrWhite);
-    xPos += 1 + wpnDmgStr.size();
-
-    eng->renderer->drawText(wpnSkillStr, renderArea_characterLines, xPos, yPos, clrWhite);
-    xPos += 1 + wpnSkillStr.size();
-
-    eng->renderer->drawText(intToString(item->numberOfItems), renderArea_characterLines, xPos, yPos, clrRedLight);
+    str = eng->itemData->getItemInterfaceRef(itemMissiles, false);
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+    xPos += str.length() + 1;
   }
 
   yPos += 1;
@@ -241,7 +129,7 @@ void Interface::drawInfoLines() {
 
   // Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());
-  xPos = MAP_X_CELLS - str.size() - 1;
+  xPos = MAP_X_CELLS - str.length() - 1;
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
 }
 

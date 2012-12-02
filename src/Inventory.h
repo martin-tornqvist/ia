@@ -13,7 +13,10 @@ using namespace std;
 class Engine;
 
 enum SlotTypes_t {
-	slot_wielded, slot_wieldedAlt, slot_missiles, slot_armorBody
+  slot_wielded,
+  slot_wieldedAlt,
+  slot_missiles,
+  slot_armorBody
 //slot_cloak,
 //slot_ringLeft,
 //slot_ringRight,
@@ -21,113 +24,122 @@ enum SlotTypes_t {
 };
 
 struct InventorySlot {
-	InventorySlot() :
-		allowWieldedWeapon(false), allowMissile(false), allowArmor(false), allowCloak(false), allowAmulet(false), allowRing(false), item(NULL) {
-	}
+  InventorySlot() :
+    allowWieldedWeapon(false),
+    allowMissile(false),
+    allowArmor(false),
+    allowCloak(false),
+    allowAmulet(false),
+    allowRing(false),
+    item(NULL) {
+  }
 
-	bool allowWieldedWeapon, allowMissile, allowArmor, allowCloak, allowAmulet, allowRing;
+  bool allowWieldedWeapon, allowMissile, allowArmor, allowCloak, allowAmulet, allowRing;
 
-	string interfaceName;
+  string interfaceName;
 
-	SlotTypes_t devName;
-	Item* item;
+  SlotTypes_t devName;
+  Item* item;
 };
 
 class Engine;
 
 class Inventory {
 public:
-	Inventory(bool humanoid);
-	~Inventory() {
-		//Actors destructor deletes actors inventory.
-		//Inventories destructor deletes all its items.
-		for(unsigned int i = 0; i < m_slots.size(); i++)
-			if(m_slots.at(i).item != NULL)
-				delete m_slots.at(i).item;
+  Inventory(bool humanoid);
+  ~Inventory() {
+    //Actors destructor deletes actors inventory.
+    //Inventories destructor deletes all its items.
+    for(unsigned int i = 0; i < m_slots.size(); i++)
+      if(m_slots.at(i).item != NULL)
+        delete m_slots.at(i).item;
 
-		for(unsigned int i = 0; i < m_general.size(); i++)
-			delete m_general.at(i);
+    for(unsigned int i = 0; i < m_general.size(); i++)
+      delete m_general.at(i);
 
-		for(unsigned int i = 0; i < m_intrinsics.size(); i++)
-			delete m_intrinsics.at(i);
-	}
+    for(unsigned int i = 0; i < m_intrinsics.size(); i++)
+      delete m_intrinsics.at(i);
+  }
 
-	void dropAllNonIntrinsic(const coord pos, const bool rollForDestruction, Engine* engine);
+  void dropAllNonIntrinsic(const coord pos, const bool rollForDestruction, Engine* engine);
 
-	bool hasItemInSlot(SlotTypes_t slotName);
+  bool hasItemInSlot(SlotTypes_t slotName);
 
-	void putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true, bool putInGeneral_ifSlotNotFound = true);
+  void putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true, bool putInGeneral_ifSlotNotFound = true);
 
-	void putItemInGeneral(Item* item);
+  void putItemInGeneral(Item* item);
 
-	int getElementToStackItem(Item* item) const;
+  int getElementToStackItem(Item* item) const;
 
-	void putItemInIntrinsics(Item* item);
+  void putItemInIntrinsics(Item* item);
 
-	bool moveItemToGeneral(InventorySlot* inventorySlot);
+  bool moveItemToGeneral(InventorySlot* inventorySlot);
 
-	void moveItemFromGeneralToIntrinsics(const unsigned int generalInventoryElement);
+  void moveItemFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT);
 
-	void moveItemToSlot(InventorySlot* inventoryslot, const unsigned int generalInventoryElement);
+  void moveItemToSlot(InventorySlot* inventoryslot, const unsigned int GENERAL_INV_ELEMENT);
 
-	void equipGeneralItemAndPossiblyEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine);
-	void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int generalInventoryElement, Engine* engine);
-	void swapWieldedAndPrepared(const bool END_TURN, Engine* engine);
+  void equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT,
+                                          const SlotTypes_t slotToEquip, Engine* engine);
 
-	bool hasAmmoForFirearmInInventory();
+//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* engine);
 
-	int getElementWithItemType(const ItemDevNames_t itemDevName) const;
+  void swapWieldedAndPrepared(const bool END_TURN, Engine* engine);
 
-	Item* getItemInSlot(SlotTypes_t slotName);
-	Item* getItemInElement(int number);
+  bool hasAmmoForFirearmInInventory();
 
-	void removeItemInElementWithoutDeletingInstance(int number);
+  int getElementWithItemType(const ItemDevNames_t itemDevName) const;
 
-	void decreaseItemInSlot(SlotTypes_t slotName);
+  Item* getItemInSlot(SlotTypes_t slotName);
+  Item* getItemInElement(int number);
 
-	void decreaseItemInGeneral(unsigned element);
+  void removeItemInElementWithoutDeletingInstance(int number);
 
-	void decreaseItemTypeInGeneral(const ItemDevNames_t devName);
+  void decreaseItemInSlot(SlotTypes_t slotName);
 
-	void deleteItemInGeneral(unsigned element);
+  void decreaseItemInGeneral(unsigned element);
 
-	int getIntrinsicsSize() {
-		return m_intrinsics.size();
-	}
+  void decreaseItemTypeInGeneral(const ItemDevNames_t devName);
 
-	Item* getIntrinsicInElement(int element);
+  void deleteItemInGeneral(unsigned element);
 
-	Item* getLastItemInGeneral();
+  int getIntrinsicsSize() {
+    return m_intrinsics.size();
+  }
 
-	bool hasItemInGeneral(const ItemDevNames_t devName) const;
+  Item* getIntrinsicInElement(int element);
 
-	int getItemStackSizeInGeneral(const ItemDevNames_t devName) const;
+  Item* getLastItemInGeneral();
 
-	bool hasDynamiteInGeneral() const;
+  bool hasItemInGeneral(const ItemDevNames_t devName) const;
 
-	void decreaseDynamiteInGeneral();
+  int getItemStackSizeInGeneral(const ItemDevNames_t devName) const;
 
-	//bool hasFirstAidInGeneral();
-	//void decreaseFirstAidInGeneral();
+  bool hasDynamiteInGeneral() const;
 
-	InventorySlot* getSlot(SlotTypes_t slotName);
+  void decreaseDynamiteInGeneral();
 
-	vector<InventorySlot>* getSlots() {
-		return &m_slots;
-	}
-	vector<Item*>* getGeneral() {
-		return &m_general;
-	}
+  //bool hasFirstAidInGeneral();
+  //void decreaseFirstAidInGeneral();
 
-	int getTotalItemWeight() const;
+  InventorySlot* getSlot(SlotTypes_t slotName);
 
-	void addSaveLines(vector<string>& lines) const;
-	void setParametersFromSaveLines(vector<string>& lines, Engine* const engine);
+  vector<InventorySlot>* getSlots() {
+    return &m_slots;
+  }
+  vector<Item*>* getGeneral() {
+    return &m_general;
+  }
+
+  int getTotalItemWeight() const;
+
+  void addSaveLines(vector<string>& lines) const;
+  void setParametersFromSaveLines(vector<string>& lines, Engine* const engine);
 
 private:
-	vector<InventorySlot> m_slots;
-	vector<Item*> m_general;
-	vector<Item*> m_intrinsics;
+  vector<InventorySlot> m_slots;
+  vector<Item*> m_general;
+  vector<Item*> m_intrinsics;
 };
 
 #endif

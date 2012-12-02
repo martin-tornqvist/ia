@@ -16,7 +16,7 @@
 
 void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* ammoItem, ReloadResult_t result, bool isSwift) {
   const string actorName = actorReloading->getNameThe();
-  const string weaponName = weapon == NULL ? "" : weapon->getDef().name.name;
+  const string weaponName = weapon == NULL ? "" : eng->itemData->getItemRef(weapon, itemRef_plain, true);
   const string ammoCapacity = weapon == NULL ? "" : intToString(weapon->ammoCapacity);
   const string ammoCurrent = weapon == NULL ? "" : intToString(weapon->ammoLoaded);
   const bool isPlayer = actorReloading == eng->player;
@@ -25,7 +25,7 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
   bool isClip = false;
 
   if(ammoItem != NULL) {
-    ammoName = ammoItem->getDef().name.name_a;
+    ammoName = eng->itemData->getItemRef(ammoItem, itemRef_a);
     isClip = ammoItem->getDef().isAmmoClip == true;
   }
 

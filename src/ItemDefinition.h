@@ -104,7 +104,7 @@ enum ItemDevNames_t {
   item_armorLeatherJacket,
   item_armorIronSuit,
   item_armorFlackJacket,
-//	item_armorAsbestosSuit,
+//  item_armorAsbestosSuit,
 
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
@@ -170,7 +170,14 @@ public:
   bool isStackable;
   bool isIdentified;
   bool isTried;
+private:
+  friend class ItemData;
+  friend class PotionNameHandler;
+  friend class Potion;
+  friend class ScrollNameHandler;
+  friend class Scroll;
   ItemName name;
+public:
   char glyph;
   sf::Color color;
   Tile_t tile;

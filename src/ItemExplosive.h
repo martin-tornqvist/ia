@@ -11,6 +11,14 @@ public:
   Explosive(ItemDefinition* const itemDefinition) : Item(itemDefinition) {}
   virtual ~Explosive();
 
+  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+    (void)actor;
+    setPlayerExplosive(engine);
+  }
+  virtual string getDefaultActivationLabel() const {
+    return "Light";
+  }
+
   virtual void setPlayerExplosive(Engine* const engine) const;
 
 protected:

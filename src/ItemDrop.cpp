@@ -20,7 +20,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT) {
   Item* item = inventory->getItemInElement(ELEMENT);
 
   if(item != NULL) {
-    const string itemRef = eng->itemData->itemInterfaceName(item, true);
+    const string itemRef = eng->itemData->getItemRef(item, itemRef_a);
 
     inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
 
@@ -35,7 +35,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT) {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
       if(eng->player->checkIfSeeActor(*curActor, blockers)) {
-        eng->log->addMessage("I see " + curActor->getNameThe() + " throw " + itemRef + ".");
+        eng->log->addMessage("I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
     }
 

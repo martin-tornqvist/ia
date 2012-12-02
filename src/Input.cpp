@@ -211,13 +211,24 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'e') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      //If player has no explosive readied, ask player to select one
-      if(eng->player->dynamiteFuseTurns == -1 && eng->player->molotovFuseTurns == -1 && eng->player->flareFuseTurns == -1) {
-        eng->inventoryHandler->runPlayerInventory(inventoryPurpose_readyExplosive);
-      } else {
-        //Else, ask player to throw explosive
+      if(
+        eng->player->dynamiteFuseTurns != -1 ||
+        eng->player->molotovFuseTurns != -1 ||
+        eng->player->flareFuseTurns == -1) {
         eng->marker->place(markerTask_throwLitExplosive);
+      } else {
+//        eng->log->addMessage("I have no explosives readied (press 'v').");
+        eng->inventoryHandler->runUseScreen();
       }
+
+//      //If player has no explosive readied, ask player to select one
+//      if(eng->player->dynamiteFuseTurns == -1 && eng->player->molotovFuseTurns == -1 &&
+//          eng->player->flareFuseTurns == -1) {
+//        eng->inventoryHandler->runPlayerInventory(inventoryPurpose_readyExplosive);
+//      } else {
+//        //Else, ask player to throw explosive
+//        eng->marker->place(markerTask_throwLitExplosive);
+//      }
     }
     clearEvents();
     return;
@@ -249,7 +260,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         }
 
         if(firearm == NULL) {
-          eng->log->addMessage("I am not wielding a firearm (press 'w').");
+          eng->log->addMessage("I am not wielding a firearm (press 'i').");
         }
       }
     }
@@ -274,33 +285,34 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------------EXAMINE INVENTORY
+  //----------------------------------------INVENTORY
   else if(d.key_ == 'i') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_look);
+      eng->inventoryHandler->runSlotsScreen();
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_look);
     }
     clearEvents();
     return;
   }
   //----------------------------------------WIELD WEAPON
-  else if(d.key_ == 'w') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldWear);
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'w') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldWear);
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------PREPARE WEAPON
-  else if(d.key_ == 'W') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldAlt);
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'W') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_wieldAlt);
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------SWAP TO PREPARED ITEM
   else if(d.key_ == 'z') {
     clearLogMessages();
@@ -312,9 +324,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       Item* const itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
       Item* const itemAlt = eng->player->getInventory()->getItemInSlot(slot_wieldedAlt);
-      const string ITEM_WIELDED_NAME = itemWielded == NULL ? "" : eng->itemData->itemInterfaceName(itemWielded, IS_FREE_TURN);
-      const string ITEM_ALT_NAME = itemAlt == NULL ? "" : eng->itemData->itemInterfaceName(itemAlt, true);
-
+      const string ITEM_WIELDED_NAME = itemWielded == NULL ? "" : eng->itemData->getItemRef(itemWielded, itemRef_a);
+      const string ITEM_ALT_NAME = itemAlt == NULL ? "" : eng->itemData->getItemRef(itemAlt, itemRef_a);
       if(itemWielded == NULL && itemAlt == NULL) {
         eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
       } else {
@@ -334,30 +345,30 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------WIELD MISSILE WEAPON
-  else if(d.key_ == 'm') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_missileSelect);
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'm') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_missileSelect);
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------UN-WIELD MISSILE WEAPON
-  else if(d.key_ == 'M') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      InventorySlot* const missileSlot = eng->player->getInventory()->getSlot(slot_missiles);
-      Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
-      const bool ITEM_MOVED = eng->player->getInventory()->moveItemToGeneral(missileSlot);
-      if(ITEM_MOVED == true) {
-        eng->log->addMessage("I quit using " + eng->itemData->itemInterfaceName(item, true) + " as missile weapon.");
-      } else {
-        eng->log->addMessage("There is no missile weapon to quit using.");
-      }
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'M') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      InventorySlot* const missileSlot = eng->player->getInventory()->getSlot(slot_missiles);
+//      Item* const item = eng->player->getInventory()->getItemInSlot(slot_missiles);
+//      const bool ITEM_MOVED = eng->player->getInventory()->moveItemToGeneral(missileSlot);
+//      if(ITEM_MOVED == true) {
+//        eng->log->addMessage("I quit using " + eng->itemData->itemInterfaceName(item, true) + " as missile weapon.");
+//      } else {
+//        eng->log->addMessage("There is no missile weapon to quit using.");
+//      }
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------SEARCH (REALLY JUST A WAIT BUTTON)
   else if(d.key_ == 's') {
     clearLogMessages();
@@ -378,27 +389,27 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------READ
-  else if(d.key_ == 'R') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowSee()) {
-        eng->playerPowersHandler->run(false);
-      } else {
-        eng->log->addMessage("I can not read while blind.");
-      }
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'R') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+//        eng->playerPowersHandler->run(false);
+//      } else {
+//        eng->log->addMessage("I can not read while blind.");
+//      }
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------QUAFF
-  else if(d.key_ == 'q') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_quaff);
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'q') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_quaff);
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------THROW ITEM
   else if(d.key_ == 't') {
     clearLogMessages();
@@ -408,7 +419,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         Item* item = eng->player->getInventory()->getItemInSlot(slot_missiles);
 
         if(item == NULL) {
-          eng->log->addMessage("I have no weapon chosen for throwing (press 'm').");
+          eng->log->addMessage("I have no missiles chosen for throwing (press 'i').");
         } else {
           eng->marker->place(markerTask_throw);
         }
@@ -418,14 +429,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DROP ITEM
-  else if(d.key_ == 'd') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_selectDrop);
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'd') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_selectDrop);
+//    }
+//    clearEvents();
+//    return;
+//  }
   //---------------------------------------- LOOK AROUND
   else if(d.key_ == 'l') {
     clearLogMessages();
@@ -604,26 +615,66 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
         }
         else {
           switch(sfmlKey) {
-          default: continue; break;
-          case sf::Keyboard::LSystem: continue; break;
-          case sf::Keyboard::RSystem: continue; break;
-          case sf::Keyboard::Menu: continue; break;
-          case sf::Keyboard::Pause: continue; break;
-          case sf::Keyboard::Space: return ret; break;
-          case sf::Keyboard::Return: return ret; break;
-          case sf::Keyboard::Back: return ret; break;
-          case sf::Keyboard::Tab: return ret; break;
-          case sf::Keyboard::PageUp: return ret; break;
-          case sf::Keyboard::PageDown: return ret; break;
-          case sf::Keyboard::End: return ret; break;
-          case sf::Keyboard::Home: return ret; break;
-          case sf::Keyboard::Insert: return ret; break;
-          case sf::Keyboard::Delete: return ret; break;
-          case sf::Keyboard::Left: return ret; break;
-          case sf::Keyboard::Right: return ret; break;
-          case sf::Keyboard::Up: return ret; break;
-          case sf::Keyboard::Down: return ret; break;
-          case sf::Keyboard::Escape: return ret; break;
+          default:
+            continue;
+            break;
+          case sf::Keyboard::LSystem:
+            continue;
+            break;
+          case sf::Keyboard::RSystem:
+            continue;
+            break;
+          case sf::Keyboard::Menu:
+            continue;
+            break;
+          case sf::Keyboard::Pause:
+            continue;
+            break;
+          case sf::Keyboard::Space:
+            return ret;
+            break;
+          case sf::Keyboard::Return:
+            return ret;
+            break;
+          case sf::Keyboard::Back:
+            return ret;
+            break;
+          case sf::Keyboard::Tab:
+            return ret;
+            break;
+          case sf::Keyboard::PageUp:
+            return ret;
+            break;
+          case sf::Keyboard::PageDown:
+            return ret;
+            break;
+          case sf::Keyboard::End:
+            return ret;
+            break;
+          case sf::Keyboard::Home:
+            return ret;
+            break;
+          case sf::Keyboard::Insert:
+            return ret;
+            break;
+          case sf::Keyboard::Delete:
+            return ret;
+            break;
+          case sf::Keyboard::Left:
+            return ret;
+            break;
+          case sf::Keyboard::Right:
+            return ret;
+            break;
+          case sf::Keyboard::Up:
+            return ret;
+            break;
+          case sf::Keyboard::Down:
+            return ret;
+            break;
+          case sf::Keyboard::Escape:
+            return ret;
+            break;
           }
         }
       }

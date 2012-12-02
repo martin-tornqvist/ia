@@ -56,9 +56,9 @@ bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_C
     }
 
     if(pos.x - other.pos.x > FOV_STANDARD_RADI_INT) return false;
-    if(other.pos.x - pos.x > FOV_STANDARD_RADI_INT)	return false;
-    if(other.pos.y - pos.y > FOV_STANDARD_RADI_INT)	return false;
-    if(pos.y - other.pos.y > FOV_STANDARD_RADI_INT)	return false;
+    if(other.pos.x - pos.x > FOV_STANDARD_RADI_INT) return false;
+    if(other.pos.y - pos.y > FOV_STANDARD_RADI_INT) return false;
+    if(pos.y - other.pos.y > FOV_STANDARD_RADI_INT) return false;
 
     if(visionBlockingCells != NULL) {
       return eng->fov->checkOneCell(visionBlockingCells, other.pos, pos, true);
@@ -262,7 +262,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + armor->getDef().name.name + " is torn apart!");
+          eng->log->addMessage("My " + eng->itemData->getItemRef(armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
         armor = NULL;
@@ -272,8 +272,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   }
 
   // Filter damage through intrinsic armor
-  // [TODOO] Stuff goes here
-
+  // TODO Stuff goes here
 
   statusEffectsHandler_->isHit();
 

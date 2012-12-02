@@ -9,6 +9,7 @@
 #include "PlayerVisualMemory.h"
 #include "Map.h"
 #include "Populate.h"
+#include "Input.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(turn_));
@@ -116,7 +117,9 @@ void GameTime::letNextAct() {
     }
   }
 
+  // Player turn begins
   if(currentActor == eng->player) {
+    eng->input->clearEvents();
     eng->player->newTurn();
   }
 }

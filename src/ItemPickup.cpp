@@ -25,7 +25,7 @@ void ItemPickup::tryPick() {
   if(item != NULL) {
     Inventory* const playerInventory = eng->player->getInventory();
 
-    const string ITEM_NAME = eng->itemData->itemInterfaceName(item, true);
+    const string ITEM_NAME = eng->itemData->getItemInterfaceRef(item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getDef().isMissileWeapon) {
@@ -94,7 +94,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           //Unload loose ammo
           spawnedAmmo->numberOfItems = ammoLoaded;
         }
-        const string WEAPON_REF_A = weapon->getDef().name.name_a;
+        const string WEAPON_REF_A = eng->itemData->getItemRef(weapon, itemRef_a);
         eng->log->addMessage("I unload " + WEAPON_REF_A);
 
         if(isInventoryFull(playerInventory, spawnedAmmo) == false) {

@@ -40,25 +40,25 @@ Inventory::Inventory(bool humanoid) {
     m_slots.push_back(invSlot);
     invSlot.allowArmor = false;
 
-    //		invSlot.devName = slot_cloak;
-    //		invSlot.interfaceName = "Cloak";
-    //		invSlot.allowCloak = true;
-    //		m_slots.push_back(invSlot);
-    //		invSlot.allowCloak = false;
+    //    invSlot.devName = slot_cloak;
+    //    invSlot.interfaceName = "Cloak";
+    //    invSlot.allowCloak = true;
+    //    m_slots.push_back(invSlot);
+    //    invSlot.allowCloak = false;
 
-    //		invSlot.devName = slot_amulet;
-    //		invSlot.interfaceName = "Amulet";
-    //		invSlot.allowAmulet = true;
-    //		m_slots.push_back(invSlot);
-    //		invSlot.allowAmulet = false;
+    //    invSlot.devName = slot_amulet;
+    //    invSlot.interfaceName = "Amulet";
+    //    invSlot.allowAmulet = true;
+    //    m_slots.push_back(invSlot);
+    //    invSlot.allowAmulet = false;
 
-    //		invSlot.devName = slot_ringLeft;
-    //		invSlot.interfaceName = "Left ring";
-    //		invSlot.allowRing = true;
-    //		m_slots.push_back(invSlot);
-    //		invSlot.devName = slot_ringRight;
-    //		invSlot.interfaceName = "Right ring";
-    //		m_slots.push_back(invSlot);
+    //    invSlot.devName = slot_ringLeft;
+    //    invSlot.interfaceName = "Left ring";
+    //    invSlot.allowRing = true;
+    //    m_slots.push_back(invSlot);
+    //    invSlot.devName = slot_ringRight;
+    //    invSlot.interfaceName = "Right ring";
+    //    m_slots.push_back(invSlot);
   }
 }
 
@@ -336,33 +336,34 @@ void Inventory::decreaseItemTypeInGeneral(const ItemDevNames_t devName) {
   }
 }
 
-void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int generalInventoryElement) {
-  bool generalSlotExists = generalInventoryElement < m_general.size();
+void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int GENERAL_INV_ELEMENT) {
+  bool generalSlotExists = GENERAL_INV_ELEMENT < m_general.size();
   Item* item = NULL;
   Item* slotItem = inventorySlot->item;
 
   if(generalSlotExists == true) {
-    item = m_general.at(generalInventoryElement);
+    item = m_general.at(GENERAL_INV_ELEMENT);
   }
 
   if(generalSlotExists == true && item != NULL) {
     if(slotItem == NULL) {
       inventorySlot->item = item;
-      m_general.erase(m_general.begin() + generalInventoryElement);
+      m_general.erase(m_general.begin() + GENERAL_INV_ELEMENT);
     } else {
-      m_general.erase(m_general.begin() + generalInventoryElement);
+      m_general.erase(m_general.begin() + GENERAL_INV_ELEMENT);
       m_general.push_back(slotItem);
       inventorySlot->item = item;
     }
   }
 }
 
-void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int generalInventoryElement, const InventoryPurpose_t purpose, Engine* engine) {
+void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT,
+    const SlotTypes_t slotToEquip, Engine* engine) {
   const bool IS_PLAYER = this == engine->player->getInventory();
 
   bool isFreeTurn = false;
 
-  Item* item = m_general.at(generalInventoryElement);
+  Item* item = m_general.at(GENERAL_INV_ELEMENT);
   const ItemDefinition& d = item->getDef();
 
   if(IS_PLAYER) {
@@ -371,41 +372,60 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int generalInv
     }
   }
 
-  if(purpose == inventoryPurpose_wieldWear && (d.isMeleeWeapon || d.isRangedWeapon)) {
+  if(slotToEquip == slot_wielded) {
     Item* const itemBefore = getItemInSlot(slot_wielded);
-    moveItemToSlot(getSlot(slot_wielded), generalInventoryElement);
+    moveItemToSlot(getSlot(slot_wielded), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_wielded);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        engine->log->addMessage("I was wielding " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
+        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        engine->log->addMessage("I was wielding " + nameBefore + ".");
       }
-      engine->log->addMessage("I am now wielding " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
+      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      engine->log->addMessage("I am now wielding " + nameAfter + ".");
     }
   }
 
-  if(purpose == inventoryPurpose_wieldWear && d.isArmor) {
+  if(slotToEquip == slot_wieldedAlt) {
+    Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
+    moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);
+    Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
+    if(IS_PLAYER) {
+      if(itemBefore != NULL) {
+        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        engine->log->addMessage("I was wielding " + nameBefore + " as a prepared weapon.");
+      }
+      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      engine->log->addMessage("I am now wielding " + nameAfter + " as a prepared weapon.");
+    }
+  }
+
+  if(slotToEquip == slot_armorBody) {
     Item* const itemBefore = getItemInSlot(slot_armorBody);
-    moveItemToSlot(getSlot(slot_armorBody), generalInventoryElement);
+    moveItemToSlot(getSlot(slot_armorBody), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_armorBody);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        engine->log->addMessage("I wore " + engine->itemData->itemInterfaceName(itemBefore, true) + ".");
+        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      engine->log->addMessage("I am now wearing " + engine->itemData->itemInterfaceName(itemAfter, true) + ".");
+      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
   }
 
-  if(purpose == inventoryPurpose_missileSelect) {
+  if(slotToEquip == slot_missiles) {
     Item* const itemBefore = getItemInSlot(slot_missiles);
-    moveItemToSlot(getSlot(slot_missiles), generalInventoryElement);
+    moveItemToSlot(getSlot(slot_missiles), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_missiles);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as missile weapon.");
+        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
       }
-
-      engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as missile weapon.");
+      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
     }
   }
   if(isFreeTurn == false) {
@@ -413,26 +433,26 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int generalInv
   }
 }
 
-void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int generalInventoryElement, Engine* engine) {
-  const bool IS_FREE_TURN = engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
-
-  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
-  moveItemToSlot(getSlot(slot_wieldedAlt), generalInventoryElement);
-  Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
-
-  engine->renderer->drawMapAndInterface();
-
-  if(itemBefore != NULL) {
-    engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
-  }
-  engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
-
-  engine->renderer->drawMapAndInterface();
-
-  if(IS_FREE_TURN == false) {
-    engine->gameTime->letNextAct();
-  }
-}
+//void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* engine) {
+//  const bool IS_FREE_TURN = engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+//
+//  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
+//  moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);
+//  Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
+//
+//  engine->renderer->drawMapAndInterface();
+//
+//  if(itemBefore != NULL) {
+//    engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
+//  }
+//  engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
+//
+//  engine->renderer->drawMapAndInterface();
+//
+//  if(IS_FREE_TURN == false) {
+//    engine->gameTime->letNextAct();
+//  }
+//}
 
 void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* engine) {
   InventorySlot* slot1 = getSlot(slot_wielded);
@@ -449,16 +469,16 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* engine) {
   }
 }
 
-void Inventory::moveItemFromGeneralToIntrinsics(const unsigned int generalInventoryElement) {
-  bool generalSlotExists = generalInventoryElement < m_general.size();
+void Inventory::moveItemFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT) {
+  bool generalSlotExists = GENERAL_INV_ELEMENT < m_general.size();
 
   if(generalSlotExists == true) {
-    Item* item = m_general.at(generalInventoryElement);
+    Item* item = m_general.at(GENERAL_INV_ELEMENT);
     bool itemExistsInGeneralSlot = item != NULL;
 
     if(itemExistsInGeneralSlot == true) {
       m_intrinsics.push_back(item);
-      m_general.erase(m_general.begin() + generalInventoryElement);
+      m_general.erase(m_general.begin() + GENERAL_INV_ELEMENT);
     }
   }
 }

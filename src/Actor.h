@@ -122,7 +122,9 @@ protected:
   friend class StatusDiseased;
 
   virtual void actorSpecificDie() {}
-  virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
+  virtual void actorSpecific_hit(const int DMG) {
+    (void)DMG;
+  }
   virtual void actorSpecific_spawnStartItems() = 0;
 
   //Called from within the normal hit function to set monsters playerAwareness

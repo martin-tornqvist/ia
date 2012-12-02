@@ -39,34 +39,35 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 $      @    Display character information
 $      TAB  Melee attack adjacent monster
 $      >    Go down staircase
-$      b    Bash (doors)
-$      c    Close (doors)
-$      d    Drop item
+$      b    Bash door or kick monster
+$      c    Close door
 $      e    Ready/aim/throw explosive
-$      f    Aim/fire ranged weapon
+$      f    Aim/fire wielded weapon
 $      g    Pick up item
-$      h    Heal/rest
-$      i    Display inventory
-$      j    Jam a door
-$      k    Kick
-$      K    Display kick stats
+$      h    Heal
+$      i    Inventory
+$      j    Jam door with an iron spike
 $      l    Display descriptions of things in view
 $      L    Display message history
-$      m    Choose missiles to use
-$      M    Quit using current missiles
 $      r    Reload wielded firearm
-$      R    Read (manuscripts)
 $      s    Wait/Search for 10 turns
 $      S    Save (must stand on stairs)
-$      t    Throw missile
-$      u    Unload ammunition from a weapon on the ground
-$      w    Wield/Wear
-$      q    Quaff potion
-$      Q    Quit
-$      x    Cast memorized spells
+$      t    Throw a missile from the missile slot
+$      u    Pick up or unload ammunition from the ground
+$      v    Use item
+$      Q    Quit to main menu (will erase the game)
+$      x    Cast memorized spell
 $      z    Swap to prepared weapon
-$      Z    Choose prepared weapon
 $      ?    Display manual
+
+Inventory shortcuts (not necessary to play the game):
+$      d    Drop item
+$      m    Choose missiles to use
+$      M    Quit using current missiles
+$      q    Quaff potion
+$      R    Read manuscript
+$      w    Wield/Wear
+$      W    Choose prepared weapon
 
 
 3. THE INTERFACE

@@ -13,6 +13,7 @@
 #include "ItemArmor.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
+#include "ActorPlayer.h"
 
 using namespace std;
 
@@ -219,7 +220,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
   }
   break;
 
-  default: {} break;
+  default:
+  {} break;
   }
 }
 
@@ -241,7 +243,7 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
 //  const double DMG_PLUS_DIV = 2;
 //  const double DMG_PLUS_BUMP = 0.8;
 //  const int DMG_PLUS = static_cast<int>(floor(static_cast<double>(ACTOR_LEVEL - 1) / DMG_PLUS_DIV + DMG_PLUS_BUMP));
-//	const int DMG_PLUS_AFTER_CAP = min(DMG_PLUS_CAP, DMG_PLUS);
+//  const int DMG_PLUS_AFTER_CAP = min(DMG_PLUS_CAP, DMG_PLUS);
 
   d.meleeDmg = pair<int, int>(1, DMG_Y_AFTER_CAP); //DiceParam(1, DMG_Y_AFTER_CAP, DMG_PLUS_AFTER_CAP);
   d.rangedDmg = DiceParam(1, DMG_Y_AFTER_CAP, 0); //DiceParam(1, DMG_Y_AFTER_CAP, DMG_PLUS_AFTER_CAP);
@@ -936,23 +938,23 @@ void ItemData::makeList() {
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
   itemDefinitions[d->devName] = d;
 
-//	d = new ItemDefinition(item_armorAsbestosSuit);
-//	resetDef(d, itemDef_armor);
-//	d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
-//	d->color = clrRedLight;
-//	d->spawnStandardMinDLVL = 3;
-//	d->armorData.absorptionPoints[damageType_acid] = 999;
-//	d->armorData.damageToDurabilityFactors[damageType_acid] = 0.1;
-//	d->armorData.absorptionPoints[damageType_electricity] = 999;
-//	d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
-//	d->armorData.absorptionPoints[damageType_fire] = 999;
-//	d->armorData.damageToDurabilityFactors[damageType_fire] = 0.1;
-//	d->armorData.absorptionPoints[damageType_physical] = 0;
-//	d->armorData.damageToDurabilityFactors[damageType_physical] = 2.0;
-//	d->armorData.chanceToDeflectTouchAttacks = 95;
-//	d->armorData.protectsAgainstStatusBurning = true;
-//	d->armorData.overRideAbsorptionPointLabel = "?";
-//	itemDefinitions[d->devName] = d;
+//  d = new ItemDefinition(item_armorAsbestosSuit);
+//  resetDef(d, itemDef_armor);
+//  d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
+//  d->color = clrRedLight;
+//  d->spawnStandardMinDLVL = 3;
+//  d->armorData.absorptionPoints[damageType_acid] = 999;
+//  d->armorData.damageToDurabilityFactors[damageType_acid] = 0.1;
+//  d->armorData.absorptionPoints[damageType_electricity] = 999;
+//  d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
+//  d->armorData.absorptionPoints[damageType_fire] = 999;
+//  d->armorData.damageToDurabilityFactors[damageType_fire] = 0.1;
+//  d->armorData.absorptionPoints[damageType_physical] = 0;
+//  d->armorData.damageToDurabilityFactors[damageType_physical] = 2.0;
+//  d->armorData.chanceToDeflectTouchAttacks = 95;
+//  d->armorData.protectsAgainstStatusBurning = true;
+//  d->armorData.overRideAbsorptionPointLabel = "?";
+//  itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
@@ -1044,11 +1046,11 @@ void ItemData::makeList() {
   /*
    d = new ItemDefinition(item_ration);
    resetDef(d, itemDef_general);
-   d->itemWeight				= itemWeight_light;
-   d->name					= ItemName("Iron Ration", "Iron Rations", "an Iron Ration");
-   d->glyph					= '%';
-   d->isEatable				= true;
-   d->nutritionValue			= NutritionValue_dinner;
+   d->itemWeight        = itemWeight_light;
+   d->name          = ItemName("Iron Ration", "Iron Rations", "an Iron Ration");
+   d->glyph         = '%';
+   d->isEatable       = true;
+   d->nutritionValue      = NutritionValue_dinner;
    itemDefinitions[d->devName] = d;
    */
 }
@@ -1090,64 +1092,148 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
   (void)oldDef;
   (void)newDef;
   (void)melee;
-//	int rolls1 = 0;
-//	int sides1 = 0;
-//	int plus1 = 0;
-//	int rolls2 = 0;
-//	int sides2 = 0;
-//	int plus2 = 0;
+//  int rolls1 = 0;
+//  int sides1 = 0;
+//  int plus1 = 0;
+//  int rolls2 = 0;
+//  int sides2 = 0;
+//  int plus2 = 0;
 //
-//	if(melee == true) {
-//		rolls1 = oldDef.meleeDmg.first;
-//		sides1 = oldDef.meleeDmg.second;
-//		plus1 = ;
+//  if(melee == true) {
+//    rolls1 = oldDef.meleeDmg.first;
+//    sides1 = oldDef.meleeDmg.second;
+//    plus1 = ;
 //
-//		rolls2 = newDef.meleeDmg.rolls;
-//		sides2 = newDef.meleeDmg.sides;
-//		plus2 = newDef.meleeDmg.plus;
-//	} else {
-//		rolls1 = oldDef.rangedDmg.rolls;
-//		sides1 = oldDef.rangedDmg.sides;
-//		plus1 = oldDef.rangedDmg.plus;
+//    rolls2 = newDef.meleeDmg.rolls;
+//    sides2 = newDef.meleeDmg.sides;
+//    plus2 = newDef.meleeDmg.plus;
+//  } else {
+//    rolls1 = oldDef.rangedDmg.rolls;
+//    sides1 = oldDef.rangedDmg.sides;
+//    plus1 = oldDef.rangedDmg.plus;
 //
-//		rolls2 = newDef.rangedDmg.rolls;
-//		sides2 = newDef.rangedDmg.sides;
-//		plus2 = newDef.rangedDmg.plus;
-//	}
+//    rolls2 = newDef.rangedDmg.rolls;
+//    sides2 = newDef.rangedDmg.sides;
+//    plus2 = newDef.rangedDmg.plus;
+//  }
 //
-//	bool newWeaponIsStronger = rolls2 * sides2 + plus2 > rolls1 * sides1 + plus1;
+//  bool newWeaponIsStronger = rolls2 * sides2 + plus2 > rolls1 * sides1 + plus1;
 //
-//	return newWeaponIsStronger;
+//  return newWeaponIsStronger;
   return false;
 }
 
-string ItemData::itemInterfaceName(Item* const item, const bool PUT_A_OR_AN_IN_FRONT) const {
+string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const bool SKIP_EXTRA_INFO) const {
+  const ItemDefinition& d = item->getDef();
+  string ret = "";
+
+  if(d.isStackable && item->numberOfItems > 1) {
+    ret = intToString(item->numberOfItems) + " ";
+  }
+
+  ret += itemRefForm == itemRef_plain ? d.name.name : itemRef_a ? d.name.name_a : d.name.name_plural;
+
+  if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+    Weapon* const w = dynamic_cast<Weapon*>(item);
+    const int PLUS = w->meleeDmgPlus;
+    return ret + (PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS));
+  }
+
+  if(d.isAmmoClip) {
+    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+  }
+
+  if(SKIP_EXTRA_INFO == false) {
+    if(d.isRangedWeapon) {
+      string ammoLoadedStr = "";
+      if(d.rangedHasInfiniteAmmo == false) {
+        Weapon* const w = dynamic_cast<Weapon*>(item);
+        ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
+      }
+      return ret + ammoLoadedStr;
+    }
+
+    if(d.isArmor) {
+      const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine();
+      return armorDataLine == "" ? ret : ret + " " + armorDataLine;
+    }
+
+    if((d.isScroll || d.isQuaffable) && d.isTried && d.isIdentified == false) {
+      return ret + " {tried}";
+    }
+  }
+
+  return ret;
+}
+
+string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A) const {
   const ItemDefinition& d = item->getDef();
 
-  string str;
+  string ret = "";
+
   if(d.isStackable && item->numberOfItems > 1) {
-    str = intToString(item->numberOfItems) + " " + d.name.name_plural;
-  } else {
-    str = PUT_A_OR_AN_IN_FRONT ? d.name.name_a : d.name.name;
-    if(d.isAmmoClip == true) {
-      str += " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
-    }
-    if(d.isRangedWeapon && d.rangedHasInfiniteAmmo == false) {
-      str += " {" + intToString((dynamic_cast<Weapon*>(item))->ammoLoaded) + "}";
-    }
-    if(d.isMeleeWeapon && d.isRangedWeapon == false) {
-      const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
-      str += PLUS > 0 ? " (+" + intToString(PLUS) + ")" : PLUS < 0 ? " (-" + intToString(PLUS) + ")" : "";
-    }
-    if(d.isArmor) {
-      str += " " + dynamic_cast<Armor*>(item)->getArmorDataLine();
-    }
+    ret = intToString(item->numberOfItems) + " ";
   }
 
-  if((d.isScroll || d.isQuaffable) && d.isIdentified == false && d.isTried) {
-    str += " {tried}";
+  ret += (ADD_A ? d.name.name_a : d.name.name);
+
+  const int PLAYER_RANGED_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
+                                    ability_accuracyRanged, false, *(eng->player));
+
+  if(d.isRangedWeapon) {
+    const int MULTIPL = d.isMachineGun == true ? NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
+    const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
+    const string sidesStr = intToString(d.rangedDmg.sides);
+    const int PLUS = d.rangedDmg.plus * MULTIPL;
+    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const int ITEM_SKILL = d.rangedBaseAttackSkill;
+    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
+    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    string ammoLoadedStr = "";
+    if(d.rangedHasInfiniteAmmo == false) {
+      Weapon* const w = dynamic_cast<Weapon*>(item);
+      ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
+    }
+    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr + ammoLoadedStr;
   }
 
-  return str;
+  if(d.isMissileWeapon) {
+    const string rollsStr = intToString(d.missileDmg.rolls);
+    const string sidesStr = intToString(d.missileDmg.sides);
+    const int PLUS = d.missileDmg.plus;
+    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const int ITEM_SKILL = d.missileBaseAttackSkill;
+    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
+    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+  }
+
+  if(d.isAmmoClip) {
+    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+  }
+
+  if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+    const string rollsStr = intToString(d.meleeDmg.first);
+    const string sidesStr = intToString(d.meleeDmg.second);
+    const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
+    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const int ITEM_SKILL = d.meleeBaseAttackSkill;
+    const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
+                                     ability_accuracyMelee, false, *(eng->player));
+    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
+    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+  }
+
+  if(d.isArmor) {
+    const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine();
+    return armorDataLine == "" ? ret : ret + " " + armorDataLine;
+  }
+
+  if((d.isScroll || d.isQuaffable) && d.isTried && d.isIdentified == false) {
+    return ret + " {tried}";
+  }
+
+  return ret;
 }
 

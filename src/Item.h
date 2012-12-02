@@ -65,6 +65,14 @@ public:
     return "HVY";
   }
 
+  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+    (void)actor;
+    (void)engine;
+  }
+  virtual string getDefaultActivationLabel() const {
+    return "";
+  }
+
   int numberOfItems;
 
 protected:

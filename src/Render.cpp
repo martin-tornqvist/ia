@@ -5,6 +5,7 @@
 
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
+#include "SFML/Window/WindowStyle.hpp"
 
 #include "Engine.h"
 #include "Item.h"
@@ -72,10 +73,20 @@ void Renderer::setupWindowAndImagesClearPrev() {
   freeWindowAndImages();
 
   tracer << "Renderer: Setting up rendering window" << endl;
-  if(eng->config->FULLSCREEN) {
+  const string title = "IA " + eng->config->GAME_VERSION;
 
+  const int& SCR_W_INT = eng->config->SCREEN_WIDTH;
+  const int& SCR_H_INT = eng->config->SCREEN_HEIGHT;
+  const float& SCR_W_FL = static_cast<float>(SCR_W_INT);
+  const float& SCR_H_FL = static_cast<float>(SCR_H_INT);
+  const float& SCALE = eng->config->SCALE;
+  const int SCR_W_SCALED = static_cast<int>(SCR_W_FL * SCALE);
+  const int SCR_H_SCALED = static_cast<int>(SCR_H_FL * SCALE);
+
+  if(eng->config->FULLSCREEN) {
+    renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title, sf::Style::Fullscreen);
   } else {
-    renderWindow_ = new sf::RenderWindow(sf::VideoMode(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT), "IA " + eng->config->GAME_VERSION);
+    renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title);
   }
 
   tracer << "Renderer: Enabling key repeat" << endl;
@@ -103,18 +114,18 @@ void Renderer::loadFont() {
   textureFontSheet_ = new sf::Texture();
   textureFontSheet_->loadFromFile(eng->config->FONT_IMAGE_NAME);
 
-  const int W = eng->config->CELL_W;
-  const int H = eng->config->CELL_H;
+  const int& W = eng->config->CELL_W;
+  const int& H = eng->config->CELL_H;
+
+  const float& SCALE = eng->config->SCALE;
 
   for(int y = 0; y < FONT_SHEET_Y_CELLS; y++) {
     for(int x = 0; x < FONT_SHEET_X_CELLS; x++) {
       spritesFont_[x][y] = new sf::Sprite(*textureFontSheet_, sf::Rect<int>(x * W, y * H, W, H));
+
+      spritesFont_[x][y]->setScale(SCALE, SCALE);
     }
   }
-
-//  tracer << "Renderer: SDL_SetColorKey()..." << endl;
-//  SDL_SetColorKey(scaledImage, SDL_SRCCOLORKEY, SDL_MapRGB(scaledImage->format, 0xFF, 0xFF, 0xFF));
-//  tracer << "Renderer: SDL_SetColorKey() [DONE]" << endl;
 
   tracer << "Renderer::loadFont() [DONE]" << endl;
 }
@@ -134,10 +145,6 @@ void Renderer::loadTiles() {
     }
   }
 
-//  tracer << "SDL_SetColorKey..." << endl;
-//  SDL_SetColorKey(loadedImage, SDL_SRCCOLORKEY, SDL_MapRGB(loadedImage->format, 0xB3, 0xB3, 0xB3));
-//  tracer << "SDL_SetColorKey [DONE]" << endl;
-
   tracer << "Renderer::loadTiles() [DONE]" << endl;
 }
 
@@ -155,8 +162,11 @@ void Renderer::loadMainMenuLogo() {
   tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
 
-void Renderer::drawSprite(const coord& posPixel, sf::Sprite& sprite) {
-  sprite.setPosition(posPixel.x, posPixel.y);
+void Renderer::drawSprite(const int X, const int Y, sf::Sprite& sprite) {
+  const float& SCALE = eng->config->SCALE;
+  const float X_FL = static_cast<float>(X) * SCALE;
+  const float Y_FL = static_cast<float>(Y) * SCALE;
+  sprite.setPosition(X_FL, Y_FL);
   renderWindow_->draw(sprite);
 }
 
@@ -164,7 +174,7 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
   const int IMG_W = spriteMainMenuLogo_->getTexture()->getSize().x;
   const int X = (eng->config->SCREEN_WIDTH - IMG_W) / 2;
   const int Y = eng->config->CELL_H * Y_POS;
-  drawSprite(coord(X, Y), *spriteMainMenuLogo_);
+  drawSprite(X, Y, *spriteMainMenuLogo_);
 }
 
 void Renderer::addMarkerOverlay(vector<coord> &trace, const int EFFECTIVE_RANGE) {
@@ -244,7 +254,8 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
 //  eng->sleep(DURATION / 2);
 //}
 
-void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr, const bool drawBgClr, const sf::Color& bgClr) {
+void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
+                             const bool drawBgClr, const sf::Color& bgClr) {
   const int& CELL_W = eng->config->CELL_W;
   const int& CELL_H = eng->config->CELL_H;
 
@@ -258,14 +269,32 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
 
   sf::Sprite* const spr = spritesTiles_[tileCoords.x][tileCoords.y];
   spr->setColor(clr);
-  drawSprite(coord(X_PIXEL, Y_PIXEL), *spr);
+  drawSprite(X_PIXEL, Y_PIXEL, *spr);
+}
+
+void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y, const sf::Color& clr,
+                              const bool drawBgClr, const sf::Color& bgClr) {
+  const int& CELL_W = eng->config->CELL_W;
+  const int& CELL_H = eng->config->CELL_H;
+
+  const int X_PIXEL = X * CELL_W;
+  const int Y_PIXEL = Y * CELL_H + eng->config->MAINSCREEN_Y_OFFSET;
+  const coord glyphCoords = eng->art->getGlyphCoords(GLYPH, eng);
+
+  if(drawBgClr) {
+    drawRectangleSolid(X_PIXEL, Y_PIXEL, CELL_W, CELL_H, bgClr);
+  }
+
+  sf::Sprite* const spr = spritesFont_[glyphCoords.x][glyphCoords.y];
+  spr->setColor(clr);
+  drawSprite(X_PIXEL, Y_PIXEL, *spr);
 }
 
 void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr) {
   const coord& glyphCoords = eng->art->getGlyphCoords(CHARACTER, eng);
   sf::Sprite* const spr = spritesFont_[glyphCoords.x][glyphCoords.y];
   spr->setColor(clr);
-  drawSprite(coord(X, Y), *spr);
+  drawSprite(X, Y, *spr);
 }
 
 coord Renderer::getPixelCoordsForCharacter(const RenderArea_t renderArea, const int X, const int Y) {
@@ -383,9 +412,14 @@ void Renderer::drawLineHorizontal(const int x0, const int y0, const int w, const
 }
 
 void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H, const sf::Color& clr) {
-  sf::RectangleShape rectShape(sf::Vector2f(W, H));
+  const float X_FL = static_cast<float>(X);
+  const float Y_FL = static_cast<float>(Y);
+  const float W_FL = static_cast<float>(W);
+  const float H_FL = static_cast<float>(H);
+  const float& SCALE = eng->config->SCALE;
+  sf::RectangleShape rectShape(sf::Vector2f(W_FL * SCALE, H_FL * SCALE));
   rectShape.setFillColor(clr);
-  rectShape.setPosition(X, Y);
+  rectShape.setPosition(X_FL * SCALE, Y_FL * SCALE);
   renderWindow_->draw(rectShape);
 }
 
@@ -469,7 +503,7 @@ void Renderer::drawLifeBar(const int X_CELL, const int Y_CELL, const int LENGTH)
     const int& W_CELL = eng->config->CELL_W;
     const int W_BAR_TOT = W_CELL - 2;
     const int W_RED = W_BAR_TOT - W_GREEN;
-    const int Y0 = eng->config->MAINSCREEN_Y_OFFSET + ((Y_CELL + 1) * eng->config->CELL_H) - 3;
+    const int Y0 = eng->config->MAINSCREEN_Y_OFFSET + ((Y_CELL + 1) * eng->config->CELL_H) - 2;
     const int X0_GREEN = X_CELL * W_CELL + 1;
     const int X0_RED = X0_GREEN + W_GREEN;
     if(W_GREEN > 0) {
@@ -614,7 +648,8 @@ void Renderer::drawASCII() {
 
   //-------------------------------------------- DRAW PLAYER CHARACTER
   if(overlayGlyphs[eng->player->pos.x][eng->player->pos.y].glyph == ' ') {
-    drawCharacter(eng->player->getGlyph(), renderArea_mainScreen, eng->player->pos.x, eng->player->pos.y, eng->player->getColor());
+    drawGlyphInMap(eng->player->getGlyph(), eng->player->pos.x, eng->player->pos.y,
+                   eng->player->getColor(), true, clrBlack);
     const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
     if(LIFE_BAR_LENGTH != -1) {
       drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);

@@ -48,11 +48,21 @@ public:
   void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
                         const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
-  void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr, const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+  void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawTileInMap(tile, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
 
-  void drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr, const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+  void drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+
+  void drawGlyphInMap(const Tile_t GLYPH, const coord& pos, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+    drawGlyphInMap(GLYPH, pos.x, pos.y, clr, drawBgClr, bgClr);
+  }
+
+  void drawGlyphInMap(const char GLYPH, const int X, const int Y, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
   void coverCellInMap(const coord& pos) {
     coverCellInMap(pos.x, pos.y);
@@ -141,7 +151,7 @@ private:
 
   void freeWindowAndImages();
 
-  void drawSprite(const coord& posPixel, sf::Sprite& sprite);
+  void drawSprite(const int X, const int Y, sf::Sprite& sprite);
   void drawASCII();
   void drawTiles();
 

@@ -148,7 +148,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     }
   }
 
-  data.weaponName_a = weapon->getDef().name.name_a;
+  data.weaponName_a = eng->itemData->getItemRef(weapon, itemRef_a, true);
   data.verbPlayerAttacksMissile = weapon->getDef().rangedAttackMessages.player;
   data.verbOtherAttacksMissile = weapon->getDef().rangedAttackMessages.other;
 

@@ -15,6 +15,13 @@ public:
 	virtual ~Potion() {
 	}
 
+  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+    quaff(actor, engine);
+  }
+  virtual string getDefaultActivationLabel() const {
+    return "Drink";
+  }
+
 	void quaff(Actor* const actor, Engine* const engine);
 
 	void collide(const coord& pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);

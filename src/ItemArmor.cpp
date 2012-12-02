@@ -9,7 +9,13 @@ Armor::Armor(ItemDefinition* const itemDefinition, Engine* engine) :
 
 string Armor::getArmorDataLine() const {
   const string apLabelOverRide = def_->armorData.overRideAbsorptionPointLabel;
-  const string absorptionPoints = apLabelOverRide == "" ? intToString(getAbsorptionPoints(damageType_physical)) : apLabelOverRide;
+  const int ABS_POINTS = getAbsorptionPoints(damageType_physical);
+
+  if(apLabelOverRide == "" && ABS_POINTS <= 0) {
+    return "";
+  }
+
+  const string absorptionPoints = apLabelOverRide == "" ? intToString(ABS_POINTS) : apLabelOverRide;
   return "[" + absorptionPoints + "]";
 }
 
@@ -28,7 +34,8 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const D
 
   const int ABSORPTION_POINTS_CURRENT = getAbsorptionPoints(damageType_physical);
   if(ABSORPTION_POINTS_CURRENT < ABSORPTION_POINTS_BEFORE && ABSORPTION_POINTS_CURRENT != 0) {
-    eng->log->addMessage("My " + def_->name.name + " is damaged!");
+    const string armorName = eng->itemData->getItemRef(this, itemRef_plain, true);
+    eng->log->addMessage("My " + armorName + " is damaged!");
   }
 
   tracer << "Armor: Damage before: " + intToString(DAMAGE_BEFORE) << endl;

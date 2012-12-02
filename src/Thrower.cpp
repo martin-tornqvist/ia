@@ -89,7 +89,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
     inventory->decreaseItemInSlot(slot_missiles);
 
     // Print initial throwing message
-    const string itemRef = eng->itemData->itemInterfaceName(itemThrown, true);
+    const string itemRef = eng->itemData->getItemRef(itemThrown, itemRef_a);
     if(actorThrowing == eng->player) {
       eng->log->clearLog();
       eng->log->addMessage("I throw " + itemRef + ".");

@@ -109,7 +109,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     const char CURRENT_KEY = 'a' + currentListPos;
     const sf::Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
     Item* const item = eng->player->getInventory()->getGeneral()->at(generalInventorySlotsToShow.at(i));
-    const string itemName = eng->itemData->itemInterfaceName(item, true);
+    const string itemName = eng->itemData->getItemInterfaceRef(item, true);
     string str = "a";
     str[0] = CURRENT_KEY;
     str += ") " + itemName;

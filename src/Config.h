@@ -38,6 +38,8 @@ public:
 
   bool SKIP_INTRO_LEVEL;
 
+  float SCALE;
+
   bool AUTO_RELOAD_GUNS;
 
   int MAINSCREEN_WIDTH, MAINSCREEN_HEIGHT;
