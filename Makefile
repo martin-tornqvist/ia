@@ -8,16 +8,19 @@ TARGET_DIR=target
 ASSETS_DIR=assets
 
 # Includes
-INCLUDES=
+INCLUDES=-I API/SFML/include
 
 # Target specific include files
 _INCLUDES=
+_CFLAGS=
 debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
+debug: _CFLAGS=-O0 -g
 release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
+release : _CFLAGS=-O2
 
 #Flags
-CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-LDFLAGS=$(shell sdl-config --libs)
+CFLAGS=-Wall -Wextra
+LDFLAGS=-L API/SFML/lib_linux -lsfml-graphics -lsfml-window -lsfml-system
 
 # Output and sources
 EXECUTABLE=ia
@@ -33,6 +36,7 @@ CP=cp -r
 
 # Dependencies 
 debug: $(SOURCES) $(EXECUTABLE) $(GAME_DOC_FILE)
+.PHONY: release
 release: $(SOURCES) $(EXECUTABLE)
 
 # Make targets
@@ -71,7 +75,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
 $(OBJECTS): $(SOURCES)
-	$(CC) $(CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
+	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
 	$(MV) *.o ./$(SRC_DIR)/
 
 .PHONY: clean
