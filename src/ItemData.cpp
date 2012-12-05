@@ -32,6 +32,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->glyph = 'X';
     d->color = clrWhite;
     d->tile = tile_empty;
+    d->primaryAttackMode = primaryAttackMode_none;
     d->isUsable = false;
     d->isReadable = false;
     d->isScroll = false;
@@ -90,6 +91,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->itemWeight = itemWeight_medium;
     d->glyph = '(';
     d->color = clrWhite;
+    d->primaryAttackMode = primaryAttackMode_melee;
     d->isMeleeWeapon = true;
   }
   break;
@@ -110,6 +112,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->color = clrWhite;
     d->isMeleeWeapon = true;
     d->meleeDmg = pair<int, int>(1, 6);
+    d->primaryAttackMode = primaryAttackMode_ranged;
     d->isRangedWeapon = true;
     d->rangedMissileGlyph = '/';
     d->rangedMissileColor = clrWhite;
@@ -485,6 +488,7 @@ void ItemData::makeList() {
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+  d->primaryAttackMode = primaryAttackMode_missile;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_rock);
@@ -497,6 +501,7 @@ void ItemData::makeList() {
   d->missileBaseAttackSkill = 10;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
+  d->primaryAttackMode = primaryAttackMode_missile;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_dagger);
@@ -1127,24 +1132,25 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
   const ItemDefinition& d = item->getDef();
   string ret = "";
 
-  if(d.isStackable && item->numberOfItems > 1) {
+  if(d.isStackable && item->numberOfItems > 1 && itemRefForm != itemRef_plain) {
     ret = intToString(item->numberOfItems) + " ";
   }
 
   ret += itemRefForm == itemRef_plain ? d.name.name : itemRef_a ? d.name.name_a : d.name.name_plural;
 
-  if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+  if(d.primaryAttackMode == primaryAttackMode_melee) {
     Weapon* const w = dynamic_cast<Weapon*>(item);
     const int PLUS = w->meleeDmgPlus;
     return ret + (PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS));
   }
 
   if(d.isAmmoClip) {
-    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+  return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
   }
 
   if(SKIP_EXTRA_INFO == false) {
-    if(d.isRangedWeapon) {
+
+  if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
         Weapon* const w = dynamic_cast<Weapon*>(item);
@@ -1166,21 +1172,39 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
   return ret;
 }
 
-string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A) const {
+string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A,
+                                     const PrimaryAttackMode_t attackMode) const {
   const ItemDefinition& d = item->getDef();
 
   string ret = "";
 
   if(d.isStackable && item->numberOfItems > 1) {
-    ret = intToString(item->numberOfItems) + " ";
+    ret = intToString(item->numberOfItems) + " " + d.name.name_plural;
+  } else {
+    ret = (ADD_A ? d.name.name_a : d.name.name);
   }
-
-  ret += (ADD_A ? d.name.name_a : d.name.name);
 
   const int PLAYER_RANGED_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
                                     ability_accuracyRanged, false, *(eng->player));
 
-  if(d.isRangedWeapon) {
+  if(
+    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_melee) ||
+    (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
+    const string rollsStr = intToString(d.meleeDmg.first);
+    const string sidesStr = intToString(d.meleeDmg.second);
+    const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
+    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const int ITEM_SKILL = d.meleeBaseAttackSkill;
+    const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
+                                     ability_accuracyMelee, false, *(eng->player));
+    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
+    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+  }
+
+  if(
+    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_ranged) ||
+    (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
     const int MULTIPL = d.isMachineGun == true ? NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
     const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
     const string sidesStr = intToString(d.rangedDmg.sides);
@@ -1197,7 +1221,9 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A) const {
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr + ammoLoadedStr;
   }
 
-  if(d.isMissileWeapon) {
+  if(
+    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_missile) ||
+    (attackMode == primaryAttackMode_missile && d.isMissileWeapon)) {
     const string rollsStr = intToString(d.missileDmg.rolls);
     const string sidesStr = intToString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
@@ -1210,19 +1236,6 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A) const {
 
   if(d.isAmmoClip) {
     return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
-  }
-
-  if(d.isMeleeWeapon && d.isRangedWeapon == false) {
-    const string rollsStr = intToString(d.meleeDmg.first);
-    const string sidesStr = intToString(d.meleeDmg.second);
-    const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
-    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
-    const int ITEM_SKILL = d.meleeBaseAttackSkill;
-    const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
-                                     ability_accuracyMelee, false, *(eng->player));
-    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
-    const string skillStr = intToString(TOTAL_SKILL) + "%";
-    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(d.isArmor) {

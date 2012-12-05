@@ -15,7 +15,7 @@
 Inventory::Inventory(bool humanoid) {
   InventorySlot invSlot;
 
-  if(humanoid == true) {
+  if(humanoid) {
     invSlot.devName = slot_wielded;
     invSlot.interfaceName = "Wielding";
     invSlot.allowWieldedWeapon = true;
@@ -378,10 +378,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wielded);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I was wielding " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
       engine->log->addMessage("I am now wielding " + nameAfter + ".");
     }
   }
@@ -392,10 +392,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I was wielding " + nameBefore + " as a prepared weapon.");
       }
-      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
       engine->log->addMessage("I am now wielding " + nameAfter + " as a prepared weapon.");
     }
   }
@@ -406,10 +406,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_armorBody);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
       engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
@@ -421,10 +421,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_missiles);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemInterfaceRef(itemBefore, true);
+        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
       }
-      const string nameAfter = engine->itemData->getItemInterfaceRef(itemAfter, true);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
       engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
     }
   }

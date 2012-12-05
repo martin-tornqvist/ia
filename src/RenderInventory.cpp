@@ -8,31 +8,208 @@
 #include "Render.h"
 
 RenderInventory::RenderInventory(Engine* engine) :
-  eng(engine)
-  /*, xPosListsLeft1(1)
-  , xPosListsLeft2(xPosListsLeft1 + 11)
-  , xPosListsLeft3(xPosListsLeft2 + 2)
-  , xPosListsRight1(1)
-  , xPosListsRight2(xPosListsRight1 + 3)
-  , xPosListsRightStandardOffset(xPosListsLeft3 + 27)
-  , yPosLists(0)*/ {
+  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 47) {
 }
 
-void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser, const vector<InventorySlotButton>& invSlotButtons) {
-
+void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr) {
+  const int X_DOTS = X_PREV + W_PREV;
+  const int W_DOTS = X_NEW - X_DOTS;
+  const string dots(W_DOTS, '.');
+  eng->renderer->drawText(dots, renderArea_screen, X_DOTS, Y, clr);
 }
 
-void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser, const vector<unsigned int>& genInvIndexes) {
+void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
+                                          const vector<InventorySlotButton>& invSlotButtons) {
+  int yPos = 1;
+  int xPos = X_POS_LEFT;
 
+  eng->renderer->drawMapAndInterface(true, true);
+  eng->renderer->drawScreenTexture();
+  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 2);
+
+  string str = "Select slot to equip/unequip  [shift+select] drop  [space/esc] exit";
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
+
+  const int X_POS_ITEM_NAME = X_POS_LEFT + 14;
+
+  yPos++;
+
+  for(unsigned int i = 0; i < invSlotButtons.size(); i++) {
+    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    str = "x) ";
+    str.at(0) = 'a' + i;
+    InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
+    str += slot->interfaceName;
+    xPos = X_POS_LEFT;
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    xPos = X_POS_ITEM_NAME;
+    str = ": ";
+    Item* const item = slot->item;
+    if(item == NULL) {
+      str += "<empty>";
+    } else {
+      const ItemDefinition& d = item->getDef();
+      PrimaryAttackMode_t attackMode = primaryAttackMode_none;
+      if(slot->devName == slot_wielded || slot->devName == slot_wieldedAlt) {
+        attackMode = d.primaryAttackMode == primaryAttackMode_missile ? primaryAttackMode_melee : d.primaryAttackMode;
+      }
+      else if(slot->devName == slot_missiles) {
+        attackMode = primaryAttackMode_missile;
+      }
+
+      str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
+    }
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+
+    yPos++;
+  }
+
+  str = "x) Browse inventory";
+  str.at(0) = invSlotButtons.back().key + 1;
+  xPos = X_POS_LEFT;
+  yPos += 1;
+  const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(invSlotButtons.size());
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+
+  eng->renderer->updateWindow();
+}
+
+void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
+                                              const vector<unsigned int>& genInvIndexes) {
+  int xPos = X_POS_LEFT;
+  int yPos = 1;
+
+  eng->renderer->drawMapAndInterface(true, true);
+  eng->renderer->drawScreenTexture();
+  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
+
+  string str = "Inventory  [shift+select] drop  [space/esc] done";
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
+  yPos++;
+
+  Inventory* const inv = eng->player->getInventory();
+
+  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+
+    str = "x) ";
+    str.at(0) = 'a' + i;
+    str += eng->itemData->getItemInterfaceRef(item, false);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+    yPos++;
+  }
+
+  eng->renderer->updateWindow();
 }
 
 void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
                                     const vector<unsigned int>& genInvIndexes) {
+  int xPos = X_POS_LEFT;
+  int yPos = 1;
 
+  eng->renderer->drawMapAndInterface(true, true);
+  eng->renderer->drawScreenTexture();
+  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
+
+  string str = "";
+  switch(slotToEquip) {
+  case slot_armorBody: str = "Wear which armor?"; break;
+  case slot_missiles: str = "Use which item as missiles?"; break;
+  case slot_wielded: str = "Wield which item?"; break;
+  case slot_wieldedAlt: str = "Use which item as prepared weapon?"; break;
+  }
+  str += "  [shift+select] drop  [space/esc] cancel";
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
+  yPos++;
+
+  Inventory* const inv = eng->player->getInventory();
+
+  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    str = "x) ";
+    str.at(0) = 'a' + i;
+    xPos = X_POS_LEFT;
+    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+
+    const ItemDefinition& d = item->getDef();
+    PrimaryAttackMode_t attackMode = primaryAttackMode_none;
+    if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
+      attackMode = d.primaryAttackMode == primaryAttackMode_missile ? primaryAttackMode_melee : d.primaryAttackMode;
+    }
+    else if(slotToEquip == slot_missiles) {
+      attackMode = primaryAttackMode_missile;
+    }
+
+    str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+    yPos++;
+  }
+
+  eng->renderer->updateWindow();
 }
 
-void RenderInventory::drawUseMode(const MenuBrowser& browser, const vector<unsigned int>& genInvIndexes) {
+void RenderInventory::drawUseMode(const MenuBrowser& browser,
+                                  const vector<unsigned int>& genInvIndexes) {
+  const int X_POS_CMD = X_POS_LEFT + 6;
 
+  int xPos = X_POS_LEFT;
+  int yPos = 1;
+
+  eng->renderer->drawMapAndInterface(true, true);
+  eng->renderer->drawScreenTexture();
+  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
+
+  string str = "Use which item?  [ctrl+select] drop  [space/esc] cancel";
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
+  yPos++;
+
+  Inventory* const inv = eng->player->getInventory();
+
+  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+
+    //Draw label
+    const string& label = item->getDefaultActivationLabel();
+    bool isNewLabel = false;
+    if(i == 0) {
+      isNewLabel = true;
+    } else {
+      Item* const itemPrev = inv->getGeneral()->at(genInvIndexes.at(i - 1));
+      const string& labelPrev = itemPrev->getDefaultActivationLabel();
+      isNewLabel = label != labelPrev;
+    }
+    if(isNewLabel) {
+      xPos = X_POS_LEFT;
+      eng->renderer->drawText(label, renderArea_screen, xPos, yPos, clrYellow);
+    }
+
+    xPos = X_POS_CMD;
+    str = "x) ";
+    str.at(0) = 'a' + i;
+    xPos = X_POS_CMD;
+    str += eng->itemData->getItemRef(item, itemRef_plain, true);
+    if(item->numberOfItems > 1 && item->getDef().isStackable) {
+      str += " (" + intToString(item->numberOfItems) + ")";
+    }
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+    yPos++;
+  }
+
+  eng->renderer->updateWindow();
 }
 
 void RenderInventory::drawDropMode(const Item* const itemToDrop) {

@@ -15,8 +15,8 @@
 
 #include "AI_handleClosedBlockingDoor.h"
 #include "AI_look_becomePlayerAware.h"
-#include "AI_listen_becomePlayerAware.h"
-#include "AI_listen_respondWithAggroPhrase.h"
+//#include "AI_listen_becomePlayerAware.h"
+//#include "AI_listen_respondWithAggroPhrase.h"
 #include "AI_makeRoomForFriend.h"
 #include "AI_stepPath.h"
 #include "AI_moveTowardsTargetSimple.h"
@@ -67,16 +67,16 @@ void Monster::act() {
       AI_look_becomePlayerAware::learn(this, eng);
     }
   }
-  if(ai.listens) {
-    if(leader != eng->player) {
-      AI_listen_becomePlayerAware::learn(this, soundsHeard);
-    }
-  }
-  if(ai.respondsWithPhrase) {
-    if(leader != eng->player) {
-      AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
-    }
-  }
+//  if(ai.listens) {
+//    if(leader != eng->player) {
+//      AI_listen_becomePlayerAware::learn(this, soundsHeard);
+//    }
+//  }
+//  if(ai.respondsWithPhrase) {
+//    if(leader != eng->player) {
+//      AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
+//    }
+//  }
 
   //------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
@@ -208,9 +208,24 @@ void Monster::moveToCell(const coord& targetCell) {
   eng->gameTime->letNextAct();
 }
 
-void Monster::registerHeardSound(const Sound& sound) {
+void Monster::hearSound(const Sound& sound) {
   if(deadState == actorDeadState_alive) {
-    soundsHeard.push_back(sound);
+    if(sound.getIsAlertingMonsters()) {
+      becomeAware();
+    }
+  }
+}
+
+void Monster::becomeAware() {
+  if(deadState == actorDeadState_alive) {
+    const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
+    playerAwarenessCounter = def_->nrTurnsAwarePlayer;
+    if(PLAYER_AWARENESS_BEFORE <= 0) {
+      const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
+      const string msg = IS_SEEN_BY_PLAYER ? getAggroPhraseMonsterSeen() : getAggroPhraseMonsterHidden();
+      eng->soundEmitter->emitSound(Sound(msg, false, pos, false, true));
+    }
+
   }
 }
 

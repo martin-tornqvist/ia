@@ -15,8 +15,11 @@ class Actor;
 class Sound {
 public:
 	Sound(
-	   const string& message, const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN, const coord& origin,
-	   const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
+	   const string& message,
+	   const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN,
+	   const coord& origin,
+	   const bool IS_LOUD,
+	   const bool IS_ALERTING_MONSTER) :
 		message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
 		origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
 

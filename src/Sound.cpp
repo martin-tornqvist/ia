@@ -38,7 +38,7 @@ void SoundEmitter::emitSound(Sound sound) const {
 					sound.addString("(" + getPlayerToOriginDirectionString(FLOOD_VALUE_AT_ACTOR, sound.getOrigin(), floodFill) + ")");
 				}
 			}
-			actor->registerHeardSound(sound);
+			actor->hearSound(sound);
 		}
 	}
 }

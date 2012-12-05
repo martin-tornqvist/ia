@@ -29,7 +29,9 @@ public:
 
   ~Renderer();
 
-  void drawMapAndInterface(const bool UPDATE_WINDOW = true);
+  void drawMapAndInterface(const bool UPDATE_WINDOW = true, const bool COPY_SCREEN_TEXTURE = false);
+
+  void updateWindow(const bool COPY_SCREEN_TEXTURE = false);
 
   void clearWindow() {
     renderWindow_->clear();
@@ -45,8 +47,8 @@ public:
 
   void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
 
-  void drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
-                        const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
+  int drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
+                       const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
   void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr,
                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
@@ -57,12 +59,12 @@ public:
                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
   void drawGlyphInMap(const Tile_t GLYPH, const coord& pos, const sf::Color& clr,
-                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawGlyphInMap(GLYPH, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
 
   void drawGlyphInMap(const char GLYPH, const int X, const int Y, const sf::Color& clr,
-                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
   void coverCellInMap(const coord& pos) {
     coverCellInMap(pos.x, pos.y);
@@ -101,11 +103,6 @@ public:
 
   void drawMainMenuLogo(const int Y_POS);
 
-  void updateWindow() {
-    renderWindow_->display();
-    clearWindow();
-  }
-
   GlyphAndColor renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];
   TileAndColor renderArrayActorsOmittedTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
@@ -128,10 +125,16 @@ public:
     overlayTiles[pos.x][pos.y].color = clr;
   }
 
+  void drawScreenTexture();
+
 private:
   friend class Postmortem;
   friend class Input;
   void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr);
+
+  // This is used to keep a copy of the screen, for things like
+  // player number entering to render over
+  sf::Texture screenTexture;
 
   void coverCharacterAtPixel(const int X, const int Y);
   void coverTileAtPixel(const int X, const int Y);
@@ -157,6 +160,7 @@ private:
 
   Engine* eng;
 
+  friend class Query;
   sf::RenderWindow* renderWindow_;
 
   sf::Texture* textureFontSheet_;

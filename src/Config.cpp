@@ -91,6 +91,7 @@ void Config::runOptionsMenu() {
     } break;
 
     case menuAction_selected: {
+      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
       playerSetsOption(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
       collectLinesFromVariables(lines);
       writeLinesToFile(lines);
@@ -160,8 +161,7 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(intToString(DELAY_EXPLOSION));
 }
 
-void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
-                  const int OPTIONS_Y_POS) {
+void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
 
   const sf::Color clrSelected = clrWhite;
   const sf::Color clrGeneral = clrRedLight;
@@ -225,7 +225,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("[space/esc] done", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateWindow(true);
 }
 
 void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {

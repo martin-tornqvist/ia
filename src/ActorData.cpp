@@ -49,7 +49,8 @@ void ActorDefinition::reset() {
   canDodge = true;
   nativeRooms.resize(0);
   description = "";
-  phraseSet = phraseSet_silent;
+  aggroTextMonsterSeen = "";
+  aggroTextMonsterHidden = "";
 }
 
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
@@ -104,8 +105,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_zombie;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -114,7 +113,6 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.phraseSet = phraseSet_zombie;
   d.glyph = 'Z';
   d.color = clrBrown;
   d.tile = tile_zombieUnarmed;
@@ -125,8 +123,9 @@ void ActorData::defineAllActors() {
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 12;
-  d.description
-  = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
+  d.description = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
+  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
+  d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.erraticMovement = actorErratic_somewhat;
   d.shockValue = shockValue_some;
   d.isUndead = true;
@@ -139,8 +138,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_zombieAxe;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -149,7 +146,6 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.phraseSet = phraseSet_zombie;
   d.glyph = 'Z';
   d.color = clrGray;
   d.tile = tile_zombieArmed;
@@ -161,6 +157,8 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 10;
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.";
+  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
+  d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.erraticMovement = actorErratic_somewhat;
   d.shockValue = shockValue_some;
   d.isUndead = true;
@@ -173,8 +171,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_bloatedZombie;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -183,7 +179,6 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 20;
-  d.phraseSet = phraseSet_silent;
   d.glyph = 'Z';
   d.color = clrWhiteHigh;
   d.tile = tile_zombieBloated;
@@ -194,8 +189,7 @@ void ActorData::defineAllActors() {
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 50;
-  d.description
-  = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
+  d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
   d.erraticMovement = actorErratic_rare;
   d.shockValue = shockValue_some;
   d.isUndead = true;
@@ -208,8 +202,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_majorClaphamLee;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -218,7 +210,6 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.phraseSet = phraseSet_zombie;
   d.glyph = 'Z';
   d.color = clrCyanLight;
   d.tile = tile_zombieUnarmed;
@@ -245,8 +236,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_deanHalsey;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -255,7 +244,6 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.phraseSet = phraseSet_zombie;
   d.glyph = 'Z';
   d.color = clrCyan;
   d.tile = tile_zombieUnarmed;
@@ -283,8 +271,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistShotgun;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -294,7 +280,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrBrown;
   d.tile = tile_cultistFirearm;
@@ -319,8 +304,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistMachineGun;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -330,7 +313,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrGray;
   d.tile = tile_cultistFirearm;
@@ -355,8 +337,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistPistol;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -366,7 +346,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrGreen;
   d.tile = tile_cultistFirearm;
@@ -391,8 +370,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistTeslaCannon;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -402,7 +379,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrYellow;
   d.tile = tile_cultistFirearm;
@@ -427,8 +403,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistSpikeGun;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -438,7 +412,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrBlueLight;
   d.tile = tile_cultistFirearm;
@@ -463,8 +436,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_keziahMason;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
@@ -498,8 +469,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_lordOfPestilence;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
@@ -532,8 +501,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_lordOfShadows;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
@@ -568,8 +535,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_lordOfSpiders;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
@@ -603,8 +568,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ethereal;
   d.devName = actor_lordOfSpirits;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
@@ -638,8 +601,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_cultistPriest;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -649,7 +610,6 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
-  d.phraseSet = phraseSet_cultist;
   d.glyph = 'P';
   d.color = clrCyanLight;
   d.tile = tile_cultistDagger;
@@ -674,8 +634,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_greenSpider;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -704,8 +662,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_whiteSpider;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -734,8 +690,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_blackSpider;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -764,8 +718,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_lengSpider;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -796,8 +748,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_fireHound;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -830,8 +780,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ethereal;
   d.devName = actor_ghost;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -863,8 +811,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ethereal;
   d.devName = actor_phantasm;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -897,8 +843,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_wraith;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -932,8 +876,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_rat;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -962,8 +904,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_ratThing;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -994,8 +934,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_brownJenkin;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1029,8 +967,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_wolf;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1049,6 +985,8 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
   d.description = "A large wolf with eyes full of cunning.";
+  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterHidden = "I hear a wolf howl.";
   d.erraticMovement = actorErratic_somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
@@ -1061,8 +999,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_giantBat;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -1094,8 +1030,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_byakhee;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1128,8 +1062,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_miGo;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -1163,8 +1095,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_ghoul;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1196,8 +1126,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_shadow;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -1233,8 +1161,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_mummy;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1269,8 +1195,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_khephren;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1309,8 +1233,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_nitokris;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1348,8 +1270,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.devName = actor_deepOne;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1381,9 +1301,6 @@ void ActorData::defineAllActors() {
   d.name_the = "The Mass of Worms";
   d.moveType = moveType_walk;
   d.devName = actor_wormMass;
-  d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
@@ -1414,8 +1331,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_fireVampire;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1452,8 +1367,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ooze;
   d.devName = actor_oozeGray;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1488,8 +1401,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ooze;
   d.devName = actor_oozeClear;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1525,8 +1436,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_ooze;
   d.devName = actor_oozePutrid;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = false;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
@@ -1561,8 +1470,6 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_fly;
   d.devName = actor_huntingHorror;
   d.aiBehavior.looks = true;
-  d.aiBehavior.listens = true;
-  d.aiBehavior.respondsWithPhrase = false;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;

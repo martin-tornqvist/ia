@@ -238,11 +238,9 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
           if(eng->config->USE_TILE_SET) {
             projectiles.at(p)->setTile(projectileTile, projectileColor);
             eng->renderer->drawProjectiles(projectiles);
-            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
           } else {
             projectiles.at(p)->setGlyph(projectileGlyph, projectileColor);
             eng->renderer->drawProjectiles(projectiles);
-            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
           }
         }
       }

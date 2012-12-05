@@ -60,7 +60,6 @@
 #include "MapTemplates.h"
 #include "Marker.h"
 #include "Pathfinding.h"
-#include "Phrases.h"
 #include "PlayerCreateCharacter.h"
 #include "PlayerBonuses.h"
 #include "PlayerPowersHandler.h"
@@ -134,7 +133,6 @@ void Engine::initGame() {
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   marker = new Marker(this);
   log = new MessageLog(this);
-  phrases = new Phrases(this);
   pathfinder = new Pathfinder(this);
   fov = new Fov(this);
   mapBuild = new MapBuild(this);
@@ -204,7 +202,6 @@ void Engine::cleanupGame() {
   delete itemData;
   delete map;
   delete log;
-  delete phrases;
   delete pathfinder;
   delete fov;
   delete mapBuild;

@@ -59,15 +59,16 @@ public:
 
   string getWeightLabel() const {
     const int WEIGHT = getWeight();
-    if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2) return " - ";
-    if(WEIGHT <= (itemWeight_light + itemWeight_medium) / 2) return "LGT";
-    if(WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2) return "MED";
-    return "HVY";
+    if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2) return "Very light";
+    if(WEIGHT <= (itemWeight_light + itemWeight_medium) / 2) return "Light";
+    if(WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2) return "Medium";
+    return "Heavy";
   }
 
-  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
     (void)actor;
     (void)engine;
+    return false;
   }
   virtual string getDefaultActivationLabel() const {
     return "";

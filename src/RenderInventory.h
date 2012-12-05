@@ -18,29 +18,20 @@ public:
   void drawUseMode(const MenuBrowser& browser, const vector<unsigned int>& genInvIndexes);
   void drawDropMode(const Item* const itemToDrop);
 
-//  string getWeaponDataLine(Weapon* const weapon) const;
-
 private:
   RenderInventory& operator=(const RenderInventory& other) {
     (void)other;
     return *this;
   }
 
-//  void drawSlots(vector<InventorySlotButton>* slotButtons, const MenuBrowser& browser, const bool DRAW_BROWSER);
-
-//  void drawGeneralItems(const int xPosOffset, const InventoryPurpose_t purpose,
-//                       const MenuBrowser& browser, const bool DRAW_BROWSER);
+  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr);
 
   Engine* eng;
 
+  const int X_POS_LEFT;
+  const int X_POS_WEIGHT;
+
   friend class Examine;
-//  const int xPosListsLeft1;
-//  const int xPosListsLeft2;
-//  const int xPosListsLeft3;
-//  const int xPosListsRight1;
-//  const int xPosListsRight2;
-//  const int xPosListsRightStandardOffset;
-//  const int yPosLists;
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
   InventoryHandler(Engine* engine);
 
   void runSlotsScreen();
-  void runUseScreen();
+  bool runUseScreen();
 
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
 
@@ -26,7 +26,7 @@ private:
   vector<unsigned int> generalItemsToShow;
 
   void runDropScreen(Item* const itemToDrop);
-  void runEquipScreen(const SlotTypes_t slotToEquip);
+  bool runEquipScreen(InventorySlot* const slotToEquip);
   void runBrowseInventoryMode();
 
   void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);

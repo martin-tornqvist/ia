@@ -17,9 +17,9 @@ public:
 
   int getChanceToCastFromMemory(Engine* const engine) const;
 
-  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
     (void)actor;
-    read(true, engine);
+    return read(false, engine);
   }
   virtual string getDefaultActivationLabel() const {
     return "Read";

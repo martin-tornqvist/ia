@@ -67,7 +67,9 @@ public:
 
   virtual void actorSpecific_spawnStartItems() = 0;
 
-  void registerHeardSound(const Sound& sound);
+  void hearSound(const Sound& sound);
+
+  void becomeAware();
 
   void act();
 
@@ -88,9 +90,9 @@ public:
 
   bool isRoamingAllowed;
 
-  void clearHeardSounds() {
-    soundsHeard.resize(0);
-  }
+//  void clearHeardSounds() {
+//    soundsHeard.resize(0);
+//  }
 
   bool isStealth;
 
@@ -99,10 +101,17 @@ public:
 
   bool waiting_;
 
+  virtual string getAggroPhraseMonsterSeen() const {
+    return def_->aggroTextMonsterSeen;
+  }
+  virtual string getAggroPhraseMonsterHidden() const {
+    return def_->aggroTextMonsterHidden;
+  }
+
 protected:
   void monsterHit();
 
-  vector<Sound> soundsHeard;
+//  vector<Sound> soundsHeard;
 };
 
 class Rat: public Monster {
@@ -274,6 +283,16 @@ public:
   Cultist() :
     Monster() {
   }
+
+  string getCultistPhrase() const;
+
+  string getAggroPhraseMonsterSeen() const {
+    return getNameThe() + ": " + getCultistPhrase();
+  }
+  string getAggroPhraseMonsterHidden() const {
+    return "Voice: " + getCultistPhrase();
+  }
+
   virtual ~Cultist() {
   }
 };

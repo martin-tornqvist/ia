@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "Phrases.h"
 #include "Converters.h"
 #include "AbilityValues.h"
 #include "RoomTheme.h"
@@ -67,17 +66,17 @@ enum ActorSizes_t {
 
 struct AiBehavior {
 public:
-  AiBehavior() : looks(false), listens(false), respondsWithPhrase(false),
+  AiBehavior() : looks(false), /*listens(false), respondsWithPhrase(false),*/
     makesRoomForFriend(false), attemptsAttack(false), pathsToTargetWhenAware(false),
     movesTowardTargetWhenVision(false), movesTowardLair(false),
     movesTowardLeader(false) {}
 
   void reset() {
-    looks = listens = respondsWithPhrase = makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware =
-        movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
+    looks = /*listens = respondsWithPhrase =*/ makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware =
+          movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
   }
 
-  bool looks, listens, respondsWithPhrase, makesRoomForFriend, attemptsAttack,
+  bool looks, /*listens, respondsWithPhrase,*/ makesRoomForFriend, attemptsAttack,
   pathsToTargetWhenAware, movesTowardTargetWhenVision, movesTowardLair,
   movesTowardLeader;
 };
@@ -126,7 +125,8 @@ public:
   bool canDodge;
   vector<RoomTheme_t> nativeRooms;
   string description;
-  PhraseSets_t phraseSet;
+  string aggroTextMonsterSeen;
+  string aggroTextMonsterHidden;
 };
 
 class ActorData {

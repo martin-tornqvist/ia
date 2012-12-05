@@ -337,6 +337,11 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
 }
 
 bool Scroll::attemptReadFromScroll(Engine* const engine) {
+  if(engine->player->getStatusEffectsHandler()->allowSee() == false) {
+    engine->log->addMessage("I can not read while blind.");
+    return false;
+  }
+
   if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned) == false) {
     engine->log->addMessage("I can not yet comprehend this.");
     return false;

@@ -102,8 +102,6 @@
 		</Unit>
 		<Unit filename="..\src\AI_castRandomSpell.h" />
 		<Unit filename="..\src\AI_handleClosedBlockingDoor.h" />
-		<Unit filename="..\src\AI_listen_becomePlayerAware.h" />
-		<Unit filename="..\src\AI_listen_respondWithAggroPhrase.h" />
 		<Unit filename="..\src\AI_look_becomePlayerAware.h" />
 		<Unit filename="..\src\AI_makeRoomForFriend.h" />
 		<Unit filename="..\src\AI_moveToRandomAdjacentCell.h" />
@@ -273,8 +271,6 @@
 		<Unit filename="..\src\MersenneTwister.h" />
 		<Unit filename="..\src\Pathfinding.cpp" />
 		<Unit filename="..\src\Pathfinding.h" />
-		<Unit filename="..\src\Phrases.cpp" />
-		<Unit filename="..\src\Phrases.h" />
 		<Unit filename="..\src\PlayerAllocBonus.cpp" />
 		<Unit filename="..\src\PlayerAllocBonus.h" />
 		<Unit filename="..\src\PlayerBonuses.cpp" />

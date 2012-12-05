@@ -270,10 +270,12 @@ void Player::incrInsanityLong() {
       case 2: {
         popupMessage += "I find myself babbling incoherently.";
         eng->popup->showMessage(popupMessage, true);
-        for(int i = eng->dice(1, 3) + 2; i > 0; i--) {
-          const string* const phrase = eng->phrases->getAggroPhraseFromPhraseSet(phraseSet_cultist);
-          eng->log->addMessage("[" + getNameThe() + "]" + *phrase);
+        Cultist* tmpCultist = new CultistPistol;
+        for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
+          const string phrase = tmpCultist->getCultistPhrase();
+          eng->log->addMessage(getNameThe() + ": " + phrase);
         }
+        delete tmpCultist;
         eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
         return;
       }
@@ -876,11 +878,10 @@ void Player::explosiveThrown() {
   eng->renderer->drawMapAndInterface();
 }
 
-void Player::registerHeardSound(const Sound& sound) {
+void Player::hearSound(const Sound& sound) {
   const coord origin = sound.getOrigin();
   const string message = sound.getMessage();
   if(message != "") {
-    //Display the message if player does not see origin cell, or if the message should be displayed despite this.
     if(eng->map->playerVision[origin.x][origin.y] == false || sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
       eng->log->addMessage(message);
     }

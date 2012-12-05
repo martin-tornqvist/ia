@@ -6,9 +6,12 @@
 class MenuBrowser {
 public:
   MenuBrowser(int nrItemsFirst, int nrItemsSecond) :
-    upLeft(coord(0, 0)), upRight(nrItemsSecond == 0 ? coord(0, 0) : coord(1, 0)), btmLeft(coord(0, nrItemsFirst - 1)), btmRight(
-      nrItemsSecond == 0 ? coord(0, nrItemsFirst - 1) : coord(1, nrItemsSecond - 1)), pos(upLeft), NR_ITEMS_FIRST(
-        nrItemsFirst), NR_ITEMS_SECOND(nrItemsSecond) {
+    upLeft(coord(0, 0)),
+    upRight(nrItemsSecond == 0 ? coord(0, 0) : coord(1, 0)),
+    btmLeft(coord(0, nrItemsFirst - 1)),
+    btmRight(nrItemsSecond == 0 ? coord(0, nrItemsFirst - 1) : coord(1, nrItemsSecond - 1)),
+    pos(upLeft), NR_ITEMS_FIRST(nrItemsFirst),
+    NR_ITEMS_SECOND(nrItemsSecond) {
   }
 
   MenuBrowser& operator=(const MenuBrowser& other) {

@@ -12,7 +12,7 @@ public:
       monster->getSpotedEnemies();
 
       if(monster->spotedEnemies.size() > 0 && monster->playerAwarenessCounter > 0) {
-        monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+        monster->becomeAware();
         return;
       }
 
@@ -21,11 +21,11 @@ public:
         if(actor == engine->player) {
           const int PLAYER_SNEAK = engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *(engine->player));
           if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
-            monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+            monster->becomeAware();
             return;
           }
         } else {
-          monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+          monster->becomeAware();
           return;
         }
       }

@@ -33,7 +33,9 @@ public:
   }
 
   string getItemRef(Item* const item, const ItemRef_t itemRefForm, const bool SKIP_EXTRA_INFO = false) const;
-  string getItemInterfaceRef(Item* const item, const bool ADD_A) const;
+
+  string getItemInterfaceRef(Item* const item, const bool ADD_A,
+                             const PrimaryAttackMode_t attackMode = primaryAttackMode_none) const;
 
   ItemDefinition* itemDefinitions[endOfItemDevNames];
 

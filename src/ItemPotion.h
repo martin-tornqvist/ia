@@ -15,8 +15,9 @@ public:
 	virtual ~Potion() {
 	}
 
-  virtual void activateDefault(Actor* const actor, Engine* const engine) {
+  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
     quaff(actor, engine);
+    return true;
   }
   virtual string getDefaultActivationLabel() const {
     return "Drink";

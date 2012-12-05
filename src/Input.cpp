@@ -208,31 +208,21 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------EXPLOSIVES
-  else if(d.key_ == 'e') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      if(
-        eng->player->dynamiteFuseTurns != -1 ||
-        eng->player->molotovFuseTurns != -1 ||
-        eng->player->flareFuseTurns == -1) {
-        eng->marker->place(markerTask_throwLitExplosive);
-      } else {
-//        eng->log->addMessage("I have no explosives readied (press 'v').");
-        eng->inventoryHandler->runUseScreen();
-      }
-
-//      //If player has no explosive readied, ask player to select one
-//      if(eng->player->dynamiteFuseTurns == -1 && eng->player->molotovFuseTurns == -1 &&
-//          eng->player->flareFuseTurns == -1) {
-//        eng->inventoryHandler->runPlayerInventory(inventoryPurpose_readyExplosive);
-//      } else {
-//        //Else, ask player to throw explosive
+//  else if(d.key_ == 'e') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      if(
+//        eng->player->dynamiteFuseTurns != -1 ||
+//        eng->player->molotovFuseTurns != -1 ||
+//        eng->player->flareFuseTurns == -1) {
 //        eng->marker->place(markerTask_throwLitExplosive);
+//      } else {
+//        eng->inventoryHandler->runUseScreen();
 //      }
-    }
-    clearEvents();
-    return;
-  }
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------AIM/FIRE FIREARM
   else if(d.key_ == 'f') {
     clearLogMessages();
@@ -260,7 +250,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         }
 
         if(firearm == NULL) {
-          eng->log->addMessage("I am not wielding a firearm (press 'i').");
+          eng->log->addMessage("I am not wielding a firearm.");
         }
       }
     }
@@ -286,11 +276,26 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------INVENTORY
-  else if(d.key_ == 'i') {
+  else if(d.key_ == 'v') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runSlotsScreen();
-//      eng->inventoryHandler->runPlayerInventory(inventoryPurpose_look);
+    }
+    clearEvents();
+    return;
+  }
+  //----------------------------------------USE
+  else if(d.key_ == 'e') {
+    clearLogMessages();
+    if(eng->player->deadState == actorDeadState_alive) {
+      if(
+        eng->player->dynamiteFuseTurns > 0 ||
+        eng->player->flareFuseTurns > 0 ||
+        eng->player->molotovFuseTurns > 0) {
+        eng->marker->place(markerTask_throwLitExplosive);
+      } else {
+        eng->inventoryHandler->runUseScreen();
+      }
     }
     clearEvents();
     return;
@@ -419,7 +424,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         Item* item = eng->player->getInventory()->getItemInSlot(slot_missiles);
 
         if(item == NULL) {
-          eng->log->addMessage("I have no missiles chosen for throwing (press 'i').");
+          eng->log->addMessage("I have no missiles chosen for throwing (press 'v').");
         } else {
           eng->marker->place(markerTask_throw);
         }

@@ -15,6 +15,13 @@ enum ItemWeight_t {
   itemWeight_heavy = 140 //Heavy armor, heavy weapons...
 };
 
+enum PrimaryAttackMode_t {
+  primaryAttackMode_none,
+  primaryAttackMode_melee,
+  primaryAttackMode_missile,
+  primaryAttackMode_ranged
+};
+
 const int PLAYER_CARRY_WEIGHT_STANDARD = 500;
 
 enum ItemDefArchetypes_t {
@@ -181,6 +188,7 @@ public:
   char glyph;
   sf::Color color;
   Tile_t tile;
+  PrimaryAttackMode_t primaryAttackMode;
   bool isExplosive;
   bool isUsable;
   bool isReadable;

@@ -46,7 +46,7 @@ public:
 
   void act();
 
-  void registerHeardSound(const Sound& sound);
+  void hearSound(const Sound& sound);
 
   void explosiveThrown();
 

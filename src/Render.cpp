@@ -105,7 +105,19 @@ void Renderer::setupWindowAndImagesClearPrev() {
   tracer << "Renderer: Clearing overlay array" << endl;
   clearOverlay();
 
+  tracer << "Renderer: Setting screen texture dimensions" << endl;
+  screenTexture.create(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT);
+
   tracer << "Renderer::setupWindowAndImagesClearPrev() [DONE]" << endl;
+}
+
+void Renderer::updateWindow(const bool COPY_SCREEN_TEXTURE) {
+  if(COPY_SCREEN_TEXTURE) {
+//    tracer << "Renderer: Updating screen texture" << endl;
+    screenTexture.update(*renderWindow_);
+  }
+  renderWindow_->display();
+  clearWindow();
 }
 
 void Renderer::loadFont() {
@@ -168,6 +180,11 @@ void Renderer::drawSprite(const int X, const int Y, sf::Sprite& sprite) {
   const float Y_FL = static_cast<float>(Y) * SCALE;
   sprite.setPosition(X_FL, Y_FL);
   renderWindow_->draw(sprite);
+}
+
+void Renderer::drawScreenTexture() {
+  sf::Sprite screenSprite(screenTexture);
+  drawSprite(0, 0, screenSprite);
 }
 
 void Renderer::drawMainMenuLogo(const int Y_POS) {
@@ -343,7 +360,7 @@ void Renderer::drawText(const string& str, const RenderArea_t renderArea, const 
   }
 }
 
-void Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
+int Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
                                 const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED) {
   const unsigned int STR_LEN_HALF = str.size() / 2;
   const int X_POS_LEFT = X - STR_LEN_HALF;
@@ -358,11 +375,12 @@ void Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea
 
   for(unsigned int i = 0; i < str.size(); i++) {
     if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->SCREEN_WIDTH) {
-      return;
+      return X_POS_LEFT;
     }
     drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr);
     pixelCoord.x += eng->config->CELL_W;
   }
+  return X_POS_LEFT;
 }
 
 void Renderer::coverRenderArea(const RenderArea_t renderArea) {
@@ -469,7 +487,7 @@ void Renderer::clearOverlay() {
   }
 }
 
-void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW) {
+void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW, const bool COPY_SCREEN_TEXTURE) {
   clearWindow();
 
   if(eng->config->USE_TILE_SET) {
@@ -483,7 +501,7 @@ void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW) {
   eng->log->drawLog();
 
   if(UPDATE_WINDOW) {
-    updateWindow();
+    updateWindow(COPY_SCREEN_TEXTURE);
   }
 }
 

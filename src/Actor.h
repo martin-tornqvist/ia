@@ -55,7 +55,7 @@ public:
 
   virtual void act() = 0;
 
-  virtual void registerHeardSound(const Sound& sound) = 0;
+  virtual void hearSound(const Sound& sound) = 0;
 
   virtual void updateColor();
 

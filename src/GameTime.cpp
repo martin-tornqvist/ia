@@ -66,7 +66,6 @@ void GameTime::letNextAct() {
     if(monster->playerAwarenessCounter > 0) {
       monster->playerAwarenessCounter -= 1;
     }
-    monster->clearHeardSounds();
   }
 
   TurnType_t currentTurnType = static_cast<TurnType_t>(currentTurnTypePos_);
