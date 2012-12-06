@@ -6,6 +6,7 @@ DEBUG_MODE_INC_DIR=$(SRC_DIR)/debugModeIncl
 RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
 TARGET_DIR=target
 ASSETS_DIR=assets
+SFML_LIB_DIR=API/SFML/lib_linux_shared
 
 # Includes
 INCLUDES=-I API/SFML/include
@@ -20,13 +21,14 @@ release : _CFLAGS=-O2
 
 #Flags
 CFLAGS=-Wall -Wextra
-LDFLAGS=-L API/SFML/lib_linux -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS=-L $(SFML_LIB_DIR) -lsfml-graphics -lsfml-window -lsfml-system
 
 # Output and sources
-EXECUTABLE=ia
+EXECUTABLE=bin
 SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 GAME_DOC_FILE=auto_game_doc.txt
+RUN_GAME_SCRIPT=ia
 
 # Various bash commands
 RM=rm -rf
@@ -73,6 +75,10 @@ $(EXECUTABLE): $(OBJECTS)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
+	$(MKDIR) $(TARGET_DIR)/$(SFML_LIB_DIR)
+	$(CP) $(SFML_LIB_DIR)/* $(TARGET_DIR)/$(SFML_LIB_DIR)
+	echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(SFML_LIB_DIR) ./$(EXECUTABLE)" > $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
+	chmod 777 $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
 
 $(OBJECTS): $(SOURCES)
 	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
