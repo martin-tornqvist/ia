@@ -24,6 +24,8 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
     projectiles.push_back(p);
   }
 
+  const int DELAY = eng->config->DELAY_PROJECTILE_DRAW / (weapon->getDef().isMachineGun ? 2 : 1);
+
   printRangedInitiateMessages(projectiles.at(0)->data);
 
   const Audio_t rangedAudio = weapon->getDef().rangedAudio;
@@ -122,21 +124,21 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
               if(projectiles.at(p)->isVisibleToPlayer) {
                 if(eng->config->USE_TILE_SET) {
                   projectiles.at(p)->setTile(tile_blastAnimation1, clrRedLight);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->sleep(DELAY / 2);
                   projectiles.at(p)->setTile(tile_blastAnimation2, clrRedLight);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->sleep(DELAY / 2);
                 } else {
                   projectiles.at(p)->setGlyph('*', clrRedLight);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
+                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjectileAtActorMessages(projectiles.at(p)->data, hitType);
                 //Need to draw again here to show log message
-                eng->renderer->drawProjectiles(projectiles);
+                eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               }
 
               projectiles.at(p)->isDoneRendering = true;
@@ -198,15 +200,15 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
           if(projectiles.at(p)->isVisibleToPlayer) {
             if(eng->config->USE_TILE_SET) {
               projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY / 2);
               projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY / 2);
             } else {
               projectiles.at(p)->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY);
             }
           }
         }
@@ -220,15 +222,15 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
           if(projectiles.at(p)->isVisibleToPlayer) {
             if(eng->config->USE_TILE_SET) {
               projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY / 2);
               projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 2);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY / 2);
             } else {
               projectiles.at(p)->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
+              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->sleep(DELAY);
             }
           }
         }
@@ -237,10 +239,10 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
         if(projectiles.at(p)->isObstructed == false && projectiles.at(p)->isVisibleToPlayer) {
           if(eng->config->USE_TILE_SET) {
             projectiles.at(p)->setTile(projectileTile, projectileColor);
-            eng->renderer->drawProjectiles(projectiles);
+            eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
           } else {
             projectiles.at(p)->setGlyph(projectileGlyph, projectileColor);
-            eng->renderer->drawProjectiles(projectiles);
+            eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
           }
         }
       }
@@ -250,11 +252,8 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
     for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
       if(eng->map->playerVision[projectiles.at(nn)->pos.x][projectiles.at(nn)->pos.y] &&
           projectiles.at(nn)->isObstructed == false) {
-        if(weapon->getDef().isMachineGun) {
-          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW / 2);
-        } else {
-          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
-        }
+          eng->sleep(DELAY);
+          nn = 99999;
       }
     }
 
@@ -295,20 +294,22 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
   bool attacked = false;
 
-  Actor* attacker = eng->gameTime->getCurrentActor();
+  Actor* const attacker = eng->gameTime->getCurrentActor();
+  const bool IS_ATTACKER_PLAYER = attacker == eng->player;
 
   const bool infAmmo = weapon->getDef().rangedHasInfiniteAmmo;
 
   //If it's a shotgun, run shotgun function instead of common projectile
   if(weapon->getDef().isShotgun) {
     if(weapon->ammoLoaded != 0 || infAmmo == true) {
-      const string soundMessage = weapon->getDef().rangedSoundMessage;
+      shotgun(attacker->pos, coord(attackX, attackY), weapon);
+
+      const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
       if(soundMessage != "") {
         const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
-        bool IS_ALERTING_MONSTERS = attacker == eng->player;
-        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ALERTING_MONSTERS));
+        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ATTACKER_PLAYER));
       }
-      shotgun(attacker->pos, coord(attackX, attackY), weapon);
+
       attacked = true;
       weapon->ammoLoaded -= 1;
     }
@@ -322,15 +323,14 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 
     //If weapon has more ammo loaded than projectiles to be fired -
     if(weapon->ammoLoaded >= nrOfProjectiles || infAmmo == true) {
-      const string soundMessage = weapon->getDef().rangedSoundMessage;
-      if(soundMessage != "") {
-        const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
-        bool IS_ALERTING_MONSTERS = attacker == eng->player;
-        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ALERTING_MONSTERS));
-      }
-
       // - Shoot.
       projectileFire(attacker->pos, coord(attackX, attackY), weapon, nrOfProjectiles);
+
+      const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
+      if(soundMessage != "") {
+        const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
+        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, IS_ATTACKER_PLAYER));
+      }
 
       attacked = true;
 
@@ -340,6 +340,8 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
       }
     }
   }
+
+  eng->renderer->drawMapAndInterface();
 
   //Report that actor has used its action
   if(attacked) {

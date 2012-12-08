@@ -143,9 +143,9 @@ void Config::setDefaultVariables() {
   WALL_SYMBOL_FULL_SQUARE = false;
   SKIP_INTRO_LEVEL = false;
   RANGED_WPN_MELEE_PROMPT = true;
-  DELAY_PROJECTILE_DRAW = 60;
-  DELAY_SHOTGUN = 130;
-  DELAY_EXPLOSION = 250;
+  DELAY_PROJECTILE_DRAW = 20;
+  DELAY_SHOTGUN = 120;
+  DELAY_EXPLOSION = 200;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
@@ -225,7 +225,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("[space/esc] done", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
-  eng->renderer->updateWindow(true);
+  eng->renderer->updateWindow();
 }
 
 void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
@@ -287,7 +287,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
   case 6: {
     const int NR = eng->query->number(
                      coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_PROJECTILE_DRAW);
+                     clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
     if(NR != -1) {
       DELAY_PROJECTILE_DRAW = NR;
     }
@@ -296,7 +296,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
   case 7: {
     const int NR = eng->query->number(
                      coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_SHOTGUN);
+                     clrWhite, 1, 3, DELAY_SHOTGUN, true);
     if(NR != -1) {
       DELAY_SHOTGUN = NR;
     }
@@ -305,7 +305,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
   case 8: {
     const int NR = eng->query->number(
                      coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_EXPLOSION);
+                     clrWhite, 1, 3, DELAY_EXPLOSION, true);
     if(NR != -1) {
       DELAY_EXPLOSION = NR;
     }

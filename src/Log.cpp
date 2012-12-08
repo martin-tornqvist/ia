@@ -104,7 +104,6 @@ void MessageLog::displayHistory() {
     }
   }
 
-//  eng->renderer->clearWindow();
   eng->renderer->drawMapAndInterface();
 }
 
@@ -116,8 +115,9 @@ void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) c
   if(history.empty()) {
     eng->renderer->drawText(" No message history ", renderArea_screen, 3, 1, clrWhite);
   } else {
-    eng ->renderer->drawText(" Displaying messages " + intToString(topLine) + "-" + intToString(bottomLine) + " of "
-                             + intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
+    eng ->renderer->drawText(
+      " Displaying messages " + intToString(topLine) + "-" + intToString(bottomLine) + " of "
+      + intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
   }
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);

@@ -11,49 +11,50 @@
 #include "Inventory.h"
 
 void JamWithSpike::playerJam() const {
-	if(eng->player->getInventory()->hasItemInGeneral(item_ironSpike) == false) {
-		eng->log->addMessage("I have no spikes to jam with.", clrWhite);
-		return;
-	}
+  eng->log->clearLog();
 
-	coord jamInPos(eng->player->pos);
+  if(eng->player->getInventory()->hasItemInGeneral(item_ironSpike) == false) {
+    eng->log->addMessage("I have no spikes to jam with.", clrWhite);
+    eng->renderer->drawMapAndInterface();
+    return;
+  }
 
-	eng->log->addMessage("Jam with spike in what direction? [Space/Esc] Cancel", clrWhiteHigh);
-	eng->renderer->updateWindow();
-	jamInPos = eng->player->pos + eng->query->direction();
-	eng->log->clearLog();
+  eng->log->addMessage("Jam with spike in what direction? [Space/Esc] Cancel", clrWhiteHigh);
+  eng->renderer->drawMapAndInterface();
+  coord jamInPos(eng->player->pos + eng->query->direction());
+  eng->log->clearLog();
 
-   playerJamFeature(eng->map->featuresStatic[jamInPos.x][jamInPos.y]);
+  playerJamFeature(eng->map->featuresStatic[jamInPos.x][jamInPos.y]);
 }
 
 void JamWithSpike::playerJamFeature(Feature* const feature) const {
-	bool jamableObjectFound = false;
+  bool jamableObjectFound = false;
 
-	if(feature->getId() == feature_door) {
-		Door* const door = dynamic_cast<Door*>(feature);
-		const bool DOOR_SPIKED = door->trySpike(eng->player);
+  if(feature->getId() == feature_door) {
+    Door* const door = dynamic_cast<Door*>(feature);
+    const bool DOOR_SPIKED = door->trySpike(eng->player);
 
-		if(DOOR_SPIKED == true) {
+    if(DOOR_SPIKED == true) {
 
-			jamableObjectFound = true;
+      jamableObjectFound = true;
 
-			eng->player->getInventory()->decreaseItemTypeInGeneral(item_ironSpike);
-			const int SPIKES_LEFT = eng->player->getInventory()->getItemStackSizeInGeneral(item_ironSpike);
-			if(SPIKES_LEFT == 0) {
-				eng->log->addMessage("I have no iron spikes left.");
-			} else {
-				eng->log->addMessage("I have " + intToString(SPIKES_LEFT) + " iron spikes left.");
-			}
-		}
-	}
+      eng->player->getInventory()->decreaseItemTypeInGeneral(item_ironSpike);
+      const int SPIKES_LEFT = eng->player->getInventory()->getItemStackSizeInGeneral(item_ironSpike);
+      if(SPIKES_LEFT == 0) {
+        eng->log->addMessage("I have no iron spikes left.");
+      } else {
+        eng->log->addMessage("I have " + intToString(SPIKES_LEFT) + " iron spikes left.");
+      }
+    }
+  }
 
-	if(jamableObjectFound == false) {
-		const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
-		if(PLAYER_IS_BLIND == false) {
-			eng->log->addMessage("I see nothing there to jam with a spike.");
-		} else {
-			eng->log->addMessage("I find nothing there to jam with a spike.");
-		}
-	}
+  if(jamableObjectFound == false) {
+    const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
+    if(PLAYER_IS_BLIND == false) {
+      eng->log->addMessage("I see nothing there to jam with a spike.");
+    } else {
+      eng->log->addMessage("I find nothing there to jam with a spike.");
+    }
+  }
 }
 

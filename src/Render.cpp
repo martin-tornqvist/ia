@@ -102,20 +102,15 @@ void Renderer::setupWindowAndImagesClearPrev() {
     loadMainMenuLogo();
   }
 
-  tracer << "Renderer: Clearing overlay array" << endl;
-  clearOverlay();
-
   tracer << "Renderer: Setting screen texture dimensions" << endl;
   screenTexture.create(eng->config->SCREEN_WIDTH, eng->config->SCREEN_HEIGHT);
 
   tracer << "Renderer::setupWindowAndImagesClearPrev() [DONE]" << endl;
 }
 
-void Renderer::updateWindow(const bool COPY_SCREEN_TEXTURE) {
-  if(COPY_SCREEN_TEXTURE) {
-//    tracer << "Renderer: Updating screen texture" << endl;
-    screenTexture.update(*renderWindow_);
-  }
+void Renderer::updateWindow() {
+  screenTexture.update(*renderWindow_);
+
   renderWindow_->display();
   clearWindow();
 }
@@ -174,17 +169,17 @@ void Renderer::loadMainMenuLogo() {
   tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
 
+void Renderer::drawScreenSizedTexture(const sf::Texture& texture) {
+  sf::Sprite spr(texture);
+  drawSprite(0, 0, spr);
+}
+
 void Renderer::drawSprite(const int X, const int Y, sf::Sprite& sprite) {
   const float& SCALE = eng->config->SCALE;
   const float X_FL = static_cast<float>(X) * SCALE;
   const float Y_FL = static_cast<float>(Y) * SCALE;
   sprite.setPosition(X_FL, Y_FL);
   renderWindow_->draw(sprite);
-}
-
-void Renderer::drawScreenTexture() {
-  sf::Sprite screenSprite(screenTexture);
-  drawSprite(0, 0, screenSprite);
 }
 
 void Renderer::drawMainMenuLogo(const int Y_POS) {
@@ -194,9 +189,13 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
   drawSprite(X, Y, *spriteMainMenuLogo_);
 }
 
-void Renderer::addMarkerOverlay(vector<coord> &trace, const int EFFECTIVE_RANGE) {
+void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
+  drawMapAndInterface(false);
+
   if(trace.size() > 2) {
     for(unsigned int i = 1; i < trace.size() - 1; i++) {
+      coverCellInMap(trace.at(i));
+
       sf::Color clr = clrGreenLight;
 
       if(EFFECTIVE_RANGE != -1) {
@@ -206,70 +205,74 @@ void Renderer::addMarkerOverlay(vector<coord> &trace, const int EFFECTIVE_RANGE)
         }
       }
       if(eng->config->USE_TILE_SET) {
-        addOverlay(trace.at(i), tile_aimMarkerTrail, clr);
+        drawTileInMap(tile_aimMarkerTrail, trace.at(i), clr);
       } else {
-        addOverlay(trace.at(i), '*', clr);
+        drawCharacter('*', renderArea_mainScreen, trace.at(i), clr);
       }
     }
   }
 
-  const coord xy = eng->marker->getPos();
+  const coord& headPos = eng->marker->getPos();
 
   sf::Color clr = clrGreenLight;
 
   if(trace.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trace.at(0), xy);
+      const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trace.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
     }
   }
+
+  coverCellInMap(headPos);
+
   if(eng->config->USE_TILE_SET) {
-    addOverlay(xy, tile_aimMarkerHead, clr);
+    drawTileInMap(tile_aimMarkerHead, headPos, clr);
   } else {
-    addOverlay(xy, 'X', clr);
+    drawCharacter('X', renderArea_mainScreen, headPos, clr);
   }
+
+  updateWindow();
 }
 
 void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
     const sf::Color& colorInner, const sf::Color& colorOuter, const int DURATION) {
-
   drawMapAndInterface();
+  clearWindow();
+
+  sf::Texture bgTexture = getScreenTextureCopy();
+  drawScreenSizedTexture(bgTexture);
 
   for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
     for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
       if(forbiddenCells[x][y] == false) {
         const bool IS_OUTER = x == center.x - RADIUS || x == center.x + RADIUS || y == center.y - RADIUS || y == center.y + RADIUS;
         const sf::Color color = IS_OUTER ? colorOuter : colorInner;
-        addOverlay(coord(x, y), tile_blastAnimation1, color);
+        coverCellInMap(x, y);
+        drawTileInMap(tile_blastAnimation1, x, y, color);
       }
     }
   }
-  drawMapAndInterface();
+  updateWindow();
   eng->sleep(DURATION / 2);
+  clearWindow();
+  drawScreenSizedTexture(bgTexture);
+
   for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
     for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
       if(forbiddenCells[x][y] == false) {
         const bool IS_OUTER = x == center.x - RADIUS || x == center.x + RADIUS || y == center.y - RADIUS || y == center.y + RADIUS;
         const sf::Color color = IS_OUTER ? colorOuter : colorInner;
-        addOverlay(coord(x, y), tile_blastAnimation2, color);
+        coverCellInMap(x, y);
+        drawTileInMap(tile_blastAnimation2, x, y, color);
       }
     }
   }
-  drawMapAndInterface();
+  updateWindow();
   eng->sleep(DURATION / 2);
+  drawMapAndInterface();
 }
-
-//void Renderer::drawBlastAnimationAt(const coord& pos, const sf::Color& color, const int DURATION) {
-//  drawMapAndInterface();
-//  addOverlay(pos, tile_blastAnimation1, color);
-//  drawMapAndInterface();
-//  eng->sleep(DURATION / 2);
-//  addOverlay(pos, tile_blastAnimation2, color);
-//  drawMapAndInterface();
-//  eng->sleep(DURATION / 2);
-//}
 
 void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
                              const bool drawBgClr, const sf::Color& bgClr) {
@@ -351,17 +354,21 @@ void Renderer::drawText(const string& str, const RenderArea_t renderArea, const 
     return;
   }
 
+  const int& CELL_W = eng->config->CELL_W;
+  const int& CELL_H = eng->config->CELL_H;
+
   for(unsigned int i = 0; i < str.size(); i++) {
     if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->SCREEN_WIDTH) {
       return;
     }
+    coverAreaPixel(pixelCoord.x, pixelCoord.y, CELL_W, CELL_H);
     drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr);
-    pixelCoord.x += eng->config->CELL_W;
+    pixelCoord.x += CELL_W;
   }
 }
 
 int Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
-                                const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED) {
+                               const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED) {
   const unsigned int STR_LEN_HALF = str.size() / 2;
   const int X_POS_LEFT = X - STR_LEN_HALF;
   const int CELL_W = eng->config->CELL_W;
@@ -429,6 +436,20 @@ void Renderer::drawLineHorizontal(const int x0, const int y0, const int w, const
   drawRectangleSolid(x0, y0, w, 2, clr);
 }
 
+// Hack to fix Catalyst 12.10 driver bug
+// (see the comment for this function declaration in Render.h)
+void Renderer::workaroundAMDBug() {
+  static sf::Texture amdWorkaroundImage;
+  static sf::Sprite sprite;
+
+  if(amdWorkaroundImage.getSize() == sf::Vector2u(0, 0)) {
+    amdWorkaroundImage.create(1, 1);
+    sprite.setTexture(amdWorkaroundImage);
+    sprite.setPosition(-20, -20);
+  }
+  renderWindow_->draw(sprite);
+}
+
 void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H, const sf::Color& clr) {
   const float X_FL = static_cast<float>(X);
   const float Y_FL = static_cast<float>(Y);
@@ -437,8 +458,13 @@ void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const i
   const float& SCALE = eng->config->SCALE;
   sf::RectangleShape rectShape(sf::Vector2f(W_FL * SCALE, H_FL * SCALE));
   rectShape.setFillColor(clr);
+
   rectShape.setPosition(X_FL * SCALE, Y_FL * SCALE);
   renderWindow_->draw(rectShape);
+
+  // Hack to fix Catalyst 12.10 driver bug
+  // (see the comment for this function declaration in Render.h)
+  workaroundAMDBug();
 }
 
 void Renderer::coverCharacterAtPixel(const int X, const int Y) {
@@ -449,12 +475,13 @@ void Renderer::coverTileAtPixel(const int X, const int Y) {
   coverAreaPixel(X, Y, eng->config->CELL_W, eng->config->CELL_H);
 }
 
-void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
+void Renderer::drawProjectilesAndUpdateWindow(vector<Projectile*>& projectiles) {
   drawMapAndInterface(false);
 
   for(unsigned int i = 0; i < projectiles.size(); i++) {
     Projectile* const p = projectiles.at(i);
     if(p->isDoneRendering == false && p->isVisibleToPlayer) {
+      coverCellInMap(p->pos);
       if(eng->config->USE_TILE_SET) {
         if(p->tile != tile_empty) {
           drawTileInMap(p->tile, p->pos, p->clr);
@@ -470,24 +497,7 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
   updateWindow();
 }
 
-void Renderer::clearOverlay() {
-  const bool& USE_TILES = eng->config->USE_TILE_SET;
-  if(USE_TILES) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
-        overlayTiles[x][y].clear();
-      }
-    }
-  } else {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
-        overlayGlyphs[x][y].clear();
-      }
-    }
-  }
-}
-
-void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW, const bool COPY_SCREEN_TEXTURE) {
+void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW) {
   clearWindow();
 
   if(eng->config->USE_TILE_SET) {
@@ -497,11 +507,10 @@ void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW, const bool COPY_SCR
   }
 
   eng->interfaceRenderer->drawInfoLines();
-
   eng->log->drawLog();
 
   if(UPDATE_WINDOW) {
-    updateWindow(COPY_SCREEN_TEXTURE);
+    updateWindow();
   }
 }
 
@@ -524,6 +533,7 @@ void Renderer::drawLifeBar(const int X_CELL, const int Y_CELL, const int LENGTH)
     const int Y0 = eng->config->MAINSCREEN_Y_OFFSET + ((Y_CELL + 1) * eng->config->CELL_H) - 2;
     const int X0_GREEN = X_CELL * W_CELL + 1;
     const int X0_RED = X0_GREEN + W_GREEN;
+
     if(W_GREEN > 0) {
       drawLineHorizontal(X0_GREEN, Y0, W_GREEN, clrGreenLight);
     }
@@ -544,7 +554,7 @@ void Renderer::drawASCII() {
       currentDrw = &renderArray[x][y];
       currentDrw->clear();
 
-      if(eng->map->playerVision[x][y] == true) {
+      if(eng->map->playerVision[x][y]) {
         //Static features
         char goreGlyph = ' ';
         if(eng->map->featuresStatic[x][y]->canHaveGore()) {
@@ -637,12 +647,8 @@ void Renderer::drawASCII() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
 
       tempDrw.clear();
-      const GlyphAndColor& overlay = overlayGlyphs[x][y];
 
-      if(overlay.glyph != ' ') {
-        tempDrw = overlay;
-      }
-      else if(eng->map->playerVision[x][y]) {
+      if(eng->map->playerVision[x][y]) {
         tempDrw = renderArray[x][y];
       }
       else if(eng->map->explored[x][y]) {
@@ -665,13 +671,11 @@ void Renderer::drawASCII() {
   }
 
   //-------------------------------------------- DRAW PLAYER CHARACTER
-  if(overlayGlyphs[eng->player->pos.x][eng->player->pos.y].glyph == ' ') {
-    drawGlyphInMap(eng->player->getGlyph(), eng->player->pos.x, eng->player->pos.y,
-                   eng->player->getColor(), true, clrBlack);
-    const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
-    if(LIFE_BAR_LENGTH != -1) {
-      drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
-    }
+  drawGlyphInMap(eng->player->getGlyph(), eng->player->pos.x, eng->player->pos.y,
+                 eng->player->getColor(), true, clrBlack);
+  const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
+  if(LIFE_BAR_LENGTH != -1) {
+    drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
   }
 }
 
@@ -782,12 +786,7 @@ void Renderer::drawTiles() {
 
       tempDrw.clear();
 
-      const TileAndColor& overlay = overlayTiles[x][y];
-
-      if(overlay.tile != tile_empty) {
-        tempDrw = overlay;
-      }
-      else if(eng->map->playerVision[x][y]) {
+      if(eng->map->playerVision[x][y]) {
         tempDrw = renderArrayTiles[x][y];
       }
       else if(eng->map->explored[x][y]) {
@@ -831,18 +830,16 @@ void Renderer::drawTiles() {
   }
 
   //-------------------------------------------- DRAW PLAYER CHARACTER
-  if(overlayTiles[eng->player->pos.x][eng->player->pos.y].tile == tile_empty) {
-    bool isWieldingRangedWeapon = false;
-    Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
-    if(item != NULL) {
-      isWieldingRangedWeapon = item->getDef().isRangedWeapon;
-    }
-    drawTileInMap(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
-                  eng->player->pos.x, eng->player->pos.y, eng->player->getColor(), true, clrBlack);
-    const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
-    if(LIFE_BAR_LENGTH != -1) {
-      drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
-    }
+  bool isWieldingRangedWeapon = false;
+  Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
+  if(item != NULL) {
+    isWieldingRangedWeapon = item->getDef().isRangedWeapon;
+  }
+  drawTileInMap(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
+                eng->player->pos, eng->player->getColor(), true, clrBlack);
+  const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
+  if(LIFE_BAR_LENGTH != -1) {
+    drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
   }
 }
 

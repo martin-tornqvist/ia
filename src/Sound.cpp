@@ -11,7 +11,7 @@ bool SoundEmitter::isSoundHeardAtRange(const int RANGE, const Sound& sound) cons
 	return sound.isLoud() ? RANGE <= 20 : RANGE <= 10;
 }
 
-void SoundEmitter::emitSound(Sound sound) const {
+void SoundEmitter::emitSound(Sound sound) {
 	bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 	FeatureStatic* f = NULL;
 	for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
@@ -22,7 +22,8 @@ void SoundEmitter::emitSound(Sound sound) const {
 		}
 	}
 	int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-	eng->mapTests->makeFloodFill(sound.getOrigin(), blockers, floodFill, 999, coord(-1, -1));
+	const coord& origin = sound.getOrigin();
+	eng->mapTests->makeFloodFill(origin, blockers, floodFill, 999, coord(-1, -1));
 
 	const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
@@ -33,12 +34,21 @@ void SoundEmitter::emitSound(Sound sound) const {
 
 		if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, sound)) {
 			if(actor == eng->player) {
-				//If player, add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-				if(sound.getMessage() != "") {
-					sound.addString("(" + getPlayerToOriginDirectionString(FLOOD_VALUE_AT_ACTOR, sound.getOrigin(), floodFill) + ")");
-				}
+        if(eng->map->playerVision[origin.x][origin.y] == false || sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
+          // Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
+          if(sound.getMessage() != "") {
+            if(nrSoundsHeardByPlayerCurTurn_ >= 1) {
+              sound.clearMessage();
+            } else {
+              sound.addString("(" + getPlayerToOriginDirectionString(FLOOD_VALUE_AT_ACTOR, origin, floodFill) + ")");
+              nrSoundsHeardByPlayerCurTurn_++;
+              actor->hearSound(sound);
+            }
+          }
+        }
+			} else {
+        actor->hearSound(sound);
 			}
-			actor->hearSound(sound);
 		}
 	}
 }

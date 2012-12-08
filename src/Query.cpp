@@ -58,9 +58,14 @@ bool Query::yesOrNo() const {
 }
 
 int Query::number(const coord& cellToRenderAt, const sf::Color clr, const int MIN,
-                  const int MAX_NR_DIGITS, const int DEFAULT) const {
+                  const int MAX_NR_DIGITS, const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT) const {
+  // Copy the current screen texture to use as background for number query
+  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
+  sf::Sprite screenSprite(screenTexture);
+
   eng->renderer->clearWindow();
-  eng->renderer->drawScreenTexture();
+
+  eng->renderer->drawSprite(0, 0, screenSprite);
 
   int retNum = max(MIN, DEFAULT);
   eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
@@ -80,7 +85,7 @@ int Query::number(const coord& cellToRenderAt, const sf::Color clr, const int MI
     }
 
     if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
-      return DEFAULT;
+      return CANCEL_RETURNS_DEFAULT ? DEFAULT : -1;
     }
 
     const string retNumStr = intToString(retNum);
@@ -89,7 +94,7 @@ int Query::number(const coord& cellToRenderAt, const sf::Color clr, const int MI
     if(d.sfmlKey_ == sf::Keyboard::Back) {
       retNum = retNum / 10;
       eng->renderer->clearWindow();
-      eng->renderer->drawScreenTexture();
+      eng->renderer->drawSprite(0, 0, screenSprite);
       eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
       eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
       eng->renderer->updateWindow();
@@ -100,7 +105,7 @@ int Query::number(const coord& cellToRenderAt, const sf::Color clr, const int MI
       int curDigit = d.key_ - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
       eng->renderer->clearWindow();
-      eng->renderer->drawScreenTexture();
+      eng->renderer->drawSprite(0, 0, screenSprite);
       eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
       eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
       eng->renderer->updateWindow();

@@ -8,7 +8,7 @@
 #include "Render.h"
 
 RenderInventory::RenderInventory(Engine* engine) :
-  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 47) {
+  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 50) {
 }
 
 void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr) {
@@ -19,12 +19,13 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_N
 }
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
-                                          const vector<InventorySlotButton>& invSlotButtons) {
+                                          const vector<InventorySlotButton>& invSlotButtons,
+                                          const sf::Texture& bgTexture) {
   int yPos = 1;
   int xPos = X_POS_LEFT;
 
-  eng->renderer->drawMapAndInterface(true, true);
-  eng->renderer->drawScreenTexture();
+  eng->renderer->clearWindow();
+  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 2);
 
@@ -59,10 +60,10 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       }
 
       str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
+      drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+      eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     }
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
-    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
 
     yPos++;
   }
@@ -78,12 +79,13 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 }
 
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
-                                              const vector<unsigned int>& genInvIndexes) {
+                                              const vector<unsigned int>& genInvIndexes,
+                                              const sf::Texture& bgTexture) {
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->drawMapAndInterface(true, true);
-  eng->renderer->drawScreenTexture();
+  eng->renderer->clearWindow();
+  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
@@ -110,12 +112,13 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
 }
 
 void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
-                                    const vector<unsigned int>& genInvIndexes) {
+                                    const vector<unsigned int>& genInvIndexes,
+                                    const sf::Texture& bgTexture) {
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->drawMapAndInterface(true, true);
-  eng->renderer->drawScreenTexture();
+  eng->renderer->clearWindow();
+  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
@@ -159,14 +162,15 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
 }
 
 void RenderInventory::drawUseMode(const MenuBrowser& browser,
-                                  const vector<unsigned int>& genInvIndexes) {
-  const int X_POS_CMD = X_POS_LEFT + 6;
+                                  const vector<unsigned int>& genInvIndexes,
+                                  const sf::Texture& bgTexture) {
+  const int X_POS_CMD = X_POS_LEFT + 7;
 
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->drawMapAndInterface(true, true);
-  eng->renderer->drawScreenTexture();
+  eng->renderer->clearWindow();
+  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
@@ -212,9 +216,9 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   eng->renderer->updateWindow();
 }
 
-void RenderInventory::drawDropMode(const Item* const itemToDrop) {
-
-}
+//void RenderInventory::drawDropMode(const Item* const itemToDrop) {
+//
+//}
 
 //string RenderInventory::getWeaponDataLine(Weapon* const weapon) const {
 //  string line = "";

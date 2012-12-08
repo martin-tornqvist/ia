@@ -14,68 +14,78 @@ class Actor;
 
 class Sound {
 public:
-	Sound(
-	   const string& message,
-	   const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN,
-	   const coord& origin,
-	   const bool IS_LOUD,
-	   const bool IS_ALERTING_MONSTER) :
-		message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
-		origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
+  Sound(
+    const string& message,
+    const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN,
+    const coord& origin,
+    const bool IS_LOUD,
+    const bool IS_ALERTING_MONSTER) :
+    message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
+    origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
 
-	Sound() {
-	}
-	~Sound() {
-	}
+  Sound() {
+  }
+  ~Sound() {
+  }
 
-	string getMessage() const {
-		return message_;
-	}
+  const string& getMessage() const {
+    return message_;
+  }
 
-	bool getIsMessageIgnoredIfPlayerSeeOrigin() const {
-		return isMessageIgnoredIfPlayerSeeOrigin_;
-	}
+  void clearMessage() {
+    message_ = "";
+  }
 
-	coord getOrigin() const {
-		return origin_;
-	}
+  bool getIsMessageIgnoredIfPlayerSeeOrigin() const {
+    return isMessageIgnoredIfPlayerSeeOrigin_;
+  }
 
-	int isLoud() const {
-		return isLoud_;
-	}
+  coord getOrigin() const {
+    return origin_;
+  }
 
-	bool getIsAlertingMonsters() const {
-		return isAlertingMonsters_;
-	}
+  int isLoud() const {
+    return isLoud_;
+  }
 
-	void addString(const string str) {
-		message_ += str;
-	}
+  bool getIsAlertingMonsters() const {
+    return isAlertingMonsters_;
+  }
+
+  void addString(const string str) {
+    message_ += str;
+  }
 
 private:
-	string message_;
-	bool isMessageIgnoredIfPlayerSeeOrigin_;
-	coord origin_;
-	bool isLoud_;
-	bool isAlertingMonsters_;
+  string message_;
+  bool isMessageIgnoredIfPlayerSeeOrigin_;
+  coord origin_;
+  bool isLoud_;
+  bool isAlertingMonsters_;
 };
 
 class SoundEmitter {
 public:
-	SoundEmitter(Engine* engine) :
-		eng(engine) {
-	}
+  SoundEmitter(Engine* engine) :
+    eng(engine) {
+  }
 
-	void emitSound(Sound sound) const;
+  void emitSound(Sound sound);
+
+  void resetNrSoundsHeardByPlayerCurTurn() {
+    nrSoundsHeardByPlayerCurTurn_ = 0;
+  }
 
 private:
-	string getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER, const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  int nrSoundsHeardByPlayerCurTurn_;
 
-	bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
+  string getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER, const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-	DirectionNames directionNames;
+  bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
 
-	Engine* eng;
+  DirectionNames directionNames;
+
+  Engine* eng;
 };
 
 #endif

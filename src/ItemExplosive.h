@@ -17,7 +17,7 @@ public:
     return true;
   }
   virtual string getDefaultActivationLabel() const {
-    return "Light";
+    return "Ignite";
   }
 
   virtual void setPlayerExplosive(Engine* const engine) const;

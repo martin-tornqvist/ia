@@ -312,10 +312,6 @@
 		<Unit filename="..\src\Thrower.h" />
 		<Unit filename="..\src\TrimTravelVector.cpp" />
 		<Unit filename="..\src\TrimTravelVector.h" />
-		<Unit filename="..\src\_MapArea.cpp" />
-		<Unit filename="..\src\_MapArea.h" />
-		<Unit filename="..\src\_SpecialRoom.cpp" />
-		<Unit filename="..\src\_SpecialRoom.h" />
 		<Unit filename="..\src\main.cpp" />
 		<Extensions>
 			<code_completion />

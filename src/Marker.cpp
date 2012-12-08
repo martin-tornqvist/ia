@@ -59,7 +59,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     if(markerTask == markerTask_aim) {
       if(pos_ != eng->player->pos) {
 
-        eng->renderer->clearOverlay();
+        eng->log->clearLog();
         eng->renderer->drawMapAndInterface();
 
         const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
@@ -87,7 +87,6 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       if(pos_ == eng->player->pos) {
         eng->log->addMessage("I should throw this somewhere else.");
       } else {
-        eng->renderer->clearOverlay();
         eng->renderer->drawMapAndInterface();
         const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
         if(actor != NULL) {
@@ -101,7 +100,6 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   }
   else if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
     if(markerTask == markerTask_throwLitExplosive) {
-      eng->renderer->clearOverlay();
       eng->renderer->drawMapAndInterface();
       eng->thrower->playerThrowLitExplosive(pos_);
       done();
@@ -112,7 +110,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   }
 }
 
-void Marker::addOverlay(const MarkerTask_t markerTask) const {
+void Marker::draw(const MarkerTask_t markerTask) const {
   vector<coord> trace;
   trace.resize(0);
 
@@ -128,7 +126,7 @@ void Marker::addOverlay(const MarkerTask_t markerTask) const {
     effectiveRange = weapon->effectiveRangeLimit;
   }
 
-  eng->renderer->addMarkerOverlay(trace, effectiveRange);
+  eng->renderer->drawMarker(trace, effectiveRange);
 }
 
 void Marker::place(const MarkerTask_t markerTask) {
@@ -144,14 +142,12 @@ void Marker::place(const MarkerTask_t markerTask) {
     }
   }
 
-  addOverlay(markerTask);
-  eng->renderer->drawMapAndInterface();
+  eng->log->clearLog();
+  draw(markerTask);
 
   if(markerTask == markerTask_look) {
     eng->look->markerAtCoord(pos_);
   }
-
-  eng->renderer->clearOverlay();
 
   isDone_ = false;
   while(isDone_ == false) {
@@ -201,24 +197,19 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask) {
     isMoved = true;
   }
 
-  eng->renderer->clearOverlay();
-  addOverlay(markerTask);
-
   if(markerTask == markerTask_look && isMoved) {
     eng->look->markerAtCoord(pos_);
   }
 
-  eng->renderer->drawMapAndInterface();
+  draw(markerTask);
 }
 
 void Marker::done() {
-  eng->renderer->clearOverlay();
   eng->renderer->drawMapAndInterface();
   isDone_ = true;
 }
 
 void Marker::cancel() {
-  eng->renderer->clearOverlay();
   eng->renderer->drawMapAndInterface();
   isDone_ = true;
 }

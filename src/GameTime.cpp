@@ -126,8 +126,6 @@ void GameTime::letNextAct() {
 void GameTime::runNewTurnEvents() {
   turn_++;
 
-//	tracer << "=== TURN " << turn_ << " begins ===" << endl;
-
   eng->basicUtils->resetBoolArray(eng->map->light, false);
 
   Actor* actor = NULL;
@@ -187,6 +185,8 @@ void GameTime::runNewTurnEvents() {
       }
     }
   }
+
+  eng->soundEmitter->resetNrSoundsHeardByPlayerCurTurn();
 }
 
 Actor* GameTime::getCurrentActor() {

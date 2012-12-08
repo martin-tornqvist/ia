@@ -39,16 +39,14 @@ void Player::actorSpecific_spawnStartItems() {
     insanityCompulsions[i] = false;
   }
 
-  int NR_OF_CARTRIDGES = eng->dice.getInRange(1, 3);
-  int NR_OF_DYNAMITE = eng->dice.getInRange(2, 4);
-  int NR_OF_MOLOTOV = eng->dice.getInRange(2, 4);
-  int NR_OF_FLARES = eng->dice.getInRange(3, 5);
-  int NR_OF_THROWING_KNIVES = eng->dice.getInRange(7, 12);
-  int NR_OF_SPIKES = eng->dice.getInRange(3, 4);
+  int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
+  int NR_OF_DYNAMITE          = eng->dice.getInRange(2, 4);
+  int NR_OF_MOLOTOV           = eng->dice.getInRange(2, 4);
+  int NR_OF_FLARES            = eng->dice.getInRange(3, 5);
+  int NR_OF_THROWING_KNIVES   = eng->dice.getInRange(7, 12);
+  int NR_OF_SPIKES            = eng->dice.getInRange(3, 4);
 
-  const int NR_OF_POSSIBLE_WEAPONS = 5;
-
-  const int WEAPON_CHOICE = eng->dice.getInRange(1, NR_OF_POSSIBLE_WEAPONS);
+  const int WEAPON_CHOICE = eng->dice.getInRange(1, 5);
   ItemDevNames_t weaponId = item_dagger;
   switch(WEAPON_CHOICE) {
   case 1:
@@ -73,7 +71,6 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-
   inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
@@ -879,12 +876,9 @@ void Player::explosiveThrown() {
 }
 
 void Player::hearSound(const Sound& sound) {
-  const coord origin = sound.getOrigin();
   const string message = sound.getMessage();
   if(message != "") {
-    if(eng->map->playerVision[origin.x][origin.y] == false || sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
-      eng->log->addMessage(message);
-    }
+    eng->log->addMessage(message);
   }
 }
 

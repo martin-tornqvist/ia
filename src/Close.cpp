@@ -11,11 +11,10 @@
 #include "Query.h"
 
 void Close::playerClose() const {
-	coord closeInPos(eng->player->pos);
-
+  eng->log->clearLog();
 	eng->log->addMessage("Close in what direction? [Space/Esc] Cancel", clrWhiteHigh);
-	eng->renderer->updateWindow();
-	closeInPos = eng->player->pos + eng->query->direction();
+	eng->renderer->drawMapAndInterface();
+	coord closeInPos(eng->player->pos + eng->query->direction());
 	eng->log->clearLog();
 
 	if(closeInPos != eng->player->pos) {

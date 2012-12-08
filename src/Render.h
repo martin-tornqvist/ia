@@ -29,15 +29,15 @@ public:
 
   ~Renderer();
 
-  void drawMapAndInterface(const bool UPDATE_WINDOW = true, const bool COPY_SCREEN_TEXTURE = false);
+  void drawMapAndInterface(const bool UPDATE_WINDOW = true);
 
-  void updateWindow(const bool COPY_SCREEN_TEXTURE = false);
+  void updateWindow();
 
   void clearWindow() {
     renderWindow_->clear();
   }
 
-  void addMarkerOverlay(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
+  void drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
 
   void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
 
@@ -99,8 +99,6 @@ public:
   void drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
                                  const sf::Color& colorInner, const sf::Color& colorOuter, const int DURATION);
 
-//  void drawBlastAnimationAt(const coord& pos, const sf::Color& color, const int DURATION);
-
   void drawMainMenuLogo(const int Y_POS);
 
   GlyphAndColor renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];
@@ -111,30 +109,24 @@ public:
 
   void setupWindowAndImagesClearPrev();
 
-  void drawProjectiles(vector<Projectile*>& projectiles);
+  void drawProjectilesAndUpdateWindow(vector<Projectile*>& projectiles);
 
-  void clearOverlay();
-
-  void addOverlay(const coord& pos, const char GLYPH, const sf::Color& clr) {
-    overlayGlyphs[pos.x][pos.y].glyph = GLYPH;
-    overlayGlyphs[pos.x][pos.y].color = clr;
+  sf::Texture getScreenTextureCopy() const {
+    return sf::Texture(screenTexture);
   }
 
-  void addOverlay(const coord& pos, const Tile_t tile, const sf::Color& clr) {
-    overlayTiles[pos.x][pos.y].tile = tile;
-    overlayTiles[pos.x][pos.y].color = clr;
-  }
-
-  void drawScreenTexture();
+  void drawScreenSizedTexture(const sf::Texture& texture);
 
 private:
   friend class Postmortem;
   friend class Input;
   void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr);
 
-  // This is used to keep a copy of the screen, for things like
-  // player number entering to render over
+  // This is used to keep a copy of the screen, for things
+  // like player number entering to render over
   sf::Texture screenTexture;
+
+  void drawSprite(const int X, const int Y, sf::Sprite& sprite);
 
   void coverCharacterAtPixel(const int X, const int Y);
   void coverTileAtPixel(const int X, const int Y);
@@ -154,7 +146,6 @@ private:
 
   void freeWindowAndImages();
 
-  void drawSprite(const int X, const int Y, sf::Sprite& sprite);
   void drawASCII();
   void drawTiles();
 
@@ -171,8 +162,12 @@ private:
   sf::Sprite* spritesTiles_[TILE_SHEET_X_CELLS][TILE_SHEET_X_CELLS];
   sf::Sprite* spriteMainMenuLogo_;
 
-  GlyphAndColor overlayGlyphs[MAP_X_CELLS][MAP_Y_CELLS];
-  TileAndColor overlayTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  // 2012-12-08:
+  // Due to a bug in AMD Catalyst 12.10 drivers (confirmed by many users), drawing shapes
+  // sometimes mess up the screen. Calling this function directly after the shapes provides a
+  // workaround to the issue. The 12.11 beta drivers contains a fix. But keep this workaround
+  // until the official 12.11 drivers has been out for a year or so.
+  void workaroundAMDBug();
 };
 
 #endif

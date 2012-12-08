@@ -56,7 +56,7 @@ void ActorDefinition::reset() {
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
   //Set HP from progression formula
   const int HP_BASE = 2;
-  const int HP_INCR = 3;
+  const int HP_INCR = 2;
   const int HP_CAP = 999;
 
   const int EFFECTIVE_LEVEL_BON_FROM_UNIQUE = d.isUnique ? 4 : 0;
@@ -71,7 +71,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   //Set weapon abilities from progression formula
   const int ATTACK_BASE = 10;
   const double ATTACK_INCR = 5.0;
-  const int ATTACK_CAP = 50;
+  const int ATTACK_CAP = 40;
 
   const int ATTACK = static_cast<int>(ceil(static_cast<double>(ATTACK_BASE) + ATTACK_INCR * static_cast<double>(EFFECTIVE_LEVEL - 1)));
   const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);

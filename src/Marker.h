@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "SFML/Graphics/Texture.hpp"
+
 #include "ConstTypes.h"
 
 using namespace std;
@@ -36,7 +38,7 @@ private:
   void setCoordToClosestEnemyIfVisible();
   bool setCoordToTargetIfVisible();
 
-  void addOverlay(const MarkerTask_t markerTask) const;
+  void draw(const MarkerTask_t markerTask) const;
   void readKeys(const MarkerTask_t markerTask);
   void move(const int DX, const int DY, const MarkerTask_t markerTask);
   void cancel();

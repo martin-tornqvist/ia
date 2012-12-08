@@ -13,47 +13,57 @@
 
 void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
+  eng->renderer->clearWindow();
+  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
+  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0 + 1); x <= min(MAP_X_CELLS - 2, data->x1 - 1); x++) {
     for(int y = max(1, data->y0 + 1); y <= min(MAP_Y_CELLS - 2, data->y1 - 1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->addOverlay(coord(x, y), '*', clrYellow);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow);
         }
       }
     }
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng->renderer->updateWindow();
   eng->sleep(eng->config->DELAY_EXPLOSION / 2);
+
+  eng->renderer->clearWindow();
+  screenTexture = eng->renderer->getScreenTextureCopy();
+  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
           if(x == data->x0 || x == data->x1 || y == data->y0 || y == data->y1) {
-            eng->renderer->addOverlay(coord(x, y), '*', clrRedLight);
+            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrRedLight);
           }
         }
       }
     }
   }
-  eng->renderer->drawMapAndInterface();
+  eng->renderer->updateWindow();
 }
 
 void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, const sf::Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
+  eng->renderer->clearWindow();
+  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
+  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->addOverlay(coord(x, y), '*', clr);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clr);
         }
       }
     }
   }
-  eng->renderer->drawMapAndInterface();
+  eng->renderer->updateWindow();
 }
 
 void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
@@ -172,7 +182,6 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
   }
 
   //Set graphics back to normal
-  eng->renderer->clearOverlay();
   eng->player->FOVupdate();
   eng->renderer->drawMapAndInterface();
 

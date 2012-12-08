@@ -11,13 +11,11 @@
 
 void Bash::playerBash() const {
   tracer << "Bash::playerBash()" << endl;
+
   eng->log->clearLog();
-
-  coord bashInPos(eng->player->pos);
-
   eng->log->addMessage("Kick or bash in which direction? [space/esc] cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  bashInPos = eng->player->pos + eng->query->direction();
+  coord bashInPos(eng->player->pos + eng->query->direction());
   eng->log->clearLog();
 
   if(bashInPos != eng->player->pos) {

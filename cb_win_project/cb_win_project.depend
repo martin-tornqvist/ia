@@ -84,7 +84,7 @@
 	"ConstTypes.h"
 	"Converters.h"
 
-1354659846 c:\dev\ia\src\sound.h
+1354990998 c:\dev\ia\src\sound.h
 	<string>
 	"ConstTypes.h"
 	"ItemData.h"
@@ -208,7 +208,7 @@
 	"Config.h"
 	"Render.h"
 
-1354738102 c:\dev\ia\src\render.h
+1354984760 c:\dev\ia\src\render.h
 	"SFML/Graphics/RenderWindow.hpp"
 	"SFML/Graphics/Texture.hpp"
 	"SFML/Graphics/Sprite.hpp"
@@ -347,7 +347,7 @@
 	<string>
 	"Item.h"
 
-1354740395 source:c:\dev\ia\src\actordata.cpp
+1354824303 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -433,7 +433,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1354660694 source:c:\dev\ia\src\actorplayer.cpp
+1354996466 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -478,7 +478,7 @@
 1354480788 c:\dev\ia\src\menubrowser.h
 	"ConstTypes.h"
 
-1354734230 c:\dev\ia\src\query.h
+1354991849 c:\dev\ia\src\query.h
 	"ConstTypes.h"
 
 1339441554 source:c:\dev\ia\src\actorrat.cpp
@@ -534,7 +534,7 @@
 1350576994 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1354574759 source:c:\dev\ia\src\attackranged.cpp
+1354997042 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -554,7 +554,7 @@
 	"SFML/Window/Keyboard.hpp"
 	"ConstTypes.h"
 
-1354036264 source:c:\dev\ia\src\attackshotgun.cpp
+1354989797 source:c:\dev\ia\src\attackshotgun.cpp
 	"Attack.h"
 	"Engine.h"
 	"Item.h"
@@ -578,7 +578,7 @@
 	<string>
 	"ActorData.h"
 
-1354229353 source:c:\dev\ia\src\bash.cpp
+1354993312 source:c:\dev\ia\src\bash.cpp
 	"Bash.h"
 	"Engine.h"
 	"GameTime.h"
@@ -647,7 +647,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1353845889 source:c:\dev\ia\src\close.cpp
+1354993364 source:c:\dev\ia\src\close.cpp
 	"Close.h"
 	"Engine.h"
 	"GameTime.h"
@@ -871,17 +871,19 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1354212311 c:\dev\ia\src\marker.h
+1354984716 c:\dev\ia\src\marker.h
 	<iostream>
 	<vector>
+	"SFML/Graphics/Texture.hpp"
 	"ConstTypes.h"
 
 1350576995 c:\dev\ia\src\playerpowershandler.h
 	<vector>
 	"MenuBrowser.h"
 
-1354737182 c:\dev\ia\src\renderinventory.h
+1354991177 c:\dev\ia\src\renderinventory.h
 	"InventoryHandler.h"
+	"SFML/Graphics/Texture.hpp"
 	"ItemData.h"
 	"MenuBrowser.h"
 
@@ -906,7 +908,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1354214910 source:c:\dev\ia\src\explosion.cpp
+1354825959 source:c:\dev\ia\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -1019,7 +1021,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1354661454 source:c:\dev\ia\src\gametime.cpp
+1354990619 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1044,7 +1046,7 @@
 	"Popup.h"
 	"Input.h"
 
-1354730806 source:c:\dev\ia\src\input.cpp
+1354992701 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -1106,7 +1108,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1354574577 source:c:\dev\ia\src\inventoryhandler.cpp
+1354991925 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1120,12 +1122,13 @@
 	"MenuInputHandler.h"
 	"Render.h"
 	"ItemDrop.h"
+	"Query.h"
 
 1323988860 c:\dev\ia\src\itemusable.h
 	"Item.h"
 	"Actor.h"
 
-1354572844 c:\dev\ia\src\itemexplosive.h
+1354823319 c:\dev\ia\src\itemexplosive.h
 	"StatusEffects.h"
 	"Item.h"
 
@@ -1218,7 +1221,7 @@
 	"Engine.h"
 	"Explosion.h"
 
-1353845889 source:c:\dev\ia\src\jamwithspike.cpp
+1354993396 source:c:\dev\ia\src\jamwithspike.cpp
 	"JamWithSpike.h"
 	"Engine.h"
 	"GameTime.h"
@@ -1239,7 +1242,7 @@
 	"Log.h"
 	"Config.h"
 
-1354214804 source:c:\dev\ia\src\log.cpp
+1354997165 source:c:\dev\ia\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Input.h"
@@ -1390,7 +1393,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1354737494 source:c:\dev\ia\src\marker.cpp
+1354988556 source:c:\dev\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -1404,7 +1407,7 @@
 	"Thrower.h"
 	"Render.h"
 
-1353960165 source:c:\dev\ia\src\menubrowser.cpp
+1354993415 source:c:\dev\ia\src\menubrowser.cpp
 	"MenuBrowser.h"
 
 1353960773 source:c:\dev\ia\src\menuinputhandler.cpp
@@ -1498,7 +1501,7 @@
 	"MenuInputHandler.h"
 	"Highscore.h"
 
-1354735810 source:c:\dev\ia\src\query.cpp
+1354991935 source:c:\dev\ia\src\query.cpp
 	"Query.h"
 	<iostream>
 	"Engine.h"
@@ -1520,7 +1523,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1354738170 source:c:\dev\ia\src\render.cpp
+1354997332 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1537,7 +1540,7 @@
 	"Log.h"
 	"Attack.h"
 
-1354740777 source:c:\dev\ia\src\renderinventory.cpp
+1354991177 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1562,7 +1565,7 @@
 	"DungeonClimb.h"
 	"Inventory.h"
 
-1354661829 source:c:\dev\ia\src\sound.cpp
+1354996607 source:c:\dev\ia\src\sound.cpp
 	"Sound.h"
 	<iostream>
 	"Engine.h"
@@ -1677,7 +1680,7 @@
 
 1350576992 c:\dev\ia\src\declares.h
 
-1354738229 source:c:\dev\ia\src\config.cpp
+1354991901 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
