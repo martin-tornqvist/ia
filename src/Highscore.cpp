@@ -12,27 +12,33 @@
 #include "Popup.h"
 #include "Input.h"
 
-const int X_POS_NAME = 1;
-const int X_POS_SCORE = 20;
-const int X_POS_LVL = 31;
-const int X_POS_DLVL = 36;
-const int X_POS_INSANITY = 42;
-const int X_POS_RANK = 52;
+const int X_POS_DATE = 1;
+const int X_POS_NAME = X_POS_DATE + 19;
+const int X_POS_SCORE = X_POS_NAME + 14;
+const int X_POS_LVL = X_POS_SCORE + 12;
+const int X_POS_DLVL = X_POS_LVL + 8;
+const int X_POS_INSANITY = X_POS_DLVL + 8;
+const int X_POS_RANK = X_POS_INSANITY + 10;
 
 
 bool HighScore::isEntryHigher(const HighScoreEntry& current, const HighScoreEntry& other) {
   return other.getScore() < current.getScore();
 }
 
-void HighScore::gameOver(const bool IS_VICTORY) {
-  //Make a vector of name and xp pairs.
+vector<HighScoreEntry> HighScore::getEntriesSorted() {
   vector<HighScoreEntry> entries;
-
-  //Read the highscore file and fill the vector with entries from it.
   readFile(entries);
+  if(entries.empty() == false) {
+    sortEntries(entries);
+  }
+  return entries;
+}
 
-  //Make a new entry for the current player, and add it to the vector.
+void HighScore::gameOver(const bool IS_VICTORY) {
+  vector<HighScoreEntry> entries = getEntriesSorted();
+
   HighScoreEntry currentPlayer(
+    eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true),
     eng->player->getNameA(),
     eng->dungeonMaster->getXp(),
     eng->dungeonMaster->getLevel(),
@@ -42,10 +48,8 @@ void HighScore::gameOver(const bool IS_VICTORY) {
 
   entries.push_back(currentPlayer);
 
-  //Sort the entries according to xp.
   sortEntries(entries);
 
-  //Write a new high score file.
   writeFile(entries);
 }
 
@@ -69,33 +73,30 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
 
     yPos++;
 
-    eng->renderer->drawText("NAME", renderArea_screen, X_POS_NAME, yPos, clrGray);
-    eng->renderer->drawText("SCORE", renderArea_screen, X_POS_SCORE, yPos, clrGray);
-    eng->renderer->drawText("LVL", renderArea_screen, X_POS_LVL, yPos, clrGray);
-    eng->renderer->drawText("DLVL", renderArea_screen, X_POS_DLVL, yPos, clrGray);
-    eng->renderer->drawText("INSANITY", renderArea_screen, X_POS_INSANITY, yPos, clrGray);
+    eng->renderer->drawText("Ended", renderArea_screen, X_POS_DATE, yPos, clrGray);
+    eng->renderer->drawText("Name", renderArea_screen, X_POS_NAME, yPos, clrGray);
+    eng->renderer->drawText("Score", renderArea_screen, X_POS_SCORE, yPos, clrGray);
+    eng->renderer->drawText("Level", renderArea_screen, X_POS_LVL, yPos, clrGray);
+    eng->renderer->drawText("Depth", renderArea_screen, X_POS_DLVL, yPos, clrGray);
+    eng->renderer->drawText("Insanity", renderArea_screen, X_POS_INSANITY, yPos, clrGray);
 
     yPos++;
 
     for(unsigned int i = TOP_ELEMENT; i < entries.size() && (i - TOP_ELEMENT) < static_cast<unsigned int>(MAP_Y_CELLS); i++) {
-
-      const string NAME = entries.at(i).getName();
+      const string dateAndTime = entries.at(i).getDateAndTime();
+      const string name = entries.at(i).getName();
       const string SCORE = intToString(entries.at(i).getScore());
       const string LVL = intToString(entries.at(i).getLvl());
       const string DLVL = intToString(entries.at(i).getDlvl());
       const string INSANITY = intToString(entries.at(i).getInsanity());
 
-//			const unsigned int FILL_START = X_POS_LEFT + NAME.size();
-//			const unsigned int FILL_LENGTH = X_POS_RIGHT - FILL_START;
-//			for(unsigned int xx = 0; xx < FILL_LENGTH; xx++) {
-//				eng->renderer->drawText(".", renderArea_screen, FILL_START + xx, y, clrGray);
-//			}
       const sf::Color clr = clrRedLight;
-      eng->renderer->drawText(NAME, renderArea_screen, X_POS_NAME, yPos, clr);
+      eng->renderer->drawText(dateAndTime, renderArea_screen, X_POS_DATE, yPos, clr);
+      eng->renderer->drawText(name, renderArea_screen, X_POS_NAME, yPos, clr);
       eng->renderer->drawText(SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);
       eng->renderer->drawText(LVL, renderArea_screen, X_POS_LVL, yPos, clr);
       eng->renderer->drawText(DLVL, renderArea_screen, X_POS_DLVL, yPos, clr);
-      eng->renderer->drawText(INSANITY, renderArea_screen, X_POS_INSANITY, yPos, clr);
+      eng->renderer->drawText(INSANITY + "%", renderArea_screen, X_POS_INSANITY, yPos, clr);
       yPos++;
     }
   }
@@ -142,13 +143,14 @@ void HighScore::sortEntries(vector<HighScoreEntry>& entries) {
 
 void HighScore::writeFile(vector<HighScoreEntry>& entries) {
   ofstream file;
-  file.open("highscores", ios::trunc);
+  file.open("memorial/highscores", ios::trunc);
 
   for(unsigned int i = 0; i < entries.size(); i++) {
     const HighScoreEntry& entry = entries.at(i);
 
     const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
     file << VICTORY_STR << endl;
+    file << entry.getDateAndTime() << endl;
     file << entry.getName() << endl;
     file << entry.getXp() << endl;
     file << entry.getLvl() << endl;
@@ -159,7 +161,7 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
 
 void HighScore::readFile(vector<HighScoreEntry>& entries) {
   ifstream file;
-  file.open("highscores");
+  file.open("memorial/highscores");
 
   if(file.is_open()) {
     string line;
@@ -167,7 +169,9 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
     while(getline(file, line)) {
       bool isVictory = line.at(0) == 'V';
       getline(file, line);
-      const string NAME = line;
+      const string dateAndTime = line;
+      getline(file, line);
+      const string name = line;
       getline(file, line);
       const int XP = stringToInt(line);
       getline(file, line);
@@ -176,7 +180,7 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       const int DLVL = stringToInt(line);
       getline(file, line);
       const int INSANITY = stringToInt(line);
-      entries.push_back(HighScoreEntry(NAME, XP, LVL, DLVL, INSANITY, isVictory));
+      entries.push_back(HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INSANITY, isVictory));
     }
     file.close();
   }

@@ -43,8 +43,7 @@ void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
 
     draw(browser, true, CAST_FROM_MEMORY, playerSlotsWithScroll, memorizedScrollsToShow);
 
-    bool done = false;
-    while(done == false) {
+    while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
       case menuAction_browsed: {
@@ -54,7 +53,7 @@ void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
       case menuAction_canceled: {
         eng->log->clearLog();
         eng->renderer->drawMapAndInterface();
-        done = true;
+        return;
       }
       break;
       case menuAction_selected: {
@@ -77,6 +76,7 @@ void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
         }
       }
       break;
+      default: {} break;
       }
     }
   }
@@ -156,7 +156,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     string s = intToString(CHANCE_OF_SUCCESS) + "% ";
     const int TURNS_PER_PERCENT = scroll->getDef().spellTurnsPerPercentCooldown;
     const int TURN = eng->gameTime->getTurn();
-    const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT ) * TURNS_PER_PERCENT );
+    const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT) * TURNS_PER_PERCENT);
     const int TURNS_LEFT = ((100 - CHANCE_OF_SUCCESS) * TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK;
     s += "(" + intToString(TURNS_LEFT) + " turns left)";
 

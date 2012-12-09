@@ -266,43 +266,10 @@ void ActorData::defineAllActors() {
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Cultist Acolyte";
-  d.name_the = "The Cultist Acolyte";
+  d.name_a = "A Cultist";
+  d.name_the = "The Cultist";
   d.moveType = moveType_walk;
-  d.devName = actor_cultistShotgun;
-  d.aiBehavior.looks = true;
-  d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
-  d.aiBehavior.pathsToTargetWhenAware = true;
-  d.aiBehavior.movesTowardTargetWhenVision = true;
-  d.aiBehavior.movesTowardLair = false;
-  d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
-  d.rangedCooldownTurns = 3;
-  d.spellCooldownTurns = 6;
-  d.glyph = 'P';
-  d.color = clrBrown;
-  d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 3;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 3;
-  d.groupSize = monsterGroupSize_few;
-  d.actorSize = actorSize_humanoid;
-  d.isHumanoid = true;
-  d.canOpenDoors = true;
-  d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a sawed-off shotgun.";
-  d.spellCastMessage = "The accolyte makes strange gestures in the air.";
-  d.erraticMovement = actorErratic_rare;
-  setStrengthsFromFormula(d, weak);
-  finalizeDefinition(d);
-  d.reset();
-
-  d.name_a = "A Cultist Acolyte";
-  d.name_the = "The Cultist Acolyte";
-  d.moveType = moveType_walk;
-  d.devName = actor_cultistMachineGun;
+  d.devName = actor_cultist;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
@@ -316,7 +283,7 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrGray;
   d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 3;
+  d.spawnMinLevel = 1;
   d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
   d.monsterLvl = 3;
   d.groupSize = monsterGroupSize_few;
@@ -325,48 +292,15 @@ void ActorData::defineAllActors() {
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a machine gun.";
+  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language.";
   d.spellCastMessage = "The accolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Cultist Acolyte";
-  d.name_the = "The Cultist Acolyte";
-  d.moveType = moveType_walk;
-  d.devName = actor_cultistPistol;
-  d.aiBehavior.looks = true;
-  d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
-  d.aiBehavior.pathsToTargetWhenAware = true;
-  d.aiBehavior.movesTowardTargetWhenVision = true;
-  d.aiBehavior.movesTowardLair = false;
-  d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
-  d.rangedCooldownTurns = 3;
-  d.spellCooldownTurns = 6;
-  d.glyph = 'P';
-  d.color = clrGreen;
-  d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 2;
-  d.groupSize = monsterGroupSize_few;
-  d.actorSize = actorSize_humanoid;
-  d.isHumanoid = true;
-  d.canOpenDoors = true;
-  d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Pistol.";
-  d.spellCastMessage = "The accolyte makes strange gestures in the air.";
-  d.erraticMovement = actorErratic_rare;
-  setStrengthsFromFormula(d, weak);
-  finalizeDefinition(d);
-  d.reset();
-
-  d.name_a = "A Cultist Acolyte";
-  d.name_the = "The Cultist Acolyte";
+  d.name_a = "A Cultist";
+  d.name_the = "The Cultist";
   d.moveType = moveType_walk;
   d.devName = actor_cultistTeslaCannon;
   d.aiBehavior.looks = true;
@@ -382,9 +316,9 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrYellow;
   d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 6;
+  d.spawnMinLevel = 7;
   d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 3;
+  d.monsterLvl = 4;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -398,8 +332,8 @@ void ActorData::defineAllActors() {
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Cultist Acolyte";
-  d.name_the = "The Cultist Acolyte";
+  d.name_a = "A Cultist";
+  d.name_the = "The Cultist";
   d.moveType = moveType_walk;
   d.devName = actor_cultistSpikeGun;
   d.aiBehavior.looks = true;
@@ -646,6 +580,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLight;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -674,6 +609,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -702,6 +638,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -731,7 +668,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_spiderLeng;
   d.spawnMinLevel = 10;
   d.monsterLvl = 10;
-  d.groupSize = monsterGroupSize_group;
+  d.groupSize = monsterGroupSize_few;
   d.nrTurnsAwarePlayer = 20;
   d.actorSize = actorSize_giant;
   d.description
@@ -888,6 +825,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_rat;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = 6;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
@@ -916,6 +854,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_ratThing;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
@@ -980,6 +919,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_wolf;
   d.spawnMinLevel = 0;
+  d.spawnMaxLevel = 10;
   d.monsterLvl = 2;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;

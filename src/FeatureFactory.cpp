@@ -13,6 +13,7 @@
 #include "Map.h"
 #include "FeatureVariousExaminable.h"
 #include "FeatureLiquid.h"
+#include "FeatureGrave.h"
 
 using namespace std;
 
@@ -122,6 +123,13 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord& pos, Fe
     FeatureLiquidDeep* liquid = new FeatureLiquidDeep(id, pos, eng);
     replaceStaticFeatureAt(liquid, pos);
     assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+  }
+  case feature_gravestone: {
+    assert(spawnData == NULL);
+    Grave* grave = new Grave(id, pos, eng);
+    replaceStaticFeatureAt(grave, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return grave;
   }
   default: {
   }

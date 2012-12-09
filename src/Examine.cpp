@@ -9,11 +9,11 @@
 #include "Query.h"
 
 void Examine::playerExamine() const {
-	eng->log->addMessage("Examine/use/apply in what direction? [Space/Esc] Cancel", clrWhiteHigh);
-	eng->renderer->updateWindow();
-	coord examineInPos = eng->player->pos + eng->query->direction();
-	eng->log->clearLog();
+  eng->log->addMessage("Examine/use/apply in what direction? [Space/Esc] Cancel", clrWhiteHigh);
+  eng->renderer->drawMapAndInterface();
+  coord examineInPos = eng->player->pos + eng->query->direction();
+  eng->log->clearLog();
 
-   Feature* const f = eng->map->featuresStatic[examineInPos.x][examineInPos.y];
-   f->examine();
+  Feature* const f = eng->map->featuresStatic[examineInPos.x][examineInPos.y];
+  f->examine();
 }

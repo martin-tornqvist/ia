@@ -24,11 +24,7 @@ void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
     //Do damage
     const bool DIED = data.currentDefender->hit(data.dmg, weapon->getDef().meleeDamageType);
 
-    if(DIED == true) {
-      if(data.currentDefender == eng->player) {
-        eng->postmortem->setCauseOfDeath(weapon->getDef().causeOfDeathMessage);
-      }
-    } else {
+    if(DIED == false) {
       //Apply weapon status effects
       data.currentDefender->getStatusEffectsHandler()->attemptAddEffectsFromWeapon(weapon, true);
     }

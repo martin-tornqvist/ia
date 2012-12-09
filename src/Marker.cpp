@@ -210,6 +210,7 @@ void Marker::done() {
 }
 
 void Marker::cancel() {
+  eng->log->clearLog();
   eng->renderer->drawMapAndInterface();
   isDone_ = true;
 }

@@ -396,6 +396,7 @@ void FeatureData::makeList() {
   d.id = feature_gravestone;
   d.name_a = "a gravestone";
   d.name_the = "the gravestone";
+  d.spawnType = featureSpawnType_other;
   d.glyph = '&';
   d.color = clrWhite;
   d.tile = tile_graveStone;

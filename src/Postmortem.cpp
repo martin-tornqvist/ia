@@ -15,6 +15,8 @@
 void Postmortem::run(bool* const quitGame) {
   makeInfoLines();
 
+  makeMemorialFile();
+
   readKeysMenu(quitGame);
 }
 
@@ -52,9 +54,6 @@ void Postmortem::makeInfoLines() {
   if(eng->player->insanityCompulsions[insanityCompulsion_sadism])
     postmortemLines.push_back(StringAndColor("   *Had a sadistic compulsion", clrInfo));
 
-  postmortemLines.push_back(StringAndColor(" ", clrInfo));
-  postmortemLines.push_back(StringAndColor(" Cause of death:", clrHeading));
-  postmortemLines.push_back(StringAndColor("   *" + causeOfDeath, clrInfo));
   postmortemLines.push_back(StringAndColor(" ", clrInfo));
 
   tracer << "Postmortem: Listing monster kills" << endl;
@@ -184,20 +183,28 @@ void Postmortem::runInfo() {
   }
 }
 
-void Postmortem::makeMemorialFile(const string path) {
-  ofstream file;
-  string fname = path;
-  file.open(fname.data(), ios::trunc);
+void Postmortem::makeMemorialFile() {
+  const string timeStamp = eng->dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
+  const string memorialFileName = eng->player->getNameA() + "_" + timeStamp + ".txt";
+  const string memorialFilePath = "memorial/" + memorialFileName;
 
+  // Add memorial file
+  ofstream file;
+  file.open(memorialFilePath.data(), ios::trunc);
   for(unsigned int i = 0; i < postmortemLines.size(); i++) {
     file << postmortemLines.at(i).str << endl;
   }
+  file.close();
 
+  // Add reference to memorial file in list
+  const string memorialList = "memorial/memorialFileList";
+  file.open(memorialList.data(), ios::app);
+  file << memorialFileName << endl;
   file.close();
 }
 
 void Postmortem::readKeysMenu(bool* const quitGame) {
-  MenuBrowser browser(6, 0);
+  MenuBrowser browser(5, 0);
 
   renderMenu(browser);
 
@@ -226,20 +233,15 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
         renderMenu(browser);
       }
       if(browser.isPosAtKey('d')) {
-        const string memorialFilePath = "memorial/" + eng->player->getNameA() + ".txt";
-        makeMemorialFile(memorialFilePath);
-        eng->renderer->drawText("Memorial file written at " + memorialFilePath, renderArea_characterLines, 1, 0, clrWhite);
-        eng->renderer->updateWindow();
-      }
-      if(browser.isPosAtKey('e')) {
         done = true;
       }
-      if(browser.isPosAtKey('f')) {
+      if(browser.isPosAtKey('e')) {
         *quitGame = true;
         done = true;
       }
     }
     break;
+    case menuAction_selectedWithShift: {} break;
     }
   }
 }
@@ -293,13 +295,10 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   eng->renderer->drawText("c) View messages", renderArea_screen, x, y, browser.isPosAtKey('c') ? clrWhite : clrRedLight);
   y += 1;
 
-  eng->renderer->drawText("d) Save memorial file", renderArea_screen, x, y, browser.isPosAtKey('d') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("d) Return to main menu", renderArea_screen, x, y, browser.isPosAtKey('d') ? clrWhite : clrRedLight);
   y += 1;
 
-  eng->renderer->drawText("e) Return to main menu", renderArea_screen, x, y, browser.isPosAtKey('e') ? clrWhite : clrRedLight);
-  y += 1;
-
-  eng->renderer->drawText("f) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('f') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("e) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('e') ? clrWhite : clrRedLight);
   y += 1;
 
   eng->renderer->updateWindow();

@@ -223,7 +223,7 @@ void Player::incrInsanityLong() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanityLong += eng->dice(1, 4) + 2;
+    insanityLong += eng->dice.getInRange(5, 8);
   }
 
   insanityShort = max(0, insanityShort - 60);
@@ -234,7 +234,6 @@ void Player::incrInsanityLong() {
   if(insanityLong >= 100) {
     popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true);
-    eng->postmortem->setCauseOfDeath("Insanity");
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
@@ -267,7 +266,7 @@ void Player::incrInsanityLong() {
       case 2: {
         popupMessage += "I find myself babbling incoherently.";
         eng->popup->showMessage(popupMessage, true);
-        Cultist* tmpCultist = new CultistPistol;
+        Cultist* tmpCultist = new Cultist;
         for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
           const string phrase = tmpCultist->getCultistPhrase();
           eng->log->addMessage(getNameThe() + ": " + phrase);
@@ -768,7 +767,7 @@ void Player::act() {
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
-    eng->renderer->updateWindow();
+    eng->renderer->drawMapAndInterface();
     restoreHP(99999);
     if(eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
       statusEffectsHandler_->endEffect(statusDiseased);
@@ -948,7 +947,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         // Encumbered?
         if(inventory_->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
           eng->log->addMessage("I am too encumbered to move!");
-          eng->renderer->updateWindow();
+          eng->renderer->drawMapAndInterface();
           return;
         }
 

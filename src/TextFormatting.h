@@ -25,6 +25,8 @@ class TextFormatting
 
       vector<string> lineToLines(string line, const int MAX_WIDTH) const;
 
+      vector<string> getSpaceSeparatedList(string line) const;
+
    private:
       string readNextWord(string& line) const;
       bool isWordFit(string& currentString, const string& newWord, const unsigned int MAX_WIDTH) const;

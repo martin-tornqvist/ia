@@ -47,7 +47,7 @@ const int XP_STEP = 60;
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
 
 // - THIS NUMBER AFFECTS LEVELING RATE -
-const int BASE_MONSTERS_TO_LVL = 35;
+const int BASE_MONSTERS_TO_LVL = 45;
 
 void DungeonMaster::init() {
   playerExp = 0;
@@ -59,12 +59,30 @@ void DungeonMaster::init() {
 void DungeonMaster::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(playerExp));
   lines.push_back(intToString(playerLvl));
+  lines.push_back(intToString(timeStarted.year_));
+  lines.push_back(intToString(timeStarted.month_));
+  lines.push_back(intToString(timeStarted.day_));
+  lines.push_back(intToString(timeStarted.hour_));
+  lines.push_back(intToString(timeStarted.minute_));
+  lines.push_back(intToString(timeStarted.second_));
 }
 
 void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
   playerExp = stringToInt(lines.front());
   lines.erase(lines.begin());
   playerLvl = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.year_ = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.month_ = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.day_ = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.hour_ = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.minute_ = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted.second_ = stringToInt(lines.front());
   lines.erase(lines.begin());
 }
 
@@ -163,6 +181,12 @@ void DungeonMaster::playerGainsExp(int exp) {
     }
   }
 }
+
+void DungeonMaster::setTimeStartedToNow() {
+  timeStarted = eng->basicUtils->getCurrentTime();
+}
+
+
 
 
 

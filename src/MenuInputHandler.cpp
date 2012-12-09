@@ -4,9 +4,7 @@
 #include "Input.h"
 
 MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
-  bool done = false;
-  while(done == false) {
-
+  while(true) {
     KeyboardReadReturnData d = eng->input->readKeysUntilFound();
 
     if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
@@ -27,6 +25,9 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
     }
     else if(d.sfmlKey_ == sf::Keyboard::Return) {
       d.key_ = browser.enter();
+      if(d.isShiftHeld_) {
+        d.key_ = d.key_ - 'a' + 'A';
+      }
     }
     else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
       return menuAction_canceled;
@@ -39,11 +40,13 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 
     const int NR_LETTERS_A_TO_Z = static_cast<int>('z' - 'a');
 
-    if(
-      (d.key_ >= 'a' && static_cast<int>(d.key_ - 'a') < TOT_SIZE_OF_LISTS) ||
-      (d.key_ >= 'A' && TOT_SIZE_OF_LISTS > NR_LETTERS_A_TO_Z && static_cast<int>(d.key_ - 'A') < TOT_SIZE_OF_LISTS - NR_LETTERS_A_TO_Z - 1)) {
+    if((d.key_ >= 'a' && static_cast<int>(d.key_ - 'a') < TOT_SIZE_OF_LISTS)) {
       browser.navigate(d.key_);
       return menuAction_selected;
+    }
+    if((d.key_ >= 'A' && static_cast<int>(d.key_ - 'A') < TOT_SIZE_OF_LISTS)) {
+      browser.navigate(d.key_ - 'A' + 'a');
+      return menuAction_selectedWithShift;
     }
   }
   return menuAction_canceled;

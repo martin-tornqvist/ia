@@ -594,6 +594,11 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
           }
         }
       }
+      else if(event.type == sf::Event::GainedFocus) {
+        eng->renderer->clearWindow();
+        eng->renderer->drawScreenSizedTexture(eng->renderer->getScreenTextureCopy());
+        eng->renderer->updateWindow();
+      }
     }
   }
 }

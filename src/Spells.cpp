@@ -73,12 +73,7 @@ void SpellShriveling::specificCast(const SpellData& d, Engine* const eng) {
       }
     }
 
-    const bool DIED = actor->hit(eng->dice(1, 6), damageType_pure);
-    if(DIED == true) {
-      if(actor == eng->player) {
-        eng->postmortem->setCauseOfDeath("Killed by shriveling spell");
-      }
-    }
+    actor->hit(eng->dice(1, 6), damageType_pure);
   }
 }
 

@@ -72,14 +72,8 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
   case actor_giantBat:
     monster = new GiantBat;
     break;
-  case actor_cultistShotgun:
-    monster = new CultistShotgun;
-    break;
-  case actor_cultistMachineGun:
-    monster = new CultistMachineGun;
-    break;
-  case actor_cultistPistol:
-    monster = new CultistPistol;
+  case actor_cultist:
+    monster = new Cultist;
     break;
   case actor_cultistTeslaCannon:
     monster = new CultistTeslaCannon;

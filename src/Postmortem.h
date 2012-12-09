@@ -13,14 +13,10 @@ class Engine;
 class Postmortem {
 public:
   Postmortem(Engine* engine) :
-    causeOfDeath("Unknown"), eng(engine) {
+    eng(engine) {
   }
 
   void run(bool* const quitGame);
-
-  void setCauseOfDeath(const string cause) {
-    causeOfDeath = cause;
-  }
 
 private:
   struct StringAndColor {
@@ -43,11 +39,9 @@ private:
 
   void renderInfo(const int TOP_ELEMENT);
 
-  void makeMemorialFile(const string path);
+  void makeMemorialFile();
 
   void makeInfoLines();
-
-  string causeOfDeath;
 
   Engine* eng;
 };

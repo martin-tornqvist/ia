@@ -528,16 +528,14 @@ int Inventory::getElementWithItemType(const ItemDevNames_t itemDevName) const {
   return -1;
 }
 
-Item* Inventory::getItemInElement(int number) {
-  //If number corresponds to equiped slots, return item in that slot
-  if(number >= 0 && number < signed(m_slots.size())) {
-    return m_slots.at(number).item;
+Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) {
+  if(GLOBAL_ELEMENT_NR >= 0 && GLOBAL_ELEMENT_NR < signed(m_slots.size())) {
+    return m_slots.at(GLOBAL_ELEMENT_NR).item;
   }
 
-  //If number corresponds to general slot, return that item
-  number -= m_slots.size();
-  if(number >= 0 && number < signed(m_general.size())) {
-    return m_general.at(number);
+  const int GENERAL_ELEMENT_NR = GLOBAL_ELEMENT_NR - m_slots.size();
+  if(GENERAL_ELEMENT_NR >= 0 && GENERAL_ELEMENT_NR < signed(m_general.size())) {
+    return m_general.at(GENERAL_ELEMENT_NR);
   }
 
   return NULL;

@@ -13,7 +13,7 @@ enum ActorDevNames_t {
   actor_empty,
   actor_player,
   actor_zombie, actor_zombieAxe, actor_bloatedZombie,
-  actor_cultistShotgun, actor_cultistPistol, actor_cultistMachineGun, actor_cultistTeslaCannon, actor_cultistSpikeGun,
+  actor_cultist, actor_cultistTeslaCannon, actor_cultistSpikeGun,
   actor_cultistPriest,
   actor_rat, actor_ratThing,
   actor_greenSpider, actor_whiteSpider, actor_blackSpider, actor_lengSpider,

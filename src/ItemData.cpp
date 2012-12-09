@@ -311,7 +311,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_incinerator);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = itemWeight_heavy;
   d->tile = tile_incinerator;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an Incinerator");
   d->rangedDmg = DiceParam(1, 3);

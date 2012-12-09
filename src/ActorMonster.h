@@ -284,6 +284,8 @@ public:
     Monster() {
   }
 
+  virtual void actorSpecific_spawnStartItems();
+
   string getCultistPhrase() const;
 
   string getAggroPhraseMonsterSeen() const {
@@ -297,42 +299,12 @@ public:
   }
 };
 
-class CultistShotgun: public Cultist {
-public:
-  CultistShotgun() :
-    Cultist() {
-  }
-  ~CultistShotgun() {
-  }
-  void actorSpecific_spawnStartItems();
-};
-
-class CultistMachineGun: public Cultist {
-public:
-  CultistMachineGun() :
-    Cultist() {
-  }
-  ~CultistMachineGun() {
-  }
-  void actorSpecific_spawnStartItems();
-};
-
 class CultistTeslaCannon: public Cultist {
 public:
   CultistTeslaCannon() :
     Cultist() {
   }
   ~CultistTeslaCannon() {
-  }
-  void actorSpecific_spawnStartItems();
-};
-
-class CultistPistol: public Cultist {
-public:
-  CultistPistol() :
-    Cultist() {
-  }
-  ~CultistPistol() {
   }
   void actorSpecific_spawnStartItems();
 };

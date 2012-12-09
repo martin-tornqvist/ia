@@ -20,6 +20,7 @@
 #include "Query.h"
 #include "Highscore.h"
 #include "Postmortem.h"
+#include "DungeonMaster.h"
 
 
 //FILE * ctt = fopen("CON", "w" );
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
       if(ENTRY_TYPE == gameEntry_new) {
         if(engine->config->BOT_PLAYING) {
           engine->playerBonusHandler->setAllBonusesToPicked();
+          engine->bot->init();
         }
         engine->playerCreateCharacter->run();
         engine->player->actorSpecific_spawnStartItems();
@@ -68,8 +70,9 @@ int main(int argc, char* argv[]) {
           //Else build first dungeon level
           engine->dungeonClimb->travelDown();
         }
-
-        engine->bot->init();
+        engine->dungeonMaster->setTimeStartedToNow();
+        const TimeData& t = engine->dungeonMaster->getTimeStarted();
+        tracer << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
       engine->player->FOVupdate();
@@ -116,15 +119,14 @@ int main(int argc, char* argv[]) {
         //If player has died, run postmortem, then return to main menu
         if(engine->player->deadState != actorDeadState_alive) {
           dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
+          engine->log->clearLog();
           engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
-          engine->renderer->updateWindow();
+          engine->renderer->drawMapAndInterface();
           engine->query->waitForKeyPress();
           engine->highScore->gameOver(false);
           engine->postmortem->run(&quitGame);
           quitToMainMenu = true;
         }
-
-        //engine->audio->updateSystem();
       }
     }
     engine->cleanupGame();

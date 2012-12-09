@@ -164,12 +164,7 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
                   printProjectileAtActorMessages(data, projectileHitType_cleanHit);
 
                   //Damage
-                  const bool DIED = data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
-                  if(DIED) {
-                    if(data.currentDefender == eng->player) {
-                      eng->postmortem->setCauseOfDeath(weapon->getDef().causeOfDeathMessage);
-                    }
-                  }
+                  data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
 
                   eng->renderer->drawMapAndInterface(true);
 

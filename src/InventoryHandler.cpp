@@ -14,6 +14,7 @@
 #include "Render.h"
 #include "ItemDrop.h"
 #include "Query.h"
+#include "ItemFactory.h"
 
 InventoryHandler::InventoryHandler(Engine* engine) : eng(engine) {
 }
@@ -133,6 +134,11 @@ void InventoryHandler::runSlotsScreen() {
       eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
     }
     break;
+    case menuAction_selectedWithShift: {
+      runDropScreen(browser.getPos().y);
+      eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+    }
+    break;
     case menuAction_selected: {
       const char charIndex = 'a' + browser.getPos().y;
       if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
@@ -203,20 +209,43 @@ bool InventoryHandler::runUseScreen() {
   }
 }
 
-void InventoryHandler::runDropScreen(Item* const itemToDrop) {
-  eng->log->clearLog();
-  const ItemDefinition& def = itemToDrop->getDef();
-  if(def.isStackable && itemToDrop->numberOfItems > 1) {
-    eng->renderer->drawMapAndInterface(false);
-    eng->renderer->drawText("Drop how many?:      [enter] drop  [space/esc] cancel", renderArea_mainScreen, 1, 1, clrWhiteHigh);
-    eng->renderer->updateWindow();
-    const int NR_TO_DROP = eng->query->number(coord(16, 1), clrWhiteHigh, 0, 3, itemToDrop->numberOfItems, false);
-    if(NR_TO_DROP == -1) {
-      return;
-    } else {
+bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
+  tracer << "InventoryHandler::runDropScreen()" << endl;
+  Inventory* const inv = eng->player->getInventory();
+  Item* const item = inv->getItemInElement(GLOBAL_ELEMENT_NR);
+  const ItemDefinition& def = item->getDef();
 
+  eng->log->clearLog();
+  if(def.isStackable && item->numberOfItems > 1) {
+    tracer << "InventoryHandler: item is stackable and more than one" << endl;
+    eng->renderer->drawMapAndInterface(false);
+    const string nrStr = "1-" + intToString(item->numberOfItems);
+    eng->renderer->drawText("Drop how many (" + nrStr + ")?:      [enter] drop  [space/esc] cancel", renderArea_screen, 1, 1, clrWhiteHigh);
+    eng->renderer->updateWindow();
+    const int NR_TO_DROP = eng->query->number(coord(20 + nrStr.size(), 1), clrWhiteHigh, 0, 3, item->numberOfItems, false);
+    if(NR_TO_DROP <= 0) {
+      tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
+      return false;
+    } else {
+      if(NR_TO_DROP >= item->numberOfItems) {
+        tracer << "InventoryHandler: nr to drop >= number of items, drop the whole item" << endl;
+        eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR);
+        return true;
+      } else {
+        tracer << "InventoryHandler: nr to drop < number of items, copying item to map" << endl;
+        Item* newItem = eng->itemFactory->copyItem(item);
+        newItem->numberOfItems = NR_TO_DROP;
+        item->numberOfItems -= NR_TO_DROP;
+        eng->itemDrop->dropItemOnMap(eng->player->pos, &newItem);
+        return false;
+      }
     }
+  } else {
+    tracer << "InventoryHandler: item not stackable, or only one item" << endl;
+    eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR);
+    return true;
   }
+  return false;
 }
 
 bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {

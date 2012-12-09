@@ -54,3 +54,20 @@ bool TextFormatting::isWordFit(string& currentString, const string& newWord, con
 	return currentString.size() + newWord.size() + 2 <= MAX_WIDTH;
 }
 
+vector<string> TextFormatting::getSpaceSeparatedList(string line) const {
+  string curLine = "";
+  vector<string> ret;
+  for(unsigned int i = 0; i < line.size(); i++) {
+    char c = line.at(i);
+    if(c == ' ') {
+      ret.push_back(curLine);
+      curLine = "";
+    } else {
+      curLine += c;
+    }
+  }
+  return ret;
+}
+
+
+

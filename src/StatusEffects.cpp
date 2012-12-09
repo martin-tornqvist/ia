@@ -57,14 +57,13 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
 
   if(owningActor == player) {
     engine->log->addMessage("I struggle to tear out the spike!", clrMessageBad);
-    engine->postmortem->setCauseOfDeath("Attempting to tear out a spike from the flesh");
   } else {
     if(player->checkIfSeeActor(*owningActor, NULL)) {
       engine->log->addMessage(owningActor->getNameThe() +  " struggles in pain!", clrMessageGood);
     }
   }
 
-  owningActor->hit(engine->dice(1, 2), damageType_physical);
+  owningActor->hit(engine->dice(1, 3), damageType_physical);
 
   if(owningActor->deadState == actorDeadState_alive) {
     const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *(owningActor));
@@ -117,12 +116,7 @@ void StatusBurning::doDamage(Engine* const engine) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
     owningActor->eng->renderer->drawMapAndInterface();
   }
-  bool DIED = owningActor->hit(engine->dice(1, 3), damageType_fire);
-  if(DIED) {
-    if(owningActor == engine->player) {
-      engine->postmortem->setCauseOfDeath("Burning");
-    }
-  }
+  owningActor->hit(engine->dice(1, 3), damageType_fire);
 }
 
 void StatusBurning::newTurn(Engine* engine) {
@@ -153,14 +147,7 @@ void StatusFlared::end() {
 }
 
 void StatusFlared::newTurn(Engine* engine) {
-  bool DIED = owningActor->hit(engine->dice(1, 2), damageType_fire);
-  if(DIED) {
-    if(owningActor == engine->player) {
-      engine->postmortem->setCauseOfDeath("Burning");
-    }
-  }
-
-//	owningActor->setColor(clrRedLight);
+  owningActor->hit(engine->dice(1, 2), damageType_fire);
   turnsLeft--;
 }
 

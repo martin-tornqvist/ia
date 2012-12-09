@@ -13,6 +13,7 @@ class Engine;
 enum MenuAction_t {
   menuAction_browsed,
   menuAction_selected,
+  menuAction_selectedWithShift,
   menuAction_canceled
 };
 

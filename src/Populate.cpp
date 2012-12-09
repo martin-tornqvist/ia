@@ -44,6 +44,8 @@ bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const b
     originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET);
 
     if(originActor != NULL) {
+      tracer << "Populate: Valid actor found, spawning group of monsters" << endl;
+
       dynamic_cast<Monster*>(originActor)->isRoamingAllowed = ALLOW_ROAM;
 
       freeCells.erase(freeCells.begin() + FREE_CELLS_ELEMENT);
@@ -79,6 +81,7 @@ bool Populate::spawnGroupOfMonstersAtFreeCells(vector<coord>& freeCells, const b
       return true;
     }
   }
+  tracer << "Populate: Spawning group of monster failed (probably no monster met criteria)" << endl;
   return false;
 }
 
@@ -111,12 +114,10 @@ void Populate::populate() const {
     vector<coord> freeCellsTraps;
     eng->mapTests->makeMapVectorFromArray(blockersTraps, freeCellsTraps);
 
-    const int MAX_CELLS_PER_TRAP = 165;
+    const int MAX_CELLS_PER_TRAP = 210;
     int nrOfTrapsOnMap = static_cast<int>(freeCellsTraps.size()) / MAX_CELLS_PER_TRAP;
     nrOfTrapsOnMap = max(2, nrOfTrapsOnMap);
-    if(nrOfTrapsOnMap > 1) {
-      nrOfTrapsOnMap += eng->dice(1, nrOfTrapsOnMap / 4);
-    }
+    nrOfTrapsOnMap += eng->dice.getInRange(0, nrOfTrapsOnMap / 4);
 
     int n = 0;
     for(int ii = 0; ii < nrOfTrapsOnMap; ii++) {
@@ -133,16 +134,16 @@ void Populate::populate() const {
     }
   }
 
-  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 900 : 110;
+  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 500 : 110;
 
   tracer << "Populate: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 
   int nrMonsterGroupsOnMap = freeCells.size() / CELLS_PER_MONSTER_GROUP;
 
-  tracer << "Populate: Number of monster groups on map: " << nrMonsterGroupsOnMap << endl;
-
-  nrMonsterGroupsOnMap = max(3, nrMonsterGroupsOnMap);
+  nrMonsterGroupsOnMap = max(1, nrMonsterGroupsOnMap);
   nrMonsterGroupsOnMap += eng->dice.getInRange(0, nrMonsterGroupsOnMap / 4);
+
+  tracer << "Populate: Number of monster groups on map: " << nrMonsterGroupsOnMap << endl;
 
   //Spawn monsters randomly from the coord-vector
   for(int ii = 0; ii < nrMonsterGroupsOnMap; ii++) {

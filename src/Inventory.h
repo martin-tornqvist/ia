@@ -91,7 +91,7 @@ public:
   int getElementWithItemType(const ItemDevNames_t itemDevName) const;
 
   Item* getItemInSlot(SlotTypes_t slotName);
-  Item* getItemInElement(int number);
+  Item* getItemInElement(const int GLOBAL_ELEMENT_NR);
 
   void removeItemInElementWithoutDeletingInstance(int number);
 

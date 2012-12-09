@@ -34,9 +34,8 @@ void PlayerEnterName::run(int& yPos) {
 }
 
 void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) {
-//  eng->renderer->coverArea(renderArea_screen, 0, RENDER_Y_POS, MAP_X_CELLS, RENDER_Y_POS + 1);
-  eng->renderer->coverRenderArea(renderArea_screen);
-  int x0 = MAP_X_CELLS_HALF; //1;
+  eng->renderer->clearWindow();
+  int x0 = MAP_X_CELLS_HALF;
   const string LABEL = "Enter character name";
   eng->renderer->drawTextCentered(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
   const string NAME_STR = currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" : currentString;
@@ -49,6 +48,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done, const int REND
 
   if(d.sfmlKey_ == sf::Keyboard::Return) {
     done = true;
+    currentString = currentString == "" ? "Howard" : currentString;
     return;
   }
 

@@ -9,6 +9,7 @@
 #include "Colors.h"
 #include "Converters.h"
 #include "PlayerCreateCharacter.h"
+#include "BasicUtils.h"
 
 class Engine;
 
@@ -55,14 +56,19 @@ public:
 
 	void winGame();
 
+	TimeData getTimeStarted() const {
+	  return timeStarted;
+	}
+	void setTimeStartedToNow();
+
 private:
 	void init();
 
 	int playerExp, playerLvl;
-
 	void initExpTable();
-
 	int expTable[PLAYER_MAX_LEVEL + 1];
+
+  TimeData timeStarted;
 
 	Engine* const eng;
 };

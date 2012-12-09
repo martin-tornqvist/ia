@@ -33,6 +33,9 @@ void PlayerAllocBonus::run() {
       eng->renderer->drawMapAndInterface();
       return;
     } break;
+
+    case menuAction_selectedWithShift: {} break;
+
     }
   }
 }

@@ -97,6 +97,8 @@ void Config::runOptionsMenu() {
       writeLinesToFile(lines);
       draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
     } break;
+
+    default: {} break;
     }
   }
 }
@@ -201,7 +203,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
   eng->renderer->drawText(SKIP_INTRO_LEVEL ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("RANGED WEAPON MELEE WARNING", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("RANGED WEAPON MELEE ATTACK WARNING", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(RANGED_WPN_MELEE_PROMPT ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
@@ -223,7 +225,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
 
-  eng->renderer->drawText("[space/esc] done", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
+  eng->renderer->drawText("[space/esc] confirm changes", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
   eng->renderer->updateWindow();
 }

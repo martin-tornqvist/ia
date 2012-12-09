@@ -25,7 +25,7 @@ private:
   //The values in this vector refer to general inventory elements
   vector<unsigned int> generalItemsToShow;
 
-  void runDropScreen(Item* const itemToDrop);
+  bool runDropScreen(const int GLOBAL_ELEMENT_NR);
   bool runEquipScreen(InventorySlot* const slotToEquip);
   void runBrowseInventoryMode();
 

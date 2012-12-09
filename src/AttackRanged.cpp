@@ -153,11 +153,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
               //Damage
               const bool DIED = projectiles.at(p)->data.currentDefender->hit(projectiles.at(p)->data.dmg,
                                 weapon->getDef().rangedDamageType);
-              if(DIED) {
-                if(projectiles.at(p)->data.currentDefender == eng->player) {
-                  eng->postmortem->setCauseOfDeath(weapon->getDef().causeOfDeathMessage);
-                }
-              } else {
+              if(DIED == false) {
                 // Aply weapon hit status effects
                 projectiles.at(p)->data.currentDefender->getStatusEffectsHandler()->attemptAddEffectsFromWeapon(weapon, false);
 
@@ -252,8 +248,8 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
     for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
       if(eng->map->playerVision[projectiles.at(nn)->pos.x][projectiles.at(nn)->pos.y] &&
           projectiles.at(nn)->isObstructed == false) {
-          eng->sleep(DELAY);
-          nn = 99999;
+        eng->sleep(DELAY);
+        nn = 99999;
       }
     }
 

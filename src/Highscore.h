@@ -10,48 +10,53 @@ class Engine;
 
 struct HighScoreEntry {
 public:
-  HighScoreEntry(string name_, int xp_, int lvl_, int dlvl_, int insanity_, bool isVictory_) :
-    name(name_), xp(xp_), lvl(lvl_), dlvl(dlvl_), insanity(insanity_), isVictory(isVictory_) {
-  }
-  HighScoreEntry() :
-    name(""), xp(0), isVictory(false) {
+  HighScoreEntry(string dateAndTime, string name, int xp, int lvl,
+                 int dlvl, int insanity, bool isVictory) :
+    dateAndTime_(dateAndTime), name_(name), xp_(xp), lvl_(lvl),
+    dlvl_(dlvl), insanity_(insanity), isVictory_(isVictory) {
   }
 
-  void set(const string NAME, const int XP, const int LVL, const int DLVL, const int INSANITY, const bool IS_VICTORY) {
-    name = NAME;
-    xp = XP;
-    lvl = LVL;
-    dlvl = DLVL;
-    insanity = INSANITY;
-    isVictory = IS_VICTORY;
+  void set(const string& dateAndTime, const string& name, const int XP, const int LVL,
+           const int DLVL, const int INSANITY, const bool IS_VICTORY) {
+    dateAndTime_ = dateAndTime;
+    name_ = name;
+    xp_ = XP;
+    lvl_ = LVL;
+    dlvl_ = DLVL;
+    insanity_ = INSANITY;
+    isVictory_ = IS_VICTORY;
   }
 
   int getScore() const {
-    return xp + (isVictory ? xp / 5 : 0);
+    return xp_ + (isVictory_ ? xp_ / 5 : 0);
   }
   int getXp() const {
-    return xp;
+    return xp_;
+  }
+  string getDateAndTime() const {
+    return dateAndTime_;
   }
   string getName() const {
-    return name;
+    return name_;
   }
   int getLvl() const {
-    return lvl;
+    return lvl_;
   }
   int getDlvl() const {
-    return dlvl;
+    return dlvl_;
   }
   int getInsanity() const {
-    return insanity;
+    return insanity_;
   }
   bool isVictoryGame() const {
-    return isVictory;
+    return isVictory_;
   }
 
 private:
-  string name;
-  int xp, lvl, dlvl, insanity;
-  bool isVictory;
+  string dateAndTime_;
+  string name_;
+  int xp_, lvl_, dlvl_, insanity_;
+  bool isVictory_;
 };
 
 class HighScore {
@@ -63,6 +68,8 @@ public:
   void gameOver(const bool IS_VICTORY);
 
   void runHighScoreScreen();
+
+  vector<HighScoreEntry> getEntriesSorted();
 
 private:
   void sortEntries(vector<HighScoreEntry>& entries);

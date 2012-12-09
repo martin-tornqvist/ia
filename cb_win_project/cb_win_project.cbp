@@ -102,6 +102,7 @@
 		</Unit>
 		<Unit filename="..\src\AI_castRandomSpell.h" />
 		<Unit filename="..\src\AI_handleClosedBlockingDoor.h" />
+		<Unit filename="..\src\AI_handleInventory.h" />
 		<Unit filename="..\src\AI_look_becomePlayerAware.h" />
 		<Unit filename="..\src\AI_makeRoomForFriend.h" />
 		<Unit filename="..\src\AI_moveToRandomAdjacentCell.h" />
@@ -176,6 +177,8 @@
 		<Unit filename="..\src\FeatureDoor.h" />
 		<Unit filename="..\src\FeatureFactory.cpp" />
 		<Unit filename="..\src\FeatureFactory.h" />
+		<Unit filename="..\src\FeatureGrave.cpp" />
+		<Unit filename="..\src\FeatureGrave.h" />
 		<Unit filename="..\src\FeatureLever.cpp" />
 		<Unit filename="..\src\FeatureLever.h" />
 		<Unit filename="..\src\FeatureLiquid.cpp" />

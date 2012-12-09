@@ -217,7 +217,7 @@ void Door::playerTryClueHidden() {
     if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
       const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
-      const int BONUS = 6;
+      const int BONUS = 10;
       if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
         clue();
       }
@@ -316,10 +316,7 @@ void Door::tryBash(Actor* actorTrying) {
           }
         }
         const int SPRAIN_DMG = 1;
-        const bool DIED = actorTrying->hit(SPRAIN_DMG, damageType_pure);
-        if(DIED && IS_PLAYER) {
-          eng->postmortem->setCauseOfDeath("Killed by a door");
-        }
+        actorTrying->hit(SPRAIN_DMG, damageType_pure);
       }
 
       if(TRYER_OFF_BALANCE) {

@@ -145,20 +145,11 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
           currentActor = eng->gameTime->getActorAt(i);
           if(currentActor->pos.x == x && currentActor->pos.y == y) {
 
-            if(DO_EXPLOSION_DMG == true) {
+            if(DO_EXPLOSION_DMG) {
               if(currentActor == eng->player) {
                 eng->log->addMessage("I am hit by an explosion!", clrMessageBad);
               }
-              const bool DIED = currentActor->hit(EXPLOSION_DMG_AT_DIST, damageType_physical);
-              if(DIED == true) {
-                if(currentActor == eng->player) {
-                  if(currentActor->deadState == actorDeadState_corpse) {
-                    eng->postmortem->setCauseOfDeath("Hit by an explosion");
-                  } else {
-                    eng->postmortem->setCauseOfDeath("Blown to pieces by an explosion");
-                  }
-                }
-              }
+              currentActor->hit(EXPLOSION_DMG_AT_DIST, damageType_physical);
             }
 
             if(effect != NULL) {

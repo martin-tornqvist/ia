@@ -287,11 +287,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
       }
 
       const int DMG = eng->dice(1, 8);
-      const bool DIED = actor->hit(DMG, damageType_physical);
-
-      if(DIED && IS_PLAYER) {
-        eng->postmortem->setCauseOfDeath("Killed by a dart trap");
-      }
+      actor->hit(DMG, damageType_physical);
     }
   }
 }
@@ -345,11 +341,7 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
       }
 
       const int DMG = eng->dice(2, 6);
-      const bool DIED = actor->hit(DMG, damageType_physical);
-
-      if(DIED && IS_PLAYER) {
-        eng->postmortem->setCauseOfDeath("Killed by a spear trap");
-      }
+      actor->hit(DMG, damageType_physical);
     }
   }
 }

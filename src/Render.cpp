@@ -86,7 +86,7 @@ void Renderer::setupWindowAndImagesClearPrev() {
   if(eng->config->FULLSCREEN) {
     renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title, sf::Style::Fullscreen);
   } else {
-    renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title);
+    renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title, sf::Style::Titlebar | sf::Style::Close);
   }
 
   tracer << "Renderer: Enabling key repeat" << endl;

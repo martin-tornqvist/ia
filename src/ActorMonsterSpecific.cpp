@@ -51,27 +51,31 @@ string Cultist::getCultistPhrase() const {
   return "Apigami!";
 }
 
-void CultistShotgun::actorSpecific_spawnStartItems() {
-  Item* item = eng->itemFactory->spawnItem(item_sawedOff);
-  inventory_->putItemInSlot(slot_wielded, item, true);
+void Cultist::actorSpecific_spawnStartItems() {
+  const int RND = eng->dice.getInRange(1, 3);
 
-  item = eng->itemFactory->spawnItem(item_shotgunShell);
-  item->numberOfItems = 10;
-  inventory_->putItemInGeneral(item);
+  tracer << RND << endl;
 
-  if(eng->dice(1, 100) < 33) {
-    inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
+  if(RND == 1) {
+    Item* item = eng->itemFactory->spawnItem(item_machineGun);
+    inventory_->putItemInSlot(slot_wielded, item, true);
   }
-
-  if(eng->dice(1, 100) < 10) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  else if(RND == 2) {
+    tracer << "WTF" << endl;
+    Item* item = eng->itemFactory->spawnItem(item_sawedOff);
+    inventory_->putItemInSlot(slot_wielded, item, true);
+    item = eng->itemFactory->spawnItem(item_shotgunShell);
+    item->numberOfItems = eng->dice.getInRange(7, 13);
+    inventory_->putItemInGeneral(item);
   }
-}
-
-void CultistMachineGun::actorSpecific_spawnStartItems() {
-  Item* item = eng->itemFactory->spawnItem(item_machineGun);
-  inventory_->putItemInSlot(slot_wielded, item, true);
+  else {
+    Item* item = eng->itemFactory->spawnItem(item_pistol);
+    inventory_->putItemInSlot(slot_wielded, item, true);
+    if(eng->dice(1, 100) < 40) {
+      item = eng->itemFactory->spawnItem(item_pistolClip);
+      inventory_->putItemInGeneral(item);
+    }
+  }
 
   if(eng->dice(1, 100) < 33) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
@@ -104,25 +108,6 @@ void CultistSpikeGun::actorSpecific_spawnStartItems() {
   Item* item = eng->itemFactory->spawnItem(item_ironSpike);
   item->numberOfItems = 8 + eng->dice(1, 8);
   inventory_->putItemInGeneral(item);
-}
-
-void CultistPistol::actorSpecific_spawnStartItems() {
-  Item* item = eng->itemFactory->spawnItem(item_pistol);
-  inventory_->putItemInSlot(slot_wielded, item, true);
-
-  if(eng->dice(1, 100) < 38) {
-    item = eng->itemFactory->spawnItem(item_pistolClip);
-    inventory_->putItemInGeneral(item);
-  }
-
-  if(eng->dice(1, 100) < 33) {
-    inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
-  }
-
-  if(eng->dice(1, 100) < 10) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-  }
 }
 
 void CultistPriest::actorSpecific_spawnStartItems() {

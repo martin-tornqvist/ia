@@ -86,7 +86,6 @@ class RoomThemeMaker;
 
 class Player;
 
-
 class Engine {
 public:
 	Engine(bool* quitToMainMenu) : cheat_vision(false), quitToMainMenu_(quitToMainMenu) {

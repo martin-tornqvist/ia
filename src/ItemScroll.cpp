@@ -322,7 +322,6 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
       } else {
         engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
       }
-      engine->postmortem->setCauseOfDeath("Miscast a spell");
       engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
       engine->player->hit(engine->dice(1, 6), damageType_pure);
     }
