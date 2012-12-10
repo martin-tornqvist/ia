@@ -18,8 +18,8 @@
 
 using namespace std;
 
-string Cultist::getCultistPhrase() const {
-  const int rnd = eng->dice.getInRange(1, 25);
+string Cultist::getCultistPhrase(Engine* const engine) {
+  const int rnd = engine->dice.getInRange(1, 25);
   switch(rnd) {
   case 1: return "Apigami!"; break;
   case 2: return "Bhuudesco invisuu!"; break;

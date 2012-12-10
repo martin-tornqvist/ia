@@ -286,13 +286,13 @@ public:
 
   virtual void actorSpecific_spawnStartItems();
 
-  string getCultistPhrase() const;
+  static string getCultistPhrase(Engine* const engine);
 
   string getAggroPhraseMonsterSeen() const {
-    return getNameThe() + ": " + getCultistPhrase();
+    return getNameThe() + ": " + getCultistPhrase(eng);
   }
   string getAggroPhraseMonsterHidden() const {
-    return "Voice: " + getCultistPhrase();
+    return "Voice: " + getCultistPhrase(eng);
   }
 
   virtual ~Cultist() {

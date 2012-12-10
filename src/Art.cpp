@@ -175,7 +175,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_floor: return coord(1, 6); break;
   case tile_aimMarkerHead: return coord(2, 6); break;
   case tile_aimMarkerTrail: return coord(3, 6); break;
-  case tile_wall: return coord(5, 6); break;
+  case tile_wallTop: return coord(5, 6); break;
   case tile_wallFront: return coord(3, 7); break;
   case tile_squareCheckered: return coord(5, 6); break;
   case tile_rubbleHigh: return coord(7, 6); break;
@@ -212,6 +212,8 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_gore7: return coord(6, 8); break;
   case tile_gore8: return coord(7, 8); break;
   case tile_smoke: return coord(9, 8); break;
+  case tile_wallFrontAlt1: return coord(1, 9); break;
+  case tile_wallFrontAlt2: return coord(0, 9); break;
   case tile_trapezohedron: return coord(11, 8); break;
   case tile_pit: return coord(12, 8); break;
   case tile_leverRight: return coord(13, 8); break;
@@ -223,6 +225,8 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_pillarCarved: return coord(7, 9); break;
   case tile_barrel: return coord(8, 9); break;
   case tile_sarcophagus: return coord(9, 9); break;
+  case tile_caveWallFront: return coord(10, 9); break;
+  case tile_caveWallTop: return coord(11, 9); break;
   case tile_empty: return coord(18, 8); break;
   default: return coord(18, 8); break;
   }

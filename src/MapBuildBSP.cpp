@@ -15,6 +15,7 @@
 #include "Pathfinding.h"
 #include "ItemFactory.h"
 #include "Map.h"
+#include "FeatureWall.h"
 
 //======================================================================== MAPBUILD-BSP
 void MapBuildBSP::run() {
@@ -277,7 +278,10 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
                   if(eng->map->featuresStatic[x + dx][y + dy]->getId() == feature_stoneWall) {
-                    eng->featureFactory->spawnFeatureAt(feature_caveWall, c + coord(dx , dy));
+                    eng->featureFactory->spawnFeatureAt(feature_stoneWall, c + coord(dx , dy));
+                    Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x + dx][y + dy]);
+                    wall->wallType = wall_cave;
+                    wall->setRandomIsSlimy();
                   }
                 }
               }
@@ -294,8 +298,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
             for(int x = 1; x < MAP_X_CELLS - 1; x++) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  Feature_t id = eng->map->featuresStatic[x + dx][y + dy]->getId();
-                  if(id == feature_stoneWall || id == feature_caveWall) {
+                  if(eng->map->featuresStatic[x + dx][y + dy]->getId() == feature_stoneWall) {
                     blockers[x][y] = blockers[x + dx][y + dy] = true;
                   }
                 }
@@ -628,14 +631,13 @@ void MapBuildBSP::decorateWalls() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
-        //if(eng->dice.coinToss()) {
-        if(eng->dice(1, 100) < 15) {
-          if(eng->dice.coinToss()) {
-            eng->featureFactory->spawnFeatureAt(feature_stoneWallSlimy, coord(x, y));
-          } else {
-            eng->featureFactory->spawnFeatureAt(feature_rubbleHigh, coord(x, y));
-          }
+        if(eng->dice(1, 100) < 10) {
+          eng->featureFactory->spawnFeatureAt(feature_rubbleHigh, coord(x, y));
+          continue;
         }
+
+        Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
+        wall->setRandomIsSlimy();
 
         bool isNextToFloor = false;
         for(int checkY = max(0, y - 1); checkY <= min(MAP_Y_CELLS - 1, y + 1); checkY++) {
@@ -643,12 +645,16 @@ void MapBuildBSP::decorateWalls() {
             if(checkX != x || checkY != y) {
               if(eng->map->featuresStatic[checkX][checkY]->getId() == feature_stoneFloor) {
                 isNextToFloor = true;
+                checkY = 999999;
+                checkX = 999999;
               }
             }
           }
         }
-        if(isNextToFloor == false) {
-          eng->featureFactory->spawnFeatureAt(feature_caveWall, coord(x, y));
+        if(isNextToFloor) {
+          wall->setRandomNormalWall();
+        } else {
+          dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->wallType = wall_cave;
         }
       }
     }

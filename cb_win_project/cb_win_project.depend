@@ -32,7 +32,7 @@
 1354228720 c:\dev\ia\src\colors.h
 	<SFML/Graphics/Color.hpp>
 
-1353858745 c:\dev\ia\src\art.h
+1355173676 c:\dev\ia\src\art.h
 
 1354659347 c:\dev\ia\src\actor.h
 	<string>
@@ -67,7 +67,7 @@
 	"ConstTypes.h"
 	"FeatureData.h"
 
-1353840156 c:\dev\ia\src\featuredata.h
+1355172991 c:\dev\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -182,7 +182,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1355009953 c:\dev\ia\src\actormonster.h
+1355177033 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -435,7 +435,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1355052787 source:c:\dev\ia\src\actorplayer.cpp
+1355177051 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -505,7 +505,7 @@
 	"ActorFactory.h"
 	"Blood.h"
 
-1354056298 source:c:\dev\ia\src\art.cpp
+1355175810 source:c:\dev\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
@@ -936,7 +936,7 @@
 	"Log.h"
 	"Render.h"
 
-1355089735 source:c:\dev\ia\src\featuredata.cpp
+1355173736 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -954,7 +954,7 @@
 	"Postmortem.h"
 	"PlayerBonuses.h"
 
-1355090908 source:c:\dev\ia\src\featurefactory.cpp
+1355166574 source:c:\dev\ia\src\featurefactory.cpp
 	"FeatureFactory.h"
 	<cassert>
 	"Engine.h"
@@ -968,6 +968,7 @@
 	"FeatureVariousExaminable.h"
 	"FeatureLiquid.h"
 	"FeatureGrave.h"
+	"FeatureWall.h"
 
 1350576992 c:\dev\ia\src\featurelitdynamite.h
 	"Feature.h"
@@ -1316,7 +1317,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1352585165 source:c:\dev\ia\src\mapbuildbsp.cpp
+1355175442 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -1332,8 +1333,9 @@
 	"Pathfinding.h"
 	"ItemFactory.h"
 	"Map.h"
+	"FeatureWall.h"
 
-1352309316 source:c:\dev\ia\src\mapbuildcavern.cpp
+1355174632 source:c:\dev\ia\src\mapbuildcavern.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -1342,6 +1344,7 @@
 	"FeatureFactory.h"
 	"ActorPlayer.h"
 	"Map.h"
+	"FeatureWall.h"
 
 1355091854 source:c:\dev\ia\src\mapbuildforest.cpp
 	"MapBuild.h"
@@ -1360,7 +1363,7 @@
 	"FeatureGrave.h"
 	"TextFormatting.h"
 
-1352309578 source:c:\dev\ia\src\mapbuildkingstomb.cpp
+1355175033 source:c:\dev\ia\src\mapbuildkingstomb.cpp
 	"MapBuild.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -1368,6 +1371,7 @@
 	"ActorFactory.h"
 	"ActorMonster.h"
 	"Map.h"
+	"FeatureWall.h"
 
 1350576994 source:c:\dev\ia\src\mapbuildroomsandcorridors.cpp
 
@@ -1379,13 +1383,14 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1352309637 source:c:\dev\ia\src\mapbuild_trapezohedronlevel.cpp
+1355174880 source:c:\dev\ia\src\mapbuild_trapezohedronlevel.cpp
 	"MapBuild.h"
 	"Engine.h"
 	"FeatureFactory.h"
 	"ActorPlayer.h"
 	"ItemFactory.h"
 	"Map.h"
+	"FeatureWall.h"
 
 1352657218 source:c:\dev\ia\src\mappatterns.cpp
 	"MapPatterns.h"
@@ -1533,7 +1538,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1355052092 source:c:\dev\ia\src\render.cpp
+1355175055 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1549,6 +1554,7 @@
 	"ActorMonster.h"
 	"Log.h"
 	"Attack.h"
+	"FeatureWall.h"
 
 1354991177 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
@@ -5643,7 +5649,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1355010866 source:c:\dev\ia\src\actormonsterspecific.cpp
+1355177003 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -9925,4 +9931,12 @@
 
 1355091236 source:c:\dev\ia\src\featuregrave.cpp
 	"FeatureGrave.h"
+
+1355175923 c:\dev\ia\src\featurewall.h
+	"Feature.h"
+
+1355176129 source:c:\dev\ia\src\featurewall.cpp
+	"FeatureWall.h"
+	"Engine.h"
+	"Map.h"
 

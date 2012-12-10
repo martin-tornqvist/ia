@@ -14,6 +14,7 @@
 #include "FeatureVariousExaminable.h"
 #include "FeatureLiquid.h"
 #include "FeatureGrave.h"
+#include "FeatureWall.h"
 
 using namespace std;
 
@@ -130,6 +131,13 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord& pos, Fe
     replaceStaticFeatureAt(grave, pos);
     assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
     return grave;
+  }
+  case feature_stoneWall: {
+    assert(spawnData == NULL);
+    Wall* wall = new Wall(id, pos, eng);
+    replaceStaticFeatureAt(wall, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return wall;
   }
   default: {
   }

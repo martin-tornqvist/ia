@@ -8,13 +8,17 @@
 #include "FeatureFactory.h"
 #include "ActorPlayer.h"
 #include "Map.h"
+#include "FeatureWall.h"
 
 void MapBuild::buildCavern() {
   eng->map->clearDungeon();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->featureFactory->spawnFeatureAt(feature_caveWall, coord(x, y));
+      eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
+      Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
+      wall->wallType = wall_common;
+      wall->isSlimy = false;
     }
   }
 

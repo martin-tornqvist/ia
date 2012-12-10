@@ -266,12 +266,10 @@ void Player::incrInsanityLong() {
       case 2: {
         popupMessage += "I find myself babbling incoherently.";
         eng->popup->showMessage(popupMessage, true);
-        Cultist* tmpCultist = new Cultist;
         for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
-          const string phrase = tmpCultist->getCultistPhrase();
+          const string phrase = Cultist::getCultistPhrase(eng);
           eng->log->addMessage(getNameThe() + ": " + phrase);
         }
-        delete tmpCultist;
         eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
         return;
       }

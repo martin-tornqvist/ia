@@ -16,6 +16,7 @@
 #include "ActorMonster.h"
 #include "Log.h"
 #include "Attack.h"
+#include "FeatureWall.h"
 
 using namespace std;
 
@@ -698,7 +699,11 @@ void Renderer::drawTiles() {
             goreTile = eng->map->featuresStatic[x][y]->getGoreTile();
           }
           if(goreTile == tile_empty) {
-            currentDrw->tile = eng->map->featuresStatic[x][y]->getTile();
+            if(eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
+              currentDrw->tile = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->getTopWallTile();
+            } else {
+              currentDrw->tile = eng->map->featuresStatic[x][y]->getTile();
+            }
             const sf::Color featStdClr = eng->map->featuresStatic[x][y]->getColor();
             currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featStdClr;
           } else {
@@ -800,21 +805,25 @@ void Renderer::drawTiles() {
 
       /*
        * Walls are given an illusion of perspective.
-       * If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is not
-       * a front or (top) wall tile, and that cell is explored, change the current tile to wall front
+       * If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is
+       * not a front or top wall tile, and that cell is explored, change the current tile to wall front
        */
-      if(y < MAP_Y_CELLS - 1 && tempDrw.tile == tile_wall) {
+      if(y < MAP_Y_CELLS - 1 && eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
         if(eng->map->explored[x][y + 1]) {
+          const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
 
           const Tile_t tileBelowSeen = renderArrayActorsOmittedTiles[x][y + 1].tile;
           const Tile_t tileBelowMem = eng->map->playerVisualMemoryTiles[x][y + 1].tile;
-          const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
 
-          const bool TILE_BELOW_IS_WALL_FRONT = IS_CELL_BELOW_SEEN ? tileBelowSeen == tile_wallFront : tileBelowMem == tile_wallFront;
-          const bool TILE_BELOW_IS_WALL_TOP = IS_CELL_BELOW_SEEN ? tileBelowSeen == tile_wall : tileBelowMem == tile_wall;
+          const bool TILE_BELOW_IS_WALL_FRONT = IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
+                                                Wall::isTileAnyWallFront(tileBelowMem);
 
-          if(!TILE_BELOW_IS_WALL_FRONT && !TILE_BELOW_IS_WALL_TOP) {
-            tempDrw.tile = tile_wallFront;
+          const bool TILE_BELOW_IS_WALL_TOP = IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
+                                              Wall::isTileAnyWallTop(tileBelowMem);
+
+          if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
+            const Wall* const wall = dynamic_cast<const Wall*>(eng->map->featuresStatic[x][y]);
+            tempDrw.tile = wall->getFrontWallTile();
           }
         }
       }

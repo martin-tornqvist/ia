@@ -193,8 +193,6 @@
 		<Unit filename="..\src\FeatureTrap.h" />
 		<Unit filename="..\src\FeatureVariousExaminable.cpp" />
 		<Unit filename="..\src\FeatureVariousExaminable.h" />
-		<Unit filename="..\src\FeatureWall.cpp" />
-		<Unit filename="..\src\FeatureWall.h" />
 		<Unit filename="..\src\Fov.cpp" />
 		<Unit filename="..\src\Fov.h" />
 		<Unit filename="..\src\FovPreCalc.cpp" />

@@ -5,13 +5,15 @@
 #include "ActorPlayer.h"
 #include "ItemFactory.h"
 #include "Map.h"
+#include "FeatureWall.h"
 
 void MapBuild::buildTrapezohedronLevel() {
   eng->map->clearDungeon();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->featureFactory->spawnFeatureAt(feature_caveWall, coord(x, y));
+      eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
+      dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->wallType = wall_cave;
     }
   }
 
