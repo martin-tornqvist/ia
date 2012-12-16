@@ -143,8 +143,8 @@ void Actor::place(const coord& pos_, ActorDefinition* const actorDefinition, Eng
 }
 
 void Actor::changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES) {
-  hpMax_ = max(1, getHpMax());
-  hp_ = max(1, getHp());
+  hpMax_ = max(1, getHpMax() + CHANGE);
+  hp_ = max(1, getHp() + CHANGE);
 
   if(ALLOW_MESSAGES) {
     if(this == eng->player) {

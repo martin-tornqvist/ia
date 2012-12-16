@@ -117,8 +117,11 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
   case actor_wormMass:
     monster = new WormMass;
     break;
-  case actor_fireVampire:
-    monster = new FireVampire;
+  case actor_dustVortex:
+    monster = new DustVortex;
+    break;
+  case actor_fireVortex:
+    monster = new FireVortex;
     break;
   case actor_oozeGray:
     monster = new OozeGray;

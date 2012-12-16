@@ -11,7 +11,7 @@ class KnockBack {
 public:
 	KnockBack(Engine* engine) : eng(engine) {}
 
-	void attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN);
+	void attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED = true);
 
 private:
 	Engine* eng;

@@ -14,7 +14,9 @@ enum MarkerTask_t {
   markerTask_aim,
   markerTask_look,
   markerTask_throw,
-  markerTask_throwLitExplosive
+  markerTask_throwLitExplosive,
+  markerTask_spellAzathothsBlast,
+  markerTask_spellVoidChain
 };
 
 class Engine;

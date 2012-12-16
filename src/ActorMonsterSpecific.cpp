@@ -15,6 +15,7 @@
 #include "Map.h"
 #include "Blood.h"
 #include "FeatureFactory.h"
+#include "Knockback.h"
 
 using namespace std;
 
@@ -126,25 +127,88 @@ void CultistPriest::actorSpecific_spawnStartItems() {
   }
 }
 
-void FireHound::actorSpecific_spawnStartItems()
-{
+void FireHound::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_hellHoundFireBreath));
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_hellHoundBite));
 }
 
-void FireVampire::monsterDeath()
-{
-  eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng), true, clrYellow);
+bool Vortex::actorSpecificAct() {
+  if(pullCooldown > 0) {
+    pullCooldown--;
+  }
+
+  if(pullCooldown <= 0) {
+    if(playerAwarenessCounter > 0) {
+      tracer << "Vortex: pullCooldown: " << pullCooldown << endl;
+      tracer << "Vortex: Is player aware" << endl;
+      const coord& playerPos = eng->player->pos;
+      if(eng->mapTests->isCellsNeighbours(pos, playerPos, true) == false) {
+
+        const int CHANCE_TO_KNOCK = 25;
+        if(eng->dice(1, 100) < CHANCE_TO_KNOCK) {
+          tracer << "Vortex: Passed random chance to pull" << endl;
+
+          const coord playerDelta = playerPos - pos;
+          coord knockBackFromPos = playerPos;
+          if(playerDelta.x > 1) {
+            knockBackFromPos.x++;
+          }
+          if(playerDelta.x < -1) {
+            knockBackFromPos.x--;
+          }
+          if(playerDelta.y > 1) {
+            knockBackFromPos.y++;
+          }
+          if(playerDelta.y < -1) {
+            knockBackFromPos.y--;
+          }
+
+          if(knockBackFromPos != playerPos) {
+            tracer << "Vortex: Good pos found to pull (knockback) player from (" << knockBackFromPos.x << "," << knockBackFromPos.y << ")" << endl;
+            tracer << "Vortex: Player position: " << playerPos.x << "," << playerPos.y << ")" << endl;
+            bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+            eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
+            if(checkIfSeeActor(*(eng->player), visionBlockers)) {
+              tracer << "Vortex: I am seeing the player" << endl;
+              if(eng->player->checkIfSeeActor(*this, NULL)) {
+                eng->log->addMessage("The Vortex attempts to pull me in!");
+              } else {
+                eng->log->addMessage("A powerful wind is pulling me!");
+              }
+              tracer << "Vortex: Attempt pull (knockback)" << endl;
+              eng->knockBack->attemptKnockBack(eng->player, knockBackFromPos, false, false);
+              pullCooldown = 5;
+              eng->gameTime->letNextAct();
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
 }
 
-void FireVampire::actorSpecific_spawnStartItems()
-{
-  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_fireVampireTouch));
+void DustVortex::monsterDeath() {
+  eng->explosionMaker->runExplosion(pos, false, new StatusBlind(eng), true, clrGray);
+}
+
+void DustVortex::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_dustVortexEngulf));
+}
+
+void FireVortex::monsterDeath() {
+  eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng), true, clrRedLight);
+}
+
+void FireVortex::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_fireVortexEngulf));
 }
 
 bool Ghost::actorSpecificAct() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
+
       if(eng->mapTests->isCellsNeighbours(pos, eng->player->pos, false)) {
         if(eng->dice(1, 100) < 35) {
 

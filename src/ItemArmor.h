@@ -32,6 +32,10 @@ public:
     return getAbsorptionPoints(damageType_physical) == 0;
   }
 
+  sf::Color getInterfaceClr() const {
+    return clrGray;
+  }
+
 private:
   int getAbsorptionPoints(const DamageTypes_t damageType) const;
 

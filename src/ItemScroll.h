@@ -25,6 +25,11 @@ public:
     return "Read";
   }
 
+  virtual sf::Color getInterfaceClr() const {
+    return clrMagenta;
+  }
+
+
   bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 
   virtual const string getRealTypeName() {
@@ -265,6 +270,55 @@ public:
 
   const string getRealTypeName() {
     return "Clairvoyance";
+  }
+private:
+};
+
+class ScrollOfAzathothsBlast: public Scroll {
+public:
+  ScrollOfAzathothsBlast(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfAzathothsBlast() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  static void castAt(const coord& pos, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Azathoths Blast";
+  }
+private:
+};
+
+class ScrollOfVoidChain: public Scroll {
+public:
+  ScrollOfVoidChain(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfVoidChain() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  static void castAt(const coord& pos, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Void Chain";
+  }
+private:
+};
+
+class ScrollOfIbnGhazisPowder: public Scroll {
+public:
+  ScrollOfIbnGhazisPowder(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfIbnGhazisPowder() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Ibn Ghazis Powder";
   }
 private:
 };

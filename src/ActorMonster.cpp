@@ -60,23 +60,6 @@ void Monster::act() {
 
   const AiBehavior& ai = def_->aiBehavior;
 
-  //------------------------------ INFORMATION GATHERING (LOOKING, LISTENING...)
-  if(ai.looks) {
-    if(leader != eng->player) {
-      AI_look_becomePlayerAware::learn(this, eng);
-    }
-  }
-//  if(ai.listens) {
-//    if(leader != eng->player) {
-//      AI_listen_becomePlayerAware::learn(this, soundsHeard);
-//    }
-//  }
-//  if(ai.respondsWithPhrase) {
-//    if(leader != eng->player) {
-//      AI_listen_respondWithAggroPhrase::learn(this, soundsHeard, eng);
-//    }
-//  }
-
   //------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
   if(leader != eng->player) {
@@ -86,6 +69,16 @@ void Monster::act() {
   }
 
   //------------------------------ COMMON ACTIONS (MOVING, ATTACKING, CASTING SPELLS...)
+  // Looking counts as an action if monster not aware before, and became aware from looking.
+  // (This is to give the monsters some reaction time, and not instantly attack)
+  if(ai.looks) {
+    if(leader != eng->player) {
+      if(AI_look_becomePlayerAware::action(this, eng)) {
+        return;
+      }
+    }
+  }
+
   if(ai.makesRoomForFriend) {
     if(leader != eng->player) {
       if(AI_makeRoomForFriend::action(this, eng)) {

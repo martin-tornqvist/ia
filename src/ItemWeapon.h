@@ -75,6 +75,11 @@ public:
     return def_->color;
   }
 
+  sf::Color getInterfaceClr() const {
+    return clrGray;
+  }
+
+
 protected:
   Weapon& operator=(const Weapon& other) {
     (void) other;

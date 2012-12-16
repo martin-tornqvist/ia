@@ -5,10 +5,24 @@
 
 #include "Converters.h"
 
-class ItemAmmoClip: public Item
-{
+class ItemAmmo: public Item {
 public:
-  ItemAmmoClip(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
+  ItemAmmo(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
+  }
+
+  virtual ~ItemAmmo() {
+  }
+
+  virtual sf::Color getInterfaceClr() const {
+    return clrGray;
+  }
+
+private:
+};
+
+class ItemAmmoClip: public ItemAmmo {
+public:
+  ItemAmmoClip(ItemDefinition* const itemDefinition) : ItemAmmo(itemDefinition) {
     setFullAmmo();
   }
 

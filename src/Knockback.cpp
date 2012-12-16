@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Config.h"
 
-void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN) {
+void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
   if(defender != eng->player || eng->config->BOT_PLAYING == false) {
     if(defender->getDef()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
@@ -29,15 +29,17 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
 
         if(WALKTYPE_CAN_BE_KNOCKED_BACK && (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
           if(i == 0) {
-            if(IS_SPIKE_GUN == false) {
-              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, true);
+            if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
+              if(DEFENDER_IS_MONSTER) {
+                eng->log->addMessage(defender->getNameThe() + " is knocked back!");
+              } else {
+                eng->log->addMessage("I am knocked back!");
+              }
             }
-
-            if(DEFENDER_IS_MONSTER) {
-              eng->log->addMessage(defender->getNameThe() + " is knocked back!");
-            } else {
-              eng->log->addMessage("I am knocked back!");
-            }
+//            if(IS_SPIKE_GUN == false) {
+              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng), false, false);
+//            }
           }
 
           defender->pos = c;

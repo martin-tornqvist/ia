@@ -528,12 +528,39 @@ private:
   int chanceToSpawnNew;
 };
 
-class FireVampire: public Monster {
-public:
-  FireVampire() :
-    Monster() {
+class Vortex: public Monster {
+  public:
+  Vortex() :
+    Monster(), pullCooldown(0) {
   }
-  ~FireVampire() {
+  virtual ~Vortex() {
+  }
+
+  bool actorSpecificAct();
+
+  virtual void actorSpecific_spawnStartItems() = 0;
+  virtual void monsterDeath() = 0;
+private:
+  int pullCooldown;
+};
+
+class DustVortex: public Vortex {
+public:
+  DustVortex() :
+    Vortex() {
+  }
+  ~DustVortex() {
+  }
+  void actorSpecific_spawnStartItems();
+  void monsterDeath();
+};
+
+class FireVortex: public Vortex {
+public:
+  FireVortex() :
+    Vortex() {
+  }
+  ~FireVortex() {
   }
   void actorSpecific_spawnStartItems();
   void monsterDeath();

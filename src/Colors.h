@@ -17,7 +17,7 @@ const sf::Color clrGreen(0, 128, 0);
 const sf::Color clrGreenLight(0, 255, 0);
 
 const sf::Color clrYellow(255, 255, 0);
-const sf::Color clrBlue(0, 0, 128);
+const sf::Color clrBlue(0, 0, 139);
 const sf::Color clrBlueLight(92, 92, 255);
 
 const sf::Color clrMagenta(139, 0, 139);

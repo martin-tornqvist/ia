@@ -409,7 +409,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
         const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
       engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
@@ -421,10 +421,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_missiles);
     if(IS_PLAYER == true) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
+        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_plural);
         engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
+      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
       engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
     }
   }

@@ -20,6 +20,10 @@ public:
     return "Ignite";
   }
 
+  virtual sf::Color getInterfaceClr() const {
+    return clrRedLight;
+  }
+
   virtual void setPlayerExplosive(Engine* const engine) const;
 
 protected:

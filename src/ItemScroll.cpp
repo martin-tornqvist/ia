@@ -12,6 +12,7 @@
 #include "Postmortem.h"
 #include "Query.h"
 #include "PlayerBonuses.h"
+#include "Marker.h"
 
 Scroll::~Scroll() {
 
@@ -214,6 +215,44 @@ void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const en
   setRealDefinitionNames(engine, false);
 }
 
+void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  setRealDefinitionNames(engine, false);
+  if(engine->player->getStatusEffectsHandler()->allowAct()) {
+    engine->marker->place(markerTask_spellAzathothsBlast);
+  } else {
+    engine->log->addMessage("My spell is disrupted.");
+  }
+}
+
+void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
+
+}
+
+void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  setRealDefinitionNames(engine, false);
+  if(engine->player->getStatusEffectsHandler()->allowAct()) {
+    engine->marker->place(markerTask_spellVoidChain);
+  } else {
+    engine->log->addMessage("My spell is disrupted.");
+  }
+}
+
+void ScrollOfVoidChain::castAt(const coord& pos, Engine* const engine) {
+  const coord playerPos = engine->player->pos;
+  const vector<coord> projectilePath =
+    engine->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
+                              true, FOV_STANDARD_RADI_INT);
+}
+
+void ScrollOfIbnGhazisPowder::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  setRealDefinitionNames(engine, false);
+  if(engine->player->getStatusEffectsHandler()->allowAct()) {
+    engine->query->direction();
+  } else {
+    engine->log->addMessage("My spell is disrupted.");
+  }
+}
+
 void ScrollNameHandler::setFalseScrollName(ItemDefinition* d) {
   const unsigned int NR_NAMES = m_falseNames.size();
 
@@ -250,13 +289,6 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
     }
   }
 }
-
-//int Scroll::getChanceToLearn(Engine* const engine) const {
-//	const int PLAYER_SKILL = engine->player->getInstanceDefinition()->abilityValues.getAbilityValue(ability_language, true);
-//	const int SCROLL_SKILL_FACTOR = m_archetypeDefinition->identifySkillFactor;
-//
-//	return (PLAYER_SKILL * SCROLL_SKILL_FACTOR) / 100;
-//}
 
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
   const int PLAYER_SKILL = engine->player->mythosKnowledge;

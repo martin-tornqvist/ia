@@ -12,7 +12,7 @@ class Actor;
 class Monster;
 
 enum Spells_t {
-	spell_shriveling,
+	spell_azathothsBlast,
 	spell_blind,
 	spell_fear,
 	spell_slow,
@@ -73,9 +73,9 @@ protected:
 	virtual void specificMonsterCast(Monster* const monster, Engine* const eng) = 0;
 };
 
-class SpellShriveling: public Spell {
+class SpellAzathothsBlast: public Spell {
 public:
-	SpellShriveling() :
+	SpellAzathothsBlast() :
 		Spell() {
 	}
 

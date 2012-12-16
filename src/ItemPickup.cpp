@@ -4,7 +4,7 @@
 
 #include "Item.h"
 #include "ItemWeapon.h"
-#include "ItemAmmoClip.h"
+#include "ItemAmmo.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "Log.h"

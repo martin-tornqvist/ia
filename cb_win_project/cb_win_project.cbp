@@ -215,8 +215,8 @@
 		<Unit filename="..\src\InventoryIndexes.h" />
 		<Unit filename="..\src\Item.cpp" />
 		<Unit filename="..\src\Item.h" />
-		<Unit filename="..\src\ItemAmmoClip.cpp" />
-		<Unit filename="..\src\ItemAmmoClip.h" />
+		<Unit filename="..\src\ItemAmmo.cpp" />
+		<Unit filename="..\src\ItemAmmo.h" />
 		<Unit filename="..\src\ItemArmor.cpp" />
 		<Unit filename="..\src\ItemArmor.h" />
 		<Unit filename="..\src\ItemData.cpp" />

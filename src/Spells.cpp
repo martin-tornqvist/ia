@@ -32,8 +32,8 @@ Spell* SpellHandler::getSpellFromEnum(const Spells_t spell) const {
   case spell_fear:
     return new SpellFear;
     break;
-  case spell_shriveling:
-    return new SpellShriveling;
+  case spell_azathothsBlast:
+    return new SpellAzathothsBlast;
     break;
   case spell_slow:
     return new SpellSlow;
@@ -59,29 +59,25 @@ Spell* SpellHandler::getSpellFromEnum(const Spells_t spell) const {
   }
 }
 
-//SHRIVELING---------------------------------------------------------------------------
-void SpellShriveling::specificCast(const SpellData& d, Engine* const eng) {
+//AZATHOTHS BLAST ---------------------------------------------------------------------------
+void SpellAzathothsBlast::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
   if(actor != NULL) {
 
     if(actor == eng->player) {
-      if(actor->getStatusEffectsHandler()->allowSee() == true) {
-        eng->log->addMessage("I feel a terrible pain as my skin suddenly shrivel and blacken!", clrMessageBad);
-      } else {
-        eng->log->addMessage("I suddenly feel a terrible pain over my skin!", clrMessageBad);
-      }
+      eng->log->addMessage("I am struck by a roaring blast!", clrMessageBad);
     }
-
-    actor->hit(eng->dice(1, 6), damageType_pure);
+    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+    actor->hit(eng->dice(2, 4), damageType_pure);
   }
 }
 
-void SpellShriveling::specificMonsterCast(Monster* const monster, Engine* const eng) {
+void SpellAzathothsBlast::specificMonsterCast(Monster* const monster, Engine* const eng) {
   specificCast(SpellData(monster, eng->player->pos), eng);
 }
 
-bool SpellShriveling::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
+bool SpellAzathothsBlast::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   return monster->checkIfSeeActor(*(engine->player), blockers);

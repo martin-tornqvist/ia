@@ -184,7 +184,7 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
       eng->renderer->drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         eng->log->addMessage("A secret is revealed.");
-        eng->renderer->updateWindow();
+        eng->renderer->drawMapAndInterface();
       }
     }
   }
@@ -359,7 +359,7 @@ void Door::tryBash(Actor* actorTrying) {
       }
     }
 
-    eng->renderer->updateWindow();
+    eng->renderer->drawMapAndInterface();
 
     tracer << "Door: Calling GameTime::letNextAct()" << endl;
     eng->gameTime->letNextAct();
@@ -381,7 +381,7 @@ void Door::tryClose(Actor* actorTrying) {
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
       eng->log->addMessage("This door refuses to be closed, perhaps it is handled elsewhere?");
-      eng->renderer->updateWindow();
+      eng->renderer->drawMapAndInterface();
     }
     return;
   }
@@ -474,7 +474,7 @@ void Door::tryOpen(Actor* actorTrying) {
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
       eng->log->addMessage("I see no way to open this door, perhaps it is opened elsewhere?");
-      eng->renderer->updateWindow();
+      eng->renderer->drawMapAndInterface();
     }
     return;
   }

@@ -8,7 +8,7 @@
 #include "Render.h"
 
 RenderInventory::RenderInventory(Engine* engine) :
-  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 50) {
+  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 60) {
 }
 
 void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr) {
@@ -19,8 +19,8 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_N
 }
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
-                                          const vector<InventorySlotButton>& invSlotButtons,
-                                          const sf::Texture& bgTexture) {
+    const vector<InventorySlotButton>& invSlotButtons,
+    const sf::Texture& bgTexture) {
   int yPos = 1;
   int xPos = X_POS_LEFT;
 
@@ -43,13 +43,18 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
     str += slot->interfaceName;
     xPos = X_POS_LEFT;
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
     xPos = X_POS_ITEM_NAME;
     str = ": ";
     Item* const item = slot->item;
     if(item == NULL) {
       str += "<empty>";
+      eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
     } else {
+      const sf::Color itemInterfClr = IS_CUR_POS ?
+                                      clrWhiteHigh :
+                                      item->getInterfaceClr();
+
       const ItemDefinition& d = item->getDef();
       PrimaryAttackMode_t attackMode = primaryAttackMode_none;
       if(slot->devName == slot_wielded || slot->devName == slot_wieldedAlt) {
@@ -60,10 +65,11 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       }
 
       str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
-      drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+      eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
+      drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
       eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     }
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+
 
     yPos++;
   }
@@ -73,14 +79,14 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   xPos = X_POS_LEFT;
   yPos += 1;
   const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(invSlotButtons.size());
-  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
 
   eng->renderer->updateWindow();
 }
 
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
-                                              const vector<unsigned int>& genInvIndexes,
-                                              const sf::Texture& bgTexture) {
+    const vector<unsigned int>& genInvIndexes,
+    const sf::Texture& bgTexture) {
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
@@ -99,11 +105,18 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
+    const sf::Color itemInterfClr = IS_CUR_POS ?
+                                    clrWhiteHigh :
+                                    item->getInterfaceClr();
     str = "x) ";
     str.at(0) = 'a' + i;
-    str += eng->itemData->getItemInterfaceRef(item, false);
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    xPos = X_POS_LEFT;
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    xPos += 2;
+
+    str = eng->itemData->getItemInterfaceRef(item, false);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }
@@ -140,7 +153,14 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_LEFT;
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    xPos += 2;
+
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+
+    const sf::Color itemInterfClr = IS_CUR_POS ?
+                                    clrWhiteHigh :
+                                    item->getInterfaceClr();
 
     const ItemDefinition& d = item->getDef();
     PrimaryAttackMode_t attackMode = primaryAttackMode_none;
@@ -151,9 +171,9 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
       attackMode = primaryAttackMode_missile;
     }
 
-    str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+    str = eng->itemData->getItemInterfaceRef(item, false, attackMode);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }
@@ -184,6 +204,10 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
+    const sf::Color itemInterfClr = IS_CUR_POS ?
+                                    clrWhiteHigh :
+                                    item->getInterfaceClr();
+
     //Draw label
     const string& label = item->getDefaultActivationLabel();
     bool isNewLabel = false;
@@ -203,12 +227,16 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_CMD;
-    str += eng->itemData->getItemRef(item, itemRef_plain, true);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    xPos += 2;
+
+    str = eng->itemData->getItemRef(item, itemRef_plain, false);
     if(item->numberOfItems > 1 && item->getDef().isStackable) {
       str += " (" + intToString(item->numberOfItems) + ")";
     }
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, clrRed);
+
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
+    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }

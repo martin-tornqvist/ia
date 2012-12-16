@@ -23,6 +23,11 @@ public:
     return "Drink";
   }
 
+  sf::Color getInterfaceClr() const {
+    return clrBlueLight;
+  }
+
+
 	void quaff(Actor* const actor, Engine* const engine);
 
 	void collide(const coord& pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);

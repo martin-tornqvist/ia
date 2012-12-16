@@ -6,14 +6,21 @@
 
 class AI_look_becomePlayerAware {
 public:
-  static void learn(Monster* monster, Engine* engine) {
+  static bool action(Monster* monster, Engine* engine) {
+    const bool IS_AWARE_BEFORE = monster->playerAwarenessCounter > 0;
+
     if(monster->deadState == actorDeadState_alive) {
 
       monster->getSpotedEnemies();
 
-      if(monster->spotedEnemies.size() > 0 && monster->playerAwarenessCounter > 0) {
+      if(monster->spotedEnemies.size() > 0 && IS_AWARE_BEFORE) {
         monster->becomeAware();
-        return;
+        if(IS_AWARE_BEFORE) {
+          return false;
+        } else {
+          engine->gameTime->letNextAct();
+          return true;
+        }
       }
 
       for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
@@ -22,14 +29,25 @@ public:
           const int PLAYER_SNEAK = engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *(engine->player));
           if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
             monster->becomeAware();
-            return;
+            if(IS_AWARE_BEFORE) {
+              return false;
+            } else {
+              engine->gameTime->letNextAct();
+              return true;
+            }
           }
         } else {
           monster->becomeAware();
-          return;
+          if(IS_AWARE_BEFORE) {
+            return false;
+          } else {
+            engine->gameTime->letNextAct();
+            return true;
+          }
         }
       }
     }
+    return false;
   }
 
 private:

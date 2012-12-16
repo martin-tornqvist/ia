@@ -106,7 +106,8 @@ enum ItemDevNames_t {
   item_oozePutridSpewPus,
   item_oozeClearSpewPus,
   item_huntingHorrorBite,
-  item_fireVampireTouch,
+  item_dustVortexEngulf,
+  item_fireVortexEngulf,
 
   item_armorLeatherJacket,
   item_armorIronSuit,
@@ -124,6 +125,9 @@ enum ItemDevNames_t {
   item_scrollOfBlessing,
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
+  item_scrollOfAzathothsBlast,
+  item_scrollOfVoidChain,
+  item_scrollOfIbnGhazisPowder,
 
   item_potionOfHealing,
   item_potionOfBlindness,
@@ -241,7 +245,6 @@ public:
   Audio_t meleeAudio;
   Audio_t reloadAudio;
   StatusEffect* rangedStatusEffect;
-  string causeOfDeathMessage;
   int castFromMemoryChance;
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;

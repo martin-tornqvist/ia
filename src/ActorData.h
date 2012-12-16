@@ -28,7 +28,7 @@ enum ActorDevNames_t {
   actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
-  actor_fireVampire,
+  actor_dustVortex, actor_fireVortex,
   actor_oozeGray, actor_oozeClear, actor_oozePutrid,
   actor_huntingHorror,
 

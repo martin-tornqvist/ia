@@ -11,6 +11,7 @@
 #include "Look.h"
 #include "Thrower.h"
 #include "Render.h"
+#include "ItemScroll.h"
 
 void Marker::readKeys(const MarkerTask_t markerTask) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
@@ -26,10 +27,10 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       move(1, 0, markerTask);
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+  if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
     move(0, -1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+  if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
     if(d.isShiftHeld_) {
       move(-1, -1, markerTask);
     }
@@ -40,22 +41,23 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       move(-1, 0, markerTask);
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+  if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
     move(0, 1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
     move(1, -1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Home || d.key_ == '7') {
+  if(d.sfmlKey_ == sf::Keyboard::Home || d.key_ == '7') {
     move(-1, -1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::End || d.key_ == '1') {
+  if(d.sfmlKey_ == sf::Keyboard::End || d.key_ == '1') {
     move(-1, 1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::PageDown || d.key_ == '3') {
+  if(d.sfmlKey_ == sf::Keyboard::PageDown || d.key_ == '3') {
     move(1, 1, markerTask);
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'f') {
+  // ------------------------------------------------------- AIM RANGED WEAPON
+  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'f') {
     if(markerTask == markerTask_aim) {
       if(pos_ != eng->player->pos) {
 
@@ -77,12 +79,14 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       done();
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
+  // ------------------------------------------------------- LOOK
+  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
     if(markerTask == markerTask_look) {
       eng->look->printExtraActorDescription(pos_);
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 't') {
+  // ------------------------------------------------------- THROW
+  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 't') {
     if(markerTask == markerTask_throw) {
       if(pos_ == eng->player->pos) {
         eng->log->addMessage("I should throw this somewhere else.");
@@ -98,14 +102,23 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       done();
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
+  // ------------------------------------------------------- THROW LIT EXPLOSIVE
+  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
     if(markerTask == markerTask_throwLitExplosive) {
       eng->renderer->drawMapAndInterface();
       eng->thrower->playerThrowLitExplosive(pos_);
       done();
     }
   }
-  else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+  // ------------------------------------------------------- AZATHOTS BLAST SPELL
+  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
+    if(markerTask == markerTask_spellAzathothsBlast) {
+      eng->renderer->drawMapAndInterface();
+      ScrollOfAzathothsBlast::castAt(pos_, eng);
+      done();
+    }
+  }
+  if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
     cancel();
   }
 }
@@ -114,12 +127,14 @@ void Marker::draw(const MarkerTask_t markerTask) const {
   vector<coord> trace;
   trace.resize(0);
 
-  int originX = eng->player->pos.x;
-  int originY = eng->player->pos.y;
-
-  trace = eng->mapTests->getLine(originX, originY, pos_.x, pos_.y, true, 99999);
-
   int effectiveRange = -1;
+
+  if(markerTask == markerTask_spellAzathothsBlast) {
+    trace.push_back(coord(pos_.x, pos_.y));
+  } else {
+    const coord playerPos = eng->player->pos;
+    trace = eng->mapTests->getLine(playerPos.x, playerPos.y, pos_.x, pos_.y, true, 99999);
+  }
 
   if(markerTask == markerTask_aim) {
     Weapon* const weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));

@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 #include "ItemWeapon.h"
-#include "ItemAmmoClip.h"
+#include "ItemAmmo.h"
 #include "ItemExplosive.h"
 #include "ItemArmor.h"
 #include "ItemScroll.h"
@@ -25,13 +25,13 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_trapezohedron:
     item = new Item(d);
     break;
-  case item_ironSpike:
-    item = new Item(d);
-    break;
   case item_rock:
     item = new Weapon(d, ammoD);
     break;
   case item_throwingKnife:
+    item = new Weapon(d, ammoD);
+    break;
+  case item_ironSpike:
     item = new Weapon(d, ammoD);
     break;
   case item_dagger:
@@ -74,6 +74,9 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
     break;
   case item_pumpShotgun:
     item = new PumpShotgun(d, ammoD);
+    break;
+  case item_shotgunShell:
+    item = new ItemAmmo(d);
     break;
   case item_machineGun:
     item = new MachineGun(d, ammoD);
@@ -216,7 +219,10 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_huntingHorrorBite:
     item = new Weapon(d, ammoD);
     break;
-  case item_fireVampireTouch:
+  case item_dustVortexEngulf:
+    item = new Weapon(d, ammoD);
+    break;
+  case item_fireVortexEngulf:
     item = new Weapon(d, ammoD);
     break;
 
@@ -253,6 +259,15 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_scrollOfClairvoyance:
     item = new ScrollOfClairvoyance(d);
     break;
+  case item_scrollOfAzathothsBlast:
+    item = new ScrollOfAzathothsBlast(d);
+    break;
+  case item_scrollOfVoidChain:
+    item = new ScrollOfVoidChain(d);
+    break;
+  case item_scrollOfIbnGhazisPowder:
+    item = new ScrollOfIbnGhazisPowder(d);
+    break;
   case item_potionOfHealing:
     item = new PotionOfHealing(d);
     break;
@@ -284,9 +299,7 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
     item = new PotionOfConfusion(d);
     break;
 
-  default:
-    item = new Item(d);
-    break;
+  default: item = new Item(d); break;
   }
 
   return item;

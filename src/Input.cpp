@@ -127,7 +127,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  else if(d.key_ == '5') {
+  else if(d.key_ == '5' || d.key_ == '.') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, 0);
@@ -469,6 +469,51 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
+  //----------------------------------------DESCEND CHEAT
+  else if(d.sfmlKey_ == sf::Keyboard::F2) {
+    if(IS_DEBUG_MODE) {
+      eng->dungeonClimb->travelDown(1);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------XP CHEAT
+  else if(d.sfmlKey_ == sf::Keyboard::F3) {
+    if(IS_DEBUG_MODE) {
+      eng->dungeonMaster->playerGainsExp(500);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------VISION CHEAT
+  else if(d.sfmlKey_ == sf::Keyboard::F4) {
+    if(IS_DEBUG_MODE) {
+      eng->cheat_vision = !eng->cheat_vision;
+      clearEvents();
+    }
+  }
+  //----------------------------------------INSANITY CHEAT
+  else if(d.sfmlKey_ == sf::Keyboard::F5) {
+    if(IS_DEBUG_MODE) {
+      eng->player->shock(shockValue_heavy, 0);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
+  else if(d.sfmlKey_ == sf::Keyboard::F6) {
+    if(IS_DEBUG_MODE) {
+      for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+        const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
+        if(def->isQuaffable == true || def->isReadable == true) {
+          eng->itemFactory->spawnItemOnMap(static_cast<ItemDevNames_t>(i), eng->player->pos);
+        }
+      }
+      clearEvents();
+    }
+    return;
+  }
+
   //----------------------------------------UNDEFINED COMMANDS
   else if(d.key_ != -1) {
     string cmdTried = " ";
@@ -602,79 +647,3 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
     }
   }
 }
-
-//void Input::read() {
-//  const bool IS_SHIFT_HELD = SDL_GetModState() & KMOD_SHIFT;
-//  const bool IS_CTRL_HELD = SDL_GetModState() & KMOD_CTRL;
-//
-//  while(SDL_PollEvent(&m_event)) {
-//    switch(m_event.type) {
-//    case SDL_QUIT:
-//      *quitToMainMenu_ = true;
-//      break;
-//
-//    case SDL_KEYDOWN: {
-//      SDLKey key = m_event.key.keysym.sym;
-//
-//      bool isCheatKeyPressed = false;
-//
-//      if(IS_DEBUG_MODE) {
-//        //----------------------------------------DESCEND CHEAT
-//        if(key == SDLK_F2) {
-//          isCheatKeyPressed = true;
-//          eng->dungeonClimb->travelDown(1);
-//          clearKeyEvents();
-//        }
-//
-//        //----------------------------------------XP CHEAT
-//        if(key == SDLK_F3) {
-//          isCheatKeyPressed = true;
-//          eng->dungeonMaster->playerGainsExp(500);
-//          clearKeyEvents();
-//        }
-//
-//        //----------------------------------------VISION CHEAT
-//        if(key == SDLK_F4) {
-//          isCheatKeyPressed = true;
-//          eng->cheat_vision = !eng->cheat_vision;
-//          clearKeyEvents();
-//        }
-//
-//        //----------------------------------------INSANITY "CHEAT"
-//        if(key == SDLK_F5) {
-//          isCheatKeyPressed = true;
-//          eng->player->shock(shockValue_heavy, 0);
-//          clearKeyEvents();
-//        }
-//
-//        //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-//        if(key == SDLK_F6) {
-//          isCheatKeyPressed = true;
-//          for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-//            const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
-//            if(def->isQuaffable == true || def->isReadable == true) {
-//              eng->itemFactory->spawnItemOnMap(static_cast<ItemDevNames_t>(i), eng->player->pos);
-//            }
-//          }
-//          clearKeyEvents();
-//        }
-//      }
-//
-//      if(isCheatKeyPressed == false) {
-//        if(
-//          key == SDLK_RIGHT || key == SDLK_UP || key == SDLK_LEFT || key == SDLK_DOWN ||
-//          key == SDLK_PAGEUP || key == SDLK_PAGEDOWN || key == SDLK_HOME || key == SDLK_END) {
-//          handleKeyPress(static_cast<Uint16>(m_event.key.keysym.sym), IS_SHIFT_HELD, IS_CTRL_HELD);
-//        } else {
-//          handleKeyPress(m_event.key.keysym.unicode, IS_SHIFT_HELD, IS_CTRL_HELD);
-//        }
-//      }
-//    }
-//    break;
-//
-//    default: {
-//    }
-//    break;
-//    }
-//  }
-//}

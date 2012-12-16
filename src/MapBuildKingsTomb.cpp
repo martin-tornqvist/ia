@@ -52,12 +52,11 @@ void MapBuild::buildKingsTomb() {
   eng->featureFactory->spawnFeatureAt(feature_trap, coord(MAP_X_CELLS - 2, MAP_Y_CELLS_HALF), new TrapSpawnData(mimicFeature, trap_teleport));
 
   coord c(MAP_X_CELLS - 5, MAP_Y_CELLS_HALF - 1);
-  Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_khephren, c));
-  monster->isRoamingAllowed = false;
+  Monster* const mummyBoss = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_khephren, c));
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
-      monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_fireVampire, c + coord(dx, dy)));
-      monster->isRoamingAllowed = false;
+      Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_fireVortex, c + coord(dx, dy)));
+      monster->leader = mummyBoss;
     }
   }
 

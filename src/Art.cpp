@@ -146,7 +146,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_byakhee: return coord(8, 2); break;
   case tile_massOfWorms: return coord(9, 2); break;
   case tile_ooze: return coord(10, 2); break;
-  case tile_fireVampire: return coord(11, 2); break;
+  case tile_vortex: return coord(5, 5); break;
   case tile_ghost: return coord(12, 2); break;
   case tile_wraith: return coord(13, 2); break;
   case tile_pistol: return coord(1, 3); break;
