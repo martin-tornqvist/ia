@@ -60,6 +60,9 @@ public:
 	Spell() {
 	}
 
+	virtual ~Spell() {
+	}
+
 	void cast(const SpellData& d, Engine* const eng);
 
 	//AI support function. Each individuall spell knows best how to
