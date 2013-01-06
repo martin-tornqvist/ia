@@ -619,3 +619,11 @@ int Inventory::getTotalItemWeight() const {
   }
   return weight;
 }
+
+void Inventory::sortGeneralInventory() {
+  // Sort items according to color code first, and lexicographically second
+  vector< vector<Item*> > sortBuffer;
+}
+
+
+

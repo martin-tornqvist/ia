@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Map.h"
 #include "Inventory.h"
+#include "ItemFactory.h"
 
 #include <algorithm>
 
@@ -15,18 +16,31 @@ void ItemDrop::dropAllCharactersItems(Actor* actor, bool died) {
   actor->getInventory()->dropAllNonIntrinsic(actor->pos, true, eng);
 }
 
-void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT) {
+void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT, const int NR_ITEMS_TO_DROP) {
   Inventory* inventory = actorDropping->getInventory();
-  Item* item = inventory->getItemInElement(ELEMENT);
+  Item* itemToDrop = inventory->getItemInElement(ELEMENT);
 
-  if(item != NULL) {
-    const string itemRef = eng->itemData->getItemRef(item, itemRef_a);
+  const bool IS_STACKABLE = itemToDrop->getDef().isStackable;
+  const int NR_ITEMS_BEFORE_DROP = itemToDrop->numberOfItems;
+  const bool IS_WHOLE_STACK_DROPPED =
+    IS_STACKABLE == false ||
+    NR_ITEMS_TO_DROP == -1 ||
+    (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
-    inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
-
-    eng->itemDrop->dropItemOnMap(actorDropping->pos, &item);
+  if(itemToDrop != NULL) {
+    if(IS_WHOLE_STACK_DROPPED) {
+      inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
+      eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
+    } else {
+      Item* itemToKeep = itemToDrop;
+      itemToDrop = eng->itemFactory->copyItem(itemToKeep);
+      itemToDrop->numberOfItems = NR_ITEMS_TO_DROP;
+      itemToKeep->numberOfItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
+      eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
+    }
 
     //Messages
+    const string itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
     const Actor* const curActor = eng->gameTime->getCurrentActor();
     if(curActor == eng->player) {
       eng->log->clearLog();

@@ -124,6 +124,8 @@ public:
 
   InventorySlot* getSlot(SlotTypes_t slotName);
 
+  void sortGeneralInventory();
+
   vector<InventorySlot>* getSlots() {
     return &m_slots;
   }

@@ -214,13 +214,11 @@ void Door::playerTrySpotHidden() {
 
 void Door::playerTryClueHidden() {
   if(isSecret_ && isClued_ == false) {
-    if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
-      const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
-      const int BONUS = 10;
-      if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
-        clue();
-      }
+    const Abilities_t abilityUsed = ability_searching;
+    const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+    const int BONUS = 10;
+    if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
+      clue();
     }
   }
 }

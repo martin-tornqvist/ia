@@ -114,6 +114,8 @@ void InventoryHandler::runSlotsScreen() {
   Inventory* const inv = eng->player->getInventory();
   vector<InventorySlot>* invSlots = inv->getSlots();
 
+  inv->sortGeneralInventory();
+
   equipmentSlotButtons.resize(0);
   char key = 'a';
   InventorySlotButton inventorySlotButton;
@@ -135,7 +137,10 @@ void InventoryHandler::runSlotsScreen() {
     }
     break;
     case menuAction_selectedWithShift: {
-      runDropScreen(browser.getPos().y);
+      if(runDropScreen(browser.getPos().y)) {
+        eng->renderer->drawMapAndInterface();
+        return;
+      }
       eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
     }
     break;
@@ -164,7 +169,9 @@ void InventoryHandler::runSlotsScreen() {
           }
         }
       } else {
-        runBrowseInventoryMode();
+        if(runBrowseInventoryMode()) {
+          return;
+        }
         eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
       }
     }
@@ -182,6 +189,8 @@ bool InventoryHandler::runUseScreen() {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
+  eng->player->getInventory()->sortGeneralInventory();
+
   filterPlayerGeneralSlotButtonsUsable();
   MenuBrowser browser(generalItemsToShow.size(), 0);
   eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
@@ -198,6 +207,14 @@ bool InventoryHandler::runUseScreen() {
       activateDefault(INV_ELEM);
       eng->renderer->drawMapAndInterface();
       return true;
+    }
+    break;
+    case menuAction_selectedWithShift: {
+      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        eng->renderer->drawMapAndInterface();
+        return true;
+      }
     }
     break;
     case menuAction_canceled: {
@@ -227,18 +244,8 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
       tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
-      if(NR_TO_DROP >= item->numberOfItems) {
-        tracer << "InventoryHandler: nr to drop >= number of items, drop the whole item" << endl;
-        eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR);
-        return true;
-      } else {
-        tracer << "InventoryHandler: nr to drop < number of items, copying item to map" << endl;
-        Item* newItem = eng->itemFactory->copyItem(item);
-        newItem->numberOfItems = NR_TO_DROP;
-        item->numberOfItems -= NR_TO_DROP;
-        eng->itemDrop->dropItemOnMap(eng->player->pos, &newItem);
-        return false;
-      }
+      eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR, NR_TO_DROP);
+      return true;
     }
   } else {
     tracer << "InventoryHandler: item not stackable, or only one item" << endl;
@@ -251,6 +258,8 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
 bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+
+  eng->player->getInventory()->sortGeneralInventory();
 
   filterPlayerGeneralSlotButtonsEquip(slotToEquip->devName);
 
@@ -270,6 +279,14 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
       return true;
     }
     break;
+    case menuAction_selectedWithShift: {
+      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        eng->renderer->drawMapAndInterface();
+        return true;
+      }
+    }
+    break;
     case menuAction_canceled: {
       return false;
     }
@@ -278,9 +295,11 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   }
 }
 
-void InventoryHandler::runBrowseInventoryMode() {
+bool InventoryHandler::runBrowseInventoryMode() {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+
+  eng->player->getInventory()->sortGeneralInventory();
 
   filterPlayerGeneralSlotButtonsShowAll();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -296,12 +315,21 @@ void InventoryHandler::runBrowseInventoryMode() {
     case menuAction_selected: {
     }
     break;
+    case menuAction_selectedWithShift: {
+      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        eng->renderer->drawMapAndInterface();
+        return true;
+      }
+    }
+    break;
     case menuAction_canceled: {
-      return;
+      return false;
     }
     break;
     }
   }
+  return false;
 }
 
 void InventoryHandler::swapItems(Item** item1, Item** item2) {
@@ -309,112 +337,4 @@ void InventoryHandler::swapItems(Item** item1, Item** item2) {
   *item1 = *item2;
   *item2 = buffer;
 }
-
-//void InventoryHandler::runPlayerInventory(InventoryPurpose_t purpose) {
-//  updatePlayerGeneralSlotButtons(purpose);
-//  const unsigned int NR_OF_SLOTS = static_cast<int>(playerSlotButtons.size());
-//
-//  bool done = false;
-//
-//  const int NR_ITEMS_FIRST = purpose == inventoryPurpose_selectDrop ? NR_OF_SLOTS : generalItemsToShow.size();
-//  const int NR_ITEMS_SECOND = purpose == inventoryPurpose_selectDrop ? generalItemsToShow.size() : 0;
-//  MenuBrowser browser(NR_ITEMS_FIRST, NR_ITEMS_SECOND);
-//
-//  const bool DRAW_BROWSER = purpose != inventoryPurpose_look;
-//
-//  if(generalItemsToShow.size() == 0 && (
-//        purpose == inventoryPurpose_use ||
-//        purpose == inventoryPurpose_quaff ||
-//        purpose == inventoryPurpose_eat ||
-//        purpose == inventoryPurpose_wieldWear ||
-//        purpose == inventoryPurpose_wieldAlt ||
-//        purpose == inventoryPurpose_readyExplosive ||
-//        purpose == inventoryPurpose_missileSelect)) {
-//    done = true;
-//
-//    if(purpose == inventoryPurpose_use)
-//      eng->log->addMessage("I have nothing to use.");
-//    if(purpose == inventoryPurpose_quaff)
-//      eng->log->addMessage("I have nothing to drink.");
-//    if(purpose == inventoryPurpose_eat)
-//      eng->log->addMessage("I have nothing to eat.");
-//    if(purpose == inventoryPurpose_wieldWear || purpose == inventoryPurpose_wieldAlt)
-//      eng->log->addMessage("I have nothing to wield or wear.");
-//    if(purpose == inventoryPurpose_readyExplosive)
-//      eng->log->addMessage("I have no explosives.");
-//    if(purpose == inventoryPurpose_missileSelect)
-//      eng->log->addMessage("I have nothing to use as a thrown weapon.");
-//  } else {
-//    eng->renderInventory->draw(purpose, browser, true, DRAW_BROWSER);
-//  }
-//
-//  while(done == false) {
-//    const MenuAction_t action = eng->menuInputHandler->getAction(browser);
-//
-//    if(action == menuAction_browsed) {
-//      eng->renderInventory->draw(purpose, browser, false, DRAW_BROWSER);
-//    }
-//
-//    if(action == menuAction_canceled) {
-//      eng->log->clearLog();
-//      eng->renderer->drawMapAndInterface();
-//      done = true;
-//      return;
-//    }
-//
-//    if(action == menuAction_selected) {
-//      switch(purpose) {
-//      case inventoryPurpose_selectDrop: {
-//        //Equipment slot?
-//        if(browser.getPos().x == 0) {
-//          Item* item = eng->player->getInventory()->getSlots()->at(browser.getPos().y).item;
-//          if(item != NULL) {
-//            eng->log->clearLog();
-//            eng->itemDrop->dropItemFromInventory(eng->player, browser.getPos().y);
-//            eng->renderer->drawMapAndInterface();
-//            return;
-//          }
-//        }
-//        //General slot?
-//        if(browser.getPos().x == 1) {
-//          const unsigned int DROP_ELEMENT = NR_OF_SLOTS + browser.getPos().y;
-//          eng->log->clearLog();
-//          eng->itemDrop->dropItemFromInventory(eng->player, DROP_ELEMENT);
-//          eng->renderer->drawMapAndInterface();
-//          return;
-//        }
-//      }
-//      break;
-//      case inventoryPurpose_eat:
-//      case inventoryPurpose_use:
-//      case inventoryPurpose_quaff:
-//      case inventoryPurpose_readyExplosive: {
-//        eng->log->clearLog();
-//        activateItem(purpose, generalItemsToShow.at(browser.getPos().y));
-//        return;
-//      }
-//      break;
-//      case inventoryPurpose_wieldWear:
-//      case inventoryPurpose_missileSelect: {
-//        eng->log->clearLog();
-//        eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(generalItemsToShow.at(browser.getPos().y), purpose, eng);
-//        return;
-//      }
-//      break;
-//      case inventoryPurpose_wieldAlt: {
-//        eng->log->clearLog();
-//        eng->player->getInventory()->equipGeneralItemToAltAndPossiblyEndTurn(generalItemsToShow.at(browser.getPos().y), eng);
-//        return;
-//      }
-//      break;
-//      default: {
-//      }
-//      break;
-//      }
-//    }
-//  }
-//
-//  eng->renderer->drawMapAndInterface();
-//}
-
 

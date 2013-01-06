@@ -40,14 +40,14 @@
 	<File name="..\src\ActorMonster.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ActorMonster.h" open="1" top="0" tabpos="3">
+	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="26931" topLine="731" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
@@ -82,8 +82,8 @@
 	<File name="..\src\CharacterInfo.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Colors.h" open="1" top="1" tabpos="1">
-		<Cursor position="375" topLine="0" />
+	<File name="..\src\Colors.h" open="0" top="0" tabpos="1">
+		<Cursor position="812" topLine="0" />
 	</File>
 	<File name="..\src\Config.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -119,7 +119,7 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\FeatureDoor.cpp" open="0" top="0" tabpos="13">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="4717" topLine="173" />
 	</File>
 	<File name="..\src\FeatureDoor.h" open="0" top="0" tabpos="12">
 		<Cursor position="0" topLine="0" />
@@ -184,17 +184,17 @@
 	<File name="..\src\Interface.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Inventory.cpp" open="0" top="0" tabpos="11">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Inventory.cpp" open="1" top="1" tabpos="6">
+		<Cursor position="18723" topLine="591" />
 	</File>
-	<File name="..\src\Inventory.h" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Inventory.h" open="1" top="0" tabpos="5">
+		<Cursor position="3665" topLine="109" />
 	</File>
-	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\InventoryHandler.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="10896" topLine="297" />
 	</File>
-	<File name="..\src\InventoryHandler.h" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\InventoryHandler.h" open="1" top="0" tabpos="1">
+		<Cursor position="78" topLine="3" />
 	</File>
 	<File name="..\src\Item.h" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
@@ -211,8 +211,11 @@
 	<File name="..\src\ItemDefinition.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ItemDrop.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1424" topLine="15" />
+	</File>
+	<File name="..\src\ItemDrop.h" open="1" top="0" tabpos="3">
+		<Cursor position="759" topLine="0" />
 	</File>
 	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
@@ -376,7 +379,7 @@
 	<File name="..\src\Spells.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Spells.h" open="1" top="0" tabpos="4">
+	<File name="..\src\Spells.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="11">
@@ -394,7 +397,7 @@
 	<File name="..\src\Thrower.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\TrimTravelVector.cpp" open="1" top="0" tabpos="2">
+	<File name="..\src\TrimTravelVector.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\main.cpp" open="0" top="0" tabpos="1">
