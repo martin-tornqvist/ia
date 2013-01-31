@@ -83,7 +83,11 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Colors.h" open="0" top="0" tabpos="1">
+<<<<<<< HEAD
+		<Cursor position="665" topLine="0" />
+=======
 		<Cursor position="812" topLine="0" />
+>>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
 	</File>
 	<File name="..\src\Config.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -184,14 +188,24 @@
 	<File name="..\src\Interface.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="0" topLine="0" />
 	</File>
+<<<<<<< HEAD
+	<File name="..\src\Inventory.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="243" topLine="0" />
+=======
 	<File name="..\src\Inventory.cpp" open="1" top="1" tabpos="6">
 		<Cursor position="18723" topLine="591" />
+>>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
 	</File>
 	<File name="..\src\Inventory.h" open="1" top="0" tabpos="5">
 		<Cursor position="3665" topLine="109" />
 	</File>
+<<<<<<< HEAD
+	<File name="..\src\InventoryHandler.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="315" topLine="0" />
+=======
 	<File name="..\src\InventoryHandler.cpp" open="1" top="0" tabpos="2">
 		<Cursor position="10896" topLine="297" />
+>>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
 	</File>
 	<File name="..\src\InventoryHandler.h" open="1" top="0" tabpos="1">
 		<Cursor position="78" topLine="3" />

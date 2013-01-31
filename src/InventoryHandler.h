@@ -27,7 +27,7 @@ private:
 
   bool runDropScreen(const int GLOBAL_ELEMENT_NR);
   bool runEquipScreen(InventorySlot* const slotToEquip);
-  void runBrowseInventoryMode();
+  bool runBrowseInventoryMode();
 
   void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);
   void filterPlayerGeneralSlotButtonsUsable();
