@@ -793,6 +793,13 @@ void Renderer::drawTiles() {
 
       if(eng->map->playerVision[x][y]) {
         tempDrw = renderArrayTiles[x][y];
+        const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+        if(DIST_FROM_PLAYER > 2) {
+          const double DIST_FADE_DIV = min(2.5, 1.0 + (DIST_FROM_PLAYER * 0.5));
+          tempDrw.color.r /= DIST_FADE_DIV;
+          tempDrw.color.g /= DIST_FADE_DIV;
+          tempDrw.color.b /= DIST_FADE_DIV;
+        }
       }
       else if(eng->map->explored[x][y]) {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
