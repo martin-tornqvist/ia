@@ -37,9 +37,10 @@ enum GameEntry_t {
   gameEntry_new, gameEntry_load
 };
 
-struct GlyphAndColor {
-  GlyphAndColor() :
-    color(clrBlack), bgColor(clrBlack), drawBgColor(false), glyph(' '), lifebarLength(-1) {
+struct CellRenderDataAscii {
+  CellRenderDataAscii() :
+    color(clrBlack), bgColor(clrBlack), drawBgColor(false), glyph(' '),
+    lifebarLength(-1), isFadeEffectAllowed(true) {
   }
   void clear() {
     color = clrBlack;
@@ -47,17 +48,20 @@ struct GlyphAndColor {
     drawBgColor = false;
     glyph = ' ';
     lifebarLength = -1;
+    isFadeEffectAllowed = true;
   }
   sf::Color color;
   sf::Color bgColor;
   bool drawBgColor;
   char glyph;
   int lifebarLength;
+  bool isFadeEffectAllowed;
 };
 
-struct TileAndColor {
-  TileAndColor() :
-    color(clrBlack), bgColor(clrBlack), drawBgColor(false), tile(tile_empty), lifebarLength(-1) {
+struct CellRenderDataTile {
+  CellRenderDataTile() :
+    color(clrBlack), bgColor(clrBlack), drawBgColor(false), tile(tile_empty),
+    lifebarLength(-1), isFadeEffectAllowed(true) {
   }
   void clear() {
     color = clrBlack;
@@ -65,12 +69,14 @@ struct TileAndColor {
     drawBgColor = false;
     tile = tile_empty;
     lifebarLength = -1;
+    isFadeEffectAllowed = true;
   }
   sf::Color color;
   sf::Color bgColor;
   bool drawBgColor;
   Tile_t tile;
   int lifebarLength;
+  bool isFadeEffectAllowed;
 };
 
 struct StringAndColor {

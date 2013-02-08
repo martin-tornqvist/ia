@@ -24,9 +24,9 @@
 #include "FeatureLitDynamite.h"
 
 Player::Player() :
-  firstAidTurnsLeft(-1), waitTurnsLeft(-1), insanityLong(0), insanityShort(0),
-  insanityShortTemp(0), mythosKnowledge(0), dynamiteFuseTurns(-1),
-  molotovFuseTurns(-1), flareFuseTurns(-1), target(NULL) {
+  firstAidTurnsLeft(-1), waitTurnsLeft(-1), mythosKnowledge(0), insanityLong(0),
+  insanityShort(0), insanityShortTemp(0), dynamiteFuseTurns(-1), molotovFuseTurns(-1),
+  flareFuseTurns(-1), target(NULL) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -245,10 +245,10 @@ void Player::incrInsanityLong() {
       }
     }
 
-    //When long term sanity decreases something happens (mostly bad mmkay)
+    //When long term sanity decreases something happens (mostly bad)
     //(Reroll until something actually happens)
-    for(unsigned int insAttemptCount = 0; insAttemptCount < 1000; insAttemptCount++) {
-      const int ROLL = eng->dice(1, 8);
+    for(unsigned int insAttemptCount = 0; insAttemptCount < 10000; insAttemptCount++) {
+      const int ROLL = eng->dice(1, 9);
       switch(ROLL) {
       case 1: {
         if(playerSeeShockingMonster) {
@@ -289,74 +289,76 @@ void Player::incrInsanityLong() {
       }
       break;
       case 5: {
-        popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (-5% xp).";
+        popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (10% of XP lost).";
         eng->popup->showMessage(popupMessage, true);
-        eng->dungeonMaster->playerLoseXpPercent(5);
+        eng->dungeonMaster->playerLoseXpPercent(10);
         return;
       }
       break;
       case 6: {
-        //There is a limit to the number of phobias you can have
-        int phobiasActive = 0;
-        for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-          if(insanityPhobias[i] == true) {
-            phobiasActive++;
-          }
-        }
-        if(phobiasActive < 2) {
-          if(eng->dice(1, 2) == 1) {
-            if(spotedEnemies.size() > 0) {
-              const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
-              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
-                popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
-                eng->popup->showMessage(popupMessage, true);
-                insanityPhobias[insanityPhobia_rat] = true;
-                return;
-              }
-              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
-                popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
-                eng->popup->showMessage(popupMessage, true);
-                insanityPhobias[insanityPhobia_spider] = true;
-                return;
-              }
-              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
-                popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
-                eng->popup->showMessage(popupMessage, true);
-                insanityPhobias[insanityPhobia_dog] = true;
-                return;
-              }
-              if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
-                popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
-                eng->popup->showMessage(popupMessage, true);
-                insanityPhobias[insanityPhobia_undead] = true;
-                return;
-              }
+        if(insanityLong > 5) {
+          //There is a limit to the number of phobias you can have
+          int phobiasActive = 0;
+          for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
+            if(insanityPhobias[i] == true) {
+              phobiasActive++;
             }
-          } else {
-            if(eng->dice.coinToss()) {
-              if(isStandingInOpenSpace()) {
-                if(insanityPhobias[insanityPhobia_openPlace] == false) {
-                  popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
+          }
+          if(phobiasActive < 2) {
+            if(eng->dice(1, 2) == 1) {
+              if(spotedEnemies.size() > 0) {
+                const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
+                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
+                  popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
                   eng->popup->showMessage(popupMessage, true);
-                  insanityPhobias[insanityPhobia_openPlace] = true;
+                  insanityPhobias[insanityPhobia_rat] = true;
                   return;
                 }
-              }
-              if(isStandingInCrampedSpace()) {
-                if(insanityPhobias[insanityPhobia_closedPlace] == false) {
-                  popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
+                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
+                  popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
                   eng->popup->showMessage(popupMessage, true);
-                  insanityPhobias[insanityPhobia_closedPlace] = true;
+                  insanityPhobias[insanityPhobia_spider] = true;
+                  return;
+                }
+                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
+                  popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
+                  eng->popup->showMessage(popupMessage, true);
+                  insanityPhobias[insanityPhobia_dog] = true;
+                  return;
+                }
+                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
+                  popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
+                  eng->popup->showMessage(popupMessage, true);
+                  insanityPhobias[insanityPhobia_undead] = true;
                   return;
                 }
               }
             } else {
-              if(eng->map->getDungeonLevel() >= 5) {
-                if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
-                  popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
-                  eng->popup->showMessage(popupMessage, true);
-                  insanityPhobias[insanityPhobia_deepPlaces] = true;
-                  return;
+              if(eng->dice.coinToss()) {
+                if(isStandingInOpenSpace()) {
+                  if(insanityPhobias[insanityPhobia_openPlace] == false) {
+                    popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
+                    eng->popup->showMessage(popupMessage, true);
+                    insanityPhobias[insanityPhobia_openPlace] = true;
+                    return;
+                  }
+                }
+                if(isStandingInCrampedSpace()) {
+                  if(insanityPhobias[insanityPhobia_closedPlace] == false) {
+                    popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
+                    eng->popup->showMessage(popupMessage, true);
+                    insanityPhobias[insanityPhobia_closedPlace] = true;
+                    return;
+                  }
+                }
+              } else {
+                if(eng->map->getDungeonLevel() >= 5) {
+                  if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
+                    popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
+                    eng->popup->showMessage(popupMessage, true);
+                    insanityPhobias[insanityPhobia_deepPlaces] = true;
+                    return;
+                  }
                 }
               }
             }
@@ -364,8 +366,9 @@ void Player::incrInsanityLong() {
         }
       }
       break;
+
       case 7: {
-        if(insanityLong > 50) {
+        if(insanityLong > 20) {
           int compulsionsActive = 0;
           for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
             if(insanityCompulsions[i] == true) {
@@ -377,7 +380,7 @@ void Player::incrInsanityLong() {
             switch(compulsion) {
             case insanityCompulsion_masochism: {
               popupMessage
-              += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, I find a little relief. However, my depraved mind decays faster over time now.";
+              += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, I find a little relief. However, my depraved mind can no longer find complete peace (shock can not go below 25%).";
               eng->popup->showMessage(popupMessage, true);
               insanityCompulsions[insanityCompulsion_masochism] = true;
               return;
@@ -385,7 +388,7 @@ void Player::incrInsanityLong() {
             break;
             case insanityCompulsion_sadism: {
               popupMessage
-              += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, I find a little relief. However, my depraved mind decays faster over time now.";
+              += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, I find a little relief. However, my depraved mind can no longer find complete peace (shock can not go below 25%).";
               eng->popup->showMessage(popupMessage, true);
               insanityCompulsions[insanityCompulsion_sadism] = true;
               return;
@@ -431,6 +434,13 @@ void Player::incrInsanityLong() {
           }
         }
 
+        return;
+      }
+
+      case 9: {
+        popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
+        eng->popup->showMessage(popupMessage, true);
+        statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
         return;
       }
 
@@ -618,6 +628,13 @@ void Player::act() {
     testPhobias();
   }
 
+  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
+    if(insanityCompulsions[i] == true) {
+      insanityShort = max(25, insanityShort);
+      break;
+    }
+  }
+
   //Lose short-term sanity from seen monsters?
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
@@ -630,13 +647,7 @@ void Player::act() {
 
   //Some short term sanity is lost every x turn
   const int TURN = eng->gameTime->getTurn();
-  bool hasCompulsion = false;
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    if(insanityCompulsions[i] == true) {
-      hasCompulsion = true;
-    }
-  }
-  const int LOSE_N_TURN = hasCompulsion == true ? 12 : 17;
+  const int LOSE_N_TURN = 17;
   if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
     if(eng->dice(1, 1000) <= 3) {
       if(eng->dice.coinToss()) {

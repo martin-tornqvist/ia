@@ -53,8 +53,6 @@ public:
   int firstAidTurnsLeft;
   int waitTurnsLeft;
 
-  int insanityLong, insanityShort, insanityShortTemp;
-
   int mythosKnowledge;
 
   void shock(const ShockValues_t shockValue, const int MODIFIER);
@@ -85,8 +83,7 @@ public:
 
 
 private:
-  //void decreaseHungerByNumber(const int satiate);
-  //int hungerLevel;
+  int insanityLong, insanityShort, insanityShortTemp;
 
   void attemptIdentifyItems();
   void testPhobias();

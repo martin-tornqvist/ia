@@ -16,14 +16,14 @@
 	"DebugMode.h"
 	"BasicUtils.h"
 
-1355674112 c:\dev\ia\src\basicutils.h
+1359640281 c:\dev\ia\src\basicutils.h
 	<vector>
 	<math.h>
 	"ConstTypes.h"
 	"Actor.h"
 	"MersenneTwister.h"
 
-1355674112 c:\dev\ia\src\consttypes.h
+1360011624 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -127,7 +127,7 @@
 	<ctime>
 	<cmath>
 
-1355674112 c:\dev\ia\src\actorplayer.h
+1360014487 c:\dev\ia\src\actorplayer.h
 	"Actor.h"
 	"ConstTypes.h"
 
@@ -197,7 +197,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1355674113 c:\dev\ia\src\map.h
+1360011692 c:\dev\ia\src\map.h
 	<vector>
 	<iostream>
 	"ConstDungeonSettings.h"
@@ -208,7 +208,7 @@
 	"Config.h"
 	"Render.h"
 
-1355674113 c:\dev\ia\src\render.h
+1360011680 c:\dev\ia\src\render.h
 	"SFML/Graphics/RenderWindow.hpp"
 	"SFML/Graphics/Texture.hpp"
 	"SFML/Graphics/Sprite.hpp"
@@ -242,7 +242,7 @@
 	"Feature.h"
 	"ConstTypes.h"
 
-1355674112 c:\dev\ia\src\itemdrop.h
+1359622536 c:\dev\ia\src\itemdrop.h
 	<iostream>
 	"ConstTypes.h"
 
@@ -263,7 +263,7 @@
 	"PlayerCreateCharacter.h"
 	"BasicUtils.h"
 
-1355674112 c:\dev\ia\src\inventory.h
+1359715244 c:\dev\ia\src\inventory.h
 	<vector>
 	<string>
 	<iostream>
@@ -435,7 +435,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1355674112 source:c:\dev\ia\src\actorplayer.cpp
+1360013972 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -465,7 +465,7 @@
 1355674112 c:\dev\ia\src\interface.h
 	"InventoryHandler.h"
 
-1355674112 c:\dev\ia\src\inventoryhandler.h
+1359622536 c:\dev\ia\src\inventoryhandler.h
 	"Inventory.h"
 
 1355674113 c:\dev\ia\src\popup.h
@@ -942,7 +942,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1355674112 source:c:\dev\ia\src\featuredoor.cpp
+1359622536 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1027,7 +1027,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1355674112 source:c:\dev\ia\src\gametime.cpp
+1360014093 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1100,7 +1100,7 @@
 	<fstream>
 	"Colors.h"
 
-1355674112 source:c:\dev\ia\src\inventory.cpp
+1359715716 source:c:\dev\ia\src\inventory.cpp
 	"Inventory.h"
 	"ItemWeapon.h"
 	"Engine.h"
@@ -1114,7 +1114,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1355674112 source:c:\dev\ia\src\inventoryhandler.cpp
+1359715297 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1168,7 +1168,7 @@
 	"Item.h"
 	"Converters.h"
 
-1355674112 source:c:\dev\ia\src\itemdrop.cpp
+1359622536 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1177,6 +1177,7 @@
 	"Log.h"
 	"Map.h"
 	"Inventory.h"
+	"ItemFactory.h"
 	<algorithm>
 
 1355674113 source:c:\dev\ia\src\itemfactory.cpp
@@ -1540,7 +1541,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1359458114 source:c:\dev\ia\src\render.cpp
+1360012192 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1558,7 +1559,7 @@
 	"Attack.h"
 	"FeatureWall.h"
 
-1355674113 source:c:\dev\ia\src\renderinventory.cpp
+1359623466 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"

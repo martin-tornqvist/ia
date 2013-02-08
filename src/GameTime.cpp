@@ -180,7 +180,9 @@ void GameTime::runNewTurnEvents() {
     if(d.isScroll) {
       if(d.isScrollLearned) {
         if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
-          d.castFromMemoryChance++;
+          if(d.castFromMemoryChance < 100) {
+            d.castFromMemoryChance++;
+          }
         }
       }
     }

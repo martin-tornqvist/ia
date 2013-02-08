@@ -27,8 +27,8 @@ public:
 	bool playerVision[MAP_X_CELLS][MAP_Y_CELLS];
 	Item* items[MAP_X_CELLS][MAP_Y_CELLS];
 	FeatureStatic* featuresStatic[MAP_X_CELLS][MAP_Y_CELLS];
-	GlyphAndColor playerVisualMemory[MAP_X_CELLS][MAP_Y_CELLS];
-	TileAndColor playerVisualMemoryTiles[MAP_X_CELLS][MAP_Y_CELLS];
+	CellRenderDataAscii playerVisualMemory[MAP_X_CELLS][MAP_Y_CELLS];
+	CellRenderDataTile playerVisualMemoryTiles[MAP_X_CELLS][MAP_Y_CELLS];
 	bool light[MAP_X_CELLS][MAP_Y_CELLS];
 	bool darkness[MAP_X_CELLS][MAP_Y_CELLS];
 

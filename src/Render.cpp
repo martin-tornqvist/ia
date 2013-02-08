@@ -545,8 +545,8 @@ void Renderer::drawLifeBar(const int X_CELL, const int Y_CELL, const int LENGTH)
 }
 
 void Renderer::drawASCII() {
-  GlyphAndColor* currentDrw = NULL;
-  GlyphAndColor tempDrw;
+  CellRenderDataAscii* currentDrw = NULL;
+  CellRenderDataAscii tempDrw;
 
   //-------------------------------------------- INSERT FEATURES AND BLOOD INTO TILE ARRAY
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -623,8 +623,10 @@ void Renderer::drawASCII() {
     if(actor != eng->player) {
       xPos = actor->pos.x;
       yPos = actor->pos.y;
-      if(actor->deadState == actorDeadState_alive && actor->getGlyph() != ' ' &&
-          eng->player->checkIfSeeActor(*actor, NULL)) {
+      if(
+        actor->deadState == actorDeadState_alive &&
+        actor->getGlyph() != ' ' &&
+        eng->player->checkIfSeeActor(*actor, NULL)) {
         currentDrw = &renderArray[xPos][yPos];
         currentDrw->color = actor->getColor();
         currentDrw->glyph = actor->getGlyph();
@@ -651,14 +653,23 @@ void Renderer::drawASCII() {
 
       if(eng->map->playerVision[x][y]) {
         tempDrw = renderArray[x][y];
+        if(tempDrw.isFadeEffectAllowed) {
+          const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+          if(DIST_FROM_PLAYER > 2) {
+            const double DIST_FADE_DIV = min(2.5, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.5));
+            tempDrw.color.r /= DIST_FADE_DIV;
+            tempDrw.color.g /= DIST_FADE_DIV;
+            tempDrw.color.b /= DIST_FADE_DIV;
+          }
+        }
       }
       else if(eng->map->explored[x][y]) {
         renderArray[x][y] = eng->map->playerVisualMemory[x][y];
         tempDrw = renderArray[x][y];
 
-        tempDrw.color.r /= 3;
-        tempDrw.color.g /= 3;
-        tempDrw.color.b /= 3;
+        tempDrw.color.r /= 5;
+        tempDrw.color.g /= 5;
+        tempDrw.color.b /= 5;
       }
 
       if(tempDrw.glyph != ' ') {
@@ -681,8 +692,8 @@ void Renderer::drawASCII() {
 }
 
 void Renderer::drawTiles() {
-  TileAndColor* currentDrw = NULL;
-  TileAndColor tempDrw;
+  CellRenderDataTile* currentDrw = NULL;
+  CellRenderDataTile tempDrw;
 
   //-------------------------------------------- INSERT STATIC FEATURES AND BLOOD INTO TILE ARRAY
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -762,15 +773,17 @@ void Renderer::drawTiles() {
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     actor = eng->gameTime->getActorAt(i);
     if(actor != eng->player) {
-      xPos = actor->pos.x;
-      yPos = actor->pos.y;
-      if(actor->deadState == actorDeadState_alive && actor->getTile() != tile_empty
-          && eng->player->checkIfSeeActor(*actor, NULL)) {
-        currentDrw = &renderArrayTiles[xPos][yPos];
+      if(
+        actor->deadState == actorDeadState_alive &&
+        actor->getTile() != tile_empty &&
+        eng->player->checkIfSeeActor(*actor, NULL)) {
+        currentDrw = &renderArrayTiles[actor->pos.x][actor->pos.y];
         currentDrw->color = actor->getColor();
         currentDrw->tile = actor->getTile();
 
         currentDrw->lifebarLength = getLifebarLength(*actor);
+
+        currentDrw->isFadeEffectAllowed = false;
 
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
         if(monster->leader == eng->player) {
@@ -793,21 +806,23 @@ void Renderer::drawTiles() {
 
       if(eng->map->playerVision[x][y]) {
         tempDrw = renderArrayTiles[x][y];
-        const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
-        if(DIST_FROM_PLAYER > 2) {
-          const double DIST_FADE_DIV = min(2.5, 1.0 + (DIST_FROM_PLAYER * 0.5));
-          tempDrw.color.r /= DIST_FADE_DIV;
-          tempDrw.color.g /= DIST_FADE_DIV;
-          tempDrw.color.b /= DIST_FADE_DIV;
+        if(tempDrw.isFadeEffectAllowed) {
+          const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+          if(DIST_FROM_PLAYER > 2) {
+            const double DIST_FADE_DIV = min(2.5, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.5));
+            tempDrw.color.r /= DIST_FADE_DIV;
+            tempDrw.color.g /= DIST_FADE_DIV;
+            tempDrw.color.b /= DIST_FADE_DIV;
+          }
         }
       }
       else if(eng->map->explored[x][y]) {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
         tempDrw = renderArrayTiles[x][y];
 
-        tempDrw.color.r /= 3;
-        tempDrw.color.g /= 3;
-        tempDrw.color.b /= 3;
+        tempDrw.color.r /= 5;
+        tempDrw.color.g /= 5;
+        tempDrw.color.b /= 5;
       }
 
       /*
@@ -822,11 +837,13 @@ void Renderer::drawTiles() {
           const Tile_t tileBelowSeen = renderArrayActorsOmittedTiles[x][y + 1].tile;
           const Tile_t tileBelowMem = eng->map->playerVisualMemoryTiles[x][y + 1].tile;
 
-          const bool TILE_BELOW_IS_WALL_FRONT = IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
-                                                Wall::isTileAnyWallFront(tileBelowMem);
+          const bool TILE_BELOW_IS_WALL_FRONT =
+            IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
+            Wall::isTileAnyWallFront(tileBelowMem);
 
-          const bool TILE_BELOW_IS_WALL_TOP = IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
-                                              Wall::isTileAnyWallTop(tileBelowMem);
+          const bool TILE_BELOW_IS_WALL_TOP =
+            IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
+            Wall::isTileAnyWallTop(tileBelowMem);
 
           if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
             const Wall* const wall = dynamic_cast<const Wall*>(eng->map->featuresStatic[x][y]);

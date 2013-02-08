@@ -620,9 +620,56 @@ int Inventory::getTotalItemWeight() const {
   return weight;
 }
 
-void Inventory::sortGeneralInventory() {
-  // Sort items according to color code first, and lexicographically second
+// Function for lexicographically comparing two items
+struct LexicograhicalCompareItems {
+public:
+  LexicograhicalCompareItems(Engine* engine) : eng(engine) {
+  }
+  bool operator()(Item* const item1, Item* const item2) {
+    const string& itemName1 = eng->itemData->getItemRef(item1, itemRef_plain, true);
+    const string& itemName2 = eng->itemData->getItemRef(item2, itemRef_plain, true);
+    // tracer << "itemName1: " << itemName1 << "    itemName2: " << itemName2 << endl;
+    return std::lexicographical_compare(itemName1.begin(), itemName1.end(), itemName2.begin(), itemName2.end());
+  }
+  Engine* const eng;
+};
+
+void Inventory::sortGeneralInventory(Engine* const engine) {
   vector< vector<Item*> > sortBuffer;
+
+  // Sort according to item interface color first
+  for(unsigned int iGeneral = 0; iGeneral < m_general.size(); iGeneral++) {
+    bool isAddedToBuffer = false;
+    for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
+      const sf::Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
+      if(m_general.at(iGeneral)->getInterfaceClr() == clrCurrentGroup) {
+        sortBuffer.at(iBuffer).push_back(m_general.at(iGeneral));
+        isAddedToBuffer = true;
+        break;
+      }
+    }
+    if(isAddedToBuffer) {
+      continue;
+    } else {
+      vector<Item*> newItemCategory;
+      newItemCategory.push_back(m_general.at(iGeneral));
+      sortBuffer.push_back(newItemCategory);
+    }
+  }
+
+  // Sort lexicographically sedond
+  for(unsigned int i = 0; i < sortBuffer.size(); i++) {
+    LexicograhicalCompareItems cmp(engine);
+    std::sort(sortBuffer.at(i).begin(), sortBuffer.at(i).end(), cmp);
+  }
+
+  // Set the inventory from the sorting buffer
+  m_general.resize(0);
+  for(unsigned int i = 0; i < sortBuffer.size(); i++) {
+    for(unsigned int ii = 0; ii < sortBuffer.at(i).size(); ii++) {
+      m_general.push_back(sortBuffer.at(i).at(ii));
+    }
+  }
 }
 
 

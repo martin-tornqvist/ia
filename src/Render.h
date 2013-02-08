@@ -101,11 +101,11 @@ public:
 
   void drawMainMenuLogo(const int Y_POS);
 
-  GlyphAndColor renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];
-  TileAndColor renderArrayActorsOmittedTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataTile renderArrayActorsOmittedTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
-  GlyphAndColor renderArray[MAP_X_CELLS][MAP_Y_CELLS];
-  TileAndColor renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArray[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataTile renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
 
   void setupWindowAndImagesClearPrev();
 

@@ -114,7 +114,7 @@ void InventoryHandler::runSlotsScreen() {
   Inventory* const inv = eng->player->getInventory();
   vector<InventorySlot>* invSlots = inv->getSlots();
 
-  inv->sortGeneralInventory();
+  inv->sortGeneralInventory(eng);
 
   equipmentSlotButtons.resize(0);
   char key = 'a';
@@ -189,7 +189,7 @@ bool InventoryHandler::runUseScreen() {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
-  eng->player->getInventory()->sortGeneralInventory();
+  eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsUsable();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -259,7 +259,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
-  eng->player->getInventory()->sortGeneralInventory();
+  eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsEquip(slotToEquip->devName);
 
@@ -299,7 +299,7 @@ bool InventoryHandler::runBrowseInventoryMode() {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
-  eng->player->getInventory()->sortGeneralInventory();
+  eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsShowAll();
   MenuBrowser browser(generalItemsToShow.size(), 0);

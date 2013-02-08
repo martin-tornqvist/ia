@@ -194,7 +194,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
-  string str = "Use which item?  [ctrl+select] drop  [space/esc] cancel";
+  string str = "Use which item?  [shift+select] drop  [space/esc] cancel";
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
   yPos++;
 
