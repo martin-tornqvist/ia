@@ -9,7 +9,9 @@
 //const int HUNGER_LEVEL_FIRST_WARNING    = 400;
 //const int HUNGER_LEVEL_FINAL_WARNING    = 200;
 
-enum InsanityPhobias_t {
+const int MIN_SHOCK_WHEN_OBSESSION = 25;
+
+enum InsanityPhobia_t {
   insanityPhobia_rat,
   insanityPhobia_spider,
   insanityPhobia_dog,
@@ -20,10 +22,10 @@ enum InsanityPhobias_t {
   endOfInsanityPhobias
 };
 
-enum InsanityCompulsions_t {
-  insanityCompulsion_sadism,
-  insanityCompulsion_masochism,
-  endOfInsanityCompulsions
+enum InsanityObsession_t {
+  insanityObsession_sadism,
+  insanityObsession_masochism,
+  endOfInsanityObsessions
 };
 
 class Monster;
@@ -55,8 +57,18 @@ public:
 
   int mythosKnowledge;
 
-  void shock(const ShockValues_t shockValue, const int MODIFIER);
-  void incrInsanityLong();
+  void incrShock(const ShockValues_t shockValue, const int MODIFIER);
+  void restoreShock();
+  int getShockTotal() {
+    return shock_ + shockTemp_;
+  }
+  int getShockTmp() {
+    return shockTemp_;
+  }
+  void incrInsanity();
+  int getInsanity() const {
+    return insanity_;
+  }
   void setTempShockFromFeatures();
 
   int dynamiteFuseTurns;
@@ -67,7 +79,7 @@ public:
   void setParametersFromSaveLines(vector<string>& lines);
 
   bool insanityPhobias[endOfInsanityPhobias];
-  bool insanityCompulsions[endOfInsanityCompulsions];
+  bool insanityObsessions[endOfInsanityObsessions];
 
   const Actor* target;
 
@@ -81,9 +93,10 @@ public:
 
   void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-
 private:
-  int insanityLong, insanityShort, insanityShortTemp;
+  friend class DungeonMaster;
+  friend class GameTime;
+  int insanity_, shock_, shockTemp_;
 
   void attemptIdentifyItems();
   void testPhobias();

@@ -310,7 +310,7 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     def_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->player->shock(shockValue_heavy, 0);
+      engine->player->incrShock(shockValue_heavy, 0);
     }
 
     def_->isIdentified = true;
@@ -359,7 +359,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     }
   }
   if(engine->player->deadState == actorDeadState_alive) {
-    engine->player->shock(shockValue_heavy, 0);
+    engine->player->incrShock(shockValue_heavy, 0);
     engine->gameTime->letNextAct();
 
     def_->castFromMemoryChance = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;
@@ -384,12 +384,12 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
     specificRead(false, engine);
     attemptMemorizeIfLearnable(engine);
-    engine->player->shock(shockValue_heavy, 0);
+    engine->player->incrShock(shockValue_heavy, 0);
   } else {
     engine->log->addMessage("I recite forbidden incantations...");
     def_->isTried = true;
     specificRead(false, engine);
-    engine->player->shock(shockValue_heavy, 0);
+    engine->player->incrShock(shockValue_heavy, 0);
     if(def_->isIdentified) {
       engine->log->addMessage("It was " + def_->name.name_a + ".");
     }

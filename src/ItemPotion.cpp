@@ -186,22 +186,19 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
     engine->log->addMessage("All my phobias are cured!");
   }
 
-  bool isCompulsionsCured = false;
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    if(engine->player->insanityCompulsions[i] == true) {
-      engine->player->insanityCompulsions[i] = false;
-      isCompulsionsCured = true;
+  bool isObsessionsCured = false;
+  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+    if(engine->player->insanityObsessions[i] == true) {
+      engine->player->insanityObsessions[i] = false;
+      isObsessionsCured = true;
     }
   }
-  if(isCompulsionsCured) {
-    engine->log->addMessage("All my compulsions are cured!");
+  if(isObsessionsCured) {
+    engine->log->addMessage("All my obsessions are cured!");
   }
 
-  const bool IS_SHOCK_RESTORED = engine->player->insanityShort > 0;
-  if(IS_SHOCK_RESTORED) {
-    engine->player->insanityShort = 0;
-    engine->log->addMessage("I feel at ease. ");
-  }
+  engine->player->restoreShock();
+  engine->log->addMessage("I feel more at ease.");
 
   setRealDefinitionNames(engine, false);
 }
@@ -295,7 +292,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     engine->log->addMessage("It was a " + REAL_NAME + ".");
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->player->shock(shockValue_heavy, 0);
+      engine->player->incrShock(shockValue_heavy, 0);
     }
 
     def_->isIdentified = true;
@@ -336,7 +333,7 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   if(actor == engine->player) {
     def_->isTried = true;
 
-    engine->player->shock(shockValue_heavy, 0);
+    engine->player->incrShock(shockValue_heavy, 0);
 
     if(def_->isIdentified) {
       engine->log->addMessage("I drink " + def_->name.name_a + "...");

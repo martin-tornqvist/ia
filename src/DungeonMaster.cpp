@@ -147,8 +147,8 @@ void DungeonMaster::monsterKilled(Actor* monster) {
   monster->getDef()->nrOfKills += 1;
 
   if(MONSTER_LVL > 1) {
-    if(eng->player->insanityCompulsions[insanityCompulsion_sadism] == true) {
-      eng->player->insanityShort = max(0, eng->player->insanityShort - 4);
+    if(eng->player->insanityObsessions[insanityObsession_sadism] == true) {
+      eng->player->shock_ = max(0, eng->player->shock_ - 4);
     }
   }
 }

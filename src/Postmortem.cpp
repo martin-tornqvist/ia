@@ -31,7 +31,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StringAndColor("   *Advanced to character level " + intToString(eng->dungeonMaster->getLevel()), clrInfo));
   postmortemLines.push_back(StringAndColor("   *Gained " + intToString(eng->dungeonMaster->getXp()) + " experience points", clrInfo));
   postmortemLines.push_back(StringAndColor("   *Explored to the depth of dungeon level " + intToString(eng->map->getDungeonLevel()), clrInfo));
-  postmortemLines.push_back(StringAndColor("   *Was " + intToString(eng->player->insanityLong) + "% insane", clrInfo));
+  postmortemLines.push_back(StringAndColor("   *Was " + intToString(eng->player->getInsanity()) + "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored, this shit is ugly as hell
   if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
@@ -49,10 +49,10 @@ void Postmortem::makeInfoLines() {
   if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
     postmortemLines.push_back(StringAndColor("   *Had a phobia of deep places", clrInfo));
 
-  if(eng->player->insanityCompulsions[insanityCompulsion_masochism])
-    postmortemLines.push_back(StringAndColor("   *Had a masochistic compulsion", clrInfo));
-  if(eng->player->insanityCompulsions[insanityCompulsion_sadism])
-    postmortemLines.push_back(StringAndColor("   *Had a sadistic compulsion", clrInfo));
+  if(eng->player->insanityObsessions[insanityObsession_masochism])
+    postmortemLines.push_back(StringAndColor("   *Had a masochistic obsession", clrInfo));
+  if(eng->player->insanityObsessions[insanityObsession_sadism])
+    postmortemLines.push_back(StringAndColor("   *Had a sadistic obsession", clrInfo));
 
   postmortemLines.push_back(StringAndColor(" ", clrInfo));
 

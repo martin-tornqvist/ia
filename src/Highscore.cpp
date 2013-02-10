@@ -43,7 +43,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
     eng->dungeonMaster->getXp(),
     eng->dungeonMaster->getLevel(),
     eng->map->getDungeonLevel(),
-    eng->player->insanityLong,
+    eng->player->getInsanity(),
     IS_VICTORY);
 
   entries.push_back(currentPlayer);

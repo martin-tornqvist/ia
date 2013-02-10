@@ -64,8 +64,8 @@ void DungeonClimb::makeLevel() {
 
 void DungeonClimb::travelDown(const int levels) {
 	tracer << "DungeonClimb::travelDown()..." << endl;
-	eng->player->insanityShort = 0;
-	eng->player->insanityShortTemp = 0;
+
+	eng->player->restoreShock();
 
 	eng->map->incrDungeonLevel(levels);
 	makeLevel();

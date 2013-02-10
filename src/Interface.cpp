@@ -38,8 +38,8 @@ void Interface::drawInfoLines() {
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
 
   //Sanity
-  const int INS_SHORT = eng->player->insanityShort + eng->player->insanityShortTemp;
-  const int INS_LONG = eng->player->insanityLong;
+  const int INS_SHORT = eng->player->getShockTotal();
+  const int INS_LONG = eng->player->getInsanity();
   xPos += 1 + str.length();
   eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;

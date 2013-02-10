@@ -57,7 +57,7 @@ void GameTime::letNextAct() {
   Actor* currentActor = getCurrentActor();
 
   if(currentActor == eng->player) {
-    eng->player->insanityShortTemp = 0;
+    eng->player->shockTemp_ = 0;
     eng->playerVisualMemory->updateVisualMemory();
     eng->player->FOVupdate();
     eng->player->setTempShockFromFeatures();

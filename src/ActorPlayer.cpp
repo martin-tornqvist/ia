@@ -24,9 +24,9 @@
 #include "FeatureLitDynamite.h"
 
 Player::Player() :
-  firstAidTurnsLeft(-1), waitTurnsLeft(-1), mythosKnowledge(0), insanityLong(0),
-  insanityShort(0), insanityShortTemp(0), dynamiteFuseTurns(-1), molotovFuseTurns(-1),
-  flareFuseTurns(-1), target(NULL) {
+  firstAidTurnsLeft(-1), waitTurnsLeft(-1), mythosKnowledge(0),
+  dynamiteFuseTurns(-1), molotovFuseTurns(-1), flareFuseTurns(-1),
+  insanity_(0), shock_(0), shockTemp_(0), target(NULL) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -35,8 +35,8 @@ void Player::actorSpecific_spawnStartItems() {
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
     insanityPhobias[i] = false;
   }
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    insanityCompulsions[i] = false;
+  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+    insanityObsessions[i] = false;
   }
 
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
@@ -108,8 +108,8 @@ void Player::addSaveLines(vector<string>& lines) const {
     lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->turnsLeft));
   }
 
-  lines.push_back(intToString(insanityLong));
-  lines.push_back(intToString(insanityShort));
+  lines.push_back(intToString(insanity_));
+  lines.push_back(intToString(shock_));
   lines.push_back(intToString(mythosKnowledge));
   lines.push_back(intToString(hp_));
   lines.push_back(intToString(hpMax_));
@@ -122,14 +122,14 @@ void Player::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
     lines.push_back(insanityPhobias[i] == 0 ? "0" : "1");
   }
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    lines.push_back(insanityCompulsions[i] == 0 ? "0" : "1");
+  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+    lines.push_back(insanityObsessions[i] == 0 ? "0" : "1");
   }
 }
 
 void Player::actorSpecific_hit(const int DMG) {
-  if(insanityCompulsions[insanityCompulsion_masochism] && DMG > 1) {
-    insanityShort = max(0, insanityShort - 5);
+  if(insanityObsessions[insanityObsession_masochism] && DMG > 1) {
+    shock_ = max(0, shock_ - 5);
   }
 
   //Hit aborts first aid
@@ -139,8 +139,8 @@ void Player::actorSpecific_hit(const int DMG) {
   }
 
   //Hit gives a little shock
-  if(insanityCompulsions[insanityCompulsion_masochism] == false) {
-    shock(shockValue_mild, 0);
+  if(insanityObsessions[insanityObsession_masochism] == false) {
+    incrShock(shockValue_mild, 0);
   }
 
   eng->renderer->drawMapAndInterface();
@@ -157,9 +157,9 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     statusEffectsHandler_->attemptAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
   }
 
-  insanityLong = stringToInt(lines.front());
+  insanity_ = stringToInt(lines.front());
   lines.erase(lines.begin());
-  insanityShort = stringToInt(lines.front());
+  shock_ = stringToInt(lines.front());
   lines.erase(lines.begin());
   mythosKnowledge = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -182,13 +182,13 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     insanityPhobias[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    insanityCompulsions[i] = lines.front() == "0" ? false : true;
+  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+    insanityObsessions[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
 }
 
-void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
+void Player::incrShock(const ShockValues_t shockValue, const int MODIFIER) {
   const int PLAYER_FORTITUDE = def_->abilityValues.getAbilityValue(ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
@@ -215,23 +215,36 @@ void Player::shock(const ShockValues_t shockValue, const int MODIFIER) {
     const bool IS_SHOCK_REDUCED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
     const int SHOCK_TAKEN = IS_SHOCK_REDUCED ? (baseIncr * (100 - 20)) / 100 : baseIncr;
 
-    insanityShort = min(100, insanityShort + max(0, SHOCK_TAKEN + MODIFIER));
+    shock_ = min(100, shock_ + max(0, SHOCK_TAKEN + MODIFIER));
   }
 }
 
-void Player::incrInsanityLong() {
+void Player::restoreShock() {
+  // If an obsession is active, only restore to a certain min level
+  bool isObsessionActive = false;
+  for(int i = 0; i < endOfInsanityObsessions; i++) {
+    if(insanityObsessions[i]) {
+      isObsessionActive = true;
+      break;
+    }
+  }
+  shock_ = isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION : 0;
+  shockTemp_ = 0;
+}
+
+void Player::incrInsanity() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanityLong += eng->dice.getInRange(5, 8);
+    insanity_ += eng->dice.getInRange(5, 8);
   }
 
-  insanityShort = max(0, insanityShort - 60);
+  shock_ = max(0, shock_ - 60);
 
   updateColor();
   eng->renderer->drawMapAndInterface();
 
-  if(insanityLong >= 100) {
+  if(insanity_ >= 100) {
     popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true);
     die(true, false, false);
@@ -296,7 +309,7 @@ void Player::incrInsanityLong() {
       }
       break;
       case 6: {
-        if(insanityLong > 5) {
+        if(insanity_ > 5) {
           //There is a limit to the number of phobias you can have
           int phobiasActive = 0;
           for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -368,29 +381,31 @@ void Player::incrInsanityLong() {
       break;
 
       case 7: {
-        if(insanityLong > 20) {
-          int compulsionsActive = 0;
-          for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-            if(insanityCompulsions[i] == true) {
-              compulsionsActive++;
+        if(insanity_ > 20) {
+          int obsessionsActive = 0;
+          for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+            if(insanityObsessions[i] == true) {
+              obsessionsActive++;
             }
           }
-          if(compulsionsActive == 0) {
-            const InsanityCompulsions_t compulsion = static_cast<InsanityCompulsions_t>(eng->dice.getInRange(0, endOfInsanityCompulsions - 1));
-            switch(compulsion) {
-            case insanityCompulsion_masochism: {
-              popupMessage
-              += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, I find a little relief. However, my depraved mind can no longer find complete peace (shock can not go below 25%).";
+          if(obsessionsActive == 0) {
+            const InsanityObsession_t obsession = static_cast<InsanityObsession_t>(eng->dice.getInRange(0, endOfInsanityObsessions - 1));
+            switch(obsession) {
+            case insanityObsession_masochism: {
+              popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
+              popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
+              popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
               eng->popup->showMessage(popupMessage, true);
-              insanityCompulsions[insanityCompulsion_masochism] = true;
+              insanityObsessions[insanityObsession_masochism] = true;
               return;
             }
             break;
-            case insanityCompulsion_sadism: {
-              popupMessage
-              += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, I find a little relief. However, my depraved mind can no longer find complete peace (shock can not go below 25%).";
+            case insanityObsession_sadism: {
+              popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
+              popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
+              popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
               eng->popup->showMessage(popupMessage, true);
-              insanityCompulsions[insanityCompulsion_sadism] = true;
+              insanityObsessions[insanityObsession_sadism] = true;
               return;
             }
             break;
@@ -454,16 +469,16 @@ void Player::incrInsanityLong() {
 
 void Player::setTempShockFromFeatures() {
   if(eng->map->darkness[pos.x][pos.y] && eng->map->light[pos.x][pos.y] == false) {
-    insanityShortTemp += 20;
+    shockTemp_ += 20;
   }
 
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
       const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-      insanityShortTemp += f->getShockWhenAdjacent();
+      shockTemp_ += f->getShockWhenAdjacent();
     }
   }
-  insanityShortTemp = min(99, insanityShortTemp);
+  shockTemp_ = min(99, shockTemp_);
 }
 
 bool Player::isStandingInOpenSpace() const {
@@ -572,7 +587,7 @@ void Player::updateColor() {
 //    return;
 //  }
 
-  const int CUR_SHOCK = insanityShort + insanityShortTemp;
+  const int CUR_SHOCK = shock_ + shockTemp_;
   if(CUR_SHOCK >= 75) {
     clr_ = clrMagenta;
     return;
@@ -628,9 +643,10 @@ void Player::act() {
     testPhobias();
   }
 
-  for(unsigned int i = 0; i < endOfInsanityCompulsions; i++) {
-    if(insanityCompulsions[i] == true) {
-      insanityShort = max(25, insanityShort);
+  // If obsessions are active, raise shock to a minimum level
+  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+    if(insanityObsessions[i] == true) {
+      shock_ = max(MIN_SHOCK_WHEN_OBSESSION, shock_);
       break;
     }
   }
@@ -640,7 +656,7 @@ void Player::act() {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
     const ActorDefinition* const def = monster->getDef();
     if(def->shockValue != shockValue_none) {
-      shock(def->shockValue, -(monster->shockDecrease));
+      incrShock(def->shockValue, -(monster->shockDecrease));
       monster->shockDecrease++;
     }
   }
@@ -655,19 +671,19 @@ void Player::act() {
       } else {
         eng->popup->showMessage("A chill runs down my spine...", true);
       }
-      shock(shockValue_heavy, 0);
-      shock(shockValue_heavy, 0);
+      incrShock(shockValue_heavy, 0);
+      incrShock(shockValue_heavy, 0);
       eng->renderer->drawMapAndInterface();
     } else {
       if(eng->map->getDungeonLevel() != 0) {
-        shock(shockValue_mild, 0);
+        incrShock(shockValue_mild, 0);
       }
     }
   }
 
   //Lose long-term sanity from high short-term sanity?
-  if(insanityShort + insanityShortTemp >= 100) {
-    incrInsanityLong();
+  if(shock_ + shockTemp_ >= 100) {
+    incrInsanity();
     eng->gameTime->letNextAct();
     return;
   }

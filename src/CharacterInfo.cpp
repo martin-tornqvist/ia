@@ -51,10 +51,10 @@ void CharacterInfo::makeLines() {
   if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
     lines.push_back(StringAndColor(offsetSpaces + "Phobia of deep places", clrRedLight));
 
-  if(eng->player->insanityCompulsions[insanityCompulsion_masochism])
-    lines.push_back(StringAndColor(offsetSpaces + "Masochistic compulsion", clrRedLight));
-  if(eng->player->insanityCompulsions[insanityCompulsion_sadism])
-    lines.push_back(StringAndColor(offsetSpaces + "Sadistic compulsion", clrRedLight));
+  if(eng->player->insanityObsessions[insanityObsession_masochism])
+    lines.push_back(StringAndColor(offsetSpaces + "Masochistic obsession", clrRedLight));
+  if(eng->player->insanityObsessions[insanityObsession_sadism])
+    lines.push_back(StringAndColor(offsetSpaces + "Sadistic obsession", clrRedLight));
   const int NR_LINES_AFTER_MENTAL = lines.size();
 
   if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
