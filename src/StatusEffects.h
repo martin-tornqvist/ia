@@ -87,6 +87,7 @@ public:
 
   //Questions for the status to answer. This is how the status ends,
   //how it damages the actor, how it affects ability values, etc.
+  virtual bool isConsideredBeneficial() = 0;
   virtual string getInterfaceName() = 0;
   virtual string messageWhenStart() = 0;
   virtual string messageWhenStartOther() = 0;
@@ -173,6 +174,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "Terrified";
   }
@@ -252,6 +257,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "Diseased";
   }
@@ -319,6 +328,10 @@ public:
   StatusStill* copy() {
     StatusStill* cpy = new StatusStill(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -396,6 +409,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Moving";
   }
@@ -469,6 +486,10 @@ public:
   StatusBlind* copy() {
     StatusBlind* cpy = new StatusBlind(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -555,6 +576,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Blessed";
   }
@@ -630,6 +655,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "Cursed";
   }
@@ -703,6 +732,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Clairvoyant";
   }
@@ -768,6 +801,10 @@ public:
   StatusBurning* copy() {
     StatusBurning* cpy = new StatusBurning(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -839,6 +876,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -907,6 +948,10 @@ public:
   StatusConfused* copy() {
     StatusConfused* cpy = new StatusConfused(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -982,6 +1027,10 @@ public:
     StatusNailed* cpy = new StatusNailed(turnsLeft);
     cpy->nrOfSpikes = nrOfSpikes;
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -1073,6 +1122,10 @@ public:
     return -999;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1154,6 +1207,10 @@ public:
     return -999;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1228,6 +1285,10 @@ public:
     return -999;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1298,6 +1359,10 @@ public:
     return -999;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1359,6 +1424,10 @@ public:
   StatusParalyzed* copy() {
     StatusParalyzed* cpy = new StatusParalyzed(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -1444,6 +1513,10 @@ public:
   StatusFainted* copy() {
     StatusFainted* cpy = new StatusFainted(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -1543,6 +1616,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "Slowed";
   }
@@ -1614,6 +1691,10 @@ public:
   StatusPerfectReflexes* copy() {
     StatusPerfectReflexes* cpy = new StatusPerfectReflexes(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -1689,6 +1770,10 @@ public:
   StatusPerfectAim* copy() {
     StatusPerfectAim* cpy = new StatusPerfectAim(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -1768,6 +1853,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "PerfStealth";
   }
@@ -1843,6 +1932,10 @@ public:
     return cpy;
   }
 
+  bool isConsideredBeneficial() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "PerfFort";
   }
@@ -1916,6 +2009,10 @@ public:
   StatusPerfectToughness* copy() {
     StatusPerfectToughness* cpy = new StatusPerfectToughness(turnsLeft);
     return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -2071,13 +2168,6 @@ public:
       if(effects.at(i)->isEthereal() == true)
         return true;
     return false;
-  }
-
-  string getStatusLine() {
-    string line = "";
-    for(unsigned int i = 0; i < effects.size(); i++)
-      line += effects.at(i)->getInterfaceName() + " ";
-    return line;
   }
 
   bool hasEffect(const StatusEffects_t effect) const {

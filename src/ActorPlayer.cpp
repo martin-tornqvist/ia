@@ -188,6 +188,13 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
+int Player::getShockResistance() const {
+  const bool IS_COOLHEADED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
+  int ret = 0;
+  ret += IS_COOLHEADED_PICKED * 20;
+  return ret;
+}
+
 void Player::incrShock(const ShockValues_t shockValue, const int MODIFIER) {
   const int PLAYER_FORTITUDE = def_->abilityValues.getAbilityValue(ability_resistStatusMind, true, *this);
 
@@ -213,7 +220,7 @@ void Player::incrShock(const ShockValues_t shockValue, const int MODIFIER) {
     }
 
     const bool IS_SHOCK_REDUCED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
-    const int SHOCK_TAKEN = IS_SHOCK_REDUCED ? (baseIncr * (100 - 20)) / 100 : baseIncr;
+    const int SHOCK_TAKEN = (baseIncr * (100 - getShockResistance())) / 100;
 
     shock_ = min(100, shock_ + max(0, SHOCK_TAKEN + MODIFIER));
   }

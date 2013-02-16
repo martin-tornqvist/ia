@@ -158,11 +158,14 @@ void Marker::place(const MarkerTask_t markerTask) {
   }
 
   eng->log->clearLog();
+
   draw(markerTask);
 
   if(markerTask == markerTask_look) {
     eng->look->markerAtCoord(pos_);
   }
+
+  draw(markerTask);
 
   isDone_ = false;
   while(isDone_ == false) {

@@ -95,6 +95,7 @@ void Renderer::setupWindowAndImagesClearPrev() {
 
   tracer << "Renderer: Setting frame rate limit" << endl;
   renderWindow_->setFramerateLimit(60);
+//  renderWindow_->setVerticalSyncEnabled(true);
 
   loadFont();
 
@@ -655,8 +656,8 @@ void Renderer::drawASCII() {
         tempDrw = renderArray[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
-          if(DIST_FROM_PLAYER > 2) {
-            const double DIST_FADE_DIV = min(2.5, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.5));
+          if(DIST_FROM_PLAYER > 1) {
+            const double DIST_FADE_DIV = min(2.0, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.33));
             tempDrw.color.r /= DIST_FADE_DIV;
             tempDrw.color.g /= DIST_FADE_DIV;
             tempDrw.color.b /= DIST_FADE_DIV;
@@ -808,8 +809,8 @@ void Renderer::drawTiles() {
         tempDrw = renderArrayTiles[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
-          if(DIST_FROM_PLAYER > 2) {
-            const double DIST_FADE_DIV = min(2.5, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.5));
+          if(DIST_FROM_PLAYER > 1) {
+            const double DIST_FADE_DIV = min(2.0, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.33));
             tempDrw.color.r /= DIST_FADE_DIV;
             tempDrw.color.g /= DIST_FADE_DIV;
             tempDrw.color.b /= DIST_FADE_DIV;
@@ -820,9 +821,9 @@ void Renderer::drawTiles() {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
         tempDrw = renderArrayTiles[x][y];
 
-        tempDrw.color.r /= 5;
-        tempDrw.color.g /= 5;
-        tempDrw.color.b /= 5;
+        tempDrw.color.r /= 4;
+        tempDrw.color.g /= 4;
+        tempDrw.color.b /= 4;
       }
 
       /*

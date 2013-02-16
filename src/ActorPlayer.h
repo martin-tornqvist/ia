@@ -71,6 +71,8 @@ public:
   }
   void setTempShockFromFeatures();
 
+  int getShockResistance() const;
+
   int dynamiteFuseTurns;
   int molotovFuseTurns;
   int flareFuseTurns;

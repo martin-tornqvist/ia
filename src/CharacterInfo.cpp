@@ -6,16 +6,40 @@
 #include "Render.h"
 #include "TextFormatting.h"
 #include "Input.h"
+#include "ItemPotion.h"
+#include "ItemScroll.h"
+#include "ItemFactory.h"
 
 void CharacterInfo::makeLines() {
   lines.resize(0);
 
-  const string offsetSpaces = "";
-  const sf::Color colorHeader = clrCyanLight;
+  const string offsetSpaces = " ";
+  const sf::Color clrHeader = clrCyanLight;
+  const sf::Color clrText = clrRedLight;
+  const sf::Color clrTextDark = clrRed;
 
-  lines.push_back(StringAndColor(" ", clrRedLight));
+  lines.push_back(StringAndColor("COMBAT SKILLS", clrHeader));
+  const int BASE_MELEE = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyMelee, false, *(eng->player));
+  const int BASE_RANGED = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, false, *(eng->player));
+  const int BASE_DODGE_ATTACKS = eng->player->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, false, *(eng->player));
+  lines.push_back(StringAndColor(offsetSpaces + "Melee          : " + intToString(BASE_MELEE) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Ranged         : " + intToString(BASE_RANGED) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Dodging        : " + intToString(BASE_DODGE_ATTACKS) + "%", clrText));
+  lines.push_back(StringAndColor(" ", clrText));
 
-  lines.push_back(StringAndColor("Abilities gained", colorHeader));
+  lines.push_back(StringAndColor("RESISTANCE TO STATUS EFFECTS", clrHeader));
+  const int STATUS_RES_PHYSICAL = eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, false, *(eng->player));
+  const int STATUS_RES_MENTAL = eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusMind, false, *(eng->player));
+  lines.push_back(StringAndColor(offsetSpaces + "Physical       : " + intToString(STATUS_RES_PHYSICAL) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Mental         : " + intToString(STATUS_RES_MENTAL) + "%", clrText));
+  lines.push_back(StringAndColor(" ", clrText));
+
+  lines.push_back(StringAndColor("RESISTANCE TO SHOCK AND HORROR", clrHeader));
+  const int SHOCK_RESISTANCE = eng->player->getShockResistance();
+  lines.push_back(StringAndColor(offsetSpaces + "Coolheadedness : " + intToString(SHOCK_RESISTANCE) + "%", clrText));
+  lines.push_back(StringAndColor(" ", clrText));
+
+  lines.push_back(StringAndColor("ABILITIES GAINED", clrHeader));
   string abilitiesLine = "";
   bool isAnyBonusPicked = false;
   for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
@@ -23,58 +47,75 @@ void CharacterInfo::makeLines() {
     if(eng->playerBonusHandler->isBonusPicked(bonus)) {
       isAnyBonusPicked = true;
       const string currentTitle = eng->playerBonusHandler->getBonusTitle(bonus);
-      lines.push_back(StringAndColor(offsetSpaces + currentTitle, clrRedLight));
+      lines.push_back(StringAndColor(offsetSpaces + currentTitle, clrText));
       const string currentDescr = eng->playerBonusHandler->getBonusDescription(bonus);
-      lines.push_back(StringAndColor(offsetSpaces + currentDescr, clrRed));
+      lines.push_back(StringAndColor(offsetSpaces + currentDescr, clrTextDark));
     }
   }
   if(isAnyBonusPicked == false) {
-    lines.push_back(StringAndColor(offsetSpaces + "None", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "None", clrText));
   }
+  lines.push_back(StringAndColor(" ", clrText));
 
-  lines.push_back(StringAndColor(" ", clrRedLight));
-
-  lines.push_back(StringAndColor("Mental conditions", colorHeader));
+  lines.push_back(StringAndColor("MENTAL CONDITIONS", clrHeader));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
   if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of enclosed spaces", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of enclosed spaces", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_dog])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of dogs", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of dogs", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_rat])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of rats", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of rats", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_undead])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of the dead", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of the dead", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_openPlace])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of open places", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of open places", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_spider])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of spiders", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of spiders", clrText));
   if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
-    lines.push_back(StringAndColor(offsetSpaces + "Phobia of deep places", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Phobia of deep places", clrText));
 
   if(eng->player->insanityObsessions[insanityObsession_masochism])
-    lines.push_back(StringAndColor(offsetSpaces + "Masochistic obsession", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Masochistic obsession", clrText));
   if(eng->player->insanityObsessions[insanityObsession_sadism])
-    lines.push_back(StringAndColor(offsetSpaces + "Sadistic obsession", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines.size();
 
   if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
-    lines.push_back(StringAndColor(offsetSpaces + "No special symptoms", clrRedLight));
+    lines.push_back(StringAndColor(offsetSpaces + "No special symptoms", clrText));
   }
+  lines.push_back(StringAndColor(" ", clrText));
 
-  lines.push_back(StringAndColor(" ", clrRedLight));
+  lines.push_back(StringAndColor("POTION KNOWLEDGE", clrHeader));
+  vector<StringAndColor> potionList;
+  vector<StringAndColor> manuscriptList;
+  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    if(d->isQuaffable) {
+      Item* item = eng->itemFactory->spawnItem(d->devName);
+      potionList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), d->color));
+      delete item;
+    } else {
+      if(d->isReadable) {
+        Item* item = eng->itemFactory->spawnItem(d->devName);
+        manuscriptList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), item->getInterfaceClr()));
+        delete item;
+      }
+    }
+  }
+  eng->basicUtils->lexicographicalSortStringAndColorVector(potionList);
+  eng->basicUtils->lexicographicalSortStringAndColorVector(manuscriptList);
 
-  //TODO With the current implementation below, it's possible to know what each scroll, potion, etc
-  //does, just by the order they are listed. If object knowledge should be included, the order they
-  //are listed needs to be randomized
-//    lines.push_back(StringAndColor("Object knowledge", colorHeader));
-//    for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-//        const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-//        if(d->abilityToIdentify != ability_empty) {
-//            lines.push_back(StringAndColor(offsetSpaces + d->name.name, d->color));
-//        }
-//    }
-//
-//    lines.push_back(StringAndColor(" ", clrRedLight));
+  for(unsigned int i = 0; i < potionList.size(); i++) {
+    lines.push_back(potionList.at(i));
+  }
+  lines.push_back(StringAndColor(" ", clrText));
+
+  lines.push_back(StringAndColor("MANUSCRIPT KNOWLEDGE", clrHeader));
+  for(unsigned int i = 0; i < manuscriptList.size(); i++) {
+    lines.push_back(manuscriptList.at(i));
+  }
+  lines.push_back(StringAndColor(" ", clrText));
+
 }
 
 void CharacterInfo::drawInterface() {

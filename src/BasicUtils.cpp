@@ -3,10 +3,26 @@
 #include <stdlib.h>
 #include <iostream>
 #include <ctime>
+#include <algorithm>
 
 #include "Engine.h"
 
 #include "Converters.h"
+
+// Function for lexicographically comparing two StringAndColor structs
+struct LexicograhicalCompareStringAndColor {
+public:
+  LexicograhicalCompareStringAndColor() {
+  }
+  bool operator()(const StringAndColor& entry1, const StringAndColor& entry2) {
+    return std::lexicographical_compare(entry1.str.begin(), entry1.str.end(), entry2.str.begin(), entry2.str.end());
+  }
+};
+
+void BasicUtils::lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect) {
+  LexicograhicalCompareStringAndColor cmp;
+  std::sort(vect.begin(), vect.end(), cmp);
+}
 
 string TimeData::getTimeStr(const Time_t lowest, const bool ADD_SEPARATORS) const {
   string ret = intToString(year_);

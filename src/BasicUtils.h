@@ -41,6 +41,8 @@ public:
     eng = engine;
   }
 
+  void lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect);
+
   void resetArray(int array[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {

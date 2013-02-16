@@ -8123,7 +8123,7 @@
 
 1350398022 c:\_martin_\ia\src\debugmodeincl\debugmode.h
 
-1356171565 c:\_martin_\ia\src\basicutils.h
+1361033051 c:\_martin_\ia\src\basicutils.h
 	<vector>
 	<math.h>
 	"ConstTypes.h"
@@ -8176,11 +8176,11 @@
 1350576994 c:\_martin_\ia\src\converters.h
 	<string>
 
-1352672586 c:\_martin_\ia\src\roomtheme.h
+1361021482 c:\_martin_\ia\src\roomtheme.h
 	<vector>
 	"ConstTypes.h"
 
-1354223910 c:\_martin_\ia\src\statuseffects.h
+1361041870 c:\_martin_\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -8229,7 +8229,7 @@
 	<ctime>
 	<cmath>
 
-1360492273 c:\_martin_\ia\src\actorplayer.h
+1361030554 c:\_martin_\ia\src\actorplayer.h
 	"Actor.h"
 	"ConstTypes.h"
 
@@ -8657,7 +8657,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1360492094 source:c:\_martin_\ia\src\actorplayer.cpp
+1361030676 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8795,11 +8795,12 @@
 1350576994 c:\_martin_\ia\src\bash.h
 	"FeatureDoor.h"
 
-1356171565 source:c:\_martin_\ia\src\basicutils.cpp
+1361033886 source:c:\_martin_\ia\src\basicutils.cpp
 	"BasicUtils.h"
 	<stdlib.h>
 	<iostream>
 	<ctime>
+	<algorithm>
 	"Engine.h"
 	"Converters.h"
 
@@ -8840,7 +8841,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1360491316 source:c:\_martin_\ia\src\characterinfo.cpp
+1361035870 source:c:\_martin_\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -8848,6 +8849,9 @@
 	"Render.h"
 	"TextFormatting.h"
 	"Input.h"
+	"ItemPotion.h"
+	"ItemScroll.h"
+	"ItemFactory.h"
 
 1350576994 c:\_martin_\ia\src\characterinfo.h
 	<vector>
@@ -8942,7 +8946,7 @@
 	"PlayerBonuses.h"
 	"MenuBrowser.h"
 
-1360491829 source:c:\_martin_\ia\src\dungeonmaster.cpp
+1361036362 source:c:\_martin_\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -9345,7 +9349,7 @@
 	"Map.h"
 	"DungeonMaster.h"
 
-1360488154 source:c:\_martin_\ia\src\inventory.cpp
+1361033249 source:c:\_martin_\ia\src\inventory.cpp
 	"Inventory.h"
 	"ItemWeapon.h"
 	"Engine.h"
@@ -9660,7 +9664,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1356171566 source:c:\_martin_\ia\src\marker.cpp
+1361036549 source:c:\_martin_\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -9800,12 +9804,13 @@
 	"Log.h"
 	"Render.h"
 
-1352658260 source:c:\_martin_\ia\src\roomtheme.cpp
+1361022082 source:c:\_martin_\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
 	"FeatureData.h"
 	"FeatureFactory.h"
+	"Map.h"
 
 1353869524 source:c:\_martin_\ia\src\savehandler.cpp
 	"SaveHandler.h"
@@ -9910,7 +9915,7 @@
 
 1350576994 c:\_martin_\ia\src\declares.h
 
-1360488154 source:c:\_martin_\ia\src\render.cpp
+1361026147 source:c:\_martin_\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
