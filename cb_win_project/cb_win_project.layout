@@ -85,8 +85,8 @@
 	<File name="..\src\BasicUtils.h" open="0" top="0" tabpos="5">
 		<Cursor position="758" topLine="24" />
 	</File>
-	<File name="..\src\CharacterInfo.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="1113" topLine="11" />
+	<File name="..\src\CharacterInfo.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1600" topLine="41" />
 	</File>
 	<File name="..\src\Colors.h" open="0" top="0" tabpos="1">
 		<Cursor position="812" topLine="0" />
@@ -224,7 +224,7 @@
 		<Cursor position="180" topLine="0" />
 	</File>
 	<File name="..\src\ItemDefinition.h" open="1" top="0" tabpos="10">
-		<Cursor position="4332" topLine="170" />
+		<Cursor position="4169" topLine="170" />
 	</File>
 	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1424" topLine="15" />
@@ -293,7 +293,7 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\MapBuildForest.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="5602" topLine="167" />
 	</File>
 	<File name="..\src\MapPatterns.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="69" topLine="0" />
@@ -355,8 +355,8 @@
 	<File name="..\src\Popup.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Postmortem.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="3115" topLine="28" />
+	<File name="..\src\Postmortem.cpp" open="1" top="1" tabpos="11">
+		<Cursor position="349" topLine="12" />
 	</File>
 	<File name="..\src\Query.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
