@@ -9,6 +9,8 @@
 #include "ItemPotion.h"
 #include "ItemScroll.h"
 #include "ItemFactory.h"
+#include "Item.h"
+#include "ItemWeapon.h"
 
 void CharacterInfo::makeLines() {
   lines.resize(0);
@@ -22,9 +24,20 @@ void CharacterInfo::makeLines() {
   const int BASE_MELEE = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyMelee, false, *(eng->player));
   const int BASE_RANGED = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, false, *(eng->player));
   const int BASE_DODGE_ATTACKS = eng->player->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, false, *(eng->player));
+  Weapon* kick = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
+  string kickStr = eng->itemData->getItemInterfaceRef(kick, false, primaryAttackMode_melee);
+  delete kick;
+  for(unsigned int i = 0; i < kickStr.length(); i++) {
+    if(kickStr.at(0) == ' ') {
+      kickStr.erase(kickStr.begin());
+    } else {
+      break;
+    }
+  }
   lines.push_back(StringAndColor(offsetSpaces + "Melee          : " + intToString(BASE_MELEE) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Ranged         : " + intToString(BASE_RANGED) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Dodging        : " + intToString(BASE_DODGE_ATTACKS) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Kicking        : " + kickStr, clrText));
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("RESISTANCE TO STATUS EFFECTS", clrHeader));

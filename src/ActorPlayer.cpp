@@ -1075,6 +1075,7 @@ void Player::kick(Actor& actorToKick) {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
   eng->attack->melee(actorToKick.pos.x, actorToKick.pos.y, kickWeapon);
+  delete kickWeapon;
 }
 
 void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {

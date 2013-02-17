@@ -8657,7 +8657,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1361030676 source:c:\_martin_\ia\src\actorplayer.cpp
+1361097078 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8841,7 +8841,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1361035870 source:c:\_martin_\ia\src\characterinfo.cpp
+1361100211 source:c:\_martin_\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -8852,6 +8852,8 @@
 	"ItemPotion.h"
 	"ItemScroll.h"
 	"ItemFactory.h"
+	"Item.h"
+	"ItemWeapon.h"
 
 1350576994 c:\_martin_\ia\src\characterinfo.h
 	<vector>
@@ -9337,7 +9339,7 @@
 	<SFML/Window/Export.hpp>
 	<SFML/System/Vector2.hpp>
 
-1360492442 source:c:\_martin_\ia\src\interface.cpp
+1361042095 source:c:\_martin_\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
