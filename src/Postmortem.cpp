@@ -28,31 +28,31 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(StringAndColor(" " + eng->player->getNameA(), clrHeading));
 
-  postmortemLines.push_back(StringAndColor("   *Advanced to character level " + intToString(eng->dungeonMaster->getLevel()), clrInfo));
-  postmortemLines.push_back(StringAndColor("   *Gained " + intToString(eng->dungeonMaster->getXp()) + " experience points", clrInfo));
-  postmortemLines.push_back(StringAndColor("   *Explored to the depth of dungeon level " + intToString(eng->map->getDungeonLevel()), clrInfo));
-  postmortemLines.push_back(StringAndColor("   *Was " + intToString(eng->player->getInsanity()) + "% insane", clrInfo));
+  postmortemLines.push_back(StringAndColor("   * Advanced to character level " + intToString(eng->dungeonMaster->getLevel()), clrInfo));
+  postmortemLines.push_back(StringAndColor("   * Gained " + intToString(eng->dungeonMaster->getXp()) + " experience points", clrInfo));
+  postmortemLines.push_back(StringAndColor("   * Explored to the depth of dungeon level " + intToString(eng->map->getDungeonLevel()), clrInfo));
+  postmortemLines.push_back(StringAndColor("   * Was " + intToString(eng->player->getInsanity()) + "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored, this shit is ugly as hell
   if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of enclosed spaces", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of enclosed spaces", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_dog])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of dogs", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of dogs", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_rat])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of rats", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of rats", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_undead])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of the dead", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of the dead", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_openPlace])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of open places", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of open places", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_spider])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of spiders", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of spiders", clrInfo));
   if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
-    postmortemLines.push_back(StringAndColor("   *Had a phobia of deep places", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a phobia of deep places", clrInfo));
 
   if(eng->player->insanityObsessions[insanityObsession_masochism])
-    postmortemLines.push_back(StringAndColor("   *Had a masochistic obsession", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a masochistic obsession", clrInfo));
   if(eng->player->insanityObsessions[insanityObsession_sadism])
-    postmortemLines.push_back(StringAndColor("   *Had a sadistic obsession", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * Had a sadistic obsession", clrInfo));
 
   postmortemLines.push_back(StringAndColor(" ", clrInfo));
 
@@ -81,13 +81,13 @@ void Postmortem::makeInfoLines() {
     }
   }
   if(killList.empty()) {
-    postmortemLines.push_back(StringAndColor("   *None", clrInfo));
+    postmortemLines.push_back(StringAndColor("   * None", clrInfo));
   } else {
 
     postmortemLines.back().str += " (" + intToString(nrOfTotalKills) + " total)";
 
     for(unsigned int i = 0; i < killList.size(); i++) {
-      postmortemLines.push_back(StringAndColor("   *" + killList.at(i).first + ": " + intToString(killList.at(i).second), clrInfo));
+      postmortemLines.push_back(StringAndColor("   * " + killList.at(i).first + ": " + intToString(killList.at(i).second), clrInfo));
     }
   }
   postmortemLines.push_back(StringAndColor(" ", clrInfo));

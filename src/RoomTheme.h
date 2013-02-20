@@ -37,6 +37,8 @@ private:
 
   void placeThemeFeatures(Room& room);
 
+  void makeRoomDarkWithChance(const Room& room);
+
   int attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
                                vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
 

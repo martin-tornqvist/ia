@@ -124,8 +124,13 @@ void Interface::drawInfoLines() {
   yPos += 1;
   xPos = CHARACTER_LINE_X0;
 
-  const string statusLine = eng->player->getStatusEffectsHandler()->getStatusLine();
-  eng->renderer->drawText(statusLine, renderArea_characterLines, xPos, yPos, clrWhite);
+  const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
+  for(unsigned int i = 0; i < effects.size(); i++) {
+    const string statusText = effects.at(i)->getInterfaceName();
+    const sf::Color statusColor = effects.at(i)->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    eng->renderer->drawText(statusText, renderArea_characterLines, xPos, yPos, statusColor);
+    xPos += statusText.length() + 1;
+  }
 
   // Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());

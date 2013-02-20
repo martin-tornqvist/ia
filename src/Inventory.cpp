@@ -658,8 +658,8 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
   }
 
   // Sort lexicographically sedond
+  LexicograhicalCompareItems cmp(engine);
   for(unsigned int i = 0; i < sortBuffer.size(); i++) {
-    LexicograhicalCompareItems cmp(engine);
     std::sort(sortBuffer.at(i).begin(), sortBuffer.at(i).end(), cmp);
   }
 

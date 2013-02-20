@@ -7,6 +7,9 @@
 	<File name="..\src\AI_look_becomePlayerAware.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
+	<File name="..\src\AI_makeRoomForFriend.h" open="0" top="0" tabpos="4">
+		<Cursor position="2493" topLine="40" />
+	</File>
 	<File name="..\src\AI_moveToRandomAdjacentCell.h" open="0" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />
 	</File>
@@ -19,8 +22,8 @@
 	<File name="..\src\AbilityValues.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="14">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="574" topLine="8" />
 	</File>
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="16">
 		<Cursor position="0" topLine="0" />
@@ -44,13 +47,21 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="20499" topLine="557" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="26931" topLine="731" />
+<<<<<<< HEAD
+	<File name="..\src\ActorPlayer.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="17529" topLine="438" />
 	</File>
-	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ActorPlayer.h" open="1" top="0" tabpos="1">
+		<Cursor position="926" topLine="42" />
+=======
+	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="38178" topLine="1051" />
+	</File>
+	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="2">
+		<Cursor position="1465" topLine="42" />
+>>>>>>> a6c29922334fc4fadbdd3cc585900017e1b53f90
 	</File>
 	<File name="..\src\Art.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
@@ -68,26 +79,25 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\AttackRanged.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="2448" topLine="50" />
 	</File>
 	<File name="..\src\AutoDescribeActor.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Bash.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Bash.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1319" topLine="16" />
 	</File>
-	<File name="..\src\BasicUtils.h" open="0" top="0" tabpos="11">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\BasicUtils.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="390" topLine="0" />
 	</File>
-	<File name="..\src\CharacterInfo.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\BasicUtils.h" open="0" top="0" tabpos="5">
+		<Cursor position="758" topLine="24" />
+	</File>
+	<File name="..\src\CharacterInfo.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1600" topLine="41" />
 	</File>
 	<File name="..\src\Colors.h" open="0" top="0" tabpos="1">
-<<<<<<< HEAD
-		<Cursor position="665" topLine="0" />
-=======
 		<Cursor position="812" topLine="0" />
->>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
 	</File>
 	<File name="..\src\Config.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -98,8 +108,14 @@
 	<File name="..\src\ConstDungeonSettings.h" open="0" top="0" tabpos="10">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ConstTypes.h" open="0" top="0" tabpos="10">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ConstTypes.h" open="0" top="0" tabpos="3">
+		<Cursor position="4063" topLine="179" />
+	</File>
+	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="2097" topLine="45" />
+	</File>
+	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="6081" topLine="130" />
 	</File>
 	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
@@ -167,51 +183,41 @@
 	<File name="..\src\FeatureWall.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="1711" topLine="40" />
 	</File>
 	<File name="..\src\GameTime.h" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Highscore.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="1261" topLine="23" />
 	</File>
 	<File name="..\src\Highscore.h" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Input.cpp" open="0" top="0" tabpos="11">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Input.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="2762" topLine="101" />
 	</File>
 	<File name="..\src\Input.h" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Interface.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Interface.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="5091" topLine="90" />
 	</File>
-<<<<<<< HEAD
-	<File name="..\src\Inventory.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="243" topLine="0" />
-=======
-	<File name="..\src\Inventory.cpp" open="1" top="1" tabpos="6">
-		<Cursor position="18723" topLine="591" />
->>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
+	<File name="..\src\Inventory.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="24" topLine="0" />
 	</File>
-	<File name="..\src\Inventory.h" open="1" top="0" tabpos="5">
-		<Cursor position="3665" topLine="109" />
+	<File name="..\src\Inventory.h" open="0" top="0" tabpos="1">
+		<Cursor position="3309" topLine="0" />
 	</File>
-<<<<<<< HEAD
-	<File name="..\src\InventoryHandler.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="315" topLine="0" />
-=======
-	<File name="..\src\InventoryHandler.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="10896" topLine="297" />
->>>>>>> 14c03e14e1abbf89173df9595d48f9f42d01dd47
+	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="9801" topLine="289" />
 	</File>
-	<File name="..\src\InventoryHandler.h" open="1" top="0" tabpos="1">
+	<File name="..\src\InventoryHandler.h" open="0" top="0" tabpos="1">
 		<Cursor position="78" topLine="3" />
 	</File>
 	<File name="..\src\Item.h" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="748" topLine="30" />
 	</File>
 	<File name="..\src\ItemAmmo.h" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
@@ -219,16 +225,19 @@
 	<File name="..\src\ItemArmor.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="12">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ItemData.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="4846" topLine="151" />
 	</File>
-	<File name="..\src\ItemDefinition.h" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ItemData.h" open="1" top="0" tabpos="9">
+		<Cursor position="180" topLine="0" />
 	</File>
-	<File name="..\src\ItemDrop.cpp" open="1" top="0" tabpos="4">
+	<File name="..\src\ItemDefinition.h" open="1" top="0" tabpos="10">
+		<Cursor position="4169" topLine="170" />
+	</File>
+	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1424" topLine="15" />
 	</File>
-	<File name="..\src\ItemDrop.h" open="1" top="0" tabpos="3">
+	<File name="..\src\ItemDrop.h" open="0" top="0" tabpos="3">
 		<Cursor position="759" topLine="0" />
 	</File>
 	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="1">
@@ -243,17 +252,20 @@
 	<File name="..\src\ItemPickup.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="11486" topLine="316" />
 	</File>
 	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="13317" topLine="371" />
 	</File>
 	<File name="..\src\ItemScroll.h" open="0" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemWeapon.h" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\ItemWeapon.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="272" topLine="0" />
+	</File>
+	<File name="..\src\ItemWeapon.h" open="1" top="0" tabpos="6">
+		<Cursor position="520" topLine="7" />
 	</File>
 	<File name="..\src\Log.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -262,13 +274,16 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Look.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="380" topLine="6" />
 	</File>
 	<File name="..\src\MainMenu.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\MainMenu.h" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="..\src\Map.h" open="0" top="0" tabpos="4">
+		<Cursor position="661" topLine="12" />
 	</File>
 	<File name="..\src\MapBuild.cpp" open="0" top="0" tabpos="13">
 		<Cursor position="0" topLine="0" />
@@ -286,19 +301,22 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\MapBuildForest.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="5602" topLine="167" />
 	</File>
 	<File name="..\src\MapPatterns.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="69" topLine="0" />
 	</File>
 	<File name="..\src\MapPatterns.h" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="623" topLine="0" />
 	</File>
-	<File name="..\src\MapTests.h" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\MapTests.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="185" topLine="0" />
 	</File>
-	<File name="..\src\Marker.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\MapTests.h" open="0" top="0" tabpos="6">
+		<Cursor position="482" topLine="2" />
+	</File>
+	<File name="..\src\Marker.cpp" open="0" top="0" tabpos="11">
+		<Cursor position="4624" topLine="137" />
 	</File>
 	<File name="..\src\Marker.h" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
@@ -340,13 +358,21 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Populate.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="481" topLine="0" />
 	</File>
-	<File name="..\src\Popup.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Popup.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="2025" topLine="34" />
 	</File>
-	<File name="..\src\Postmortem.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+<<<<<<< HEAD
+	<File name="..\src\Popup.h" open="1" top="0" tabpos="7">
+		<Cursor position="296" topLine="6" />
+	</File>
+	<File name="..\src\Postmortem.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="3115" topLine="34" />
+=======
+	<File name="..\src\Postmortem.cpp" open="1" top="1" tabpos="11">
+		<Cursor position="349" topLine="12" />
+>>>>>>> a6c29922334fc4fadbdd3cc585900017e1b53f90
 	</File>
 	<File name="..\src\Query.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
@@ -360,23 +386,28 @@
 	<File name="..\src\Reload.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Render.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="27517" topLine="788" />
+<<<<<<< HEAD
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="30744" topLine="843" />
+=======
+	<File name="..\src\Render.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="22536" topLine="640" />
+>>>>>>> a6c29922334fc4fadbdd3cc585900017e1b53f90
 	</File>
-	<File name="..\src\Render.h" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Render.h" open="1" top="0" tabpos="5">
+		<Cursor position="645" topLine="18" />
 	</File>
-	<File name="..\src\RenderInventory.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\RenderInventory.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="9701" topLine="198" />
 	</File>
 	<File name="..\src\RenderInventory.h" open="0" top="0" tabpos="3">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\RoomTheme.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="3678" topLine="90" />
 	</File>
 	<File name="..\src\RoomTheme.h" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="174" topLine="1" />
 	</File>
 	<File name="..\src\SaveHandler.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -396,11 +427,11 @@
 	<File name="..\src\Spells.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="11">
+	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="1">
+		<Cursor position="45713" topLine="2170" />
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
@@ -414,7 +445,7 @@
 	<File name="..\src\TrimTravelVector.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\main.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\main.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="2352" topLine="58" />
 	</File>
 </CodeBlocks_layout_file>

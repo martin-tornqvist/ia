@@ -4,12 +4,23 @@
 #include "MapBuildBSP.h"
 #include "FeatureData.h"
 #include "FeatureFactory.h"
+#include "Map.h"
 
 // Criteria:
 // * If a room contains other rooms, the outer room has no theme
 // * Rooms inside other rooms may have any theme
 // * If a room is too small or too big, it is always plain (if not none)
 
+void RoomThemeMaker::run(const vector<Room*>& rooms) {
+  tracer << "RoomThemeMaker::run()..." << endl;
+  assignRoomThemes(rooms);
+
+  for(unsigned int i = 0; i < rooms.size(); i++) {
+    applyThemeToRoom(*(rooms.at(i)));
+    makeRoomDarkWithChance(*(rooms.at(i)));
+  }
+  tracer << "RoomThemeMaker::run() [DONE]" << endl;
+}
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
   tracer << "RoomThemeMaker::applyThemeToRoom()..." << endl;
@@ -71,6 +82,47 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
       if(featuresLeftToPlace == 0) {
         tracer << "RoomThemeMaker: Placer enough features, returning" << endl;
         return;
+      }
+    }
+  }
+}
+
+void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
+  int chanceToMakeDark = 0;
+
+  switch(room.roomTheme) {
+  case roomTheme_none:
+    chanceToMakeDark = 0;
+    break;
+  case roomTheme_plain:
+    chanceToMakeDark = 5;
+    break;
+  case roomTheme_human:
+    chanceToMakeDark = 10;
+    break;
+  case roomTheme_ritual:
+    chanceToMakeDark = 15;
+    break;
+  case roomTheme_spider:
+    chanceToMakeDark = 25;
+    break;
+  case roomTheme_jail:
+    chanceToMakeDark = 20;
+    break;
+  case roomTheme_tomb:
+    chanceToMakeDark = 75;
+    break;
+  case roomTheme_monster:
+    chanceToMakeDark = 75;
+    break;
+  default:
+    break;
+  }
+
+  if(eng->dice.getInRange(1, 100) < chanceToMakeDark) {
+    for(int y = room.getY0(); y <= room.getY1(); y++) {
+      for(int x = room.getX0(); x <= room.getX1(); x++) {
+        eng->map->darkness[x][y] = true;
       }
     }
   }
@@ -148,16 +200,6 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(const coord& pos,  vector<coo
     }
   }
   tracer << "RoomThemeMaker::eraseAdjacentCellsFromVectors() [DONE]" << endl;
-}
-
-void RoomThemeMaker::run(const vector<Room*>& rooms) {
-  tracer << "RoomThemeMaker::run()..." << endl;
-  assignRoomThemes(rooms);
-
-  for(unsigned int i = 0; i < rooms.size(); i++) {
-    applyThemeToRoom(*(rooms.at(i)));
-  }
-  tracer << "RoomThemeMaker::run() [DONE]" << endl;
 }
 
 void RoomThemeMaker::assignRoomThemes(const vector<Room*>& rooms) {
