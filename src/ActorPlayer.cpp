@@ -270,7 +270,7 @@ void Player::incrInsanity() {
           } else {
             popupMessage += "I scream in terror.";
           }
-          eng->popup->showMessage(popupMessage, true);
+          eng->popup->showMessage(popupMessage, true, "Screaming!");
           eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
           return;
         }
@@ -278,7 +278,7 @@ void Player::incrInsanity() {
       break;
       case 2: {
         popupMessage += "I find myself babbling incoherently.";
-        eng->popup->showMessage(popupMessage, true);
+        eng->popup->showMessage(popupMessage, true, "Babbling!");
         for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
           const string phrase = Cultist::getCultistPhrase(eng);
           eng->log->addMessage(getNameThe() + ": " + phrase);
@@ -289,21 +289,21 @@ void Player::incrInsanity() {
       break;
       case 3: {
         popupMessage += "I struggle to not fall into a stupor.";
-        eng->popup->showMessage(popupMessage, true);
+        eng->popup->showMessage(popupMessage, true, "Fainting!");
         statusEffectsHandler_->attemptAddEffect(new StatusFainted(eng));
         return;
       }
       break;
       case 4: {
         popupMessage += "I laugh nervously.";
-        eng->popup->showMessage(popupMessage, true);
+        eng->popup->showMessage(popupMessage, true, "HAHAHA!");
         eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
         return;
       }
       break;
       case 5: {
-        popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (10% of XP lost).";
-        eng->popup->showMessage(popupMessage, true);
+        popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
+        eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
         eng->dungeonMaster->playerLoseXpPercent(10);
         return;
       }
@@ -323,25 +323,25 @@ void Player::incrInsanity() {
                 const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
                 if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
                   popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true);
+                  eng->popup->showMessage(popupMessage, true, "Murophobia!");
                   insanityPhobias[insanityPhobia_rat] = true;
                   return;
                 }
                 if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
                   popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true);
+                  eng->popup->showMessage(popupMessage, true, "Arachnophobia!");
                   insanityPhobias[insanityPhobia_spider] = true;
                   return;
                 }
                 if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
                   popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true);
+                  eng->popup->showMessage(popupMessage, true, "Cynophobia!");
                   insanityPhobias[insanityPhobia_dog] = true;
                   return;
                 }
                 if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
                   popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
-                  eng->popup->showMessage(popupMessage, true);
+                  eng->popup->showMessage(popupMessage, true, "Necrophobia!");
                   insanityPhobias[insanityPhobia_undead] = true;
                   return;
                 }
@@ -351,7 +351,7 @@ void Player::incrInsanity() {
                 if(isStandingInOpenSpace()) {
                   if(insanityPhobias[insanityPhobia_openPlace] == false) {
                     popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
-                    eng->popup->showMessage(popupMessage, true);
+                    eng->popup->showMessage(popupMessage, true, "Agoraphobia!");
                     insanityPhobias[insanityPhobia_openPlace] = true;
                     return;
                   }
@@ -359,7 +359,7 @@ void Player::incrInsanity() {
                 if(isStandingInCrampedSpace()) {
                   if(insanityPhobias[insanityPhobia_closedPlace] == false) {
                     popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
-                    eng->popup->showMessage(popupMessage, true);
+                    eng->popup->showMessage(popupMessage, true, "Claustrophobia!");
                     insanityPhobias[insanityPhobia_closedPlace] = true;
                     return;
                   }
@@ -368,7 +368,7 @@ void Player::incrInsanity() {
                 if(eng->map->getDungeonLevel() >= 5) {
                   if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
                     popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
-                    eng->popup->showMessage(popupMessage, true);
+                    eng->popup->showMessage(popupMessage, true, "Bathophobia!");
                     insanityPhobias[insanityPhobia_deepPlaces] = true;
                     return;
                   }
@@ -395,7 +395,7 @@ void Player::incrInsanity() {
               popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
               popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
               popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-              eng->popup->showMessage(popupMessage, true);
+              eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
               insanityObsessions[insanityObsession_masochism] = true;
               return;
             }
@@ -404,7 +404,7 @@ void Player::incrInsanity() {
               popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
               popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
               popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-              eng->popup->showMessage(popupMessage, true);
+              eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
               insanityObsessions[insanityObsession_sadism] = true;
               return;
             }
@@ -420,7 +420,7 @@ void Player::incrInsanity() {
 
       case 8: {
         popupMessage += "The shadows are closing in on me!";
-        eng->popup->showMessage(popupMessage, true);
+        eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
@@ -454,7 +454,7 @@ void Player::incrInsanity() {
 
       case 9: {
         popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
-        eng->popup->showMessage(popupMessage, true);
+        eng->popup->showMessage(popupMessage, true, "Confusion!");
         statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
         return;
       }

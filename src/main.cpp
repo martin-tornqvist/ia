@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
           introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
           introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
           introMessage += "- a window to all secrets of the universe.";
-          engine->popup->showMessage(introMessage, true);
+          engine->popup->showMessage(introMessage, true, "The story so far...");
         }
       }
 

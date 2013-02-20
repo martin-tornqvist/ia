@@ -36,7 +36,7 @@ Popup::BoxReturnData Popup::printBox(const int BOX_HALF_WIDTH) const {
   return BoxReturnData(x0y0 + coord(1, 1), x1y1 - coord(1, 1));
 }
 
-void Popup::showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE) const {
+void Popup::showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE, const string title) const {
   if(DRAW_MAP_AND_INTERFACE) {
     eng->renderer->drawMapAndInterface(false);
   }
@@ -46,17 +46,18 @@ void Popup::showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE)
   const int W = box.x1y1Text.x - box.x0y0Text.x + 1;
   vector<string> lines = eng->textFormatting->lineToLines(message, W + 1);
 
+  const int MAP_Y_OFFSET = eng->config->MAINSCREEN_Y_CELLS_OFFSET;
+  const int TEXT_POS_TOP = box.x0y0Text.y + MAP_Y_OFFSET;
+  if(title != "") {
+    eng->renderer->drawTextCentered(title, renderArea_screen, MAP_X_CELLS_HALF, TEXT_POS_TOP, clrCyanLight, true);
+  }
   for(unsigned int i = 0; i < lines.size(); i++) {
-    eng->renderer->drawText(
-      lines.at(i), renderArea_screen, box.x0y0Text.x,
-      (i + box.x0y0Text.y) + eng->config->MAINSCREEN_Y_CELLS_OFFSET, clrRedLight);
-
+    const int Y = TEXT_POS_TOP + i + (title != "");
+    eng->renderer->drawText(lines.at(i), renderArea_screen, box.x0y0Text.x, Y, clrRedLight);
     eng->log->addLineToHistory(lines.at(i));
   }
 
-  eng->renderer->drawTextCentered(
-    "[Space/Esc] to close", renderArea_screen, box.x0y0Text.x + W / 2,
-    box.x1y1Text.y + eng->config->MAINSCREEN_Y_CELLS_OFFSET, clrWhiteHigh);
+  eng->renderer->drawTextCentered("[Space/Esc] to close", renderArea_screen, box.x0y0Text.x + W / 2, box.x1y1Text.y + MAP_Y_OFFSET, clrWhiteHigh);
 
   eng->renderer->updateWindow();
 

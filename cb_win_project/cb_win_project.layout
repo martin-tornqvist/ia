@@ -49,11 +49,11 @@
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="20499" topLine="557" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="23399" topLine="650" />
+	<File name="..\src\ActorPlayer.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="17529" topLine="438" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="1" top="0" tabpos="1">
-		<Cursor position="1306" topLine="42" />
+		<Cursor position="926" topLine="42" />
 	</File>
 	<File name="..\src\Art.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
@@ -344,12 +344,15 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Populate.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="481" topLine="0" />
 	</File>
-	<File name="..\src\Popup.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\Popup.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="2025" topLine="34" />
 	</File>
-	<File name="..\src\Postmortem.cpp" open="1" top="1" tabpos="4">
+	<File name="..\src\Popup.h" open="1" top="0" tabpos="7">
+		<Cursor position="296" topLine="6" />
+	</File>
+	<File name="..\src\Postmortem.cpp" open="1" top="0" tabpos="4">
 		<Cursor position="3115" topLine="34" />
 	</File>
 	<File name="..\src\Query.cpp" open="0" top="0" tabpos="7">
@@ -364,11 +367,11 @@
 	<File name="..\src\Reload.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Render.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="28079" topLine="794" />
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="30744" topLine="843" />
 	</File>
-	<File name="..\src\Render.h" open="0" top="0" tabpos="9">
-		<Cursor position="543" topLine="14" />
+	<File name="..\src\Render.h" open="1" top="0" tabpos="5">
+		<Cursor position="645" topLine="18" />
 	</File>
 	<File name="..\src\RenderInventory.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="8116" topLine="184" />
@@ -418,7 +421,7 @@
 	<File name="..\src\TrimTravelVector.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\main.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="..\src\main.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="2352" topLine="58" />
 	</File>
 </CodeBlocks_layout_file>
