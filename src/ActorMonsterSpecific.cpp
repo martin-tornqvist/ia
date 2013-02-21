@@ -538,7 +538,7 @@ bool MajorClaphamLee::actorSpecificAct() {
           const unsigned int NR_OF_SPAWNS = 5;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng->log->addMessage("Major Clapham Lee calls forth his Tomb-Legions!");
-            eng->player->incrShock(shockValue_heavy, 0);
+            eng->player->incrShock(shockValue_heavy);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               if(i == 0) {
                 Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
@@ -593,7 +593,7 @@ bool Zombie::attemptResurrect() {
           def_->nrOfKills--;
           if(eng->map->playerVision[pos.x][pos.y] == true) {
             eng->log->addMessage(getNameThe() + " rises again!!", clrWhite, messageInterrupt_force);
-            eng->player->incrShock(shockValue_some, 0);
+            eng->player->incrShock(shockValue_some);
           }
 
           playerAwarenessCounter = def_->nrTurnsAwarePlayer * 2;

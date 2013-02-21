@@ -64,6 +64,14 @@ enum ActorSizes_t {
   actorSize_giant
 };
 
+enum MonsterShockLevel {
+  monsterShockLevel_none,
+  monsterShockLevel_unsettling,
+  monsterShockLevel_scary,
+  monsterShockLevel_terrifying,
+  monsterShockLevel_mindShattering
+};
+
 struct AiBehavior {
 public:
   AiBehavior() : looks(false), /*listens(false), respondsWithPhrase(false),*/
@@ -118,7 +126,7 @@ public:
   bool isAutoSpawnAllowed;
   string spellCastMessage;
   ActorErratic_t erraticMovement;
-  ShockValues_t shockValue;
+  MonsterShockLevel monsterShockLevel;
   bool isRat, isCanine, isSpider, isUndead;
   bool canBeSummoned;
   bool canBleed;

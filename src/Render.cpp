@@ -821,9 +821,9 @@ void Renderer::drawTiles() {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
         tempDrw = renderArrayTiles[x][y];
 
-        tempDrw.color.r /= 4;
-        tempDrw.color.g /= 4;
-        tempDrw.color.b /= 4;
+        tempDrw.color.r /= 5;
+        tempDrw.color.g /= 5;
+        tempDrw.color.b /= 5;
       }
 
       /*

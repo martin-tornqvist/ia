@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Actor.h"
+#include <math.h>
 
+#include "Actor.h"
 #include "ConstTypes.h"
 
 //const int HUNGER_LEVEL_FULL             = 1400;
@@ -57,10 +58,11 @@ public:
 
   int mythosKnowledge;
 
-  void incrShock(const ShockValues_t shockValue, const int MODIFIER);
+  void incrShock(const ShockValues_t shockValue);
+  void incrShock(const int VAL);
   void restoreShock();
   int getShockTotal() {
-    return shock_ + shockTemp_;
+    return static_cast<int>(floor(shock_ + shockTemp_));
   }
   int getShockTmp() {
     return shockTemp_;
@@ -98,7 +100,8 @@ public:
 private:
   friend class DungeonMaster;
   friend class GameTime;
-  int insanity_, shock_, shockTemp_;
+  int insanity_;
+  double shock_, shockTemp_;
 
   void attemptIdentifyItems();
   void testPhobias();

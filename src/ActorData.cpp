@@ -42,7 +42,7 @@ void ActorDefinition::reset() {
   isAutoSpawnAllowed = true;
   spellCastMessage = "[SPELL MESSAGE HERE]";
   erraticMovement = actorErratic_rare;
-  shockValue = shockValue_none;
+  monsterShockLevel = monsterShockLevel_none;
   isRat = isCanine = isSpider = isUndead = false;
   canBeSummoned = false;
   canBleed = true;
@@ -127,7 +127,7 @@ void ActorData::defineAllActors() {
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
@@ -160,7 +160,7 @@ void ActorData::defineAllActors() {
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
@@ -191,7 +191,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 50;
   d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
@@ -223,7 +223,7 @@ void ActorData::defineAllActors() {
   d.description
   = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
@@ -258,7 +258,7 @@ void ActorData::defineAllActors() {
   d.description
   = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
@@ -393,7 +393,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -425,7 +425,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "The Lord of Pestilence makes strange gestures in the air.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -458,7 +458,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "The Lord of Shadows makes strange gestures in the air.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   d.abilityValues.setAbilityValue(ability_stealth, 90);
   finalizeDefinition(d);
@@ -492,7 +492,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "The Lord of Spiders makes strange gestures in the air.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -525,7 +525,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "The Lord of Spirits makes strange gestures in the air.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -608,8 +608,8 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 7;
+  d.spawnMinLevel = 3;
+  d.spawnMaxLevel = 10;
   d.monsterLvl = 1;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -675,7 +675,7 @@ void ActorData::defineAllActors() {
   = "Leng spiders are huge, purplish arachnids, with pustulent bloated bodies and long, bristly legs. Native to the Dreamlands, the spiders of Leng are intelligent, dangerous, and gigantic.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -705,7 +705,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 25;
   d.description = "This extremely aggressive canine seems to be part corporeal and part fire. It breathes searing flames.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isCanine = true;
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, normal);
@@ -735,7 +735,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "A restless spirit?";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Ghost is put to rest.";
@@ -767,7 +767,7 @@ void ActorData::defineAllActors() {
   d.description
   = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
   d.erraticMovement = actorErratic_very;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Phantasm is put to rest.";
@@ -800,7 +800,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "A powerful spirit.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Wraith is put to rest.";
@@ -862,7 +862,7 @@ void ActorData::defineAllActors() {
   d.description
   = "At first sight, a Rat-thing can easily be mistaken for a large, dark rat. On closer examination, however, their human hands and evil caricatures of human heads reveal their unnatural nature. Rat-things are said to be created from dead cultists by foul witchcraft. Thus, they are found where the witch who created them had her lair.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_mild;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
   d.isRat = true;
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
@@ -895,7 +895,7 @@ void ActorData::defineAllActors() {
   = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isRat = true;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
@@ -959,7 +959,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.";
   d.erraticMovement = actorErratic_very;
-  d.shockValue = shockValue_mild;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
@@ -991,7 +991,7 @@ void ActorData::defineAllActors() {
   d.description
   = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a isHumanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
@@ -1025,7 +1025,7 @@ void ActorData::defineAllActors() {
   = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_mild;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1056,7 +1056,7 @@ void ActorData::defineAllActors() {
   d.description
   = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome isHumanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -1090,7 +1090,7 @@ void ActorData::defineAllActors() {
   d.description = "A living shadow";
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   d.abilityValues.setAbilityValue(ability_stealth, 80);
   finalizeDefinition(d);
@@ -1123,7 +1123,7 @@ void ActorData::defineAllActors() {
   d.description = "A mummified human being, possibly dating back millenia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
   d.isHumanoid = true;
   setStrengthsFromFormula(d, strong);
@@ -1161,7 +1161,7 @@ void ActorData::defineAllActors() {
   = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   setStrengthsFromFormula(d, strong);
@@ -1198,7 +1198,7 @@ void ActorData::defineAllActors() {
   = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   setStrengthsFromFormula(d, strong);
@@ -1232,7 +1232,7 @@ void ActorData::defineAllActors() {
   d.description
   = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1261,7 +1261,6 @@ void ActorData::defineAllActors() {
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;
-  d.shockValue = shockValue_none;
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1295,7 +1294,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
   setStrengthsFromFormula(d, weak);
-  d.shockValue = shockValue_mild;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
   finalizeDefinition(d);
   d.reset();
 
@@ -1328,7 +1327,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
   setStrengthsFromFormula(d, weak);
-  d.shockValue = shockValue_mild;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
   finalizeDefinition(d);
   d.reset();
 
@@ -1361,7 +1360,7 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, superStrong);
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
   d.erraticMovement = actorErratic_somewhat;
   finalizeDefinition(d);
   d.reset();
@@ -1395,7 +1394,7 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, strong);
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   d.erraticMovement = actorErratic_somewhat;
   d.abilityValues.setAbilityValue(ability_stealth, 100);
   finalizeDefinition(d);
@@ -1431,7 +1430,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   setStrengthsFromFormula(d, superStrong);
   d.erraticMovement = actorErratic_somewhat;
-  d.shockValue = shockValue_some;
+  d.monsterShockLevel = monsterShockLevel_scary;
   finalizeDefinition(d);
   d.reset();
 
@@ -1465,7 +1464,7 @@ void ActorData::defineAllActors() {
   d.canBleed = true;
   d.canBeSummoned = false;
   setStrengthsFromFormula(d, strong);
-  d.shockValue = shockValue_heavy;
+  d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   finalizeDefinition(d);
   d.reset();

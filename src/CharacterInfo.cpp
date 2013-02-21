@@ -103,29 +103,37 @@ void CharacterInfo::makeLines() {
   vector<StringAndColor> manuscriptList;
   for(unsigned int i = 1; i < endOfItemDevNames; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-    if(d->isQuaffable) {
+    if(d->isQuaffable && (d->isTried || d->isIdentified)) {
       Item* item = eng->itemFactory->spawnItem(d->devName);
       potionList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), d->color));
       delete item;
     } else {
-      if(d->isReadable) {
+      if(d->isReadable && (d->isTried || d->isIdentified)) {
         Item* item = eng->itemFactory->spawnItem(d->devName);
         manuscriptList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), item->getInterfaceClr()));
         delete item;
       }
     }
   }
-  eng->basicUtils->lexicographicalSortStringAndColorVector(potionList);
-  eng->basicUtils->lexicographicalSortStringAndColorVector(manuscriptList);
 
-  for(unsigned int i = 0; i < potionList.size(); i++) {
-    lines.push_back(potionList.at(i));
+  if(potionList.size() == 0) {
+    lines.push_back(StringAndColor(offsetSpaces + "No known potions", clrText));
+  } else {
+    eng->basicUtils->lexicographicalSortStringAndColorVector(potionList);
+    for(unsigned int i = 0; i < potionList.size(); i++) {
+      lines.push_back(potionList.at(i));
+    }
   }
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("MANUSCRIPT KNOWLEDGE", clrHeader));
-  for(unsigned int i = 0; i < manuscriptList.size(); i++) {
-    lines.push_back(manuscriptList.at(i));
+  if(potionList.size() == 0) {
+    lines.push_back(StringAndColor(offsetSpaces + "No known manuscripts", clrText));
+  } else {
+    eng->basicUtils->lexicographicalSortStringAndColorVector(manuscriptList);
+    for(unsigned int i = 0; i < manuscriptList.size(); i++) {
+      lines.push_back(manuscriptList.at(i));
+    }
   }
   lines.push_back(StringAndColor(" ", clrText));
 

@@ -292,7 +292,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     engine->log->addMessage("It was a " + REAL_NAME + ".");
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->player->incrShock(shockValue_heavy, 0);
+      engine->player->incrShock(shockValue_heavy);
     }
 
     def_->isIdentified = true;
@@ -333,7 +333,7 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   if(actor == engine->player) {
     def_->isTried = true;
 
-    engine->player->incrShock(shockValue_heavy, 0);
+    engine->player->incrShock(shockValue_heavy);
 
     if(def_->isIdentified) {
       engine->log->addMessage("I drink " + def_->name.name_a + "...");

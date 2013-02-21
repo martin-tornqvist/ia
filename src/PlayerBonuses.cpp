@@ -90,6 +90,8 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
     ret.push_back(playerBonus_tough);
     ret.push_back(playerBonus_learned);
     ret.push_back(playerBonus_stealthy);
+    ret.push_back(playerBonus_agile);
+    ret.push_back(playerBonus_strongMinded);
   } else {
     vector<PlayerBonuses_t> candidates;
     for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
@@ -107,7 +109,7 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
       }
     }
 
-    const int NR_OF_CHOICES = 4;
+    const int NR_OF_CHOICES = 6;
 
     for(int i = 0; i < NR_OF_CHOICES; i++) {
       if(candidates.empty()) {
@@ -124,4 +126,3 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
   std::sort(ret.begin(), ret.end());
   return ret;
 }
-

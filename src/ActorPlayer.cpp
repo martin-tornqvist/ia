@@ -26,7 +26,7 @@
 Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), mythosKnowledge(0),
   dynamiteFuseTurns(-1), molotovFuseTurns(-1), flareFuseTurns(-1),
-  insanity_(0), shock_(0), shockTemp_(0), target(NULL) {
+  target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -109,7 +109,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 
   lines.push_back(intToString(insanity_));
-  lines.push_back(intToString(shock_));
+  lines.push_back(intToString(static_cast<int>(shock_)));
   lines.push_back(intToString(mythosKnowledge));
   lines.push_back(intToString(hp_));
   lines.push_back(intToString(hpMax_));
@@ -128,19 +128,18 @@ void Player::addSaveLines(vector<string>& lines) const {
 }
 
 void Player::actorSpecific_hit(const int DMG) {
-  if(insanityObsessions[insanityObsession_masochism] && DMG > 1) {
-    shock_ = max(0, shock_ - 5);
-  }
-
   //Hit aborts first aid
   if(firstAidTurnsLeft != -1) {
     firstAidTurnsLeft = -1;
     eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
   }
 
-  //Hit gives a little shock
-  if(insanityObsessions[insanityObsession_masochism] == false) {
-    incrShock(shockValue_mild, 0);
+  if(insanityObsessions[insanityObsession_masochism]) {
+    if(DMG > 1) {
+      shock_ = max(0.0, shock_ - 5.0);
+    }
+  } else {
+    incrShock(1);
   }
 
   eng->renderer->drawMapAndInterface();
@@ -159,7 +158,7 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 
   insanity_ = stringToInt(lines.front());
   lines.erase(lines.begin());
-  shock_ = stringToInt(lines.front());
+  shock_ = static_cast<double>(stringToInt(lines.front()));
   lines.erase(lines.begin());
   mythosKnowledge = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -192,37 +191,40 @@ int Player::getShockResistance() const {
   const bool IS_COOLHEADED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
   int ret = 0;
   ret += IS_COOLHEADED_PICKED * 20;
-  return ret;
+  return min(100, max(0, ret));
 }
 
-void Player::incrShock(const ShockValues_t shockValue, const int MODIFIER) {
+void Player::incrShock(const int VAL) {
+  const double SHOCK_RES_FL = static_cast<double>(getShockResistance());
+  const double VAL_FL = static_cast<double>(VAL);
+  const double VAL_AFTER_SHOCK_RES = (VAL_FL * (100.0 - SHOCK_RES_FL)) / 100.0;
+  shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
+}
+
+void Player::incrShock(const ShockValues_t shockValue) {
   const int PLAYER_FORTITUDE = def_->abilityValues.getAbilityValue(ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
-    int baseIncr = 0;
     switch(shockValue) {
     case shockValue_none: {
-      baseIncr = 0;
+      incrShock(0);
     }
     break;
     case shockValue_mild: {
-      baseIncr = eng->dice(1, 2);
+      incrShock(2);
     }
     break;
     case shockValue_some: {
-      baseIncr = eng->dice(1, 4);
+      incrShock(4);
     }
     break;
     case shockValue_heavy: {
-      baseIncr = eng->dice(2, 4) + 4;
+      incrShock(8);
     }
     break;
+    default:
+    {} break;
     }
-
-    const bool IS_SHOCK_REDUCED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
-    const int SHOCK_TAKEN = (baseIncr * (100 - getShockResistance())) / 100;
-
-    shock_ = min(100, shock_ + max(0, SHOCK_TAKEN + MODIFIER));
   }
 }
 
@@ -243,10 +245,10 @@ void Player::incrInsanity() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanity_ += eng->dice.getInRange(5, 8);
+    insanity_ += eng->dice.getInRange(5, 7);
   }
 
-  shock_ = max(0, shock_ - 60);
+  shock_ = max(0.0, shock_ - 70.0);
 
   updateColor();
   eng->renderer->drawMapAndInterface();
@@ -260,7 +262,7 @@ void Player::incrInsanity() {
     getSpotedEnemies();
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
       const ActorDefinition* const def = spotedEnemies.at(i)->getDef();
-      if(def->shockValue > shockValue_none) {
+      if(def->monsterShockLevel != monsterShockLevel_none) {
         playerSeeShockingMonster = true;
       }
     }
@@ -485,7 +487,7 @@ void Player::setTempShockFromFeatures() {
       shockTemp_ += f->getShockWhenAdjacent();
     }
   }
-  shockTemp_ = min(99, shockTemp_);
+  shockTemp_ = min(99.0, shockTemp_);
 }
 
 bool Player::isStandingInOpenSpace() const {
@@ -650,46 +652,66 @@ void Player::act() {
     testPhobias();
   }
 
-  // If obsessions are active, raise shock to a minimum level
+  //If obsessions are active, raise shock to a minimum level
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
     if(insanityObsessions[i] == true) {
-      shock_ = max(MIN_SHOCK_WHEN_OBSESSION, shock_);
+      shock_ = max(static_cast<double>(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
     }
   }
 
-  //Lose short-term sanity from seen monsters?
+  //Shock from seen monsters
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
     const ActorDefinition* const def = monster->getDef();
-    if(def->shockValue != shockValue_none) {
-      incrShock(def->shockValue, -(monster->shockDecrease));
-      monster->shockDecrease++;
+    if(def->monsterShockLevel != monsterShockLevel_none) {
+      switch(def->monsterShockLevel) {
+      case monsterShockLevel_unsettling: {
+        monster->shockCausedCurrent += 0.10;
+        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.05, 1.0);
+      }
+      break;
+      case monsterShockLevel_scary: {
+        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.15, 1.0);
+      }
+      break;
+      case monsterShockLevel_terrifying: {
+        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.5, 2.0);
+      }
+      break;
+      case monsterShockLevel_mindShattering: {
+        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.75, 3.0);
+      }
+      break;
+      default:
+      {} break;
+      }
+
+      incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));
     }
   }
 
-  //Some short term sanity is lost every x turn
+  //Some shock is taken every Xth turn
   const int TURN = eng->gameTime->getTurn();
-  const int LOSE_N_TURN = 17;
+  const int LOSE_N_TURN = 14;
   if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
-    if(eng->dice(1, 1000) <= 3) {
+    if(eng->dice(1, 1000) <= 2) {
       if(eng->dice.coinToss()) {
         eng->popup->showMessage("I have a bad feeling...", true);
       } else {
         eng->popup->showMessage("A chill runs down my spine...", true);
       }
-      incrShock(shockValue_heavy, 0);
-      incrShock(shockValue_heavy, 0);
+      incrShock(shockValue_heavy);
       eng->renderer->drawMapAndInterface();
     } else {
       if(eng->map->getDungeonLevel() != 0) {
-        incrShock(shockValue_mild, 0);
+        incrShock(1);
       }
     }
   }
 
-  //Lose long-term sanity from high short-term sanity?
-  if(shock_ + shockTemp_ >= 100) {
+  //Take sanity hit from high shock?
+  if(getShockTotal() >= 100) {
     incrInsanity();
     eng->gameTime->letNextAct();
     return;

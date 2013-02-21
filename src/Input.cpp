@@ -495,7 +495,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------INSANITY CHEAT
   else if(d.sfmlKey_ == sf::Keyboard::F5) {
     if(IS_DEBUG_MODE) {
-      eng->player->incrShock(shockValue_heavy, 0);
+      eng->player->incrShock(shockValue_heavy);
       clearEvents();
     }
     return;

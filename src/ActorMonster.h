@@ -45,8 +45,8 @@ class Weapon;
 class Monster: public Actor {
 public:
   Monster() :
-    playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0), shockDecrease(0),
-    isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL), waiting_(false) {
+    playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0),
+    isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL), waiting_(false), shockCausedCurrent(0.0) {
   }
 
   virtual ~Monster() {
@@ -86,13 +86,7 @@ public:
   vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;
 
-  int shockDecrease;
-
   bool isRoamingAllowed;
-
-//  void clearHeardSounds() {
-//    soundsHeard.resize(0);
-//  }
 
   bool isStealth;
 
@@ -107,6 +101,8 @@ public:
   virtual string getAggroPhraseMonsterHidden() const {
     return def_->aggroTextMonsterHidden;
   }
+
+  double shockCausedCurrent;
 
 protected:
   void monsterHit();
