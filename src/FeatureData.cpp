@@ -66,7 +66,7 @@ void FeatureData::makeList() {
   d.name_the = "the stone wall";
   d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
   d.color = clrGray;
-  d.tile = tile_wallFront;
+  d.tile = tile_wallTop;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ethereal] = true;
   d.isMovePassable[moveType_fly] = false;

@@ -631,30 +631,39 @@ void MapBuildBSP::decorateWalls() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
+
+        int nrAdjFloor = 0;
+
+        for(int yy = max(0, y - 1); yy <= min(MAP_Y_CELLS - 1, y + 1); yy++) {
+          for(int xx = max(0, x - 1); xx <= min(MAP_X_CELLS - 1, x + 1); xx++) {
+            if(xx != x || yy != y) {
+              if(eng->map->featuresStatic[xx][yy]->getId() == feature_stoneFloor) {
+                nrAdjFloor++;
+              }
+            }
+          }
+        }
+
+        //Convert isolated stone walls to pillars
+//        if(nrAdjFloor == 8) {
+//          eng->featureFactory->spawnFeatureAt(feature_pillar, coord(x, y));
+//          continue;
+//        }
+
+        //Rubble
         if(eng->dice(1, 100) < 10) {
           eng->featureFactory->spawnFeatureAt(feature_rubbleHigh, coord(x, y));
           continue;
         }
 
+        //Slimy walls
         Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
         wall->setRandomIsSlimy();
 
-        bool isNextToFloor = false;
-        for(int checkY = max(0, y - 1); checkY <= min(MAP_Y_CELLS - 1, y + 1); checkY++) {
-          for(int checkX = max(0, x - 1); checkX <= min(MAP_X_CELLS - 1, x + 1); checkX++) {
-            if(checkX != x || checkY != y) {
-              if(eng->map->featuresStatic[checkX][checkY]->getId() == feature_stoneFloor) {
-                isNextToFloor = true;
-                checkY = 999999;
-                checkX = 999999;
-              }
-            }
-          }
-        }
-        if(isNextToFloor) {
-          wall->setRandomNormalWall();
-        } else {
+        if(nrAdjFloor == 0) {
           dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->wallType = wall_cave;
+        } else {
+          wall->setRandomNormalWall();
         }
       }
     }

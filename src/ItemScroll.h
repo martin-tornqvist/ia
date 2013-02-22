@@ -341,7 +341,7 @@ public:
     m_falseNames.push_back("Pretaanluxis");
     m_falseNames.push_back("PraaNsilenux");
     m_falseNames.push_back("Quodpipax");
-    m_falseNames.push_back("lokemundux");
+    m_falseNames.push_back("Lokemundux");
     m_falseNames.push_back("Profanuxes");
     m_falseNames.push_back("Shaantitus");
     m_falseNames.push_back("Geropayati");
@@ -375,6 +375,9 @@ public:
     cmb.push_back("Desco");
     cmb.push_back("Esco");
     cmb.push_back("Gero");
+    cmb.push_back("Klaatu");
+    cmb.push_back("Barada");
+    cmb.push_back("Nikto");
 
     const unsigned int CMB_SIZ = cmb.size();
     for(unsigned int i = 0; i < CMB_SIZ; i++) {

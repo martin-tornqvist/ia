@@ -25,9 +25,14 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
 
   engine->log->addMessage("Destruction rages around me!");
 
+  const int PLAYER_X = engine->player->pos.x;
+  const int PLAYER_Y = engine->player->pos.y;
+
+  const int AREA_RADI = 8;
+
   for(int i = 0; i < NR_OF_SWEEPS; i++) {
-    for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-      for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+    for(int y = max(1, PLAYER_Y - AREA_RADI); y < min(MAP_Y_CELLS - 1, PLAYER_Y + AREA_RADI); y++) {
+      for(int x = max(1, PLAYER_X - AREA_RADI); x < min(MAP_X_CELLS - 1, PLAYER_X + AREA_RADI); x++) {
         const coord c(x, y);
         bool isAdjToWalkableCell = false;
         for(int dy = -1; dy <= 1; dy++) {
@@ -47,10 +52,10 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
     }
   }
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = max(1, PLAYER_Y - AREA_RADI); y < min(MAP_Y_CELLS - 1, PLAYER_Y + AREA_RADI); y++) {
+    for(int x = max(1, PLAYER_X - AREA_RADI); x < min(MAP_X_CELLS - 1, PLAYER_X + AREA_RADI); x++) {
       if(engine->map->featuresStatic[x][y]->canHaveBlood()) {
-        const int CHANCE_FOR_BLOOD = 20;
+        const int CHANCE_FOR_BLOOD = 10;
         if(engine->dice(1, 100) < CHANCE_FOR_BLOOD) {
           engine->map->featuresStatic[x][y]->setHasBlood(true);
         }
@@ -66,6 +71,8 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
       }
     }
   }
+
+  engine->soundEmitter->emitSound(Sound("", true, engine->player->pos, true, true));
 
   setRealDefinitionNames(engine, false);
 }

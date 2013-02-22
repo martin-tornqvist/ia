@@ -661,6 +661,7 @@ void Player::act() {
   }
 
   //Shock from seen monsters
+  double shockFromMonstersCurrentPlayerTurn = 0.0;
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
     const ActorDefinition* const def = monster->getDef();
@@ -686,8 +687,10 @@ void Player::act() {
       default:
       {} break;
       }
-
-      incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));
+      if(shockFromMonstersCurrentPlayerTurn < 3.0) {
+        incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));
+        shockFromMonstersCurrentPlayerTurn += monster->shockCausedCurrent;
+      }
     }
   }
 

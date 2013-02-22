@@ -13,7 +13,8 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
   switch(wallType) {
   case wall_common:
   case wall_alt1:
-  /*case wall_alt2:*/ {
+    /*case wall_alt2:*/
+  {
     const string modStr = isSlimy ? "slimy " : "";
     return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
   }
@@ -41,30 +42,50 @@ char Wall::getGlyph() const {
 
 Tile_t Wall::getFrontWallTile() const {
   switch(wallType) {
-  case wall_common: return tile_wallFront; break;
-  case wall_alt1: return tile_wallFrontAlt1; break;
+  case wall_common:
+    return tile_wallFront;
+    break;
+  case wall_alt1:
+    return tile_wallFrontAlt1;
+    break;
 //  case wall_alt2: return tile_wallFrontAlt2; break;
-  case wall_cave: return tile_caveWallFront; break;
-  default: return tile_wallFront; break;
+  case wall_cave:
+    return tile_caveWallFront;
+    break;
+  default:
+    return tile_wallFront;
+    break;
   }
 }
 
 Tile_t Wall::getTopWallTile() const {
   switch(wallType) {
-  case wall_common: return tile_wallTop; break;
-  case wall_alt1: return tile_wallTop; break;
+  case wall_common:
+    return tile_wallTop;
+    break;
+  case wall_alt1:
+    return tile_wallTop;
+    break;
 //  case wall_alt2: return tile_wallTop; break;
-  case wall_cave: return tile_caveWallTop; break;
-  default: return tile_wallTop; break;
+  case wall_cave:
+    return tile_caveWallTop;
+    break;
+  default:
+    return tile_wallTop;
+    break;
   }
 }
 
 void Wall::setRandomNormalWall() {
-  const int RND = eng->dice.getInRange(1, 4);
+  const int RND = eng->dice.getInRange(1, 6);
   switch(RND) {
-  case 1: wallType = wall_alt1; break;
+  case 1:
+    wallType = wall_alt1;
+    break;
 //  case 2: wallType = wall_alt2; break;
-  default: wallType = wall_common; break;
+  default:
+    wallType = wall_common;
+    break;
   }
 }
 

@@ -55,14 +55,11 @@ string Cultist::getCultistPhrase(Engine* const engine) {
 void Cultist::actorSpecific_spawnStartItems() {
   const int RND = eng->dice.getInRange(1, 3);
 
-  tracer << RND << endl;
-
   if(RND == 1) {
     Item* item = eng->itemFactory->spawnItem(item_machineGun);
     inventory_->putItemInSlot(slot_wielded, item, true);
   }
   else if(RND == 2) {
-    tracer << "WTF" << endl;
     Item* item = eng->itemFactory->spawnItem(item_sawedOff);
     inventory_->putItemInSlot(slot_wielded, item, true);
     item = eng->itemFactory->spawnItem(item_shotgunShell);

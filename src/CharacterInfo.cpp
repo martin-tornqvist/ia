@@ -127,7 +127,7 @@ void CharacterInfo::makeLines() {
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("MANUSCRIPT KNOWLEDGE", clrHeader));
-  if(potionList.size() == 0) {
+  if(manuscriptList.size() == 0) {
     lines.push_back(StringAndColor(offsetSpaces + "No known manuscripts", clrText));
   } else {
     eng->basicUtils->lexicographicalSortStringAndColorVector(manuscriptList);

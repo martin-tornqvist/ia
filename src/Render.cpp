@@ -17,6 +17,7 @@
 #include "Log.h"
 #include "Attack.h"
 #include "FeatureWall.h"
+#include "FeatureDoor.h"
 
 using namespace std;
 
@@ -711,13 +712,15 @@ void Renderer::drawTiles() {
             goreTile = eng->map->featuresStatic[x][y]->getGoreTile();
           }
           if(goreTile == tile_empty) {
-            if(eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
-              currentDrw->tile = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->getTopWallTile();
+            Feature* const f = eng->map->featuresStatic[x][y];
+            const Feature_t featureId = f->getId();
+            if(featureId == feature_stoneWall) {
+              currentDrw->tile = dynamic_cast<Wall*>(f)->getTopWallTile();
             } else {
-              currentDrw->tile = eng->map->featuresStatic[x][y]->getTile();
+              currentDrw->tile = f->getTile();
             }
-            const sf::Color featStdClr = eng->map->featuresStatic[x][y]->getColor();
-            currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featStdClr;
+            const sf::Color featStdClr = f->getColor();
+            currentDrw->color = f->hasBlood() ? clrRedLight : featStdClr;
           } else {
             currentDrw->tile = goreTile;
             currentDrw->color = clrRed;
@@ -826,12 +829,16 @@ void Renderer::drawTiles() {
         tempDrw.color.b /= 5;
       }
 
-      /*
-       * Walls are given an illusion of perspective.
-       * If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is
-       * not a front or top wall tile, and that cell is explored, change the current tile to wall front
-       */
-      if(y < MAP_Y_CELLS - 1 && eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
+      //Walls are given perspective.
+      //If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is
+      //not a front or top wall tile, and that cell is explored, change the current tile to wall front
+      Feature* const f = eng->map->featuresStatic[x][y];
+      const Feature_t featureId = f->getId();
+      bool isHiddenDoor = false;
+      if(featureId == feature_door) {
+        isHiddenDoor = dynamic_cast<Door*>(f)->isSecret();
+      }
+      if(y < MAP_Y_CELLS - 1 && (featureId == feature_stoneWall || isHiddenDoor)) {
         if(eng->map->explored[x][y + 1]) {
           const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
 
@@ -847,8 +854,12 @@ void Renderer::drawTiles() {
             Wall::isTileAnyWallTop(tileBelowMem);
 
           if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
-            const Wall* const wall = dynamic_cast<const Wall*>(eng->map->featuresStatic[x][y]);
-            tempDrw.tile = wall->getFrontWallTile();
+            if(isHiddenDoor) {
+              tempDrw.tile = tile_wallFront;
+            } else if(featureId == feature_stoneWall) {
+              const Wall* const wall = dynamic_cast<const Wall*>(f);
+              tempDrw.tile = wall->getFrontWallTile();
+            }
           }
         }
       }

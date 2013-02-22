@@ -127,7 +127,7 @@
 	<ctime>
 	<cmath>
 
-1361485239 c:\dev\ia\src\actorplayer.h
+1361554009 c:\dev\ia\src\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"ConstTypes.h"
@@ -349,7 +349,7 @@
 	<string>
 	"Item.h"
 
-1361483514 source:c:\dev\ia\src\actordata.cpp
+1361566972 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -436,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1361486280 source:c:\dev\ia\src\actorplayer.cpp
+1361554427 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -640,7 +640,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1361481995 source:c:\dev\ia\src\characterinfo.cpp
+1361563380 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -853,7 +853,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1355674113 c:\dev\ia\src\itemscroll.h
+1361567983 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -943,7 +943,7 @@
 	"Log.h"
 	"Render.h"
 
-1355674112 source:c:\dev\ia\src\featuredata.cpp
+1361561491 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -1211,7 +1211,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1361481457 source:c:\dev\ia\src\itemscroll.cpp
+1361563718 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1326,7 +1326,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1355674113 source:c:\dev\ia\src\mapbuildbsp.cpp
+1361566959 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -1548,7 +1548,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1361482385 source:c:\dev\ia\src\render.cpp
+1361561524 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1565,6 +1565,7 @@
 	"Log.h"
 	"Attack.h"
 	"FeatureWall.h"
+	"FeatureDoor.h"
 
 1359623466 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
@@ -5659,7 +5660,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1361481155 source:c:\dev\ia\src\actormonsterspecific.cpp
+1361564471 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -9974,7 +9975,7 @@
 1355674112 c:\dev\ia\src\featurewall.h
 	"Feature.h"
 
-1355674112 source:c:\dev\ia\src\featurewall.cpp
+1361566330 source:c:\dev\ia\src\featurewall.cpp
 	"FeatureWall.h"
 	"Engine.h"
 	"Map.h"
