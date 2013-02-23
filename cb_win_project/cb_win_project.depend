@@ -8169,7 +8169,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1356171565 c:\_martin_\ia\src\actordata.h
+1361617616 c:\_martin_\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -8189,7 +8189,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1361041870 c:\_martin_\ia\src\statuseffects.h
+1361634559 c:\_martin_\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -8238,7 +8238,8 @@
 	<ctime>
 	<cmath>
 
-1361030554 c:\_martin_\ia\src\actorplayer.h
+1361617616 c:\_martin_\ia\src\actorplayer.h
+	<math.h>
 	"Actor.h"
 	"ConstTypes.h"
 
@@ -8307,7 +8308,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1356171565 c:\_martin_\ia\src\actormonster.h
+1361617616 c:\_martin_\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -8523,7 +8524,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1356171565 source:c:\_martin_\ia\src\actordata.cpp
+1361617616 source:c:\_martin_\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -8636,7 +8637,7 @@
 
 1350576992 c:\_martin_\ia\src\ai_castrandomspell.h
 
-1360491236 source:c:\_martin_\ia\src\actormonsterspecific.cpp
+1361617616 source:c:\_martin_\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -8666,7 +8667,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1361097078 source:c:\_martin_\ia\src\actorplayer.cpp
+1361617616 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8696,7 +8697,7 @@
 1357390829 c:\_martin_\ia\src\inventoryhandler.h
 	"Inventory.h"
 
-1354042564 c:\_martin_\ia\src\popup.h
+1361617616 c:\_martin_\ia\src\popup.h
 	<vector>
 	"ConstTypes.h"
 
@@ -8850,7 +8851,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1361100211 source:c:\_martin_\ia\src\characterinfo.cpp
+1361617616 source:c:\_martin_\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -8957,7 +8958,7 @@
 	"PlayerBonuses.h"
 	"MenuBrowser.h"
 
-1361036362 source:c:\_martin_\ia\src\dungeonmaster.cpp
+1361617616 source:c:\_martin_\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -9071,7 +9072,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1356171566 c:\_martin_\ia\src\itemscroll.h
+1361617616 c:\_martin_\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -9161,7 +9162,7 @@
 	"Log.h"
 	"Render.h"
 
-1356171565 source:c:\_martin_\ia\src\featuredata.cpp
+1361617616 source:c:\_martin_\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -9216,7 +9217,7 @@
 	"Render.h"
 	"ActorPlayer.h"
 
-1353845890 source:c:\_martin_\ia\src\featureliquid.cpp
+1361627048 source:c:\_martin_\ia\src\featureliquid.cpp
 	"FeatureLiquid.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -9304,7 +9305,7 @@
 	"Popup.h"
 	"Input.h"
 
-1360492102 source:c:\_martin_\ia\src\input.cpp
+1361634854 source:c:\_martin_\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -9472,7 +9473,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1360492471 source:c:\_martin_\ia\src\itempotion.cpp
+1361617616 source:c:\_martin_\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -9481,7 +9482,7 @@
 	"Map.h"
 	"ActorMonster.h"
 
-1360492485 source:c:\_martin_\ia\src\itemscroll.cpp
+1361617616 source:c:\_martin_\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -9584,7 +9585,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1356171566 source:c:\_martin_\ia\src\mapbuildbsp.cpp
+1361626596 source:c:\_martin_\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -9719,7 +9720,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1353013506 source:c:\_martin_\ia\src\playerbonuses.cpp
+1361617616 source:c:\_martin_\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -9763,7 +9764,7 @@
 	"ActorPlayer.h"
 	"FeatureFactory.h"
 
-1354042646 source:c:\_martin_\ia\src\popup.cpp
+1361617616 source:c:\_martin_\ia\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Render.h"
@@ -9859,7 +9860,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1356171566 source:c:\_martin_\ia\src\statuseffects.cpp
+1361634940 source:c:\_martin_\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -9900,7 +9901,7 @@
 
 1352032404 source:c:\_martin_\ia\src\_specialroom.cpp
 
-1356171566 source:c:\_martin_\ia\src\main.cpp
+1361617616 source:c:\_martin_\ia\src\main.cpp
 	<cassert>
 	"Declares.h"
 	"Engine.h"
@@ -9926,7 +9927,7 @@
 
 1350576994 c:\_martin_\ia\src\declares.h
 
-1361026147 source:c:\_martin_\ia\src\render.cpp
+1361634878 source:c:\_martin_\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -9943,6 +9944,7 @@
 	"Log.h"
 	"Attack.h"
 	"FeatureWall.h"
+	"FeatureDoor.h"
 
 1353606354 c:\_martin_\ia\api\sfml\include\sfml\graphics\rectangleshape.hpp
 	<SFML/Graphics/Export.hpp>
@@ -9998,7 +10000,7 @@
 1356171565 source:c:\_martin_\ia\src\featuregrave.cpp
 	"FeatureGrave.h"
 
-1356171565 source:c:\_martin_\ia\src\featurewall.cpp
+1361617616 source:c:\_martin_\ia\src\featurewall.cpp
 	"FeatureWall.h"
 	"Engine.h"
 	"Map.h"

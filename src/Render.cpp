@@ -95,8 +95,7 @@ void Renderer::setupWindowAndImagesClearPrev() {
   renderWindow_->setKeyRepeatEnabled(true);
 
   tracer << "Renderer: Setting frame rate limit" << endl;
-  renderWindow_->setFramerateLimit(60);
-//  renderWindow_->setVerticalSyncEnabled(true);
+  renderWindow_->setFramerateLimit(0/*60*/);
 
   loadFont();
 
@@ -359,12 +358,14 @@ void Renderer::drawText(const string& str, const RenderArea_t renderArea, const 
 
   const int& CELL_W = eng->config->CELL_W;
   const int& CELL_H = eng->config->CELL_H;
+  const int TOT_W = CELL_W * str.size();
+
+  coverAreaPixel(pixelCoord.x, pixelCoord.y, TOT_W, CELL_H);
 
   for(unsigned int i = 0; i < str.size(); i++) {
     if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->SCREEN_WIDTH) {
       return;
     }
-    coverAreaPixel(pixelCoord.x, pixelCoord.y, CELL_W, CELL_H);
     drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr);
     pixelCoord.x += CELL_W;
   }
@@ -440,7 +441,7 @@ void Renderer::drawLineHorizontal(const int x0, const int y0, const int w, const
 }
 
 // Hack to fix Catalyst 12.10 driver bug
-// (see the comment for this function declaration in Render.h)
+// (see the comment for the function declaration in Render.h)
 void Renderer::workaroundAMDBug() {
   static sf::Texture amdWorkaroundImage;
   static sf::Sprite sprite;
@@ -454,9 +455,10 @@ void Renderer::workaroundAMDBug() {
 }
 
 void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H, const sf::Color& clr) {
+  const int W_MAX = min(eng->config->MAINSCREEN_WIDTH - X, W);
   const float X_FL = static_cast<float>(X);
   const float Y_FL = static_cast<float>(Y);
-  const float W_FL = static_cast<float>(W);
+  const float W_FL = static_cast<float>(W_MAX);
   const float H_FL = static_cast<float>(H);
   const float& SCALE = eng->config->SCALE;
   sf::RectangleShape rectShape(sf::Vector2f(W_FL * SCALE, H_FL * SCALE));
@@ -466,7 +468,7 @@ void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const i
   renderWindow_->draw(rectShape);
 
   // Hack to fix Catalyst 12.10 driver bug
-  // (see the comment for this function declaration in Render.h)
+  // (see the comment for the function declaration in Render.h)
   workaroundAMDBug();
 }
 

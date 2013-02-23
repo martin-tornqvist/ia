@@ -97,9 +97,9 @@ public:
   virtual string messageWhenSavesOther() = 0;
   virtual string messageWhenMore() = 0;
   virtual string messageWhenMoreOther() = 0;
-  virtual void newTurn(Engine* engine) = 0;
-  virtual void start() = 0;
-  virtual void end() = 0;
+  virtual void newTurn(Engine* const engine) = 0;
+  virtual void start(Engine* const engine) = 0;
+  virtual void end(Engine* const engine) = 0;
 
   virtual void more() {
   }
@@ -137,7 +137,7 @@ public:
     return 0;
   }
 
-  virtual coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
+  virtual coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
     (void)actorPos;
     (void)engine;
     return movePos;
@@ -222,17 +222,19 @@ public:
     return 10;
   }
 
-  void start() {
+  void start(Engine* const engine) {
+    (void)engine;
   }
 
-  void end() {
+  void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -296,12 +298,12 @@ public:
     return 10;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine);
+  void newTurn(Engine* const engine);
 
 private:
   DiceParam getRandomStandardNrTurns() {
@@ -369,10 +371,10 @@ public:
     return -9999;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -381,7 +383,7 @@ public:
     return 0;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -448,10 +450,10 @@ public:
     return -9999;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -460,7 +462,7 @@ public:
     return 0;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -527,10 +529,9 @@ public:
     return 0;
   }
 
-  void start();
+  void start(Engine* const engine);
 
-  void end() {
-  }
+  void end(Engine* const engine);
 
   bool allowSee() {
     return false;
@@ -548,7 +549,7 @@ public:
     return 0;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -615,9 +616,9 @@ public:
     return 0;
   }
 
-  void start();
+  void start(Engine* const engine);
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -627,7 +628,7 @@ public:
     return 10;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -694,9 +695,9 @@ public:
     return 0;
   }
 
-  void start();
+  void start(Engine* const engine);
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -704,7 +705,7 @@ public:
     return -10;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -771,17 +772,16 @@ public:
     return 0;
   }
 
-  void start();
+  void start(Engine* const engine);
 
-  void end() {
-  }
+  void end(Engine* const engine);
 
   int getAbilityModifier(const Abilities_t ability) {
     (void)ability;
     return 0;
   }
 
-  void newTurn(Engine* engine);
+  void newTurn(Engine* const engine);
 
 private:
   DiceParam getRandomStandardNrTurns() {
@@ -846,9 +846,9 @@ public:
     return clrRedLight;
   }
 
-  void start();
-  void end();
-  void newTurn(Engine* engine);
+  void start(Engine* const engine);
+  void end(Engine* const engine);
+  void newTurn(Engine* const engine);
 
 private:
   DiceParam getRandomStandardNrTurns() {
@@ -919,9 +919,9 @@ public:
     return clrRedLight;
   }
 
-  void start();
-  void end();
-  void newTurn(Engine* engine);
+  void start(Engine* const engine);
+  void end(Engine* const engine);
+  void newTurn(Engine* const engine);
 
 private:
   DiceParam getRandomStandardNrTurns() {
@@ -989,18 +989,18 @@ public:
     return 0;
   }
 
-  coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine);
+  coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine);
 
   bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1068,23 +1068,23 @@ public:
     return 27;
   }
 
-  coord changeMoveCoord(const coord& actorPos , const coord& movePos, Engine* engine);
+  coord changeMoveCoord(const coord& actorPos , const coord& movePos, Engine* const engine);
 
   void more() {
     nrOfSpikes++;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool isFinnished() {
     return nrOfSpikes <= 0;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
   }
 
@@ -1153,13 +1153,13 @@ public:
   string messageWhenSavesOther() {
     return "";
   }
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
-  void start() {
+  void start(Engine* const engine) {
   }
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool allowMove() {
@@ -1238,13 +1238,13 @@ public:
   string messageWhenSavesOther() {
     return "";
   }
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
-  void start() {
+  void start(Engine* const engine) {
   }
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1316,13 +1316,13 @@ public:
   string messageWhenSavesOther() {
     return "";
   }
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
-  void start() {
+  void start(Engine* const engine) {
   }
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1390,13 +1390,13 @@ public:
   string messageWhenSavesOther() {
     return "";
   }
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
-  void start() {
+  void start(Engine* const engine) {
   }
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1465,10 +1465,10 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool allowAct() {
@@ -1490,7 +1490,7 @@ public:
     return false;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1554,13 +1554,15 @@ public:
     return -15;
   }
 
-  void start() {
-  }
+  void start(Engine* const engine);
 
-  void end() {
-  }
+  void end(Engine* const engine);
 
   bool allowAct() {
+    return false;
+  }
+
+  bool allowSee() {
     return false;
   }
 
@@ -1579,7 +1581,7 @@ public:
     return false;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1655,17 +1657,17 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool isSlowed() {
     return true;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1738,13 +1740,13 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1819,13 +1821,13 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1898,13 +1900,13 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -1977,13 +1979,13 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -2056,17 +2058,17 @@ public:
     return 0;
   }
 
-  void start() {
+  void start(Engine* const engine) {
   }
 
-  void end() {
+  void end(Engine* const engine) {
   }
 
   bool isSlowed() {
     return true;
   }
 
-  void newTurn(Engine* engine) {
+  void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
   }
@@ -2083,7 +2085,7 @@ private:
 //requests to add new status effects to the actor.
 class StatusEffectsHandler {
 public:
-  StatusEffectsHandler(Actor* const owningActor_, Engine* engine) :
+  StatusEffectsHandler(Actor* const owningActor_, Engine* const engine) :
     owningActor(owningActor_), eng(engine) {
     effects.resize(0);
   }

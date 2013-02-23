@@ -533,6 +533,9 @@ void Input::clearEvents() const {
 
 KeyboardReadReturnData Input::readKeysUntilFound() const {
   while(true) {
+
+    eng->sleep(1);
+
     sf::Event event;
     while(eng->renderer->renderWindow_->pollEvent(event)) {
       if(event.type == sf::Event::TextEntered) {

@@ -234,7 +234,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
 
         Region* const region = regions[regX][regY];
 
-        // This region no longer has a room, delete it from list
+        //This region no longer has a room, delete it from list
         deleteAndRemoveRoomFromList(region->mainRoom);
         region->mainRoom = NULL;
 
@@ -273,7 +273,9 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
             const coord c(x, y);
             if(c == origin || floodFillResult[x][y] > 0) {
 
-              eng->featureFactory->spawnFeatureAt(feature_caveFloor, c);
+              //eng->featureFactory->spawnFeatureAt(feature_caveFloor, c);
+
+              eng->featureFactory->spawnFeatureAt(feature_shallowMud, c);
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
@@ -498,37 +500,37 @@ void MapBuildBSP::buildRoomsInRooms() {
 }
 
 //void MapBuildBSP::buildNaturalArea(Region* regions[3][3]) {
-//	const coord origin(1,1);
-//	for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-//		for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-//			if(eng->basicUtils->pointDistance(origin.x, origin.y, x, y) < 20) {
-//				eng->featureFactory->spawnFeatureAt(feature_deepWater, coord(x,y));
-//				for(int yRegion = 0; yRegion < 3; yRegion++) {
-//					for(int xRegion = 0; xRegion < 3; xRegion++) {
-//						Region* region = regions[xRegion][yRegion];
-//						if(eng->mapTests->isCellInside(coord(x,y), region->getX0Y0(), region->getX1Y1())) {
-//							region->mapArea.isSpecialRoomAllowed = false;
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//	makeRiver(regions);
+//  const coord origin(1,1);
+//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+//      if(eng->basicUtils->pointDistance(origin.x, origin.y, x, y) < 20) {
+//        eng->featureFactory->spawnFeatureAt(feature_deepWater, coord(x,y));
+//        for(int yRegion = 0; yRegion < 3; yRegion++) {
+//          for(int xRegion = 0; xRegion < 3; xRegion++) {
+//            Region* region = regions[xRegion][yRegion];
+//            if(eng->mapTests->isCellInside(coord(x,y), region->getX0Y0(), region->getX1Y1())) {
+//              region->mapArea.isSpecialRoomAllowed = false;
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//  makeRiver(regions);
 //}
 
 //void MapBuildBSP::makeRiver(Region* regions[3][3]) {
-//	(void)regions;
+//  (void)regions;
 //
-//	const int WIDTH = eng->dice.getInRange(4, 12);
-//	const int START_X_OFFSET_MAX = 5;
-//	const int X_POS_START = MAP_X_CELLS/2 + eng->dice.getInRange(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
+//  const int WIDTH = eng->dice.getInRange(4, 12);
+//  const int START_X_OFFSET_MAX = 5;
+//  const int X_POS_START = MAP_X_CELLS/2 + eng->dice.getInRange(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
 //
-//	coord leftCoord(X_POS_START, 0);
-//	while(eng->mapTests->isCellInsideMainScreen(leftCoord) && eng->mapTests->isCellInsideMainScreen(leftCoord + coord(WIDTH,0))) {
-//		coverAreaWithFeature(Rect(leftCoord, leftCoord + coord(WIDTH, 0)), feature_deepWater);
-//		leftCoord += coord(eng->dice.getInRange(-1,1), 1);
-//	}
+//  coord leftCoord(X_POS_START, 0);
+//  while(eng->mapTests->isCellInsideMainScreen(leftCoord) && eng->mapTests->isCellInsideMainScreen(leftCoord + coord(WIDTH,0))) {
+//    coverAreaWithFeature(Rect(leftCoord, leftCoord + coord(WIDTH, 0)), feature_deepWater);
+//    leftCoord += coord(eng->dice.getInRange(-1,1), 1);
+//  }
 //}
 
 coord MapBuildBSP::placeStairs() {

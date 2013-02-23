@@ -17,15 +17,15 @@ StatusEffect::~StatusEffect() {
 
 }
 
-void StatusBlessed::start() {
+void StatusBlessed::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusCursed);
 }
 
-void StatusCursed::start() {
+void StatusCursed::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusBlessed);
 }
 
-void StatusDiseased::newTurn(Engine* engine) {
+void StatusDiseased::newTurn(Engine* const engine) {
   int& hp = engine->player->hp_;
   int& hpMax = engine->player->hpMax_;
 
@@ -50,7 +50,7 @@ bool StatusTerrified::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALS
   return true;
 }
 
-coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
+coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
   (void)movePos;
 
   Actor* const player = owningActor->eng->player;
@@ -102,13 +102,18 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
   return true;
 }
 
-void StatusBurning::start() {
+void StatusBurning::start(Engine* const engine) {
   owningActor->addLight(owningActor->eng->map->light);
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
   doDamage(owningActor->eng);
 }
 
-void StatusBurning::end() {
-
+void StatusBurning::end(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
 }
 
 void StatusBurning::doDamage(Engine* const engine) {
@@ -119,40 +124,74 @@ void StatusBurning::doDamage(Engine* const engine) {
   owningActor->hit(engine->dice(1, 3), damageType_fire);
 }
 
-void StatusBurning::newTurn(Engine* engine) {
+void StatusBurning::newTurn(Engine* const engine) {
   owningActor->addLight(owningActor->eng->map->light);
   doDamage(engine);
   turnsLeft--;
 }
 
-void StatusBlind::start() {
+void StatusBlind::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
 }
 
-void StatusClairvoyant::newTurn(Engine* engine) {
+void StatusBlind::end(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+void StatusFainted::start(Engine* const engine) {
+  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+void StatusFainted::end(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+void StatusClairvoyant::start(Engine* const engine) {
+  owningActor->getStatusEffectsHandler()->endEffect(statusBlind);
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+void StatusClairvoyant::end(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+void StatusClairvoyant::newTurn(Engine* const engine) {
   (void)engine;
   turnsLeft--;
 }
 
-void StatusClairvoyant::start() {
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlind);
+void StatusFlared::start(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
 }
 
-void StatusFlared::start() {
-
+void StatusFlared::end(Engine* const engine) {
+  owningActor->updateColor();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
 }
 
-void StatusFlared::end() {
-
-}
-
-void StatusFlared::newTurn(Engine* engine) {
+void StatusFlared::newTurn(Engine* const engine) {
   owningActor->hit(engine->dice(1, 2), damageType_fire);
   turnsLeft--;
 }
 
-coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* engine) {
-
+coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
 
@@ -339,11 +378,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
     //This part reached means the applied effect is new.
     effect->setOwningActor(owningActor);
     effects.push_back(effect);
-    effect->start();
-
-    owningActor->updateColor();
-    eng->player->FOVupdate();
-    eng->renderer->drawMapAndInterface(true);
+    effect->start(eng);
 
     if(OWNER_IS_PLAYER) {
       if(NO_MESSAGES == false) {
@@ -410,11 +445,8 @@ void StatusEffectsHandler::newTurnAllEffects() {
     StatusEffect* const curEffect = effects.at(i);
     if(curEffect->isFinnished()) {
 
-      curEffect->end();
+      curEffect->end(eng);
       effects.erase(effects.begin() + i);
-
-      eng->player->FOVupdate();
-      eng->renderer->drawMapAndInterface();
 
       if(OWNER_IS_PLAYER && curEffect->messageWhenEnd() != "") {
         eng->log->addMessage(curEffect->messageWhenEnd(), clrWhite);
