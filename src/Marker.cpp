@@ -12,6 +12,7 @@
 #include "Thrower.h"
 #include "Render.h"
 #include "ItemScroll.h"
+#include "Map.h"
 
 void Marker::readKeys(const MarkerTask_t markerTask) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
@@ -113,9 +114,11 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   // ------------------------------------------------------- AZATHOTS BLAST SPELL
   if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
     if(markerTask == markerTask_spellAzathothsBlast) {
-      eng->renderer->drawMapAndInterface();
-      ScrollOfAzathothsBlast::castAt(pos_, eng);
-      done();
+      if(eng->map->playerVision[pos_.x][pos_.y]) {
+        eng->renderer->drawMapAndInterface();
+        ScrollOfAzathothsBlast::castAt(pos_, eng);
+        done();
+      }
     }
   }
   if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {

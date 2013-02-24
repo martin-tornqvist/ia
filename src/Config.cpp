@@ -15,11 +15,12 @@ using namespace std;
 
 Config::Config(Engine* engine) :
   GAME_VERSION("v14.0"),
-  SCALE(1.0f),
   TILES_IMAGE_NAME("images/gfx_16x24.png"),
   MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.png"),
+  fontImageName(""),
   LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
   LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
+  SCALE(1.0f),
   CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
   CHARACTER_LINES_Y_CELLS(3),
   SCREEN_BPP(32),
@@ -105,7 +106,7 @@ void Config::runOptionsMenu() {
 
 void Config::parseFontNameAndSetCellDims() {
   tracer << "Config:: parseFontNameAndSetCellDims()..." << endl;
-  string fontName = FONT_IMAGE_NAME;
+  string fontName = fontImageName;
 
   char ch = 'a';
   while(ch < '0' || ch > '9') {
@@ -139,7 +140,7 @@ void Config::parseFontNameAndSetCellDims() {
 
 void Config::setDefaultVariables() {
   USE_TILE_SET = true;
-  FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
+  fontImageName = "images/16x24_clean_v1.png";
   parseFontNameAndSetCellDims();
   FULLSCREEN = false;
   WALL_SYMBOL_FULL_SQUARE = false;
@@ -153,7 +154,7 @@ void Config::setDefaultVariables() {
 void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.resize(0);
   lines.push_back(USE_TILE_SET == false ? "0" : "1");
-  lines.push_back(FONT_IMAGE_NAME);
+  lines.push_back(fontImageName);
   lines.push_back(FULLSCREEN == false ? "0" : "1");
   lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
   lines.push_back(SKIP_INTRO_LEVEL == false ? "0" : "1");
@@ -185,7 +186,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(FONT_IMAGE_NAME, renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(fontImageName, renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
   eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
@@ -236,7 +237,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
     USE_TILE_SET = !USE_TILE_SET;
     if(USE_TILE_SET) {
       if(CELL_W != 16 || CELL_H != 24) {
-        FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
+        fontImageName = "images/16x24_clean_v1.png";
       }
     }
     parseFontNameAndSetCellDims();
@@ -246,8 +247,8 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
 
   case 1: {
     for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-      if(FONT_IMAGE_NAME == fontImageNames.at(i)) {
-        FONT_IMAGE_NAME = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+      if(fontImageName == fontImageNames.at(i)) {
+        fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
         break;
       }
     }
@@ -256,8 +257,8 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
     if(USE_TILE_SET) {
       while(CELL_W != 16 && CELL_H != 24) {
         for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-          if(FONT_IMAGE_NAME == fontImageNames.at(i)) {
-            FONT_IMAGE_NAME = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+          if(fontImageName == fontImageNames.at(i)) {
+            fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
             break;
           }
         }
@@ -331,14 +332,14 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   } else {
     USE_TILE_SET = true;
     if(CELL_W != 16 || CELL_H != 24) {
-      FONT_IMAGE_NAME = "images/16x24_clean_v1.png";
+      fontImageName = "images/16x24_clean_v1.png";
       parseFontNameAndSetCellDims();
     }
   }
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  FONT_IMAGE_NAME = curLine;
+  fontImageName = curLine;
   parseFontNameAndSetCellDims();
   lines.erase(lines.begin());
 

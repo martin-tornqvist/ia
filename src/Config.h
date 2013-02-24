@@ -23,7 +23,7 @@ public:
 
   const string TILES_IMAGE_NAME;
   const string MAIN_MENU_LOGO_IMAGE_NAME;
-  string FONT_IMAGE_NAME;
+  string fontImageName;
 
 private:
   const int LOG_X_CELLS_OFFSET;

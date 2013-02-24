@@ -232,7 +232,7 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
 }
 
 void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
-
+  drawEffectAnimationIfPlayerVisionAt(pos, clrYellow, engine);
 }
 
 void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -317,6 +317,8 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     def_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
+      engine->log->addMessage("It was " + def_->name.name_a + ".");
+      engine->renderer->drawMapAndInterface();
       engine->player->incrShock(shockValue_heavy);
     }
 
@@ -397,9 +399,6 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     def_->isTried = true;
     specificRead(false, engine);
     engine->player->incrShock(shockValue_heavy);
-    if(def_->isIdentified) {
-      engine->log->addMessage("It was " + def_->name.name_a + ".");
-    }
   }
   engine->gameTime->letNextAct();
   return true;
@@ -414,3 +413,35 @@ void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFa
     }
   }
 }
+
+void Scroll::drawEffectAnimationIfPlayerVisionAt(const coord& pos, const sf::Color& clr, Engine* const engine) {
+  if(engine->map->playerVision[pos.x][pos.y]) {
+
+//    eng->renderer->drawMapAndInterface();
+//    eng->renderer->clearWindow();
+//    sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
+//    eng->renderer->drawScreenSizedTexture(screenTexture);
+
+    const int DELAY = engine->config->DELAY_EXPLOSION;
+    const int DELAY_HALF = engine->config->DELAY_EXPLOSION / 2;
+
+    if(engine->config->USE_TILE_SET) {
+      bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
+      engine->basicUtils->resetBoolArray(forbiddenCells, false);
+      engine->renderer->drawBlastAnimationAtField(pos, 0, forbiddenCells, clr, clr, DELAY);
+
+//      engine->renderer->drawTileInMap(tile_blastAnimation1, pos, clr, true, clrBlack);
+//      eng->renderer->updateWindow();
+//      engine->sleep(DELAY_HALF);
+//
+//      eng->renderer->clearWindow();
+//      screenTexture = eng->renderer->getScreenTextureCopy();
+//      eng->renderer->drawScreenSizedTexture(screenTexture);
+//      engine->renderer->drawTileInMap(tile_blastAnimation2, pos, clr, true, clrBlack);
+//      engine->sleep(DELAY_HALF);
+
+    } else {
+    }
+  }
+}
+

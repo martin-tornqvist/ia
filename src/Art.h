@@ -126,8 +126,8 @@ struct coord;
 
 class Art {
 public:
-	coord getGlyphCoords(const char glyph, Engine* engine);
-	coord getTileCoords(const Tile_t tile, Engine* engine);
+	coord getGlyphCoords(const char glyph);
+	coord getTileCoords(const Tile_t tile);
 
 private:
 	coord getColumnAndRow(const char glyph);

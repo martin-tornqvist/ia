@@ -233,16 +233,12 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
 }
 
 
-coord Art::getGlyphCoords(const char glyph, Engine* engine) {
+coord Art::getGlyphCoords(const char glyph) {
   coord c = getColumnAndRow(glyph);
-//  c.x *= engine->config->CELL_W;
-//  c.y *= engine->config->CELL_H;
   return c;
 }
 
-coord Art::getTileCoords(const Tile_t tile, Engine* engine) {
+coord Art::getTileCoords(const Tile_t tile) {
   coord c = getColumnAndRowTile(tile);
-//  c.x *= engine->config->CELL_W;
-//  c.y *= engine->config->CELL_H;
   return c;
 }

@@ -18,10 +18,12 @@ StatusEffect::~StatusEffect() {
 }
 
 void StatusBlessed::start(Engine* const engine) {
+  (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusCursed);
 }
 
 void StatusCursed::start(Engine* const engine) {
+  (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusBlessed);
 }
 

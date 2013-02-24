@@ -94,7 +94,7 @@ void Renderer::setupWindowAndImagesClearPrev() {
   tracer << "Renderer: Enabling key repeat" << endl;
   renderWindow_->setKeyRepeatEnabled(true);
 
-  tracer << "Renderer: Setting frame rate limit" << endl;
+//  tracer << "Renderer: Setting frame rate limit" << endl;
   renderWindow_->setFramerateLimit(0/*60*/);
 
   loadFont();
@@ -121,7 +121,7 @@ void Renderer::loadFont() {
   tracer << "Renderer::loadFont()..." << endl;
 
   textureFontSheet_ = new sf::Texture();
-  textureFontSheet_->loadFromFile(eng->config->FONT_IMAGE_NAME);
+  textureFontSheet_->loadFromFile(eng->config->fontImageName);
 
   const int& W = eng->config->CELL_W;
   const int& H = eng->config->CELL_H;
@@ -283,7 +283,7 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
 
   const int X_PIXEL = X * CELL_W;
   const int Y_PIXEL = Y * CELL_H + eng->config->MAINSCREEN_Y_OFFSET;
-  const coord tileCoords = eng->art->getTileCoords(tile, eng);
+  const coord tileCoords = eng->art->getTileCoords(tile);
 
   if(drawBgClr) {
     drawRectangleSolid(X_PIXEL, Y_PIXEL, CELL_W, CELL_H, bgClr);
@@ -301,7 +301,7 @@ void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y, const 
 
   const int X_PIXEL = X * CELL_W;
   const int Y_PIXEL = Y * CELL_H + eng->config->MAINSCREEN_Y_OFFSET;
-  const coord glyphCoords = eng->art->getGlyphCoords(GLYPH, eng);
+  const coord glyphCoords = eng->art->getGlyphCoords(GLYPH);
 
   if(drawBgClr) {
     drawRectangleSolid(X_PIXEL, Y_PIXEL, CELL_W, CELL_H, bgClr);
@@ -313,7 +313,7 @@ void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y, const 
 }
 
 void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr) {
-  const coord& glyphCoords = eng->art->getGlyphCoords(CHARACTER, eng);
+  const coord& glyphCoords = eng->art->getGlyphCoords(CHARACTER);
   sf::Sprite* const spr = spritesFont_[glyphCoords.x][glyphCoords.y];
   spr->setColor(clr);
   drawSprite(X, Y, *spr);

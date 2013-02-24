@@ -44,6 +44,8 @@ protected:
     (void)FROM_MEMORY;
   }
 
+  static void drawEffectAnimationIfPlayerVisionAt(const coord& pos, const sf::Color& clr, Engine* const engine);
+
   bool attemptReadFromMemory(Engine* const engine);
   bool attemptReadFromScroll(Engine* const engine);
 

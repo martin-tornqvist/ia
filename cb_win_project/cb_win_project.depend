@@ -8156,7 +8156,7 @@
 
 1353606354 c:\_martin_\ia\api\sfml\include\sfml\config.hpp
 
-1356171565 c:\_martin_\ia\src\art.h
+1361645068 c:\_martin_\ia\src\art.h
 
 1356171565 c:\_martin_\ia\src\actor.h
 	<string>
@@ -8189,7 +8189,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1361634559 c:\_martin_\ia\src\statuseffects.h
+1361644831 c:\_martin_\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -8220,7 +8220,7 @@
 
 1352829480 c:\_martin_\ia\src\constdungeonsettings.h
 
-1354314201 c:\_martin_\ia\src\config.h
+1361645212 c:\_martin_\ia\src\config.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -8716,7 +8716,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1356171565 source:c:\_martin_\ia\src\art.cpp
+1361645064 source:c:\_martin_\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
@@ -8888,7 +8888,7 @@
 1350576994 c:\_martin_\ia\src\close.h
 	"ConstTypes.h"
 
-1356171565 source:c:\_martin_\ia\src\config.cpp
+1361645719 source:c:\_martin_\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -9072,7 +9072,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1361617616 c:\_martin_\ia\src\itemscroll.h
+1361651076 c:\_martin_\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -9217,7 +9217,7 @@
 	"Render.h"
 	"ActorPlayer.h"
 
-1361627048 source:c:\_martin_\ia\src\featureliquid.cpp
+1361645776 source:c:\_martin_\ia\src\featureliquid.cpp
 	"FeatureLiquid.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -9482,7 +9482,7 @@
 	"Map.h"
 	"ActorMonster.h"
 
-1361617616 source:c:\_martin_\ia\src\itemscroll.cpp
+1361651607 source:c:\_martin_\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -9676,7 +9676,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1361036549 source:c:\_martin_\ia\src\marker.cpp
+1361651613 source:c:\_martin_\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -9690,11 +9690,12 @@
 	"Thrower.h"
 	"Render.h"
 	"ItemScroll.h"
+	"Map.h"
 
 1353960166 source:c:\_martin_\ia\src\menubrowser.cpp
 	"MenuBrowser.h"
 
-1356171566 source:c:\_martin_\ia\src\menuinputhandler.cpp
+1361645803 source:c:\_martin_\ia\src\menuinputhandler.cpp
 	"MenuInputHandler.h"
 	"Engine.h"
 	"Input.h"
@@ -9860,7 +9861,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1361634940 source:c:\_martin_\ia\src\statuseffects.cpp
+1361645827 source:c:\_martin_\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -9927,7 +9928,7 @@
 
 1350576994 c:\_martin_\ia\src\declares.h
 
-1361634878 source:c:\_martin_\ia\src\render.cpp
+1361645610 source:c:\_martin_\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>

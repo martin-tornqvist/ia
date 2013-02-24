@@ -38,7 +38,7 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 
     const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
 
-    const int NR_LETTERS_A_TO_Z = static_cast<int>('z' - 'a');
+////    const int NR_LETTERS_A_TO_Z = static_cast<int>('z' - 'a');
 
     if((d.key_ >= 'a' && static_cast<int>(d.key_ - 'a') < TOT_SIZE_OF_LISTS)) {
       browser.navigate(d.key_);

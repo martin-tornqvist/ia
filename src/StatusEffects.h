@@ -299,8 +299,10 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine);
@@ -372,9 +374,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -451,9 +455,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -619,6 +625,7 @@ public:
   void start(Engine* const engine);
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -698,6 +705,7 @@ public:
   void start(Engine* const engine);
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   int getAbilityModifier(const Abilities_t ability) {
@@ -995,9 +1003,11 @@ public:
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine) {
@@ -1075,9 +1085,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool isFinnished() {
@@ -1158,8 +1170,10 @@ public:
     turnsLeft--;
   }
   void start(Engine* const engine) {
+    (void)engine;
   }
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowMove() {
@@ -1243,8 +1257,10 @@ public:
     turnsLeft--;
   }
   void start(Engine* const engine) {
+    (void)engine;
   }
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1321,8 +1337,10 @@ public:
     turnsLeft--;
   }
   void start(Engine* const engine) {
+    (void)engine;
   }
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1395,8 +1413,10 @@ public:
     turnsLeft--;
   }
   void start(Engine* const engine) {
+    (void)engine;
   }
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
@@ -1466,9 +1486,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool allowAct() {
@@ -1658,9 +1680,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool isSlowed() {
@@ -1741,9 +1765,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine) {
@@ -1822,9 +1848,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine) {
@@ -1901,9 +1929,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine) {
@@ -1980,9 +2010,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   void newTurn(Engine* const engine) {
@@ -2059,9 +2091,11 @@ public:
   }
 
   void start(Engine* const engine) {
+    (void)engine;
   }
 
   void end(Engine* const engine) {
+    (void)engine;
   }
 
   bool isSlowed() {
