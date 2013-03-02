@@ -35,7 +35,7 @@ void Actor::newTurn() {
   }
 }
 
-bool Actor::checkIfSeeActor(const Actor& other, bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool Actor::checkIfSeeActor(const Actor& other, const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
   if(other.deadState == actorDeadState_alive) {
     if(this == &other) {
       return true;

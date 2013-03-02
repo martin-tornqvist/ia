@@ -56,8 +56,6 @@ public:
   int firstAidTurnsLeft;
   int waitTurnsLeft;
 
-  int mythosKnowledge;
-
   void incrShock(const ShockValues_t shockValue);
   void incrShock(const int VAL);
   void restoreShock();
@@ -69,11 +67,19 @@ public:
   }
   void incrInsanity();
   int getInsanity() const {
-    return insanity_;
+    return insanity_ + mythosKnowledge;
   }
   void setTempShockFromFeatures();
 
   int getShockResistance() const;
+
+  int getMythosKnowledge() const {
+    return mythosKnowledge;
+  }
+
+  int getSanityPenaltyFromMythosKnowledge() const {
+    return mythosKnowledge;
+  }
 
   int dynamiteFuseTurns;
   int molotovFuseTurns;
@@ -102,6 +108,8 @@ private:
   friend class GameTime;
   int insanity_;
   double shock_, shockTemp_;
+
+  int mythosKnowledge;
 
   void attemptIdentifyItems();
   void testPhobias();

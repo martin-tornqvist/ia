@@ -55,7 +55,7 @@ void ActorDefinition::reset() {
 
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
   //Set HP from progression formula
-  const int HP_BASE = 2;
+  const int HP_BASE = 3;
   const int HP_INCR = 2;
   const int HP_CAP = 999;
 
@@ -129,6 +129,9 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -162,6 +165,9 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -193,6 +199,9 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -227,6 +236,9 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -262,6 +274,9 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -295,6 +310,9 @@ void ActorData::defineAllActors() {
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language.";
   d.spellCastMessage = "The accolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_ritual);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -328,6 +346,9 @@ void ActorData::defineAllActors() {
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Tesla Cannon.";
   d.spellCastMessage = "The accolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_ritual);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -361,6 +382,9 @@ void ActorData::defineAllActors() {
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Spike gun.";
   d.spellCastMessage = "The accolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_ritual);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -394,6 +418,8 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_ritual);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -543,7 +569,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 3;
+  d.spellCooldownTurns = 2;
   d.glyph = 'P';
   d.color = clrCyanLight;
   d.tile = tile_cultistDagger;
@@ -559,6 +585,9 @@ void ActorData::defineAllActors() {
   d.description = "A fanatic cultist of the priest rank, madly gibbering in some half-lost language.";
   d.spellCastMessage = "The priest makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_ritual);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -588,6 +617,8 @@ void ActorData::defineAllActors() {
   d.description = "A large green spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -617,6 +648,8 @@ void ActorData::defineAllActors() {
   d.description = "A large white spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -646,6 +679,8 @@ void ActorData::defineAllActors() {
   d.description = "A large black spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -676,6 +711,8 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -708,6 +745,8 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isCanine = true;
   d.canBeSummoned = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -739,6 +778,8 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Ghost is put to rest.";
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -771,6 +812,8 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Phantasm is put to rest.";
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -804,6 +847,8 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Wraith is put to rest.";
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -833,6 +878,10 @@ void ActorData::defineAllActors() {
   d.description = "A large and aggressive rodent.";
   d.erraticMovement = actorErratic_somewhat;
   d.isRat = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -864,6 +913,10 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.isRat = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
+  d.nativeRooms.push_back(roomTheme_human);
+  d.nativeRooms.push_back(roomTheme_tomb);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -930,6 +983,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
+  d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -961,6 +1015,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
+  d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -993,6 +1048,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
+  d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -1026,6 +1082,7 @@ void ActorData::defineAllActors() {
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1057,6 +1114,8 @@ void ActorData::defineAllActors() {
   = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome isHumanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -1091,8 +1150,10 @@ void ActorData::defineAllActors() {
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_monster);
   setStrengthsFromFormula(d, weak);
   d.abilityValues.setAbilityValue(ability_stealth, 80);
+  d.nativeRooms.push_back(roomTheme_plain);
   finalizeDefinition(d);
   d.reset();
 
@@ -1127,6 +1188,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   setStrengthsFromFormula(d, strong);
+  d.nativeRooms.push_back(roomTheme_plain);
   finalizeDefinition(d);
   d.reset();
 
@@ -1165,6 +1227,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   setStrengthsFromFormula(d, strong);
+  d.nativeRooms.push_back(roomTheme_plain);
   finalizeDefinition(d);
   d.reset();
 
@@ -1201,6 +1264,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
+  d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -1261,6 +1325,8 @@ void ActorData::defineAllActors() {
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_monster);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1293,8 +1359,9 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  setStrengthsFromFormula(d, weak);
   d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1326,8 +1393,9 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  setStrengthsFromFormula(d, weak);
   d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1359,9 +1427,10 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.canBleed = false;
   d.canBeSummoned = true;
-  setStrengthsFromFormula(d, superStrong);
-  d.monsterShockLevel = monsterShockLevel_unsettling;
   d.erraticMovement = actorErratic_somewhat;
+  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, superStrong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1393,10 +1462,11 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.canBleed = false;
   d.canBeSummoned = true;
-  setStrengthsFromFormula(d, strong);
   d.monsterShockLevel = monsterShockLevel_scary;
   d.erraticMovement = actorErratic_somewhat;
   d.abilityValues.setAbilityValue(ability_stealth, 100);
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1428,9 +1498,10 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.canBleed = false;
   d.canBeSummoned = true;
-  setStrengthsFromFormula(d, superStrong);
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, superStrong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1463,9 +1534,9 @@ void ActorData::defineAllActors() {
   = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
   d.canBleed = true;
   d.canBeSummoned = false;
-  setStrengthsFromFormula(d, strong);
   d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.erraticMovement = actorErratic_somewhat;
+  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 }

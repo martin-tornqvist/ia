@@ -5,6 +5,9 @@
 #include "FeatureData.h"
 #include "FeatureFactory.h"
 #include "Map.h"
+#include "PopulateItems.h"
+#include "PopulateMonsters.h"
+#include "PopulateTraps.h"
 
 // Criteria:
 // * If a room contains other rooms, the outer room has no theme
@@ -19,17 +22,19 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
     applyThemeToRoom(*(rooms.at(i)));
     makeRoomDarkWithChance(*(rooms.at(i)));
   }
+
+  tracer << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
+  eng->populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
+
   tracer << "RoomThemeMaker::run() [DONE]" << endl;
 }
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
-  tracer << "RoomThemeMaker::applyThemeToRoom()..." << endl;
-  if(room.roomTheme != roomTheme_none) {
-    if(room.roomTheme != roomTheme_plain) {
-      placeThemeFeatures(room);
-    }
+//  tracer << "RoomThemeMaker::applyThemeToRoom()..." << endl; //Spammy
+  if(room.roomTheme != roomTheme_plain) {
+    placeThemeFeatures(room);
   }
-  tracer << "RoomThemeMaker::applyThemeToRoom() [DONE]" << endl;
+//  tracer << "RoomThemeMaker::applyThemeToRoom() [DONE]" << endl;  //Spammy
 }
 
 void RoomThemeMaker::placeThemeFeatures(Room& room) {
@@ -91,9 +96,6 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   int chanceToMakeDark = 0;
 
   switch(room.roomTheme) {
-  case roomTheme_none:
-    chanceToMakeDark = 0;
-    break;
   case roomTheme_plain:
     chanceToMakeDark = 5;
     break;
@@ -118,6 +120,8 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   default:
     break;
   }
+
+  chanceToMakeDark += eng->map->getDungeonLevel() - 1;
 
   if(eng->dice.getInRange(1, 100) < chanceToMakeDark) {
     for(int y = room.getY0(); y <= room.getY1(); y++) {
@@ -148,7 +152,7 @@ int RoomThemeMaker::attemptSetFeatureToPlace(const FeatureDef** def, coord& pos,
 
     if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_nextToWalls) {
       if(IS_NEXT_TO_WALL_AVAIL) {
-        const int POS_ELEMENT = eng->dice(0, nextToWalls.size() - 1);
+        const int POS_ELEMENT = eng->dice.getInRange(0, nextToWalls.size() - 1);
         pos = nextToWalls.at(POS_ELEMENT);
         *def = dTemp;
         return FEATURE_DEF_ELEMENT;
@@ -157,7 +161,7 @@ int RoomThemeMaker::attemptSetFeatureToPlace(const FeatureDef** def, coord& pos,
 
     if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_awayFromWalls) {
       if(IS_AWAY_FROM_WALLS_AVAIL) {
-        const int POS_ELEMENT = eng->dice(0, awayFromWalls.size() - 1);
+        const int POS_ELEMENT = eng->dice.getInRange(0, awayFromWalls.size() - 1);
         pos = awayFromWalls.at(POS_ELEMENT);
         *def = dTemp;
         return FEATURE_DEF_ELEMENT;
@@ -167,14 +171,14 @@ int RoomThemeMaker::attemptSetFeatureToPlace(const FeatureDef** def, coord& pos,
     if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_nextToWallsOrAwayFromWalls) {
       if(eng->dice.coinToss()) {
         if(IS_NEXT_TO_WALL_AVAIL) {
-          const int POS_ELEMENT = eng->dice(0, nextToWalls.size() - 1);
+          const int POS_ELEMENT = eng->dice.getInRange(0, nextToWalls.size() - 1);
           pos = nextToWalls.at(POS_ELEMENT);
           *def = dTemp;
           return FEATURE_DEF_ELEMENT;
         }
       } else {
         if(IS_AWAY_FROM_WALLS_AVAIL) {
-          const int POS_ELEMENT = eng->dice(0, awayFromWalls.size() - 1);
+          const int POS_ELEMENT = eng->dice.getInRange(0, awayFromWalls.size() - 1);
           pos = awayFromWalls.at(POS_ELEMENT);
           *def = dTemp;
           return FEATURE_DEF_ELEMENT;
@@ -204,33 +208,24 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(const coord& pos,  vector<coo
 
 void RoomThemeMaker::assignRoomThemes(const vector<Room*>& rooms) {
   tracer << "RoomThemeMaker::assignRoomThemes()..." << endl;
+
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      themeMap[x][y] = roomTheme_plain;
+    }
+  }
+
   const int MIN_DIM = 3;
-  const int MAX_DIM = 15;
-  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(2, 5);
+  const int MAX_DIM = 12;
+  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(2, 3);
 
   const int NR_ROOMS = rooms.size();
 
   vector<bool> isAssigned(rooms.size(), false);
 
-  tracer << "RoomThemeMaker: Assigning none-theme to rooms containing rooms, and plain to those with wrong dims" << endl;
+  tracer << "RoomThemeMaker: Assigning plain theme to rooms with wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     Room* const r = rooms.at(i);
-
-    // If room contains other room, set outer room to no theme
-    for(int ii = 0; ii < NR_ROOMS; ii++) {
-      if(ii != i) {
-        if(isAssigned.at(i) == false) {
-          if(eng->mapTests->isAreaStrictlyInsideOrSameAsArea(rooms.at(ii)->getDims(), r->getDims())) {
-            r->roomTheme = roomTheme_none;
-            isAssigned.at(i) = true;
-            break;
-          }
-        }
-        if(isAssigned.at(i)) {
-          continue;
-        }
-      }
-    }
 
     // Check dimensions, assign plain if too small or too big
     if(isAssigned.at(i) == false) {
@@ -244,16 +239,22 @@ void RoomThemeMaker::assignRoomThemes(const vector<Room*>& rooms) {
     }
   }
 
-  tracer << "RoomThemeMaker: Trying to assign non-plain themes to some rooms" << endl;
+  tracer << "RoomThemeMaker: Attempting to assign non-plain themes to some rooms" << endl;
   const int NR_TRIES_TO_ASSIGN = 100;
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
       const int ELEMENT = eng->dice.getInRange(0, NR_ROOMS - 1);
       if(isAssigned.at(ELEMENT) == false) {
-        const RoomTheme_t theme = static_cast<RoomTheme_t>(eng->dice.getInRange(2, endOfRoomThemes - 2));
-        rooms.at(ELEMENT)->roomTheme = theme;
+        const RoomTheme_t theme = static_cast<RoomTheme_t>(eng->dice.getInRange(1, endOfRoomThemes - 1));
+        Room* const room = rooms.at(ELEMENT);
+        room->roomTheme = theme;
         tracer << "RoomThemeMaker: Assigned non-plain theme (" << theme << ") to room" << endl;
         isAssigned.at(ELEMENT) = true;
+        for(int y = room->getY0(); y < room->getY1(); y++) {
+          for(int x = room->getX0(); x < room->getX1(); x++) {
+            themeMap[x][y] = theme;
+          }
+        }
         break;
       }
     }

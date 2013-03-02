@@ -99,6 +99,8 @@ public:
   void drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
                                  const sf::Color& colorInner, const sf::Color& colorOuter, const int DURATION);
 
+  void drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION);
+
   void drawMainMenuLogo(const int Y_POS);
 
   CellRenderDataAscii renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];

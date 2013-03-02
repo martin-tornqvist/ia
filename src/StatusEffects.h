@@ -6,6 +6,7 @@
 #include "AbilityValues.h"
 #include "ConstTypes.h"
 #include "Converters.h"
+#include "ConstDungeonSettings.h"
 
 using namespace std;
 
@@ -2249,7 +2250,7 @@ private:
   Engine* eng;
 
   friend class GameTime;
-  void newTurnAllEffects();
+  void newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 };
 
 #endif

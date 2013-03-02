@@ -169,10 +169,8 @@ void InventoryHandler::runSlotsScreen() {
           }
         }
       } else {
-        if(runBrowseInventoryMode()) {
-          return;
-        }
-        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+        runBrowseInventoryMode();
+        return;
       }
     }
     break;
@@ -295,7 +293,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   }
 }
 
-bool InventoryHandler::runBrowseInventoryMode() {
+void InventoryHandler::runBrowseInventoryMode() {
   eng->renderer->drawMapAndInterface();
   sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
@@ -319,17 +317,16 @@ bool InventoryHandler::runBrowseInventoryMode() {
       const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
       if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
         eng->renderer->drawMapAndInterface();
-        return true;
+        return;
       }
     }
     break;
     case menuAction_canceled: {
-      return false;
+      return;
     }
     break;
     }
   }
-  return false;
 }
 
 void InventoryHandler::swapItems(Item** item1, Item** item2) {

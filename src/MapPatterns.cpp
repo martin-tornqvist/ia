@@ -71,28 +71,32 @@ int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const coord 
         nrBlockers += 1;
       }
     }
-  } break;
+  }
+  break;
   case direction_down: {
     for(int dx = -1; dx <= 1; dx++) {
       if(eng->map->featuresStatic[pos.x + dx][pos.y + 1]->isMoveTypePassable(moveType_walk) == false) {
         nrBlockers += 1;
       }
     }
-  } break;
+  }
+  break;
   case direction_left: {
     for(int dy = -1; dy <= 1; dy++) {
       if(eng->map->featuresStatic[pos.x - 1][pos.y + dy]->isMoveTypePassable(moveType_walk) == false) {
         nrBlockers += 1;
       }
     }
-  } break;
+  }
+  break;
   case direction_up: {
     for(int dx = -1; dx <= 1; dx++) {
       if(eng->map->featuresStatic[pos.x + dx][pos.y - 1]->isMoveTypePassable(moveType_walk) == false) {
         nrBlockers += 1;
       }
     }
-  } break;
+  }
+  break;
   }
   return nrBlockers;
 }

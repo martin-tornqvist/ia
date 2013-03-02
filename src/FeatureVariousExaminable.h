@@ -3,81 +3,94 @@
 
 #include "Feature.h"
 
-class Tomb: public FeatureStatic {
+class FeatureExaminable: public FeatureStatic {
+public:
+  ~FeatureExaminable() {
+  }
+
+  void examine();
+
+  sf::Color getColorBg() const;
+
+  bool isExaminableFurther() const {
+    return isExaminableFurther_;
+  }
+
+protected:
+  virtual void featureSpecific_examine() = 0;
+
+  bool isExaminableFurther_;
+
+  friend class FeatureFactory;
+  FeatureExaminable(Feature_t id, coord pos, Engine* engine);
+};
+
+class Tomb: public FeatureExaminable {
 public:
   ~Tomb() {
   }
-  void examine();
+  void featureSpecific_examine();
+
 private:
   friend class FeatureFactory;
   Tomb(Feature_t id, coord pos, Engine* engine);
 };
 
-class Cabinet: public FeatureStatic {
+class Cabinet: public FeatureExaminable {
 public:
   ~Cabinet() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   Cabinet(Feature_t id, coord pos, Engine* engine);
 };
 
-class Chest: public FeatureStatic {
+class Chest: public FeatureExaminable {
 public:
   ~Chest() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   Chest(Feature_t id, coord pos, Engine* engine);
 };
 
-class Cocoon: public FeatureStatic {
+class Cocoon: public FeatureExaminable {
 public:
   ~Cocoon() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   Cocoon(Feature_t id, coord pos, Engine* engine);
 };
 
-class Altar: public FeatureStatic {
+class Altar: public FeatureExaminable {
 public:
   ~Altar() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   Altar(Feature_t id, coord pos, Engine* engine);
 };
 
-class Pillar: public FeatureStatic {
-public:
-  ~Pillar() {
-  }
-  void examine();
-private:
-  friend class FeatureFactory;
-  Pillar(Feature_t id, coord pos, Engine* engine);
-};
-
-class CarvedPillar: public FeatureStatic {
+class CarvedPillar: public FeatureExaminable {
 public:
   ~CarvedPillar() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   CarvedPillar(Feature_t id, coord pos, Engine* engine);
 };
 
-class Barrel: public FeatureStatic {
+class Barrel: public FeatureExaminable {
 public:
   ~Barrel() {
   }
-  void examine();
+  void featureSpecific_examine();
 private:
   friend class FeatureFactory;
   Barrel(Feature_t id, coord pos, Engine* engine);

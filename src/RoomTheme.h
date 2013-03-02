@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "ConstTypes.h"
+#include "ConstDungeonSettings.h"
 
 using namespace std;
 
@@ -11,7 +12,6 @@ class Engine;
 class FeatureDef;
 
 enum RoomTheme_t {
-  roomTheme_none,
   roomTheme_plain,
   roomTheme_human,
   roomTheme_ritual,
@@ -33,6 +33,9 @@ public:
   void run(const vector<Room*>& rooms);
 
 private:
+  //This array supports placing items, monsters and traps
+  RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS];
+
   void applyThemeToRoom(Room& room);
 
   void placeThemeFeatures(Room& room);

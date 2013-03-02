@@ -8,7 +8,7 @@
 #include "ActorMonster.h"
 #include "PlayerVisualMemory.h"
 #include "Map.h"
-#include "Populate.h"
+#include "PopulateMonsters.h"
 #include "Input.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
@@ -130,11 +130,15 @@ void GameTime::runNewTurnEvents() {
 
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
+
+  bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockingArray);
+
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
     //Update status effects on all actors, this also makes the monster player-aware if
     //it has any active status effect.
-    actor->getStatusEffectsHandler()->newTurnAllEffects();
+    actor->getStatusEffectsHandler()->newTurnAllEffects(visionBlockingArray);
 
     //Delete dead, mangled actors
     if(actor->deadState == actorDeadState_mangled) {
@@ -170,7 +174,7 @@ void GameTime::runNewTurnEvents() {
   if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 55;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
-      eng->populate->spawnOneMonster();
+      eng->populateMonsters->attemptSpawnDueToTimePassed();
     }
   }
 

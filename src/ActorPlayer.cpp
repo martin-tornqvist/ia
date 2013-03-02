@@ -24,9 +24,10 @@
 #include "FeatureLitDynamite.h"
 
 Player::Player() :
-  firstAidTurnsLeft(-1), waitTurnsLeft(-1), mythosKnowledge(0),
-  dynamiteFuseTurns(-1), molotovFuseTurns(-1), flareFuseTurns(-1),
-  target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0) {
+  firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
+  molotovFuseTurns(-1), flareFuseTurns(-1),
+  target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
+  mythosKnowledge() {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -38,6 +39,8 @@ void Player::actorSpecific_spawnStartItems() {
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
     insanityObsessions[i] = false;
   }
+
+  mythosKnowledge = eng->dice(1, 6);
 
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
   int NR_OF_DYNAMITE          = eng->dice.getInRange(2, 4);
@@ -245,15 +248,15 @@ void Player::incrInsanity() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanity_ += eng->dice.getInRange(5, 7);
+    insanity_ += 5;
   }
 
-  shock_ = max(0.0, shock_ - 70.0);
+  shock_ = max(0.0, shock_ - 100.0);
 
   updateColor();
   eng->renderer->drawMapAndInterface();
 
-  if(insanity_ >= 100) {
+  if(getInsanity() >= 100) {
     popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true);
     die(true, false, false);
@@ -1192,7 +1195,7 @@ void Player::FOVupdate() {
     FOVhack();
   }
 
-  if(eng->cheat_vision) {
+  if(eng->isCheatVisionEnabled) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
         eng->map->playerVision[x][y] = true;

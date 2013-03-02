@@ -74,7 +74,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     yPos++;
   }
 
-  str = "x) Browse inventory";
+  str = "x) Browse backpack";
   str.at(0) = invSlotButtons.back().key + 1;
   xPos = X_POS_LEFT;
   yPos += 1;
@@ -95,7 +95,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
-  string str = "Inventory  [shift+select] drop  [space/esc] done";
+  string str = "Backpack  [shift+select] drop  [space/esc] done";
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
   yPos++;
 

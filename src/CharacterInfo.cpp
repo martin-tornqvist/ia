@@ -34,40 +34,26 @@ void CharacterInfo::makeLines() {
       break;
     }
   }
-  lines.push_back(StringAndColor(offsetSpaces + "Melee          : " + intToString(BASE_MELEE) + "%", clrText));
-  lines.push_back(StringAndColor(offsetSpaces + "Ranged         : " + intToString(BASE_RANGED) + "%", clrText));
-  lines.push_back(StringAndColor(offsetSpaces + "Dodging        : " + intToString(BASE_DODGE_ATTACKS) + "%", clrText));
-  lines.push_back(StringAndColor(offsetSpaces + "Kicking        : " + kickStr, clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Melee           : " + intToString(BASE_MELEE) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Ranged          : " + intToString(BASE_RANGED) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Dodging         : " + intToString(BASE_DODGE_ATTACKS) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Kicking         : " + kickStr, clrText));
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("RESISTANCE TO STATUS EFFECTS", clrHeader));
   const int STATUS_RES_PHYSICAL = eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, false, *(eng->player));
   const int STATUS_RES_MENTAL = eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusMind, false, *(eng->player));
-  lines.push_back(StringAndColor(offsetSpaces + "Physical       : " + intToString(STATUS_RES_PHYSICAL) + "%", clrText));
-  lines.push_back(StringAndColor(offsetSpaces + "Mental         : " + intToString(STATUS_RES_MENTAL) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Physical        : " + intToString(STATUS_RES_PHYSICAL) + "%", clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Mental          : " + intToString(STATUS_RES_MENTAL) + "%", clrText));
   lines.push_back(StringAndColor(" ", clrText));
 
-  lines.push_back(StringAndColor("RESISTANCE TO SHOCK AND HORROR", clrHeader));
+  lines.push_back(StringAndColor("MYTHOS KNOWLEDGE EFFECTS", clrHeader));
+  const int INS_FROM_MTH = eng->player->getSanityPenaltyFromMythosKnowledge();
+  lines.push_back(StringAndColor(offsetSpaces + "Sanity penalty  : " + intToString(INS_FROM_MTH) + "%", clrText));
+  lines.push_back(StringAndColor(" ", clrText));
+
   const int SHOCK_RESISTANCE = eng->player->getShockResistance();
-  lines.push_back(StringAndColor(offsetSpaces + "Coolheadedness : " + intToString(SHOCK_RESISTANCE) + "%", clrText));
-  lines.push_back(StringAndColor(" ", clrText));
-
-  lines.push_back(StringAndColor("ABILITIES GAINED", clrHeader));
-  string abilitiesLine = "";
-  bool isAnyBonusPicked = false;
-  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
-    const PlayerBonuses_t bonus = static_cast<PlayerBonuses_t>(i);
-    if(eng->playerBonusHandler->isBonusPicked(bonus)) {
-      isAnyBonusPicked = true;
-      const string currentTitle = eng->playerBonusHandler->getBonusTitle(bonus);
-      lines.push_back(StringAndColor(offsetSpaces + currentTitle, clrText));
-      const string currentDescr = eng->playerBonusHandler->getBonusDescription(bonus);
-      lines.push_back(StringAndColor(offsetSpaces + currentDescr, clrTextDark));
-    }
-  }
-  if(isAnyBonusPicked == false) {
-    lines.push_back(StringAndColor(offsetSpaces + "None", clrText));
-  }
+  lines.push_back(StringAndColor("SHOCK RESISTANCE : " + intToString(SHOCK_RESISTANCE) + "%", clrHeader));
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("MENTAL CONDITIONS", clrHeader));
@@ -95,6 +81,24 @@ void CharacterInfo::makeLines() {
 
   if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
     lines.push_back(StringAndColor(offsetSpaces + "No special symptoms", clrText));
+  }
+  lines.push_back(StringAndColor(" ", clrText));
+
+  lines.push_back(StringAndColor("ABILITIES GAINED", clrHeader));
+  string abilitiesLine = "";
+  bool isAnyBonusPicked = false;
+  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    const PlayerBonuses_t bonus = static_cast<PlayerBonuses_t>(i);
+    if(eng->playerBonusHandler->isBonusPicked(bonus)) {
+      isAnyBonusPicked = true;
+      const string currentTitle = eng->playerBonusHandler->getBonusTitle(bonus);
+      lines.push_back(StringAndColor(offsetSpaces + currentTitle, clrText));
+      const string currentDescr = eng->playerBonusHandler->getBonusDescription(bonus);
+      lines.push_back(StringAndColor(offsetSpaces + currentDescr, clrTextDark));
+    }
+  }
+  if(isAnyBonusPicked == false) {
+    lines.push_back(StringAndColor(offsetSpaces + "None", clrText));
   }
   lines.push_back(StringAndColor(" ", clrText));
 

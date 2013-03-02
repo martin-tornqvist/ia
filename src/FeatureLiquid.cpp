@@ -16,11 +16,11 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
 
     actorBumping->getStatusEffectsHandler()->attemptAddEffect(new StatusWaiting(eng));
 
-    const bool IS_PLAYER = actorBumping == eng->player;
-    if(IS_PLAYER) {
-      eng->log->addMessage("*glop*");
-      eng->renderer->updateWindow();
-    }
+//    const bool IS_PLAYER = actorBumping == eng->player;
+//    if(IS_PLAYER) {
+//      eng->log->addMessage("*glop*");
+//      eng->renderer->updateWindow();
+//    }
   }
 }
 

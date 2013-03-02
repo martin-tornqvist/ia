@@ -276,6 +276,31 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
   drawMapAndInterface();
 }
 
+void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION) {
+  drawMapAndInterface();
+  clearWindow();
+
+  sf::Texture bgTexture = getScreenTextureCopy();
+  drawScreenSizedTexture(bgTexture);
+
+  for(unsigned int i = 0; i < positions.size(); i++) {
+    const coord& pos = positions.at(i);
+    drawTileInMap(tile_blastAnimation1, pos.x, pos.y, color, true, clrBlack);
+  }
+  updateWindow();
+  eng->sleep(DURATION / 2);
+  clearWindow();
+  drawScreenSizedTexture(bgTexture);
+
+  for(unsigned int i = 0; i < positions.size(); i++) {
+    const coord& pos = positions.at(i);
+    drawTileInMap(tile_blastAnimation2, pos.x, pos.y, color, true, clrBlack);
+  }
+  updateWindow();
+  eng->sleep(DURATION / 2);
+  drawMapAndInterface();
+}
+
 void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
                              const bool drawBgClr, const sf::Color& bgClr) {
   const int& CELL_W = eng->config->CELL_W;
@@ -552,7 +577,7 @@ void Renderer::drawASCII() {
   CellRenderDataAscii* currentDrw = NULL;
   CellRenderDataAscii tempDrw;
 
-  //-------------------------------------------- INSERT FEATURES AND BLOOD INTO TILE ARRAY
+  //-------------------------------------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
 
@@ -567,8 +592,13 @@ void Renderer::drawASCII() {
         }
         if(goreGlyph == ' ') {
           currentDrw->glyph = eng->map->featuresStatic[x][y]->getGlyph();
-          const sf::Color featureStdClr = eng->map->featuresStatic[x][y]->getColor();
-          currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featureStdClr;
+          const sf::Color& featureClr = eng->map->featuresStatic[x][y]->getColor();
+          const sf::Color& featureClrBg = eng->map->featuresStatic[x][y]->getColorBg();
+          currentDrw->color = eng->map->featuresStatic[x][y]->hasBlood() ? clrRedLight : featureClr;
+          if(featureClrBg != clrBlack) {
+            currentDrw->colorBg = featureClrBg;
+            currentDrw->drawBgColor = true;
+          }
         } else {
           currentDrw->glyph = goreGlyph;
           currentDrw->color = clrRed;
@@ -579,7 +609,7 @@ void Renderer::drawASCII() {
 
   int xPos, yPos;
   const unsigned int LOOP_SIZE = eng->gameTime->actors_.size();
-  //-------------------------------------------- INSERT DEAD ACTORS INTO TILE ARRAY
+  //-------------------------------------------- INSERT DEAD ACTORS INTO ARRAY
   Actor* actor = NULL;
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     actor = eng->gameTime->getActorAt(i);
@@ -596,7 +626,7 @@ void Renderer::drawASCII() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       currentDrw = &renderArray[x][y];
       if(eng->map->playerVision[x][y] == true) {
-        //-------------------------------------------- INSERT ITEMS INTO TILE ARRAY
+        //-------------------------------------------- INSERT ITEMS INTO ARRAY
         if(eng->map->items[x][y] != NULL) {
           currentDrw->color = eng->map->items[x][y]->getColor();
           currentDrw->glyph = eng->map->items[x][y]->getGlyph();
@@ -608,7 +638,7 @@ void Renderer::drawASCII() {
     }
   }
 
-  //-------------------------------------------- INSERT MOBILE FEATURES INTO TILE ARRAY
+  //-------------------------------------------- INSERT MOBILE FEATURES INTO ARRAY
   const unsigned int SIZE_OF_FEAT_MOB = eng->gameTime->getFeatureMobsSize();
   for(unsigned int i = 0; i < SIZE_OF_FEAT_MOB; i++) {
     FeatureMob* feature = eng->gameTime->getFeatureMobAt(i);
@@ -621,7 +651,7 @@ void Renderer::drawASCII() {
     }
   }
 
-  //-------------------------------------------- INSERT LIVING ACTORS INTO TILE ARRAY
+  //-------------------------------------------- INSERT LIVING ACTORS INTO ARRAY
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     actor = eng->gameTime->getActorAt(i);
     if(actor != eng->player) {
@@ -649,7 +679,7 @@ void Renderer::drawASCII() {
     }
   }
 
-  //-------------------------------------------- DRAW THE TILE GRID
+  //-------------------------------------------- DRAW THE GRID
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
 
@@ -721,8 +751,13 @@ void Renderer::drawTiles() {
             } else {
               currentDrw->tile = f->getTile();
             }
-            const sf::Color featStdClr = f->getColor();
-            currentDrw->color = f->hasBlood() ? clrRedLight : featStdClr;
+            const sf::Color featureClr = f->getColor();
+            const sf::Color featureClrBg = f->getColorBg();
+            currentDrw->color = f->hasBlood() ? clrRedLight : featureClr;
+            if(featureClrBg != clrBlack) {
+              currentDrw->colorBg = featureClrBg;
+              currentDrw->drawBgColor = true;
+            }
           } else {
             currentDrw->tile = goreTile;
             currentDrw->color = clrRed;
@@ -796,7 +831,7 @@ void Renderer::drawTiles() {
           // TODO implement allied indicator
         } else {
           if(monster->playerAwarenessCounter <= 0) {
-            currentDrw->bgColor = clrBlue;
+            currentDrw->colorBg = clrBlue;
             currentDrw->drawBgColor = true;
           }
         }
@@ -829,6 +864,9 @@ void Renderer::drawTiles() {
         tempDrw.color.r /= 5;
         tempDrw.color.g /= 5;
         tempDrw.color.b /= 5;
+        tempDrw.colorBg.r /= 5;
+        tempDrw.colorBg.g /= 5;
+        tempDrw.colorBg.b /= 5;
       }
 
       //Walls are given perspective.
@@ -867,7 +905,7 @@ void Renderer::drawTiles() {
       }
 
       if(tempDrw.tile != tile_empty) {
-        drawTileInMap(tempDrw.tile, x, y, tempDrw.color, tempDrw.drawBgColor, tempDrw.bgColor);
+        drawTileInMap(tempDrw.tile, x, y, tempDrw.color, tempDrw.drawBgColor, tempDrw.colorBg);
 
         if(tempDrw.lifebarLength != -1) {
           drawLifeBar(x, y, tempDrw.lifebarLength);

@@ -110,6 +110,54 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord& pos, Fe
     return tomb;
   }
   break;
+  case feature_pillarCarved: {
+    assert(spawnData == NULL);
+    CarvedPillar* pillar = new CarvedPillar(id, pos, eng);
+    replaceStaticFeatureAt(pillar, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return pillar;
+  }
+  break;
+  case feature_barrel: {
+    assert(spawnData == NULL);
+    Barrel* barrel = new Barrel(id, pos, eng);
+    replaceStaticFeatureAt(barrel, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return barrel;
+  }
+  break;
+  case feature_cabinet: {
+    assert(spawnData == NULL);
+    Cabinet* cabinet = new Cabinet(id, pos, eng);
+    replaceStaticFeatureAt(cabinet, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return cabinet;
+  }
+  break;
+  case feature_chest: {
+    assert(spawnData == NULL);
+    Chest* chest = new Chest(id, pos, eng);
+    replaceStaticFeatureAt(chest, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return chest;
+  }
+  break;
+  case feature_cocoon: {
+    assert(spawnData == NULL);
+    Cocoon* cocoon = new Cocoon(id, pos, eng);
+    replaceStaticFeatureAt(cocoon, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return cocoon;
+  }
+  break;
+  case feature_altar: {
+    assert(spawnData == NULL);
+    Altar* altar = new Altar(id, pos, eng);
+    replaceStaticFeatureAt(altar, pos);
+    assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+    return altar;
+  }
+  break;
   case feature_shallowMud:
   case feature_shallowWater:
   case feature_poolBlood: {

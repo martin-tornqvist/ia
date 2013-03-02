@@ -44,6 +44,7 @@ enum Feature_t {
   feature_cabinet,
   feature_barrel,
   feature_pillar,
+  feature_pillarBroken,
   feature_pillarCarved,
   feature_chasm,
   feature_shallowWater,
@@ -137,6 +138,7 @@ struct FeatureDef {
   FeatureSpawnType_t spawnType;
   char glyph;
   sf::Color color;
+  sf::Color colorBg;
   Tile_t tile;
   bool isMovePassable[endOfMoveType];
   bool isShootPassable;

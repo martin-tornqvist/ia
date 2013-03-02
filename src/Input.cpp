@@ -259,11 +259,20 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------------INVENTORY
+  //----------------------------------------SLOTS SCREEN
   else if(d.key_ == 'v') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runSlotsScreen();
+    }
+    clearEvents();
+    return;
+  }
+  //----------------------------------------INVENTORY
+  else if(d.key_ == 'i') {
+    clearLogMessages();
+    if(eng->player->deadState == actorDeadState_alive) {
+      eng->inventoryHandler->runBrowseInventoryMode();
     }
     clearEvents();
     return;
@@ -488,9 +497,18 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------VISION CHEAT
   else if(d.sfmlKey_ == sf::Keyboard::F4) {
     if(IS_DEBUG_MODE) {
-      eng->cheat_vision = !eng->cheat_vision;
-      clearEvents();
+      if(eng->isCheatVisionEnabled) {
+        for(int y = 0; y < MAP_Y_CELLS; y++) {
+          for(int x = 0; x < MAP_X_CELLS; x++) {
+            eng->map->explored[x][y] = false;
+          }
+        }
+        eng->isCheatVisionEnabled = false;
+      } else {
+        eng->isCheatVisionEnabled = true;
+      }
     }
+    clearEvents();
   }
   //----------------------------------------INSANITY CHEAT
   else if(d.sfmlKey_ == sf::Keyboard::F5) {

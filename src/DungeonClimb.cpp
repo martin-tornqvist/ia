@@ -4,8 +4,8 @@
 #include "Map.h"
 #include "MapBuildBSP.h"
 #include "MapBuild.h"
-#include "Populate.h"
-#include "MapBuildSpawnItems.h"
+#include "PopulateMonsters.h"
+#include "PopulateItems.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Item.h"
@@ -41,8 +41,8 @@ void DungeonClimb::makeLevel() {
 			//eng->mapBuild->buildDungeonLevel();
 			tracer << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
 			eng->mapBuildBSP->run();
-			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
-			eng->populate->populate();
+//			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//			eng->populateMonsters->populate();
 			levelBuilt = true;
 		}
 	}
@@ -51,13 +51,13 @@ void DungeonClimb::makeLevel() {
 		if(DLVL >= FIRST_CAVERN_LEVEL) {
 			tracer << "DungeonClimb: Calling MapBuild::buildCavern()" << endl;
 			eng->mapBuild->buildCavern();
-			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
-			eng->populate->populate();
+//			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//			eng->populate->populate();
 		}
 	}
 	if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {
-		tracer << "DungeonClimb: Calling MapBuildSpawnItems::spawnItems()" << endl;
-		eng->mapBuildSpawnItems->spawnItems();
+		tracer << "DungeonClimb: Calling PopulateItems::spawnItems()" << endl;
+		eng->populateItems->spawnItems();
 	}
 	tracer << "DungeonClimb::makeLevel() [DONE]" << endl;
 }

@@ -27,28 +27,35 @@ void Interface::drawInfoLines() {
   //Name
   str = eng->player->getNameA();
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+  xPos += 1 + str.length();
 
   //Health
-  xPos += 1 + str.length();
   const string hp = intToString(eng->player->getHp());
   const string hpMax = intToString(eng->player->getHpMax());
   eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 3;
   str = hp + "/" + hpMax;
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+  xPos += 1 + str.length();
 
   //Sanity
-  const int INS_SHORT = eng->player->getShockTotal();
+  const int SHOCK = eng->player->getShockTotal();
   const int INS_LONG = eng->player->getInsanity();
-  xPos += 1 + str.length();
   eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;
   str = intToString(INS_LONG) + "%";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
   xPos += str.length();
-  const sf::Color shortSanClr = INS_SHORT < 50 ? clrGreenLight : INS_SHORT < 75 ? clrYellow : clrMagenta;
-  str = "(" + intToString(INS_SHORT) + "%)";
+  const sf::Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
+  str = "(" + intToString(SHOCK) + "%)";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
+  xPos += 1 + str.length();
+
+  const int MTH = eng->player->getMythosKnowledge();
+  eng->renderer->drawText("MTH:", renderArea_characterLines, xPos, yPos, clrGray);
+  xPos += 4;
+  str = intToString(MTH) + "%";
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
   xPos += 1 + str.length();
 
   //Encumbrance
@@ -83,11 +90,11 @@ void Interface::drawInfoLines() {
   const int DLVL = eng->map->getDungeonLevel();
   str = DLVL >= 0 ? intToString(DLVL) : "?";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+  xPos += str.length() + 1;
 
   DungeonMaster* const dm = eng->dungeonMaster;
 
   //Level and xp
-  xPos += str.length() + 1;
   str = "LVL:" + intToString(dm->getLevel());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
   xPos += str.length() + 1;

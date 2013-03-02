@@ -68,6 +68,10 @@ sf::Color Feature::getColor() const {
 	return def_->color;
 }
 
+sf::Color Feature::getColorBg() const {
+	return def_->colorBg;
+}
+
 char Feature::getGlyph() const {
 	return def_->glyph;
 }

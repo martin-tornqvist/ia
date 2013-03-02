@@ -10,7 +10,7 @@
 #include "ActorPlayer.h"
 #include "PlayerAllocBonus.h"
 #include "MapBuild.h"
-#include "Populate.h"
+#include "PopulateMonsters.h"
 #include "DungeonClimb.h"
 #include "Bot.h"
 #include "Popup.h"
@@ -65,7 +65,6 @@ int main(int argc, char* argv[]) {
           engine->renderer->coverRenderArea(renderArea_screen);
           engine->renderer->updateWindow();
           engine->mapBuild->buildForest();
-          engine->populate->populate();
         } else {
           //Else build first dungeon level
           engine->dungeonClimb->travelDown();

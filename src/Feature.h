@@ -34,6 +34,7 @@ public:
   virtual string getDescription(const bool DEFINITE_ARTICLE) const;
   virtual void hit(const int DAMAGE, const DamageTypes_t damageType);
   virtual sf::Color getColor() const;
+  virtual sf::Color getColorBg() const;
   virtual char getGlyph() const;
   virtual Tile_t getTile() const;
   virtual void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;

@@ -17,6 +17,8 @@ public:
   void runSlotsScreen();
   bool runUseScreen();
 
+  void runBrowseInventoryMode();
+
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
 
 private:
@@ -27,7 +29,6 @@ private:
 
   bool runDropScreen(const int GLOBAL_ELEMENT_NR);
   bool runEquipScreen(InventorySlot* const slotToEquip);
-  bool runBrowseInventoryMode();
 
   void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);
   void filterPlayerGeneralSlotButtonsUsable();

@@ -45,6 +45,7 @@ $      e    Use item or aim/throw held explosive
 $      f    Aim/fire wielded weapon
 $      g    Pick up item
 $      h    Heal
+$      i    Browse inventory (backpack)
 $      j    Jam door with an iron spike
 $      l    Display descriptions of things in view
 $      L    Display message history
@@ -53,7 +54,7 @@ $      s    Wait and search for 10 turns
 $      S    Save (must stand on stairs)
 $      t    Throw a missile from the missile slot
 $      u    Pick up or unload ammunition from the ground
-$      v    Inventory
+$      v    Handle equipment
 $      Q    Quit to main menu (will erase the game)
 $      x    Cast memorized spell
 $      z    Swap to prepared weapon

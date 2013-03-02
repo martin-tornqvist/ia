@@ -297,7 +297,8 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
   case statusClairvoyant:
     return new StatusClairvoyant(TURNS_LEFT);
     break;
-  default: {} break;
+  default:
+  {} break;
   }
   return NULL;
 }
@@ -433,11 +434,9 @@ void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const boo
   }
 }
 
-void StatusEffectsHandler::newTurnAllEffects() {
+void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
-  const bool PLAYER_SEE_OWNER = OWNER_IS_PLAYER ? true : eng->player->checkIfSeeActor(*owningActor, blockers);
+  const bool PLAYER_SEE_OWNER = OWNER_IS_PLAYER ? true : eng->player->checkIfSeeActor(*owningActor, visionBlockingArray);
 
   for(unsigned int i = 0; i < effects.size();) {
     if(OWNER_IS_PLAYER == false) {

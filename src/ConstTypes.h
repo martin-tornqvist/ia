@@ -39,19 +39,19 @@ enum GameEntry_t {
 
 struct CellRenderDataAscii {
   CellRenderDataAscii() :
-    color(clrBlack), bgColor(clrBlack), drawBgColor(false), glyph(' '),
+    color(clrBlack), colorBg(clrBlack), drawBgColor(false), glyph(' '),
     lifebarLength(-1), isFadeEffectAllowed(true) {
   }
   void clear() {
     color = clrBlack;
-    bgColor = clrBlack;
+    colorBg = clrBlack;
     drawBgColor = false;
     glyph = ' ';
     lifebarLength = -1;
     isFadeEffectAllowed = true;
   }
   sf::Color color;
-  sf::Color bgColor;
+  sf::Color colorBg;
   bool drawBgColor;
   char glyph;
   int lifebarLength;
@@ -60,19 +60,19 @@ struct CellRenderDataAscii {
 
 struct CellRenderDataTile {
   CellRenderDataTile() :
-    color(clrBlack), bgColor(clrBlack), drawBgColor(false), tile(tile_empty),
+    color(clrBlack), colorBg(clrBlack), drawBgColor(false), tile(tile_empty),
     lifebarLength(-1), isFadeEffectAllowed(true) {
   }
   void clear() {
     color = clrBlack;
-    bgColor = clrBlack;
+    colorBg = clrBlack;
     drawBgColor = false;
     tile = tile_empty;
     lifebarLength = -1;
     isFadeEffectAllowed = true;
   }
   sf::Color color;
-  sf::Color bgColor;
+  sf::Color colorBg;
   bool drawBgColor;
   Tile_t tile;
   int lifebarLength;

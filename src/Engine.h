@@ -51,11 +51,12 @@ class Gore;
 class Manual;
 class FovPreCalc;
 class BresenhamLine;
-class Populate;
+class PopulateItems;
+class PopulateMonsters;
+class PopulateTraps;
 class RenderInventory;
 class InventoryIndexes;
 class Query;
-class MapBuildSpawnItems;
 class ActorData;
 class ScrollNameHandler;
 class PotionNameHandler;
@@ -88,7 +89,7 @@ class Player;
 
 class Engine {
 public:
-	Engine(bool* quitToMainMenu) : cheat_vision(false), quitToMainMenu_(quitToMainMenu) {
+	Engine(bool* quitToMainMenu) : isCheatVisionEnabled(false), quitToMainMenu_(quitToMainMenu) {
 	}
 	~Engine() {
 	}
@@ -144,11 +145,12 @@ public:
 	Manual* manual;
 	FovPreCalc* fovPreCalc;
 	BresenhamLine* bresenhamLine;
-	Populate* populate;
+	PopulateItems* populateItems;
+	PopulateMonsters* populateMonsters;
+	PopulateTraps* populateTraps;
 	RenderInventory* renderInventory;
 	InventoryIndexes* inventoryIndexes;
 	Query* query;
-	MapBuildSpawnItems* mapBuildSpawnItems;
 	ActorData* actorData;
 	ScrollNameHandler* scrollNameHandler;
 	PotionNameHandler* potionNameHandler;
@@ -178,7 +180,7 @@ public:
 
 	Player* player;
 
-	bool cheat_vision;
+	bool isCheatVisionEnabled;
 
 private:
 	bool* quitToMainMenu_;

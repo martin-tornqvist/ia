@@ -56,7 +56,9 @@
 #include "MapTests.h"
 #include "MapBuild.h"
 #include "MapBuildBSP.h"
-#include "MapBuildSpawnItems.h"
+#include "PopulateItems.h"
+#include "PopulateMonsters.h"
+#include "PopulateTraps.h"
 #include "MapTemplates.h"
 #include "Marker.h"
 #include "Pathfinding.h"
@@ -64,7 +66,6 @@
 #include "PlayerBonuses.h"
 #include "PlayerPowersHandler.h"
 #include "PlayerVisualMemory.h"
-#include "Populate.h"
 #include "Popup.h"
 #include "Postmortem.h"
 #include "Query.h"
@@ -165,11 +166,12 @@ void Engine::initGame() {
   manual = new Manual(this);
   fovPreCalc = new FovPreCalc(this);
   bresenhamLine = new BresenhamLine(this);
-  populate = new Populate(this);
+  populateItems = new PopulateItems(this);
+  populateMonsters = new PopulateMonsters(this);
+  populateTraps = new PopulateTraps(this);
   renderInventory = new RenderInventory(this);
   inventoryIndexes = new InventoryIndexes;
   query = new Query(this);
-  mapBuildSpawnItems = new MapBuildSpawnItems(this);
   bash = new Bash(this);
   close = new Close(this);
   look = new Look(this);
@@ -234,11 +236,12 @@ void Engine::cleanupGame() {
   delete gore;
   delete manual;
   delete fovPreCalc;
-  delete populate;
+  delete populateItems;
+  delete populateMonsters;
+  delete populateTraps;
   delete renderInventory;
   delete inventoryIndexes;
   delete query;
-  delete mapBuildSpawnItems;
   delete actorData;
   delete scrollNameHandler;
   delete potionNameHandler;

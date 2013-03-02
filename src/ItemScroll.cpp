@@ -133,18 +133,23 @@ void ScrollOfTeleportation::specificRead(const bool FROM_MEMORY, Engine* const e
 void ScrollOfStatusOnAllVisibleMonsters::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
   engine->player->getSpotedEnemies();
-  vector<Actor*> actors = engine->player->spotedEnemies;
+  const vector<Actor*>& actors = engine->player->spotedEnemies;
 
   if(actors.size() > 0) {
-
     setRealDefinitionNames(engine, false);
+    vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
-      if(actors.at(i) != engine->player) {
-        StatusEffect* const effect = getStatusEffect(engine);
-        actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(effect);
-      }
+      actorPositions.push_back(actors.at(i)->pos);
     }
+
+    drawEffectAnimationsIfPlayerVisionAt(actorPositions, clrMagenta, engine);
+
+    for(unsigned int i = 0; i < actors.size(); i++) {
+      StatusEffect* const effect = getStatusEffect(engine);
+      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(effect);
+    }
+
   } else {
     failedToLearnRealName(engine);
   }
@@ -232,7 +237,7 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
 }
 
 void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
-  drawEffectAnimationIfPlayerVisionAt(pos, clrYellow, engine);
+  drawEffectAnimationsIfPlayerVisionAt(vector<coord>(1, pos), clrRedLight, engine);
 }
 
 void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -298,10 +303,11 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
-  const int PLAYER_SKILL = engine->player->mythosKnowledge;
+  (void)engine;
+//  const int PLAYER_SKILL = engine->player->getMythosKnowledge();
   const int BASE_CHANCE = def_->castFromMemoryChance;
 
-  return BASE_CHANCE + PLAYER_SKILL;
+  return BASE_CHANCE; //+ PLAYER_SKILL;
 }
 
 void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
@@ -414,34 +420,22 @@ void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFa
   }
 }
 
-void Scroll::drawEffectAnimationIfPlayerVisionAt(const coord& pos, const sf::Color& clr, Engine* const engine) {
-  if(engine->map->playerVision[pos.x][pos.y]) {
+void Scroll::drawEffectAnimationsIfPlayerVisionAt(const vector<coord>& positions, const sf::Color& clr, Engine* const engine) {
+  const int DELAY = engine->config->DELAY_EXPLOSION * 4;
+//  const int DELAY_HALF = engine->config->DELAY_EXPLOSION / 2;
 
-//    eng->renderer->drawMapAndInterface();
-//    eng->renderer->clearWindow();
-//    sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
-//    eng->renderer->drawScreenSizedTexture(screenTexture);
-
-    const int DELAY = engine->config->DELAY_EXPLOSION;
-    const int DELAY_HALF = engine->config->DELAY_EXPLOSION / 2;
-
-    if(engine->config->USE_TILE_SET) {
-      bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->basicUtils->resetBoolArray(forbiddenCells, false);
-      engine->renderer->drawBlastAnimationAtField(pos, 0, forbiddenCells, clr, clr, DELAY);
-
-//      engine->renderer->drawTileInMap(tile_blastAnimation1, pos, clr, true, clrBlack);
-//      eng->renderer->updateWindow();
-//      engine->sleep(DELAY_HALF);
-//
-//      eng->renderer->clearWindow();
-//      screenTexture = eng->renderer->getScreenTextureCopy();
-//      eng->renderer->drawScreenSizedTexture(screenTexture);
-//      engine->renderer->drawTileInMap(tile_blastAnimation2, pos, clr, true, clrBlack);
-//      engine->sleep(DELAY_HALF);
-
-    } else {
+  vector<coord> positionsWithVision;
+  for(unsigned int i = 0; i < positions.size(); i++) {
+    const coord& pos = positions.at(i);
+    if(engine->map->playerVision[pos.x][pos.y]) {
+      positionsWithVision.push_back(pos);
     }
+  }
+
+  if(engine->config->USE_TILE_SET) {
+    engine->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
+  } else {
+
   }
 }
 

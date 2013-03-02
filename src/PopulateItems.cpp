@@ -1,4 +1,4 @@
-#include "MapBuildSpawnItems.h"
+#include "PopulateItems.h"
 #include "Engine.h"
 
 #include "ActorPlayer.h"
@@ -6,7 +6,7 @@
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"
 
-void MapBuildSpawnItems::spawnItems() {
+void PopulateItems::spawnItems() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeItemBlockerArray(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
@@ -48,7 +48,7 @@ void MapBuildSpawnItems::spawnItems() {
   }
 }
 
-void MapBuildSpawnItems::buildCandidateList() {
+void PopulateItems::buildCandidateList() {
   candidates.resize(0);
 
   ItemDefinition** defs = eng->itemData->itemDefinitions;
@@ -65,7 +65,7 @@ void MapBuildSpawnItems::buildCandidateList() {
   }
 }
 
-ItemDevNames_t MapBuildSpawnItems::getFromCandidateList() {
+ItemDevNames_t PopulateItems::getFromCandidateList() {
   const int NUMBER_CANDIDATES = static_cast<int>(candidates.size());
   return candidates.at(eng->dice(1, NUMBER_CANDIDATES) - 1);
 }
