@@ -25,18 +25,34 @@ public:
   Room(Rect dims) : roomTheme(roomTheme_plain), dims_(dims) {
   }
 
-  Room() : roomTheme(roomTheme_plain), dims_(Rect(coord(-1, -1), coord(-1, -1))) {
+  Room() : roomTheme(roomTheme_plain), roomDescr(""), dims_(Rect(coord(-1, -1), coord(-1, -1))) {
   }
 
-  Rect getDims() const {return dims_;}
-  int getX0() const {return dims_.x0y0.x;}
-  int getY0() const {return dims_.x0y0.y;}
-  int getX1() const {return dims_.x1y1.x;}
-  int getY1() const {return dims_.x1y1.y;}
-  coord getX0Y0() const {return dims_.x0y0;}
-  coord getX1Y1() const {return dims_.x1y1;}
+  Rect getDims() const {
+    return dims_;
+  }
+  int getX0() const {
+    return dims_.x0y0.x;
+  }
+  int getY0() const {
+    return dims_.x0y0.y;
+  }
+  int getX1() const {
+    return dims_.x1y1.x;
+  }
+  int getY1() const {
+    return dims_.x1y1.y;
+  }
+  coord getX0Y0() const {
+    return dims_.x0y0;
+  }
+  coord getX1Y1() const {
+    return dims_.x1y1;
+  }
 
   RoomTheme_t roomTheme;
+
+  string roomDescr;
 
 private:
   Rect dims_;

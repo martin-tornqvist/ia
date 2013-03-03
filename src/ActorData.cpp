@@ -131,7 +131,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -167,7 +167,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -201,7 +201,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -238,7 +238,7 @@ void ActorData::defineAllActors() {
   d.nrLeftAllowedToSpawn = 1;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -276,7 +276,7 @@ void ActorData::defineAllActors() {
   d.nrLeftAllowedToSpawn = 0;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -399,9 +399,9 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_slow;
+  d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 3;
+  d.spellCooldownTurns = 2;
   d.glyph = 'P';
   d.color = clrMagenta;
   d.tile = tile_witchOrWarlock;
@@ -641,7 +641,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_spider;
   d.spawnMinLevel = 3;
   d.spawnMaxLevel = 10;
-  d.monsterLvl = 1;
+  d.monsterLvl = 2;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
@@ -779,7 +779,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -813,7 +813,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -848,7 +848,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -881,7 +881,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_human);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -916,7 +916,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_human);
-  d.nativeRooms.push_back(roomTheme_tomb);
+  d.nativeRooms.push_back(roomTheme_crypt);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();

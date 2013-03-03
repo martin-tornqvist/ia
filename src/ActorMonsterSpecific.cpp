@@ -351,7 +351,7 @@ bool KeziahMason::actorSpecificAct() {
             if(blockers[c.x][c.y] == false) {
               eng->log->addMessage("Keziah summons Brown Jenkin!");
               Monster* jenkin = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_brownJenkin, c));
-              eng->explosionMaker->runSmokeExplosion(c);
+//              eng->explosionMaker->runSmokeExplosion(c);
               eng->renderer->drawMapAndInterface();
               hasSummonedJenkin = true;
               jenkin->playerAwarenessCounter = 999;

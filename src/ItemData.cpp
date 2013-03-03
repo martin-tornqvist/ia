@@ -1171,8 +1171,8 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A,
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
 
-  const int PLAYER_RANGED_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
-                                    ability_accuracyRanged, false, *(eng->player));
+  const int PLAYER_RANGED_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged,
+                                  true, *(eng->player));
 
   if(
     (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_melee) ||
@@ -1183,7 +1183,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A,
     const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
     const int ITEM_SKILL = d.meleeBaseAttackSkill;
     const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(
-                                     ability_accuracyMelee, false, *(eng->player));
+                                     ability_accuracyMelee, true, *(eng->player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;

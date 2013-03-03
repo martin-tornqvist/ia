@@ -12,8 +12,6 @@ class PopulateMonsters {
 public:
   PopulateMonsters(Engine* engine) : eng(engine) {}
 
-  void spawnGroupOfRandomAt(const coord& origin) const;
-
   void attemptSpawnDueToTimePassed() const;
 
   void populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const;
@@ -28,6 +26,11 @@ private:
   void makeSortedFreeCellsVector(const coord& origin, const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) const;
 
   int getRandomOutOfDepth() const;
+
+  void spawnGroupOfRandomAt(const vector<coord>& sortedFreeCellsVector, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+                            const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, const bool IS_ROAMING_ALLOWED) const;
+
+  void makeListOfMonstersEligibleForAutoSpawning(const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, vector<ActorDevNames_t>& listToFill) const;
 
   Engine* eng;
 };

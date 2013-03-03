@@ -13,6 +13,7 @@ public:
 private:
    friend class Renderer;
    void drawInfoLines();
+   void drawLocationInfo();
 	Engine* eng;
 };
 

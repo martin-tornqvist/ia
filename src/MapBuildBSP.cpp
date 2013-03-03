@@ -56,21 +56,20 @@ void MapBuildBSP::run() {
 
   buildMergedRegionsAndRooms(regions, SPLIT_X1, SPLIT_X2, SPLIT_Y1, SPLIT_Y2);
 
-  const int FIRST_DUNGEON_LEVEL_WITH_CAVES = 5;
-  if(eng->map->getDungeonLevel() >= FIRST_DUNGEON_LEVEL_WITH_CAVES) {
-    const int CHANCE_FOR_CAVE_AREA = eng->map->getDungeonLevel() * 15;
-    if(eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA) {
-      const bool IS_TWO_CAVES = eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA / 3;
-      for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
-        int nrTriesToMark = 1000;
-        while(nrTriesToMark > 0) {
-          coord c(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 2));
-          if(regions[c.x][c.y] == NULL && regionsToBuildCave[c.x][c.y] == false) {
-            regionsToBuildCave[c.x][c.y] = true;
-            nrTriesToMark = 0;
-          }
-          nrTriesToMark--;
+  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 6;
+  const int DLVL = eng->map->getDungeonLevel();
+  const int CHANCE_FOR_CAVE_AREA = (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
+  if(eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA) {
+    const bool IS_TWO_CAVES = eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA / 3;
+    for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
+      int nrTriesToMark = 1000;
+      while(nrTriesToMark > 0) {
+        coord c(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 2));
+        if(regions[c.x][c.y] == NULL && regionsToBuildCave[c.x][c.y] == false) {
+          regionsToBuildCave[c.x][c.y] = true;
+          nrTriesToMark = 0;
         }
+        nrTriesToMark--;
       }
     }
   }
@@ -329,12 +328,10 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
   const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng->dice.getInRange(0, 2);
 
   for(int attemptCount = 0; attemptCount < NR_OF_MERGED_REGIONS_TO_ATTEMPT; attemptCount++) {
-    coord regIndex1(2, 2);
-    while(regIndex1 == coord(2, 2)) {
-      regIndex1 = coord(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 2));
-    }
 
-    coord regIndex2(regIndex1);
+    coord regionIndex1, regionIndex2;
+
+    //Find two non-occupied regions
     int nrTriesToFindRegions = 100;
     bool isGoodRegionsFound = false;
     while(isGoodRegionsFound == false) {
@@ -342,24 +339,23 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
       if(nrTriesToFindRegions <= 0) {
         return;
       }
-      regIndex2 = regIndex1 + (eng->dice.coinToss() ? coord(1, 0) : coord(0, 1));
-      const bool IS_REGIONS_PLACED_OK = regIndex2.x <= 2 && regIndex2.y <= 2 && (regIndex2 != regIndex1);
-      if(IS_REGIONS_PLACED_OK) {
-        isGoodRegionsFound = regions[regIndex1.x][regIndex1.y] == NULL && regions[regIndex2.x][regIndex2.y] == NULL;
-      }
+
+      regionIndex1 = coord(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 1));
+      regionIndex2 = coord(regionIndex1 + coord(0, 1));
+      isGoodRegionsFound = regions[regionIndex1.x][regionIndex1.y] == NULL && regions[regionIndex2.x][regionIndex2.y] == NULL;
     }
 
-    const int MERGED_X0 = regIndex1.x == 0 ? 0 : regIndex1.x == 1 ? SPLIT_X1 : SPLIT_X2;
-    const int MERGED_Y0 = regIndex1.y == 0 ? 0 : regIndex1.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
-    const int MERGED_X1 = regIndex2.x == 0 ? SPLIT_X1 - 1 : regIndex2.x == 1 ? SPLIT_X2 - 1 : MAP_X_CELLS - 1;
-    const int MERGED_Y1 = regIndex2.y == 0 ? SPLIT_Y1 - 1 : regIndex2.y == 1 ? SPLIT_Y2 - 1 : MAP_Y_CELLS - 1;
+    const int MERGED_X0 = regionIndex1.x == 0 ? 0 : regionIndex1.x == 1 ? SPLIT_X1 : SPLIT_X2;
+    const int MERGED_Y0 = regionIndex1.y == 0 ? 0 : regionIndex1.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
+    const int MERGED_X1 = regionIndex2.x == 0 ? SPLIT_X1 - 1 : regionIndex2.x == 1 ? SPLIT_X2 - 1 : MAP_X_CELLS - 1;
+    const int MERGED_Y1 = regionIndex2.y == 0 ? SPLIT_Y1 - 1 : regionIndex2.y == 1 ? SPLIT_Y2 - 1 : MAP_Y_CELLS - 1;
 
-    const int AREA_2_X0 = regIndex2.x == 0 ? 0 : regIndex2.x == 1 ? SPLIT_X1 : SPLIT_X2;
-    const int AREA_2_Y0 = regIndex2.y == 0 ? 0 : regIndex2.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
+    const int AREA_2_X0 = regionIndex2.x == 0 ? 0 : regionIndex2.x == 1 ? SPLIT_X1 : SPLIT_X2;
+    const int AREA_2_Y0 = regionIndex2.y == 0 ? 0 : regionIndex2.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
     const int AREA_2_X1 = MERGED_X1;
     const int AREA_2_Y1 = MERGED_Y1;
 
-    const bool AREA_2_IS_BELOW = regIndex2.y > regIndex1.y;
+    const bool AREA_2_IS_BELOW = regionIndex2.y > regionIndex1.y;
 
     const int AREA_1_X0 = MERGED_X0;
     const int AREA_1_X1 = AREA_2_IS_BELOW ? MERGED_X1 - 1 : AREA_2_X0 - 1;
@@ -371,17 +367,21 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
 
     Region* region1 = new Region(area1.x0y0, area1.x1y1);
     Region* region2 = new Region(area2.x0y0, area2.x1y1);
-    regions[regIndex1.x][regIndex1.y] = region1;
-    regions[regIndex2.x][regIndex2.y] = region2;
+    regions[regionIndex1.x][regionIndex1.y] = region1;
+    regions[regionIndex2.x][regionIndex2.y] = region2;
 
-    Rect roomCoords(area1.x0y0 + coord(2, 2), area2.x1y1 - coord(2, 2));
+    const int OFFSET_X0 = eng->dice.getInRange(1, 4);
+    const int OFFSET_Y0 = eng->dice.getInRange(1, 4);
+    const int OFFSET_X1 = eng->dice.getInRange(1, 4);
+    const int OFFSET_Y1 = eng->dice.getInRange(1, 4);
+    Rect roomCoords(area1.x0y0 + coord(OFFSET_X0, OFFSET_Y0), area2.x1y1 - coord(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomCoords);
     rooms_.push_back(room);
 
     region1->mainRoom = region2->mainRoom = room;
 
-    region1->regionsConnectedTo[regIndex2.x][regIndex2.y] = true;
-    region2->regionsConnectedTo[regIndex1.x][regIndex1.y] = true;
+    region1->regionsConnectedTo[regionIndex2.x][regionIndex2.y] = true;
+    region2->regionsConnectedTo[regionIndex1.x][regionIndex1.y] = true;
 
     if(eng->dice(1, 100) < 33) {
       reshapeRoom(*room);

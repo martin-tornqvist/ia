@@ -11,8 +11,41 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "DungeonMaster.h"
+#include "MapBuildBSP.h"
 
 using namespace std;
+
+void Interface::drawLocationInfo() {
+  if(eng->player->getStatusEffectsHandler()->allowSee()) {
+    string str = "";
+
+    const coord& playerPos = eng->player->pos;
+
+    const int DLVL = eng->map->getDungeonLevel();
+    if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
+      const vector<Room*>& roomList = eng->roomThemeMaker->roomList;
+      for(unsigned int i = 0; i < roomList.size(); i++) {
+        const Room* const room = roomList.at(i);
+        const coord& x0y0 = room->getX0Y0();
+        const coord& x1y1 = room->getX1Y1();
+        if(eng->mapTests->isCellInside(playerPos, x0y0, x1y1)) {
+          const string& roomDescr = room->roomDescr;
+          if(roomDescr != "") {
+            str += room->roomDescr + " ";
+          }
+        }
+      }
+    }
+
+    if(eng->map->darkness[playerPos.x][playerPos.y]) {
+      str += "It is dark here. ";
+    }
+
+    if(str != "") {
+      eng->renderer->drawText(str, renderArea_characterLines, 1, -1, clrWhite);
+    }
+  }
+}
 
 void Interface::drawInfoLines() {
   eng->renderer->coverRenderArea(renderArea_characterLines);

@@ -16,8 +16,8 @@ enum RoomTheme_t {
   roomTheme_human,
   roomTheme_ritual,
   roomTheme_spider,
-  roomTheme_jail,
-  roomTheme_tomb,
+  roomTheme_dungeon,
+  roomTheme_crypt,
   roomTheme_monster,
 
   endOfRoomThemes
@@ -32,6 +32,8 @@ public:
 
   void run(const vector<Room*>& rooms);
 
+  vector<Room*> roomList;
+
 private:
   //This array supports placing items, monsters and traps
   RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS];
@@ -40,6 +42,8 @@ private:
 
   void placeThemeFeatures(Room& room);
 
+  void makeThemeSpecificRoomModifications(Room& room);
+
   void makeRoomDarkWithChance(const Room& room);
 
   int attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
@@ -47,7 +51,9 @@ private:
 
   void eraseAdjacentCellsFromVectors(const coord& pos,  vector<coord>& nextToWalls, vector<coord>& awayFromWalls);
 
-  void assignRoomThemes(const vector<Room*>& rooms);
+  void assignRoomThemes();
+
+  bool isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme, const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   Engine* eng;
 };

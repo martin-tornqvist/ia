@@ -537,6 +537,7 @@ void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW) {
   }
 
   eng->interfaceRenderer->drawInfoLines();
+  eng->interfaceRenderer->drawLocationInfo();
   eng->log->drawLog();
 
   if(UPDATE_WINDOW) {
