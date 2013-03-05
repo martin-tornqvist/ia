@@ -31,7 +31,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StringAndColor("   * Advanced to character level " + intToString(eng->dungeonMaster->getLevel()), clrInfo));
   postmortemLines.push_back(StringAndColor("   * Gained " + intToString(eng->dungeonMaster->getXp()) + " experience points", clrInfo));
   postmortemLines.push_back(StringAndColor("   * Explored to the depth of dungeon level " + intToString(eng->map->getDungeonLevel()), clrInfo));
-  postmortemLines.push_back(StringAndColor("   * Was " + intToString(eng->player->getInsanity()) + "% insane", clrInfo));
+  postmortemLines.push_back(StringAndColor("   * Was " + intToString(min(100, eng->player->getInsanity())) + "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored, this shit is ugly as hell
   if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
@@ -76,18 +76,24 @@ void Postmortem::makeInfoLines() {
       }
 
       if(isAlreadyAdded == false) {
-        killList.push_back(pair<string, int>(d.name_a, d.nrOfKills));
+        if(d.isUnique) {
+          killList.push_back(pair<string, int>(d.name_a, -1));
+        } else {
+          killList.push_back(pair<string, int>(d.name_a, d.nrOfKills));
+        }
       }
     }
   }
   if(killList.empty()) {
     postmortemLines.push_back(StringAndColor("   * None", clrInfo));
   } else {
-
     postmortemLines.back().str += " (" + intToString(nrOfTotalKills) + " total)";
 
     for(unsigned int i = 0; i < killList.size(); i++) {
-      postmortemLines.push_back(StringAndColor("   * " + killList.at(i).first + ": " + intToString(killList.at(i).second), clrInfo));
+      const string name = killList.at(i).first;
+      const int nrOfKills = killList.at(i).second;
+      const string nrOfKillsStr = nrOfKills == -1 ? "" : (": " + intToString(nrOfKills));
+      postmortemLines.push_back(StringAndColor("   * " + name + nrOfKillsStr, clrInfo));
     }
   }
   postmortemLines.push_back(StringAndColor(" ", clrInfo));
@@ -241,7 +247,8 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
       }
     }
     break;
-    case menuAction_selectedWithShift: {} break;
+    case menuAction_selectedWithShift:
+    {} break;
     }
   }
 }

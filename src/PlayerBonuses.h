@@ -15,7 +15,7 @@ using namespace std;
 // Keep the following values lexicographically sorted:
 enum PlayerBonuses_t {
   playerBonus_adeptMeleeCombatant,
-  playerBonus_adeptRangedCombatant,
+  playerBonus_marksman,
   playerBonus_adeptWoundTreater,
   playerBonus_agile,
 //playerBonus_aggressive,
@@ -31,10 +31,10 @@ enum PlayerBonuses_t {
   playerBonus_imperceptible,
   playerBonus_learned,
   playerBonus_masterfulMeleeCombatant,
-  playerBonus_masterfulRangedCombatant,
-  playerBonus_nimble,
+  playerBonus_sharpshooter,
+//  playerBonus_nimble,
   playerBonus_observant,
-  playerBonus_rapidRejuvenator,
+  playerBonus_rapidRecoverer,
   playerBonus_rugged,
   playerBonus_steadyAimer,
   playerBonus_stealthy,

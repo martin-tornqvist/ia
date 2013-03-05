@@ -19,11 +19,11 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
   if(&actor == eng->player) {
     switch(ability) {
     case ability_searching: {
-      val += 2;
+      val += 8;
     } break;
 
     case ability_accuracyMelee: {
-      val += 55;
+      val += 45;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptMeleeCombatant))
         val += 15;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulMeleeCombatant))
@@ -32,9 +32,9 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
 
     case ability_accuracyRanged: {
       val += 55;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptRangedCombatant))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_marksman))
         val += 15;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulRangedCombatant))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_sharpshooter))
         val += 15;
     } break;
 
@@ -47,11 +47,11 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     } break;
 
     case ability_dodgeAttack: {
-      val += 5;
+      val += 10;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
-        val += 20;
+        val += 30;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_athletic))
-        val += 20;
+        val += 30;
     } break;
 
     case ability_resistStatusBody: {

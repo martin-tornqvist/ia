@@ -121,6 +121,7 @@ public:
   string deathMessageOverride;
   int nrOfKills;
   bool canOpenDoors, canBashDoors;
+  bool canSeeInDarkness;
   int nrLeftAllowedToSpawn;
   bool isUnique;
   bool isAutoSpawnAllowed;

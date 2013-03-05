@@ -347,9 +347,15 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   if(result <= failSmall || FORCE_EFFECT) {
     //Saving throw failed, apply effect.
 
-    //If actor already has effect, use maximum nr of turns of old effect or new effect.
+    //Actor already has effect?
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(effect->getEffectId() == effects.at(i)->getEffectId()) {
+
+        if(effect->canBeAppliedWhileSameEffectOngoing() == false) {
+          delete effect;
+          return;
+        }
+
         const int TURNS_LEFT_OLD = effects.at(i)->turnsLeft;
         const int TURNS_LEFT_NEW = effect->turnsLeft;
 

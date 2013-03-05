@@ -191,9 +191,16 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 int Player::getShockResistance() const {
-  const bool IS_COOLHEADED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded);
   int ret = 0;
-  ret += IS_COOLHEADED_PICKED * 20;
+  if(eng->playerBonusHandler->isBonusPicked(playerBonus_strongMinded)) {
+    ret += 5;
+  }
+  if(eng->playerBonusHandler->isBonusPicked(playerBonus_unyielding)) {
+    ret += 5;
+  }
+  if(eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded)) {
+    ret += 20;
+  }
   return min(100, max(0, ret));
 }
 
@@ -248,7 +255,7 @@ void Player::incrInsanity() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanity_ += 5;
+    insanity_ += 7;
   }
 
   shock_ = max(0.0, shock_ - 100.0);
@@ -768,7 +775,7 @@ void Player::act() {
 
   if(firstAidTurnsLeft == -1) {
 
-    if(eng->playerBonusHandler->isBonusPicked(playerBonus_rapidRejuvenator)) {
+    if(eng->playerBonusHandler->isBonusPicked(playerBonus_rapidRecoverer)) {
       if(statusEffectsHandler_->hasEffect(statusDiseased) == false) {
         const int REGEN_N_TURN = 8;
         if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
@@ -780,7 +787,6 @@ void Player::act() {
     }
 
     if(statusEffectsHandler_->allowSee()) {
-
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;
@@ -981,7 +987,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
                 }
               }
               hasMeleeWeapon = true;
-              eng->attack->melee(dest.x, dest.y, weapon);
+              eng->attack->melee(dest, weapon);
               target = actorAtDest;
               return;
             }
@@ -1102,7 +1108,7 @@ void Player::kick(Actor& actorToKick) {
   } else {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
-  eng->attack->melee(actorToKick.pos.x, actorToKick.pos.y, kickWeapon);
+  eng->attack->melee(actorToKick.pos, kickWeapon);
   delete kickWeapon;
 }
 

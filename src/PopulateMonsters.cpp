@@ -122,7 +122,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
         const int ROOM_H = room->getY1() - room->getY0() + 1;
         const unsigned int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
 
-        if(originCandidates.size() < NR_CELLS_IN_ROOM / 2) {
+        if(originCandidates.size() < NR_CELLS_IN_ROOM / 3) {
           continue;
         }
 
@@ -214,11 +214,11 @@ void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord
   }
   break;
   case monsterGroupSize_group: {
-    maxNrInGroup = eng->dice.getInRange(3, 6);
+    maxNrInGroup = eng->dice.getInRange(3, 4);
   }
   break;
   case monsterGroupSize_horde: {
-    maxNrInGroup = eng->dice.getInRange(8, 14);
+    maxNrInGroup = eng->dice.getInRange(7, 12);
   }
   break;
   default:

@@ -368,7 +368,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
-      isFreeTurn = engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+      isFreeTurn = false; //engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
     }
   }
 

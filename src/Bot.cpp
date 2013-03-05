@@ -48,7 +48,7 @@ void Bot::runFunctionTests() {
   for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
     Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + coord(1, 0));
     dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
-    eng->attack->melee(eng->player->pos.x + 1, eng->player->pos.y, dynamic_cast<Weapon*>(weaponUsed));
+    eng->attack->melee(eng->player->pos + coord(1, 0), dynamic_cast<Weapon*>(weaponUsed));
     if(actor->getHp() < actor->getHpMax()) {
       hitChanceReal += 1.0;
     }

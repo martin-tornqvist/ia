@@ -82,7 +82,7 @@ public:
     eng(engine) {}
 
   bool ranged(int attackX, int attackY, Weapon* weapon);
-  void melee(int defenderX, int defenderY, Weapon* weapon);
+  void melee(const coord& defenderPos, Weapon* weapon);
 
 private:
   double shotgunSpreadAngleHalf;

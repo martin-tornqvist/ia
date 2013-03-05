@@ -136,7 +136,7 @@ void MapBuildBSP::run() {
     revealAllDoorsBetweenPlayerAndStairs(stairsCoord);
   }
 
-  makeLevers();
+//  makeLevers();
 
   // Note: This must be run last, everything else depends on all walls being common stone walls
   decorateWalls();
@@ -178,7 +178,7 @@ void MapBuildBSP::makeLevers() {
   }
   Door* const doorToLink = doorCandidates.at(eng->dice.getInRange(0, doorCandidates.size() - 1));
 
-  tracer << "MapBuildBSP: Making floodfill and picking pos with lower value than the door" << endl;
+  tracer << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
   for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
@@ -272,9 +272,9 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
             const coord c(x, y);
             if(c == origin || floodFillResult[x][y] > 0) {
 
-              //eng->featureFactory->spawnFeatureAt(feature_caveFloor, c);
+              eng->featureFactory->spawnFeatureAt(feature_caveFloor, c);
 
-              eng->featureFactory->spawnFeatureAt(feature_shallowMud, c);
+//              eng->featureFactory->spawnFeatureAt(feature_shallowMud, c);
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
@@ -1137,6 +1137,7 @@ bool MapBuildBSP::isAreaFree(const int X0, const int Y0, const int X1, const int
 }
 
 void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
+  tracer << "MapBuildBSP::buildAuxRooms()..." << endl;
   const int NR_TRIES_PER_SIDE = 10;
 
   for(int regionY = 0; regionY < 3; regionY++) {
@@ -1149,9 +1150,9 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
 
         if(mainRoom != NULL) {
 
-          bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS];
-          eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingCells);
-          eng->basicUtils->reverseBoolArray(blockingCells);
+          bool cellsWithFloor[MAP_X_CELLS][MAP_Y_CELLS];
+          eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, cellsWithFloor);
+          eng->basicUtils->reverseBoolArray(cellsWithFloor);
 
           int connectX, connectY, auxRoomW, auxRoomH, auxRoomX, auxRoomY;
 
@@ -1159,13 +1160,16 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX1() + 1;
             connectY = eng->dice.getInRange(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng->dice(1, 5) + 2;
-            auxRoomH = eng->dice(1, 5) + 2;
+            auxRoomW = eng->dice.getInRange(3, 7);
+            auxRoomH = eng->dice.getInRange(3, 7);
             auxRoomX = connectX + 1;
             auxRoomY = eng->dice.getInRange(connectY - auxRoomH + 1, connectY);
-            coord c(connectX, connectY);
-            if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, blockingCells, c)) {
-              i = 99999;
+            if(cellsWithFloor[connectX - 1][connectY]) {
+              coord c(connectX, connectY);
+              if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
+                tracer << "MapBuildBSP: Aux room placed right" << endl;
+                i = 99999;
+              }
             }
           }
 
@@ -1173,13 +1177,16 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = eng->dice.getInRange(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY0() - 1;
-            auxRoomW = eng->dice(1, 5) + 2;
-            auxRoomH = eng->dice(1, 5) + 2;
+            auxRoomW = eng->dice.getInRange(3, 7);
+            auxRoomH = eng->dice.getInRange(3, 7);
             auxRoomX = eng->dice.getInRange(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY - auxRoomH;
-            coord c(connectX, connectY);
-            if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, blockingCells, c)) {
-              i = 99999;
+            if(cellsWithFloor[connectX][connectY + 1]) {
+              coord c(connectX, connectY);
+              if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
+                tracer << "MapBuildBSP: Aux room placed up" << endl;
+                i = 99999;
+              }
             }
           }
 
@@ -1187,13 +1194,16 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX0() - 1;
             connectY = eng->dice.getInRange(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng->dice(1, 5) + 2;
-            auxRoomH = eng->dice(1, 5) + 2;
+            auxRoomW = eng->dice.getInRange(3, 7);
+            auxRoomH = eng->dice.getInRange(3, 7);
             auxRoomX = connectX - auxRoomW;
             auxRoomY = eng->dice.getInRange(connectY - auxRoomH + 1, connectY);
-            coord c(connectX, connectY);
-            if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, blockingCells, c)) {
-              i = 99999;
+            if(cellsWithFloor[connectX + 1][connectY]) {
+              coord c(connectX, connectY);
+              if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
+                tracer << "MapBuildBSP: Aux room placed left" << endl;
+                i = 99999;
+              }
             }
           }
 
@@ -1201,19 +1211,23 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = eng->dice.getInRange(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY1() + 1;
-            auxRoomW = eng->dice(1, 5) + 2;
-            auxRoomH = eng->dice(1, 5) + 2;
+            auxRoomW = eng->dice.getInRange(3, 7);
+            auxRoomH = eng->dice.getInRange(3, 7);
             auxRoomX = eng->dice.getInRange(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY + 1;
-            coord c(connectX, connectY);
-            if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, blockingCells, c)) {
-              i = 99999;
+            if(cellsWithFloor[connectX][connectY - 1]) {
+              coord c(connectX, connectY);
+              if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
+                tracer << "MapBuildBSP: Aux room placed down" << endl;
+                i = 99999;
+              }
             }
           }
         }
       }
     }
   }
+  tracer << "MapBuildBSP::buildAuxRooms() [DONE]" << endl;
 }
 
 bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,
@@ -1232,7 +1246,7 @@ bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const
       }
     }
 
-    const int CHANCE_FOR_CRUMLE_ROOM = 30;
+    const int CHANCE_FOR_CRUMLE_ROOM = 22;
 
     if(eng->dice.getInRange(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
       makeCrumbleRoom(auxAreaWithWalls, doorPos);

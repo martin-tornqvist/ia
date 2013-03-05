@@ -235,7 +235,7 @@ bool Monster::attemptAttack(const coord& attackPos) {
         if(attack.weapon != NULL) {
           if(attack.melee) {
             if(attack.weapon->getDef().isMeleeWeapon) {
-              eng->attack->melee(attackPos.x, attackPos.y, attack.weapon);
+              eng->attack->melee(attackPos, attack.weapon);
               return true;
             }
           } else {

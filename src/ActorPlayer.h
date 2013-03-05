@@ -10,7 +10,7 @@
 //const int HUNGER_LEVEL_FIRST_WARNING    = 400;
 //const int HUNGER_LEVEL_FINAL_WARNING    = 200;
 
-const int MIN_SHOCK_WHEN_OBSESSION = 25;
+const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
 enum InsanityPhobia_t {
   insanityPhobia_rat,

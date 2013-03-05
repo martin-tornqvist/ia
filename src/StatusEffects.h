@@ -102,6 +102,10 @@ public:
   virtual void start(Engine* const engine) = 0;
   virtual void end(Engine* const engine) = 0;
 
+  virtual bool canBeAppliedWhileSameEffectOngoing() {
+    return true;
+  }
+
   virtual void more() {
   }
 
@@ -1458,10 +1462,10 @@ public:
     return "I am paralyzed!";
   }
   string messageWhenMore() {
-    return "I am more paralyzed.";
+    return "";
   }
   string messageWhenMoreOther() {
-    return "is more paralyzed.";
+    return "";
   }
   string messageWhenEnd() {
     return "I can move again!";
@@ -1516,6 +1520,10 @@ public:
   void newTurn(Engine* const engine) {
     (void)engine;
     turnsLeft--;
+  }
+
+  bool canBeAppliedWhileSameEffectOngoing() {
+    return false;
   }
 
 private:

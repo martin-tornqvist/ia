@@ -37,6 +37,7 @@ void ActorDefinition::reset() {
   deathMessageOverride = "";
   nrOfKills = 0;
   canOpenDoors = canBashDoors = false;
+  canSeeInDarkness = false;
   nrLeftAllowedToSpawn = -1;
   isUnique = false;
   isAutoSpawnAllowed = true;
@@ -70,7 +71,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
 
   //Set weapon abilities from progression formula
   const int ATTACK_BASE = 15;
-  const double ATTACK_INCR = 7.0;
+  const double ATTACK_INCR = 15.0;
   const int ATTACK_CAP = 40;
 
   const int ATTACK = static_cast<int>(ceil(static_cast<double>(ATTACK_BASE) + ATTACK_INCR * static_cast<double>(EFFECTIVE_LEVEL - 1)));
@@ -122,6 +123,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
+  d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 12;
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
@@ -158,6 +160,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
+  d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 10;
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
@@ -194,6 +197,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
+  d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 50;
   d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
   d.erraticMovement = actorErratic_rare;
@@ -228,6 +232,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
+  d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
   d.description
   = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
@@ -266,6 +271,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
+  d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
   d.description
   = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
@@ -292,7 +298,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
+  d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 6;
   d.glyph = 'P';
@@ -407,6 +413,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_witchOrWarlock;
   d.nrLeftAllowedToSpawn = 1;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 3;
   d.monsterLvl = 3;
   d.groupSize = monsterGroupSize_alone;
@@ -442,6 +449,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_witchOrWarlock;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 100;
   d.monsterLvl = 15;
   d.groupSize = monsterGroupSize_alone;
@@ -474,6 +482,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_witchOrWarlock;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 100;
   d.monsterLvl = 15;
   d.groupSize = monsterGroupSize_alone;
@@ -508,6 +517,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_witchOrWarlock;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 100;
   d.monsterLvl = 15;
   d.groupSize = monsterGroupSize_alone;
@@ -541,6 +551,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_witchOrWarlock;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 100;
   d.monsterLvl = 15;
   d.groupSize = monsterGroupSize_alone;
@@ -608,9 +619,10 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrGreenLight;
   d.tile = tile_spider;
-  d.spawnMinLevel = 1;
+  d.spawnMinLevel = 2;
   d.spawnMaxLevel = 7;
-  d.monsterLvl = 1;
+  d.monsterLvl = 2;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
@@ -639,9 +651,10 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
-  d.spawnMinLevel = 3;
+  d.spawnMinLevel = 2;
   d.spawnMaxLevel = 10;
   d.monsterLvl = 2;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
@@ -673,6 +686,7 @@ void ActorData::defineAllActors() {
   d.spawnMinLevel = 1;
   d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
@@ -703,6 +717,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_spiderLeng;
   d.spawnMinLevel = 10;
   d.monsterLvl = 10;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.nrTurnsAwarePlayer = 20;
   d.actorSize = actorSize_giant;
@@ -736,6 +751,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_hound;
   d.spawnMinLevel = 9;
   d.monsterLvl = 7;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_floor;
   d.canBashDoors = true;
@@ -769,6 +785,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_ghost;
   d.spawnMinLevel = 3;
   d.monsterLvl = 3;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
@@ -802,6 +819,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_phantasm;
   d.spawnMinLevel = 7;
   d.monsterLvl = 7;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
@@ -837,6 +855,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_wraith;
   d.spawnMinLevel = 12;
   d.monsterLvl = 12;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.spellCastMessage = "The Wraith casts a spell";
   d.actorSize = actorSize_humanoid;
@@ -872,6 +891,7 @@ void ActorData::defineAllActors() {
   d.spawnMinLevel = 1;
   d.spawnMaxLevel = 6;
   d.monsterLvl = 1;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
@@ -905,6 +925,7 @@ void ActorData::defineAllActors() {
   d.spawnMinLevel = 1;
   d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
@@ -940,6 +961,7 @@ void ActorData::defineAllActors() {
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 3;
   d.monsterLvl = 3;
   d.groupSize = monsterGroupSize_alone;
@@ -971,6 +993,7 @@ void ActorData::defineAllActors() {
   d.glyph = 'd';
   d.color = clrGray;
   d.tile = tile_wolf;
+  d.canSeeInDarkness = true;
   d.spawnMinLevel = 0;
   d.spawnMaxLevel = 10;
   d.monsterLvl = 2;
@@ -1007,6 +1030,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_bat;
   d.spawnMinLevel = 4;
   d.monsterLvl = 4;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1039,6 +1063,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_byakhee;
   d.spawnMinLevel = 6;
   d.monsterLvl = 6;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1105,6 +1130,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_ghoul;
   d.spawnMinLevel = 5;
   d.monsterLvl = 5;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1138,6 +1164,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_shadow;
   d.spawnMinLevel = 4;
   d.monsterLvl = 3;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
@@ -1318,6 +1345,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_massOfWorms;
   d.spawnMinLevel = 4;
   d.monsterLvl = 1;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 10;
@@ -1417,6 +1445,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_ooze;
   d.spawnMinLevel = 3;
   d.monsterLvl = 3;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
@@ -1452,6 +1481,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_ooze;
   d.spawnMinLevel = 4;
   d.monsterLvl = 4;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
@@ -1488,6 +1518,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_ooze;;
   d.spawnMinLevel = 5;
   d.monsterLvl = 5;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
@@ -1524,6 +1555,7 @@ void ActorData::defineAllActors() {
   d.spawnMinLevel = LAST_CAVERN_LEVEL - 1;
   d.spawnMaxLevel = 99999;
   d.monsterLvl = 20;
+  d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 2;

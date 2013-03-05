@@ -298,7 +298,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      const bool IS_FREE_TURN = eng->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+      const bool IS_FREE_TURN = false; //eng->playerBonusHandler->isBonusPicked(playerBonus_nimble);
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 

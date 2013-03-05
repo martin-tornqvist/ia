@@ -11,10 +11,10 @@
 
 using namespace std;
 
-void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
+void Attack::melee(const coord& defenderPos, Weapon* weapon) {
   //Get attack data
   AttackData data;
-  getAttackData(data, coord(defenderX, defenderY), coord(defenderX, defenderY), weapon, true);
+  getAttackData(data, defenderPos, defenderPos, weapon, true);
 
   //Print messages
   printMeleeMessages(data, weapon);
@@ -31,7 +31,7 @@ void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
     //Blood
     if(data.attackResult >= successNormal) {
       if(data.currentDefender->getDef()->canBleed == true) {
-        eng->gore->makeBlood(coord(defenderX, defenderY));
+        eng->gore->makeBlood(defenderPos);
       }
     }
 
@@ -43,16 +43,22 @@ void Attack::melee(int defenderX, int defenderY, Weapon* weapon) {
         }
       }
     }
+
+    //If weapon not light, make a sound
+    const ItemDefinition& itemDef = weapon->getDef();
+    if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsicWeapon == false) {
+      eng->soundEmitter->emitSound(Sound("", true, defenderPos, false, true));
+    }
   }
 
-  if(data.currentDefender != eng->player) {
-    Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
-    monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
-  } else {
+  if(data.currentDefender == eng->player) {
     if(data.attackResult >= failSmall) {
       Monster* const monster = dynamic_cast<Monster*>(data.attacker);
       monster->isStealth = false;
     }
+  } else {
+    Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
+    monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
   }
 
   //Let next act

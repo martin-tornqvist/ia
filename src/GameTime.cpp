@@ -172,7 +172,7 @@ void GameTime::runNewTurnEvents() {
 
   //Spawn more monsters? (If an unexplored cell is selected, the spawn is aborted)
   if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
-    const int SPAWN_N_TURN = 100;
+    const int SPAWN_N_TURN = 150;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       eng->populateMonsters->attemptSpawnDueToTimePassed();
     }

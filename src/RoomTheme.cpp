@@ -70,7 +70,8 @@ bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTh
     const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
   const int ROOM_W = room->getX1() - room->getX0() + 1;
   const int ROOM_H = room->getY1() - room->getY0() + 1;
-  const int SMALLEST_DIM = min(ROOM_W, ROOM_H);
+  const int MIN_DIM = min(ROOM_W, ROOM_H);
+  const int MAX_DIM = max(ROOM_W, ROOM_H);
 
   switch(theme) {
   case roomTheme_plain: {
@@ -78,38 +79,39 @@ bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTh
   }
   break;
   case roomTheme_human: {
-    return SMALLEST_DIM >= 4;
+    return MAX_DIM >= 5 && MIN_DIM >= 4;
   }
   break;
   case roomTheme_ritual: {
-    return SMALLEST_DIM >= 4;
+    return MAX_DIM >= 5 && MIN_DIM >= 4;
   }
   break;
   case roomTheme_spider: {
-    return SMALLEST_DIM >= 4;
+    return MAX_DIM >= 4 && MIN_DIM >= 3;
   }
   break;
   case roomTheme_dungeon: {
-    if(SMALLEST_DIM >= 7) {
-      //The dungeon room needs to be completely clean before building the theme
-      for(int y = room->getY0(); y <= room->getY1(); y++) {
-        for(int x = room->getX0(); x <= room->getX1(); x++) {
-          if(blockers[x][y]) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
+    //TODO Dungeon is not used for now
+//    if(MAX_DIM >= 9 && MIN_DIM >= 4) {
+//      //The dungeon room needs to be completely clean before building the theme
+//      for(int y = room->getY0(); y <= room->getY1(); y++) {
+//        for(int x = room->getX0(); x <= room->getX1(); x++) {
+//          if(blockers[x][y]) {
+//            return false;
+//          }
+//        }
+//      }
+//      return true;
+//    }
     return false;
   }
   break;
   case roomTheme_crypt: {
-    return SMALLEST_DIM >= 5;
+    return MAX_DIM >= 5 && MIN_DIM >= 4;
   }
   break;
   case roomTheme_monster: {
-    return SMALLEST_DIM >= 4;
+    return MAX_DIM >= 5 && MIN_DIM >= 4;
   }
   break;
   default: {
@@ -123,6 +125,9 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
 
   if(room.roomTheme == roomTheme_dungeon) {
+
+
+
   }
 
   if(room.roomTheme == roomTheme_monster) {

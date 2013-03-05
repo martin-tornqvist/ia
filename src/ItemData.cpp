@@ -603,7 +603,7 @@ void ItemData::makeList() {
   d->color = clrGray;
   d->glyph = '/';
   d->missileBaseAttackSkill = -5;
-  d->missileDmg = DiceParam(1, 5);
+  d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
@@ -787,7 +787,7 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDamageType = damageType_electric;
-  d->rangedStatusEffect = new StatusParalyzed(2);
+  d->rangedStatusEffect = new StatusParalyzed(3);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
   d->rangedSoundIsLoud = true;
