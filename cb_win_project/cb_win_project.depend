@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1355674112 c:\dev\ia\src\itemdefinition.h
+1362600764 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1362522690 source:c:\dev\ia\src\actordata.cpp
+1362608273 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1362526109 source:c:\dev\ia\src\actorplayer.cpp
+1362606079 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -855,7 +855,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1361821181 c:\dev\ia\src\itemscroll.h
+1362600850 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -884,7 +884,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1355674113 c:\dev\ia\src\marker.h
+1362598025 c:\dev\ia\src\marker.h
 	<iostream>
 	<vector>
 	"SFML/Graphics/Texture.hpp"
@@ -1159,7 +1159,7 @@
 	"Engine.h"
 	"Log.h"
 
-1362522874 source:c:\dev\ia\src\itemdata.cpp
+1362600819 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1190,7 +1190,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1355674113 source:c:\dev\ia\src\itemfactory.cpp
+1362600831 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1214,7 +1214,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1362235415 source:c:\dev\ia\src\itemscroll.cpp
+1362600850 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1284,7 +1284,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1355674113 source:c:\dev\ia\src\mainmenu.cpp
+1362574704 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1420,7 +1420,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1361819647 source:c:\dev\ia\src\marker.cpp
+1362598554 source:c:\dev\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -1465,7 +1465,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1362524381 source:c:\dev\ia\src\playerbonuses.cpp
+1362608575 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1482,7 +1482,7 @@
 	"PlayerAllocBonus.h"
 	"Input.h"
 
-1355674113 source:c:\dev\ia\src\playerpowershandler.cpp
+1362598891 source:c:\dev\ia\src\playerpowershandler.cpp
 	"PlayerPowersHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -10039,7 +10039,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1362513559 source:c:\dev\ia\src\populatemonsters.cpp
+1362609079 source:c:\dev\ia\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"

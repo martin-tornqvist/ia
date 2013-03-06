@@ -939,12 +939,14 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfTeleportation);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 5;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfDeepDescent);
   resetDef(d, itemDef_scroll);
   d->spawnStandardMinDLVL = 6;
-  d->isScrollLearnable = false;
+  d->isScrollLearnable = true;
+  d->spellTurnsPerPercentCooldown = 50;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfPestilence);
@@ -954,43 +956,53 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfConfuseEnemies);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 2;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfParalyzeEnemies);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 2;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfSlowEnemies);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 2;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfDetectItems);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 20;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfDetectTraps);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 20;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfBlessing);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 30;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfClairvoyance);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 10;
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_scrollOfAzathothsBlast);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 2;
   itemDefinitions[d->devName] = d;
 
-  d = new ItemDefinition(item_scrollOfVoidChain);
-  resetDef(d, itemDef_scroll);
-  itemDefinitions[d->devName] = d;
+//  d = new ItemDefinition(item_scrollOfVoidChain);
+//  resetDef(d, itemDef_scroll);
+//  d->spellTurnsPerPercentCooldown = 1;
+//  itemDefinitions[d->devName] = d;
 
-  d = new ItemDefinition(item_scrollOfIbnGhazisPowder);
-  resetDef(d, itemDef_scroll);
-  itemDefinitions[d->devName] = d;
+//  d = new ItemDefinition(item_scrollOfIbnGhazisPowder);
+//  resetDef(d, itemDef_scroll);
+//  d->spellTurnsPerPercentCooldown = 1;
+//  itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_potionOfHealing);
   resetDef(d, itemDef_potion);

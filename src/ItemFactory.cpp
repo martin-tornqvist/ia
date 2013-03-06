@@ -262,12 +262,12 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_scrollOfAzathothsBlast:
     item = new ScrollOfAzathothsBlast(d);
     break;
-  case item_scrollOfVoidChain:
-    item = new ScrollOfVoidChain(d);
-    break;
-  case item_scrollOfIbnGhazisPowder:
-    item = new ScrollOfIbnGhazisPowder(d);
-    break;
+//  case item_scrollOfVoidChain:
+//    item = new ScrollOfVoidChain(d);
+//    break;
+//  case item_scrollOfIbnGhazisPowder:
+//    item = new ScrollOfIbnGhazisPowder(d);
+//    break;
   case item_potionOfHealing:
     item = new PotionOfHealing(d);
     break;

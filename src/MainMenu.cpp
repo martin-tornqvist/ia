@@ -110,7 +110,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2012 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
+  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
   eng->renderer->updateWindow();
 

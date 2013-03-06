@@ -293,37 +293,37 @@ public:
 private:
 };
 
-class ScrollOfVoidChain: public Scroll {
-public:
-  ScrollOfVoidChain(ItemDefinition* const itemDefinition) :
-    Scroll(itemDefinition) {
-  }
-  ~ScrollOfVoidChain() {
-  }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//class ScrollOfVoidChain: public Scroll {
+//public:
+//  ScrollOfVoidChain(ItemDefinition* const itemDefinition) :
+//    Scroll(itemDefinition) {
+//  }
+//  ~ScrollOfVoidChain() {
+//  }
+//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//
+//  static void castAt(const coord& pos, Engine* const engine);
+//
+//  const string getRealTypeName() {
+//    return "Void Chain";
+//  }
+//private:
+//};
 
-  static void castAt(const coord& pos, Engine* const engine);
-
-  const string getRealTypeName() {
-    return "Void Chain";
-  }
-private:
-};
-
-class ScrollOfIbnGhazisPowder: public Scroll {
-public:
-  ScrollOfIbnGhazisPowder(ItemDefinition* const itemDefinition) :
-    Scroll(itemDefinition) {
-  }
-  ~ScrollOfIbnGhazisPowder() {
-  }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
-
-  const string getRealTypeName() {
-    return "Ibn Ghazis Powder";
-  }
-private:
-};
+//class ScrollOfIbnGhazisPowder: public Scroll {
+//public:
+//  ScrollOfIbnGhazisPowder(ItemDefinition* const itemDefinition) :
+//    Scroll(itemDefinition) {
+//  }
+//  ~ScrollOfIbnGhazisPowder() {
+//  }
+//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//
+//  const string getRealTypeName() {
+//    return "Ibn Ghazis Powder";
+//  }
+//private:
+//};
 
 class ScrollNameHandler {
 public:

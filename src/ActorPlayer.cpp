@@ -255,7 +255,7 @@ void Player::incrInsanity() {
   string popupMessage = "Insanity draws nearer... ";
 
   if(eng->config->BOT_PLAYING == false) {
-    insanity_ += 7;
+    insanity_ += 6;
   }
 
   shock_ = max(0.0, shock_ - 100.0);

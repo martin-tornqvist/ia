@@ -228,11 +228,28 @@ void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const en
 }
 
 void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  setRealDefinitionNames(engine, false);
-  if(engine->player->getStatusEffectsHandler()->allowAct()) {
-    engine->marker->place(markerTask_spellAzathothsBlast);
+  (void)FROM_MEMORY;
+  engine->player->getSpotedEnemies();
+  const vector<Actor*>& actors = engine->player->spotedEnemies;
+
+  if(actors.size() > 0) {
+    setRealDefinitionNames(engine, false);
+    vector<coord> actorPositions;
+
+    for(unsigned int i = 0; i < actors.size(); i++) {
+      actorPositions.push_back(actors.at(i)->pos);
+    }
+
+    drawEffectAnimationsIfPlayerVisionAt(actorPositions, clrRedLight, engine);
+
+    for(unsigned int i = 0; i < actors.size(); i++) {
+      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+      const string monsterName = actors.at(i)->getNameThe();
+      engine->log->addMessage(monsterName + " is struck by a roaring blast!", clrMessageGood);
+      actors.at(i)->hit(engine->dice(2, 4), damageType_pure);
+    }
   } else {
-    engine->log->addMessage("My spell is disrupted.");
+    failedToLearnRealName(engine);
   }
 }
 
@@ -240,30 +257,30 @@ void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
   drawEffectAnimationsIfPlayerVisionAt(vector<coord>(1, pos), clrRedLight, engine);
 }
 
-void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  setRealDefinitionNames(engine, false);
-  if(engine->player->getStatusEffectsHandler()->allowAct()) {
-    engine->marker->place(markerTask_spellVoidChain);
-  } else {
-    engine->log->addMessage("My spell is disrupted.");
-  }
-}
+//void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+//  setRealDefinitionNames(engine, false);
+//  if(engine->player->getStatusEffectsHandler()->allowAct()) {
+//    engine->marker->place(markerTask_spellVoidChain);
+//  } else {
+//    engine->log->addMessage("My spell is disrupted.");
+//  }
+//}
 
-void ScrollOfVoidChain::castAt(const coord& pos, Engine* const engine) {
-  const coord playerPos = engine->player->pos;
-  const vector<coord> projectilePath =
-    engine->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
-                              true, FOV_STANDARD_RADI_INT);
-}
+//void ScrollOfVoidChain::castAt(const coord& pos, Engine* const engine) {
+//  const coord playerPos = engine->player->pos;
+//  const vector<coord> projectilePath =
+//    engine->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
+//                              true, FOV_STANDARD_RADI_INT);
+//}
 
-void ScrollOfIbnGhazisPowder::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  setRealDefinitionNames(engine, false);
-  if(engine->player->getStatusEffectsHandler()->allowAct()) {
-    engine->query->direction();
-  } else {
-    engine->log->addMessage("My spell is disrupted.");
-  }
-}
+//void ScrollOfIbnGhazisPowder::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+//  setRealDefinitionNames(engine, false);
+//  if(engine->player->getStatusEffectsHandler()->allowAct()) {
+//    engine->query->direction();
+//  } else {
+//    engine->log->addMessage("My spell is disrupted.");
+//  }
+//}
 
 void ScrollNameHandler::setFalseScrollName(ItemDefinition* d) {
   const unsigned int NR_NAMES = m_falseNames.size();
@@ -421,7 +438,7 @@ void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFa
 }
 
 void Scroll::drawEffectAnimationsIfPlayerVisionAt(const vector<coord>& positions, const sf::Color& clr, Engine* const engine) {
-  const int DELAY = engine->config->DELAY_EXPLOSION * 4;
+  const int DELAY = engine->config->DELAY_EXPLOSION * 3;
 //  const int DELAY_HALF = engine->config->DELAY_EXPLOSION / 2;
 
   vector<coord> positionsWithVision;

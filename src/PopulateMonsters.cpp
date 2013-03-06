@@ -84,7 +84,7 @@ void PopulateMonsters::attemptSpawnDueToTimePassed() const {
 }
 
 void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
-  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(5, 8);
+  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(6, 8);
   int nrGroupsSpawned = 0;
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
@@ -104,7 +104,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
     Room* const room = rooms.at(i);
     if(room->roomTheme != roomTheme_plain) {
 
-      const unsigned int MAX_NR_GROUPS_IN_ROOM = 3;
+      const unsigned int MAX_NR_GROUPS_IN_ROOM = 2;
       for(unsigned int i_groupsInRoom = 0; i_groupsInRoom < MAX_NR_GROUPS_IN_ROOM; i_groupsInRoom++) {
 
         //Randomly pick a free position inside the room
@@ -210,7 +210,7 @@ void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord
 
   switch(d.groupSize) {
   case monsterGroupSize_few: {
-    maxNrInGroup = eng->dice.getInRange(1, 3);
+    maxNrInGroup = eng->dice.getInRange(1, 2);
   }
   break;
   case monsterGroupSize_group: {
@@ -218,7 +218,7 @@ void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord
   }
   break;
   case monsterGroupSize_horde: {
-    maxNrInGroup = eng->dice.getInRange(7, 12);
+    maxNrInGroup = eng->dice.getInRange(6, 8);
   }
   break;
   default:

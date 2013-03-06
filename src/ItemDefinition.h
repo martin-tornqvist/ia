@@ -126,8 +126,8 @@ enum ItemDevNames_t {
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
   item_scrollOfAzathothsBlast,
-  item_scrollOfVoidChain,
-  item_scrollOfIbnGhazisPowder,
+//  item_scrollOfVoidChain,
+//  item_scrollOfIbnGhazisPowder,
 
   item_potionOfHealing,
   item_potionOfBlindness,

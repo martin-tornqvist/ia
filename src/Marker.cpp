@@ -112,15 +112,15 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- AZATHOTS BLAST SPELL
-  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
-    if(markerTask == markerTask_spellAzathothsBlast) {
-      if(eng->map->playerVision[pos_.x][pos_.y]) {
-        eng->renderer->drawMapAndInterface();
-        ScrollOfAzathothsBlast::castAt(pos_, eng);
-        done();
-      }
-    }
-  }
+//  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
+//    if(markerTask == markerTask_spellAzathothsBlast) {
+//      if(eng->map->playerVision[pos_.x][pos_.y]) {
+//        eng->renderer->drawMapAndInterface();
+//        ScrollOfAzathothsBlast::castAt(pos_, eng);
+//        done();
+//      }
+//    }
+//  }
   if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
     cancel();
   }
@@ -132,12 +132,12 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 
   int effectiveRange = -1;
 
-  if(markerTask == markerTask_spellAzathothsBlast) {
-    trace.push_back(coord(pos_.x, pos_.y));
-  } else {
-    const coord playerPos = eng->player->pos;
-    trace = eng->mapTests->getLine(playerPos.x, playerPos.y, pos_.x, pos_.y, true, 99999);
-  }
+//  if(markerTask == markerTask_spellAzathothsBlast) {
+//    trace.push_back(coord(pos_.x, pos_.y));
+//  } else {
+  const coord playerPos = eng->player->pos;
+  trace = eng->mapTests->getLine(playerPos.x, playerPos.y, pos_.x, pos_.y, true, 99999);
+//  }
 
   if(markerTask == markerTask_aim) {
     Weapon* const weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
