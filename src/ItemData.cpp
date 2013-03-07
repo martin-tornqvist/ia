@@ -33,7 +33,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->color = clrWhite;
     d->tile = tile_empty;
     d->primaryAttackMode = primaryAttackMode_none;
-    d->isUsable = false;
     d->isReadable = false;
     d->isScroll = false;
     d->isScrollLearned = false;
@@ -177,8 +176,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isScrollLearned = 0;
     d->castFromMemoryChance = eng->dice.getInRange(1, 100);
     d->maxStackSizeAtSpawn = 2;
-    //d->nativeRooms.push_back(specialRoom_tombs);
-    //d->nativeRooms.push_back(specialRoom_ritualChamber);
     d->landOnHardSurfaceSoundMessage = "";
     eng->scrollNameHandler->setFalseScrollName(d);
   }
@@ -196,10 +193,22 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->missileBaseAttackSkill = -5;
     d->missileDmg = DiceParam(1, 3, 0);
     d->maxStackSizeAtSpawn = 1;
-    //d->nativeRooms.push_back(specialRoom_tombs);
-    //d->nativeRooms.push_back(specialRoom_ritualChamber);
     d->landOnHardSurfaceSoundMessage = "";
     eng->potionNameHandler->setColorAndFalseName(d);
+  }
+  break;
+
+  case itemDef_device: {
+    resetDef(d, itemDef_general);
+    d->chanceToIncludeInSpawnList = 60;
+    d->itemWeight = itemWeight_medium;
+    d->isIdentified = true;
+    d->glyph = '{';
+    d->tile = tile_device2;
+    d->isStackable = false;
+    d->spawnStandardMinDLVL = 3;
+    d->spawnStandardMaxDLVL = 999;
+    d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   }
   break;
 
@@ -458,7 +467,6 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_flare;
   d->color = clrGray;
-  d->glyph = '{';
   d->isAmmo = true;
   itemDefinitions[d->devName] = d;
 
@@ -1044,18 +1052,11 @@ void ItemData::makeList() {
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 
-
-
-  /*
-   d = new ItemDefinition(item_ration);
-   resetDef(d, itemDef_general);
-   d->itemWeight        = itemWeight_light;
-   d->name          = ItemName("Iron Ration", "Iron Rations", "an Iron Ration");
-   d->glyph         = '%';
-   d->isEatable       = true;
-   d->nutritionValue      = NutritionValue_dinner;
-   itemDefinitions[d->devName] = d;
-   */
+  d = new ItemDefinition(item_deviceSentry);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Sentry device", "Sentry Devices", "a Sentry Device");
+  d->color = clrYellow;
+  itemDefinitions[d->devName] = d;
 }
 
 void ItemData::addSaveLines(vector<string>& lines) const {

@@ -74,13 +74,7 @@ public:
     return "";
   }
 
-//  virtual sf::Color getInterfaceClrBright() const {
-//    return clrBrown;
-//  }
-//  virtual sf::Color getInterfaceClrDark() const {
-//    return clrBrownDark;
-//  }
-   virtual sf::Color getInterfaceClr() const {
+  virtual sf::Color getInterfaceClr() const {
     return clrBrown;
   }
 

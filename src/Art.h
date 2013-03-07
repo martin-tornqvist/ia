@@ -77,6 +77,8 @@ enum Tile_t {
 	tile_stairsDown,
   tile_leverLeft,
   tile_leverRight,
+  tile_device1,
+  tile_device2,
   tile_cabinetClosd,
   tile_cabinetOpen,
   tile_pillarBroken,

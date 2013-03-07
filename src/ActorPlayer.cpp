@@ -101,6 +101,9 @@ void Player::actorSpecific_spawnStartItems() {
   inventory_->putItemInGeneral(item);
 
   inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
+
+  item = eng->itemFactory->spawnItem(item_deviceSentry);
+  inventory_->putItemInGeneral(item);
 }
 
 void Player::addSaveLines(vector<string>& lines) const {

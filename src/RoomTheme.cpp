@@ -68,6 +68,9 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
 
 bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme,
     const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
+
+      (void)blockers;
+
   const int ROOM_W = room->getX1() - room->getX0() + 1;
   const int ROOM_H = room->getY1() - room->getY0() + 1;
   const int MIN_DIM = min(ROOM_W, ROOM_H);

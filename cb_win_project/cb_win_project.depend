@@ -32,7 +32,7 @@
 1357142943 c:\dev\ia\src\colors.h
 	<SFML/Graphics/Color.hpp>
 
-1361819647 c:\dev\ia\src\art.h
+1362689903 c:\dev\ia\src\art.h
 
 1362221206 c:\dev\ia\src\actor.h
 	<string>
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1362600764 c:\dev\ia\src\itemdefinition.h
+1362694490 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -163,7 +163,7 @@
 	"Engine.h"
 	"Item.h"
 
-1355674112 c:\dev\ia\src\item.h
+1362695391 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1362606079 source:c:\dev\ia\src\actorplayer.cpp
+1362695203 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -507,7 +507,7 @@
 	"ActorFactory.h"
 	"Blood.h"
 
-1361819647 source:c:\dev\ia\src\art.cpp
+1362689930 source:c:\dev\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
@@ -855,7 +855,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1362600850 c:\dev\ia\src\itemscroll.h
+1362693803 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -1159,7 +1159,7 @@
 	"Engine.h"
 	"Log.h"
 
-1362600819 source:c:\dev\ia\src\itemdata.cpp
+1362695761 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1190,7 +1190,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1362600831 source:c:\dev\ia\src\itemfactory.cpp
+1362694736 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1200,6 +1200,7 @@
 	"ItemScroll.h"
 	"ItemPotion.h"
 	"ItemDrop.h"
+	"ItemDevice.h"
 
 1355674113 source:c:\dev\ia\src\itempickup.cpp
 	"ItemPickup.h"
@@ -1571,7 +1572,7 @@
 	"FeatureWall.h"
 	"FeatureDoor.h"
 
-1362242559 source:c:\dev\ia\src\renderinventory.cpp
+1362695814 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -7742,7 +7743,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1362513315 source:c:\dev\ia\src\roomtheme.cpp
+1362694629 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -10054,4 +10055,10 @@
 1361906468 source:c:\dev\ia\src\populatetraps.cpp
 	"PopulateTraps.h"
 	"Engine.h"
+
+1362693957 source:c:\dev\ia\src\itemdevice.cpp
+	"ItemDevice.h"
+
+1362695915 c:\dev\ia\src\itemdevice.h
+	"Item.h"
 

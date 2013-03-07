@@ -17,18 +17,17 @@ public:
 
   int getChanceToCastFromMemory(Engine* const engine) const;
 
-  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
+  bool activateDefault(Actor* const actor, Engine* const engine) {
     (void)actor;
     return read(false, engine);
   }
-  virtual string getDefaultActivationLabel() const {
+  string getDefaultActivationLabel() const {
     return "Read";
   }
 
   virtual sf::Color getInterfaceClr() const {
     return clrMagenta;
   }
-
 
   bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 

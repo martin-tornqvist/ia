@@ -218,6 +218,8 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_pit: return coord(12, 8); break;
   case tile_leverRight: return coord(13, 8); break;
   case tile_leverLeft: return coord(14, 8); break;
+  case tile_device1: return coord(15, 8); break;
+  case tile_device2: return coord(16, 8); break;
   case tile_cabinetClosd: return coord(3, 9); break;
   case tile_cabinetOpen: return coord(4, 9); break;
   case tile_pillarBroken: return coord(5, 9); break;

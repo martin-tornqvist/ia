@@ -9,6 +9,7 @@
 #include "ItemScroll.h"
 #include "ItemPotion.h"
 #include "ItemDrop.h"
+#include "ItemDevice.h"
 
 //Private
 Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
@@ -18,8 +19,9 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
 
   ItemDefinition* ammoD = NULL;
 
-  if(d->rangedAmmoTypeUsed != item_empty)
+  if(d->rangedAmmoTypeUsed != item_empty) {
     ammoD = eng->itemData->itemDefinitions[d->rangedAmmoTypeUsed];
+  }
 
   switch(devName) {
   case item_trapezohedron:
@@ -298,8 +300,13 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_potionOfConfusion:
     item = new PotionOfConfusion(d);
     break;
+  case item_deviceSentry:
+    item = new DeviceSentry(d);
+    break;
 
-  default: item = new Item(d); break;
+  default:
+    item = new Item(d);
+    break;
   }
 
   return item;

@@ -184,7 +184,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
 void RenderInventory::drawUseMode(const MenuBrowser& browser,
                                   const vector<unsigned int>& genInvIndexes,
                                   const sf::Texture& bgTexture) {
-  const int X_POS_CMD = X_POS_LEFT + 7;
+  const int X_POS_CMD = X_POS_LEFT + 11;
 
   int xPos = X_POS_LEFT;
   int yPos = 1;

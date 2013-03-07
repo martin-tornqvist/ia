@@ -35,6 +35,7 @@ enum ItemDefArchetypes_t {
   itemDef_ammoClip,
   itemDef_scroll,
   itemDef_potion,
+  itemDef_device,
   itemDef_armor,
   itemDef_explosive
 };
@@ -140,6 +141,8 @@ enum ItemDevNames_t {
   item_potionOfFear,
   item_potionOfConfusion,
 
+  item_deviceSentry,
+
   endOfItemDevNames
 };
 
@@ -194,7 +197,6 @@ public:
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
   bool isExplosive;
-  bool isUsable;
   bool isReadable;
   bool isScroll;
   bool isScrollLearned;
