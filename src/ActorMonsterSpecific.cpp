@@ -110,6 +110,7 @@ void CultistSpikeGun::actorSpecific_spawnStartItems() {
 
 void CultistPriest::actorSpecific_spawnStartItems() {
   Item* item = eng->itemFactory->spawnItem(item_dagger);
+  dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2
   inventory_->putItemInSlot(slot_wielded, item, true);
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
@@ -327,6 +328,11 @@ void Byakhee::actorSpecific_spawnStartItems()
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_byakheeClaw));
 }
 
+void GiantMantis::actorSpecific_spawnStartItems()
+{
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_giantMantisClaw));
+}
+
 void HuntingHorror::actorSpecific_spawnStartItems()
 {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_huntingHorrorBite));
@@ -424,10 +430,10 @@ bool WormMass::actorSpecificAct() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
-              WormMass* const spawn =
-                dynamic_cast<WormMass*>(eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy)));
-              chanceToSpawnNew -= 5;
-              spawn->chanceToSpawnNew = chanceToSpawnNew;
+              Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
+              WormMass* const worm = dynamic_cast<WormMass*>(actor);
+              chanceToSpawnNew -= 10;
+              worm->chanceToSpawnNew = chanceToSpawnNew;
               eng->gameTime->letNextAct();
               return true;
             }
@@ -441,6 +447,36 @@ bool WormMass::actorSpecificAct() {
 
 void WormMass::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_wormMassBite));
+}
+
+bool GiantLocust::actorSpecificAct() {
+  if(deadState == actorDeadState_alive) {
+    if(playerAwarenessCounter > 0) {
+      if(eng->dice(1, 100) < chanceToSpawnNew) {
+
+        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        eng->mapTests->makeMoveBlockerArray(this, blockers);
+
+        for(int dx = -1; dx <= 1; dx++) {
+          for(int dy = -1; dy <= 1; dy++) {
+            if(blockers[pos.x + dx][pos.y + dy] == false) {
+              Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
+              GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
+              chanceToSpawnNew -= 10;
+              locust->chanceToSpawnNew = chanceToSpawnNew;
+              eng->gameTime->letNextAct();
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+void GiantLocust::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_giantLocustBite));
 }
 
 bool LordOfShadows::actorSpecificAct() {

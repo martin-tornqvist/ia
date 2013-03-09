@@ -102,6 +102,12 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
   case actor_byakhee:
     monster = new Byakhee;
     break;
+  case actor_giantMantis:
+    monster = new GiantMantis;
+    break;
+  case actor_giantLocust:
+    monster = new GiantLocust;
+    break;
   case actor_mummy:
     monster = new Mummy;
     break;

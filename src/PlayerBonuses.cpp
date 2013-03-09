@@ -28,7 +28,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);
-//  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed");
+  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed", playerBonus_observant, playerBonus_agile);
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+20% chance to avoid being spoted by monsters", playerBonus_stealthy);
   setBonus(playerBonus_learned, "Learned", "You can read and memorize manuscripts");
@@ -85,14 +85,14 @@ void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
 vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
   vector<PlayerBonuses_t> ret;
 
-  if(eng->dungeonMaster->getLevel() == 1) {
-    ret.push_back(playerBonus_adeptMeleeCombatant);
-    ret.push_back(playerBonus_tough);
-    ret.push_back(playerBonus_learned);
-    ret.push_back(playerBonus_stealthy);
-    ret.push_back(playerBonus_agile);
-    ret.push_back(playerBonus_strongMinded);
-  } else {
+//  if(eng->dungeonMaster->getLevel() == 1) {
+//    ret.push_back(playerBonus_adeptMeleeCombatant);
+//    ret.push_back(playerBonus_tough);
+//    ret.push_back(playerBonus_learned);
+//    ret.push_back(playerBonus_stealthy);
+//    ret.push_back(playerBonus_agile);
+//    ret.push_back(playerBonus_strongMinded);
+//  } else {
     vector<PlayerBonuses_t> candidates;
     for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
       const PlayerBonus& bon = bonuses_[i];
@@ -121,7 +121,7 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
       ret.push_back(candidates.at(ELEMENT));
       candidates.erase(candidates.begin() + ELEMENT);
     }
-  }
+//  }
 
   std::sort(ret.begin(), ret.end());
   return ret;

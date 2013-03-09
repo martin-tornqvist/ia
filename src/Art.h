@@ -41,6 +41,8 @@ enum Tile_t {
 	tile_vortex,
 	tile_ghost,
 	tile_wraith,
+	tile_mantis,
+	tile_locust,
 	tile_pistol,
 	tile_tommyGun,
 	tile_shotgun,

@@ -47,7 +47,7 @@ const int XP_STEP = 60;
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
 
 // - THIS NUMBER AFFECTS LEVELING RATE -
-const int BASE_MONSTERS_TO_LVL = 45;
+const int BASE_MONSTERS_TO_LVL = 50;
 
 void DungeonMaster::init() {
   playerExp = 0;

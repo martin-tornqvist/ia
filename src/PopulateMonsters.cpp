@@ -84,7 +84,7 @@ void PopulateMonsters::attemptSpawnDueToTimePassed() const {
 }
 
 void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
-  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(6, 8);
+  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(7, 10);
   int nrGroupsSpawned = 0;
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
@@ -218,7 +218,11 @@ void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord
   }
   break;
   case monsterGroupSize_horde: {
-    maxNrInGroup = eng->dice.getInRange(6, 8);
+    maxNrInGroup = eng->dice.getInRange(7, 10);
+  }
+  break;
+  case monsterGroupSize_swarm: {
+    maxNrInGroup = eng->dice.getInRange(14, 18);
   }
   break;
   default:

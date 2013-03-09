@@ -46,7 +46,7 @@ enum PlayerBonuses_t {
   playerBonus_treasureHunter,
 //playerBonus_tumbler,
   playerBonus_unyielding,
-//playerBonus_vigilant,
+  playerBonus_vigilant,
   playerBonus_vigorous,
 //playerBonus_wakeful,
   endOfPlayerBonuses

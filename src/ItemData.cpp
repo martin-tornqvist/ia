@@ -795,7 +795,7 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDamageType = damageType_electric;
-  d->rangedStatusEffect = new StatusParalyzed(3);
+  d->rangedStatusEffect = new StatusParalyzed(eng);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
   d->rangedSoundIsLoud = true;
@@ -818,6 +818,18 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_byakhee], normal);
+  itemDefinitions[d->devName] = d;
+
+  d = new ItemDefinition(item_giantMantisClaw);
+  resetDef(d, itemDef_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "claws me");
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantMantis], strong);
+  itemDefinitions[d->devName] = d;
+
+  d = new ItemDefinition(item_giantLocustBite);
+  resetDef(d, itemDef_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "bites me");
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantLocust], weak);
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_mummyMaul);

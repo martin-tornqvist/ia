@@ -430,6 +430,16 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
+class GiantMantis: public Monster {
+public:
+  GiantMantis() :
+    Monster() {
+  }
+  ~GiantMantis() {
+  }
+  void actorSpecific_spawnStartItems();
+};
+
 class HuntingHorror: public GiantBat {
 public:
   HuntingHorror() :
@@ -517,6 +527,19 @@ public:
     Monster(), chanceToSpawnNew(35) {
   }
   ~WormMass() {
+  }
+  bool actorSpecificAct();
+  virtual void actorSpecific_spawnStartItems();
+private:
+  int chanceToSpawnNew;
+};
+
+class GiantLocust: public Monster {
+public:
+  GiantLocust() :
+    Monster(), chanceToSpawnNew(35) {
+  }
+  ~GiantLocust() {
   }
   bool actorSpecificAct();
   virtual void actorSpecific_spawnStartItems();

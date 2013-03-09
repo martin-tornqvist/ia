@@ -339,7 +339,6 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 
   eng->renderer->drawMapAndInterface();
 
-  //Report that actor has used its action
   if(attacked) {
     eng->gameTime->letNextAct();
   }

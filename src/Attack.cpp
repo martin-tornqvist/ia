@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "FeatureTrap.h"
+#include "PlayerBonuses.h"
 
 using namespace std;
 
@@ -114,7 +115,8 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     if(data.attacker == eng->player) {
       isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
     } else {
-      isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL);
+      isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL) &&
+                        eng->playerBonusHandler->isBonusPicked(playerBonus_vigilant) == false;
     }
     bool isDefenderHeldByWeb = false;
     const FeatureStatic* const f = eng->map->featuresStatic[target.x][target.y];
@@ -140,7 +142,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     // Rolling attack result again after "situation" modifiers
     data.attackResult = eng->abilityRoll->roll(data.totalSkill);
 
-    // Backstab damage bonus against unaware monster?
+    // Backstab damage bonus against unaware defender?
     if(isDefenderAware == false) {
       data.dmgRoll = data.dmgRolls * data.dmgSides;
       data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;

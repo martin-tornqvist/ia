@@ -89,6 +89,8 @@ enum ItemDevNames_t {
   item_ghoulClaw,
   item_shadowClaw,
   item_byakheeClaw,
+  item_giantMantisClaw,
+  item_giantLocustBite,
   item_hellHoundFireBreath,
   item_hellHoundBite,
   item_giantBatBite,

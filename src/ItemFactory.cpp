@@ -107,6 +107,9 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_teslaCanister:
     item = new ItemAmmoClip(d);
     break;
+  case item_incineratorShell:
+    item = new ItemAmmo(d);
+    break;
 
   case item_playerKick:
     item = new Weapon(d, ammoD);
@@ -198,6 +201,12 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
     item = new Weapon(d, ammoD);
     break;
   case item_byakheeClaw:
+    item = new Weapon(d, ammoD);
+    break;
+  case item_giantMantisClaw:
+    item = new Weapon(d, ammoD);
+    break;
+  case item_giantLocustBite:
     item = new Weapon(d, ammoD);
     break;
   case item_mummyMaul:

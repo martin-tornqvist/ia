@@ -261,7 +261,7 @@ void Player::incrInsanity() {
     insanity_ += 6;
   }
 
-  shock_ = max(0.0, shock_ - 100.0);
+  shock_ = max(0.0, shock_ - 85.0);
 
   updateColor();
   eng->renderer->drawMapAndInterface();

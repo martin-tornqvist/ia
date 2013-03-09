@@ -1143,8 +1143,9 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
   for(int regionY = 0; regionY < 3; regionY++) {
     for(int regionX = 0; regionX < 3; regionX++) {
 
-      if(eng->dice.coinToss()) {
+      const int CHANCE_TO_BUILD_AUX_ROOMS = 40;
 
+      if(eng->dice.getInRange(1, 100) < CHANCE_TO_BUILD_AUX_ROOMS) {
         const Region* const region = regions[regionX][regionY];
         const Room* const mainRoom = region->mainRoom;
 
@@ -1246,7 +1247,7 @@ bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const
       }
     }
 
-    const int CHANCE_FOR_CRUMLE_ROOM = 22;
+    const int CHANCE_FOR_CRUMLE_ROOM = 20;
 
     if(eng->dice.getInRange(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
       makeCrumbleRoom(auxAreaWithWalls, doorPos);
