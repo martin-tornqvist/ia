@@ -548,7 +548,7 @@ private:
 };
 
 class Vortex: public Monster {
-  public:
+public:
   Vortex() :
     Monster(), pullCooldown(0) {
   }
@@ -624,5 +624,6 @@ public:
   }
   void actorSpecific_spawnStartItems();
 };
+
 
 #endif

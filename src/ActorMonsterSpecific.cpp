@@ -110,7 +110,7 @@ void CultistSpikeGun::actorSpecific_spawnStartItems() {
 
 void CultistPriest::actorSpecific_spawnStartItems() {
   Item* item = eng->itemFactory->spawnItem(item_dagger);
-  dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2
+  dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
   inventory_->putItemInSlot(slot_wielded, item, true);
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
@@ -666,5 +666,4 @@ void BloatedZombie::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_bloatedZombiePunch));
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_bloatedZombieSpit));
 }
-
 

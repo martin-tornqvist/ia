@@ -101,6 +101,9 @@ public:
 
   void drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION);
 
+  void drawBlastAnimationAtPositionsWithPlayerVision(const vector<coord>& positions,
+    const sf::Color& clr, const int EXPLOSION_DELAY_FACTOR, Engine* const engine);
+
   void drawMainMenuLogo(const int Y_POS);
 
   CellRenderDataAscii renderArrayActorsOmitted[MAP_X_CELLS][MAP_Y_CELLS];

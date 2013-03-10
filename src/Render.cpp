@@ -301,6 +301,26 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions, con
   drawMapAndInterface();
 }
 
+void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(const vector<coord>& positions,
+    const sf::Color& clr, const int EXPLOSION_DELAY_FACTOR, Engine* const engine) {
+
+  const int DELAY = engine->config->DELAY_EXPLOSION * EXPLOSION_DELAY_FACTOR;
+
+  vector<coord> positionsWithVision;
+  for(unsigned int i = 0; i < positions.size(); i++) {
+    const coord& pos = positions.at(i);
+    if(engine->map->playerVision[pos.x][pos.y]) {
+      positionsWithVision.push_back(pos);
+    }
+  }
+
+  if(engine->config->USE_TILE_SET) {
+    engine->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
+  } else {
+    //TODO
+  }
+}
+
 void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
                              const bool drawBgClr, const sf::Color& bgClr) {
   const int& CELL_W = eng->config->CELL_W;

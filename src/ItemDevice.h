@@ -6,7 +6,7 @@
 class Device: public Item {
 public:
   Device(ItemDefinition* const itemDefinition) :
-    Item(itemDefinition), isActivated_(false) {
+    Item(itemDefinition), isActivated_(false), nrTurnsToNextEffect_(-1) {
   }
 
   virtual ~Device() {
@@ -24,14 +24,19 @@ public:
     return clrCyan;
   }
 
+  void newTurn(Engine* const engine);
+
 protected:
-  bool toggle(Engine* const engine) {
-    (void)engine;
-    isActivated_ = !isActivated_;
-    return false;
-  }
+  bool toggle(Engine* const engine);
+
+  int getRandomNrTurnsToNextEffect(Engine* const engine) const;
+
+  void runEffect(Engine* const engine);
+
+  virtual void specificEffect(Engine* const engine) = 0;
 
   bool isActivated_;
+  int nrTurnsToNextEffect_;
 };
 
 class DeviceSentry: public Device {
@@ -44,6 +49,7 @@ public:
   }
 
 private:
+  void specificEffect(Engine* const engine);
 };
 
 #endif

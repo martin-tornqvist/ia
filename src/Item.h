@@ -78,6 +78,10 @@ public:
     return clrBrown;
   }
 
+  virtual void newTurn(Engine* const engine) {
+    (void)engine;
+  }
+
   int numberOfItems;
 
 protected:

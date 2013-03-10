@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "PopulateMonsters.h"
 #include "Input.h"
+#include "Inventory.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(turn_));
@@ -189,6 +190,20 @@ void GameTime::runNewTurnEvents() {
           }
         }
       }
+    }
+  }
+
+  //Run new turn events on all player items
+  Inventory* playerInv = eng->player->getInventory();
+  vector<Item*>* playerBackpack = playerInv->getGeneral();
+  for(unsigned int i = 0; i < playerBackpack->size(); i++) {
+    playerBackpack->at(i)->newTurn(eng);
+  }
+  vector<InventorySlot>* playerSlots = playerInv->getSlots();
+  for(unsigned int i = 0; i < playerSlots->size(); i++) {
+    Item* const item = playerSlots->at(i).item;
+    if(item != NULL) {
+      item->newTurn(eng);
     }
   }
 

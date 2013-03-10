@@ -14,6 +14,9 @@
 #include "PlayerBonuses.h"
 #include "Marker.h"
 
+
+const int BLAST_ANIMATION_DELAY_FACTOR = 3;
+
 Scroll::~Scroll() {
 
 }
@@ -143,7 +146,8 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(const bool FROM_MEMORY, En
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    drawEffectAnimationsIfPlayerVisionAt(actorPositions, clrMagenta, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrMagenta,
+        BLAST_ANIMATION_DELAY_FACTOR, engine);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       StatusEffect* const effect = getStatusEffect(engine);
@@ -240,7 +244,8 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    drawEffectAnimationsIfPlayerVisionAt(actorPositions, clrRedLight, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrRedLight,
+        BLAST_ANIMATION_DELAY_FACTOR, engine);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
@@ -254,7 +259,8 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
 }
 
 void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
-  drawEffectAnimationsIfPlayerVisionAt(vector<coord>(1, pos), clrRedLight, engine);
+  engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(vector<coord>(1, pos), clrRedLight,
+      BLAST_ANIMATION_DELAY_FACTOR, engine);
 }
 
 //void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -434,25 +440,6 @@ void Scroll::failedToLearnRealName(Engine* const engine, const string overrideFa
     } else {
       engine->log->addMessage("Was that supposed to do something?");
     }
-  }
-}
-
-void Scroll::drawEffectAnimationsIfPlayerVisionAt(const vector<coord>& positions, const sf::Color& clr, Engine* const engine) {
-  const int DELAY = engine->config->DELAY_EXPLOSION * 3;
-//  const int DELAY_HALF = engine->config->DELAY_EXPLOSION / 2;
-
-  vector<coord> positionsWithVision;
-  for(unsigned int i = 0; i < positions.size(); i++) {
-    const coord& pos = positions.at(i);
-    if(engine->map->playerVision[pos.x][pos.y]) {
-      positionsWithVision.push_back(pos);
-    }
-  }
-
-  if(engine->config->USE_TILE_SET) {
-    engine->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
-  } else {
-
   }
 }
 
