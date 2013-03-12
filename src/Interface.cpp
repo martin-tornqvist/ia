@@ -37,8 +37,10 @@ void Interface::drawLocationInfo() {
       }
     }
 
-    if(eng->map->darkness[playerPos.x][playerPos.y]) {
-      str += "It is dark here. ";
+    const bool IS_DARK_AT_PLAYER = eng->map->darkness[playerPos.x][playerPos.y];
+    const bool IS_LIGHT_AT_PLAYER = eng->map->light[playerPos.x][playerPos.y];
+    if(IS_DARK_AT_PLAYER) {
+      str += IS_LIGHT_AT_PLAYER ? "The darkness is lit up. " : "It is dark here. ";
     }
 
     if(str != "") {
