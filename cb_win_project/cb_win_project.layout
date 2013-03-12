@@ -28,8 +28,8 @@
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="9">
 		<Cursor position="2211" topLine="87" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="1" top="1" tabpos="0">
-		<Cursor position="2352" topLine="51" />
+	<File name="..\src\ActorData.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="2421" topLine="51" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="4">
 		<Cursor position="188" topLine="5" />
@@ -184,11 +184,11 @@
 	<File name="..\src\FeatureTrap.h" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="219" />
 	</File>
-	<File name="..\src\FeatureVariousExaminable.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="439" topLine="0" />
+	<File name="..\src\FeatureVariousExaminable.cpp" open="1" top="1" tabpos="4">
+		<Cursor position="984" topLine="0" />
 	</File>
-	<File name="..\src\FeatureVariousExaminable.h" open="0" top="0" tabpos="5">
-		<Cursor position="195" topLine="0" />
+	<File name="..\src\FeatureVariousExaminable.h" open="1" top="0" tabpos="3">
+		<Cursor position="249" topLine="0" />
 	</File>
 	<File name="..\src\FeatureWall.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="1949" topLine="59" />
@@ -433,8 +433,8 @@
 	<File name="..\src\Reload.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Render.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="9628" topLine="285" />
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="26384" topLine="750" />
 	</File>
 	<File name="..\src\Render.h" open="0" top="0" tabpos="6">
 		<Cursor position="3750" topLine="79" />

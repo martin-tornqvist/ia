@@ -10,7 +10,7 @@ public:
 
   void examine();
 
-  sf::Color getColorBg() const;
+//  sf::Color getColorBg() const;
 
   bool isExaminableFurther() const {
     return isExaminableFurther_;

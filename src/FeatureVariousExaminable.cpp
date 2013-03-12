@@ -11,9 +11,9 @@ FeatureExaminable::FeatureExaminable(Feature_t id, coord pos, Engine* engine) :
 
 }
 
-sf::Color FeatureExaminable::getColorBg() const {
-  return isExaminableFurther_ ? clrBlue : clrBlack;
-}
+//sf::Color FeatureExaminable::getColorBg() const {
+//  return isExaminableFurther_ ? clrBlue : clrBlack;
+//}
 
 void FeatureExaminable::examine() {
   tracer << "FeatureExaminable::examine()..." << endl;
