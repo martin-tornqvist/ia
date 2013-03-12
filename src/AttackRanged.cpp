@@ -301,7 +301,7 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
       shotgun(attacker->pos, coord(attackX, attackY), weapon);
 
       const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
-      if(soundMessage != "") {
+      if(IS_ATTACKER_PLAYER || soundMessage != "") {
         const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
         eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
       }
@@ -323,7 +323,7 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
       projectileFire(attacker->pos, coord(attackX, attackY), weapon, nrOfProjectiles);
 
       const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
-      if(soundMessage != "") {
+      if(IS_ATTACKER_PLAYER || soundMessage != "") {
         const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
         eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
       }

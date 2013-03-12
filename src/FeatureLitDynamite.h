@@ -31,9 +31,9 @@ public:
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  static int getLightRadius() {
-    return FOV_STANDARD_RADI_INT;
-  }
+//  static int getLightRadius() {
+//    return FOV_STANDARD_RADI_INT;
+//  }
 
 private:
   friend class FeatureFactory;

@@ -127,7 +127,7 @@ void StatusBurning::doDamage(Engine* const engine) {
 }
 
 void StatusBurning::newTurn(Engine* const engine) {
-  owningActor->addLight(owningActor->eng->map->light);
+//  owningActor->addLight(owningActor->eng->map->light);
   doDamage(engine);
   turnsLeft--;
 }

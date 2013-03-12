@@ -32,7 +32,7 @@
 1357142943 c:\dev\ia\src\colors.h
 	<SFML/Graphics/Color.hpp>
 
-1362689903 c:\dev\ia\src\art.h
+1362999855 c:\dev\ia\src\art.h
 
 1362221206 c:\dev\ia\src\actor.h
 	<string>
@@ -45,7 +45,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1362517514 c:\dev\ia\src\actordata.h
+1362999855 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1362694490 c:\dev\ia\src\itemdefinition.h
+1363042688 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -133,7 +133,7 @@
 	"Actor.h"
 	"ConstTypes.h"
 
-1362524381 c:\dev\ia\src\playerbonuses.h
+1362999855 c:\dev\ia\src\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -163,12 +163,12 @@
 	"Engine.h"
 	"Item.h"
 
-1362695391 c:\dev\ia\src\item.h
+1362999855 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
 
-1355674112 c:\dev\ia\src\gametime.h
+1363118939 c:\dev\ia\src\gametime.h
 	<vector>
 	<stdexcept>
 	"Feature.h"
@@ -184,7 +184,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1361478125 c:\dev\ia\src\actormonster.h
+1362999855 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -210,7 +210,7 @@
 	"Config.h"
 	"Render.h"
 
-1361821300 c:\dev\ia\src\render.h
+1362999855 c:\dev\ia\src\render.h
 	"SFML/Graphics/RenderWindow.hpp"
 	"SFML/Graphics/Texture.hpp"
 	"SFML/Graphics/Sprite.hpp"
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1362608273 source:c:\dev\ia\src\actordata.cpp
+1363114965 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -360,7 +360,7 @@
 	"Item.h"
 	"Engine.h"
 
-1355674112 source:c:\dev\ia\src\actorfactory.cpp
+1362999855 source:c:\dev\ia\src\actorfactory.cpp
 	"ActorFactory.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1362695203 source:c:\dev\ia\src\actorplayer.cpp
+1363119106 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -460,6 +460,7 @@
 	"ActorFactory.h"
 	"PlayerBonuses.h"
 	"FeatureLitDynamite.h"
+	"ItemDevice.h"
 
 1355674113 c:\dev\ia\src\playercreatecharacter.h
 	<string>
@@ -507,11 +508,11 @@
 	"ActorFactory.h"
 	"Blood.h"
 
-1362689930 source:c:\dev\ia\src\art.cpp
+1362999855 source:c:\dev\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
-1355674112 source:c:\dev\ia\src\attack.cpp
+1362999855 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -523,6 +524,7 @@
 	"Map.h"
 	"Log.h"
 	"FeatureTrap.h"
+	"PlayerBonuses.h"
 
 1362520524 source:c:\dev\ia\src\attackmelee.cpp
 	"Attack.h"
@@ -538,7 +540,7 @@
 1355674113 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1362520484 source:c:\dev\ia\src\attackranged.cpp
+1363116569 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -728,7 +730,7 @@
 	<vector>
 	"ItemData.h"
 
-1361485127 source:c:\dev\ia\src\dungeonmaster.cpp
+1362999855 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -855,7 +857,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1362693803 c:\dev\ia\src\itemscroll.h
+1362999855 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -951,7 +953,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1359622536 source:c:\dev\ia\src\featuredoor.cpp
+1363118781 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -979,7 +981,7 @@
 	"FeatureGrave.h"
 	"FeatureWall.h"
 
-1355674112 c:\dev\ia\src\featurelitdynamite.h
+1363043480 c:\dev\ia\src\featurelitdynamite.h
 	"Feature.h"
 	"FeatureFactory.h"
 
@@ -987,7 +989,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1355674112 source:c:\dev\ia\src\featurelitdynamite.cpp
+1363043585 source:c:\dev\ia\src\featurelitdynamite.cpp
 	"FeatureLitDynamite.h"
 	"Engine.h"
 	"Explosion.h"
@@ -1036,7 +1038,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1362511289 source:c:\dev\ia\src\gametime.cpp
+1363119106 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1047,6 +1049,7 @@
 	"Map.h"
 	"PopulateMonsters.h"
 	"Input.h"
+	"Inventory.h"
 
 1360601225 source:c:\dev\ia\src\highscore.cpp
 	"Highscore.h"
@@ -1159,7 +1162,7 @@
 	"Engine.h"
 	"Log.h"
 
-1362695761 source:c:\dev\ia\src\itemdata.cpp
+1363116145 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1190,7 +1193,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1362694736 source:c:\dev\ia\src\itemfactory.cpp
+1363042870 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1215,7 +1218,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1362600850 source:c:\dev\ia\src\itemscroll.cpp
+1362999855 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1330,7 +1333,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1362525374 source:c:\dev\ia\src\mapbuildbsp.cpp
+1362999855 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -1466,7 +1469,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1362608575 source:c:\dev\ia\src\playerbonuses.cpp
+1362999855 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1553,7 +1556,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1362256035 source:c:\dev\ia\src\render.cpp
+1362999855 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1572,7 +1575,7 @@
 	"FeatureWall.h"
 	"FeatureDoor.h"
 
-1362695814 source:c:\dev\ia\src\renderinventory.cpp
+1363117735 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1630,7 +1633,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1362522284 source:c:\dev\ia\src\statuseffects.cpp
+1363116053 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1647,7 +1650,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1355674113 source:c:\dev\ia\src\thrower.cpp
+1363119470 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -1671,7 +1674,7 @@
 	"TrimTravelVector.h"
 	"Engine.h"
 
-1355674112 source:c:\dev\ia\src\itemexplosive.cpp
+1363119363 source:c:\dev\ia\src\itemexplosive.cpp
 	"ItemExplosive.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -5665,7 +5668,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1362309042 source:c:\dev\ia\src\actormonsterspecific.cpp
+1362999855 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -10051,7 +10054,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1362609079 source:c:\dev\ia\src\populatemonsters.cpp
+1362999855 source:c:\dev\ia\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"
@@ -10067,10 +10070,15 @@
 	"PopulateTraps.h"
 	"Engine.h"
 
-1362693957 source:c:\dev\ia\src\itemdevice.cpp
+1363119363 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Render.h"
+	"GameTime.h"
+	"Log.h"
 
-1362695915 c:\dev\ia\src\itemdevice.h
+1363118298 c:\dev\ia\src\itemdevice.h
 	"Item.h"
 
 1362761709 c:\_martin_\ia\src\populatemonsters.h

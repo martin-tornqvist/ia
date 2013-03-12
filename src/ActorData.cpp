@@ -70,7 +70,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   d.hpMax = HP_AFTER_CAP;
 
   //Set weapon abilities from progression formula
-  const int ATTACK_BASE = 15;
+  const int ATTACK_BASE = 14;
   const double ATTACK_INCR = 10.0;
   const int ATTACK_CAP = 40;
 
@@ -90,7 +90,7 @@ void ActorData::defineAllActors() {
   d.name_the = "Player";
   d.moveType = moveType_walk;
   d.devName = actor_player;
-  d.hpMax = 16;
+  d.hpMax = 14;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
@@ -621,7 +621,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_spider;
   d.spawnMinLevel = 2;
   d.spawnMaxLevel = 7;
-  d.monsterLvl = 2;
+  d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -653,7 +653,7 @@ void ActorData::defineAllActors() {
   d.tile = tile_spider;
   d.spawnMinLevel = 2;
   d.spawnMaxLevel = 10;
-  d.monsterLvl = 2;
+  d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;

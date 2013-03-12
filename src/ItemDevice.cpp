@@ -3,6 +3,8 @@
 #include "Engine.h"
 #include "ActorPlayer.h"
 #include "Render.h"
+#include "GameTime.h"
+#include "Log.h"
 
 //---------------------------------------------------- BASE CLASS
 bool Device::toggle(Engine* const engine) {
@@ -13,6 +15,10 @@ bool Device::toggle(Engine* const engine) {
     isActivated_ = true;
     nrTurnsToNextEffect_ = getRandomNrTurnsToNextEffect(engine);
   }
+  string str = "Device ";
+  str += isActivated_ ? "activates" : "deactivates";
+  engine->log->addMessage(str);
+  specificToggle(engine);
   return false;
 }
 
@@ -49,3 +55,20 @@ void DeviceSentry::specificEffect(Engine* const engine) {
     actor->hit(DMG, damageType_electric);
   }
 }
+
+//---------------------------------------------------- ELECTRIC LANTERN
+void DeviceElectricLantern::specificEffect(Engine* const engine) {
+  (void)engine;
+}
+
+void DeviceElectricLantern::specificToggle(Engine* const engine) {
+  engine->gameTime->updateLightMap();
+  engine->player->FOVupdate();
+  engine->renderer->drawMapAndInterface();
+}
+
+bool DeviceElectricLantern::isGivingLight() const {
+  return isActivated_;
+}
+
+

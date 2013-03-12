@@ -22,6 +22,7 @@
 #include "ActorFactory.h"
 #include "PlayerBonuses.h"
 #include "FeatureLitDynamite.h"
+#include "ItemDevice.h"
 
 Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -102,8 +103,8 @@ void Player::actorSpecific_spawnStartItems() {
 
   inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
 
-  item = eng->itemFactory->spawnItem(item_deviceSentry);
-  inventory_->putItemInGeneral(item);
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
@@ -1116,28 +1117,37 @@ void Player::kick(Actor& actorToKick) {
 }
 
 void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-  if(flareFuseTurns > 0) {
+
+  bool isUsingLightGivingItem = flareFuseTurns > 0;
+
+  if(isUsingLightGivingItem == false) {
+    for(unsigned int i = 0; i < inventory_->getGeneral()->size(); i++) {
+      Item* const item = inventory_->getGeneral()->at(i);
+      if(item->getDef().devName == item_deviceElectricLantern) {
+        DeviceElectricLantern* const lantern = dynamic_cast<DeviceElectricLantern*>(item);
+        isUsingLightGivingItem = lantern->isGivingLight();
+        break;
+      }
+    }
+  }
+
+  if(isUsingLightGivingItem) {
     bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
     eng->basicUtils->resetBoolArray(myLight, false);
-    const int RADI = LitFlare::getLightRadius();
-    int x0 = pos.x - RADI;
-    int y0 = pos.y - RADI;
-    int x1 = pos.x + RADI;
-    int y1 = pos.y + RADI;
-    x0 = max(0, x0);
-    y0 = max(0, y0);
-    x1 = min(MAP_X_CELLS - 1, x1);
-    y1 = min(MAP_Y_CELLS - 1, y1);
+    const int RADI = FOV_STANDARD_RADI_INT; //LitFlare::getLightRadius();
+    coord x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
+    coord x1y1(min(MAP_X_CELLS - 1, pos.x + RADI), min(MAP_Y_CELLS - 1, pos.y + RADI));
+
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-    for(int y = y0; y <= y1; y++) {
-      for(int x = x0; x <= x1; x++) {
+    for(int y = x0y0.y; y <= x1y1.y; y++) {
+      for(int x = x0y0.x; x <= x1y1.x; x++) {
         visionBlockers[x][y] = !eng->map->featuresStatic[x][y]->isVisionPassable();
       }
     }
 
     eng->fov->runFovOnArray(visionBlockers, pos, myLight, false);
-    for(int y = y0; y <= y1; y++) {
-      for(int x = x0; x <= x1; x++) {
+    for(int y = x0y0.y; y <= x1y1.y; y++) {
+      for(int x = x0y0.x; x <= x1y1.x; x++) {
         if(myLight[x][y]) {
           light[x][y] = true;
         }
@@ -1149,7 +1159,7 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
 void Player::FOVupdate() {
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
 
-  addLight(eng->map->light);
+//  addLight(eng->map->light);
 
   for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
     eng->gameTime->getFeatureMobAt(i)->addLight(eng->map->light);

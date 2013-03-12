@@ -312,6 +312,9 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_deviceSentry:
     item = new DeviceSentry(d);
     break;
+  case item_deviceElectricLantern:
+    item = new DeviceElectricLantern(d);
+    break;
 
   default:
     item = new Item(d);

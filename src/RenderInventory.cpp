@@ -29,7 +29,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 2);
 
-  string str = "Select slot to equip/unequip  [shift+select] drop  [space/esc] exit";
+  string str = "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
 
   const int X_POS_ITEM_NAME = X_POS_LEFT + 14;
@@ -95,7 +95,10 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
-  string str = "Backpack  [shift+select] drop  [space/esc] done";
+  const bool HAS_ANY_ITEM = genInvIndexes.empty() == false;
+
+  string str = HAS_ANY_ITEM ? "Browsing backpack. | shift+select to drop" : "I carry no items.";
+  str += " | space/esc to exit";
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
   yPos++;
 
@@ -135,14 +138,27 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
+  const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
+
   string str = "";
   switch(slotToEquip) {
-  case slot_armorBody: str = "Wear which armor?"; break;
-  case slot_missiles: str = "Use which item as missiles?"; break;
-  case slot_wielded: str = "Wield which item?"; break;
-  case slot_wieldedAlt: str = "Use which item as prepared weapon?"; break;
+  case slot_armorBody:
+    str = IS_ANY_ITEM_AVAILABLE ? "Wear which armor?" : "I carry no armor.";
+    break;
+  case slot_missiles:
+    str = IS_ANY_ITEM_AVAILABLE ? "Use which item as missiles?" : "I carry no weapon to throw." ;
+    break;
+  case slot_wielded:
+    str = IS_ANY_ITEM_AVAILABLE ? "Wield which item?" : "I carry no weapon to wield.";
+    break;
+  case slot_wieldedAlt:
+    str = IS_ANY_ITEM_AVAILABLE ? "Use which item as prepared weapon?" : "I carry no weapon to wield.";
+    break;
   }
-  str += "  [shift+select] drop  [space/esc] cancel";
+  if(IS_ANY_ITEM_AVAILABLE) {
+    str += " | shift+select to drop";
+  }
+  str += " | space/esc to cancel";
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
   yPos++;
 
@@ -194,7 +210,10 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
-  string str = "Use which item?  [shift+select] drop  [space/esc] cancel";
+  const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
+  string str = IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" : "I carry no item to use.";
+  str += " | space/esc to cancel";
+
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
   yPos++;
 

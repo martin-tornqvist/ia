@@ -201,7 +201,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
   case itemDef_device: {
     resetDef(d, itemDef_general);
     d->chanceToIncludeInSpawnList = 60;
-    d->itemWeight = itemWeight_medium;
+    d->itemWeight = itemWeight_light;
     d->isIdentified = true;
     d->glyph = '{';
     d->tile = tile_device2;
@@ -242,23 +242,16 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
   const int ACTOR_LEVEL = owningActor.monsterLvl;
 
   //Set 1dY dmg from formula
-  const int DMG_Y_CAP = 999;
-  const int DMG_Y_BASE = 1;
-  const double DMG_Y_INCR = 0.2;
+  const int DMG_ROLLS_CAP = 10;
+  const int DMG_ROLLS_BASE = 1;
+  const double DMG_ROLLS_INCR = 0.3;
   const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
-  const double DMG_Y_BEFORE_STR = DMG_Y_BASE + static_cast<double>(ACTOR_LEVEL - 1) * DMG_Y_INCR;
-  const int DMG_Y_AFTER_STR = static_cast<int>(ceil(DMG_Y_BEFORE_STR * DMG_STRENGTH_FACTOR));
-  const int DMG_Y_AFTER_CAP = max(1, min(DMG_Y_CAP, DMG_Y_AFTER_STR));
+  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE + static_cast<double>(ACTOR_LEVEL - 1) * DMG_ROLLS_INCR;
+  const int DMG_ROLLS_AFTER_STR = static_cast<int>(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
+  const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
 
-  //Set + dmg from formula
-//  const int DMG_PLUS_CAP = 6;
-//  const double DMG_PLUS_DIV = 2;
-//  const double DMG_PLUS_BUMP = 0.8;
-//  const int DMG_PLUS = static_cast<int>(floor(static_cast<double>(ACTOR_LEVEL - 1) / DMG_PLUS_DIV + DMG_PLUS_BUMP));
-//  const int DMG_PLUS_AFTER_CAP = min(DMG_PLUS_CAP, DMG_PLUS);
-
-  d.meleeDmg = pair<int, int>(1, DMG_Y_AFTER_CAP); //DiceParam(1, DMG_Y_AFTER_CAP, DMG_PLUS_AFTER_CAP);
-  d.rangedDmg = DiceParam(1, DMG_Y_AFTER_CAP, 0); //DiceParam(1, DMG_Y_AFTER_CAP, DMG_PLUS_AFTER_CAP);
+  d.meleeDmg = pair<int, int>(1, DMG_ROLLS_AFTER_CAP);
+  d.rangedDmg = DiceParam(1, DMG_ROLLS_AFTER_CAP, 0);
 }
 
 //------------------------------- LIST OF ITEMS
@@ -1067,6 +1060,12 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry device", "Sentry Devices", "a Sentry Device");
+  d->color = clrRed;
+  itemDefinitions[d->devName] = d;
+
+  d = new ItemDefinition(item_deviceElectricLantern);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
   d->color = clrYellow;
   itemDefinitions[d->devName] = d;
 }

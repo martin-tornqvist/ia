@@ -146,8 +146,10 @@ MaterialType_t Door::getMaterialType() const {
 void Door::bump(Actor* actorBumping) {
   if(isSecret_) {
     if(eng->map->playerVision[pos_.x][pos_.y]) {
+      tracer << "Door: Player bumped into secret door, with vision in cell" << endl;
       eng->log->addMessage("That way is blocked.");
     } else {
+      tracer << "Door: Player bumped into secret door, without vision in cell" << endl;
       eng->log->addMessage("I bump into something.");
     }
     return;

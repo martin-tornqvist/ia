@@ -144,6 +144,7 @@ enum ItemDevNames_t {
   item_potionOfConfusion,
 
   item_deviceSentry,
+  item_deviceElectricLantern,
 
   endOfItemDevNames
 };

@@ -83,8 +83,11 @@ void GameTime::letNextAct() {
       if(currentTurnTypePos_ == endOfTurnType) {
         currentTurnTypePos_ = 0;
       }
+
+      runNewAtomicTurnEvents();
+
       if(currentTurnType != turnType_fast && currentTurnType != turnType_fastest) {
-        runNewTurnEvents();
+        runNewStandardTurnEvents();
       }
     }
 
@@ -124,10 +127,8 @@ void GameTime::letNextAct() {
   }
 }
 
-void GameTime::runNewTurnEvents() {
+void GameTime::runNewStandardTurnEvents() {
   turn_++;
-
-  eng->basicUtils->resetBoolArray(eng->map->light, false);
 
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
@@ -157,18 +158,13 @@ void GameTime::runNewTurnEvents() {
   }
   //Update all timed features
   for(unsigned int i = 0; i < featureMobs_.size(); i++) {
-    featureMobs_.at(i)->addLight(eng->map->light);
     featureMobs_.at(i)->newTurn(); //Note: this may erase the feature
   }
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->featuresStatic[x][y]->addLight(eng->map->light);
       eng->map->featuresStatic[x][y]->newTurn();
     }
-
-    //Add light from player (holding flare for example)
-    eng->player->addLight(eng->map->light);
   }
 
   //Spawn more monsters? (If an unexplored cell is selected, the spawn is aborted)
@@ -208,6 +204,30 @@ void GameTime::runNewTurnEvents() {
   }
 
   eng->soundEmitter->resetNrSoundsHeardByPlayerCurTurn();
+}
+
+void GameTime::runNewAtomicTurnEvents() {
+  updateLightMap();
+}
+
+void GameTime::updateLightMap() {
+  eng->basicUtils->resetBoolArray(eng->map->light, false);
+
+  for(unsigned int i = 0; i < actors_.size(); i++) {
+    actors_.at(i)->addLight(eng->map->light);
+  }
+
+  for(unsigned int i = 0; i < featureMobs_.size(); i++) {
+    featureMobs_.at(i)->addLight(eng->map->light);
+  }
+
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      eng->map->featuresStatic[x][y]->addLight(eng->map->light);
+    }
+  }
+
+  eng->player->addLight(eng->map->light);
 }
 
 Actor* GameTime::getCurrentActor() {

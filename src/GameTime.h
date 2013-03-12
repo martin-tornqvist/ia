@@ -101,12 +101,16 @@ public:
     currentActorVectorPos_ = 0;
   }
 
+  void updateLightMap();
+
 private:
   friend class Renderer;
   friend class Dungeon;
   friend class DungeonFeatureFactory;
 
-  void runNewTurnEvents();
+  void runNewStandardTurnEvents();
+
+  void runNewAtomicTurnEvents();
 
   vector<ActorSpeed_t> turnTypeVector_;
   int currentTurnTypePos_;

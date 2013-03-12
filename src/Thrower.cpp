@@ -47,6 +47,9 @@ void Thrower::playerThrowLitExplosive(const coord aimCell) {
     if(eng->map->featuresStatic[path.back().x][path.back().y]->isBottomless() == false) {
       eng->featureFactory->spawnFeatureAt(feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
     }
+    eng->gameTime->updateLightMap();
+    eng->player->FOVupdate();
+    eng->renderer->drawMapAndInterface();
   } else {
     eng->log->addMessage("I throw a lit Molotov Cocktail.");
     if(eng->map->featuresStatic[path.back().x][path.back().y]->isBottomless() == false) {

@@ -35,6 +35,10 @@ protected:
 
   virtual void specificEffect(Engine* const engine) = 0;
 
+  virtual void specificToggle(Engine* const engine) {
+    (void)engine;
+  }
+
   bool isActivated_;
   int nrTurnsToNextEffect_;
 };
@@ -50,6 +54,23 @@ public:
 
 private:
   void specificEffect(Engine* const engine);
+};
+
+class DeviceElectricLantern: public Device {
+public:
+  DeviceElectricLantern(ItemDefinition* const itemDefinition) :
+    Device(itemDefinition) {
+  }
+
+  ~DeviceElectricLantern() {
+  }
+
+  bool isGivingLight() const;
+
+private:
+  void specificEffect(Engine* const engine);
+
+  void specificToggle(Engine* const engine);
 };
 
 #endif
