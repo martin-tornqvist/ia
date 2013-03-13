@@ -415,7 +415,7 @@ void ActorData::defineAllActors() {
   d.isUnique = true;
   d.canSeeInDarkness = true;
   d.spawnMinLevel = 3;
-  d.monsterLvl = 3;
+  d.monsterLvl = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -619,7 +619,7 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrGreenLight;
   d.tile = tile_spider;
-  d.spawnMinLevel = 2;
+  d.spawnMinLevel = 1;
   d.spawnMaxLevel = 7;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
@@ -651,7 +651,7 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
-  d.spawnMinLevel = 2;
+  d.spawnMinLevel = 1;
   d.spawnMaxLevel = 10;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
@@ -667,10 +667,42 @@ void ActorData::defineAllActors() {
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Black Spider";
-  d.name_the = "The Black Spider";
+  d.name_a = "A Red Spider";
+  d.name_the = "The Red Spider";
   d.moveType = moveType_walk;
-  d.devName = actor_blackSpider;
+  d.devName = actor_redSpider;
+  d.aiBehavior.looks = true;
+  d.aiBehavior.makesRoomForFriend = true;
+  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.pathsToTargetWhenAware = false;
+  d.aiBehavior.movesTowardTargetWhenVision = true;
+  d.aiBehavior.movesTowardLair = true;
+  d.aiBehavior.movesTowardLeader = true;
+  d.speed = actorSpeed_slow;
+  d.rangedCooldownTurns = 0;
+  d.glyph = 's';
+  d.color = clrRedLight;
+  d.tile = tile_spider;
+  d.spawnMinLevel = 2;
+  d.spawnMaxLevel = 7;
+  d.monsterLvl = 2;
+  d.canSeeInDarkness = true;
+  d.groupSize = monsterGroupSize_group;
+  d.nrTurnsAwarePlayer = 5;
+  d.actorSize = actorSize_floor;
+  d.description = "A large red spider.";
+  d.erraticMovement = actorErratic_somewhat;
+  d.isSpider = true;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_spider);
+  setStrengthsFromFormula(d, weak);
+  finalizeDefinition(d);
+  d.reset();
+
+  d.name_a = "A Shadow Spider";
+  d.name_the = "The Shadow Spider";
+  d.moveType = moveType_walk;
+  d.devName = actor_shadowSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;
@@ -683,24 +715,25 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrGray;
   d.tile = tile_spider;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 7;
-  d.monsterLvl = 1;
+  d.spawnMinLevel = 6;
+  d.spawnMaxLevel = 999;
+  d.monsterLvl = 6;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
-  d.description = "A large black spider.";
+  d.description = "A faint shadow of a spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, normal);
+  setStrengthsFromFormula(d, weak);
+  d.abilityValues.setAbilityValue(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Leng-Spider";
-  d.name_the = "The Leng-Spider";
+  d.name_a = "A Leng Spider";
+  d.name_the = "The Leng Spider";
   d.moveType = moveType_walk;
   d.devName = actor_lengSpider;
   d.aiBehavior.looks = true;
@@ -963,7 +996,7 @@ void ActorData::defineAllActors() {
   d.isUnique = true;
   d.canSeeInDarkness = true;
   d.spawnMinLevel = 3;
-  d.monsterLvl = 3;
+  d.monsterLvl = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
   d.description
@@ -1244,9 +1277,9 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_monster);
-  setStrengthsFromFormula(d, weak);
-  d.abilityValues.setAbilityValue(ability_stealth, 80);
   d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, weak);
+  d.abilityValues.setAbilityValue(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 

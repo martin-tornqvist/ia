@@ -27,8 +27,7 @@ enum Trap_t {
 
 class Trap: public FeatureStatic {
 public:
-  ~Trap() {
-  }
+  ~Trap();
 
   void bump(Actor* actorBumping);
   sf::Color getColor() const;
@@ -53,6 +52,10 @@ public:
   coord actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest);
 
   Trap_t getTrapType() const;
+
+  const SpecificTrapBase* getSpecificTrap() const {
+    return specificTrap_;
+  }
 
 protected:
   friend class FeatureFactory;
@@ -285,7 +288,7 @@ public:
 private:
   friend class Trap;
   TrapSpiderWeb(coord pos, Engine* engine) :
-    SpecificTrapBase(pos, trap_spiderWeb, engine) {
+    SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   sf::Color getTrapSpecificColor() const {
@@ -295,7 +298,7 @@ private:
     return "Spider web";
   }
   char getTrapSpecificGlyph() const {
-    return '*';//6;
+    return '*';
   }
   Tile_t getTrapSpecificTile() const {
     return tile_spiderWeb;

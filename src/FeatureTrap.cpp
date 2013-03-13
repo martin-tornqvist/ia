@@ -14,6 +14,7 @@
 #include "Explosion.h"
 #include "Popup.h"
 #include "ActorMonster.h"
+#include "Inventory.h"
 
 Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), isHidden_(true) {
@@ -55,6 +56,11 @@ Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
   }
   assert(specificTrap_ != NULL);
   assert(mimicFeature_ != NULL);
+}
+
+Trap::~Trap() {
+  assert(specificTrap_ != NULL);
+  delete specificTrap_;
 }
 
 void Trap::setSpecificTrapFromId(const Trap_t id) {
@@ -103,7 +109,11 @@ void Trap::triggerOnPurpose(Actor* actorTriggering) {
 }
 
 void Trap::bump(Actor* actorBumping) {
+  tracer << "Trap::Bump()..." << endl;
+
   const ActorDefinition* const d = actorBumping->getDef();
+
+  tracer << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
 
   if(d->moveType == moveType_walk) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
@@ -114,6 +124,7 @@ void Trap::bump(Actor* actorBumping) {
     const string trapName = specificTrap_->getTrapSpecificTitle();
 
     if(IS_PLAYER) {
+      tracer << "Trap: Player bumping" << endl;
       const int CHANCE_TO_AVOID = isHidden_ == true ? 10 : (BASE_CHANCE_TO_AVOID + DODGE_SKILL_VALUE);
       const AbilityRollResult_t result = actorBumping->eng->abilityRoll->roll(CHANCE_TO_AVOID);
 
@@ -128,11 +139,12 @@ void Trap::bump(Actor* actorBumping) {
         reveal(false);
         specificTrap_->trapSpecificTrigger(actorBumping, DODGE_RESULT);
       }
-
     } else {
       if(d->actorSize == actorSize_humanoid) {
+        tracer << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(actorBumping);
         if(monster->playerAwarenessCounter > 0 && monster->isStealth == false) {
+          tracer << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER = actorBumping->eng->player->checkIfSeeActor(*actorBumping, NULL);
 
@@ -156,6 +168,7 @@ void Trap::bump(Actor* actorBumping) {
       }
     }
   }
+  tracer << "Trap::Bump() [DONE]" << endl;
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
@@ -228,6 +241,7 @@ bool Trap::canHaveItem() const {
 }
 
 coord Trap::actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  tracer << "Trap::actorAttemptLeave()" << endl;
   assert(specificTrap_ != NULL);
   return specificTrap_->specificTrapActorAttemptLeave(actor, pos, dest);
 }
@@ -510,10 +524,36 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
   const string actorName = actor->getNameThe();
 
   if(IS_PLAYER) {
-    if(CAN_SEE) {
-      eng->log->addMessage("I find myself entangled in a huge spider web!");
+    tracer << "TrapSpiderWeb: Checking if player has machete" << endl;
+    Inventory* const playerInv = eng->player->getInventory();
+    Item* itemWielded = playerInv->getItemInSlot(slot_wielded);
+    bool hasMachete = false;
+    if(itemWielded != NULL) {
+      hasMachete = itemWielded->getDef().devName == item_machete;
+    }
+    if(hasMachete == false) {
+      Item* itemWieldedAlt = playerInv->getItemInSlot(slot_wieldedAlt);
+      if(itemWieldedAlt != NULL) {
+        hasMachete = itemWieldedAlt->getDef().devName == item_machete;
+      }
+    }
+    if(hasMachete == false) {
+      hasMachete = playerInv->hasItemInGeneral(item_machete);
+    }
+
+    if(hasMachete) {
+      eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
+      if(CAN_SEE) {
+        eng->log->addMessage("I cut down a spider web with my machete");
+      } else {
+        eng->log->addMessage("I cut down a sticky mass of threads with my machete!");
+      }
     } else {
-      eng->log->addMessage("I am entangled by a sticky mass of threads!");
+      if(CAN_SEE) {
+        eng->log->addMessage("I am entangled in a spider web!");
+      } else {
+        eng->log->addMessage("I am entangled by a sticky mass of threads!");
+      }
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
@@ -523,17 +563,22 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
 }
 
 coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  tracer << "TrapSpiderWeb: specificTrapActorAttemptLeave()" << endl;
+
   if(isHoldingActor) {
+    tracer << "TrapSpiderWeb: Is holding actor" << endl;
 
     const bool IS_PLAYER = actor == eng->player;
     const bool PLAYER_CAN_SEE = eng->player->getStatusEffectsHandler()->allowSee();
     const bool PLAYER_CAN_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
     const string actorName = actor->getNameThe();
 
+    tracer << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
+
     const int ABILITY_VALUE = max(30, actor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *actor));
 
-    const AbilityRollResult_t rollResult = eng->abilityRoll->roll(ABILITY_VALUE);
-    if(rollResult >= successSmall) {
+    if(eng->abilityRoll->roll(ABILITY_VALUE) >= successSmall) {
+      tracer << "TrapSpiderWeb: Actor succeeded to break free" << endl;
 
       isHoldingActor = false;
 
@@ -546,6 +591,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
       }
 
       if(eng->dice(1, 100) <= 50) {
+        tracer << "TrapSpiderWeb: Web is destroyed" << endl;
 
         if((IS_PLAYER && PLAYER_CAN_SEE) || (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
           eng->log->addMessage("The web is destroyed.");
@@ -553,7 +599,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
 
         eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       }
-      return dest;
+      return pos;
     } else {
       if(IS_PLAYER) {
         eng->log->addMessage("I struggle to break free.");
@@ -564,6 +610,8 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
       }
       return pos;
     }
+  } else {
+    tracer << "TrapSpiderWeb: Not holding actor" << endl;
   }
   return dest;
 }

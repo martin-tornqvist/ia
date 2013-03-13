@@ -25,6 +25,9 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
   tracer << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
   eng->populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
 
+tracer << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
+  eng->populateTraps->populateRoomAndCorridorLevel(themeMap, rooms);
+
   tracer << "RoomThemeMaker::run() [DONE]" << endl;
 }
 

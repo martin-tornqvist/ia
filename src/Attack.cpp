@@ -106,11 +106,12 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     data.dmg = max(0, data.dmgRoll + data.dmgPlus);
   }
 
+  data.isWeakAttack = false;
   data.isBackStab = false;
 
   if(IS_MELEE) {
-    // Check if defender is in a bad situation (stuck, blind, fainted, confused...)
-    // If so, give hit chance bonus to attacker
+    //Check if defender is in a bad situation (stuck, blind, fainted, confused...)
+    //If so, give hit chance bonus to attacker
     bool isDefenderAware = true;
     if(data.attacker == eng->player) {
       isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
@@ -123,7 +124,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     if(f->getId() == feature_trap) {
       const Trap* const t = dynamic_cast<const Trap*>(f);
       if(t->getTrapType() == trap_spiderWeb) {
-        const TrapSpiderWeb* const web = dynamic_cast<const TrapSpiderWeb*>(t);
+        const TrapSpiderWeb* const web = dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
         if(web->isHolding()) {
           isDefenderHeldByWeb = true;
         }
@@ -139,14 +140,23 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
       data.totalSkill += 20;
     }
 
-    // Rolling attack result again after "situation" modifiers
+    //Rolling attack result again after "situation" modifiers
     data.attackResult = eng->abilityRoll->roll(data.totalSkill);
 
-    // Backstab damage bonus against unaware defender?
-    if(isDefenderAware == false) {
-      data.dmgRoll = data.dmgRolls * data.dmgSides;
-      data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
-      data.isBackStab = true;
+    //Weak attack (due to status effect "weak")?
+    if(data.attacker->getStatusEffectsHandler()->hasEffect(statusWeak)) {
+      data.dmgRoll = data.dmgRolls;
+      data.dmg = data.dmgRoll + data.dmgPlus;
+      data.isWeakAttack = true;
+    }
+
+    //Backstab damage bonus against unaware defender?
+    if(data.isWeakAttack == false) {
+      if(isDefenderAware == false) {
+        data.dmgRoll = data.dmgRolls * data.dmgSides;
+        data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
+        data.isBackStab = true;
+      }
     }
   }
 
@@ -314,11 +324,12 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
           }
 
           if(data.isIntrinsic) {
-            eng->log->addMessage("I " + wpnVerb + " " + otherName + data.dmgDescript, clrMessageGood);
+            const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly " : "";
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + data.dmgDescript, clrMessageGood);
           } else {
-            const string BONUS_STR = data.isBackStab ? "covertly " : "";
+            const string ATTACK_MOD_TEXT = data.isWeakAttack ? "feebly " : (data.isBackStab ? "covertly " : "");
             const sf::Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
-            eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + BONUS_STR + "with " + data.weaponName_a + data.dmgDescript, clr);
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " + data.weaponName_a + data.dmgDescript, clr);
           }
         } else {
           const string wpnVerb = weapon->getDef().meleeAttackMessages.other;

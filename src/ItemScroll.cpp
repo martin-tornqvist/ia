@@ -86,7 +86,7 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-  const int RADI = 5;
+  const int RADI = 4;
   const int x0 = max(0, engine->player->pos.x - RADI);
   const int y0 = max(0, engine->player->pos.y - RADI);
   const int x1 = min(MAP_X_CELLS - 1, engine->player->pos.x + RADI);
@@ -103,7 +103,7 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
               engine->actorFactory->spawnActor(actor_whiteSpider, coord(x, y));
             }
           } else {
-            engine->actorFactory->spawnActor(actor_blackSpider, coord(x, y));
+            engine->actorFactory->spawnActor(actor_redSpider, coord(x, y));
           }
         } else {
           engine->actorFactory->spawnActor(actor_rat, coord(x, y));

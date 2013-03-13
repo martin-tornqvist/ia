@@ -25,7 +25,7 @@ enum PlayerBonuses_t {
 //playerBonus_courageous,
   playerBonus_curer,
 //playerBonus_deadlyThrower,
-  playerBonus_elusive,
+//  playerBonus_elusive,
   playerBonus_erudite,
   playerBonus_healthy,
   playerBonus_imperceptible,

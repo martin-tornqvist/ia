@@ -14,28 +14,33 @@
 void PlayerAllocBonus::run() {
   const vector<PlayerBonuses_t> bonusesToChooseFrom = eng->playerBonusHandler->getBonusChoices();
 
-  MenuBrowser browser(bonusesToChooseFrom.size(), 0);
-  draw(bonusesToChooseFrom, browser);
+  if(bonusesToChooseFrom.empty() == false) {
+    MenuBrowser browser(bonusesToChooseFrom.size(), 0);
+    draw(bonusesToChooseFrom, browser);
 
-  while(true) {
-    const MenuAction_t action = eng->menuInputHandler->getAction(browser);
-    switch(action) {
-    case menuAction_browsed: {
-      draw(bonusesToChooseFrom, browser);
-    } break;
+    while(true) {
+      const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+      switch(action) {
+      case menuAction_browsed: {
+        draw(bonusesToChooseFrom, browser);
+      }
+      break;
 
-    case menuAction_canceled: {
-    } break;
+      case menuAction_canceled: {
+      } break;
 
-    case menuAction_selected: {
-      eng->playerBonusHandler->pickBonus(bonusesToChooseFrom.at(browser.getPos().y));
-      eng->log->drawLog();
-      eng->renderer->drawMapAndInterface();
-      return;
-    } break;
+      case menuAction_selected: {
+        eng->playerBonusHandler->pickBonus(bonusesToChooseFrom.at(browser.getPos().y));
+        eng->log->drawLog();
+        eng->renderer->drawMapAndInterface();
+        return;
+      }
+      break;
 
-    case menuAction_selectedWithShift: {} break;
+      case menuAction_selectedWithShift:
+      {} break;
 
+      }
     }
   }
 }

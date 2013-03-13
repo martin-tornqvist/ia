@@ -159,22 +159,32 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
-class BlackSpider: public Spider {
-public:
-  BlackSpider() :
-    Spider() {
-  }
-  ~BlackSpider() {
-  }
-  void actorSpecific_spawnStartItems();
-};
-
 class WhiteSpider: public Spider {
 public:
   WhiteSpider() :
     Spider() {
   }
   ~WhiteSpider() {
+  }
+  void actorSpecific_spawnStartItems();
+};
+
+class RedSpider: public Spider {
+public:
+  RedSpider() :
+    Spider() {
+  }
+  ~RedSpider() {
+  }
+  void actorSpecific_spawnStartItems();
+};
+
+class ShadowSpider: public Spider {
+public:
+  ShadowSpider() :
+    Spider() {
+  }
+  ~ShadowSpider() {
   }
   void actorSpecific_spawnStartItems();
 };
@@ -524,7 +534,7 @@ public:
 class WormMass: public Monster {
 public:
   WormMass() :
-    Monster(), chanceToSpawnNew(35) {
+    Monster(), chanceToSpawnNew(25) {
   }
   ~WormMass() {
   }
@@ -537,7 +547,7 @@ private:
 class GiantLocust: public Monster {
 public:
   GiantLocust() :
-    Monster(), chanceToSpawnNew(35) {
+    Monster(), chanceToSpawnNew(25) {
   }
   ~GiantLocust() {
   }

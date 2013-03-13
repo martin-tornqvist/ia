@@ -218,11 +218,11 @@ void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord
   }
   break;
   case monsterGroupSize_horde: {
-    maxNrInGroup = eng->dice.getInRange(7, 10);
+    maxNrInGroup = eng->dice.getInRange(6, 7);
   }
   break;
   case monsterGroupSize_swarm: {
-    maxNrInGroup = eng->dice.getInRange(14, 18);
+    maxNrInGroup = eng->dice.getInRange(12, 15);
   }
   break;
   default:

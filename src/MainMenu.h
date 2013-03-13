@@ -11,7 +11,7 @@ public:
 	MainMenu(Engine* engine) {
 		eng = engine;
 	}
-	GameEntry_t run(bool *quit);
+	GameEntry_t run(bool& quit);
 
 private:
 	Engine* eng;

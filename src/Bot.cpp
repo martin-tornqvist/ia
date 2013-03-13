@@ -184,6 +184,7 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
 
   assert(key >= '1' && key <= '9');
 
+  tracer << "Bot: Sending walk keypress" << endl;
   eng->input->handleKeyPress(KeyboardReadReturnData(key));
 
   tracer << "Bot::walkToAdjacentCell() [DONE]" << endl;

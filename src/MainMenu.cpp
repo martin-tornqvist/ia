@@ -87,7 +87,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   xPos = MAP_X_CELLS / 2;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("DEBUG MODE", renderArea_screen, 1, 1, clrYellow);
+    eng->renderer->drawText("## DEBUG MODE ##", renderArea_screen, 1, 1, clrYellow);
   }
 
   yPos += 3;
@@ -110,6 +110,11 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
   yPos += 1;
 
+  if(IS_DEBUG_MODE) {
+    eng->renderer->drawTextCentered("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
+    yPos += 1;
+  }
+
   eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
   eng->renderer->updateWindow();
@@ -117,10 +122,10 @@ void MainMenu::draw(const MenuBrowser& browser) {
   tracer << "MainMenu::draw() [DONE]" << endl;
 }
 
-GameEntry_t MainMenu::run(bool* quit) {
+GameEntry_t MainMenu::run(bool& quit) {
   tracer << "MainMenu::run()" << endl;
 
-  MenuBrowser browser(6, 0);
+  MenuBrowser browser(IS_DEBUG_MODE ? 7 : 6, 0);
 
   const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();
 
@@ -167,7 +172,13 @@ GameEntry_t MainMenu::run(bool* quit) {
       }
       if(browser.isPosAtKey('f')) {
         proceed = true;
-        *quit = true;
+        quit = true;
+      }
+      if(IS_DEBUG_MODE) {
+        if(browser.isPosAtKey('g')) {
+          proceed = true;
+          eng->config->BOT_PLAYING = true;
+        }
       }
     }
     break;

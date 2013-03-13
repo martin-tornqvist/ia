@@ -243,6 +243,9 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
   case statusTerrified:
     return new StatusTerrified(TURNS_LEFT);
     break;
+  case statusWeak:
+    return new StatusWeak(TURNS_LEFT);
+    break;
   case statusConfused:
     return new StatusConfused(TURNS_LEFT);
     break;
@@ -276,9 +279,9 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
   case statusStill:
     return new StatusStill(TURNS_LEFT);
     break;
-  case statusElusive:
-    return new StatusElusive(TURNS_LEFT);
-    break;
+//  case statusElusive:
+//    return new StatusElusive(TURNS_LEFT);
+//    break;
   case statusDisabledAttack:
     return new StatusDisabledAttack(TURNS_LEFT);
     break;

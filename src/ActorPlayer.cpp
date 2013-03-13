@@ -963,6 +963,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     if(dest != pos) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
+        tracer << "Player: Standing on trap, check if trap affects leaving the cell" << endl;
         dest = dynamic_cast<Trap*>(f)->actorAttemptLeave(this, pos, dest);
       }
     }
@@ -1030,9 +1031,9 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         pos = dest;
 
         // Player bonus gives dodge chance when moving?
-        if(eng->playerBonusHandler->isBonusPicked(playerBonus_elusive)) {
-          statusEffectsHandler_->attemptAddEffect(new StatusElusive(eng), true, true);
-        }
+//        if(eng->playerBonusHandler->isBonusPicked(playerBonus_elusive)) {
+//          statusEffectsHandler_->attemptAddEffect(new StatusElusive(eng), true, true);
+//        }
 
         // Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];

@@ -27,6 +27,7 @@ enum StatusEffects_t {
   statusSlowed,
   statusDiseased,
   statusFainted,
+  statusWeak,
   statusPerfectReflexes,
   statusPerfectAim,
   statusPerfectStealth,
@@ -42,7 +43,7 @@ enum StatusEffects_t {
   statusStill,
 
   //Status for the elusive ability
-  statusElusive,
+//  statusElusive,
 
   //The following are mostly used as AI nerfs
   statusDisabledAttack,
@@ -250,6 +251,88 @@ private:
   }
 };
 
+class StatusWeak: public StatusEffect {
+public:
+  StatusWeak(Engine* const engine) :
+    StatusEffect(statusWeak) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusWeak(const int turns) :
+    StatusEffect(turns, statusWeak) {
+  }
+  ~StatusWeak() {
+  }
+
+  StatusWeak* copy() {
+    StatusWeak* cpy = new StatusWeak(turnsLeft);
+    return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
+  string getInterfaceName() {
+    return "Weak";
+  }
+  string messageWhenStart() {
+    return "I feel weaker!";
+  }
+  string messageWhenStartOther() {
+    return "looks weaker.";
+  }
+  string messageWhenMore() {
+    return "I feel weaker.";
+  }
+  string messageWhenMoreOther() {
+    return "looks weaker!";
+  }
+  string messageWhenEnd() {
+    return "I feel stronger!";
+  }
+  string messageWhenSaves() {
+    return "I resist weakness.";
+  }
+  string messageWhenSavesOther() {
+    return "resists weakness.";
+  }
+  string messageWhenEndOther() {
+    return "looks stronger.";
+  }
+
+  Abilities_t getSaveAbility() {
+    return ability_resistStatusBody;
+  }
+
+  int getAbilityModifier(const Abilities_t ability) {
+    if(ability == ability_resistStatusBody)
+      return -30;
+    return 0;
+  }
+
+  int getSaveAbilityModifier() {
+    return 0;
+  }
+
+  void start(Engine* const engine) {
+    (void)engine;
+  }
+
+  void end(Engine* const engine) {
+    (void)engine;
+  }
+
+  void newTurn(Engine* const engine) {
+    (void)engine;
+    turnsLeft--;
+  }
+
+private:
+  DiceParam getRandomStandardNrTurns() {
+    return DiceParam(0, 0, 250);
+  }
+};
+
 class StatusDiseased: public StatusEffect {
 public:
   StatusDiseased(Engine* const engine) :
@@ -403,86 +486,86 @@ private:
   }
 };
 
-class StatusElusive: public StatusEffect {
-public:
-  StatusElusive(Engine* const engine) :
-    StatusEffect(statusElusive) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusElusive(const int turns) :
-    StatusEffect(turns, statusElusive) {
-  }
-  ~StatusElusive() {
-  }
-
-  StatusElusive* copy() {
-    StatusElusive* cpy = new StatusElusive(turnsLeft);
-    return cpy;
-  }
-
-  bool isConsideredBeneficial() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Moving";
-  }
-  string messageWhenStart() {
-    return "";
-  }
-  string messageWhenMore() {
-    return "";
-  }
-  string messageWhenMoreOther() {
-    return "";
-  }
-  string messageWhenEnd() {
-    return "";
-  }
-  string messageWhenSaves() {
-    return "";
-  }
-  string messageWhenStartOther() {
-    return "";
-  }
-  string messageWhenEndOther() {
-    return "";
-  }
-  string messageWhenSavesOther() {
-    return "";
-  }
-
-  Abilities_t getSaveAbility() {
-    return ability_empty;
-  }
-  int getSaveAbilityModifier() {
-    return -9999;
-  }
-
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodgeAttack)
-      return 25;
-    return 0;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 1);
-  }
-};
+//class StatusElusive: public StatusEffect {
+//public:
+//  StatusElusive(Engine* const engine) :
+//    StatusEffect(statusElusive) {
+//    setTurnsFromRandomStandard(engine);
+//  }
+//  StatusElusive(const int turns) :
+//    StatusEffect(turns, statusElusive) {
+//  }
+//  ~StatusElusive() {
+//  }
+//
+//  StatusElusive* copy() {
+//    StatusElusive* cpy = new StatusElusive(turnsLeft);
+//    return cpy;
+//  }
+//
+//  bool isConsideredBeneficial() {
+//    return true;
+//  }
+//
+//  string getInterfaceName() {
+//    return "Moving";
+//  }
+//  string messageWhenStart() {
+//    return "";
+//  }
+//  string messageWhenMore() {
+//    return "";
+//  }
+//  string messageWhenMoreOther() {
+//    return "";
+//  }
+//  string messageWhenEnd() {
+//    return "";
+//  }
+//  string messageWhenSaves() {
+//    return "";
+//  }
+//  string messageWhenStartOther() {
+//    return "";
+//  }
+//  string messageWhenEndOther() {
+//    return "";
+//  }
+//  string messageWhenSavesOther() {
+//    return "";
+//  }
+//
+//  Abilities_t getSaveAbility() {
+//    return ability_empty;
+//  }
+//  int getSaveAbilityModifier() {
+//    return -9999;
+//  }
+//
+//  void start(Engine* const engine) {
+//    (void)engine;
+//  }
+//
+//  void end(Engine* const engine) {
+//    (void)engine;
+//  }
+//
+//  int getAbilityModifier(const Abilities_t ability) {
+//    if(ability == ability_dodgeAttack)
+//      return 25;
+//    return 0;
+//  }
+//
+//  void newTurn(Engine* const engine) {
+//    (void)engine;
+//    turnsLeft--;
+//  }
+//
+//private:
+//  DiceParam getRandomStandardNrTurns() {
+//    return DiceParam(0, 0, 1);
+//  }
+//};
 
 class StatusBlind: public StatusEffect {
 public:
@@ -1022,7 +1105,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(4, 8, 24);
+    return DiceParam(3, 6, 30);
   }
 };
 

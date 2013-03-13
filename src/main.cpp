@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(&quitGame);
+    const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(quitGame);
 
     if(quitGame == false) {
       quitToMainMenu = false;

@@ -601,7 +601,7 @@ void FeatureData::makeList() {
   d.name_a = "a carved pillar";
   d.name_the = "the carved pillar";
   d.spawnType = featureSpawnType_other;
-  d.glyph = '|';
+  d.glyph = '1';
   d.color = clrGray;
   d.tile = tile_pillarCarved;
   d.isMovePassable[moveType_walk] = false;

@@ -14,7 +14,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_agile, "Agile", "+30% chance to evade attacks and traps");
   setBonus(playerBonus_athletic, "Athletic", "+20% chance to evade attacks and traps", playerBonus_agile);
 //  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
-  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_agile);
+//  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_agile);
 //  setBonus(playerBonus_tumbler, "Tumbler", "Can evade explosions", playerBonus_athletic);
   setBonus(playerBonus_adeptMeleeCombatant, "Adept melee combatant", "+15% hit chance with melee weapons");
   setBonus(playerBonus_masterfulMeleeCombatant, "Masterful melee combatant", "+15% hit chance with melee weapons", playerBonus_adeptMeleeCombatant);
@@ -114,7 +114,9 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
     for(int i = 0; i < NR_OF_CHOICES; i++) {
       if(candidates.empty()) {
         tracer << "[WARNING] Could not choose " << NR_OF_CHOICES << " pickable bonuses, in PlayerBonusHandler::getBonusChoices()" << endl;
-        std::sort(ret.begin(), ret.end());
+        if(ret.empty() == false) {
+          std::sort(ret.begin(), ret.end());
+        }
         return ret;
       }
       const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);

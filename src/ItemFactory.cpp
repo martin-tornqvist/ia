@@ -164,7 +164,10 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_whiteSpiderBite:
     item = new Weapon(d, ammoD);
     break;
-  case item_blackSpiderBite:
+  case item_redSpiderBite:
+    item = new Weapon(d, ammoD);
+    break;
+  case item_shadowSpiderBite:
     item = new Weapon(d, ammoD);
     break;
   case item_lengSpiderBite:

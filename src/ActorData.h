@@ -16,7 +16,7 @@ enum ActorDevNames_t {
   actor_cultist, actor_cultistTeslaCannon, actor_cultistSpikeGun,
   actor_cultistPriest,
   actor_rat, actor_ratThing,
-  actor_greenSpider, actor_whiteSpider, actor_blackSpider, actor_lengSpider,
+  actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider, actor_lengSpider,
   actor_miGo,
   actor_ghoul, actor_shadow,
   actor_fireHound, actor_wolf,

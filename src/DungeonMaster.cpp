@@ -116,7 +116,7 @@ void DungeonMaster::winGame() {
     eng->renderer->updateWindow();
     eng->sleep(DELAY_BETWEEN_LINES);
   }
-  const string CMD_LABEL = "[Space/Esc] Record high-score and return to main menu";
+  const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
   eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
   eng->renderer->updateWindow();
   eng->query->waitForEscOrSpace();

@@ -55,6 +55,8 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * status effects, update timed features, spawn more monsters etc.
  */
 void GameTime::letNextAct() {
+  runNewAtomicTurnEvents();
+
   Actor* currentActor = getCurrentActor();
 
   if(currentActor == eng->player) {
@@ -83,8 +85,6 @@ void GameTime::letNextAct() {
       if(currentTurnTypePos_ == endOfTurnType) {
         currentTurnTypePos_ = 0;
       }
-
-      runNewAtomicTurnEvents();
 
       if(currentTurnType != turnType_fast && currentTurnType != turnType_fastest) {
         runNewStandardTurnEvents();

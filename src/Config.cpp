@@ -146,9 +146,9 @@ void Config::setDefaultVariables() {
   WALL_SYMBOL_FULL_SQUARE = false;
   SKIP_INTRO_LEVEL = false;
   RANGED_WPN_MELEE_PROMPT = true;
-  DELAY_PROJECTILE_DRAW = 20;
+  DELAY_PROJECTILE_DRAW = 30;
   DELAY_SHOTGUN = 120;
-  DELAY_EXPLOSION = 200;
+  DELAY_EXPLOSION = 250;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {

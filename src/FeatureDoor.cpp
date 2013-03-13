@@ -295,9 +295,17 @@ void Door::tryBash(Actor* actorTrying) {
     }
 
     //Various things that can happen...
-    const int BON = eng->playerBonusHandler->isBonusPicked(playerBonus_tough) ? 20 : 0;
-    const int SKILL_VALUE_SMASH = actorTrying == eng->player ? 60 + BON - min(58, nrOfSpikes_ * 20) : 10 - min(9, nrOfSpikes_ * 3);
-    const bool DOOR_SMASHED = material_ == doorMaterial_metal ? false : eng->abilityRoll->roll(SKILL_VALUE_SMASH) >= successSmall;
+    int skillValueBash = 0;
+    bool isBasherWeak = actorTrying->getStatusEffectsHandler()->hasEffect(statusWeak);
+    if(isBasherWeak == false) {
+      if(actorTrying == eng->player) {
+        const int BON = eng->playerBonusHandler->isBonusPicked(playerBonus_tough) ? 20 : 0;
+        skillValueBash = 60 + BON - min(58, nrOfSpikes_ * 20);
+      } else {
+        skillValueBash = 10 - min(9, nrOfSpikes_ * 3);
+      }
+    }
+    const bool DOOR_SMASHED = (material_ == doorMaterial_metal || isBasherWeak) ? false : eng->abilityRoll->roll(skillValueBash) >= successSmall;
 
     if(IS_PLAYER) {
       const int SKILL_VALUE_UNHURT = 75;
@@ -330,7 +338,7 @@ void Door::tryBash(Actor* actorTrying) {
         actorTrying->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(2));
       }
 
-      if(IS_PLAYER && material_ == doorMaterial_metal) {
+      if(IS_PLAYER && (material_ == doorMaterial_metal || isBasherWeak)) {
         eng->log->addMessage("It seems futile.");
       }
     }

@@ -709,10 +709,17 @@ void ItemData::makeList() {
   d->meleeStatusEffect = new StatusParalyzed(3);
   itemDefinitions[d->devName] = d;
 
-  d = new ItemDefinition(item_blackSpiderBite);
+  d = new ItemDefinition(item_redSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_blackSpider], normal);
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_redSpider], normal);
+  d->meleeStatusEffect = new StatusWeak(250);
+  itemDefinitions[d->devName] = d;
+
+  d = new ItemDefinition(item_shadowSpiderBite);
+  resetDef(d, itemDef_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "bites me");
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadowSpider], normal);
   itemDefinitions[d->devName] = d;
 
   d = new ItemDefinition(item_lengSpiderBite);
@@ -878,7 +885,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_armor);
   d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
   d->itemWeight = itemWeight_light;
-  d->color = clrGray;
+  d->color = clrBrown;
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints[damageType_acid] = 1;
   d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;

@@ -25,7 +25,7 @@ struct AttackData {
   AttackData() : aimLevel(actorSize_none) {
   }
 
-  bool isBackStab;
+  bool isBackStab, isWeakAttack;
   string weaponName_a;
   string verbPlayerAttacksMissile;
   string verbOtherAttacksMissile;

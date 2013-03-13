@@ -48,11 +48,14 @@ Actor* ActorFactory::spawnActor(const ActorDevNames_t characterType, const coord
   case actor_greenSpider:
     monster = new GreenSpider;
     break;
-  case actor_blackSpider:
-    monster = new BlackSpider;
+  case actor_redSpider:
+    monster = new RedSpider;
     break;
   case actor_whiteSpider:
     monster = new WhiteSpider;
+    break;
+  case actor_shadowSpider:
+    monster = new ShadowSpider;
     break;
   case actor_lengSpider:
     monster = new LengSpider;

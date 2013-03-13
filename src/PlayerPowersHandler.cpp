@@ -97,7 +97,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     } else {
       eng->log->addMessage("Choose a written power to evoke", clrWhiteHigh);
     }
-    eng->log->addMessage("[a-" + endLetter + "] [Space/esc] Exit", clrWhiteHigh);
+    eng->log->addMessage("[a-" + endLetter + "] | Space/esc to exit", clrWhiteHigh);
   }
 
   const int LIST_HEIGHT = static_cast<int>(endLetter[0] - 'a') + 1;

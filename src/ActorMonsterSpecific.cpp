@@ -22,32 +22,84 @@ using namespace std;
 string Cultist::getCultistPhrase(Engine* const engine) {
   const int rnd = engine->dice.getInRange(1, 25);
   switch(rnd) {
-  case 1: return "Apigami!"; break;
-  case 2: return "Bhuudesco invisuu!"; break;
-  case 3: return "Bhuuesco marana!"; break;
-  case 4: return "Crudux cruo!"; break;
-  case 5: return "Cruento paashaeximus!"; break;
-  case 6: return "Cruento pestis shatruex!"; break;
-  case 7: return "Cruo crunatus durbe!"; break;
-  case 8: return "Cruo lokemundux!"; break;
-  case 9: return "Cruo-stragaraNa!"; break;
-  case 10: return "Gero shay cruo!"; break;
-  case 11: return "In marana domus-bhaava crunatus!"; break;
-  case 12: return "Caecux infirmux!"; break;
-  case 13: return "Malax sayti!"; break;
-  case 14: return "Marana pallex!"; break;
-  case 15: return "Marana malax!"; break;
-  case 16: return "Pallex ti!"; break;
-  case 17: return "Peroshay bibox malax!"; break;
-  case 18: return "Pestis Cruento!"; break;
-  case 19: return "Pestis cruento vilomaxus pretiacruento!"; break;
-  case 20: return "Pretaanluxis cruonit!"; break;
-  case 21: return "Pretiacruento!"; break;
-  case 22: return "StragarNaya!"; break;
-  case 23: return "Vorox esco marana!"; break;
-  case 24: return "Vilomaxus!"; break;
-  case 25: return "Prostragaranar malachtose!"; break;
-  default: return "Apigami!"; break;
+  case 1:
+    return "Apigami!";
+    break;
+  case 2:
+    return "Bhuudesco invisuu!";
+    break;
+  case 3:
+    return "Bhuuesco marana!";
+    break;
+  case 4:
+    return "Crudux cruo!";
+    break;
+  case 5:
+    return "Cruento paashaeximus!";
+    break;
+  case 6:
+    return "Cruento pestis shatruex!";
+    break;
+  case 7:
+    return "Cruo crunatus durbe!";
+    break;
+  case 8:
+    return "Cruo lokemundux!";
+    break;
+  case 9:
+    return "Cruo-stragaraNa!";
+    break;
+  case 10:
+    return "Gero shay cruo!";
+    break;
+  case 11:
+    return "In marana domus-bhaava crunatus!";
+    break;
+  case 12:
+    return "Caecux infirmux!";
+    break;
+  case 13:
+    return "Malax sayti!";
+    break;
+  case 14:
+    return "Marana pallex!";
+    break;
+  case 15:
+    return "Marana malax!";
+    break;
+  case 16:
+    return "Pallex ti!";
+    break;
+  case 17:
+    return "Peroshay bibox malax!";
+    break;
+  case 18:
+    return "Pestis Cruento!";
+    break;
+  case 19:
+    return "Pestis cruento vilomaxus pretiacruento!";
+    break;
+  case 20:
+    return "Pretaanluxis cruonit!";
+    break;
+  case 21:
+    return "Pretiacruento!";
+    break;
+  case 22:
+    return "StragarNaya!";
+    break;
+  case 23:
+    return "Vorox esco marana!";
+    break;
+  case 24:
+    return "Vilomaxus!";
+    break;
+  case 25:
+    return "Prostragaranar malachtose!";
+    break;
+  default:
+    return "Apigami!";
+    break;
   }
   return "Apigami!";
 }
@@ -280,7 +332,7 @@ void MiGo::actorSpecific_spawnStartItems()
 
 void Rat::actorSpecific_spawnStartItems() {
   Item* item = NULL;
-  if(eng->dice(1, 100) < 20) {
+  if(eng->dice(1, 100) < 15) {
     item = eng->itemFactory->spawnItem(item_ratBiteDiseased);
   } else {
     item = eng->itemFactory->spawnItem(item_ratBite);
@@ -401,13 +453,16 @@ void GreenSpider::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_greenSpiderBite));
 }
 
-void BlackSpider::actorSpecific_spawnStartItems() {
-  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_blackSpiderBite));
-}
-
-
 void WhiteSpider::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_whiteSpiderBite));
+}
+
+void RedSpider::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_redSpiderBite));
+}
+
+void ShadowSpider::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_shadowSpiderBite));
 }
 
 void LengSpider::actorSpecific_spawnStartItems() {
@@ -650,7 +705,7 @@ void Zombie::actorSpecificDie() {
 
 void ZombieClaw::actorSpecific_spawnStartItems() {
   Item* item = NULL;
-  if(eng->dice(1, 100) < 30) {
+  if(eng->dice(1, 100) < 20) {
     item = eng->itemFactory->spawnItem(item_zombieClawDiseased);
   } else {
     item = eng->itemFactory->spawnItem(item_zombieClaw);
