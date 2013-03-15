@@ -67,7 +67,7 @@ public:
   }
   void incrInsanity();
   int getInsanity() const {
-    return insanity_ + mythosKnowledge;
+    return min(100, insanity_ + mythosKnowledge);
   }
   void setTempShockFromFeatures();
 

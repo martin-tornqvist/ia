@@ -26,9 +26,9 @@
 		<Cursor position="12448" topLine="385" />
 	</File>
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="10">
-		<Cursor position="2635" topLine="104" />
+		<Cursor position="3109" topLine="90" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="1" top="0" tabpos="1">
+	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="42085" topLine="1143" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="6">
@@ -49,11 +49,11 @@
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="15361" topLine="465" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="981" topLine="43" />
+	<File name="..\src\ActorPlayer.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="9218" topLine="261" />
 	</File>
-	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="9">
-		<Cursor position="756" topLine="21" />
+	<File name="..\src\ActorPlayer.h" open="1" top="0" tabpos="2">
+		<Cursor position="1582" topLine="49" />
 	</File>
 	<File name="..\src\Art.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="6174" topLine="133" />
@@ -109,8 +109,8 @@
 	<File name="..\src\ConstTypes.h" open="0" top="0" tabpos="3">
 		<Cursor position="5866" topLine="255" />
 	</File>
-	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="604" topLine="5" />
+	<File name="..\src\DungeonClimb.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="2172" topLine="39" />
 	</File>
 	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="5020" topLine="89" />
@@ -203,7 +203,7 @@
 		<Cursor position="341" topLine="0" />
 	</File>
 	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="5915" topLine="166" />
+		<Cursor position="1779" topLine="40" />
 	</File>
 	<File name="..\src\GameTime.h" open="0" top="0" tabpos="3">
 		<Cursor position="2338" topLine="86" />
@@ -292,8 +292,8 @@
 	<File name="..\src\ItemPickup.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="958" topLine="15" />
+	<File name="..\src\ItemPotion.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="5579" topLine="151" />
 	</File>
 	<File name="..\src\ItemPotion.h" open="0" top="0" tabpos="0">
 		<Cursor position="1967" topLine="49" />
@@ -430,8 +430,8 @@
 	<File name="..\src\Query.h" open="0" top="0" tabpos="9">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Reload.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="2813" topLine="69" />
+	<File name="..\src\Reload.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="3853" topLine="83" />
 	</File>
 	<File name="..\src\Reload.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
@@ -472,11 +472,11 @@
 	<File name="..\src\Spells.h" open="0" top="0" tabpos="4">
 		<Cursor position="2950" topLine="113" />
 	</File>
-	<File name="..\src\StatusEffects.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="3534" topLine="101" />
+	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="3285" topLine="101" />
 	</File>
-	<File name="..\src\StatusEffects.h" open="1" top="0" tabpos="3">
-		<Cursor position="20003" topLine="930" />
+	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="3">
+		<Cursor position="9096" topLine="382" />
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
