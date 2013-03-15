@@ -184,7 +184,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1363213778 c:\dev\ia\src\actormonster.h
+1363344629 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1363302463 source:c:\dev\ia\src\actordata.cpp
+1363344437 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1363209563 source:c:\dev\ia\src\actorplayer.cpp
+1363337029 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1096,7 +1096,7 @@
 	"Examine.h"
 	"PlayerCreateCharacter.h"
 
-1363121527 source:c:\dev\ia\src\interface.cpp
+1363352076 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
@@ -1163,7 +1163,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363298777 source:c:\dev\ia\src\itemdata.cpp
+1363342987 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -5671,7 +5671,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1363214027 source:c:\dev\ia\src\actormonsterspecific.cpp
+1363344619 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"

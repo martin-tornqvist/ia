@@ -534,7 +534,7 @@ public:
 class WormMass: public Monster {
 public:
   WormMass() :
-    Monster(), chanceToSpawnNew(25) {
+    Monster(), chanceToSpawnNew(12) {
   }
   ~WormMass() {
   }
@@ -547,7 +547,7 @@ private:
 class GiantLocust: public Monster {
 public:
   GiantLocust() :
-    Monster(), chanceToSpawnNew(25) {
+    Monster(), chanceToSpawnNew(6) {
   }
   ~GiantLocust() {
   }

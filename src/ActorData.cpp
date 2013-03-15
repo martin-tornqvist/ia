@@ -56,25 +56,26 @@ void ActorDefinition::reset() {
 
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
   //Set HP from progression formula
-  const int HP_BASE = 3;
-  const int HP_INCR = 1;
-  const int HP_CAP = 999;
+  const double HP_BASE_FL = 3.0;
+  const double HP_INCR_FL = 1.5;
 
-  const int EFFECTIVE_LEVEL_BON_FROM_UNIQUE = d.isUnique ? 4 : 0;
-  const int EFFECTIVE_LEVEL = d.monsterLvl + EFFECTIVE_LEVEL_BON_FROM_UNIQUE;
+  const double EFFECTIVE_LEVEL_FL = static_cast<double>(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
 
-  const int HP_BEFORE_STRENGTH = HP_BASE + HP_INCR * (EFFECTIVE_LEVEL - 1);
+  const double HP_BEFORE_STRENGTH_FL = HP_BASE_FL + (HP_INCR_FL * (EFFECTIVE_LEVEL_FL - 1));
   const double STRENGTH_FACTOR = EntityStrength::getFactor(hpStrength);
-  const int HP_AFTER_STRENGTH = static_cast<int>(ceil(static_cast<double>(HP_BEFORE_STRENGTH) * STRENGTH_FACTOR));
+
+  const int HP_AFTER_STRENGTH = static_cast<int>(HP_BEFORE_STRENGTH_FL * STRENGTH_FACTOR);
+  const int HP_CAP = 999;
   const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
   d.hpMax = HP_AFTER_CAP;
 
   //Set weapon abilities from progression formula
-  const int ATTACK_BASE = 14;
-  const double ATTACK_INCR = 10.0;
-  const int ATTACK_CAP = 40;
+  const double ATTACK_BASE_FL = 14.0;
+  const double ATTACK_INCR_FL = 10.0;
 
-  const int ATTACK = static_cast<int>(ceil(static_cast<double>(ATTACK_BASE) + ATTACK_INCR * static_cast<double>(EFFECTIVE_LEVEL - 1)));
+  const int ATTACK = static_cast<int>(ceil(ATTACK_BASE_FL + ATTACK_INCR_FL * EFFECTIVE_LEVEL_FL - 1));
+
+  const int ATTACK_CAP = 40;
   const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
 
   d.abilityValues.setAbilityValue(ability_accuracyMelee, ATTACK_AFTER_CAP);
@@ -714,15 +715,15 @@ void ActorData::defineAllActors() {
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrGray;
-  d.tile = tile_spider;
+  d.tile = tile_spiderLeng;
   d.spawnMinLevel = 6;
   d.spawnMaxLevel = 999;
   d.monsterLvl = 6;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
-  d.actorSize = actorSize_floor;
-  d.description = "A faint shadow of a spider, lurking in my periphery.";
+  d.actorSize = actorSize_humanoid;
+  d.description = "A faint shadow of a huge spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -845,7 +846,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
   d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_slow;
+  d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrWhite;
@@ -1161,7 +1162,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_locust;
   d.spawnMinLevel = 7;
-  d.monsterLvl = 3;
+  d.monsterLvl = 2;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_swarm;
   d.actorSize = actorSize_floor;

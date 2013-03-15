@@ -62,7 +62,7 @@ void Interface::drawInfoLines() {
   //Name
   str = eng->player->getNameA();
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
-  xPos += 1 + str.length();
+  xPos += str.length() + 1;
 
   //Health
   const string hp = intToString(eng->player->getHp());
@@ -71,27 +71,27 @@ void Interface::drawInfoLines() {
   xPos += 3;
   str = hp + "/" + hpMax;
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
-  xPos += 1 + str.length();
+  xPos += str.length() + 1;
 
   //Sanity
   const int SHOCK = eng->player->getShockTotal();
-  const int INS_LONG = eng->player->getInsanity();
+  const int INS = eng->player->getInsanity();
   eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;
-  str = intToString(INS_LONG) + "%";
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
-  xPos += str.length();
   const sf::Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
-  str = "(" + intToString(SHOCK) + "%)";
+  str = intToString(SHOCK) + "%/";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
-  xPos += 1 + str.length();
+  xPos += str.length();
+  str = intToString(INS) + "%";
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
+  xPos += str.length() + 1;
 
   const int MTH = eng->player->getMythosKnowledge();
   eng->renderer->drawText("MTH:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;
   str = intToString(MTH) + "%";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
-  xPos += 1 + str.length();
+  xPos += str.length() + 1;
 
   //Encumbrance
   eng->renderer->drawText("ENC:", renderArea_characterLines, xPos, yPos, clrGray);
@@ -101,7 +101,7 @@ void Interface::drawInfoLines() {
   const int ENC = static_cast<int>((static_cast<double>(TOTAL_W) / static_cast<double>(MAX_W)) * 100.0);
   str = intToString(ENC) + "%";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLight : clrWhite);
-  xPos += 1 + str.length();
+  xPos += str.length() + 1;
 
   //Wielded weapon
   xPos += 4;
@@ -114,7 +114,7 @@ void Interface::drawInfoLines() {
   } else {
     str = eng->itemData->getItemInterfaceRef(itemWielded, false);
     eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
-    xPos += 1 + str.length();
+    xPos += str.length() + 1;
   }
 
   //Dungeon level

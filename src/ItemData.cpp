@@ -771,7 +771,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_phantasmSickle);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_phantasm], normal);
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_phantasm], strong);
   d->meleeStatusEffect = new StatusTerrified(4);
   itemDefinitions[d->devName] = d;
 

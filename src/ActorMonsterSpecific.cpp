@@ -487,7 +487,7 @@ bool WormMass::actorSpecificAct() {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
               Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
-              chanceToSpawnNew -= 10;
+              chanceToSpawnNew -= 2;
               worm->chanceToSpawnNew = chanceToSpawnNew;
               eng->gameTime->letNextAct();
               return true;
@@ -517,7 +517,7 @@ bool GiantLocust::actorSpecificAct() {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
               Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
-              chanceToSpawnNew -= 10;
+              chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
               eng->gameTime->letNextAct();
               return true;
