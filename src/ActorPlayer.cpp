@@ -250,7 +250,7 @@ void Player::incrShock(const ShockValues_t shockValue) {
   }
 }
 
-void Player::restoreShock() {
+void Player::restoreShock(const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = false;
   for(int i = 0; i < endOfInsanityObsessions; i++) {
@@ -260,7 +260,7 @@ void Player::restoreShock() {
     }
   }
   shock_ = isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION : 0;
-  shockTemp_ = 0;
+  shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
 void Player::incrInsanity() {
@@ -270,7 +270,7 @@ void Player::incrInsanity() {
     insanity_ += 6;
   }
 
-  shock_ = max(0.0, shock_ - 85.0);
+  restoreShock(false);
 
   updateColor();
   eng->renderer->drawMapAndInterface();
