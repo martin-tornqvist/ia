@@ -6,36 +6,8 @@
 #include "Log.h"
 #include "Map.h"
 #include "ActorMonster.h"
-
-//void PotionOfClairvoyance::specificQuaff(Actor* const actor, Engine* const engine) {
-//
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  engine->mapTests->makeVisionBlockerArray(actor->pos, blockers);
-//
-//  if(actor == engine->player) {
-//    engine->log->addMessage("A vision comes to me, the area is revealed.");
-//
-//    for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
-//      for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-//        if(blockers[x][y] == false) {
-//          engine->map->playerVision[x][y] = true;
-//          engine->map->explored[x][y] = true;
-//        }
-//        //TODO reimplement
-//        //				Door* door = engine->map->doors[x][y];
-//        //				if(door != NULL) {
-//        //					if(door->isSecret() == true) {
-//        //						door->reveal(false, engine);
-//        //					}
-//        //				}
-//      }
-//    }
-//
-//    engine->renderer->drawMapAndInterface();
-//
-//    setRealDefinitionNames(engine, false);
-//  }
-//}
+#include "PlayerPowersHandler.h"
+#include "ItemScroll.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   //Attempt to heal the actor. If no hp was healed (already at full hp), boost the hp instead.
@@ -46,7 +18,7 @@ void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   //End disease
   actor->getStatusEffectsHandler()->endEffect(statusDiseased);
 
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -58,9 +30,31 @@ void PotionOfHealing::specificCollide(const coord& pos, Actor* const actor, Engi
   }
 }
 
+void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
+  (void)actor;
+  bool isAnySpellRestored = false;
+
+  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfScrolls();
+  for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
+    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+    const ItemDefinition& d = scroll->getDef();
+    if(d.isScrollLearnable && d.isScrollLearned) {
+      if(d.castFromMemoryChance < 100) {
+        scroll->setCastFromMemoryChance(100);
+        isAnySpellRestored = true;
+      }
+    }
+  }
+
+  if(isAnySpellRestored) {
+    engine->log->addMessage("My magic is restored!");
+    setRealDefinitionNames(engine, false);
+  }
+}
+
 void PotionOfBlindness::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(8 + engine->dice(1, 8)));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -74,7 +68,7 @@ void PotionOfBlindness::specificCollide(const coord& pos, Actor* const actor, En
 
 void PotionOfParalyzation::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -88,28 +82,14 @@ void PotionOfParalyzation::specificCollide(const coord& pos, Actor* const actor,
 
 void PotionOfDisease::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusDiseased(engine));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
-  }
-}
-
-void PotionOfFear::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusTerrified(engine));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
-    setRealDefinitionNames(engine, false);
-  }
-}
-
-void PotionOfFear::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
-  (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor, engine);
   }
 }
 
 void PotionOfConfusion::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(engine));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -126,7 +106,7 @@ void PotionOfCorruption::specificQuaff(Actor* const actor, Engine* const engine)
 
   actor->changeMaxHP(CHANGE, true);
 
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -137,7 +117,7 @@ void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, E
   } else {
     engine->map->switchToDestroyedFeatAt(pos);
 
-    if(engine->map->playerVision[pos.x][pos.y] == true) {
+    if(engine->map->playerVision[pos.x][pos.y]) {
       setRealDefinitionNames(engine, false);
     }
   }
@@ -147,7 +127,7 @@ void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
   const int TURNS = engine->dice(3, 8) + 24;
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(TURNS));
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(TURNS));
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -177,7 +157,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
 
   bool isPhobiasCured = false;
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-    if(engine->player->insanityPhobias[i] == true) {
+    if(engine->player->insanityPhobias[i]) {
       engine->player->insanityPhobias[i] = false;
       isPhobiasCured = true;
     }
@@ -188,7 +168,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
 
   bool isObsessionsCured = false;
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-    if(engine->player->insanityObsessions[i] == true) {
+    if(engine->player->insanityObsessions[i]) {
       engine->player->insanityObsessions[i] = false;
       isObsessionsCured = true;
     }
@@ -215,7 +195,7 @@ void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) 
 
   actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBody);
 
-  if(engine->player->checkIfSeeActor(*actor, NULL) == true) {
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
@@ -305,7 +285,7 @@ void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition&
 
     const bool PLAYER_SEE_CELL = engine->map->playerVision[pos.x][pos.y];
 
-    if(PLAYER_SEE_CELL == true) {
+    if(PLAYER_SEE_CELL) {
       engine->renderer->drawCharacter('*', renderArea_mainScreen, pos.x, pos.y, potionDef->color);
 
       if(actor != NULL) {

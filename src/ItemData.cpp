@@ -1056,11 +1056,11 @@ void ItemData::makeList() {
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 
-  d = new ItemDefinition(item_potionOfFear);
+  d = new ItemDefinition(item_potionOfConfusion);
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 
-  d = new ItemDefinition(item_potionOfConfusion);
+  d = new ItemDefinition(item_potionOfSorcery);
   resetDef(d, itemDef_potion);
   itemDefinitions[d->devName] = d;
 

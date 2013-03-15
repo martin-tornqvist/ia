@@ -90,7 +90,7 @@ bool StatusConfused::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE)
   (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
-    return owningActor->eng->dice(1, 100) > 85;
+    return owningActor->eng->dice.coinToss();
   }
   return true;
 }
@@ -99,7 +99,7 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
   (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
-    return owningActor->eng->dice(1, 100) > 85;
+    return owningActor->eng->dice.coinToss();
   }
   return true;
 }

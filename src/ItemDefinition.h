@@ -116,7 +116,6 @@ enum ItemDevNames_t {
   item_armorLeatherJacket,
   item_armorIronSuit,
   item_armorFlackJacket,
-//  item_armorAsbestosSuit,
 
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
@@ -130,8 +129,7 @@ enum ItemDevNames_t {
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
   item_scrollOfAzathothsBlast,
-//  item_scrollOfVoidChain,
-//  item_scrollOfIbnGhazisPowder,
+  //item_scrollOfInsight,
 
   item_potionOfHealing,
   item_potionOfBlindness,
@@ -141,8 +139,9 @@ enum ItemDevNames_t {
   item_potionOfFortitude,
   item_potionOfToughness,
   item_potionOfParalyzation,
-  item_potionOfFear,
   item_potionOfConfusion,
+  item_potionOfSorcery,
+//  item_potionOfForgetfulness,
 
   item_deviceSentry,
   item_deviceElectricLantern,

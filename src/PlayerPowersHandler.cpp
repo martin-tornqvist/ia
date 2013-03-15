@@ -9,6 +9,23 @@
 #include "Inventory.h"
 #include "ItemFactory.h"
 
+PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :
+  eng(engine) {
+
+  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    if(d->isScroll) {
+      scrollsToReadFromPlayerMemory.push_back(dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemDevNames_t>(i))));
+    }
+  }
+}
+
+PlayerPowersHandler::~PlayerPowersHandler() {
+  for(unsigned int i = 0; i < scrollsToReadFromPlayerMemory.size(); i++) {
+    delete scrollsToReadFromPlayerMemory.at(i);
+  }
+}
+
 void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
   vector<unsigned int> playerSlotsWithScroll;
   vector<unsigned int> memorizedScrollsToShow;
@@ -170,19 +187,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
   eng->renderer->updateWindow();
 }
 
-PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :
-  eng(engine) {
-
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
-    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-    if(d->isScroll == true) {
-      scrollsToReadFromPlayerMemory.push_back(dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemDevNames_t>(i))));
-    }
-  }
+Scroll* PlayerPowersHandler::getScrollAt(const unsigned int SCROLL_VECTOR_ELEMENT) const {
+  return scrollsToReadFromPlayerMemory.at(SCROLL_VECTOR_ELEMENT);
 }
 
-PlayerPowersHandler::~PlayerPowersHandler() {
-  for(unsigned int i = 0; i < scrollsToReadFromPlayerMemory.size(); i++) {
-    delete scrollsToReadFromPlayerMemory.at(i);
-  }
-}

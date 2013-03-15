@@ -300,7 +300,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 3;
-  d.spellCooldownTurns = 6;
+  d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrGray;
   d.tile = tile_cultistFirearm;
@@ -336,7 +336,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
-  d.spellCooldownTurns = 6;
+  d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrYellow;
   d.tile = tile_cultistFirearm;
@@ -372,7 +372,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 3;
-  d.spellCooldownTurns = 6;
+  d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrBlueLight;
   d.tile = tile_cultistFirearm;
@@ -882,7 +882,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 10;
+  d.spellCooldownTurns = 4;
   d.glyph = 'G';
   d.color = clrRed;
   d.tile = tile_wraith;
@@ -1189,8 +1189,8 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_fast;
-  d.rangedCooldownTurns = 4;
-  d.spellCooldownTurns = 4;
+  d.rangedCooldownTurns = 3;
+  d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrMagentaLight;
   d.tile = tile_migo;
@@ -1331,7 +1331,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 5;
+  d.spellCooldownTurns = 3;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
   d.glyph = 'P';
@@ -1370,7 +1370,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 5;
+  d.spellCooldownTurns = 3;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
   d.glyph = 'P';

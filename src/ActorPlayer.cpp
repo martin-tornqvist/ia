@@ -417,7 +417,7 @@ void Player::incrInsanity() {
             case insanityObsession_masochism: {
               popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
               popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-              popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+              popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
               eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
               insanityObsessions[insanityObsession_masochism] = true;
               return;
@@ -426,7 +426,7 @@ void Player::incrInsanity() {
             case insanityObsession_sadism: {
               popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
               popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-              popupMessage += "(shock can not go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+              popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
               eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
               insanityObsessions[insanityObsession_sadism] = true;
               return;

@@ -17,9 +17,6 @@
 
 const int BLAST_ANIMATION_DELAY_FACTOR = 3;
 
-Scroll::~Scroll() {
-
-}
 
 void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
@@ -160,19 +157,15 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(const bool FROM_MEMORY, En
 }
 
 StatusEffect* ScrollOfConfuseEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusConfused(engine->dice(3, 6) + 6);
+  return new StatusConfused(engine);
 }
 
-//StatusEffect* ScrollOfBlindEnemies::getStatusEffect(Engine* const engine) {
-//    return new StatusBlind(engine->dice(3, 6) + 6);
-//}
-
 StatusEffect* ScrollOfParalyzeEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusParalyzed(engine->dice(1, 6) + 6);
+  return new StatusParalyzed(engine);
 }
 
 StatusEffect* ScrollOfSlowEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusSlowed(engine->dice(3, 6) + 6);
+  return new StatusSlowed(engine);
 }
 
 void ScrollOfDetectItems::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -237,7 +230,6 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
   if(actors.size() > 0) {
-    setRealDefinitionNames(engine, false);
     vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
@@ -248,11 +240,13 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
         BLAST_ANIMATION_DELAY_FACTOR, engine);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
-      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
       const string monsterName = actors.at(i)->getNameThe();
       engine->log->addMessage(monsterName + " is struck by a roaring blast!", clrMessageGood);
-      actors.at(i)->hit(engine->dice(2, 4), damageType_pure);
+      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+      actors.at(i)->hit(engine->dice(1, 8), damageType_physical);
     }
+
+    setRealDefinitionNames(engine, false);
   } else {
     failedToLearnRealName(engine);
   }
@@ -325,12 +319,20 @@ void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
+Scroll::~Scroll() {
+
+}
+
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
   (void)engine;
 //  const int PLAYER_SKILL = engine->player->getMythosKnowledge();
   const int BASE_CHANCE = def_->castFromMemoryChance;
 
   return BASE_CHANCE; //+ PLAYER_SKILL;
+}
+
+void Scroll::setCastFromMemoryChance(const int VAL) {
+  def_->castFromMemoryChance = VAL;
 }
 
 void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
@@ -386,15 +388,14 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     specificRead(true, engine);
   } else {
     engine->log->addMessage("I miscast it.");
+    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusWeak(engine));
     if(engine->dice.coinToss()) {
-      if(engine->dice.coinToss()) {
-        engine->log->addMessage("I feel a sharp pain in my head!", clrMessageBad);
-      } else {
-        engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
-      }
-      engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
-      engine->player->hit(engine->dice(1, 6), damageType_pure);
+      engine->log->addMessage("I feel a sharp pain in my head!", clrMessageBad);
+    } else {
+      engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
     }
+    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
+    engine->player->hit(engine->dice(1, 6), damageType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
     engine->player->incrShock(shockValue_heavy);

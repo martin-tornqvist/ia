@@ -24,6 +24,12 @@ public:
 
 	void run(const bool CAST_FROM_MEMORY);
 
+	unsigned int getNrOfScrolls() const {
+	  return scrollsToReadFromPlayerMemory.size();
+	}
+
+  Scroll* getScrollAt(const unsigned int SCROLL_VECTOR_ELEMENT) const;
+
 private:
 	void draw(MenuBrowser& browser, const bool DRAW_COMMAND_PROMPT, const bool CAST_FROM_MEMORY,
 	          const vector<unsigned int> generalInventorySlotsToShow, const vector<unsigned int> memorizedScrollsToShow);

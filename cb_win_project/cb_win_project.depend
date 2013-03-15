@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1363213484 c:\dev\ia\src\itemdefinition.h
+1363298773 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -195,7 +195,7 @@
 	"Item.h"
 	"Converters.h"
 
-1357143084 c:\dev\ia\src\spells.h
+1363302369 c:\dev\ia\src\spells.h
 	<vector>
 	"ConstTypes.h"
 
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1363215862 source:c:\dev\ia\src\actordata.cpp
+1363302463 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -853,11 +853,11 @@
 1355674113 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1355674113 c:\dev\ia\src\itempotion.h
+1363299000 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
-1362999855 c:\dev\ia\src\itemscroll.h
+1363301175 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -892,7 +892,7 @@
 	"SFML/Graphics/Texture.hpp"
 	"ConstTypes.h"
 
-1355674113 c:\dev\ia\src\playerpowershandler.h
+1363301331 c:\dev\ia\src\playerpowershandler.h
 	<vector>
 	"MenuBrowser.h"
 
@@ -953,7 +953,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1363215372 source:c:\dev\ia\src\featuredoor.cpp
+1363305137 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1163,7 +1163,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363216153 source:c:\dev\ia\src\itemdata.cpp
+1363298777 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1194,7 +1194,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1363213652 source:c:\dev\ia\src\itemfactory.cpp
+1363302031 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1219,7 +1219,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1363214710 source:c:\dev\ia\src\itemscroll.cpp
+1363305379 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1470,7 +1470,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1363209011 source:c:\dev\ia\src\playerbonuses.cpp
+1363303966 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1487,7 +1487,7 @@
 	"PlayerAllocBonus.h"
 	"Input.h"
 
-1363128615 source:c:\dev\ia\src\playerpowershandler.cpp
+1363301992 source:c:\dev\ia\src\playerpowershandler.cpp
 	"PlayerPowersHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1622,7 +1622,7 @@
 	"MapBuild.h"
 	"ActorPlayer.h"
 
-1355674113 source:c:\dev\ia\src\spells.cpp
+1363305387 source:c:\dev\ia\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -1634,7 +1634,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1363212171 source:c:\dev\ia\src\statuseffects.cpp
+1363302878 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1682,7 +1682,7 @@
 	"Log.h"
 	"Render.h"
 
-1361481305 source:c:\dev\ia\src\itempotion.cpp
+1363302655 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -1690,6 +1690,8 @@
 	"Log.h"
 	"Map.h"
 	"ActorMonster.h"
+	"PlayerPowersHandler.h"
+	"ItemScroll.h"
 
 1363127487 source:c:\dev\ia\src\main.cpp
 	<cassert>

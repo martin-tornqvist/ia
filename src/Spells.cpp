@@ -53,13 +53,16 @@ Spell* SpellHandler::getSpellFromEnum(const Spells_t spell) const {
   case spell_confuse:
     return new SpellConfuse;
     break;
+  case spell_weakness:
+    return new SpellWeakness;
+    break;
   default:
     return NULL;
     break;
   }
 }
 
-//AZATHOTHS BLAST ---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- AZATHOTHS BLAST
 void SpellAzathothsBlast::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -69,7 +72,7 @@ void SpellAzathothsBlast::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("I am struck by a roaring blast!", clrMessageBad);
     }
     actor->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
-    actor->hit(eng->dice(2, 4), damageType_pure);
+    actor->hit(eng->dice(1, 8), damageType_physical);
   }
 }
 
@@ -84,7 +87,7 @@ bool SpellAzathothsBlast::isGoodForMonsterNow(const Monster* const monster, Engi
 }
 
 
-//TELEPORT---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- TELEPORT
 void SpellTeleport::specificCast(const SpellData& d, Engine* const eng) {
   if(eng->player->checkIfSeeActor(*(d.caster_), NULL)) {
     eng->log->addMessage(d.caster_->getNameThe() + " dissapears in a blast of smoke!");
@@ -105,7 +108,7 @@ bool SpellTeleport::isGoodForMonsterNow(const Monster* const monster, Engine* co
 
 
 
-//KNOCK BACK---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- KNOCK BACK
 void SpellKnockBack::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -127,7 +130,7 @@ bool SpellKnockBack::isGoodForMonsterNow(const Monster* const monster, Engine* c
   return monster->checkIfSeeActor(*(engine->player), blockers);
 }
 
-//CONFUSE--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- CONFUSE
 void SpellConfuse::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -137,7 +140,7 @@ void SpellConfuse::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("My mind is reeling!");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng->dice(3, 6)));
+    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng));
   }
 }
 
@@ -149,12 +152,39 @@ bool SpellConfuse::isGoodForMonsterNow(const Monster* const monster, Engine* con
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   if(monster->checkIfSeeActor(*(engine->player), blockers)) {
-    return engine->player->getStatusEffectsHandler()->allowSee() == true;
+    return engine->player->getStatusEffectsHandler()->allowSee();
   }
   return false;
 }
 
-//BLIND--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- WEAKNESS
+void SpellWeakness::specificCast(const SpellData& d, Engine* const eng) {
+  Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
+
+  if(actor != NULL) {
+
+    if(actor == eng->player) {
+      eng->log->addMessage("Something is draining me physically!");
+    }
+
+    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusWeak(eng));
+  }
+}
+
+void SpellWeakness::specificMonsterCast(Monster* const monster, Engine* const eng) {
+  specificCast(SpellData(monster, eng->player->pos), eng);
+}
+
+bool SpellWeakness::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  if(monster->checkIfSeeActor(*(engine->player), blockers)) {
+    return engine->player->getStatusEffectsHandler()->allowSee();
+  }
+  return false;
+}
+
+//--------------------------------------------------------------------------- BLIND
 void SpellBlind::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -176,12 +206,12 @@ bool SpellBlind::isGoodForMonsterNow(const Monster* const monster, Engine* const
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   if(monster->checkIfSeeActor(*(engine->player), blockers)) {
-    return engine->player->getStatusEffectsHandler()->allowSee() == true;
+    return engine->player->getStatusEffectsHandler()->allowSee() ;
   }
   return false;
 }
 
-//FEAR---------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- FEAR
 void SpellFear::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -205,7 +235,7 @@ bool SpellFear::isGoodForMonsterNow(const Monster* const monster, Engine* const 
   return monster->checkIfSeeActor(*(engine->player), blockers);
 }
 
-//SLOW---------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- SLOW
 void SpellSlow::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -229,7 +259,7 @@ bool SpellSlow::isGoodForMonsterNow(const Monster* const monster, Engine* const 
   return monster->checkIfSeeActor(*(engine->player), blockers);
 }
 
-//DISEASE---------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- DISEASE
 void SpellDisease::specificCast(const SpellData& d, Engine* const eng) {
   Actor* actor = eng->mapTests->getActorAtPos(d.targetCell_);
 
@@ -253,12 +283,12 @@ bool SpellDisease::isGoodForMonsterNow(const Monster* const monster, Engine* con
   return monster->checkIfSeeActor(*(engine->player), blockers);
 }
 
-//SUMMON RANDOM---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- SUMMON RANDOM
 void SpellSummonRandom::specificCast(const SpellData& d, Engine* const eng) {
   vector<ActorDevNames_t> summonCandidates;
   for(unsigned int i = 1; i < endOfActorDevNames; i++) {
     const ActorDefinition& def = eng->actorData->actorDefinitions[i];
-    if(def.canBeSummoned == true) {
+    if(def.canBeSummoned) {
       //Monster summoned must be equal or lower level to the caster.
       //(No checks needed for available summons, since wolves (lvl 2) can be summoned)
       if(def.monsterLvl <= d.caster_->getDef()->monsterLvl) {
@@ -269,7 +299,7 @@ void SpellSummonRandom::specificCast(const SpellData& d, Engine* const eng) {
   const ActorDevNames_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
   Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, d.targetCell_));
   monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
-  if(eng->map->playerVision[d.targetCell_.x][d.targetCell_.y] == true) {
+  if(eng->map->playerVision[d.targetCell_.x][d.targetCell_.y]) {
     eng->log->addMessage(monster->getNameA() + " appears.");
   }
 }
@@ -327,7 +357,7 @@ void Spell::cast(const SpellData& d, Engine* const eng) {
 }
 
 void Spell::monsterCast(Monster* const monster, Engine* const eng) {
-  if(eng->map->playerVision[monster->pos.x][monster->pos.y] == true) {
+  if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
     const string SPELL_MESSAGE = monster->getDef()->spellCastMessage;
     eng->log->addMessage(SPELL_MESSAGE);
   }
@@ -337,7 +367,7 @@ void Spell::monsterCast(Monster* const monster, Engine* const eng) {
   eng->gameTime->letNextAct();
 }
 
-//HEAL SELF ---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- HEAL SELF
 void SpellHealSelf::specificCast(const SpellData& d, Engine* const eng) {
   (void)eng;
   d.caster_->restoreHP(999, true);
