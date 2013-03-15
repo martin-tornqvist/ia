@@ -28,7 +28,7 @@
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="10">
 		<Cursor position="2635" topLine="104" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="1" top="1" tabpos="0">
+	<File name="..\src\ActorData.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="42085" topLine="1143" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="6">
@@ -49,8 +49,8 @@
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="15361" topLine="465" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="15824" topLine="400" />
+	<File name="..\src\ActorPlayer.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="981" topLine="43" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="9">
 		<Cursor position="756" topLine="21" />
@@ -472,11 +472,11 @@
 	<File name="..\src\Spells.h" open="0" top="0" tabpos="4">
 		<Cursor position="2950" topLine="113" />
 	</File>
-	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="2293" topLine="74" />
+	<File name="..\src\StatusEffects.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="3534" topLine="101" />
 	</File>
-	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="1">
-		<Cursor position="31885" topLine="1586" />
+	<File name="..\src\StatusEffects.h" open="1" top="0" tabpos="3">
+		<Cursor position="20003" topLine="930" />
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />

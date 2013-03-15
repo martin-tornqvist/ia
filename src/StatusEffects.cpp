@@ -123,7 +123,7 @@ void StatusBurning::doDamage(Engine* const engine) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
     owningActor->eng->renderer->drawMapAndInterface();
   }
-  owningActor->hit(engine->dice(1, 3), damageType_fire);
+  owningActor->hit(engine->dice(1, 2), damageType_fire);
 }
 
 void StatusBurning::newTurn(Engine* const engine) {

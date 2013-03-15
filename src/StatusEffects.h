@@ -948,7 +948,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 3, 3);
+    return DiceParam(1, 6, 3);
   }
   friend class StatusEffectsHandler;
   StatusBurning(const int turns) :

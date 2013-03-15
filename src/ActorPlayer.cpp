@@ -41,14 +41,14 @@ void Player::actorSpecific_spawnStartItems() {
     insanityObsessions[i] = false;
   }
 
-  mythosKnowledge = eng->dice(1, 6);
+  mythosKnowledge = eng->dice.getInRange(1, 6);
 
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
-  int NR_OF_DYNAMITE          = eng->dice.getInRange(2, 4);
-  int NR_OF_MOLOTOV           = eng->dice.getInRange(2, 4);
-  int NR_OF_FLARES            = eng->dice.getInRange(3, 5);
-  int NR_OF_THROWING_KNIVES   = eng->dice.getInRange(7, 12);
-  int NR_OF_SPIKES            = eng->dice.getInRange(3, 4);
+  int NR_OF_DYNAMITE          = eng->dice.getInRange(1, 4);
+  int NR_OF_MOLOTOV           = eng->dice.getInRange(1, 4);
+  int NR_OF_FLARES            = eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 5);
+  int NR_OF_THROWING_KNIVES   = eng->dice.coinToss() ? 0 : eng->dice.getInRange(7, 12);
+  int NR_OF_SPIKES            = eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 4);
 
   const int WEAPON_CHOICE = eng->dice.getInRange(1, 5);
   ItemDevNames_t weaponId = item_dagger;
@@ -89,19 +89,27 @@ void Player::actorSpecific_spawnStartItems() {
   item->numberOfItems = NR_OF_MOLOTOV;
   inventory_->putItemInGeneral(item);
 
-  item = eng->itemFactory->spawnItem(item_flare);
-  item->numberOfItems = NR_OF_FLARES;
-  inventory_->putItemInGeneral(item);
+  if(NR_OF_FLARES > 0) {
+    item = eng->itemFactory->spawnItem(item_flare);
+    item->numberOfItems = NR_OF_FLARES;
+    inventory_->putItemInGeneral(item);
+  }
 
-  item = eng->itemFactory->spawnItem(item_throwingKnife);
-  item->numberOfItems = NR_OF_THROWING_KNIVES;
-  inventory_->putItemInSlot(slot_missiles, item, true, true);
+  if(NR_OF_THROWING_KNIVES > 0) {
+    item = eng->itemFactory->spawnItem(item_throwingKnife);
+    item->numberOfItems = NR_OF_THROWING_KNIVES;
+    inventory_->putItemInSlot(slot_missiles, item, true, true);
+  }
 
-  item = eng->itemFactory->spawnItem(item_ironSpike);
-  item->numberOfItems = NR_OF_SPIKES;
-  inventory_->putItemInGeneral(item);
+  if(NR_OF_THROWING_KNIVES > 0) {
+    item = eng->itemFactory->spawnItem(item_ironSpike);
+    item->numberOfItems = NR_OF_SPIKES;
+    inventory_->putItemInGeneral(item);
+  }
 
-  inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
+  if(eng->dice.coinToss()) {
+    inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
+  }
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
