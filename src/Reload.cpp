@@ -94,28 +94,28 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
   }
 
   if(weaponToReload != NULL) {
-    const int weaponAmmoCap = weaponToReload->ammoCapacity;
+    const int weaponAmmoCapacity = weaponToReload->ammoCapacity;
 
-    if(weaponAmmoCap == 0) {
+    if(weaponAmmoCapacity == 0) {
       printReloadMessages(actorReloading, NULL, NULL, reloadResult_weaponNotUsingAmmo, false);
     } else {
       const ItemDevNames_t ammoType = weaponToReload->getDef().rangedAmmoTypeUsed;
       Item* ammoItem = NULL;
       bool isClip = weaponToReload->clip;
 
-      if(weaponToReload->ammoLoaded < weaponAmmoCap) {
+      if(weaponToReload->ammoLoaded < weaponAmmoCapacity) {
         for(unsigned int i = 0; i < genInv->size(); i++) {
           ammoItem = genInv->at(i);
 
           if(ammoItem->getDef().devName == ammoType) {
             const bool IS_RELOADER_BLIND = actorReloading->getStatusEffectsHandler()->allowSee() == false;
             const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusEffectsHandler()->hasEffect(statusTerrified);
-            const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 40 : 0) + (IS_REALOADER_TERRIFIED ? 40 : 0);
+            const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
             if(eng->dice(1, 100) < CHANCE_TO_FUMBLE) {
               isSwiftReload = false;
               result = reloadResult_fumble;
-              printReloadMessages(actorReloading, NULL, NULL, reloadResult_fumble, false);
+              printReloadMessages(actorReloading, NULL, ammoItem, reloadResult_fumble, false);
             } else {
               result = reloadResult_success;
               isClip = ammoItem->getDef().isAmmoClip;
