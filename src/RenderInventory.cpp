@@ -57,10 +57,10 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 
       const ItemDefinition& d = item->getDef();
       PrimaryAttackMode_t attackMode = primaryAttackMode_none;
-      if(slot->devName == slot_wielded || slot->devName == slot_wieldedAlt) {
+      if(slot->id == slot_wielded || slot->id == slot_wieldedAlt) {
         attackMode = d.primaryAttackMode == primaryAttackMode_missile ? primaryAttackMode_melee : d.primaryAttackMode;
       }
-      else if(slot->devName == slot_missiles) {
+      else if(slot->id == slot_missiles) {
         attackMode = primaryAttackMode_missile;
       }
 

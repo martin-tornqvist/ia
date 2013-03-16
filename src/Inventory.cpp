@@ -16,47 +16,47 @@ Inventory::Inventory(bool humanoid) {
   InventorySlot invSlot;
 
   if(humanoid) {
-    invSlot.devName = slot_wielded;
+    invSlot.id = slot_wielded;
     invSlot.interfaceName = "Wielding";
     invSlot.allowWieldedWeapon = true;
     m_slots.push_back(invSlot);
     invSlot.allowWieldedWeapon = false;
 
-    invSlot.devName = slot_wieldedAlt;
+    invSlot.id = slot_wieldedAlt;
     invSlot.interfaceName = "Prepared";
     invSlot.allowWieldedWeapon = true;
     m_slots.push_back(invSlot);
     invSlot.allowWieldedWeapon = false;
 
-    invSlot.devName = slot_missiles;
+    invSlot.id = slot_missiles;
     invSlot.interfaceName = "Missiles";
     invSlot.allowMissile = true;
     m_slots.push_back(invSlot);
     invSlot.allowMissile = false;
 
-    invSlot.devName = slot_armorBody;
+    invSlot.id = slot_armorBody;
     invSlot.interfaceName = "On body";
     invSlot.allowArmor = true;
     m_slots.push_back(invSlot);
     invSlot.allowArmor = false;
 
-    //    invSlot.devName = slot_cloak;
+    //    invSlot.id = slot_cloak;
     //    invSlot.interfaceName = "Cloak";
     //    invSlot.allowCloak = true;
     //    m_slots.push_back(invSlot);
     //    invSlot.allowCloak = false;
 
-    //    invSlot.devName = slot_amulet;
+    //    invSlot.id = slot_amulet;
     //    invSlot.interfaceName = "Amulet";
     //    invSlot.allowAmulet = true;
     //    m_slots.push_back(invSlot);
     //    invSlot.allowAmulet = false;
 
-    //    invSlot.devName = slot_ringLeft;
+    //    invSlot.id = slot_ringLeft;
     //    invSlot.interfaceName = "Left ring";
     //    invSlot.allowRing = true;
     //    m_slots.push_back(invSlot);
-    //    invSlot.devName = slot_ringRight;
+    //    invSlot.id = slot_ringRight;
     //    invSlot.interfaceName = "Right ring";
     //    m_slots.push_back(invSlot);
   }
@@ -68,7 +68,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     if(item == NULL) {
       lines.push_back("0");
     } else {
-      lines.push_back(intToString(item->getDef().devName));
+      lines.push_back(intToString(item->getDef().id));
       lines.push_back(intToString(item->numberOfItems));
       item->itemSpecificAddSaveLines(lines);
     }
@@ -77,7 +77,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(m_general.size()));
   for(unsigned int i = 0; i < m_general.size(); i++) {
     Item* const item = m_general.at(i);
-    lines.push_back(intToString(item->getDef().devName));
+    lines.push_back(intToString(item->getDef().id));
     lines.push_back(intToString(item->numberOfItems));
     item->itemSpecificAddSaveLines(lines);
   }
@@ -92,10 +92,10 @@ void Inventory::setParametersFromSaveLines(vector<string>& lines, Engine* const 
       m_slots.at(i).item = NULL;
     }
 
-    const ItemDevNames_t devName = static_cast<ItemDevNames_t>(stringToInt(lines.front()));
+    const ItemId_t id = static_cast<ItemId_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
-    if(devName != item_empty) {
-      item = engine->itemFactory->spawnItem(devName);
+    if(id != item_empty) {
+      item = engine->itemFactory->spawnItem(id);
       item->numberOfItems = stringToInt(lines.front());
       lines.erase(lines.begin());
       item->itemSpecificSetParametersFromSaveLines(lines);
@@ -111,9 +111,9 @@ void Inventory::setParametersFromSaveLines(vector<string>& lines, Engine* const 
   const unsigned int NR_OF_GENERAL = stringToInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
-    const ItemDevNames_t devName = static_cast<ItemDevNames_t>(stringToInt(lines.front()));
+    const ItemId_t id = static_cast<ItemId_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
-    Item* item = engine->itemFactory->spawnItem(devName);
+    Item* item = engine->itemFactory->spawnItem(id);
     item->numberOfItems = stringToInt(lines.front());
     lines.erase(lines.begin());
     item->itemSpecificSetParametersFromSaveLines(lines);
@@ -125,18 +125,18 @@ bool Inventory::hasDynamiteInGeneral() const {
   return hasItemInGeneral(item_dynamite);
 }
 
-bool Inventory::hasItemInGeneral(const ItemDevNames_t devName) const {
+bool Inventory::hasItemInGeneral(const ItemId_t id) const {
   for(unsigned int i = 0; i < m_general.size(); i++) {
-    if(m_general.at(i)->getDef().devName == devName)
+    if(m_general.at(i)->getDef().id == id)
       return true;
   }
 
   return false;
 }
 
-int Inventory::getItemStackSizeInGeneral(const ItemDevNames_t devName) const {
+int Inventory::getItemStackSizeInGeneral(const ItemId_t id) const {
   for(unsigned int i = 0; i < m_general.size(); i++) {
-    if(m_general.at(i)->getDef().devName == devName) {
+    if(m_general.at(i)->getDef().id == id) {
       if(m_general.at(i)->getDef().isStackable == false) {
         return 1;
       } else {
@@ -150,7 +150,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemDevNames_t devName) const {
 
 void Inventory::decreaseDynamiteInGeneral() {
   for(unsigned int i = 0; i < m_general.size(); i++) {
-    if(m_general.at(i)->getDef().devName == item_dynamite) {
+    if(m_general.at(i)->getDef().id == item_dynamite) {
       decreaseItemInGeneral(i);
       break;
     }
@@ -161,7 +161,7 @@ void Inventory::decreaseDynamiteInGeneral() {
  bool Inventory::hasFirstAidInGeneral()
  {
  for(unsigned int i = 0; i < m_general.size(); i++) {
- if(m_general.at(i)->getInstanceDefinition().devName == item_firstAidKit)
+ if(m_general.at(i)->getInstanceDefinition().id == item_firstAidKit)
  return true;
  }
 
@@ -171,7 +171,7 @@ void Inventory::decreaseDynamiteInGeneral() {
  void Inventory::decreaseFirstAidInGeneral()
  {
  for(unsigned int i = 0; i < m_general.size(); i++) {
- if(m_general.at(i)->getInstanceDefinition().devName == item_firstAidKit) {
+ if(m_general.at(i)->getInstanceDefinition().id == item_firstAidKit) {
  decreaseItemInGeneral(i);
  break;
  }
@@ -209,7 +209,7 @@ int Inventory::getElementToStackItem(Item* item) const {
     for(unsigned int i = 0; i < m_general.size(); i++) {
       Item* compare = m_general.at(i);
 
-      if(compare->getDef().devName == item->getDef().devName) {
+      if(compare->getDef().id == item->getDef().id) {
         return i;
       }
     }
@@ -268,11 +268,11 @@ bool Inventory::hasAmmoForFirearmInInventory() {
     if(weapon->getDef().isRangedWeapon == true) {
 
       //Get weapon ammo type
-      const ItemDevNames_t ammoDevName = weapon->getDef().rangedAmmoTypeUsed;
+      const ItemId_t ammoId = weapon->getDef().rangedAmmoTypeUsed;
 
       //Look for that ammo type in inventory
       for(unsigned int i = 0; i < m_general.size(); i++) {
-        if(m_general.at(i)->getDef().devName == ammoDevName) {
+        if(m_general.at(i)->getDef().id == ammoId) {
           return true;
         }
       }
@@ -327,9 +327,9 @@ void Inventory::decreaseItemInGeneral(unsigned element) {
   }
 }
 
-void Inventory::decreaseItemTypeInGeneral(const ItemDevNames_t devName) {
+void Inventory::decreaseItemTypeInGeneral(const ItemId_t id) {
   for(unsigned int i = 0; i < m_general.size(); i++) {
-    if(m_general.at(i)->getDef().devName == devName) {
+    if(m_general.at(i)->getDef().id == id) {
       decreaseItemInGeneral(i);
       return;
     }
@@ -496,7 +496,7 @@ bool Inventory::moveItemToGeneral(InventorySlot* inventorySlot) {
 
 bool Inventory::hasItemInSlot(SlotTypes_t slotName) {
   for(unsigned int i = 0; i < m_slots.size(); i++) {
-    if(m_slots[i].devName == slotName) {
+    if(m_slots[i].id == slotName) {
       if(m_slots[i].item != NULL) {
         return true;
       }
@@ -519,9 +519,9 @@ void Inventory::removeItemInElementWithoutDeletingInstance(int number) {
   }
 }
 
-int Inventory::getElementWithItemType(const ItemDevNames_t itemDevName) const {
+int Inventory::getElementWithItemType(const ItemId_t id) const {
   for(unsigned int i = 0; i < m_general.size(); i++) {
-    if(m_general.at(i)->getDef().devName == itemDevName) {
+    if(m_general.at(i)->getDef().id == id) {
       return i;
     }
   }
@@ -544,7 +544,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) {
 Item* Inventory::getItemInSlot(SlotTypes_t slotName) {
   if(hasItemInSlot(slotName) == true) {
     for(unsigned int i = 0; i < m_slots.size(); i++) {
-      if(m_slots[i].devName == slotName) {
+      if(m_slots[i].id == slotName) {
         return m_slots[i].item;
       }
     }
@@ -553,7 +553,7 @@ Item* Inventory::getItemInSlot(SlotTypes_t slotName) {
   return NULL;
 }
 
-Item* Inventory::getIntrinsicInElement(int element) {
+Item* Inventory::getIntrinsicInElement(int element) const {
   if(getIntrinsicsSize() > element)
     return m_intrinsics[element];
 
@@ -582,7 +582,7 @@ InventorySlot* Inventory::getSlot(SlotTypes_t slotName) {
   InventorySlot* slot = NULL;
 
   for(unsigned int i = 0; i < m_slots.size(); i++) {
-    if(m_slots[i].devName == slotName) {
+    if(m_slots[i].id == slotName) {
       slot = &m_slots[i];
     }
   }
@@ -593,7 +593,7 @@ void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGenera
   bool hasSlot = false;
 
   for(unsigned int i = 0; i < m_slots.size(); i++) {
-    if(m_slots[i].devName == slotName) {
+    if(m_slots[i].id == slotName) {
       hasSlot = true;
       if(m_slots[i].item == NULL)
         m_slots[i].item = item;

@@ -105,15 +105,15 @@ void CharacterInfo::makeLines() {
   lines.push_back(StringAndColor("POTION KNOWLEDGE", clrHeader));
   vector<StringAndColor> potionList;
   vector<StringAndColor> manuscriptList;
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isQuaffable && (d->isTried || d->isIdentified)) {
-      Item* item = eng->itemFactory->spawnItem(d->devName);
+      Item* item = eng->itemFactory->spawnItem(d->id);
       potionList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), d->color));
       delete item;
     } else {
       if(d->isReadable && (d->isTried || d->isIdentified)) {
-        Item* item = eng->itemFactory->spawnItem(d->devName);
+        Item* item = eng->itemFactory->spawnItem(d->id);
         manuscriptList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), item->getInterfaceClr()));
         delete item;
       }

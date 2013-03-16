@@ -485,7 +485,7 @@ bool WormMass::actorSpecificAct() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
-              Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
+              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + coord(dx, dy));
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 2;
               worm->chanceToSpawnNew = chanceToSpawnNew;
@@ -515,7 +515,7 @@ bool GiantLocust::actorSpecificAct() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
-              Actor* const actor = eng->actorFactory->spawnActor(def_->devName, pos + coord(dx, dy));
+              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + coord(dx, dy));
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
@@ -635,19 +635,19 @@ bool MajorClaphamLee::actorSpecificAct() {
                 freeCells.erase(freeCells.begin());
               } else {
                 const int ZOMBIE_TYPE = eng->dice.getInRange(0, 2);
-                ActorDevNames_t devName = actor_zombie;
+                ActorId_t id = actor_zombie;
                 switch(ZOMBIE_TYPE) {
                 case 0:
-                  devName = actor_zombie;
+                  id = actor_zombie;
                   break;
                 case 1:
-                  devName = actor_zombieAxe;
+                  id = actor_zombieAxe;
                   break;
                 case 2:
-                  devName = actor_bloatedZombie;
+                  id = actor_bloatedZombie;
                   break;
                 }
-                Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(devName, freeCells.at(0)));
+                Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(id, freeCells.at(0)));
                 monster->playerAwarenessCounter = 999;
                 monster->leader = this;
                 freeCells.erase(freeCells.begin());

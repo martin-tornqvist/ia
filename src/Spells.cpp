@@ -285,18 +285,18 @@ bool SpellDisease::isGoodForMonsterNow(const Monster* const monster, Engine* con
 
 //--------------------------------------------------------------------------- SUMMON RANDOM
 void SpellSummonRandom::specificCast(const SpellData& d, Engine* const eng) {
-  vector<ActorDevNames_t> summonCandidates;
-  for(unsigned int i = 1; i < endOfActorDevNames; i++) {
+  vector<ActorId_t> summonCandidates;
+  for(unsigned int i = 1; i < endOfActorIds; i++) {
     const ActorDefinition& def = eng->actorData->actorDefinitions[i];
     if(def.canBeSummoned) {
       //Monster summoned must be equal or lower level to the caster.
       //(No checks needed for available summons, since wolves (lvl 2) can be summoned)
       if(def.monsterLvl <= d.caster_->getDef()->monsterLvl) {
-        summonCandidates.push_back(static_cast<ActorDevNames_t>(i));
+        summonCandidates.push_back(static_cast<ActorId_t>(i));
       }
     }
   }
-  const ActorDevNames_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
+  const ActorId_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
   Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, d.targetCell_));
   monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
   if(eng->map->playerVision[d.targetCell_.x][d.targetCell_.y]) {

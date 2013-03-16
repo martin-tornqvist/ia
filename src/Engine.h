@@ -84,6 +84,7 @@ class CharacterInfo;
 class Examine;
 class PlayerCreateCharacter;
 class RoomThemeMaker;
+class DebugModeStatPrinter;
 
 class Player;
 
@@ -177,6 +178,7 @@ public:
 	Examine* examine;
 	PlayerCreateCharacter* playerCreateCharacter;
 	RoomThemeMaker* roomThemeMaker;
+	DebugModeStatPrinter* debugModeStatPrinter;
 
 	Player* player;
 

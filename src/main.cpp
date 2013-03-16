@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "Declares.h"
 #include "Engine.h"
 #include "MainMenu.h"
 #include "Render.h"
@@ -21,6 +20,7 @@
 #include "Highscore.h"
 #include "Postmortem.h"
 #include "DungeonMaster.h"
+#include "DebugModeStatPrinter.h"
 
 
 //FILE * ctt = fopen("CON", "w" );
@@ -43,6 +43,10 @@ int main(int argc, char* argv[]) {
       if(arg1 == "-b") {
         engine->config->BOT_PLAYING = true;
       }
+    }
+
+    if(IS_DEBUG_MODE) {
+      engine->debugModeStatPrinter->run();
     }
 
     const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(quitGame);

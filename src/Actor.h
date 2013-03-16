@@ -69,8 +69,8 @@ public:
   void getSpotedEnemiesPositions();
 
   //Various "shortcuts" to the instance definition
-  ActorDevNames_t getDevName() const {
-    return def_->devName;
+  ActorId_t getId() const {
+    return def_->id;
   }
   int getHp() const {
     return hp_;

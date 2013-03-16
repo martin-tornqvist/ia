@@ -40,7 +40,7 @@ enum ItemDefArchetypes_t {
   itemDef_explosive
 };
 
-enum ItemDevNames_t {
+enum ItemId_t {
   item_empty,
 
   item_trapezohedron,
@@ -144,9 +144,12 @@ enum ItemDevNames_t {
 //  item_potionOfForgetfulness,
 
   item_deviceSentry,
+  item_deviceRepeller,
+  item_deviceRejuvenator,
+  item_deviceTranslocator,
   item_deviceElectricLantern,
 
-  endOfItemDevNames
+  endOfItemIds
 };
 
 struct ArmorData {
@@ -167,8 +170,8 @@ struct ArmorData {
 
 class ItemDefinition {
 public:
-  ItemDefinition(const ItemDevNames_t devName_) :
-    devName(devName_), meleeStatusEffect(NULL), rangedStatusEffect(NULL) {
+  ItemDefinition(const ItemId_t itemId) :
+    id(itemId), meleeStatusEffect(NULL), rangedStatusEffect(NULL) {
   }
 
   ~ItemDefinition() {
@@ -178,7 +181,7 @@ public:
       delete rangedStatusEffect;
   }
 
-  ItemDevNames_t devName;
+  ItemId_t id;
   ItemWeight_t itemWeight;
   int spawnStandardMinDLVL;
   int spawnStandardMaxDLVL;
@@ -234,7 +237,7 @@ public:
   string rangedDmgLabelOverRide;
   int rangedBaseAttackSkill;
   Abilities_t rangedAbilityUsed;
-  ItemDevNames_t rangedAmmoTypeUsed;
+  ItemId_t rangedAmmoTypeUsed;
   DamageTypes_t rangedDamageType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;

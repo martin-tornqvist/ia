@@ -34,19 +34,22 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
     if(isPlayer == true) {
       eng->log->addMessage("Weapon does not use ammo.");
     }
-  } break;
+  }
+  break;
 
   case reloadResult_alreadyFull: {
     if(isPlayer == true) {
       eng->log->addMessage("Weapon already loaded.");
     }
-  } break;
+  }
+  break;
 
   case reloadResult_noAmmo: {
     if(isPlayer == true) {
       eng->log->addMessage("I carry no ammunition for this weapon.");
     }
-  } break;
+  }
+  break;
 
   case reloadResult_success: {
     const string swiftStr = isSwift ? " swiftly" : "";
@@ -62,7 +65,8 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
         eng->log->addMessage(actorName + swiftStr + " reloads.");
       }
     }
-  } break;
+  }
+  break;
 
   case reloadResult_fumble: {
     if(isPlayer) {
@@ -72,7 +76,8 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* am
         eng->log->addMessage(actorName + " fumbles with " + ammoName + ".");
       }
     }
-  } break;
+  }
+  break;
 
   default:
     break;
@@ -99,7 +104,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
     if(weaponAmmoCapacity == 0) {
       printReloadMessages(actorReloading, NULL, NULL, reloadResult_weaponNotUsingAmmo, false);
     } else {
-      const ItemDevNames_t ammoType = weaponToReload->getDef().rangedAmmoTypeUsed;
+      const ItemId_t ammoType = weaponToReload->getDef().rangedAmmoTypeUsed;
       Item* ammoItem = NULL;
       bool isClip = weaponToReload->clip;
 
@@ -107,7 +112,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
         for(unsigned int i = 0; i < genInv->size(); i++) {
           ammoItem = genInv->at(i);
 
-          if(ammoItem->getDef().devName == ammoType) {
+          if(ammoItem->getDef().id == ammoType) {
             const bool IS_RELOADER_BLIND = actorReloading->getStatusEffectsHandler()->allowSee() == false;
             const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusEffectsHandler()->hasEffect(statusTerrified);
             const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);

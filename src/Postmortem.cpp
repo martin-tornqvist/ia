@@ -61,7 +61,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StringAndColor(" Monsters killed:", clrHeading));
   vector< pair<string, int> > killList;
   int nrOfTotalKills = 0;
-  for(unsigned int i = actor_player + 1; i < endOfActorDevNames; i++) {
+  for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
     const ActorDefinition& d = eng->actorData->actorDefinitions[i];
     if(d.nrOfKills > 0) {
 

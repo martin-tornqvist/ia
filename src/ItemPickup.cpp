@@ -31,7 +31,7 @@ void ItemPickup::tryPick() {
     if(item->getDef().isMissileWeapon) {
       Item* const carriedMissile = playerInventory->getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
-        if(item->getDef().devName == carriedMissile->getDef().devName) {
+        if(item->getDef().id == carriedMissile->getDef().id) {
           eng->log->addMessage("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->numberOfItems += item->numberOfItems;
           delete item;
@@ -83,7 +83,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
 
       if(ammoLoaded > 0 && weapon->getDef().rangedHasInfiniteAmmo == false) {
         Inventory* const playerInventory = eng->player->getInventory();
-        const ItemDevNames_t ammoType = weapon->getDef().rangedAmmoTypeUsed;
+        const ItemId_t ammoType = weapon->getDef().rangedAmmoTypeUsed;
 
         ItemDefinition* const ammoDef = eng->itemData->itemDefinitions[ammoType];
 

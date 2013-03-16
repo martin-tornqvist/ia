@@ -23,6 +23,7 @@
 #include "BresenhamLine.h"
 #include "CharacterInfo.h"
 #include "Close.h"
+#include "DebugModeStatPrinter.h"
 #include "PlayerAllocBonus.h"
 #include "Map.h"
 #include "DungeonClimb.h"
@@ -190,6 +191,7 @@ void Engine::initGame() {
   examine = new Examine(this);
   characterInfo = new CharacterInfo(this);
   roomThemeMaker = new RoomThemeMaker(this);
+  debugModeStatPrinter = new DebugModeStatPrinter(this);
 
   tracer << "Engine::initGame() [DONE]" << endl;
 }
@@ -265,6 +267,7 @@ void Engine::cleanupGame() {
   delete examine;
   delete characterInfo;
   delete roomThemeMaker;
+  delete debugModeStatPrinter;
 
   delete marker;
 

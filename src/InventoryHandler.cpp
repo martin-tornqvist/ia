@@ -156,7 +156,7 @@ void InventoryHandler::runSlotsScreen() {
             eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
           }
         } else {
-          const bool IS_ARMOR = slot->devName == slot_armorBody;
+          const bool IS_ARMOR = slot->id == slot_armorBody;
           const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
           inv->moveItemToGeneral(slot);
           if(IS_ARMOR) {
@@ -259,21 +259,21 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
-  filterPlayerGeneralSlotButtonsEquip(slotToEquip->devName);
+  filterPlayerGeneralSlotButtonsEquip(slotToEquip->id);
 
   MenuBrowser browser(generalItemsToShow.size(), 0);
-  eng->renderInventory->drawEquipMode(browser, slotToEquip->devName, generalItemsToShow, bgTexture);
+  eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
     case menuAction_browsed: {
-      eng->renderInventory->drawEquipMode(browser, slotToEquip->devName, generalItemsToShow, bgTexture);
+      eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
     }
     break;
     case menuAction_selected: {
       const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-      eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(INV_ELEM, slotToEquip->devName, eng);
+      eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(INV_ELEM, slotToEquip->id, eng);
       return true;
     }
     break;

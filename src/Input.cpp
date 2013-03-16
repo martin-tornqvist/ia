@@ -247,7 +247,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       Item* const itemAtPlayer = eng->map->items[eng->player->pos.x][eng->player->pos.y];
       if(itemAtPlayer != NULL) {
-        if(itemAtPlayer->getDef().devName == item_trapezohedron) {
+        if(itemAtPlayer->getDef().id == item_trapezohedron) {
           eng->dungeonMaster->winGame();
           *quitToMainMenu_ = true;
         }
@@ -521,10 +521,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
   else if(d.sfmlKey_ == sf::Keyboard::F6) {
     if(IS_DEBUG_MODE) {
-      for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+      for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
         if(def->isQuaffable == true || def->isReadable == true) {
-          eng->itemFactory->spawnItemOnMap(static_cast<ItemDevNames_t>(i), eng->player->pos);
+          eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }
       }
       clearEvents();

@@ -14,31 +14,31 @@
 using namespace std;
 
 void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-    vector<ActorDevNames_t>& listToFill) const {
+    vector<ActorId_t>& listToFill) const {
 
   listToFill.resize(0);
 
   const int DLVL = eng->map->getDungeonLevel();
 
-  for(unsigned int i = 1; i < endOfActorDevNames; i++) {
+  for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
     const ActorDefinition& d = eng->actorData->actorDefinitions[i];
     if(
       d.isAutoSpawnAllowed &&
       (d.nrLeftAllowedToSpawn == -1 || d.nrLeftAllowedToSpawn > 0) &&
       DLVL >= (d.spawnMinLevel - NR_LVLS_OUT_OF_DEPTH_ALLOWED) &&
       DLVL <= d.spawnMaxLevel) {
-      listToFill.push_back(static_cast<ActorDevNames_t>(i));
+      listToFill.push_back(static_cast<ActorId_t>(i));
     }
   }
 }
 
 void PopulateMonsters::spawnGroupOfRandomAt(const vector<coord>& sortedFreeCellsVector, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
     const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, const bool IS_ROAMING_ALLOWED) const {
-  vector<ActorDevNames_t> idCandidates;
+  vector<ActorId_t> idCandidates;
   makeListOfMonstersEligibleForAutoSpawning(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   if(idCandidates.empty() == false) {
-    const ActorDevNames_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
+    const ActorId_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
 
     spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells, IS_ROAMING_ALLOWED);
   }
@@ -173,7 +173,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t r
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const {
   tracer << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
-  vector<ActorDevNames_t> idCandidates;
+  vector<ActorId_t> idCandidates;
   makeListOfMonstersEligibleForAutoSpawning(NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   for(unsigned int i = 0; i < idCandidates.size(); i++) {
@@ -195,13 +195,13 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t r
     tracer << "PopulateMonsters: Found no valid monsters to spawn at room theme (" + intToString(roomTheme) + ")" << endl;
     return false;
   } else {
-    const ActorDevNames_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
+    const ActorId_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
     spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells, IS_ROAMING_ALLOWED);
     return true;
   }
 }
 
-void PopulateMonsters::spawnGroupAt(const ActorDevNames_t id, const vector<coord>& sortedFreeCellsVector,
+void PopulateMonsters::spawnGroupAt(const ActorId_t id, const vector<coord>& sortedFreeCellsVector,
                                     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const {
 
   const ActorDefinition& d = eng->actorData->actorDefinitions[id];

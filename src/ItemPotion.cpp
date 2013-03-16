@@ -224,7 +224,7 @@ void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
 }
 
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isQuaffable) {
       lines.push_back(d->name.name);
@@ -238,7 +238,7 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
 }
 
 void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isQuaffable) {
       d->name.name = lines.front();
@@ -281,7 +281,7 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 
 void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition& itemDef, Engine* const engine) {
   if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false || actor != NULL) {
-    ItemDefinition* const potionDef = engine->itemData->itemDefinitions[itemDef.devName];
+    ItemDefinition* const potionDef = engine->itemData->itemDefinitions[itemDef.id];
 
     const bool PLAYER_SEE_CELL = engine->map->playerVision[pos.x][pos.y];
 

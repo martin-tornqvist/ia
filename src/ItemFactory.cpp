@@ -12,7 +12,7 @@
 #include "ItemDevice.h"
 
 //Private
-Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
+Item* ItemFactory::spawnItem(ItemId_t devName) {
   Item* item = NULL;
 
   ItemDefinition* const d = eng->itemData->itemDefinitions[devName];
@@ -309,6 +309,15 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   case item_deviceSentry:
     item = new DeviceSentry(d);
     break;
+  case item_deviceRepeller:
+    item = new DeviceRepeller(d);
+    break;
+  case item_deviceRejuvenator:
+    item = new DeviceRejuvenator(d);
+    break;
+  case item_deviceTranslocator:
+    item = new DeviceTranslocator(d);
+    break;
   case item_deviceElectricLantern:
     item = new DeviceElectricLantern(d);
     break;
@@ -321,7 +330,7 @@ Item* ItemFactory::spawnItem(ItemDevNames_t devName) {
   return item;
 }
 
-Item* ItemFactory::spawnItemOnMap(ItemDevNames_t devName, const coord pos) {
+Item* ItemFactory::spawnItemOnMap(ItemId_t devName, const coord pos) {
   Item* item = spawnItem(devName);
 
   const ItemDefinition& d = item->getDef();
@@ -359,15 +368,15 @@ Item* ItemFactory::spawnItemOnMap(ItemDevNames_t devName, const coord pos) {
 }
 
 Item* ItemFactory::copyItem(Item* oldItem) {
-  Item* newItem = spawnItem(oldItem->getDef().devName);
+  Item* newItem = spawnItem(oldItem->getDef().id);
   *newItem = *oldItem;
   return newItem;
 }
 
 //Item* ItemFactory::spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType) {
-//  vector<ItemDevNames_t> itemCandidates;
+//  vector<ItemId_t> itemCandidates;
 //
-//  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+//  for(unsigned int i = 1; i < endOfItemIds; i++) {
 //    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
 //
 //    bool isNative = false;
@@ -379,7 +388,7 @@ Item* ItemFactory::copyItem(Item* oldItem) {
 //    }
 //
 //    if(isNative) {
-//      itemCandidates.push_back(static_cast<ItemDevNames_t>(i));
+//      itemCandidates.push_back(static_cast<ItemId_t>(i));
 //    }
 //  }
 //
@@ -392,12 +401,12 @@ Item* ItemFactory::copyItem(Item* oldItem) {
 //}
 
 Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS) {
-  vector<ItemDevNames_t> itemCandidates;
+  vector<ItemId_t> itemCandidates;
 
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if((d->isReadable == true && ALLOW_SCROLLS == true) || (d->isQuaffable == true && ALLOW_POTIONS == true)) {
-      itemCandidates.push_back(static_cast<ItemDevNames_t>(i));
+      itemCandidates.push_back(static_cast<ItemId_t>(i));
     }
   }
 

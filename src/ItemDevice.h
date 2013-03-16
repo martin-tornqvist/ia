@@ -6,7 +6,7 @@
 class Device: public Item {
 public:
   Device(ItemDefinition* const itemDefinition) :
-    Item(itemDefinition), isActivated_(false), nrTurnsToNextEffect_(-1) {
+    Item(itemDefinition), isActivated_(false), nrTurnsToNextGoodEffect_(-1), nrTurnsToNextBadEffect_(-1) {
   }
 
   virtual ~Device() {
@@ -31,16 +31,17 @@ protected:
 
   int getRandomNrTurnsToNextEffect(Engine* const engine) const;
 
-  void runEffect(Engine* const engine);
+  virtual void runGoodEffect(Engine* const engine) = 0;
 
-  virtual void specificEffect(Engine* const engine) = 0;
+  virtual void runBadEffect(Engine* const engine);
 
   virtual void specificToggle(Engine* const engine) {
     (void)engine;
   }
 
   bool isActivated_;
-  int nrTurnsToNextEffect_;
+  int nrTurnsToNextGoodEffect_;
+  int nrTurnsToNextBadEffect_;
 };
 
 class DeviceSentry: public Device {
@@ -53,7 +54,46 @@ public:
   }
 
 private:
-  void specificEffect(Engine* const engine);
+  void runGoodEffect(Engine* const engine);
+};
+
+class DeviceRepeller: public Device {
+public:
+  DeviceRepeller(ItemDefinition* const itemDefinition) :
+    Device(itemDefinition) {
+  }
+
+  ~DeviceRepeller() {
+  }
+
+private:
+  void runGoodEffect(Engine* const engine);
+};
+
+class DeviceRejuvenator: public Device {
+public:
+  DeviceRejuvenator(ItemDefinition* const itemDefinition) :
+    Device(itemDefinition) {
+  }
+
+  ~DeviceRejuvenator() {
+  }
+
+private:
+  void runGoodEffect(Engine* const engine);
+};
+
+class DeviceTranslocator: public Device {
+public:
+  DeviceTranslocator(ItemDefinition* const itemDefinition) :
+    Device(itemDefinition) {
+  }
+
+  ~DeviceTranslocator() {
+  }
+
+private:
+  void runGoodEffect(Engine* const engine);
 };
 
 class DeviceElectricLantern: public Device {
@@ -68,9 +108,12 @@ public:
   bool isGivingLight() const;
 
 private:
-  void specificEffect(Engine* const engine);
+  void runGoodEffect(Engine* const engine);
+
+  void runBadEffect(Engine* const engine);
 
   void specificToggle(Engine* const engine);
 };
+
 
 #endif

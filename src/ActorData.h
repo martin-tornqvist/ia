@@ -9,7 +9,7 @@
 #include "RoomTheme.h"
 #include "ConstTypes.h"
 
-enum ActorDevNames_t {
+enum ActorId_t {
   actor_empty,
   actor_player,
   actor_zombie, actor_zombieAxe, actor_bloatedZombie,
@@ -26,14 +26,14 @@ enum ActorDevNames_t {
   actor_mummy, actor_khephren, actor_nitokris,
   actor_deepOne,
   actor_keziahMason, actor_brownJenkin,
-  actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
+//  actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
   actor_dustVortex, actor_fireVortex,
   actor_oozeGray, actor_oozeClear, actor_oozePutrid,
   actor_huntingHorror,
 
-  endOfActorDevNames
+  endOfActorIds
 };
 
 enum MonsterGroupSize_t {
@@ -76,19 +76,17 @@ enum MonsterShockLevel {
 
 struct AiBehavior {
 public:
-  AiBehavior() : looks(false), /*listens(false), respondsWithPhrase(false),*/
-    makesRoomForFriend(false), attemptsAttack(false), pathsToTargetWhenAware(false),
-    movesTowardTargetWhenVision(false), movesTowardLair(false),
-    movesTowardLeader(false) {}
+  AiBehavior() : looks(false), makesRoomForFriend(false), attemptsAttack(false),
+    pathsToTargetWhenAware(false), movesTowardTargetWhenVision(false),
+    movesTowardLair(false), movesTowardLeader(false) {}
 
   void reset() {
-    looks = /*listens = respondsWithPhrase =*/ makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware =
-          movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
+    looks = makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware = false;
+    movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
   }
 
-  bool looks, /*listens, respondsWithPhrase,*/ makesRoomForFriend, attemptsAttack,
-  pathsToTargetWhenAware, movesTowardTargetWhenVision, movesTowardLair,
-  movesTowardLeader;
+  bool looks, makesRoomForFriend, attemptsAttack, pathsToTargetWhenAware;
+  bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
 };
 
 struct ActorDefinition {
@@ -99,7 +97,7 @@ public:
 
   void reset();
 
-  ActorDevNames_t devName;
+  ActorId_t id;
   string name_a;
   string name_the;
   Tile_t tile;
@@ -143,7 +141,7 @@ public:
 class ActorData {
 public:
   ActorData(Engine* engine) : eng(engine) {
-    for(unsigned int i = 0; i < endOfActorDevNames; i++) {
+    for(unsigned int i = 0; i < endOfActorIds; i++) {
       actorDefinitions[i].abilityValues.eng = engine;
     }
     defineAllActors();
@@ -151,17 +149,17 @@ public:
 
   void defineAllActors();
 
-  ActorDefinition actorDefinitions[endOfActorDevNames];
+  ActorDefinition actorDefinitions[endOfActorIds];
 
   void addSaveLines(vector<string>& lines) const {
-    for(unsigned int i = 0; i < endOfActorDevNames; i++) {
+    for(unsigned int i = 0; i < endOfActorIds; i++) {
       lines.push_back(intToString(actorDefinitions[i].nrLeftAllowedToSpawn));
       lines.push_back(intToString(actorDefinitions[i].nrOfKills));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < endOfActorDevNames; i++) {
+    for(unsigned int i = 0; i < endOfActorIds; i++) {
       actorDefinitions[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
       lines.erase(lines.begin());
       actorDefinitions[i].nrOfKills = stringToInt(lines.front());
@@ -170,13 +168,9 @@ public:
   }
 
 private:
-
   void setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const;
 
-  void finalizeDefinition(ActorDefinition& d) {
-    actorDefinitions[d.devName] = d;
-    d.description.resize(0);
-  }
+  void finalizeDefinition(ActorDefinition& d);
 
   Engine* eng;
 };

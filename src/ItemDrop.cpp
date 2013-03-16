@@ -96,7 +96,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
         stackY = freeCells.at(ii).y;
         stackItem = eng->map->items[stackX][stackY];
         if(stackItem != NULL) {
-          if(stackItem->getDef().devName == (*item)->getDef().devName) {
+          if(stackItem->getDef().id == (*item)->getDef().id) {
             stackItem->numberOfItems += (*item)->numberOfItems;
             delete(*item);
             *item = NULL;

@@ -10,10 +10,11 @@
 bool Device::toggle(Engine* const engine) {
   if(isActivated_) {
     isActivated_ = false;
-    nrTurnsToNextEffect_ = -1;
+    nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
   } else {
     isActivated_ = true;
-    nrTurnsToNextEffect_ = getRandomNrTurnsToNextEffect(engine);
+    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextEffect(engine);
+    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextEffect(engine);
   }
   string str = "Device ";
   str += isActivated_ ? "activates" : "deactivates";
@@ -28,21 +29,23 @@ int Device::getRandomNrTurnsToNextEffect(Engine* const engine) const {
 
 void Device::newTurn(Engine* const engine) {
   if(isActivated_) {
-    if(--nrTurnsToNextEffect_ <= 0) {
-      runEffect(engine);
-      nrTurnsToNextEffect_ = getRandomNrTurnsToNextEffect(engine);
+    if(--nrTurnsToNextGoodEffect_ <= 0) {
+      runGoodEffect(engine);
+      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextEffect(engine);
+    }
+    if(--nrTurnsToNextBadEffect_ <= 0) {
+      runBadEffect(engine);
+      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextEffect(engine);
     }
   }
 }
 
-void Device::runEffect(Engine* const engine) {
-  tracer << "Device::runEffect()..." << endl;
-  specificEffect(engine);
-  tracer << "Device::runEffect() [DONE]" << endl;
+void Device::runBadEffect(Engine* const engine) {
+
 }
 
 //---------------------------------------------------- SENTRY DEVICE
-void DeviceSentry::specificEffect(Engine* const engine) {
+void DeviceSentry::runGoodEffect(Engine* const engine) {
   const int DMG = engine->dice(1, 6) + 2;
 
   engine->player->getSpotedEnemies();
@@ -51,13 +54,29 @@ void DeviceSentry::specificEffect(Engine* const engine) {
   if(NR_TARGET_CANDIDATES > 0) {
     Actor* const actor = targetCandidates.at(engine->dice.getInRange(0, NR_TARGET_CANDIDATES - 1));
     const coord& pos = actor->pos;
+    engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(vector<coord>(1, pos), clrYellow, 1, engine);
     actor->hit(DMG, damageType_electric);
   }
 }
 
+//---------------------------------------------------- REPELLER DEVICE
+void DeviceRepeller::runGoodEffect(Engine* const engine) {
+
+}
+
+//---------------------------------------------------- REJUVENATOR DEVICE
+void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
+
+}
+
+//---------------------------------------------------- TRANSLOCATOR DEVICE
+void DeviceTranslocator::runGoodEffect(Engine* const engine) {
+
+}
+
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceElectricLantern::specificEffect(Engine* const engine) {
+void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
   (void)engine;
 }
 
@@ -69,6 +88,10 @@ void DeviceElectricLantern::specificToggle(Engine* const engine) {
 
 bool DeviceElectricLantern::isGivingLight() const {
   return isActivated_;
+}
+
+void DeviceElectricLantern::runBadEffect(Engine* const engine) {
+
 }
 
 

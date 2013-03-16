@@ -529,12 +529,12 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
     Item* itemWielded = playerInv->getItemInSlot(slot_wielded);
     bool hasMachete = false;
     if(itemWielded != NULL) {
-      hasMachete = itemWielded->getDef().devName == item_machete;
+      hasMachete = itemWielded->getDef().id == item_machete;
     }
     if(hasMachete == false) {
       Item* itemWieldedAlt = playerInv->getItemInSlot(slot_wieldedAlt);
       if(itemWieldedAlt != NULL) {
-        hasMachete = itemWieldedAlt->getDef().devName == item_machete;
+        hasMachete = itemWieldedAlt->getDef().id == item_machete;
       }
     }
     if(hasMachete == false) {

@@ -12,10 +12,10 @@
 PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :
   eng(engine) {
 
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isScroll) {
-      scrollsToReadFromPlayerMemory.push_back(dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemDevNames_t>(i))));
+      scrollsToReadFromPlayerMemory.push_back(dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemId_t>(i))));
     }
   }
 }
@@ -93,7 +93,8 @@ void PlayerPowersHandler::run(const bool CAST_FROM_MEMORY) {
         }
       }
       break;
-      default: {} break;
+      default:
+      {} break;
       }
     }
   }
@@ -132,19 +133,19 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const bool DRAW_COMMAND_PRO
     str += ") " + itemName;
     eng->renderer->drawText(str, renderArea_mainScreen, 1, currentListPos, clr);
 
-//		string fill;
-//		fill.resize(0);
-//		const unsigned int FILL_SIZE = 65 - str.size();
-//		for(unsigned int i = 0; i < FILL_SIZE; i++) {
-//			fill.push_back('.');
-//		}
-//		eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, clrGray);
-//		const int x = 28;
+//    string fill;
+//    fill.resize(0);
+//    const unsigned int FILL_SIZE = 65 - str.size();
+//    for(unsigned int i = 0; i < FILL_SIZE; i++) {
+//      fill.push_back('.');
+//    }
+//    eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, clrGray);
+//    const int x = 28;
 //
-//		const int CHANCE_OF_SUCCESS = dynamic_cast<Scroll*>(item)->getChanceToLearnOrCastFromMemory(false, eng);
+//    const int CHANCE_OF_SUCCESS = dynamic_cast<Scroll*>(item)->getChanceToLearnOrCastFromMemory(false, eng);
 //
-//		const string info = "(" + intToString(CHANCE_OF_SUCCESS) + "% chance to memorize when cast)";
-//		eng->renderer->drawText(info, renderArea_mainScreen, x, currentListPos, clrWhite);
+//    const string info = "(" + intToString(CHANCE_OF_SUCCESS) + "% chance to memorize when cast)";
+//    eng->renderer->drawText(info, renderArea_mainScreen, x, currentListPos, clrWhite);
 
     currentListPos++;
   }

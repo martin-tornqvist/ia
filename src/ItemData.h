@@ -28,7 +28,7 @@ public:
     makeList();
   }
   ~ItemData() {
-    for(unsigned int i = 1; i < endOfItemDevNames; i++)
+    for(unsigned int i = 1; i < endOfItemIds; i++)
       delete itemDefinitions[i];
   }
 
@@ -37,7 +37,7 @@ public:
   string getItemInterfaceRef(Item* const item, const bool ADD_A,
                              const PrimaryAttackMode_t attackMode = primaryAttackMode_none) const;
 
-  ItemDefinition* itemDefinitions[endOfItemDevNames];
+  ItemDefinition* itemDefinitions[endOfItemIds];
 
   bool isWeaponStronger(const ItemDefinition& oldDef, const ItemDefinition& newDef, bool melee);
   void addSaveLines(vector<string>& lines) const;

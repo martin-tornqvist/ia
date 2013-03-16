@@ -158,7 +158,8 @@
 		<Unit filename="..\src\ConstTypes.h" />
 		<Unit filename="..\src\Converters.cpp" />
 		<Unit filename="..\src\Converters.h" />
-		<Unit filename="..\src\Declares.h" />
+		<Unit filename="..\src\DebugModeStatPrinter.cpp" />
+		<Unit filename="..\src\DebugModeStatPrinter.h" />
 		<Unit filename="..\src\DungeonClimb.cpp" />
 		<Unit filename="..\src\DungeonClimb.h" />
 		<Unit filename="..\src\DungeonMaster.cpp" />

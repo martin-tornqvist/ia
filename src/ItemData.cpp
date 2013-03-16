@@ -267,7 +267,7 @@ void ItemData::makeList() {
   d->glyph = '*';
   d->color = clrRedLight;
   d->tile = tile_trapezohedron;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_sawedOff);
   resetDef(d, itemDef_rangedWpn);
@@ -283,7 +283,7 @@ void ItemData::makeList() {
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->reloadAudio = audio_shotgun_load_shell;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pumpShotgun);
   resetDef(d, itemDef_rangedWpn);
@@ -300,13 +300,13 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAudio = audio_shotgunPump_fire;
   d->reloadAudio = audio_shotgun_load_shell;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shotgunShell);
   resetDef(d, itemDef_ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incinerator);
   resetDef(d, itemDef_rangedWpn);
@@ -324,7 +324,7 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrRedLight;
   d->spawnStandardMinDLVL = 4;
   d->rangedDmgLabelOverRide = "?";
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incineratorShell);
   resetDef(d, itemDef_ammo);
@@ -332,7 +332,7 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->spawnStandardMinDLVL = 3;
   d->maxStackSizeAtSpawn = 2;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machineGun);
   resetDef(d, itemDef_rangedWpn);
@@ -349,13 +349,13 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
   d->rangedAudio = audio_tommygun_fire;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_drumOfBullets);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistol);
   resetDef(d, itemDef_rangedWpn);
@@ -371,7 +371,7 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a pistol being fired.";
   d->rangedAudio = audio_pistol_fire;
   d->reloadAudio = audio_pistol_reload;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flareGun);
   resetDef(d, itemDef_rangedWpn);
@@ -389,13 +389,13 @@ void ItemData::makeList() {
   d->rangedStatusEffect = new StatusFlared(eng);
   //d->rangedAudio = audio_pistol_fire;
   //d->reloadAudio = audio_pistol_reload;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistolClip);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_teslaCanon);
   resetDef(d, itemDef_rangedWpn);
@@ -415,7 +415,7 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrYellow;
   d->spawnStandardMinDLVL = 7;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_spikeGun);
   resetDef(d, itemDef_rangedWpn);
@@ -437,14 +437,14 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedMissileColor = clrGray;
   d->spawnStandardMinDLVL = 4;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_teslaCanister);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
   d->ammoContainedInClip = 50;
   d->spawnStandardMinDLVL = 6;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dynamite);
   resetDef(d, itemDef_explosive);
@@ -452,7 +452,7 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
   d->color = clrRedLight;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flare);
   resetDef(d, itemDef_explosive);
@@ -461,7 +461,7 @@ void ItemData::makeList() {
   d->tile = tile_flare;
   d->color = clrGray;
   d->isAmmo = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_molotov);
   resetDef(d, itemDef_explosive);
@@ -469,7 +469,7 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_molotov;
   d->color = clrWhite;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_throwingKnife);
   resetDef(d, itemDef_missileWeapon);
@@ -483,7 +483,7 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_rock);
   resetDef(d, itemDef_missileWeapon);
@@ -496,7 +496,7 @@ void ItemData::makeList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->primaryAttackMode = primaryAttackMode_missile;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dagger);
   resetDef(d, itemDef_meleeWpn);
@@ -507,7 +507,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeBaseAttackSkill = 20;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hatchet);
   resetDef(d, itemDef_meleeWpn);
@@ -521,7 +521,7 @@ void ItemData::makeList() {
   d->missileBaseAttackSkill = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_club);
   resetDef(d, itemDef_meleeWpn);
@@ -535,7 +535,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeBaseAttackSkill = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hammer);
   resetDef(d, itemDef_meleeWpn);
@@ -546,7 +546,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeBaseAttackSkill = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machete);
   resetDef(d, itemDef_meleeWpn);
@@ -557,7 +557,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeBaseAttackSkill = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_axe);
   resetDef(d, itemDef_meleeWpn);
@@ -568,7 +568,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pitchFork);
   resetDef(d, itemDef_meleeWpn);
@@ -580,7 +580,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_sledgeHammer);
   resetDef(d, itemDef_meleeWpn);
@@ -592,7 +592,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ironSpike);
   resetDef(d, itemDef_missileWeapon);
@@ -608,7 +608,7 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_playerKick);
   resetDef(d, itemDef_meleeWpnIntr);
@@ -617,7 +617,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = 25;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_playerStomp);
   resetDef(d, itemDef_meleeWpnIntr);
@@ -626,33 +626,33 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = 25;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_zombieClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_zombieClawDiseased);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_zombieAxe);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_bloatedZombiePunch);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_bloatedZombie], strong);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_bloatedZombieSpit);
   resetDef(d, itemDef_rangedWpnIntr);
@@ -662,71 +662,71 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrGreenLight;
   d->rangedDamageType = damageType_acid;
   d->rangedMissileGlyph = '*';
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ratBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ratBiteDiseased);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ratThingBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ratThing], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_wormMassBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wormMass], weak);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_wolfBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wolf], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_greenSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_greenSpider], normal);
   d->meleeStatusEffect = new StatusBlind(4);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_whiteSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_whiteSpider], normal);
   d->meleeStatusEffect = new StatusParalyzed(3);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_redSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_redSpider], normal);
   d->meleeStatusEffect = new StatusWeak(250);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shadowSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadowSpider], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_lengSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_lengSpider], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hellHoundFireBreath);
   resetDef(d, itemDef_rangedWpnIntr);
@@ -739,54 +739,54 @@ void ItemData::makeList() {
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
   d->rangedDamageType = damageType_fire;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hellHoundBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dustVortexEngulf);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_dustVortex], normal);
   d->meleeStatusEffect = new StatusBlind(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_fireVortexEngulf);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireVortex], normal);
   d->meleeStatusEffect = new StatusBurning(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ghostClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghost], normal);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_phantasmSickle);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_phantasm], strong);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_wraithClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wraith], normal);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_giantBatBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantBat], weak);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_miGoElectricGun);
   resetDef(d, itemDef_rangedWpnIntr);
@@ -799,45 +799,45 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
   d->rangedSoundIsLoud = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ghoulClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghoul], normal);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shadowClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadow], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_byakheeClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_byakhee], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_giantMantisClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantMantis], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_giantLocustBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantLocust], weak);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_mummyMaul);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_mummy], strong);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deepOneJavelinAttack);
   resetDef(d, itemDef_rangedWpnIntr);
@@ -847,39 +847,39 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrBrown;
   d->rangedMissileGlyph = '/';
   d->rangedSoundIsLoud = false;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deepOneSpearAttack);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "thrusts a spear at me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_oozeGraySpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeGray], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_oozeClearSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeClear], strong);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_oozePutridSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozePutrid], strong);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_huntingHorrorBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_huntingHorror], strong);
   d->meleeStatusEffect = new StatusParalyzed(eng);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorLeatherJacket);
   resetDef(d, itemDef_armor);
@@ -897,7 +897,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 1.0;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "";
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorIronSuit);
   resetDef(d, itemDef_armor);
@@ -915,7 +915,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 80;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorFlackJacket);
   resetDef(d, itemDef_armor);
@@ -933,7 +933,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_armorAsbestosSuit);
 //  resetDef(d, itemDef_armor);
@@ -951,134 +951,152 @@ void ItemData::makeList() {
 //  d->armorData.chanceToDeflectTouchAttacks = 95;
 //  d->armorData.protectsAgainstStatusBurning = true;
 //  d->armorData.overRideAbsorptionPointLabel = "?";
-//  itemDefinitions[d->devName] = d;
+//  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfTeleportation);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 5;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfDeepDescent);
   resetDef(d, itemDef_scroll);
   d->spawnStandardMinDLVL = 6;
   d->isScrollLearnable = true;
   d->spellTurnsPerPercentCooldown = 50;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfPestilence);
   resetDef(d, itemDef_scroll);
   d->isScrollLearnable = false;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfConfuseEnemies);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfParalyzeEnemies);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfSlowEnemies);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfDetectItems);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfDetectTraps);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfBlessing);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 30;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfClairvoyance);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 10;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfAzathothsBlast);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_scrollOfVoidChain);
 //  resetDef(d, itemDef_scroll);
 //  d->spellTurnsPerPercentCooldown = 1;
-//  itemDefinitions[d->devName] = d;
+//  itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_scrollOfIbnGhazisPowder);
 //  resetDef(d, itemDef_scroll);
 //  d->spellTurnsPerPercentCooldown = 1;
-//  itemDefinitions[d->devName] = d;
+//  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfHealing);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfBlindness);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfCorruption);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfTheCobra);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfStealth);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfFortitude);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfToughness);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfParalyzation);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfConfusion);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfSorcery);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
-  d->name = ItemName("Sentry device", "Sentry Devices", "a Sentry Device");
+  d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->color = clrRed;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_deviceRepeller);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
+  d->color = clrRed;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_deviceRejuvenator);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
+  d->color = clrRed;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_deviceTranslocator);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
+  d->color = clrRed;
+  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
   d->color = clrYellow;
-  itemDefinitions[d->devName] = d;
+  itemDefinitions[d->id] = d;
 }
 
 void ItemData::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     if(itemDefinitions[i]->isQuaffable) {
       lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
     }
@@ -1092,7 +1110,7 @@ void ItemData::addSaveLines(vector<string>& lines) const {
 }
 
 void ItemData::setParametersFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     if(itemDefinitions[i]->isQuaffable) {
       itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());

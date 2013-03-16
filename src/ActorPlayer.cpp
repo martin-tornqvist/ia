@@ -51,7 +51,7 @@ void Player::actorSpecific_spawnStartItems() {
   int NR_OF_SPIKES            = eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 4);
 
   const int WEAPON_CHOICE = eng->dice.getInRange(1, 5);
-  ItemDevNames_t weaponId = item_dagger;
+  ItemId_t weaponId = item_dagger;
   switch(WEAPON_CHOICE) {
   case 1:
     weaponId = item_dagger;
@@ -112,6 +112,9 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 }
 
@@ -1132,7 +1135,7 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
   if(isUsingLightGivingItem == false) {
     for(unsigned int i = 0; i < inventory_->getGeneral()->size(); i++) {
       Item* const item = inventory_->getGeneral()->at(i);
-      if(item->getDef().devName == item_deviceElectricLantern) {
+      if(item->getDef().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern = dynamic_cast<DeviceElectricLantern*>(item);
         isUsingLightGivingItem = lantern->isGivingLight();
         break;

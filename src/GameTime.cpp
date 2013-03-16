@@ -176,7 +176,7 @@ void GameTime::runNewStandardTurnEvents() {
   }
 
   //Player spell cooldowns
-  for(unsigned int i = 1; i < endOfItemDevNames; i++) {
+  for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemDefinition& d = *(eng->itemData->itemDefinitions[i]);
     if(d.isScroll) {
       if(d.isScrollLearned) {

@@ -12,18 +12,20 @@ class Engine;
 
 class ActorFactory {
 public:
-	ActorFactory(Engine* engine) {
-		eng = engine;
-	}
-	void deleteAllMonsters();
-    Actor* spawnActor(const ActorDevNames_t characterType, const coord& pos);
+  ActorFactory(Engine* engine) : eng(engine) {
+  }
 
-	Actor* spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET);
+  void deleteAllMonsters();
 
-//	Actor* spawnRandomActorRelatedToSpecialRoom(const coord& pos, const SpecialRoom_t roomType, const int SPAWN_LEVEL_OFFSET);
+  Actor* spawnActor(const ActorId_t id, const coord& pos);
+
+  Actor* spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET);
 
 private:
-	Engine* eng;
+  friend class DebugModeStatPrinter;
+  Actor* makeActorFromId(const ActorId_t id);
+
+  Engine* eng;
 };
 
 #endif

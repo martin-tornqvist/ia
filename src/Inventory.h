@@ -38,7 +38,7 @@ struct InventorySlot {
 
   string interfaceName;
 
-  SlotTypes_t devName;
+  SlotTypes_t id;
   Item* item;
 };
 
@@ -88,7 +88,7 @@ public:
 
   bool hasAmmoForFirearmInInventory();
 
-  int getElementWithItemType(const ItemDevNames_t itemDevName) const;
+  int getElementWithItemType(const ItemId_t itemDevName) const;
 
   Item* getItemInSlot(SlotTypes_t slotName);
   Item* getItemInElement(const int GLOBAL_ELEMENT_NR);
@@ -99,21 +99,21 @@ public:
 
   void decreaseItemInGeneral(unsigned element);
 
-  void decreaseItemTypeInGeneral(const ItemDevNames_t devName);
+  void decreaseItemTypeInGeneral(const ItemId_t devName);
 
   void deleteItemInGeneral(unsigned element);
 
-  int getIntrinsicsSize() {
+  int getIntrinsicsSize() const {
     return m_intrinsics.size();
   }
 
-  Item* getIntrinsicInElement(int element);
+  Item* getIntrinsicInElement(int element) const;
 
   Item* getLastItemInGeneral();
 
-  bool hasItemInGeneral(const ItemDevNames_t devName) const;
+  bool hasItemInGeneral(const ItemId_t id) const;
 
-  int getItemStackSizeInGeneral(const ItemDevNames_t devName) const;
+  int getItemStackSizeInGeneral(const ItemId_t id) const;
 
   bool hasDynamiteInGeneral() const;
 
