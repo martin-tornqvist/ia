@@ -44,7 +44,7 @@ void Device::runBadEffect(Engine* const engine) {
 
 }
 
-//---------------------------------------------------- SENTRY DEVICE
+//---------------------------------------------------- SENTRY
 void DeviceSentry::runGoodEffect(Engine* const engine) {
   const int DMG = engine->dice(1, 6) + 2;
 
@@ -60,18 +60,23 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
   }
 }
 
-//---------------------------------------------------- REPELLER DEVICE
+//---------------------------------------------------- REPELLER
 void DeviceRepeller::runGoodEffect(Engine* const engine) {
 
 }
 
-//---------------------------------------------------- REJUVENATOR DEVICE
+//---------------------------------------------------- REJUVENATOR
 void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
 
 }
 
-//---------------------------------------------------- TRANSLOCATOR DEVICE
+//---------------------------------------------------- TRANSLOCATOR
 void DeviceTranslocator::runGoodEffect(Engine* const engine) {
+
+}
+
+//---------------------------------------------------- SPELL REFLECTOR
+void DeviceSpellReflector::runGoodEffect(Engine* const engine) {
 
 }
 

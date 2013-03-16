@@ -204,7 +204,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
     d->glyph = '{';
-    d->tile = tile_device2;
+    d->tile = tile_device1;
     d->isStackable = false;
     d->spawnStandardMinDLVL = 3;
     d->spawnStandardMaxDLVL = 999;
@@ -239,14 +239,16 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
 void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor,
                                  const EntityStrength_t dmgStrength) const {
-  const int ACTOR_LEVEL = owningActor.monsterLvl;
+
+  const int ACTOR_LVL = owningActor.monsterLvl;
+//  const int EFFECTIVE_L
 
   //Set 1dY dmg from formula
   const int DMG_ROLLS_CAP = 10;
-  const int DMG_ROLLS_BASE = 1;
-  const double DMG_ROLLS_INCR = 0.3;
+  const double DMG_ROLLS_BASE_FL = 1.0;
+  const double DMG_ROLLS_INCR_FL = 0.4;
   const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
-  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE + static_cast<double>(ACTOR_LEVEL - 1) * DMG_ROLLS_INCR;
+  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_FL + (static_cast<double>(ACTOR_LVL - 1) * DMG_ROLLS_INCR_FL);
   const int DMG_ROLLS_AFTER_STR = static_cast<int>(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
   const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
 
@@ -1067,25 +1069,31 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
-  d->color = clrRed;
+  d->color = clrGray;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRepeller);
   resetDef(d, itemDef_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
-  d->color = clrRed;
+  d->color = clrGray;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRejuvenator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
-  d->color = clrRed;
+  d->color = clrGray;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceTranslocator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
-  d->color = clrRed;
+  d->color = clrGray;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_deviceSpellReflector);
+  resetDef(d, itemDef_device);
+  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
+  d->color = clrGray;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceElectricLantern);

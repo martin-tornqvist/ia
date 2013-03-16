@@ -274,7 +274,7 @@ public:
     if(strength == weak)
       return 0.7;
     if(strength == strong)
-      return 1.5;
+      return 1.6;
     if(strength == superStrong)
       return 2.5;
     return 1.0;

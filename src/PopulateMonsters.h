@@ -16,14 +16,14 @@ public:
 
   void populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const;
 
-private:
-  bool spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t roomTheme, const vector<coord>& sortedFreeCellsVector,
-      bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const;
-
   void spawnGroupAt(const ActorId_t id, const vector<coord>& sortedFreeCellsVector,
                     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const;
 
   void makeSortedFreeCellsVector(const coord& origin, const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) const;
+
+private:
+  bool spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t roomTheme, const vector<coord>& sortedFreeCellsVector,
+      bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const;
 
   int getRandomOutOfDepth() const;
 

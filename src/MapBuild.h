@@ -18,29 +18,13 @@ public:
   MapBuild(Engine* engine) : eng(engine) {
   }
 
-  //void buildStartArea1();
-
   void buildForest();
-
-//  void buildDungeonLevel();
 
   void buildCavern();
 
   void buildKingsTomb();
 
   void buildTrapezohedronLevel();
-
-  //	MapJunction* getJunctionAt(const int x, const int y) {
-  //		MapJunction* junction;
-  //
-  //		for(unsigned int i = 0; i < m_mapAreas.size(); i++) {
-  //			junction = m_mapAreas.at(i).getJunctionAt(x, y);
-  //			if(junction != NULL) {
-  //				return junction;
-  //			}
-  //		}
-  //		return NULL;
-  //	}
 
   void makePathByRandomWalk(
     int originX, int originY, int len, Feature_t featureToMake,
@@ -56,53 +40,6 @@ private:
   void buildForestOuterTreeline();
   void buildForestTreePatch();
   void buildForestTrees(const coord& stairsCoord);
-
-//  bool isAreaFree(const int x0, const int y0, const int x1, const int y1);
-
-//  vector<MapArea> m_mapAreas;
-
-//  coord getRectangularAreaDimensions(const Directions_t direction, const MapAreaType_t areaType, const int forcedCorridorLength = -1);
-
-//  bool buildRectangularArea(MapJunction* const junction, const MapAreaType_t areaType, const int forcedCorridorLength = -1);
-
-//  void coverAreaWithFeature(const Rect area, const Feature_t feature);
-
-//  void addJunction(MapArea& area, const coord upperLeft, const coord lowerRight, const int width, const int height,
-//                   const Directions_t junctionDirection);
-
-//  void addJunctionsToArea(
-//    MapArea& area, coord upperLeft, coord lowerRight, const int width, const int height,
-//    const Directions_t areaDirection);
-
-//  bool buildGeneralAreaFromTemplate(MapJunction* junction);
-//  bool buildStartRoom(int x0, int y0, int x1, int y1);
-
-//  void buildCorridorsAndRooms();
-
-//  void connectCorridorsAndRooms();
-
-//  void removeCorridorStumps();
-
-//  bool tryConnectPoints(const coord& c, const coord& offset);
-
-//  void buildRoomsAtCorridorEnds();
-
-//  int getRandomExpandableArea();
-
-//  void placeDoors();
-//  bool isPointGoodForDoor(coord testDoorCoord);
-//  bool isPointPassable(const int x, const int y);
-//  void placeDoorIfSingleEntrance(const vector<coord>& doorCandidates);
-
-//  void placeStairs();
-//  bool forbiddenStairCells[MAP_X_CELLS][MAP_Y_CELLS];
-
-//  Directions_t getRandomDirection() const;
-//  int getRandomRoomSize() const;
-//  int getRandomRoomSizeSmall() const;
-//  int getRandomCorridorLength() const;
-
-//  bool doors[MAP_X_CELLS][MAP_Y_CELLS];
 
   void buildFromTemplate(const coord pos, MapTemplate* t);
   void buildFromTemplate(const coord pos, TemplateDevName_t devName, const bool generalTemplate);

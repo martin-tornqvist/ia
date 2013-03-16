@@ -15,7 +15,11 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_N
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
-  eng->renderer->drawText(dots, renderArea_screen, X_DOTS, Y, clr);
+  sf::Color realColorDots = clr;
+  realColorDots.r /= 3;
+  realColorDots.g /= 3;
+  realColorDots.b /= 3;
+  eng->renderer->drawText(dots, renderArea_screen, X_DOTS, Y, realColorDots);
 }
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,

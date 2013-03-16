@@ -8155,7 +8155,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1362761709 c:\_martin_\ia\src\consttypes.h
+1363434861 c:\_martin_\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -8226,7 +8226,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1363432680 c:\_martin_\ia\src\itemdefinition.h
+1363437296 c:\_martin_\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -8685,7 +8685,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1363390111 source:c:\_martin_\ia\src\actorplayer.cpp
+1363437552 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8953,7 +8953,7 @@
 	"FeatureData.h"
 	"FeatureDoor.h"
 
-1352309562 c:\_martin_\ia\src\mapbuild.h
+1363433505 c:\_martin_\ia\src\mapbuild.h
 	<algorithm>
 	"MapTemplates.h"
 	"GameTime.h"
@@ -9436,7 +9436,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363432680 source:c:\_martin_\ia\src\itemdata.cpp
+1363437375 source:c:\_martin_\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -9474,7 +9474,7 @@
 	"Log.h"
 	"Render.h"
 
-1363432743 source:c:\_martin_\ia\src\itemfactory.cpp
+1363437530 source:c:\_martin_\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -9836,7 +9836,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1363390593 source:c:\_martin_\ia\src\renderinventory.cpp
+1363438547 source:c:\_martin_\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -10094,7 +10094,7 @@
 1363118298 c:\dev\ia\src\itemdevice.h
 	"Item.h"
 
-1363389951 c:\_martin_\ia\src\populatemonsters.h
+1363433453 c:\_martin_\ia\src\populatemonsters.h
 	<vector>
 	"ActorData.h"
 
@@ -10105,7 +10105,7 @@
 1363366495 c:\_martin_\ia\src\populatetraps.h
 	"RoomTheme.h"
 
-1363379677 source:c:\_martin_\ia\src\itemdevice.cpp
+1363437457 source:c:\_martin_\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10113,7 +10113,7 @@
 	"GameTime.h"
 	"Log.h"
 
-1363379842 c:\_martin_\ia\src\itemdevice.h
+1363437394 c:\_martin_\ia\src\itemdevice.h
 	"Item.h"
 
 1363390094 source:c:\_martin_\ia\src\populateitems.cpp
@@ -10144,7 +10144,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1363432759 source:c:\_martin_\ia\src\debugmodestatprinter.cpp
+1363432969 source:c:\_martin_\ia\src\debugmodestatprinter.cpp
 	"DebugModeStatPrinter.h"
 	<vector>
 	<algorithm>

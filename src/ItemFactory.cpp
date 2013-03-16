@@ -318,6 +318,9 @@ Item* ItemFactory::spawnItem(ItemId_t devName) {
   case item_deviceTranslocator:
     item = new DeviceTranslocator(d);
     break;
+  case item_deviceSpellReflector:
+    item = new DeviceSpellReflector(d);
+    break;
   case item_deviceElectricLantern:
     item = new DeviceElectricLantern(d);
     break;

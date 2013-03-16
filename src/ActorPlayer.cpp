@@ -115,6 +115,7 @@ void Player::actorSpecific_spawnStartItems() {
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSpellReflector));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 }
 
