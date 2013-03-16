@@ -8226,7 +8226,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1363390068 c:\_martin_\ia\src\itemdefinition.h
+1363432680 c:\_martin_\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -9094,7 +9094,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1363366495 c:\_martin_\ia\src\itemscroll.h
+1363432656 c:\_martin_\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -9436,7 +9436,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363392957 source:c:\_martin_\ia\src\itemdata.cpp
+1363432680 source:c:\_martin_\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -9474,7 +9474,7 @@
 	"Log.h"
 	"Render.h"
 
-1363390431 source:c:\_martin_\ia\src\itemfactory.cpp
+1363432743 source:c:\_martin_\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -9510,7 +9510,7 @@
 	"PlayerPowersHandler.h"
 	"ItemScroll.h"
 
-1363390094 source:c:\_martin_\ia\src\itemscroll.cpp
+1363432766 source:c:\_martin_\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -10144,7 +10144,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1363395701 source:c:\_martin_\ia\src\debugmodestatprinter.cpp
+1363432759 source:c:\_martin_\ia\src\debugmodestatprinter.cpp
 	"DebugModeStatPrinter.h"
 	<vector>
 	<algorithm>
@@ -10153,8 +10153,11 @@
 	"ActorFactory.h"
 	"Inventory.h"
 	"Item.h"
+	"PlayerPowersHandler.h"
+	"ItemScroll.h"
+	"ItemData.h"
 
-1363391142 c:\_martin_\ia\src\debugmodestatprinter.h
+1363430649 c:\_martin_\ia\src\debugmodestatprinter.h
 	<string>
 	<iostream>
 	<fstream>

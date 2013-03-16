@@ -119,7 +119,7 @@ enum ItemId_t {
 
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
-  item_scrollOfDeepDescent,
+  item_scrollOfDescent,
   item_scrollOfConfuseEnemies,
   item_scrollOfParalyzeEnemies,
   item_scrollOfSlowEnemies,

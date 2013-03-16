@@ -962,7 +962,7 @@ void ItemData::makeList() {
   d->spellTurnsPerPercentCooldown = 5;
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfDeepDescent);
+  d = new ItemDefinition(item_scrollOfDescent);
   resetDef(d, itemDef_scroll);
   d->spawnStandardMinDLVL = 6;
   d->isScrollLearnable = true;

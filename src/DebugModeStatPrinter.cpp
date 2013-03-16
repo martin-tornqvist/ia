@@ -8,6 +8,9 @@
 #include "ActorFactory.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "PlayerPowersHandler.h"
+#include "ItemScroll.h"
+#include "ItemData.h"
 
 struct IsHigherMonsterLvl {
 public:
@@ -22,12 +25,26 @@ void DebugModeStatPrinter::run() {
   const string separator = "--------------------------------------------------";
   const string indent1 = " ";
   const string indent2 = indent1 + "      ";
-//  const string indent2 = indent1 + indent1;
 
   statFile.open("debug_mode_stats_file.txt", ios::trunc);
   printLine("This file was created because Infra Arcana was run in Debug mode\n");
   printLine("Created at   : " + eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true));
   printLine("Game version : " + eng->config->GAME_VERSION);
+  printLine("\n");
+
+  printLine("SPELL COOLDOWN TURNS (0% -> 100%)");
+  printLine(separator);
+  const unsigned int NR_LEARNABLE_SCROLLS = eng->playerPowersHandler->getNrOfScrolls();
+  for(unsigned int i = 0; i < NR_LEARNABLE_SCROLLS; i++) {
+    Scroll* const scroll = eng->playerPowersHandler->getScrollAt(i);
+    const ItemDefinition& d = scroll->getDef();
+    if(d.isScrollLearnable) {
+      string name = scroll->getRealTypeName();
+      name.insert(name.end(), 24 - name.size(), ' ');
+      const string cooldownTurnsStr = intToString(d.spellTurnsPerPercentCooldown * 100);
+      printLine(indent1 + name + cooldownTurnsStr);
+    }
+  }
   printLine("\n");
 
   vector<ActorDefinition*> actorDefsSorted;
@@ -48,16 +65,18 @@ void DebugModeStatPrinter::run() {
   }
   for(unsigned int i = 0; i < monstersPerLvl.size(); i++) {
     const int LVL = i + 1;
-    const string lvlStr = (LVL < 10 ? " " : "") + intToString(LVL);
+    string lvlStr = intToString(LVL);
+    lvlStr.insert(lvlStr.end(), 6 - lvlStr.size(), ' ');
     const string nrStr = intToString(monstersPerLvl.at(i));
-    printLine(indent1 + lvlStr + "    " + nrStr);
+    printLine(indent1 + lvlStr + nrStr);
   }
   printLine("\n" + indent1 + "Total number of monsters: " + intToString(actorDefsSorted.size()));
   printLine("\n");
 
   printLine("STATS FOR EACH MONSTER");
   printLine(separator);
-  printLine(indent1 + "For creature's attack(s):");
+  printLine(indent1 + "Notes:");
+  printLine(indent1 + "(U) = Unique monster");
   printLine(indent1 + "(M) = Melee weapon");
   printLine(indent1 + "(R) = Ranged weapon");
   printLine("");
@@ -68,12 +87,15 @@ void DebugModeStatPrinter::run() {
     Actor* const actor = eng->actorFactory->makeActorFromId(d.id);
     actor->place(coord(-1, -1), &d, eng);
 
-    printLine(indent1 + actor->getNameA());
-    const string lvlStr = "LVL " + intToString(d.monsterLvl);
-    const string hpStr = "HP " + intToString(d.hpMax);
+    const string uniqueStr = d.isUnique ? " (U)" : "";
+    printLine(indent1 + actor->getNameA() + uniqueStr);
+    string lvlStr = "LVL:" + intToString(d.monsterLvl);
+    lvlStr.insert(lvlStr.end(), 8 - lvlStr.size(), ' ');
+    string hpStr = "HP:" + intToString(d.hpMax);
+    hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
     const int attackSkill = d.abilityValues.getAbilityValue(ability_accuracyMelee, false, *actor);
-    const string attackSkillStr = "Attack skill " + intToString(attackSkill) + "%";
-    printLine(indent2 + lvlStr + ", " + hpStr + ", " + attackSkillStr);
+    const string attackSkillStr = "Attack skill:" + intToString(attackSkill) + "%";
+    printLine(indent2 + lvlStr + hpStr + attackSkillStr);
 
     const Inventory* const inv = actor->getInventory();
     const unsigned int NR_INTRINSIC_ATTACKS = inv->getIntrinsicsSize();

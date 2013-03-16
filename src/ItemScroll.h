@@ -128,17 +128,17 @@ public:
 private:
 };
 
-class ScrollOfDeepDescent: public Scroll {
+class ScrollOfDescent: public Scroll {
 public:
-  ScrollOfDeepDescent(ItemDefinition* const itemDefinition) :
+  ScrollOfDescent(ItemDefinition* const itemDefinition) :
     Scroll(itemDefinition) {
   }
-  ~ScrollOfDeepDescent() {
+  ~ScrollOfDescent() {
   }
   void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
   const string getRealTypeName() {
-    return "Deep Descent";
+    return "Descent";
   }
 private:
 };

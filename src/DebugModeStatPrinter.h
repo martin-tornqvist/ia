@@ -9,8 +9,6 @@ using namespace std;
 
 class Engine;
 
-//IS_DEBUG_MODE
-
 class DebugModeStatPrinter {
 public:
   DebugModeStatPrinter(Engine* const engine) : eng(engine) {

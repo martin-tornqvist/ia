@@ -246,8 +246,8 @@ Item* ItemFactory::spawnItem(ItemId_t devName) {
   case item_scrollOfTeleportation:
     item = new ScrollOfTeleportation(d);
     break;
-  case item_scrollOfDeepDescent:
-    item = new ScrollOfDeepDescent(d);
+  case item_scrollOfDescent:
+    item = new ScrollOfDescent(d);
     break;
   case item_scrollOfPestilence:
     item = new ScrollOfPestilence(d);
