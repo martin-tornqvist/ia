@@ -67,7 +67,11 @@ void DebugModeStatPrinter::run() {
     const int LVL = i + 1;
     string lvlStr = intToString(LVL);
     lvlStr.insert(lvlStr.end(), 6 - lvlStr.size(), ' ');
-    const string nrStr = intToString(monstersPerLvl.at(i));
+    string nrStr = intToString(monstersPerLvl.at(i));
+    nrStr.insert(nrStr.end(), 3, ' ');
+    if(monstersPerLvl.at(i) > 0) {
+      nrStr.insert(nrStr.end(), monstersPerLvl.at(i), '*');
+    }
     printLine(indent1 + lvlStr + nrStr);
   }
   printLine("\n" + indent1 + "Total number of monsters: " + intToString(actorDefsSorted.size()));

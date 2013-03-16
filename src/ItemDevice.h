@@ -39,6 +39,10 @@ protected:
     (void)engine;
   }
 
+  virtual void specificNewTurn(Engine* const engine) {
+    (void)engine;
+  }
+
   bool isActivated_;
   int nrTurnsToNextGoodEffect_;
   int nrTurnsToNextBadEffect_;
@@ -121,6 +125,8 @@ public:
   bool isGivingLight() const;
 
 private:
+  void specificNewTurn(Engine* const engine);
+
   void runGoodEffect(Engine* const engine);
 
   void runBadEffect(Engine* const engine);

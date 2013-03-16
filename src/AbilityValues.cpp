@@ -42,7 +42,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
       val += 5;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
         val += 20;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_athletic))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
         val += 20;
     } break;
 
@@ -50,7 +50,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
       val += 10;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
         val += 30;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_athletic))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
         val += 30;
     } break;
 

@@ -38,6 +38,7 @@ void Device::newTurn(Engine* const engine) {
       nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextEffect(engine);
     }
   }
+  specificNewTurn(engine);
 }
 
 void Device::runBadEffect(Engine* const engine) {
@@ -81,6 +82,10 @@ void DeviceSpellReflector::runGoodEffect(Engine* const engine) {
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
+void DeviceElectricLantern::specificNewTurn(Engine* const engine) {
+
+}
+
 void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
   (void)engine;
 }

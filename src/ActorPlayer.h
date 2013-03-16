@@ -111,6 +111,8 @@ private:
 
   int mythosKnowledge;
 
+  int nrMovesUntilFreeAction;
+
   void attemptIdentifyItems();
   void testPhobias();
   void actorSpecific_hit(const int DMG);

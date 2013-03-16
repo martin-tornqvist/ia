@@ -11,8 +11,8 @@
 using namespace std;
 
 PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
-  setBonus(playerBonus_agile, "Agile", "+30% chance to evade attacks and traps");
-  setBonus(playerBonus_athletic, "Athletic", "+20% chance to evade attacks and traps", playerBonus_agile);
+  setBonus(playerBonus_agile, "Agile", "+30% chance to evade attacks and traps, every fourth move is a free action.");
+  setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every third move is a free action.", playerBonus_agile);
 //  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
 //  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_agile);
 //  setBonus(playerBonus_tumbler, "Tumbler", "Can evade explosions", playerBonus_athletic);
@@ -73,10 +73,12 @@ void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
   switch(bonus) {
   case playerBonus_healthy: {
     eng->player->changeMaxHP(2, false);
-  } break;
+  }
+  break;
   case playerBonus_vigorous: {
     eng->player->changeMaxHP(2, false);
-  } break;
+  }
+  break;
   default: {
   } break;
   }
@@ -93,36 +95,35 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
 //    ret.push_back(playerBonus_agile);
 //    ret.push_back(playerBonus_strongMinded);
 //  } else {
-    vector<PlayerBonuses_t> candidates;
-    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
-      const PlayerBonus& bon = bonuses_[i];
-      if(bon.isPicked_ == false) {
-        bool isPrereqsMet = true;
-        for(unsigned int ii = 0; ii < bon.prereqs_.size(); ii++) {
-          if(bonuses_[bon.prereqs_.at(ii)].isPicked_ == false) {
-            isPrereqsMet = false;
-          }
-        }
-        if(isPrereqsMet) {
-          candidates.push_back(static_cast<PlayerBonuses_t>(i));
+  vector<PlayerBonuses_t> candidates;
+  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    const PlayerBonus& bon = bonuses_[i];
+    if(bon.isPicked_ == false) {
+      bool isPrereqsMet = true;
+      for(unsigned int ii = 0; ii < bon.prereqs_.size(); ii++) {
+        if(bonuses_[bon.prereqs_.at(ii)].isPicked_ == false) {
+          isPrereqsMet = false;
         }
       }
-    }
-
-    const int NR_OF_CHOICES = 6;
-
-    for(int i = 0; i < NR_OF_CHOICES; i++) {
-      if(candidates.empty()) {
-        tracer << "[WARNING] Could not choose " << NR_OF_CHOICES << " pickable bonuses, in PlayerBonusHandler::getBonusChoices()" << endl;
-        if(ret.empty() == false) {
-          std::sort(ret.begin(), ret.end());
-        }
-        return ret;
+      if(isPrereqsMet) {
+        candidates.push_back(static_cast<PlayerBonuses_t>(i));
       }
-      const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);
-      ret.push_back(candidates.at(ELEMENT));
-      candidates.erase(candidates.begin() + ELEMENT);
     }
+  }
+
+  const int NR_OF_CHOICES = 6;
+
+  for(int i = 0; i < NR_OF_CHOICES; i++) {
+    if(candidates.empty()) {
+      if(ret.empty() == false) {
+        std::sort(ret.begin(), ret.end());
+      }
+      return ret;
+    }
+    const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);
+    ret.push_back(candidates.at(ELEMENT));
+    candidates.erase(candidates.begin() + ELEMENT);
+  }
 //  }
 
   std::sort(ret.begin(), ret.end());

@@ -28,7 +28,7 @@ Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
   molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  mythosKnowledge() {
+  mythosKnowledge(0), nrMovesUntilFreeAction(-1) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -980,7 +980,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       }
     }
 
-    bool isSwiftMoveAllowed = false;
+    bool isFreeTurn = false;;
 
     if(dest != pos) {
       // Attack?
@@ -1038,14 +1038,22 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           return;
         }
 
-        isSwiftMoveAllowed = true;
         const coord oldPos = pos;
         pos = dest;
 
-        // Player bonus gives dodge chance when moving?
-//        if(eng->playerBonusHandler->isBonusPicked(playerBonus_elusive)) {
-//          statusEffectsHandler_->attemptAddEffect(new StatusElusive(eng), true, true);
-//        }
+        const bool IS_AGILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_agile);
+        const bool IS_LITHE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_lithe);
+        if(IS_AGILE_PICKED || IS_LITHE_PICKED) {
+          const int FREE_MOVE_EVERY_N_TURN = IS_LITHE_PICKED ? 3 : 4;
+          if(nrMovesUntilFreeAction == -1) {
+            nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
+          } else if(nrMovesUntilFreeAction == 0) {
+            nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 1;
+            isFreeTurn = true;
+          } else {
+            nrMovesUntilFreeAction--;
+          }
+        }
 
         // Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
@@ -1065,24 +1073,12 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     // If destination reached, then we either moved or were held by something.
     // End turn (unless free turn due to bonus).
     if(pos == dest) {
-      bool isFreeTurn = false;
-      if(isSwiftMoveAllowed) {
-//        if(eng->playerBonusHandler->isBonusPicked(playerBonus_quick)) {
-//          const int CHANCE_FOR_SWIFT_MOVE = 10;
-//          if(eng->dice.getInRange(0, 100) < CHANCE_FOR_SWIFT_MOVE) {
-//            isFreeTurn = true;
-//            eng->playerVisualMemory->updateVisualMemory();
-//            eng->player->FOVupdate();
-//            eng->renderer->drawMapAndInterface();
-//          }
-//        }
-      }
       if(isFreeTurn == false) {
         eng->gameTime->letNextAct();
+        return;
       }
-    } else {
-      eng->renderer->drawMapAndInterface();
     }
+    eng->renderer->drawMapAndInterface();
   }
 }
 
