@@ -209,9 +209,10 @@ void Player::actorSpecific_hit(const int DMG) {
 int Player::getCarryWeightLimit() const {
   const bool IS_TOUGH_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_tough);
   const bool IS_RUGGED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
-  const int CARRY_WEIGHT_BON_FACTOR = (IS_TOUGH_PICKED ? 15 : 0) + (IS_RUGGED_PICKED ? 15 : 0);
+  const bool IS_WEAK = statusEffectsHandler_->hasEffect(statusWeak);
+  const int CARRY_WEIGHT_MOD = (IS_TOUGH_PICKED ? 15 : 0) + (IS_RUGGED_PICKED ? 15 : 0) + (IS_WEAK ? -20 : 0);
 
-  return (carryWeightBase * (CARRY_WEIGHT_BON_FACTOR + 100)) / 100;
+  return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::getShockResistance() const {

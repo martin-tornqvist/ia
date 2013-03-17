@@ -149,35 +149,37 @@ void StatusBlind::end(Engine* const engine) {
 
 void StatusParalyzed::start(Engine* const engine) {
   Player* const player = engine->player;
-  const coord& playerPos = player->pos;
-  const int DYNAMITE_FUSE = engine->player->dynamiteFuseTurns;
-  const int FLARE_FUSE = engine->player->flareFuseTurns;
-  const int MOLOTOV_FUSE = engine->player->molotovFuseTurns;
+  if(owningActor == player) {
+    const coord& playerPos = player->pos;
+    const int DYNAMITE_FUSE = engine->player->dynamiteFuseTurns;
+    const int FLARE_FUSE = engine->player->flareFuseTurns;
+    const int MOLOTOV_FUSE = engine->player->molotovFuseTurns;
 
-  if(DYNAMITE_FUSE > 0) {
-    player->dynamiteFuseTurns = -1;
-    player->updateColor();
-    engine->log->addMessage("The lit Dynamite stick falls from my hands!");
-    if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
-      engine->featureFactory->spawnFeatureAt(feature_litDynamite, playerPos, new DynamiteSpawnData(DYNAMITE_FUSE));
+    if(DYNAMITE_FUSE > 0) {
+      player->dynamiteFuseTurns = -1;
+      player->updateColor();
+      engine->log->addMessage("The lit Dynamite stick falls from my hands!");
+      if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
+        engine->featureFactory->spawnFeatureAt(feature_litDynamite, playerPos, new DynamiteSpawnData(DYNAMITE_FUSE));
+      }
     }
-  }
-  if(FLARE_FUSE > 0) {
-    player->flareFuseTurns = -1;
-    player->updateColor();
-    engine->log->addMessage("The lit Flare falls from my hands.");
-    if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
-      engine->featureFactory->spawnFeatureAt(feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
+    if(FLARE_FUSE > 0) {
+      player->flareFuseTurns = -1;
+      player->updateColor();
+      engine->log->addMessage("The lit Flare falls from my hands.");
+      if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
+        engine->featureFactory->spawnFeatureAt(feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
+      }
+      engine->gameTime->updateLightMap();
+      player->updateFov();
+      engine->renderer->drawMapAndInterface();
     }
-    engine->gameTime->updateLightMap();
-    player->updateFov();
-    engine->renderer->drawMapAndInterface();
-  }
-  if(MOLOTOV_FUSE > 0) {
-    player->molotovFuseTurns = -1;
-    player->updateColor();
-    engine->log->addMessage("The lit Molotov Cocktail falls from my hands!");
-    engine->explosionMaker->runExplosion(player->pos, false, new StatusBurning(engine));
+    if(MOLOTOV_FUSE > 0) {
+      player->molotovFuseTurns = -1;
+      player->updateColor();
+      engine->log->addMessage("The lit Molotov Cocktail falls from my hands!");
+      engine->explosionMaker->runExplosion(player->pos, false, new StatusBurning(engine));
+    }
   }
 }
 
