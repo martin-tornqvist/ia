@@ -14,7 +14,7 @@ public:
   }
 
   virtual sf::Color getInterfaceClr() const {
-    return clrGray;
+    return clrWhite;
   }
 
 private:
