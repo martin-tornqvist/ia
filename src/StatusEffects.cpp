@@ -10,6 +10,8 @@
 #include "ActorMonster.h"
 #include "Inventory.h"
 #include "Map.h"
+#include "Explosion.h"
+#include "FeatureFactory.h"
 
 using namespace std;
 
@@ -107,14 +109,14 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 void StatusBurning::start(Engine* const engine) {
   owningActor->addLight(owningActor->eng->map->light);
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
   doDamage(owningActor->eng);
 }
 
 void StatusBurning::end(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
@@ -135,39 +137,73 @@ void StatusBurning::newTurn(Engine* const engine) {
 void StatusBlind::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
 void StatusBlind::end(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
+}
+
+void StatusParalyzed::start(Engine* const engine) {
+  Player* const player = engine->player;
+  const coord& playerPos = player->pos;
+  const int DYNAMITE_FUSE = engine->player->dynamiteFuseTurns;
+  const int FLARE_FUSE = engine->player->flareFuseTurns;
+  const int MOLOTOV_FUSE = engine->player->molotovFuseTurns;
+
+  if(DYNAMITE_FUSE > 0) {
+    player->dynamiteFuseTurns = -1;
+    player->updateColor();
+    engine->log->addMessage("The lit Dynamite stick falls from my hands!");
+    if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
+      engine->featureFactory->spawnFeatureAt(feature_litDynamite, playerPos, new DynamiteSpawnData(DYNAMITE_FUSE));
+    }
+  }
+  if(FLARE_FUSE > 0) {
+    player->flareFuseTurns = -1;
+    player->updateColor();
+    engine->log->addMessage("The lit Flare falls from my hands.");
+    if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
+      engine->featureFactory->spawnFeatureAt(feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
+    }
+    engine->gameTime->updateLightMap();
+    player->updateFov();
+    engine->renderer->drawMapAndInterface();
+  }
+  if(MOLOTOV_FUSE > 0) {
+    player->molotovFuseTurns = -1;
+    player->updateColor();
+    engine->log->addMessage("The lit Molotov Cocktail falls from my hands!");
+    engine->explosionMaker->runExplosion(player->pos, false, new StatusBurning(engine));
+  }
 }
 
 void StatusFainted::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
 void StatusFainted::end(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
 void StatusClairvoyant::start(Engine* const engine) {
   owningActor->getStatusEffectsHandler()->endEffect(statusBlind);
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
 void StatusClairvoyant::end(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
@@ -178,13 +214,13 @@ void StatusClairvoyant::newTurn(Engine* const engine) {
 
 void StatusFlared::start(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
 void StatusFlared::end(Engine* const engine) {
   owningActor->updateColor();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 

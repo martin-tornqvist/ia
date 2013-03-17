@@ -797,7 +797,7 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDamageType = damageType_electric;
-  d->rangedStatusEffect = new StatusParalyzed(eng);
+  d->rangedStatusEffect = new StatusParalyzed(2);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
   d->rangedSoundIsLoud = true;
@@ -1204,7 +1204,7 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
     }
 
     if(d.isArmor) {
-      const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine();
+      const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
       return armorDataLine == "" ? ret : ret + " " + armorDataLine;
     }
 
@@ -1283,7 +1283,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A,
   }
 
   if(d.isArmor) {
-    const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine();
+    const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
     return armorDataLine == "" ? ret : ret + " " + armorDataLine;
   }
 

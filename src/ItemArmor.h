@@ -15,7 +15,7 @@ public:
     return durability;
   }
 
-  string getArmorDataLine() const;
+  string getArmorDataLine(const bool WITH_BRACKETS) const;
 
   int takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const DamageTypes_t damageType);
 

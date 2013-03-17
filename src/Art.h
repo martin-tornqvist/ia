@@ -108,6 +108,7 @@ enum Tile_t {
 	tile_blastAnimation1,
 	tile_blastAnimation2,
 	tile_corpse,
+	tile_corpse2,
 	tile_projectileStandardFrontSlash,
 	tile_projectileStandardBackSlash,
 	tile_projectileStandardDash,

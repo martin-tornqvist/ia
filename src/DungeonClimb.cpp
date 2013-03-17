@@ -71,7 +71,7 @@ void DungeonClimb::travelDown(const int levels) {
 	makeLevel();
 
 	eng->player->target = NULL;
-	eng->player->FOVupdate();
+	eng->player->updateFov();
 	eng->player->updateColor();
 	eng->renderer->drawMapAndInterface();
 	tracer << "DungeonClimb::travelDown() [DONE]" << endl;

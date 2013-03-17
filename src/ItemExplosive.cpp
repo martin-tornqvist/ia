@@ -37,7 +37,7 @@ void Flare::setPlayerExplosive(Engine* const engine) const {
 	engine->player->clr_ = clrYellow;
 	engine->log->addMessage("I light a Flare.");
   engine->gameTime->updateLightMap();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
 	engine->renderer->drawMapAndInterface();
 	engine->gameTime->letNextAct();
 }

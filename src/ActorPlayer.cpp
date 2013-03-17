@@ -657,9 +657,9 @@ void Player::act() {
   }
   if(molotovFuseTurns == 0) {
     eng->log->addMessage("The Molotov Cocktail explodes in my hands!");
+    molotovFuseTurns = -1;
     updateColor();
     eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng));
-    molotovFuseTurns = -1;
   }
 
   //Flare
@@ -778,7 +778,7 @@ void Player::act() {
               }
               else if(rollResult > successSmall) {
                 monster->isStealth = false;
-                FOVupdate();
+                updateFov();
                 eng->renderer->drawMapAndInterface();
                 eng->log->addMessage("I spot " + monster->getNameA() + "!");
               }
@@ -983,7 +983,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     bool isFreeTurn = false;;
 
     if(dest != pos) {
-      // Attack?
+      //Attack?
       Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
       if(actorAtDest != NULL) {
         if(statusEffectsHandler_->allowAttackMelee(true) == true) {
@@ -1016,9 +1016,9 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         return;
       }
 
-      // This point reached means no actor in the destination cell.
+      //This point reached means no actor in the destination cell.
 
-      // Blocking mobile or static features?
+      //Blocking mobile or static features?
       bool featuresAllowMove = eng->map->featuresStatic[dest.x][dest.y]->isMovePassable(this);
       vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(dest);
       if(featuresAllowMove) {
@@ -1038,7 +1038,6 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           return;
         }
 
-        const coord oldPos = pos;
         pos = dest;
 
         const bool IS_AGILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_agile);
@@ -1055,7 +1054,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           }
         }
 
-        // Print message if walking on item
+        //Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
           string message = statusEffectsHandler_->allowSee() == false ? "I feel here: " : "I see here: ";
@@ -1064,20 +1063,22 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         }
       }
 
-      // Note: bump() prints block messages.
+      //Note: bump() prints block messages.
       for(unsigned int i = 0; i < featureMobs.size(); i++) {
         featureMobs.at(i)->bump(this);
       }
       eng->map->featuresStatic[dest.x][dest.y]->bump(this);
     }
-    // If destination reached, then we either moved or were held by something.
-    // End turn (unless free turn due to bonus).
+    //If destination reached, then we either moved or were held by something.
+    //End turn (unless free turn due to bonus).
     if(pos == dest) {
       if(isFreeTurn == false) {
         eng->gameTime->letNextAct();
         return;
       }
     }
+    eng->gameTime->updateLightMap();
+    updateFov();
     eng->renderer->drawMapAndInterface();
   }
 }
@@ -1165,7 +1166,7 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
   }
 }
 
-void Player::FOVupdate() {
+void Player::updateFov() {
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
 
 //  addLight(eng->map->light);

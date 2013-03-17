@@ -36,7 +36,7 @@ public:
   Player();
   ~Player() {}
 
-  void FOVupdate();
+  void updateFov();
 
   void moveDirection(const coord& dir) {
     moveDirection(dir.x, dir.y);

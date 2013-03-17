@@ -146,7 +146,7 @@ void Interface::drawInfoLines() {
     eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
     xPos += 4;
   } else {
-    str = dynamic_cast<const Armor*>(armor)->getArmorDataLine();
+    str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
     eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
     xPos += str.length() + 1;
   }

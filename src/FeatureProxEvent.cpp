@@ -59,7 +59,7 @@ void ProxEventWallCrumble::playerIsNear() {
         }
       }
 
-      eng->player->FOVupdate();
+      eng->player->updateFov();
       eng->renderer->drawMapAndInterface();
 
       done = isOpeningMade;
@@ -95,7 +95,7 @@ void ProxEventWallCrumble::playerIsNear() {
     }
 
     eng->log->addMessage("The walls suddenly crumbles!");
-    eng->player->FOVupdate();
+    eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
     eng->gameTime->eraseFeatureMob(this, true);
   }

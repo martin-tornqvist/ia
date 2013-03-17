@@ -62,7 +62,7 @@ void GameTime::letNextAct() {
   if(currentActor == eng->player) {
     eng->player->shockTemp_ = 0;
     eng->playerVisualMemory->updateVisualMemory();
-    eng->player->FOVupdate();
+    eng->player->updateFov();
     eng->player->setTempShockFromFeatures();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);

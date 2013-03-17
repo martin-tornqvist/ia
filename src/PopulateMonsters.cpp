@@ -84,7 +84,7 @@ void PopulateMonsters::attemptSpawnDueToTimePassed() const {
 }
 
 void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
-  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(7, 10);
+  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(9, 11);
   int nrGroupsSpawned = 0;
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];

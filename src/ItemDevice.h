@@ -9,8 +9,7 @@ public:
     Item(itemDefinition), isActivated_(false), nrTurnsToNextGoodEffect_(-1), nrTurnsToNextBadEffect_(-1) {
   }
 
-  virtual ~Device() {
-  }
+  virtual ~Device() {}
 
   bool activateDefault(Actor* const actor, Engine* const engine) {
     (void)actor;
@@ -29,7 +28,8 @@ public:
 protected:
   bool toggle(Engine* const engine);
 
-  int getRandomNrTurnsToNextEffect(Engine* const engine) const;
+  virtual int getRandomNrTurnsToNextGoodEffect(Engine* const engine) const;
+  virtual int getRandomNrTurnsToNextBadEffect(Engine* const engine) const;
 
   virtual void runGoodEffect(Engine* const engine) = 0;
 
@@ -51,11 +51,9 @@ protected:
 class DeviceSentry: public Device {
 public:
   DeviceSentry(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceSentry() {
-  }
+  ~DeviceSentry() {}
 
 private:
   void runGoodEffect(Engine* const engine);
@@ -64,24 +62,21 @@ private:
 class DeviceRepeller: public Device {
 public:
   DeviceRepeller(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceRepeller() {
-  }
+  ~DeviceRepeller() {}
 
 private:
   void runGoodEffect(Engine* const engine);
+  int getRandomNrTurnsToNextGoodEffect(Engine* const engine) const;
 };
 
 class DeviceRejuvenator: public Device {
 public:
   DeviceRejuvenator(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceRejuvenator() {
-  }
+  ~DeviceRejuvenator() {}
 
 private:
   void runGoodEffect(Engine* const engine);
@@ -90,11 +85,9 @@ private:
 class DeviceTranslocator: public Device {
 public:
   DeviceTranslocator(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceTranslocator() {
-  }
+  ~DeviceTranslocator() {}
 
 private:
   void runGoodEffect(Engine* const engine);
@@ -103,11 +96,9 @@ private:
 class DeviceSpellReflector: public Device {
 public:
   DeviceSpellReflector(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceSpellReflector() {
-  }
+  ~DeviceSpellReflector() {}
 
 private:
   void runGoodEffect(Engine* const engine);
@@ -116,11 +107,9 @@ private:
 class DeviceElectricLantern: public Device {
 public:
   DeviceElectricLantern(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {
-  }
+    Device(itemDefinition) {}
 
-  ~DeviceElectricLantern() {
-  }
+  ~DeviceElectricLantern() {}
 
   bool isGivingLight() const;
 

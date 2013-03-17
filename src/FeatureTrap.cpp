@@ -475,7 +475,7 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
   const string actorName = actor->getNameThe();
 
   if(IS_PLAYER) {
-    eng->player->FOVupdate();
+    eng->player->updateFov();
     if(CAN_SEE) {
       eng->popup->showMessage("A curious shape on the floor starts to glow!", true);
     } else {

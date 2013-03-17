@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
         tracer << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
-      engine->player->FOVupdate();
+      engine->player->updateFov();
       engine->renderer->drawMapAndInterface();
 
       if(ENTRY_TYPE == gameEntry_new) {

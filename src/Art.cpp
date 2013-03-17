@@ -201,6 +201,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_blastAnimation1: return coord(11, 7); break;
   case tile_blastAnimation2: return coord(12, 7); break;
   case tile_corpse: return coord(13, 7); break;
+  case tile_corpse2: return coord(14, 7); break;
   case tile_projectileStandardFrontSlash: return coord(15, 7); break;
   case tile_projectileStandardBackSlash: return coord(16, 7); break;
   case tile_projectileStandardDash: return coord(17, 7); break;

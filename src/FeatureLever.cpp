@@ -34,7 +34,7 @@ void FeatureLever::pull() {
     doorLinkedTo_->isOpen_ = !doorLinkedTo_->isOpen_;
     doorLinkedTo_->isStuck_ = false;
   }
-  eng->player->FOVupdate();
+  eng->player->updateFov();
   eng->renderer->drawMapAndInterface();
   tracer << "FeatureLever::pull() [DONE]" << endl;
 }

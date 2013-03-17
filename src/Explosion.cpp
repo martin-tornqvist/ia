@@ -173,7 +173,7 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
   }
 
   //Set graphics back to normal
-  eng->player->FOVupdate();
+  eng->player->updateFov();
   eng->renderer->drawMapAndInterface();
 
   if(effect != NULL) {
@@ -211,7 +211,7 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
   }
 
   //Draw map
-  eng->player->FOVupdate();
+  eng->player->updateFov();
   eng->renderer->drawMapAndInterface();
 
   //Delay

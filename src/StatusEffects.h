@@ -329,7 +329,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 250);
+    return DiceParam(0, 0, 150);
   }
 };
 
@@ -1573,9 +1573,7 @@ public:
     return 0;
   }
 
-  void start(Engine* const engine) {
-    (void)engine;
-  }
+  void start(Engine* const engine);
 
   void end(Engine* const engine) {
     (void)engine;

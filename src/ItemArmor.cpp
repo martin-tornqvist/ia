@@ -7,7 +7,7 @@ Armor::Armor(ItemDefinition* const itemDefinition, Engine* engine) :
   Item(itemDefinition), eng(engine), durability(eng->dice.getInRange(60, 100)) {
 }
 
-string Armor::getArmorDataLine() const {
+string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
   const string apLabelOverRide = def_->armorData.overRideAbsorptionPointLabel;
   const int ABS_POINTS = getAbsorptionPoints(damageType_physical);
 
@@ -15,8 +15,12 @@ string Armor::getArmorDataLine() const {
     return "";
   }
 
-  const string absorptionPoints = apLabelOverRide == "" ? intToString(ABS_POINTS) : apLabelOverRide;
-  return "[" + absorptionPoints + "]";
+  const string absorptionPointsStr = apLabelOverRide == "" ? intToString(ABS_POINTS) : apLabelOverRide;
+  if(WITH_BRACKETS) {
+    return "[" + absorptionPointsStr + "]";
+  } else {
+    return absorptionPointsStr;
+  }
 }
 
 int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const DamageTypes_t damageType) {

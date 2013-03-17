@@ -177,7 +177,7 @@ void Actor::teleportToRandom() {
   const coord CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
 
   if(this == eng->player) {
-    eng->player->FOVupdate();
+    eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
   }
@@ -185,7 +185,7 @@ void Actor::teleportToRandom() {
   pos = CELL;
 
   if(this == eng->player) {
-    eng->player->FOVupdate();
+    eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
@@ -384,7 +384,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
       }
     }
     glyph_ = '&';
-    tile_ = tile_corpse;
+    tile_ = tile_corpse2;
   } else {
     glyph_ = ' ';
     tile_ = tile_empty;

@@ -181,7 +181,7 @@ void ScrollOfDetectItems::specificRead(const bool FROM_MEMORY, Engine* const eng
     }
   }
   engine->renderer->drawMapAndInterface();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 
   engine->log->addMessage("All items are revealed to me.");

@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "GameTime.h"
 #include "Log.h"
+#include "Knockback.h"
 
 //---------------------------------------------------- BASE CLASS
 bool Device::toggle(Engine* const engine) {
@@ -13,8 +14,9 @@ bool Device::toggle(Engine* const engine) {
     nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
   } else {
     isActivated_ = true;
-    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextEffect(engine);
-    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextEffect(engine);
+    runBadEffect(engine);
+    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
+    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
   }
   string str = "Device ";
   str += isActivated_ ? "activates" : "deactivates";
@@ -23,7 +25,11 @@ bool Device::toggle(Engine* const engine) {
   return false;
 }
 
-int Device::getRandomNrTurnsToNextEffect(Engine* const engine) const {
+int Device::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
+  return engine->dice.getInRange(6, 10);
+}
+
+int Device::getRandomNrTurnsToNextBadEffect(Engine* const engine) const {
   return engine->dice.getInRange(6, 10);
 }
 
@@ -31,11 +37,11 @@ void Device::newTurn(Engine* const engine) {
   if(isActivated_) {
     if(--nrTurnsToNextGoodEffect_ <= 0) {
       runGoodEffect(engine);
-      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextEffect(engine);
+      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
     }
     if(--nrTurnsToNextBadEffect_ <= 0) {
       runBadEffect(engine);
-      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextEffect(engine);
+      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
     }
   }
   specificNewTurn(engine);
@@ -63,7 +69,21 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
 
 //---------------------------------------------------- REPELLER
 void DeviceRepeller::runGoodEffect(Engine* const engine) {
+  const coord& playerPos = engine->player->pos;
+  const unsigned int NR_ACTORS = engine->gameTime->getLoopSize();
+  for(unsigned int i = 0; i < NR_ACTORS; i++) {
+    Actor* const actor = engine->gameTime->getActorAt(i);
+    if(actor != engine->player) {
+      const coord& otherPos = actor->pos;
+      if(engine->mapTests->isCellsNeighbours(playerPos, otherPos, false)) {
+        engine->knockBack->attemptKnockBack(actor, playerPos, false, true);
+      }
+    }
+  }
+}
 
+int DeviceRepeller::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
+  return engine->dice.getInRange(2, 4);
 }
 
 //---------------------------------------------------- REJUVENATOR
@@ -92,7 +112,7 @@ void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
 
 void DeviceElectricLantern::specificToggle(Engine* const engine) {
   engine->gameTime->updateLightMap();
-  engine->player->FOVupdate();
+  engine->player->updateFov();
   engine->renderer->drawMapAndInterface();
 }
 
