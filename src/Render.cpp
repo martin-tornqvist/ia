@@ -321,13 +321,13 @@ void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(const vector<coord>
   }
 }
 
-void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
-                             const bool drawBgClr, const sf::Color& bgClr) {
+void Renderer::drawTileInScreen(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
+                                const bool drawBgClr, const sf::Color& bgClr) {
   const int& CELL_W = eng->config->CELL_W;
   const int& CELL_H = eng->config->CELL_H;
 
   const int X_PIXEL = X * CELL_W;
-  const int Y_PIXEL = Y * CELL_H + eng->config->MAINSCREEN_Y_OFFSET;
+  const int Y_PIXEL = Y * CELL_H;
   const coord tileCoords = eng->art->getTileCoords(tile);
 
   if(drawBgClr) {
@@ -337,6 +337,11 @@ void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const 
   sf::Sprite* const spr = spritesTiles_[tileCoords.x][tileCoords.y];
   spr->setColor(clr);
   drawSprite(X_PIXEL, Y_PIXEL, *spr);
+}
+
+void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
+                             const bool drawBgClr, const sf::Color& bgClr) {
+  drawTileInScreen(tile, X, Y + eng->config->MAINSCREEN_Y_CELLS_OFFSET, clr, drawBgClr, bgClr);
 }
 
 void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y, const sf::Color& clr,

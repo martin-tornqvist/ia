@@ -15,19 +15,41 @@ Popup::BoxReturnData Popup::printBox(const int BOX_HALF_WIDTH) const {
 
   eng->renderer->coverArea(renderArea_mainScreen, x0y0.x, x0y0.y, x1y1.x - x0y0.x + 1, x1y1.y - x0y0.y + 1);
 
+  const bool& USE_TILE_SET = eng->config->USE_TILE_SET;
+
   const sf::Color clrBox = clrGray;
 
   for(int y = x0y0.y; y <= x1y1.y; y++) {
     for(int x = x0y0.x; x <= x1y1.x; x++) {
       if(x == x0y0.x || x == x1y1.x) {
         if(y == x0y0.y || y == x1y1.y) {
-          eng->renderer->drawCharacter('#', renderArea_mainScreen, x, y, clrBox);
+          if(USE_TILE_SET) {
+            if(x == x0y0.x && y == x0y0.y) {
+              eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, false, clrBlack);
+            } else if(x == x1y1.x && y == x0y0.y) {
+              eng->renderer->drawTileInMap(tile_popupCornerTopRight, x, y, clrBox, false, clrBlack);
+            } else if(x == x0y0.x && y == x1y1.y) {
+              eng->renderer->drawTileInMap(tile_popupCornerBottomLeft, x, y, clrBox, false, clrBlack);
+            } else {
+              eng->renderer->drawTileInMap(tile_popupCornerBottomRight, x, y, clrBox, false, clrBlack);
+            }
+          } else {
+            eng->renderer->drawCharacter('#', renderArea_mainScreen, x, y, clrBox);
+          }
         } else {
-          eng->renderer->drawCharacter('|', renderArea_mainScreen, x, y, clrBox);
+          if(USE_TILE_SET) {
+            eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, false, clrBlack);
+          } else {
+            eng->renderer->drawCharacter('|', renderArea_mainScreen, x, y, clrBox);
+          }
         }
       } else {
         if(y == x0y0.y || y == x1y1.y) {
-          eng->renderer->drawCharacter('=', renderArea_mainScreen, x, y, clrBox);
+          if(USE_TILE_SET) {
+            eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, false, clrBlack);
+          } else {
+            eng->renderer->drawCharacter('=', renderArea_mainScreen, x, y, clrBox);
+          }
         }
       }
     }

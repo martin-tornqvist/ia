@@ -8,16 +8,16 @@ class Engine;
 
 class MainMenu {
 public:
-	MainMenu(Engine* engine) {
-		eng = engine;
-	}
-	GameEntry_t run(bool& quit);
+  MainMenu(Engine* engine) {
+    eng = engine;
+  }
+  GameEntry_t run(bool& quit);
 
 private:
-	Engine* eng;
-	void draw(const MenuBrowser& browser);
+  Engine* eng;
+  void draw(const MenuBrowser& browser);
 
-	string getHplQuote();
+  string getHplQuote();
 };
 
 #endif

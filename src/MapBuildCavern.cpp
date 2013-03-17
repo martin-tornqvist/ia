@@ -31,8 +31,8 @@ void MapBuild::buildCavern() {
   const bool IS_TUNNEL_CAVE = eng->dice.coinToss();
 
   //Make some more at random places, connect them to each other.
-  const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng->dice.getInRange(9, 14) : 4;
-  for(int i = 0; i < 4; i++) {
+  const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng->dice.getInRange(6, 8) : 4;
+  for(int i = 0; i < NR_OPEN_PLACES; i++) {
     const coord curCenter(10 + eng->dice(1, MAP_X_CELLS - 1 - 10) - 1, 2 + eng->dice(1, MAP_Y_CELLS - 1 - 2) - 1);
     length = IS_TUNNEL_CAVE ? 30 + eng->dice(1, 30) : 650;
     makePathByRandomWalk(curCenter.x, curCenter.y, length, feature_caveFloor, true);

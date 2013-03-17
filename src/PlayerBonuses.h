@@ -112,6 +112,8 @@ public:
     }
   }
 
+  vector<PlayerBonuses_t> getBonusPrereqs(const PlayerBonuses_t bonusId) const;
+
 private:
   Engine* eng;
 

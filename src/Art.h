@@ -4,8 +4,7 @@
 const int FONT_SHEET_X_CELLS = 16;
 const int FONT_SHEET_Y_CELLS = 7;
 const int TILE_SHEET_X_CELLS = 19;
-const int TILE_SHEET_Y_CELLS = 10;
-
+const int TILE_SHEET_Y_CELLS = 11;
 
 enum Tile_t {
 	tile_empty,
@@ -123,7 +122,13 @@ enum Tile_t {
 	tile_gore8,
 	tile_smoke,
 	tile_trapezohedron,
-	tile_pit
+	tile_pit,
+	tile_popupCornerTopLeft,
+	tile_popupCornerTopRight,
+	tile_popupCornerBottomLeft,
+	tile_popupCornerBottomRight,
+	tile_popupHorizontalBar,
+	tile_popupVerticalBar
 };
 
 class Engine;

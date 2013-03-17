@@ -10,6 +10,7 @@
 #include "DungeonMaster.h"
 #include "MenuInputHandler.h"
 #include "TextFormatting.h"
+#include "PlayerCreateCharacter.h"
 
 void PlayerAllocBonus::run() {
   vector<PlayerBonuses_t> bonuses = eng->playerBonusHandler->getBonusChoices();
@@ -75,28 +76,17 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
   const unsigned int NR_BONUSES_COLUMN_ONE = bonusesColumnOne.size();
   const unsigned int NR_BONUSES_COLUMN_TWO = bonusesColumnTwo.size();
 
-//  unsigned int sizeOfLongestNameInFirstCol = 0;
-//  for(unsigned int i = 0; i < NR_BONUSES_COLUMN_ONE; i++) {
-//    const string& name = eng->playerBonusHandler->getBonusTitle(bonusesColumnOne.at(i));
-//    if(name.size() > sizeOfLongestNameInFirstCol) {
-//      sizeOfLongestNameInFirstCol = name.size();
-//    }
-//  }
-
-//  const int COLUMNS_W_FROM_CENTER = 3;
-//  const int X_COLUMN_ONE = MAP_X_CELLS_HALF - COLUMNS_W_FROM_CENTER - sizeOfLongestNameInFirstCol + 1;
-//  const int X_COLUMN_TWO = MAP_X_CELLS_HALF + COLUMNS_W_FROM_CENTER;
-
   const int X_COLUMN_ONE = 14;
   const int X_COLUMN_TWO = MAP_X_CELLS_HALF + 6;
 
-  const int Y0_BONUSES = MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
+  const int Y0_TITLE = Y0_CREATE_CHARACTER; //Y0_CREATE_CHARACTER MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
 
-  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, Y0_BONUSES - 2, clrWhite, true);
+  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, true);
 
   const coord browserPos = browser.getPos();
 
   //Draw bonuses
+  const int Y0_BONUSES = Y0_TITLE + 2;
   int yPos = Y0_BONUSES;
   for(unsigned int i = 0; i < NR_BONUSES_COLUMN_ONE; i++) {
     const PlayerBonuses_t currentBonus = bonusesColumnOne.at(i);
@@ -117,14 +107,38 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
   }
 
   //Draw description
-  yPos = Y0_BONUSES + NR_BONUSES_COLUMN_ONE + 2;
+  const int Y0_DESCR = Y0_BONUSES + NR_BONUSES_COLUMN_ONE + 2;
+  yPos = Y0_DESCR;
   const PlayerBonuses_t markedBonus = browserPos.x == 0 ? bonusesColumnOne.at(browserPos.y) : bonusesColumnTwo.at(browserPos.y);
   string descr = eng->playerBonusHandler->getBonusDescription(markedBonus);
-  vector<string> descrLines = eng->textFormatting->lineToLines(descr, 50);
-//  const int X_POS_DESCR_LEFT_AFTER_FIRST = MAP_X_CELLS_HALF - descrLines.at(0).size() / 2;
-  for(unsigned int iDescr = 0; iDescr < descrLines.size(); iDescr++) {
-    eng->renderer->drawText(descrLines.at(iDescr), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
+  const int MAX_WIDTH_DESCR = 50;
+  vector<string> descrLines = eng->textFormatting->lineToLines("Effect(s): " + descr, MAX_WIDTH_DESCR);
+  for(unsigned int i = 0; i < descrLines.size(); i++) {
+    eng->renderer->drawText(descrLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
     yPos++;
+  }
+  yPos++;
+
+  yPos = max(Y0_DESCR + 3, yPos);
+
+  vector<PlayerBonuses_t> prereqsForCurrentBonus = eng->playerBonusHandler->getBonusPrereqs(markedBonus);
+  const unsigned int NR_PREREQS = prereqsForCurrentBonus.size();
+  if(NR_PREREQS > 0) {
+    string prereqStr = "This ability had the following requirement(s): ";
+    for(unsigned int i = 0; i < NR_PREREQS; i++) {
+      const PlayerBonuses_t prereq = prereqsForCurrentBonus.at(i);
+      const string prereqTitle = eng->playerBonusHandler->getBonusTitle(prereq);
+      if(i == 0) {
+        prereqStr += "\"" + prereqTitle + "\"";
+      } else {
+        prereqStr += ", \"" + prereqTitle + "\"";
+      }
+    }
+    vector<string> prereqLines = eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR);
+    for(unsigned int i = 0; i < prereqLines.size(); i++) {
+      eng->renderer->drawText(prereqLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
+      yPos++;
+    }
   }
 
   eng->renderer->updateWindow();

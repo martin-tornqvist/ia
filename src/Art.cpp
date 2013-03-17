@@ -232,7 +232,13 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_sarcophagus: return coord(9, 9); break;
   case tile_caveWallFront: return coord(10, 9); break;
   case tile_caveWallTop: return coord(11, 9); break;
-  case tile_empty: return coord(18, 8); break;
+  case tile_popupCornerTopLeft: return coord(0, 10); break;
+	case tile_popupCornerTopRight: return coord(1, 10); break;
+	case tile_popupCornerBottomLeft: return coord(2, 10); break;
+	case tile_popupCornerBottomRight: return coord(3, 10); break;
+	case tile_popupHorizontalBar: return coord(4, 10); break;
+	case tile_popupVerticalBar: return coord(5, 10); break;
+  case tile_empty: return coord(18, 9); break;
   default: return coord(18, 8); break;
   }
 }

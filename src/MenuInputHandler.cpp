@@ -11,7 +11,7 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
       browser.navigate(direction_right);
       return menuAction_browsed;
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '6') {
+    else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
       browser.navigate(direction_left);
       return menuAction_browsed;
     }

@@ -7,7 +7,7 @@
 #include "Input.h"
 
 void PlayerCreateCharacter::run() {
-  int currentRenderYpos = 8;
+  int currentRenderYpos = Y0_CREATE_CHARACTER;
   PlayerEnterName playerEnterName(eng);
   playerEnterName.run(currentRenderYpos);
   eng->playerAllocBonus->run();

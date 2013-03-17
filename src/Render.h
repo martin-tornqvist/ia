@@ -58,6 +58,14 @@ public:
   void drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
+  void drawTileInScreen(const Tile_t tile, const coord& pos, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+    drawTileInScreen(tile, pos.x, pos.y, clr, drawBgClr, bgClr);
+  }
+
+  void drawTileInScreen(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+
   void drawGlyphInMap(const Tile_t GLYPH, const coord& pos, const sf::Color& clr,
                       const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawGlyphInMap(GLYPH, pos.x, pos.y, clr, drawBgClr, bgClr);
