@@ -23,8 +23,7 @@ void MapBuild::buildCavern() {
   }
 
   const coord& playerCoord = eng->player->pos;
-  coord preCenter(playerCoord);
-  coord curCenter;
+  vector<coord> previousCenters(1, playerCoord);
 
   //Make a random walk path from stairs
   int length = 40 + eng->dice(1, 40);
@@ -32,13 +31,14 @@ void MapBuild::buildCavern() {
   const bool IS_TUNNEL_CAVE = eng->dice.coinToss();
 
   //Make some more at random places, connect them to each other.
+  const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng->dice.getInRange(9, 14) : 4;
   for(int i = 0; i < 4; i++) {
-    curCenter.x = 20 + eng->dice(1, MAP_X_CELLS - 1 - 20) - 1;
-    curCenter.y = 4 + eng->dice(1, MAP_Y_CELLS - 1 - 4) - 1;
-    length = IS_TUNNEL_CAVE ? 20 + eng->dice(1, 20) : 750;
+    const coord curCenter(10 + eng->dice(1, MAP_X_CELLS - 1 - 10) - 1, 2 + eng->dice(1, MAP_Y_CELLS - 1 - 2) - 1);
+    length = IS_TUNNEL_CAVE ? 30 + eng->dice(1, 30) : 650;
     makePathByRandomWalk(curCenter.x, curCenter.y, length, feature_caveFloor, true);
-    makeStraightPathByPathfinder(preCenter, curCenter, feature_caveFloor, false, true);
-    preCenter.set(curCenter);
+    const coord prevCenter = previousCenters.at(eng->dice.getInRange(0, previousCenters.size() - 1));
+    makeStraightPathByPathfinder(prevCenter, curCenter, feature_caveFloor, false, true);
+    previousCenters.push_back(curCenter);
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];

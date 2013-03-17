@@ -95,7 +95,7 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
 //    ret.push_back(playerBonus_agile);
 //    ret.push_back(playerBonus_strongMinded);
 //  } else {
-  vector<PlayerBonuses_t> candidates;
+
   for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
     const PlayerBonus& bon = bonuses_[i];
     if(bon.isPicked_ == false) {
@@ -106,24 +106,24 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
         }
       }
       if(isPrereqsMet) {
-        candidates.push_back(static_cast<PlayerBonuses_t>(i));
+        ret.push_back(static_cast<PlayerBonuses_t>(i));
       }
     }
   }
 
-  const int NR_OF_CHOICES = 6;
+//  const int NR_OF_CHOICES = 6;
 
-  for(int i = 0; i < NR_OF_CHOICES; i++) {
-    if(candidates.empty()) {
-      if(ret.empty() == false) {
-        std::sort(ret.begin(), ret.end());
-      }
-      return ret;
-    }
-    const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);
-    ret.push_back(candidates.at(ELEMENT));
-    candidates.erase(candidates.begin() + ELEMENT);
-  }
+//  for(int i = 0; i < NR_OF_CHOICES; i++) {
+//    if(candidates.empty()) {
+//      if(ret.empty() == false) {
+//        std::sort(ret.begin(), ret.end());
+//      }
+//      return ret;
+//    }
+//    const int ELEMENT = eng->dice.getInRange(0, candidates.size() - 1);
+//    ret.push_back(candidates.at(ELEMENT));
+//    candidates.erase(candidates.begin() + ELEMENT);
+//  }
 //  }
 
   std::sort(ret.begin(), ret.end());

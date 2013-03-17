@@ -12,17 +12,35 @@
 #include "TextFormatting.h"
 
 void PlayerAllocBonus::run() {
-  const vector<PlayerBonuses_t> bonusesToChooseFrom = eng->playerBonusHandler->getBonusChoices();
+  vector<PlayerBonuses_t> bonuses = eng->playerBonusHandler->getBonusChoices();
 
-  if(bonusesToChooseFrom.empty() == false) {
-    MenuBrowser browser(bonusesToChooseFrom.size(), 0);
-    draw(bonusesToChooseFrom, browser);
+  if(bonuses.empty() == false) {
+
+    const unsigned int NR_BONUSES_TOT = bonuses.size();
+
+    const unsigned int NR_BONUSES_COLUMN_TWO = NR_BONUSES_TOT / 2;
+    const unsigned int NR_BONUSES_COLUMN_ONE = NR_BONUSES_TOT - NR_BONUSES_COLUMN_TWO;
+
+    vector<PlayerBonuses_t> bonusesColumnOne;
+    vector<PlayerBonuses_t> bonusesColumnTwo;
+
+    for(unsigned int i = 0; i < NR_BONUSES_TOT; i++) {
+      const PlayerBonuses_t bonus = bonuses.at(i);
+      if(i < NR_BONUSES_COLUMN_ONE) {
+        bonusesColumnOne.push_back(bonus);
+      } else {
+        bonusesColumnTwo.push_back(bonus);
+      }
+    }
+
+    MenuBrowser browser(bonusesColumnOne.size(), bonusesColumnTwo.size());
+    draw(bonusesColumnOne, bonusesColumnTwo, browser);
 
     while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
       case menuAction_browsed: {
-        draw(bonusesToChooseFrom, browser);
+        draw(bonusesColumnOne, bonusesColumnTwo, browser);
       }
       break;
 
@@ -30,7 +48,12 @@ void PlayerAllocBonus::run() {
       } break;
 
       case menuAction_selected: {
-        eng->playerBonusHandler->pickBonus(bonusesToChooseFrom.at(browser.getPos().y));
+        const coord browserPos = browser.getPos();
+        if(browserPos.x == 0) {
+          eng->playerBonusHandler->pickBonus(bonusesColumnOne.at(browser.getPos().y));
+        } else {
+          eng->playerBonusHandler->pickBonus(bonusesColumnTwo.at(browser.getPos().y));
+        }
         eng->log->drawLog();
         eng->renderer->drawMapAndInterface();
         return;
@@ -45,37 +68,62 @@ void PlayerAllocBonus::run() {
   }
 }
 
-void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesToChooseFrom, const MenuBrowser& browser) const {
+void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, const vector<PlayerBonuses_t>& bonusesColumnTwo,
+                            const MenuBrowser& browser) const {
   eng->renderer->coverRenderArea(renderArea_screen);
 
-  int yPos = 8;
-  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, yPos, clrWhite);
-  const unsigned int NR_OF_BONUSES = bonusesToChooseFrom.size();
+  const unsigned int NR_BONUSES_COLUMN_ONE = bonusesColumnOne.size();
+  const unsigned int NR_BONUSES_COLUMN_TWO = bonusesColumnTwo.size();
 
-  yPos += 2;
+//  unsigned int sizeOfLongestNameInFirstCol = 0;
+//  for(unsigned int i = 0; i < NR_BONUSES_COLUMN_ONE; i++) {
+//    const string& name = eng->playerBonusHandler->getBonusTitle(bonusesColumnOne.at(i));
+//    if(name.size() > sizeOfLongestNameInFirstCol) {
+//      sizeOfLongestNameInFirstCol = name.size();
+//    }
+//  }
+
+//  const int COLUMNS_W_FROM_CENTER = 3;
+//  const int X_COLUMN_ONE = MAP_X_CELLS_HALF - COLUMNS_W_FROM_CENTER - sizeOfLongestNameInFirstCol + 1;
+//  const int X_COLUMN_TWO = MAP_X_CELLS_HALF + COLUMNS_W_FROM_CENTER;
+
+  const int X_COLUMN_ONE = 14;
+  const int X_COLUMN_TWO = MAP_X_CELLS_HALF + 6;
+
+  const int Y0_BONUSES = MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
+
+  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, Y0_BONUSES - 2, clrWhite, true);
+
+  const coord browserPos = browser.getPos();
 
   //Draw bonuses
-  for(unsigned int i = 0; i < NR_OF_BONUSES; i++) {
-    const PlayerBonuses_t currentBonus = bonusesToChooseFrom.at(i);
-    string s = eng->playerBonusHandler->getBonusTitle(currentBonus);
-    const bool IS_MARKED_BONUS = static_cast<unsigned int>(browser.getPos().y) == i;
-    sf::Color drwClr = IS_MARKED_BONUS ? clrWhite : clrRedLight;
-    eng->renderer->drawTextCentered(s, renderArea_screen, MAP_X_CELLS_HALF, yPos, drwClr);
+  int yPos = Y0_BONUSES;
+  for(unsigned int i = 0; i < NR_BONUSES_COLUMN_ONE; i++) {
+    const PlayerBonuses_t currentBonus = bonusesColumnOne.at(i);
+    const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
+    const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == static_cast<int>(i);
+    sf::Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    eng->renderer->drawText(name, renderArea_screen, X_COLUMN_ONE, yPos, drwClr);
+    yPos++;
+  }
+  yPos = Y0_BONUSES;
+  for(unsigned int i = 0; i < NR_BONUSES_COLUMN_TWO; i++) {
+    const PlayerBonuses_t currentBonus = bonusesColumnTwo.at(i);
+    const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
+    const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == static_cast<int>(i);
+    sf::Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    eng->renderer->drawText(name, renderArea_screen, X_COLUMN_TWO, yPos, drwClr);
     yPos++;
   }
 
-  yPos++;
-
   //Draw description
-  string descr = eng->playerBonusHandler->getBonusDescription(bonusesToChooseFrom.at(browser.getPos().y));
+  yPos = Y0_BONUSES + NR_BONUSES_COLUMN_ONE + 2;
+  const PlayerBonuses_t markedBonus = browserPos.x == 0 ? bonusesColumnOne.at(browserPos.y) : bonusesColumnTwo.at(browserPos.y);
+  string descr = eng->playerBonusHandler->getBonusDescription(markedBonus);
   vector<string> descrLines = eng->textFormatting->lineToLines(descr, 50);
-  const int X_POS_DESCR_LEFT_AFTER_FIRST = MAP_X_CELLS_HALF - descrLines.at(0).size() / 2;
+//  const int X_POS_DESCR_LEFT_AFTER_FIRST = MAP_X_CELLS_HALF - descrLines.at(0).size() / 2;
   for(unsigned int iDescr = 0; iDescr < descrLines.size(); iDescr++) {
-    if(iDescr == 0) {
-      eng->renderer->drawTextCentered(descrLines.at(iDescr), renderArea_screen, MAP_X_CELLS_HALF, yPos, clrRed, false);
-    } else {
-      eng->renderer->drawText(descrLines.at(iDescr), renderArea_screen, X_POS_DESCR_LEFT_AFTER_FIRST, yPos, clrRed);
-    }
+    eng->renderer->drawText(descrLines.at(iDescr), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
     yPos++;
   }
 

@@ -8685,7 +8685,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1363520468 source:c:\_martin_\ia\src\actorplayer.cpp
+1363523352 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8974,7 +8974,7 @@
 	<vector>
 	"ItemData.h"
 
-1353869522 c:\_martin_\ia\src\playerallocbonus.h
+1363532791 c:\_martin_\ia\src\playerallocbonus.h
 	"PlayerBonuses.h"
 	"MenuBrowser.h"
 
@@ -9631,7 +9631,7 @@
 	"Map.h"
 	"FeatureWall.h"
 
-1356171566 source:c:\_martin_\ia\src\mapbuildcavern.cpp
+1363526792 source:c:\_martin_\ia\src\mapbuildcavern.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -9737,7 +9737,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1363366495 source:c:\_martin_\ia\src\playerallocbonus.cpp
+1363536400 source:c:\_martin_\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -9749,7 +9749,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1363520454 source:c:\_martin_\ia\src\playerbonuses.cpp
+1363530477 source:c:\_martin_\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
