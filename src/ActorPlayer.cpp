@@ -28,7 +28,7 @@ Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
   molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  mythosKnowledge(0), nrMovesUntilFreeAction(-1) {
+  mythosKnowledge(0), nrMovesUntilFreeAction(-1), carryWeightBase(400) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -146,24 +146,6 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Player::actorSpecific_hit(const int DMG) {
-  //Hit aborts first aid
-  if(firstAidTurnsLeft != -1) {
-    firstAidTurnsLeft = -1;
-    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
-  }
-
-  if(insanityObsessions[insanityObsession_masochism]) {
-    if(DMG > 1) {
-      shock_ = max(0.0, shock_ - 5.0);
-    }
-  } else {
-    incrShock(1);
-  }
-
-  eng->renderer->drawMapAndInterface();
-}
-
 void Player::setParametersFromSaveLines(vector<string>& lines) {
   const unsigned int NR_OF_STATUS_EFFECTS = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -204,6 +186,32 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     insanityObsessions[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
+}
+
+void Player::actorSpecific_hit(const int DMG) {
+  //Hit aborts first aid
+  if(firstAidTurnsLeft != -1) {
+    firstAidTurnsLeft = -1;
+    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
+  }
+
+  if(insanityObsessions[insanityObsession_masochism]) {
+    if(DMG > 1) {
+      shock_ = max(0.0, shock_ - 5.0);
+    }
+  } else {
+    incrShock(1);
+  }
+
+  eng->renderer->drawMapAndInterface();
+}
+
+int Player::getCarryWeightLimit() const {
+  const bool IS_TOUGH_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_tough);
+  const bool IS_RUGGED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
+  const int CARRY_WEIGHT_BON_FACTOR = (IS_TOUGH_PICKED ? 15 : 0) + (IS_RUGGED_PICKED ? 15 : 0);
+
+  return (carryWeightBase * (CARRY_WEIGHT_BON_FACTOR + 100)) / 100;
 }
 
 int Player::getShockResistance() const {
@@ -1032,7 +1040,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
       if(featuresAllowMove) {
         // Encumbered?
-        if(inventory_->getTotalItemWeight() >= PLAYER_CARRY_WEIGHT_STANDARD) {
+        if(inventory_->getTotalItemWeight() >= getCarryWeightLimit()) {
           eng->log->addMessage("I am too encumbered to move!");
           eng->renderer->drawMapAndInterface();
           return;

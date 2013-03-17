@@ -42,8 +42,8 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_adeptWoundTreater, "Adept wound treater", "Healing takes half the normal time");
   setBonus(playerBonus_curer, "Curer", "Can heal disease", playerBonus_adeptWoundTreater);
   setBonus(playerBonus_rapidRecoverer, "Rapid recoverer", "Passive HP regeneration", playerBonus_curer, playerBonus_healthy);
-  setBonus(playerBonus_tough, "Tough", "+20% physical status resistance, +20% chance to bash doors");
-  setBonus(playerBonus_rugged, "Rugged", "+20% physical status resistance", playerBonus_tough);
+  setBonus(playerBonus_tough, "Tough", "+20% physical status resistance, +20% chance to bash doors, +15% carry weight limit");
+  setBonus(playerBonus_rugged, "Rugged", "+20% physical status resistance, +15% carry weight limit", playerBonus_tough);
   setBonus(playerBonus_healthy, "Healthy", "+2 HP", playerBonus_tough);
   setBonus(playerBonus_vigorous, "Vigorous", "+2 HP", playerBonus_healthy);
 //  setBonus(playerBonus_strongBacked, "Strong-backed", "Encumbrance limit is increased to X%, carry limit is increased to Y%", playerBonus_tough);

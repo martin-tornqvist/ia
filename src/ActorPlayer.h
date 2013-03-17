@@ -6,10 +6,6 @@
 #include "Actor.h"
 #include "ConstTypes.h"
 
-//const int HUNGER_LEVEL_FULL             = 1400;
-//const int HUNGER_LEVEL_FIRST_WARNING    = 400;
-//const int HUNGER_LEVEL_FINAL_WARNING    = 200;
-
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
 enum InsanityPhobia_t {
@@ -81,6 +77,8 @@ public:
     return mythosKnowledge;
   }
 
+  int getCarryWeightLimit() const;
+
   int dynamiteFuseTurns;
   int molotovFuseTurns;
   int flareFuseTurns;
@@ -112,6 +110,8 @@ private:
   int mythosKnowledge;
 
   int nrMovesUntilFreeAction;
+
+  const int carryWeightBase;
 
   void attemptIdentifyItems();
   void testPhobias();

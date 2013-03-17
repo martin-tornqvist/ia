@@ -246,7 +246,7 @@ struct DirectionNames {
 //  inventoryPurpose_wieldAlt,
 //  inventoryPurpose_missileSelect,
 //  inventoryPurpose_use,
-////	inventoryPurpose_read,
+////  inventoryPurpose_read,
 //  inventoryPurpose_quaff,
 //  inventoryPurpose_eat,
 //  inventoryPurpose_selectDrop,
@@ -258,7 +258,7 @@ struct DirectionNames {
 //  generalInventoryFilter_wieldableAndWearable,
 //  generalInventoryFilter_missile,
 //  generalInventoryFilter_usable,
-////	generalInventoryFilter_readable,
+////  generalInventoryFilter_readable,
 //  generalInventoryFilter_quaffable,
 //  generalInventoryFilter_eatable,
 //  generalInventoryFilter_explosives

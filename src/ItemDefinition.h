@@ -22,8 +22,6 @@ enum PrimaryAttackMode_t {
   primaryAttackMode_ranged
 };
 
-const int PLAYER_CARRY_WEIGHT_STANDARD = 500;
-
 enum ItemDefArchetypes_t {
   itemDef_general,
   itemDef_meleeWpn,
