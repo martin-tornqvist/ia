@@ -207,10 +207,11 @@ void Player::actorSpecific_hit(const int DMG) {
 }
 
 int Player::getCarryWeightLimit() const {
-  const bool IS_TOUGH_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_tough);
-  const bool IS_RUGGED_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
+  const bool IS_TOUGH = eng->playerBonusHandler->isBonusPicked(playerBonus_tough);
+  const bool IS_RUGGED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
+  const bool IS_STRONG_BACKED = eng->playerBonusHandler->isBonusPicked(playerBonus_strongBacked);
   const bool IS_WEAK = statusEffectsHandler_->hasEffect(statusWeak);
-  const int CARRY_WEIGHT_MOD = (IS_TOUGH_PICKED ? 15 : 0) + (IS_RUGGED_PICKED ? 15 : 0) + (IS_WEAK ? -25 : 0);
+  const int CARRY_WEIGHT_MOD = (IS_TOUGH ? 10 : 0) + (IS_RUGGED ? 10 : 0) + (IS_STRONG_BACKED ? 30 : 0) + (IS_WEAK ? -25 : 0);
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
@@ -263,16 +264,16 @@ void Player::incrShock(const ShockValues_t shockValue) {
   }
 }
 
-void Player::restoreShock(const bool IS_TEMP_SHOCK_RESTORED) {
+void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
-  bool isObsessionActive = false;
+  bool isObsessionActive = 0;
   for(int i = 0; i < endOfInsanityObsessions; i++) {
     if(insanityObsessions[i]) {
       isObsessionActive = true;
       break;
     }
   }
-  shock_ = isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION : 0;
+  shock_ = max((isObsessionActive ? static_cast<double>(MIN_SHOCK_WHEN_OBSESSION) : 0.0), shock_ - amountRestored);
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
@@ -283,7 +284,7 @@ void Player::incrInsanity() {
     insanity_ += 6;
   }
 
-  restoreShock(false);
+  restoreShock(70, false);
 
   updateColor();
   eng->renderer->drawMapAndInterface();
@@ -362,7 +363,7 @@ void Player::incrInsanity() {
             }
           }
           if(phobiasActive < 2) {
-            if(eng->dice(1, 2) == 1) {
+            if(eng->dice.coinToss()) {
               if(spotedEnemies.size() > 0) {
                 const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
                 if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
@@ -463,45 +464,53 @@ void Player::incrInsanity() {
       break;
 
       case 8: {
-        popupMessage += "The shadows are closing in on me!";
-        eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
+        if(insanity_ > 8) {
+          popupMessage += "The shadows are closing in on me!";
+          eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
 
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+          bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+          eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-        int shadowsLeftToSpawn = eng->dice.getInRange(2, 3);
-        while(shadowsLeftToSpawn > 0) {
+          vector<coord> spawnPosCandidates;
+
           const int D_MAX = 3;
           for(int dx = -D_MAX; dx <= D_MAX; dx++) {
             for(int dy = -D_MAX; dy <= D_MAX; dy++) {
               if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
                 if(blockers[pos.x + dx][pos.y + dy] == false) {
-                  if(eng->dice(1, 100) < 10) {
-                    Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, pos + coord(dx, dy)));
-                    if(eng->dice.coinToss()) {
-                      monster->isStealth = true;
-                    }
-                    shadowsLeftToSpawn--;
-                    if(shadowsLeftToSpawn <= 0) {
-                      dx = 999;
-                      dy = 999;
-                    }
-                  }
+                  spawnPosCandidates.push_back(pos + coord(dx, dy));
                 }
               }
             }
           }
+          const int NR_SPAWN_POS_CANDIDATES = spawnPosCandidates.size();
+          if(NR_SPAWN_POS_CANDIDATES > 0) {
+            const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDungeonLevel() + 1) / 2)));
+            for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
+              const unsigned int SPAWN_POS_ELEMENT = eng->dice.getInRange(0, spawnPosCandidates.size() - 1);
+              const coord spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
+              spawnPosCandidates.erase(spawnPosCandidates.begin() + SPAWN_POS_ELEMENT);
+              Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, spawnPos));
+              monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+              if(eng->dice.coinToss()) {
+                monster->isStealth = true;
+              }
+            }
+          }
+          return;
         }
-
-        return;
       }
+      break;
 
       case 9: {
-        popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
-        eng->popup->showMessage(popupMessage, true, "Confusion!");
-        statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
-        return;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware) == false) {
+          popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
+          eng->popup->showMessage(popupMessage, true, "Confusion!");
+          statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
+          return;
+        }
       }
+      break;
 
       default: {
       }
@@ -600,12 +609,6 @@ void Player::testPhobias() {
         return;
       }
     }
-  }
-
-  if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown && insanityPhobias[insanityPhobia_deepPlaces]) {
-    eng->log->addMessage("I am plagued by my phobia of deep places!");
-    statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(2, 6) + 6));
-    return;
   }
 }
 

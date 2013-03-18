@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "DungeonMaster.h"
 #include "MapBuildBSP.h"
+#include "PlayerBonuses.h"
 
 using namespace std;
 
@@ -166,10 +167,18 @@ void Interface::drawInfoLines() {
   yPos += 1;
   xPos = CHARACTER_LINE_X0;
 
+  const bool IS_SELF_AWARE = eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware);
   const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
   for(unsigned int i = 0; i < effects.size(); i++) {
-    const string statusText = effects.at(i)->getInterfaceName();
-    const sf::Color statusColor = effects.at(i)->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    StatusEffect* const effect = effects.at(i);
+    const sf::Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    string statusText = effect->getInterfaceName();
+    if(IS_SELF_AWARE) {
+      if(effect->allowDisplayTurnsInInterface()) {
+        // +1 to offset that the turn is also active on turn 0
+        statusText += "(" + intToString(effect->turnsLeft + 1) + ")";
+      }
+    }
     eng->renderer->drawText(statusText, renderArea_characterLines, xPos, yPos, statusColor);
     xPos += statusText.length() + 1;
   }

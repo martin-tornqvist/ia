@@ -861,10 +861,10 @@ void ActorData::defineAllActors() {
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAwarePlayer = 7;
   d.description
   = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
-  d.erraticMovement = actorErratic_very;
+  d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.canBeSummoned = true;
@@ -1108,7 +1108,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
   d.description
-  = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a isHumanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
+  = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;

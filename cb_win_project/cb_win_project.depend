@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1363548600 c:\dev\ia\src\statuseffects.h
+1363644665 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -128,12 +128,12 @@
 	<ctime>
 	<cmath>
 
-1363548600 c:\dev\ia\src\actorplayer.h
+1363633667 c:\dev\ia\src\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"ConstTypes.h"
 
-1363552933 c:\dev\ia\src\playerbonuses.h
+1363644030 c:\dev\ia\src\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1363548600 source:c:\dev\ia\src\actordata.cpp
+1363557571 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1363548600 source:c:\dev\ia\src\actorplayer.cpp
+1363646544 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -512,7 +512,7 @@
 	"Art.h"
 	"Engine.h"
 
-1363215652 source:c:\dev\ia\src\attack.cpp
+1363556176 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -682,7 +682,7 @@
 	<sstream>
 	<iostream>
 
-1363548600 source:c:\dev\ia\src\dungeonclimb.cpp
+1363646508 source:c:\dev\ia\src\dungeonclimb.cpp
 	"DungeonClimb.h"
 	"Engine.h"
 	"Map.h"
@@ -1097,7 +1097,7 @@
 	"Examine.h"
 	"PlayerCreateCharacter.h"
 
-1363548600 source:c:\dev\ia\src\interface.cpp
+1363646950 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
@@ -1109,6 +1109,7 @@
 	"Map.h"
 	"DungeonMaster.h"
 	"MapBuildBSP.h"
+	"PlayerBonuses.h"
 
 1323988860 source:c:\dev\ia\src\introtext.cpp
 	<string>
@@ -1290,7 +1291,7 @@
 	"TextFormatting.h"
 	"Query.h"
 
-1363127765 source:c:\dev\ia\src\mainmenu.cpp
+1363560183 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1472,7 +1473,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1363553422 source:c:\dev\ia\src\playerbonuses.cpp
+1363645262 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1636,7 +1637,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1363548600 source:c:\dev\ia\src\statuseffects.cpp
+1363645491 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1650,6 +1651,7 @@
 	"Map.h"
 	"Explosion.h"
 	"FeatureFactory.h"
+	"PlayerBonuses.h"
 
 1355674113 source:c:\dev\ia\src\textformatting.cpp
 	"TextFormatting.h"
@@ -1686,7 +1688,7 @@
 	"Log.h"
 	"Render.h"
 
-1363548600 source:c:\dev\ia\src\itempotion.cpp
+1363634091 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -10069,7 +10071,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1363548600 source:c:\dev\ia\src\populatemonsters.cpp
+1363557453 source:c:\dev\ia\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"

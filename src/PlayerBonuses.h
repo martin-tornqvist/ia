@@ -12,13 +12,13 @@
 
 using namespace std;
 
-// Keep the following values lexicographically sorted:
+// *************************************************** //
+// Keep the following values lexicographically sorted! //
+// *************************************************** //
 enum PlayerBonuses_t {
   playerBonus_adeptMeleeCombatant,
-  playerBonus_marksman,
   playerBonus_adeptWoundTreater,
   playerBonus_agile,
-  playerBonus_lithe,
 //playerBonus_aggressive,
 //  playerBonus_athletic,
 //playerBonus_clearThinker,
@@ -31,15 +31,18 @@ enum PlayerBonuses_t {
   playerBonus_healthy,
   playerBonus_imperceptible,
   playerBonus_learned,
+  playerBonus_lithe,
+  playerBonus_marksman,
   playerBonus_masterfulMeleeCombatant,
-  playerBonus_sharpshooter,
 //  playerBonus_nimble,
   playerBonus_observant,
   playerBonus_rapidRecoverer,
   playerBonus_rugged,
+  playerBonus_selfAware,
+  playerBonus_sharpshooter,
   playerBonus_steadyAimer,
   playerBonus_stealthy,
-  //playerBonus_strongBacked,
+  playerBonus_strongBacked,
   playerBonus_strongMinded,
 //playerBonus_swiftAssailant,
 //playerBonus_swiftRetaliator,

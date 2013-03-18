@@ -90,6 +90,7 @@ public:
   //Questions for the status to answer. This is how the status ends,
   //how it damages the actor, how it affects ability values, etc.
   virtual bool isConsideredBeneficial() = 0;
+  virtual bool allowDisplayTurnsInInterface() = 0;
   virtual string getInterfaceName() = 0;
   virtual string messageWhenStart() = 0;
   virtual string messageWhenStartOther() = 0;
@@ -184,6 +185,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Terrified";
   }
@@ -272,6 +277,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Weak";
   }
@@ -351,6 +360,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Diseased";
   }
@@ -424,6 +437,10 @@ public:
 
   bool isConsideredBeneficial() {
     return true;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return false;
   }
 
   string getInterfaceName() {
@@ -588,6 +605,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Blind";
   }
@@ -675,6 +696,10 @@ public:
     return true;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Blessed";
   }
@@ -755,6 +780,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Cursed";
   }
@@ -833,6 +862,10 @@ public:
     return true;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Clairvoyant";
   }
@@ -901,6 +934,10 @@ public:
 
   bool isConsideredBeneficial() {
     return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -976,6 +1013,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1048,6 +1089,10 @@ public:
 
   bool isConsideredBeneficial() {
     return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -1128,6 +1173,10 @@ public:
   }
 
   bool isConsideredBeneficial() {
+    return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
     return false;
   }
 
@@ -1222,6 +1271,10 @@ public:
     return -999;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -1313,6 +1366,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1393,6 +1450,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1469,6 +1530,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return false;
+  }
+
   string getInterfaceName() {
     return "";
   }
@@ -1536,6 +1601,10 @@ public:
 
   bool isConsideredBeneficial() {
     return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -1629,6 +1698,10 @@ public:
 
   bool isConsideredBeneficial() {
     return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return true;
   }
 
   string getInterfaceName() {
@@ -1734,6 +1807,10 @@ public:
     return false;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "Slowed";
   }
@@ -1810,6 +1887,10 @@ public:
   }
 
   bool isConsideredBeneficial() {
+    return true;
+  }
+
+  bool allowDisplayTurnsInInterface() {
     return true;
   }
 
@@ -1891,6 +1972,10 @@ public:
   }
 
   bool isConsideredBeneficial() {
+    return true;
+  }
+
+  bool allowDisplayTurnsInInterface() {
     return true;
   }
 
@@ -1977,6 +2062,10 @@ public:
     return true;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "PerfStealth";
   }
@@ -2055,6 +2144,10 @@ public:
   }
 
   bool isConsideredBeneficial() {
+    return true;
+  }
+
+  bool allowDisplayTurnsInInterface() {
     return true;
   }
 
@@ -2139,6 +2232,10 @@ public:
     return true;
   }
 
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
   string getInterfaceName() {
     return "PerfTough";
   }
@@ -2203,10 +2300,8 @@ private:
   }
 };
 
-//Every actor has a StatusEffectHandler member. This class
-//contains a vector of StatusEffect. It handles communication
-//between the effects and the actor, and recieves attempt
-//requests to add new status effects to the actor.
+//Every actor has a StatusEffectHandler member. This class contains a vector of StatusEffects.
+//It handles communication with the effects, and recieves attempts to add new effects to the actor.
 class StatusEffectsHandler {
 public:
   StatusEffectsHandler(Actor* const owningActor_, Engine* const engine) :

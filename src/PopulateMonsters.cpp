@@ -89,7 +89,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
 
-  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 1;
+  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 2;
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
   const coord& playerPos = eng->player->pos;
 

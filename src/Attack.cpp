@@ -324,7 +324,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
           }
 
           if(data.isIntrinsic) {
-            const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly " : "";
+            const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly" : "";
             eng->log->addMessage("I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + data.dmgDescript, clrMessageGood);
           } else {
             const string ATTACK_MOD_TEXT = data.isWeakAttack ? "feebly " : (data.isBackStab ? "covertly " : "");

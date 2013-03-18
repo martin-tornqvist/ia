@@ -177,7 +177,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
     engine->log->addMessage("All my obsessions are cured!");
   }
 
-  engine->player->restoreShock(false);
+  engine->player->restoreShock(999, false);
   engine->log->addMessage("I feel more at ease.");
 
   setRealDefinitionNames(engine, false);

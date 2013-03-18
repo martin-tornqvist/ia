@@ -54,7 +54,7 @@ public:
 
   void incrShock(const ShockValues_t shockValue);
   void incrShock(const int VAL);
-  void restoreShock(const bool IS_TEMP_SHOCK_RESTORED);
+  void restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED);
   int getShockTotal() {
     return static_cast<int>(floor(shock_ + shockTemp_));
   }

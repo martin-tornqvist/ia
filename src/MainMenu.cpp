@@ -54,9 +54,9 @@ void MainMenu::draw(const MenuBrowser& browser) {
   const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
   sf::Color quoteClr = clrGray;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 27);
+  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 1, 13 + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 2, 13 + i, quoteClr);
   }
 
   sf::Color clrGeneral = clrRed;
@@ -193,6 +193,7 @@ GameEntry_t MainMenu::run(bool& quit) {
 string MainMenu::getHplQuote() {
   vector<string> quotes;
   quotes.resize(0);
+  quotes.push_back("Happy is the tomb where no wizard hath lain and happy the town at night whose wizards are all ashes.");
   quotes.push_back("Our means of receiving impressions are absurdly few, and our notions of surrounding objects infinitely narrow. We see things only as we are constructed to see them, and can gain no idea of their absolute nature. With five feeble senses we pretend to comprehend the boundlessly complex cosmos...");
   quotes.push_back("Disintegration is quite painless, I assure you.");
   quotes.push_back("...the prosaic materialism of the majority condemns as madness the flashes of super-sight which penetrate the common veil of obvious empiricism...");
@@ -200,7 +201,8 @@ string MainMenu::getHplQuote() {
   quotes.push_back("The end is near. I hear a noise at the door, as of some immense slippery body lumbering against it. It shall not find me...");
   quotes.push_back("In broad daylight, and at most seasons I am apt to think the greater part of it a mere dream; but sometimes in the autumn, about two in the morning when winds and animals howl dismally, there comes from inconceivable depths below a damnable suggestions of rhythmical throbbing ... and I feel that the transition of Juan Romero was a terrible one indeed...");
   quotes.push_back("Sometimes I believe that this less material life is our truer life, and that our vain presence on the terraqueous globe is itself the secondary or merely virtual phenomenon.");
-  quotes.push_back("Life is a hideous thing, and from the background behind what we know of it peer daemoniacal hints of truth which make it sometimes a thousandfold more hideous. Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
+  quotes.push_back("Life is a hideous thing, and from the background behind what we know of it peer daemoniacal hints of truth which make it sometimes a thousandfold more hideous.");
+  quotes.push_back("Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
   quotes.push_back("Madness rides the star-wind... claws and teeth sharpened on centuries of corpses... dripping death astride a bacchanale of bats from nigh-black ruins of buried temples of Belial...");
   quotes.push_back("Memories and possibilities are ever more hideous than realities.");
   quotes.push_back("The only saving grace of the present is that it's too damned stupid to question the past very closely.");

@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Explosion.h"
 #include "FeatureFactory.h"
+#include "PlayerBonuses.h"
 
 using namespace std;
 
@@ -369,14 +370,20 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   const int SAVE_ABILITY_MOD = effect->getSaveAbilityModifier();
   int statusProtectionFromArmor = 0;
 
-  if(effect->getEffectId() == statusBurning) {
-    if(OWNER_IS_PLAYER) {
+  if(OWNER_IS_PLAYER) {
+    if(effect->getEffectId() == statusBurning) {
       Item* const armor = owningActor->getInventory()->getItemInSlot(slot_armorBody);
       if(armor != NULL) {
         const bool ARMOR_PROTECTS_FROM_BURNING = armor->getDef().armorData.protectsAgainstStatusBurning;
         if(ARMOR_PROTECTS_FROM_BURNING) {
           statusProtectionFromArmor = max(0, dynamic_cast<Armor*>(armor)->getDurability());
         }
+      }
+    } else if(effect->getEffectId() == statusConfused) {
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware)) {
+        eng->log->addMessage(effect->messageWhenSaves());
+        delete effect;
+        return;
       }
     }
   }
