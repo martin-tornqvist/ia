@@ -15,7 +15,7 @@ INCLUDES=-I API/SFML/include
 _INCLUDES=
 _CFLAGS=
 debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
-debug: _CFLAGS=-O0 -g
+debug : _CFLAGS=-O0 -g
 release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
 release : _CFLAGS=-O2
 
@@ -27,7 +27,7 @@ LDFLAGS=-L $(SFML_LIB_DIR) -lsfml-graphics -lsfml-window -lsfml-system
 EXECUTABLE=bin
 SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
-GAME_DOC_FILE=auto_game_doc.txt
+OBJECTS_STAMP_FILE=obj_stamp
 RUN_GAME_SCRIPT=ia
 
 # Various bash commands
@@ -37,8 +37,7 @@ MKDIR=mkdir -p
 CP=cp -r
 
 # Dependencies 
-debug: $(SOURCES) $(EXECUTABLE) $(GAME_DOC_FILE)
-.PHONY: release
+debug: $(SOURCES) $(EXECUTABLE)
 release: $(SOURCES) $(EXECUTABLE)
 
 # Make targets
@@ -47,29 +46,8 @@ release: $(SOURCES) $(EXECUTABLE)
 default_target:
 	@echo "Use \"make debug\" or \"make release\""
 
-.PHONY: $(GAME_DOC_FILE)
-$(GAME_DOC_FILE):
-	echo "This is a generated document containing game mechanics information for Infra Arcana." > $@ && \
-	echo "" >> $@ && \
-	echo "Information is added here in two steps:" >> $@ && \
-	echo "1. When making the debug target, all files in the source folder are parsed" >> $@ && \
-	echo "for lines containing double percentage signs. These lines are handwritten" >> $@ && \
-	echo "descriptions of various game mechanics." >> $@ && \
-	echo "2. When the game is started in debug mode, it appends monster and item info." >> $@ && \
-	echo "This is only done if there is no previous such information appended." >> $@ && \
-	echo "" >> $@ && \
-	echo "" >> $@ && \
-	echo "1. STATIC SOURCE FILES DOCUMENTATION" >> $@ && \
-	echo "------------------------------------------------" >> $@ && \
-	grep -ri %% $(SRC_DIR)/* >> $@ && \
-	sed -i 's/%%//g' $@ && \
-	echo "" >> $@ && \
-	echo "" >> $@ && \
-	echo "" >> $@ && \
-	echo "2. RUN-TIME GENERATED INFORMATION" >> $@ && \
-	echo "------------------------------------------------" >> $@
-
-$(EXECUTABLE): $(OBJECTS)
+.PHONY: $(EXECUTABLE)
+$(EXECUTABLE): $(OBJECTS_STAMP_FILE)
 	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
 	$(RM) $(TARGET_DIR)
 	$(MKDIR) $(TARGET_DIR)
@@ -80,7 +58,9 @@ $(EXECUTABLE): $(OBJECTS)
 	echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(SFML_LIB_DIR) ./$(EXECUTABLE)" > $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
 	chmod 777 $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
 
-$(OBJECTS): $(SOURCES)
+.PHONY: $(OBJECTS_STAMP_FILE)
+$(OBJECTS_STAMP_FILE): $(SOURCES)
+	find . -type f -name '*.o' | xargs $(RM)
 	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
 	$(MV) *.o ./$(SRC_DIR)/
 
