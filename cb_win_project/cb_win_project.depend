@@ -23,7 +23,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1363548600 c:\dev\ia\src\consttypes.h
+1363724528 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1363644665 c:\dev\ia\src\statuseffects.h
+1363683857 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -350,7 +350,7 @@
 	<string>
 	"Item.h"
 
-1363557571 source:c:\dev\ia\src\actordata.cpp
+1363649706 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1363646544 source:c:\dev\ia\src\actorplayer.cpp
+1363683539 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -698,7 +698,7 @@
 1355674112 c:\dev\ia\src\dungeonclimb.h
 	<iostream>
 
-1362257487 c:\dev\ia\src\mapbuildbsp.h
+1363722877 c:\dev\ia\src\mapbuildbsp.h
 	<vector>
 	"ConstTypes.h"
 	"FeatureData.h"
@@ -730,7 +730,7 @@
 	<vector>
 	"ItemData.h"
 
-1363128615 source:c:\dev\ia\src\dungeonmaster.cpp
+1363683611 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -1165,7 +1165,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363548600 source:c:\dev\ia\src\itemdata.cpp
+1363683726 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1336,7 +1336,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1362999855 source:c:\dev\ia\src\mapbuildbsp.cpp
+1363725943 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>

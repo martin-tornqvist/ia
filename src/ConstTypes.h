@@ -181,6 +181,29 @@ struct Rect {
   coord x1y1;
 };
 
+struct PosAndVal {
+  PosAndVal() :
+    pos(coord()), val(-1) {
+  }
+  PosAndVal(const coord& pos_, const int val_) :
+    pos(pos_), val(val_) {
+  }
+  PosAndVal(const PosAndVal& other) :
+    pos(other.pos), val(other.val) {
+  }
+
+  coord pos;
+  int val;
+};
+
+struct PosAndVal_compareForVal {
+public:
+  PosAndVal_compareForVal() {}
+  bool operator()(const PosAndVal& p1, const PosAndVal& p2) {
+    return p1.val < p2.val;
+  }
+};
+
 class DiceParam {
 public:
   DiceParam() :

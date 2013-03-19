@@ -104,6 +104,8 @@ void MapBuildBSP::run() {
 
   buildRoomsInRooms();
 
+  postProcessFillDeadEnds();
+
   tracer << "MapBuildBSP: Placing doors" << endl;
   const int CHANCE_TO_PLACE_DOOR = 70;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -495,6 +497,48 @@ void MapBuildBSP::buildRoomsInRooms() {
           }
         }
       }
+    }
+  }
+}
+
+void MapBuildBSP::postProcessFillDeadEnds() {
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+
+  //Find an origin with no adjacent walls, to ensure we don't start in a dead end
+  coord origin;
+  for(int y = 2; y < MAP_Y_CELLS - 2; y++) {
+    for(int x = 2; x < MAP_X_CELLS - 2; x++) {
+      if(isAreaFree(x - 1, y - 1, x + 1, y + 1, blockers)) {
+        origin = coord(x, y);
+        y = 999;
+        x = 999;
+      }
+    }
+  }
+
+  //Floodfill from origin, then sort the positions for flood value
+  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeFloodFill(origin, blockers, floodFill, 99999, coord(-1, -1));
+  vector<PosAndVal> floodFillVector;
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      if(blockers[x][y] == false) {
+        floodFillVector.push_back(PosAndVal(coord(x, y), floodFill[x][y]));
+      }
+    }
+  }
+  std::sort(floodFillVector.begin(), floodFillVector.end(), PosAndVal_compareForVal());
+
+  //Fill all positions with only one cardinal floor neighbour
+  for(int i = static_cast<int>(floodFillVector.size()) - 1; i >= 0; i--) {
+    const coord& pos = floodFillVector.at(i).pos;
+    const int x = pos.x;
+    const int y = pos.y;
+    const int NR_ADJ_CARDINAL_WALLS = blockers[x + 1][y] + blockers[x - 1][y] + blockers[x][y + 1] + blockers[x][y - 1];
+    if(NR_ADJ_CARDINAL_WALLS == 3) {
+      eng->featureFactory->spawnFeatureAt(feature_stoneWall, pos);
+      blockers[x][y] = true;
     }
   }
 }
@@ -1339,12 +1383,16 @@ Rect Region::getRandomCoordsForRoom(Engine* eng) const {
   const bool TINY_ALLOWED_HOR = eng->dice.coinToss();
 
   const coord minDim(TINY_ALLOWED_HOR ? 2 : 4, TINY_ALLOWED_HOR ? 4 : 2);
-  const coord maxDim = x1y1_ - x0y0_ - coord(1, 1);
+  const coord maxDim = x1y1_ - x0y0_ - coord(2, 2);
 
-  const coord dim(eng->dice.getInRange(minDim.x, maxDim.x - 1), eng->dice.getInRange(minDim.y, maxDim.y - 1));
+  const int H = eng->dice.getInRange(minDim.y, maxDim.y);
+  const bool ALLOW_BIG_W = H > (maxDim.y * 5) / 6;
+  const int W = eng->dice.getInRange(minDim.x, ALLOW_BIG_W ? maxDim.x : minDim.x + (maxDim.x - minDim.x) / 5);
 
-  const int X0 = x0y0_.x + 1 + eng->dice.getInRange(0, maxDim.x - dim.x - 1);
-  const int Y0 = x0y0_.y + 1 + eng->dice.getInRange(0, maxDim.y - dim.y - 1);
+  const coord dim(W, H);
+
+  const int X0 = x0y0_.x + 1 + eng->dice.getInRange(0, maxDim.x - dim.x);
+  const int Y0 = x0y0_.y + 1 + eng->dice.getInRange(0, maxDim.y - dim.y);
   const int X1 = X0 + dim.x - 1;
   const int Y1 = Y0 + dim.y - 1;
 
