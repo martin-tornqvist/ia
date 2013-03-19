@@ -715,7 +715,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_redSpider], normal);
-  d->meleeStatusEffect = new StatusWeak(250);
+  d->meleeStatusEffect = new StatusWeak(eng);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shadowSpiderBite);

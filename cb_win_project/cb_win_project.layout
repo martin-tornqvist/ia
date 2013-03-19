@@ -28,8 +28,8 @@
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="6">
 		<Cursor position="513" topLine="25" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="1" top="1" tabpos="10">
-		<Cursor position="30817" topLine="837" />
+	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="12738" topLine="347" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="11">
 		<Cursor position="1219" topLine="9" />
@@ -40,7 +40,7 @@
 	<File name="..\src\ActorFactory.h" open="0" top="0" tabpos="9">
 		<Cursor position="86" topLine="0" />
 	</File>
-	<File name="..\src\ActorMonster.cpp" open="1" top="0" tabpos="8">
+	<File name="..\src\ActorMonster.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="4563" topLine="164" />
 	</File>
 	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="5">
@@ -50,7 +50,7 @@
 		<Cursor position="19129" topLine="606" />
 	</File>
 	<File name="..\src\ActorPlayer.cpp" open="1" top="0" tabpos="6">
-		<Cursor position="19571" topLine="467" />
+		<Cursor position="7476" topLine="193" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="7">
 		<Cursor position="1071" topLine="36" />
@@ -121,11 +121,11 @@
 	<File name="..\src\DebugModeStatPrinter.h" open="0" top="0" tabpos="1">
 		<Cursor position="279" topLine="0" />
 	</File>
-	<File name="..\src\DungeonClimb.cpp" open="1" top="0" tabpos="7">
+	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="3486" topLine="74" />
 	</File>
-	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="5020" topLine="89" />
+	<File name="..\src\DungeonMaster.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="1527" topLine="24" />
 	</File>
 	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="5886" topLine="165" />
@@ -232,7 +232,7 @@
 	<File name="..\src\Input.h" open="0" top="0" tabpos="9">
 		<Cursor position="515" topLine="3" />
 	</File>
-	<File name="..\src\Interface.cpp" open="1" top="0" tabpos="9">
+	<File name="..\src\Interface.cpp" open="0" top="0" tabpos="9">
 		<Cursor position="6744" topLine="155" />
 	</File>
 	<File name="..\src\Interface.h" open="0" top="0" tabpos="4">
@@ -266,7 +266,7 @@
 		<Cursor position="853" topLine="8" />
 	</File>
 	<File name="..\src\ItemData.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="34770" topLine="868" />
+		<Cursor position="26331" topLine="697" />
 	</File>
 	<File name="..\src\ItemData.h" open="0" top="0" tabpos="4">
 		<Cursor position="550" topLine="16" />
@@ -490,8 +490,8 @@
 	<File name="..\src\StatusEffects.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="310" topLine="0" />
 	</File>
-	<File name="..\src\StatusEffects.h" open="1" top="0" tabpos="2">
-		<Cursor position="22559" topLine="1091" />
+	<File name="..\src\StatusEffects.h" open="1" top="1" tabpos="2">
+		<Cursor position="29702" topLine="1403" />
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />

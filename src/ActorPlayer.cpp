@@ -107,9 +107,7 @@ void Player::actorSpecific_spawnStartItems() {
     inventory_->putItemInGeneral(item);
   }
 
-  if(eng->dice.coinToss()) {
-    inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
-  }
+  inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));

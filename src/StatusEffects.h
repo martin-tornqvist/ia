@@ -338,7 +338,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 150);
+    return DiceParam(1, 50, 100);
   }
 };
 
@@ -410,7 +410,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 1500);
+    return DiceParam(1, 100, 1450);
   }
   friend class StatusEffectsHandler;
   StatusDiseased(const int turns) :
@@ -755,7 +755,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 500);
+    return DiceParam(1, 100, 450);
   }
 };
 
@@ -837,7 +837,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 500);
+    return DiceParam(1, 100, 450);
   }
 };
 
@@ -914,7 +914,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 500);
+    return DiceParam(1, 100, 450);
   }
 };
 
