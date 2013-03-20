@@ -276,7 +276,7 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
   drawMapAndInterface();
 }
 
-void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION) {
+ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION) {
   drawMapAndInterface();
   clearWindow();
 

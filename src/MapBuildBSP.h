@@ -106,7 +106,7 @@ private:
 
   int getTotalNrOfConnections(Region* regions[3][3]) const;
 
-  bool doorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
+  bool globalDoorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 
 //  void findEdgesOfRoom(const Rect roomCoords, vector<coord>& vectorToFill);
 

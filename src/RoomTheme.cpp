@@ -25,7 +25,7 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
   tracer << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
   eng->populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
 
-tracer << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
+  tracer << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
   eng->populateTraps->populateRoomAndCorridorLevel(themeMap, rooms);
 
   tracer << "RoomThemeMaker::run() [DONE]" << endl;
@@ -72,7 +72,7 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
 bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme,
     const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
-      (void)blockers;
+  (void)blockers;
 
   const int ROOM_W = room->getX1() - room->getX0() + 1;
   const int ROOM_H = room->getY1() - room->getY0() + 1;

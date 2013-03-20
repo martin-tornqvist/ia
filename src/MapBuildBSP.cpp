@@ -29,13 +29,14 @@ void MapBuildBSP::run() {
     delete rooms_.at(i);
   }
   rooms_.resize(0);
+  eng->roomThemeMaker->roomList.resize(0);
 
   tracer << "MapBuildBSP: Setting all cells to stone walls and resetting helper arrays" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       roomCells[x][y] = false;
       eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
-      doorPositionCandidates[x][y] = false;
+      globalDoorPositionCandidates[x][y] = false;
       forbiddenStairCellsGlobal[x][y] = false;
     }
   }
@@ -110,7 +111,7 @@ void MapBuildBSP::run() {
   const int CHANCE_TO_PLACE_DOOR = 70;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(doorPositionCandidates[x][y] == true) {
+      if(globalDoorPositionCandidates[x][y] == true) {
         if(eng->dice(1, 100) < CHANCE_TO_PLACE_DOOR) {
           placeDoorAtPosIfSuitable(coord(x, y));
         }
@@ -468,11 +469,13 @@ void MapBuildBSP::buildRoomsInRooms() {
               if(eng->dice.coinToss() || doorCandidates.size() <= 2) {
                 const int DOOR_POS_ELEMENT = eng->dice.getInRange(0, doorCandidates.size() - 1);
                 const coord doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
-                if(eng->dice.coinToss()) {
-                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
-                } else {
+//                if(eng->dice.coinToss()) {
+//                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
                   eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-                }
+                  globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
+//                } else {
+//                  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+//                }
               } else {
                 vector<coord> positionsWithDoor;
                 const int NR_TRIES = eng->dice.getInRange(1, 10);
@@ -865,7 +868,7 @@ void MapBuildBSP::buildCorridorBetweenRooms(const Region& region1, const Region&
     while(floorInR2Grid[c.x][c.y] == false) {
       c += regionDeltaSign;
       eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-      doorPositionCandidates[c.x][c.y] = true;
+      globalDoorPositionCandidates[c.x][c.y] = true;
     }
   } else {
 
@@ -928,7 +931,7 @@ void MapBuildBSP::buildCorridorBetweenRooms(const Region& region1, const Region&
       c += regionDeltaSign;
     }
     eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-    doorPositionCandidates[c.x][c.y] = true;
+    globalDoorPositionCandidates[c.x][c.y] = true;
     c += regionDeltaSign;
 
     // (3)
@@ -955,7 +958,7 @@ void MapBuildBSP::buildCorridorBetweenRooms(const Region& region1, const Region&
     }
     c -= regionDeltaSign;
     if(floorInR2Vector.size() > 1) {
-      doorPositionCandidates[c.x][c.y] = true;
+      globalDoorPositionCandidates[c.x][c.y] = true;
     }
   }
 }
@@ -1300,7 +1303,7 @@ bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const
       room = NULL;
     } else {
       eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-      doorPositionCandidates[doorPos.x][doorPos.y] = true;
+      globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
     }
 
     return true;

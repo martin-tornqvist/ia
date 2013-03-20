@@ -698,7 +698,7 @@
 1355674112 c:\dev\ia\src\dungeonclimb.h
 	<iostream>
 
-1363722877 c:\dev\ia\src\mapbuildbsp.h
+1363802774 c:\dev\ia\src\mapbuildbsp.h
 	<vector>
 	"ConstTypes.h"
 	"FeatureData.h"
@@ -1097,7 +1097,7 @@
 	"Examine.h"
 	"PlayerCreateCharacter.h"
 
-1363646950 source:c:\dev\ia\src\interface.cpp
+1363802409 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
@@ -1336,7 +1336,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1363780828 source:c:\dev\ia\src\mapbuildbsp.cpp
+1363802880 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -1560,7 +1560,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1363551391 source:c:\dev\ia\src\render.cpp
+1363801153 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -7755,7 +7755,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1363123157 source:c:\dev\ia\src\roomtheme.cpp
+1363802409 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
