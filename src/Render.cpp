@@ -192,8 +192,6 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
 }
 
 void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
-  drawMapAndInterface(false);
-
   if(trace.size() > 2) {
     for(unsigned int i = 1; i < trace.size() - 1; i++) {
       coverCellInMap(trace.at(i));
@@ -234,8 +232,6 @@ void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
   } else {
     drawCharacter('X', renderArea_mainScreen, headPos, clr);
   }
-
-  updateWindow();
 }
 
 void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],

@@ -11,6 +11,7 @@
 #include "AutoDescribeActor.h"
 #include "TextFormatting.h"
 #include "Query.h"
+#include "Marker.h"
 
 Entity::Entity(FeatureMob* feature_) :
   feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureMob) {
@@ -81,6 +82,8 @@ void Look::printExtraActorDescription(const coord pos) const {
       const int START_X = 1;
       const int START_Y = 2;
 
+      eng->renderer->drawMapAndInterface(false);
+      eng->marker->draw(markerTask_look);
       eng->renderer->coverArea(renderArea_screen, START_X, START_Y, 1, NR_OF_LINES);
 
       for(unsigned int i = 0; i < NR_OF_LINES; i++) {

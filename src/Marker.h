@@ -33,14 +33,14 @@ public:
     return pos_;
   }
 
+  void draw(const MarkerTask_t markerTask) const;
+
 private:
   coord lastKnownPlayerPos_;
 
   coord getClosestPos(const coord& c, const vector<coord>& positions) const;
   void setCoordToClosestEnemyIfVisible();
   bool setCoordToTargetIfVisible();
-
-  void draw(const MarkerTask_t markerTask) const;
   void readKeys(const MarkerTask_t markerTask);
   void move(const int DX, const int DY, const MarkerTask_t markerTask);
   void cancel();

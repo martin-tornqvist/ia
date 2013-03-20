@@ -84,6 +84,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
     if(markerTask == markerTask_look) {
       eng->look->printExtraActorDescription(pos_);
+      move(0, 0, markerTask_look);
     }
   }
   // ------------------------------------------------------- THROW
@@ -162,13 +163,17 @@ void Marker::place(const MarkerTask_t markerTask) {
 
   eng->log->clearLog();
 
+  eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
+  eng->renderer->updateWindow();
 
   if(markerTask == markerTask_look) {
     eng->look->markerAtCoord(pos_);
   }
 
+  eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
+  eng->renderer->updateWindow();
 
   isDone_ = false;
   while(isDone_ == false) {
@@ -222,7 +227,9 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask) {
     eng->look->markerAtCoord(pos_);
   }
 
+  eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
+  eng->renderer->updateWindow();
 }
 
 void Marker::done() {
