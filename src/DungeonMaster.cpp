@@ -109,19 +109,23 @@ void DungeonMaster::winGame() {
 
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
-  const int DELAY_BETWEEN_LINES = 75;
+  const int DELAY_BETWEEN_LINES = 40;
   eng->sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
-    eng->renderer->drawTextCentered(winMessageLines.at(i), renderArea_screen, MAP_X_CELLS_HALF, Y0 + i, clrMessageBad, true);
+    for(unsigned int ii = 0; ii <= i; ii++) {
+      eng->renderer->drawTextCentered(winMessageLines.at(ii), renderArea_screen, MAP_X_CELLS_HALF, Y0 + ii, clrMessageBad, true);
+      if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
+        const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
+        eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
+      }
+    }
     eng->renderer->updateWindow();
     eng->sleep(DELAY_BETWEEN_LINES);
   }
-  const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
-  eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
-  eng->renderer->updateWindow();
+
   eng->query->waitForEscOrSpace();
-  eng->renderer->coverRenderArea(renderArea_screen);
-  eng->renderer->updateWindow();
+//  eng->renderer->coverRenderArea(renderArea_screen);
+//  eng->renderer->updateWindow();
 }
 
 void DungeonMaster::initExpTable() {
