@@ -1278,7 +1278,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1355674113 source:c:\dev\ia\src\look.cpp
+1363814400 source:c:\dev\ia\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -1290,6 +1290,7 @@
 	"AutoDescribeActor.h"
 	"TextFormatting.h"
 	"Query.h"
+	"Marker.h"
 
 1363560183 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
@@ -1427,7 +1428,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1363813848 source:c:\dev\ia\src\marker.cpp
+1363814373 source:c:\dev\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -1560,7 +1561,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1363801153 source:c:\dev\ia\src\render.cpp
+1363814176 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>

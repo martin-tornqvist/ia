@@ -79,9 +79,12 @@ void DungeonClimb::travelDown(const int levels) {
 
 void DungeonClimb::attemptUseDownStairs() {
   tracer << "DungeonClimb::attemptUseDownStairs()..." << endl;
-  const int DLVL = eng->map->getDungeonLevel();
 
+  eng->log->clearLog();
+
+  const int DLVL = eng->map->getDungeonLevel();
   const coord& playerPos = eng->player->pos;
+
   if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
     tracer << "DungeonClimb: Player is on stairs" << endl;
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
@@ -89,7 +92,7 @@ void DungeonClimb::attemptUseDownStairs() {
     } else {
       eng->log->addMessage("I descend the stairs.");
     }
-    eng->renderer->updateWindow();
+//    eng->renderer->updateWindow();
     travelDown();
     if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown &&
         eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
@@ -103,7 +106,7 @@ void DungeonClimb::attemptUseDownStairs() {
     } else {
       eng->log->addMessage("I see no stairs leading downwards here.");
     }
-    eng->renderer->updateWindow();
+//    eng->renderer->updateWindow();
   }
   tracer << "DungeonClimb::attemptUseDownStairs() [DONE]" << endl;
 }
