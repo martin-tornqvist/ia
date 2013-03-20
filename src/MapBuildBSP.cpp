@@ -164,67 +164,67 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
   tracer << "[WARNING] Tried to remove room that is not in list, in MapBuildBSP::deleteAndRemoveRoomFromList()" << endl;
 }
 
-void MapBuildBSP::makeLevers() {
-  tracer << "MapBuildBSP::makeLeverPuzzle()..." << endl;
+//void MapBuildBSP::makeLevers() {
+//  tracer << "MapBuildBSP::makeLeverPuzzle()..." << endl;
+//
+//  tracer << "MapBuildBSP: Picking a random door" << endl;
+//  vector<Door*> doorCandidates;
+//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+//      Feature* const feature = eng->map->featuresStatic[x][y];
+//      if(feature->getId() == feature_door) {
+//        Door* const door = dynamic_cast<Door*>(feature);
+//        doorCandidates.push_back(door);
+//      }
+//    }
+//  }
+//  Door* const doorToLink = doorCandidates.at(eng->dice.getInRange(0, doorCandidates.size() - 1));
+//
+//  tracer << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
+//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+//      Feature* const feature = eng->map->featuresStatic[x][y];
+//      if(feature->getId() == feature_door) {
+//        blockers[x][y] = false;
+//      }
+//    }
+//  }
+//  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
+//  eng->mapTests->makeFloodFill(eng->player->pos, blockers, floodFill, 99999, coord(-1, -1));
+//  const int FLOOD_VALUE_AT_DOOR = floodFill[doorToLink->pos_.x][doorToLink->pos_.y];
+//  vector<coord> leverPosCandidates;
+//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+//      if(floodFill[x][y] < FLOOD_VALUE_AT_DOOR) {
+//        if(eng->map->featuresStatic[x][y]->canHaveStaticFeature()) {
+//          leverPosCandidates.push_back(coord(x, y));
+//        }
+//      }
+//    }
+//  }
+//
+//  if(leverPosCandidates.size() > 0) {
+//    const int ELEMENT = eng->dice.getInRange(0, leverPosCandidates.size() - 1);
+//    const coord leverPos(leverPosCandidates.at(ELEMENT));
+//    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
+//  } else {
+//    tracer << "[WARNING] Could not find position to place lever, in MapBuildBSP::makeLeverPuzzle()" << endl;
+//  }
+//  tracer << "MapBuildBSP::makeLeverPuzzle() [DONE]" << endl;
+//}
 
-  tracer << "MapBuildBSP: Picking a random door" << endl;
-  vector<Door*> doorCandidates;
-  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-      Feature* const feature = eng->map->featuresStatic[x][y];
-      if(feature->getId() == feature_door) {
-        Door* const door = dynamic_cast<Door*>(feature);
-        doorCandidates.push_back(door);
-      }
-    }
-  }
-  Door* const doorToLink = doorCandidates.at(eng->dice.getInRange(0, doorCandidates.size() - 1));
-
-  tracer << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
-  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-      Feature* const feature = eng->map->featuresStatic[x][y];
-      if(feature->getId() == feature_door) {
-        blockers[x][y] = false;
-      }
-    }
-  }
-  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeFloodFill(eng->player->pos, blockers, floodFill, 99999, coord(-1, -1));
-  const int FLOOD_VALUE_AT_DOOR = floodFill[doorToLink->pos_.x][doorToLink->pos_.y];
-  vector<coord> leverPosCandidates;
-  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-      if(floodFill[x][y] < FLOOD_VALUE_AT_DOOR) {
-        if(eng->map->featuresStatic[x][y]->canHaveStaticFeature()) {
-          leverPosCandidates.push_back(coord(x, y));
-        }
-      }
-    }
-  }
-
-  if(leverPosCandidates.size() > 0) {
-    const int ELEMENT = eng->dice.getInRange(0, leverPosCandidates.size() - 1);
-    const coord leverPos(leverPosCandidates.at(ELEMENT));
-    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
-  } else {
-    tracer << "[WARNING] Could not find position to place lever, in MapBuildBSP::makeLeverPuzzle()" << endl;
-  }
-  tracer << "MapBuildBSP::makeLeverPuzzle() [DONE]" << endl;
-}
-
-void MapBuildBSP::spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door) {
-  tracer << "MapBuildBSP: Spawning lever and linking it to the door" << endl;
-  eng->featureFactory->spawnFeatureAt(feature_lever, leverPos, new LeverSpawnData(&door));
-
-  tracer << "MapBuildBSP: Changing door properties" << endl;
-  door.material_ = doorMaterial_metal;
-  door.isOpen_ = false;
-  door.isStuck_ = false;
-  door.isOpenedAndClosedExternally_ = true;
-}
+//void MapBuildBSP::spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door) {
+//  tracer << "MapBuildBSP: Spawning lever and linking it to the door" << endl;
+//  eng->featureFactory->spawnFeatureAt(feature_lever, leverPos, new LeverSpawnData(&door));
+//
+//  tracer << "MapBuildBSP: Changing door properties" << endl;
+//  door.material_ = doorMaterial_metal;
+//  door.isOpen_ = false;
+//  door.isStuck_ = false;
+//  door.isOpenedAndClosedExternally_ = true;
+//}
 
 void MapBuildBSP::buildCaves(Region* regions[3][3]) {
   tracer << "MapBuildBSP::buildCaves()..." << endl;
@@ -718,12 +718,12 @@ void MapBuildBSP::decorateWalls() {
 
 void MapBuildBSP::connectRegions(Region* regions[3][3]) {
   tracer << "MapBuildBSP::connectRegions()..." << endl;
-  const int MIN_NR_OF_CON_LIMIT = 16;
-  const int MAX_NR_OF_CON_LIMIT = 22;
-  const int MIN_NR_OF_CON = eng->dice.getInRange(MIN_NR_OF_CON_LIMIT, MAX_NR_OF_CON_LIMIT);
+  const int MIN_NR_CONNECTIONS_LIMIT = 16;
+  const int MAX_NR_CONNECTIONS_LIMIT = 22;
+  const int MIN_NR_CONNECTIONS = eng->dice.getInRange(MIN_NR_CONNECTIONS_LIMIT, MAX_NR_CONNECTIONS_LIMIT);
   int totalNrConnections = 0;
   bool isAllConnected = false;
-  while(isAllConnected == false || totalNrConnections < MIN_NR_OF_CON) {
+  while(isAllConnected == false || totalNrConnections < MIN_NR_CONNECTIONS) {
     totalNrConnections = getTotalNrOfConnections(regions);
     isAllConnected = isAllRoomsConnected();
 
@@ -751,7 +751,7 @@ void MapBuildBSP::connectRegions(Region* regions[3][3]) {
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
     }
-    if(totalNrConnections >= MAX_NR_OF_CON_LIMIT) {
+    if(totalNrConnections >= MAX_NR_CONNECTIONS_LIMIT) {
       break;
     }
   }
@@ -1353,15 +1353,15 @@ Region::~Region() {
 }
 
 int Region::getNrOfConnections() {
-  int connections = 0;
+  int nRconnections = 0;
   for(int x = 0; x < 3; x++) {
     for(int y = 0; y < 3; y++) {
       if(regionsConnectedTo[x][y]) {
-        connections++;
+        nRconnections++;
       }
     }
   }
-  return connections;
+  return nRconnections;
 }
 
 bool Region::isRegionNeighbour(const Region& other, Engine* const engine) {

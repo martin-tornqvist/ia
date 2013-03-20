@@ -23,13 +23,13 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="12018" topLine="364" />
+		<Cursor position="8296" topLine="246" />
 	</File>
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="6">
 		<Cursor position="513" topLine="25" />
 	</File>
 	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="12738" topLine="347" />
+		<Cursor position="3060" topLine="72" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="11">
 		<Cursor position="1219" topLine="9" />
@@ -49,7 +49,7 @@
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="19129" topLine="606" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="1" top="0" tabpos="6">
+	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="7476" topLine="193" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="7">
@@ -62,7 +62,7 @@
 		<Cursor position="175" topLine="0" />
 	</File>
 	<File name="..\src\Attack.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="12783" topLine="309" />
+		<Cursor position="3925" topLine="138" />
 	</File>
 	<File name="..\src\Attack.h" open="0" top="0" tabpos="7">
 		<Cursor position="523" topLine="13" />
@@ -124,7 +124,7 @@
 	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="3486" topLine="74" />
 	</File>
-	<File name="..\src\DungeonMaster.cpp" open="1" top="0" tabpos="7">
+	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="1527" topLine="24" />
 	</File>
 	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="8">
@@ -265,8 +265,8 @@
 	<File name="..\src\ItemArmor.h" open="0" top="0" tabpos="0">
 		<Cursor position="853" topLine="8" />
 	</File>
-	<File name="..\src\ItemData.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="26331" topLine="697" />
+	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="12182" topLine="344" />
 	</File>
 	<File name="..\src\ItemData.h" open="0" top="0" tabpos="4">
 		<Cursor position="550" topLine="16" />
@@ -346,11 +346,11 @@
 	<File name="..\src\MapBuild.h" open="0" top="0" tabpos="11">
 		<Cursor position="325" topLine="11" />
 	</File>
-	<File name="..\src\MapBuildBSP.cpp" open="1" top="1" tabpos="9">
-		<Cursor position="20927" topLine="512" />
+	<File name="..\src\MapBuildBSP.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="18861" topLine="444" />
 	</File>
-	<File name="..\src\MapBuildBSP.h" open="1" top="0" tabpos="8">
-		<Cursor position="2336" topLine="91" />
+	<File name="..\src\MapBuildBSP.h" open="1" top="0" tabpos="1">
+		<Cursor position="3127" topLine="105" />
 	</File>
 	<File name="..\src\MapBuildCavern.cpp" open="0" top="0" tabpos="14">
 		<Cursor position="1102" topLine="16" />
@@ -397,10 +397,10 @@
 	<File name="..\src\PlayerAllocBonus.h" open="0" top="0" tabpos="3">
 		<Cursor position="261" topLine="0" />
 	</File>
-	<File name="..\src\PlayerBonuses.cpp" open="1" top="0" tabpos="5">
+	<File name="..\src\PlayerBonuses.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="2247" topLine="15" />
 	</File>
-	<File name="..\src\PlayerBonuses.h" open="1" top="0" tabpos="4">
+	<File name="..\src\PlayerBonuses.h" open="0" top="0" tabpos="4">
 		<Cursor position="331" topLine="3" />
 	</File>
 	<File name="..\src\PlayerCreateCharacter.cpp" open="0" top="0" tabpos="8">
@@ -487,10 +487,10 @@
 	<File name="..\src\Spells.h" open="0" top="0" tabpos="4">
 		<Cursor position="2950" topLine="113" />
 	</File>
-	<File name="..\src\StatusEffects.cpp" open="1" top="0" tabpos="3">
+	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="310" topLine="0" />
 	</File>
-	<File name="..\src\StatusEffects.h" open="1" top="0" tabpos="2">
+	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="2">
 		<Cursor position="29422" topLine="1403" />
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="8">

@@ -120,8 +120,8 @@ private:
 
   coord placeStairs();
 
-  void makeLevers();
-  void spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door);
+//  void makeLevers();
+//  void spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door);
 
   void revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord);
 

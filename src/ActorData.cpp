@@ -96,7 +96,7 @@ void ActorData::defineAllActors() {
   d.name_the = "Player";
   d.moveType = moveType_walk;
   d.id = actor_player;
-  d.hpMax = 14;
+  d.hpMax = 16;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;

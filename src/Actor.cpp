@@ -248,6 +248,8 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
 
 bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   tracer << "Actor::hit()..." << endl;
+  tracer << "Actor: Damage from parameter: " << dmg << endl;
+
   monsterHit();
 
   dmg = max(1, dmg);
