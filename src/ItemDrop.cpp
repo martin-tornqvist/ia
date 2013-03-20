@@ -27,20 +27,23 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT, co
     NR_ITEMS_TO_DROP == -1 ||
     (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
+  string itemRef = "";
+
   if(itemToDrop != NULL) {
     if(IS_WHOLE_STACK_DROPPED) {
+      itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
       eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng->itemFactory->copyItem(itemToKeep);
       itemToDrop->numberOfItems = NR_ITEMS_TO_DROP;
+      itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
       itemToKeep->numberOfItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
     }
 
     //Messages
-    const string itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
     const Actor* const curActor = eng->gameTime->getCurrentActor();
     if(curActor == eng->player) {
       eng->log->clearLog();
@@ -84,7 +87,6 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
   int curX, curY, stackX, stackY;
   const bool ITEM_STACKS = (*item)->getDef().isStackable;
   int ii = 0;
-  Item* stackItem;
   const unsigned int vectorSize = freeCells.size();
   for(unsigned int i = 0; i < vectorSize; i++) {
     //First look in all cells that has distance to origin equal to cell i
@@ -94,14 +96,13 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
         stackX = freeCells.at(ii).x;
         stackY = freeCells.at(ii).y;
-        stackItem = eng->map->items[stackX][stackY];
-        if(stackItem != NULL) {
-          if(stackItem->getDef().id == (*item)->getDef().id) {
-            stackItem->numberOfItems += (*item)->numberOfItems;
-            delete(*item);
-            *item = NULL;
-            i = 999999;
-            break;
+        Item* itemFoundOnFloor = eng->map->items[stackX][stackY];
+        if(itemFoundOnFloor != NULL) {
+          if(itemFoundOnFloor->getDef().id == (*item)->getDef().id) {
+            (*item)->numberOfItems += itemFoundOnFloor->numberOfItems;
+            delete itemFoundOnFloor;
+            eng->map->items[stackX][stackY] = *item;
+            return;
           }
         }
         ii++;
@@ -117,7 +118,9 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
     curX = freeCells.at(i).x;
     curY = freeCells.at(i).y;
     if(eng->map->items[curX][curY] == NULL) {
+
       eng->map->items[curX][curY] = *item;
+
       if(eng->player->pos == coord(curX, curY)) {
         if(curX != pos.x || curY != pos.y) {
           eng->log->addMessage("I feel something by my feet.");

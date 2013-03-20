@@ -1184,7 +1184,7 @@
 	"Item.h"
 	"Converters.h"
 
-1363548600 source:c:\dev\ia\src\itemdrop.cpp
+1363811879 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1336,7 +1336,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1363802880 source:c:\dev\ia\src\mapbuildbsp.cpp
+1363803404 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
