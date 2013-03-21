@@ -3,453 +3,114 @@
 #include "Engine.h"
 
 
-//---------------------------------------------------TEMPLATES
 void MapTemplateHandler::initTemplates()
 {
-  MapTemplate templ;
-
   string templateString;
   vector<CharToIdTranslation> translationVector;
-  coord junction;
 
-  //---------------GENERAL TEMPLATES FOR MAPBUILDER
+  //---------------------------------------------------- CHURCH
   templateString =
-    string(".................;") +
-    string(".................;") +
-    string("...#.#.#.#.#.#...;") +
-    string(".................;") +
-    string(".................;") +
-    string(".................;") +
-    string("...#.#.#.#.#.#...;") +
-    string(".................;") +
-    string(".................;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom01);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#.#.#.#.#.#;") +
-    string("...........;") +
-    string("...........;") +
-    string("...........;") +
-    string("#.#.#.#.#.#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom02);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("###.....###;") +
-    string("###.....###;") +
-    string("###.....###;") +
-    string("...........;") +
-    string(".....#.....;") +
-    string("....###....;") +
-    string(".....#.....;") +
-    string("...........;") +
-    string("###.....###;") +
-    string("###.....###;") +
-    string("###.....###;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom03);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("##...##;") +
-    string("##...##;") +
-    string(".......;") +
-    string("...#...;") +
-    string(".......;") +
-    string("##...##;") +
-    string("##...##;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom04);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".......................;") +
-    string(".......................;") +
-    string("..###.#####.#####.###..;") +
-    string("..#.....#.....#.....#..;") +
-    string(".......................;") +
-    string("..#.....#.....#.....#..;") +
-    string("..###.#####.######.##..;") +
-    string(".......................;") +
-    string(".......................;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom05);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".......................;") +
-    string(".......................;") +
-    string("..###.#####.#####.###..;") +
-    string("..#.....#.....#.....#..;") +
-    string("..#.....#.....#.....#..;") +
-    string(".......................;") +
-    string("..#.....#.....#.....#..;") +
-    string("..#.....#.....#.....#..;") +
-    string("..###.#####.#####.###..;") +
-    string(".......................;") +
-    string(".......................;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom06);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".................;") +
-    string(".................;") +
-    string("..######.######..;") +
-    string("..#....#.#....#..;") +
-    string("..#....#.#....#..;") +
-    string("..#...........#..;") +
-    string("..#....#.#....#..;") +
-    string("..###.##.##.###..;") +
-    string(".................;") +
-    string("..###.##.##.###..;") +
-    string("..#....#.#....#..;") +
-    string("..#...........#..;") +
-    string("..#....#.#....#..;") +
-    string("..#....#.#....#..;") +
-    string("..######.######..;") +
-    string(".................;") +
-    string(".................;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom07);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("....#.#....;") +
-    string("....#.#....;") +
-    string("...........;") +
-    string("....#.#....;") +
-    string("##.##.##.##;") +
-    string("...........;") +
-    string("##.##.##.##;") +
-    string("....#.#....;") +
-    string("...........;") +
-    string("....#.#....;") +
-    string("....#.#....;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom08);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("....#........#....;") +
-    string("....#........#....;") +
-    string("..................;") +
-    string("....#........#....;") +
-    string("##.##........##.##;") +
-    string("..................;") +
-    string("##.##........##.##;") +
-    string("....#........#....;") +
-    string("..................;") +
-    string("....#........#....;") +
-    string("....#........#....;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom09);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#...#...#...#...#...#...#...#;") +
-    string(".............................;") +
-    string("..############.############..;") +
-    string("..#.......................#..;") +
-    string("..#......#....#....#......#..;") +
-    string("..#.......................#..;") +
-    string("..#.#.#..#.........#..#.#.#..;") +
-    string("..............#..............;") +
-    string("..#.#.#..#.........#..#.#.#..;") +
-    string("..#.......................#..;") +
-    string("..#......#....#....#......#..;") +
-    string("..#.......................#..;") +
-    string("..############.############..;") +
-    string(".............................;") +
-    string("#...#...#...#...#...#...#...#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom10);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#.#.#.#.#.#;") +
-    string("...........;") +
-    string("#.#.#.#.#.#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom11);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#.#;") +
-    string("...;") +
-    string("#.#;") +
-    string("...;") +
-    string("#.#;") +
-    string("...;") +
-    string("#.#;") +
-    string("...;") +
-    string("#.#;") +
-    string("...;") +
-    string("#.#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom12);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".........;") +
-    string("########.;") +
-    string(".......#.;") +
-    string(".......#.;") +
-    string(".......#.;") +
-    string(".......#.;") +
-    string(".......#.;") +
-    string(".......#.;") +
-    string(".........;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom13);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".........;") +
-    string(".#.......;") +
-    string(".#.......;") +
-    string(".#.......;") +
-    string(".#.......;") +
-    string(".#.......;") +
-    string(".#.......;") +
-    string(".########;") +
-    string(".........;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom14);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".........;") +
-    string(".........;") +
-    string(".........;") +
-    string("...###...;") +
-    string("...###...;") +
-    string("...###...;") +
-    string(".........;") +
-    string(".........;") +
-    string(".........;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom15);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#.............#;") +
-    string("...............;") +
-    string("#.............#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom16);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("...............;") +
-    string("...#...#...#...;") +
-    string("...............;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom17);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("#.#;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("...;") +
-    string("#.#;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom18);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("...;") +
-    string("...;") +
-    string(".#.;") +
-    string("...;") +
-    string("...;") +
-    string(".#.;") +
-    string("...;") +
-    string("...;") +
-    string(".#.;") +
-    string("...;") +
-    string("...;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom19);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string(".........;") +
-    string(".#######.;") +
-    string(".#######.;") +
-    string(".#######.;") +
-    string(".#######.;") +
-    string(".#######.;") +
-    string(".........;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom20);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-  templateString =
-    string("............;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string(".##########.;") +
-    string("............;");
-  templ = stringToTemplate(templateString, NULL, templateDevName_generalRoom21);
-  addJunctionsToRoomEdge(templ);
-  m_generalTemplates.push_back(templ);
-
-
-  //---------------SPECIAL TEMPLATES
-  //--------------------------------  Tomb-house
-//    templateString =
-//        string("ggggggg;")+
-//        string("ggggggg;")+
-//        string("ggtotgg;")+
-//        string("ggtotgg;")+
-//        string("ggtttgg;")+
-//        string("ggggggg;")+
-//        string("ggggggg;");
-//
-//    translationVector.resize(0);
-//    addTranslationToVector(&translationVector, 't', landscDevToId(feature_stoneWall));
-//    addTranslationToVector(&translationVector, 'o', landscDevToId(feature_stoneFloor));
-//    addTranslationToVector(&translationVector, 'g', landscDevToId(feature_grass));
-//    m_templates.push_back( stringToTemplate(templateString, &translationVector, templateDevName_tombHouse) );
-
-  //--------------------------------  Church
-  templateString =
-    string("_____________,,,,,,,,,,,_____;") +
-    string("__________,,,,,XXXXXX,,,,____;") +
-    string("_,,,,,,,,,,,,,,XI..IX,,,,,___;") +
-    string(",,,,,,,,,,,,,XXX....XXX,,,,__;") +
-    string(",,XXXXX,X,,X,X.X....X.X,,,,,_;") +
-    string(",,XI.IXXXXXXXX.X....X.XXXXXX,;") +
-    string("..X...XI.................IXX,;") +
-    string(".,X.X.X..[.[.[.[...[.[.....X,;") +
-    string(".......*****************-..X,;") +
-    string(".,X.X.X..[.[.[.[...[.[.....X,;") +
-    string(".,X...XI.................IXX,;") +
-    string(",,XI.IXXXXXXXX.X....X.XXXXXX,;") +
-    string(",,XXXXX,X,,X,X.X....X.X,,,,,_;") +
-    string(",,,,,,,,,,,,,XXX....XXX,,,,__;") +
-    string("_,,,,,,,,,,,,,,XI..IX,,,,,___;") +
-    string("_________,,,,,,XXXXXX,,,_____;") +
-    string("____________,,,,,,,,,,,,_____;");
+    string("             ,,,,,,,,,,,     ;") +
+    string("          ,,,,,######,,,,    ;") +
+    string(" ,,,,,,,,,,,,,,#v..v#,,,,,   ;") +
+    string(",,,,,,,,,,,,,###....###,,,,  ;") +
+    string(",,#####,#,,#,#.#....#.#,,,,, ;") +
+    string(",,#v.v########.#....#.######,;") +
+    string("..#...#v.................v##,;") +
+    string(".,#.#.#..[.[.[.[...[.[.....#,;") +
+    string(".......*****************-..#,;") +
+    string(".,#.#.#..[.[.[.[...[.[.....#,;") +
+    string(".,#...#v.................v##,;") +
+    string(",,#v.v########.#....#.######,;") +
+    string(",,#####,#,,#,#.#....#.#,,,,, ;") +
+    string(",,,,,,,,,,,,,###....###,,,,  ;") +
+    string(" ,,,,,,,,,,,,,,#v..v#,,,,,   ;") +
+    string("         ,,,,,,######,,,,    ;") +
+    string("            ,,,,,,,,,,,,     ;");
 
 
   translationVector.resize(0);
-  addTranslationToVector(&translationVector, 'X', feature_stoneWall);
-  addTranslationToVector(&translationVector, '.', feature_stoneFloor);
-  addTranslationToVector(&translationVector, ',', feature_grassWithered);
-  addTranslationToVector(&translationVector, 'I', feature_brazierGolden);
-  addTranslationToVector(&translationVector, '[', feature_churchBench);
-  addTranslationToVector(&translationVector, '-', feature_altar);
-  addTranslationToVector(&translationVector, '*', feature_churchCarpet);
+  addTranslationToVector(translationVector, ',', feature_grassWithered);
+  addTranslationToVector(translationVector, 'v', feature_brazierGolden);
+  addTranslationToVector(translationVector, '[', feature_churchBench);
+  addTranslationToVector(translationVector, '-', feature_altar);
+  addTranslationToVector(translationVector, '*', feature_churchCarpet);
 
-  m_templates.push_back(stringToTemplate(templateString, &translationVector, templateDevName_church));
-  //--------------------------------
+  templates_.push_back(stringToTemplate(templateString, translationVector, mapTemplate_church));
+
+  //---------------------------------------------------- PHARAOH CHAMBER
+
+  templateString =
+    //                      1         2         3         4         5         6         7
+    //            01234567890123456789012345678901234567890123456789012345678901234567890123456789
+    string(/* 0*/"################################################################################;"/* 0*/) +
+    string(/* 1*/"########################.......#####################.#####.#####.###############;"/* 1*/) +
+    string(/* 2*/"######################...1.#.1...##################...###...###...##############;"/* 2*/) +
+    string(/* 3*/"#####################......#......################.....#.....#.....#############;"/* 3*/) +
+    string(/* 4*/"#####################......#......###############...................############;"/* 4*/) +
+    string(/* 5*/"#####################.1...###...1.##############.....................###########;"/* 5*/) +
+    string(/* 6*/"#####################......#......#############..1.....1.....1.....1.###########;"/* 6*/) +
+    string(/* 7*/"#####################......#......############.......................###########;"/* 7*/) +
+    string(/* 8*/"#####################..1..###..1..###########........................###########;"/* 8*/) +
+    string(/* 9*/"#####################......#......##########.....1.....1.....1.....1.###########;"/* 9*/) +
+    string(/*10*/"######################.....#.....##########..........................###########;"/*10*/) +
+    string(/*11*/"###v###################..1.#.1..##########...........................###########;"/*11*/) +
+    string(/*12*/"###.###################....#....#########............................###########;"/*12*/) +
+    string(/*13*/"#v...v##################...#...#########.............................###########;"/*13*/) +
+    string(/*14*/"##..######..P...P...P..##..#..#########..............................######v####;"/*14*/) +
+    string(/*15*/"##.v#####.....1...1.....##.#.#########...............................#####...###;"/*15*/) +
+    string(/*16*/"##.#####.................#.#.########............1.....1.....1.....1.####v...v##;"/*16*/) +
+    string(/*17*/"##.........................#.........................................###.......#;"/*17*/) +
+    string(/*18*/"########.................###############.............................###v.....v#;"/*18*/) +
+    string(/*19*/"#########.....1...1.....#################........1.....1.....1.....1.###v.....v#;"/*19*/) +
+    string(/*20*/"##########..P...P...P..###################...........................###.......#;"/*20*/) +
+    string(/*21*/"###########################################..........................####v...v##;"/*21*/) +
+    string(/*22*/"############################################.....#.....#.....#.....#..####...###;"/*22*/) +
+    string(/*23*/"#############################################...###...###...###...###..####.####;"/*23*/) +
+    string(/*24*/"##############################################.#####.#####.#####.#####.........#;"/*24*/) +
+    string(/*25*/"################################################################################;"/*25*/);
+  //              01234567890123456789012345678901234567890123456789012345678901234567890123456789
+  //                        1         2         3         4         5         6         7
+  translationVector.resize(0);
+  addTranslationToVector(translationVector, 'v', feature_brazierGolden);
+  addTranslationToVector(translationVector, '1', feature_pillar);
+  addTranslationToVector(translationVector, 'P', feature_statue);
+  templates_.push_back(stringToTemplate(templateString, translationVector, mapTemplate_pharaohsChamber));
 }
 
-void MapTemplateHandler::addJunctionsToRoomEdge(MapTemplate& t)
-{
-  coord junction;
-
-  junction.x = t.width + 1;     junction.y = (t.height - 1) / 2;
-  t.junctionPositions.push_back(junction);
-
-  junction.x = (t.width - 1) / 2; junction.y = -2;
-  t.junctionPositions.push_back(junction);
-
-  junction.x = -2;            junction.y = (t.height - 1) / 2;
-  t.junctionPositions.push_back(junction);
-
-  junction.x = (t.width - 1) / 2; junction.y =  t.height + 1;
-  t.junctionPositions.push_back(junction);
-}
-
-MapTemplate* MapTemplateHandler::getTemplate(TemplateDevName_t templateDevName, bool generalTemplate)
-{
-  MapTemplate* te = NULL;
-
-  if(generalTemplate == true) {
-    for(unsigned int i = 0; i < m_generalTemplates.size(); i++) {
-      if(m_generalTemplates.at(i).devName == templateDevName) {
-        te = &(m_generalTemplates.at(i));
-        i = 9999;
-      }
+MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId_t templateId) {
+  for(unsigned int i = 0; i < templates_.size(); i++) {
+    if(templates_.at(i).templateId == templateId) {
+      return &(templates_.at(i));
+      i = 9999;
     }
   }
-  else {
-    for(unsigned int i = 0; i < m_templates.size(); i++) {
-      if(m_templates.at(i).devName == templateDevName) {
-        te = &(m_templates.at(i));
-        i = 9999;
-      }
-    }
-  }
 
-  if(te == NULL) {
-    tracer << "[WARNING] Invalid maptemplate or wrong section (general or not?), in getTemplate()" << endl;
-  }
-  return te;
+  return NULL;
 }
 
 
-MapTemplate* MapTemplateHandler::getRandomTemplateForMapBuilder()
-{
-  const int siz = m_generalTemplates.size();
-  //If no templates exists, pos = -1. If one template exist pos = 0. Else random.
-  const int pos = siz == 0 ? -1 : (siz == 1 ? 0 : eng->dice(1, siz) - 1);
-
-  if(pos == -1) {
-    tracer << "[WARNING] No templates exists, in getRandomTemplateForMapbuilder()" << endl;
-    return NULL;
-  }
-
-  return &(m_generalTemplates.at(pos));
-}
-
-
-MapTemplate MapTemplateHandler::stringToTemplate(
-  string str, vector<CharToIdTranslation>* translations, TemplateDevName_t devName)
-{
-  MapTemplate             result(devName);
+MapTemplate MapTemplateHandler::stringToTemplate(const string str, const vector<CharToIdTranslation>& translations,
+    const MapTemplateId_t templateId) {
+  MapTemplate             result(templateId);
   unsigned int            strPos = 0;
   const unsigned int      strSize = str.size();
   vector< vector<Feature_t> > resultVector;
-  vector<Feature_t> curInnerVec;
+  vector<Feature_t> curInnerVector;
 
   while(strPos != strSize) {
     //If delim character found push inner vector to outer
     if(str[strPos] == ';') {
-      resultVector.push_back(curInnerVec);
-      curInnerVec.resize(0);
-    }
-    else {
-      if(str[strPos] == '#' || str[strPos] == '_') {
-        curInnerVec.push_back(feature_empty);
-      }
-      else {
-        if(str[strPos] == '.') {
-          curInnerVec.push_back(feature_stoneFloor);
-        }
-        else {
-          if(translations != NULL) {
-            curInnerVec.push_back(translate(str[strPos], translations));
-          }
-        }
-      }
+      resultVector.push_back(curInnerVector);
+      curInnerVector.resize(0);
+    } else if(str[strPos] == '#') {
+      curInnerVector.push_back(feature_stoneWall);
+    } else if(str[strPos] == '.') {
+      curInnerVector.push_back(feature_stoneFloor);
+    } else if(str[strPos] == ' ') {
+      curInnerVector.push_back(feature_empty);
+    } else {
+      curInnerVector.push_back(translate(str[strPos], translations));
     }
     strPos++;
   }
@@ -461,16 +122,3 @@ MapTemplate MapTemplateHandler::stringToTemplate(
   return result;
 }
 
-//void MapTemplateHandler::initSize(int width, int height, MapTemplate &mapTemplate)
-//{
-//    //Outer vector is rows
-//    mapTemplate.m.resize(width);
-//
-//    //Inner vector is columns
-//    for (int x = 0; x < width; x++) {
-//        mapTemplate.m[x].resize(height);
-//
-//        for (int y = 0; y < height; y++)
-//            mapTemplate.m[x][y] = 0;
-//    }
-//}

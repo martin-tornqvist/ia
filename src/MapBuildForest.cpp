@@ -149,7 +149,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
       buildForestTreePatch();
     }
 
-    buildFromTemplate(churchPos, templateDevName_church, false);
+    buildFromTemplate(churchPos, mapTemplate_church);
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
@@ -189,7 +189,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
 
   // Place graves
   vector<HighScoreEntry> highscoreEntries = eng->highScore->getEntriesSorted();
-  const unsigned PLACE_TOP_N_HIGHSCORES = 10;
+  const unsigned PLACE_TOP_N_HIGHSCORES = 7;
   const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
   if(NR_HIGHSCORES > 0) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];

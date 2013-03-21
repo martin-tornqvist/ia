@@ -42,7 +42,7 @@ private:
   void buildForestTrees(const coord& stairsCoord);
 
   void buildFromTemplate(const coord pos, MapTemplate* t);
-  void buildFromTemplate(const coord pos, TemplateDevName_t devName, const bool generalTemplate);
+  void buildFromTemplate(const coord pos, MapTemplateId_t templateId);
 
   Feature_t backup[MAP_X_CELLS][MAP_Y_CELLS];
   void backupMap();

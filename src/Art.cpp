@@ -136,6 +136,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_elderSign: return coord(10, 1); break;
   case tile_chestClosed: return coord(11, 1); break;
   case tile_chestOpen: return coord(12, 1); break;
+  case tile_electricLantern: return coord(16, 1); break;
   case tile_rat: return coord(1, 2); break;
   case tile_spider: return coord(2, 2); break;
   case tile_wolf: return coord(3, 2); break;
@@ -232,6 +233,8 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_sarcophagus: return coord(9, 9); break;
   case tile_caveWallFront: return coord(10, 9); break;
   case tile_caveWallTop: return coord(11, 9); break;
+  case tile_egyptWallFront: return coord(16, 9); break;
+  case tile_egyptWallTop: return coord(17, 9); break;
   case tile_popupCornerTopLeft: return coord(0, 10); break;
 	case tile_popupCornerTopRight: return coord(1, 10); break;
 	case tile_popupCornerBottomLeft: return coord(2, 10); break;

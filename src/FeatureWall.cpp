@@ -9,12 +9,27 @@ Wall::Wall(Feature_t id, coord pos, Engine* engine) :
 
 }
 
+bool Wall::isTileAnyWallFront(const Tile_t tile) {
+  return
+    tile == tile_wallFront ||
+    tile == tile_wallFrontAlt1 ||
+    tile == tile_wallFrontAlt2 ||
+    tile == tile_caveWallFront ||
+    tile == tile_egyptWallFront;
+}
+
+bool Wall::isTileAnyWallTop(const Tile_t tile) {
+  return
+    tile == tile_wallTop ||
+    tile == tile_caveWallTop ||
+    tile == tile_egyptWallTop ||
+    tile == tile_rubbleHigh;
+}
+
 string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
   switch(wallType) {
   case wall_common:
-  case wall_alt1:
-    /*case wall_alt2:*/
-  {
+  case wall_alt1: {
     const string modStr = isSlimy ? "slimy " : "";
     return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
   }
@@ -24,12 +39,29 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? "the " + modStr + "cavern wall" : "a " + modStr + "cavern wall";
 
   }
+  case wall_egypt: {
+    const string modStr = isSlimy ? "slimy " : "";
+    return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
+
+  }
   }
   return "[ERROR]";
 }
 
 sf::Color Wall::getColor() const {
-  return isSlimy ? clrGreen : clrGray;
+  if(isSlimy) {
+    return clrGreen;
+  }
+
+  if(wallType == wall_cave) {
+    return clrBrownGray;
+  }
+
+  if(wallType == wall_egypt) {
+    return clrBrownGray;
+  }
+
+  return clrGray;
 }
 
 char Wall::getGlyph() const {
@@ -48,9 +80,11 @@ Tile_t Wall::getFrontWallTile() const {
   case wall_alt1:
     return tile_wallFrontAlt1;
     break;
-//  case wall_alt2: return tile_wallFrontAlt2; break;
   case wall_cave:
     return tile_caveWallFront;
+    break;
+  case wall_egypt:
+    return tile_egyptWallFront;
     break;
   default:
     return tile_wallFront;
@@ -66,9 +100,11 @@ Tile_t Wall::getTopWallTile() const {
   case wall_alt1:
     return tile_wallTop;
     break;
-//  case wall_alt2: return tile_wallTop; break;
   case wall_cave:
     return tile_caveWallTop;
+    break;
+  case wall_egypt:
+    return tile_egyptWallTop;
     break;
   default:
     return tile_wallTop;

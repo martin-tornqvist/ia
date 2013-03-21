@@ -115,7 +115,8 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
 
 void ScrollOfDescent::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
-  if(engine->map->getDungeonLevel() <= LAST_CAVERN_LEVEL - 3) {
+
+  if(engine->map->getDungeonLevel() < FIRST_CAVERN_LEVEL - 1) {
     engine->dungeonClimb->travelDown(1);
     engine->log->addMessage("I sink downwards!");
     setRealDefinitionNames(engine, false);

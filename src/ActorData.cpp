@@ -62,7 +62,7 @@ void ActorData::finalizeDefinition(ActorDefinition& d) {
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
   //Set HP from progression formula
   const double HP_BASE_FL = 3.0;
-  const double HP_INCR_FL = 1.5;
+  const double HP_INCR_FL = 1.75;
 
   const double EFFECTIVE_LEVEL_FL = static_cast<double>(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
 
@@ -1172,7 +1172,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_swarm;
   d.actorSize = actorSize_floor;
   d.canBashDoors = false;
-  d.nrTurnsAwarePlayer = 10;
+  d.nrTurnsAwarePlayer = 12;
   d.description
   = "A huge swarming insect. They breed rapidly.";
   d.erraticMovement = actorErratic_very;

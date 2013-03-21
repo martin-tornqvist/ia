@@ -131,7 +131,7 @@ void DungeonMaster::winGame() {
 void DungeonMaster::initExpTable() {
   expTable[1] = XP_STEP;
 
-  for(int i = 2; i <= PLAYER_MAX_LEVEL; i++) {
+  for(int i = 2; i <= PLAYER_CLVL_MAX; i++) {
     expTable[i] = i * XP_STEP + expTable[i - 1];
   }
 }
@@ -144,7 +144,7 @@ void DungeonMaster::monsterKilled(Actor* monster) {
 
   eng->renderer->drawMapAndInterface();
 
-  if(playerLvl < PLAYER_MAX_LEVEL) {
+  if(playerLvl < PLAYER_CLVL_MAX) {
     playerGainsExp(MONSTER_XP);
   }
 
@@ -159,16 +159,16 @@ void DungeonMaster::monsterKilled(Actor* monster) {
 
 void DungeonMaster::playerGainsExp(int exp) {
   if(eng->player->deadState == actorDeadState_alive) {
-    if(playerLvl <= PLAYER_MAX_LEVEL) {
+    if(playerLvl <= PLAYER_CLVL_MAX) {
       //Exp increase must be looped in case player gains several lvls in one kill
       for(int i = 0; i < exp; i++) {
         playerExp++;
 
-        if(playerLvl < PLAYER_MAX_LEVEL) {
+        if(playerLvl < PLAYER_CLVL_MAX) {
 
           if(playerExp >= getXpToNextLvl()) {
             playerLvl++;
-            eng->log->addMessage("I have reached level " + intToString(playerLvl) + "! Press any key to pick ability...", clrGreen);
+            eng->log->addMessage("You have reached level " + intToString(playerLvl) + "! Press any key to pick ability...", clrGreen);
             eng->renderer->drawMapAndInterface();
             eng->query->waitForKeyPress();
 

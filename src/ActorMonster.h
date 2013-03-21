@@ -520,13 +520,24 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
+class MummyPharaohChamberBoss: public MummyUnique {
+public:
+  MummyPharaohChamberBoss() :
+    MummyUnique() {
+  }
+  ~MummyPharaohChamberBoss() {}
+
+  bool actorSpecificAct();
+private:
+  bool hasSummonedLocusts;
+};
+
 class Shadow: public Monster {
 public:
   Shadow() :
     Monster() {
   }
-  ~Shadow() {
-  }
+  ~Shadow() {}
 
   virtual void actorSpecific_spawnStartItems();
 };
@@ -536,8 +547,7 @@ public:
   WormMass() :
     Monster(), chanceToSpawnNew(12) {
   }
-  ~WormMass() {
-  }
+  ~WormMass() {}
   bool actorSpecificAct();
   virtual void actorSpecific_spawnStartItems();
 private:

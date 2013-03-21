@@ -135,7 +135,7 @@ void Interface::drawInfoLines() {
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
   xPos += str.length() + 1;
   str = "NXT:";
-  str += dm->getLevel() >= PLAYER_MAX_LEVEL ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
+  str += dm->getLevel() >= PLAYER_CLVL_MAX ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
   xPos += str.length() + 1;
 

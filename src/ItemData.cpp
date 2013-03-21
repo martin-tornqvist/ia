@@ -838,6 +838,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_mummy], strong);
+  d->meleeStatusEffect = new StatusCursed(eng);
   d->meleeCausesKnockBack = true;
   itemDefinitions[d->id] = d;
 
@@ -1099,6 +1100,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
+  d->tile = tile_electricLantern;
   d->color = clrYellow;
   itemDefinitions[d->id] = d;
 }

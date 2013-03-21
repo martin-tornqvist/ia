@@ -93,8 +93,8 @@ void MapBuild::buildFromTemplate(const coord pos, MapTemplate* t) {
   }
 }
 
-void MapBuild::buildFromTemplate(const coord pos, TemplateDevName_t devName, const bool generalTemplate) {
-  MapTemplate* t = eng->mapTemplateHandler->getTemplate(devName, generalTemplate);
+void MapBuild::buildFromTemplate(const coord pos, MapTemplateId_t templateId) {
+  MapTemplate* t = eng->mapTemplateHandler->getTemplate(templateId);
   buildFromTemplate(pos, t);
 }
 

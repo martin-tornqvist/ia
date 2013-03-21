@@ -6,8 +6,8 @@
 enum Wall_t {
   wall_common,
   wall_alt1,
-//  wall_alt2,
-  wall_cave
+  wall_cave,
+  wall_egypt
 };
 
 class Wall: public FeatureStatic {
@@ -28,14 +28,9 @@ public:
   Wall_t wallType;
   bool isSlimy;
 
-  static bool isTileAnyWallFront(const Tile_t tile) {
-    return tile == tile_wallFront || tile == tile_wallFrontAlt1 ||
-           tile == tile_wallFrontAlt2 || tile == tile_caveWallFront;
-  }
+  static bool isTileAnyWallFront(const Tile_t tile);
 
-  static bool isTileAnyWallTop(const Tile_t tile) {
-    return tile == tile_wallTop || tile == tile_caveWallTop || tile == tile_rubbleHigh;
-  }
+  static bool isTileAnyWallTop(const Tile_t tile);
 
 private:
   friend class FeatureFactory;

@@ -114,7 +114,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
     return new Mummy;
     break;
   case actor_khephren:
-    return new MummyUnique;
+    return new MummyPharaohChamberBoss;
     break;
   case actor_nitokris:
     return new MummyUnique;

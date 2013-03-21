@@ -66,7 +66,7 @@ private:
 
 	int playerExp, playerLvl;
 	void initExpTable();
-	int expTable[PLAYER_MAX_LEVEL + 1];
+	int expTable[PLAYER_CLVL_MAX + 1];
 
   TimeData timeStarted;
 

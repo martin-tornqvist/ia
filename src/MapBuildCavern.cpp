@@ -17,7 +17,7 @@ void MapBuild::buildCavern() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
       Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
-      wall->wallType = wall_common;
+      wall->wallType = wall_cave;
       wall->isSlimy = false;
     }
   }

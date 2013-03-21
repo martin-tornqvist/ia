@@ -365,6 +365,58 @@ void MummyUnique::actorSpecific_spawnStartItems() {
   eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
 }
 
+bool MummyPharaohChamberBoss::actorSpecificAct() {
+  if(deadState == actorDeadState_alive) {
+    if(playerAwarenessCounter > 0) {
+      if(hasSummonedLocusts == false) {
+
+        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        eng->mapTests->makeVisionBlockerArray(pos, blockers);
+
+        if(checkIfSeeActor(*(eng->player), blockers)) {
+          eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_fly, blockers);
+
+          const int SPAWN_AFTER_X = eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;
+          for(int y = 0; y  < MAP_Y_CELLS; y++) {
+            for(int x = 0; x <= SPAWN_AFTER_X; x++) {
+              blockers[x][y] = true;
+            }
+          }
+
+          eng->basicUtils->reverseBoolArray(blockers);
+          vector<coord> freeCells;
+          eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+          sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
+
+          const unsigned int NR_OF_SPAWNS = 15;
+          if(freeCells.size() >= NR_OF_SPAWNS + 1) {
+            eng->log->addMessage("Khephren calls a plague of Locusts!");
+            eng->player->incrShock(shockValue_heavy);
+            Monster* leaderMonster = NULL;
+            for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
+              Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_giantLocust, freeCells.at(0)));
+              if(i == 0) {
+                leaderMonster = monster;
+              }
+              monster->playerAwarenessCounter = 999;
+              monster->leader = this;
+              freeCells.erase(freeCells.begin());
+            }
+            eng->renderer->drawMapAndInterface();
+            hasSummonedLocusts = true;
+            eng->gameTime->letNextAct();
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+
+
 void DeepOne::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_deepOneJavelinAttack));
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_deepOneSpearAttack));

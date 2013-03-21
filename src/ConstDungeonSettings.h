@@ -4,15 +4,14 @@
 const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
 
 const int MAP_X_CELLS = 80;
-const int MAP_Y_CELLS = 26;//22;
+const int MAP_Y_CELLS = 26;
 const int MAP_X_CELLS_HALF = MAP_X_CELLS / 2;
 const int MAP_Y_CELLS_HALF = MAP_Y_CELLS / 2;
 
-//Maximum player experience level
-const int PLAYER_MAX_LEVEL = 21;
+const int PLAYER_CLVL_MAX = 21;
 
-const int FIRST_CAVERN_LEVEL = 20; //15;
-const int LAST_CAVERN_LEVEL = 29; //24;
+const int FIRST_CAVERN_LEVEL = 20;
+const int LAST_CAVERN_LEVEL = 29;
 
 const int FOV_STANDARD_RADI_INT = 6;
 const int FOV_STANDARD_WIDTH_INT = 2 * FOV_STANDARD_RADI_INT + 1;
