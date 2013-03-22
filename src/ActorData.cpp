@@ -60,7 +60,7 @@ void ActorData::finalizeDefinition(ActorDefinition& d) {
 }
 
 void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const {
-  //Set HP from progression formula
+  //----------------------------------------------- HP
   const double HP_BASE_FL = 3.0;
   const double HP_INCR_FL = 1.75;
 
@@ -74,17 +74,25 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
   d.hpMax = HP_AFTER_CAP;
 
-  //Set weapon abilities from progression formula
+  //----------------------------------------------- ATTACK SKILL
   const double ATTACK_BASE_FL = 14.0;
   const double ATTACK_INCR_FL = 10.0;
 
-  const int ATTACK = static_cast<int>(ceil(ATTACK_BASE_FL + ATTACK_INCR_FL * EFFECTIVE_LEVEL_FL - 1));
+  const int ATTACK = static_cast<int>(ceil(ATTACK_BASE_FL + ATTACK_INCR_FL * (EFFECTIVE_LEVEL_FL - 1.0)));
 
   const int ATTACK_CAP = 40;
   const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
 
   d.abilityValues.setAbilityValue(ability_accuracyMelee, ATTACK_AFTER_CAP);
   d.abilityValues.setAbilityValue(ability_accuracyRanged, ATTACK_AFTER_CAP);
+
+  //----------------------------------------------- STATUS RESISTANCE
+  const double STATUS_RES_BASE = 5.0;
+  const double STATUS_RES_INCR = 4.0;
+
+  const int STATUS_RES = static_cast<int>(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_FL - 1.0)));
+  d.abilityValues.setAbilityValue(ability_resistStatusBody, STATUS_RES);
+  d.abilityValues.setAbilityValue(ability_resistStatusMind, STATUS_RES);
 }
 
 void ActorData::defineAllActors() {
