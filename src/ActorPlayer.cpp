@@ -209,7 +209,7 @@ int Player::getCarryWeightLimit() const {
   const bool IS_RUGGED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
   const bool IS_STRONG_BACKED = eng->playerBonusHandler->isBonusPicked(playerBonus_strongBacked);
   const bool IS_WEAK = statusEffectsHandler_->hasEffect(statusWeak);
-  const int CARRY_WEIGHT_MOD = (IS_TOUGH ? 10 : 0) + (IS_RUGGED ? 10 : 0) + (IS_STRONG_BACKED ? 30 : 0) + (IS_WEAK ? -25 : 0);
+  const int CARRY_WEIGHT_MOD = (IS_TOUGH ? 10 : 0) + (IS_RUGGED ? 10 : 0) + (IS_STRONG_BACKED ? 30 : 0) + (IS_WEAK ? -15 : 0);
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }

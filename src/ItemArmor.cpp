@@ -31,8 +31,8 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const D
   const int ABSORPTION_POINTS_BEFORE = getAbsorptionPoints(damageType);
 
   const double DDF_INTRINSIC = def_->armorData.damageToDurabilityFactors[damageType];
-  const double DDF_RANDOM = static_cast<float>(eng->dice(1, 100)) / 100.0;
-  const double DDF_ADJUST = 5.0;
+  const double DDF_RANDOM = static_cast<float>(eng->dice.getInRange(1, 100)) / 100.0;
+  const double DDF_ADJUST = 3.0;
 
   durability = max(0, durability - static_cast<int>(static_cast<double>(DAMAGE_BEFORE) * DDF_INTRINSIC * DDF_RANDOM * DDF_ADJUST));
 

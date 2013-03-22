@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1363963134 source:c:\dev\ia\src\actorplayer.cpp
+1363995552 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1368,7 +1368,7 @@
 	"Map.h"
 	"FeatureWall.h"
 
-1363902204 source:c:\dev\ia\src\mapbuildforest.cpp
+1363994292 source:c:\dev\ia\src\mapbuildforest.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -1640,7 +1640,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1363992349 source:c:\dev\ia\src\statuseffects.cpp
+1363994533 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"

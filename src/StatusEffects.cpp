@@ -112,6 +112,30 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
   return true;
 }
 
+coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
+
+  if(actorPos != movePos) {
+    const int CHANCE_TO_MOVE_WRONG = 40;
+    if(engine->dice(1, 100) < CHANCE_TO_MOVE_WRONG) {
+      int triesLeft = 100;
+      while(triesLeft != 0) {
+        //-1 to 1 for x and y
+        const coord delta(engine->dice(1, 3) - 2, engine->dice(1, 3) - 2);
+        if(delta.x != 0 || delta.y != 0) {
+          const coord c = actorPos + delta;
+          if(blockers[c.x][c.y] == false) {
+            return actorPos + delta;
+          }
+        }
+        triesLeft--;
+      }
+    }
+  }
+  return movePos;
+}
+
 void StatusBurning::start(Engine* const engine) {
   owningActor->addLight(engine->map->light);
 }
@@ -229,30 +253,6 @@ void StatusFlared::end(Engine* const engine) {
 void StatusFlared::newTurn(Engine* const engine) {
   owningActor->hit(engine->dice(1, 2), damageType_fire);
   turnsLeft--;
-}
-
-coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
-
-  if(actorPos != movePos) {
-    const int CHANCE_TO_MOVE_WRONG = 40;
-    if(engine->dice(1, 100) < CHANCE_TO_MOVE_WRONG) {
-      int triesLeft = 100;
-      while(triesLeft != 0) {
-        //-1 to 1 for x and y
-        const coord delta(engine->dice(1, 3) - 2, engine->dice(1, 3) - 2);
-        if(delta.x != 0 || delta.y != 0) {
-          const coord c = actorPos + delta;
-          if(blockers[c.x][c.y] == false) {
-            return actorPos + delta;
-          }
-        }
-        triesLeft--;
-      }
-    }
-  }
-  return movePos;
 }
 
 //================================================================ STATUS EFFECTS HANDLER
