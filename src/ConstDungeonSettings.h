@@ -28,6 +28,8 @@ const int PLAYER_ALLOC_SKILLS_BATCH_SIZE = 10;
 //How many turns to explosion from lighting a stick of dynamite
 const int DYNAMITE_FUSE_TURNS = 5;
 
+const int SHOCK_TAKEN_FROM_CASTING_SPELLS = 16;
+
 const int NUMBER_OF_TRIES_TO_BUILD_FROM_JUNCTIONS = 10;
 
 const int NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST = 5;

@@ -351,7 +351,7 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     if(IS_SILENT_IDENTIFY == false) {
       engine->log->addMessage("It was " + def_->name.name_a + ".");
       engine->renderer->drawMapAndInterface();
-      engine->player->incrShock(shockValue_heavy);
+//      engine->player->incrShock(shockValue_heavy);
     }
 
     def_->isIdentified = true;
@@ -399,7 +399,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     engine->player->hit(engine->dice(1, 6), damageType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
-    engine->player->incrShock(10);
+    engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
     engine->gameTime->letNextAct();
 
     def_->castFromMemoryChance = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;
@@ -424,12 +424,12 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
     specificRead(false, engine);
     attemptMemorizeIfLearnable(engine);
-    engine->player->incrShock(shockValue_heavy);
+    engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   } else {
     engine->log->addMessage("I recite forbidden incantations...");
     def_->isTried = true;
     specificRead(false, engine);
-    engine->player->incrShock(shockValue_heavy);
+    engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   }
   engine->gameTime->letNextAct();
   return true;

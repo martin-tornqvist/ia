@@ -108,7 +108,7 @@
 1355674112 c:\dev\ia\src\audio.h
 	<string>
 
-1363894387 c:\dev\ia\src\constdungeonsettings.h
+1363964924 c:\dev\ia\src\constdungeonsettings.h
 
 1361819647 c:\dev\ia\src\config.h
 	<string>
@@ -1166,7 +1166,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363964139 source:c:\dev\ia\src\itemdata.cpp
+1363964608 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
