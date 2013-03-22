@@ -108,7 +108,11 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> 
     for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {
       fill.push_back('.');
     }
-    eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, clrGray);
+    sf::Color fillClr = clrGray;
+    fillClr.r /= 3;
+    fillClr.g /= 3;
+    fillClr.b /= 3;
+    eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, fillClr);
     const int x = 28;
 
     const int CHANCE_OF_SUCCESS = scroll->getChanceToCastFromMemory(eng);
