@@ -199,7 +199,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1360011692 c:\dev\ia\src\map.h
+1363962379 c:\dev\ia\src\map.h
 	<vector>
 	<iostream>
 	"ConstDungeonSettings.h"
@@ -437,7 +437,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1363820004 source:c:\dev\ia\src\actorplayer.cpp
+1363963134 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -682,7 +682,7 @@
 	<sstream>
 	<iostream>
 
-1363814782 source:c:\dev\ia\src\dungeonclimb.cpp
+1363962529 source:c:\dev\ia\src\dungeonclimb.cpp
 	"DungeonClimb.h"
 	"Engine.h"
 	"Map.h"
@@ -698,7 +698,7 @@
 1355674112 c:\dev\ia\src\dungeonclimb.h
 	<iostream>
 
-1363802774 c:\dev\ia\src\mapbuildbsp.h
+1363962438 c:\dev\ia\src\mapbuildbsp.h
 	<vector>
 	"ConstTypes.h"
 	"FeatureData.h"
@@ -1315,7 +1315,7 @@
 	"TextFormatting.h"
 	"Render.h"
 
-1355674113 source:c:\dev\ia\src\map.cpp
+1363962620 source:c:\dev\ia\src\map.cpp
 	"Map.h"
 	<cassert>
 	"Engine.h"
@@ -1323,6 +1323,7 @@
 	"FeatureFactory.h"
 	"ActorFactory.h"
 	"ItemFactory.h"
+	"MapBuildBSP.h"
 
 1350576994 source:c:\dev\ia\src\maparea.cpp
 	"MapArea.h"
@@ -1338,7 +1339,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1363803404 source:c:\dev\ia\src\mapbuildbsp.cpp
+1363962611 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>

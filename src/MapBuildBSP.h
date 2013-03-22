@@ -77,6 +77,8 @@ public:
 
   int getNrStepsInDirectionUntilWallFound(coord c, const Directions_t dir) const;
 
+  void clearRooms();
+
 private:
   bool isAllRoomsConnected();
 

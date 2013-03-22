@@ -812,7 +812,7 @@ void Player::act() {
       }
     }
 
-    if(statusEffectsHandler_->allowSee()) {
+    if(statusEffectsHandler_->allowSee() && statusEffectsHandler_->hasEffect(statusConfused) == false) {
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;

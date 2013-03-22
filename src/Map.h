@@ -21,15 +21,23 @@ class FeatureStatic;
 class Map {
 public:
 	Map(Engine* engine);
+
 	~Map();
 
 	bool explored[MAP_X_CELLS][MAP_Y_CELLS];
+
 	bool playerVision[MAP_X_CELLS][MAP_Y_CELLS];
+
 	Item* items[MAP_X_CELLS][MAP_Y_CELLS];
+
 	FeatureStatic* featuresStatic[MAP_X_CELLS][MAP_Y_CELLS];
+
 	CellRenderDataAscii playerVisualMemory[MAP_X_CELLS][MAP_Y_CELLS];
+
 	CellRenderDataTile playerVisualMemoryTiles[MAP_X_CELLS][MAP_Y_CELLS];
+
 	bool light[MAP_X_CELLS][MAP_Y_CELLS];
+
 	bool darkness[MAP_X_CELLS][MAP_Y_CELLS];
 
 	int getDungeonLevel() {
@@ -42,11 +50,15 @@ public:
 	void decrDungeonLevel(const int levels = 1) {
 		dungeonLevel_ -= levels;
 	}
+
 	void clearDungeon();
+
 	void switchToDestroyedFeatAt(const coord pos);
+
 	void addSaveLines(vector<string>& lines) const {
 		lines.push_back(intToString(dungeonLevel_));
 	}
+
 	void setParametersFromSaveLines(vector<string>& lines) {
 		dungeonLevel_ = stringToInt(lines.front());
 		lines.erase(lines.begin());

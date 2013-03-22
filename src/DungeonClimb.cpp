@@ -14,7 +14,11 @@
 
 void DungeonClimb::makeLevel() {
   tracer << "DungeonClimb::makeLevel()..." << endl;
+
+  eng->map->clearDungeon();
+
   const int DLVL = eng->map->getDungeonLevel();
+
   bool levelBuilt = false;
   if(eng->config->BOT_PLAYING == false) {
     //------------------------------------- TRAPEZOHEDRON LEVEL
@@ -68,6 +72,7 @@ void DungeonClimb::travelDown(const int levels) {
   eng->player->restoreShock(999, true);
 
   eng->map->incrDungeonLevel(levels);
+
   makeLevel();
 
   eng->player->target = NULL;

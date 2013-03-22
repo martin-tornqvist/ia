@@ -21,21 +21,14 @@
 void MapBuildBSP::run() {
   tracer << "MapBuildBSP::run()..." << endl;
 
-  tracer << "MapBuildBSP: Calling map->clearDungeon()" << endl;
-  eng->map->clearDungeon();
+//  tracer << "MapBuildBSP: Calling map->clearDungeon()" << endl;
+//  eng->map->clearDungeon();
 
-  tracer << "MapBuildBSP: Deleting rooms" << endl;
-  for(unsigned int i = 0; i < rooms_.size(); i++) {
-    delete rooms_.at(i);
-  }
-  rooms_.resize(0);
-  eng->roomThemeMaker->roomList.resize(0);
-
-  tracer << "MapBuildBSP: Setting all cells to stone walls and resetting helper arrays" << endl;
+  tracer << "MapBuildBSP: Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       roomCells[x][y] = false;
-      eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
+//      eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
       globalDoorPositionCandidates[x][y] = false;
       forbiddenStairCellsGlobal[x][y] = false;
     }
@@ -152,6 +145,15 @@ void MapBuildBSP::run() {
   }
 
   tracer << "MapBuildBSP::run() [DONE]" << endl;
+}
+
+void MapBuildBSP::clearRooms() {
+  tracer << "MapBuildBSP: Deleting rooms" << endl;
+  for(unsigned int i = 0; i < rooms_.size(); i++) {
+    delete rooms_.at(i);
+  }
+  rooms_.resize(0);
+  eng->roomThemeMaker->roomList.resize(0);
 }
 
 void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
@@ -471,8 +473,8 @@ void MapBuildBSP::buildRoomsInRooms() {
                 const coord doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 //                if(eng->dice.coinToss()) {
 //                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
-                  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-                  globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
+                eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+                globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
 //                } else {
 //                  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
 //                }
