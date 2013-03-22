@@ -399,7 +399,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     engine->player->hit(engine->dice(1, 6), damageType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
-    engine->player->incrShock(shockValue_heavy);
+    engine->player->incrShock(10);
     engine->gameTime->letNextAct();
 
     def_->castFromMemoryChance = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;

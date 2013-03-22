@@ -164,7 +164,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_scroll: {
     resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 75;
+    d->chanceToIncludeInSpawnList = 60;
     d->itemWeight = itemWeight_none;
     d->isIdentified = false;
     d->glyph = '?';
@@ -200,7 +200,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_device: {
     resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 60;
+    d->chanceToIncludeInSpawnList = 40;
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
     d->glyph = '{';
