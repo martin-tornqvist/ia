@@ -88,7 +88,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
 
   //----------------------------------------------- STATUS RESISTANCE
   const double STATUS_RES_BASE = 5.0;
-  const double STATUS_RES_INCR = 4.0;
+  const double STATUS_RES_INCR = 3.0;
 
   const int STATUS_RES = static_cast<int>(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_FL - 1.0)));
   d.abilityValues.setAbilityValue(ability_resistStatusBody, STATUS_RES);

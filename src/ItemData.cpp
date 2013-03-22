@@ -294,7 +294,7 @@ void ItemData::makeList() {
   d->tile = tile_shotgun;
   d->isShotgun = true;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a shotgun");
-  d->rangedDmg = DiceParam(7, 3);
+  d->rangedDmg = DiceParam(6, 3);
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
@@ -409,7 +409,7 @@ void ItemData::makeList() {
   d->rangedBaseAttackSkill = -15;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->rangedDmg = DiceParam(2, 3, 2);
+  d->rangedDmg = DiceParam(2, 3, 3);
   d->rangedDamageType = damageType_electric;
   d->rangedAmmoTypeUsed = item_teslaCanister;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
@@ -444,7 +444,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_teslaCanister);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
-  d->ammoContainedInClip = 50;
+  d->ammoContainedInClip = 30;
   d->spawnStandardMinDLVL = 6;
   itemDefinitions[d->id] = d;
 
