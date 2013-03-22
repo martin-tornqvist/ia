@@ -174,6 +174,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
 
   Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_cultist, cultistCoord));
   monster->isRoamingAllowed = false;
+//  Inventory* const inventory = monster->getInventory();
 
   //Build path
   for(unsigned int i = 0; i < path.size(); i++) {

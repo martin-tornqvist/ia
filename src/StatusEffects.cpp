@@ -20,6 +20,11 @@ StatusEffect::~StatusEffect() {
 
 }
 
+void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
+  const DiceParam diceParam = getRandomStandardNrTurns();
+  turnsLeft = engine->dice(diceParam.rolls, diceParam.sides) + diceParam.plus;
+}
+
 void StatusBlessed::start(Engine* const engine) {
   (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusCursed);
@@ -108,23 +113,21 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
 }
 
 void StatusBurning::start(Engine* const engine) {
-  owningActor->addLight(owningActor->eng->map->light);
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
-  doDamage(owningActor->eng);
+  owningActor->addLight(engine->map->light);
 }
 
 void StatusBurning::end(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
+}
+
+bool StatusBurning::isPlayerVisualUpdateNeededWhenStartOrEnd() {
+  return true;
 }
 
 void StatusBurning::doDamage(Engine* const engine) {
   if(owningActor == engine->player) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
-    owningActor->eng->renderer->drawMapAndInterface();
+//    owningActor->eng->renderer->drawMapAndInterface();
   }
   owningActor->hit(engine->dice(1, 2), damageType_fire);
 }
@@ -136,16 +139,16 @@ void StatusBurning::newTurn(Engine* const engine) {
 }
 
 void StatusBlind::start(Engine* const engine) {
+  (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
 }
 
 void StatusBlind::end(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
+}
+
+bool StatusBlind::isPlayerVisualUpdateNeededWhenStartOrEnd() {
+  return owningActor == owningActor->eng->player;
 }
 
 void StatusParalyzed::start(Engine* const engine) {
@@ -185,29 +188,29 @@ void StatusParalyzed::start(Engine* const engine) {
 }
 
 void StatusFainted::start(Engine* const engine) {
+  (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
 }
 
 void StatusFainted::end(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
+}
+
+bool StatusFainted::isPlayerVisualUpdateNeededWhenStartOrEnd() {
+  return owningActor == owningActor->eng->player;
 }
 
 void StatusClairvoyant::start(Engine* const engine) {
+  (void)engine;
   owningActor->getStatusEffectsHandler()->endEffect(statusBlind);
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
 }
 
 void StatusClairvoyant::end(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
+}
+
+bool StatusClairvoyant::isPlayerVisualUpdateNeededWhenStartOrEnd() {
+  return owningActor == owningActor->eng->player;
 }
 
 void StatusClairvoyant::newTurn(Engine* const engine) {
@@ -216,15 +219,11 @@ void StatusClairvoyant::newTurn(Engine* const engine) {
 }
 
 void StatusFlared::start(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
 }
 
 void StatusFlared::end(Engine* const engine) {
-  owningActor->updateColor();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+  (void)engine;
 }
 
 void StatusFlared::newTurn(Engine* const engine) {
@@ -254,11 +253,6 @@ coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePo
     }
   }
   return movePos;
-}
-
-void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
-  const DiceParam diceParam = getRandomStandardNrTurns();
-  turnsLeft = engine->dice(diceParam.rolls, diceParam.sides) + diceParam.plus;
 }
 
 //================================================================ STATUS EFFECTS HANDLER
@@ -318,9 +312,6 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
   case statusStill:
     return new StatusStill(TURNS_LEFT);
     break;
-//  case statusElusive:
-//    return new StatusElusive(TURNS_LEFT);
-//    break;
   case statusDisabledAttack:
     return new StatusDisabledAttack(TURNS_LEFT);
     break;
@@ -433,9 +424,15 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
     }
 
     //This part reached means the applied effect is new.
-    effect->setOwningActor(owningActor);
+    effect->owningActor = owningActor;
     effects.push_back(effect);
     effect->start(eng);
+
+    if(effect->isPlayerVisualUpdateNeededWhenStartOrEnd()) {
+      effect->owningActor->updateColor();
+      eng->player->updateFov();
+      eng->renderer->drawMapAndInterface();
+    }
 
     if(OWNER_IS_PLAYER) {
       if(NO_MESSAGES == false) {
@@ -501,7 +498,16 @@ void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_
     if(curEffect->isFinnished()) {
 
       curEffect->end(eng);
+
+      const bool IS_VISUAL_UPDATE_NEEDED = curEffect->isPlayerVisualUpdateNeededWhenStartOrEnd();
+
       effects.erase(effects.begin() + i);
+
+      if(IS_VISUAL_UPDATE_NEEDED) {
+        curEffect->owningActor->updateColor();
+        eng->player->updateFov();
+        eng->renderer->drawMapAndInterface();
+      }
 
       if(OWNER_IS_PLAYER && curEffect->messageWhenEnd() != "") {
         eng->log->addMessage(curEffect->messageWhenEnd(), clrWhite);

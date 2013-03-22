@@ -105,33 +105,38 @@ string Cultist::getCultistPhrase(Engine* const engine) {
 }
 
 void Cultist::actorSpecific_spawnStartItems() {
-  const int RND = eng->dice.getInRange(1, 3);
+  const int PISTOL = 6;
+  const int PUMP_SHOTGUN = PISTOL + 4;
+  const int SAWN_SHOTGUN = PUMP_SHOTGUN + 3;
+  const int MG = SAWN_SHOTGUN + (eng->map->getDungeonLevel() < 3 ? 0 : 2);
 
-  if(RND == 1) {
-    Item* item = eng->itemFactory->spawnItem(item_machineGun);
-    inventory_->putItemInSlot(slot_wielded, item, true);
-  }
-  else if(RND == 2) {
-    Item* item = eng->itemFactory->spawnItem(item_sawedOff);
-    inventory_->putItemInSlot(slot_wielded, item, true);
-    item = eng->itemFactory->spawnItem(item_shotgunShell);
-    item->numberOfItems = eng->dice.getInRange(7, 13);
-    inventory_->putItemInGeneral(item);
-  }
-  else {
-    Item* item = eng->itemFactory->spawnItem(item_pistol);
-    inventory_->putItemInSlot(slot_wielded, item, true);
+  const int TOT = MG;
+  const int RND = eng->dice.getInRange(1, TOT);
+
+  if(RND <= PISTOL) {
+    inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pistol), true);
     if(eng->dice(1, 100) < 40) {
-      item = eng->itemFactory->spawnItem(item_pistolClip);
-      inventory_->putItemInGeneral(item);
+      inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
     }
+  } else if(RND <= PUMP_SHOTGUN) {
+    inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pumpShotgun), true);
+    Item* item = eng->itemFactory->spawnItem(item_shotgunShell);
+    item->numberOfItems = eng->dice.getInRange(5, 9);
+    inventory_->putItemInGeneral(item);
+  } else if(RND <= SAWN_SHOTGUN) {
+    inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_sawedOff), true);
+    Item* item = eng->itemFactory->spawnItem(item_shotgunShell);
+    item->numberOfItems = eng->dice.getInRange(6, 12);
+    inventory_->putItemInGeneral(item);
+  } else {
+    inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_machineGun), true);
   }
 
   if(eng->dice(1, 100) < 33) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
   }
 
-  if(eng->dice(1, 100) < 10) {
+  if(eng->dice(1, 100) < 8) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }

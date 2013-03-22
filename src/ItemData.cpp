@@ -175,7 +175,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isScrollLearnable = true;
     d->isScrollLearned = 0;
     d->castFromMemoryChance = eng->dice.getInRange(1, 100);
-    d->maxStackSizeAtSpawn = 2;
+    d->maxStackSizeAtSpawn = 1;
     d->landOnHardSurfaceSoundMessage = "";
     eng->scrollNameHandler->setFalseScrollName(d);
   }
@@ -968,7 +968,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_scrollOfDescent);
   resetDef(d, itemDef_scroll);
   d->spawnStandardMinDLVL = 6;
-  d->isScrollLearnable = true;
+  d->isScrollLearnable = false;
   d->spellTurnsPerPercentCooldown = 50;
   itemDefinitions[d->id] = d;
 

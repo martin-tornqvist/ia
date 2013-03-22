@@ -54,22 +54,18 @@ enum StatusEffects_t {
 class StatusEffect {
 public:
   StatusEffect(const int turns, const StatusEffects_t effectId) :
-    turnsLeft(turns), m_effectId(effectId) {
+    turnsLeft(turns), owningActor(NULL), effectId_(effectId) {
   }
   StatusEffect(const StatusEffects_t effectId) :
-    m_effectId(effectId) {
+    effectId_(effectId) {
   }
   StatusEffect(const StatusEffect& other) :
     turnsLeft(other.turnsLeft) {
   }
   virtual ~StatusEffect();
 
-  void setOwningActor(Actor* owningActor_) {
-    owningActor = owningActor_;
-  }
-
   StatusEffects_t getEffectId() {
-    return m_effectId;
+    return effectId_;
   }
 
   virtual bool isFinnished() {
@@ -106,6 +102,10 @@ public:
 
   virtual bool canBeAppliedWhileSameEffectOngoing() {
     return true;
+  }
+
+  virtual bool isPlayerVisualUpdateNeededWhenStartOrEnd() {
+    return false;
   }
 
   virtual void more() {
@@ -155,13 +155,13 @@ public:
     return false;
   }
 
+  Actor* owningActor;
+
 protected:
   virtual DiceParam getRandomStandardNrTurns() = 0;
   void setTurnsFromRandomStandard(Engine* const engine);
 
-  StatusEffects_t m_effectId;
-
-  Actor* owningActor;
+  StatusEffects_t effectId_;
 };
 
 class StatusTerrified: public StatusEffect {
@@ -503,87 +503,6 @@ private:
   }
 };
 
-//class StatusElusive: public StatusEffect {
-//public:
-//  StatusElusive(Engine* const engine) :
-//    StatusEffect(statusElusive) {
-//    setTurnsFromRandomStandard(engine);
-//  }
-//  StatusElusive(const int turns) :
-//    StatusEffect(turns, statusElusive) {
-//  }
-//  ~StatusElusive() {
-//  }
-//
-//  StatusElusive* copy() {
-//    StatusElusive* cpy = new StatusElusive(turnsLeft);
-//    return cpy;
-//  }
-//
-//  bool isConsideredBeneficial() {
-//    return true;
-//  }
-//
-//  string getInterfaceName() {
-//    return "Moving";
-//  }
-//  string messageWhenStart() {
-//    return "";
-//  }
-//  string messageWhenMore() {
-//    return "";
-//  }
-//  string messageWhenMoreOther() {
-//    return "";
-//  }
-//  string messageWhenEnd() {
-//    return "";
-//  }
-//  string messageWhenSaves() {
-//    return "";
-//  }
-//  string messageWhenStartOther() {
-//    return "";
-//  }
-//  string messageWhenEndOther() {
-//    return "";
-//  }
-//  string messageWhenSavesOther() {
-//    return "";
-//  }
-//
-//  Abilities_t getSaveAbility() {
-//    return ability_empty;
-//  }
-//  int getSaveAbilityModifier() {
-//    return -9999;
-//  }
-//
-//  void start(Engine* const engine) {
-//    (void)engine;
-//  }
-//
-//  void end(Engine* const engine) {
-//    (void)engine;
-//  }
-//
-//  int getAbilityModifier(const Abilities_t ability) {
-//    if(ability == ability_dodgeAttack)
-//      return 25;
-//    return 0;
-//  }
-//
-//  void newTurn(Engine* const engine) {
-//    (void)engine;
-//    turnsLeft--;
-//  }
-//
-//private:
-//  DiceParam getRandomStandardNrTurns() {
-//    return DiceParam(0, 0, 1);
-//  }
-//};
-
 class StatusBlind: public StatusEffect {
 public:
   StatusBlind(Engine* const engine) :
@@ -608,6 +527,8 @@ public:
   bool allowDisplayTurnsInInterface() {
     return true;
   }
+
+  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
 
   string getInterfaceName() {
     return "Blind";
@@ -866,6 +787,8 @@ public:
     return true;
   }
 
+  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
+
   string getInterfaceName() {
     return "Clairvoyant";
   }
@@ -939,6 +862,8 @@ public:
   bool allowDisplayTurnsInInterface() {
     return true;
   }
+
+  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
 
   string getInterfaceName() {
     return "Burning";
@@ -1703,6 +1628,8 @@ public:
   bool allowDisplayTurnsInInterface() {
     return true;
   }
+
+  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
 
   string getInterfaceName() {
     return "Fainted";

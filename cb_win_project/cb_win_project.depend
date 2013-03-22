@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1363683857 c:\dev\ia\src\statuseffects.h
+1363991882 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -1166,7 +1166,7 @@
 	"Engine.h"
 	"Log.h"
 
-1363964608 source:c:\dev\ia\src\itemdata.cpp
+1363992765 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1222,7 +1222,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1363904419 source:c:\dev\ia\src\itemscroll.cpp
+1363965167 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1640,7 +1640,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1363645491 source:c:\dev\ia\src\statuseffects.cpp
+1363992349 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -5680,7 +5680,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1363904305 source:c:\dev\ia\src\actormonsterspecific.cpp
+1363993973 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
