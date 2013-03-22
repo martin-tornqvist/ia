@@ -10,6 +10,8 @@
 
 #include <vector>
 
+#include "SFML/Graphics/Texture.hpp"
+
 #include "MenuBrowser.h"
 
 using namespace std;
@@ -22,7 +24,7 @@ public:
 	PlayerPowersHandler(Engine* engine);
 	~PlayerPowersHandler();
 
-	void run(const bool CAST_FROM_MEMORY);
+	void run();
 
 	unsigned int getNrOfScrolls() const {
 	  return scrollsToReadFromPlayerMemory.size();
@@ -31,8 +33,7 @@ public:
   Scroll* getScrollAt(const unsigned int SCROLL_VECTOR_ELEMENT) const;
 
 private:
-	void draw(MenuBrowser& browser, const bool DRAW_COMMAND_PROMPT, const bool CAST_FROM_MEMORY,
-	          const vector<unsigned int> generalInventorySlotsToShow, const vector<unsigned int> memorizedScrollsToShow);
+	void draw(MenuBrowser& browser, const vector<unsigned int> memorizedScrollsToShow, const sf::Texture& bgTexture);
 
 	vector<Scroll*> scrollsToReadFromPlayerMemory;
 

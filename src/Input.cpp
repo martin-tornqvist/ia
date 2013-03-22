@@ -411,7 +411,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'x') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->playerPowersHandler->run(true);
+      eng->playerPowersHandler->run();
     }
     clearEvents();
     return;

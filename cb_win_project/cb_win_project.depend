@@ -893,8 +893,9 @@
 	"SFML/Graphics/Texture.hpp"
 	"ConstTypes.h"
 
-1363301331 c:\dev\ia\src\playerpowershandler.h
+1363961356 c:\dev\ia\src\playerpowershandler.h
 	<vector>
+	"SFML/Graphics/Texture.hpp"
 	"MenuBrowser.h"
 
 1355674113 c:\dev\ia\src\renderinventory.h
@@ -1066,7 +1067,7 @@
 	"Popup.h"
 	"Input.h"
 
-1363548600 source:c:\dev\ia\src\input.cpp
+1363961175 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -1417,7 +1418,7 @@
 	"Engine.h"
 	"Map.h"
 
-1363904899 source:c:\dev\ia\src\maptemplates.cpp
+1363905164 source:c:\dev\ia\src\maptemplates.cpp
 	"MapTemplates.h"
 	"Engine.h"
 
@@ -1491,7 +1492,7 @@
 	"PlayerAllocBonus.h"
 	"Input.h"
 
-1363548600 source:c:\dev\ia\src\playerpowershandler.cpp
+1363961714 source:c:\dev\ia\src\playerpowershandler.cpp
 	"PlayerPowersHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
