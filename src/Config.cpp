@@ -20,7 +20,7 @@ Config::Config(Engine* engine) :
   fontImageName(""),
   LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
   LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
-  SCALE(1.0f),
+  SCALE(1.0),
   CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
   CHARACTER_LINES_Y_CELLS(3),
   SCREEN_BPP(32),
@@ -226,7 +226,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
 
-  eng->renderer->drawText("[space/esc] confirm changes", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
+  eng->renderer->drawText("space/esc to confirm changes", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
   eng->renderer->updateWindow();
 }

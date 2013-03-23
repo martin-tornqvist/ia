@@ -19,7 +19,7 @@ void JamWithSpike::playerJam() const {
     return;
   }
 
-  eng->log->addMessage("Jam with spike in what direction? [Space/Esc] Cancel", clrWhiteHigh);
+  eng->log->addMessage("Jam with spike in what direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
   coord jamInPos(eng->player->pos + eng->query->direction());
   eng->log->clearLog();

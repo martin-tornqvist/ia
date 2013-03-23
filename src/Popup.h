@@ -1,13 +1,12 @@
 #ifndef POPUP_H
 #define POPUP_H
 
-class Engine;
-
 #include <vector>
-
-#include "ConstTypes.h"
+#include <string>
 
 using namespace std;
+
+class Engine;
 
 class Popup {
 public:
@@ -15,26 +14,16 @@ public:
     eng(engine) {
   }
 
-  void showMessage(const string message, const bool DRAW_MAP_AND_INTERFACE, const string title = "") const;
+  void showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE, const string title = "") const;
 
+  unsigned int showMultiChoiceMessage(const string& message, const bool SHOW_MESSAGE_CENTERED, const bool DRAW_MAP_AND_INTERFACE,
+                                      const vector<string>& choices, const string title = "") const;
 private:
-  struct BoxReturnData {
-public:
-    BoxReturnData(coord x0y0Text_, coord x1y1Text_) :
-      x0y0Text(x0y0Text_), x1y1Text(x1y1Text_) {
-    }
+  int printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const;
 
-    const coord x0y0Text;
-    const coord x1y1Text;
-private:
-    BoxReturnData& operator=(BoxReturnData& other) {
-      (void)other;
-      return *this;
-    }
-  };
-
-  BoxReturnData printBox(const int BOX_HALF_WIDTH) const;
-
+  void multiChoiceMessageDrawingHelper(const vector<string>& lines, const bool SHOW_MESSAGE_CENTERED, const vector<string>& choices,
+                                       const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice, const int TEXT_AREA_HEIGHT,
+                                       const string title = "") const;
   Engine* eng;
 };
 

@@ -59,12 +59,12 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
   if(entries.size() == 0) {
     const int X0 = 1;
     const int Y0 = 4;
-    eng->renderer->drawText("No High Score entries found [Space/Esc] to exit.", renderArea_screen, X0, Y0, clrWhite);
+    eng->renderer->drawText("No High Score entries found | space/esc to exit.", renderArea_screen, X0, Y0, clrWhite);
   } else {
     const string decorationLine(MAP_X_CELLS - 2, '-');
 
     eng->renderer->drawText(decorationLine, renderArea_characterLines, 0, 1, clrWhite);
-    eng->renderer->drawText(" [2/8, Down/Up] to navigate  [Space/Esc] to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+    eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
 
     int yPos = 1;
 

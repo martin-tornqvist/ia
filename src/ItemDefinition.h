@@ -6,6 +6,7 @@
 #include "StatusEffects.h"
 #include "Audio.h"
 #include "RoomTheme.h"
+#include "Feature.h"
 
 enum ItemWeight_t {
   itemWeight_none = 0,
@@ -255,6 +256,7 @@ public:
   int castFromMemoryChance;
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;
+  vector<Feature_t> featuresCanBeFoundIn;
 
 private:
 };

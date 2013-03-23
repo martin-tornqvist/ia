@@ -289,7 +289,7 @@ void Player::incrInsanity() {
 
   if(getInsanity() >= 100) {
     popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
-    eng->popup->showMessage(popupMessage, true);
+    eng->popup->showMessage(popupMessage, true, "Complete insanity!");
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;

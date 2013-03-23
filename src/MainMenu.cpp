@@ -139,9 +139,11 @@ GameEntry_t MainMenu::run(bool& quit) {
       draw(browser);
     }
     break;
+
     case menuAction_canceled: {
     }
     break;
+
     case menuAction_selected: {
       if(browser.isPosAtKey('a')) {
         proceed = true;
@@ -182,9 +184,11 @@ GameEntry_t MainMenu::run(bool& quit) {
       }
     }
     break;
+
     default: {
     }
     break;
+
     }
   }
   return gameEntry_new;

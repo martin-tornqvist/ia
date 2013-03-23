@@ -81,6 +81,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->spellTurnsPerPercentCooldown = 10;
     d->armorData = ArmorData();
     d->nativeRooms.resize(0);
+    d->featuresCanBeFoundIn.resize(0);
   }
   break;
 
@@ -177,6 +178,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->castFromMemoryChance = eng->dice.getInRange(1, 100);
     d->maxStackSizeAtSpawn = 1;
     d->landOnHardSurfaceSoundMessage = "";
+    d->featuresCanBeFoundIn.push_back(feature_chest);
+    d->featuresCanBeFoundIn.push_back(feature_cabinet);
     eng->scrollNameHandler->setFalseScrollName(d);
   }
   break;
@@ -194,6 +197,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->missileDmg = DiceParam(1, 3, 0);
     d->maxStackSizeAtSpawn = 1;
     d->landOnHardSurfaceSoundMessage = "";
+    d->featuresCanBeFoundIn.push_back(feature_chest);
+    d->featuresCanBeFoundIn.push_back(feature_cabinet);
     eng->potionNameHandler->setColorAndFalseName(d);
   }
   break;
@@ -208,6 +213,8 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isStackable = false;
     d->spawnStandardMinDLVL = 3;
     d->spawnStandardMaxDLVL = 999;
+    d->featuresCanBeFoundIn.push_back(feature_chest);
+    d->featuresCanBeFoundIn.push_back(feature_cabinet);
     d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   }
   break;
@@ -285,6 +292,8 @@ void ItemData::makeList() {
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->reloadAudio = audio_shotgun_load_shell;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pumpShotgun);
@@ -302,12 +311,16 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAudio = audio_shotgunPump_fire;
   d->reloadAudio = audio_shotgun_load_shell;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shotgunShell);
   resetDef(d, itemDef_ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incinerator);
@@ -326,6 +339,8 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrRedLight;
   d->spawnStandardMinDLVL = 4;
   d->rangedDmgLabelOverRide = "?";
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incineratorShell);
@@ -334,6 +349,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->spawnStandardMinDLVL = 3;
   d->maxStackSizeAtSpawn = 2;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machineGun);
@@ -351,12 +368,16 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
   d->rangedAudio = audio_tommygun_fire;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_drumOfBullets);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistol);
@@ -373,6 +394,8 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a pistol being fired.";
   d->rangedAudio = audio_pistol_fire;
   d->reloadAudio = audio_pistol_reload;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flareGun);
@@ -389,14 +412,16 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
   d->rangedSoundMessage = "I hear a flare gun being fired.";
   d->rangedStatusEffect = new StatusFlared(eng);
-  //d->rangedAudio = audio_pistol_fire;
-  //d->reloadAudio = audio_pistol_reload;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistolClip);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_teslaCanon);
@@ -417,6 +442,8 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrYellow;
   d->spawnStandardMinDLVL = 7;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_spikeGun);
@@ -439,6 +466,8 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedMissileColor = clrGray;
   d->spawnStandardMinDLVL = 4;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_teslaCanister);
@@ -446,6 +475,8 @@ void ItemData::makeList() {
   d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
   d->ammoContainedInClip = 30;
   d->spawnStandardMinDLVL = 6;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dynamite);
@@ -454,6 +485,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
   d->color = clrRedLight;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flare);
@@ -463,6 +496,8 @@ void ItemData::makeList() {
   d->tile = tile_flare;
   d->color = clrGray;
   d->isAmmo = true;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_molotov);
@@ -471,6 +506,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_molotov;
   d->color = clrWhite;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_throwingKnife);
@@ -485,6 +522,8 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_rock);
@@ -509,6 +548,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeBaseAttackSkill = 20;
   d->meleeAbilityUsed = ability_accuracyMelee;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hatchet);
@@ -523,6 +564,8 @@ void ItemData::makeList() {
   d->missileBaseAttackSkill = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_club);
@@ -537,6 +580,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeBaseAttackSkill = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hammer);
@@ -548,6 +593,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeBaseAttackSkill = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machete);
@@ -559,6 +606,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeBaseAttackSkill = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_axe);
@@ -570,6 +619,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pitchFork);
@@ -582,6 +633,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_sledgeHammer);
@@ -594,6 +646,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ironSpike);
@@ -610,6 +663,8 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_playerKick);
@@ -900,6 +955,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 1.0;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "";
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorIronSuit);
@@ -918,6 +974,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 80;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorFlackJacket);
@@ -936,6 +993,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_armorAsbestosSuit);

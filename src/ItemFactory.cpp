@@ -11,11 +11,10 @@
 #include "ItemDrop.h"
 #include "ItemDevice.h"
 
-//Private
-Item* ItemFactory::spawnItem(ItemId_t devName) {
+Item* ItemFactory::spawnItem(ItemId_t itemId) {
   Item* item = NULL;
 
-  ItemDefinition* const d = eng->itemData->itemDefinitions[devName];
+  ItemDefinition* const d = eng->itemData->itemDefinitions[itemId];
 
   ItemDefinition* ammoD = NULL;
 
@@ -23,7 +22,7 @@ Item* ItemFactory::spawnItem(ItemId_t devName) {
     ammoD = eng->itemData->itemDefinitions[d->rangedAmmoTypeUsed];
   }
 
-  switch(devName) {
+  switch(itemId) {
   case item_trapezohedron:
     item = new Item(d);
     break;
@@ -333,9 +332,7 @@ Item* ItemFactory::spawnItem(ItemId_t devName) {
   return item;
 }
 
-Item* ItemFactory::spawnItemOnMap(ItemId_t devName, const coord pos) {
-  Item* item = spawnItem(devName);
-
+void ItemFactory::setItemRandomizedProperties(Item* item) {
   const ItemDefinition& d = item->getDef();
 
   //If it is a pure melee weapon, it may get a plus
@@ -364,6 +361,12 @@ Item* ItemFactory::spawnItemOnMap(ItemId_t devName, const coord pos) {
   if(d.isStackable) {
     item->numberOfItems = eng->dice(1, d.maxStackSizeAtSpawn);
   }
+}
+
+Item* ItemFactory::spawnItemOnMap(ItemId_t itemId, const coord pos) {
+  Item* item = spawnItem(itemId);
+
+  setItemRandomizedProperties(item);
 
   eng->itemDrop->dropItemOnMap(pos, &item);
 
@@ -375,33 +378,6 @@ Item* ItemFactory::copyItem(Item* oldItem) {
   *newItem = *oldItem;
   return newItem;
 }
-
-//Item* ItemFactory::spawnRandomItemRelatedToSpecialRoom(const SpecialRoom_t roomType) {
-//  vector<ItemId_t> itemCandidates;
-//
-//  for(unsigned int i = 1; i < endOfItemIds; i++) {
-//    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-//
-//    bool isNative = false;
-//    for(unsigned int ii = 0; ii < d->nativeRooms.size(); ii++) {
-//      if(d->nativeRooms.at(ii) == roomType) {
-//        isNative = true;
-//        ii = 999999;
-//      }
-//    }
-//
-//    if(isNative) {
-//      itemCandidates.push_back(static_cast<ItemId_t>(i));
-//    }
-//  }
-//
-//  if(itemCandidates.size() > 0) {
-//    const unsigned int ELEMENT = eng->dice.getInRange(0, itemCandidates.size() - 1);
-//    return spawnItem(itemCandidates.at(ELEMENT));
-//  }
-//
-//  return NULL;
-//}
 
 Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS) {
   vector<ItemId_t> itemCandidates;

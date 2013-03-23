@@ -329,7 +329,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //      for(int i = 0; i < extraSpawns; i++) {
 //        if(freeCells.size() > 0) {
 //          const coord posExtra = freeCells.front();
-//          Actor* const actorExtra = eng->actorFactory->spawnActor(originActor->getDef()->devName, posExtra);
+//          Actor* const actorExtra = eng->actorFactory->spawnActor(originActor->getDef()->actorId, posExtra);
 //          dynamic_cast<Monster*>(actorExtra)->isRoamingAllowed = ALLOW_ROAM;
 //          dynamic_cast<Monster*>(actorExtra)->leader = originActor;
 //          freeCells.erase(freeCells.begin());

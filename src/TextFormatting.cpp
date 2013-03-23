@@ -3,55 +3,54 @@
 #include "Engine.h"
 
 vector<string> TextFormatting::lineToLines(string line, const int MAX_WIDTH) const {
-	vector<string> lines;
-	lines.resize(1);
+  vector<string> lines;
+  lines.resize(1);
 
-	int curRow = 0;
+  int curRow = 0;
 
-	string curWord = readNextWord(line);
+  string curWord = readNextWord(line);
 
-	while(curWord != "") {
+  while(curWord != "") {
 
-		if(isWordFit(lines.at(curRow), curWord, MAX_WIDTH) == false) {
-			curRow++;
-			lines.resize(curRow + 1);
-			lines.at(curRow) = "";
-		}
+    if(isWordFit(lines.at(curRow), curWord, MAX_WIDTH) == false) {
+      curRow++;
+      lines.resize(curRow + 1);
+      lines.at(curRow) = "";
+    }
 
-		lines.at(curRow) += curWord + " ";
+    lines.at(curRow) += curWord + " ";
 
-		curWord = readNextWord(line);
-	}
+    curWord = readNextWord(line);
+  }
 
-	return lines;
+  return lines;
 }
 
-//Reads and removes the first word of the string.
-//It reads until ' '-char or end of string.
+//Reads and removes the first word of the string. It reads until ' '-char or end of string.
 //The ' '-char is also removed.
 string TextFormatting::readNextWord(string& line) const {
-	string returnWord = "";
+  string returnWord = "";
 
-	//Build a word until parameter string is empty, or a a space character is found.
-	for(unsigned int i = 0; i < line.size(); i++) {
-		const char CURRENT_CHARACTER = line.at(0);
+  //Build a word until parameter string is empty, or a a space character is found.
+  for(unsigned int i = 0; i < line.size(); i++) {
+    const char CURRENT_CHARACTER = line.at(0);
 
-		line.erase(line.begin());
+    line.erase(line.begin());
 
-		if(CURRENT_CHARACTER == ' ') {
-			return returnWord;
-		} else {
-			returnWord += CURRENT_CHARACTER;
-		}
+    if(CURRENT_CHARACTER == ' ') {
+      return returnWord;
+    } else {
+      returnWord += CURRENT_CHARACTER;
+    }
 
-		i--;
-	}
+    i--;
+  }
 
-	return returnWord;
+  return returnWord;
 }
 
 bool TextFormatting::isWordFit(string& currentString, const string& newWord, const unsigned int MAX_WIDTH) const {
-	return currentString.size() + newWord.size() + 2 <= MAX_WIDTH;
+  return currentString.size() + newWord.size() + 1 <= MAX_WIDTH;
 }
 
 vector<string> TextFormatting::getSpaceSeparatedList(string line) const {

@@ -88,7 +88,7 @@ public:
 
   bool hasAmmoForFirearmInInventory();
 
-  int getElementWithItemType(const ItemId_t itemDevName) const;
+  int getElementWithItemType(const ItemId_t itemId) const;
 
   Item* getItemInSlot(SlotTypes_t slotName);
   Item* getItemInElement(const int GLOBAL_ELEMENT_NR);
@@ -99,7 +99,7 @@ public:
 
   void decreaseItemInGeneral(unsigned element);
 
-  void decreaseItemTypeInGeneral(const ItemId_t devName);
+  void decreaseItemTypeInGeneral(const ItemId_t itemId);
 
   void deleteItemInGeneral(unsigned element);
 

@@ -38,7 +38,7 @@ public:
 
   bool SKIP_INTRO_LEVEL;
 
-  float SCALE;
+  double SCALE;
 
   bool AUTO_RELOAD_GUNS;
 

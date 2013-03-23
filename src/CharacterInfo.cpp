@@ -153,7 +153,7 @@ void CharacterInfo::drawInterface() {
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
 
-  eng->renderer->drawText(" [2/8, Down/Up] to navigate  [Space/Esc] to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
 void CharacterInfo::run() {

@@ -121,9 +121,15 @@ void MapBuildBSP::run() {
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();
 
-
   tracer << "MapBuildBSP: Calling RoomThemeMaker::run()" << endl;
   eng->roomThemeMaker->run(rooms_);
+
+  tracer << "MapBuildBSP: Moving player to nearest floor cell again after room theme maker" << endl;
+  eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
+  eng->basicUtils->reverseBoolArray(blockers);
+  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(eng->player->pos, eng));
+  eng->player->pos = freeCells.front();
 
   const coord stairsCoord = placeStairs();
 

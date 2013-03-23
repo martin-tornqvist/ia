@@ -23,19 +23,17 @@ public:
         Monster* otherMonster = NULL;
         Actor* actor = NULL;
 
-        // Loop through all timed entities...
+        //Loop through all actors
         for(unsigned int i = 0; i < LOOP_SIZE; i++) {
           actor = engine->gameTime->getActorAt(i);
-
-          // If this is a monster other than the current actor...
           if(actor != engine->player && actor != monsterActing) {
             if(actor->deadState == actorDeadState_alive) {
               otherMonster = dynamic_cast<Monster*>(actor);
 
-              bool foundNeighbourWithoutPlayerVis = isNeighbourAndWithoutVision(monsterActing, otherMonster, blockersVision, engine);
+              bool isOtherNeighbourWithoutVision = isNeighbourAndWithoutVision(monsterActing, otherMonster, blockersVision, engine);
 
-              // If the pal sees the player, or it's a neighbour that does not see the player...
-              if(otherMonster->checkIfSeeActor(*engine->player, blockersVision) || foundNeighbourWithoutPlayerVis) {
+              //Other monster sees the player, or it's a neighbour that does not see the player?
+              if(otherMonster->checkIfSeeActor(*engine->player, blockersVision) || isOtherNeighbourWithoutVision) {
 
                 // If we are indeed blocking a pal, check every neighbouring cell that is at equal
                 // or closer distance to the player, to check whether they are fine.
@@ -44,36 +42,35 @@ public:
 
                 // TODO If several good candidates are found, result should be picked from them at random
 
-                if(checkIfBlockingMonster(monsterActing->pos, otherMonster, engine) || foundNeighbourWithoutPlayerVis) {
+                if(checkIfBlockingMonster(monsterActing->pos, otherMonster, engine) || isOtherNeighbourWithoutVision) {
 
                   // Get a list of neighbouring free cells
                   vector<coord> candidates = getMoveCandidates(monsterActing, engine);
 
-                  // Sort the list by vicinity to player
+                  // Sort the list by closeness to player
                   IsCloserToOrigin sorter(engine->player->pos, engine);
                   sort(candidates.begin(), candidates.end(), sorter);
 
                   // Test the candidate cells until one is found that is not also blocking someone.
                   for(unsigned int ii = 0; ii < candidates.size(); ii++) {
 
-                    bool goodCandidateFound = true;
+                    bool isGoodCandidateFound = true;
 
                     for(unsigned int iii = 0; iii < LOOP_SIZE; iii++) {
                       actor = engine->gameTime->getActorAt(iii);
                       if(actor != engine->player && actor != monsterActing) {
                         otherMonster = dynamic_cast<Monster*>(actor);
-                        foundNeighbourWithoutPlayerVis =
-                          isNeighbourAndWithoutVision(monsterActing, otherMonster, blockersVision, engine);
-                        if(otherMonster->checkIfSeeActor(*engine->player, blockersVision) || foundNeighbourWithoutPlayerVis) {
-                          if(checkIfBlockingMonster(candidates.at(ii), otherMonster, engine)
-                              || foundNeighbourWithoutPlayerVis) {
-                            goodCandidateFound = false;
+//                        isOtherNeighbourWithoutVision = isNeighbourAndWithoutVision(monsterActing, otherMonster, blockersVision, engine);
+                        if(otherMonster->checkIfSeeActor(*engine->player, blockersVision) /*|| isOtherNeighbourWithoutVision*/) {
+                          if(checkIfBlockingMonster(candidates.at(ii), otherMonster, engine) /*|| isOtherNeighbourWithoutVision*/) {
+                            isGoodCandidateFound = false;
+                            break;
                           }
                         }
                       }
                     }
 
-                    if(goodCandidateFound) {
+                    if(isGoodCandidateFound) {
                       monsterActing->moveToCell(candidates.at(ii));
                       return true;
                     }
@@ -92,8 +89,10 @@ private:
   static bool checkIfBlockingMonster(const coord& pos, Monster* other, Engine* engine) {
     const vector<coord> line = engine->mapTests->getLine(other->pos.x, other->pos.y, engine->player->pos.x, engine->player->pos.y, true, 99999);
     for(unsigned int i = 0; i < line.size(); i++) {
-      if(pos == line.at(i)) {
+      if(line.at(i) == pos ) {
         return true;
+      } else if(line.at(i) == engine->player->pos) {
+        return false;
       }
     }
     return false;
