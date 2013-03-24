@@ -49,9 +49,9 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     case ability_dodgeAttack: {
       val += 10;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
-        val += 30;
+        val += 25;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
-        val += 30;
+        val += 20;
     } break;
 
     case ability_resistStatusBody: {

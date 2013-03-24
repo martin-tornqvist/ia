@@ -11,7 +11,7 @@
 using namespace std;
 
 PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
-  setBonus(playerBonus_dexterous, "Dexterous", "+30% chance to evade attacks and traps, every fourth move is a free action");
+  setBonus(playerBonus_dexterous, "Dexterous", "+25% chance to evade attacks and traps, every fourth move is a free action");
   setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every third move is a free action", playerBonus_dexterous);
 //  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
 //  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_dexterous);
@@ -24,7 +24,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_sharpshooter, "Sharpshooter", "+15% hit chance with firearms and thrown wepaons", playerBonus_marksman);
   setBonus(playerBonus_steadyAimer, "Steady aimer", "Waiting a turn gives 100% hit chance with firearms and thrown weapons", playerBonus_marksman);
 //  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
-  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "+X% chance to disarm traps, can use lockpicks, X% chance to reload or swap weapon instantly", playerBonus_dexterous);
+  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "+X% chance to disarm traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);

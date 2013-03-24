@@ -531,22 +531,22 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
     if(itemWielded != NULL) {
       hasMachete = itemWielded->getDef().id == item_machete;
     }
-    if(hasMachete == false) {
-      Item* itemWieldedAlt = playerInv->getItemInSlot(slot_wieldedAlt);
-      if(itemWieldedAlt != NULL) {
-        hasMachete = itemWieldedAlt->getDef().id == item_machete;
-      }
-    }
-    if(hasMachete == false) {
-      hasMachete = playerInv->hasItemInGeneral(item_machete);
-    }
+//    if(hasMachete == false) {
+//      Item* itemWieldedAlt = playerInv->getItemInSlot(slot_wieldedAlt);
+//      if(itemWieldedAlt != NULL) {
+//        hasMachete = itemWieldedAlt->getDef().id == item_machete;
+//      }
+//    }
+//    if(hasMachete == false) {
+//      hasMachete = playerInv->hasItemInGeneral(item_machete);
+//    }
 
     if(hasMachete) {
       eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       if(CAN_SEE) {
-        eng->log->addMessage("I cut down a spider web with my machete");
+        eng->log->addMessage("I cut down a spider web with my machete.");
       } else {
-        eng->log->addMessage("I cut down a sticky mass of threads with my machete!");
+        eng->log->addMessage("I cut down a sticky mass of threads with my machete.");
       }
     } else {
       if(CAN_SEE) {
