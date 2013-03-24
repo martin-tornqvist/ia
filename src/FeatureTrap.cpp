@@ -590,7 +590,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
         }
       }
 
-      if(eng->dice(1, 100) <= 50) {
+      if(eng->dice(1, 100) < 50) {
         tracer << "TrapSpiderWeb: Web is destroyed" << endl;
 
         if((IS_PLAYER && PLAYER_CAN_SEE) || (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {

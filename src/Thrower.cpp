@@ -190,7 +190,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
       }
     }
 
-    if(eng->dice(1, 100) <= chanceToDestroyItem) {
+    if(eng->dice(1, 100) < chanceToDestroyItem) {
       delete itemThrown;
     } else {
       const int DROP_ELEMENT = blockedInElement == -1 ? path.size() - 1 : blockedInElement;

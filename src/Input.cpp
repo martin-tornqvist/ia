@@ -378,20 +378,24 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'h') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getHp() >= eng->player->getHpMax()) {
-        eng->log->addMessage("I am already at good health.");
-        eng->renderer->drawMapAndInterface();
+      if(eng->player->getStatusEffectsHandler()->hasEffect(statusPoisoned)) {
+        eng->log->addMessage("Not while poisoned.");
       } else {
-        eng->player->getSpotedEnemies();
-        if(eng->player->spotedEnemies.size() == 0) {
-          const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
-          const string TURNS_STR = intToString(TURNS_TO_HEAL);
-          eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
-          eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
-          eng->gameTime->letNextAct();
-        } else {
-          eng->log->addMessage("Not while an enemy is near.");
+        if(eng->player->getHp() >= eng->player->getHpMax()) {
+          eng->log->addMessage("I am already at good health.");
           eng->renderer->drawMapAndInterface();
+        } else {
+          eng->player->getSpotedEnemies();
+          if(eng->player->spotedEnemies.size() == 0) {
+            const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
+            const string TURNS_STR = intToString(TURNS_TO_HEAL);
+            eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
+            eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
+            eng->gameTime->letNextAct();
+          } else {
+            eng->log->addMessage("Not while an enemy is near.");
+            eng->renderer->drawMapAndInterface();
+          }
         }
       }
     }
@@ -527,6 +531,13 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
           eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }
       }
+      clearEvents();
+    }
+    return;
+  }
+  else if(d.sfmlKey_ == sf::Keyboard::F7) {
+    if(IS_DEBUG_MODE) {
+      eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng), false, false);
       clearEvents();
     }
     return;

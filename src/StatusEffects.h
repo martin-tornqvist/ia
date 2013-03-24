@@ -26,6 +26,7 @@ enum StatusEffects_t {
   statusWaiting,
   statusSlowed,
   statusDiseased,
+  statusPoisoned,
   statusFainted,
   statusWeak,
   statusPerfectReflexes,
@@ -75,9 +76,6 @@ public:
   int turnsLeft;
 
   //Ability used for saving, and how it is modified.
-  //(A status can be hard to avoid by having a large negative modifier, like a
-  //strong poison, or getting covered in napalm. It can be made impossible to
-  //avoid the effect by returning ability_empty, and a huge negative modifier)
   virtual Abilities_t getSaveAbility() = 0;
   virtual int getSaveAbilityModifier() = 0;
 
@@ -416,6 +414,80 @@ private:
   StatusDiseased(const int turns) :
     StatusEffect(turns, statusDiseased) {
   }
+};
+
+class StatusPoisoned: public StatusEffect {
+public:
+  StatusPoisoned(Engine* const engine) :
+    StatusEffect(statusPoisoned) {
+    setTurnsFromRandomStandard(engine);
+  }
+  ~StatusPoisoned() {
+  }
+
+  StatusPoisoned* copy() {
+    StatusPoisoned* cpy = new StatusPoisoned(turnsLeft);
+    return cpy;
+  }
+
+  bool isConsideredBeneficial() {
+    return false;
+  }
+
+  bool allowDisplayTurnsInInterface() {
+    return true;
+  }
+
+  string getInterfaceName() {
+    return "Poisoned";
+  }
+  string messageWhenStart() {
+    return "I am poisoned!";
+  }
+  string messageWhenStartOther() {
+    return "is poisoned.";
+  }
+  string messageWhenMore() {
+    return "I am more poisoned.";
+  }
+  string messageWhenMoreOther() {
+    return "is more poisoned.";
+  }
+  string messageWhenEnd() {
+    return "My body is cleansed from poisoning!";
+  }
+  string messageWhenSaves() {
+    return "I resist poisoning.";
+  }
+  string messageWhenSavesOther() {
+    return "resists poisoning.";
+  }
+  string messageWhenEndOther() {
+    return "is cleansed from poisoning.";
+  }
+
+  Abilities_t getSaveAbility() {
+    return ability_resistStatusBody;
+  }
+  int getSaveAbilityModifier() {
+    return 0;
+  }
+
+  void start(Engine* const engine) {
+    (void)engine;
+  }
+  void end(Engine* const engine) {
+    (void)engine;
+  }
+
+  void newTurn(Engine* const engine);
+
+private:
+  DiceParam getRandomStandardNrTurns() {
+    return DiceParam(1, 20, 40);
+  }
+  friend class StatusEffectsHandler;
+  StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}
 };
 
 class StatusStill: public StatusEffect {

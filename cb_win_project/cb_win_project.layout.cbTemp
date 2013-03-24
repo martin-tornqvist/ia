@@ -31,8 +31,8 @@
 	<File name="..\src\Actor.h" open="0" top="0" tabpos="6">
 		<Cursor position="513" topLine="25" />
 	</File>
-	<File name="..\src\ActorData.cpp" open="1" top="1" tabpos="7">
-		<Cursor position="40131" topLine="1094" />
+	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="12724" topLine="325" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="6">
 		<Cursor position="703" topLine="7" />
@@ -106,8 +106,8 @@
 	<File name="..\src\Colors.h" open="0" top="0" tabpos="7">
 		<Cursor position="229" topLine="3" />
 	</File>
-	<File name="..\src\Config.cpp" open="1" top="0" tabpos="6">
-		<Cursor position="3976" topLine="123" />
+	<File name="..\src\Config.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="9708" topLine="211" />
 	</File>
 	<File name="..\src\Config.h" open="0" top="0" tabpos="3">
 		<Cursor position="526" topLine="23" />
@@ -202,8 +202,8 @@
 	<File name="..\src\FeatureTrap.h" open="0" top="0" tabpos="5">
 		<Cursor position="1214" topLine="39" />
 	</File>
-	<File name="..\src\FeatureVariousExaminable.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="5827" topLine="146" />
+	<File name="..\src\FeatureVariousExaminable.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="5530" topLine="146" />
 	</File>
 	<File name="..\src\FeatureVariousExaminable.h" open="1" top="0" tabpos="1">
 		<Cursor position="1814" topLine="68" />

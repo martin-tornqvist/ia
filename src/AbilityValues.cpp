@@ -40,7 +40,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
 
     case ability_dodgeTrap: {
       val += 5;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
         val += 20;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
         val += 20;
@@ -48,7 +48,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
 
     case ability_dodgeAttack: {
       val += 10;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_agile))
+      if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
         val += 30;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
         val += 30;

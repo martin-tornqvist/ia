@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1363548600 source:c:\dev\ia\src\abilityvalues.cpp
+1364126538 source:c:\dev\ia\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -23,7 +23,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1363724528 c:\dev\ia\src\consttypes.h
+1364148685 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -32,7 +32,7 @@
 1363820994 c:\dev\ia\src\colors.h
 	<SFML/Graphics/Color.hpp>
 
-1363898461 c:\dev\ia\src\art.h
+1364127424 c:\dev\ia\src\art.h
 
 1363548600 c:\dev\ia\src\actor.h
 	<string>
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1363991882 c:\dev\ia\src\statuseffects.h
+1364139468 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1364072860 c:\dev\ia\src\itemdefinition.h
+1364127942 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -134,7 +134,7 @@
 	"Actor.h"
 	"ConstTypes.h"
 
-1363644030 c:\dev\ia\src\playerbonuses.h
+1364126520 c:\dev\ia\src\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1363964099 source:c:\dev\ia\src\actordata.cpp
+1364123591 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1364055945 source:c:\dev\ia\src\actorplayer.cpp
+1364126538 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -472,7 +472,7 @@
 1362241541 c:\dev\ia\src\inventoryhandler.h
 	"Inventory.h"
 
-1364081867 c:\dev\ia\src\popup.h
+1364143911 c:\dev\ia\src\popup.h
 	<vector>
 	<string>
 
@@ -509,7 +509,7 @@
 	"ActorFactory.h"
 	"Blood.h"
 
-1363898677 source:c:\dev\ia\src\art.cpp
+1364127380 source:c:\dev\ia\src\art.cpp
 	"Art.h"
 	"Engine.h"
 
@@ -950,7 +950,7 @@
 	"Log.h"
 	"Render.h"
 
-1363161914 source:c:\dev\ia\src\featuredata.cpp
+1364141155 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -1014,7 +1014,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1363548600 source:c:\dev\ia\src\featuretrap.cpp
+1364153502 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -1068,7 +1068,7 @@
 	"Popup.h"
 	"Input.h"
 
-1363961175 source:c:\dev\ia\src\input.cpp
+1364139737 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -1167,7 +1167,7 @@
 	"Engine.h"
 	"Log.h"
 
-1364074546 source:c:\dev\ia\src\itemdata.cpp
+1364140167 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1198,7 +1198,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1364073141 source:c:\dev\ia\src\itemfactory.cpp
+1364128408 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1369,7 +1369,7 @@
 	"Map.h"
 	"FeatureWall.h"
 
-1363994292 source:c:\dev\ia\src\mapbuildforest.cpp
+1364156968 source:c:\dev\ia\src\mapbuildforest.cpp
 	"MapBuild.h"
 	<iostream>
 	<vector>
@@ -1385,6 +1385,7 @@
 	"Fov.h"
 	"FeatureGrave.h"
 	"TextFormatting.h"
+	"PopulateMonsters.h"
 
 1363904785 source:c:\dev\ia\src\mapbuildkingstomb.cpp
 	"MapBuild.h"
@@ -1464,7 +1465,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1363554737 source:c:\dev\ia\src\playerallocbonus.cpp
+1364127326 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1477,7 +1478,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1363647075 source:c:\dev\ia\src\playerbonuses.cpp
+1364154386 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1521,7 +1522,7 @@
 	"ActorPlayer.h"
 	"FeatureFactory.h"
 
-1364081927 source:c:\dev\ia\src\popup.cpp
+1364155787 source:c:\dev\ia\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Render.h"
@@ -1644,7 +1645,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1363994533 source:c:\dev\ia\src\statuseffects.cpp
+1364139435 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1664,7 +1665,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1363548600 source:c:\dev\ia\src\thrower.cpp
+1364153503 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -3791,7 +3792,7 @@
 	<vector>
 	<string>
 
-1364081888 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1364154069 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -3802,8 +3803,9 @@
 	"ItemDrop.h"
 	"Popup.h"
 	"PlayerBonuses.h"
+	"ActorPlayer.h"
 
-1364080036 c:\dev\ia\src\featurevariousexaminable.h
+1364150571 c:\dev\ia\src\featurevariousexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
@@ -5691,7 +5693,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1363993973 source:c:\dev\ia\src\actormonsterspecific.cpp
+1364155954 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -10066,7 +10068,7 @@
 	"Item.h"
 	"Converters.h"
 
-1363548600 c:\dev\ia\src\populatemonsters.h
+1364156470 c:\dev\ia\src\populatemonsters.h
 	<vector>
 	"ActorData.h"
 
@@ -10085,7 +10087,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1364072750 source:c:\dev\ia\src\populatemonsters.cpp
+1364156848 source:c:\dev\ia\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"

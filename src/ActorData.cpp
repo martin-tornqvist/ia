@@ -1209,7 +1209,7 @@ void ActorData::defineAllActors() {
   d.color = clrMagentaLight;
   d.tile = tile_migo;
   d.spawnMinLevel = 4;
-  d.monsterLvl = 4;
+  d.monsterLvl = 5;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1218,6 +1218,8 @@ void ActorData::defineAllActors() {
   d.description
   = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
+  d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
+  d.aggroTextMonsterHidden = "I hear a droning voice.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);

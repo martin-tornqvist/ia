@@ -164,6 +164,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_flareGun: return coord(11, 3); break;
   case tile_flareLit: return coord(12, 3); break;
   case tile_dagger: return coord(0, 4); break;
+  case tile_crowbar: return coord(3, 4); break;
   case tile_axe: return coord(9, 4); break;
   case tile_club: return coord(10, 4); break;
   case tile_hammer: return coord(11, 4); break;
@@ -172,6 +173,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_sledgeHammer: return coord(14, 4); break;
   case tile_rock: return coord(15, 4); break;
   case tile_ironSpike: return coord(16, 4); break;
+  case tile_lockpick: return coord(17, 4); break;
   case tile_huntingHorror: return coord(4, 5); break;
   case tile_spiderLeng: return coord(10, 5); break;
   case tile_migo: return coord(12, 5); break;

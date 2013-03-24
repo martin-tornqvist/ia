@@ -11,10 +11,10 @@
 using namespace std;
 
 PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
-  setBonus(playerBonus_agile, "Agile", "+30% chance to evade attacks and traps, every fourth move is a free action");
-  setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every third move is a free action", playerBonus_agile);
+  setBonus(playerBonus_dexterous, "Dexterous", "+30% chance to evade attacks and traps, every fourth move is a free action");
+  setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every third move is a free action", playerBonus_dexterous);
 //  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
-//  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_agile);
+//  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_dexterous);
 //  setBonus(playerBonus_tumbler, "Tumbler", "Can evade explosions", playerBonus_athletic);
   setBonus(playerBonus_adeptMeleeCombatant, "Adept melee combatant", "+15% hit chance with melee weapons");
   setBonus(playerBonus_masterfulMeleeCombatant, "Masterful melee combatant", "+15% hit chance with melee weapons", playerBonus_adeptMeleeCombatant);
@@ -24,11 +24,11 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_sharpshooter, "Sharpshooter", "+15% hit chance with firearms and thrown wepaons", playerBonus_marksman);
   setBonus(playerBonus_steadyAimer, "Steady aimer", "Waiting a turn gives 100% hit chance with firearms and thrown weapons", playerBonus_marksman);
 //  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
-//  setBonus(playerBonus_nimble, "Nimble", "X% chance to reload instantly, swapping is always instant", playerBonus_adeptMeleeCombatant, playerBonus_adeptRangedCombatant);
+  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "+X% chance to disarm traps, can use lockpicks, X% chance to reload or swap weapon instantly", playerBonus_dexterous);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
-  setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages");
+  setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);
-  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed", playerBonus_observant, playerBonus_agile);
+  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed", playerBonus_observant, playerBonus_dexterous);
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+20% chance to avoid being spoted by monsters", playerBonus_stealthy);
   setBonus(playerBonus_learned, "Learned", "You can read and memorize manuscripts");
@@ -40,10 +40,10 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
 //  setBonus(playerBonus_wakeful, "Wakeful", "Can not faint");
 //  setBonus(playerBonus_clearThinker, "Clear thinker", "Can not be confused");
 //  setBonus(playerBonus_courageous, "Courageous", "Can not be terrified");
-  setBonus(playerBonus_adeptWoundTreater, "Adept wound treater", "Healing takes half the normal time");
-  setBonus(playerBonus_curer, "Curer", "Can heal disease", playerBonus_adeptWoundTreater);
+  setBonus(playerBonus_skillfulWoundTreater, "Skillful wound treater", "Healing takes half the normal time");
+  setBonus(playerBonus_curer, "Curer", "Can heal disease", playerBonus_skillfulWoundTreater);
   setBonus(playerBonus_rapidRecoverer, "Rapid recoverer", "Passive HP regeneration", playerBonus_curer, playerBonus_healthy);
-  setBonus(playerBonus_tough, "Tough", "+20% physical status resistance, +20% chance to bash doors, +10% carry weight limit");
+  setBonus(playerBonus_tough, "Tough", "+20% physical status resistance, +20% chance to force open doors, +10% carry weight limit");
   setBonus(playerBonus_strongBacked, "Strong-backed", "+30% carry weight limit", playerBonus_tough);
   setBonus(playerBonus_rugged, "Rugged", "+20% physical status resistance, +10% carry weight limit", playerBonus_tough);
   setBonus(playerBonus_healthy, "Healthy", "+2 HP", playerBonus_tough);

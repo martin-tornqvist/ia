@@ -105,13 +105,15 @@ string Cultist::getCultistPhrase(Engine* const engine) {
 }
 
 void Cultist::actorSpecific_spawnStartItems() {
+  const int DLVL = eng->map->getDungeonLevel();
+
   const int PISTOL = 6;
   const int PUMP_SHOTGUN = PISTOL + 4;
   const int SAWN_SHOTGUN = PUMP_SHOTGUN + 3;
-  const int MG = SAWN_SHOTGUN + (eng->map->getDungeonLevel() < 3 ? 0 : 2);
+  const int MG = SAWN_SHOTGUN + (DLVL < 3 ? 0 : 2);
 
   const int TOT = MG;
-  const int RND = eng->dice.getInRange(1, TOT);
+  const int RND = DLVL == 0 ? PISTOL : eng->dice.getInRange(1, TOT);
 
   if(RND <= PISTOL) {
     inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pistol), true);
@@ -728,7 +730,7 @@ bool Zombie::attemptResurrect() {
     if(hasResurrected == false) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
-        if(pos != eng->player->pos && eng->dice(1, 100) <= 7) {
+        if(pos != eng->player->pos && eng->dice(1, 100) < 7) {
           deadState = actorDeadState_alive;
           hp_ = (getHpMax() * 3) / 4;
           glyph_ = def_->glyph;

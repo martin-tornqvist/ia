@@ -46,6 +46,25 @@ void StatusDiseased::newTurn(Engine* const engine) {
   turnsLeft--;
 }
 
+void StatusPoisoned::newTurn(Engine* const engine) {
+  const int DMG_N_TURN = 5;
+  const int TURN = engine->gameTime->getTurn();
+  if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
+
+    if(owningActor == engine->player) {
+      engine->log->addMessage("I am suffering from the poison!", clrMessageBad, messageInterrupt_force);
+    } else {
+      if(engine->player->checkIfSeeActor(*owningActor, NULL)) {
+        engine->log->addMessage(owningActor->getNameThe() + " suffers from poisoning!");
+      }
+    }
+
+    owningActor->hit(1, damageType_pure);
+  }
+
+  turnsLeft--;
+}
+
 bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
   if(ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
     if(owningActor == owningActor->eng->player) {
@@ -290,6 +309,9 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
     break;
   case statusDiseased:
     return new StatusDiseased(TURNS_LEFT);
+    break;
+  case statusPoisoned:
+    return new StatusPoisoned(TURNS_LEFT);
     break;
   case statusFainted:
     return new StatusFainted(TURNS_LEFT);

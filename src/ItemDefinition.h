@@ -47,6 +47,8 @@ enum ItemId_t {
   item_throwingKnife,
   item_rock,
   item_ironSpike,
+  item_crowbar,
+  item_lockpick,
   item_dagger,
   item_hatchet,
   item_club,

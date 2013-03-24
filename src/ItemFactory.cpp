@@ -23,6 +23,12 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   }
 
   switch(itemId) {
+  case item_crowbar:
+    item = new Item(d);
+    break;
+  case item_lockpick:
+    item = new Item(d);
+    break;
   case item_trapezohedron:
     item = new Item(d);
     break;

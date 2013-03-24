@@ -15,6 +15,7 @@
 #include "Fov.h"
 #include "FeatureGrave.h"
 #include "TextFormatting.h"
+#include "PopulateMonsters.h"
 
 void MapBuild::buildForestLimit() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -167,14 +168,11 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     maxPathLength++;
   }
 
-  const int RND = eng->dice.getInRange(1, 4);
-  const coord cultistCoordRelStairs =
-    RND == 1 ? coord(-5, -2) : RND == 2 ? coord(-5, 4) : RND == 3 ? coord(-12, -2) : coord(-12, 4);
+  const coord cultistCoordRelStairs = coord(-1, 1);
   const coord cultistCoord(stairsCoord + cultistCoordRelStairs);
 
   Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_cultist, cultistCoord));
   monster->isRoamingAllowed = false;
-//  Inventory* const inventory = monster->getInventory();
 
   //Build path
   for(unsigned int i = 0; i < path.size(); i++) {
@@ -188,7 +186,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     }
   }
 
-  // Place graves
+  //Place graves
   vector<HighScoreEntry> highscoreEntries = eng->highScore->getEntriesSorted();
   const unsigned PLACE_TOP_N_HIGHSCORES = 7;
   const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
@@ -283,11 +281,10 @@ void MapBuild::buildForest() {
   }
 
   coord stairCell(MAP_X_CELLS - 6, 9);
-
   buildForestOuterTreeline();
-
   buildForestTrees(stairCell);
-
   buildForestLimit();
+
+  eng->populateMonsters->populateIntroLevel();
 }
 

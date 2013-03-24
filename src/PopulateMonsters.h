@@ -16,6 +16,8 @@ public:
 
   void populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const;
 
+  void populateIntroLevel();
+
   void spawnGroupAt(const ActorId_t id, const vector<coord>& sortedFreeCellsVector,
                     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const;
 

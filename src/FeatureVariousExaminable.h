@@ -73,22 +73,36 @@ private:
   ExaminableItemContainer itemContainer;
 };
 
+enum ChestAction_t {
+  chestAction_open,
+  chestAction_searchForTrap,
+  chestAction_disarmTrap,
+  chestAction_forceLock,
+  chestAction_kick,
+  chestAction_leave
+};
+
 class Chest: public FeatureExaminable {
 public:
   ~Chest() {
   }
   void featureSpecific_examine();
 
-  string getDescription(const bool DEFINITE_ARTICLE) const;
+//  string getDescription(const bool DEFINITE_ARTICLE) const;
 
-  sf::Color getColor() const;
+//  sf::Color getColor() const;
 
 private:
   friend class FeatureFactory;
   Chest(Feature_t id, coord pos, Engine* engine);
 
-  bool isLocked_, isSmashed_;
-  DoorMaterial_t material_;
+  void triggerTrap();
+
+  void setChoiceLabelsFromPossibleActions(const vector<ChestAction_t>& possibleActions, vector<string>& actionLabels) const;
+
+  void setDescription(string& description) const;
+
+  bool isContentKnown_, isLocked_, isTrapped_, isTrapStatusKnown_;
 
   ExaminableItemContainer itemContainer_;
 };

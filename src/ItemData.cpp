@@ -208,7 +208,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->chanceToIncludeInSpawnList = 40;
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
-    d->glyph = '{';
+    d->glyph = '~';
     d->tile = tile_device1;
     d->isStackable = false;
     d->spawnStandardMinDLVL = 3;
@@ -537,6 +537,8 @@ void ItemData::makeList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->primaryAttackMode = primaryAttackMode_missile;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dagger);
@@ -663,6 +665,33 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_crowbar);
+  resetDef(d, itemDef_general);
+  d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
+  d->itemWeight = itemWeight_light;
+  d->tile = tile_crowbar;
+  d->isStackable = false;
+  d->color = clrGray;
+  d->glyph = '~';
+  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_lockpick);
+  resetDef(d, itemDef_general);
+  d->name = ItemName("Lockpick", "Lockpicks", "a Lockpick");
+  d->itemWeight = itemWeight_extraLight;
+  d->tile = tile_lockpick;
+  d->isStackable = true;
+  d->maxStackSizeAtSpawn = 2;
+  d->color = clrWhite;
+  d->glyph = '~';
+  d->landOnHardSurfaceSoundMessage = "I clinking sound.";
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;

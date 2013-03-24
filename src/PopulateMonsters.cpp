@@ -83,6 +83,37 @@ void PopulateMonsters::attemptSpawnDueToTimePassed() const {
   tracer << "PopulateMonsters::attemptSpawnDueToTimePassed() [DONE]" << endl;
 }
 
+void PopulateMonsters::populateIntroLevel() {
+  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(2, 3);
+
+  bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
+
+  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 3;
+  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
+  const coord& playerPos = eng->player->pos;
+
+  for(int y = max(0, playerPos.y - MIN_DIST_FROM_PLAYER); y < min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER); y++) {
+    for(int x = max(0, playerPos.x - MIN_DIST_FROM_PLAYER); x < min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER); x++) {
+      forbiddenCells[x][y] = true;
+    }
+  }
+
+  for(int i = 0; i < NR_GROUPS_ALLOWED; i++) {
+    vector<coord> originCandidates;
+    for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+      for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+        if(forbiddenCells[x][y] == false) {
+          originCandidates.push_back(coord(x, y));
+        }
+      }
+    }
+    const coord origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+    vector<coord> sortedFreeCellsVector;
+    makeSortedFreeCellsVector(origin, forbiddenCells, sortedFreeCellsVector);
+    spawnGroupAt(actor_wolf, sortedFreeCellsVector, forbiddenCells, true);
+  }
+}
+
 void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
   const int NR_GROUPS_ALLOWED = eng->dice.getInRange(9, 11);
   int nrGroupsSpawned = 0;

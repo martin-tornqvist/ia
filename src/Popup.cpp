@@ -85,9 +85,15 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
     eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
   }
 
+  const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
+
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
-    eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+    if(SHOW_MESSAGE_CENTERED) {
+      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrRedLight, true);
+    } else {
+      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+    }
     eng->log->addLineToHistory(lines.at(i));
   }
   yPos += 2;
@@ -103,8 +109,8 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   }
 }
 
-unsigned int Popup::showMultiChoiceMessage(const string& message, const bool SHOW_MESSAGE_CENTERED,
-    const bool DRAW_MAP_AND_INTERFACE, const vector<string>& choices, const string title) const {
+unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE,
+    const vector<string>& choices, const string title) const {
 
   vector<string> lines = eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH);
   const int TEXT_HEIGHT = static_cast<int>(lines.size());
@@ -114,14 +120,14 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool SHO
 
   MenuBrowser browser(NR_CHOICES, 0);
 
-  multiChoiceMessageDrawingHelper(lines, SHOW_MESSAGE_CENTERED, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
+  multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
 
     switch(action) {
     case menuAction_browsed: {
-      multiChoiceMessageDrawingHelper(lines, SHOW_MESSAGE_CENTERED, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
+      multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
     }
     break;
 
@@ -144,8 +150,8 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool SHO
   }
 }
 
-void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const bool SHOW_MESSAGE_CENTERED,
-    const vector<string>& choices, const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
+void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const vector<string>& choices,
+    const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
     const int TEXT_AREA_HEIGHT, const string title) const {
 
   if(DRAW_MAP_AND_INTERFACE) {
@@ -159,6 +165,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const b
   if(title != "") {
     eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
   }
+
+  const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
+
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
@@ -173,7 +182,6 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const b
     yPos++;
     sf::Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
     eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clr, true);
-    eng->log->addLineToHistory(choices.at(i));
   }
   eng->renderer->updateWindow();
 }

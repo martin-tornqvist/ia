@@ -547,7 +547,7 @@ void FeatureData::makeList() {
   d.name_the = "the chest";
   d.spawnType = featureSpawnType_other;
   d.glyph = '+';
-  d.color = clrGray;
+  d.color = clrBrownDark;
   d.tile = tile_chestClosed;
   d.isMovePassable[moveType_walk] = true;
   d.isShootPassable = true;

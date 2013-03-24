@@ -124,7 +124,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
   vector<PlayerBonuses_t> prereqsForCurrentBonus = eng->playerBonusHandler->getBonusPrereqs(markedBonus);
   const unsigned int NR_PREREQS = prereqsForCurrentBonus.size();
   if(NR_PREREQS > 0) {
-    string prereqStr = "This ability had the following requirement(s): ";
+    string prereqStr = "This ability had the following prerequisite(s): ";
     for(unsigned int i = 0; i < NR_PREREQS; i++) {
       const PlayerBonuses_t prereq = prereqsForCurrentBonus.at(i);
       const string prereqTitle = eng->playerBonusHandler->getBonusTitle(prereq);

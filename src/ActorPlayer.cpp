@@ -908,7 +908,7 @@ void Player::attemptIdentifyItems() {
 
 int Player::getHealingTimeTotal() const {
   const int TURNS_BEFORE_BON = 70;
-  const int PLAYER_HEALING_RANK = eng->playerBonusHandler->isBonusPicked(playerBonus_adeptWoundTreater);
+  const int PLAYER_HEALING_RANK = eng->playerBonusHandler->isBonusPicked(playerBonus_skillfulWoundTreater);
   return PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
 }
 
@@ -1050,7 +1050,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
         pos = dest;
 
-        const bool IS_AGILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_agile);
+        const bool IS_AGILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous);
         const bool IS_LITHE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_lithe);
         if(IS_AGILE_PICKED || IS_LITHE_PICKED) {
           const int FREE_MOVE_EVERY_N_TURN = IS_LITHE_PICKED ? 3 : 4;
