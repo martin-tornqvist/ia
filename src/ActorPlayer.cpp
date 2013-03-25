@@ -28,7 +28,7 @@ Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
   molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  mythosKnowledge(0), nrMovesUntilFreeAction(-1), carryWeightBase(400) {
+  mythosKnowledge(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -41,7 +41,7 @@ void Player::actorSpecific_spawnStartItems() {
     insanityObsessions[i] = false;
   }
 
-  mythosKnowledge = eng->dice.getInRange(1, 6);
+//  mythosKnowledge = eng->dice.getInRange(1, 6);
 
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
   int NR_OF_DYNAMITE          = eng->dice.getInRange(1, 4);
@@ -74,7 +74,8 @@ void Player::actorSpecific_spawnStartItems() {
     break;
   }
 
-  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+//  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pumpShotgun ), true, true);
   inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_OF_CARTRIDGES; i++) {

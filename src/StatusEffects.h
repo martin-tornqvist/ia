@@ -484,7 +484,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 20, 40);
+    return DiceParam(1, 40, 40);
   }
   friend class StatusEffectsHandler;
   StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1364126538 source:c:\dev\ia\src\abilityvalues.cpp
+1364158235 source:c:\dev\ia\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1364139468 c:\dev\ia\src\statuseffects.h
+1364160178 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1364126538 source:c:\dev\ia\src\actorplayer.cpp
+1364225914 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -561,7 +561,7 @@
 	"SFML/Window/Keyboard.hpp"
 	"ConstTypes.h"
 
-1355674112 source:c:\dev\ia\src\attackshotgun.cpp
+1364233811 source:c:\dev\ia\src\attackshotgun.cpp
 	"Attack.h"
 	"Engine.h"
 	"Item.h"
@@ -950,7 +950,7 @@
 	"Log.h"
 	"Render.h"
 
-1364141155 source:c:\dev\ia\src\featuredata.cpp
+1364223457 source:c:\dev\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
@@ -1014,7 +1014,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1364153502 source:c:\dev\ia\src\featuretrap.cpp
+1364158347 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -1478,7 +1478,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1364154386 source:c:\dev\ia\src\playerbonuses.cpp
+1364158235 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -3792,7 +3792,7 @@
 	<vector>
 	<string>
 
-1364154069 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1364162323 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -5693,7 +5693,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1364155954 source:c:\dev\ia\src\actormonsterspecific.cpp
+1364162820 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"

@@ -329,9 +329,9 @@ void MiGo::actorSpecific_spawnStartItems()
   inventory_->putItemInIntrinsics(item);
 
   spellsKnown.push_back(new SpellTeleport);
+  spellsKnown.push_back(new SpellHealSelf);
 
   if(eng->dice.coinToss()) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
@@ -486,7 +486,11 @@ bool KeziahMason::actorSpecificAct() {
 }
 
 void KeziahMason::actorSpecific_spawnStartItems() {
-  eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
+  spellsKnown.push_back(new SpellTeleport);
+  spellsKnown.push_back(new SpellHealSelf);
+  spellsKnown.push_back(new SpellSummonRandom);
+  spellsKnown.push_back(new SpellAzathothsBlast);
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
 void OozeGray::actorSpecific_spawnStartItems()

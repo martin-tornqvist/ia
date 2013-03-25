@@ -575,7 +575,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_dungeon);
+//  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_dungeon);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cabinet;
@@ -613,7 +613,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
+//  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pillar;

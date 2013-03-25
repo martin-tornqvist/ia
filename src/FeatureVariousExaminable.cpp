@@ -121,15 +121,15 @@ Chest::Chest(Feature_t id, coord pos, Engine* engine) :
   //EventRegularity_t eventRegularity = getEventRegularity();
   const int CHANCE_FOR_EMPTY = 10;
   const int NR_ITEMS_MIN = eng->dice(1, 100) < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = eng->playerBonusHandler->isBonusPicked(playerBonus_treasureHunter) ? 3 : 2;
+  const int NR_ITEMS_MAX = eng->playerBonusHandler->isBonusPicked(playerBonus_treasureHunter) ? 4 : 3;
   itemContainer_.setRandomItemsForFeature(feature_chest, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   if(itemContainer_.items_.empty() == false) {
     const int CHANCE_FOR_LOCKED = 80;
     isLocked_ = eng->dice(1, 100) < CHANCE_FOR_LOCKED;
 
-    const int CHANCE_FOR_TRAPPED = 10;
-    isTrapped_ = eng->dice(1, 100) < CHANCE_FOR_TRAPPED ? false : true;
+    const int CHANCE_FOR_TRAPPED = 20;
+    isTrapped_ = eng->dice(1, 100) < CHANCE_FOR_TRAPPED ? true : false;
   }
 }
 

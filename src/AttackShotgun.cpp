@@ -10,260 +10,160 @@
 #include "Map.h"
 #include "Postmortem.h"
 
-struct ShotGunProjectile {
-  ShotGunProjectile() {
-    path.resize(0);
-  }
-  vector<coord> path;
-
-  void init(double xIncr_, double yIncr_) {
-    xIncr = xIncr_;
-    yIncr = yIncr_;
-  }
-
-  double xIncr, yIncr;
-};
-
-bool Attack::isCellOnLine(vector<coord> line, int x, int y) {
-  for(unsigned int i = 0; i < line.size(); i++) {
-    if(line.at(i).x == x && line.at(i).y == y) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 void Attack::shotgun(const coord& origin, const coord& target, Weapon* const weapon) {
   AttackData data;
   getAttackData(data, target, origin, weapon, false);
   printRangedInitiateMessages(data);
 
-  const int CHEB_TO_TARGET = eng->basicUtils->chebyshevDistance(origin, target);
-
-  const double deltaX = (static_cast<double>(target.x) - static_cast<double>(origin.x));
-  const double deltaY = (static_cast<double>(target.y) - static_cast<double>(origin.y));
-
-  const double hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
-  const double baseAngle = asin(deltaY / hypot);
-
-  //This value is -1 or 1
-  const int xDir = -1 + (target.x - origin.x >= 0) * 2;
-
-  vector<ShotGunProjectile> projectiles;
-  projectiles.resize(0);
-
-  ShotGunProjectile p;
-  double xIncr, yIncr;
-
-  //Initialize vectors
-  for(double i = -shotgunSpreadAngleHalf; i <= shotgunSpreadAngleHalf + 0.004; i += 0.004) {
-    xIncr = cos(baseAngle + i) * double(xDir);
-    yIncr = sin(baseAngle + i);
-    p.init(xIncr, yIncr);
-    projectiles.push_back(p);
-  }
-
-  //Also add precise base angle-vector so it can shoot past diagonal obstacles
-  xIncr = cos(baseAngle) * double(xDir);
-  yIncr = sin(baseAngle);
-  p.init(xIncr, yIncr);
-  projectiles.push_back(p);
-
-  double curX_prec, curY_prec;
-  int curX, curY;
-  coord c;
-  bool hitArray[MAP_X_CELLS][MAP_Y_CELLS] = { };
-
-  //Array of blocking cells
-  // -1 = cell is passable and will always be passable
-  //  0 = cell is passable, but may be set to -1 or 1
-  //  1 = cell is not passable, and will never be passable
-  int blockingArray[MAP_X_CELLS][MAP_Y_CELLS] = { };
+  const ActorSizes_t intendedAimLevel = data.aimLevel;
 
   //Add blocking features to array
   bool featureBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeShootBlockerFeaturesArray(featureBlockers);
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      if(featureBlockers[x][y]) {
-        blockingArray[x][y] = 1;
-      }
+
+  //An array of actors
+  Actor* actorArray[MAP_X_CELLS][MAP_Y_CELLS];
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      actorArray[x][y] = NULL;
     }
   }
-
-  //An array of actors - so that each projectile doesn't have to check the time loop each step
-  Actor* actorArray[MAP_X_CELLS][MAP_Y_CELLS] = { };
-  Actor* curActor = NULL;
-  const unsigned int ENTITY_LOOP_SIZE = eng->gameTime->getLoopSize();
-  for(unsigned int i = 0; i < ENTITY_LOOP_SIZE; i++) {
-    curActor = eng->gameTime->getActorAt(i);
+  const unsigned int ACTOR_LOOP_SIZE = eng->gameTime->getLoopSize();
+  for(unsigned int i = 0; i < ACTOR_LOOP_SIZE; i++) {
+    Actor* curActor = eng->gameTime->getActorAt(i);
     if(curActor->deadState == actorDeadState_alive) {
       actorArray[curActor->pos.x][curActor->pos.y] = curActor;
     }
   }
 
-  //Get main line - only hits on this path has full damage potential.
-  vector<coord> mainLine = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, false, 99999);
+  vector<coord> path = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, false, 9999);
 
   //% Chance for stray hit
-  const int probabStrayHit = 50; //Perhaps this should depend on skill?
-  const int strayShotDivide = 2;
-  bool canGetCleanHit = true;
-  bool projectileActive = true;
+  const int CHANCE_FOR_STRAY_HIT = 50;
+  const int STRAY_DMG_DIV = 2;
+  bool allowStrayHit = true;
 
-  for(unsigned pElement = 0; pElement < projectiles.size(); pElement++) {
-    curX_prec = static_cast<double>(origin.x) + 0.5;
-    curY_prec = static_cast<double>(origin.y) + 0.5;
-    curX_prec += projectiles.at(pElement).xIncr;
-    curY_prec += projectiles.at(pElement).yIncr;
+  int nrActorsHit = 0;
 
-    projectileActive = true;
+  for(double i = 1; i < path.size(); i++) {
+    const coord curPos(path.at(i));
 
-    for(double i = 0; i <= FOV_STANDARD_RADI_FLO; i += 0.004) {
-      curX_prec += projectiles.at(pElement).xIncr * 0.004;
-      curY_prec += projectiles.at(pElement).yIncr * 0.004;
-      curX = int(curX_prec);
-      curY = int(curY_prec);
+    allowStrayHit = true;
 
-      if(blockingArray[curX][curY] == 1) {
-        hitArray[curX][curY] = true;
-        projectileActive = false;
-        i = 99999;
+    //If there is a defender in current cell, and current defender is at least equal to aim-level,
+    //attempt direct hit
+    getAttackData(data, target, curPos, weapon, false);
+    if(actorArray[curPos.x][curPos.y] != NULL && (data.currentDefenderSize >= intendedAimLevel)) {
+      if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
+        if(data.attackResult >= successSmall) {
+          if(eng->map->playerVision[curPos.x][curPos.y]) {
+            eng->renderer->drawMapAndInterface(false);
+            eng->renderer->coverCellInMap(curPos.x, curPos.y);
+            if(eng->config->USE_TILE_SET) {
+              eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
+            } else {
+              eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
+            }
+            eng->renderer->updateWindow();
+            eng->sleep(eng->config->DELAY_SHOTGUN);
+          }
+
+          //Messages
+          printProjectileAtActorMessages(data, projectileHitType_cleanHit);
+
+          //Damage
+          data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
+
+          nrActorsHit++;
+
+          eng->renderer->drawMapAndInterface();
+
+          allowStrayHit = false;
+
+          //Special shotgun behavior:
+          //If current defender was killed, and player aimed at humanoid level, or at floor level
+          //but beyond the current position, the shot will continue.
+          const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+          if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
+            break;
+          }
+        }
       }
 
-      //If cell hasn't been considered before
-      if(blockingArray[curX][curY] == 0) {
-        getAttackData(data, target, coord(curX, curY), weapon, false);
-        //If there is a defender in current cell, and current defender is at least equal to aim-level
-        if(actorArray[curX][curY] != NULL && (data.currentDefenderSize >= data.aimLevel)) {
-          //If both aim level and current defender is on floor level, it must be within 1 cell of target
-          if((data.aimLevel == actorSize_floor && data.currentDefenderSize == actorSize_floor &&
-              eng->basicUtils->chebyshevDistance(target, coord(curX, curY)) > 1) == false) {
-
-            //If cell is on main line, and distance is within effective weapon distance,
-            //a chance for a clean hit is given<
-            if(isCellOnLine(mainLine, curX, curY) && canGetCleanHit) {
-              if(eng->basicUtils->chebyshevDistance(origin, coord(curX, curY)) <= weapon->effectiveRangeLimit) {
-                if(data.attackResult >= successSmall) {
-
-                  if(eng->map->playerVision[curX][curY]) {
-                    eng->renderer->drawMapAndInterface(false);
-
-                    if(eng->config->USE_TILE_SET) {
-                      eng->renderer->drawTileInMap(tile_blastAnimation2, coord(curX, curY), clrRedLight);
-                    } else {
-                      eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(curX, curY), clrRedLight);
-                    }
-
-                    eng->renderer->updateWindow();
-                    eng->sleep(eng->config->DELAY_SHOTGUN);
-                  }
-
-                  //Messages
-                  printProjectileAtActorMessages(data, projectileHitType_cleanHit);
-
-                  //Damage
-                  data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
-
-                  eng->renderer->drawMapAndInterface(true);
-
-                  blockingArray[curX][curY] = 1;
-
-                  projectileActive = false;
-                  i = 99999;
-                }
-              }
-
-              canGetCleanHit = false;
+      //Stray hit?
+      if(allowStrayHit) {
+        getAttackData(data, target, curPos, weapon, false);
+        if(eng->dice(1, 100) < CHANCE_FOR_STRAY_HIT) {
+          if(eng->map->playerVision[curPos.x][curPos.y]) {
+            eng->renderer->drawMapAndInterface(false);
+            eng->renderer->coverCellInMap(curPos.x, curPos.y);
+            if(eng->config->USE_TILE_SET) {
+              eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
+            } else {
+              eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
             }
-
-            if(projectileActive) {
-              //If this point in the code is reached - that means either -
-              //A - Actor was not on main line,
-              //B - Actor was not within effective range (Chebyshev), or
-              //C - Skill roll failed.
-              //(It also means that the cell has not been considered before)
-
-              //In any and all of these cases a chance for a stray hit is given
-
-              getAttackData(data, target, coord(curX, curY), weapon, false);
-
-              if(eng->dice(1, 100) < probabStrayHit) {
-                if(eng->map->playerVision[curX][curY]) {
-                  eng->renderer->drawMapAndInterface(false);
-                  if(eng->config->USE_TILE_SET) {
-                    eng->renderer->drawTileInMap(tile_blastAnimation2, coord(curX, curY), clrRedLight);
-                  } else {
-                    eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(curX, curY), clrRedLight);
-                  }
-                  eng->renderer->updateWindow();
-                  eng->sleep(eng->config->DELAY_SHOTGUN);
-                }
-
-                data.attackResult = successSmall;
-
-                //Messages
-                printProjectileAtActorMessages(data, projectileHitType_strayHit);
-
-                eng->renderer->updateWindow();
-
-                //Damage
-                data.currentDefender->hit(data.dmg / strayShotDivide, weapon->getDef().rangedDamageType);
-
-                blockingArray[curX][curY] = 1;
-
-                projectileActive = false;
-                i = 99999;
-              } else {
-                data.attackResult = failNormal;
-
-                blockingArray[curX][curY] = -1;
-                hitArray[curX][curY] = true;
-                projectileActive = false;
-
-                printProjectileAtActorMessages(data, projectileHitType_miss);
-              }
-            }
-          } else {
-            blockingArray[curX][curY] = -1;
+            eng->renderer->updateWindow();
+            eng->sleep(eng->config->DELAY_SHOTGUN);
           }
+
+          data.attackResult = successSmall;
+
+          //Messages
+          printProjectileAtActorMessages(data, projectileHitType_strayHit);
+
+          //Damage
+          data.currentDefender->hit(data.dmg / STRAY_DMG_DIV, weapon->getDef().rangedDamageType);
+
+          nrActorsHit++;
+
+          eng->renderer->drawMapAndInterface();
+
+          //Special shotgun behavior:
+          //If current defender was killed, and player aimed at humanoid level, or at floor level
+          //but beyond the current position, the shot will continue.
+          const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+          if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
+            break;
+          }
+        }
+      }
+    }
+
+    //Wall hit?
+    getAttackData(data, target, curPos, weapon, false);
+    if(featureBlockers[curPos.x][curPos.y]) {
+      if(eng->map->playerVision[curPos.x][curPos.y]) {
+        eng->renderer->drawMapAndInterface(false);
+        eng->renderer->coverCellInMap(curPos.x, curPos.y);
+        if(eng->config->USE_TILE_SET) {
+          eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
         } else {
-          blockingArray[curX][curY] = -1;
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
         }
+        eng->renderer->updateWindow();
+        eng->sleep(eng->config->DELAY_SHOTGUN);
+        eng->renderer->drawMapAndInterface();
       }
+      break;
+    }
 
-      //Floor hit?
-      if(data.aimLevel == actorSize_floor && actorArray[curX][curY] == NULL && (eng->basicUtils->chebyshevDistance(origin, coord(curX, curY))
-          == CHEB_TO_TARGET + 1 || (curX == target.x && curY == target.y))) {
-
-        hitArray[curX][curY] = true;
-        blockingArray[curX][curY] = 1;
-        projectileActive = false;
+    //Floor hit?
+    getAttackData(data, target, curPos, weapon, false);
+    if(intendedAimLevel == actorSize_floor && curPos == target) {
+      if(eng->map->playerVision[curPos.x][curPos.y]) {
+        eng->renderer->drawMapAndInterface(false);
+        eng->renderer->coverCellInMap(curPos.x, curPos.y);
+        if(eng->config->USE_TILE_SET) {
+          eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
+        } else {
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
+        }
+        eng->renderer->updateWindow();
+        eng->sleep(eng->config->DELAY_SHOTGUN);
+        eng->renderer->drawMapAndInterface();
       }
+      break;
     }
   }
-
-  //Draw projectiles hitting walls and floor
-  eng->renderer->drawMapAndInterface(false);
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      //Cell hit with no actor there means it's a wall or something...
-      if(hitArray[x][y] && actorArray[x][y] == NULL) {
-        if(eng->map->playerVision[x][y]) {
-          eng->renderer->coverCellInMap(x, y);
-          if(eng->config->USE_TILE_SET) {
-            eng->renderer->drawTileInMap(tile_blastAnimation2, coord(x, y), clrYellow);
-          } else {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen, coord(x, y), clrYellow);
-          }
-        }
-      }
-    }
-  }
-
-  eng->renderer->updateWindow();
-  eng->sleep(eng->config->DELAY_SHOTGUN);
-  eng->renderer->drawMapAndInterface();
 }
 
