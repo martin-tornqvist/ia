@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1364158235 source:c:\dev\ia\src\abilityvalues.cpp
+1364242411 source:c:\dev\ia\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -34,7 +34,7 @@
 
 1364127424 c:\dev\ia\src\art.h
 
-1363548600 c:\dev\ia\src\actor.h
+1364243357 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1364160178 c:\dev\ia\src\statuseffects.h
+1364252764 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1364127942 c:\dev\ia\src\itemdefinition.h
+1364243216 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -129,7 +129,7 @@
 	<ctime>
 	<cmath>
 
-1363633667 c:\dev\ia\src\actorplayer.h
+1364243424 c:\dev\ia\src\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"ConstTypes.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1363777108 source:c:\dev\ia\src\actor.cpp
+1364245162 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1364123591 source:c:\dev\ia\src\actordata.cpp
+1364242110 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1364225914 source:c:\dev\ia\src\actorplayer.cpp
+1364253091 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -612,7 +612,7 @@
 	"Engine.h"
 	"Map.h"
 
-1363172825 source:c:\dev\ia\src\bot.cpp
+1364243770 source:c:\dev\ia\src\bot.cpp
 	"Bot.h"
 	<cassert>
 	"Engine.h"
@@ -855,7 +855,7 @@
 1355674113 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1363299000 c:\dev\ia\src\itempotion.h
+1364243874 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
@@ -1014,7 +1014,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1364158347 source:c:\dev\ia\src\featuretrap.cpp
+1364242141 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -1068,7 +1068,7 @@
 	"Popup.h"
 	"Input.h"
 
-1364139737 source:c:\dev\ia\src\input.cpp
+1364250358 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -1099,7 +1099,7 @@
 	"Examine.h"
 	"PlayerCreateCharacter.h"
 
-1363894510 source:c:\dev\ia\src\interface.cpp
+1364243831 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
@@ -1167,7 +1167,7 @@
 	"Engine.h"
 	"Log.h"
 
-1364140167 source:c:\dev\ia\src\itemdata.cpp
+1364243854 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1198,7 +1198,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1364128408 source:c:\dev\ia\src\itemfactory.cpp
+1364243865 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1478,7 +1478,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1364158235 source:c:\dev\ia\src\playerbonuses.cpp
+1364251674 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1487,7 +1487,7 @@
 	"ActorPlayer.h"
 	"DungeonMaster.h"
 
-1363554353 source:c:\dev\ia\src\playercreatecharacter.cpp
+1364243424 source:c:\dev\ia\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Render.h"
@@ -1568,7 +1568,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1363814176 source:c:\dev\ia\src\render.cpp
+1364243929 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1633,7 +1633,7 @@
 	"MapBuild.h"
 	"ActorPlayer.h"
 
-1363548600 source:c:\dev\ia\src\spells.cpp
+1364243950 source:c:\dev\ia\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -1645,7 +1645,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1364139435 source:c:\dev\ia\src\statuseffects.cpp
+1364252403 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1696,7 +1696,7 @@
 	"Log.h"
 	"Render.h"
 
-1363634091 source:c:\dev\ia\src\itempotion.cpp
+1364251555 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -5693,7 +5693,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1364162820 source:c:\dev\ia\src\actormonsterspecific.cpp
+1364243705 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"

@@ -48,7 +48,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done, const int REND
 
   if(d.sfmlKey_ == sf::Keyboard::Return) {
     done = true;
-    currentString = currentString == "" ? "Howard" : currentString;
+    currentString = currentString == "" ? "Rogue" : currentString;
     return;
   }
 

@@ -26,23 +26,26 @@ void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
 }
 
 void StatusBlessed::start(Engine* const engine) {
-  (void)engine;
-  owningActor->getStatusEffectsHandler()->endEffect(statusCursed);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusCursed, visionBlockers);
 }
 
 void StatusCursed::start(Engine* const engine) {
-  (void)engine;
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlessed);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusBlessed, visionBlockers);
+}
+
+void StatusDiseased::start(Engine* const engine) {
+  //player->getHpMax() will now return a decreased value,
+  //cap current HP to the new, lower, maximum
+  int& hp = engine->player->hp_;
+  hp = min(engine->player->getHpMax(true), hp);
 }
 
 void StatusDiseased::newTurn(Engine* const engine) {
-  int& hp = engine->player->hp_;
-  int& hpMax = engine->player->hpMax_;
-
-  if(hp > (hpMax * 3) / 4) {
-    hp -= 1;
-  }
-
+  (void)engine;
   turnsLeft--;
 }
 
@@ -182,8 +185,9 @@ void StatusBurning::newTurn(Engine* const engine) {
 }
 
 void StatusBlind::start(Engine* const engine) {
-  (void)engine;
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers);
 }
 
 void StatusBlind::end(Engine* const engine) {
@@ -231,8 +235,9 @@ void StatusParalyzed::start(Engine* const engine) {
 }
 
 void StatusFainted::start(Engine* const engine) {
-  (void)engine;
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers);
 }
 
 void StatusFainted::end(Engine* const engine) {
@@ -244,8 +249,9 @@ bool StatusFainted::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 }
 
 void StatusClairvoyant::start(Engine* const engine) {
-  (void)engine;
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlind);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusBlind, visionBlockers);
 }
 
 void StatusClairvoyant::end(Engine* const engine) {
@@ -507,39 +513,47 @@ void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const boo
   }
 }
 
-void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+void StatusEffectsHandler::runEffectEndAndRemoveFromList(const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
   const bool PLAYER_SEE_OWNER = OWNER_IS_PLAYER ? true : eng->player->checkIfSeeActor(*owningActor, visionBlockingArray);
 
+  StatusEffect* const effect = effects.at(index);
+
+  effect->end(eng);
+
+  const bool IS_VISUAL_UPDATE_NEEDED = effect->isPlayerVisualUpdateNeededWhenStartOrEnd();
+
+  effects.erase(effects.begin() + index);
+
+  if(IS_VISUAL_UPDATE_NEEDED) {
+    effect->owningActor->updateColor();
+    eng->player->updateFov();
+    eng->renderer->drawMapAndInterface();
+  }
+
+  if(OWNER_IS_PLAYER && effect->messageWhenEnd() != "") {
+    eng->log->addMessage(effect->messageWhenEnd(), clrWhite);
+  } else {
+    if(PLAYER_SEE_OWNER && effect->messageWhenEndOther() != "") {
+      eng->log->addMessage(owningActor->getNameThe() + " " + effect->messageWhenEndOther());
+    }
+  }
+
+  delete effect;
+}
+
+void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   for(unsigned int i = 0; i < effects.size();) {
-    if(OWNER_IS_PLAYER == false) {
-      dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter = owningActor->getDef()->nrTurnsAwarePlayer;
+    StatusEffect* const curEffect = effects.at(i);
+
+    if(owningActor != eng->player) {
+      if(curEffect->isMakingOwnerAwareOfPlayer()) {
+        dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter = owningActor->getDef()->nrTurnsAwarePlayer;
+      }
     }
 
-    StatusEffect* const curEffect = effects.at(i);
     if(curEffect->isFinnished()) {
-
-      curEffect->end(eng);
-
-      const bool IS_VISUAL_UPDATE_NEEDED = curEffect->isPlayerVisualUpdateNeededWhenStartOrEnd();
-
-      effects.erase(effects.begin() + i);
-
-      if(IS_VISUAL_UPDATE_NEEDED) {
-        curEffect->owningActor->updateColor();
-        eng->player->updateFov();
-        eng->renderer->drawMapAndInterface();
-      }
-
-      if(OWNER_IS_PLAYER && curEffect->messageWhenEnd() != "") {
-        eng->log->addMessage(curEffect->messageWhenEnd(), clrWhite);
-      } else {
-        if(PLAYER_SEE_OWNER && curEffect->messageWhenEndOther() != "") {
-          eng->log->addMessage(owningActor->getNameThe() + " " + curEffect->messageWhenEndOther());
-        }
-      }
-
-      delete curEffect;
+      runEffectEndAndRemoveFromList(i, visionBlockingArray);
     } else {
       curEffect->newTurn(eng);
       i++;

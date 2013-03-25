@@ -381,10 +381,16 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng->player->getStatusEffectsHandler()->hasEffect(statusPoisoned)) {
         eng->log->addMessage("Not while poisoned.");
       } else {
-        if(eng->player->getHp() >= eng->player->getHpMax()) {
-          eng->log->addMessage("I am already at good health.");
-          eng->renderer->drawMapAndInterface();
-        } else {
+        bool allowHeal = false;
+        const bool IS_DISEASED = eng->player->getStatusEffectsHandler()->hasEffect(statusDiseased);
+
+        if(eng->player->getHp() < eng->player->getHpMax(true)) {
+          allowHeal = true;
+        } else if(IS_DISEASED && eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
+          allowHeal = true;
+        }
+
+        if(allowHeal) {
           eng->player->getSpotedEnemies();
           if(eng->player->spotedEnemies.size() == 0) {
             const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
@@ -396,6 +402,13 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             eng->log->addMessage("Not while an enemy is near.");
             eng->renderer->drawMapAndInterface();
           }
+        } else {
+          if(IS_DISEASED) {
+            eng->log->addMessage("I cannot heal this disease.");
+          } else {
+            eng->log->addMessage("I am already at good health.");
+          }
+          eng->renderer->drawMapAndInterface();
         }
       }
     }

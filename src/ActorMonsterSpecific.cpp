@@ -736,7 +736,7 @@ bool Zombie::attemptResurrect() {
       if(deadTurnCounter > 5) {
         if(pos != eng->player->pos && eng->dice(1, 100) < 7) {
           deadState = actorDeadState_alive;
-          hp_ = (getHpMax() * 3) / 4;
+          hp_ = (getHpMax(true) * 3) / 4;
           glyph_ = def_->glyph;
           tile_ = def_->tile;
           clr_ = def_->color;

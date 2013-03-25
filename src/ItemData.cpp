@@ -1130,9 +1130,9 @@ void ItemData::makeList() {
   resetDef(d, itemDef_potion);
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfStealth);
-  resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+//  d = new ItemDefinition(item_potionOfStealth);
+//  resetDef(d, itemDef_potion);
+//  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfFortitude);
   resetDef(d, itemDef_potion);

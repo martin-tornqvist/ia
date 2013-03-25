@@ -140,7 +140,7 @@ void Trap::bump(Actor* actorBumping) {
         specificTrap_->trapSpecificTrigger(actorBumping, DODGE_RESULT);
       }
     } else {
-      if(d->actorSize == actorSize_humanoid) {
+      if(d->actorSize == actorSize_humanoid && d->isSpider == false) {
         tracer << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(actorBumping);
         if(monster->playerAwarenessCounter > 0 && monster->isStealth == false) {

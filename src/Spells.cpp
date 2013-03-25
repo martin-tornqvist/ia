@@ -103,7 +103,7 @@ void SpellTeleport::specificMonsterCast(Monster* const monster, Engine* const en
 bool SpellTeleport::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
-  return monster->checkIfSeeActor(*(engine->player), blockers) && monster->getHp() <= (monster->getHpMax() / 2) && engine->dice.coinToss();
+  return monster->checkIfSeeActor(*(engine->player), blockers) && monster->getHp() <= (monster->getHpMax(true) / 2) && engine->dice.coinToss();
 }
 
 
@@ -379,5 +379,5 @@ void SpellHealSelf::specificMonsterCast(Monster* const monster, Engine* const en
 
 bool SpellHealSelf::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
   (void)engine;
-  return monster->getHp() < monster->getHpMax();
+  return monster->getHp() < monster->getHpMax(true);
 }

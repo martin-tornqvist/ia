@@ -293,9 +293,9 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   case item_potionOfTheCobra:
     item = new PotionOfTheCobra(d);
     break;
-  case item_potionOfStealth:
-    item = new PotionOfStealth(d);
-    break;
+//  case item_potionOfStealth:
+//    item = new PotionOfStealth(d);
+//    break;
   case item_potionOfFortitude:
     item = new PotionOfFortitude(d);
     break;

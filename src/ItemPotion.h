@@ -177,24 +177,24 @@ private:
   }
 };
 
-class PotionOfStealth: public Potion {
-public:
-  PotionOfStealth(ItemDefinition* const itemDefinition) :
-    Potion(itemDefinition) {
-  }
-  ~PotionOfStealth() {
-  }
-  void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
-    (void)pos;
-    (void)actor;
-    (void)engine;
-  }
-  const string getRealTypeName() {
-    return "Ghostly Stealth";
-  }
-};
+//class PotionOfStealth: public Potion {
+//public:
+//  PotionOfStealth(ItemDefinition* const itemDefinition) :
+//    Potion(itemDefinition) {
+//  }
+//  ~PotionOfStealth() {
+//  }
+//  void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+//    (void)pos;
+//    (void)actor;
+//    (void)engine;
+//  }
+//  const string getRealTypeName() {
+//    return "Ghostly Stealth";
+//  }
+//};
 
 class PotionOfFortitude: public Potion {
 public:

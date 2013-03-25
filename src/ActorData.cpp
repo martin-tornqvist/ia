@@ -736,9 +736,9 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_humanoid;
+  d.isHumanoid = false;
   d.description = "A faint shadow of a huge spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
-  d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, weak);

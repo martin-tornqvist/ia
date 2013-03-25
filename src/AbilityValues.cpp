@@ -31,7 +31,7 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
     } break;
 
     case ability_accuracyRanged: {
-      val += 55;
+      val += 50;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_marksman))
         val += 15;
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_sharpshooter))

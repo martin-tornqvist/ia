@@ -144,8 +144,8 @@ void Actor::place(const coord& pos_, ActorDefinition* const actorDefinition, Eng
 }
 
 void Actor::changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES) {
-  hpMax_ = max(1, getHpMax() + CHANGE);
-  hp_ = max(1, getHp() + CHANGE);
+  hpMax_ = max(1, hpMax_ + CHANGE);
+  hp_ = max(1, hp_ + CHANGE);
 
   if(ALLOW_MESSAGES) {
     if(this == eng->player) {
@@ -212,12 +212,11 @@ void Actor::updateColor() {
 bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
   bool IS_HP_GAINED = false;
 
-  const int DIF_FROM_MAX = hpMax_ - hpRestored;
+  const int DIF_FROM_MAX = getHpMax(true) - hpRestored;
 
-  //If hp is below limit, but restored hp will push it
-  //over the limit - hp is set to max.
-  if(getHp() > DIF_FROM_MAX && getHp() < getHpMax()) {
-    hp_ = getHpMax();
+  //If hp is below limit, but restored hp will push it over the limit - hp is set to max.
+  if(getHp() > DIF_FROM_MAX && getHp() < getHpMax(true)) {
+    hp_ = getHpMax(true);
     IS_HP_GAINED = true;
   }
 
@@ -283,7 +282,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
 
   //Damage to corpses
   if(deadState != actorDeadState_alive) {
-    if(dmg >= getHpMax() / 2) {
+    if(dmg >= getHpMax(true) / 2) {
       deadState = actorDeadState_mangled;
       glyph_ = ' ';
       if(isHumanoid()) {
@@ -299,7 +298,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   }
 
   const bool IS_ON_BOTTOMLESS = eng->map->featuresStatic[pos.x][pos.y]->isBottomless();
-  const bool IS_MANGLED = IS_ON_BOTTOMLESS == true ? true : (dmg > ((getHpMax() * 5) / 4) ? true : false);
+  const bool IS_MANGLED = IS_ON_BOTTOMLESS == true ? true : (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
     die(IS_MANGLED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     actorSpecificDie();

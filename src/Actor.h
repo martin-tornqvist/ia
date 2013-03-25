@@ -75,7 +75,8 @@ public:
   int getHp() const {
     return hp_;
   }
-  int getHpMax() const {
+  virtual int getHpMax(const bool WITH_MODIFIERS) const {
+    (void)WITH_MODIFIERS;
     return hpMax_;
   }
   string getNameThe() const {

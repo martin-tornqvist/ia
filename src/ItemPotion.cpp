@@ -10,13 +10,15 @@
 #include "ItemScroll.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
+  //End disease
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  actor->getStatusEffectsHandler()->endEffect(statusDiseased, visionBlockers);
+
   //Attempt to heal the actor. If no hp was healed (already at full hp), boost the hp instead.
   if(actor->restoreHP(engine->dice(2, 6) + 12) == false) {
     actor->changeMaxHP(1, true);
   }
-
-  //End disease
-  actor->getStatusEffectsHandler()->endEffect(statusDiseased);
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
@@ -139,21 +141,24 @@ void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Eng
   }
 }
 
-void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
-  for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
-    Actor* otherActor = engine->gameTime->getActorAt(i);
-    if(otherActor != engine->player) {
-      dynamic_cast<Monster*>(otherActor)->playerAwarenessCounter = 0;
-    }
-  }
-  setRealDefinitionNames(engine, false);
-}
+//void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
+//  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
+//  for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
+//    Actor* otherActor = engine->gameTime->getActorAt(i);
+//    if(otherActor != engine->player) {
+//      dynamic_cast<Monster*>(otherActor)->playerAwarenessCounter = 0;
+//    }
+//  }
+//  setRealDefinitionNames(engine, false);
+//}
 
 void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectFortitude(24 + engine->dice(3, 8)));
 
-  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusMind);
+
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
 
   bool isPhobiasCured = false;
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -193,7 +198,9 @@ void PotionOfFortitude::specificCollide(const coord& pos, Actor* const actor, En
 void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectToughness(24 + engine->dice(3, 8)));
 
-  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBody);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);

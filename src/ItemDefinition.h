@@ -136,7 +136,7 @@ enum ItemId_t {
   item_potionOfBlindness,
   item_potionOfCorruption,
   item_potionOfTheCobra,
-  item_potionOfStealth,
+//  item_potionOfStealth,
   item_potionOfFortitude,
   item_potionOfToughness,
   item_potionOfParalyzation,

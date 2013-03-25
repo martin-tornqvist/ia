@@ -43,10 +43,7 @@ enum StatusEffects_t {
   //Status for the steady aimer ability
   statusStill,
 
-  //Status for the elusive ability
-//  statusElusive,
-
-  //The following are mostly used as AI nerfs
+  //The following are mostly used for AI controll
   statusDisabledAttack,
   statusDisabledMelee,
   statusDisabledRanged
@@ -85,6 +82,7 @@ public:
   //how it damages the actor, how it affects ability values, etc.
   virtual bool isConsideredBeneficial() = 0;
   virtual bool allowDisplayTurnsInInterface() = 0;
+  virtual bool isMakingOwnerAwareOfPlayer() = 0;
   virtual string getInterfaceName() = 0;
   virtual string messageWhenStart() = 0;
   virtual string messageWhenStartOther() = 0;
@@ -179,6 +177,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -271,6 +273,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -354,6 +360,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -397,9 +407,8 @@ public:
     return 10;
   }
 
-  void start(Engine* const engine) {
-    (void)engine;
-  }
+  void start(Engine* const engine);
+
   void end(Engine* const engine) {
     (void)engine;
   }
@@ -428,6 +437,10 @@ public:
   StatusPoisoned* copy() {
     StatusPoisoned* cpy = new StatusPoisoned(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -507,6 +520,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return true;
   }
@@ -560,7 +577,7 @@ public:
 
   int getAbilityModifier(const Abilities_t ability) {
     if(ability == ability_accuracyRanged)
-      return 999;
+      return 20;
     return 0;
   }
 
@@ -590,6 +607,10 @@ public:
   StatusBlind* copy() {
     StatusBlind* cpy = new StatusBlind(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -685,6 +706,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return true;
   }
@@ -769,6 +794,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -851,6 +880,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return true;
   }
@@ -927,6 +960,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -969,7 +1006,7 @@ public:
     return ability_resistStatusBody;
   }
   int getSaveAbilityModifier() {
-    return 0;
+    return -20;
   }
 
   sf::Color getColorOwningActor() {
@@ -1004,6 +1041,10 @@ public:
   StatusFlared* copy() {
     StatusFlared* cpy = new StatusFlared(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -1082,6 +1123,10 @@ public:
   StatusConfused* copy() {
     StatusConfused* cpy = new StatusConfused(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -1169,6 +1214,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -1243,7 +1292,6 @@ private:
 };
 
 
-
 class StatusWaiting: public StatusEffect {
 public:
   StatusWaiting(Engine* const engine) :
@@ -1259,6 +1307,10 @@ public:
   StatusWaiting* copy() {
     StatusWaiting* cpy = new StatusWaiting(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
   }
 
   Abilities_t getSaveAbility() {
@@ -1352,6 +1404,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   Abilities_t getSaveAbility() {
     return ability_empty;
   }
@@ -1434,6 +1490,10 @@ public:
   StatusDisabledAttackMelee* copy() {
     StatusDisabledAttackMelee* cpy = new StatusDisabledAttackMelee(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
   }
 
   Abilities_t getSaveAbility() {
@@ -1523,6 +1583,10 @@ public:
     return -999;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -1594,6 +1658,10 @@ public:
   StatusParalyzed* copy() {
     StatusParalyzed* cpy = new StatusParalyzed(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -1691,6 +1759,10 @@ public:
   StatusFainted* copy() {
     StatusFainted* cpy = new StatusFainted(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
   }
 
   bool isConsideredBeneficial() {
@@ -1802,6 +1874,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return true;
+  }
+
   bool isConsideredBeneficial() {
     return false;
   }
@@ -1883,6 +1959,10 @@ public:
   StatusPerfectReflexes* copy() {
     StatusPerfectReflexes* cpy = new StatusPerfectReflexes(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
   }
 
   bool isConsideredBeneficial() {
@@ -1968,6 +2048,10 @@ public:
   StatusPerfectAim* copy() {
     StatusPerfectAim* cpy = new StatusPerfectAim(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
   }
 
   bool isConsideredBeneficial() {
@@ -2057,6 +2141,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return true;
   }
@@ -2142,6 +2230,10 @@ public:
     return cpy;
   }
 
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
+  }
+
   bool isConsideredBeneficial() {
     return true;
   }
@@ -2225,6 +2317,10 @@ public:
   StatusPerfectToughness* copy() {
     StatusPerfectToughness* cpy = new StatusPerfectToughness(turnsLeft);
     return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer() {
+    return false;
   }
 
   bool isConsideredBeneficial() {
@@ -2315,7 +2411,7 @@ public:
   }
 
   //This function was created so that the id could be saved to file when saving the game,
-  //in other cases, a status effect instance should be created simply using "new"
+  //in other cases, a status effect instance should be created by simply using "new"
   StatusEffect* makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT);
 
   void attemptAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false, const bool NO_MESSAGES = false);
@@ -2399,18 +2495,21 @@ public:
     return false;
   }
 
-  void endEffect(const StatusEffects_t effect) {
+  void endEffect(const StatusEffects_t effect, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(effects.at(i)->getEffectId() == effect) {
-        effects.at(i)->turnsLeft = 0;
+        runEffectEndAndRemoveFromList(i, visionBlockingArray);
+        return;
       }
     }
   }
 
-  void endEffectsOfAbility(const Abilities_t ability) {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->getSaveAbility() == ability) {
-        effects.at(i)->turnsLeft = 0;
+  void endEffectsOfAbility(const Abilities_t ability, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+    for(int i = 0; i < static_cast<int>(effects.size()); i++) {
+      const unsigned int ELEMENT = static_cast<unsigned int>(i);
+      if(effects.at(ELEMENT)->getSaveAbility() == ability) {
+        runEffectEndAndRemoveFromList(i, visionBlockingArray);
+        i--;
       }
     }
   }
@@ -2428,9 +2527,10 @@ public:
   vector<StatusEffect*> effects;
 
 private:
-
   Actor* owningActor;
   Engine* eng;
+
+  void runEffectEndAndRemoveFromList(const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 
   friend class GameTime;
   void newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);

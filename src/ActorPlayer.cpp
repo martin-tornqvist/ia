@@ -610,6 +610,15 @@ void Player::testPhobias() {
   }
 }
 
+int Player::getHpMax(const bool WITH_MODIFIERS) const {
+  if(WITH_MODIFIERS) {
+    if(statusEffectsHandler_->hasEffect(statusDiseased)) {
+      return (hpMax_ * 3) / 4;
+    }
+  }
+  return hpMax_;
+}
+
 void Player::updateColor() {
   if(deadState != actorDeadState_alive) {
     clr_ = clrRed;
@@ -802,12 +811,10 @@ void Player::act() {
   if(firstAidTurnsLeft == -1) {
 
     if(eng->playerBonusHandler->isBonusPicked(playerBonus_rapidRecoverer)) {
-      if(statusEffectsHandler_->hasEffect(statusDiseased) == false) {
-        const int REGEN_N_TURN = 8;
-        if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
-          if(getHp() < getHpMax()) {
-            hp_++;
-          }
+      const int REGEN_N_TURN = 7;
+      if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
+        if(getHp() < getHpMax(true)) {
+          hp_++;
         }
       }
     }
@@ -863,11 +870,13 @@ void Player::act() {
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
-    eng->renderer->drawMapAndInterface();
-    restoreHP(99999);
     if(eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
-      statusEffectsHandler_->endEffect(statusDiseased);
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
+      statusEffectsHandler_->endEffect(statusDiseased, visionBlockers);
     }
+    restoreHP(99999);
+    eng->renderer->drawMapAndInterface();
     firstAidTurnsLeft = -1;
   }
 
@@ -931,7 +940,7 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
     getSpotedEnemies();
     const int TOTAL_TURNS = getHealingTimeTotal();
     const bool IS_ENOUGH_TIME_PASSED = firstAidTurnsLeft < TOTAL_TURNS - 10;
-    const int MISSING_HP = getHpMax() - getHp();
+    const int MISSING_HP = getHpMax(true) - getHp();
     const int HP_HEALED_IF_ABORTED = IS_ENOUGH_TIME_PASSED ? (MISSING_HP * (TOTAL_TURNS - firstAidTurnsLeft)) / TOTAL_TURNS  : 0;
 
     bool isAborted = false;

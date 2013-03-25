@@ -32,6 +32,8 @@ public:
   Player();
   ~Player() {}
 
+  int getHpMax(const bool WITH_MODIFIERS) const;
+
   void updateFov();
 
   void moveDirection(const coord& dir) {

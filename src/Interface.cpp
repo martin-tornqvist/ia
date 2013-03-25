@@ -67,7 +67,7 @@ void Interface::drawInfoLines() {
 
   //Health
   const string hp = intToString(eng->player->getHp());
-  const string hpMax = intToString(eng->player->getHpMax());
+  const string hpMax = intToString(eng->player->getHpMax(true));
   eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 3;
   str = hp + "/" + hpMax;

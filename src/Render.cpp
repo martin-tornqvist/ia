@@ -568,7 +568,7 @@ void Renderer::drawMapAndInterface(const bool UPDATE_WINDOW) {
 
 int Renderer::getLifebarLength(const Actor& actor) const {
   const int ACTOR_HP = max(0, actor.getHp());
-  const int ACTOR_HP_MAX = actor.getHpMax();
+  const int ACTOR_HP_MAX = actor.getHpMax(true);
   if(ACTOR_HP < ACTOR_HP_MAX) {
     int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
     return ((eng->config->CELL_W - 2) * HP_PERCENT) / 100;
