@@ -50,10 +50,9 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
     allowStrayHit = true;
 
-    //If there is a defender in current cell, and current defender is at least equal to aim-level,
-    //attempt direct hit
+    //If this is the intended target cell, and there is a defender here, attempt direct hit
     getAttackData(data, target, curPos, weapon, false);
-    if(actorArray[curPos.x][curPos.y] != NULL && (data.currentDefenderSize >= intendedAimLevel)) {
+    if(curPos == target && actorArray[curPos.x][curPos.y] != NULL) {
       if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
         if(data.attackResult >= successSmall) {
           if(eng->map->playerVision[curPos.x][curPos.y]) {
