@@ -38,53 +38,53 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
   vector<coord> path = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, false, 9999);
 
-  //% Chance for stray hit
   const int CHANCE_FOR_STRAY_HIT = 50;
   const int STRAY_DMG_DIV = 2;
-  bool allowStrayHit = true;
 
   int nrActorsHit = 0;
 
   for(double i = 1; i < path.size(); i++) {
     const coord curPos(path.at(i));
 
-    allowStrayHit = true;
+    bool allowStrayHit = true;
 
-    //If this is the intended target cell, and there is a defender here, attempt direct hit
-    getAttackData(data, target, curPos, weapon, false);
-    if(curPos == target && actorArray[curPos.x][curPos.y] != NULL) {
-      if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
-        if(data.attackResult >= successSmall) {
-          if(eng->map->playerVision[curPos.x][curPos.y]) {
-            eng->renderer->drawMapAndInterface(false);
-            eng->renderer->coverCellInMap(curPos.x, curPos.y);
-            if(eng->config->USE_TILE_SET) {
-              eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
-            } else {
-              eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
+    if(actorArray[curPos.x][curPos.y] != NULL) {
+      //If this is the intended target cell, attempt direct hit
+      if(curPos == target) {
+        getAttackData(data, target, curPos, weapon, false);
+        if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
+          if(data.attackResult >= successSmall) {
+            if(eng->map->playerVision[curPos.x][curPos.y]) {
+              eng->renderer->drawMapAndInterface(false);
+              eng->renderer->coverCellInMap(curPos.x, curPos.y);
+              if(eng->config->USE_TILE_SET) {
+                eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
+              } else {
+                eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
+              }
+              eng->renderer->updateWindow();
+              eng->sleep(eng->config->DELAY_SHOTGUN);
             }
-            eng->renderer->updateWindow();
-            eng->sleep(eng->config->DELAY_SHOTGUN);
-          }
 
-          //Messages
-          printProjectileAtActorMessages(data, projectileHitType_cleanHit);
+            //Messages
+            printProjectileAtActorMessages(data, projectileHitType_cleanHit);
 
-          //Damage
-          data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
+            //Damage
+            data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
 
-          nrActorsHit++;
+            nrActorsHit++;
 
-          eng->renderer->drawMapAndInterface();
+            allowStrayHit = false;
 
-          allowStrayHit = false;
+            eng->renderer->drawMapAndInterface();
 
-          //Special shotgun behavior:
-          //If current defender was killed, and player aimed at humanoid level, or at floor level
-          //but beyond the current position, the shot will continue.
-          const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
-          if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
-            break;
+            //Special shotgun behavior:
+            //If current defender was killed, and player aimed at humanoid level, or at floor level
+            //but beyond the current position, the shot will continue.
+            const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+            if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
+              break;
+            }
           }
         }
       }

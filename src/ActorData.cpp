@@ -1206,7 +1206,7 @@ void ActorData::defineAllActors() {
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
-  d.color = clrMagentaLight;
+  d.color = clrMagenta;
   d.tile = tile_migo;
   d.spawnMinLevel = 4;
   d.monsterLvl = 5;
