@@ -359,14 +359,6 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
     eng->itemDrop->dropAllCharactersItems(this, true);
   }
 
-  //Died with a flare inside?
-  if(def_->actorSize > actorSize_floor) {
-    if(statusEffectsHandler_->hasEffect(statusFlared)) {
-      eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng));
-      deadState = actorDeadState_mangled;
-    }
-  }
-
   if(MANGLED == false) {
     coord newCoord;
     Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];

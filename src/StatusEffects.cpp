@@ -28,13 +28,13 @@ void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
 void StatusBlessed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusCursed, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusCursed, visionBlockers, false);
 }
 
 void StatusCursed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlessed, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusBlessed, visionBlockers, false);
 }
 
 void StatusDiseased::start(Engine* const engine) {
@@ -50,7 +50,7 @@ void StatusDiseased::newTurn(Engine* const engine) {
 }
 
 void StatusPoisoned::newTurn(Engine* const engine) {
-  const int DMG_N_TURN = 5;
+  const int DMG_N_TURN = 4;
   const int TURN = engine->gameTime->getTurn();
   if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
 
@@ -187,7 +187,7 @@ void StatusBurning::newTurn(Engine* const engine) {
 void StatusBlind::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers, false);
 }
 
 void StatusBlind::end(Engine* const engine) {
@@ -237,7 +237,7 @@ void StatusParalyzed::start(Engine* const engine) {
 void StatusFainted::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers, false);
 }
 
 void StatusFainted::end(Engine* const engine) {
@@ -251,7 +251,7 @@ bool StatusFainted::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 void StatusClairvoyant::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlind, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(statusBlind, visionBlockers, false);
 }
 
 void StatusClairvoyant::end(Engine* const engine) {
@@ -276,8 +276,15 @@ void StatusFlared::end(Engine* const engine) {
 }
 
 void StatusFlared::newTurn(Engine* const engine) {
-  owningActor->hit(engine->dice(1, 2), damageType_fire);
+  owningActor->hit(1, damageType_fire);
   turnsLeft--;
+
+  if(turnsLeft == 0) {
+    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+    engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 99999);
+    owningActor->getStatusEffectsHandler()->attemptAddEffect(new StatusBurning(engine));
+    owningActor->getStatusEffectsHandler()->endEffect(statusFlared, visionBlockers, false);
+  }
 }
 
 //================================================================ STATUS EFFECTS HANDLER

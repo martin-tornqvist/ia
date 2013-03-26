@@ -497,7 +497,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 40, 40);
+    return DiceParam(1, 40, 50);
   }
   friend class StatusEffectsHandler;
   StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}
@@ -1074,25 +1074,25 @@ public:
     return "";
   }
   string messageWhenStartOther() {
-    return "is perforated by the flare.";
+    return "is perforated by a flare.";
   }
   string messageWhenEndOther() {
-    return "recovers from the flare.";
+    return "recovers from a flare.";
   }
   string messageWhenSavesOther() {
-    return "resists the flare.";
+    return "resists a flare.";
   }
 
   Abilities_t getSaveAbility() {
     return ability_resistStatusBody;
   }
   int getSaveAbilityModifier() {
-    return 0;
+    return -100;
   }
 
-  sf::Color getColorOwningActor() {
-    return clrRedLight;
-  }
+//  sf::Color getColorOwningActor() {
+//    return clrRedLight;
+//  }
 
   void start(Engine* const engine);
   void end(Engine* const engine);
@@ -1100,7 +1100,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 3, 6);
+    return DiceParam(1, 2, 2);
   }
   friend class StatusEffectsHandler;
   StatusFlared(const int turns) :
@@ -2495,10 +2495,15 @@ public:
     return false;
   }
 
-  void endEffect(const StatusEffects_t effect, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+  void endEffect(const StatusEffects_t effect, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS], const bool RUN_STATUS_END_EFFECTS = true) {
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(effects.at(i)->getEffectId() == effect) {
-        runEffectEndAndRemoveFromList(i, visionBlockingArray);
+        if(RUN_STATUS_END_EFFECTS) {
+          runEffectEndAndRemoveFromList(i, visionBlockingArray);
+        } else {
+          delete effects.at(i);
+          effects.erase(effects.begin() + i);
+        }
         return;
       }
     }

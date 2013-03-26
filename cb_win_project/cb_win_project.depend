@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1364252764 c:\dev\ia\src\statuseffects.h
+1364305712 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1364245162 source:c:\dev\ia\src\actor.cpp
+1364303814 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1364254794 source:c:\dev\ia\src\actorplayer.cpp
+1364304084 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1167,7 +1167,7 @@
 	"Engine.h"
 	"Log.h"
 
-1364243854 source:c:\dev\ia\src\itemdata.cpp
+1364302499 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1645,7 +1645,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1364252403 source:c:\dev\ia\src\statuseffects.cpp
+1364305799 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -3792,7 +3792,7 @@
 	<vector>
 	<string>
 
-1364162323 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1364302200 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"

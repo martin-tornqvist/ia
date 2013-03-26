@@ -165,7 +165,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_scroll: {
     resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 60;
+    d->chanceToIncludeInSpawnList = 50;
     d->itemWeight = itemWeight_none;
     d->isIdentified = false;
     d->glyph = '?';
@@ -180,13 +180,14 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->landOnHardSurfaceSoundMessage = "";
     d->featuresCanBeFoundIn.push_back(feature_chest);
     d->featuresCanBeFoundIn.push_back(feature_cabinet);
+    d->featuresCanBeFoundIn.push_back(feature_tomb);
     eng->scrollNameHandler->setFalseScrollName(d);
   }
   break;
 
   case itemDef_potion: {
     resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 75;
+    d->chanceToIncludeInSpawnList = 65;
     d->itemWeight = itemWeight_light;
     d->isIdentified = false;
     d->glyph = '!';
@@ -199,13 +200,14 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->landOnHardSurfaceSoundMessage = "";
     d->featuresCanBeFoundIn.push_back(feature_chest);
     d->featuresCanBeFoundIn.push_back(feature_cabinet);
+    d->featuresCanBeFoundIn.push_back(feature_tomb);
     eng->potionNameHandler->setColorAndFalseName(d);
   }
   break;
 
   case itemDef_device: {
     resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 40;
+    d->chanceToIncludeInSpawnList = 30;
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
     d->glyph = '~';
@@ -213,8 +215,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isStackable = false;
     d->spawnStandardMinDLVL = 3;
     d->spawnStandardMaxDLVL = 999;
-    d->featuresCanBeFoundIn.push_back(feature_chest);
-    d->featuresCanBeFoundIn.push_back(feature_cabinet);
     d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   }
   break;
@@ -522,7 +522,6 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -537,7 +536,6 @@ void ItemData::makeList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -552,6 +550,7 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hatchet);
@@ -582,8 +581,6 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeBaseAttackSkill = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hammer);
@@ -595,7 +592,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeBaseAttackSkill = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
+//  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -608,7 +605,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeBaseAttackSkill = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
+//  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -621,8 +618,9 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
+//  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pitchFork);
@@ -665,20 +663,19 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_crowbar);
   resetDef(d, itemDef_general);
   d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
+  d->chanceToIncludeInSpawnList = 70;
   d->itemWeight = itemWeight_light;
   d->tile = tile_crowbar;
   d->isStackable = false;
   d->color = clrGray;
   d->glyph = '~';
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
-  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -688,11 +685,10 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_extraLight;
   d->tile = tile_lockpick;
   d->isStackable = true;
-  d->maxStackSizeAtSpawn = 2;
+  d->maxStackSizeAtSpawn = 1;
   d->color = clrWhite;
   d->glyph = '~';
   d->landOnHardSurfaceSoundMessage = "I clinking sound.";
-  d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
   itemDefinitions[d->id] = d;
 
@@ -1158,30 +1154,40 @@ void ItemData::makeList() {
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->color = clrGray;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRepeller);
   resetDef(d, itemDef_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
   d->color = clrGray;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRejuvenator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
   d->color = clrGray;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceTranslocator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
   d->color = clrGray;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceSpellReflector);
   resetDef(d, itemDef_device);
   d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
   d->color = clrGray;
+  d->featuresCanBeFoundIn.push_back(feature_chest);
+  d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceElectricLantern);

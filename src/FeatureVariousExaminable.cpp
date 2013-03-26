@@ -128,7 +128,7 @@ Chest::Chest(Feature_t id, coord pos, Engine* engine) :
     const int CHANCE_FOR_LOCKED = 80;
     isLocked_ = eng->dice(1, 100) < CHANCE_FOR_LOCKED;
 
-    const int CHANCE_FOR_TRAPPED = 20;
+    const int CHANCE_FOR_TRAPPED = 25;
     isTrapped_ = eng->dice(1, 100) < CHANCE_FOR_TRAPPED ? true : false;
   }
 }
@@ -196,7 +196,7 @@ void Chest::featureSpecific_examine() {
     }
     break;
     case chestAction_searchForTrap: {
-      const int CHANCE_TO_FIND_TRAP = 25 + (IS_OBSERVANT ? 25 : 0) + (IS_CONFUSED ? - 10 : 0) + (IS_BLIND ? -10 : 0);
+      const int CHANCE_TO_FIND_TRAP = 20 + IS_OBSERVANT * 40 - IS_CONFUSED * 10 - IS_BLIND * 10;
       const bool IS_ROLL_SUCCESS = eng->dice(1, 100) < CHANCE_TO_FIND_TRAP;
       if(IS_ROLL_SUCCESS && isTrapped_) {
         eng->log->addMessage("The chest has a hidden trap mechanism!");
@@ -249,7 +249,7 @@ void Chest::setChoiceLabelsFromPossibleActions(const vector<ChestAction_t>& poss
     }
     break;
     case chestAction_kick: {
-      actionLabels.push_back("Kick it open");
+      actionLabels.push_back("Kick the lid");
     }
     break;
     case chestAction_leave: {
