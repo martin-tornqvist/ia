@@ -1,5 +1,10 @@
 #include "MenuBrowser.h"
 
+void MenuBrowser::setY(const int Y) {
+  const int NR_ITEMS_THIS_X = pos.x == 0 ? NR_ITEMS_FIRST : NR_ITEMS_SECOND;
+  pos.y =  min(NR_ITEMS_THIS_X - 1, max(0, Y));
+}
+
 void MenuBrowser::navigate(const char KEY) {
   const int ELEMENT = KEY >= 'a' ? static_cast<int>(KEY - 'a') : KEY >= 'A' ? static_cast<int>(KEY - 'A' + 'z' - 'a' + 1) : 0;
   pos.x = ELEMENT < NR_ITEMS_FIRST ? 0 : 1;

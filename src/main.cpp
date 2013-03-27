@@ -101,7 +101,6 @@ int main(int argc, char* argv[]) {
         if(engine->gameTime->getLoopSize() != 0) {
           if(engine->gameTime->getCurrentActor() == engine->player) {
 
-
             if(engine->config->BOT_PLAYING) {
               engine->bot->act();
             } else {

@@ -5,6 +5,14 @@
 
 class Engine;
 
+enum InventotyScreen_t {
+  inventoryScreen_slots,
+  inventoryScreen_equip,
+  inventoryScreen_use,
+  inventoryScreen_backpack,
+  endOfInventoryScreens
+};
+
 struct InventorySlotButton {
   InventorySlot* inventorySlot;
   char key;
@@ -18,8 +26,13 @@ public:
   bool runUseScreen();
 
   void runBrowseInventoryMode();
+  bool runEquipScreen(InventorySlot* const slotToEquip);
 
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
+
+  InventotyScreen_t screenToOpenAfterDrop;
+  InventorySlot* equipSlotToOpenAfterDrop;
+  int browserPosToSetAfterDrop;
 
 private:
   vector<InventorySlotButton> equipmentSlotButtons;
@@ -28,7 +41,6 @@ private:
   vector<unsigned int> generalItemsToShow;
 
   bool runDropScreen(const int GLOBAL_ELEMENT_NR);
-  bool runEquipScreen(InventorySlot* const slotToEquip);
 
   void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);
   void filterPlayerGeneralSlotButtonsUsable();

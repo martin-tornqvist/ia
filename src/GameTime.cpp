@@ -11,6 +11,7 @@
 #include "PopulateMonsters.h"
 #include "Input.h"
 #include "Inventory.h"
+#include "InventoryHandler.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(turn_));
@@ -124,6 +125,31 @@ void GameTime::letNextAct() {
   if(currentActor == eng->player) {
     eng->input->clearEvents();
     eng->player->newTurn();
+
+    //If player was dropping an item, check if should go back to inventory screen
+    eng->player->getSpotedEnemiesPositions();
+    if(eng->player->spotedEnemiesPositions.empty()) {
+      switch(eng->inventoryHandler->screenToOpenAfterDrop) {
+      case inventoryScreen_backpack: {
+        eng->inventoryHandler->runBrowseInventoryMode();
+      }
+      break;
+      case inventoryScreen_use: {
+        eng->inventoryHandler->runUseScreen();
+      }
+      break;
+      case inventoryScreen_equip: {
+        eng->inventoryHandler->runEquipScreen(eng->inventoryHandler->equipSlotToOpenAfterDrop);
+      }
+      break;
+      case inventoryScreen_slots: {
+        eng->inventoryHandler->runSlotsScreen();
+      }
+      break;
+      default:
+      {} break;
+      }
+    }
   }
 }
 

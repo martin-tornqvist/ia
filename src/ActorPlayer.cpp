@@ -925,6 +925,9 @@ int Player::getHealingTimeTotal() const {
 void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
   eng->renderer->drawMapAndInterface();
 
+  eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
+  eng->inventoryHandler->browserPosToSetAfterDrop = 0;
+
   //Abort searching
   if(waitTurnsLeft > 0) {
     eng->log->addMessage("I stop waiting.", clrWhite);

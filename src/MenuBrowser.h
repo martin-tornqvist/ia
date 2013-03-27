@@ -36,6 +36,8 @@ public:
 
   bool isPosAtKey(const char KEY) const;
 
+  void setY(const int Y);
+
 private:
   const coord upLeft;
   const coord upRight;

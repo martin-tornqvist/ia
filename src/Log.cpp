@@ -153,7 +153,7 @@ int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int
   return xPos;
 }
 
-void MessageLog::addMessage(const string& text, const sf::Color color, MessageInterrupt_t interrupt) {
+void MessageLog::addMessage(const string& text, const sf::Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
   bool repeated = false;
 
   //New message equal to previous?
@@ -186,6 +186,16 @@ void MessageLog::addMessage(const string& text, const sf::Color color, MessageIn
   }
 
   drawLog();
+
+  if(FORCE_MORE_PROMPT) {
+    eng->renderer->drawMapAndInterface(false);
+    const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
+    eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS_AFTER, 0, clrCyanLight);
+    eng->renderer->updateWindow();
+    eng->query->waitForKeyPress();
+    clearLog();
+    eng->renderer->drawMapAndInterface(true);
+  }
 
   //Messages may stop long actions like first aid and auto travel.
   if(interrupt != messageInterrupt_never) {

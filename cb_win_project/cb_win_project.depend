@@ -228,7 +228,7 @@
 
 1355674113 c:\dev\ia\src\playervisualmemory.h
 
-1355674113 c:\dev\ia\src\log.h
+1364418823 c:\dev\ia\src\log.h
 	<string>
 	<vector>
 	<iostream>
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1364254558 source:c:\dev\ia\src\actordata.cpp
+1364306001 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1364304084 source:c:\dev\ia\src\actorplayer.cpp
+1364418637 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -469,7 +469,7 @@
 1362255998 c:\dev\ia\src\interface.h
 	"InventoryHandler.h"
 
-1362241541 c:\dev\ia\src\inventoryhandler.h
+1364418074 c:\dev\ia\src\inventoryhandler.h
 	"Inventory.h"
 
 1364143911 c:\dev\ia\src\popup.h
@@ -481,7 +481,7 @@
 	<string>
 	"MenuBrowser.h"
 
-1355674113 c:\dev\ia\src\menubrowser.h
+1364418366 c:\dev\ia\src\menubrowser.h
 	"ConstTypes.h"
 
 1355674113 c:\dev\ia\src\query.h
@@ -1042,7 +1042,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1363548600 source:c:\dev\ia\src\gametime.cpp
+1364417915 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1054,6 +1054,7 @@
 	"PopulateMonsters.h"
 	"Input.h"
 	"Inventory.h"
+	"InventoryHandler.h"
 
 1364069761 source:c:\dev\ia\src\highscore.cpp
 	"Highscore.h"
@@ -1132,7 +1133,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1364069799 source:c:\dev\ia\src\inventoryhandler.cpp
+1364418605 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1186,7 +1187,7 @@
 	"Item.h"
 	"Converters.h"
 
-1363812474 source:c:\dev\ia\src\itemdrop.cpp
+1364419237 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1270,7 +1271,7 @@
 	"Log.h"
 	"Config.h"
 
-1364069822 source:c:\dev\ia\src\log.cpp
+1364419320 source:c:\dev\ia\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Input.h"
@@ -1448,7 +1449,7 @@
 	"ItemScroll.h"
 	"Map.h"
 
-1355674113 source:c:\dev\ia\src\menubrowser.cpp
+1364418453 source:c:\dev\ia\src\menubrowser.cpp
 	"MenuBrowser.h"
 
 1363555027 source:c:\dev\ia\src\menuinputhandler.cpp
@@ -1587,7 +1588,7 @@
 	"FeatureWall.h"
 	"FeatureDoor.h"
 
-1363548600 source:c:\dev\ia\src\renderinventory.cpp
+1364418350 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1707,7 +1708,7 @@
 	"PlayerPowersHandler.h"
 	"ItemScroll.h"
 
-1364055385 source:c:\dev\ia\src\main.cpp
+1364419206 source:c:\dev\ia\src\main.cpp
 	<cassert>
 	"Engine.h"
 	"MainMenu.h"

@@ -16,7 +16,8 @@
 #include "Query.h"
 #include "ItemFactory.h"
 
-InventoryHandler::InventoryHandler(Engine* engine) : eng(engine) {
+InventoryHandler::InventoryHandler(Engine* engine) : screenToOpenAfterDrop(endOfInventoryScreens), equipSlotToOpenAfterDrop(NULL), eng(engine) {
+
 }
 
 void InventoryHandler::activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT) {
@@ -108,8 +109,9 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
 }
 
 void InventoryHandler::runSlotsScreen() {
+  screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   Inventory* const inv = eng->player->getInventory();
   vector<InventorySlot>* invSlots = inv->getSlots();
@@ -127,6 +129,8 @@ void InventoryHandler::runSlotsScreen() {
   }
 
   MenuBrowser browser(invSlots->size() + 1, 0);
+  browser.setY(browserPosToSetAfterDrop);
+  browserPosToSetAfterDrop = 0;
   eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
 
   while(true) {
@@ -138,7 +142,8 @@ void InventoryHandler::runSlotsScreen() {
     break;
     case menuAction_selectedWithShift: {
       if(runDropScreen(browser.getPos().y)) {
-        eng->renderer->drawMapAndInterface();
+        screenToOpenAfterDrop = inventoryScreen_slots;
+        browserPosToSetAfterDrop = browser.getPos().y;
         return;
       }
       eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
@@ -184,13 +189,16 @@ void InventoryHandler::runSlotsScreen() {
 }
 
 bool InventoryHandler::runUseScreen() {
+  screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsUsable();
   MenuBrowser browser(generalItemsToShow.size(), 0);
+  browser.setY(browserPosToSetAfterDrop);
+  browserPosToSetAfterDrop = 0;
   eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
 
   while(true) {
@@ -210,7 +218,8 @@ bool InventoryHandler::runUseScreen() {
     case menuAction_selectedWithShift: {
       const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
       if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        eng->renderer->drawMapAndInterface();
+        screenToOpenAfterDrop = inventoryScreen_use;
+        browserPosToSetAfterDrop = browser.getPos().y;
         return true;
       }
     }
@@ -254,14 +263,18 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
 }
 
 bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
+  screenToOpenAfterDrop = endOfInventoryScreens;
+  equipSlotToOpenAfterDrop = slotToEquip;
   eng->renderer->drawMapAndInterface();
-  sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsEquip(slotToEquip->id);
 
   MenuBrowser browser(generalItemsToShow.size(), 0);
+  browser.setY(browserPosToSetAfterDrop);
+  browserPosToSetAfterDrop = 0;
   eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
 
   while(true) {
@@ -280,7 +293,8 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
     case menuAction_selectedWithShift: {
       const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
       if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        eng->renderer->drawMapAndInterface();
+        screenToOpenAfterDrop = inventoryScreen_equip;
+        browserPosToSetAfterDrop = browser.getPos().y;
         return true;
       }
     }
@@ -294,13 +308,16 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
 }
 
 void InventoryHandler::runBrowseInventoryMode() {
+  screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
+  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsShowAll();
   MenuBrowser browser(generalItemsToShow.size(), 0);
+  browser.setY(browserPosToSetAfterDrop);
+  browserPosToSetAfterDrop = 0;
   eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
 
   while(true) {
@@ -316,7 +333,8 @@ void InventoryHandler::runBrowseInventoryMode() {
     case menuAction_selectedWithShift: {
       const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
       if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        eng->renderer->drawMapAndInterface();
+        screenToOpenAfterDrop = inventoryScreen_backpack;
+        browserPosToSetAfterDrop = browser.getPos().y;
         return;
       }
     }

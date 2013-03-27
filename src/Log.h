@@ -25,7 +25,7 @@ public:
     clearLog();
   }
 
-  void addMessage(const string& text, const sf::Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never);
+  void addMessage(const string& text, const sf::Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never, const bool FORCE_MORE_PROMPT = false);
 
   void drawLog() const;
 
