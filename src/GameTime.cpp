@@ -149,6 +149,9 @@ void GameTime::letNextAct() {
       default:
       {} break;
       }
+    } else {
+      eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
+      eng->inventoryHandler->browserPosToSetAfterDrop = 0;
     }
   }
 }

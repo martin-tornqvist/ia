@@ -111,7 +111,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
 
   if(IS_MELEE) {
     //Check if defender is in a bad situation (stuck, blind, fainted, confused...)
-    //If so, give hit chance bonus to attacker
+    //If so, give hit chance bonus to attacker if the attacker is aware
     bool isDefenderAware = true;
     if(data.attacker == eng->player) {
       isDefenderAware = dynamic_cast<Monster*>(data.currentDefender)->playerAwarenessCounter > 0;
@@ -119,6 +119,13 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
       isDefenderAware = eng->player->checkIfSeeActor(*data.attacker, NULL) &&
                         eng->playerBonusHandler->isBonusPicked(playerBonus_vigilant) == false;
     }
+    bool isAttackerAware = true;
+    if(data.attacker == eng->player) {
+      isAttackerAware = eng->player->checkIfSeeActor(*data.currentDefender, NULL);
+    } else {
+      isAttackerAware = dynamic_cast<Monster*>(data.attacker)->playerAwarenessCounter > 0;
+    }
+
     bool isDefenderHeldByWeb = false;
     const FeatureStatic* const f = eng->map->featuresStatic[target.x][target.y];
     if(f->getId() == feature_trap) {
@@ -130,14 +137,23 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
         }
       }
     }
-    StatusEffectsHandler* const status = data.currentDefender->getStatusEffectsHandler();
-    if(isDefenderAware == false || isDefenderHeldByWeb || status->hasEffect(statusParalyzed) ||
-        status->hasEffect(statusNailed) || status->hasEffect(statusFainted)) {
-      data.totalSkill += 50;
-    }
-    if(status->allowSee() == false || status->hasEffect(statusConfused) ||
-        status->hasEffect(statusSlowed) || status->hasEffect(statusBurning)) {
-      data.totalSkill += 20;
+    if(isAttackerAware) {
+      StatusEffectsHandler* const status = data.currentDefender->getStatusEffectsHandler();
+      if(
+        (isDefenderAware == false ||
+         isDefenderHeldByWeb ||
+         status->hasEffect(statusParalyzed) ||
+         status->hasEffect(statusNailed) ||
+         status->hasEffect(statusFainted))) {
+        data.totalSkill += 50;
+      }
+      if(
+        status->allowSee() == false ||
+        status->hasEffect(statusConfused) ||
+        status->hasEffect(statusSlowed) ||
+        status->hasEffect(statusBurning)) {
+        data.totalSkill += 20;
+      }
     }
 
     //Rolling attack result again after "situation" modifiers
@@ -150,8 +166,8 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
       data.isWeakAttack = true;
     }
 
-    //Backstab damage bonus against unaware defender?
-    if(data.isWeakAttack == false) {
+    //Backstab damage bonus?
+    if(isAttackerAware && data.isWeakAttack == false) {
       if(isDefenderAware == false) {
         data.dmgRoll = data.dmgRolls * data.dmgSides;
         data.dmg = ((data.dmgRoll + data.dmgPlus) * 3) / 2;
