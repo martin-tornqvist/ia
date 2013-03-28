@@ -1277,11 +1277,11 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
     ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
   }
 
-  if(d.primaryAttackMode == primaryAttackMode_melee) {
-    Weapon* const w = dynamic_cast<Weapon*>(item);
-    const int PLUS = w->meleeDmgPlus;
-    return ret + (PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS));
-  }
+//  if(d.primaryAttackMode == primaryAttackMode_melee) {
+//    Weapon* const w = dynamic_cast<Weapon*>(item);
+//    const int PLUS = w->meleeDmgPlus;
+//    return ret + (PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS));
+//  }
 
   if(d.isAmmoClip) {
     return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
