@@ -126,7 +126,6 @@ MaterialType_t Feature::getMaterialType() const {
 
 void Feature::examine() {
    eng->log->addMessage("I find nothing specific there to examine or use.");
-   eng->renderer->updateWindow();
 }
 
 void FeatureStatic::setGoreIfPossible() {
