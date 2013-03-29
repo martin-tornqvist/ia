@@ -56,8 +56,10 @@ void PopulateItems::buildCandidateList() {
   const unsigned int NUMBER_DEFINED = static_cast<unsigned int>(endOfItemIds);
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
-    if(eng->map->getDungeonLevel() >= defs[i]->spawnStandardMinDLVL && eng->map->getDungeonLevel() <= defs[i]->spawnStandardMaxDLVL
-        && defs[i]->isIntrinsicWeapon == false) {
+    if(
+      eng->map->getDungeonLevel() >= defs[i]->spawnStandardMinDLVL &&
+      eng->map->getDungeonLevel() <= defs[i]->spawnStandardMaxDLVL &&
+      defs[i]->isIntrinsic == false) {
       if(eng->dice(1, 100) < defs[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));
       }

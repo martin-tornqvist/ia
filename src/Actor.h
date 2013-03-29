@@ -128,9 +128,9 @@ protected:
   }
   virtual void actorSpecific_spawnStartItems() = 0;
 
-  //Called from within the normal hit function to set monsters playerAwareness
-  virtual void monsterHit() {}
-  //Monsters may have special stuff happening when they die (such as fire vampire explosion)
+  virtual void monsterHit(int& dmg) {
+    (void)dmg;
+  }
   virtual void monsterDeath() {}
 
   sf::Color clr_;

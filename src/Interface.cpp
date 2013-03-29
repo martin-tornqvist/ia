@@ -87,7 +87,7 @@ void Interface::drawInfoLines() {
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
   xPos += str.length() + 1;
 
-  const int MTH = eng->player->getMythosKnowledge();
+  const int MTH = eng->player->getMth();
   eng->renderer->drawText("MTH:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;
   str = intToString(MTH) + "%";

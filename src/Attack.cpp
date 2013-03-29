@@ -53,7 +53,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
     data.wpnBaseSkill = weapon->getDef().rangedBaseAttackSkill;
   }
 
-  data.isIntrinsic = weapon->getDef().isIntrinsicWeapon;
+  data.isIntrinsic = weapon->getDef().isIntrinsic;
   data.attackSkill = data.attacker->getDef()->abilityValues.getAbilityValue(data.abilityUsed, true, *(data.attacker));
   data.totalSkill = data.wpnBaseSkill + data.attackSkill;
   data.attackResult = eng->abilityRoll->roll(data.totalSkill);

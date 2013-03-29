@@ -216,7 +216,7 @@ public:
   bool isCloak;
   bool isRing;
   bool isAmulet;
-  bool isIntrinsicWeapon;
+  bool isIntrinsic;
   bool isMeleeWeapon;
   bool isRangedWeapon;
   bool isMissileWeapon;

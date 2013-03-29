@@ -79,11 +79,11 @@ void Renderer::setupWindowAndImagesClearPrev() {
 
   const int& SCR_W_INT = eng->config->SCREEN_WIDTH;
   const int& SCR_H_INT = eng->config->SCREEN_HEIGHT;
-  const float& SCR_W_FL = static_cast<float>(SCR_W_INT);
-  const float& SCR_H_FL = static_cast<float>(SCR_H_INT);
-  const float& SCALE = eng->config->SCALE;
-  const int SCR_W_SCALED = static_cast<int>(SCR_W_FL * SCALE);
-  const int SCR_H_SCALED = static_cast<int>(SCR_H_FL * SCALE);
+  const double& SCR_W_DB = static_cast<double>(SCR_W_INT);
+  const double& SCR_H_DB = static_cast<double>(SCR_H_INT);
+  const double& SCALE = eng->config->SCALE;
+  const int SCR_W_SCALED = static_cast<int>(SCR_W_DB * SCALE);
+  const int SCR_H_SCALED = static_cast<int>(SCR_H_DB * SCALE);
 
   if(eng->config->FULLSCREEN) {
     renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title, sf::Style::Fullscreen);
@@ -126,7 +126,7 @@ void Renderer::loadFont() {
   const int& W = eng->config->CELL_W;
   const int& H = eng->config->CELL_H;
 
-  const float& SCALE = eng->config->SCALE;
+  const double& SCALE = eng->config->SCALE;
 
   for(int y = 0; y < FONT_SHEET_Y_CELLS; y++) {
     for(int x = 0; x < FONT_SHEET_X_CELLS; x++) {
@@ -177,10 +177,10 @@ void Renderer::drawScreenSizedTexture(const sf::Texture& texture) {
 }
 
 void Renderer::drawSprite(const int X, const int Y, sf::Sprite& sprite) {
-  const float& SCALE = eng->config->SCALE;
-  const float X_FL = static_cast<float>(X) * SCALE;
-  const float Y_FL = static_cast<float>(Y) * SCALE;
-  sprite.setPosition(X_FL, Y_FL);
+  const double& SCALE = eng->config->SCALE;
+  const double X_DB = static_cast<double>(X) * SCALE;
+  const double Y_DB = static_cast<double>(Y) * SCALE;
+  sprite.setPosition(X_DB, Y_DB);
   renderWindow_->draw(sprite);
 }
 
@@ -502,15 +502,15 @@ void Renderer::workaroundAMDBug() {
 
 void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H, const sf::Color& clr) {
   const int W_MAX = min(eng->config->MAINSCREEN_WIDTH - X, W);
-  const float X_FL = static_cast<float>(X);
-  const float Y_FL = static_cast<float>(Y);
-  const float W_FL = static_cast<float>(W_MAX);
-  const float H_FL = static_cast<float>(H);
-  const float& SCALE = eng->config->SCALE;
-  sf::RectangleShape rectShape(sf::Vector2f(W_FL * SCALE, H_FL * SCALE));
+  const double X_DB = static_cast<double>(X);
+  const double Y_DB = static_cast<double>(Y);
+  const double W_DB = static_cast<double>(W_MAX);
+  const double H_DB = static_cast<double>(H);
+  const double& SCALE = eng->config->SCALE;
+  sf::RectangleShape rectShape(sf::Vector2f(W_DB * SCALE, H_DB * SCALE));
   rectShape.setFillColor(clr);
 
-  rectShape.setPosition(X_FL * SCALE, Y_FL * SCALE);
+  rectShape.setPosition(X_DB * SCALE, Y_DB * SCALE);
   renderWindow_->draw(rectShape);
 
   // Hack to fix Catalyst 12.10 driver bug

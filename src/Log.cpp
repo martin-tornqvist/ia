@@ -121,7 +121,7 @@ void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) c
   }
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
 int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int messageNr) const {

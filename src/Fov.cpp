@@ -19,7 +19,7 @@ void Fov::performCheck(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const 
                        bool array[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_AFFECTED_BY_DARKNESS) {
   const coord deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
   vector<coord> pathDeltas;
-  eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_FLO);
+  eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_DB);
 
   const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 
@@ -56,7 +56,7 @@ bool Fov::checkOneCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const 
 
   const coord deltaToTarget(cellToCheck - origin);
   vector<coord> pathDeltas;
-  eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_FLO);
+  eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_DB);
 
   const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 

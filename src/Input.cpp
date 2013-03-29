@@ -530,13 +530,21 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------INSANITY CHEAT
   else if(d.sfmlKey_ == sf::Keyboard::F5) {
     if(IS_DEBUG_MODE) {
-      eng->player->incrShock(shockValue_heavy);
+      eng->player->incrShock(50);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------MTH CHEAT
+  else if(d.sfmlKey_ == sf::Keyboard::F6) {
+    if(IS_DEBUG_MODE) {
+      eng->player->incrMth(8);
       clearEvents();
     }
     return;
   }
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sfmlKey_ == sf::Keyboard::F6) {
+  else if(d.sfmlKey_ == sf::Keyboard::F7) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
@@ -544,13 +552,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
           eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }
       }
-      clearEvents();
-    }
-    return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::F7) {
-    if(IS_DEBUG_MODE) {
-      eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng), false, false);
       clearEvents();
     }
     return;

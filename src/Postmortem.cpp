@@ -153,9 +153,9 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
   eng->renderer->coverRenderArea(renderArea_screen);
   const string decorationLine(MAP_X_CELLS - 2, '-');
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
-  eng->renderer->drawText("Displaying postmortem information", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(" Displaying postmortem information ", renderArea_screen, 3, 1, clrWhite);
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit  ", renderArea_characterLines, 3, 1, clrWhite);
   int x = 0;
   int y = 0;
   for(unsigned int i = TOP_ELEMENT; i < postmortemLines.size() && (i - TOP_ELEMENT) <= static_cast<unsigned int>(MAP_Y_CELLS); i++) {

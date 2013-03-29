@@ -48,8 +48,14 @@ void CharacterInfo::makeLines() {
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("MYTHOS KNOWLEDGE EFFECTS", clrHeader));
-  const int INS_FROM_MTH = eng->player->getSanityPenaltyFromMythosKnowledge();
-  lines.push_back(StringAndColor(offsetSpaces + "Sanity penalty  : " + intToString(INS_FROM_MTH) + "%", clrText));
+  const int MTH = eng->player->getMth();
+  if(MTH == 0) {
+    lines.push_back(StringAndColor(offsetSpaces + "No effects", clrText));
+  } else {
+    lines.push_back(StringAndColor(offsetSpaces + "+" + intToString(MTH) + "% damage against all bizarre, alien, mystical and shocking creatures", clrText));
+  }
+//  const int INS_FROM_MTH = eng->player->getSanityPenaltyFromMythosKnowledge();
+//  lines.push_back(StringAndColor(offsetSpaces + "Sanity penalty  : " + intToString(INS_FROM_MTH) + "%", clrText));
   lines.push_back(StringAndColor(" ", clrText));
 
   const int SHOCK_RESISTANCE = eng->player->getShockResistance();
@@ -149,11 +155,11 @@ void CharacterInfo::drawInterface() {
   eng->renderer->coverArea(renderArea_screen, coord(0, 1), MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
-  eng->renderer->drawText("Displaying character info", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(" Displaying character info ", renderArea_screen, 3, 1, clrWhite);
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
 
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
 void CharacterInfo::run() {

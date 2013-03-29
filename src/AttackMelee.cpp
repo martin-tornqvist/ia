@@ -46,7 +46,7 @@ void Attack::melee(const coord& defenderPos, Weapon* weapon) {
 
     //If weapon not light, make a sound
     const ItemDefinition& itemDef = weapon->getDef();
-    if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsicWeapon == false) {
+    if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsic == false) {
       eng->soundEmitter->emitSound(Sound("", true, defenderPos, false, true));
     }
   }

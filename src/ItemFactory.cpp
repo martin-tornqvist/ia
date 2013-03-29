@@ -390,7 +390,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const boo
 
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-    if((d->isReadable == true && ALLOW_SCROLLS == true) || (d->isQuaffable == true && ALLOW_POTIONS == true)) {
+    if(d->isIntrinsic == false && ((d->isReadable && ALLOW_SCROLLS) || (d->isQuaffable && ALLOW_POTIONS))) {
       itemCandidates.push_back(static_cast<ItemId_t>(i));
     }
   }

@@ -105,7 +105,7 @@ public:
   double shockCausedCurrent;
 
 protected:
-  void monsterHit();
+  void monsterHit(int& dmg);
 
 //  vector<Sound> soundsHeard;
 };

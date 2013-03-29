@@ -166,8 +166,12 @@ void Monster::act() {
   eng->gameTime->letNextAct();
 }
 
-void Monster::monsterHit() {
+void Monster::monsterHit(int& dmg) {
   playerAwarenessCounter = def_->nrTurnsAwarePlayer;
+
+  if(getDef()->monsterShockLevel != monsterShockLevel_none) {
+    dmg = (dmg * (100 + eng->player->getMth())) / 100;
+  }
 }
 
 void Monster::moveToCell(const coord& targetCell) {

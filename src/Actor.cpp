@@ -249,7 +249,8 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   tracer << "Actor::hit()..." << endl;
   tracer << "Actor: Damage from parameter: " << dmg << endl;
 
-  monsterHit();
+  monsterHit(dmg);
+  tracer << "Actor: Damage after monsterHit(): " << dmg << endl;
 
   dmg = max(1, dmg);
 

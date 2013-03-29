@@ -32,7 +32,7 @@ void FovPreCalc::calcLineTravelVectors() {
       getLineAngles(deltaX, deltaY, angles);
       xStep = angles.first * 0.04;
       yStep = angles.second * 0.04;
-      for(double i = 0.0; i <= FOV_MAX_RADI_FLO; i += 0.04) {
+      for(double i = 0.0; i <= FOV_MAX_RADI_DB; i += 0.04) {
         currentDelta.set(static_cast<int>(floor(incrInX)), static_cast<int>(floor(incrInY)));
         //Add position to current vector if vector is empty, or if pos not equal to previous.
         bool isPositionGoodToAdd = currentPath.empty();
@@ -68,9 +68,9 @@ void FovPreCalc::calcLineAnglesAndAbsDistances() {
   for(unsigned int x = 0; x <= FOV_MAX_RADI_INT * 2; x++) {
     for(unsigned int y = 0; y <= FOV_MAX_RADI_INT * 2; y++) {
       deltaX = static_cast<double>(x);
-      deltaX -= FOV_MAX_RADI_FLO;
+      deltaX -= FOV_MAX_RADI_DB;
       deltaY = static_cast<double>(y);
-      deltaY -= FOV_MAX_RADI_FLO;
+      deltaY -= FOV_MAX_RADI_DB;
       hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
       absDistances[x][y] = floor(hypot);
       xIncr = deltaX / hypot;

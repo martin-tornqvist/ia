@@ -561,7 +561,7 @@ Item* Inventory::getIntrinsicInElement(int element) const {
 }
 
 void Inventory::putItemInIntrinsics(Item* item) {
-  if(item->getDef().isIntrinsicWeapon) {
+  if(item->getDef().isIntrinsic) {
     m_intrinsics.push_back(item);
   }
   else {

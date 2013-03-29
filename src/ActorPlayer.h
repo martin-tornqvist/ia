@@ -63,21 +63,16 @@ public:
   int getShockTmp() {
     return shockTemp_;
   }
-  void incrInsanity();
   int getInsanity() const {
-    return min(100, insanity_ + mythosKnowledge);
+    return min(100, insanity_);
+  }
+  void incrMth(const int VAL);
+  int getMth() const {
+    return mth;
   }
   void setTempShockFromFeatures();
 
   int getShockResistance() const;
-
-  int getMythosKnowledge() const {
-    return mythosKnowledge;
-  }
-
-  int getSanityPenaltyFromMythosKnowledge() const {
-    return mythosKnowledge;
-  }
 
   int getCarryWeightLimit() const;
 
@@ -106,23 +101,25 @@ public:
 private:
   friend class DungeonMaster;
   friend class GameTime;
-  int insanity_;
-  double shock_, shockTemp_;
+  friend class MessageLog;
 
-  int mythosKnowledge;
-
-  int nrMovesUntilFreeAction;
-
-  const int carryWeightBase;
-
+  void incrInsanity();
   void attemptIdentifyItems();
   void testPhobias();
   void actorSpecific_hit(const int DMG);
   void FOVhack();
   void interruptActions(const bool PROMPT_FOR_ABORT);
-  friend class MessageLog;
   bool isStandingInOpenSpace() const;
   bool isStandingInCrampedSpace() const;
+
+  int insanity_;
+  double shock_, shockTemp_;
+
+  int mth;
+
+  int nrMovesUntilFreeAction;
+
+  const int carryWeightBase;
 };
 
 

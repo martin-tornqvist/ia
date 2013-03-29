@@ -15,12 +15,12 @@ const int LAST_CAVERN_LEVEL = 29;
 
 const int FOV_STANDARD_RADI_INT = 6;
 const int FOV_STANDARD_WIDTH_INT = 2 * FOV_STANDARD_RADI_INT + 1;
-const double FOV_STANDARD_RADI_FLO = static_cast<const double>(FOV_STANDARD_RADI_INT);
-const double FOV_STANDARD_WIDTH_FLO = static_cast<const double>(FOV_STANDARD_WIDTH_INT);
+const double FOV_STANDARD_RADI_DB = static_cast<const double>(FOV_STANDARD_RADI_INT);
+const double FOV_STANDARD_WIDTH_DB = static_cast<const double>(FOV_STANDARD_WIDTH_INT);
 const int FOV_MAX_RADI_INT = FOV_STANDARD_RADI_INT * 2;
 const int FOV_MAX_WIDTH_INT = 2 * FOV_MAX_RADI_INT + 1;
-const double FOV_MAX_RADI_FLO = static_cast<const double>(FOV_MAX_RADI_INT);
-const double FOV_MAX_WIDTH_FLO = static_cast<const double>(FOV_MAX_WIDTH_INT);
+const double FOV_MAX_RADI_DB = static_cast<const double>(FOV_MAX_RADI_INT);
+const double FOV_MAX_WIDTH_DB = static_cast<const double>(FOV_MAX_WIDTH_INT);
 
 //How many skills to allocate per key press
 const int PLAYER_ALLOC_SKILLS_BATCH_SIZE = 10;

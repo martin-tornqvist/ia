@@ -28,7 +28,7 @@ Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
   molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  mythosKnowledge(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {
+  mth(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {
 }
 
 void Player::actorSpecific_spawnStartItems() {
@@ -40,8 +40,6 @@ void Player::actorSpecific_spawnStartItems() {
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
     insanityObsessions[i] = false;
   }
-
-//  mythosKnowledge = eng->dice.getInRange(1, 6);
 
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
   int NR_OF_DYNAMITE          = eng->dice.getInRange(1, 4);
@@ -128,7 +126,7 @@ void Player::addSaveLines(vector<string>& lines) const {
 
   lines.push_back(intToString(insanity_));
   lines.push_back(intToString(static_cast<int>(shock_)));
-  lines.push_back(intToString(mythosKnowledge));
+  lines.push_back(intToString(mth));
   lines.push_back(intToString(hp_));
   lines.push_back(intToString(hpMax_));
   lines.push_back(intToString(pos.x));
@@ -160,7 +158,7 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   lines.erase(lines.begin());
   shock_ = static_cast<double>(stringToInt(lines.front()));
   lines.erase(lines.begin());
-  mythosKnowledge = stringToInt(lines.front());
+  mth = stringToInt(lines.front());
   lines.erase(lines.begin());
   hp_ = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -230,9 +228,9 @@ int Player::getShockResistance() const {
 }
 
 void Player::incrShock(const int VAL) {
-  const double SHOCK_RES_FL = static_cast<double>(getShockResistance());
-  const double VAL_FL = static_cast<double>(VAL);
-  const double VAL_AFTER_SHOCK_RES = (VAL_FL * (100.0 - SHOCK_RES_FL)) / 100.0;
+  const double SHOCK_RES_DB = static_cast<double>(getShockResistance());
+  const double VAL_DB = static_cast<double>(VAL);
+  const double VAL_AFTER_SHOCK_RES = (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
   shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
 }
 
@@ -276,12 +274,21 @@ void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RES
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
+void Player::incrMth(const int VAL) {
+  mth = max(0, min(100, mth + VAL));
+  insanity_ = max(0, min(100, insanity_ + VAL / 2));
+}
+
 void Player::incrInsanity() {
-  string popupMessage = "Insanity draws nearer... ";
+  string popupMessage = getInsanity() < 100 ? "Insanity draws nearer... " : "";
+
+  const int INS_INCR = 6;
 
   if(eng->config->BOT_PLAYING == false) {
-    insanity_ += 6;
+    insanity_ += INS_INCR;
   }
+
+  mth = min(100, mth + INS_INCR / 2);
 
   restoreShock(70, false);
 

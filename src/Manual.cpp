@@ -45,11 +45,11 @@ void Manual::drawManualInterface() {
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
-  eng->renderer->drawText("Displaying manual.txt", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(" Displaying manual.txt ", renderArea_screen, 3, 1, clrWhite);
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
 
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit. ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
 void Manual::run() {

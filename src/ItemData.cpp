@@ -43,7 +43,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isCloak = false;
     d->isRing = false;
     d->isAmulet = false;
-    d->isIntrinsicWeapon = false;
+    d->isIntrinsic = false;
     d->isMeleeWeapon = false;
     d->isRangedWeapon = false;
     d->isMissileWeapon = false;
@@ -98,7 +98,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_meleeWpnIntr: {
     resetDef(d, itemDef_meleeWpn);
-    d->isIntrinsicWeapon = true;
+    d->isIntrinsic = true;
     d->spawnStandardMinDLVL = -1;
     d->spawnStandardMaxDLVL = -1;
   }
@@ -123,7 +123,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_rangedWpnIntr: {
     resetDef(d, itemDef_rangedWpn);
-    d->isIntrinsicWeapon = true;
+    d->isIntrinsic = true;
     d->rangedHasInfiniteAmmo = true;
     d->spawnStandardMinDLVL = -1;
     d->spawnStandardMaxDLVL = -1;
@@ -252,10 +252,10 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
 
   //Set 1dY dmg from formula
   const int DMG_ROLLS_CAP = 10;
-  const double DMG_ROLLS_BASE_FL = 1.0;
-  const double DMG_ROLLS_INCR_FL = 0.4;
+  const double DMG_ROLLS_BASE_DB = 1.0;
+  const double DMG_ROLLS_INCR_DB = 0.4;
   const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
-  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_FL + (static_cast<double>(ACTOR_LVL - 1) * DMG_ROLLS_INCR_FL);
+  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_DB + (static_cast<double>(ACTOR_LVL - 1) * DMG_ROLLS_INCR_DB);
   const int DMG_ROLLS_AFTER_STR = static_cast<int>(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
   const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
 
