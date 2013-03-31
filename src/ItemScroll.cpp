@@ -253,10 +253,11 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
   }
 }
 
-void ScrollOfAzathothsBlast::castAt(const coord& pos, Engine* const engine) {
-  engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(vector<coord>(1, pos), clrRedLight,
-      BLAST_ANIMATION_DELAY_FACTOR, engine);
+
+void ThaumaturgicAlteration::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  (void)FROM_MEMORY;
 }
+
 
 //void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
 //  setRealDefinitionNames(engine, false);

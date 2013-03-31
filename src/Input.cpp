@@ -548,7 +548,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
-        if(def->isQuaffable == true || def->isReadable == true) {
+        if(def->isIntrinsic == false && (def->isQuaffable == true || def->isReadable == true)) {
           eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }
       }

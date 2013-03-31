@@ -132,6 +132,8 @@ enum ItemId_t {
   item_scrollOfAzathothsBlast,
   //item_scrollOfInsight,
 
+  item_thaumaturgicAlteration,
+
   item_potionOfHealing,
   item_potionOfBlindness,
   item_potionOfCorruption,
@@ -148,7 +150,7 @@ enum ItemId_t {
   item_deviceRepeller,
   item_deviceRejuvenator,
   item_deviceTranslocator,
-  item_deviceSpellReflector,
+//  item_deviceSpellReflector,
   item_deviceElectricLantern,
 
   endOfItemIds

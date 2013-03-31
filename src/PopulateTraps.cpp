@@ -7,8 +7,6 @@
 #include "FeatureFactory.h"
 
 void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
-  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = 25 + (eng->map->getDungeonLevel() * 5);
-
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
 
@@ -29,7 +27,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         chanceForTrappedRoom = 25;
         break;
       case roomTheme_spider:
-        chanceForTrappedRoom = 100;
+        chanceForTrappedRoom = 75;
         break;
       case roomTheme_crypt:
         chanceForTrappedRoom = 75;
@@ -74,8 +72,33 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
             const FeatureDef* const defAtTrap = eng->featureData->getFeatureDef(f->getId());
             eng->featureFactory->spawnFeatureAt(feature_trap, pos, new TrapSpawnData(defAtTrap, trapType));
             trapPositionCandidates.erase(trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
+            blockers[pos.x][pos.y] = true;
           }
         }
+      }
+    }
+  }
+
+  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 25 + (eng->map->getDungeonLevel() * 5));
+  if(eng->dice(1, 100) < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
+    vector<coord> trapPositionCandidates;
+    for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+      for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+        if(blockers[x][y] == false && themeMap[x][y] == roomTheme_plain) {
+          trapPositionCandidates.push_back(coord(x, y));
+        }
+      }
+    }
+    const int NR_TRAP_POSITION_CANDIDATES = static_cast<int>(trapPositionCandidates.size());
+    if(NR_TRAP_POSITION_CANDIDATES > 0) {
+      const int NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES, eng->dice.getInRange(6, 9));
+      for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {
+        const unsigned int CANDIDATE_ELEMENT = eng->dice.getInRange(0, trapPositionCandidates.size() - 1);
+        const coord& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
+        FeatureStatic* const f = eng->map->featuresStatic[pos.x][pos.y];
+        const FeatureDef* const defAtTrap = eng->featureData->getFeatureDef(f->getId());
+        eng->featureFactory->spawnFeatureAt(feature_trap, pos, new TrapSpawnData(defAtTrap, trap_any));
+        trapPositionCandidates.erase(trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
       }
     }
   }

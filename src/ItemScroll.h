@@ -55,31 +55,31 @@ protected:
 
 //class scrollOfSummoning: public Scroll {
 //public:
-//	scrollOfSummoning(ItemDefinition* const itemDefinition) :
-//		Scroll(itemDefinition) {
-//	}
-//	~scrollOfSummoning() {
-//	}
-//	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  scrollOfSummoning(ItemDefinition* const itemDefinition) :
+//    Scroll(itemDefinition) {
+//  }
+//  ~scrollOfSummoning() {
+//  }
+//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 //
-//	const string getRealTypeName() {
-//		return "Summoning";
-//	}
+//  const string getRealTypeName() {
+//    return "Summoning";
+//  }
 //private:
 //};
 //
 //class scrollOfGreaterSummoning: public Scroll {
 //public:
-//	scrollOfGreaterSummoning(ItemDefinition* const itemDefinition) :
-//		Scroll(itemDefinition) {
-//	}
-//	~scrollOfGreaterSummoning() {
-//	}
-//	void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  scrollOfGreaterSummoning(ItemDefinition* const itemDefinition) :
+//    Scroll(itemDefinition) {
+//  }
+//  ~scrollOfGreaterSummoning() {
+//  }
+//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
 //
-//	const string getRealTypeName() {
-//		return "Greater Summoning";
-//	}
+//  const string getRealTypeName() {
+//    return "Greater Summoning";
+//  }
 //private:
 //};
 
@@ -172,17 +172,17 @@ private:
 
 //class ScrollOfBlindEnemies: public ScrollOfStatusOnAllVisibleMonsters {
 //public:
-//	ScrollOfBlindEnemies(ItemDefinition* const ItemDefinition) :
-//		ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-//	}
-//	~ScrollOfBlindEnemies() {
-//	}
+//  ScrollOfBlindEnemies(ItemDefinition* const ItemDefinition) :
+//    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
+//  }
+//  ~ScrollOfBlindEnemies() {
+//  }
 //
-//	const string getRealTypeName() {
-//		return "Blind Enemies";
-//	}
+//  const string getRealTypeName() {
+//    return "Blind Enemies";
+//  }
 //private:
-//	StatusEffect* getStatusEffect(Engine* const engine);
+//  StatusEffect* getStatusEffect(Engine* const engine);
 //};
 
 class ScrollOfParalyzeEnemies: public ScrollOfStatusOnAllVisibleMonsters {
@@ -284,10 +284,23 @@ public:
   }
   void specificRead(const bool FROM_MEMORY, Engine* const engine);
 
-  static void castAt(const coord& pos, Engine* const engine);
-
   const string getRealTypeName() {
     return "Azathoths Blast";
+  }
+private:
+};
+
+class ThaumaturgicAlteration: public Scroll {
+public:
+  ThaumaturgicAlteration(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ThaumaturgicAlteration() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Thaumaturgic Alteration";
   }
 private:
 };

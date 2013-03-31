@@ -1041,18 +1041,18 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 4;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfTeleportation);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 5;
+  d->spellTurnsPerPercentCooldown = 7;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfDescent);
   resetDef(d, itemDef_scroll);
   d->spawnStandardMinDLVL = 6;
   d->isScrollLearnable = false;
-  d->spellTurnsPerPercentCooldown = 50;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfPestilence);
@@ -1092,12 +1092,18 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfClairvoyance);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 10;
+  d->spellTurnsPerPercentCooldown = 20;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfAzathothsBlast);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_thaumaturgicAlteration);
+  resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 25;
+  d->isIntrinsic = true;
   itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_scrollOfVoidChain);
@@ -1182,13 +1188,13 @@ void ItemData::makeList() {
   d->featuresCanBeFoundIn.push_back(feature_tomb);
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_deviceSpellReflector);
-  resetDef(d, itemDef_device);
-  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
-  d->color = clrGray;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
-  itemDefinitions[d->id] = d;
+//  d = new ItemDefinition(item_deviceSpellReflector);
+//  resetDef(d, itemDef_device);
+//  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
+//  d->color = clrGray;
+//  d->featuresCanBeFoundIn.push_back(feature_chest);
+//  d->featuresCanBeFoundIn.push_back(feature_tomb);
+//  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);

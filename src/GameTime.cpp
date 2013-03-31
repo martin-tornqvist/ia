@@ -126,6 +126,10 @@ void GameTime::letNextAct() {
     eng->input->clearEvents();
     eng->player->newTurn();
 
+    if(eng->player->getMth() >= 10) {
+      eng->player->grantMthPower();
+    }
+
     //If player was dropping an item, check if should go back to inventory screen
     eng->player->getSpotedEnemiesPositions();
     if(eng->player->spotedEnemiesPositions.empty()) {
@@ -211,7 +215,11 @@ void GameTime::runNewStandardTurnEvents() {
       if(d.isScrollLearned) {
         if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
           if(d.castFromMemoryChance < 100) {
+//            if(d.id == item_thaumaturgicAlteration) {
+//              d.castFromMemoryChance = min(eng->player->getMth(), d.castFromMemoryChance + 1);
+//            } else {
             d.castFromMemoryChance++;
+//            }
           }
         }
       }

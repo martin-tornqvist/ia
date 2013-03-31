@@ -23,7 +23,7 @@ void Manual::readFile() {
           lines.push_back(curLine);
         } else {
           formated.resize(0);
-          formated = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS);
+          formated = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
 
           for(unsigned int i = 0; i < formated.size(); i++) {
             lines.push_back(formated.at(i));
@@ -76,7 +76,7 @@ void Manual::run() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
-      topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      topElement = max(0, min(topElement + 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();
@@ -88,7 +88,7 @@ void Manual::run() {
       eng->renderer->updateWindow();
     }
     else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
-      topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
+      topElement = max(0, min(topElement - 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();

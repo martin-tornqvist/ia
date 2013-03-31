@@ -93,16 +93,16 @@ private:
   void runGoodEffect(Engine* const engine);
 };
 
-class DeviceSpellReflector: public Device {
-public:
-  DeviceSpellReflector(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
-
-  ~DeviceSpellReflector() {}
-
-private:
-  void runGoodEffect(Engine* const engine);
-};
+//class DeviceSpellReflector: public Device {
+//public:
+//  DeviceSpellReflector(ItemDefinition* const itemDefinition) :
+//    Device(itemDefinition) {}
+//
+//  ~DeviceSpellReflector() {}
+//
+//private:
+//  void runGoodEffect(Engine* const engine);
+//};
 
 class DeviceElectricLantern: public Device {
 public:

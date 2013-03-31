@@ -1287,7 +1287,7 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The shadow fades.";
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAwarePlayer = 25;
   d.description = "A living shadow";
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_somewhat;

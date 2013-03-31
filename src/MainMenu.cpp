@@ -98,7 +98,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Keyboard commands", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
   yPos += 1;
 
   eng->renderer->drawTextCentered("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);

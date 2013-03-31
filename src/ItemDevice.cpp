@@ -97,9 +97,9 @@ void DeviceTranslocator::runGoodEffect(Engine* const engine) {
 }
 
 //---------------------------------------------------- SPELL REFLECTOR
-void DeviceSpellReflector::runGoodEffect(Engine* const engine) {
-
-}
+//void DeviceSpellReflector::runGoodEffect(Engine* const engine) {
+//
+//}
 
 //---------------------------------------------------- ELECTRIC LANTERN
 void DeviceElectricLantern::specificNewTurn(Engine* const engine) {

@@ -199,7 +199,7 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
   case tile_tomb: return coord(14, 5); break;
   case tile_water1: return coord(7, 7); break;
   case tile_water2: return coord(8, 7); break;
-  case tile_trapGeneral: return coord(9, 7); break;
+  case tile_trapGeneral: return coord(17, 5); break;
   case tile_cocoon: return coord(10, 7); break;
   case tile_blastAnimation1: return coord(11, 7); break;
   case tile_blastAnimation2: return coord(12, 7); break;

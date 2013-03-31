@@ -281,6 +281,10 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   case item_scrollOfAzathothsBlast:
     item = new ScrollOfAzathothsBlast(d);
     break;
+  case item_thaumaturgicAlteration:
+    item = new ThaumaturgicAlteration(d);
+    break;
+
   case item_potionOfHealing:
     item = new PotionOfHealing(d);
     break;
@@ -323,9 +327,9 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   case item_deviceTranslocator:
     item = new DeviceTranslocator(d);
     break;
-  case item_deviceSpellReflector:
-    item = new DeviceSpellReflector(d);
-    break;
+//  case item_deviceSpellReflector:
+//    item = new DeviceSpellReflector(d);
+//    break;
   case item_deviceElectricLantern:
     item = new DeviceElectricLantern(d);
     break;

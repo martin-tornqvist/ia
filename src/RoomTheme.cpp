@@ -176,16 +176,18 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
           }
         }
       }
-      if(origin.x == -1) {
-        origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
-      }
-      for(int dy = -1; dy <= 1; dy++) {
-        for(int dx = -1; dx <= 1; dx++) {
-          if((dx == 0 && dy == 0) || (eng->dice(1, 100) < CHANCE_FOR_BLOODY_RITUAL_CHAMBER / 2)) {
-            const coord pos = origin + coord(dx, dy);
-            if(blockers[pos.x][pos.y] == false) {
-              eng->gore->makeGore(pos);
-              eng->gore->makeBlood(pos);
+      if(originCandidates.empty() == false) {
+        if(origin.x == -1) {
+          origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+        }
+        for(int dy = -1; dy <= 1; dy++) {
+          for(int dx = -1; dx <= 1; dx++) {
+            if((dx == 0 && dy == 0) || (eng->dice(1, 100) < CHANCE_FOR_BLOODY_RITUAL_CHAMBER / 2)) {
+              const coord pos = origin + coord(dx, dy);
+              if(blockers[pos.x][pos.y] == false) {
+                eng->gore->makeGore(pos);
+                eng->gore->makeBlood(pos);
+              }
             }
           }
         }

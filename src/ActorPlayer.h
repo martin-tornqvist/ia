@@ -98,6 +98,8 @@ public:
 
   void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
+  void grantMthPower() const;
+
 private:
   friend class DungeonMaster;
   friend class GameTime;
