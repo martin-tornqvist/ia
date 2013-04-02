@@ -132,6 +132,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_zombieUnarmed;
   d.spawnMinLevel = 1;
+  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
   d.monsterLvl = 2;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
@@ -169,6 +170,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_zombieArmed;
   d.spawnMinLevel = 2;
+  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
   d.monsterLvl = 3;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
@@ -206,6 +208,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhiteHigh;
   d.tile = tile_zombieBloated;
   d.spawnMinLevel = 3;
+  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
   d.monsterLvl = 4;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -634,7 +637,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLight;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 7;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -666,7 +669,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 10;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -698,7 +701,7 @@ void ActorData::defineAllActors() {
   d.color = clrRedLight;
   d.tile = tile_spider;
   d.spawnMinLevel = 2;
-  d.spawnMaxLevel = 7;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 2;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -730,7 +733,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_spiderLeng;
   d.spawnMinLevel = 6;
-  d.spawnMaxLevel = 999;
+  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
   d.monsterLvl = 6;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -792,7 +795,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardLeader = true;
   d.abilityValues.setAbilityValue(ability_dodgeAttack, 35);
   d.speed = actorSpeed_fast;
-  d.rangedCooldownTurns = 10;
+  d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrRed;
   d.tile = tile_hound;
@@ -831,6 +834,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_ghost;
   d.spawnMinLevel = 3;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 3;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -865,6 +869,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhite;
   d.tile = tile_phantasm;
   d.spawnMinLevel = 7;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 7;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -936,7 +941,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_rat;
   d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 6;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
@@ -970,7 +975,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_ratThing;
   d.spawnMinLevel = 1;
-  d.spawnMaxLevel = 7;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
@@ -1209,7 +1214,7 @@ void ActorData::defineAllActors() {
   d.color = clrMagenta;
   d.tile = tile_migo;
   d.spawnMinLevel = 4;
-  d.monsterLvl = 5;
+  d.monsterLvl = 6;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1278,6 +1283,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_shadow;
   d.spawnMinLevel = 4;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 3;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
@@ -1459,6 +1465,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhite;
   d.tile = tile_massOfWorms;
   d.spawnMinLevel = 4;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -1491,6 +1498,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_vortex;
   d.spawnMinLevel = 8;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 8;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -1559,6 +1567,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_ooze;
   d.spawnMinLevel = 3;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 3;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -1595,6 +1604,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhiteHigh;
   d.tile = tile_ooze;
   d.spawnMinLevel = 4;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 4;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -1632,6 +1642,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLight;
   d.tile = tile_ooze;;
   d.spawnMinLevel = 5;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;

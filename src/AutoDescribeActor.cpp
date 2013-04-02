@@ -19,7 +19,12 @@ void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line
 string AutoDescribeActor::getNormalGroupSizeStr(const ActorDefinition& def) const {
   const MonsterGroupSize_t s = def.groupSize;
 
-  return s == monsterGroupSize_alone ? "alone" : s == monsterGroupSize_few ? "in groups of a few" : "in hordes";
+  return
+    s == monsterGroupSize_alone ? "alone" :
+    s == monsterGroupSize_few ? "in groups of a few" :
+    s == monsterGroupSize_group ? "in groups" :
+    s == monsterGroupSize_horde ? "in hordes" :
+    "in swarms";
 }
 
 string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {

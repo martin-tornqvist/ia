@@ -16,6 +16,8 @@ public:
 
   void populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const;
 
+  void populateCaveLevel() const;
+
   void populateIntroLevel();
 
   void spawnGroupAt(const ActorId_t id, const vector<coord>& sortedFreeCellsVector,
