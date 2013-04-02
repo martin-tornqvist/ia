@@ -32,7 +32,7 @@ void DungeonClimb::makeLevel() {
 
     //------------------------------------- KINGS TOMB
     if(levelBuilt == false) {
-      if(DLVL == FIRST_CAVERN_LEVEL - 1) {
+      if(DLVL == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
         tracer << "DungeonClimb: Calling MapBuild::buildKingsTomb()" << endl;
         eng->mapBuild->buildKingsTomb();
         levelBuilt = true;

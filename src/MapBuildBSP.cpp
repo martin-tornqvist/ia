@@ -133,7 +133,7 @@ void MapBuildBSP::run() {
 
   const coord stairsCoord = placeStairs();
 
-  const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 5;
+  const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 9;
   if(eng->map->getDungeonLevel() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
     revealAllDoorsBetweenPlayerAndStairs(stairsCoord);
   }

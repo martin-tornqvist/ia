@@ -1453,6 +1453,7 @@ void ActorData::defineAllActors() {
   d.name_the = "The Mass of Worms";
   d.moveType = moveType_walk;
   d.id = actor_wormMass;
+  d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
   d.aiBehavior.attemptsAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
