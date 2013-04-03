@@ -114,7 +114,7 @@ void DeviceElectricLantern::specificNewTurn(Engine* const engine) {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
-      engine->log->addMessage("The Electric Lantern is casting light.");
+//      engine->log->addMessage("The Electric Lantern is casting light.");
       engine->gameTime->updateLightMap();
       engine->player->updateFov();
       engine->renderer->drawMapAndInterface();
