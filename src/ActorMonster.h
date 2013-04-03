@@ -645,5 +645,15 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
+class OozePoison: public Ooze {
+public:
+  OozePoison() :
+    Ooze() {
+  }
+  ~OozePoison() {
+  }
+  void actorSpecific_spawnStartItems();
+};
+
 
 #endif

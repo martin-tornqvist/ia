@@ -139,7 +139,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
                 printReloadMessages(actorReloading, weaponToReload, ammoItem, result, isSwiftReload);
 
                 //Erase loaded clip
-                inv->deleteItemInGeneral(i);
+                inv->deleteItemInGeneralWithElement(i);
 
                 //If weapon previously contained ammo, create a new clip item
                 if(previousAmmoCount > 0) {

@@ -235,6 +235,9 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   case item_oozePutridSpewPus:
     item = new Weapon(d, ammoD);
     break;
+  case item_oozePoisonSpewPus:
+    item = new Weapon(d, ammoD);
+    break;
   case item_huntingHorrorBite:
     item = new Weapon(d, ammoD);
     break;

@@ -48,20 +48,18 @@ class Inventory {
 public:
   Inventory(bool humanoid);
   ~Inventory() {
-    //Actors destructor deletes actors inventory.
-    //Inventories destructor deletes all its items.
-    for(unsigned int i = 0; i < m_slots.size(); i++)
-      if(m_slots.at(i).item != NULL)
-        delete m_slots.at(i).item;
+    for(unsigned int i = 0; i < slots_.size(); i++)
+      if(slots_.at(i).item != NULL)
+        delete slots_.at(i).item;
 
-    for(unsigned int i = 0; i < m_general.size(); i++)
-      delete m_general.at(i);
+    for(unsigned int i = 0; i < general_.size(); i++)
+      delete general_.at(i);
 
-    for(unsigned int i = 0; i < m_intrinsics.size(); i++)
-      delete m_intrinsics.at(i);
+    for(unsigned int i = 0; i < intrinsics_.size(); i++)
+      delete intrinsics_.at(i);
   }
 
-  void dropAllNonIntrinsic(const coord pos, const bool rollForDestruction, Engine* engine);
+  void dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
 
   bool hasItemInSlot(SlotTypes_t slotName);
 
@@ -80,11 +78,11 @@ public:
   void moveItemToSlot(InventorySlot* inventoryslot, const unsigned int GENERAL_INV_ELEMENT);
 
   void equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT,
-                                          const SlotTypes_t slotToEquip, Engine* engine);
+                                          const SlotTypes_t slotToEquip, Engine* const engine);
 
-//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* engine);
+//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine);
 
-  void swapWieldedAndPrepared(const bool END_TURN, Engine* engine);
+  void swapWieldedAndPrepared(const bool END_TURN, Engine* const engine);
 
   bool hasAmmoForFirearmInInventory();
 
@@ -93,7 +91,7 @@ public:
   Item* getItemInSlot(SlotTypes_t slotName);
   Item* getItemInElement(const int GLOBAL_ELEMENT_NR);
 
-  void removeItemInElementWithoutDeletingInstance(int number);
+  void removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
 
   void decreaseItemInSlot(SlotTypes_t slotName);
 
@@ -101,13 +99,14 @@ public:
 
   void decreaseItemTypeInGeneral(const ItemId_t itemId);
 
-  void deleteItemInGeneral(unsigned element);
+  void deleteItemInGeneralWithElement(const unsigned ELEMENT);
+  void removetemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {
-    return m_intrinsics.size();
+    return intrinsics_.size();
   }
 
-  Item* getIntrinsicInElement(int element) const;
+  Item* getIntrinsicInElement(const int ELEMENT) const;
 
   Item* getLastItemInGeneral();
 
@@ -127,10 +126,10 @@ public:
   void sortGeneralInventory(Engine* const engine);
 
   vector<InventorySlot>* getSlots() {
-    return &m_slots;
+    return &slots_;
   }
   vector<Item*>* getGeneral() {
-    return &m_general;
+    return &general_;
   }
 
   int getTotalItemWeight() const;
@@ -139,9 +138,9 @@ public:
   void setParametersFromSaveLines(vector<string>& lines, Engine* const engine);
 
 private:
-  vector<InventorySlot> m_slots;
-  vector<Item*> m_general;
-  vector<Item*> m_intrinsics;
+  vector<InventorySlot> slots_;
+  vector<Item*> general_;
+  vector<Item*> intrinsics_;
 };
 
 #endif

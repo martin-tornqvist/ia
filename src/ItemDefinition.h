@@ -109,6 +109,7 @@ enum ItemId_t {
   item_deepOneJavelinAttack,
   item_oozeGraySpewPus,
   item_oozePutridSpewPus,
+  item_oozePoisonSpewPus,
   item_oozeClearSpewPus,
   item_huntingHorrorBite,
   item_dustVortexEngulf,

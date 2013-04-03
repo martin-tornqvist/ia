@@ -44,7 +44,7 @@ void Player::actorSpecific_spawnStartItems() {
   int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
   int NR_OF_DYNAMITE          = eng->dice.getInRange(1, 4);
   int NR_OF_MOLOTOV           = eng->dice.getInRange(1, 4);
-  int NR_OF_FLARES            = eng->dice.getInRange(1, 6);
+//  int NR_OF_FLARES            = eng->dice.getInRange(1, 6);
   int NR_OF_THROWING_KNIVES   = eng->dice.coinToss() ? 0 : eng->dice.getInRange(7, 12);
   int NR_OF_SPIKES            = eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 4);
 
@@ -88,11 +88,11 @@ void Player::actorSpecific_spawnStartItems() {
   item->numberOfItems = NR_OF_MOLOTOV;
   inventory_->putItemInGeneral(item);
 
-  if(NR_OF_FLARES > 0) {
-    item = eng->itemFactory->spawnItem(item_flare);
-    item->numberOfItems = NR_OF_FLARES;
-    inventory_->putItemInGeneral(item);
-  }
+//  if(NR_OF_FLARES > 0) {
+//    item = eng->itemFactory->spawnItem(item_flare);
+//    item->numberOfItems = NR_OF_FLARES;
+//    inventory_->putItemInGeneral(item);
+//  }
 
   if(NR_OF_THROWING_KNIVES > 0) {
     item = eng->itemFactory->spawnItem(item_throwingKnife);
@@ -112,7 +112,6 @@ void Player::actorSpecific_spawnStartItems() {
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSpellReflector));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 }
 

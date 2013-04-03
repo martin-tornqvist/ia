@@ -493,19 +493,20 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
-void OozeGray::actorSpecific_spawnStartItems()
-{
+void OozeGray::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozeGraySpewPus));
 }
 
-void OozeClear::actorSpecific_spawnStartItems()
-{
+void OozeClear::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozeClearSpewPus));
 }
 
-void OozePutrid::actorSpecific_spawnStartItems()
-{
+void OozePutrid::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozePutridSpewPus));
+}
+
+void OozePoison::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozePoisonSpewPus));
 }
 
 bool Spider::actorSpecificAct() {

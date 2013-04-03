@@ -6,23 +6,29 @@
 #include "GameTime.h"
 #include "Log.h"
 #include "Knockback.h"
+#include "Inventory.h"
 
 //---------------------------------------------------- BASE CLASS
 bool Device::toggle(Engine* const engine) {
+  printToggleMessage(engine);
+
   if(isActivated_) {
     isActivated_ = false;
     nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
+    specificToggle(engine);
   } else {
     isActivated_ = true;
-    runBadEffect(engine);
     nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
+    specificToggle(engine);
+    runBadEffect(engine);
   }
-  string str = "Device ";
-  str += isActivated_ ? "activates" : "deactivates";
-  engine->log->addMessage(str);
-  specificToggle(engine);
   return false;
+}
+
+void Device::printToggleMessage(Engine* const engine) {
+  const string name_a = engine->itemData->getItemRef(this, itemRef_a, true);
+  engine->log->addMessage((isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
 }
 
 int Device::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
@@ -35,16 +41,18 @@ int Device::getRandomNrTurnsToNextBadEffect(Engine* const engine) const {
 
 void Device::newTurn(Engine* const engine) {
   if(isActivated_) {
+
+    specificNewTurn(engine);
+
     if(--nrTurnsToNextGoodEffect_ <= 0) {
-      runGoodEffect(engine);
       nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
+      runGoodEffect(engine);
     }
     if(--nrTurnsToNextBadEffect_ <= 0) {
-      runBadEffect(engine);
       nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
+      runBadEffect(engine);
     }
   }
-  specificNewTurn(engine);
 }
 
 void Device::runBadEffect(Engine* const engine) {
@@ -103,7 +111,20 @@ void DeviceTranslocator::runGoodEffect(Engine* const engine) {
 
 //---------------------------------------------------- ELECTRIC LANTERN
 void DeviceElectricLantern::specificNewTurn(Engine* const engine) {
+  if(isActivated_ && malfunctCooldown_ > 0) {
+    malfunctCooldown_--;
+    if(malfunctCooldown_ <= 0) {
+      engine->log->addMessage("The Electric Lantern is casting light.");
+      engine->gameTime->updateLightMap();
+      engine->player->updateFov();
+      engine->renderer->drawMapAndInterface();
+    }
+  }
+}
 
+void DeviceElectricLantern::printToggleMessage(Engine* const engine) {
+  const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
+  engine->log->addMessage(toggleStr + " the Electric Lantern.");
 }
 
 void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
@@ -117,11 +138,43 @@ void DeviceElectricLantern::specificToggle(Engine* const engine) {
 }
 
 bool DeviceElectricLantern::isGivingLight() const {
-  return isActivated_;
+  return isActivated_ && malfunctCooldown_ <= 0;
 }
 
 void DeviceElectricLantern::runBadEffect(Engine* const engine) {
+  if(malfunctCooldown_ <= 0) {
+    bool isVisionUpdateNeeded = false;
+    bool isItemDestroyed = false;
 
+    const int RND = engine->dice(1, 100);
+    if(RND < 3) {
+      engine->log->addMessage("The Electric Lantern breaks!");
+      engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
+      isVisionUpdateNeeded = true;
+      isItemDestroyed = true;
+    } else {
+      if(RND < 20) {
+        engine->log->addMessage("The Electric Lantern malfunctions.");
+        malfunctCooldown_ = engine->dice.getInRange(2, 4);
+        isVisionUpdateNeeded = true;
+      } else {
+        if(RND < 50) {
+          engine->log->addMessage("The Electric Lantern flickers.");
+          malfunctCooldown_ = 2;
+          isVisionUpdateNeeded = true;
+        }
+      }
+    }
+
+    if(isVisionUpdateNeeded) {
+      engine->gameTime->updateLightMap();
+      engine->player->updateFov();
+      engine->renderer->drawMapAndInterface();
+    }
+    if(isItemDestroyed) {
+      delete this;
+    }
+  }
 }
 
 

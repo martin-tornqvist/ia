@@ -217,6 +217,7 @@ void ActorData::defineAllActors() {
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 50;
   d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
+  d.aggroTextMonsterHidden = "I hear heavy footsteps.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
@@ -439,6 +440,8 @@ void ActorData::defineAllActors() {
   d.description
   = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familier; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
+  d.aggroTextMonsterSeen = d.name_the + " chortles at me in a croaking voice.";
+  d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -1020,6 +1023,8 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_floor;
   d.description
   = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
+  d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
+  d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -1088,6 +1093,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
   d.description = "An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.";
+  d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
@@ -1122,6 +1128,7 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 5;
   d.description
   = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
+  d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
@@ -1258,6 +1265,8 @@ void ActorData::defineAllActors() {
   d.nrTurnsAwarePlayer = 25;
   d.description
   = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome isHumanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
+  d.aggroTextMonsterSeen = d.name_the + " howls at me.";
+  d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1508,6 +1517,7 @@ void ActorData::defineAllActors() {
   d.canOpenDoors = false;
   d.canBashDoors = true;
   d.description = "A spinning force of destruction. It seems to move with some manner of purpose.";
+  d.aggroTextMonsterHidden = "I hear a howling wind.";
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
@@ -1542,6 +1552,7 @@ void ActorData::defineAllActors() {
   d.canOpenDoors = false;
   d.canBashDoors = true;
   d.description = "A spinning force of fire and destruction. It seems to move with some manner of purpose.";
+  d.aggroTextMonsterHidden = "I hear a howling wind.";
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
@@ -1579,6 +1590,8 @@ void ActorData::defineAllActors() {
   d.canBashDoors = false;
   d.description = "It's just a mass of gunk, but it seems sentient.";
   d.deathMessageOverride = "The Ooze disintegrates.";
+  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
@@ -1616,6 +1629,8 @@ void ActorData::defineAllActors() {
   d.canBashDoors = false;
   d.description = "It's a clear mass of gunk. They can be hard to spot.";
   d.deathMessageOverride = "The Ooze disintegrates.";
+  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.canBleed = false;
   d.canBeSummoned = true;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -1640,8 +1655,8 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
-  d.color = clrGreenLight;
-  d.tile = tile_ooze;;
+  d.color = clrGreen;
+  d.tile = tile_ooze;
   d.spawnMinLevel = 5;
   d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 5;
@@ -1654,6 +1669,47 @@ void ActorData::defineAllActors() {
   d.canBashDoors = false;
   d.description = "It's just a mass of gunk, but it seems sentient. It stinks like rotting cadavers.";
   d.deathMessageOverride = "The Ooze disintegrates.";
+  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterHidden = "I hear a gurgling noise.";
+  d.canBleed = false;
+  d.canBeSummoned = true;
+  d.erraticMovement = actorErratic_somewhat;
+  d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
+  setStrengthsFromFormula(d, superStrong);
+  finalizeDefinition(d);
+  d.reset();
+
+  d.name_a = "A Poison Ooze";
+  d.name_the = "The Poison Ooze";
+  d.moveType = moveType_ooze;
+  d.id = actor_oozePoison;
+  d.aiBehavior.looks = true;
+  d.aiBehavior.makesRoomForFriend = true;
+  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.pathsToTargetWhenAware = true;
+  d.aiBehavior.movesTowardTargetWhenVision = true;
+  d.aiBehavior.movesTowardLair = false;
+  d.aiBehavior.movesTowardLeader = true;
+  d.speed = actorSpeed_sluggish;
+  d.rangedCooldownTurns = 0;
+  d.glyph = 'o';
+  d.color = clrGreenLight;
+  d.tile = tile_ooze;
+  d.spawnMinLevel = 9;
+  d.spawnMaxLevel = d.spawnMinLevel + 5;
+  d.monsterLvl = 9;
+  d.canSeeInDarkness = true;
+  d.groupSize = monsterGroupSize_group;
+  d.actorSize = actorSize_floor;
+  d.nrTurnsAwarePlayer = 250;
+  d.isAutoDescriptionAllowed = true;
+  d.canOpenDoors = false;
+  d.canBashDoors = false;
+  d.description = "It's just a mass of gunk, but it seems sentient. It drips and sizzles with poison.";
+  d.deathMessageOverride = "The Ooze disintegrates.";
+  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;

@@ -15,6 +15,7 @@ public:
     (void)actor;
     return toggle(engine);
   }
+
   virtual string getDefaultActivationLabel() const {
     return isActivated_ ? "Deactivate" : "Activate";
   }
@@ -42,6 +43,8 @@ protected:
   virtual void specificNewTurn(Engine* const engine) {
     (void)engine;
   }
+
+  virtual void printToggleMessage(Engine* const engine);
 
   bool isActivated_;
   int nrTurnsToNextGoodEffect_;
@@ -107,13 +110,15 @@ private:
 class DeviceElectricLantern: public Device {
 public:
   DeviceElectricLantern(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
+    Device(itemDefinition), malfunctCooldown_(-1) {}
 
   ~DeviceElectricLantern() {}
 
   bool isGivingLight() const;
 
 private:
+  void printToggleMessage(Engine* const engine);
+
   void specificNewTurn(Engine* const engine);
 
   void runGoodEffect(Engine* const engine);
@@ -121,6 +126,8 @@ private:
   void runBadEffect(Engine* const engine);
 
   void specificToggle(Engine* const engine);
+
+  int malfunctCooldown_;
 };
 
 

@@ -140,6 +140,9 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
   case actor_oozePutrid:
     return new OozePutrid;
     break;
+  case actor_oozePoison:
+    return new OozePoison;
+    break;
   case actor_huntingHorror:
     return new HuntingHorror;
     break;
