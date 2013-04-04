@@ -73,8 +73,8 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-//  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
+//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));

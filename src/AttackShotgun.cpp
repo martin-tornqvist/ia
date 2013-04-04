@@ -43,7 +43,16 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
   int nrActorsHit = 0;
 
-  for(double i = 1; i < path.size(); i++) {
+  int monsterKilledInElement = -1;
+
+  for(unsigned int i = 1; i < path.size(); i++) {
+    //If travelled further than two steps after a killed monster, stop projectile.
+    if(monsterKilledInElement != -1) {
+      if(i > static_cast<unsigned int>(monsterKilledInElement + 1)) {
+        break;
+      }
+    }
+
     const coord curPos(path.at(i));
 
     bool allowStrayHit = true;
@@ -80,8 +89,11 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
             //Special shotgun behavior:
             //If current defender was killed, and player aimed at humanoid level, or at floor level
-            //but beyond the current position, the shot will continue.
+            //but beyond the current position, the shot will continue one cell.
             const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+            if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
+              monsterKilledInElement = i;
+            }
             if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
               break;
             }
@@ -119,8 +131,11 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
 
           //Special shotgun behavior:
           //If current defender was killed, and player aimed at humanoid level, or at floor level
-          //but beyond the current position, the shot will continue.
+          //but beyond the current position, the shot will continue one cell.
           const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+          if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
+            monsterKilledInElement = i;
+          }
           if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
             break;
           }
