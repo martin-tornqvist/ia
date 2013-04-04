@@ -1,40 +1,40 @@
 --------------------------------------------------------------
 Release 13.1 (September 20, 2012)
 --------------------------------------------------------------
-*  The Incinerator is a medium weight weapon
-*  The Toughness ability also gives a hit point bonus
-*  Lowered starting hit points from 16 to 14
-*  Fixed: There was a situation that put the game in an infinite loop (not responding)
-*  Fixed: The player color updates immediately after healing (instead of the turn after)
+* The Incinerator is a medium weight weapon
+* The Toughness ability also gives a hit point bonus
+* Lowered starting hit points from 16 to 14
+* Fixed: There was a situation that put the game in an infinite loop (not responding)
+* Fixed: The player color updates immediately after healing (instead of the turn after)
 
 
 --------------------------------------------------------------
 Release 13.0 (September 15, 2012)
 --------------------------------------------------------------
-*  The narrative is in first person perspective
-*  Added new 16x24 font (typewriter)
-*  Nicer looking main menu
-*  Removed the "Arcana" skill, and added a different system for casting chance
-*  Items have weights, and there is a carry limit
-*  Improved hit chances of heavy weapons to compensate for their weight
-*  Thrown items makes sounds when hitting hard surfaces
-*  Increased number of different items that can be carried
-*  Special rooms does not cause shock, this is instead tied to the map features
-*  Fortitude reduces shock by a fixed percent (instead of randomly blocking it completely)
-*  The turn number is displayed in the interface
-*  The player character is colored magenta when shock gets high
-*  The player character is colored dark red when HP gets low
-*  Reduced number of skill ranks in general, each lvl grants one skill pick
-*  Improved Healing (rank 2 heals disease, rank 3 regenerates hp over time)
-*  Better rules for if player with phobia is considered to be in open or cramped spaces
-*  Merged potion of reflexes and potion of aiming into one, and renamed it "Potion of the Cobra"
-*  Teleport traps displays a popup instead of log text (it was difficult to react)
-*  Open doors in ASCII mode uses ´ symbol (to differentiate from missile weapons)
-*  Damage per turn from burning is reduced
-*  Fixed: Explosions crashed the game in certain situations
-*  Fixed: Status effect countdown did not occur on some turns
-*  Fixed: "High ceiling rooms" could spawn monsters outside the room
-*  Fixed: Armor durability and clip ammo count were not stored in save files
+* The narrative is in first person perspective
+* Added new 16x24 font (typewriter)
+* Nicer looking main menu
+* Removed the "Arcana" skill, and added a different system for casting chance
+* Items have weights, and there is a carry limit
+* Improved hit chances of heavy weapons to compensate for their weight
+* Thrown items makes sounds when hitting hard surfaces
+* Increased number of different items that can be carried
+* Special rooms does not cause shock, this is instead tied to the map features
+* Fortitude reduces shock by a fixed percent (instead of randomly blocking it completely)
+* The turn number is displayed in the interface
+* The player character is colored magenta when shock gets high
+* The player character is colored dark red when HP gets low
+* Reduced number of skill ranks in general, each lvl grants one skill pick
+* Improved Healing (rank 2 heals disease, rank 3 regenerates hp over time)
+* Better rules for if player with phobia is considered to be in open or cramped spaces
+* Merged potion of reflexes and potion of aiming into one, and renamed it "Potion of the Cobra"
+* Teleport traps displays a popup instead of log text (it was difficult to react)
+* Open doors in ASCII mode uses ´ symbol (to differentiate from missile weapons)
+* Damage per turn from burning is reduced
+* Fixed: Explosions crashed the game in certain situations
+* Fixed: Status effect countdown did not occur on some turns
+* Fixed: "High ceiling rooms" could spawn monsters outside the room
+* Fixed: Armor durability and clip ammo count were not stored in save files
 
 
 --------------------------------------------------------------
