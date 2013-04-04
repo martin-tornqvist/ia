@@ -337,7 +337,7 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrRedLight;
-  d->spawnStandardMinDLVL = 4;
+  d->spawnStandardMinDLVL = 10;
   d->rangedDmgLabelOverRide = "?";
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);

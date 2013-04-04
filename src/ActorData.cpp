@@ -1220,8 +1220,8 @@ void ActorData::defineAllActors() {
   d.glyph = 'E';
   d.color = clrMagenta;
   d.tile = tile_migo;
-  d.spawnMinLevel = 4;
-  d.monsterLvl = 6;
+  d.spawnMinLevel = 6;
+  d.monsterLvl = 5;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
