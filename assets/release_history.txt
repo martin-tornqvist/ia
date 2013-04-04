@@ -484,18 +484,18 @@ Dec 1, 2010
 
 Nov 23, 2010
 * Smarter AI
-+Some monsters will search for you if they saw you.
-+Some will listen for sounds.
-+Some will communicate about where to search.
+> Some monsters will search for you if they saw you.
+> Some will listen for sounds.
+> Some will communicate about where to search.
 * Corpses/Gore (depending on force of attack)
 * Zombie-corpses can rise again.
 * Napalm Launcher explosion also sets creatures on fire.
 * Blindness affects messages - "It bites you!", "You hear gunfire." et c
 * Blindness affects skill rolls.
 * Added some nice things to the forest-level
-+Crypt that you climb out of.
-+Graveyard.
-+You reach the dungeon/underworld through the cellar of a ruined church.
+> Crypt that you climb out of.
+> Graveyard.
+> You reach the dungeon/underworld through the cellar of a ruined church.
 * Predefined rooms that appear randomly.
 * Fixed a graphical glitch with Tommy Gun and Tesla Cannon.
 * Various balancing/behaviour fixing.
@@ -512,9 +512,9 @@ Sep 19, 2010
 * Napalm launcher - Hehehe
 * Monsters are placed in groups at world generation - Now you can be chased by a horde of zombies.
 * Characters have size data. Ranged attacks have rules for what character sizes can be hit - resulting in more intuitive behaviour such as:
-+ A rat can't block your shot when you aim at a human-sized target.
-+ Projectiles can miss their target and hit someone behind it instead.
-+ You can aim the Napalm Launcher at the ground.
+> A rat can't block your shot when you aim at a human-sized target.
+> Projectiles can miss their target and hit someone behind it instead.
+> You can aim the Napalm Launcher at the ground.
 
 Aug 25, 2010
 * Dynamite
