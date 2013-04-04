@@ -27,7 +27,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_nimbleHanded, "Nimble-handed", "+X% chance to disarm traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
-  setBonus(playerBonus_treasureHunter, "Treasure hunter", "+20% more items found", playerBonus_observant);
+  setBonus(playerBonus_treasureHunter, "Treasure hunter", "50% more items found on map", playerBonus_observant);
   setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed", playerBonus_observant, playerBonus_dexterous);
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+20% chance to avoid being spoted by monsters", playerBonus_stealthy, playerBonus_dexterous);

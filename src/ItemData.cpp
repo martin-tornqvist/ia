@@ -175,7 +175,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->isScroll = true;
     d->isScrollLearnable = true;
     d->isScrollLearned = 0;
-    d->castFromMemoryChance = eng->dice.getInRange(1, 100);
+    d->castFromMemoryChance = 0;
     d->maxStackSizeAtSpawn = 1;
     d->landOnHardSurfaceSoundMessage = "";
     d->featuresCanBeFoundIn.push_back(feature_chest);
@@ -208,13 +208,13 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
   case itemDef_device: {
     resetDef(d, itemDef_general);
     d->isDevice = true;
-    d->chanceToIncludeInSpawnList = 30;
+    d->chanceToIncludeInSpawnList = 15;
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
     d->glyph = '~';
     d->tile = tile_device1;
     d->isStackable = false;
-    d->spawnStandardMinDLVL = 3;
+    d->spawnStandardMinDLVL = 4;
     d->spawnStandardMaxDLVL = 999;
     d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   }
@@ -1216,6 +1216,9 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
+  d->spawnStandardMaxDLVL = 1;
+  d->spawnStandardMaxDLVL = 10;
+  d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
   d->tile = tile_electricLantern;
   d->color = clrYellow;

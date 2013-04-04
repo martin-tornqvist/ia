@@ -276,9 +276,8 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     def_->name.name_plural = REAL_NAME_PLURAL;
     def_->name.name_a = REAL_NAME_A;
 
-    engine->log->addMessage("It was a " + REAL_NAME + ".");
-
     if(IS_SILENT_IDENTIFY == false) {
+      engine->log->addMessage("It was a " + REAL_NAME + ".");
       engine->player->incrShock(shockValue_heavy);
     }
 

@@ -13,7 +13,9 @@
 #include "Query.h"
 #include "PlayerBonuses.h"
 #include "Marker.h"
-
+#include "Inventory.h"
+#include "ItemPotion.h"
+#include "ItemDevice.h"
 
 const int BLAST_ANIMATION_DELAY_FACTOR = 3;
 
@@ -119,10 +121,10 @@ void ScrollOfDescent::specificRead(const bool FROM_MEMORY, Engine* const engine)
   if(engine->map->getDungeonLevel() < FIRST_CAVERN_LEVEL - 1) {
     engine->dungeonClimb->travelDown(1);
     engine->log->addMessage("I sink downwards!");
-    setRealDefinitionNames(engine, false);
   } else {
-    engine->log->addMessage("Nothing happens.");
+    engine->log->addMessage("I get a sinking feeling, but nothing happens.");
   }
+  setRealDefinitionNames(engine, false);
 }
 
 void ScrollOfTeleportation::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -220,7 +222,61 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
 }
 
 void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  Inventory* const inv = engine->player->getInventory();
 
+  vector<Item*> itemIdentifyCandidates;
+
+  vector<InventorySlot>* slots = inv->getSlots();
+  for(unsigned int i = 0; i < slots->size(); i++) {
+    Item* const item = slots->at(i).item;
+    if(item != NULL) {
+      const ItemDefinition& d = item->getDef();
+      if(d.isIdentified == false) {
+        itemIdentifyCandidates.push_back(item);
+      }
+    }
+  }
+  vector<Item*>* backpack = inv->getGeneral();
+  for(unsigned int i = 0; i < backpack->size(); i++) {
+    Item* const item = backpack->at(i);
+    if(item != this) {
+      const ItemDefinition& d = item->getDef();
+      if(d.isIdentified == false) {
+        itemIdentifyCandidates.push_back(item);
+      }
+    }
+  }
+
+  const unsigned int NR_ELEMENTS = itemIdentifyCandidates.size();
+  if(NR_ELEMENTS == 0) {
+    failedToLearnRealName(engine);
+    return;
+  } else {
+    Item* const item = itemIdentifyCandidates.at(engine->dice.getInRange(0, NR_ELEMENTS - 1));
+
+    const string itemNameBefore = engine->itemData->getItemRef(item, itemRef_a, true);
+
+    const ItemDefinition& d = item->getDef();
+    if(d.isScroll) {
+      Scroll* const scroll = dynamic_cast<Scroll*>(item);
+      scroll->setRealDefinitionNames(engine, true);
+    } else if(d.isQuaffable) {
+      Potion* const potion = dynamic_cast<Potion*>(item);
+      potion->setRealDefinitionNames(engine, true);
+    } else if(d.isDevice) {
+      Device* const device = dynamic_cast<Device*>(item);
+      device->identify(true);
+    } else {
+      tracer << "[WARNING] Scroll of identify was unable to identify item with name \"" + itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
+    }
+
+    const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
+
+    engine->log->addMessage("I suddenly gain intuitions about " + itemNameBefore + "...");
+    engine->log->addMessage("It is identified as " + itemNameAfter + "!");
+
+    setRealDefinitionNames(engine, false);
+  }
 }
 
 void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
@@ -356,7 +412,6 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
     if(IS_SILENT_IDENTIFY == false) {
       engine->log->addMessage("It was " + def_->name.name_a + ".");
       engine->renderer->drawMapAndInterface();
-//      engine->player->incrShock(shockValue_heavy);
     }
 
     def_->isIdentified = true;
@@ -414,12 +469,12 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
 
 bool Scroll::attemptReadFromScroll(Engine* const engine) {
   if(engine->player->getStatusEffectsHandler()->allowSee() == false) {
-    engine->log->addMessage("I can not read while blind.");
+    engine->log->addMessage("I cannot read while blind.");
     return false;
   }
 
   if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned) == false) {
-    engine->log->addMessage("I can not yet comprehend this.");
+    engine->log->addMessage("I cannot yet comprehend this.");
     return false;
   }
 

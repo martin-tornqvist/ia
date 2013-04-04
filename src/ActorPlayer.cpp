@@ -73,8 +73,8 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
-//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
+//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
@@ -113,6 +113,9 @@ void Player::actorSpecific_spawnStartItems() {
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
+  item = eng->itemFactory->spawnItem(item_scrollOfIdentify);
+  item->numberOfItems = 4;
+  inventory_->putItemInGeneral(item);
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
@@ -801,8 +804,7 @@ void Player::act() {
               const AbilityRollResult_t rollResult = eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
               if(rollResult == successSmall) {
                 eng->log->addMessage("I see something moving in the shadows.");
-              }
-              else if(rollResult > successSmall) {
+              } else if(rollResult > successSmall) {
                 monster->isStealth = false;
                 updateFov();
                 eng->renderer->drawMapAndInterface();

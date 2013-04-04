@@ -7,8 +7,22 @@
 #include "Log.h"
 #include "Knockback.h"
 #include "Inventory.h"
+#include "Map.h"
 
 //---------------------------------------------------- BASE CLASS
+bool Device::activateDefault(Actor* const actor, Engine* const engine) {
+  (void)actor;
+
+  if(def_->isIdentified) {
+    bool isDestroyed = toggle(engine);
+    engine->gameTime->letNextAct();
+    return isDestroyed;
+  } else {
+    engine->log->addMessage("I cannot yet use this.");
+    return false;
+  }
+}
+
 bool Device::toggle(Engine* const engine) {
   printToggleMessage(engine);
 
@@ -68,6 +82,12 @@ void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
   isActivated_ = lines.back() == "0" ? false : true;
   lines.erase(lines.begin());
   deviceSpecificSetParametersFromSaveLines(lines);
+}
+
+void Device::identify(const bool IS_SILENT_IDENTIFY) {
+  (void)IS_SILENT_IDENTIFY;
+
+  def_->isIdentified = true;
 }
 
 //---------------------------------------------------- SENTRY
@@ -162,18 +182,14 @@ void DeviceElectricLantern::runBadEffect(Engine* const engine) {
       engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;
       isItemDestroyed = true;
-    } else {
-      if(RND < 20) {
-        engine->log->addMessage("My Electric Lantern malfunctions.");
-        malfunctCooldown_ = engine->dice.getInRange(3, 4);
-        isVisionUpdateNeeded = true;
-      } else {
-        if(RND < 50) {
-          engine->log->addMessage("My Electric Lantern flickers.");
-          malfunctCooldown_ = 2;
-          isVisionUpdateNeeded = true;
-        }
-      }
+    } else if(RND < 20) {
+      engine->log->addMessage("My Electric Lantern malfunctions.");
+      malfunctCooldown_ = engine->dice.getInRange(3, 4);
+      isVisionUpdateNeeded = true;
+    } else if(RND < 50) {
+      engine->log->addMessage("My Electric Lantern flickers.");
+      malfunctCooldown_ = 2;
+      isVisionUpdateNeeded = true;
     }
 
     if(isVisionUpdateNeeded) {

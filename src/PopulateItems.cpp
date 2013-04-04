@@ -20,7 +20,7 @@ void PopulateItems::spawnItems() {
   nrOfSpawns += eng->dice(1, (nrOfSpawns / 2) + 2) - 1;
 
   if(eng->playerBonusHandler->isBonusPicked(playerBonus_treasureHunter)) {
-    nrOfSpawns = static_cast<int>(static_cast<double>(nrOfSpawns) * 1.2);
+    nrOfSpawns = (nrOfSpawns * 3) / 2;
   }
 
   buildCandidateList();

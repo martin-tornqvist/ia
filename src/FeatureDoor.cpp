@@ -22,10 +22,10 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
   const int ROLL = eng->dice(1, 100);
   const DoorSpawnState_t doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
-    ROLL < 30 ? doorSpawnState_secret :
-    ROLL < 40 ? doorSpawnState_stuck :
-    ROLL < 50 ? doorSpawnState_broken :
-    ROLL < 65 ? doorSpawnState_open :
+    ROLL < 40 ? doorSpawnState_secret :
+    ROLL < 50 ? doorSpawnState_stuck :
+    ROLL < 60 ? doorSpawnState_broken :
+    ROLL < 75 ? doorSpawnState_open :
     doorSpawnState_closed;
 
   switch(static_cast<DoorSpawnState_t>(doorState)) {

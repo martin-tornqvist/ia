@@ -53,7 +53,7 @@ void ItemPickup::tryPick() {
       eng->gameTime->letNextAct();
     } else {
       eng->log->clearLog();
-      eng->log->addMessage("I can not carry more.");
+      eng->log->addMessage("I cannot carry more.");
     }
   } else {
     eng->log->clearLog();

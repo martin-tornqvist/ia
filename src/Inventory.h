@@ -33,11 +33,8 @@ struct InventorySlot {
     allowRing(false),
     item(NULL) {
   }
-
   bool allowWieldedWeapon, allowMissile, allowArmor, allowCloak, allowAmulet, allowRing;
-
   string interfaceName;
-
   SlotTypes_t id;
   Item* item;
 };

@@ -11,10 +11,7 @@ public:
 
   virtual ~Device() {}
 
-  bool activateDefault(Actor* const actor, Engine* const engine) {
-    (void)actor;
-    return toggle(engine);
-  }
+  bool activateDefault(Actor* const actor, Engine* const engine);
 
   virtual string getDefaultActivationLabel() const {return isActivated_ ? "Deactivate" : "Activate";}
 
@@ -23,8 +20,9 @@ public:
   void newTurnInInventory(Engine* const engine);
 
   void itemSpecificAddSaveLines(vector<string>& lines);
-
   void itemSpecificSetParametersFromSaveLines(vector<string>& lines);
+
+  void identify(const bool IS_SILENT_IDENTIFY);
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
