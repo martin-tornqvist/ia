@@ -219,6 +219,10 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
   }
 }
 
+void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+
+}
+
 void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
   engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusClairvoyant(engine), true, false);

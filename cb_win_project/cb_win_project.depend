@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365028526 c:\dev\ia\src\itemdefinition.h
+1365073910 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1364568341 source:c:\dev\ia\src\actor.cpp
+1365068965 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -164,7 +164,7 @@
 	"Engine.h"
 	"Item.h"
 
-1363003455 c:\dev\ia\src\item.h
+1365068965 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1365068140 source:c:\dev\ia\src\actorplayer.cpp
+1365072165 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -859,7 +859,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1364824881 c:\dev\ia\src\itemscroll.h
+1365073784 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -956,7 +956,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1363308737 source:c:\dev\ia\src\featuredoor.cpp
+1365069384 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1010,7 +1010,7 @@
 	"MapTests.h"
 	"Log.h"
 
-1355677712 source:c:\dev\ia\src\featuresmoke.cpp
+1365070107 source:c:\dev\ia\src\featuresmoke.cpp
 	"FeatureSmoke.h"
 	"Engine.h"
 
@@ -1042,7 +1042,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1364824881 source:c:\dev\ia\src\gametime.cpp
+1365069058 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1168,7 +1168,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365065582 source:c:\dev\ia\src\itemdata.cpp
+1365072364 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1341,7 +1341,7 @@
 	"FeatureFactory.h"
 	"Map.h"
 
-1364941927 source:c:\dev\ia\src\mapbuildbsp.cpp
+1365069099 source:c:\dev\ia\src\mapbuildbsp.cpp
 	"MapBuildBSP.h"
 	"algorithm"
 	<stdlib.h>
@@ -10129,7 +10129,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1365031508 source:c:\dev\ia\src\itemdevice.cpp
+1365072625 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10139,7 +10139,7 @@
 	"Knockback.h"
 	"Inventory.h"
 
-1365026243 c:\dev\ia\src\itemdevice.h
+1365069875 c:\dev\ia\src\itemdevice.h
 	"Item.h"
 
 1364579806 c:\_martin_\ia\src\populatemonsters.h

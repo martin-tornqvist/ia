@@ -78,7 +78,7 @@ public:
     return clrBrown;
   }
 
-  virtual void newTurn(Engine* const engine) {
+  virtual void newTurnInInventory(Engine* const engine) {
     (void)engine;
   }
 

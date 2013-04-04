@@ -16,17 +16,21 @@ public:
     return toggle(engine);
   }
 
-  virtual string getDefaultActivationLabel() const {
-    return isActivated_ ? "Deactivate" : "Activate";
-  }
+  virtual string getDefaultActivationLabel() const {return isActivated_ ? "Deactivate" : "Activate";}
 
-  virtual sf::Color getInterfaceClr() const {
-    return clrCyan;
-  }
+  virtual sf::Color getInterfaceClr() const {return clrCyan;}
 
-  void newTurn(Engine* const engine);
+  void newTurnInInventory(Engine* const engine);
+
+  void itemSpecificAddSaveLines(vector<string>& lines);
+
+  void itemSpecificSetParametersFromSaveLines(vector<string>& lines);
 
 protected:
+  virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
+
+  virtual void deviceSpecificSetParametersFromSaveLines(vector<string>& lines) {(void)lines;}
+
   bool toggle(Engine* const engine);
 
   virtual int getRandomNrTurnsToNextGoodEffect(Engine* const engine) const;
@@ -36,13 +40,9 @@ protected:
 
   virtual void runBadEffect(Engine* const engine);
 
-  virtual void specificToggle(Engine* const engine) {
-    (void)engine;
-  }
+  virtual void specificToggle(Engine* const engine) {(void)engine;}
 
-  virtual void specificNewTurn(Engine* const engine) {
-    (void)engine;
-  }
+  virtual void specificnewTurnInInventory(Engine* const engine) {(void)engine;}
 
   virtual void printToggleMessage(Engine* const engine);
 
@@ -53,8 +53,7 @@ protected:
 
 class DeviceSentry: public Device {
 public:
-  DeviceSentry(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
+  DeviceSentry(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceSentry() {}
 
@@ -64,8 +63,7 @@ private:
 
 class DeviceRepeller: public Device {
 public:
-  DeviceRepeller(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
+  DeviceRepeller(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceRepeller() {}
 
@@ -76,8 +74,7 @@ private:
 
 class DeviceRejuvenator: public Device {
 public:
-  DeviceRejuvenator(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
+  DeviceRejuvenator(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceRejuvenator() {}
 
@@ -87,8 +84,7 @@ private:
 
 class DeviceTranslocator: public Device {
 public:
-  DeviceTranslocator(ItemDefinition* const itemDefinition) :
-    Device(itemDefinition) {}
+  DeviceTranslocator(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceTranslocator() {}
 
@@ -119,7 +115,7 @@ public:
 private:
   void printToggleMessage(Engine* const engine);
 
-  void specificNewTurn(Engine* const engine);
+  void specificnewTurnInInventory(Engine* const engine);
 
   void runGoodEffect(Engine* const engine);
 

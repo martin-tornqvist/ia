@@ -260,6 +260,21 @@ public:
 private:
 };
 
+class ScrollOfIdentify: public Scroll {
+public:
+  ScrollOfIdentify(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfIdentify() {
+  }
+  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Identify";
+  }
+private:
+};
+
 class ScrollOfClairvoyance: public Scroll {
 public:
   ScrollOfClairvoyance(ItemDefinition* const itemDefinition) :

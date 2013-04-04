@@ -1,0 +1,525 @@
+--------------------------------------------------------------
+Release 13.1 (September 20, 2012)
+--------------------------------------------------------------
+*  The Incinerator is a medium weight weapon
+*  The Toughness ability also gives a hit point bonus
+*  Lowered starting hit points from 16 to 14
+*  Fixed: There was a situation that put the game in an infinite loop (not responding)
+*  Fixed: The player color updates immediately after healing (instead of the turn after)
+
+
+--------------------------------------------------------------
+Release 13.0 (September 15, 2012)
+--------------------------------------------------------------
+*  The narrative is in first person perspective
+*  Added new 16x24 font (typewriter)
+*  Nicer looking main menu
+*  Removed the "Arcana" skill, and added a different system for casting chance
+*  Items have weights, and there is a carry limit
+*  Improved hit chances of heavy weapons to compensate for their weight
+*  Thrown items makes sounds when hitting hard surfaces
+*  Increased number of different items that can be carried
+*  Special rooms does not cause shock, this is instead tied to the map features
+*  Fortitude reduces shock by a fixed percent (instead of randomly blocking it completely)
+*  The turn number is displayed in the interface
+*  The player character is colored magenta when shock gets high
+*  The player character is colored dark red when HP gets low
+*  Reduced number of skill ranks in general, each lvl grants one skill pick
+*  Improved Healing (rank 2 heals disease, rank 3 regenerates hp over time)
+*  Better rules for if player with phobia is considered to be in open or cramped spaces
+*  Merged potion of reflexes and potion of aiming into one, and renamed it "Potion of the Cobra"
+*  Teleport traps displays a popup instead of log text (it was difficult to react)
+*  Open doors in ASCII mode uses ´ symbol (to differentiate from missile weapons)
+*  Damage per turn from burning is reduced
+*  Fixed: Explosions crashed the game in certain situations
+*  Fixed: Status effect countdown did not occur on some turns
+*  Fixed: "High ceiling rooms" could spawn monsters outside the room
+*  Fixed: Armor durability and clip ammo count were not stored in save files
+
+
+--------------------------------------------------------------
+Release 12.2 (June 10, 2012)
+--------------------------------------------------------------
+* Game crashed when loading a game while "blessed" or "cursed"
+
+
+--------------------------------------------------------------
+Release 12.1 (June 9, 2012)
+--------------------------------------------------------------
+* Linux version
+* The game should use a lot less CPU power
+* Smoother rendering in certain cases (e.g. no flickering when blinded)
+* Blue colors are brighter for better visibility
+
+
+--------------------------------------------------------------
+Release 12.0 (May 27, 2012)
+--------------------------------------------------------------
+* New map generator
+* A character screen (@) with info about skills and mental conditions
+* Reworked skill system - merging, balancing, grouping
+* New skill: Mobility (occasionally get free turn when moving)
+* Some monsters can use the sneaking and backstabbing skills
+* Monsters can sometimes spawn on an earlier depth than normal
+* 3 new monsters
+* A couple more spells that monsters can cast
+* New weapon: Spike Gun
+* Merged wear and wield command
+* It is now possible to use ranged weapons while Terrified (with a hit penalty). It also gives a dodge bonus now
+* Reworked magic system. Spells can now be identified/memorized when cast from a manuscript (removed studying)
+* New status effects: Blessed/Cursed (bonus/penalty to all rolls)
+* Darkness gives shock instead of the room (so lighting up a dark area with a flare removes the shock)
+* HP bonus per level is fixed instead of random
+* Armor durability % is no longer shown in the interface (only the protection value)
+* Replaced graves in the dungeon with tombs
+* Hunting horrors (deepest monsters) are somewhat weaker
+* Fixed a bug that prevented hit chance bonus vs unaware monsters
+* Removed and merged some redundant scrolls and potions
+* Quaffing a potion of stealth also causes all monsters to forget you
+* Fixed a bug that allowed explosion graphics to be rendered in unseen cells
+* The number of dungeon levels has been reduced from 30 to 25
+
+
+--------------------------------------------------------------
+Release 11.2 (December 19, 2011)
+--------------------------------------------------------------
+* The 16x24 font is fully available in ASCII mode
+* Fixed a bug that prevented monsters from stepping on corpses
+* Fixed a bug that allowed saving anywhere
+* Removed spirit points (sanity is now the only "resource" needed to cast spells)
+* The ghosts touch attack now causes slowness instead of draining spirit points
+* Ghosts can no longer use their touch attack while unaware of the player
+* Worm masses can no longer spawn worms from their corpses
+* Lowered the effects of Dodging, Fortitude and Toughness
+* Chances for scrolls and potions spawning is a bit higher
+* Slightly reduced the damage from spear traps
+
+
+--------------------------------------------------------------
+Release 11.1 (December 14, 2011)
+--------------------------------------------------------------
+* Added a Flare Gun
+* There was some problems with the map in the postmortem screen
+* The 16x24 font is unfinished for ascii mode, removed that option from the config file
+
+
+--------------------------------------------------------------
+Release 11.0 (December 13, 2011)
+--------------------------------------------------------------
+* Tile set
+* New font (16x24)
+* New time system (easier to predict how much the monsters will move between your turns)
+* New item: Flares - can be used to light up dark rooms
+* The skill system uses ranks again (instead of percentages)
+* Renamed the "Reloading" trait to "Weapon handling" and included chance for instant wield or swap
+* Merged the traits "Spot traps" and "Spot secret doors" into "Spot constructions"
+* New ability: "Spot items" - you find more items
+* Merged the traits "Evade melee" and "Evade traps" into "Dodge"
+* Removed the "Alchemy" trait and included potion identifying in "Arcana" instead
+* Removed the trait "Composure" and included shock resistance in "Fortitude" instead
+* Better formula for chances to study scrolls (smoother increase)
+* Fixed a bug that caused the 'get' command to crash the game after loading a save file
+* Decreased the HP of all monsters
+
+
+--------------------------------------------------------------
+Release 10.2 (November 20, 2011)
+--------------------------------------------------------------
+* The game crashed when dying from drinking a potion of scorching (changed it so you can't die from it)
+
+
+--------------------------------------------------------------
+Release 10.1 (November 19, 2011)
+--------------------------------------------------------------
+* Casting spells from manuscripts drained spirit points
+
+
+--------------------------------------------------------------
+Release 10.0 (November 19, 2011)
+--------------------------------------------------------------
+* The game is winnable
+* New armor system:
+> Armors provide different amount of protection from different damage types (physical, fire, electricity, etc)
+> Armors can be damaged, which makes it less effective
+> Armors are named "Name [D%, AP]", where D=Durability, AP=Damage reduction (vs physical)
+> Armor stats are shown in the character info lines
+* New armor type: Asbestos suit (very good against certain damage types, bad against physical)
+* New magic system:
+> Scrolls (now called manuscripts) can be studied to be identified or memorized (to cast them at any time)
+> Chance to identify or memorize depends on the language ability
+> Casting spells from memory drains Spirit Points, it can also cause miscasts with negative effects
+> The 'R'-key is used for studying texts, 'x' for casting from memory, and 'X' for casting from manuscripts
+* The melee abilities are merged into one again, and vice versa for firearms (the split didn't add anything to the game)
+* New abilities:
+> Spirit - increases max Spirit Points
+> Arcana - gives better chances to cast spells from memory without failure
+> Technique (melee) - Chance to get free turn (light weapons), full damage (heavy), or random bonus (medium)
+> Reloading - Chance to get a free turn when reloading firearms
+* 7 new monsters
+* 6 new potions
+* "Treasure rooms" with armor and ammo, or scrolls and potions, that are usually secret.
+* First aid can not be started if a monster is seen, and is automatically aborted if one appears
+* Special rooms occur less often
+* Less pop-up descriptions when entering special rooms (I found them extremely repetitive once you know them)
+* Mi-Go electric guns cause paralysis
+* Added missing messages for wielding and wearing things
+* Attacking an unaware monster in melee makes it aware even if you miss
+* The Incinerator's dmg description is "?" (less misleading than showing the projectile impact damage)
+* Removed some stuff from the character info lines to make room for new things
+* Pools no longer slows you down (it didn't work very well)
+
+
+--------------------------------------------------------------
+Release 9.2 (October 16, 2011)
+--------------------------------------------------------------
+New features
+* A new font image added (11x19), edit config.txt to use it
+
+Fixes & changes
+* You can no longer wait ('s') while you see an enemy
+* Missiles always landed at the end of their path (even if it hit a monster along the way)
+* Fixed some grammatical errors
+* Added a missing message (related to jamming doors)
+
+
+--------------------------------------------------------------
+Release 9.1 (October 13, 2011)
+--------------------------------------------------------------
+Fixes & changes
+* Fixed a faulty message when throwing potions on monsters ("it had no apparent effect..." even when the effect was obvious. Only the message was wrong though, not the actual identification)
+* You lost iron spikes if you tried to jam an open door
+
+
+--------------------------------------------------------------
+Release 9.0 (October 12, 2011)
+--------------------------------------------------------------
+New features
+* Linux version
+* Modified and expanded skill system:
+> Some skills have been split (e.g. Firearms->Shotguns, Pistols, Automatics)
+> You assign points instead of ranks
+> The skills are ordered in groups (e.g. Stealth = Sneaking and Backstabbing)
+> Putting points in one skill gives half the amount to all other skills in the same group
+* New skills:
+> Lore(Alchemy) - Used for identifying potions.
+> Lore(Language) - Used for identifying scrolls.
+* 2 new unique monsters
+* 4 new common monsters
+* Some more monster spells
+* Doors can be jammed with iron spikes (j)
+* Kick attack (k)
+* Some attacks causes knock-back
+* You can throw potions
+* New symbol for walls (full square)
+* Option for wall symbol (full square or '#')
+* Option to skip intro-level
+* Option for if 'Close', 'Bash', etc should always ask for direction
+* Melee attack for fire hounds
+* Command to "un-wield" missile weapons (M)
+
+Fixes & changes
+* The command to show the message log is now 'L' (used to be 'M')
+* Cultists can drop scrolls and potions
+* Potions and scrolls can spawn stacked
+* Fixed a problem with save files messing up identified potions
+* Messages in pop-up boxes are duplicated to the message history screen
+* HP is raised more when gaining new levels, and starts a bit higher
+* Disease lowers you to 3/4 HP instead of 1/2 HP
+* Not all room entrances have doors
+* Much lower masochism bonus (you could grind xp endlessly)
+* Claustrophobia can not happen next to chasms
+* The stairs could be hidden by certain things created by the special rooms
+* More convenient configuration file (easier to choose font image)
+* New AI for Fungi from Yuggoth (to avoid an exploit)
+* The map is regenerated if too small
+* Prevented chasms from making unreachable "islands"
+* Fixed some code that may have made the game less stable
+
+
+--------------------------------------------------------------
+Release 8.1 (September 24, 2011)
+--------------------------------------------------------------
+New features
+* 2 new unique monsters
+* The tab key performs a melee attack vs an adjacent monster
+
+Fixes & changes
+* The FoV is more permissive with walls (especially corridors and corners)
+* Default aim position is at last monster attacked
+* If there is only one adjacent door, the 'close' command does not ask for direction
+
+
+--------------------------------------------------------------
+Release 8.0 (September 20, 2011)
+--------------------------------------------------------------
+New features
+* Potions (14 types)
+* 6 new scrolls (some old scroll effects are now potions instead)
+* Special rooms with descriptions and various effects
+* Some rooms give temporary shock (restored when leaving)
+* New trap: Spider web
+* Flying creatures actually fly (can fly over chasms, acid, etc)
+* New terrain types:
+> Water (slower walk speed, dodge penalty)
+> Blood (slower walk speed, doge penalty, causes shock)
+> Acid (does damage)
+> Mud (much slower walk speed, heavy dodge penalty)
+> Chasm (only flying creatures can pass)
+> And a few more...
+* New symbol for gravestones
+* New symbol for impassable rubble
+
+Fixes & changes
+* "SAN" (sanity) changed to "INS" (insanity) in the interface. Counts up from 0%. The values are called "insanity" and "shock" (or stress)
+* Insanity increases when shock reaches 100% (instead of randomly happening when shock is high)
+* The backstabbing skill gives highest dmg +50/100/150% extra dmg (was +50/100/150% added to rolled dmg)
+* The XP info in the interface is of the format LVL: [level] NXT: [xp remaining for next lvl]
+* Disease last much longer (but there are two types of potions that removes disease)
+* Sadism does not decrease shock for killing LVL 1 creatures (rats, spiders...)
+* A bug caused monsters to cast spells even while unaware
+* Smoke was not erased when switching level
+* Unseen cells are darker than in previous versions, and very slightly coloured blue
+* The line under unaware monsters is blue instead of white
+* When reading a scroll of summoning, the scroll identity is always revealed
+* Fixed a typo when reading scrolls
+
+
+--------------------------------------------------------------
+Release 7.1 (August 29, 2011)
+--------------------------------------------------------------
+Fixes
+* Every melee attack was presented like a back-stab (only the message was bugged though)
+* Fixed a horrible horrible bug that prevented the player from dodging melee attacks
+* CPU usage % should be much lower
+* The inventory can store more items
+* Windowed mode is now the default
+
+
+--------------------------------------------------------------
+Release 7.0 (August 25, 2011)
+--------------------------------------------------------------
+New features
+* Save function
+* Sneaking (unaware creatures are marked with an underscore)
+* Backstabbing ("You stab the Cultist covertly with a dagger")
+* Entry for sneaking and backstabbing in the manual
+* Three new level-up bonuses to choose from
+* Slot for prepared weapon (for fast switching)
+* More insanity effects (including permanent effects)
+* The back-story is written in the game
+* Some text (e.g. insanity events) is shown in a pop-up box instead of the message log (they were too easy to miss)
+
+Fixes
+* Lower monster spawn rate
+* Removed hunger (the sanity system made it redundant)
+* Animals listen for sound
+* +1 or 2 HP when levelling up (randomly)
+* More HP restored when levelling up
+* Using the 'fire' command while aiming at yourself cancels the aiming mode
+* Scroll of corruption can not take you to 0 HP
+* Removed the "It was a scroll of" message when reading unknown scrolls
+* Much higher shock from reading and identifying scrolls
+* Toughness increases HP instead of decreasing damage taken
+* You can no longer use the throwing attack while "Terrified"
+
+
+--------------------------------------------------------------
+Release 6.0 (August 5, 2011)
+--------------------------------------------------------------
+New features
+* Insanity
+* High Score
+* New explosive weapon: Molotov Cocktail
+* New thrown weapon: Rocks
+* Explosions destroy walls and doors (destroyed walls may leave rocks)
+* Pressing the wait command gives status "Still" for one turn. This gives slightly better hit chance with firearms and thrown weapons.
+* A wait command can also be made with the period (.) key (as well as the '5'-key)
+* Menus can be navigated using the movement keys and enter (as well as typing a letter)
+* Alternative commands for diagonal movement (PgUp/Home/End/PgDwn -- or -- arrow keys + shift/ctrl)
+* New status effect: Fainted
+* One new monster
+* The tombstone screen has a command to quit the game
+
+Fixes
+* The game restarts smoother (doesn't restart the renderer when going to main menu)
+* Zombies leave no corpse the second time they are killed
+* The pre-set player name is empty instead of "Player"
+* While paralysed, the character info did not show damage taken until the player could move (now it updates for each hit)
+* Cancellation commands in some places where they were missing
+* Rewrote level up-bonus description text
+
+
+--------------------------------------------------------------
+Release 5.0 (July 24, 2011)
+--------------------------------------------------------------
+New features:
+* Monster spell casting
+* New monsters
+* Throwing weapons
+* Postmortem information
+* A command to print the postmortem info to a memorial file
+* Player can name the character
+* New status effects: Diseased, Slowed
+* Some rats and clawing zombies are diseased (attack causes disease). Ghouls always cause disease
+* Some Cultist Acolytes can cast a few spells (very rare). Some Mi-Go (Fungi) can cast spells (somewhat rare)
+
+Fixes:
+* Fixed a bug that caused unique monsters to sometimes spawn more than once
+* The minimum value for any skill roll was 5%, causing hidden things to be found much too easily even without "Alertness". This value is now 1%
+* Monsters give less xp (to compensate for spawning)
+* The "Melee" and "Firearms" skills now only gives better chance to hit
+* Safeguard against accidental quitting
+
+
+--------------------------------------------------------------
+Release 4.0 (July 12, 2011)
+--------------------------------------------------------------
+New features:
+One unique monster
+
+Fixes:
+* Much better map (no dead end corridors)
+* Changed healing back so you spend a number of turns to apply first aid (instead of healing at stairs)
+* +2HP at level up instead of +1
+* Better dodge chance from Agility
+* Monsters spawn faster, prepare to get overrun if you dwell on the level :-)
+* All monsters of the "Reanimated" variety spawn a level earlier.
+* Raised the damage of the Tommy Gun (when cultists fired it, it often barely hurt you)
+* Cultists fire their weapons more often
+* All monsters have slightly higher hit chance
+* Fixed a bug that caused enemies to spawn inside your field of view
+* Fixed a minor problem with the field of view (too many wall cells were revealed in some circumstances)
+* Cultist anger phrases were too infrequent in the previous version
+* Reading scrolls now causes your turn to end
+
+
+--------------------------------------------------------------
+Release 3.0 (July 9, 2011)
+--------------------------------------------------------------
+New features:
+* More monsters
+* Pump-action shotgun
+* Monsters spawn while you are on the level
+* Hit points are restored only when climbing the stairs (except for rare methods such as scrolls and potions)
+* Melee weapons are classed as light, medium and heavy. When attacking there is a chance for a bonus depending on class. With light you get a free turn, heavy do maximum damage. Medium weapons get no bonus
+* Varying damage (pluses) on spawned melee weapons
+* When looking at melee weapons on the floor, their +damage is seen (if they have it)
+* Firearms have effective range limits (half damage beyond it), the line drawn while aiming is green inside the limit and yellow beyond it
+* When holding lit dynamite, the messages tells how many turns are left on the fuse
+* Explosions leave smoke
+* More pre-defined rooms
+
+Fixes:
+* Much balancing of weapons and monsters
+* Changed the names of some weapons
+* Fixed a bug with machine gun weapons (killing a monster caused the following bullets to hit the floor where he stood. Now machine guns are more effective against rows of monsters)
+* Shotgun shells spawned on the floor can be more than one shell
+* Fixed a graphical bug with gas traps
+* Fixed a graphical bug with smoke
+* Teleport traps are added to the "remembered" map when you are moved
+* Reduced spam from Cultist anger phrases
+* Death occurs on 0hp instead of -1
+* Confusion is less random
+* Some small improvements to the interface
+
+
+--------------------------------------------------------------
+Release 2.0 (June 23, 2011)
+--------------------------------------------------------------
+New features:
+* Traps
+* A command to trigger known traps on purpose
+* Secret doors
+* command to wait for 10 turns (useful to search for hidden things)
+* New level up bonuses to choose from
+* New status effects
+* New terrain type: smoke
+* Armor (a bit crude so far)
+* Different First Aid (not item based)
+* Starvation is not lethal (but still very dangerous)
+* Expanded the command list screen to a brief manual
+
+Fixes:
+* Much better looking explosions and projectile hits
+* The in-game quit command returns to the main menu instead of shutting down the game
+* Monsters roam the map more
+* Message if an item drops where you stand
+* Removed bouncing of thrown items (it felt too unpredictable)
+* Fixed some grammatical errors
+
+
+
+Old changelogs from before the game was named Infra Arcana
+--------------------------------------------------------------
+Feb 7, 2011
+* There are incantation scrolls with mysterious titles that you can read. Their effect and true identity are unknown until you try them (and only if their effect is visible and obvious to the player character). Once you learn the true identity of a scroll, all scrolls of that type are always known. There are a decent number of types in the game already.
+* Items are found in the dungeon (not only dropped from killed monsters).
+* New skill: Dodge & Evade.
+* New items: More melee weapons. Healing items.
+* Dynamite explodes in your hands if you hold it too long.
+* Corpses blow up from explosions (can be used to prevent zombies from rising).
+* New enemy: Wolf.
+* Firearms on the ground have white symbol if they have ammo loaded, otherwise gray.
+* Projectile symbol depends on direction fired (used to be '/' for all directions).
+* Identical log messages show number of repeats, instead of repeating the message itself.
+Before: You are hit. You are hit. You are hit.
+Now: "You are hit.(x3)"
+* The log prompts for "[MORE]" if next message doesn't fit.
+* Added several log messages related to throwing, dynamite fuse, death screams from explosions and other things.
+"You light a dynamite stick. You throw a lit dynamite stick. (E)You hear an explosion. (E)You hear agonized screaming(x4)"
+* Picking up items, lighting dynamite fuse and throwing now costs turns.
+* New inventory interface. It takes fewer key-presses to use now.
+
+Dec 1, 2010
+* Big rearrangement of the interface.
+* In-game command list.
+* Monsters sometimes drop stuff when they die.
+* One item per tile. Items dropped on other items "roll" to the nearest free cell. This creates a nice "explosion"-effect when monsters die.
+* Message when you stand on an item.
+* Command for unloading ammo from a gun on the ground ('u').
+* Pressing the fire command when no ammo loaded attempts a reload instead.
+(Especially handy with Shotguns.)
+* The interface always shows info for the wielded weapon both as a firearm and as a melee weapon.
+* Staircases cannot be hidden by corpses.
+
+Nov 23, 2010
+* Smarter AI
++Some monsters will search for you if they saw you.
++Some will listen for sounds.
++Some will communicate about where to search.
+* Corpses/Gore (depending on force of attack)
+* Zombie-corpses can rise again.
+* Napalm Launcher explosion also sets creatures on fire.
+* Blindness affects messages - "It bites you!", "You hear gunfire." et c
+* Blindness affects skill rolls.
+* Added some nice things to the forest-level
++Crypt that you climb out of.
++Graveyard.
++You reach the dungeon/underworld through the cellar of a ruined church.
+* Predefined rooms that appear randomly.
+* Fixed a graphical glitch with Tommy Gun and Tesla Cannon.
+* Various balancing/behaviour fixing.
+* Fixed some problems with keyboard input and the game directory
+
+Oct 5, 2010
+* New weapons - Tesla Canon, Tommy Gun
+* New enemies - Fanatic, Zealot
+* Player visual memory - Things outside your field of view are seen as your character remembers them.
+* Merged Firearm-slot and Melee-slot - Instead of two separate slots, you have "Wielding". Firearms can also be used in melee to buttstroke enemies.
+
+Sep 19, 2010
+* Gargoyle - I'm happy with the behaviour of this one. It's much faster than you when moving, but when it swoops down to claw at you it must pause for a short while. The gargoyle can also fling bones.
+* Napalm launcher - Hehehe
+* Monsters are placed in groups at world generation - Now you can be chased by a horde of zombies.
+* Characters have size data. Ranged attacks have rules for what character sizes can be hit - resulting in more intuitive behaviour such as:
++ A rat can't block your shot when you aim at a human-sized target.
++ Projectiles can miss their target and hit someone behind it instead.
++ You can aim the Napalm Launcher at the ground.
+
+Aug 25, 2010
+* Dynamite
+You can light the fuse, and you can wait with the lit dynamite in hands if you want. When you throw it, it can bounce off walls. When the fuse runs out the dynamite explodes for massive area damage.
+* Reloading
+The shotgun has a capacity of two shells, and you load one shell at a time. Cultits reload their shotgun when they need to.
+* Phantasm
+When it goes ethereal you can't attack it, and vice versa. It can slice you with its sickle. It can also use the sickle to project evil spirits at you, though it prefers melee.

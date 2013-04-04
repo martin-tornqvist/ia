@@ -108,10 +108,10 @@ void Player::actorSpecific_spawnStartItems() {
 
   inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
 
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 }
 

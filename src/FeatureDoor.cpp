@@ -319,8 +319,7 @@ void Door::tryBash(Actor* actorTrying) {
       if(TRYER_SPRAINED) {
         if(IS_PLAYER) {
           eng->log->addMessage("I sprain myself.", clrMessageBad);
-        }
-        else {
+        } else {
           if(PLAYER_SEE_TRYER) {
             eng->log->addMessage(actorTrying->getNameThe() + " is hurt.");
           }
@@ -332,8 +331,7 @@ void Door::tryBash(Actor* actorTrying) {
       if(TRYER_OFF_BALANCE) {
         if(IS_PLAYER) {
           eng->log->addMessage("I am off-balance.");
-        }
-        else if(PLAYER_SEE_TRYER) {
+        } else if(PLAYER_SEE_TRYER) {
           eng->log->addMessage(actorTrying->getNameThe() + " is off-balance.");
         }
 
@@ -427,8 +425,7 @@ void Door::tryClose(Actor* actorTrying) {
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
           eng->log->addMessage("The door is blocked.");
-        }
-        else {
+        } else {
           eng->log->addMessage("Something is blocking the door.");
         }
       }

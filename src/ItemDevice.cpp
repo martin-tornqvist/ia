@@ -39,10 +39,10 @@ int Device::getRandomNrTurnsToNextBadEffect(Engine* const engine) const {
   return engine->dice.getInRange(6, 10);
 }
 
-void Device::newTurn(Engine* const engine) {
+void Device::newTurnInInventory(Engine* const engine) {
   if(isActivated_) {
 
-    specificNewTurn(engine);
+    specificnewTurnInInventory(engine);
 
     if(--nrTurnsToNextGoodEffect_ <= 0) {
       nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
@@ -57,6 +57,17 @@ void Device::newTurn(Engine* const engine) {
 
 void Device::runBadEffect(Engine* const engine) {
 
+}
+
+void Device::itemSpecificAddSaveLines(vector<string>& lines) {
+  lines.push_back(isActivated_ ? "0" : "1");
+  deviceSpecificAddSaveLines(lines);
+}
+
+void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  isActivated_ = lines.back() == "0" ? false : true;
+  lines.erase(lines.begin());
+  deviceSpecificSetParametersFromSaveLines(lines);
 }
 
 //---------------------------------------------------- SENTRY
@@ -110,11 +121,10 @@ void DeviceTranslocator::runGoodEffect(Engine* const engine) {
 //}
 
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceElectricLantern::specificNewTurn(Engine* const engine) {
+void DeviceElectricLantern::specificnewTurnInInventory(Engine* const engine) {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
-//      engine->log->addMessage("The Electric Lantern is casting light.");
       engine->gameTime->updateLightMap();
       engine->player->updateFov();
       engine->renderer->drawMapAndInterface();
@@ -124,7 +134,7 @@ void DeviceElectricLantern::specificNewTurn(Engine* const engine) {
 
 void DeviceElectricLantern::printToggleMessage(Engine* const engine) {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
-  engine->log->addMessage(toggleStr + " the Electric Lantern.");
+  engine->log->addMessage(toggleStr + " an Electric Lantern.");
 }
 
 void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
@@ -148,18 +158,18 @@ void DeviceElectricLantern::runBadEffect(Engine* const engine) {
 
     const int RND = engine->dice(1, 100);
     if(RND < 3) {
-      engine->log->addMessage("The Electric Lantern breaks!");
+      engine->log->addMessage("My Electric Lantern breaks!");
       engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;
       isItemDestroyed = true;
     } else {
       if(RND < 20) {
-        engine->log->addMessage("The Electric Lantern malfunctions.");
-        malfunctCooldown_ = engine->dice.getInRange(2, 4);
+        engine->log->addMessage("My Electric Lantern malfunctions.");
+        malfunctCooldown_ = engine->dice.getInRange(3, 4);
         isVisionUpdateNeeded = true;
       } else {
         if(RND < 50) {
-          engine->log->addMessage("The Electric Lantern flickers.");
+          engine->log->addMessage("My Electric Lantern flickers.");
           malfunctCooldown_ = 2;
           isVisionUpdateNeeded = true;
         }

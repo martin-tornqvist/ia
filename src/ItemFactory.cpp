@@ -275,6 +275,9 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   case item_scrollOfDetectTraps:
     item = new ScrollOfDetectTraps(d);
     break;
+  case item_scrollOfIdentify:
+    item = new ScrollOfIdentify(d);
+    break;
   case item_scrollOfBlessing:
     item = new ScrollOfBlessing(d);
     break;

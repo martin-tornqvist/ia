@@ -127,11 +127,11 @@ enum ItemId_t {
   item_scrollOfSlowEnemies,
   item_scrollOfDetectTraps,
   item_scrollOfDetectItems,
+  item_scrollOfIdentify,
   item_scrollOfBlessing,
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
   item_scrollOfAzathothsBlast,
-  //item_scrollOfInsight,
 
   item_thaumaturgicAlteration,
 
@@ -213,6 +213,7 @@ public:
   bool isScrollLearned;
   bool isScrollLearnable;
   bool isQuaffable;
+  bool isDevice;
   bool isEatable;
   bool isArmor;
   ArmorData armorData;

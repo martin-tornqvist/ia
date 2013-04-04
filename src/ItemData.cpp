@@ -207,6 +207,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
   case itemDef_device: {
     resetDef(d, itemDef_general);
+    d->isDevice = true;
     d->chanceToIncludeInSpawnList = 30;
     d->itemWeight = itemWeight_light;
     d->isIdentified = true;
@@ -1092,6 +1093,11 @@ void ItemData::makeList() {
   d->spellTurnsPerPercentCooldown = 20;
   itemDefinitions[d->id] = d;
 
+  d = new ItemDefinition(item_scrollOfIdentify);
+  resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 20;
+  itemDefinitions[d->id] = d;
+
   d = new ItemDefinition(item_scrollOfBlessing);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 30;
@@ -1166,6 +1172,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
+  d->isIdentified = false;
   d->color = clrGray;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_tomb);
@@ -1174,6 +1181,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceRepeller);
   resetDef(d, itemDef_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
+  d->isIdentified = false;
   d->color = clrGray;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_tomb);
@@ -1182,6 +1190,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceRejuvenator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
+  d->isIdentified = false;
   d->color = clrGray;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_tomb);
@@ -1190,6 +1199,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceTranslocator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
+  d->isIdentified = false;
   d->color = clrGray;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_tomb);
@@ -1206,6 +1216,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
+  d->isIdentified = true;
   d->tile = tile_electricLantern;
   d->color = clrYellow;
   itemDefinitions[d->id] = d;
@@ -1213,11 +1224,9 @@ void ItemData::makeList() {
 
 void ItemData::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(itemDefinitions[i]->isQuaffable) {
-      lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
-    }
+    lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
+
     if(itemDefinitions[i]->isScroll) {
-      lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
       lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
       lines.push_back(itemDefinitions[i]->isTried ? "1" : "0");
       lines.push_back(intToString(itemDefinitions[i]->castFromMemoryChance));
@@ -1227,10 +1236,9 @@ void ItemData::addSaveLines(vector<string>& lines) const {
 
 void ItemData::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(itemDefinitions[i]->isQuaffable) {
-      itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
-      lines.erase(lines.begin());
-    }
+    itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
+    lines.erase(lines.begin());
+
     if(itemDefinitions[i]->isScroll) {
       itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
@@ -1283,6 +1291,14 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
   const ItemDefinition& d = item->getDef();
   string ret = "";
 
+  if(d.isDevice && d.isIdentified == false) {
+    if(itemRefForm == itemRef_plain) {
+      return "Alien Device";
+    } else {
+      return "an Alien Device";
+    }
+  }
+
   if(d.isStackable && item->numberOfItems > 1 && itemRefForm == itemRef_plural) {
     ret = intToString(item->numberOfItems) + " ";
     ret += d.name.name_plural;
@@ -1324,9 +1340,12 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
   return ret;
 }
 
-string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A,
-                                     const PrimaryAttackMode_t attackMode) const {
+string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const PrimaryAttackMode_t attackMode) const {
   const ItemDefinition& d = item->getDef();
+
+  if(d.isDevice && d.isIdentified == false) {
+    return ADD_A ? "an Alien Device" : "Alien Device";
+  }
 
   string ret = "";
 

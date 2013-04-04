@@ -230,13 +230,13 @@ void GameTime::runNewStandardTurnEvents() {
   Inventory* playerInv = eng->player->getInventory();
   vector<Item*>* playerBackpack = playerInv->getGeneral();
   for(unsigned int i = 0; i < playerBackpack->size(); i++) {
-    playerBackpack->at(i)->newTurn(eng);
+    playerBackpack->at(i)->newTurnInInventory(eng);
   }
   vector<InventorySlot>* playerSlots = playerInv->getSlots();
   for(unsigned int i = 0; i < playerSlots->size(); i++) {
     Item* const item = playerSlots->at(i).item;
     if(item != NULL) {
-      item->newTurn(eng);
+      item->newTurnInInventory(eng);
     }
   }
 
