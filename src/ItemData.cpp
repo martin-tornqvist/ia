@@ -347,7 +347,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_ammo);
   d->name = ItemName("Napalm shell", "Napalm shells", "a Napalm shell");
   d->itemWeight = itemWeight_light;
-  d->spawnStandardMinDLVL = 3;
+  d->spawnStandardMinDLVL = 8;
   d->maxStackSizeAtSpawn = 2;
   d->featuresCanBeFoundIn.push_back(feature_chest);
   d->featuresCanBeFoundIn.push_back(feature_cabinet);
