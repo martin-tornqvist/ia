@@ -39,6 +39,10 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         break;
       case roomTheme_dungeon:
         break;
+      case roomTheme_flooded:
+        break;
+      case roomTheme_muddy:
+        break;
       case endOfRoomThemes:
         break;
       }

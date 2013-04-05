@@ -502,7 +502,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_crypt);
+  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_crypt);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_ghoulStatue;
@@ -521,7 +521,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 6;
-  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_monster);
+  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cocoon;
@@ -539,7 +539,7 @@ void FeatureData::makeList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls, roomTheme_spider);
+  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_spider);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_chest;
@@ -631,7 +631,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
+  d.themedFeatureSpawnRules.set(4, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pillarBroken;
@@ -649,7 +649,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(2, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
+  d.themedFeatureSpawnRules.set(4, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_altar;

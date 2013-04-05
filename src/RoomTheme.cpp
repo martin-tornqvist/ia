@@ -64,6 +64,14 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
     room.roomDescr = "A gruesome room.";
   }
   break;
+  case roomTheme_flooded: {
+    room.roomDescr = "A flooded room.";
+  }
+  break;
+  case roomTheme_muddy: {
+    room.roomDescr = "A muddy room.";
+  }
+  break;
   default: {
   } break;
   }
@@ -132,8 +140,17 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 
   if(room.roomTheme == roomTheme_dungeon) {
 
+  }
 
-
+  if(room.roomTheme == roomTheme_flooded || room.roomTheme == roomTheme_muddy) {
+    const Feature_t featureId = room.roomTheme == roomTheme_flooded ? feature_shallowWater : feature_shallowMud;
+    for(int y = room.getY0(); y <= room.getY1(); y++) {
+      for(int x = room.getX0(); x <= room.getX1(); x++) {
+        if(blockers[x][y] == false) {
+          eng->featureFactory->spawnFeatureAt(featureId, coord(x, y));
+        }
+      }
+    }
   }
 
   if(room.roomTheme == roomTheme_monster) {
@@ -279,6 +296,12 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
     case roomTheme_monster:
       chanceToMakeDark = 75;
       break;
+    case roomTheme_flooded:
+      chanceToMakeDark = 50;
+      break;
+    case roomTheme_muddy:
+      chanceToMakeDark = 50;
+      break;
     default:
       break;
     }
@@ -298,6 +321,10 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
 int RoomThemeMaker::attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
     vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme) {
   tracer << "RoomThemeMaker::attemptSetFeatureToPlace()" << endl;
+
+  if(featureDefsBelongingToTheme.empty()) {
+    return -1;
+  }
 
   const bool IS_NEXT_TO_WALL_AVAIL = nextToWalls.size() != 0;
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
@@ -380,7 +407,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   const int MIN_DIM = 3;
   const int MAX_DIM = 12;
-  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(2, 3);
+  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(1, 4);
 
   const int NR_ROOMS = roomList.size();
 

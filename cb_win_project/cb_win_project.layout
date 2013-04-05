@@ -52,8 +52,8 @@
 	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="7">
 		<Cursor position="10888" topLine="624" />
 	</File>
-	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="17312" topLine="487" />
+	<File name="..\src\ActorMonsterSpecific.cpp" open="1" top="1" tabpos="4">
+		<Cursor position="13350" topLine="365" />
 	</File>
 	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="2255" topLine="53" />
@@ -295,8 +295,8 @@
 	<File name="..\src\ItemDefinition.h" open="0" top="0" tabpos="4">
 		<Cursor position="2766" topLine="113" />
 	</File>
-	<File name="..\src\ItemDevice.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="578" topLine="0" />
+	<File name="..\src\ItemDevice.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="66" topLine="0" />
 	</File>
 	<File name="..\src\ItemDevice.h" open="0" top="0" tabpos="1">
 		<Cursor position="721" topLine="0" />
@@ -319,8 +319,8 @@
 	<File name="..\src\ItemFactory.h" open="0" top="0" tabpos="10">
 		<Cursor position="263" topLine="0" />
 	</File>
-	<File name="..\src\ItemPickup.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1788" topLine="38" />
+	<File name="..\src\ItemPickup.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="1475" topLine="38" />
 	</File>
 	<File name="..\src\ItemPickup.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
@@ -331,8 +331,8 @@
 	<File name="..\src\ItemPotion.h" open="0" top="0" tabpos="0">
 		<Cursor position="4625" topLine="162" />
 	</File>
-	<File name="..\src\ItemScroll.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="16671" topLine="454" />
+	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="16437" topLine="454" />
 	</File>
 	<File name="..\src\ItemScroll.h" open="0" top="0" tabpos="2">
 		<Cursor position="6340" topLine="241" />
@@ -388,8 +388,8 @@
 	<File name="..\src\MapBuildForest.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="4695" topLine="127" />
 	</File>
-	<File name="..\src\MapBuildKingsTomb.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="708" topLine="1" />
+	<File name="..\src\MapBuildKingsTomb.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="600" topLine="3" />
 	</File>
 	<File name="..\src\MapBuildRoomsAndCorridors.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="21152" topLine="703" />
@@ -400,8 +400,8 @@
 	<File name="..\src\MapPatterns.h" open="0" top="0" tabpos="3">
 		<Cursor position="69" topLine="0" />
 	</File>
-	<File name="..\src\MapTemplates.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="3730" topLine="39" />
+	<File name="..\src\MapTemplates.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="3509" topLine="41" />
 	</File>
 	<File name="..\src\MapTemplates.h" open="0" top="0" tabpos="0">
 		<Cursor position="891" topLine="42" />
@@ -496,8 +496,8 @@
 	<File name="..\src\Reload.h" open="0" top="0" tabpos="4">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\Render.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="16794" topLine="477" />
+	<File name="..\src\Render.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="2724" topLine="67" />
 	</File>
 	<File name="..\src\Render.h" open="0" top="0" tabpos="4">
 		<Cursor position="1996" topLine="44" />

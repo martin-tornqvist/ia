@@ -19,6 +19,8 @@ enum RoomTheme_t {
   roomTheme_dungeon,
   roomTheme_crypt,
   roomTheme_monster,
+  roomTheme_flooded,
+  roomTheme_muddy,
 
   endOfRoomThemes
 };
