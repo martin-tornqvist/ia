@@ -111,7 +111,7 @@
 
 1364941844 c:\dev\ia\src\constdungeonsettings.h
 
-1364051024 c:\dev\ia\src\config.h
+1365146998 c:\dev\ia\src\config.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -10132,7 +10132,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1365115869 source:c:\dev\ia\src\itemdevice.cpp
+1365117583 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"

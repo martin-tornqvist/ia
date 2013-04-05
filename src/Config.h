@@ -58,7 +58,7 @@ public:
 
   const int SCREEN_BPP;
   const int FRAMES_PER_SECOND;
-  bool FULLSCREEN;
+//  bool FULLSCREEN;
 
   const int PLAYER_START_X;
   const int PLAYER_START_Y;

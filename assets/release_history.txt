@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-Release 13.1 (September 20, 2012)
+v13.1 (September 20, 2012)
 --------------------------------------------------------------
 * The Incinerator is a medium weight weapon
 * The Toughness ability also gives a hit point bonus
@@ -9,7 +9,7 @@ Release 13.1 (September 20, 2012)
 
 
 --------------------------------------------------------------
-Release 13.0 (September 15, 2012)
+v13.0 (September 15, 2012)
 --------------------------------------------------------------
 * The narrative is in first person perspective
 * Added new 16x24 font (typewriter)
@@ -38,13 +38,13 @@ Release 13.0 (September 15, 2012)
 
 
 --------------------------------------------------------------
-Release 12.2 (June 10, 2012)
+v12.2 (June 10, 2012)
 --------------------------------------------------------------
 * Game crashed when loading a game while "blessed" or "cursed"
 
 
 --------------------------------------------------------------
-Release 12.1 (June 9, 2012)
+v12.1 (June 9, 2012)
 --------------------------------------------------------------
 * Linux version
 * The game should use a lot less CPU power
@@ -53,7 +53,7 @@ Release 12.1 (June 9, 2012)
 
 
 --------------------------------------------------------------
-Release 12.0 (May 27, 2012)
+v12.0 (May 27, 2012)
 --------------------------------------------------------------
 * New map generator
 * A character screen (@) with info about skills and mental conditions
@@ -81,7 +81,7 @@ Release 12.0 (May 27, 2012)
 
 
 --------------------------------------------------------------
-Release 11.2 (December 19, 2011)
+v11.2 (December 19, 2011)
 --------------------------------------------------------------
 * The 16x24 font is fully available in ASCII mode
 * Fixed a bug that prevented monsters from stepping on corpses
@@ -96,7 +96,7 @@ Release 11.2 (December 19, 2011)
 
 
 --------------------------------------------------------------
-Release 11.1 (December 14, 2011)
+v11.1 (December 14, 2011)
 --------------------------------------------------------------
 * Added a Flare Gun
 * There was some problems with the map in the postmortem screen
@@ -104,7 +104,7 @@ Release 11.1 (December 14, 2011)
 
 
 --------------------------------------------------------------
-Release 11.0 (December 13, 2011)
+v11.0 (December 13, 2011)
 --------------------------------------------------------------
 * Tile set
 * New font (16x24)
@@ -123,19 +123,19 @@ Release 11.0 (December 13, 2011)
 
 
 --------------------------------------------------------------
-Release 10.2 (November 20, 2011)
+v10.2 (November 20, 2011)
 --------------------------------------------------------------
 * The game crashed when dying from drinking a potion of scorching (changed it so you can't die from it)
 
 
 --------------------------------------------------------------
-Release 10.1 (November 19, 2011)
+v10.1 (November 19, 2011)
 --------------------------------------------------------------
 * Casting spells from manuscripts drained spirit points
 
 
 --------------------------------------------------------------
-Release 10.0 (November 19, 2011)
+v10.0 (November 19, 2011)
 --------------------------------------------------------------
 * The game is winnable
 * New armor system:
@@ -170,7 +170,7 @@ Release 10.0 (November 19, 2011)
 
 
 --------------------------------------------------------------
-Release 9.2 (October 16, 2011)
+v9.2 (October 16, 2011)
 --------------------------------------------------------------
 New features
 * A new font image added (11x19), edit config.txt to use it
@@ -183,7 +183,7 @@ Fixes & changes
 
 
 --------------------------------------------------------------
-Release 9.1 (October 13, 2011)
+v9.1 (October 13, 2011)
 --------------------------------------------------------------
 Fixes & changes
 * Fixed a faulty message when throwing potions on monsters ("it had no apparent effect..." even when the effect was obvious. Only the message was wrong though, not the actual identification)
@@ -191,7 +191,7 @@ Fixes & changes
 
 
 --------------------------------------------------------------
-Release 9.0 (October 12, 2011)
+v9.0 (October 12, 2011)
 --------------------------------------------------------------
 New features
 * Linux version
@@ -237,7 +237,7 @@ Fixes & changes
 
 
 --------------------------------------------------------------
-Release 8.1 (September 24, 2011)
+v8.1 (September 24, 2011)
 --------------------------------------------------------------
 New features
 * 2 new unique monsters
@@ -250,7 +250,7 @@ Fixes & changes
 
 
 --------------------------------------------------------------
-Release 8.0 (September 20, 2011)
+v8.0 (September 20, 2011)
 --------------------------------------------------------------
 New features
 * Potions (14 types)
@@ -285,7 +285,7 @@ Fixes & changes
 
 
 --------------------------------------------------------------
-Release 7.1 (August 29, 2011)
+v7.1 (August 29, 2011)
 --------------------------------------------------------------
 Fixes
 * Every melee attack was presented like a back-stab (only the message was bugged though)
@@ -296,7 +296,7 @@ Fixes
 
 
 --------------------------------------------------------------
-Release 7.0 (August 25, 2011)
+v7.0 (August 25, 2011)
 --------------------------------------------------------------
 New features
 * Save function
@@ -324,7 +324,7 @@ Fixes
 
 
 --------------------------------------------------------------
-Release 6.0 (August 5, 2011)
+v6.0 (August 5, 2011)
 --------------------------------------------------------------
 New features
 * Insanity
@@ -350,7 +350,7 @@ Fixes
 
 
 --------------------------------------------------------------
-Release 5.0 (July 24, 2011)
+v5.0 (July 24, 2011)
 --------------------------------------------------------------
 New features:
 * Monster spell casting
@@ -372,7 +372,7 @@ Fixes:
 
 
 --------------------------------------------------------------
-Release 4.0 (July 12, 2011)
+v4.0 (July 12, 2011)
 --------------------------------------------------------------
 New features:
 One unique monster
@@ -394,7 +394,7 @@ Fixes:
 
 
 --------------------------------------------------------------
-Release 3.0 (July 9, 2011)
+v3.0 (July 9, 2011)
 --------------------------------------------------------------
 New features:
 * More monsters
@@ -424,7 +424,7 @@ Fixes:
 
 
 --------------------------------------------------------------
-Release 2.0 (June 23, 2011)
+v2.0 (June 23, 2011)
 --------------------------------------------------------------
 New features:
 * Traps
@@ -448,7 +448,7 @@ Fixes:
 * Fixed some grammatical errors
 
 
-
+--------------------------------------------------------------
 Old changelogs from before the game was named Infra Arcana
 --------------------------------------------------------------
 Feb 7, 2011
