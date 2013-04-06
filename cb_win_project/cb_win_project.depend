@@ -8201,7 +8201,7 @@
 
 1364579806 c:\_martin_\ia\src\art.h
 
-1364579806 c:\_martin_\ia\src\actor.h
+1365258795 c:\_martin_\ia\src\actor.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -8297,7 +8297,7 @@
 	"Engine.h"
 	<math.h>
 
-1364579806 source:c:\_martin_\ia\src\actor.cpp
+1365258795 source:c:\_martin_\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -9299,7 +9299,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1364579806 source:c:\_martin_\ia\src\featuretrap.cpp
+1365258976 source:c:\_martin_\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -9470,7 +9470,7 @@
 
 1350576994 source:c:\_martin_\ia\src\itemammoclip.cpp
 
-1364579806 source:c:\_martin_\ia\src\itemarmor.cpp
+1365259390 source:c:\_martin_\ia\src\itemarmor.cpp
 	"ItemArmor.h"
 	"Engine.h"
 	"Log.h"
@@ -9549,7 +9549,7 @@
 	"PlayerPowersHandler.h"
 	"ItemScroll.h"
 
-1365188945 source:c:\_martin_\ia\src\itemscroll.cpp
+1365259042 source:c:\_martin_\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -9895,7 +9895,7 @@
 	"Log.h"
 	"Render.h"
 
-1365194070 source:c:\_martin_\ia\src\roomtheme.cpp
+1365194236 source:c:\_martin_\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -9931,7 +9931,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1364579806 source:c:\_martin_\ia\src\spells.cpp
+1365259076 source:c:\_martin_\ia\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -10161,7 +10161,7 @@
 1363370095 c:\_martin_\ia\src\populatetraps.h
 	"RoomTheme.h"
 
-1365188945 source:c:\_martin_\ia\src\itemdevice.cpp
+1365261650 source:c:\_martin_\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10172,7 +10172,7 @@
 	"Inventory.h"
 	"Map.h"
 
-1365188945 c:\_martin_\ia\src\itemdevice.h
+1365261639 c:\_martin_\ia\src\itemdevice.h
 	"Item.h"
 
 1365188945 source:c:\_martin_\ia\src\populateitems.cpp

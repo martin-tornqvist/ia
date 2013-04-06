@@ -487,7 +487,7 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
     }
   }
 
-  actor->teleportToRandom();
+  actor->teleport(false);
 }
 
 void TrapSmoke::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {

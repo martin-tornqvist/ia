@@ -34,6 +34,10 @@ bool Device::toggle(Engine* const engine) {
     isActivated_ = true;
     nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
+    const string message = getSpecificActivateMessage();
+    if(message != "") {
+      engine->log->addMessage(message);
+    }
     specificToggle(engine);
     runBadEffect(engine);
   }
@@ -46,11 +50,11 @@ void Device::printToggleMessage(Engine* const engine) {
 }
 
 int Device::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
-  return engine->dice.getInRange(6, 10);
+  return engine->dice.getInRange(6, 9);
 }
 
 int Device::getRandomNrTurnsToNextBadEffect(Engine* const engine) const {
-  return engine->dice.getInRange(6, 10);
+  return engine->dice.getInRange(12, 16);
 }
 
 void Device::newTurnInInventory(Engine* const engine) {
@@ -70,7 +74,19 @@ void Device::newTurnInInventory(Engine* const engine) {
 }
 
 void Device::runBadEffect(Engine* const engine) {
+  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
 
+  const int RND = engine->dice(1, 100);
+  if(RND < 2) {
+    engine->log->addMessage("The " + name + " breaks!");
+    engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
+  } else if(RND < 40) {
+    engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
+    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(2));
+    engine->player->hit(engine->dice.getInRange(1, 2), damageType_electric);
+  } else {
+    engine->log->addMessage("The " + name + " hums ominously.");
+  }
 }
 
 void Device::itemSpecificAddSaveLines(vector<string>& lines) {
@@ -91,6 +107,10 @@ void Device::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 //---------------------------------------------------- SENTRY
+string DeviceSentry::getSpecificActivateMessage() {
+  return "It seems to peruse area.";
+}
+
 void DeviceSentry::runGoodEffect(Engine* const engine) {
   const int DMG = engine->dice(1, 6) + 2;
 
@@ -107,6 +127,10 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
 }
 
 //---------------------------------------------------- REPELLER
+string DeviceRepeller::getSpecificActivateMessage() {
+  return "I feel a certain tension in the air around me.";
+}
+
 void DeviceRepeller::runGoodEffect(Engine* const engine) {
   const coord& playerPos = engine->player->pos;
   const unsigned int NR_ACTORS = engine->gameTime->getLoopSize();
@@ -126,13 +150,29 @@ int DeviceRepeller::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const
 }
 
 //---------------------------------------------------- REJUVENATOR
-void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
+string DeviceRejuvenator::getSpecificActivateMessage() {
+  return "It seems to attempt repairing my flesh.";
+}
 
+void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
+//  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+//  engine->log->addMessage(name + " repairs my wounds.");
+  engine->player->restoreHP(1, false);
 }
 
 //---------------------------------------------------- TRANSLOCATOR
-void DeviceTranslocator::runGoodEffect(Engine* const engine) {
+string DeviceTranslocator::getSpecificActivateMessage() {
+  return "";
+}
 
+void DeviceTranslocator::runGoodEffect(Engine* const engine) {
+  Player* const player = engine->player;
+  player->getSpotedEnemiesPositions();
+  if(player->getHp() <= player->getHpMax(true) / 4 && player->spotedEnemiesPositions.empty() == false) {
+    const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+    engine->log->addMessage("The " + name + " makes a droning noise...");
+    player->teleport(true);
+  }
 }
 
 //---------------------------------------------------- SPELL REFLECTOR
@@ -155,10 +195,6 @@ void DeviceElectricLantern::specificnewTurnInInventory(Engine* const engine) {
 void DeviceElectricLantern::printToggleMessage(Engine* const engine) {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
   engine->log->addMessage(toggleStr + " an Electric Lantern.");
-}
-
-void DeviceElectricLantern::runGoodEffect(Engine* const engine) {
-  (void)engine;
 }
 
 void DeviceElectricLantern::specificToggle(Engine* const engine) {

@@ -129,7 +129,7 @@ void ScrollOfDescent::specificRead(const bool FROM_MEMORY, Engine* const engine)
 
 void ScrollOfTeleportation::specificRead(const bool FROM_MEMORY, Engine* const engine) {
   (void)FROM_MEMORY;
-  engine->player->teleportToRandom();
+  engine->player->teleport(false);
   setRealDefinitionNames(engine, false);
 }
 

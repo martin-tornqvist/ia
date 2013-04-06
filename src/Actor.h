@@ -111,7 +111,7 @@ public:
 
   Engine* eng;
 
-  void teleportToRandom();
+  void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
 protected:
   //TODO Try to get rid of these friend declarations

@@ -26,7 +26,6 @@ public:
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
-
   virtual void deviceSpecificSetParametersFromSaveLines(vector<string>& lines) {(void)lines;}
 
   bool toggle(Engine* const engine);
@@ -34,8 +33,9 @@ protected:
   virtual int getRandomNrTurnsToNextGoodEffect(Engine* const engine) const;
   virtual int getRandomNrTurnsToNextBadEffect(Engine* const engine) const;
 
-  virtual void runGoodEffect(Engine* const engine) = 0;
+  virtual string getSpecificActivateMessage() {return "";}
 
+  virtual void runGoodEffect(Engine* const engine) {(void) engine;}
   virtual void runBadEffect(Engine* const engine);
 
   virtual void specificToggle(Engine* const engine) {(void)engine;}
@@ -57,6 +57,7 @@ public:
 
 private:
   void runGoodEffect(Engine* const engine);
+  string getSpecificActivateMessage();
 };
 
 class DeviceRepeller: public Device {
@@ -68,6 +69,7 @@ public:
 private:
   void runGoodEffect(Engine* const engine);
   int getRandomNrTurnsToNextGoodEffect(Engine* const engine) const;
+  string getSpecificActivateMessage();
 };
 
 class DeviceRejuvenator: public Device {
@@ -78,6 +80,7 @@ public:
 
 private:
   void runGoodEffect(Engine* const engine);
+  string getSpecificActivateMessage();
 };
 
 class DeviceTranslocator: public Device {
@@ -88,6 +91,7 @@ public:
 
 private:
   void runGoodEffect(Engine* const engine);
+  string getSpecificActivateMessage();
 };
 
 //class DeviceSpellReflector: public Device {
@@ -114,8 +118,6 @@ private:
   void printToggleMessage(Engine* const engine);
 
   void specificnewTurnInInventory(Engine* const engine);
-
-  void runGoodEffect(Engine* const engine);
 
   void runBadEffect(Engine* const engine);
 

@@ -93,7 +93,7 @@ void SpellTeleport::specificCast(const SpellData& d, Engine* const eng) {
     eng->log->addMessage(d.caster_->getNameThe() + " dissapears in a blast of smoke!");
   }
 
-  d.caster_->teleportToRandom();
+  d.caster_->teleport(false);
 }
 
 void SpellTeleport::specificMonsterCast(Monster* const monster, Engine* const eng) {
@@ -317,7 +317,7 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//	eng->mapTests->makeVisionBlockerArray(blockers);
+//  eng->mapTests->makeVisionBlockerArray(blockers);
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
   for(int i = 0; i < static_cast<int>(freePositionsSeenByPlayer.size()); i++) {
