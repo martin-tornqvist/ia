@@ -8233,7 +8233,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1365339879 c:\_martin_\ia\src\statuseffects.h
+1365344457 c:\_martin_\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -8713,7 +8713,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1365339181 source:c:\_martin_\ia\src\actorplayer.cpp
+1365343696 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"

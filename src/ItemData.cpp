@@ -235,7 +235,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     d->itemWeight = itemWeight_light;
     d->isExplosive = true;
     d->glyph = '-';
-    d->maxStackSizeAtSpawn = 3;
+    d->maxStackSizeAtSpawn = 2;
     d->landOnHardSurfaceSoundMessage = "";
   }
   break;
