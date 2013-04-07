@@ -23,326 +23,263 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
   }
 
   switch(itemId) {
-  case item_crowbar:
-    item = new Item(d);
-    break;
-  case item_lockpick:
-    item = new Item(d);
-    break;
-  case item_trapezohedron:
-    item = new Item(d);
-    break;
-  case item_rock:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_throwingKnife:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ironSpike:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_dagger:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_hatchet:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_club:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_hammer:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_machete:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_axe:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_pitchFork:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_sledgeHammer:
-    item = new Weapon(d, ammoD);
-    break;
+    case item_crowbar:            item = new Item(d);                 break;
+    case item_lockpick:           item = new Item(d);                 break;
+    case item_trapezohedron:      item = new Item(d);                 break;
+    case item_rock:               item = new Weapon(d, ammoD);        break;
+    case item_throwingKnife:      item = new Weapon(d, ammoD);        break;
+    case item_ironSpike:          item = new Weapon(d, ammoD);        break;
+    case item_dagger:             item = new Weapon(d, ammoD);        break;
+    case item_hatchet:            item = new Weapon(d, ammoD);        break;
+    case item_club:               item = new Weapon(d, ammoD);        break;
+    case item_hammer:             item = new Weapon(d, ammoD);        break;
+    case item_machete:            item = new Weapon(d, ammoD);        break;
+    case item_axe:                item = new Weapon(d, ammoD);        break;
+    case item_pitchFork:          item = new Weapon(d, ammoD);        break;
+    case item_sledgeHammer:       item = new Weapon(d, ammoD);        break;
+    case item_dynamite:           item = new Dynamite(d);             break;
+    case item_flare:              item = new Flare(d);                break;
+    case item_molotov:            item = new Molotov(d);              break;
 
-  case item_dynamite:
-    item = new Dynamite(d);
-    break;
-  case item_flare:
-    item = new Flare(d);
-    break;
-  case item_molotov:
-    item = new Molotov(d);
-    break;
+    case item_sawedOff:           item = new SawedOff(d, ammoD);      break;
+    case item_pumpShotgun:        item = new PumpShotgun(d, ammoD);   break;
+    case item_shotgunShell:       item = new ItemAmmo(d);             break;
+    case item_machineGun:         item = new MachineGun(d, ammoD);    break;
+    case item_drumOfBullets:      item = new ItemAmmoClip(d);         break;
+    case item_pistol:             item = new Pistol(d, ammoD);        break;
+    case item_flareGun:           item = new FlareGun(d, ammoD);      break;
+    case item_pistolClip:         item = new ItemAmmoClip(d);         break;
+    case item_incinerator:        item = new Incinerator(d, ammoD);   break;
+    case item_teslaCanon:         item = new TeslaCanon(d, ammoD);    break;
+    case item_spikeGun:           item = new SpikeGun(d, ammoD);      break;
+    case item_teslaCanister:      item = new ItemAmmoClip(d);         break;
+    case item_incineratorShell:   item = new ItemAmmo(d);             break;
 
-  case item_sawedOff:
-    item = new SawedOff(d, ammoD);
-    break;
-  case item_pumpShotgun:
-    item = new PumpShotgun(d, ammoD);
-    break;
-  case item_shotgunShell:
-    item = new ItemAmmo(d);
-    break;
-  case item_machineGun:
-    item = new MachineGun(d, ammoD);
-    break;
-  case item_drumOfBullets:
-    item = new ItemAmmoClip(d);
-    break;
-  case item_pistol:
-    item = new Pistol(d, ammoD);
-    break;
-  case item_flareGun:
-    item = new FlareGun(d, ammoD);
-    break;
-  case item_pistolClip:
-    item = new ItemAmmoClip(d);
-    break;
-  case item_incinerator:
-    item = new Incinerator(d, ammoD);
-    break;
-  case item_teslaCanon:
-    item = new TeslaCanon(d, ammoD);
-    break;
-  case item_spikeGun:
-    item = new SpikeGun(d, ammoD);
-    break;
-  case item_teslaCanister:
-    item = new ItemAmmoClip(d);
-    break;
-  case item_incineratorShell:
-    item = new ItemAmmo(d);
-    break;
+    case item_playerKick:         item = new Weapon(d, ammoD);        break;
+    case item_playerStomp:
+      item = new Weapon(d, ammoD);
+      break;
 
-  case item_playerKick:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_playerStomp:
-    item = new Weapon(d, ammoD);
-    break;
-
-  case item_armorFlackJacket:
-    item = new Armor(d, eng);
-    break;
-  case item_armorLeatherJacket:
-    item = new Armor(d, eng);
-    break;
-  case item_armorIronSuit:
-    item = new Armor(d, eng);
-    break;
+    case item_armorFlackJacket:
+      item = new Armor(d, eng);
+      break;
+    case item_armorLeatherJacket:
+      item = new Armor(d, eng);
+      break;
+    case item_armorIronSuit:
+      item = new Armor(d, eng);
+      break;
 //    case item_armorAsbestosSuit:
 //        item = new Armor(d, eng);
 //        break;
 
-  case item_zombieAxe:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_zombieClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_zombieClawDiseased:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_bloatedZombiePunch:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_bloatedZombieSpit:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ratBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ratBiteDiseased:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ratThingBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_wormMassBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_greenSpiderBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_whiteSpiderBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_redSpiderBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_shadowSpiderBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_lengSpiderBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_hellHoundFireBreath:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_hellHoundBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_giantBatBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_wolfBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ghostClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_phantasmSickle:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_wraithClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_miGoElectricGun:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_ghoulClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_shadowClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_byakheeClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_giantMantisClaw:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_giantLocustBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_mummyMaul:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_deepOneJavelinAttack:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_deepOneSpearAttack:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_oozeGraySpewPus:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_oozeClearSpewPus:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_oozePutridSpewPus:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_oozePoisonSpewPus:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_huntingHorrorBite:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_dustVortexEngulf:
-    item = new Weapon(d, ammoD);
-    break;
-  case item_fireVortexEngulf:
-    item = new Weapon(d, ammoD);
-    break;
+    case item_zombieAxe:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_zombieClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_zombieClawDiseased:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_bloatedZombiePunch:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_bloatedZombieSpit:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_ratBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_ratBiteDiseased:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_ratThingBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_wormMassBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_greenSpiderBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_whiteSpiderBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_redSpiderBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_shadowSpiderBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_lengSpiderBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_hellHoundFireBreath:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_hellHoundBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_giantBatBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_wolfBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_ghostClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_phantasmSickle:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_wraithClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_miGoElectricGun:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_ghoulClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_shadowClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_byakheeClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_giantMantisClaw:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_giantLocustBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_mummyMaul:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_deepOneJavelinAttack:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_deepOneSpearAttack:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_oozeGraySpewPus:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_oozeClearSpewPus:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_oozePutridSpewPus:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_oozePoisonSpewPus:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_huntingHorrorBite:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_dustVortexEngulf:
+      item = new Weapon(d, ammoD);
+      break;
+    case item_fireVortexEngulf:
+      item = new Weapon(d, ammoD);
+      break;
 
-  case item_scrollOfMayhem:
-    item = new ScrollOfMayhem(d);
-    break;
-  case item_scrollOfTeleportation:
-    item = new ScrollOfTeleportation(d);
-    break;
-  case item_scrollOfDescent:
-    item = new ScrollOfDescent(d);
-    break;
-  case item_scrollOfPestilence:
-    item = new ScrollOfPestilence(d);
-    break;
-  case item_scrollOfConfuseEnemies:
-    item = new ScrollOfConfuseEnemies(d);
-    break;
-  case item_scrollOfParalyzeEnemies:
-    item = new ScrollOfParalyzeEnemies(d);
-    break;
-  case item_scrollOfSlowEnemies:
-    item = new ScrollOfSlowEnemies(d);
-    break;
-  case item_scrollOfDetectItems:
-    item = new ScrollOfDetectItems(d);
-    break;
-  case item_scrollOfDetectTraps:
-    item = new ScrollOfDetectTraps(d);
-    break;
-  case item_scrollOfIdentify:
-    item = new ScrollOfIdentify(d);
-    break;
-  case item_scrollOfBlessing:
-    item = new ScrollOfBlessing(d);
-    break;
-  case item_scrollOfClairvoyance:
-    item = new ScrollOfClairvoyance(d);
-    break;
-  case item_scrollOfAzathothsBlast:
-    item = new ScrollOfAzathothsBlast(d);
-    break;
-  case item_thaumaturgicAlteration:
-    item = new ThaumaturgicAlteration(d);
-    break;
+    case item_scrollOfMayhem:
+      item = new ScrollOfMayhem(d);
+      break;
+    case item_scrollOfTeleportation:
+      item = new ScrollOfTeleportation(d);
+      break;
+    case item_scrollOfDescent:
+      item = new ScrollOfDescent(d);
+      break;
+    case item_scrollOfPestilence:
+      item = new ScrollOfPestilence(d);
+      break;
+    case item_scrollOfConfuseEnemies:
+      item = new ScrollOfConfuseEnemies(d);
+      break;
+    case item_scrollOfParalyzeEnemies:
+      item = new ScrollOfParalyzeEnemies(d);
+      break;
+    case item_scrollOfSlowEnemies:
+      item = new ScrollOfSlowEnemies(d);
+      break;
+    case item_scrollOfDetectItems:
+      item = new ScrollOfDetectItems(d);
+      break;
+    case item_scrollOfDetectTraps:
+      item = new ScrollOfDetectTraps(d);
+      break;
+    case item_scrollOfIdentify:
+      item = new ScrollOfIdentify(d);
+      break;
+    case item_scrollOfBlessing:
+      item = new ScrollOfBlessing(d);
+      break;
+    case item_scrollOfClairvoyance:
+      item = new ScrollOfClairvoyance(d);
+      break;
+    case item_scrollOfAzathothsBlast:
+      item = new ScrollOfAzathothsBlast(d);
+      break;
+    case item_thaumaturgicAlteration:
+      item = new ThaumaturgicAlteration(d);
+      break;
 
-  case item_potionOfHealing:
-    item = new PotionOfHealing(d);
-    break;
-  case item_potionOfBlindness:
-    item = new PotionOfBlindness(d);
-    break;
-  case item_potionOfCorruption:
-    item = new PotionOfCorruption(d);
-    break;
-  case item_potionOfTheCobra:
-    item = new PotionOfTheCobra(d);
-    break;
+    case item_potionOfHealing:
+      item = new PotionOfHealing(d);
+      break;
+    case item_potionOfBlindness:
+      item = new PotionOfBlindness(d);
+      break;
+    case item_potionOfCorruption:
+      item = new PotionOfCorruption(d);
+      break;
+    case item_potionOfTheCobra:
+      item = new PotionOfTheCobra(d);
+      break;
 //  case item_potionOfStealth:
 //    item = new PotionOfStealth(d);
 //    break;
-  case item_potionOfFortitude:
-    item = new PotionOfFortitude(d);
-    break;
-  case item_potionOfToughness:
-    item = new PotionOfToughness(d);
-    break;
-  case item_potionOfParalyzation:
-    item = new PotionOfParalyzation(d);
-    break;
-  case item_potionOfConfusion:
-    item = new PotionOfConfusion(d);
-    break;
-  case item_potionOfSorcery:
-    item = new PotionOfSorcery(d);
-    break;
-  case item_deviceSentry:
-    item = new DeviceSentry(d);
-    break;
-  case item_deviceRepeller:
-    item = new DeviceRepeller(d);
-    break;
-  case item_deviceRejuvenator:
-    item = new DeviceRejuvenator(d);
-    break;
-  case item_deviceTranslocator:
-    item = new DeviceTranslocator(d);
-    break;
+    case item_potionOfFortitude:
+      item = new PotionOfFortitude(d);
+      break;
+    case item_potionOfToughness:
+      item = new PotionOfToughness(d);
+      break;
+    case item_potionOfParalyzation:
+      item = new PotionOfParalyzation(d);
+      break;
+    case item_potionOfConfusion:
+      item = new PotionOfConfusion(d);
+      break;
+    case item_potionOfSorcery:
+      item = new PotionOfSorcery(d);
+      break;
+    case item_deviceSentry:
+      item = new DeviceSentry(d);
+      break;
+    case item_deviceRepeller:
+      item = new DeviceRepeller(d);
+      break;
+    case item_deviceRejuvenator:
+      item = new DeviceRejuvenator(d);
+      break;
+    case item_deviceTranslocator:
+      item = new DeviceTranslocator(d);
+      break;
 //  case item_deviceSpellReflector:
 //    item = new DeviceSpellReflector(d);
 //    break;
-  case item_deviceElectricLantern:
-    item = new DeviceElectricLantern(d);
-    break;
+    case item_deviceElectricLantern:
+      item = new DeviceElectricLantern(d);
+      break;
 
-  default:
-    item = new Item(d);
-    break;
+    default:
+      item = new Item(d);
+      break;
   }
 
   if(item->getDef().isStackable == false && NR_ITEMS != 1) {
@@ -388,11 +325,8 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
 
 Item* ItemFactory::spawnItemOnMap(ItemId_t itemId, const coord pos) {
   Item* item = spawnItem(itemId);
-
   setItemRandomizedProperties(item);
-
   eng->itemDrop->dropItemOnMap(pos, &item);
-
   return item;
 }
 
