@@ -22,25 +22,20 @@ class Inventory;
 
 class Actor {
 public:
-  Actor() {
-  }
+  Actor() {}
 
   StatusEffectsHandler* getStatusEffectsHandler() {
     return statusEffectsHandler_;
   }
 
-  ActorDefinition* getDef() {
-    return def_;
-  }
+  ActorDefinition* getDef() {return def_;}
 
   virtual ~Actor();
 
   coord pos;
   ActorDeadState_t deadState;
 
-  Inventory* getInventory() {
-    return inventory_;
-  }
+  Inventory* getInventory() {return inventory_;}
 
   void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
 
@@ -69,45 +64,23 @@ public:
   void getSpotedEnemiesPositions();
 
   //Various "shortcuts" to the instance definition
-  ActorId_t getId() const {
-    return def_->id;
-  }
-  int getHp() const {
-    return hp_;
-  }
+  ActorId_t getId() const {return def_->id;}
+  int getHp() const {return hp_;}
   virtual int getHpMax(const bool WITH_MODIFIERS) const {
     (void)WITH_MODIFIERS;
     return hpMax_;
   }
-  string getNameThe() const {
-    return def_->name_the;
-  }
-  string getNameA() const {
-    return def_->name_a;
-  }
-  bool isHumanoid() const {
-    return def_->isHumanoid;
-  }
-  char getGlyph() const {
-    return glyph_;
-  }
-  const sf::Color& getColor() const {
-    return clr_;
-  }
-
-  const Tile_t& getTile() const {
-    return tile_;
-  }
-
-  MoveType_t getMoveType() const {
-    return def_->moveType;
-  }
+  string getNameThe() const {return def_->name_the;}
+  string getNameA() const {return def_->name_a;}
+  bool isHumanoid() const {return def_->isHumanoid;}
+  char getGlyph() const {return glyph_;}
+  const sf::Color& getColor() const {return clr_;}
+  const Tile_t& getTile() const {return tile_;}
+  MoveType_t getMoveType() const {return def_->moveType;}
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-    (void)light;
-  }
+  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {(void)light;}
 
   Engine* eng;
 
@@ -123,14 +96,10 @@ protected:
   friend class StatusDiseased;
 
   virtual void actorSpecificDie() {}
-  virtual void actorSpecific_hit(const int DMG) {
-    (void)DMG;
-  }
+  virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
   virtual void actorSpecific_spawnStartItems() = 0;
 
-  virtual void monsterHit(int& dmg) {
-    (void)dmg;
-  }
+  virtual void monsterHit(int& dmg) {(void)dmg;}
   virtual void monsterDeath() {}
 
   sf::Color clr_;

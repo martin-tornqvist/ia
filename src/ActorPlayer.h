@@ -36,9 +36,7 @@ public:
 
   void updateFov();
 
-  void moveDirection(const coord& dir) {
-    moveDirection(dir.x, dir.y);
-  }
+  void moveDirection(const coord& dir) {moveDirection(dir.x, dir.y);}
   void moveDirection(const int X_DIR, int Y_DIR);
 
   void actorSpecific_init() {}
@@ -57,19 +55,11 @@ public:
   void incrShock(const ShockValues_t shockValue);
   void incrShock(const int VAL);
   void restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED);
-  int getShockTotal() {
-    return static_cast<int>(floor(shock_ + shockTemp_));
-  }
-  int getShockTmp() {
-    return shockTemp_;
-  }
-  int getInsanity() const {
-    return min(100, insanity_);
-  }
+  int getShockTotal() {return static_cast<int>(floor(shock_ + shockTemp_));}
+  int getShockTmp() {return shockTemp_;}
+  int getInsanity() const {return min(100, insanity_);}
   void incrMth(const int VAL);
-  int getMth() const {
-    return mth;
-  }
+  int getMth() const {return mth;}
   void setTempShockFromFeatures();
 
   int getShockResistance() const;

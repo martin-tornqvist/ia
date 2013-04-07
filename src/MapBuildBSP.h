@@ -118,7 +118,7 @@ private:
   bool isAreaAndBorderFree(const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
   bool isAreaFree(const int X0, const int Y0, const int X1, const int Y1, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void decorateWalls();
+  void decorate();
 
   coord placeStairs();
 

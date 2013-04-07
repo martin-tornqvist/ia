@@ -126,8 +126,7 @@ void Wall::setRandomNormalWall() {
 }
 
 void Wall::setRandomIsSlimy() {
-  const int RND = eng->dice.getInRange(1, 30);
-  isSlimy = RND == 1;
+  isSlimy = eng->dice.getInRange(1, 40) == 1;
 }
 
 

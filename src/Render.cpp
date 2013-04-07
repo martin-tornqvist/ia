@@ -242,6 +242,8 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
   sf::Texture bgTexture = getScreenTextureCopy();
   drawScreenSizedTexture(bgTexture);
 
+  bool isAnyBlastRendered = false;
+
   for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
     for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
       if(forbiddenCells[x][y] == false) {
@@ -249,11 +251,14 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
         const sf::Color color = IS_OUTER ? colorOuter : colorInner;
         coverCellInMap(x, y);
         drawTileInMap(tile_blastAnimation1, x, y, color);
+        isAnyBlastRendered = true;
       }
     }
   }
   updateWindow();
-  eng->sleep(DURATION / 2);
+  if(isAnyBlastRendered) {
+    eng->sleep(DURATION / 2);
+  }
   clearWindow();
   drawScreenSizedTexture(bgTexture);
 
@@ -268,7 +273,9 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, 
     }
   }
   updateWindow();
-  eng->sleep(DURATION / 2);
+  if(isAnyBlastRendered) {
+    eng->sleep(DURATION / 2);
+  }
   drawMapAndInterface();
 }
 

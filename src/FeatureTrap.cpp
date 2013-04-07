@@ -224,21 +224,10 @@ Tile_t Trap::getTile() const {
   return isHidden_ ? mimicFeature_->tile : specificTrap_->getTrapSpecificTile();
 }
 
-bool Trap::canHaveCorpse() const {
-  return isHidden_;
-}
-
-bool Trap::canHaveBlood() const {
-  return isHidden_;
-}
-
-bool Trap::canHaveGore() const {
-  return isHidden_;
-}
-
-bool Trap::canHaveItem() const {
-  return isHidden_;
-}
+bool Trap::canHaveCorpse() const {return isHidden_;}
+bool Trap::canHaveBlood() const {return isHidden_;}
+bool Trap::canHaveGore() const {return isHidden_;}
+bool Trap::canHaveItem() const {return isHidden_;}
 
 coord Trap::actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
   tracer << "Trap::actorAttemptLeave()" << endl;
@@ -250,7 +239,11 @@ MaterialType_t Trap::getMaterialType() const {
   return isHidden_ ? mimicFeature_->materialType : def_->materialType;
 }
 
-//============================================================= TRAP LIST
+//================================================ SPECIFIC TRAPS
+TrapDart::TrapDart(coord pos, Engine* engine) :
+  SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
+  isPoisoned = eng->map->getDungeonLevel() >= 6 && eng->dice.coinToss();
+}
 
 void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
   const bool IS_PLAYER = actor == eng->player;
@@ -281,10 +274,8 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         } else {
           eng->log->addMessage("A mechanism triggers, I hear something barely missing me!", clrMessageGood);
         }
-      } else {
-        if(CAN_PLAYER_SEE_ACTOR) {
-          eng->log->addMessage("A dart barely misses " + actorName + "!");
-        }
+      } else if(CAN_PLAYER_SEE_ACTOR) {
+        eng->log->addMessage("A dart barely misses " + actorName + "!");
       }
     } else {
       //Dodge failed and trap hits
@@ -294,16 +285,25 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         } else {
           eng->log->addMessage("A mechanism triggers, I feel a needle piercing my skin!", clrMessageBad);
         }
-      } else {
-        if(CAN_PLAYER_SEE_ACTOR) {
-          eng->log->addMessage(actorName + " is hit by a dart!", clrMessageGood);
-        }
+      } else if(CAN_PLAYER_SEE_ACTOR) {
+        eng->log->addMessage(actorName + " is hit by a dart!", clrMessageGood);
       }
 
       const int DMG = eng->dice(1, 8);
       actor->hit(DMG, damageType_physical);
+      if(actor->deadState == actorDeadState_alive && isPoisoned) {
+        if(IS_PLAYER) {
+          eng->log->addMessage("It was poisoned!");
+        }
+        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng));
+      }
     }
   }
+}
+
+TrapSpear::TrapSpear(coord pos, Engine* engine) :
+  SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
+  isPoisoned = eng->map->getDungeonLevel() >= 6 && eng->dice.coinToss();
 }
 
 void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -356,6 +356,12 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
 
       const int DMG = eng->dice(2, 6);
       actor->hit(DMG, damageType_physical);
+      if(actor->deadState == actorDeadState_alive && isPoisoned) {
+        if(IS_PLAYER) {
+          eng->log->addMessage("It was poisoned!");
+        }
+        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng));
+      }
     }
   }
 }

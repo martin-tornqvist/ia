@@ -141,7 +141,7 @@ void MapBuildBSP::run() {
 //  makeLevers();
 
   // Note: This must be run last, everything else depends on all walls being common stone walls
-  decorateWalls();
+  decorate();
 
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
@@ -684,7 +684,7 @@ void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord)
   tracer << "MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs()[DONE]" << endl;
 }
 
-void MapBuildBSP::decorateWalls() {
+void MapBuildBSP::decorate() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(eng->map->featuresStatic[x][y]->getId() == feature_stoneWall) {
@@ -701,13 +701,7 @@ void MapBuildBSP::decorateWalls() {
           }
         }
 
-        //Convert isolated stone walls to pillars
-//        if(nrAdjFloor == 8) {
-//          eng->featureFactory->spawnFeatureAt(feature_pillar, coord(x, y));
-//          continue;
-//        }
-
-        //Rubble
+        //Randomly convert walls to rubble
         if(eng->dice(1, 100) < 10) {
           eng->featureFactory->spawnFeatureAt(feature_rubbleHigh, coord(x, y));
           continue;
@@ -717,6 +711,7 @@ void MapBuildBSP::decorateWalls() {
         Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
         wall->setRandomIsSlimy();
 
+        //Convert walls with no adjacent stone floor to cave walls
         if(nrAdjFloor == 0) {
           dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->wallType = wall_cave;
         } else {
@@ -725,6 +720,18 @@ void MapBuildBSP::decorateWalls() {
       }
     }
   }
+
+//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+//      if(eng->map->featuresStatic[x][y]->getId() == feature_stoneFloor) {
+//        //Randomly convert stone floor to low rubble
+//        if(eng->dice(1, 100) == 1) {
+//          eng->featureFactory->spawnFeatureAt(feature_rubbleLow, coord(x, y));
+//          continue;
+//        }
+//      }
+//    }
+//  }
 }
 
 void MapBuildBSP::connectRegions(Region* regions[3][3]) {

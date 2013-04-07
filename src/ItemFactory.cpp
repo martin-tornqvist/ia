@@ -11,7 +11,7 @@
 #include "ItemDrop.h"
 #include "ItemDevice.h"
 
-Item* ItemFactory::spawnItem(ItemId_t itemId) {
+Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
   Item* item = NULL;
 
   ItemDefinition* const d = eng->itemData->itemDefinitions[itemId];
@@ -343,6 +343,13 @@ Item* ItemFactory::spawnItem(ItemId_t itemId) {
   default:
     item = new Item(d);
     break;
+  }
+
+  if(item->getDef().isStackable == false && NR_ITEMS != 1) {
+    tracer << "[WARNING] Specified " + intToString(NR_ITEMS) + " nr items";
+    tracer << " for non-stackable item, in ItemFactory::spawnItem()" << endl;
+  } else {
+    item->numberOfItems = NR_ITEMS;
   }
 
   return item;

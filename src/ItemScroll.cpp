@@ -272,7 +272,7 @@ void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine
 
     const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
 
-    engine->log->addMessage("I suddenly gain intuitions about " + itemNameBefore + "...");
+    engine->log->addMessage("I gain intuitions about " + itemNameBefore + "...");
     engine->log->addMessage("It is identified as " + itemNameAfter + "!");
 
     setRealDefinitionNames(engine, false);

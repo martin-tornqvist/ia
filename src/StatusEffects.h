@@ -52,23 +52,14 @@ enum StatusEffects_t {
 class StatusEffect {
 public:
   StatusEffect(const int turns, const StatusEffects_t effectId) :
-    turnsLeft(turns), owningActor(NULL), effectId_(effectId) {
-  }
-  StatusEffect(const StatusEffects_t effectId) :
-    effectId_(effectId) {
-  }
-  StatusEffect(const StatusEffect& other) :
-    turnsLeft(other.turnsLeft) {
-  }
+    turnsLeft(turns), owningActor(NULL), effectId_(effectId) {}
+  StatusEffect(const StatusEffects_t effectId) : effectId_(effectId) {}
+  StatusEffect(const StatusEffect& other) : turnsLeft(other.turnsLeft) {}
   virtual ~StatusEffect();
 
-  StatusEffects_t getEffectId() {
-    return effectId_;
-  }
+  StatusEffects_t getEffectId() {return effectId_;}
 
-  virtual bool isFinnished() {
-    return turnsLeft <= 0;
-  }
+  virtual bool isFinnished() {return turnsLeft <= 0;}
 
   int turnsLeft;
 
@@ -96,35 +87,19 @@ public:
   virtual void start(Engine* const engine) = 0;
   virtual void end(Engine* const engine) = 0;
 
-  virtual bool canBeAppliedWhileSameEffectOngoing() {
-    return true;
-  }
+  virtual bool canBeAppliedWhileSameEffectOngoing() {return true;}
 
-  virtual bool isPlayerVisualUpdateNeededWhenStartOrEnd() {
-    return false;
-  }
+  virtual bool isPlayerVisualUpdateNeededWhenStartOrEnd() {return false;}
 
-  virtual void more() {
-  }
+  virtual void more() {}
 
-  virtual bool allowSee() {
-    return true;
-  }
-  virtual bool allowMove() {
-    return true;
-  }
-  virtual bool allowAct() {
-    return true;
-  }
-  virtual bool isSlowed() {
-    return false;
-  }
-  virtual void isHit() {
-  }
+  virtual bool allowSee() {return true;}
+  virtual bool allowMove() {return true;}
+  virtual bool allowAct() {return true;}
+  virtual bool isSlowed() {return false;}
+  virtual void isHit() {}
 
-  virtual sf::Color getColorOwningActor() {
-    return clrBlack;
-  }
+  virtual sf::Color getColorOwningActor() {return clrBlack;}
 
   virtual bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
@@ -146,10 +121,7 @@ public:
     return movePos;
   }
 
-  //Less used...
-  virtual bool isEthereal() {
-    return false;
-  }
+  virtual bool isEthereal() {return false;}
 
   Actor* owningActor;
 
@@ -162,84 +134,41 @@ protected:
 
 class StatusTerrified: public StatusEffect {
 public:
-  StatusTerrified(Engine* const engine) :
-    StatusEffect(statusTerrified) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusTerrified(const int turns) :
-    StatusEffect(turns, statusTerrified) {
-  }
-  ~StatusTerrified() {
-  }
+  StatusTerrified(Engine* const engine) : StatusEffect(statusTerrified) {setTurnsFromRandomStandard(engine);}
+  StatusTerrified(const int turns) : StatusEffect(turns, statusTerrified) {}
+  ~StatusTerrified() {}
 
   StatusTerrified* copy() {
     StatusTerrified* cpy = new StatusTerrified(turnsLeft);
     return cpy;
   }
 
-  bool isMakingOwnerAwareOfPlayer() {
-    return true;
-  }
+  bool isMakingOwnerAwareOfPlayer()   {return true;}
+  bool isConsideredBeneficial()       {return false;}
+  bool allowDisplayTurnsInInterface() {return true;}
 
-  bool isConsideredBeneficial() {
-    return false;
-  }
+  string getInterfaceName()       {return "Terrified";}
+  string messageWhenStart()       {return "I am terrified!";}
+  string messageWhenStartOther()  {return "looks terrified.";}
+  string messageWhenMore()        {return "I am more terrified.";}
+  string messageWhenMoreOther()   {return "looks more terrified.";}
+  string messageWhenEnd()         {return "I am no longer terrified!";}
+  string messageWhenSaves()       {return "I resist fear.";}
+  string messageWhenSavesOther()  {return "resists fear.";}
+  string messageWhenEndOther()    {return "is no longer terrified.";}
 
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Terrified";
-  }
-  string messageWhenStart() {
-    return "I am terrified!";
-  }
-  string messageWhenStartOther() {
-    return "is terrified.";
-  }
-  string messageWhenMore() {
-    return "I am more terrified.";
-  }
-  string messageWhenMoreOther() {
-    return "is more terrified.";
-  }
-  string messageWhenEnd() {
-    return "I am no longer terrified!";
-  }
-  string messageWhenSaves() {
-    return "I resist fear.";
-  }
-  string messageWhenSavesOther() {
-    return "resists fear.";
-  }
-  string messageWhenEndOther() {
-    return "is no longer terrified.";
-  }
-
-  Abilities_t getSaveAbility() {
-    return ability_resistStatusMind;
-  }
+  Abilities_t getSaveAbility() {return ability_resistStatusMind;}
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodgeAttack)
-      return 20;
-    if(ability == ability_accuracyRanged)
-      return -20;
+    if(ability == ability_dodgeAttack)      return 20;
+    if(ability == ability_accuracyRanged)   return -20;
     return 0;
   }
 
-  int getSaveAbilityModifier() {
-    return 10;
-  }
+  int getSaveAbilityModifier() {return 10;}
 
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
+  void start(Engine* const engine) {(void)engine;}
+  void end(Engine* const engine) {(void)engine;}
 
   bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
 
@@ -251,89 +180,45 @@ public:
   }
 
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 8, 4);
-  }
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 4);}
 };
 
 class StatusWeak: public StatusEffect {
 public:
-  StatusWeak(Engine* const engine) :
-    StatusEffect(statusWeak) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusWeak(const int turns) :
-    StatusEffect(turns, statusWeak) {
-  }
-  ~StatusWeak() {
-  }
+  StatusWeak(Engine* const engine) : StatusEffect(statusWeak) {setTurnsFromRandomStandard(engine);}
+  StatusWeak(const int turns) : StatusEffect(turns, statusWeak) {}
+  ~StatusWeak() {}
 
   StatusWeak* copy() {
     StatusWeak* cpy = new StatusWeak(turnsLeft);
     return cpy;
   }
 
-  bool isMakingOwnerAwareOfPlayer() {
-    return true;
-  }
+  bool isMakingOwnerAwareOfPlayer()   {return true;}
+  bool isConsideredBeneficial()       {return false;}
+  bool allowDisplayTurnsInInterface() {return true;}
 
-  bool isConsideredBeneficial() {
-    return false;
-  }
+  string getInterfaceName()       {return "Weak";}
+  string messageWhenStart()       {return "I feel weaker!";}
+  string messageWhenStartOther()  {return "looks weaker.";}
+  string messageWhenMore()        {return "I feel weaker.";}
+  string messageWhenMoreOther()   {return "looks weaker!";}
+  string messageWhenEnd()         {return "I feel stronger!";}
+  string messageWhenSaves()       {return "I resist weakness.";}
+  string messageWhenSavesOther()  {return "resists weakness.";}
+  string messageWhenEndOther()    {return "looks stronger.";}
 
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Weak";
-  }
-  string messageWhenStart() {
-    return "I feel weaker!";
-  }
-  string messageWhenStartOther() {
-    return "looks weaker.";
-  }
-  string messageWhenMore() {
-    return "I feel weaker.";
-  }
-  string messageWhenMoreOther() {
-    return "looks weaker!";
-  }
-  string messageWhenEnd() {
-    return "I feel stronger!";
-  }
-  string messageWhenSaves() {
-    return "I resist weakness.";
-  }
-  string messageWhenSavesOther() {
-    return "resists weakness.";
-  }
-  string messageWhenEndOther() {
-    return "looks stronger.";
-  }
-
-  Abilities_t getSaveAbility() {
-    return ability_resistStatusBody;
-  }
+  Abilities_t getSaveAbility() {return ability_resistStatusBody;}
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_resistStatusBody)
-      return -30;
+    if(ability == ability_resistStatusBody) return -30;
     return 0;
   }
 
-  int getSaveAbilityModifier() {
-    return 0;
-  }
+  int getSaveAbilityModifier() {return 0;}
 
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
+  void start(Engine* const engine) {(void)engine;}
+  void end(Engine* const engine) {(void)engine;}
 
   void newTurn(Engine* const engine) {
     (void)engine;
@@ -341,9 +226,7 @@ public:
   }
 
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 50, 100);
-  }
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 50, 100);}
 };
 
 class StatusDiseased: public StatusEffect {
@@ -497,7 +380,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 40, 50);
+    return DiceParam(1, 35, 40);
   }
   friend class StatusEffectsHandler;
   StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}

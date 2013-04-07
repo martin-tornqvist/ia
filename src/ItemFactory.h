@@ -15,7 +15,7 @@ public:
     eng = engine;
   }
 
-  Item* spawnItem(ItemId_t itemId);
+  Item* spawnItem(ItemId_t itemId, const int NR_ITEMS = 1);
 
   void setItemRandomizedProperties(Item* item);
 

@@ -41,12 +41,12 @@ void Player::actorSpecific_spawnStartItems() {
     insanityObsessions[i] = false;
   }
 
-  int NR_OF_CARTRIDGES        = eng->dice.getInRange(1, 3);
-  int NR_OF_DYNAMITE          = eng->dice.getInRange(1, 4);
-  int NR_OF_MOLOTOV           = eng->dice.getInRange(1, 4);
-//  int NR_OF_FLARES            = eng->dice.getInRange(1, 6);
-  int NR_OF_THROWING_KNIVES   = eng->dice.coinToss() ? 0 : eng->dice.getInRange(7, 12);
-  int NR_OF_SPIKES            = eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 4);
+  int NR_CARTRIDGES        = eng->dice.getInRange(1, 2);
+  int NR_DYNAMITE          = eng->dice.getInRange(2, 3);
+  int NR_MOLOTOV           = eng->dice.getInRange(2, 3);
+//  int NR_FLARES            = eng->dice.getInRange(1, 6);
+  int NR_THROWING_KNIVES   = eng->dice.getInRange(7, 12);
+  int NR_SPIKES            = 0; //eng->dice.coinToss() ? 0 : eng->dice.getInRange(3, 4);
 
   const int WEAPON_CHOICE = eng->dice.getInRange(1, 5);
   ItemId_t weaponId = item_dagger;
@@ -73,55 +73,45 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
+//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
-  for(int i = 0; i < NR_OF_CARTRIDGES; i++) {
+  for(int i = 0; i < NR_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
   }
 
-  Item* item = eng->itemFactory->spawnItem(item_dynamite);
-  item->numberOfItems = NR_OF_DYNAMITE;
-  inventory_->putItemInGeneral(item);
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
 
-  item = eng->itemFactory->spawnItem(item_molotov);
-  item->numberOfItems = NR_OF_MOLOTOV;
-  inventory_->putItemInGeneral(item);
-
-//  if(NR_OF_FLARES > 0) {
+//  if(NR_FLARES > 0) {
 //    item = eng->itemFactory->spawnItem(item_flare);
-//    item->numberOfItems = NR_OF_FLARES;
+//    item->numberOfItems = NR_FLARES;
 //    inventory_->putItemInGeneral(item);
 //  }
 
-  if(NR_OF_THROWING_KNIVES > 0) {
-    item = eng->itemFactory->spawnItem(item_throwingKnife);
-    item->numberOfItems = NR_OF_THROWING_KNIVES;
-    inventory_->putItemInSlot(slot_missiles, item, true, true);
+  if(NR_THROWING_KNIVES > 0) {
+    inventory_->putItemInSlot(slot_missiles, eng->itemFactory->spawnItem(item_throwingKnife, NR_THROWING_KNIVES), true, true);
   }
 
-  if(NR_OF_THROWING_KNIVES > 0) {
-    item = eng->itemFactory->spawnItem(item_ironSpike);
-    item->numberOfItems = NR_OF_SPIKES;
-    inventory_->putItemInGeneral(item);
+  if(NR_SPIKES > 0) {
+    inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
   }
 
   inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
+
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
-  item = eng->itemFactory->spawnItem(item_scrollOfIdentify);
-  item->numberOfItems = 4;
-  inventory_->putItemInGeneral(item);
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_scrollOfIdentify, 4));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
-  const unsigned int NR_OF_STATUS_EFFECTS = statusEffectsHandler_->effects.size();
-  lines.push_back(intToString(NR_OF_STATUS_EFFECTS));
-  for(unsigned int i = 0; i < NR_OF_STATUS_EFFECTS; i++) {
+  const unsigned int NR_STATUS_EFFECTS = statusEffectsHandler_->effects.size();
+  lines.push_back(intToString(NR_STATUS_EFFECTS));
+  for(unsigned int i = 0; i < NR_STATUS_EFFECTS; i++) {
     lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->getEffectId()));
     lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->turnsLeft));
   }
@@ -146,9 +136,9 @@ void Player::addSaveLines(vector<string>& lines) const {
 }
 
 void Player::setParametersFromSaveLines(vector<string>& lines) {
-  const unsigned int NR_OF_STATUS_EFFECTS = stringToInt(lines.front());
+  const unsigned int NR_STATUS_EFFECTS = stringToInt(lines.front());
   lines.erase(lines.begin());
-  for(unsigned int i = 0; i < NR_OF_STATUS_EFFECTS; i++) {
+  for(unsigned int i = 0; i < NR_STATUS_EFFECTS; i++) {
     const StatusEffects_t id = static_cast<StatusEffects_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
     const int TURNS = stringToInt(lines.front());

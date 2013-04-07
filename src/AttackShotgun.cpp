@@ -58,11 +58,58 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
     bool allowStrayHit = true;
 
     if(actorArray[curPos.x][curPos.y] != NULL) {
-      //If this is the intended target cell, attempt direct hit
-      if(curPos == target) {
-        getAttackData(data, target, curPos, weapon, false);
-        if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
-          if(data.attackResult >= successSmall) {
+
+      //Only attempt hit if aiming at a level that would hit the actor
+      const ActorSizes_t sizeOfActor = actorArray[curPos.x][curPos.y]->getDef()->actorSize;
+      if(sizeOfActor >= actorSize_humanoid || curPos == target) {
+
+        //If this is the intended target cell, attempt direct hit
+        if(curPos == target) {
+          getAttackData(data, target, curPos, weapon, false);
+          if(eng->basicUtils->chebyshevDistance(origin, curPos) <= weapon->effectiveRangeLimit) {
+            if(data.attackResult >= successSmall) {
+              if(eng->map->playerVision[curPos.x][curPos.y]) {
+                eng->renderer->drawMapAndInterface(false);
+                eng->renderer->coverCellInMap(curPos.x, curPos.y);
+                if(eng->config->USE_TILE_SET) {
+                  eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
+                } else {
+                  eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
+                }
+                eng->renderer->updateWindow();
+                eng->sleep(eng->config->DELAY_SHOTGUN);
+              }
+
+              //Messages
+              printProjectileAtActorMessages(data, projectileHitType_cleanHit);
+
+              //Damage
+              data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
+
+              nrActorsHit++;
+
+              allowStrayHit = false;
+
+              eng->renderer->drawMapAndInterface();
+
+              //Special shotgun behavior:
+              //If current defender was killed, and player aimed at humanoid level, or at floor level
+              //but beyond the current position, the shot will continue one cell.
+              const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
+              if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
+                monsterKilledInElement = i;
+              }
+              if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
+                break;
+              }
+            }
+          }
+        }
+
+        //Stray hit?
+        if(allowStrayHit) {
+          getAttackData(data, target, curPos, weapon, false);
+          if(eng->dice(1, 100) < CHANCE_FOR_STRAY_HIT) {
             if(eng->map->playerVision[curPos.x][curPos.y]) {
               eng->renderer->drawMapAndInterface(false);
               eng->renderer->coverCellInMap(curPos.x, curPos.y);
@@ -75,15 +122,15 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
               eng->sleep(eng->config->DELAY_SHOTGUN);
             }
 
+            data.attackResult = successSmall;
+
             //Messages
-            printProjectileAtActorMessages(data, projectileHitType_cleanHit);
+            printProjectileAtActorMessages(data, projectileHitType_strayHit);
 
             //Damage
-            data.currentDefender->hit(data.dmg, weapon->getDef().rangedDamageType);
+            data.currentDefender->hit(data.dmg / STRAY_DMG_DIV, weapon->getDef().rangedDamageType);
 
             nrActorsHit++;
-
-            allowStrayHit = false;
 
             eng->renderer->drawMapAndInterface();
 
@@ -97,47 +144,6 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
             if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
               break;
             }
-          }
-        }
-      }
-
-      //Stray hit?
-      if(allowStrayHit) {
-        getAttackData(data, target, curPos, weapon, false);
-        if(eng->dice(1, 100) < CHANCE_FOR_STRAY_HIT) {
-          if(eng->map->playerVision[curPos.x][curPos.y]) {
-            eng->renderer->drawMapAndInterface(false);
-            eng->renderer->coverCellInMap(curPos.x, curPos.y);
-            if(eng->config->USE_TILE_SET) {
-              eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
-            } else {
-              eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
-            }
-            eng->renderer->updateWindow();
-            eng->sleep(eng->config->DELAY_SHOTGUN);
-          }
-
-          data.attackResult = successSmall;
-
-          //Messages
-          printProjectileAtActorMessages(data, projectileHitType_strayHit);
-
-          //Damage
-          data.currentDefender->hit(data.dmg / STRAY_DMG_DIV, weapon->getDef().rangedDamageType);
-
-          nrActorsHit++;
-
-          eng->renderer->drawMapAndInterface();
-
-          //Special shotgun behavior:
-          //If current defender was killed, and player aimed at humanoid level, or at floor level
-          //but beyond the current position, the shot will continue one cell.
-          const bool IS_TARGET_KILLED = data.currentDefender->deadState != actorDeadState_alive;
-          if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
-            monsterKilledInElement = i;
-          }
-          if(nrActorsHit >= 2 || IS_TARGET_KILLED == false || (intendedAimLevel == actorSize_floor && curPos == target)) {
-            break;
           }
         }
       }
