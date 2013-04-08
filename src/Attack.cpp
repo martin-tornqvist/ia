@@ -230,9 +230,9 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
         if(data.currentDefender == eng->player) {
           eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, messageInterrupt_force);
 
-          if(data.attackResult == successCritical) {
-            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
-          }
+//          if(data.attackResult == successCritical) {
+//            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
+//          }
         } else {
           string otherName = "It";
 
@@ -241,9 +241,9 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
 
           eng->log->addMessage(otherName + " is hit" + data.dmgDescript, clrMessageGood);
 
-          if(data.attackResult == successCritical) {
-            eng->log->addMessage("It was a great hit!", clrMessageGood);
-          }
+//          if(data.attackResult == successCritical) {
+//            eng->log->addMessage("It was a great hit!", clrMessageGood);
+//          }
         }
       }
     }
@@ -251,16 +251,14 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
 }
 
 void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
-  string otherName;
-
   //Punctuation or exclamation marks depending on attack strength
   data.dmgDescript = ".";
-  if(data.dmgRolls* data.dmgSides >= 4) {
-    if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
-      data.dmgDescript = "!";
-    if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
-      data.dmgDescript = "!!!";
+  const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+  if(MAX_DMG_ROLL >= 4) {
+    data.dmgDescript = data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" : data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" : data.dmgDescript;
   }
+
+  string otherName = "";
 
   if(data.isTargetEthereal == true) {
     if(data.isPlayerAttacking == true) {
@@ -276,38 +274,42 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
     }
   } else {
     //----- ATTACK FUMBLE -----
-    if(data.attackResult == failCritical) {
-      if(data.isPlayerAttacking) {
-        eng->log->addMessage("I fumble!");
-      } else {
-        if(eng->player->checkIfSeeActor(*data.attacker, NULL))
-          otherName = data.attacker->getNameThe();
-        else otherName = "It";
-
-        eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
-      }
-    }
+//    if(data.attackResult == failCritical) {
+//      if(data.isPlayerAttacking) {
+//        eng->log->addMessage("I fumble!");
+//      } else {
+//        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+//          otherName = data.attacker->getNameThe();
+//        } else {
+//          otherName = "It";
+//        }
+//        eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
+//      }
+//    }
 
     //----- ATTACK MISS -------
-    if(data.attackResult > failCritical && data.attackResult <= failSmall) {
+    if(/*data.attackResult > failCritical &&*/ data.attackResult <= failSmall) {
       if(data.isPlayerAttacking) {
-        if(data.attackResult == failSmall)
-          eng->log->addMessage("I barely miss" + data.dmgDescript);
-        if(data.attackResult == failNormal)
-          eng->log->addMessage("I miss" + data.dmgDescript);
-        if(data.attackResult == failBig)
-          eng->log->addMessage("I miss completely" + data.dmgDescript);
+        if(data.attackResult == failSmall) {
+          eng->log->addMessage("I barely miss!");
+        } else if(data.attackResult == failNormal) {
+          eng->log->addMessage("I miss.");
+        } else if(data.attackResult == failBig) {
+          eng->log->addMessage("I miss completely.");
+        }
       } else {
-        if(eng->player->checkIfSeeActor(*data.attacker, NULL))
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
-        else otherName = "It";
-
-        if(data.attackResult == failSmall)
-          eng->log->addMessage(otherName + " barely misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
-        if(data.attackResult == failNormal)
-          eng->log->addMessage(otherName + " misses me" + data.dmgDescript, clrWhite, messageInterrupt_force);
-        if(data.attackResult == failBig)
-          eng->log->addMessage(otherName + " misses me completely" + data.dmgDescript, clrWhite, messageInterrupt_force);
+        } else {
+          otherName = "It";
+        }
+        if(data.attackResult == failSmall) {
+          eng->log->addMessage(otherName + " barely misses me!", clrWhite, messageInterrupt_force);
+        } else if(data.attackResult == failNormal) {
+          eng->log->addMessage(otherName + " misses me.", clrWhite, messageInterrupt_force);
+        } else if(data.attackResult == failBig) {
+          eng->log->addMessage(otherName + " misses me completely.", clrWhite, messageInterrupt_force);
+        }
       }
     }
 
