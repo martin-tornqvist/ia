@@ -262,7 +262,7 @@ public:
   int castFromMemoryChance;
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;
-  vector<Feature_t> featuresCanBeFoundIn;
+  vector< pair<Feature_t, int> > featuresCanBeFoundIn;
 
 private:
 };

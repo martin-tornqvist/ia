@@ -39,7 +39,7 @@ struct AttackData {
   AbilityRollResult_t attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
-  string dmgDescript;
+  string dmgPunctuation;
   bool isPlayerAttacking;
   bool isDefenderDodging;
   ActorSizes_t aimLevel;

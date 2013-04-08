@@ -20,229 +20,233 @@ using namespace std;
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
 void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const {
   switch(archetype) {
-  case itemDef_general: {
-    d->itemWeight = itemWeight_none;
-    d->spawnStandardMinDLVL = 1;
-    d->spawnStandardMaxDLVL = 999999;
-    d->maxStackSizeAtSpawn = 1;
-    d->chanceToIncludeInSpawnList = 100;
-    d->isStackable = true;
-    d->isIdentified = true;
-    d->isTried = false;
-    d->glyph = 'X';
-    d->color = clrWhite;
-    d->tile = tile_empty;
-    d->primaryAttackMode = primaryAttackMode_none;
-    d->isReadable = false;
-    d->isScroll = false;
-    d->isScrollLearned = false;
-    d->isScrollLearnable = false;
-    d->isQuaffable = false;
-    d->isEatable = false;
-    d->isArmor = false;
-    d->isCloak = false;
-    d->isRing = false;
-    d->isAmulet = false;
-    d->isIntrinsic = false;
-    d->isMeleeWeapon = false;
-    d->isRangedWeapon = false;
-    d->isMissileWeapon = false;
-    d->isShotgun = false;
-    d->isMachineGun = false;
-    d->isAmmo = false;
-    d->isAmmoClip = false;
-    d->ammoContainedInClip = 0;
-    d->meleeBaseAttackSkill = 0;
-    d->meleeAbilityUsed = ability_accuracyMelee;
-    d->meleeStatusEffect = NULL;
-    d->meleeCausesKnockBack = false;
-    d->rangedCausesKnockBack = false;
-    d->meleeDamageType = damageType_physical;
-    d->rangedBaseAttackSkill = 0;
-    d->rangedDmgLabelOverRide = "";
-    d->rangedAbilityUsed = ability_accuracyRanged;
-    d->rangedAmmoTypeUsed = item_empty;
-    d->rangedDamageType = damageType_physical;
-    d->rangedHasInfiniteAmmo = false;
-    d->rangedMissileGlyph = 'X';
-    d->rangedMissileTile = tile_projectileStandardFrontSlash;
-    d->rangedMissileColor = clrWhite;
-    d->rangedMissileLeavesTrail = false;
-    d->rangedMissileLeavesSmoke = false;
-    d->rangedAudio = audio_none;
-    d->meleeAudio = audio_none;
-    d->reloadAudio = audio_none;
-    d->rangedSoundMessage = "";
-    d->rangedSoundIsLoud = false;
-    d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
-    d->rangedStatusEffect = NULL;
-    d->isExplosive = false;
-    d->castFromMemoryChance = 0;
-    d->spellTurnsPerPercentCooldown = 10;
-    d->armorData = ArmorData();
-    d->nativeRooms.resize(0);
-    d->featuresCanBeFoundIn.resize(0);
-  }
-  break;
+    case itemDef_general: {
+      d->itemWeight = itemWeight_none;
+      d->spawnStandardMinDLVL = 1;
+      d->spawnStandardMaxDLVL = 999999;
+      d->maxStackSizeAtSpawn = 1;
+      d->chanceToIncludeInSpawnList = 100;
+      d->isStackable = true;
+      d->isIdentified = true;
+      d->isTried = false;
+      d->glyph = 'X';
+      d->color = clrWhite;
+      d->tile = tile_empty;
+      d->primaryAttackMode = primaryAttackMode_none;
+      d->isReadable = false;
+      d->isScroll = false;
+      d->isScrollLearned = false;
+      d->isScrollLearnable = false;
+      d->isQuaffable = false;
+      d->isEatable = false;
+      d->isArmor = false;
+      d->isCloak = false;
+      d->isRing = false;
+      d->isAmulet = false;
+      d->isIntrinsic = false;
+      d->isMeleeWeapon = false;
+      d->isRangedWeapon = false;
+      d->isMissileWeapon = false;
+      d->isShotgun = false;
+      d->isMachineGun = false;
+      d->isAmmo = false;
+      d->isAmmoClip = false;
+      d->ammoContainedInClip = 0;
+      d->meleeBaseAttackSkill = 0;
+      d->meleeAbilityUsed = ability_accuracyMelee;
+      d->meleeStatusEffect = NULL;
+      d->meleeCausesKnockBack = false;
+      d->rangedCausesKnockBack = false;
+      d->meleeDamageType = damageType_physical;
+      d->rangedBaseAttackSkill = 0;
+      d->rangedDmgLabelOverRide = "";
+      d->rangedAbilityUsed = ability_accuracyRanged;
+      d->rangedAmmoTypeUsed = item_empty;
+      d->rangedDamageType = damageType_physical;
+      d->rangedHasInfiniteAmmo = false;
+      d->rangedMissileGlyph = 'X';
+      d->rangedMissileTile = tile_projectileStandardFrontSlash;
+      d->rangedMissileColor = clrWhite;
+      d->rangedMissileLeavesTrail = false;
+      d->rangedMissileLeavesSmoke = false;
+      d->rangedAudio = audio_none;
+      d->meleeAudio = audio_none;
+      d->reloadAudio = audio_none;
+      d->rangedSoundMessage = "";
+      d->rangedSoundIsLoud = false;
+      d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
+      d->rangedStatusEffect = NULL;
+      d->isExplosive = false;
+      d->castFromMemoryChance = 0;
+      d->spellTurnsPerPercentCooldown = 10;
+      d->armorData = ArmorData();
+      d->nativeRooms.resize(0);
+      d->featuresCanBeFoundIn.resize(0);
+    }
+    break;
 
-  case itemDef_meleeWpn: {
-    resetDef(d, itemDef_general);
-    d->isStackable = false;
-    d->itemWeight = itemWeight_medium;
-    d->glyph = '(';
-    d->color = clrWhite;
-    d->primaryAttackMode = primaryAttackMode_melee;
-    d->isMeleeWeapon = true;
-  }
-  break;
+    case itemDef_meleeWpn: {
+      resetDef(d, itemDef_general);
+      d->isStackable = false;
+      d->itemWeight = itemWeight_medium;
+      d->glyph = '(';
+      d->color = clrWhite;
+      d->primaryAttackMode = primaryAttackMode_melee;
+      d->isMeleeWeapon = true;
+    }
+    break;
 
-  case itemDef_meleeWpnIntr: {
-    resetDef(d, itemDef_meleeWpn);
-    d->isIntrinsic = true;
-    d->spawnStandardMinDLVL = -1;
-    d->spawnStandardMaxDLVL = -1;
-  }
-  break;
+    case itemDef_meleeWpnIntr: {
+      resetDef(d, itemDef_meleeWpn);
+      d->isIntrinsic = true;
+      d->spawnStandardMinDLVL = -1;
+      d->spawnStandardMaxDLVL = -1;
+    }
+    break;
 
-  case itemDef_rangedWpn: {
-    resetDef(d, itemDef_general);
-    d->isStackable = false;
-    d->itemWeight = itemWeight_medium;
-    d->glyph = '}';
-    d->color = clrWhite;
-    d->isMeleeWeapon = true;
-    d->meleeDmg = pair<int, int>(1, 6);
-    d->primaryAttackMode = primaryAttackMode_ranged;
-    d->isRangedWeapon = true;
-    d->rangedMissileGlyph = '/';
-    d->rangedMissileColor = clrWhite;
-    d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-    d->rangedSoundIsLoud = true;
-  }
-  break;
+    case itemDef_rangedWpn: {
+      resetDef(d, itemDef_general);
+      d->isStackable = false;
+      d->itemWeight = itemWeight_medium;
+      d->glyph = '}';
+      d->color = clrWhite;
+      d->isMeleeWeapon = true;
+      d->meleeDmg = pair<int, int>(1, 6);
+      d->primaryAttackMode = primaryAttackMode_ranged;
+      d->isRangedWeapon = true;
+      d->rangedMissileGlyph = '/';
+      d->rangedMissileColor = clrWhite;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->rangedSoundIsLoud = true;
+    }
+    break;
 
-  case itemDef_rangedWpnIntr: {
-    resetDef(d, itemDef_rangedWpn);
-    d->isIntrinsic = true;
-    d->rangedHasInfiniteAmmo = true;
-    d->spawnStandardMinDLVL = -1;
-    d->spawnStandardMaxDLVL = -1;
-    d->isMeleeWeapon = false; //(Extrinsic ranged weapons tend to double as melee weapons, while intrinsics do not)
-    d->rangedMissileGlyph = '*';
-    d->rangedSoundIsLoud = false;
-  }
-  break;
+    case itemDef_rangedWpnIntr: {
+      resetDef(d, itemDef_rangedWpn);
+      d->isIntrinsic = true;
+      d->rangedHasInfiniteAmmo = true;
+      d->spawnStandardMinDLVL = -1;
+      d->spawnStandardMaxDLVL = -1;
+      d->isMeleeWeapon = false; //(Extrinsic ranged weapons tend to double as melee weapons, while intrinsics do not)
+      d->rangedMissileGlyph = '*';
+      d->rangedSoundIsLoud = false;
+    }
+    break;
 
-  case itemDef_missileWeapon: {
-    resetDef(d, itemDef_general);
-    d->itemWeight = itemWeight_extraLight;
-    d->isStackable = true;
-    d->isMissileWeapon = true;
-    d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-    d->rangedSoundIsLoud = false;
-  }
-  break;
+    case itemDef_missileWeapon: {
+      resetDef(d, itemDef_general);
+      d->itemWeight = itemWeight_extraLight;
+      d->isStackable = true;
+      d->isMissileWeapon = true;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->rangedSoundIsLoud = false;
+    }
+    break;
 
-  case itemDef_ammo: {
-    resetDef(d, itemDef_general);
-    d->itemWeight = itemWeight_extraLight;
-    d->glyph = '{';
-    d->color = clrWhite;
-    d->tile = tile_ammo;
-    d->isAmmo = true;
-    d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-  }
-  break;
+    case itemDef_ammo: {
+      resetDef(d, itemDef_general);
+      d->itemWeight = itemWeight_extraLight;
+      d->glyph = '{';
+      d->color = clrWhite;
+      d->tile = tile_ammo;
+      d->isAmmo = true;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+    }
+    break;
 
-  case itemDef_ammoClip: {
-    resetDef(d, itemDef_ammo);
-    d->itemWeight = itemWeight_light;
-    d->isStackable = false;
-    d->isAmmoClip = true;
-    d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-  }
-  break;
+    case itemDef_ammoClip: {
+      resetDef(d, itemDef_ammo);
+      d->itemWeight = itemWeight_light;
+      d->isStackable = false;
+      d->isAmmoClip = true;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+    }
+    break;
 
-  case itemDef_scroll: {
-    resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 50;
-    d->itemWeight = itemWeight_none;
-    d->isIdentified = false;
-    d->glyph = '?';
-    d->color = clrWhite;
-    d->tile = tile_scroll;
-    d->isReadable = true;
-    d->isScroll = true;
-    d->isScrollLearnable = true;
-    d->isScrollLearned = 0;
-    d->castFromMemoryChance = 0;
-    d->maxStackSizeAtSpawn = 1;
-    d->landOnHardSurfaceSoundMessage = "";
-    d->featuresCanBeFoundIn.push_back(feature_chest);
-    d->featuresCanBeFoundIn.push_back(feature_cabinet);
-    d->featuresCanBeFoundIn.push_back(feature_tomb);
-    eng->scrollNameHandler->setFalseScrollName(d);
-  }
-  break;
+    case itemDef_scroll: {
+      resetDef(d, itemDef_general);
+      d->chanceToIncludeInSpawnList = 50;
+      d->itemWeight = itemWeight_none;
+      d->isIdentified = false;
+      d->glyph = '?';
+      d->color = clrWhite;
+      d->tile = tile_scroll;
+      d->isReadable = true;
+      d->isScroll = true;
+      d->isScrollLearnable = true;
+      d->isScrollLearned = 0;
+      d->castFromMemoryChance = 0;
+      d->maxStackSizeAtSpawn = 1;
+      d->landOnHardSurfaceSoundMessage = "";
+      addFeatureFoundIn(d, feature_chest);
+      addFeatureFoundIn(d, feature_cabinet, 25);
+      addFeatureFoundIn(d, feature_tomb);
+      eng->scrollNameHandler->setFalseScrollName(d);
+    }
+    break;
 
-  case itemDef_potion: {
-    resetDef(d, itemDef_general);
-    d->chanceToIncludeInSpawnList = 65;
-    d->itemWeight = itemWeight_light;
-    d->isIdentified = false;
-    d->glyph = '!';
-    d->tile = tile_potion;
-    d->isQuaffable = true;
-    d->isMissileWeapon = true;
-    d->missileBaseAttackSkill = -5;
-    d->missileDmg = DiceParam(1, 3, 0);
-    d->maxStackSizeAtSpawn = 1;
-    d->landOnHardSurfaceSoundMessage = "";
-    d->featuresCanBeFoundIn.push_back(feature_chest);
-    d->featuresCanBeFoundIn.push_back(feature_cabinet);
-    d->featuresCanBeFoundIn.push_back(feature_tomb);
-    eng->potionNameHandler->setColorAndFalseName(d);
-  }
-  break;
+    case itemDef_potion: {
+      resetDef(d, itemDef_general);
+      d->chanceToIncludeInSpawnList = 65;
+      d->itemWeight = itemWeight_light;
+      d->isIdentified = false;
+      d->glyph = '!';
+      d->tile = tile_potion;
+      d->isQuaffable = true;
+      d->isMissileWeapon = true;
+      d->missileBaseAttackSkill = -5;
+      d->missileDmg = DiceParam(1, 3, 0);
+      d->maxStackSizeAtSpawn = 1;
+      d->landOnHardSurfaceSoundMessage = "";
+      addFeatureFoundIn(d, feature_chest);
+      addFeatureFoundIn(d, feature_cabinet, 25);
+      addFeatureFoundIn(d, feature_tomb);
+      eng->potionNameHandler->setColorAndFalseName(d);
+    }
+    break;
 
-  case itemDef_device: {
-    resetDef(d, itemDef_general);
-    d->isDevice = true;
-    d->chanceToIncludeInSpawnList = 15;
-    d->itemWeight = itemWeight_light;
-    d->isIdentified = true;
-    d->glyph = '~';
-    d->tile = tile_device1;
-    d->isStackable = false;
-    d->spawnStandardMinDLVL = 4;
-    d->spawnStandardMaxDLVL = 999;
-    d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
-  }
-  break;
+    case itemDef_device: {
+      resetDef(d, itemDef_general);
+      d->isDevice = true;
+      d->chanceToIncludeInSpawnList = 15;
+      d->itemWeight = itemWeight_light;
+      d->isIdentified = true;
+      d->glyph = '~';
+      d->tile = tile_device1;
+      d->isStackable = false;
+      d->spawnStandardMinDLVL = 4;
+      d->spawnStandardMaxDLVL = 999;
+      d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+    }
+    break;
 
-  case itemDef_armor: {
-    resetDef(d, itemDef_general);
-    d->itemWeight = itemWeight_heavy;
-    d->glyph = '[';
-    d->tile = tile_armor;
-    d->isArmor = true;
-    d->isStackable = false;
-  }
-  break;
+    case itemDef_armor: {
+      resetDef(d, itemDef_general);
+      d->itemWeight = itemWeight_heavy;
+      d->glyph = '[';
+      d->tile = tile_armor;
+      d->isArmor = true;
+      d->isStackable = false;
+    }
+    break;
 
-  case itemDef_explosive: {
-    resetDef(d, itemDef_general);
-    d->itemWeight = itemWeight_light;
-    d->isExplosive = true;
-    d->glyph = '-';
-    d->maxStackSizeAtSpawn = 2;
-    d->landOnHardSurfaceSoundMessage = "";
-  }
-  break;
+    case itemDef_explosive: {
+      resetDef(d, itemDef_general);
+      d->itemWeight = itemWeight_light;
+      d->isExplosive = true;
+      d->glyph = '-';
+      d->maxStackSizeAtSpawn = 2;
+      d->landOnHardSurfaceSoundMessage = "";
+    }
+    break;
 
-  default:
-  {} break;
+    default:
+    {} break;
   }
+}
+
+void ItemData::addFeatureFoundIn(ItemDefinition* const itemDef, const Feature_t featureId, const int CHANCE_TO_INCLUDE) const {
+  itemDef->featuresCanBeFoundIn.push_back(pair<Feature_t, int>(featureId, CHANCE_TO_INCLUDE));
 }
 
 void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor,
@@ -293,8 +297,8 @@ void ItemData::makeList() {
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->reloadAudio = audio_shotgun_load_shell;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pumpShotgun);
@@ -312,16 +316,16 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAudio = audio_shotgunPump_fire;
   d->reloadAudio = audio_shotgun_load_shell;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_shotgunShell);
   resetDef(d, itemDef_ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incinerator);
@@ -340,8 +344,8 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrRedLight;
   d->spawnStandardMinDLVL = 10;
   d->rangedDmgLabelOverRide = "?";
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest, 25);
+  addFeatureFoundIn(d, feature_cabinet, 25);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incineratorShell);
@@ -350,8 +354,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->spawnStandardMinDLVL = 8;
   d->maxStackSizeAtSpawn = 2;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest, 25);
+  addFeatureFoundIn(d, feature_cabinet, 25);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machineGun);
@@ -369,16 +373,16 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
   d->rangedAudio = audio_tommygun_fire;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_drumOfBullets);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistol);
@@ -395,8 +399,8 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a pistol being fired.";
   d->rangedAudio = audio_pistol_fire;
   d->reloadAudio = audio_pistol_reload;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flareGun);
@@ -413,16 +417,16 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
   d->rangedSoundMessage = "I hear a flare gun being fired.";
   d->rangedStatusEffect = new StatusFlared(eng);
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pistolClip);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_teslaCanon);
@@ -443,8 +447,17 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrYellow;
   d->spawnStandardMinDLVL = 7;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest, 50);
+  addFeatureFoundIn(d, feature_cabinet, 50);
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_teslaCanister);
+  resetDef(d, itemDef_ammoClip);
+  d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
+  d->ammoContainedInClip = 30;
+  d->spawnStandardMinDLVL = 6;
+  addFeatureFoundIn(d, feature_chest, 50);
+  addFeatureFoundIn(d, feature_cabinet, 50);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_spikeGun);
@@ -467,17 +480,8 @@ void ItemData::makeList() {
   d->rangedMissileGlyph = '/';
   d->rangedMissileColor = clrGray;
   d->spawnStandardMinDLVL = 4;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
-  itemDefinitions[d->id] = d;
-
-  d = new ItemDefinition(item_teslaCanister);
-  resetDef(d, itemDef_ammoClip);
-  d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
-  d->ammoContainedInClip = 30;
-  d->spawnStandardMinDLVL = 6;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest, 50);
+  addFeatureFoundIn(d, feature_cabinet, 50);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dynamite);
@@ -486,8 +490,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
   d->color = clrRedLight;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_flare);
@@ -497,8 +501,8 @@ void ItemData::makeList() {
   d->tile = tile_flare;
   d->color = clrGray;
   d->isAmmo = true;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_molotov);
@@ -507,8 +511,8 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_molotov;
   d->color = clrWhite;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_throwingKnife);
@@ -523,7 +527,8 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_rock);
@@ -537,7 +542,7 @@ void ItemData::makeList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_dagger);
@@ -549,9 +554,9 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeBaseAttackSkill = 20;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hatchet);
@@ -566,8 +571,8 @@ void ItemData::makeList() {
   d->missileBaseAttackSkill = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_club);
@@ -593,8 +598,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeBaseAttackSkill = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-//  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_machete);
@@ -606,8 +610,7 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeBaseAttackSkill = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
-//  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_axe);
@@ -619,9 +622,8 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
-//  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, feature_tomb);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_pitchFork);
@@ -634,7 +636,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_sledgeHammer);
@@ -647,7 +649,7 @@ void ItemData::makeList() {
   d->meleeBaseAttackSkill = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_ironSpike);
@@ -664,7 +666,7 @@ void ItemData::makeList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_crowbar);
@@ -677,7 +679,7 @@ void ItemData::makeList() {
   d->color = clrGray;
   d->glyph = '~';
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_lockpick);
@@ -690,7 +692,7 @@ void ItemData::makeList() {
   d->color = clrWhite;
   d->glyph = '~';
   d->landOnHardSurfaceSoundMessage = "I clinking sound.";
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_playerKick);
@@ -988,7 +990,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 1.0;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "";
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorIronSuit);
@@ -1007,7 +1009,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 80;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_armorFlackJacket);
@@ -1026,7 +1028,7 @@ void ItemData::makeList() {
   d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
-  d->featuresCanBeFoundIn.push_back(feature_cabinet);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_armorAsbestosSuit);
@@ -1174,8 +1176,8 @@ void ItemData::makeList() {
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->isIdentified = false;
   d->color = clrGray;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_chest, 10);
+  addFeatureFoundIn(d, feature_tomb, 10);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRepeller);
@@ -1183,8 +1185,8 @@ void ItemData::makeList() {
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
   d->isIdentified = false;
   d->color = clrGray;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_chest, 10);
+  addFeatureFoundIn(d, feature_tomb, 10);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceRejuvenator);
@@ -1192,8 +1194,8 @@ void ItemData::makeList() {
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
   d->isIdentified = false;
   d->color = clrGray;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_chest, 10);
+  addFeatureFoundIn(d, feature_tomb, 10);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_deviceTranslocator);
@@ -1201,8 +1203,8 @@ void ItemData::makeList() {
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
   d->isIdentified = false;
   d->color = clrGray;
-  d->featuresCanBeFoundIn.push_back(feature_chest);
-  d->featuresCanBeFoundIn.push_back(feature_tomb);
+  addFeatureFoundIn(d, feature_chest, 10);
+  addFeatureFoundIn(d, feature_tomb, 10);
   itemDefinitions[d->id] = d;
 
 //  d = new ItemDefinition(item_deviceSpellReflector);
@@ -1222,6 +1224,8 @@ void ItemData::makeList() {
   d->isIdentified = true;
   d->tile = tile_electricLantern;
   d->color = clrYellow;
+  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 }
 

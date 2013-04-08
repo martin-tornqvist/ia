@@ -218,17 +218,15 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
       }
     } else {
       //Punctuation or exclamation marks depending on attack strength
-      data.dmgDescript = ".";
-      if(data.dmgRolls* data.dmgSides >= 4) {
-        if(data.dmgRoll > data.dmgRolls * data.dmgSides / 2)
-          data.dmgDescript = "!";
-        if(data.dmgRoll > data.dmgRolls * data.dmgSides * 5 / 6)
-          data.dmgDescript = "!!!";
+      data.dmgPunctuation = ".";
+      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      if(MAX_DMG_ROLL >= 4) {
+        data.dmgPunctuation = data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" : data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" : data.dmgPunctuation;
       }
 
       if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {
         if(data.currentDefender == eng->player) {
-          eng->log->addMessage("I am hit" + data.dmgDescript, clrMessageBad, messageInterrupt_force);
+          eng->log->addMessage("I am hit" + data.dmgPunctuation, clrMessageBad, messageInterrupt_force);
 
 //          if(data.attackResult == successCritical) {
 //            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
@@ -239,7 +237,7 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
           if(eng->map->playerVision[defX][defY] == true)
             otherName = data.currentDefender->getNameThe();
 
-          eng->log->addMessage(otherName + " is hit" + data.dmgDescript, clrMessageGood);
+          eng->log->addMessage(otherName + " is hit" + data.dmgPunctuation, clrMessageGood);
 
 //          if(data.attackResult == successCritical) {
 //            eng->log->addMessage("It was a great hit!", clrMessageGood);
@@ -252,17 +250,17 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
 
 void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
   //Punctuation or exclamation marks depending on attack strength
-  data.dmgDescript = ".";
+  data.dmgPunctuation = ".";
   const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
   if(MAX_DMG_ROLL >= 4) {
-    data.dmgDescript = data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" : data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" : data.dmgDescript;
+    data.dmgPunctuation = data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" : data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" : data.dmgPunctuation;
   }
 
   string otherName = "";
 
   if(data.isTargetEthereal == true) {
     if(data.isPlayerAttacking == true) {
-      eng->log->addMessage("I hit nothing but void" + data.dmgDescript);
+      eng->log->addMessage("I hit nothing but void" + data.dmgPunctuation);
     } else {
       if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
@@ -270,7 +268,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
         otherName = "its";
       }
 
-      eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgDescript, clrWhite, messageInterrupt_force);
+      eng->log->addMessage("I am unaffected by " + otherName + " attack" + data.dmgPunctuation, clrWhite, messageInterrupt_force);
     }
   } else {
     //----- ATTACK FUMBLE -----
@@ -343,11 +341,11 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
 
           if(data.isIntrinsic) {
             const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly" : "";
-            eng->log->addMessage("I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + data.dmgDescript, clrMessageGood);
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + data.dmgPunctuation, clrMessageGood);
           } else {
             const string ATTACK_MOD_TEXT = data.isWeakAttack ? "feebly " : (data.isBackStab ? "covertly " : "");
             const sf::Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
-            eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " + data.weaponName_a + data.dmgDescript, clr);
+            eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " + data.weaponName_a + data.dmgPunctuation, clr);
           }
         } else {
           const string wpnVerb = weapon->getDef().meleeAttackMessages.other;
@@ -358,7 +356,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
             otherName = "It";
           }
 
-          eng->log->addMessage(otherName + " " + wpnVerb + data.dmgDescript, clrMessageBad, messageInterrupt_force);
+          eng->log->addMessage(otherName + " " + wpnVerb + data.dmgPunctuation, clrMessageBad, messageInterrupt_force);
         }
       }
     }

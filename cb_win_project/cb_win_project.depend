@@ -91,14 +91,14 @@
 	"ItemData.h"
 	"ConstDungeonSettings.h"
 
-1363552200 c:\dev\ia\src\itemdata.h
+1365446305 c:\dev\ia\src\itemdata.h
 	<vector>
 	<string>
 	"ConstTypes.h"
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365073910 c:\dev\ia\src\itemdefinition.h
+1365445304 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -238,7 +238,7 @@
 1355677712 c:\dev\ia\src\blood.h
 	"ConstTypes.h"
 
-1365374974 c:\dev\ia\src\featuretrap.h
+1365447756 c:\dev\ia\src\featuretrap.h
 	"Feature.h"
 	"AbilityValues.h"
 	"Art.h"
@@ -424,7 +424,7 @@
 	"AI_castRandomSpell.h"
 	"AI_handleInventory.h"
 
-1363215908 c:\dev\ia\src\attack.h
+1365426050 c:\dev\ia\src\attack.h
 	<vector>
 	<math.h>
 	<iostream>
@@ -513,7 +513,7 @@
 	"Art.h"
 	"Engine.h"
 
-1365425396 source:c:\dev\ia\src\attack.cpp
+1365426429 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -1014,7 +1014,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1365374974 source:c:\dev\ia\src\featuretrap.cpp
+1365453237 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
 	"Engine.h"
@@ -1168,7 +1168,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365374974 source:c:\dev\ia\src\itemdata.cpp
+1365446797 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -3797,7 +3797,7 @@
 	<vector>
 	<string>
 
-1364305800 source:c:\dev\ia\src\featurevariousexaminable.cpp
+1365445749 source:c:\dev\ia\src\featurevariousexaminable.cpp
 	"FeatureVariousExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -3810,7 +3810,7 @@
 	"PlayerBonuses.h"
 	"ActorPlayer.h"
 
-1364154171 c:\dev\ia\src\featurevariousexaminable.h
+1365449574 c:\dev\ia\src\featurevariousexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 

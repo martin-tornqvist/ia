@@ -28,26 +28,26 @@ Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
       trapType = static_cast<Trap_t>(eng->dice.getInRange(0, endOfTraps - 1));
       tracer << "Trap: Picked trap type id: " << trapType << endl;
 
-      if(trapType == trap_teleport) {
-        tracer << "Trap: Picked trap is teleport trap" << endl;
-        bool isNextToWalkBlocking = false;
-        for(int dy = -1; dy <= 1; dy++) {
-          for(int dx = -1; dx <= 1; dx++) {
-            const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-            if(f->isMoveTypePassable(moveType_walk) == false) {
-              isNextToWalkBlocking = true;
-              dy = 999;
-              dx = 999;
-            }
-          }
-        }
-        if(isNextToWalkBlocking) {
-          tracer << "Trap: Non-walkable adjacent cell found, picking other trap type" << endl;
-          continue;
-        } else {
-          tracer << "Trap: All adjacent cells are walkable, ok to spawn teleport trap" << endl;
-        }
-      }
+//      if(trapType == trap_teleport) {
+//        tracer << "Trap: Picked trap is teleport trap" << endl;
+//        bool isNextToWalkBlocking = false;
+//        for(int dy = -1; dy <= 1; dy++) {
+//          for(int dx = -1; dx <= 1; dx++) {
+//            const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+//            if(f->isMoveTypePassable(moveType_walk) == false) {
+//              isNextToWalkBlocking = true;
+//              dy = 999;
+//              dx = 999;
+//            }
+//          }
+//        }
+//        if(isNextToWalkBlocking) {
+//          tracer << "Trap: Non-walkable adjacent cell found, picking other trap type" << endl;
+//          continue;
+//        } else {
+//          tracer << "Trap: All adjacent cells are walkable, ok to spawn teleport trap" << endl;
+//        }
+//      }
       break;
     }
     setSpecificTrapFromId(trapType);
@@ -65,37 +65,37 @@ Trap::~Trap() {
 
 void Trap::setSpecificTrapFromId(const Trap_t id) {
   switch(id) {
-  case trap_dart:
-    specificTrap_ = new TrapDart(pos_, eng);
+    case trap_dart:
+      specificTrap_ = new TrapDart(pos_, eng);
+      break;
+    case trap_spear:
+      specificTrap_ = new TrapSpear(pos_, eng);
+      break;
+    case trap_gasConfusion:
+      specificTrap_ = new TrapGasConfusion(pos_, eng);
+      break;
+    case trap_gasParalyze:
+      specificTrap_ = new TrapGasParalyzation(pos_, eng);
+      break;
+    case trap_gasFear:
+      specificTrap_ = new TrapGasFear(pos_, eng);
+      break;
+    case trap_blinding:
+      specificTrap_ = new TrapBlindingFlash(pos_, eng);
+      break;
+    case trap_teleport:
+      specificTrap_ = new TrapTeleport(pos_, eng);
+      break;
+    case trap_smoke:
+      specificTrap_ = new TrapSmoke(pos_, eng);
+      break;
+    case trap_spiderWeb:
+      specificTrap_ = new TrapSpiderWeb(pos_, eng);
+      break;
+    default: {
+      specificTrap_ = NULL;
+    }
     break;
-  case trap_spear:
-    specificTrap_ = new TrapSpear(pos_, eng);
-    break;
-  case trap_gasConfusion:
-    specificTrap_ = new TrapGasConfusion(pos_, eng);
-    break;
-  case trap_gasParalyze:
-    specificTrap_ = new TrapGasParalyzation(pos_, eng);
-    break;
-  case trap_gasFear:
-    specificTrap_ = new TrapGasFear(pos_, eng);
-    break;
-  case trap_blinding:
-    specificTrap_ = new TrapBlindingFlash(pos_, eng);
-    break;
-  case trap_teleport:
-    specificTrap_ = new TrapTeleport(pos_, eng);
-    break;
-  case trap_smoke:
-    specificTrap_ = new TrapSmoke(pos_, eng);
-    break;
-  case trap_spiderWeb:
-    specificTrap_ = new TrapSpiderWeb(pos_, eng);
-    break;
-  default: {
-    specificTrap_ = NULL;
-  }
-  break;
   }
 }
 

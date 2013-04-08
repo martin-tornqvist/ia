@@ -184,7 +184,7 @@ private:
   sf::Color getTrapSpecificColor() const {return clrCyan;}
   string getTrapSpecificTitle() const {return "Teleporter trap";}
   char getTrapSpecificGlyph() const {return '^';}
-  Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
+  Tile_t getTrapSpecificTile() const {return tile_elderSign;}
 };
 
 class TrapSmoke: public SpecificTrapBase {

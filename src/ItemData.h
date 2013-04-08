@@ -48,6 +48,8 @@ private:
   void setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor, const EntityStrength_t dmgStrength) const;
   void resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const;
 
+  void addFeatureFoundIn(ItemDefinition* const itemDef, const Feature_t featureId, const int CHANCE_TO_INCLUDE = 100) const;
+
   Engine* eng;
 };
 

@@ -6,9 +6,9 @@
 #include "FeatureDoor.h"
 
 enum EventRegularity_t {
-  eventRegularity_common = 100,
-  eventRegularity_rare = 10,
-  eventRegularity_veryRare = 1
+  eventRegularity_common    = 100,
+  eventRegularity_rare      = 10,
+  eventRegularity_veryRare  = 1
 };
 
 class Item;
@@ -50,21 +50,56 @@ public:
   vector<Item*> items_;
 };
 
+enum TombAction_t {
+  tombAction_pushLid,
+  tombAction_smashLidWithSledgehammer,
+  tombAction_searchExterior,
+  tombAction_carveCurseWard,
+  tombAction_leave
+};
+
+enum TombTrap_t {
+  tombTrap_fumes,
+  tombTrap_cursed,
+  tombTrap_monster,
+  tombTrap_none
+};
+
+//Tombs can have a combination of these depending on content and traps (may be false clues)
+enum TombTraits_t {
+  tombTrait_stench,                 //Fumes, Ooze-type monster
+  tombTrait_auraOfUnrest,           //Ghost-type monster
+  tombTrait_forebodingCarvedSigns,  //Cursed
+  tombTrait_impressive,             //Good items
+  tombTrait_marvelous               //Excellent items
+};
+
 class Tomb: public FeatureExaminable {
 public:
-  ~Tomb() {
-  }
+  ~Tomb() {}
   void featureSpecific_examine();
 
 private:
   friend class FeatureFactory;
+
   Tomb(Feature_t id, coord pos, Engine* engine);
+
+  void triggerTrap();
+
+  void setChoiceLabelsFromPossibleActions(const vector<TombAction_t>& possibleActions, vector<string>& actionLabels) const;
+
+  void setDescription(string& description) const;
+
+  bool isContentKnown_, isLidTooHeavyToPush_, isTrapped_, isTrapStatusKnown_;
+
+  vector<TombTraits_t> tombTraits;
+
+  ExaminableItemContainer itemContainer_;
 };
 
 class Cabinet: public FeatureExaminable {
 public:
-  ~Cabinet() {
-  }
+  ~Cabinet() {}
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
@@ -109,8 +144,7 @@ private:
 
 class Cocoon: public FeatureExaminable {
 public:
-  ~Cocoon() {
-  }
+  ~Cocoon() {}
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
@@ -121,8 +155,7 @@ private:
 
 class Altar: public FeatureExaminable {
 public:
-  ~Altar() {
-  }
+  ~Altar() {}
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
@@ -131,8 +164,7 @@ private:
 
 class CarvedPillar: public FeatureExaminable {
 public:
-  ~CarvedPillar() {
-  }
+  ~CarvedPillar() {}
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
@@ -141,8 +173,7 @@ private:
 
 class Barrel: public FeatureExaminable {
 public:
-  ~Barrel() {
-  }
+  ~Barrel() {}
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
