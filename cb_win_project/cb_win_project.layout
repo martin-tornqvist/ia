@@ -208,10 +208,10 @@
 	<File name="..\src\FeatureSmoke.h" open="0" top="0" tabpos="0">
 		<Cursor position="180" topLine="0" />
 	</File>
-	<File name="..\src\FeatureTrap.cpp" open="1" top="1" tabpos="6">
-		<Cursor position="1360" topLine="15" />
+	<File name="..\src\FeatureTrap.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="874" topLine="15" />
 	</File>
-	<File name="..\src\FeatureTrap.h" open="1" top="0" tabpos="7">
+	<File name="..\src\FeatureTrap.h" open="1" top="0" tabpos="6">
 		<Cursor position="5730" topLine="160" />
 	</File>
 	<File name="..\src\FeatureVariousExaminable.cpp" open="1" top="0" tabpos="2">
@@ -286,13 +286,13 @@
 	<File name="..\src\ItemArmor.h" open="0" top="0" tabpos="0">
 		<Cursor position="732" topLine="8" />
 	</File>
-	<File name="..\src\ItemData.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="19916" topLine="524" />
+	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="19951" topLine="512" />
 	</File>
 	<File name="..\src\ItemData.h" open="1" top="0" tabpos="3">
 		<Cursor position="1439" topLine="13" />
 	</File>
-	<File name="..\src\ItemDefinition.h" open="1" top="0" tabpos="5">
+	<File name="..\src\ItemDefinition.h" open="1" top="0" tabpos="4">
 		<Cursor position="6287" topLine="229" />
 	</File>
 	<File name="..\src\ItemDevice.cpp" open="0" top="0" tabpos="2">
@@ -313,8 +313,8 @@
 	<File name="..\src\ItemExplosive.h" open="0" top="0" tabpos="0">
 		<Cursor position="409" topLine="0" />
 	</File>
-	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="439" topLine="15" />
+	<File name="..\src\ItemFactory.cpp" open="1" top="1" tabpos="7">
+		<Cursor position="7986" topLine="0" />
 	</File>
 	<File name="..\src\ItemFactory.h" open="0" top="0" tabpos="4">
 		<Cursor position="255" topLine="0" />

@@ -108,13 +108,10 @@ int main(int argc, char* argv[]) {
               engine->input->handleMapModeInputUntilFound();
             }
 
+          } else if(engine->player->deadState == actorDeadState_alive) {
+            engine->gameTime->getCurrentActor()->newTurn();
           } else {
-            //If not player turn, run AI
-            if(engine->player->deadState == actorDeadState_alive) {
-              engine->gameTime->getCurrentActor()->newTurn();
-            } else {
-              engine->gameTime->letNextAct();
-            }
+            engine->gameTime->letNextAct();
           }
         }
 
