@@ -40,6 +40,7 @@ $      >    Go down staircase
 $      a    Examine object
 $      b    Bash door or kick monster
 $      c    Close door
+$      d    Disarm trap
 $      e    Use item or throw held explosive
 $      f    Aim/fire wielded weapon
 $      g    Pick up item

@@ -244,7 +244,7 @@ void FeatureData::makeList() {
   d.name_a = "a golden brazier";
   d.name_the = "the golden brazier";
   d.glyph = '0';
-  d.color = clrYellow;
+  d.color = clrGold;
   d.tile = tile_brazier;
   d.isShootPassable = true;
   d.isVisionPassable = true;

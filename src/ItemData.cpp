@@ -52,6 +52,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->isMachineGun = false;
       d->isAmmo = false;
       d->isAmmoClip = false;
+      d->isDevice = false;
       d->ammoContainedInClip = 0;
       d->meleeBaseAttackSkill = 0;
       d->meleeAbilityUsed = ability_accuracyMelee;

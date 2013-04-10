@@ -23,42 +23,42 @@ void SpellHandler::addAllCommonSpellsForMonsters(vector<Spell*>& knownSpells) co
 
 Spell* SpellHandler::getSpellFromEnum(const Spells_t spell) const {
   switch(spell) {
-  case spell_blind:
-    return new SpellBlind;
-    break;
-  case spell_disease:
-    return new SpellDisease;
-    break;
-  case spell_fear:
-    return new SpellFear;
-    break;
-  case spell_azathothsBlast:
-    return new SpellAzathothsBlast;
-    break;
-  case spell_slow:
-    return new SpellSlow;
-    break;
-  case spell_summonRandom:
-    return new SpellSummonRandom;
-    break;
-  case spell_healSelf:
-    return new SpellHealSelf;
-    break;
-  case spell_knockBack:
-    return new SpellKnockBack;
-    break;
-  case spell_teleport:
-    return new SpellTeleport;
-    break;
-  case spell_confuse:
-    return new SpellConfuse;
-    break;
-  case spell_weakness:
-    return new SpellWeakness;
-    break;
-  default:
-    return NULL;
-    break;
+    case spell_blind:
+      return new SpellBlind;
+      break;
+    case spell_disease:
+      return new SpellDisease;
+      break;
+    case spell_fear:
+      return new SpellFear;
+      break;
+    case spell_azathothsBlast:
+      return new SpellAzathothsBlast;
+      break;
+    case spell_slow:
+      return new SpellSlow;
+      break;
+    case spell_summonRandom:
+      return new SpellSummonRandom;
+      break;
+    case spell_healSelf:
+      return new SpellHealSelf;
+      break;
+    case spell_knockBack:
+      return new SpellKnockBack;
+      break;
+    case spell_teleport:
+      return new SpellTeleport;
+      break;
+    case spell_confuse:
+      return new SpellConfuse;
+      break;
+    case spell_weakness:
+      return new SpellWeakness;
+      break;
+    default:
+      return NULL;
+      break;
   }
 }
 
@@ -327,16 +327,16 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
       i--;
     }
   }
-  //First try to summon inside players FOV
-  if(freePositionsSeenByPlayer.size() > 0) {
-    summonPos = freePositionsSeenByPlayer.at(eng->dice(1, freePositionsSeenByPlayer.size()) - 1);
-  } else {
+
+  if(freePositionsSeenByPlayer.empty()) {
     vector<coord> freeCellsVector;
     eng->mapTests->makeMapVectorFromArray(blockers, freeCellsVector);
     if(freeCellsVector.size() > 0) {
       sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToOrigin(monster->pos, eng));
       summonPos = freeCellsVector.at(0);
     }
+  } else {
+    summonPos = freePositionsSeenByPlayer.at(eng->dice(1, freePositionsSeenByPlayer.size()) - 1);
   }
 
   specificCast(SpellData(monster, summonPos), eng);

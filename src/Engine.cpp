@@ -24,6 +24,7 @@
 #include "CharacterInfo.h"
 #include "Close.h"
 #include "DebugModeStatPrinter.h"
+#include "Disarm.h"
 #include "PlayerAllocBonus.h"
 #include "Map.h"
 #include "DungeonClimb.h"
@@ -192,6 +193,7 @@ void Engine::initGame() {
   characterInfo = new CharacterInfo(this);
   roomThemeMaker = new RoomThemeMaker(this);
   debugModeStatPrinter = new DebugModeStatPrinter(this);
+  disarm = new Disarm(this);
 
   tracer << "Engine::initGame() [DONE]" << endl;
 }
@@ -268,6 +270,7 @@ void Engine::cleanupGame() {
   delete characterInfo;
   delete roomThemeMaker;
   delete debugModeStatPrinter;
+  delete disarm;
 
   delete marker;
 

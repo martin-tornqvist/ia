@@ -141,8 +141,7 @@ coord Query::direction() const {
   if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
     if(d.isShiftHeld_) {
       return coord(1, -1);
-    }
-    else if(d.isCtrlHeld_) {
+    } else if(d.isCtrlHeld_) {
       return coord(1, 1);
     } else {
       return coord(1, 0);

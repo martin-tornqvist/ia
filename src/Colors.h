@@ -33,7 +33,7 @@ const sf::Color	clrBrownDark(96, 64, 32, 255);
 
 const sf::Color clrBrownGray(92, 84, 78, 255);
 
-const sf::Color clrGold(255, 215, 0, 255);
+const sf::Color clrGold(218, 165, 32, 255);
 
 const sf::Color clrMessageGood = clrGreenLight;
 const sf::Color clrMessageBad = clrRedLight;

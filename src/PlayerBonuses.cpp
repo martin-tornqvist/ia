@@ -24,7 +24,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_sharpshooter, "Sharpshooter", "+15% hit chance with firearms and thrown wepaons", playerBonus_marksman);
   setBonus(playerBonus_steadyAimer, "Steady aimer", "Waiting a turn gives +20% hit chance with firearms and thrown weapons", playerBonus_marksman);
 //  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
-  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "+X% chance to disarm traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
+  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "Can disarm mechanical traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "50% more items found on map", playerBonus_observant);
@@ -32,7 +32,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+20% chance to avoid being spoted by monsters", playerBonus_stealthy, playerBonus_dexterous);
   setBonus(playerBonus_learned, "Learned", "You can read and memorize manuscripts");
-  setBonus(playerBonus_erudite, "Erudite", "Spell cooldowns starts from 20%", playerBonus_learned);
+  setBonus(playerBonus_erudite, "Erudite", "Spell cooldowns starts from 20%, can disarm magic traps", playerBonus_learned);
   setBonus(playerBonus_strongMinded, "Strong-minded", "+20% mental status resistance, -5% shock received");
   setBonus(playerBonus_unyielding, "Unyielding", "+20% mental status resistance, -5% shock received", playerBonus_strongMinded);
   setBonus(playerBonus_coolHeaded, "Cool-headed", "-20% shock received", playerBonus_strongMinded);
@@ -72,22 +72,22 @@ void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
   bonuses_[bonus].isPicked_ = true;
 
   switch(bonus) {
-  case playerBonus_healthy: {
-    eng->player->changeMaxHP(2, false);
-  }
-  break;
-  case playerBonus_vigorous: {
-    eng->player->changeMaxHP(2, false);
-  }
-  break;
-  case playerBonus_selfAware: {
-    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
-    eng->player->getStatusEffectsHandler()->endEffect(statusConfused, visionBlockers);
-  }
-  break;
-  default: {
-  } break;
+    case playerBonus_healthy: {
+      eng->player->changeMaxHP(2, false);
+    }
+    break;
+    case playerBonus_vigorous: {
+      eng->player->changeMaxHP(2, false);
+    }
+    break;
+    case playerBonus_selfAware: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+      eng->player->getStatusEffectsHandler()->endEffect(statusConfused, visionBlockers);
+    }
+    break;
+    default: {
+    } break;
   }
 }
 

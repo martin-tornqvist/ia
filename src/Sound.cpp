@@ -8,7 +8,7 @@
 #include "ActorPlayer.h"
 
 bool SoundEmitter::isSoundHeardAtRange(const int RANGE, const Sound& sound) const {
-	return sound.isLoud() ? RANGE <= 20 : RANGE <= 10;
+	return sound.isLoud() ? RANGE <= 30 : RANGE <= 10;
 }
 
 void SoundEmitter::emitSound(Sound sound) {

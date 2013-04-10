@@ -20,31 +20,16 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
       int chanceForTrappedRoom = 0;
 
       switch(theme) {
-      case roomTheme_human:
-        chanceForTrappedRoom = 25;
-        break;
-      case roomTheme_ritual:
-        chanceForTrappedRoom = 25;
-        break;
-      case roomTheme_spider:
-        chanceForTrappedRoom = 75;
-        break;
-      case roomTheme_crypt:
-        chanceForTrappedRoom = 75;
-        break;
-      case roomTheme_monster:
-        chanceForTrappedRoom = 25;
-        break;
-      case roomTheme_plain:
-        break;
-      case roomTheme_dungeon:
-        break;
-      case roomTheme_flooded:
-        break;
-      case roomTheme_muddy:
-        break;
-      case endOfRoomThemes:
-        break;
+        case roomTheme_human:    chanceForTrappedRoom = 25;  break;
+        case roomTheme_ritual:   chanceForTrappedRoom = 25;  break;
+        case roomTheme_spider:   chanceForTrappedRoom = 75;  break;
+        case roomTheme_crypt:    chanceForTrappedRoom = 75;  break;
+        case roomTheme_monster:  chanceForTrappedRoom = 25;  break;
+        case roomTheme_plain:                                break;
+        case roomTheme_dungeon:                              break;
+        case roomTheme_flooded:                              break;
+        case roomTheme_muddy:                                break;
+        case endOfRoomThemes:                                break;
       }
 
       if(eng->dice.getInRange(1, 100) < chanceForTrappedRoom) {
@@ -83,7 +68,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
     }
   }
 
-  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 25 + (eng->map->getDungeonLevel() * 5));
+  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (eng->map->getDungeonLevel() * 5));
   if(eng->dice.percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     vector<coord> trapPositionCandidates;
     for(int y = 1; y < MAP_Y_CELLS - 1; y++) {

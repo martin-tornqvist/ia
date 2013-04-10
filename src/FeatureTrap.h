@@ -12,14 +12,17 @@ class SpecificTrapBase;
 class TrapSpawnData;
 
 enum Trap_t {
-  trap_blinding, trap_dart,
+  trap_blinding,
+  trap_dart,
   trap_gasConfusion,
   trap_gasFear,
   trap_gasParalyze,
   trap_smoke,
+  trap_alarm,
   trap_spear,
   trap_spiderWeb,
   trap_teleport,
+  trap_summonMonster,
   endOfTraps,
   trap_any
 };
@@ -38,6 +41,9 @@ public:
   bool canHaveCorpse() const;
   bool canHaveItem() const;
 
+  bool isMagical() const;
+  bool isDisarmable() const;
+
   void triggerOnPurpose(Actor* actorTriggering);
 
   void reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES);
@@ -54,7 +60,10 @@ public:
 
 protected:
   friend class FeatureFactory;
+  friend class Disarm;
   Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData);
+
+  void trigger(Actor* const actor);
 
   void setSpecificTrapFromId(const Trap_t id);
 
@@ -88,6 +97,8 @@ protected:
   virtual sf::Color getTrapSpecificColor() const = 0;
   virtual char getTrapSpecificGlyph() const = 0;
   virtual Tile_t getTrapSpecificTile() const = 0;
+  virtual bool isMagical() const = 0;
+  virtual bool isDisarmable() const = 0;
 
   coord pos_;
   Trap_t trapType_;
@@ -104,6 +115,8 @@ private:
   string getTrapSpecificTitle() const {return "Dart trap";}
   char getTrapSpecificGlyph() const {return '^';}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   bool isPoisoned;
 };
 
@@ -117,6 +130,8 @@ private:
   string getTrapSpecificTitle() const {return "Spear trap";}
   char getTrapSpecificGlyph() const {return '^';}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   bool isPoisoned;
 };
 
@@ -130,6 +145,8 @@ private:
   sf::Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
 };
 
@@ -144,6 +161,8 @@ private:
   sf::Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
 };
 
@@ -157,6 +176,8 @@ private:
   sf::Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
 };
 
@@ -170,6 +191,8 @@ private:
   sf::Color getTrapSpecificColor() const {return clrYellow;}
   string getTrapSpecificTitle() const {return "Blinding trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
 };
 
@@ -184,6 +207,24 @@ private:
   sf::Color getTrapSpecificColor() const {return clrCyan;}
   string getTrapSpecificTitle() const {return "Teleporter trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return true;}
+  bool isDisarmable() const {return true;}
+  Tile_t getTrapSpecificTile() const {return tile_elderSign;}
+};
+
+class TrapSummonMonster: public SpecificTrapBase {
+public:
+private:
+  friend class Trap;
+  TrapSummonMonster(coord pos, Engine* engine) :
+    SpecificTrapBase(pos, trap_summonMonster, engine) {
+  }
+  void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
+  sf::Color getTrapSpecificColor() const {return clrBrownDark;}
+  string getTrapSpecificTitle() const {return "Monster summoning trap";}
+  char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return true;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const {return tile_elderSign;}
 };
 
@@ -197,8 +238,26 @@ private:
   sf::Color getTrapSpecificColor() const {return clrGray;}
   string getTrapSpecificTitle() const {return "Smoke trap";}
   char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
   Tile_t getTrapSpecificTile() const { return tile_trapGeneral;}
 };
+
+class TrapAlarm: public SpecificTrapBase {
+public:
+private:
+  friend class Trap;
+  TrapAlarm(coord pos, Engine* engine) :
+    SpecificTrapBase(pos, trap_alarm, engine) {}
+  void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
+  sf::Color getTrapSpecificColor() const {return clrGold;}
+  string getTrapSpecificTitle() const {return "Alarm trap";}
+  char getTrapSpecificGlyph() const {return '^';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return true;}
+  Tile_t getTrapSpecificTile() const { return tile_trapGeneral;}
+};
+
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
@@ -214,6 +273,8 @@ private:
   sf::Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Spider web";}
   char getTrapSpecificGlyph() const {return '*';}
+  bool isMagical() const {return false;}
+  bool isDisarmable() const {return false;}
   Tile_t getTrapSpecificTile() const {return tile_spiderWeb;}
 
   bool isHoldingActor;

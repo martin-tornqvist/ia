@@ -15,6 +15,8 @@
 #include "Popup.h"
 #include "ActorMonster.h"
 #include "Inventory.h"
+#include "Sound.h"
+#include "ActorFactory.h"
 
 Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), isHidden_(true) {
@@ -22,35 +24,7 @@ Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
   assert(spawnData->trapType_ != endOfTraps);
 
   if(spawnData->trapType_ == trap_any) {
-    Trap_t trapType = endOfTraps;
-    while(true) {
-      tracer << "Trap: Picking trap type" << endl;
-      trapType = static_cast<Trap_t>(eng->dice.getInRange(0, endOfTraps - 1));
-      tracer << "Trap: Picked trap type id: " << trapType << endl;
-
-//      if(trapType == trap_teleport) {
-//        tracer << "Trap: Picked trap is teleport trap" << endl;
-//        bool isNextToWalkBlocking = false;
-//        for(int dy = -1; dy <= 1; dy++) {
-//          for(int dx = -1; dx <= 1; dx++) {
-//            const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-//            if(f->isMoveTypePassable(moveType_walk) == false) {
-//              isNextToWalkBlocking = true;
-//              dy = 999;
-//              dx = 999;
-//            }
-//          }
-//        }
-//        if(isNextToWalkBlocking) {
-//          tracer << "Trap: Non-walkable adjacent cell found, picking other trap type" << endl;
-//          continue;
-//        } else {
-//          tracer << "Trap: All adjacent cells are walkable, ok to spawn teleport trap" << endl;
-//        }
-//      }
-      break;
-    }
-    setSpecificTrapFromId(trapType);
+    setSpecificTrapFromId(static_cast<Trap_t>(eng->dice.getInRange(0, endOfTraps - 1)));
   } else {
     setSpecificTrapFromId(spawnData->trapType_);
   }
@@ -65,43 +39,26 @@ Trap::~Trap() {
 
 void Trap::setSpecificTrapFromId(const Trap_t id) {
   switch(id) {
-    case trap_dart:
-      specificTrap_ = new TrapDart(pos_, eng);
-      break;
-    case trap_spear:
-      specificTrap_ = new TrapSpear(pos_, eng);
-      break;
-    case trap_gasConfusion:
-      specificTrap_ = new TrapGasConfusion(pos_, eng);
-      break;
-    case trap_gasParalyze:
-      specificTrap_ = new TrapGasParalyzation(pos_, eng);
-      break;
-    case trap_gasFear:
-      specificTrap_ = new TrapGasFear(pos_, eng);
-      break;
-    case trap_blinding:
-      specificTrap_ = new TrapBlindingFlash(pos_, eng);
-      break;
-    case trap_teleport:
-      specificTrap_ = new TrapTeleport(pos_, eng);
-      break;
-    case trap_smoke:
-      specificTrap_ = new TrapSmoke(pos_, eng);
-      break;
-    case trap_spiderWeb:
-      specificTrap_ = new TrapSpiderWeb(pos_, eng);
-      break;
-    default: {
-      specificTrap_ = NULL;
-    }
-    break;
+    case trap_dart:           specificTrap_ = new TrapDart(pos_, eng);            break;
+    case trap_spear:          specificTrap_ = new TrapSpear(pos_, eng);           break;
+    case trap_gasConfusion:   specificTrap_ = new TrapGasConfusion(pos_, eng);    break;
+    case trap_gasParalyze:    specificTrap_ = new TrapGasParalyzation(pos_, eng); break;
+    case trap_gasFear:        specificTrap_ = new TrapGasFear(pos_, eng);         break;
+    case trap_blinding:       specificTrap_ = new TrapBlindingFlash(pos_, eng);   break;
+    case trap_teleport:       specificTrap_ = new TrapTeleport(pos_, eng);        break;
+    case trap_summonMonster:  specificTrap_ = new TrapSummonMonster(pos_, eng);   break;
+    case trap_smoke:          specificTrap_ = new TrapSmoke(pos_, eng);           break;
+    case trap_alarm:          specificTrap_ = new TrapAlarm(pos_, eng);           break;
+    case trap_spiderWeb:      specificTrap_ = new TrapSpiderWeb(pos_, eng);       break;
+    default:                  specificTrap_ = NULL;                               break;
   }
 }
 
-Trap_t Trap::getTrapType() const {
-  return specificTrap_->trapType_;
-}
+Trap_t Trap::getTrapType() const {return specificTrap_->trapType_;}
+
+bool Trap::isMagical() const {return specificTrap_->isMagical();}
+
+bool Trap::isDisarmable() const {return specificTrap_->isDisarmable();}
 
 void Trap::triggerOnPurpose(Actor* actorTriggering) {
   const AbilityRollResult_t DODGE_RESULT = failSmall;
@@ -109,7 +66,7 @@ void Trap::triggerOnPurpose(Actor* actorTriggering) {
 }
 
 void Trap::bump(Actor* actorBumping) {
-  tracer << "Trap::Bump()..." << endl;
+  tracer << "Trap::bump()..." << endl;
 
   const ActorDefinition* const d = actorBumping->getDef();
 
@@ -135,9 +92,7 @@ void Trap::bump(Actor* actorBumping) {
           }
         }
       } else {
-        const AbilityRollResult_t DODGE_RESULT = actorBumping->eng->abilityRoll->roll(DODGE_SKILL_VALUE);
-        reveal(false);
-        specificTrap_->trapSpecificTrigger(actorBumping, DODGE_RESULT);
+        trigger(actorBumping);
       }
     } else {
       if(d->actorSize == actorSize_humanoid && d->isSpider == false) {
@@ -157,18 +112,36 @@ void Trap::bump(Actor* actorBumping) {
               actorBumping->eng->log->addMessage(actorName + " avoids a " + trapName + ".");
             }
           } else {
-            const AbilityRollResult_t DODGE_RESULT =
-              d->canDodge ? actorBumping->eng->abilityRoll->roll(DODGE_SKILL_VALUE) :  failNormal;
-            if(IS_ACTOR_SEEN_BY_PLAYER) {
-              reveal(false);
-            }
-            specificTrap_->trapSpecificTrigger(actorBumping, DODGE_RESULT);
+            trigger(actorBumping);
           }
         }
       }
     }
   }
-  tracer << "Trap::Bump() [DONE]" << endl;
+  tracer << "Trap::bump() [DONE]" << endl;
+}
+
+void Trap::trigger(Actor* const actor) {
+  tracer << "Trap::trigger()..." << endl;
+
+  const ActorDefinition* const d = actor->getDef();
+  const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodgeTrap, true, *actor);
+
+  if(actor == eng->player) {
+    const AbilityRollResult_t DODGE_RESULT = eng->abilityRoll->roll(DODGE_SKILL_VALUE);
+    reveal(false);
+    specificTrap_->trapSpecificTrigger(actor, DODGE_RESULT);
+  } else {
+    const bool IS_ACTOR_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*actor, NULL);
+    const AbilityRollResult_t dodgeResult =
+      d->canDodge ? eng->abilityRoll->roll(DODGE_SKILL_VALUE) : failNormal;
+    if(IS_ACTOR_SEEN_BY_PLAYER) {
+      reveal(false);
+    }
+    specificTrap_->trapSpecificTrigger(actor, dodgeResult);
+  }
+
+  tracer << "Trap::trigger() [DONE]" << endl;
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
@@ -386,7 +359,7 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor, const AbilityRoll
     }
   }
 
-  actor->eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng), true, getTrapSpecificColor());
+  eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng), true, getTrapSpecificColor());
 }
 
 void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -409,7 +382,7 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityR
     }
   }
 
-  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng), true, getTrapSpecificColor());
+  eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng), true, getTrapSpecificColor());
 }
 
 void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -432,7 +405,7 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResul
     }
   }
 
-  actor->eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng), true, getTrapSpecificColor());
+  eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng), true, getTrapSpecificColor());
 }
 
 void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -496,6 +469,74 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
   actor->teleport(false);
 }
 
+void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+  (void)dodgeResult;
+
+  const bool IS_PLAYER = actor == eng->player;
+  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
+  const string actorName = actor->getNameThe();
+
+  if(IS_PLAYER) {
+    eng->player->updateFov();
+    if(CAN_SEE) {
+      eng->log->addMessage("A curious shape on the floor starts to glow!");
+    } else {
+      eng->log->addMessage("I feel a peculiar energy around me!");
+    }
+  } else {
+    if(CAN_PLAYER_SEE_ACTOR) {
+      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName);
+    }
+  }
+
+  bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingFeatures);
+  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeFloodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
+  vector<PosAndVal> floodFillVector;
+  bool actorArray[MAP_X_CELLS][MAP_Y_CELLS];
+  for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {
+      const int VAL = floodFill[x][y];
+      if(VAL > 0) {
+        floodFillVector.push_back(PosAndVal(coord(x, y), VAL));
+      }
+      actorArray[x][y] = false;
+    }
+  }
+  PosAndVal_compareForVal floodFillSorter;
+  std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
+
+  for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
+    const coord curPos = eng->gameTime->getActorAt(i)->pos;
+    actorArray[curPos.x][curPos.y] = true;
+  }
+
+  vector<ActorId_t> summonCandidates;
+  for(unsigned int i = 1; i < endOfActorIds; i++) {
+    const ActorDefinition& def = eng->actorData->actorDefinitions[i];
+    if(def.canBeSummoned) {
+      if(def.monsterLvl <= eng->map->getDungeonLevel() + 3) {
+        summonCandidates.push_back(static_cast<ActorId_t>(i));
+      }
+    }
+  }
+  const ActorId_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
+
+  for(unsigned int i = 0; i < floodFillVector.size(); i++) {
+    const coord curPos = floodFillVector.at(i).pos;
+    if(actorArray[curPos.x][curPos.y] == false) {
+      Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, curPos));
+      monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+      if(eng->map->playerVision[curPos.x][curPos.y]) {
+        eng->log->addMessage(monster->getNameA() + " appears.");
+      }
+      break;
+    }
+  }
+}
+
 void TrapSmoke::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
@@ -516,7 +557,26 @@ void TrapSmoke::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
     }
   }
 
-  actor->eng->explosionMaker->runSmokeExplosion(pos_);
+  eng->explosionMaker->runSmokeExplosion(pos_);
+}
+
+void TrapAlarm::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+  (void)dodgeResult;
+
+  const bool IS_PLAYER = actor == eng->player;
+  const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
+  const string actorName = actor->getNameThe();
+
+  if(IS_PLAYER) {
+    eng->log->addMessage("An alarm sounds!");
+  } else {
+    if(CAN_PLAYER_SEE_ACTOR) {
+      eng->log->addMessage("Suddenly the air around " + actorName + " is thick with smoke!");
+    } else {
+    }
+  }
+
+  eng->soundEmitter->emitSound(Sound("I hear an alarm sounding!", IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true));
 }
 
 void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {

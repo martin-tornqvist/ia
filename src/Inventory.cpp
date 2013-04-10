@@ -355,11 +355,11 @@ void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int 
   Item* item = NULL;
   Item* slotItem = inventorySlot->item;
 
-  if(generalSlotExists == true) {
+  if(generalSlotExists) {
     item = general_.at(GENERAL_INV_ELEMENT);
   }
 
-  if(generalSlotExists == true && item != NULL) {
+  if(generalSlotExists && item != NULL) {
     if(slotItem == NULL) {
       inventorySlot->item = item;
       general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
@@ -390,7 +390,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemBefore = getItemInSlot(slot_wielded);
     moveItemToSlot(getSlot(slot_wielded), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_wielded);
-    if(IS_PLAYER == true) {
+    if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I was wielding " + nameBefore + ".");
@@ -418,7 +418,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemBefore = getItemInSlot(slot_armorBody);
     moveItemToSlot(getSlot(slot_armorBody), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_armorBody);
-    if(IS_PLAYER == true) {
+    if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
@@ -433,7 +433,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemBefore = getItemInSlot(slot_missiles);
     moveItemToSlot(getSlot(slot_missiles), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(slot_missiles);
-    if(IS_PLAYER == true) {
+    if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_plural);
         engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
@@ -486,11 +486,11 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* const engine
 void Inventory::moveItemFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT) {
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
 
-  if(generalSlotExists == true) {
+  if(generalSlotExists) {
     Item* item = general_.at(GENERAL_INV_ELEMENT);
     bool itemExistsInGeneralSlot = item != NULL;
 
-    if(itemExistsInGeneralSlot == true) {
+    if(itemExistsInGeneralSlot) {
       intrinsics_.push_back(item);
       general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
     }
@@ -556,7 +556,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) {
 }
 
 Item* Inventory::getItemInSlot(SlotTypes_t slotName) {
-  if(hasItemInSlot(slotName) == true) {
+  if(hasItemInSlot(slotName)) {
     for(unsigned int i = 0; i < slots_.size(); i++) {
       if(slots_[i].id == slotName) {
         return slots_[i].item;
@@ -611,12 +611,12 @@ void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGenera
       hasSlot = true;
       if(slots_[i].item == NULL)
         slots_[i].item = item;
-      else if(putInGeneral_ifOccupied == true)
+      else if(putInGeneral_ifOccupied)
         general_.push_back(item);
     }
   }
 
-  if(putInGeneral_ifSlotNotFound == true && hasSlot == false) {
+  if(putInGeneral_ifSlotNotFound && hasSlot == false) {
     general_.push_back(item);
   }
 }

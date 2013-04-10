@@ -29,6 +29,7 @@
 #include "PlayerBonuses.h"
 #include "Examine.h"
 #include "PlayerCreateCharacter.h"
+#include "Disarm.h"
 
 void Input::clearLogMessages() {
   if(eng->player->deadState == actorDeadState_alive) {
@@ -191,6 +192,19 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
+  //----------------------------------------DISARM
+  else if(d.key_ == 'd') {
+    clearLogMessages();
+    if(eng->player->deadState == actorDeadState_alive) {
+      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+        eng->disarm->playerDisarm();
+        eng->renderer->drawMapAndInterface();
+      } else {
+      }
+    }
+    clearEvents();
+    return;
+  }
   //----------------------------------------UNLOAD AMMO FROM GROUND
   else if(d.key_ == 'u') {
     clearLogMessages();
@@ -212,7 +226,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         firearm = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
 
         if(firearm != NULL) {
-          if(firearm->getDef().isRangedWeapon == true) {
+          if(firearm->getDef().isRangedWeapon) {
             if(firearm->ammoLoaded >= 1 || firearm->getDef().rangedHasInfiniteAmmo) {
               if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
@@ -358,7 +372,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'l') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowSee() == true) {
+      if(eng->player->getStatusEffectsHandler()->allowSee()) {
         eng->marker->place(markerTask_look);
       } else {
         eng->log->addMessage("I am blind.");
@@ -542,7 +556,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
-        if(def->isIntrinsic == false && (def->isQuaffable == true || def->isReadable == true)) {
+        if(def->isIntrinsic == false && (def->isQuaffable || def->isReadable)) {
           eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }
       }
@@ -614,66 +628,26 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
           return ret;
         } else {
           switch(sfmlKey) {
-            default:
-              continue;
-              break;
-            case sf::Keyboard::LSystem:
-              continue;
-              break;
-            case sf::Keyboard::RSystem:
-              continue;
-              break;
-            case sf::Keyboard::Menu:
-              continue;
-              break;
-            case sf::Keyboard::Pause:
-              continue;
-              break;
-            case sf::Keyboard::Space:
-              return ret;
-              break;
-            case sf::Keyboard::Return:
-              return ret;
-              break;
-            case sf::Keyboard::Back:
-              return ret;
-              break;
-            case sf::Keyboard::Tab:
-              return ret;
-              break;
-            case sf::Keyboard::PageUp:
-              return ret;
-              break;
-            case sf::Keyboard::PageDown:
-              return ret;
-              break;
-            case sf::Keyboard::End:
-              return ret;
-              break;
-            case sf::Keyboard::Home:
-              return ret;
-              break;
-            case sf::Keyboard::Insert:
-              return ret;
-              break;
-            case sf::Keyboard::Delete:
-              return ret;
-              break;
-            case sf::Keyboard::Left:
-              return ret;
-              break;
-            case sf::Keyboard::Right:
-              return ret;
-              break;
-            case sf::Keyboard::Up:
-              return ret;
-              break;
-            case sf::Keyboard::Down:
-              return ret;
-              break;
-            case sf::Keyboard::Escape:
-              return ret;
-              break;
+            default:                        continue;   break;
+            case sf::Keyboard::LSystem:     continue;   break;
+            case sf::Keyboard::RSystem:     continue;   break;
+            case sf::Keyboard::Menu:        continue;   break;
+            case sf::Keyboard::Pause:       continue;   break;
+            case sf::Keyboard::Space:       return ret; break;
+            case sf::Keyboard::Return:      return ret; break;
+            case sf::Keyboard::Back:        return ret; break;
+            case sf::Keyboard::Tab:         return ret; break;
+            case sf::Keyboard::PageUp:      return ret; break;
+            case sf::Keyboard::PageDown:    return ret; break;
+            case sf::Keyboard::End:         return ret; break;
+            case sf::Keyboard::Home:        return ret; break;
+            case sf::Keyboard::Insert:      return ret; break;
+            case sf::Keyboard::Delete:      return ret; break;
+            case sf::Keyboard::Left:        return ret; break;
+            case sf::Keyboard::Right:       return ret; break;
+            case sf::Keyboard::Up:          return ret; break;
+            case sf::Keyboard::Down:        return ret; break;
+            case sf::Keyboard::Escape:      return ret; break;
           }
         }
       } else if(event.type == sf::Event::GainedFocus) {
