@@ -194,7 +194,7 @@ class SpikeGun: public Weapon {
 public:
   SpikeGun(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
-    ammoCapacity = 5;
+    ammoCapacity = 12;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
     clip = true;

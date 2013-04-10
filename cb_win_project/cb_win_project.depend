@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365630929 c:\dev\ia\src\itemdefinition.h
+1365631003 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -192,7 +192,7 @@
 	"Sound.h"
 	"Spells.h"
 
-1365587045 c:\dev\ia\src\itemweapon.h
+1365631223 c:\dev\ia\src\itemweapon.h
 	"Item.h"
 	"Converters.h"
 
