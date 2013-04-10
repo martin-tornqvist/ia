@@ -114,7 +114,7 @@ void PopulateMonsters::populateCaveLevel() const {
 }
 
 void PopulateMonsters::populateIntroLevel() {
-  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(2, 3);
+  const int NR_GROUPS_ALLOWED = 2; //eng->dice.getInRange(2, 3);
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
 
@@ -145,7 +145,7 @@ void PopulateMonsters::populateIntroLevel() {
 }
 
 void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
-  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(9, 11);
+  const int NR_GROUPS_ALLOWED = eng->dice.getInRange(8, 10);
   int nrGroupsSpawned = 0;
 
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
@@ -270,24 +270,11 @@ void PopulateMonsters::spawnGroupAt(const ActorId_t id, const vector<coord>& sor
   int maxNrInGroup = 1;
 
   switch(d.groupSize) {
-  case monsterGroupSize_few: {
-    maxNrInGroup = eng->dice.getInRange(1, 2);
-  }
-  break;
-  case monsterGroupSize_group: {
-    maxNrInGroup = eng->dice.getInRange(3, 4);
-  }
-  break;
-  case monsterGroupSize_horde: {
-    maxNrInGroup = eng->dice.getInRange(6, 7);
-  }
-  break;
-  case monsterGroupSize_swarm: {
-    maxNrInGroup = eng->dice.getInRange(12, 15);
-  }
-  break;
-  default:
-  {} break;
+    case monsterGroupSize_few:    {maxNrInGroup = eng->dice.getInRange(1, 2);}    break;
+    case monsterGroupSize_group:  {maxNrInGroup = eng->dice.getInRange(3, 4);}    break;
+    case monsterGroupSize_horde:  {maxNrInGroup = eng->dice.getInRange(6, 7);}    break;
+    case monsterGroupSize_swarm:  {maxNrInGroup = eng->dice.getInRange(12, 15);}  break;
+    default: {} break;
   }
 
   Actor* originActor = NULL;

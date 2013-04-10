@@ -1184,6 +1184,10 @@ void ItemData::makeList() {
   resetDef(d, itemDef_potion);
   itemDefinitions[d->id] = d;
 
+  d = new ItemDefinition(item_potionOfPoison);
+  resetDef(d, itemDef_potion);
+  itemDefinitions[d->id] = d;
+
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");

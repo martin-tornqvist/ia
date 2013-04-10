@@ -60,12 +60,7 @@ void Player::actorSpecific_spawnStartItems() {
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
-//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_incinerator), true, true);
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
@@ -92,11 +87,11 @@ void Player::actorSpecific_spawnStartItems() {
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_scrollOfIdentify, 4));
+//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
+//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
+//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
+//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
+//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_scrollOfIdentify, 4));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
@@ -1052,10 +1047,10 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
         pos = dest;
 
-        const bool IS_AGILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous);
+        const bool IS_DEXTEROUS_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous);
         const bool IS_LITHE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_lithe);
-        if(IS_AGILE_PICKED || IS_LITHE_PICKED) {
-          const int FREE_MOVE_EVERY_N_TURN = IS_LITHE_PICKED ? 3 : 4;
+        if(IS_DEXTEROUS_PICKED || IS_LITHE_PICKED) {
+          const int FREE_MOVE_EVERY_N_TURN = IS_LITHE_PICKED ? 4 : 5;
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
           } else if(nrMovesUntilFreeAction == 0) {

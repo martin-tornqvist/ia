@@ -301,7 +301,7 @@ public:
   void newTurn(Engine* const engine);
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 35, 40);}
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
   friend class StatusEffectsHandler;
   StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}
 };

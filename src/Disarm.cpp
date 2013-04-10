@@ -28,6 +28,6 @@ void Disarm::playerDisarm() const {
   }
 
   if(isDisarmableFound == false) {
-    eng->log->addMessage("I see no trap there to disarm.");
+    eng->log->addMessage("I see nothing there that I can disarm.");
   }
 }

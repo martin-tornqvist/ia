@@ -168,16 +168,26 @@ void DungeonMaster::playerGainsExp(int exp) {
 
           if(playerExp >= getXpToNextLvl()) {
             playerLvl++;
-            eng->log->addMessage("You have reached level " + intToString(playerLvl) + "! Press any key to pick ability...", clrGreen);
-            eng->renderer->drawMapAndInterface();
-            eng->query->waitForKeyPress();
+
+            bool isAbilityGained = playerLvl <= 6 || playerLvl % 2 == 0;
+
+            const string levelUpStr = "Welcome to level " + intToString(playerLvl) + "!";
+
+            if(isAbilityGained) {
+              eng->log->addMessage(levelUpStr + " Press any key to gain ability...", clrGreen);
+              eng->renderer->drawMapAndInterface();
+              eng->query->waitForKeyPress();
+            } else {
+              eng->log->addMessage(levelUpStr, clrGreen);
+            }
 
             eng->player->hpMax_ += 2;
-
             eng->player->restoreHP(eng->player->hpMax_ / 2, false);
 
-            eng->playerAllocBonus->run();
-            eng->log->clearLog();
+            if(isAbilityGained) {
+              eng->playerAllocBonus->run();
+              eng->log->clearLog();
+            }
             eng->renderer->drawMapAndInterface();
           }
         }

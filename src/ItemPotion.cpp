@@ -126,9 +126,8 @@ void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, E
 }
 
 void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
-  const int TURNS = engine->dice(3, 8) + 24;
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(TURNS));
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(TURNS));
+  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(engine));
+  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
@@ -153,8 +152,7 @@ void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Eng
 //}
 
 void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectFortitude(24 + engine->dice(3, 8)));
-
+  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectFortitude(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
@@ -196,7 +194,7 @@ void PotionOfFortitude::specificCollide(const coord& pos, Actor* const actor, En
 }
 
 void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectToughness(24 + engine->dice(3, 8)));
+  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectToughness(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
@@ -208,6 +206,21 @@ void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) 
 }
 
 void PotionOfToughness::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor, engine);
+  }
+}
+
+void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
+  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(engine));
+
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
+    setRealDefinitionNames(engine, false);
+  }
+}
+
+void PotionOfPoison::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);

@@ -290,83 +290,32 @@ void StatusFlared::newTurn(Engine* const engine) {
 //================================================================ STATUS EFFECTS HANDLER
 StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT) {
   switch(id) {
-  case statusNailed:
-    return new StatusNailed(TURNS_LEFT);
-    break;
-  case statusBlind:
-    return new StatusBlind(TURNS_LEFT);
-    break;
-  case statusBurning:
-    return new StatusBurning(TURNS_LEFT);
-    break;
-  case statusFlared:
-    return new StatusFlared(TURNS_LEFT);
-    break;
-  case statusParalyzed:
-    return new StatusParalyzed(TURNS_LEFT);
-    break;
-  case statusTerrified:
-    return new StatusTerrified(TURNS_LEFT);
-    break;
-  case statusWeak:
-    return new StatusWeak(TURNS_LEFT);
-    break;
-  case statusConfused:
-    return new StatusConfused(TURNS_LEFT);
-    break;
-  case statusWaiting:
-    return new StatusWaiting(TURNS_LEFT);
-    break;
-  case statusSlowed:
-    return new StatusSlowed(TURNS_LEFT);
-    break;
-  case statusDiseased:
-    return new StatusDiseased(TURNS_LEFT);
-    break;
-  case statusPoisoned:
-    return new StatusPoisoned(TURNS_LEFT);
-    break;
-  case statusFainted:
-    return new StatusFainted(TURNS_LEFT);
-    break;
-  case statusPerfectReflexes:
-    return new StatusPerfectReflexes(TURNS_LEFT);
-    break;
-  case statusPerfectAim:
-    return new StatusPerfectAim(TURNS_LEFT);
-    break;
-  case statusPerfectStealth:
-    return new StatusPerfectStealth(TURNS_LEFT);
-    break;
-  case statusPerfectFortitude:
-    return new StatusPerfectFortitude(TURNS_LEFT);
-    break;
-  case statusPerfectToughness:
-    return new StatusPerfectToughness(TURNS_LEFT);
-    break;
-  case statusStill:
-    return new StatusStill(TURNS_LEFT);
-    break;
-  case statusDisabledAttack:
-    return new StatusDisabledAttack(TURNS_LEFT);
-    break;
-  case statusDisabledMelee:
-    return new StatusDisabledAttackMelee(TURNS_LEFT);
-    break;
-  case statusDisabledRanged:
-    return new StatusDisabledAttackRanged(TURNS_LEFT);
-    break;
-  case statusBlessed:
-    return new StatusBlessed(TURNS_LEFT);
-    break;
-  case statusCursed:
-    return new StatusCursed(TURNS_LEFT);
-    break;
-  case statusClairvoyant:
-    return new StatusClairvoyant(TURNS_LEFT);
-    break;
-  default:
-  {} break;
+    case statusNailed:            return new StatusNailed(TURNS_LEFT);                break;
+    case statusBlind:             return new StatusBlind(TURNS_LEFT);                 break;
+    case statusBurning:           return new StatusBurning(TURNS_LEFT);               break;
+    case statusFlared:            return new StatusFlared(TURNS_LEFT);                break;
+    case statusParalyzed:         return new StatusParalyzed(TURNS_LEFT);             break;
+    case statusTerrified:         return new StatusTerrified(TURNS_LEFT);             break;
+    case statusWeak:              return new StatusWeak(TURNS_LEFT);                  break;
+    case statusConfused:          return new StatusConfused(TURNS_LEFT);              break;
+    case statusWaiting:           return new StatusWaiting(TURNS_LEFT);               break;
+    case statusSlowed:            return new StatusSlowed(TURNS_LEFT);                break;
+    case statusDiseased:          return new StatusDiseased(TURNS_LEFT);              break;
+    case statusPoisoned:          return new StatusPoisoned(TURNS_LEFT);              break;
+    case statusFainted:           return new StatusFainted(TURNS_LEFT);               break;
+    case statusPerfectReflexes:   return new StatusPerfectReflexes(TURNS_LEFT);       break;
+    case statusPerfectAim:        return new StatusPerfectAim(TURNS_LEFT);            break;
+    case statusPerfectStealth:    return new StatusPerfectStealth(TURNS_LEFT);        break;
+    case statusPerfectFortitude:  return new StatusPerfectFortitude(TURNS_LEFT);      break;
+    case statusPerfectToughness:  return new StatusPerfectToughness(TURNS_LEFT);      break;
+    case statusStill:             return new StatusStill(TURNS_LEFT);                 break;
+    case statusDisabledAttack:    return new StatusDisabledAttack(TURNS_LEFT);        break;
+    case statusDisabledMelee:     return new StatusDisabledAttackMelee(TURNS_LEFT);   break;
+    case statusDisabledRanged:    return new StatusDisabledAttackRanged(TURNS_LEFT);  break;
+    case statusBlessed:           return new StatusBlessed(TURNS_LEFT);               break;
+    case statusCursed:            return new StatusCursed(TURNS_LEFT);                break;
+    case statusClairvoyant:       return new StatusClairvoyant(TURNS_LEFT);           break;
+    default:  {} break;
   }
   return NULL;
 }

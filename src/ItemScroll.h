@@ -40,9 +40,8 @@ public:
   void setCastFromMemoryChance(const int VAL);
 
 protected:
-  virtual void specificRead(const bool FROM_MEMORY, Engine* const engine) {
+  virtual void specificRead(Engine* const engine) {
     (void)engine;
-    (void)FROM_MEMORY;
   }
 
   bool attemptReadFromMemory(Engine* const engine);
@@ -60,7 +59,7 @@ protected:
 //  }
 //  ~scrollOfSummoning() {
 //  }
-//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  void specificRead(Engine* const engine);
 //
 //  const string getRealTypeName() {
 //    return "Summoning";
@@ -75,7 +74,7 @@ protected:
 //  }
 //  ~scrollOfGreaterSummoning() {
 //  }
-//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  void specificRead(Engine* const engine);
 //
 //  const string getRealTypeName() {
 //    return "Greater Summoning";
@@ -90,7 +89,7 @@ public:
   }
   ~ScrollOfMayhem() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Mayhem";
@@ -105,7 +104,7 @@ public:
   }
   ~ScrollOfPestilence() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Pestilence";
@@ -120,7 +119,7 @@ public:
   }
   ~ScrollOfTeleportation() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Teleportation";
@@ -135,7 +134,7 @@ public:
   }
   ~ScrollOfDescent() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Descent";
@@ -150,7 +149,7 @@ public:
   }
   ~ScrollOfStatusOnAllVisibleMonsters() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 protected:
   virtual StatusEffect* getStatusEffect(Engine* const engine) = 0;
 };
@@ -222,7 +221,7 @@ public:
   }
   ~ScrollOfBlessing() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Blessing";
@@ -237,7 +236,7 @@ public:
   }
   ~ScrollOfDetectItems() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Detect Items";
@@ -252,7 +251,7 @@ public:
   }
   ~ScrollOfDetectTraps() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Detect Traps";
@@ -267,7 +266,7 @@ public:
   }
   ~ScrollOfIdentify() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Identify";
@@ -282,7 +281,7 @@ public:
   }
   ~ScrollOfClairvoyance() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Clairvoyance";
@@ -297,7 +296,7 @@ public:
   }
   ~ScrollOfAzathothsBlast() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Azathoths Blast";
@@ -312,7 +311,7 @@ public:
   }
   ~ThaumaturgicAlteration() {
   }
-  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+  void specificRead(Engine* const engine);
 
   const string getRealTypeName() {
     return "Thaumaturgic Alteration";
@@ -327,7 +326,7 @@ private:
 //  }
 //  ~ScrollOfVoidChain() {
 //  }
-//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  void specificRead(Engine* const engine);
 //
 //  static void castAt(const coord& pos, Engine* const engine);
 //
@@ -344,7 +343,7 @@ private:
 //  }
 //  ~ScrollOfIbnGhazisPowder() {
 //  }
-//  void specificRead(const bool FROM_MEMORY, Engine* const engine);
+//  void specificRead(Engine* const engine);
 //
 //  const string getRealTypeName() {
 //    return "Ibn Ghazis Powder";

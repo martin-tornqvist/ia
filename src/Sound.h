@@ -76,7 +76,9 @@ public:
 private:
   int nrSoundsHeardByPlayerCurTurn_;
 
-  string getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER, const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  string getPlayerToOriginDirectionString(
+    const int FLOOD_VALUE_AT_PLAYER,
+    const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
 

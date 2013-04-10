@@ -10,8 +10,8 @@ void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line
       line += " " + def->name_the + " is normally found beneath level " + getDwellingLevelStr(*def) + ". ";
     }
   } else {
-    line += " They tend to dwell " + getNormalGroupSizeStr(*def);
-    line += " beneath level " + getDwellingLevelStr(*def) + ".";
+    line += " They tend to dwell " + getNormalGroupSizeStr(*def) + ", ";
+    line += " and usually stay at depths beneath level " + getDwellingLevelStr(*def) + ".";
     line += " They move " + getSpeedStr(*def) + ". ";
   }
 }
@@ -29,26 +29,26 @@ string AutoDescribeActor::getNormalGroupSizeStr(const ActorDefinition& def) cons
 
 string AutoDescribeActor::getSpeedStr(const ActorDefinition& def) const {
   switch(def.speed) {
-  case actorSpeed_sluggish: {
-    return "at sluggish speed";
-  }
-  break;
-  case actorSpeed_slow: {
-    return "slowly";
-  }
-  break;
-  case actorSpeed_normal: {
-    return "at normal speed";
-  }
-  break;
-  case actorSpeed_fast: {
-    return "fast";
-  }
-  break;
-  case actorSpeed_fastest: {
-    return "very fast";
-  }
-  break;
+    case actorSpeed_sluggish: {
+      return "at sluggish speed";
+    }
+    break;
+    case actorSpeed_slow: {
+      return "slowly";
+    }
+    break;
+    case actorSpeed_normal: {
+      return "at normal speed";
+    }
+    break;
+    case actorSpeed_fast: {
+      return "fast";
+    }
+    break;
+    case actorSpeed_fastest: {
+      return "very fast";
+    }
+    break;
   }
   return "";
 }

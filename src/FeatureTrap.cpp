@@ -76,7 +76,7 @@ void Trap::bump(Actor* actorBumping) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
     const bool ACTOR_CAN_SEE = actorBumping->getStatusEffectsHandler()->allowSee();
     const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodgeTrap, true, *actorBumping);
-    const int BASE_CHANCE_TO_AVOID = 40;
+    const int BASE_CHANCE_TO_AVOID = 30;
 
     const string trapName = specificTrap_->getTrapSpecificTitle();
 

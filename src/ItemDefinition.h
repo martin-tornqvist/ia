@@ -152,6 +152,7 @@ enum ItemId_t {
   item_potionOfParalyzation,
   item_potionOfConfusion,
   item_potionOfSorcery,
+  item_potionOfPoison,
 //  item_potionOfForgetfulness,
 
   item_deviceSentry,

@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
         //If player has died, run postmortem, then return to main menu
         if(engine->player->deadState != actorDeadState_alive) {
           dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
-          engine->log->clearLog();
+//          engine->log->clearLog();
           engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
           engine->renderer->drawMapAndInterface();
           engine->query->waitForKeyPress();

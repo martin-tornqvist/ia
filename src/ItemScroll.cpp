@@ -17,12 +17,9 @@
 #include "ItemPotion.h"
 #include "ItemDevice.h"
 
-const int BLAST_ANIMATION_DELAY_FACTOR = 3;
+const int BLAST_ANIMATION_DELAY_FACTOR = 2;
 
-
-void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
-
+void ScrollOfMayhem::specificRead(Engine* const engine) {
   const int NR_OF_SWEEPS = 5;
 
   engine->log->addMessage("Destruction rages around me!");
@@ -79,9 +76,7 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
-
+void ScrollOfPestilence::specificRead(Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
@@ -91,22 +86,17 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
   const int x1 = min(MAP_X_CELLS - 1, engine->player->pos.x + RADI);
   const int y1 = min(MAP_Y_CELLS - 1, engine->player->pos.y + RADI);
 
+  ActorId_t monsterId = endOfActorIds;
+  Dice& dice = engine->dice;
+
   for(int x = x0; x <= x1; x++) {
     for(int y = y0; y <= y1; y++) {
       if(blockers[x][y] == false) {
-        if(engine->dice(1, 3) == 1) {
-          if(engine->dice.coinToss()) {
-            if(engine->dice.coinToss()) {
-              engine->actorFactory->spawnActor(actor_greenSpider, coord(x, y));
-            } else {
-              engine->actorFactory->spawnActor(actor_whiteSpider, coord(x, y));
-            }
-          } else {
-            engine->actorFactory->spawnActor(actor_redSpider, coord(x, y));
-          }
-        } else {
-          engine->actorFactory->spawnActor(actor_rat, coord(x, y));
-        }
+        monsterId = dice(1, 3) == 1 ?
+                    (dice.coinToss() ? actor_greenSpider :
+                     (dice.coinToss() ? actor_whiteSpider : actor_redSpider)) :
+                      actor_rat;
+        engine->actorFactory->spawnActor(monsterId, coord(x, y));
       }
     }
   }
@@ -115,9 +105,7 @@ void ScrollOfPestilence::specificRead(const bool FROM_MEMORY, Engine* const engi
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfDescent::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
-
+void ScrollOfDescent::specificRead(Engine* const engine) {
   if(engine->map->getDungeonLevel() < FIRST_CAVERN_LEVEL - 1) {
     engine->dungeonClimb->travelDown(1);
     engine->log->addMessage("I sink downwards!");
@@ -127,14 +115,12 @@ void ScrollOfDescent::specificRead(const bool FROM_MEMORY, Engine* const engine)
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfTeleportation::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ScrollOfTeleportation::specificRead(Engine* const engine) {
   engine->player->teleport(false);
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfStatusOnAllVisibleMonsters::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
@@ -171,9 +157,7 @@ StatusEffect* ScrollOfSlowEnemies::getStatusEffect(Engine* const engine) {
   return new StatusSlowed(engine);
 }
 
-void ScrollOfDetectItems::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
-
+void ScrollOfDetectItems::specificRead(Engine* const engine) {
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       Item* item = engine->map->items[x][y];
@@ -191,15 +175,12 @@ void ScrollOfDetectItems::specificRead(const bool FROM_MEMORY, Engine* const eng
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfBlessing::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
-
+void ScrollOfBlessing::specificRead(Engine* const engine) {
   engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusBlessed(engine));
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ScrollOfDetectTraps::specificRead(Engine* const engine) {
   bool somethingRevealed = false;
 
   for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -221,7 +202,7 @@ void ScrollOfDetectTraps::specificRead(const bool FROM_MEMORY, Engine* const eng
   }
 }
 
-void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+void ScrollOfIdentify::specificRead(Engine* const engine) {
   Inventory* const inv = engine->player->getInventory();
 
   vector<Item*> itemIdentifyCandidates;
@@ -267,7 +248,8 @@ void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine
       Device* const device = dynamic_cast<Device*>(item);
       device->identify(true);
     } else {
-      tracer << "[WARNING] Scroll of identify was unable to identify item with name \"" + itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
+      tracer << "[WARNING] Scroll of identify was unable to identify item with name \"" +
+      itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
     }
 
     const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
@@ -279,14 +261,12 @@ void ScrollOfIdentify::specificRead(const bool FROM_MEMORY, Engine* const engine
   }
 }
 
-void ScrollOfClairvoyance::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ScrollOfClairvoyance::specificRead(Engine* const engine) {
   engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusClairvoyant(engine), true, false);
   setRealDefinitionNames(engine, false);
 }
 
-void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
@@ -314,12 +294,12 @@ void ScrollOfAzathothsBlast::specificRead(const bool FROM_MEMORY, Engine* const 
 }
 
 
-void ThaumaturgicAlteration::specificRead(const bool FROM_MEMORY, Engine* const engine) {
-  (void)FROM_MEMORY;
+void ThaumaturgicAlteration::specificRead(Engine* const engine) {
+
 }
 
 
-//void ScrollOfVoidChain::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+//void ScrollOfVoidChain::specificRead(Engine* const engine) {
 //  setRealDefinitionNames(engine, false);
 //  if(engine->player->getStatusEffectsHandler()->allowAct()) {
 //    engine->marker->place(markerTask_spellVoidChain);
@@ -335,7 +315,7 @@ void ThaumaturgicAlteration::specificRead(const bool FROM_MEMORY, Engine* const 
 //                              true, FOV_STANDARD_RADI_INT);
 //}
 
-//void ScrollOfIbnGhazisPowder::specificRead(const bool FROM_MEMORY, Engine* const engine) {
+//void ScrollOfIbnGhazisPowder::specificRead(Engine* const engine) {
 //  setRealDefinitionNames(engine, false);
 //  if(engine->player->getStatusEffectsHandler()->allowAct()) {
 //    engine->query->direction();
@@ -446,7 +426,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
   const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToCastFromMemory(engine));
   if(rollResult >= successSmall) {
     engine->log->addMessage("I cast " + getRealTypeName() + "...");
-    specificRead(true, engine);
+    specificRead(engine);
   } else {
     engine->log->addMessage("I miscast it.");
     engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusWeak(engine));
@@ -482,13 +462,13 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
 
   if(IS_IDENTIFIED_BEFORE_READING) {
     engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
-    specificRead(false, engine);
+    specificRead(engine);
     attemptMemorizeIfLearnable(engine);
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   } else {
     engine->log->addMessage("I recite forbidden incantations...");
     def_->isTried = true;
-    specificRead(false, engine);
+    specificRead(engine);
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   }
   engine->gameTime->letNextAct();

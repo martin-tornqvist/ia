@@ -62,6 +62,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_armorFlackJacket:         item = new Armor(d, eng);               break;
     case item_armorLeatherJacket:       item = new Armor(d, eng);               break;
     case item_armorIronSuit:            item = new Armor(d, eng);               break;
+
     case item_zombieAxe:                item = new Weapon(d, ammoD);            break;
     case item_zombieClaw:               item = new Weapon(d, ammoD);            break;
     case item_zombieClawDiseased:       item = new Weapon(d, ammoD);            break;
@@ -99,6 +100,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_huntingHorrorBite:        item = new Weapon(d, ammoD);            break;
     case item_dustVortexEngulf:         item = new Weapon(d, ammoD);            break;
     case item_fireVortexEngulf:         item = new Weapon(d, ammoD);            break;
+
     case item_scrollOfMayhem:           item = new ScrollOfMayhem(d);           break;
     case item_scrollOfTeleportation:    item = new ScrollOfTeleportation(d);    break;
     case item_scrollOfDescent:          item = new ScrollOfDescent(d);          break;
@@ -123,6 +125,8 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfParalyzation:     item = new PotionOfParalyzation(d);     break;
     case item_potionOfConfusion:        item = new PotionOfConfusion(d);        break;
     case item_potionOfSorcery:          item = new PotionOfSorcery(d);          break;
+    case item_potionOfPoison:           item = new PotionOfPoison(d);           break;
+
     case item_deviceSentry:             item = new DeviceSentry(d);             break;
     case item_deviceRepeller:           item = new DeviceRepeller(d);           break;
     case item_deviceRejuvenator:        item = new DeviceRejuvenator(d);        break;

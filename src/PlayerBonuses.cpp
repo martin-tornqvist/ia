@@ -11,8 +11,8 @@
 using namespace std;
 
 PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
-  setBonus(playerBonus_dexterous, "Dexterous", "+25% chance to evade attacks and traps, every fourth move is a free action");
-  setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every third move is a free action", playerBonus_dexterous);
+  setBonus(playerBonus_dexterous, "Dexterous", "+25% chance to evade attacks and traps, every fifth move is a free action");
+  setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every fourth move is a free action", playerBonus_dexterous);
 //  setBonus(playerBonus_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
 //  setBonus(playerBonus_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBonus_dexterous);
 //  setBonus(playerBonus_tumbler, "Tumbler", "Can evade explosions", playerBonus_athletic);
