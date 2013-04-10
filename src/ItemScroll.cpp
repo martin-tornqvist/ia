@@ -46,7 +46,7 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
         }
         if(isAdjToWalkableCell) {
           const int CHANCE_TO_DESTROY = 10;
-          if(engine->dice(1, 100) < CHANCE_TO_DESTROY) {
+          if(engine->dice.percentile() < CHANCE_TO_DESTROY) {
             engine->map->switchToDestroyedFeatAt(c);
           }
         }
@@ -58,7 +58,7 @@ void ScrollOfMayhem::specificRead(const bool FROM_MEMORY, Engine* const engine) 
     for(int x = max(1, PLAYER_X - AREA_RADI); x < min(MAP_X_CELLS - 1, PLAYER_X + AREA_RADI); x++) {
       if(engine->map->featuresStatic[x][y]->canHaveBlood()) {
         const int CHANCE_FOR_BLOOD = 10;
-        if(engine->dice(1, 100) < CHANCE_FOR_BLOOD) {
+        if(engine->dice.percentile() < CHANCE_FOR_BLOOD) {
           engine->map->featuresStatic[x][y]->setHasBlood(true);
         }
       }

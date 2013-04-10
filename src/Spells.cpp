@@ -348,7 +348,7 @@ bool SpellSummonRandom::isGoodForMonsterNow(const Monster* const monster, Engine
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   const bool MONSTER_SEES_PLAYER = monster->checkIfSeeActor(*(engine->player), blockers);
-  return MONSTER_SEES_PLAYER || (engine->dice(1, 100) < CHANCE_FOR_OK_IF_NOT_SEE_PLAYER);
+  return MONSTER_SEES_PLAYER || (engine->dice.percentile() < CHANCE_FOR_OK_IF_NOT_SEE_PLAYER);
 }
 
 void Spell::cast(const SpellData& d, Engine* const eng) {

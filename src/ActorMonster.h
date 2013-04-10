@@ -520,12 +520,12 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
-class MummyPharaohChamberBoss: public MummyUnique {
+class Khephren: public MummyUnique {
 public:
-  MummyPharaohChamberBoss() :
+  Khephren() :
     MummyUnique() {
   }
-  ~MummyPharaohChamberBoss() {}
+  ~Khephren() {}
 
   bool actorSpecificAct();
 private:

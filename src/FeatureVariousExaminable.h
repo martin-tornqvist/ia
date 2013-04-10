@@ -58,20 +58,26 @@ enum TombAction_t {
   tombAction_leave
 };
 
-enum TombTrap_t {
-  tombTrap_fumes,
-  tombTrap_cursed,
-  tombTrap_monster,
-  tombTrap_none
-};
+//enum TombTrap_t {
+//  tombTrap_fumes,
+//  tombTrap_cursed,
+//  tombTrap_monster,
+//  tombTrap_none
+//};
 
-//Tombs can have a combination of these depending on content and traps (may be false clues)
+//Tombs can have a combination of these (may be false clues)
 enum TombTraits_t {
   tombTrait_stench,                 //Fumes, Ooze-type monster
   tombTrait_auraOfUnrest,           //Ghost-type monster
   tombTrait_forebodingCarvedSigns,  //Cursed
-  tombTrait_impressive,             //Good items
-  tombTrait_marvelous               //Excellent items
+  endOfTombTraits
+};
+
+enum TombAppearance_t {
+  tombAppearance_common,
+  tombAppearance_impressive,  //Good items
+  tombAppearance_marvelous,   //Excellent items
+  endOfTombAppearance
 };
 
 class Tomb: public FeatureExaminable {
@@ -90,9 +96,12 @@ private:
 
   void setDescription(string& description) const;
 
-  bool isContentKnown_, isLidTooHeavyToPush_, isTrapped_, isTrapStatusKnown_;
+  bool isKnownEmpty_, isLidTooHeavyToPush_;
+  TombAppearance_t appearance_;
+  TombTraits_t falseTrait_;
 
-  vector<TombTraits_t> tombTraits;
+  bool trueTraits_[endOfTombTraits];
+  bool traitsKnowledge_[endOfTombTraits];
 
   ExaminableItemContainer itemContainer_;
 };

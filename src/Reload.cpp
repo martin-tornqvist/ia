@@ -117,7 +117,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
             const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusEffectsHandler()->hasEffect(statusTerrified);
             const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-            if(eng->dice(1, 100) < CHANCE_TO_FUMBLE) {
+            if(eng->dice.percentile() < CHANCE_TO_FUMBLE) {
               isSwiftReload = false;
               result = reloadResult_fumble;
               printReloadMessages(actorReloading, NULL, ammoItem, reloadResult_fumble, false);

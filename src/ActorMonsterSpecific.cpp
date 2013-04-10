@@ -117,7 +117,7 @@ void Cultist::actorSpecific_spawnStartItems() {
 
   if(RND <= PISTOL) {
     inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_pistol), true);
-    if(eng->dice(1, 100) < 40) {
+    if(eng->dice.percentile() < 40) {
       inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
     }
   } else if(RND <= PUMP_SHOTGUN) {
@@ -134,11 +134,11 @@ void Cultist::actorSpecific_spawnStartItems() {
     inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_machineGun), true);
   }
 
-  if(eng->dice(1, 100) < 33) {
+  if(eng->dice.percentile() < 33) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
   }
 
-  if(eng->dice(1, 100) < 8) {
+  if(eng->dice.percentile() < 8) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
@@ -150,11 +150,11 @@ void CultistTeslaCannon::actorSpecific_spawnStartItems() {
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_teslaCanister));
 
-  if(eng->dice(1, 100) < 33) {
+  if(eng->dice.percentile() < 33) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
   }
 
-  if(eng->dice(1, 100) < 10) {
+  if(eng->dice.percentile() < 10) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
@@ -178,7 +178,7 @@ void CultistPriest::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 
-  if(eng->dice(1, 100) < 33) {
+  if(eng->dice.percentile() < 33) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
@@ -202,7 +202,7 @@ bool Vortex::actorSpecificAct() {
       if(eng->mapTests->isCellsNeighbours(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
-        if(eng->dice(1, 100) < CHANCE_TO_KNOCK) {
+        if(eng->dice.percentile() < CHANCE_TO_KNOCK) {
           tracer << "Vortex: Passed random chance to pull" << endl;
 
           const coord playerDelta = playerPos - pos;
@@ -267,7 +267,7 @@ bool Ghost::actorSpecificAct() {
     if(playerAwarenessCounter > 0) {
 
       if(eng->mapTests->isCellsNeighbours(pos, eng->player->pos, false)) {
-        if(eng->dice(1, 100) < 35) {
+        if(eng->dice.percentile() < 35) {
 
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
           eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -284,7 +284,7 @@ bool Ghost::actorSpecificAct() {
             Item* const playerArmor = eng->player->getInventory()->getItemInSlot(slot_armorBody);
             if(playerArmor != NULL) {
               const int ARMOR_CHANCE_TO_DEFLECT = playerArmor->getDef().armorData.chanceToDeflectTouchAttacks;
-              if(eng->dice(1, 100) < ARMOR_CHANCE_TO_DEFLECT) {
+              if(eng->dice.percentile() < ARMOR_CHANCE_TO_DEFLECT) {
                 deflectedByArmor = true;
               }
             }
@@ -339,7 +339,7 @@ void MiGo::actorSpecific_spawnStartItems()
 
 void Rat::actorSpecific_spawnStartItems() {
   Item* item = NULL;
-  if(eng->dice(1, 100) < 15) {
+  if(eng->dice.percentile() < 15) {
     item = eng->itemFactory->spawnItem(item_ratBiteDiseased);
   } else {
     item = eng->itemFactory->spawnItem(item_ratBite);
@@ -372,7 +372,7 @@ void MummyUnique::actorSpecific_spawnStartItems() {
   eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
 }
 
-bool MummyPharaohChamberBoss::actorSpecificAct() {
+bool Khephren::actorSpecificAct() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
       if(hasSummonedLocusts == false) {
@@ -541,7 +541,7 @@ void Wolf::actorSpecific_spawnStartItems() {
 bool WormMass::actorSpecificAct() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
-      if(eng->dice(1, 100) < chanceToSpawnNew) {
+      if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(this, blockers);
@@ -571,7 +571,7 @@ void WormMass::actorSpecific_spawnStartItems() {
 bool GiantLocust::actorSpecificAct() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
-      if(eng->dice(1, 100) < chanceToSpawnNew) {
+      if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(this, blockers);
@@ -621,7 +621,7 @@ bool LordOfSpiders::actorSpecificAct() {
       for(int dy = -1; dy <= 1; dy++) {
         for(int dx = -1; dx <= 1; dx++) {
 
-          if(eng->dice(1, 100) < 75) {
+          if(eng->dice.percentile() < 75) {
 
             const coord c(playerPos + coord(dx, dy));
             const FeatureStatic* const mimicFeature = eng->map->featuresStatic[c.x][c.y];
@@ -735,7 +735,7 @@ bool Zombie::attemptResurrect() {
     if(hasResurrected == false) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
-        if(pos != eng->player->pos && eng->dice(1, 100) < 7) {
+        if(pos != eng->player->pos && eng->dice.percentile() < 7) {
           deadState = actorDeadState_alive;
           hp_ = (getHpMax(true) * 3) / 4;
           glyph_ = def_->glyph;
@@ -769,7 +769,7 @@ void Zombie::actorSpecificDie() {
 
 void ZombieClaw::actorSpecific_spawnStartItems() {
   Item* item = NULL;
-  if(eng->dice(1, 100) < 20) {
+  if(eng->dice.percentile() < 20) {
     item = eng->itemFactory->spawnItem(item_zombieClawDiseased);
   } else {
     item = eng->itemFactory->spawnItem(item_zombieClaw);

@@ -8,18 +8,49 @@
 
 Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
   switch(id) {
-  case actor_zombie:
-    return new ZombieClaw;
-    break;
-  case actor_zombieAxe:
-    return new ZombieAxe;
-    break;
-  case actor_bloatedZombie:
-    return new BloatedZombie;
-    break;
-  case actor_majorClaphamLee:
-    return new MajorClaphamLee;
-    break;
+    case actor_zombie:              return new ZombieClaw;            break;
+    case actor_zombieAxe:           return new ZombieAxe;             break;
+    case actor_bloatedZombie:       return new BloatedZombie;         break;
+    case actor_majorClaphamLee:     return new MajorClaphamLee;       break;
+    case actor_deanHalsey:          return new DeanHalsey;            break;
+    case actor_rat:                 return new Rat;                   break;
+    case actor_ratThing:            return new RatThing;              break;
+    case actor_brownJenkin:         return new BrownJenkin;           break;
+    case actor_greenSpider:         return new GreenSpider;           break;
+    case actor_redSpider:           return new RedSpider;             break;
+    case actor_whiteSpider:         return new WhiteSpider;           break;
+    case actor_shadowSpider:        return new ShadowSpider;          break;
+    case actor_lengSpider:          return new LengSpider;            break;
+    case actor_fireHound:           return new FireHound;             break;
+    case actor_ghost:               return new Ghost;                 break;
+    case actor_wraith:              return new Wraith;                break;
+    case actor_phantasm:            return new Phantasm;              break;
+    case actor_giantBat:            return new GiantBat;              break;
+    case actor_cultist:             return new Cultist;               break;
+    case actor_cultistTeslaCannon:  return new CultistTeslaCannon;    break;
+    case actor_cultistSpikeGun:     return new CultistSpikeGun;       break;
+    case actor_cultistPriest:       return new CultistPriest;         break;
+    case actor_keziahMason:         return new KeziahMason;           break;
+    case actor_wolf:                return new Wolf;                  break;
+    case actor_miGo:                return new MiGo;                  break;
+    case actor_ghoul:               return new Ghoul;                 break;
+    case actor_shadow:              return new Shadow;                break;
+    case actor_byakhee:             return new Byakhee;               break;
+    case actor_giantMantis:         return new GiantMantis;           break;
+    case actor_giantLocust:         return new GiantLocust;           break;
+    case actor_mummy:               return new Mummy;                 break;
+    case actor_khephren:            return new Khephren;              break;
+    case actor_nitokris:            return new MummyUnique;           break;
+    case actor_deepOne:             return new DeepOne;               break;
+    case actor_wormMass:            return new WormMass;              break;
+    case actor_dustVortex:          return new DustVortex;            break;
+    case actor_fireVortex:          return new FireVortex;            break;
+    case actor_oozeGray:            return new OozeGray;              break;
+    case actor_oozeClear:           return new OozeClear;             break;
+    case actor_oozePutrid:          return new OozePutrid;            break;
+    case actor_oozePoison:          return new OozePoison;            break;
+    case actor_huntingHorror:       return new HuntingHorror;         break;
+
 //  case actor_lordOfPestilence:
 //    return new LordOfPestilence;
 //    break;
@@ -32,126 +63,12 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
 //  case actor_lordOfSpirits:
 //    return new LordOfSpirits;
 //    break;
-  case actor_deanHalsey:
-    return new DeanHalsey;
-    break;
-  case actor_rat:
-    return new Rat;
-    break;
-  case actor_ratThing:
-    return new RatThing;
-    break;
-  case actor_brownJenkin:
-    return new BrownJenkin;
-    break;
-  case actor_greenSpider:
-    return new GreenSpider;
-    break;
-  case actor_redSpider:
-    return new RedSpider;
-    break;
-  case actor_whiteSpider:
-    return new WhiteSpider;
-    break;
-  case actor_shadowSpider:
-    return new ShadowSpider;
-    break;
-  case actor_lengSpider:
-    return new LengSpider;
-    break;
-  case actor_fireHound:
-    return new FireHound;
-    break;
-  case actor_ghost:
-    return new Ghost;
-    break;
-  case actor_wraith:
-    return new Wraith;
-    break;
-  case actor_phantasm:
-    return new Phantasm;
-    break;
-  case actor_giantBat:
-    return new GiantBat;
-    break;
-  case actor_cultist:
-    return new Cultist;
-    break;
-  case actor_cultistTeslaCannon:
-    return new CultistTeslaCannon;
-    break;
-  case actor_cultistSpikeGun:
-    return new CultistSpikeGun;
-    break;
-  case actor_cultistPriest:
-    return new CultistPriest;
-    break;
-  case actor_keziahMason:
-    return new KeziahMason;
-    break;
-  case actor_wolf:
-    return new Wolf;
-    break;
-  case actor_miGo:
-    return new MiGo;
-    break;
-  case actor_ghoul:
-    return new Ghoul;
-    break;
-  case actor_shadow:
-    return new Shadow;
-    break;
-  case actor_byakhee:
-    return new Byakhee;
-    break;
-  case actor_giantMantis:
-    return new GiantMantis;
-    break;
-  case actor_giantLocust:
-    return new GiantLocust;
-    break;
-  case actor_mummy:
-    return new Mummy;
-    break;
-  case actor_khephren:
-    return new MummyPharaohChamberBoss;
-    break;
-  case actor_nitokris:
-    return new MummyUnique;
-    break;
-  case actor_deepOne:
-    return new DeepOne;
-    break;
-  case actor_wormMass:
-    return new WormMass;
-    break;
-  case actor_dustVortex:
-    return new DustVortex;
-    break;
-  case actor_fireVortex:
-    return new FireVortex;
-    break;
-  case actor_oozeGray:
-    return new OozeGray;
-    break;
-  case actor_oozeClear:
-    return new OozeClear;
-    break;
-  case actor_oozePutrid:
-    return new OozePutrid;
-    break;
-  case actor_oozePoison:
-    return new OozePoison;
-    break;
-  case actor_huntingHorror:
-    return new HuntingHorror;
-    break;
 
-  default: {
-    tracer << "[WARNING] Bad actor ID given in ActorFactory::makeActorFromId()" << endl;
-    return NULL;
-  }
-  break;
+    default: {
+      tracer << "[WARNING] Bad actor ID given in ActorFactory::makeActorFromId()" << endl;
+      return NULL;
+    }
+    break;
   }
 }
 

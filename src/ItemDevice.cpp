@@ -76,7 +76,7 @@ void Device::newTurnInInventory(Engine* const engine) {
 void Device::runBadEffect(Engine* const engine) {
   const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
 
-  const int RND = engine->dice(1, 100);
+  const int RND = engine->dice.percentile();
   if(RND < 2) {
     engine->log->addMessage("The " + name + " breaks!");
     engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
@@ -212,7 +212,7 @@ void DeviceElectricLantern::runBadEffect(Engine* const engine) {
     bool isVisionUpdateNeeded = false;
     bool isItemDestroyed = false;
 
-    const int RND = engine->dice(1, 100);
+    const int RND = engine->dice.percentile();
     if(RND < 3) {
       engine->log->addMessage("My Electric Lantern breaks!");
       engine->player->getInventory()->removetemInGeneralWithPointer(this, false);

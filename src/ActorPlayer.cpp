@@ -51,30 +51,21 @@ void Player::actorSpecific_spawnStartItems() {
   const int WEAPON_CHOICE = eng->dice.getInRange(1, 5);
   ItemId_t weaponId = item_dagger;
   switch(WEAPON_CHOICE) {
-  case 1:
-    weaponId = item_dagger;
-    break;
-  case 2:
-    weaponId = item_hatchet;
-    break;
-  case 3:
-    weaponId = item_hammer;
-    break;
-  case 4:
-    weaponId = item_machete;
-    break;
-  case 5:
-    weaponId = item_axe;
-    break;
-
-  default:
-    weaponId = item_dagger;
-    break;
+    case 1:   weaponId = item_dagger;   break;
+    case 2:   weaponId = item_hatchet;  break;
+    case 3:   weaponId = item_hammer;   break;
+    case 4:   weaponId = item_machete;  break;
+    case 5:   weaponId = item_axe;      break;
+    default:  weaponId = item_dagger;   break;
   }
 
   inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
+//  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
 //  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
+  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_incinerator), true, true);
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
@@ -231,24 +222,24 @@ void Player::incrShock(const ShockValues_t shockValue) {
 
   if(PLAYER_FORTITUDE < 99) {
     switch(shockValue) {
-    case shockValue_none: {
-      incrShock(0);
-    }
-    break;
-    case shockValue_mild: {
-      incrShock(2);
-    }
-    break;
-    case shockValue_some: {
-      incrShock(4);
-    }
-    break;
-    case shockValue_heavy: {
-      incrShock(8);
-    }
-    break;
-    default:
-    {} break;
+      case shockValue_none: {
+        incrShock(0);
+      }
+      break;
+      case shockValue_mild: {
+        incrShock(2);
+      }
+      break;
+      case shockValue_some: {
+        incrShock(4);
+      }
+      break;
+      case shockValue_heavy: {
+        incrShock(8);
+      }
+      break;
+      default:
+      {} break;
     }
   }
 }
@@ -306,213 +297,213 @@ void Player::incrInsanity() {
     for(unsigned int insAttemptCount = 0; insAttemptCount < 10000; insAttemptCount++) {
       const int ROLL = eng->dice(1, 9);
       switch(ROLL) {
-      case 1: {
-        if(playerSeeShockingMonster) {
-          if(eng->dice.coinToss()) {
-            popupMessage += "I let out a terrified shriek.";
-          } else {
-            popupMessage += "I scream in terror.";
+        case 1: {
+          if(playerSeeShockingMonster) {
+            if(eng->dice.coinToss()) {
+              popupMessage += "I let out a terrified shriek.";
+            } else {
+              popupMessage += "I scream in terror.";
+            }
+            eng->popup->showMessage(popupMessage, true, "Screaming!");
+            eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
+            return;
           }
-          eng->popup->showMessage(popupMessage, true, "Screaming!");
-          eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
+        }
+        break;
+        case 2: {
+          popupMessage += "I find myself babbling incoherently.";
+          eng->popup->showMessage(popupMessage, true, "Babbling!");
+          for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
+            const string phrase = Cultist::getCultistPhrase(eng);
+            eng->log->addMessage(getNameThe() + ": " + phrase);
+          }
+          eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
           return;
         }
-      }
-      break;
-      case 2: {
-        popupMessage += "I find myself babbling incoherently.";
-        eng->popup->showMessage(popupMessage, true, "Babbling!");
-        for(int i = eng->dice.getInRange(3, 5); i > 0; i--) {
-          const string phrase = Cultist::getCultistPhrase(eng);
-          eng->log->addMessage(getNameThe() + ": " + phrase);
+        break;
+        case 3: {
+          popupMessage += "I struggle to not fall into a stupor.";
+          eng->popup->showMessage(popupMessage, true, "Fainting!");
+          statusEffectsHandler_->attemptAddEffect(new StatusFainted(eng));
+          return;
         }
-        eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
-        return;
-      }
-      break;
-      case 3: {
-        popupMessage += "I struggle to not fall into a stupor.";
-        eng->popup->showMessage(popupMessage, true, "Fainting!");
-        statusEffectsHandler_->attemptAddEffect(new StatusFainted(eng));
-        return;
-      }
-      break;
-      case 4: {
-        popupMessage += "I laugh nervously.";
-        eng->popup->showMessage(popupMessage, true, "HAHAHA!");
-        eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
-        return;
-      }
-      break;
-      case 5: {
-        popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
-        eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
-        eng->dungeonMaster->playerLoseXpPercent(10);
-        return;
-      }
-      break;
-      case 6: {
-        if(insanity_ > 5) {
-          //There is a limit to the number of phobias you can have
-          int phobiasActive = 0;
-          for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-            if(insanityPhobias[i] == true) {
-              phobiasActive++;
-            }
-          }
-          if(phobiasActive < 2) {
-            if(eng->dice.coinToss()) {
-              if(spotedEnemies.size() > 0) {
-                const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
-                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
-                  popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true, "Murophobia!");
-                  insanityPhobias[insanityPhobia_rat] = true;
-                  return;
-                }
-                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
-                  popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true, "Arachnophobia!");
-                  insanityPhobias[insanityPhobia_spider] = true;
-                  return;
-                }
-                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
-                  popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
-                  eng->popup->showMessage(popupMessage, true, "Cynophobia!");
-                  insanityPhobias[insanityPhobia_dog] = true;
-                  return;
-                }
-                if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
-                  popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
-                  eng->popup->showMessage(popupMessage, true, "Necrophobia!");
-                  insanityPhobias[insanityPhobia_undead] = true;
-                  return;
-                }
+        break;
+        case 4: {
+          popupMessage += "I laugh nervously.";
+          eng->popup->showMessage(popupMessage, true, "HAHAHA!");
+          eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
+          return;
+        }
+        break;
+        case 5: {
+          popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
+          eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
+          eng->dungeonMaster->playerLoseXpPercent(10);
+          return;
+        }
+        break;
+        case 6: {
+          if(insanity_ > 5) {
+            //There is a limit to the number of phobias you can have
+            int phobiasActive = 0;
+            for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
+              if(insanityPhobias[i] == true) {
+                phobiasActive++;
               }
-            } else {
+            }
+            if(phobiasActive < 2) {
               if(eng->dice.coinToss()) {
-                if(isStandingInOpenSpace()) {
-                  if(insanityPhobias[insanityPhobia_openPlace] == false) {
-                    popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
-                    eng->popup->showMessage(popupMessage, true, "Agoraphobia!");
-                    insanityPhobias[insanityPhobia_openPlace] = true;
+                if(spotedEnemies.size() > 0) {
+                  const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
+                    popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
+                    eng->popup->showMessage(popupMessage, true, "Murophobia!");
+                    insanityPhobias[insanityPhobia_rat] = true;
                     return;
                   }
-                }
-                if(isStandingInCrampedSpace()) {
-                  if(insanityPhobias[insanityPhobia_closedPlace] == false) {
-                    popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
-                    eng->popup->showMessage(popupMessage, true, "Claustrophobia!");
-                    insanityPhobias[insanityPhobia_closedPlace] = true;
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
+                    popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
+                    eng->popup->showMessage(popupMessage, true, "Arachnophobia!");
+                    insanityPhobias[insanityPhobia_spider] = true;
+                    return;
+                  }
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
+                    popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
+                    eng->popup->showMessage(popupMessage, true, "Cynophobia!");
+                    insanityPhobias[insanityPhobia_dog] = true;
+                    return;
+                  }
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
+                    popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
+                    eng->popup->showMessage(popupMessage, true, "Necrophobia!");
+                    insanityPhobias[insanityPhobia_undead] = true;
                     return;
                   }
                 }
               } else {
-                if(eng->map->getDungeonLevel() >= 5) {
-                  if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
-                    popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
-                    eng->popup->showMessage(popupMessage, true, "Bathophobia!");
-                    insanityPhobias[insanityPhobia_deepPlaces] = true;
-                    return;
+                if(eng->dice.coinToss()) {
+                  if(isStandingInOpenSpace()) {
+                    if(insanityPhobias[insanityPhobia_openPlace] == false) {
+                      popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
+                      eng->popup->showMessage(popupMessage, true, "Agoraphobia!");
+                      insanityPhobias[insanityPhobia_openPlace] = true;
+                      return;
+                    }
+                  }
+                  if(isStandingInCrampedSpace()) {
+                    if(insanityPhobias[insanityPhobia_closedPlace] == false) {
+                      popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
+                      eng->popup->showMessage(popupMessage, true, "Claustrophobia!");
+                      insanityPhobias[insanityPhobia_closedPlace] = true;
+                      return;
+                    }
+                  }
+                } else {
+                  if(eng->map->getDungeonLevel() >= 5) {
+                    if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
+                      popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
+                      eng->popup->showMessage(popupMessage, true, "Bathophobia!");
+                      insanityPhobias[insanityPhobia_deepPlaces] = true;
+                      return;
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-      break;
+        break;
 
-      case 7: {
-        if(insanity_ > 20) {
-          int obsessionsActive = 0;
-          for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-            if(insanityObsessions[i] == true) {
-              obsessionsActive++;
+        case 7: {
+          if(insanity_ > 20) {
+            int obsessionsActive = 0;
+            for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+              if(insanityObsessions[i] == true) {
+                obsessionsActive++;
+              }
             }
-          }
-          if(obsessionsActive == 0) {
-            const InsanityObsession_t obsession = static_cast<InsanityObsession_t>(eng->dice.getInRange(0, endOfInsanityObsessions - 1));
-            switch(obsession) {
-            case insanityObsession_masochism: {
-              popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
-              popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-              popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-              eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
-              insanityObsessions[insanityObsession_masochism] = true;
-              return;
-            }
-            break;
-            case insanityObsession_sadism: {
-              popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
-              popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-              popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-              eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
-              insanityObsessions[insanityObsession_sadism] = true;
-              return;
-            }
-            break;
-            default: {
-            }
-            break;
+            if(obsessionsActive == 0) {
+              const InsanityObsession_t obsession = static_cast<InsanityObsession_t>(eng->dice.getInRange(0, endOfInsanityObsessions - 1));
+              switch(obsession) {
+                case insanityObsession_masochism: {
+                  popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
+                  popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
+                  popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
+                  insanityObsessions[insanityObsession_masochism] = true;
+                  return;
+                }
+                break;
+                case insanityObsession_sadism: {
+                  popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
+                  popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
+                  popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
+                  insanityObsessions[insanityObsession_sadism] = true;
+                  return;
+                }
+                break;
+                default: {
+                }
+                break;
+              }
             }
           }
         }
-      }
-      break;
+        break;
 
-      case 8: {
-        if(insanity_ > 8) {
-          popupMessage += "The shadows are closing in on me!";
-          eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
+        case 8: {
+          if(insanity_ > 8) {
+            popupMessage += "The shadows are closing in on me!";
+            eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
 
-          bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+            bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+            eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-          vector<coord> spawnPosCandidates;
+            vector<coord> spawnPosCandidates;
 
-          const int D_MAX = 3;
-          for(int dx = -D_MAX; dx <= D_MAX; dx++) {
-            for(int dy = -D_MAX; dy <= D_MAX; dy++) {
-              if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
-                if(blockers[pos.x + dx][pos.y + dy] == false) {
-                  spawnPosCandidates.push_back(pos + coord(dx, dy));
+            const int D_MAX = 3;
+            for(int dx = -D_MAX; dx <= D_MAX; dx++) {
+              for(int dy = -D_MAX; dy <= D_MAX; dy++) {
+                if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
+                  if(blockers[pos.x + dx][pos.y + dy] == false) {
+                    spawnPosCandidates.push_back(pos + coord(dx, dy));
+                  }
                 }
               }
             }
-          }
-          const int NR_SPAWN_POS_CANDIDATES = spawnPosCandidates.size();
-          if(NR_SPAWN_POS_CANDIDATES > 0) {
-            const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDungeonLevel() + 1) / 2)));
-            for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
-              const unsigned int SPAWN_POS_ELEMENT = eng->dice.getInRange(0, spawnPosCandidates.size() - 1);
-              const coord spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
-              spawnPosCandidates.erase(spawnPosCandidates.begin() + SPAWN_POS_ELEMENT);
-              Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, spawnPos));
-              monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
-              if(eng->dice.coinToss()) {
-                monster->isStealth = true;
+            const int NR_SPAWN_POS_CANDIDATES = spawnPosCandidates.size();
+            if(NR_SPAWN_POS_CANDIDATES > 0) {
+              const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDungeonLevel() + 1) / 2)));
+              for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
+                const unsigned int SPAWN_POS_ELEMENT = eng->dice.getInRange(0, spawnPosCandidates.size() - 1);
+                const coord spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
+                spawnPosCandidates.erase(spawnPosCandidates.begin() + SPAWN_POS_ELEMENT);
+                Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, spawnPos));
+                monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+                if(eng->dice.coinToss()) {
+                  monster->isStealth = true;
+                }
               }
             }
+            return;
           }
-          return;
         }
-      }
-      break;
+        break;
 
-      case 9: {
-        if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware) == false) {
-          popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
-          eng->popup->showMessage(popupMessage, true, "Confusion!");
-          statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
-          return;
+        case 9: {
+          if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware) == false) {
+            popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
+            eng->popup->showMessage(popupMessage, true, "Confusion!");
+            statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
+            return;
+          }
         }
-      }
-      break;
+        break;
 
-      default: {
-      }
-      break;
+        default: {
+        }
+        break;
       }
     }
   }
@@ -565,7 +556,7 @@ bool Player::isStandingInCrampedSpace() const {
 }
 
 void Player::testPhobias() {
-  const int ROLL = eng->dice(1, 100);
+  const int ROLL = eng->dice.percentile();
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
@@ -712,25 +703,25 @@ void Player::act() {
     const ActorDefinition* const def = monster->getDef();
     if(def->monsterShockLevel != monsterShockLevel_none) {
       switch(def->monsterShockLevel) {
-      case monsterShockLevel_unsettling: {
-        monster->shockCausedCurrent += 0.10;
-        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.05, 1.0);
-      }
-      break;
-      case monsterShockLevel_scary: {
-        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.15, 1.0);
-      }
-      break;
-      case monsterShockLevel_terrifying: {
-        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.5, 2.0);
-      }
-      break;
-      case monsterShockLevel_mindShattering: {
-        monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.75, 3.0);
-      }
-      break;
-      default:
-      {} break;
+        case monsterShockLevel_unsettling: {
+          monster->shockCausedCurrent += 0.10;
+          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.05, 1.0);
+        }
+        break;
+        case monsterShockLevel_scary: {
+          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.15, 1.0);
+        }
+        break;
+        case monsterShockLevel_terrifying: {
+          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.5, 2.0);
+        }
+        break;
+        case monsterShockLevel_mindShattering: {
+          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.75, 3.0);
+        }
+        break;
+        default:
+        {} break;
       }
       if(shockFromMonstersCurrentPlayerTurn < 3.0) {
         incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));

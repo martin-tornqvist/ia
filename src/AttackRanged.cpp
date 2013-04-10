@@ -114,7 +114,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
             //If clean hit failed (because of not cell aimed for, or failed skill roll), try a stray hit
             if(hitType == projectileHitType_miss) {
               //placeholder value, but it might do the trick?***
-              if(eng->dice(1, 100) < 25) {
+              if(eng->dice.percentile() < 25) {
                 hitType = projectileHitType_strayHit;
               }
             }

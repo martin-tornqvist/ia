@@ -60,7 +60,7 @@ void Map::switchToDestroyedFeatAt(const coord pos) {
       }
 
       if(NEW_FEATURE_ID == feature_rubbleLow && NEW_FEATURE_ID != OLD_FEATURE_ID) {
-        if(eng->dice(1, 100) < 50) {
+        if(eng->dice.percentile() < 50) {
           eng->itemFactory->spawnItemOnMap(item_rock, pos);
         }
       }

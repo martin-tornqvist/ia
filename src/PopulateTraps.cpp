@@ -84,7 +84,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
   }
 
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 25 + (eng->map->getDungeonLevel() * 5));
-  if(eng->dice(1, 100) < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
+  if(eng->dice.percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     vector<coord> trapPositionCandidates;
     for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
       for(int x = 1; x < MAP_X_CELLS - 1; x++) {

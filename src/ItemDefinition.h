@@ -39,6 +39,12 @@ enum ItemDefArchetypes_t {
   itemDef_explosive
 };
 
+enum ItemValue_t {
+  itemValue_normal,
+  itemValue_minorTreasure,
+  itemValue_majorTreasure
+};
+
 enum ItemId_t {
   item_empty,
 
@@ -187,6 +193,7 @@ public:
   }
 
   ItemId_t id;
+  ItemValue_t itemValue;
   ItemWeight_t itemWeight;
   int spawnStandardMinDLVL;
   int spawnStandardMaxDLVL;

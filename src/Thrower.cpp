@@ -150,7 +150,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
         }
 
         //If actor hit by accident
-        if(actorHere->getDef()->actorSize >= actorSize_humanoid && eng->dice(1, 100) < 25) {
+        if(actorHere->getDef()->actorSize >= actorSize_humanoid && eng->dice.percentile() < 25) {
           if(eng->map->playerVision[path.at(i).x][path.at(i).y]) {
             eng->renderer->drawCharacter('*', renderArea_mainScreen, path.at(i).x, path.at(i).y, clrRedLight);
             eng->renderer->updateWindow();
@@ -190,7 +190,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
       }
     }
 
-    if(eng->dice(1, 100) < chanceToDestroyItem) {
+    if(eng->dice.percentile() < chanceToDestroyItem) {
       delete itemThrown;
     } else {
       const int DROP_ELEMENT = blockedInElement == -1 ? path.size() - 1 : blockedInElement;

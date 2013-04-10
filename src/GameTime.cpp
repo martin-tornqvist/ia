@@ -99,7 +99,7 @@ void GameTime::letNextAct() {
     const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
     switch(realSpeed) {
     case actorSpeed_sluggish: {
-      actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice(1, 100) < 65;
+      actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice.percentile() < 65;
     }
     break;
     case actorSpeed_slow: {

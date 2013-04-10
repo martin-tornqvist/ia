@@ -52,82 +52,70 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       clearLogMessages();
       if(d.isShiftHeld_) {
         eng->player->moveDirection(1, -1);
-      }
-      else if(d.isCtrlHeld_) {
+      } else if(d.isCtrlHeld_) {
         eng->player->moveDirection(1, 1);
-      }
-      else {
+      } else {
         eng->player->moveDirection(1, 0);
       }
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+  } else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, 1);
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+  } else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
         eng->player->moveDirection(-1, -1);
-      }
-      else if(d.isCtrlHeld_) {
+      } else if(d.isCtrlHeld_) {
         eng->player->moveDirection(-1, 1);
-      }
-      else {
+      } else {
         eng->player->moveDirection(-1, 0);
       }
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+  } else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, -1);
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, -1);
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '3') {
+  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, 1);
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '1') {
+  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, 1);
     }
     clearEvents();
     return;
-  }
-  else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '7') {
+  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, -1);
     }
     clearEvents();
     return;
-  }
-  else if(d.key_ == '5' || d.key_ == '.') {
+  } else if(d.key_ == '5' || d.key_ == '.') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, 0);
@@ -153,8 +141,13 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'a') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->examine->playerExamine();
-      eng->renderer->drawMapAndInterface();
+      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+        eng->examine->playerExamine();
+        eng->renderer->drawMapAndInterface();
+      } else {
+        eng->log->addMessage("Not while blind.");
+        eng->renderer->drawMapAndInterface();
+      }
     }
     clearEvents();
     return;
@@ -380,6 +373,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getStatusEffectsHandler()->hasEffect(statusPoisoned)) {
         eng->log->addMessage("Not while poisoned.");
+        eng->renderer->drawMapAndInterface();
       } else {
         bool allowHeal = false;
         const bool IS_DISEASED = eng->player->getStatusEffectsHandler()->hasEffect(statusDiseased);
@@ -591,8 +585,7 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
           return KeyboardReadReturnData(static_cast<char>(event.text.unicode));
         }
         continue;
-      }
-      else if(event.type == sf::Event::KeyPressed) {
+      } else if(event.type == sf::Event::KeyPressed) {
         // Other key pressed? (escape, return, space, etc)
         const sf::Keyboard::Key sfmlKey = event.key.code;
 
@@ -619,73 +612,71 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
         if(sfmlKey >= sf::Keyboard::F1 && sfmlKey <= sf::Keyboard::F15) {
           // F-keys
           return ret;
-        }
-        else {
+        } else {
           switch(sfmlKey) {
-          default:
-            continue;
-            break;
-          case sf::Keyboard::LSystem:
-            continue;
-            break;
-          case sf::Keyboard::RSystem:
-            continue;
-            break;
-          case sf::Keyboard::Menu:
-            continue;
-            break;
-          case sf::Keyboard::Pause:
-            continue;
-            break;
-          case sf::Keyboard::Space:
-            return ret;
-            break;
-          case sf::Keyboard::Return:
-            return ret;
-            break;
-          case sf::Keyboard::Back:
-            return ret;
-            break;
-          case sf::Keyboard::Tab:
-            return ret;
-            break;
-          case sf::Keyboard::PageUp:
-            return ret;
-            break;
-          case sf::Keyboard::PageDown:
-            return ret;
-            break;
-          case sf::Keyboard::End:
-            return ret;
-            break;
-          case sf::Keyboard::Home:
-            return ret;
-            break;
-          case sf::Keyboard::Insert:
-            return ret;
-            break;
-          case sf::Keyboard::Delete:
-            return ret;
-            break;
-          case sf::Keyboard::Left:
-            return ret;
-            break;
-          case sf::Keyboard::Right:
-            return ret;
-            break;
-          case sf::Keyboard::Up:
-            return ret;
-            break;
-          case sf::Keyboard::Down:
-            return ret;
-            break;
-          case sf::Keyboard::Escape:
-            return ret;
-            break;
+            default:
+              continue;
+              break;
+            case sf::Keyboard::LSystem:
+              continue;
+              break;
+            case sf::Keyboard::RSystem:
+              continue;
+              break;
+            case sf::Keyboard::Menu:
+              continue;
+              break;
+            case sf::Keyboard::Pause:
+              continue;
+              break;
+            case sf::Keyboard::Space:
+              return ret;
+              break;
+            case sf::Keyboard::Return:
+              return ret;
+              break;
+            case sf::Keyboard::Back:
+              return ret;
+              break;
+            case sf::Keyboard::Tab:
+              return ret;
+              break;
+            case sf::Keyboard::PageUp:
+              return ret;
+              break;
+            case sf::Keyboard::PageDown:
+              return ret;
+              break;
+            case sf::Keyboard::End:
+              return ret;
+              break;
+            case sf::Keyboard::Home:
+              return ret;
+              break;
+            case sf::Keyboard::Insert:
+              return ret;
+              break;
+            case sf::Keyboard::Delete:
+              return ret;
+              break;
+            case sf::Keyboard::Left:
+              return ret;
+              break;
+            case sf::Keyboard::Right:
+              return ret;
+              break;
+            case sf::Keyboard::Up:
+              return ret;
+              break;
+            case sf::Keyboard::Down:
+              return ret;
+              break;
+            case sf::Keyboard::Escape:
+              return ret;
+              break;
           }
         }
-      }
-      else if(event.type == sf::Event::GainedFocus) {
+      } else if(event.type == sf::Event::GainedFocus) {
         eng->renderer->clearWindow();
         eng->renderer->drawScreenSizedTexture(eng->renderer->getScreenTextureCopy());
         eng->renderer->updateWindow();

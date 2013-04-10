@@ -21,6 +21,7 @@ using namespace std;
 void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const {
   switch(archetype) {
     case itemDef_general: {
+      d->itemValue = itemValue_normal;
       d->itemWeight = itemWeight_none;
       d->spawnStandardMinDLVL = 1;
       d->spawnStandardMaxDLVL = 999999;
@@ -165,6 +166,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
     case itemDef_scroll: {
       resetDef(d, itemDef_general);
+      d->itemValue = itemValue_minorTreasure;
       d->chanceToIncludeInSpawnList = 50;
       d->itemWeight = itemWeight_none;
       d->isIdentified = false;
@@ -187,6 +189,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
 
     case itemDef_potion: {
       resetDef(d, itemDef_general);
+      d->itemValue = itemValue_minorTreasure;
       d->chanceToIncludeInSpawnList = 65;
       d->itemWeight = itemWeight_light;
       d->isIdentified = false;
@@ -349,11 +352,12 @@ void ItemData::makeList() {
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_incineratorShell);
-  resetDef(d, itemDef_ammo);
+  resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Napalm shell", "Napalm shells", "a Napalm shell");
   d->itemWeight = itemWeight_light;
+  d->ammoContainedInClip = 3;
   d->spawnStandardMinDLVL = 8;
-  d->maxStackSizeAtSpawn = 2;
+  d->maxStackSizeAtSpawn = 1;
   addFeatureFoundIn(d, feature_chest, 25);
   addFeatureFoundIn(d, feature_cabinet, 25);
   itemDefinitions[d->id] = d;
@@ -1174,6 +1178,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
+  d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
   d->color = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1183,6 +1188,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceRepeller);
   resetDef(d, itemDef_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
+  d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
   d->color = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1192,6 +1198,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceRejuvenator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
+  d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
   d->color = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1201,6 +1208,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceTranslocator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
+  d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
   d->color = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1300,9 +1308,9 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
 
   if(d.isDevice && d.isIdentified == false) {
     if(itemRefForm == itemRef_plain) {
-      return "Alien Device";
+      return "Strange Device";
     } else {
-      return "an Alien Device";
+      return "a Strange Device";
     }
   }
 
@@ -1351,7 +1359,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
   const ItemDefinition& d = item->getDef();
 
   if(d.isDevice && d.isIdentified == false) {
-    return ADD_A ? "an Alien Device" : "Alien Device";
+    return ADD_A ? "a Strange Device" : "Strange Device";
   }
 
   string ret = "";

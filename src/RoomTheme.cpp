@@ -113,7 +113,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           if(blockers[x][y] == false) {
             const int CHANCE_TO_PUT_BLOOD = 40;
-            if(eng->dice(1, 100) < CHANCE_TO_PUT_BLOOD) {
+            if(eng->dice.percentile() < CHANCE_TO_PUT_BLOOD) {
               eng->gore->makeGore(coord(x, y));
               eng->gore->makeBlood(coord(x, y));
               nrBloodPut++;
@@ -128,7 +128,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   //Ritual chamber, somtimes make gore at altar (or random pos if no altar)
   if(room.roomTheme == roomTheme_ritual) {
     const int CHANCE_FOR_BLOODY_RITUAL_CHAMBER = 60;
-    if(eng->dice(1, 100) < CHANCE_FOR_BLOODY_RITUAL_CHAMBER) {
+    if(eng->dice.percentile() < CHANCE_FOR_BLOODY_RITUAL_CHAMBER) {
 
       coord origin(-1, -1);
       vector<coord> originCandidates;
@@ -151,7 +151,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         }
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if((dx == 0 && dy == 0) || (eng->dice(1, 100) < CHANCE_FOR_BLOODY_RITUAL_CHAMBER / 2)) {
+            if((dx == 0 && dy == 0) || (eng->dice.percentile() < CHANCE_FOR_BLOODY_RITUAL_CHAMBER / 2)) {
               const coord pos = origin + coord(dx, dy);
               if(blockers[pos.x][pos.y] == false) {
                 eng->gore->makeGore(pos);

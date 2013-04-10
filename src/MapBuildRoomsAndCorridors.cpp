@@ -35,7 +35,7 @@
 //}
 //
 //void MapBuild::buildCorridorsAndRooms() {
-////	const bool varyCorridorLength = eng->dice(1, 100) < 85;
+////	const bool varyCorridorLength = eng->dice.percentile() < 85;
 ////	const int forcedCorridorLength = varyCorridorLength == true ? -1 : getRandomCorridorLength();
 ////
 ////	const int diceValueCeilRoom = eng->dice(1, 20) + 35;
@@ -67,7 +67,7 @@
 ////		junction = m_mapAreas.at(mapAreaIndex).getRandomExpandableJunction(eng);
 ////
 ////		if(junction != NULL) {
-////			const int rnd = eng->dice(1, 100);
+////			const int rnd = eng->dice.percentile();
 ////			const MapAreaType_t areaType = rnd < diceValueCeilRoom ? mapArea_room : (rnd < diceValueCeilCorr ? mapArea_corridor : mapArea_template);
 ////
 ////			if(areaType == mapArea_template) {
@@ -497,7 +497,7 @@
 //			c.set(x0y0);
 //
 //			while(c.y != x1y1.y) {
-//				if(eng->dice(1, 100) < CHANCE_FOR_DOOR) {
+//				if(eng->dice.percentile() < CHANCE_FOR_DOOR) {
 //					if(isPointGoodForDoor(c) == true) {
 //						doorCandidatesLeft.push_back(c);
 //					}
@@ -505,7 +505,7 @@
 //				c.y += 1;
 //			}
 //			while(c.x != x1y1.x) {
-//				if(eng->dice(1, 100) < CHANCE_FOR_DOOR) {
+//				if(eng->dice.percentile() < CHANCE_FOR_DOOR) {
 //					if(isPointGoodForDoor(c) == true) {
 //						doorCandidatesDown.push_back(c);
 //					}
@@ -513,7 +513,7 @@
 //				c.x += 1;
 //			}
 //			while(c.y != x0y0.y) {
-//				if(eng->dice(1, 100) < CHANCE_FOR_DOOR) {
+//				if(eng->dice.percentile() < CHANCE_FOR_DOOR) {
 //					if(isPointGoodForDoor(c) == true) {
 //						doorCandidatesRight.push_back(c);
 //					}
@@ -521,7 +521,7 @@
 //				c.y -= 1;
 //			}
 //			while(c.x != x0y0.x) {
-//				if(eng->dice(1, 100) < CHANCE_FOR_DOOR) {
+//				if(eng->dice.percentile() < CHANCE_FOR_DOOR) {
 //					if(isPointGoodForDoor(c) == true) {
 //						doorCandidatesUp.push_back(c);
 //					}

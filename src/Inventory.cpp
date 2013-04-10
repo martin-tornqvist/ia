@@ -225,7 +225,7 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   for(unsigned int i = 0; i < slots_.size(); i++) {
     item = slots_.at(i).item;
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice(1, 100) < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slots_.at(i).item;
       } else {
         engine->itemDrop->dropItemOnMap(pos, &item);
@@ -240,7 +240,7 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   while(i < general_.size()) {
     item = general_.at(i);
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice(1, 100) < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
         engine->itemDrop->dropItemOnMap(pos, &item);

@@ -7,7 +7,7 @@ void Weapon::setRandomMeleePlus(Engine* const engine) {
   int plus = 0;
 
   int chance = 45;
-  while(engine->dice(1, 100) < chance) {
+  while(engine->dice.percentile() < chance) {
     plus++;
     chance -= 5;
   }

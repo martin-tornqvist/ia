@@ -267,7 +267,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
   } else {
     //Trap misses?
     const int CHANCE_TO_HIT = 75;
-    if(eng->dice(1, 100) > CHANCE_TO_HIT) {
+    if(eng->dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
           eng->log->addMessage("A dart barely misses me!", clrMessageGood);
@@ -328,7 +328,7 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
   } else {
     //Trap misses?
     const int CHANCE_TO_HIT = 75;
-    if(eng->dice(1, 100) > CHANCE_TO_HIT) {
+    if(eng->dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
           eng->log->addMessage("A spear barely misses me!", clrMessageGood);
@@ -596,7 +596,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
         }
       }
 
-      if(eng->dice(1, 100) < 50) {
+      if(eng->dice.percentile() < 50) {
         tracer << "TrapSpiderWeb: Web is destroyed" << endl;
 
         if((IS_PLAYER && PLAYER_CAN_SEE) || (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {

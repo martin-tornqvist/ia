@@ -53,7 +53,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_teslaCanon:               item = new TeslaCanon(d, ammoD);        break;
     case item_spikeGun:                 item = new SpikeGun(d, ammoD);          break;
     case item_teslaCanister:            item = new ItemAmmoClip(d);             break;
-    case item_incineratorShell:         item = new ItemAmmo(d);                 break;
+    case item_incineratorShell:         item = new ItemAmmoClip(d);             break;
 
     case item_playerKick:               item = new Weapon(d, ammoD);            break;
     case item_playerStomp:              item = new Weapon(d, ammoD);            break;

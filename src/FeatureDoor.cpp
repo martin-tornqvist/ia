@@ -19,7 +19,7 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
 
   isClued_ = false;
 
-  const int ROLL = eng->dice(1, 100);
+  const int ROLL = eng->dice.percentile();
   const DoorSpawnState_t doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
     ROLL < 40 ? doorSpawnState_secret :
@@ -444,7 +444,7 @@ void Door::tryClose(Actor* actorTrying) {
       else if(PLAYER_SEE_TRYER)
         eng->log->addMessage(actorTrying->getNameThe() + " closes a door.");
     } else {
-      if(eng->dice(1, 100) < 50) {
+      if(eng->dice.percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
           eng->log->addMessage("I fumble with a door and succeed to close it.");
@@ -510,7 +510,7 @@ void Door::tryOpen(Actor* actorTrying) {
         eng->soundEmitter->emitSound(Sound("I hear a door open.", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
       }
     } else {
-      if(eng->dice(1, 100) < 50) {
+      if(eng->dice.percentile() < 50) {
         tracer << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {

@@ -109,7 +109,7 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
         //Stray hit?
         if(allowStrayHit) {
           getAttackData(data, target, curPos, weapon, false);
-          if(eng->dice(1, 100) < CHANCE_FOR_STRAY_HIT) {
+          if(eng->dice.percentile() < CHANCE_FOR_STRAY_HIT) {
             if(eng->map->playerVision[curPos.x][curPos.y]) {
               eng->renderer->drawMapAndInterface(false);
               eng->renderer->coverCellInMap(curPos.x, curPos.y);

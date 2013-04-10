@@ -53,8 +53,8 @@ void MapBuildBSP::run() {
   const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 6;
   const int DLVL = eng->map->getDungeonLevel();
   const int CHANCE_FOR_CAVE_AREA = (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
-  if(eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA) {
-    const bool IS_TWO_CAVES = eng->dice(1, 100) < CHANCE_FOR_CAVE_AREA / 3;
+  if(eng->dice.percentile() < CHANCE_FOR_CAVE_AREA) {
+    const bool IS_TWO_CAVES = eng->dice.percentile() < CHANCE_FOR_CAVE_AREA / 3;
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
@@ -83,7 +83,7 @@ void MapBuildBSP::run() {
         rooms_.push_back(buildRoom(roomCoords));
         regions[x][y]->mainRoom = rooms_.back();
 
-        if(eng->dice(1, 100) < 30) {
+        if(eng->dice.percentile() < 30) {
           reshapeRoom(*(regions[x][y]->mainRoom));
         }
       }
@@ -105,7 +105,7 @@ void MapBuildBSP::run() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(globalDoorPositionCandidates[x][y] == true) {
-        if(eng->dice(1, 100) < CHANCE_TO_PLACE_DOOR) {
+        if(eng->dice.percentile() < CHANCE_TO_PLACE_DOOR) {
           placeDoorAtPosIfSuitable(coord(x, y));
         }
       }
@@ -303,7 +303,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
 
         const int CHANCE_TO_MAKE_CHASM = 25;
 
-        if(eng->dice(1, 100) < CHANCE_TO_MAKE_CHASM) {
+        if(eng->dice.percentile() < CHANCE_TO_MAKE_CHASM) {
           eng->basicUtils->resetBoolArray(blockers, false);
 
           for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
@@ -394,7 +394,7 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
     region1->regionsConnectedTo[regionIndex2.x][regionIndex2.y] = true;
     region2->regionsConnectedTo[regionIndex1.x][regionIndex1.y] = true;
 
-    if(eng->dice(1, 100) < 33) {
+    if(eng->dice.percentile() < 33) {
       reshapeRoom(*room);
     }
   }
@@ -417,7 +417,7 @@ void MapBuildBSP::buildRoomsInRooms() {
 
     const bool IS_ROOM_BIG = ROOM_WI > 16 || ROOM_HE > 8;
 
-    if(IS_ROOM_BIG || eng->dice(1, 100) < 30) {
+    if(IS_ROOM_BIG || eng->dice.percentile() < 30) {
       const int MAX_DIM_W = min(16, ROOM_WI);
       const int MAX_DIM_H = min(16, ROOM_HE);
 
@@ -702,7 +702,7 @@ void MapBuildBSP::decorate() {
         }
 
         //Randomly convert walls to rubble
-        if(eng->dice(1, 100) < 10) {
+        if(eng->dice.percentile() < 10) {
           eng->featureFactory->spawnFeatureAt(feature_rubbleHigh, coord(x, y));
           continue;
         }
@@ -725,7 +725,7 @@ void MapBuildBSP::decorate() {
 //    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
 //      if(eng->map->featuresStatic[x][y]->getId() == feature_stoneFloor) {
 //        //Randomly convert stone floor to low rubble
-//        if(eng->dice(1, 100) == 1) {
+//        if(eng->dice.percentile() == 1) {
 //          eng->featureFactory->spawnFeatureAt(feature_rubbleLow, coord(x, y));
 //          continue;
 //        }
@@ -1101,10 +1101,10 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
 
     vector<RoomReshape_t> reshapesToPerform;
-    if(eng->dice(1, 100) < 75) {
+    if(eng->dice.percentile() < 75) {
       reshapesToPerform.push_back(roomReshape_trimCorners);
     }
-    if(eng->dice(1, 100) < 75) {
+    if(eng->dice.percentile() < 75) {
       reshapesToPerform.push_back(roomReshape_pillarsRandom);
     }
 
@@ -1154,7 +1154,7 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
               }
             }
             if(isNextToWall == false) {
-              if(eng->dice(1, 100) < 20) {
+              if(eng->dice.percentile() < 20) {
                 eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(c.x, c.y));
               }
             }

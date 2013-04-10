@@ -45,7 +45,7 @@ void MapBuild::makeStraightPathByPathfinder(const coord origin, const coord targ
     const coord c = path.at(i);
     if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       eng->featureFactory->spawnFeatureAt(feature, c);
-      if(SMOOTH == false && eng->dice(1, 100) < 33) {
+      if(SMOOTH == false && eng->dice.percentile() < 33) {
         makePathByRandomWalk(c.x, c.y, eng->dice(1, 6), feature, true);
       }
     }

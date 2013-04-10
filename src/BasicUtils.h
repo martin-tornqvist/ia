@@ -99,19 +99,17 @@ private:
 
 class Dice {
 public:
-  int operator()(const int ROLLS, const int SIDES) {
-    return roll(ROLLS, SIDES);
-  }
-  int operator()(const DiceParam& p) {
-    return roll(p.rolls, p.sides);
-  }
-  bool coinToss() {
-    return roll(1, 2) == 2;
-  }
+  int operator()(const int ROLLS, const int SIDES) {return roll(ROLLS, SIDES);}
+  int operator()(const DiceParam& p) {return roll(p.rolls, p.sides);}
+  bool coinToss() {return roll(1, 2) == 2;}
 
   int getInRange(const int MIN, const int MAX) {
     const int ROLL = roll(1, MAX - MIN + 1);
     return MIN + ROLL - 1;
+  }
+
+  int percentile() {
+    return roll(1, 100);
   }
 
 private:

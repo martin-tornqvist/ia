@@ -89,7 +89,7 @@ void Monster::act() {
 
   if(target != NULL) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
-    if(eng->dice(1, 100) < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
+    if(eng->dice.percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(AI_castRandomSpellIfAware::action(this, eng)) {
         return;
       }
@@ -110,7 +110,7 @@ void Monster::act() {
     }
   }
 
-  if(eng->dice(1, 100) < def_->erraticMovement) {
+  if(eng->dice.percentile() < def_->erraticMovement) {
     if(AI_moveToRandomAdjacentCell::action(this, eng)) {
       return;
     }

@@ -164,7 +164,7 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
         }
 
         if(DO_EXPLOSION_DMG == true) {
-          if(eng->dice(1, 100) < 55) {
+          if(eng->dice.percentile() < 55) {
             eng->featureFactory->spawnFeatureAt(feature_smoke, coord(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
           }
         }

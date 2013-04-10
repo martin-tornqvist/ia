@@ -164,7 +164,7 @@ class Incinerator: public Weapon {
 public:
   Incinerator(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
-    ammoCapacity = 1;
+    ammoCapacity = ammoDef_->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = false;

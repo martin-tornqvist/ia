@@ -60,7 +60,7 @@ void PopulateItems::buildCandidateList() {
       eng->map->getDungeonLevel() >= defs[i]->spawnStandardMinDLVL &&
       eng->map->getDungeonLevel() <= defs[i]->spawnStandardMaxDLVL &&
       defs[i]->isIntrinsic == false) {
-      if(eng->dice(1, 100) < defs[i]->chanceToIncludeInSpawnList) {
+      if(eng->dice.percentile() < defs[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));
       }
     }
