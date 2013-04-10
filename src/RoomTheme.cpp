@@ -42,19 +42,18 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
     case roomTheme_human:   {room.roomDescr = "Human quarters.";}   break;
     case roomTheme_ritual:  {room.roomDescr = "A ritual chamber.";} break;
     case roomTheme_spider:  {room.roomDescr = "A spider lair.";}    break;
-    case roomTheme_dungeon: {room.roomDescr = "A dungeon.";}        break;
+//    case roomTheme_dungeon: {room.roomDescr = "A dungeon.";}        break;
     case roomTheme_crypt:   {room.roomDescr = "A crypt.";}          break;
     case roomTheme_monster: {room.roomDescr = "A gruesome room.";}  break;
     case roomTheme_flooded: {room.roomDescr = "A flooded room.";}   break;
     case roomTheme_muddy:   {room.roomDescr = "A muddy room.";}     break;
+//    case roomTheme_chasm:   {room.roomDescr = "A chasm.";}          break;
     default: {} break;
   }
 }
 
 bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme,
     const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
-
-  (void)blockers;
 
   const int ROOM_W  = room->getX1() - room->getX0() + 1;
   const int ROOM_H  = room->getY1() - room->getY0() + 1;
@@ -66,23 +65,25 @@ bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTh
     case roomTheme_human:     {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
     case roomTheme_ritual:    {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
     case roomTheme_spider:    {return MAX_DIM >= 4 && MIN_DIM >= 3;} break;
-    case roomTheme_dungeon: {
-      //TODO Dungeon is not used for now
-//    if(MAX_DIM >= 9 && MIN_DIM >= 4) {
-//      //The dungeon room needs to be completely clean before building the theme
-//      for(int y = room->getY0(); y <= room->getY1(); y++) {
-//        for(int x = room->getX0(); x <= room->getX1(); x++) {
-//          if(blockers[x][y]) {
-//            return false;
-//          }
-//        }
-//      }
-//      return true;
-//    }
-      return false;
-    } break;
+//    case roomTheme_dungeon: {
+//      return false;
+//    } break;
     case roomTheme_crypt:     {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
     case roomTheme_monster:   {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
+//    case roomTheme_chasm: {
+//      if(MIN_DIM >= 5) {
+//        for(int y = room->getY0(); y <= room->getY1(); y++) {
+//          for(int x = room->getX0(); x <= room->getX1(); x++) {
+//            if(blockers[x][y]) {
+//              return false;
+//            }
+//          }
+//        }
+//        return true;
+//      }
+//      return false;
+//    } break;
+
     default: {} break;
   }
   return true;
@@ -92,7 +93,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
 
-  if(room.roomTheme == roomTheme_dungeon) {}
+//  if(room.roomTheme == roomTheme_dungeon) {}
 
   if(room.roomTheme == roomTheme_flooded || room.roomTheme == roomTheme_muddy) {
     const Feature_t featureId = room.roomTheme == roomTheme_flooded ? feature_shallowWater : feature_shallowMud;
@@ -104,6 +105,14 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       }
     }
   }
+
+//  if(room.roomTheme == roomTheme_chasm) {
+//    for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
+//      for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
+//        eng->featureFactory->spawnFeatureAt(feature_chasm, coord(x, y));
+//      }
+//    }
+//  }
 
   if(room.roomTheme == roomTheme_monster) {
     bool done = false;
@@ -229,11 +238,12 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       case roomTheme_human:     chanceToMakeDark = 10;  break;
       case roomTheme_ritual:    chanceToMakeDark = 15;  break;
       case roomTheme_spider:    chanceToMakeDark = 33;  break;
-      case roomTheme_dungeon:   chanceToMakeDark = 50;  break;
+//      case roomTheme_dungeon:   chanceToMakeDark = 50;  break;
       case roomTheme_crypt:     chanceToMakeDark = 75;  break;
       case roomTheme_monster:   chanceToMakeDark = 75;  break;
       case roomTheme_flooded:   chanceToMakeDark = 50;  break;
       case roomTheme_muddy:     chanceToMakeDark = 50;  break;
+//      case roomTheme_chasm:     chanceToMakeDark = 50;  break;
       default: break;
     }
 

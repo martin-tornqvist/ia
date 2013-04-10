@@ -557,7 +557,7 @@ void FeatureData::makeList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human, roomTheme_dungeon);
+  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human/*, roomTheme_dungeon*/);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_barrel;

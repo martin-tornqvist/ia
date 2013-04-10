@@ -957,6 +957,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -993,6 +994,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -1098,6 +1100,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -1133,6 +1136,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
@@ -1236,6 +1240,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
@@ -1602,6 +1607,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, superStrong);
   finalizeDefinition(d);
   d.reset();
@@ -1644,6 +1650,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
@@ -1685,6 +1692,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, superStrong);
   finalizeDefinition(d);
   d.reset();
@@ -1726,6 +1734,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, superStrong);
   finalizeDefinition(d);
   d.reset();
@@ -1747,7 +1756,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_huntingHorror;
   d.spawnMinLevel = LAST_CAVERN_LEVEL - 1;
-  d.spawnMaxLevel = 99999;
+  d.spawnMaxLevel = 999;
   d.monsterLvl = 20;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -1762,6 +1771,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = false;
   d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.erraticMovement = actorErratic_somewhat;
+//  d.nativeRooms.push_back(roomTheme_chasm);
   setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();

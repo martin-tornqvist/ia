@@ -16,11 +16,12 @@ enum RoomTheme_t {
   roomTheme_human,
   roomTheme_ritual,
   roomTheme_spider,
-  roomTheme_dungeon,
+//  roomTheme_dungeon,
   roomTheme_crypt,
   roomTheme_monster,
   roomTheme_flooded,
   roomTheme_muddy,
+//  roomTheme_chasm,
 
   endOfRoomThemes
 };

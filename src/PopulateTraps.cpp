@@ -26,9 +26,10 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         case roomTheme_crypt:    chanceForTrappedRoom = 75;  break;
         case roomTheme_monster:  chanceForTrappedRoom = 25;  break;
         case roomTheme_plain:                                break;
-        case roomTheme_dungeon:                              break;
+//        case roomTheme_dungeon:                              break;
         case roomTheme_flooded:                              break;
         case roomTheme_muddy:                                break;
+//        case roomTheme_chasm:                                break;
         case endOfRoomThemes:                                break;
       }
 
