@@ -340,7 +340,7 @@ void ItemData::makeList() {
   d->rangedDmg = DiceParam(1, 3);
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->rangedAmmoTypeUsed = item_incineratorShell;
+  d->rangedAmmoTypeUsed = item_napalmCartridge;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSoundMessage = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
@@ -351,9 +351,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_cabinet, 25);
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_incineratorShell);
+  d = new ItemDefinition(item_napalmCartridge);
   resetDef(d, itemDef_ammoClip);
-  d->name = ItemName("Napalm shell", "Napalm shells", "a Napalm shell");
+  d->name = ItemName("Napalm Cartridge", "Napalm Cartridges", "a Napalm Cartridge");
   d->itemWeight = itemWeight_light;
   d->ammoContainedInClip = 3;
   d->spawnStandardMinDLVL = 8;
@@ -703,7 +703,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 25;
+  d->meleeBaseAttackSkill = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
   itemDefinitions[d->id] = d;
@@ -712,9 +712,17 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 25;
+  d->meleeBaseAttackSkill = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_playerPunch);
+  resetDef(d, itemDef_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("punch", "");
+  d->meleeAbilityUsed = ability_accuracyMelee;
+  d->meleeBaseAttackSkill = 25;
+  d->meleeDmg = pair<int, int>(1, 2);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_zombieClaw);

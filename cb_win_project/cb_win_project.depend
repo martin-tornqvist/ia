@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365545722 c:\dev\ia\src\itemdefinition.h
+1365590154 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -129,7 +129,7 @@
 	<ctime>
 	<cmath>
 
-1365587000 c:\dev\ia\src\actorplayer.h
+1365588973 c:\dev\ia\src\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"ConstTypes.h"
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1365587718 source:c:\dev\ia\src\actorplayer.cpp
+1365589140 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -541,7 +541,7 @@
 1355677713 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1365546041 source:c:\dev\ia\src\attackranged.cpp
+1365588569 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -595,7 +595,7 @@
 	"Log.h"
 	"Query.h"
 
-1355677712 c:\dev\ia\src\bash.h
+1365588945 c:\dev\ia\src\bash.h
 	"FeatureDoor.h"
 
 1361391371 source:c:\dev\ia\src\basicutils.cpp
@@ -644,7 +644,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1364569200 source:c:\dev\ia\src\characterinfo.cpp
+1365589541 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -1168,7 +1168,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365587092 source:c:\dev\ia\src\itemdata.cpp
+1365590154 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1199,7 +1199,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1365587124 source:c:\dev\ia\src\itemfactory.cpp
+1365590154 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"

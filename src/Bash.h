@@ -6,19 +6,18 @@
 class Engine;
 class Feature;
 
-class Bash
-{
+class Bash {
 public:
-	Bash(Engine* engine) : eng(engine) {}
-	~Bash() {}
+  Bash(Engine* engine) : eng(engine) {}
+  ~Bash() {}
 
-	void playerBash() const;
+  void playerBash() const;
 
 private:
-   friend class Feature;
-   void playerBashFeature(Feature* const feature) const;
+  friend class Feature;
+  void playerBashFeature(Feature* const feature) const;
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

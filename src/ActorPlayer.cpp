@@ -63,9 +63,9 @@ void Player::actorSpecific_spawnStartItems() {
 //  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pumpShotgun), true, true);
 //  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
   inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_incinerator), true, true);
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_incineratorShell));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
+  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_napalmCartridge));
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
@@ -1022,7 +1022,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
             }
           }
           if(hasMeleeWeapon == false) {
-            eng->log->addMessage("[punch]");
+            punch(*actorAtDest);
           }
         }
         return;
@@ -1123,12 +1123,10 @@ void Player::autoMelee() {
 }
 
 void Player::kick(Actor& actorToKick) {
-  //Spawn a temporary kick weapon to attack with
   Weapon* kickWeapon = NULL;
 
   const ActorDefinition* const d = actorToKick.getDef();
 
-  //If kicking critters, call it a stomp instead and give it bonus hit chance
   if(d->actorSize == actorSize_floor && (d->isSpider == true || d->isRat == true)) {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerStomp));
   } else {
@@ -1136,6 +1134,13 @@ void Player::kick(Actor& actorToKick) {
   }
   eng->attack->melee(actorToKick.pos, kickWeapon);
   delete kickWeapon;
+}
+
+void Player::punch(Actor& actorToPunch) {
+  //Spawn a temporary punch weapon to attack with
+  Weapon* punchWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
+  eng->attack->melee(actorToPunch.pos, punchWeapon);
+  delete punchWeapon;
 }
 
 void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {

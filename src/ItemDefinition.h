@@ -71,7 +71,7 @@ enum ItemId_t {
   item_spikeGun,
   item_shotgunShell,
   item_drumOfBullets,
-  item_incineratorShell,
+  item_napalmCartridge,
   item_teslaCanister,
   item_pistol,
   item_pistolClip,
@@ -82,6 +82,7 @@ enum ItemId_t {
 
   item_playerKick,
   item_playerStomp,
+  item_playerPunch,
 
   item_bloatedZombiePunch,
   item_bloatedZombieSpit,

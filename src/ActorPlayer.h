@@ -81,6 +81,7 @@ public:
   void autoMelee();
 
   void kick(Actor& actorToKick);
+  void punch(Actor& actorToPunch);
 
   void updateColor();
 

@@ -34,10 +34,21 @@ void CharacterInfo::makeLines() {
       break;
     }
   }
+  Weapon* punch = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
+  string punchStr = eng->itemData->getItemInterfaceRef(punch, false, primaryAttackMode_melee);
+  delete punch;
+  for(unsigned int i = 0; i < punchStr.length(); i++) {
+    if(punchStr.at(0) == ' ') {
+      punchStr.erase(punchStr.begin());
+    } else {
+      break;
+    }
+  }
   lines.push_back(StringAndColor(offsetSpaces + "Melee           : " + intToString(BASE_MELEE) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Ranged          : " + intToString(BASE_RANGED) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Dodging         : " + intToString(BASE_DODGE_ATTACKS) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Kicking         : " + kickStr, clrText));
+  lines.push_back(StringAndColor(offsetSpaces + "Punching        : " + punchStr, clrText));
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("RESISTANCE TO STATUS EFFECTS", clrHeader));
@@ -198,8 +209,7 @@ void CharacterInfo::run() {
         yCell++;
       }
       eng->renderer->updateWindow();
-    }
-    else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+    } else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
@@ -210,8 +220,7 @@ void CharacterInfo::run() {
         yCell++;
       }
       eng->renderer->updateWindow();
-    }
-    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    } else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
       done = true;
     }
 
