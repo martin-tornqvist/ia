@@ -1187,6 +1187,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_locust;
   d.spawnMinLevel = 7;
+  d.spawnMaxLevel = FIRST_CAVERN_LEVEL;
   d.monsterLvl = 2;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_swarm;

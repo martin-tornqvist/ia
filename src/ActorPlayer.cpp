@@ -1049,8 +1049,9 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
         const bool IS_DEXTEROUS_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous);
         const bool IS_LITHE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_lithe);
-        if(IS_DEXTEROUS_PICKED || IS_LITHE_PICKED) {
-          const int FREE_MOVE_EVERY_N_TURN = IS_LITHE_PICKED ? 4 : 5;
+        const bool IS_MOBILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_mobile);
+        if(IS_MOBILE_PICKED || IS_DEXTEROUS_PICKED || IS_LITHE_PICKED) {
+          const int FREE_MOVE_EVERY_N_TURN = IS_MOBILE_PICKED ? 2 : (IS_LITHE_PICKED ? 4 : 5);
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
           } else if(nrMovesUntilFreeAction == 0) {
