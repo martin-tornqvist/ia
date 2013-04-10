@@ -250,7 +250,7 @@ private:
   TrapAlarm(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_alarm, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrGold;}
+  sf::Color getTrapSpecificColor() const {return clrBrown;}
   string getTrapSpecificTitle() const {return "Alarm trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}

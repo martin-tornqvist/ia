@@ -160,6 +160,8 @@
 		<Unit filename="..\src\Converters.h" />
 		<Unit filename="..\src\DebugModeStatPrinter.cpp" />
 		<Unit filename="..\src\DebugModeStatPrinter.h" />
+		<Unit filename="..\src\Disarm.cpp" />
+		<Unit filename="..\src\Disarm.h" />
 		<Unit filename="..\src\DungeonClimb.cpp" />
 		<Unit filename="..\src\DungeonClimb.h" />
 		<Unit filename="..\src\DungeonMaster.cpp" />
