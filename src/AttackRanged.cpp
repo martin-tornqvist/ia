@@ -322,17 +322,21 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
       // - Shoot.
       projectileFire(attacker->pos, coord(attackX, attackY), weapon, nrOfProjectiles);
 
-      const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
-      if(IS_ATTACKER_PLAYER || soundMessage != "") {
-        const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
-        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
-      }
+      if(eng->player->deadState == actorDeadState_alive) {
+        const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
+        if(IS_ATTACKER_PLAYER || soundMessage != "") {
+          const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
+          eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
+        }
 
-      attacked = true;
+        attacked = true;
 
-      //Subtract current loaded ammo.
-      if(infAmmo == false) {
-        weapon->ammoLoaded -= nrOfProjectiles;
+        //Subtract current loaded ammo.
+        if(infAmmo == false) {
+          weapon->ammoLoaded -= nrOfProjectiles;
+        }
+      } else {
+        return true;
       }
     }
   }
