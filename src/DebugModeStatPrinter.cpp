@@ -32,7 +32,7 @@ void DebugModeStatPrinter::run() {
   printLine("Game version : " + eng->config->GAME_VERSION);
   printLine("\n");
 
-  printLine("SPELL COOLDOWN TURNS (0% -> 100%)");
+  printLine("SPELL COOLDOWN TURNS (0% -> " + intToString(CAST_FROM_MEMORY_CHANCE_LIM) + "%)");
   printLine(separator);
   const unsigned int NR_LEARNABLE_SCROLLS = eng->playerPowersHandler->getNrOfScrolls();
   for(unsigned int i = 0; i < NR_LEARNABLE_SCROLLS; i++) {

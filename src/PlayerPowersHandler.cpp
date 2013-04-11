@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
+#include "PlayerBonuses.h"
 
 PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :
   eng(engine) {
@@ -50,28 +51,28 @@ void PlayerPowersHandler::run() {
     while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
-      case menuAction_browsed: {
-        draw(browser, memorizedScrollsToShow, bgTexture);
-      }
-      break;
-      case menuAction_canceled: {
-        eng->log->clearLog();
-        eng->renderer->drawMapAndInterface();
-        return;
-      }
-      break;
-      case menuAction_selected: {
-        eng->log->clearLog();
-        const unsigned int ELEMENT_SELECTED = browser.getPos().y;
-        Scroll* const scroll = dynamic_cast<Scroll*>(scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(ELEMENT_SELECTED)));
-        eng->log->clearLog();
-        eng->renderer->drawMapAndInterface();
-        scroll->read(true, eng);
-        return;
-      }
-      break;
-      default:
-      {} break;
+        case menuAction_browsed: {
+          draw(browser, memorizedScrollsToShow, bgTexture);
+        }
+        break;
+        case menuAction_canceled: {
+          eng->log->clearLog();
+          eng->renderer->drawMapAndInterface();
+          return;
+        }
+        break;
+        case menuAction_selected: {
+          eng->log->clearLog();
+          const unsigned int ELEMENT_SELECTED = browser.getPos().y;
+          Scroll* const scroll = dynamic_cast<Scroll*>(scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(ELEMENT_SELECTED)));
+          eng->log->clearLog();
+          eng->renderer->drawMapAndInterface();
+          scroll->read(true, eng);
+          return;
+        }
+        break;
+        default:
+        {} break;
       }
     }
   }
@@ -117,12 +118,14 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> 
 
     const int CHANCE_OF_SUCCESS = scroll->getChanceToCastFromMemory(eng);
     string s = intToString(CHANCE_OF_SUCCESS) + "% ";
-    const int TURNS_PER_PERCENT = scroll->getDef().spellTurnsPerPercentCooldown;
-    const int TURN = eng->gameTime->getTurn();
-    const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT) * TURNS_PER_PERCENT);
-    const int TURNS_LEFT = max(0, ((100 - CHANCE_OF_SUCCESS) * TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK);
-    if(TURNS_LEFT > 0) {
-      s += "(" + intToString(TURNS_LEFT) + " turns left)";
+    if(eng->playerBonusHandler->isBonusPicked(playerBonus_occultist)) {
+      const int TURNS_PER_PERCENT = scroll->getDef().spellTurnsPerPercentCooldown;
+      const int TURN = eng->gameTime->getTurn();
+      const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT) * TURNS_PER_PERCENT);
+      const int TURNS_LEFT = max(0, ((CAST_FROM_MEMORY_CHANCE_LIM - CHANCE_OF_SUCCESS) * TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK);
+      if(TURNS_LEFT > 0) {
+        s += "(" + intToString(TURNS_LEFT) + " turns left)";
+      }
     }
 
     eng->renderer->drawText(s, renderArea_mainScreen, x, currentListPos, clrWhite);

@@ -1869,9 +1869,11 @@ public:
   bool allowSee();
 
   bool allowMove() {
-    for(unsigned int i = 0; i < effects.size(); i++)
-      if(effects.at(i)->allowMove() == false)
+    for(unsigned int i = 0; i < effects.size(); i++) {
+      if(effects.at(i)->allowMove() == false) {
         return false;
+      }
+    }
     return true;
   }
 
@@ -1882,23 +1884,28 @@ public:
   }
 
   bool allowAct() {
-    for(unsigned int i = 0; i < effects.size(); i++)
-      if(effects.at(i)->allowAct() == false)
+    for(unsigned int i = 0; i < effects.size(); i++) {
+      if(effects.at(i)->allowAct() == false) {
         return false;
+      }
+    }
     return true;
   }
 
   int getAbilityModifier(const Abilities_t ability) {
     int modifier = 0;
-    for(unsigned int i = 0; i < effects.size(); i++)
+    for(unsigned int i = 0; i < effects.size(); i++) {
       modifier += effects.at(i)->getAbilityModifier(ability);
+    }
     return modifier;
   }
 
   bool isEthereal() {
-    for(unsigned int i = 0; i < effects.size(); i++)
-      if(effects.at(i)->isEthereal() == true)
+    for(unsigned int i = 0; i < effects.size(); i++) {
+      if(effects.at(i)->isEthereal() == true) {
         return true;
+      }
+    }
     return false;
   }
 

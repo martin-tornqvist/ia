@@ -1570,10 +1570,10 @@ void ActorData::defineAllActors() {
   finalizeDefinition(d);
   d.reset();
 
-  d.name_a = "A Gray Ooze";
-  d.name_the = "The Gray Ooze";
+  d.name_a = "A Black Ooze";
+  d.name_the = "The Black Ooze";
   d.moveType = moveType_ooze;
-  d.id = actor_oozeGray;
+  d.id = actor_oozeBlack;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
   d.aiBehavior.attemptsAttack = true;

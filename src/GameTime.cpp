@@ -12,6 +12,7 @@
 #include "Input.h"
 #include "Inventory.h"
 #include "InventoryHandler.h"
+#include "PlayerBonuses.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(turn_));
@@ -98,26 +99,26 @@ void GameTime::letNextAct() {
     const ActorSpeed_t defSpeed = currentActor->getDef()->speed;
     const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
     switch(realSpeed) {
-    case actorSpeed_sluggish: {
-      actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice.percentile() < 65;
-    }
-    break;
-    case actorSpeed_slow: {
-      actorWhoCanActThisTurnFound = currentTurnType == turnType_slow || currentTurnType == turnType_normal_2;
-    }
-    break;
-    case actorSpeed_normal: {
-      actorWhoCanActThisTurnFound = currentTurnType != turnType_fast && currentTurnType != turnType_fastest;
-    }
-    break;
-    case actorSpeed_fast: {
-      actorWhoCanActThisTurnFound = currentTurnType != turnType_fastest;
-    }
-    break;
-    case actorSpeed_fastest: {
-      actorWhoCanActThisTurnFound = true;
-    }
-    break;
+      case actorSpeed_sluggish: {
+        actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice.percentile() < 65;
+      }
+      break;
+      case actorSpeed_slow: {
+        actorWhoCanActThisTurnFound = currentTurnType == turnType_slow || currentTurnType == turnType_normal_2;
+      }
+      break;
+      case actorSpeed_normal: {
+        actorWhoCanActThisTurnFound = currentTurnType != turnType_fast && currentTurnType != turnType_fastest;
+      }
+      break;
+      case actorSpeed_fast: {
+        actorWhoCanActThisTurnFound = currentTurnType != turnType_fastest;
+      }
+      break;
+      case actorSpeed_fastest: {
+        actorWhoCanActThisTurnFound = true;
+      }
+      break;
     }
   }
 
@@ -134,24 +135,24 @@ void GameTime::letNextAct() {
     eng->player->getSpotedEnemiesPositions();
     if(eng->player->spotedEnemiesPositions.empty()) {
       switch(eng->inventoryHandler->screenToOpenAfterDrop) {
-      case inventoryScreen_backpack: {
-        eng->inventoryHandler->runBrowseInventoryMode();
-      }
-      break;
-      case inventoryScreen_use: {
-        eng->inventoryHandler->runUseScreen();
-      }
-      break;
-      case inventoryScreen_equip: {
-        eng->inventoryHandler->runEquipScreen(eng->inventoryHandler->equipSlotToOpenAfterDrop);
-      }
-      break;
-      case inventoryScreen_slots: {
-        eng->inventoryHandler->runSlotsScreen();
-      }
-      break;
-      default:
-      {} break;
+        case inventoryScreen_backpack: {
+          eng->inventoryHandler->runBrowseInventoryMode();
+        }
+        break;
+        case inventoryScreen_use: {
+          eng->inventoryHandler->runUseScreen();
+        }
+        break;
+        case inventoryScreen_equip: {
+          eng->inventoryHandler->runEquipScreen(eng->inventoryHandler->equipSlotToOpenAfterDrop);
+        }
+        break;
+        case inventoryScreen_slots: {
+          eng->inventoryHandler->runSlotsScreen();
+        }
+        break;
+        default:
+        {} break;
       }
     } else {
       eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
@@ -213,13 +214,11 @@ void GameTime::runNewStandardTurnEvents() {
     ItemDefinition& d = *(eng->itemData->itemDefinitions[i]);
     if(d.isScroll) {
       if(d.isScrollLearned) {
-        if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
-          if(d.castFromMemoryChance < 100) {
-//            if(d.id == item_thaumaturgicAlteration) {
-//              d.castFromMemoryChance = min(eng->player->getMth(), d.castFromMemoryChance + 1);
-//            } else {
-            d.castFromMemoryChance++;
-//            }
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_occultist)) {
+          if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
+            if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
+              d.castFromMemoryCurrentBaseChance++;
+            }
           }
         }
       }

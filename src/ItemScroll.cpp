@@ -367,14 +367,35 @@ Scroll::~Scroll() {
 
 int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
   (void)engine;
-//  const int PLAYER_SKILL = engine->player->getMythosKnowledge();
-  const int BASE_CHANCE = def_->castFromMemoryChance;
+  const int BASE_CHANCE = def_->castFromMemoryCurrentBaseChance;
 
-  return BASE_CHANCE; //+ PLAYER_SKILL;
+  int bon = 0;
+
+  for(int dy = -1; dy <= 1; dy++) {
+    for(int dx = -1; dx <= 1; dx++) {
+      const coord pos(engine->player->pos + coord(dx, dy));
+      if(engine->map->featuresStatic[pos.x][pos.y]->getId() == feature_altar) {
+        bon += 20;
+        break;
+      }
+    }
+  }
+
+  bon += engine->playerBonusHandler->isBonusPicked(playerBonus_warlock)       ? 20 : 0;
+
+  bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlessed)  ? 10 : 0;
+  bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlind)    ? 20 : 0;
+
+  bon += engine->player->getStatusEffectsHandler()->hasEffect(statusCursed)   ? -25 : 0;
+  bon += engine->player->getStatusEffectsHandler()->hasEffect(statusConfused) ? -25 : 0;
+
+  bon += engine->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+
+  return max(0, min(CAST_FROM_MEMORY_CHANCE_LIM, BASE_CHANCE + bon));
 }
 
-void Scroll::setCastFromMemoryChance(const int VAL) {
-  def_->castFromMemoryChance = VAL;
+void Scroll::setCastFromMemoryCurrentBaseChance(const int VAL) {
+  def_->castFromMemoryCurrentBaseChance = max(0, min(CAST_FROM_MEMORY_CHANCE_LIM, VAL));
 }
 
 void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
@@ -400,14 +421,12 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 
 void Scroll::attemptMemorizeIfLearnable(Engine* const engine) {
   if(def_->isScrollLearned == false && def_->isScrollLearnable) {
-    if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned)) {
-      const int CHANCE_TO_LEARN = 75;
-      if(engine->dice.getInRange(0, 100) < CHANCE_TO_LEARN) {
-        engine->log->addMessage("I learn to cast this incantation by heart!");
-        def_->isScrollLearned = true;
-      } else {
-        engine->log->addMessage("I failed to memorize the incantation.");
-      }
+    const int CHANCE_TO_LEARN = 80;
+    if(engine->dice.getInRange(0, 100) < CHANCE_TO_LEARN) {
+      engine->log->addMessage("I learn to cast this incantation by heart!");
+      def_->isScrollLearned = true;
+    } else {
+      engine->log->addMessage("I failed to memorize the incantation.");
     }
   }
 }
@@ -442,7 +461,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
     engine->gameTime->letNextAct();
 
-    def_->castFromMemoryChance = engine->playerBonusHandler->isBonusPicked(playerBonus_erudite) ? 20 : 0;
+    def_->castFromMemoryCurrentBaseChance = 0;
   }
   return true;
 }
@@ -453,10 +472,10 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     return false;
   }
 
-  if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned) == false) {
-    engine->log->addMessage("I cannot yet comprehend this.");
-    return false;
-  }
+//  if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned) == false) {
+//    engine->log->addMessage("I cannot yet comprehend this.");
+//    return false;
+//  }
 
   const bool IS_IDENTIFIED_BEFORE_READING = def_->isIdentified;
 
@@ -470,6 +489,9 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     def_->isTried = true;
     specificRead(engine);
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
+  }
+  if(def_->isScrollLearned) {
+    setCastFromMemoryCurrentBaseChance(def_->castFromMemoryCurrentBaseChance + 20);
   }
   engine->gameTime->letNextAct();
   return true;

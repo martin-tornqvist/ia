@@ -26,16 +26,15 @@ enum PlayerBonuses_t {
 //playerBonus_deadlyThrower,
   playerBonus_dexterous,
 //  playerBonus_elusive,
-  playerBonus_erudite,
   playerBonus_healthy,
   playerBonus_imperceptible,
-  playerBonus_learned,
   playerBonus_lithe,
   playerBonus_marksman,
   playerBonus_masterfulMeleeCombatant,
   playerBonus_mobile,
   playerBonus_nimbleHanded,
   playerBonus_observant,
+  playerBonus_occultist,
   playerBonus_rapidRecoverer,
   playerBonus_rugged,
   playerBonus_selfAware,
@@ -54,6 +53,7 @@ enum PlayerBonuses_t {
   playerBonus_vigilant,
   playerBonus_vigorous,
 //playerBonus_wakeful,
+  playerBonus_warlock,
   endOfPlayerBonuses
 };
 

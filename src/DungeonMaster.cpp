@@ -47,7 +47,7 @@ const int XP_STEP = 60;
 // monsterExp = expTable[monsterLvl] / (BASE_MONSTERS_TO_LVL + monsterLvl)
 
 // - THIS NUMBER AFFECTS LEVELING RATE -
-const int BASE_MONSTERS_TO_LVL = 45;
+const int BASE_MONSTERS_TO_LVL = 40;
 
 void DungeonMaster::init() {
   playerExp = 0;
@@ -124,8 +124,6 @@ void DungeonMaster::winGame() {
   }
 
   eng->query->waitForEscOrSpace();
-//  eng->renderer->coverRenderArea(renderArea_screen);
-//  eng->renderer->updateWindow();
 }
 
 void DungeonMaster::initExpTable() {
@@ -139,8 +137,8 @@ void DungeonMaster::initExpTable() {
 void DungeonMaster::monsterKilled(Actor* monster) {
   const int MONSTER_LVL = monster->getDef()->monsterLvl;
 
-  // Dividing monster level by 2, to not have such a steep XP increase with monster levels
-  const int MONSTER_XP = getXpToNextLvlAtLvl(MONSTER_LVL) / (BASE_MONSTERS_TO_LVL + (MONSTER_LVL / 2));
+  // Dividing monster level by a number, to not have such a steep XP increase with monster levels
+  const int MONSTER_XP = getXpToNextLvlAtLvl(MONSTER_LVL) / (BASE_MONSTERS_TO_LVL + (MONSTER_LVL / 3));
 
   eng->renderer->drawMapAndInterface();
 

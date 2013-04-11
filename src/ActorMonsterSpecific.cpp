@@ -493,8 +493,8 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
-void OozeGray::actorSpecific_spawnStartItems() {
-  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozeGraySpewPus));
+void OozeBlack::actorSpecific_spawnStartItems() {
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozeBlackSpewPus));
 }
 
 void OozeClear::actorSpecific_spawnStartItems() {

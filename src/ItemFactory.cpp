@@ -93,7 +93,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_mummyMaul:                item = new Weapon(d, ammoD);            break;
     case item_deepOneJavelinAttack:     item = new Weapon(d, ammoD);            break;
     case item_deepOneSpearAttack:       item = new Weapon(d, ammoD);            break;
-    case item_oozeGraySpewPus:          item = new Weapon(d, ammoD);            break;
+    case item_oozeBlackSpewPus:         item = new Weapon(d, ammoD);            break;
     case item_oozeClearSpewPus:         item = new Weapon(d, ammoD);            break;
     case item_oozePutridSpewPus:        item = new Weapon(d, ammoD);            break;
     case item_oozePoisonSpewPus:        item = new Weapon(d, ammoD);            break;

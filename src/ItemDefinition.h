@@ -114,7 +114,7 @@ enum ItemId_t {
   item_mummyMaul,
   item_deepOneSpearAttack,
   item_deepOneJavelinAttack,
-  item_oozeGraySpewPus,
+  item_oozeBlackSpewPus,
   item_oozePutridSpewPus,
   item_oozePoisonSpewPus,
   item_oozeClearSpewPus,
@@ -268,7 +268,7 @@ public:
   Audio_t meleeAudio;
   Audio_t reloadAudio;
   StatusEffect* rangedStatusEffect;
-  int castFromMemoryChance;
+  int castFromMemoryCurrentBaseChance;
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;
   vector< pair<Feature_t, int> > featuresCanBeFoundIn;

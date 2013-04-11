@@ -45,7 +45,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1365028533 c:\dev\ia\src\actordata.h
+1365695462 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1365624991 c:\dev\ia\src\statuseffects.h
+1365706099 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365631003 c:\dev\ia\src\itemdefinition.h
+1365703694 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -109,7 +109,7 @@
 1355677712 c:\dev\ia\src\audio.h
 	<string>
 
-1364941844 c:\dev\ia\src\constdungeonsettings.h
+1365705979 c:\dev\ia\src\constdungeonsettings.h
 
 1365146998 c:\dev\ia\src\config.h
 	<string>
@@ -134,7 +134,7 @@
 	"Actor.h"
 	"ConstTypes.h"
 
-1365629860 c:\dev\ia\src\playerbonuses.h
+1365709104 c:\dev\ia\src\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -185,7 +185,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1365586039 c:\dev\ia\src\actormonster.h
+1365695509 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1365632979 source:c:\dev\ia\src\actordata.cpp
+1365695488 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -361,7 +361,7 @@
 	"Item.h"
 	"Engine.h"
 
-1365586084 source:c:\dev\ia\src\actorfactory.cpp
+1365695523 source:c:\dev\ia\src\actorfactory.cpp
 	"ActorFactory.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -731,7 +731,7 @@
 	<vector>
 	"ItemData.h"
 
-1365628753 source:c:\dev\ia\src\dungeonmaster.cpp
+1365702477 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -860,7 +860,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1365622887 c:\dev\ia\src\itemscroll.h
+1365704210 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -1045,7 +1045,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1365546042 source:c:\dev\ia\src\gametime.cpp
+1365708967 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1058,6 +1058,7 @@
 	"Input.h"
 	"Inventory.h"
 	"InventoryHandler.h"
+	"PlayerBonuses.h"
 
 1364569200 source:c:\dev\ia\src\highscore.cpp
 	"Highscore.h"
@@ -1172,7 +1173,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365624222 source:c:\dev\ia\src\itemdata.cpp
+1365704169 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1203,7 +1204,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1365624675 source:c:\dev\ia\src\itemfactory.cpp
+1365695575 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1228,7 +1229,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1365626844 source:c:\dev\ia\src\itemscroll.cpp
+1365709335 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1487,7 +1488,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1365630097 source:c:\dev\ia\src\playerbonuses.cpp
+1365708392 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1504,7 +1505,7 @@
 	"PlayerAllocBonus.h"
 	"Input.h"
 
-1363965531 source:c:\dev\ia\src\playerpowershandler.cpp
+1365708995 source:c:\dev\ia\src\playerpowershandler.cpp
 	"PlayerPowersHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1514,6 +1515,7 @@
 	"Render.h"
 	"Inventory.h"
 	"ItemFactory.h"
+	"PlayerBonuses.h"
 
 1355677713 source:c:\dev\ia\src\playervisualmemory.cpp
 	"PlayerVisualMemory.h"
@@ -1705,7 +1707,7 @@
 	"Log.h"
 	"Render.h"
 
-1365624608 source:c:\dev\ia\src\itempotion.cpp
+1365704241 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -5702,7 +5704,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1365586845 source:c:\dev\ia\src\actormonsterspecific.cpp
+1365695556 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -7780,7 +7782,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1365633074 source:c:\dev\ia\src\roomtheme.cpp
+1365634139 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -10225,7 +10227,7 @@
 	<iostream>
 	<fstream>
 
-1363552200 source:c:\dev\ia\src\debugmodestatprinter.cpp
+1365704575 source:c:\dev\ia\src\debugmodestatprinter.cpp
 	"DebugModeStatPrinter.h"
 	<vector>
 	<algorithm>

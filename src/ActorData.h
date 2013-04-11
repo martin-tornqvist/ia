@@ -30,7 +30,7 @@ enum ActorId_t {
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
   actor_dustVortex, actor_fireVortex,
-  actor_oozeGray, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
+  actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
   actor_huntingHorror,
 
   endOfActorIds

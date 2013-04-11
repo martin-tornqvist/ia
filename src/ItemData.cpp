@@ -79,7 +79,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
       d->rangedStatusEffect = NULL;
       d->isExplosive = false;
-      d->castFromMemoryChance = 0;
+      d->castFromMemoryCurrentBaseChance = 0;
       d->spellTurnsPerPercentCooldown = 10;
       d->armorData = ArmorData();
       d->nativeRooms.resize(0);
@@ -178,7 +178,6 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->isScroll = true;
       d->isScrollLearnable = true;
       d->isScrollLearned = 0;
-      d->castFromMemoryChance = 0;
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMessage = "";
       addFeatureFoundIn(d, feature_chest);
@@ -754,7 +753,7 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_bloatedZombieSpit);
   resetDef(d, itemDef_rangedWpnIntr);
-  d->rangedAttackMessages = ItemAttackMessages("", "spits a gob of puke at me");
+  d->rangedAttackMessages = ItemAttackMessages("", "spits pus at me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
   d->rangedSoundMessage = "I hear spitting.";
   d->rangedMissileColor = clrGreenLight;
@@ -954,10 +953,10 @@ void ItemData::makeList() {
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_oozeGraySpewPus);
+  d = new ItemDefinition(item_oozeBlackSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeGray], strong);
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeBlack], strong);
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_oozeClearSpewPus);
@@ -1257,7 +1256,7 @@ void ItemData::addSaveLines(vector<string>& lines) const {
     if(itemDefinitions[i]->isScroll) {
       lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
       lines.push_back(itemDefinitions[i]->isTried ? "1" : "0");
-      lines.push_back(intToString(itemDefinitions[i]->castFromMemoryChance));
+      lines.push_back(intToString(itemDefinitions[i]->castFromMemoryCurrentBaseChance));
     }
   }
 }
@@ -1274,7 +1273,7 @@ void ItemData::setParametersFromSaveLines(vector<string>& lines) {
       lines.erase(lines.begin());
       itemDefinitions[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
-      itemDefinitions[i]->castFromMemoryChance = stringToInt(lines.front());
+      itemDefinitions[i]->castFromMemoryCurrentBaseChance = stringToInt(lines.front());
       lines.erase(lines.begin());
     }
   }

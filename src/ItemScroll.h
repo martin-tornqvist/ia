@@ -37,7 +37,7 @@ public:
 
   void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
 
-  void setCastFromMemoryChance(const int VAL);
+  void setCastFromMemoryCurrentBaseChance(const int VAL);
 
 protected:
   virtual void specificRead(Engine* const engine) {

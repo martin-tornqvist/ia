@@ -615,12 +615,12 @@ public:
   virtual void actorSpecific_spawnStartItems() = 0;
 };
 
-class OozeGray: public Ooze {
+class OozeBlack: public Ooze {
 public:
-  OozeGray() :
+  OozeBlack() :
     Ooze() {
   }
-  ~OozeGray() {
+  ~OozeBlack() {
   }
   void actorSpecific_spawnStartItems();
 };

@@ -41,8 +41,8 @@ void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
     Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
     const ItemDefinition& d = scroll->getDef();
     if(d.isScrollLearnable && d.isScrollLearned) {
-      if(d.castFromMemoryChance < 100) {
-        scroll->setCastFromMemoryChance(100);
+      if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
+        scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
         isAnySpellRestored = true;
       }
     }
