@@ -462,7 +462,7 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResu
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName);
+      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName + ".");
     }
   }
 
@@ -486,7 +486,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName);
+      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName + ".");
     }
   }
 

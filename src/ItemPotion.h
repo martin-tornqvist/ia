@@ -107,15 +107,15 @@ private:
   const string getRealTypeName() {return "Confusion";}
 };
 
-class PotionOfCorruption: public Potion {
-public:
-  PotionOfCorruption(ItemDefinition* const itemDefinition) : Potion(itemDefinition) {}
-  ~PotionOfCorruption() {}
-  void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
-  const string getRealTypeName() {return "Corruption";}
-};
+//class PotionOfCorruption: public Potion {
+//public:
+//  PotionOfCorruption(ItemDefinition* const itemDefinition) : Potion(itemDefinition) {}
+//  ~PotionOfCorruption() {}
+//  void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+//  const string getRealTypeName() {return "Corruption";}
+//};
 
 class PotionOfTheCobra: public Potion {
 public:
@@ -155,7 +155,8 @@ public:
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
   void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
-  const string getRealTypeName() {return "Fortitude";
+  const string getRealTypeName() {
+    return "Fortitude";
   }
 };
 

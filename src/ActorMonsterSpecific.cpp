@@ -22,84 +22,84 @@ using namespace std;
 string Cultist::getCultistPhrase(Engine* const engine) {
   const int rnd = engine->dice.getInRange(1, 25);
   switch(rnd) {
-  case 1:
-    return "Apigami!";
-    break;
-  case 2:
-    return "Bhuudesco invisuu!";
-    break;
-  case 3:
-    return "Bhuuesco marana!";
-    break;
-  case 4:
-    return "Crudux cruo!";
-    break;
-  case 5:
-    return "Cruento paashaeximus!";
-    break;
-  case 6:
-    return "Cruento pestis shatruex!";
-    break;
-  case 7:
-    return "Cruo crunatus durbe!";
-    break;
-  case 8:
-    return "Cruo lokemundux!";
-    break;
-  case 9:
-    return "Cruo-stragaraNa!";
-    break;
-  case 10:
-    return "Gero shay cruo!";
-    break;
-  case 11:
-    return "In marana domus-bhaava crunatus!";
-    break;
-  case 12:
-    return "Caecux infirmux!";
-    break;
-  case 13:
-    return "Malax sayti!";
-    break;
-  case 14:
-    return "Marana pallex!";
-    break;
-  case 15:
-    return "Marana malax!";
-    break;
-  case 16:
-    return "Pallex ti!";
-    break;
-  case 17:
-    return "Peroshay bibox malax!";
-    break;
-  case 18:
-    return "Pestis Cruento!";
-    break;
-  case 19:
-    return "Pestis cruento vilomaxus pretiacruento!";
-    break;
-  case 20:
-    return "Pretaanluxis cruonit!";
-    break;
-  case 21:
-    return "Pretiacruento!";
-    break;
-  case 22:
-    return "StragarNaya!";
-    break;
-  case 23:
-    return "Vorox esco marana!";
-    break;
-  case 24:
-    return "Vilomaxus!";
-    break;
-  case 25:
-    return "Prostragaranar malachtose!";
-    break;
-  default:
-    return "Apigami!";
-    break;
+    case 1:
+      return "Apigami!";
+      break;
+    case 2:
+      return "Bhuudesco invisuu!";
+      break;
+    case 3:
+      return "Bhuuesco marana!";
+      break;
+    case 4:
+      return "Crudux cruo!";
+      break;
+    case 5:
+      return "Cruento paashaeximus!";
+      break;
+    case 6:
+      return "Cruento pestis shatruex!";
+      break;
+    case 7:
+      return "Cruo crunatus durbe!";
+      break;
+    case 8:
+      return "Cruo lokemundux!";
+      break;
+    case 9:
+      return "Cruo-stragaraNa!";
+      break;
+    case 10:
+      return "Gero shay cruo!";
+      break;
+    case 11:
+      return "In marana domus-bhaava crunatus!";
+      break;
+    case 12:
+      return "Caecux infirmux!";
+      break;
+    case 13:
+      return "Malax sayti!";
+      break;
+    case 14:
+      return "Marana pallex!";
+      break;
+    case 15:
+      return "Marana malax!";
+      break;
+    case 16:
+      return "Pallex ti!";
+      break;
+    case 17:
+      return "Peroshay bibox malax!";
+      break;
+    case 18:
+      return "Pestis Cruento!";
+      break;
+    case 19:
+      return "Pestis cruento vilomaxus pretiacruento!";
+      break;
+    case 20:
+      return "Pretaanluxis cruonit!";
+      break;
+    case 21:
+      return "Pretiacruento!";
+      break;
+    case 22:
+      return "StragarNaya!";
+      break;
+    case 23:
+      return "Vorox esco marana!";
+      break;
+    case 24:
+      return "Vilomaxus!";
+      break;
+    case 25:
+      return "Prostragaranar malachtose!";
+      break;
+    default:
+      return "Apigami!";
+      break;
   }
   return "Apigami!";
 }
@@ -323,8 +323,7 @@ void Wraith::actorSpecific_spawnStartItems() {
   eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
 }
 
-void MiGo::actorSpecific_spawnStartItems()
-{
+void MiGo::actorSpecific_spawnStartItems() {
   Item* item = eng->itemFactory->spawnItem(item_miGoElectricGun);
   inventory_->putItemInIntrinsics(item);
 
@@ -429,23 +428,19 @@ void DeepOne::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_deepOneSpearAttack));
 }
 
-void GiantBat::actorSpecific_spawnStartItems()
-{
+void GiantBat::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_giantBatBite));
 }
 
-void Byakhee::actorSpecific_spawnStartItems()
-{
+void Byakhee::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_byakheeClaw));
 }
 
-void GiantMantis::actorSpecific_spawnStartItems()
-{
+void GiantMantis::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_giantMantisClaw));
 }
 
-void HuntingHorror::actorSpecific_spawnStartItems()
-{
+void HuntingHorror::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_huntingHorrorBite));
 }
 
@@ -491,6 +486,11 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(new SpellSummonRandom);
   spellsKnown.push_back(new SpellAzathothsBlast);
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+}
+
+bool Ooze::actorSpecificAct() {
+  restoreHP(1, false);
+  return false;
 }
 
 void OozeBlack::actorSpecific_spawnStartItems() {
@@ -701,15 +701,15 @@ bool MajorClaphamLee::actorSpecificAct() {
                 const int ZOMBIE_TYPE = eng->dice.getInRange(0, 2);
                 ActorId_t id = actor_zombie;
                 switch(ZOMBIE_TYPE) {
-                case 0:
-                  id = actor_zombie;
-                  break;
-                case 1:
-                  id = actor_zombieAxe;
-                  break;
-                case 2:
-                  id = actor_bloatedZombie;
-                  break;
+                  case 0:
+                    id = actor_zombie;
+                    break;
+                  case 1:
+                    id = actor_zombieAxe;
+                    break;
+                  case 2:
+                    id = actor_bloatedZombie;
+                    break;
                 }
                 Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(id, freeCells.at(0)));
                 monster->playerAwarenessCounter = 999;

@@ -206,7 +206,8 @@ void MapTests::makeMapVectorFromArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<c
   }
 }
 
-void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], int valueArray[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
+void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+                             int valueArray[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
                              const coord target) {
   eng->basicUtils->resetArray(valueArray);
 
@@ -229,8 +230,11 @@ void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_
       for(int dy = -1; dy <= 1; dy++) {
         if((dx != 0 || dy != 0)) {
           //TODO Improve readability
-          if((blockers[currentX + dx][currentY + dy] == false) && (currentX + dx >= 1 && currentY + dy >= 1 && currentX + dx < MAP_X_CELLS
-              - 1 && currentY + dy < MAP_Y_CELLS - 1) && (valueArray[currentX + dx][currentY + dy] == 0)) {
+          if(
+            blockers[currentX + dx][currentY + dy] == false &&
+            (currentX + dx >= 1 && currentY + dy >= 1 &&
+             currentX + dx < MAP_X_CELLS - 1 && currentY + dy < MAP_Y_CELLS - 1) &&
+            (valueArray[currentX + dx][currentY + dy] == 0)) {
             currentValue = valueArray[currentX][currentY];
 
             if(currentValue < travelLimit) {

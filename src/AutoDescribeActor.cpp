@@ -10,7 +10,7 @@ void AutoDescribeActor::addAutoDescriptionLines(Actor* const actor, string& line
       line += " " + def->name_the + " is normally found beneath level " + getDwellingLevelStr(*def) + ". ";
     }
   } else {
-    line += " They tend to dwell " + getNormalGroupSizeStr(*def) + ", ";
+    line += " They tend to dwell " + getNormalGroupSizeStr(*def) + ",";
     line += " and usually stay at depths beneath level " + getDwellingLevelStr(*def) + ".";
     line += " They move " + getSpeedStr(*def) + ". ";
   }

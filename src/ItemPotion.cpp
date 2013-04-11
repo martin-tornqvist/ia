@@ -103,27 +103,27 @@ void PotionOfConfusion::specificCollide(const coord& pos, Actor* const actor, En
   }
 }
 
-void PotionOfCorruption::specificQuaff(Actor* const actor, Engine* const engine) {
-  const int CHANGE = -(engine->dice(1, 2));
-
-  actor->changeMaxHP(CHANGE, true);
-
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
-  }
-}
-
-void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
-  if(actor != NULL) {
-    specificQuaff(actor, engine);
-  } else {
-    engine->map->switchToDestroyedFeatAt(pos);
-
-    if(engine->map->playerVision[pos.x][pos.y]) {
-      setRealDefinitionNames(engine, false);
-    }
-  }
-}
+//void PotionOfCorruption::specificQuaff(Actor* const actor, Engine* const engine) {
+//  const int CHANGE = -(engine->dice(1, 2));
+//
+//  actor->changeMaxHP(CHANGE, true);
+//
+//  if(engine->player->checkIfSeeActor(*actor, NULL)) {
+//    setRealDefinitionNames(engine, false);
+//  }
+//}
+//
+//void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+//  if(actor != NULL) {
+//    specificQuaff(actor, engine);
+//  } else {
+//    engine->map->switchToDestroyedFeatAt(pos);
+//
+//    if(engine->map->playerVision[pos.x][pos.y]) {
+//      setRealDefinitionNames(engine, false);
+//    }
+//  }
+//}
 
 void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(engine));

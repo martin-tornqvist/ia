@@ -50,7 +50,7 @@ void MapBuildBSP::run() {
 
   buildMergedRegionsAndRooms(regions, SPLIT_X1, SPLIT_X2, SPLIT_Y1, SPLIT_Y2);
 
-  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 6;
+  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
   const int DLVL = eng->map->getDungeonLevel();
   const int CHANCE_FOR_CAVE_AREA = (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
   if(eng->dice.percentile() < CHANCE_FOR_CAVE_AREA) {
@@ -736,12 +736,12 @@ void MapBuildBSP::decorate() {
 
 void MapBuildBSP::connectRegions(Region* regions[3][3]) {
   tracer << "MapBuildBSP::connectRegions()..." << endl;
-  const int MIN_NR_CONNECTIONS_LIMIT = 16;
-  const int MAX_NR_CONNECTIONS_LIMIT = 22;
-  const int MIN_NR_CONNECTIONS = eng->dice.getInRange(MIN_NR_CONNECTIONS_LIMIT, MAX_NR_CONNECTIONS_LIMIT);
+//  const int MIN_NR_CONNECTIONS_LIMIT = 0;//16;
+//  const int MAX_NR_CONNECTIONS_LIMIT = 0;//22;
+//  const int MIN_NR_CONNECTIONS = eng->dice.getInRange(MIN_NR_CONNECTIONS_LIMIT, MAX_NR_CONNECTIONS_LIMIT);
   int totalNrConnections = 0;
   bool isAllConnected = false;
-  while(isAllConnected == false || totalNrConnections < MIN_NR_CONNECTIONS) {
+  while(isAllConnected == false /*|| totalNrConnections < MIN_NR_CONNECTIONS*/) {
     totalNrConnections = getTotalNrOfConnections(regions);
     isAllConnected = isAllRoomsConnected();
 
@@ -769,17 +769,17 @@ void MapBuildBSP::connectRegions(Region* regions[3][3]) {
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
     }
-    if(totalNrConnections >= MAX_NR_CONNECTIONS_LIMIT) {
-      break;
-    }
+//    if(totalNrConnections >= MAX_NR_CONNECTIONS_LIMIT) {
+//      break;
+//    }
   }
   tracer << "MapBuildBSP::connectRegions()[DONE]" << endl;
 }
 
 bool MapBuildBSP::isAllRoomsConnected() {
   coord c;
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
       c.set(x, y);
       if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
         x = 999;
@@ -792,10 +792,10 @@ bool MapBuildBSP::isAllRoomsConnected() {
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeFloodFill(c, blockers, floodFill, 99999, coord(-1, -1));
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
       if(eng->map->featuresStatic[x][y]->getId() == feature_stoneFloor) {
-        if((x != c.x || y != c.y) && floodFill[x][y] == 0) {
+        if(coord(x, y) != c && floodFill[x][y] == 0) {
           return false;
         }
       }
@@ -1110,58 +1110,58 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
 
     for(unsigned int i = 0; i < reshapesToPerform.size(); i++) {
       switch(reshapesToPerform.at(i)) {
-      case roomReshape_trimCorners: {
-        const int W_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
-        const int H_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
+        case roomReshape_trimCorners: {
+          const int W_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
+          const int H_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
 
-        const int W = max(1, ROOM_W / W_DIV);
-        const int H = max(1, ROOM_H / H_DIV);
+          const int W = max(1, ROOM_W / W_DIV);
+          const int H = max(1, ROOM_H / H_DIV);
 
-        const bool TRIM_ALL = false;
+          const bool TRIM_ALL = false;
 
-        if(TRIM_ALL || eng->dice.coinToss()) {
-          const coord upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
-          MapBuildBSP::coverAreaWithFeature(Rect(room.getX0Y0(), upLeft), feature_stoneWall);
+          if(TRIM_ALL || eng->dice.coinToss()) {
+            const coord upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
+            MapBuildBSP::coverAreaWithFeature(Rect(room.getX0Y0(), upLeft), feature_stoneWall);
+          }
+
+          if(TRIM_ALL || eng->dice.coinToss()) {
+            const coord upRight(room.getX1() - W + 1, room.getY0() + H - 1);
+            MapBuildBSP::coverAreaWithFeature(Rect(coord(room.getX0() + ROOM_W - 1, room.getY0()), upRight), feature_stoneWall);
+          }
+
+          if(TRIM_ALL || eng->dice.coinToss()) {
+            const coord downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
+            MapBuildBSP::coverAreaWithFeature(Rect(coord(room.getX0(), room.getY0() + ROOM_H - 1), downLeft), feature_stoneWall);
+          }
+
+          if(TRIM_ALL || eng->dice.coinToss()) {
+            const coord downRight(room.getX1() - W + 1, room.getY1() - H + 1);
+            MapBuildBSP::coverAreaWithFeature(Rect(room.getX1Y1(), downRight), feature_stoneWall);
+          }
         }
+        break;
 
-        if(TRIM_ALL || eng->dice.coinToss()) {
-          const coord upRight(room.getX1() - W + 1, room.getY0() + H - 1);
-          MapBuildBSP::coverAreaWithFeature(Rect(coord(room.getX0() + ROOM_W - 1, room.getY0()), upRight), feature_stoneWall);
-        }
-
-        if(TRIM_ALL || eng->dice.coinToss()) {
-          const coord downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
-          MapBuildBSP::coverAreaWithFeature(Rect(coord(room.getX0(), room.getY0() + ROOM_H - 1), downLeft), feature_stoneWall);
-        }
-
-        if(TRIM_ALL || eng->dice.coinToss()) {
-          const coord downRight(room.getX1() - W + 1, room.getY1() - H + 1);
-          MapBuildBSP::coverAreaWithFeature(Rect(room.getX1Y1(), downRight), feature_stoneWall);
-        }
-      }
-      break;
-
-      case roomReshape_pillarsRandom: {
-        for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
-          for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
-            coord c(x + eng->dice(1, 3) - 2, y + eng->dice(1, 3) - 2);
-            bool isNextToWall = false;
-            for(int dxCheck = -1; dxCheck <= 1; dxCheck++) {
-              for(int dyCheck = -1; dyCheck <= 1; dyCheck++) {
-                if(eng->map->featuresStatic[c.x + dxCheck][c.y + dyCheck]->getId() == feature_stoneWall) {
-                  isNextToWall = true;
+        case roomReshape_pillarsRandom: {
+          for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
+            for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
+              coord c(x + eng->dice(1, 3) - 2, y + eng->dice(1, 3) - 2);
+              bool isNextToWall = false;
+              for(int dxCheck = -1; dxCheck <= 1; dxCheck++) {
+                for(int dyCheck = -1; dyCheck <= 1; dyCheck++) {
+                  if(eng->map->featuresStatic[c.x + dxCheck][c.y + dyCheck]->getId() == feature_stoneWall) {
+                    isNextToWall = true;
+                  }
                 }
               }
-            }
-            if(isNextToWall == false) {
-              if(eng->dice.percentile() < 20) {
-                eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(c.x, c.y));
+              if(isNextToWall == false) {
+                if(eng->dice.percentile() < 20) {
+                  eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(c.x, c.y));
+                }
               }
             }
           }
         }
-      }
-      break;
+        break;
       }
     }
   }
