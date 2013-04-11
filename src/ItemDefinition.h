@@ -118,6 +118,7 @@ enum ItemId_t {
   item_oozePutridSpewPus,
   item_oozePoisonSpewPus,
   item_oozeClearSpewPus,
+  item_colourOutOfSpaceTouch,
   item_huntingHorrorBite,
   item_dustVortexEngulf,
   item_fireVortexEngulf,

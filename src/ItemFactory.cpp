@@ -97,6 +97,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_oozeClearSpewPus:         item = new Weapon(d, ammoD);            break;
     case item_oozePutridSpewPus:        item = new Weapon(d, ammoD);            break;
     case item_oozePoisonSpewPus:        item = new Weapon(d, ammoD);            break;
+    case item_colourOutOfSpaceTouch:    item = new Weapon(d, ammoD);            break;
     case item_huntingHorrorBite:        item = new Weapon(d, ammoD);            break;
     case item_dustVortexEngulf:         item = new Weapon(d, ammoD);            break;
     case item_fireVortexEngulf:         item = new Weapon(d, ammoD);            break;

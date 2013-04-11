@@ -74,7 +74,7 @@ public:
   string getNameA() const {return def_->name_a;}
   bool isHumanoid() const {return def_->isHumanoid;}
   char getGlyph() const {return glyph_;}
-  const sf::Color& getColor() const {return clr_;}
+  virtual const sf::Color& getColor() {return clr_;}
   const Tile_t& getTile() const {return tile_;}
   MoveType_t getMoveType() const {return def_->moveType;}
 

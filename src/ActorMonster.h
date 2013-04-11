@@ -481,9 +481,7 @@ class Ooze: public Monster {
 public:
   Ooze() : Monster() {}
   ~Ooze() {}
-
   bool actorSpecificAct();
-
   virtual void actorSpecific_spawnStartItems() = 0;
 };
 
@@ -515,5 +513,15 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
+class ColourOutOfSpace: public Ooze {
+public:
+  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLight) {}
+  ~ColourOutOfSpace() {}
+  bool actorSpecificAct();
+  void actorSpecific_spawnStartItems();
+  const sf::Color& getColor();
+private:
+  sf::Color currentColor;
+};
 
 #endif

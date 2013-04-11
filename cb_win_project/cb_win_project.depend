@@ -34,7 +34,7 @@
 
 1364131024 c:\dev\ia\src\art.h
 
-1365374974 c:\dev\ia\src\actor.h
+1365716869 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -45,7 +45,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1365695462 c:\dev\ia\src\actordata.h
+1365715965 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365712135 c:\dev\ia\src\itemdefinition.h
+1365716460 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -185,7 +185,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1365711545 c:\dev\ia\src\actormonster.h
+1365718327 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1365715262 source:c:\dev\ia\src\actordata.cpp
+1365718105 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -361,7 +361,7 @@
 	"Item.h"
 	"Engine.h"
 
-1365695523 source:c:\dev\ia\src\actorfactory.cpp
+1365716537 source:c:\dev\ia\src\actorfactory.cpp
 	"ActorFactory.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -1173,7 +1173,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365712470 source:c:\dev\ia\src\itemdata.cpp
+1365716504 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1204,7 +1204,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1365713064 source:c:\dev\ia\src\itemfactory.cpp
+1365716558 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1579,7 +1579,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1365374974 source:c:\dev\ia\src\render.cpp
+1365715720 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -5704,7 +5704,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1365715502 source:c:\dev\ia\src\actormonsterspecific.cpp
+1365718491 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"

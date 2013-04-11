@@ -979,6 +979,12 @@ void ItemData::makeList() {
   d->meleeStatusEffect = new StatusPoisoned(eng);
   itemDefinitions[d->id] = d;
 
+  d = new ItemDefinition(item_colourOutOfSpaceTouch);
+  resetDef(d, itemDef_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "touches me");
+  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_colourOutOfSpace], strong);
+  itemDefinitions[d->id] = d;
+
   d = new ItemDefinition(item_huntingHorrorBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");

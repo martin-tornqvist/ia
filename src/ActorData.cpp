@@ -1693,7 +1693,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, superStrong);
+  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1735,7 +1735,48 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
+  setStrengthsFromFormula(d, strong);
+  finalizeDefinition(d);
+  d.reset();
+
+  d.name_a = "A Colour out of space";
+  d.name_the = "The Colour out of space";
+  d.moveType = moveType_ooze;
+  d.id = actor_colourOutOfSpace;
+  d.aiBehavior.looks = true;
+  d.aiBehavior.makesRoomForFriend = true;
+  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.pathsToTargetWhenAware = false;
+  d.aiBehavior.movesTowardTargetWhenVision = true;
+  d.aiBehavior.movesTowardLair = false;
+  d.aiBehavior.movesTowardLeader = true;
+  d.speed = actorSpeed_sluggish;
+  d.rangedCooldownTurns = 0;
+  d.glyph = 'O';
+  d.color = clrGreenLight;
+  d.tile = tile_ooze;
+  d.spawnMinLevel = 14;
+  d.spawnMaxLevel = 999;
+  d.monsterLvl = 14;
+  d.canSeeInDarkness = true;
+  d.groupSize = monsterGroupSize_alone;
+  d.actorSize = actorSize_humanoid;
+  d.nrTurnsAwarePlayer = 250;
+  d.canOpenDoors = false;
+  d.canBashDoors = false;
+  d.description = "A very peculiar floating speck of strange and shifting colours. It is hard to tell what colour it is exactly.";
+  d.isAutoDescriptionAllowed = false;
+  d.deathMessageOverride = "The Colour disintegrates.";
+  d.canBleed = false;
+  d.canBeSummoned = true;
+  d.erraticMovement = actorErratic_very;
+  d.monsterShockLevel = monsterShockLevel_scary;
+  d.nativeRooms.push_back(roomTheme_plain);
+  d.nativeRooms.push_back(roomTheme_flooded);
+  d.nativeRooms.push_back(roomTheme_muddy);
   setStrengthsFromFormula(d, superStrong);
+  d.abilityValues.setAbilityValue(ability_resistStatusBody, 100);
+  d.abilityValues.setAbilityValue(ability_resistStatusMind, 100);
   finalizeDefinition(d);
   d.reset();
 

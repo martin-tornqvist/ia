@@ -377,22 +377,22 @@ coord Renderer::getPixelCoordsForCharacter(const RenderArea_t renderArea, const 
   const int CELL_H = eng->config->CELL_H;
 
   switch(renderArea) {
-  case renderArea_screen: {
-    return coord(X * CELL_W, Y * CELL_H);
-  }
-  break;
-  case renderArea_mainScreen: {
-    return coord(X * CELL_W, eng->config->MAINSCREEN_Y_OFFSET + Y * CELL_H);
-  }
-  break;
-  case renderArea_log: {
-    return coord(eng->config->LOG_X_OFFSET + X * CELL_W, eng->config->LOG_Y_OFFSET + Y * CELL_H);
-  }
-  break;
-  case renderArea_characterLines: {
-    return coord(X * CELL_W, eng->config->CHARACTER_LINES_Y_OFFSET + Y * CELL_H);
-  }
-  break;
+    case renderArea_screen: {
+      return coord(X * CELL_W, Y * CELL_H);
+    }
+    break;
+    case renderArea_mainScreen: {
+      return coord(X * CELL_W, eng->config->MAINSCREEN_Y_OFFSET + Y * CELL_H);
+    }
+    break;
+    case renderArea_log: {
+      return coord(eng->config->LOG_X_OFFSET + X * CELL_W, eng->config->LOG_Y_OFFSET + Y * CELL_H);
+    }
+    break;
+    case renderArea_characterLines: {
+      return coord(X * CELL_W, eng->config->CHARACTER_LINES_Y_OFFSET + Y * CELL_H);
+    }
+    break;
   }
   return coord();
 }
@@ -450,22 +450,22 @@ int Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea,
 void Renderer::coverRenderArea(const RenderArea_t renderArea) {
   const coord x0y0Pixel = getPixelCoordsForCharacter(renderArea, 0, 0);
   switch(renderArea) {
-  case renderArea_characterLines: {
-    coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->SCREEN_WIDTH, eng->config->CHARACTER_LINES_HEIGHT);
-  }
-  break;
-  case renderArea_log: {
-    coverAreaPixel(0, 0, eng->config->SCREEN_WIDTH, eng->config->LOG_HEIGHT + eng->config->LOG_Y_OFFSET);
-  }
-  break;
-  case renderArea_mainScreen: {
-    coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->SCREEN_WIDTH, eng->config->MAINSCREEN_HEIGHT);
-  }
-  break;
-  case renderArea_screen: {
-    clearWindow();
-  }
-  break;
+    case renderArea_characterLines: {
+      coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->SCREEN_WIDTH, eng->config->CHARACTER_LINES_HEIGHT);
+    }
+    break;
+    case renderArea_log: {
+      coverAreaPixel(0, 0, eng->config->SCREEN_WIDTH, eng->config->LOG_HEIGHT + eng->config->LOG_Y_OFFSET);
+    }
+    break;
+    case renderArea_mainScreen: {
+      coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->SCREEN_WIDTH, eng->config->MAINSCREEN_HEIGHT);
+    }
+    break;
+    case renderArea_screen: {
+      clearWindow();
+    }
+    break;
 
   }
 }
@@ -725,8 +725,7 @@ void Renderer::drawASCII() {
             tempDrw.color.b /= DIST_FADE_DIV;
           }
         }
-      }
-      else if(eng->map->explored[x][y]) {
+      } else if(eng->map->explored[x][y]) {
         renderArray[x][y] = eng->map->playerVisualMemory[x][y];
         tempDrw = renderArray[x][y];
 
@@ -885,8 +884,7 @@ void Renderer::drawTiles() {
             tempDrw.color.b /= DIST_FADE_DIV;
           }
         }
-      }
-      else if(eng->map->explored[x][y]) {
+      } else if(eng->map->explored[x][y]) {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
         tempDrw = renderArrayTiles[x][y];
 

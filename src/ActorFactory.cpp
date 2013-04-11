@@ -46,6 +46,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
     case actor_dustVortex:          return new DustVortex;            break;
     case actor_fireVortex:          return new FireVortex;            break;
     case actor_oozeBlack:           return new OozeBlack;             break;
+    case actor_colourOutOfSpace:    return new ColourOutOfSpace;      break;
     case actor_oozeClear:           return new OozeClear;             break;
     case actor_oozePutrid:          return new OozePutrid;            break;
     case actor_oozePoison:          return new OozePoison;            break;
