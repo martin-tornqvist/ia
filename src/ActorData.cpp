@@ -1608,7 +1608,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, superStrong);
+  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 

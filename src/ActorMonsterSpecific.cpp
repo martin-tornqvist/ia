@@ -489,7 +489,7 @@ void KeziahMason::actorSpecific_spawnStartItems() {
 }
 
 bool Ooze::actorSpecificAct() {
-  restoreHP(1, false);
+  restoreHP(3, false);
   return false;
 }
 
