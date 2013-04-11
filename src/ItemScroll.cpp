@@ -478,6 +478,7 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
 //  }
 
   const bool IS_IDENTIFIED_BEFORE_READING = def_->isIdentified;
+  const bool IS_SCROLL_LEARNED_BEFORE_READING = def_->isScrollLearned;
 
   if(IS_IDENTIFIED_BEFORE_READING) {
     engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
@@ -490,9 +491,11 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
     specificRead(engine);
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   }
-  if(def_->isScrollLearned) {
+
+  if(IS_SCROLL_LEARNED_BEFORE_READING) {
     setCastFromMemoryCurrentBaseChance(def_->castFromMemoryCurrentBaseChance + 20);
   }
+
   engine->gameTime->letNextAct();
   return true;
 }
