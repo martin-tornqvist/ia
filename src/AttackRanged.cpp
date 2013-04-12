@@ -155,7 +155,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
                                 weapon->getDef().rangedDamageType);
               if(DIED == false) {
                 // Aply weapon hit status effects
-                projectiles.at(p)->data.currentDefender->getStatusEffectsHandler()->attemptAddEffectsFromWeapon(weapon, false);
+                projectiles.at(p)->data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(weapon, false);
 
                 // Knock-back?
                 if(weapon->getDef().rangedCausesKnockBack) {
@@ -163,7 +163,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
                   const coord defenderPosBefore = currentAttData.currentDefender->pos;
                   if(currentAttData.attackResult >= successSmall) {
                     const bool IS_SPIKE_GUN = weapon->getDef().id == item_spikeGun;
-                    eng->knockBack->attemptKnockBack(currentAttData.currentDefender, currentAttData.attacker->pos, IS_SPIKE_GUN);
+                    eng->knockBack->tryKnockBack(currentAttData.currentDefender, currentAttData.attacker->pos, IS_SPIKE_GUN);
                   }
 //                  // If target was knocked back, update target attack cell to defenders new pos
 //                  if(target == defenderPosBefore) {

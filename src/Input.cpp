@@ -121,7 +121,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       clearLogMessages();
       eng->player->moveDirection(0, 0);
       if(eng->playerBonusHandler->isBonusPicked(playerBonus_steadyAimer)) {
-        eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusStill(1));
+        eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusStill(1));
       }
     }
     clearEvents();
@@ -132,8 +132,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     tracer << "Input: User pressed '>'" << endl;
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      tracer << "Input: Calling DungeonClimb::attemptUseDownStairs()" << endl;
-      eng->dungeonClimb->attemptUseDownStairs();
+      tracer << "Input: Calling DungeonClimb::tryUseDownStairs()" << endl;
+      eng->dungeonClimb->tryUseDownStairs();
     }
     clearEvents();
     return;

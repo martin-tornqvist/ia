@@ -1830,9 +1830,9 @@ public:
   //in other cases, a status effect instance should be created by simply using "new"
   StatusEffect* makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT);
 
-  void attemptAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false, const bool NO_MESSAGES = false);
+  void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false, const bool NO_MESSAGES = false);
 
-  void attemptAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE);
+  void tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE);
 
   coord changeMoveCoord(const coord& actorPos, const coord& movePos) {
     coord ret = movePos;

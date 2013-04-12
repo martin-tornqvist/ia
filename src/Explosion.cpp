@@ -156,7 +156,7 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
               if(currentActor->deadState == actorDeadState_alive) {
                 //Making a copy of the effect, because the handler may destroy the parameter effect.
                 StatusEffect* effectCpy = effect->copy();
-                currentActor->getStatusEffectsHandler()->attemptAddEffect(effectCpy);
+                currentActor->getStatusEffectsHandler()->tryAddEffect(effectCpy);
               }
             }
 

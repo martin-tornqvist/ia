@@ -32,7 +32,7 @@ Player::Player() :
 }
 
 void Player::actorSpecific_spawnStartItems() {
-  def_->abilityValues.reset();
+  def_->abilityVals.reset();
 
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
     insanityPhobias[i] = false;
@@ -129,7 +129,7 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
     const int TURNS = stringToInt(lines.front());
     lines.erase(lines.begin());
-    statusEffectsHandler_->attemptAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
+    statusEffectsHandler_->tryAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
   }
 
   insanity_ = stringToInt(lines.front());
@@ -213,7 +213,7 @@ void Player::incrShock(const int VAL) {
 }
 
 void Player::incrShock(const ShockValues_t shockValue) {
-  const int PLAYER_FORTITUDE = def_->abilityValues.getAbilityValue(ability_resistStatusMind, true, *this);
+  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
     switch(shockValue) {
@@ -319,7 +319,7 @@ void Player::incrInsanity() {
         case 3: {
           popupMessage += "I struggle to not fall into a stupor.";
           eng->popup->showMessage(popupMessage, true, "Fainting!");
-          statusEffectsHandler_->attemptAddEffect(new StatusFainted(eng));
+          statusEffectsHandler_->tryAddEffect(new StatusFainted(eng));
           return;
         }
         break;
@@ -490,7 +490,7 @@ void Player::incrInsanity() {
           if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware) == false) {
             popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
             eng->popup->showMessage(popupMessage, true, "Confusion!");
-            statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng), true);
+            statusEffectsHandler_->tryAddEffect(new StatusConfused(eng), true);
             return;
           }
         }
@@ -557,22 +557,22 @@ void Player::testPhobias() {
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
       if(spotedEnemies.at(0)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == true) {
         eng->log->addMessage("I am plagued by my canine phobia!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
       if(spotedEnemies.at(0)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == true) {
         eng->log->addMessage("I am plagued by my rat phobia!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
       if(spotedEnemies.at(0)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == true) {
         eng->log->addMessage("I am plagued by my phobia of the dead!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
       if(spotedEnemies.at(0)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == true) {
         eng->log->addMessage("I am plagued by my spider phobia!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -581,7 +581,7 @@ void Player::testPhobias() {
     if(insanityPhobias[insanityPhobia_openPlace] == true) {
       if(isStandingInOpenSpace()) {
         eng->log->addMessage("I am plagued by my phobia of open places!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -589,7 +589,7 @@ void Player::testPhobias() {
     if(insanityPhobias[insanityPhobia_closedPlace] == true) {
       if(isStandingInCrampedSpace()) {
         eng->log->addMessage("I am plagued by my phobia of closed places!");
-        statusEffectsHandler_->attemptAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -776,7 +776,7 @@ void Player::act() {
           //Is the monster sneaking? Try to spot it
           if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
             if(monster->isStealth) {
-              const int PLAYER_SEARCH_SKILL = def_->abilityValues.getAbilityValue(ability_searching, true, *this);
+              const int PLAYER_SEARCH_SKILL = def_->abilityVals.getVal(ability_searching, true, *this);
               const AbilityRollResult_t rollResult = eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
               if(rollResult == successSmall) {
                 eng->log->addMessage("I see something moving in the shadows.");
@@ -847,7 +847,7 @@ void Player::act() {
       }
 
       //Any item in the inventory that can be identified?
-      attemptIdentifyItems();
+      tryIdentifyItems();
     }
   }
 
@@ -879,7 +879,7 @@ void Player::act() {
   //When this function ends, the system starts reading keys.
 }
 
-void Player::attemptIdentifyItems() {
+void Player::tryIdentifyItems() {
   //  const vector<Item*>* const general = inventory_->getGeneral();
   //  for(unsigned int i = 0; i < general->size(); i++) {
   //    Item* const item = general->at(i);
@@ -889,7 +889,7 @@ void Player::attemptIdentifyItems() {
   //    if(def.isReadable == false) {
   //      if(def.isIdentified == false) {
   //        if(def.abilityToIdentify != ability_empty) {
-  //          const int SKILL = m_instanceDefinition.abilityValues.getAbilityValue(def.abilityToIdentify, true);
+  //          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);
   //          if(SKILL > (100 - def.identifySkillFactor)) {
   //            item->setRealDefinitionNames(eng, false);
   //            eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
@@ -983,7 +983,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
         tracer << "Player: Standing on trap, check if trap affects leaving the cell" << endl;
-        dest = dynamic_cast<Trap*>(f)->actorAttemptLeave(this, pos, dest);
+        dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       }
     }
 

@@ -106,7 +106,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
     int blockedInElement = -1;
 
     const int WPN_BASE_ABILITY = itemDefThrown.missileBaseAttackSkill;
-    const int ACTOR_ABILITY = actorThrowing->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, true, *(actorThrowing));
+    const int ACTOR_ABILITY = actorThrowing->getDef()->abilityVals.getVal(ability_accuracyRanged, true, *(actorThrowing));
     const int TOTAL_ABILITY = WPN_BASE_ABILITY + ACTOR_ABILITY;
     const AbilityRollResult_t rollResult = eng->abilityRoll->roll(TOTAL_ABILITY);
 

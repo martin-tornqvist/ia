@@ -66,7 +66,7 @@ void ScrollOfMayhem::specificRead(Engine* const engine) {
     Actor* actor = engine->gameTime->getActorAt(i);
     if(actor != engine->player) {
       if(engine->player->checkIfSeeActor(*actor, NULL)) {
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBurning(engine));
+        actor->getStatusEffectsHandler()->tryAddEffect(new StatusBurning(engine));
       }
     }
   }
@@ -137,7 +137,7 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       StatusEffect* const effect = getStatusEffect(engine);
-      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(effect);
+      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(effect);
     }
 
   } else {
@@ -176,7 +176,7 @@ void ScrollOfDetectItems::specificRead(Engine* const engine) {
 }
 
 void ScrollOfBlessing::specificRead(Engine* const engine) {
-  engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusBlessed(engine));
+  engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusBlessed(engine));
   setRealDefinitionNames(engine, false);
 }
 
@@ -262,7 +262,7 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
 }
 
 void ScrollOfClairvoyance::specificRead(Engine* const engine) {
-  engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusClairvoyant(engine), true, false);
+  engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusClairvoyant(engine), true, false);
   setRealDefinitionNames(engine, false);
 }
 
@@ -283,7 +283,7 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
     for(unsigned int i = 0; i < actors.size(); i++) {
       const string monsterName = actors.at(i)->getNameThe();
       engine->log->addMessage(monsterName + " is struck by a roaring blast!", clrMessageGood);
-      actors.at(i)->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
       actors.at(i)->hit(engine->dice(1, 8), damageType_physical);
     }
 
@@ -419,7 +419,7 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
   }
 }
 
-void Scroll::attemptMemorizeIfLearnable(Engine* const engine) {
+void Scroll::tryMemorizeIfLearnable(Engine* const engine) {
   if(def_->isScrollLearned == false && def_->isScrollLearnable) {
     const int CHANCE_TO_LEARN = 80;
     if(engine->dice.getInRange(0, 100) < CHANCE_TO_LEARN) {
@@ -435,26 +435,26 @@ bool Scroll::read(const bool IS_FROM_MEMORY, Engine* const engine) {
   engine->renderer->drawMapAndInterface();
 
   if(IS_FROM_MEMORY) {
-    return attemptReadFromMemory(engine);
+    return tryReadFromMemory(engine);
   } else {
-    return attemptReadFromScroll(engine);
+    return tryReadFromScroll(engine);
   }
 }
 
-bool Scroll::attemptReadFromMemory(Engine* const engine) {
+bool Scroll::tryReadFromMemory(Engine* const engine) {
   const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToCastFromMemory(engine));
   if(rollResult >= successSmall) {
     engine->log->addMessage("I cast " + getRealTypeName() + "...");
     specificRead(engine);
   } else {
     engine->log->addMessage("I miscast it.");
-    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusWeak(engine));
+    engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusWeak(engine));
     if(engine->dice.coinToss()) {
       engine->log->addMessage("I feel a sharp pain in my head!", clrMessageBad);
     } else {
       engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
     }
-    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine), false, false);
+    engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(engine), false, false);
     engine->player->hit(engine->dice(1, 6), damageType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
@@ -466,7 +466,7 @@ bool Scroll::attemptReadFromMemory(Engine* const engine) {
   return true;
 }
 
-bool Scroll::attemptReadFromScroll(Engine* const engine) {
+bool Scroll::tryReadFromScroll(Engine* const engine) {
   if(engine->player->getStatusEffectsHandler()->allowSee() == false) {
     engine->log->addMessage("I cannot read while blind.");
     return false;
@@ -483,7 +483,7 @@ bool Scroll::attemptReadFromScroll(Engine* const engine) {
   if(IS_IDENTIFIED_BEFORE_READING) {
     engine->log->addMessage("I read a scroll of " + getRealTypeName() + "...");
     specificRead(engine);
-    attemptMemorizeIfLearnable(engine);
+    tryMemorizeIfLearnable(engine);
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   } else {
     engine->log->addMessage("I recite forbidden incantations...");

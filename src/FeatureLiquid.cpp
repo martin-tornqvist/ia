@@ -14,7 +14,7 @@ FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, coord pos, Engine* engi
 void FeatureLiquidShallow::bump(Actor* actorBumping) {
   if(actorBumping->getDef()->moveType == moveType_walk) {
 
-    actorBumping->getStatusEffectsHandler()->attemptAddEffect(new StatusWaiting(eng));
+    actorBumping->getStatusEffectsHandler()->tryAddEffect(new StatusWaiting(eng));
 
 //    const bool IS_PLAYER = actorBumping == eng->player;
 //    if(IS_PLAYER) {

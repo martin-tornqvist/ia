@@ -233,7 +233,7 @@ bool Vortex::actorSpecificAct() {
                 eng->log->addMessage("A powerful wind is pulling me!");
               }
               tracer << "Vortex: Attempt pull (knockback)" << endl;
-              eng->knockBack->attemptKnockBack(eng->player, knockBackFromPos, false, false);
+              eng->knockBack->tryKnockBack(eng->player, knockBackFromPos, false, false);
               pullCooldown = 5;
               eng->gameTime->letNextAct();
               return true;
@@ -275,7 +275,7 @@ bool Ghost::actorSpecificAct() {
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng->log->addMessage(refer + " reaches for me... ");
           const AbilityRollResult_t rollResult = eng->abilityRoll->roll(
-              eng->player->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, true, *this));
+              eng->player->getDef()->abilityVals.getVal(ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
             eng->log->addMessage("I dodge!", clrMessageGood);
@@ -294,9 +294,9 @@ bool Ghost::actorSpecificAct() {
               eng->log->addMessage("The touch is deflected by my " + armorName + "!");
             } else {
               if(eng->dice.coinToss()) {
-                eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusSlowed(eng));
+                eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusSlowed(eng));
               } else {
-                eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusCursed(eng));
+                eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusCursed(eng));
               }
               restoreHP(999);
             }
@@ -493,6 +493,11 @@ bool Ooze::actorSpecificAct() {
   return false;
 }
 
+bool OozeBlack::actorSpecificAct() {
+  restoreHP(3, false);
+  return false;
+}
+
 void OozeBlack::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_oozeBlackSpewPus));
 }
@@ -522,7 +527,7 @@ const sf::Color& ColourOutOfSpace::getColor() {
 
 bool ColourOutOfSpace::actorSpecificAct() {
   if(eng->player->checkIfSeeActor(*this, NULL)) {
-    eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng));
+    eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng));
   }
   return false;
 }
@@ -683,11 +688,11 @@ void LordOfPestilence::actorSpecific_spawnStartItems() {
 }
 
 bool Zombie::actorSpecificAct() {
-  return attemptResurrect();
+  return tryResurrect();
 }
 
 bool MajorClaphamLee::actorSpecificAct() {
-  if(attemptResurrect()) {
+  if(tryResurrect()) {
     return true;
   }
 
@@ -748,7 +753,7 @@ bool MajorClaphamLee::actorSpecificAct() {
   return false;
 }
 
-bool Zombie::attemptResurrect() {
+bool Zombie::tryResurrect() {
   if(deadState == actorDeadState_corpse) {
     if(hasResurrected == false) {
       deadTurnCounter += 1;

@@ -21,9 +21,9 @@ void CharacterInfo::makeLines() {
   const sf::Color clrTextDark = clrRed;
 
   lines.push_back(StringAndColor("COMBAT SKILLS", clrHeader));
-  const int BASE_MELEE = min(100, eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyMelee, true, *(eng->player)));
-  const int BASE_RANGED = min(100, eng->player->getDef()->abilityValues.getAbilityValue(ability_accuracyRanged, true, *(eng->player)));
-  const int BASE_DODGE_ATTACKS = min(100, eng->player->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, true, *(eng->player)));
+  const int BASE_MELEE = min(100, eng->player->getDef()->abilityVals.getVal(ability_accuracyMelee, true, *(eng->player)));
+  const int BASE_RANGED = min(100, eng->player->getDef()->abilityVals.getVal(ability_accuracyRanged, true, *(eng->player)));
+  const int BASE_DODGE_ATTACKS = min(100, eng->player->getDef()->abilityVals.getVal(ability_dodgeAttack, true, *(eng->player)));
   Weapon* kick = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   string kickStr = eng->itemData->getItemInterfaceRef(kick, false, primaryAttackMode_melee);
   delete kick;
@@ -52,8 +52,8 @@ void CharacterInfo::makeLines() {
   lines.push_back(StringAndColor(" ", clrText));
 
   lines.push_back(StringAndColor("RESISTANCE TO STATUS EFFECTS", clrHeader));
-  const int STATUS_RES_PHYSICAL = min(100, eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *(eng->player)));
-  const int STATUS_RES_MENTAL = min(100, eng->player->getDef()->abilityValues.getAbilityValue(ability_resistStatusMind, true, *(eng->player)));
+  const int STATUS_RES_PHYSICAL = min(100, eng->player->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *(eng->player)));
+  const int STATUS_RES_MENTAL = min(100, eng->player->getDef()->abilityVals.getVal(ability_resistStatusMind, true, *(eng->player)));
   lines.push_back(StringAndColor(offsetSpaces + "Physical        : " + intToString(STATUS_RES_PHYSICAL) + "%", clrText));
   lines.push_back(StringAndColor(offsetSpaces + "Mental          : " + intToString(STATUS_RES_MENTAL) + "%", clrText));
   lines.push_back(StringAndColor(" ", clrText));

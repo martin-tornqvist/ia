@@ -97,7 +97,7 @@ void DebugModeStatPrinter::run() {
     lvlStr.insert(lvlStr.end(), 8 - lvlStr.size(), ' ');
     string hpStr = "HP:" + intToString(d.hpMax);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
-    const int attackSkill = d.abilityValues.getAbilityValue(ability_accuracyMelee, false, *actor);
+    const int attackSkill = d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
     const string attackSkillStr = "Attack skill:" + intToString(attackSkill) + "%";
     printLine(indent2 + lvlStr + hpStr + attackSkillStr);
 

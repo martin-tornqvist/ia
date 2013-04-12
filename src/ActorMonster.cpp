@@ -55,7 +55,7 @@ void Monster::act() {
     }
   }
 
-  const bool HAS_SNEAK_SKILL = def_->abilityValues.getAbilityValue(ability_stealth, true, *this) > 0;
+  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(ability_stealth, true, *this) > 0;
   isStealth = eng->player->checkIfSeeActor(*this, NULL) == false && HAS_SNEAK_SKILL;
 
   const AiBehavior& ai = def_->aiBehavior;
@@ -96,9 +96,9 @@ void Monster::act() {
     }
   }
 
-  if(ai.attemptsAttack) {
+  if(ai.triesAttack) {
     if(target != NULL) {
-      if(attemptAttack(target->pos)) {
+      if(tryAttack(target->pos)) {
         return;
       }
     }
@@ -182,7 +182,7 @@ void Monster::moveToCell(const coord& targetCell) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
       tracer << "Monster: Standing on trap, check if trap affects leaving the cell" << endl;
-      dest = dynamic_cast<Trap*>(f)->actorAttemptLeave(this, pos, dest);
+      dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       if(dest == pos) {
         tracer << "Monster: Trap prevented leaving" << endl;
         eng->gameTime->letNextAct();
@@ -227,7 +227,7 @@ void Monster::becomeAware() {
   }
 }
 
-bool Monster::attemptAttack(const coord& attackPos) {
+bool Monster::tryAttack(const coord& attackPos) {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0 || leader == eng->player) {
 
@@ -251,7 +251,7 @@ bool Monster::attemptAttack(const coord& attackPos) {
                 return true;
               } else {
                 const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
-                statusEffectsHandler_->attemptAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
+                statusEffectsHandler_->tryAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
                 eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
                 return true;
               }

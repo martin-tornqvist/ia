@@ -49,7 +49,7 @@ private:
 
   void makeRoomDarkWithChance(const Room& room);
 
-  int attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
+  int trySetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
                                vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
 
   void eraseAdjacentCellsFromVectors(const coord& pos,  vector<coord>& nextToWalls, vector<coord>& awayFromWalls);

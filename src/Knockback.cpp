@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Config.h"
 
-void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
+void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
   if(defender != eng->player || eng->config->BOT_PLAYING == false) {
     if(defender->getDef()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
@@ -37,8 +37,8 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
               }
             }
 //            if(IS_SPIKE_GUN == false) {
-              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
-              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng), false, false);
+              defender->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
+              defender->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng), false, false);
 //            }
           }
 
@@ -78,7 +78,7 @@ void KnockBack::attemptKnockBack(Actor* const defender, const coord& attackedFro
           // Defender nailed to a wall from a  spike gun?
           if(IS_SPIKE_GUN) {
             if(eng->map->featuresStatic[c.x][c.y]->isVisionPassable() == false) {
-              defender->getStatusEffectsHandler()->attemptAddEffect(new StatusNailed(eng));
+              defender->getStatusEffectsHandler()->tryAddEffect(new StatusNailed(eng));
             }
           }
 

@@ -26,7 +26,7 @@ void Attack::melee(const coord& defenderPos, Weapon* weapon) {
 
     if(DIED == false) {
       //Apply weapon status effects
-      data.currentDefender->getStatusEffectsHandler()->attemptAddEffectsFromWeapon(weapon, true);
+      data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(weapon, true);
     }
     //Blood
     if(data.attackResult >= successNormal) {
@@ -39,7 +39,7 @@ void Attack::melee(const coord& defenderPos, Weapon* weapon) {
     if(DIED == false) {
       if(weapon->getDef().meleeCausesKnockBack) {
         if(data.attackResult > successSmall) {
-          eng->knockBack->attemptKnockBack(data.currentDefender, data.attacker->pos, false);
+          eng->knockBack->tryKnockBack(data.currentDefender, data.attacker->pos, false);
         }
       }
     }

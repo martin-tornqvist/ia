@@ -37,7 +37,7 @@ void Bot::runFunctionTests() {
   Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
   const Abilities_t weaponAbilityUsed = weaponUsed->getDef().meleeAbilityUsed;
   const int HIT_CHANCE_WEAPON = weaponUsed->getDef().meleeBaseAttackSkill;
-  const int HIT_CHANCE_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(weaponAbilityUsed, true, *(eng->player));
+  const int HIT_CHANCE_SKILL = eng->player->getDef()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
   const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
   const int NUMBER_OF_ATTACKS = 100;
   double hitChanceReal = 0;

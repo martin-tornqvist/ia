@@ -199,7 +199,7 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
     const FeatureDef* d = NULL;
     coord pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
-      attemptSetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureDefsBelongingToTheme);
+      trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureDefsBelongingToTheme);
 
     if(d == NULL) {
       tracer << "RoomThemeMaker: Could not find any more spots to place feature, returning" << endl;
@@ -261,9 +261,9 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   }
 }
 
-int RoomThemeMaker::attemptSetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
+int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
     vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme) {
-  tracer << "RoomThemeMaker::attemptSetFeatureToPlace()" << endl;
+  tracer << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
 
   if(featureDefsBelongingToTheme.empty()) {
     return -1;

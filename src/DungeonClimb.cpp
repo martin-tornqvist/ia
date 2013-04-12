@@ -82,8 +82,8 @@ void DungeonClimb::travelDown(const int levels) {
   tracer << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 
-void DungeonClimb::attemptUseDownStairs() {
-  tracer << "DungeonClimb::attemptUseDownStairs()..." << endl;
+void DungeonClimb::tryUseDownStairs() {
+  tracer << "DungeonClimb::tryUseDownStairs()..." << endl;
 
   eng->log->clearLog();
 
@@ -102,7 +102,7 @@ void DungeonClimb::attemptUseDownStairs() {
     if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown &&
         eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
       eng->log->addMessage("I am plagued by my phobia of deep places!");
-      eng->player->getStatusEffectsHandler()->attemptAddEffect(new StatusTerrified(eng));
+      eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusTerrified(eng));
       return;
     }
   } else {
@@ -113,6 +113,6 @@ void DungeonClimb::attemptUseDownStairs() {
     }
 //    eng->renderer->updateWindow();
   }
-  tracer << "DungeonClimb::attemptUseDownStairs() [DONE]" << endl;
+  tracer << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }
 

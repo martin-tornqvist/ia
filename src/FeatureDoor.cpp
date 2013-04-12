@@ -208,7 +208,7 @@ void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+      const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
       }
@@ -219,7 +219,7 @@ void Door::playerTrySpotHidden() {
 void Door::playerTryClueHidden() {
   if(isSecret_ && isClued_ == false) {
     const Abilities_t abilityUsed = ability_searching;
-    const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+    const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
     const int BONUS = 10;
     if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
       clue();
@@ -335,7 +335,7 @@ void Door::tryBash(Actor* actorTrying) {
           eng->log->addMessage(actorTrying->getNameThe() + " is off-balance.");
         }
 
-        actorTrying->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(2));
+        actorTrying->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
       }
 
       if(IS_PLAYER && (material_ == doorMaterial_metal || isBasherWeak)) {

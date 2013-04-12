@@ -7,7 +7,7 @@
 #include "PlayerBonuses.h"
 #include "BasicUtils.h"
 
-int AbilityValues::getAbilityValue(const Abilities_t ability,
+int AbilityValues::getVal(const Abilities_t ability,
                                    const bool IS_AFFECTED_BY_STATUS_EFFECTS,
                                    Actor& actor) const {
   int val = abilityList[ability];
@@ -18,67 +18,67 @@ int AbilityValues::getAbilityValue(const Abilities_t ability,
 
   if(&actor == eng->player) {
     switch(ability) {
-    case ability_searching: {
-      val += 8;
-    } break;
+      case ability_searching: {
+        val += 8;
+      } break;
 
-    case ability_accuracyMelee: {
-      val += 45;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptMeleeCombatant))
-        val += 15;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulMeleeCombatant))
-        val += 15;
-    } break;
-
-    case ability_accuracyRanged: {
-      val += 50;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_marksman))
-        val += 15;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_sharpshooter))
-        val += 15;
-    } break;
-
-    case ability_dodgeTrap: {
-      val += 5;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
-        val += 20;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
-        val += 20;
-    } break;
-
-    case ability_dodgeAttack: {
-      val += 10;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
-        val += 25;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
-        val += 20;
-    } break;
-
-    case ability_resistStatusBody: {
-      val += 25;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_tough))
-        val += 20;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_rugged))
-        val += 20;
-    } break;
-
-    case ability_resistStatusMind: {
-      val += 25;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_strongMinded))
-        val += 20;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_unyielding))
-        val += 20;
-    } break;
-
-    case ability_stealth: {
-      val += 30;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_stealthy))
+      case ability_accuracyMelee: {
         val += 45;
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_imperceptible))
-        val += 20;
-    } break;
-    default: {
-    } break;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_adeptMeleeCombatant))
+          val += 15;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_masterfulMeleeCombatant))
+          val += 15;
+      } break;
+
+      case ability_accuracyRanged: {
+        val += 50;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_marksman))
+          val += 15;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_sharpshooter))
+          val += 15;
+      } break;
+
+      case ability_dodgeTrap: {
+        val += 5;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
+          val += 20;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
+          val += 20;
+      } break;
+
+      case ability_dodgeAttack: {
+        val += 10;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous))
+          val += 25;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_lithe))
+          val += 20;
+      } break;
+
+      case ability_resistStatusBody: {
+        val += 25;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_tough))
+          val += 20;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_rugged))
+          val += 20;
+      } break;
+
+      case ability_resistStatusMind: {
+        val += 25;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_strongMinded))
+          val += 20;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_unyielding))
+          val += 20;
+      } break;
+
+      case ability_stealth: {
+        val += 30;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_stealthy))
+          val += 45;
+        if(eng->playerBonusHandler->isBonusPicked(playerBonus_imperceptible))
+          val += 20;
+      } break;
+      default: {
+      } break;
     }
 
     //Searching must be at least 1
@@ -103,13 +103,13 @@ AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
   const int failNormalLimit       = 2 * TOTAL_SKILL_VALUE - successBigLimit;
   const int failBigLimit          = 98;
 
-  if(ROLL <= successCriticalLimit)	return successCritical;
-  if(ROLL <= successBigLimit)			return successBig;
-  if(ROLL <= successNormalLimit)		return successNormal;
-  if(ROLL <= successSmallLimit)		return successSmall;
-  if(ROLL <= failSmallLimit)			return failSmall;
-  if(ROLL <= failNormalLimit)			return failNormal;
-  if(ROLL <= failBigLimit)			return failBig;
+  if(ROLL <= successCriticalLimit)  return successCritical;
+  if(ROLL <= successBigLimit)     return successBig;
+  if(ROLL <= successNormalLimit)    return successNormal;
+  if(ROLL <= successSmallLimit)   return successSmall;
+  if(ROLL <= failSmallLimit)      return failSmall;
+  if(ROLL <= failNormalLimit)     return failNormal;
+  if(ROLL <= failBigLimit)      return failBig;
 
   return failCritical;
 
@@ -135,7 +135,7 @@ void AbilityValues::reset() {
   }
 }
 
-void AbilityValues::setAbilityValue(const Abilities_t ability, const int VAL) {
+void AbilityValues::setVal(const Abilities_t ability, const int VAL) {
   abilityList[ability] = VAL;
 }
 

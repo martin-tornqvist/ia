@@ -205,7 +205,7 @@ void GameTime::runNewStandardTurnEvents() {
   if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 100;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
-      eng->populateMonsters->attemptSpawnDueToTimePassed();
+      eng->populateMonsters->trySpawnDueToTimePassed();
     }
   }
 

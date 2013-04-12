@@ -190,7 +190,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
     eng->renderer->updateWindow();
-    statusEffectsHandler_->attemptAddEffect(new StatusConfused(eng));
+    statusEffectsHandler_->tryAddEffect(new StatusConfused(eng));
   }
 }
 

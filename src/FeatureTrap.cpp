@@ -75,7 +75,7 @@ void Trap::bump(Actor* actorBumping) {
   if(d->moveType == moveType_walk) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
     const bool ACTOR_CAN_SEE = actorBumping->getStatusEffectsHandler()->allowSee();
-    const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodgeTrap, true, *actorBumping);
+    const int DODGE_SKILL_VALUE = actorBumping->getDef()->abilityVals.getVal(ability_dodgeTrap, true, *actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
     const string trapName = specificTrap_->getTrapSpecificTitle();
@@ -125,7 +125,7 @@ void Trap::trigger(Actor* const actor) {
   tracer << "Trap::trigger()..." << endl;
 
   const ActorDefinition* const d = actor->getDef();
-  const int DODGE_SKILL_VALUE = d->abilityValues.getAbilityValue(ability_dodgeTrap, true, *actor);
+  const int DODGE_SKILL_VALUE =  actor->getDef()->abilityVals.getVal(ability_dodgeTrap, true, *actor);
 
   if(actor == eng->player) {
     const AbilityRollResult_t DODGE_RESULT = eng->abilityRoll->roll(DODGE_SKILL_VALUE);
@@ -168,7 +168,7 @@ void Trap::playerTrySpotHidden() {
   if(isHidden_) {
     if(eng->mapTests->isCellsNeighbours(pos_, eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+      const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
 
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
@@ -202,10 +202,10 @@ bool Trap::canHaveBlood() const {return isHidden_;}
 bool Trap::canHaveGore() const {return isHidden_;}
 bool Trap::canHaveItem() const {return isHidden_;}
 
-coord Trap::actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
-  tracer << "Trap::actorAttemptLeave()" << endl;
+coord Trap::actorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  tracer << "Trap::actorTryLeave()" << endl;
   assert(specificTrap_ != NULL);
-  return specificTrap_->specificTrapActorAttemptLeave(actor, pos, dest);
+  return specificTrap_->specificTrapActorTryLeave(actor, pos, dest);
 }
 
 MaterialType_t Trap::getMaterialType() const {
@@ -268,7 +268,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
         }
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng));
+        actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(eng));
       }
     }
   }
@@ -333,7 +333,7 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
         }
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(eng));
+        actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(eng));
       }
     }
   }
@@ -432,14 +432,14 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRol
     if(IS_PLAYER) {
       if(CAN_SEE) {
         eng->log->addMessage("A sharp flash of light pierces my eyes!", clrWhite);
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng));
+        actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(eng));
       } else {
         eng->log->addMessage("I feel a mechanism trigger!", clrWhite);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
         eng->log->addMessage(actorName + " is hit by a flash of blinding light!");
-        actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng));
+        actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(eng));
       }
     }
   }
@@ -628,8 +628,8 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
   }
 }
 
-coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
-  tracer << "TrapSpiderWeb: specificTrapActorAttemptLeave()" << endl;
+coord TrapSpiderWeb::specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  tracer << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 
   if(isHoldingActor) {
     tracer << "TrapSpiderWeb: Is holding actor" << endl;
@@ -641,7 +641,7 @@ coord TrapSpiderWeb::specificTrapActorAttemptLeave(Actor* const actor, const coo
 
     tracer << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
 
-    const int ABILITY_VALUE = max(30, actor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *actor));
+    const int ABILITY_VALUE = max(30, actor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *actor));
 
     if(eng->abilityRoll->roll(ABILITY_VALUE) >= successSmall) {
       tracer << "TrapSpiderWeb: Actor succeeded to break free" << endl;

@@ -28,7 +28,7 @@ public:
         if(actor == engine->player) {
           const coord playerPos = engine->player->pos;
           const bool IS_LGT_AT_PLAYER = engine->map->light[playerPos.x][playerPos.y];
-          const int PLAYER_SNEAK = IS_LGT_AT_PLAYER ? 0 : engine->player->getDef()->abilityValues.getAbilityValue(ability_stealth, true, *(engine->player));
+          const int PLAYER_SNEAK = IS_LGT_AT_PLAYER ? 0 : engine->player->getDef()->abilityVals.getVal(ability_stealth, true, *(engine->player));
           if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
             monster->becomeAware();
             if(IS_AWARE_BEFORE) {

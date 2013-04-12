@@ -52,7 +52,7 @@ public:
 
   MaterialType_t getMaterialType() const;
 
-  coord actorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest);
+  coord actorTryLeave(Actor* const actor, const coord& pos, const coord& dest);
 
   Trap_t getTrapType() const;
 
@@ -86,7 +86,7 @@ protected:
   SpecificTrapBase() {}
   ~SpecificTrapBase() {}
 
-  virtual coord specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  virtual coord specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
     (void)actor;
     (void)pos;
     return dest;
@@ -261,7 +261,7 @@ private:
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
-  coord specificTrapActorAttemptLeave(Actor* const actor, const coord& pos, const coord& dest);
+  coord specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest);
 
   bool isHolding() const {return isHoldingActor;}
 

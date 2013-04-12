@@ -55,7 +55,7 @@ void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
 }
 
 void PotionOfBlindness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(8 + engine->dice(1, 8)));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(8 + engine->dice(1, 8)));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
@@ -69,7 +69,7 @@ void PotionOfBlindness::specificCollide(const coord& pos, Actor* const actor, En
 }
 
 void PotionOfParalyzation::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
@@ -83,14 +83,14 @@ void PotionOfParalyzation::specificCollide(const coord& pos, Actor* const actor,
 }
 
 void PotionOfDisease::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusDiseased(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusDiseased(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
 }
 
 void PotionOfConfusion::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
@@ -126,8 +126,8 @@ void PotionOfConfusion::specificCollide(const coord& pos, Actor* const actor, En
 //}
 
 void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectAim(engine));
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectReflexes(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectAim(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectReflexes(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);
   }
@@ -141,7 +141,7 @@ void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Eng
 }
 
 //void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
+//  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
 //  for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
 //    Actor* otherActor = engine->gameTime->getActorAt(i);
 //    if(otherActor != engine->player) {
@@ -152,7 +152,7 @@ void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Eng
 //}
 
 void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectFortitude(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectFortitude(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
@@ -194,7 +194,7 @@ void PotionOfFortitude::specificCollide(const coord& pos, Actor* const actor, En
 }
 
 void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPerfectToughness(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectToughness(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
@@ -213,7 +213,7 @@ void PotionOfToughness::specificCollide(const coord& pos, Actor* const actor, En
 }
 
 void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->attemptAddEffect(new StatusPoisoned(engine));
+  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(engine));
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
     setRealDefinitionNames(engine, false);

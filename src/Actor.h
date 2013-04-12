@@ -28,7 +28,7 @@ public:
     return statusEffectsHandler_;
   }
 
-  ActorDefinition* getDef() {return def_;}
+  inline ActorDefinition* getDef() {return def_;}
 
   virtual ~Actor();
 
@@ -64,19 +64,19 @@ public:
   void getSpotedEnemiesPositions();
 
   //Various "shortcuts" to the instance definition
-  ActorId_t getId() const {return def_->id;}
-  int getHp() const {return hp_;}
+  inline ActorId_t getId() const {return def_->id;}
+  inline int getHp() const {return hp_;}
   virtual int getHpMax(const bool WITH_MODIFIERS) const {
     (void)WITH_MODIFIERS;
     return hpMax_;
   }
-  string getNameThe() const {return def_->name_the;}
-  string getNameA() const {return def_->name_a;}
-  bool isHumanoid() const {return def_->isHumanoid;}
-  char getGlyph() const {return glyph_;}
-  virtual const sf::Color& getColor() {return clr_;}
-  const Tile_t& getTile() const {return tile_;}
-  MoveType_t getMoveType() const {return def_->moveType;}
+  inline string getNameThe() const {return def_->name_the;}
+  inline string getNameA() const {return def_->name_a;}
+  inline bool isHumanoid() const {return def_->isHumanoid;}
+  inline char getGlyph() const {return glyph_;}
+  inline virtual const sf::Color& getColor() {return clr_;}
+  inline const Tile_t& getTile() const {return tile_;}
+  inline MoveType_t getMoveType() const {return def_->moveType;}
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 

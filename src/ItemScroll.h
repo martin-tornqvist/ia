@@ -44,10 +44,10 @@ protected:
     (void)engine;
   }
 
-  bool attemptReadFromMemory(Engine* const engine);
-  bool attemptReadFromScroll(Engine* const engine);
+  bool tryReadFromMemory(Engine* const engine);
+  bool tryReadFromScroll(Engine* const engine);
 
-  void attemptMemorizeIfLearnable(Engine* const engine);
+  void tryMemorizeIfLearnable(Engine* const engine);
 
   void failedToLearnRealName(Engine* const engine, const string overrideFailString = "");
 };

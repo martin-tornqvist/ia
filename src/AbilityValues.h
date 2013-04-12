@@ -38,13 +38,13 @@ public:
   }
 
   void reset();
-  int getAbilityValue(const Abilities_t ability,
-                      const bool IS_AFFECTED_BY_STATUS_EFFECTS,
-                      Actor& actor) const;
+  int getVal(const Abilities_t ability,
+             const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+             Actor& actor) const;
 
 private:
   friend class ActorData;
-  void setAbilityValue(const Abilities_t ability, const int VAL);
+  void setVal(const Abilities_t ability, const int VAL);
   int abilityList[endOfAbilities];
   Engine* eng;
 };

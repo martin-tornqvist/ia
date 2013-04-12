@@ -12,7 +12,7 @@ class PopulateMonsters {
 public:
   PopulateMonsters(Engine* engine) : eng(engine) {}
 
-  void attemptSpawnDueToTimePassed() const;
+  void trySpawnDueToTimePassed() const;
 
   void populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const;
 

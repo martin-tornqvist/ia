@@ -33,7 +33,7 @@ public:
 
   void updateWindow();
 
-  void clearWindow() {
+  inline void clearWindow() {
     renderWindow_->clear();
   }
 
@@ -41,7 +41,7 @@ public:
 
   void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
 
-  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const coord& pos, const sf::Color& clr) {
+  inline void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const coord& pos, const sf::Color& clr) {
     drawCharacter(CHARACTER, renderArea, pos.x, pos.y, clr);
   }
 
@@ -50,7 +50,7 @@ public:
   int drawTextCentered(const string& str, const RenderArea_t renderArea, const int X, const int Y,
                        const sf::Color& clr, const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
-  void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr,
+  inline void drawTileInMap(const Tile_t tile, const coord& pos, const sf::Color& clr,
                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawTileInMap(tile, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
@@ -58,15 +58,15 @@ public:
   void drawTileInMap(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
                      const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
-  void drawTileInScreen(const Tile_t tile, const coord& pos, const sf::Color& clr,
-                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+  inline void drawTileInScreen(const Tile_t tile, const coord& pos, const sf::Color& clr,
+                        const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawTileInScreen(tile, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
 
   void drawTileInScreen(const Tile_t tile, const int X, const int Y, const sf::Color& clr,
-                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
+                        const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
-  void drawGlyphInMap(const Tile_t GLYPH, const coord& pos, const sf::Color& clr,
+  inline void drawGlyphInMap(const Tile_t GLYPH, const coord& pos, const sf::Color& clr,
                       const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
     drawGlyphInMap(GLYPH, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
@@ -74,7 +74,7 @@ public:
   void drawGlyphInMap(const char GLYPH, const int X, const int Y, const sf::Color& clr,
                       const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
-  void coverCellInMap(const coord& pos) {
+  inline void coverCellInMap(const coord& pos) {
     coverCellInMap(pos.x, pos.y);
   }
 
@@ -82,19 +82,19 @@ public:
 
   void coverRenderArea(const RenderArea_t renderArea);
 
-  void coverArea(const RenderArea_t renderArea, const coord& pos, const int W, const int H) {
+  inline void coverArea(const RenderArea_t renderArea, const coord& pos, const int W, const int H) {
     coverArea(renderArea, pos.x, pos.y, W, H);
   }
 
   void coverArea(const RenderArea_t renderArea, const int X, const int Y, const int W, const int H);
 
-  void coverAreaPixel(const coord& posPixel, const int W, const int H) {
+  inline void coverAreaPixel(const coord& posPixel, const int W, const int H) {
     coverAreaPixel(posPixel.x, posPixel.y, W, H);
   }
 
   void coverAreaPixel(const int X, const int Y, const int W, const int H);
 
-  void drawRectangleSolid(const coord& posPixel, const int w, const int h, const sf::Color& clr) {
+  inline void drawRectangleSolid(const coord& posPixel, const int w, const int h, const sf::Color& clr) {
     drawRectangleSolid(posPixel.x, posPixel.y, w, h, clr);
   }
 
@@ -110,7 +110,7 @@ public:
   void drawBlastAnimationAtPositions(const vector<coord>& positions, const sf::Color& color, const int DURATION);
 
   void drawBlastAnimationAtPositionsWithPlayerVision(const vector<coord>& positions,
-    const sf::Color& clr, const int EXPLOSION_DELAY_FACTOR, Engine* const engine);
+      const sf::Color& clr, const int EXPLOSION_DELAY_FACTOR, Engine* const engine);
 
   void drawMainMenuLogo(const int Y_POS);
 

@@ -63,7 +63,7 @@ public:
 
   AttackOpport getAttackOpport(const coord& attackPos);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
-  bool attemptAttack(const coord& attackPos);
+  bool tryAttack(const coord& attackPos);
 
   virtual void actorSpecific_spawnStartItems() = 0;
 
@@ -182,7 +182,7 @@ public:
   virtual bool actorSpecificAct();
   void actorSpecificDie();
 protected:
-  bool attemptResurrect();
+  bool tryResurrect();
   int deadTurnCounter;
   bool hasResurrected;
 };
@@ -481,7 +481,7 @@ class Ooze: public Monster {
 public:
   Ooze() : Monster() {}
   ~Ooze() {}
-  bool actorSpecificAct();
+  virtual bool actorSpecificAct();
   virtual void actorSpecific_spawnStartItems() = 0;
 };
 
@@ -489,6 +489,7 @@ class OozeBlack: public Ooze {
 public:
   OozeBlack() : Ooze() {}
   ~OozeBlack() {}
+  bool actorSpecificAct();
   void actorSpecific_spawnStartItems();
 };
 

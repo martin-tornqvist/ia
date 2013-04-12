@@ -303,7 +303,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 //
 //    //Total attack skill with weapon (base + actor skill)
 //    abilityUsed = itemDef->rangedAbilityUsed;
-//    actorAttackSkill = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+//    actorAttackSkill = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
 //    baseAttackSkill = itemDef->rangedBaseAttackSkill;
 //    totalAttackSkill = min(100, baseAttackSkill + actorAttackSkill);
 //    wpnSkillStr = intToString(totalAttackSkill) + "%";
@@ -335,7 +335,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 //
 //    //Total attack skill with weapon (base + actor skill)
 //    abilityUsed = itemDef->meleeAbilityUsed;
-//    actorAttackSkill = eng->player->getDef()->abilityValues.getAbilityValue(abilityUsed, true, *(eng->player));
+//    actorAttackSkill = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
 //    baseAttackSkill = itemDef->meleeBaseAttackSkill;
 //    totalAttackSkill = min(100, baseAttackSkill + actorAttackSkill);
 //    wpnSkillStr = intToString(totalAttackSkill) + "%";

@@ -71,7 +71,7 @@ void SpellAzathothsBlast::specificCast(const SpellData& d, Engine* const eng) {
     if(actor == eng->player) {
       eng->log->addMessage("I am struck by a roaring blast!", clrMessageBad);
     }
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(1), false, false);
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
     actor->hit(eng->dice(1, 8), damageType_physical);
   }
 }
@@ -116,7 +116,7 @@ void SpellKnockBack::specificCast(const SpellData& d, Engine* const eng) {
     if(actor == eng->player) {
       eng->log->addMessage("A force pushes me!", clrMessageBad);
     }
-    eng->knockBack->attemptKnockBack(eng->player, d.caster_->pos, false);
+    eng->knockBack->tryKnockBack(eng->player, d.caster_->pos, false);
   }
 }
 
@@ -140,7 +140,7 @@ void SpellConfuse::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("My mind is reeling!");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusConfused(eng));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng));
   }
 }
 
@@ -167,7 +167,7 @@ void SpellWeakness::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("Something is draining me physically!");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusWeak(eng));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusWeak(eng));
   }
 }
 
@@ -194,7 +194,7 @@ void SpellBlind::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("Scales starts to grow over my eyes!");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusBlind(eng->dice(3, 6)));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(eng->dice(3, 6)));
   }
 }
 
@@ -221,7 +221,7 @@ void SpellFear::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("My mind is besieged by terror.");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusTerrified(eng->dice(3, 6)));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusTerrified(eng->dice(3, 6)));
   }
 }
 
@@ -245,7 +245,7 @@ void SpellSlow::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("I start to feel bogged down.");
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusSlowed(eng->dice(3, 6)));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusSlowed(eng->dice(3, 6)));
   }
 }
 
@@ -269,7 +269,7 @@ void SpellDisease::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("A disease is starting to afflict my body!", clrMessageBad);
     }
 
-    actor->getStatusEffectsHandler()->attemptAddEffect(new StatusDiseased(eng));
+    actor->getStatusEffectsHandler()->tryAddEffect(new StatusDiseased(eng));
   }
 }
 

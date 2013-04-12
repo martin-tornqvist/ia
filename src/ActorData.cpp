@@ -27,7 +27,7 @@ void ActorDefinition::reset() {
   isResPhys = isResFire = isResCold = isResAcid = isResElectric = isResSpirit = false;
   isImmunePhys = isImmuneFire = isImmuneCold = isImmuneAcid = isImmuneElectric = isImmuneSpirit = false;
   isResLight = isImmuneLight = true;
-  abilityValues.reset();
+  abilityVals.reset();
   aiBehavior.reset();
   nrTurnsAwarePlayer = 0;
   spawnMinLevel = spawnMaxLevel = 999;
@@ -83,16 +83,16 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   const int ATTACK_CAP = 40;
   const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
 
-  d.abilityValues.setAbilityValue(ability_accuracyMelee, ATTACK_AFTER_CAP);
-  d.abilityValues.setAbilityValue(ability_accuracyRanged, ATTACK_AFTER_CAP);
+  d.abilityVals.setVal(ability_accuracyMelee, ATTACK_AFTER_CAP);
+  d.abilityVals.setVal(ability_accuracyRanged, ATTACK_AFTER_CAP);
 
   //----------------------------------------------- STATUS RESISTANCE
   const double STATUS_RES_BASE = 5.0;
   const double STATUS_RES_INCR = 3.0;
 
   const int STATUS_RES = static_cast<int>(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_DB - 1.0)));
-  d.abilityValues.setAbilityValue(ability_resistStatusBody, STATUS_RES);
-  d.abilityValues.setAbilityValue(ability_resistStatusMind, STATUS_RES);
+  d.abilityVals.setVal(ability_resistStatusBody, STATUS_RES);
+  d.abilityVals.setVal(ability_resistStatusMind, STATUS_RES);
 }
 
 void ActorData::defineAllActors() {
@@ -121,7 +121,7 @@ void ActorData::defineAllActors() {
   d.id = actor_zombie;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -159,7 +159,7 @@ void ActorData::defineAllActors() {
   d.id = actor_zombieAxe;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -197,7 +197,7 @@ void ActorData::defineAllActors() {
   d.id = actor_bloatedZombie;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -234,7 +234,7 @@ void ActorData::defineAllActors() {
   d.id = actor_majorClaphamLee;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -272,7 +272,7 @@ void ActorData::defineAllActors() {
   d.id = actor_deanHalsey;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -311,7 +311,7 @@ void ActorData::defineAllActors() {
   d.id = actor_cultist;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -347,7 +347,7 @@ void ActorData::defineAllActors() {
   d.id = actor_cultistTeslaCannon;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -383,7 +383,7 @@ void ActorData::defineAllActors() {
   d.id = actor_cultistSpikeGun;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -515,7 +515,7 @@ void ActorData::defineAllActors() {
 //  d.erraticMovement = actorErratic_rare;
 //  d.monsterShockLevel = monsterShockLevel_scary;
 //  setStrengthsFromFormula(d, weak);
-//  d.abilityValues.setAbilityValue(ability_stealth, 90);
+//  d.abilityVals.setVal(ability_stealth, 90);
 //  finalizeDefinition(d);
 //  d.reset();
 
@@ -593,7 +593,7 @@ void ActorData::defineAllActors() {
   d.id = actor_cultistPriest;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -629,7 +629,7 @@ void ActorData::defineAllActors() {
   d.id = actor_greenSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -661,7 +661,7 @@ void ActorData::defineAllActors() {
   d.id = actor_whiteSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -693,7 +693,7 @@ void ActorData::defineAllActors() {
   d.id = actor_redSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -725,7 +725,7 @@ void ActorData::defineAllActors() {
   d.id = actor_shadowSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -748,7 +748,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
   setStrengthsFromFormula(d, weak);
-  d.abilityValues.setAbilityValue(ability_stealth, 90);
+  d.abilityVals.setVal(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 
@@ -758,7 +758,7 @@ void ActorData::defineAllActors() {
   d.id = actor_lengSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -791,12 +791,12 @@ void ActorData::defineAllActors() {
   d.id = actor_fireHound;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityValues.setAbilityValue(ability_dodgeAttack, 35);
+  d.abilityVals.setVal(ability_dodgeAttack, 35);
   d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
@@ -826,7 +826,7 @@ void ActorData::defineAllActors() {
   d.id = actor_ghost;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -861,7 +861,7 @@ void ActorData::defineAllActors() {
   d.id = actor_phantasm;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -897,7 +897,7 @@ void ActorData::defineAllActors() {
   d.id = actor_wraith;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -933,7 +933,7 @@ void ActorData::defineAllActors() {
   d.id = actor_rat;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -968,7 +968,7 @@ void ActorData::defineAllActors() {
   d.id = actor_ratThing;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1005,7 +1005,7 @@ void ActorData::defineAllActors() {
   d.id = actor_brownJenkin;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1041,12 +1041,12 @@ void ActorData::defineAllActors() {
   d.id = actor_wolf;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityValues.setAbilityValue(ability_dodgeAttack, 20);
+  d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
@@ -1076,12 +1076,12 @@ void ActorData::defineAllActors() {
   d.id = actor_giantBat;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityValues.setAbilityValue(ability_dodgeAttack, 75);
+  d.abilityVals.setVal(ability_dodgeAttack, 75);
   d.speed = actorSpeed_fastest;
   d.rangedCooldownTurns = 0;
   d.glyph = 'B';
@@ -1111,12 +1111,12 @@ void ActorData::defineAllActors() {
   d.id = actor_byakhee;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityValues.setAbilityValue(ability_dodgeAttack, 40);
+  d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.speed = actorSpeed_fastest;
   d.rangedCooldownTurns = 0;
   d.glyph = 'B';
@@ -1147,12 +1147,12 @@ void ActorData::defineAllActors() {
   d.id = actor_giantMantis;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityValues.setAbilityValue(ability_dodgeAttack, 40);
+  d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.speed = actorSpeed_fastest;
   d.glyph = 'I';
   d.color = clrGreenLight;
@@ -1171,7 +1171,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, normal);
-  d.abilityValues.setAbilityValue(ability_stealth, 20);
+  d.abilityVals.setVal(ability_stealth, 20);
   finalizeDefinition(d);
   d.reset();
 
@@ -1181,7 +1181,7 @@ void ActorData::defineAllActors() {
   d.id = actor_giantLocust;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1214,7 +1214,7 @@ void ActorData::defineAllActors() {
   d.id = actor_miGo;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = false;
   d.aiBehavior.movesTowardLair = false;
@@ -1251,7 +1251,7 @@ void ActorData::defineAllActors() {
   d.id = actor_ghoul;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -1287,7 +1287,7 @@ void ActorData::defineAllActors() {
   d.id = actor_shadow;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -1316,7 +1316,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, weak);
-  d.abilityValues.setAbilityValue(ability_stealth, 90);
+  d.abilityVals.setVal(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 
@@ -1326,7 +1326,7 @@ void ActorData::defineAllActors() {
   d.id = actor_mummy;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1361,7 +1361,7 @@ void ActorData::defineAllActors() {
   d.id = actor_khephren;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1400,7 +1400,7 @@ void ActorData::defineAllActors() {
   d.id = actor_nitokris;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1438,7 +1438,7 @@ void ActorData::defineAllActors() {
   d.id = actor_deepOne;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
@@ -1472,7 +1472,7 @@ void ActorData::defineAllActors() {
   d.id = actor_wormMass;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1505,7 +1505,7 @@ void ActorData::defineAllActors() {
   d.id = actor_dustVortex;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1541,7 +1541,7 @@ void ActorData::defineAllActors() {
   d.id = actor_fireVortex;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1576,7 +1576,7 @@ void ActorData::defineAllActors() {
   d.id = actor_oozeBlack;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1618,7 +1618,7 @@ void ActorData::defineAllActors() {
   d.id = actor_oozeClear;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1646,7 +1646,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.erraticMovement = actorErratic_somewhat;
-  d.abilityValues.setAbilityValue(ability_stealth, 100);
+  d.abilityVals.setVal(ability_stealth, 100);
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
@@ -1661,7 +1661,7 @@ void ActorData::defineAllActors() {
   d.id = actor_oozePutrid;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1703,7 +1703,7 @@ void ActorData::defineAllActors() {
   d.id = actor_oozePoison;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1745,7 +1745,7 @@ void ActorData::defineAllActors() {
   d.id = actor_colourOutOfSpace;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = false;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
@@ -1775,8 +1775,8 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
   setStrengthsFromFormula(d, superStrong);
-  d.abilityValues.setAbilityValue(ability_resistStatusBody, 100);
-  d.abilityValues.setAbilityValue(ability_resistStatusMind, 100);
+  d.abilityVals.setVal(ability_resistStatusBody, 100);
+  d.abilityVals.setVal(ability_resistStatusMind, 100);
   finalizeDefinition(d);
   d.reset();
 
@@ -1786,7 +1786,7 @@ void ActorData::defineAllActors() {
   d.id = actor_huntingHorror;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.attemptsAttack = true;
+  d.aiBehavior.triesAttack = true;
   d.aiBehavior.pathsToTargetWhenAware = true;
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;

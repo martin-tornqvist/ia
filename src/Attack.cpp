@@ -54,7 +54,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
   }
 
   data.isIntrinsic = weapon->getDef().isIntrinsic;
-  data.attackSkill = data.attacker->getDef()->abilityValues.getAbilityValue(data.abilityUsed, true, *(data.attacker));
+  data.attackSkill = data.attacker->getDef()->abilityVals.getVal(data.abilityUsed, true, *(data.attacker));
   data.totalSkill = data.wpnBaseSkill + data.attackSkill;
   data.attackResult = eng->abilityRoll->roll(data.totalSkill);
   data.isPlayerAttacking = data.attacker == eng->player;
@@ -64,7 +64,7 @@ void Attack::getAttackData(AttackData& data, const coord& target, const coord& c
   if(data.currentDefender != NULL && IS_MELEE == true) {
     if(data.currentDefender->getDef()->canDodge == true) {
       const int DEFENDER_DODGE_SKILL =
-        data.currentDefender->getDef()->abilityValues.getAbilityValue(ability_dodgeAttack, true, *(data.currentDefender));
+        data.currentDefender->getDef()->abilityVals.getVal(ability_dodgeAttack, true, *(data.currentDefender));
 
       const coord defenderPos = data.currentDefender->pos;
       const int DODGE_MOD_AT_FEATURE = eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();

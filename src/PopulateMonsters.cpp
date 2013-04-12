@@ -44,8 +44,8 @@ void PopulateMonsters::spawnGroupOfRandomAt(const vector<coord>& sortedFreeCells
   }
 }
 
-void PopulateMonsters::attemptSpawnDueToTimePassed() const {
-  tracer << "PopulateMonsters::attemptSpawnDueToTimePassed()..." << endl;
+void PopulateMonsters::trySpawnDueToTimePassed() const {
+  tracer << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
@@ -79,7 +79,7 @@ void PopulateMonsters::attemptSpawnDueToTimePassed() const {
       spawnGroupOfRandomAt(freeCellsVector, blockers, getRandomOutOfDepth(), true);
     }
   }
-  tracer << "PopulateMonsters::attemptSpawnDueToTimePassed() [DONE]" << endl;
+  tracer << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
 void PopulateMonsters::populateCaveLevel() const {

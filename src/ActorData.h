@@ -76,16 +76,16 @@ enum MonsterShockLevel {
 
 struct AiBehavior {
 public:
-  AiBehavior() : looks(false), makesRoomForFriend(false), attemptsAttack(false),
+  AiBehavior() : looks(false), makesRoomForFriend(false), triesAttack(false),
     pathsToTargetWhenAware(false), movesTowardTargetWhenVision(false),
     movesTowardLair(false), movesTowardLeader(false) {}
 
   void reset() {
-    looks = makesRoomForFriend = attemptsAttack = pathsToTargetWhenAware = false;
+    looks = makesRoomForFriend = triesAttack = pathsToTargetWhenAware = false;
     movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
   }
 
-  bool looks, makesRoomForFriend, attemptsAttack, pathsToTargetWhenAware;
+  bool looks, makesRoomForFriend, triesAttack, pathsToTargetWhenAware;
   bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
 };
 
@@ -98,12 +98,14 @@ public:
   void reset();
 
   ActorId_t id;
+
   string name_a;
   string name_the;
   Tile_t tile;
   char glyph;
   sf::Color color;
   int monsterLvl;
+  AbilityValues abilityVals;
   MonsterGroupSize_t groupSize;
   int hpMax;
   ActorSpeed_t speed;
@@ -111,7 +113,6 @@ public:
   int rangedCooldownTurns, spellCooldownTurns;
   bool isResPhys, isResFire, isResCold, isResAcid, isResElectric, isResSpirit, isResLight;
   bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
-  AbilityValues abilityValues;
   AiBehavior aiBehavior;
   int nrTurnsAwarePlayer;
   int spawnMinLevel, spawnMaxLevel;
@@ -142,7 +143,7 @@ class ActorData {
 public:
   ActorData(Engine* engine) : eng(engine) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      actorDefinitions[i].abilityValues.eng = engine;
+      actorDefinitions[i].abilityVals.eng = engine;
     }
     defineAllActors();
   }

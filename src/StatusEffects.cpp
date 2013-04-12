@@ -98,7 +98,7 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
   owningActor->hit(engine->dice(1, 3), damageType_physical);
 
   if(owningActor->deadState == actorDeadState_alive) {
-    const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityValues.getAbilityValue(ability_resistStatusBody, true, *(owningActor));
+    const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *(owningActor));
     if(engine->abilityRoll->roll(ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
       nrOfSpikes--;
       if(nrOfSpikes > 0) {
@@ -282,7 +282,7 @@ void StatusFlared::newTurn(Engine* const engine) {
   if(turnsLeft == 0) {
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
     engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 99999);
-    owningActor->getStatusEffectsHandler()->attemptAddEffect(new StatusBurning(engine));
+    owningActor->getStatusEffectsHandler()->tryAddEffect(new StatusBurning(engine));
     owningActor->getStatusEffectsHandler()->endEffect(statusFlared, visionBlockers, false);
   }
 }
@@ -333,7 +333,7 @@ bool StatusEffectsHandler::allowSee() {
   return true;
 }
 
-void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT, const bool NO_MESSAGES) {
+void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT, const bool NO_MESSAGES) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -341,7 +341,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   const bool PLAYER_SEE_OWNER = eng->player->checkIfSeeActor(*owningActor, blockers);
 
   const Abilities_t saveAbility = effect->getSaveAbility();
-  const int ACTOR_ABILITY = owningActor->getDef()->abilityValues.getAbilityValue(saveAbility, true, *(owningActor));
+  const int ACTOR_ABILITY = owningActor->getDef()->abilityVals.getVal(saveAbility, true, *(owningActor));
   const int SAVE_ABILITY_MOD = effect->getSaveAbilityModifier();
   int statusProtectionFromArmor = 0;
 
@@ -455,7 +455,7 @@ void StatusEffectsHandler::attemptAddEffect(StatusEffect* const effect, const bo
   delete effect;
 }
 
-void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE) {
+void StatusEffectsHandler::tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE) {
   const ItemDefinition& wpnDef = weapon->getDef();
   StatusEffect* wpnEffect = IS_MELEE ? wpnDef.meleeStatusEffect : wpnDef.rangedStatusEffect;
 
@@ -465,7 +465,7 @@ void StatusEffectsHandler::attemptAddEffectsFromWeapon(Weapon* weapon, const boo
 
     //Attempt to add the effect to the actor.
     //If attempt fails (saving throw succeeds, immune, etc), the copy is destroyed.
-    attemptAddEffect(cpy);
+    tryAddEffect(cpy);
   }
 }
 

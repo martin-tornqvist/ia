@@ -82,7 +82,7 @@ void Device::runBadEffect(Engine* const engine) {
     engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
   } else if(RND < 40) {
     engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
-    engine->player->getStatusEffectsHandler()->attemptAddEffect(new StatusParalyzed(2));
+    engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
     engine->player->hit(engine->dice.getInRange(1, 2), damageType_electric);
   } else {
     engine->log->addMessage("The " + name + " hums ominously.");
@@ -139,7 +139,7 @@ void DeviceRepeller::runGoodEffect(Engine* const engine) {
     if(actor != engine->player) {
       const coord& otherPos = actor->pos;
       if(engine->mapTests->isCellsNeighbours(playerPos, otherPos, false)) {
-        engine->knockBack->attemptKnockBack(actor, playerPos, false, true);
+        engine->knockBack->tryKnockBack(actor, playerPos, false, true);
       }
     }
   }

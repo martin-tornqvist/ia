@@ -100,15 +100,15 @@ public:
 
   void setGoreIfPossible();
 
-  Tile_t getGoreTile() {
+  inline Tile_t getGoreTile() {
     return goreTile_;
   }
 
-  char getGoreGlyph() {
+  inline char getGoreGlyph() {
     return goreGlyph_;
   }
 
-  void clearGore() {
+  inline void clearGore() {
     goreTile_ = tile_empty;
     goreGlyph_ = ' ';
     hasBlood_ = false;
