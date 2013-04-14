@@ -178,6 +178,8 @@
 		<Unit filename="..\src\FeatureData.h" />
 		<Unit filename="..\src\FeatureDoor.cpp" />
 		<Unit filename="..\src\FeatureDoor.h" />
+		<Unit filename="..\src\FeatureExaminable.cpp" />
+		<Unit filename="..\src\FeatureExaminable.h" />
 		<Unit filename="..\src\FeatureFactory.cpp" />
 		<Unit filename="..\src\FeatureFactory.h" />
 		<Unit filename="..\src\FeatureGrave.cpp" />
@@ -194,8 +196,6 @@
 		<Unit filename="..\src\FeatureSmoke.h" />
 		<Unit filename="..\src\FeatureTrap.cpp" />
 		<Unit filename="..\src\FeatureTrap.h" />
-		<Unit filename="..\src\FeatureVariousExaminable.cpp" />
-		<Unit filename="..\src\FeatureVariousExaminable.h" />
 		<Unit filename="..\src\FeatureWall.cpp" />
 		<Unit filename="..\src\FeatureWall.h" />
 		<Unit filename="..\src\Fov.cpp" />
@@ -204,6 +204,8 @@
 		<Unit filename="..\src\FovPreCalc.h" />
 		<Unit filename="..\src\GameTime.cpp" />
 		<Unit filename="..\src\GameTime.h" />
+		<Unit filename="..\src\Gods.cpp" />
+		<Unit filename="..\src\Gods.h" />
 		<Unit filename="..\src\Highscore.cpp" />
 		<Unit filename="..\src\Highscore.h" />
 		<Unit filename="..\src\Input.cpp" />

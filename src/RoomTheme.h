@@ -30,8 +30,7 @@ struct Room;
 
 class RoomThemeMaker {
 public:
-  RoomThemeMaker(Engine* engine) : eng(engine) {
-  }
+  RoomThemeMaker(Engine* engine) : eng(engine) {}
 
   void run(const vector<Room*>& rooms);
 
@@ -50,13 +49,16 @@ private:
   void makeRoomDarkWithChance(const Room& room);
 
   int trySetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
-                               vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
+                           vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme);
 
   void eraseAdjacentCellsFromVectors(const coord& pos,  vector<coord>& nextToWalls, vector<coord>& awayFromWalls);
 
   void assignRoomThemes();
 
-  bool isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme, const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  bool isThemeAllowed(const Room* const room, const RoomTheme_t theme,
+                      const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const;
+
+  bool isThemeExistInMap(const RoomTheme_t theme) const;
 
   Engine* eng;
 };

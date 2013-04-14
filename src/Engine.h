@@ -86,6 +86,7 @@ class PlayerCreateCharacter;
 class RoomThemeMaker;
 class DebugModeStatPrinter;
 class Disarm;
+class Gods;
 
 class Player;
 
@@ -181,6 +182,7 @@ public:
 	RoomThemeMaker* roomThemeMaker;
 	DebugModeStatPrinter* debugModeStatPrinter;
 	Disarm* disarm;
+	Gods* gods;
 
 	Player* player;
 

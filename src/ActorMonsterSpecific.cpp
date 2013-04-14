@@ -16,92 +16,58 @@
 #include "Blood.h"
 #include "FeatureFactory.h"
 #include "Knockback.h"
+#include "Gods.h"
 
 using namespace std;
 
 string Cultist::getCultistPhrase(Engine* const engine) {
-  const int rnd = engine->dice.getInRange(1, 25);
-  switch(rnd) {
-    case 1:
-      return "Apigami!";
-      break;
-    case 2:
-      return "Bhuudesco invisuu!";
-      break;
-    case 3:
-      return "Bhuuesco marana!";
-      break;
-    case 4:
-      return "Crudux cruo!";
-      break;
-    case 5:
-      return "Cruento paashaeximus!";
-      break;
-    case 6:
-      return "Cruento pestis shatruex!";
-      break;
-    case 7:
-      return "Cruo crunatus durbe!";
-      break;
-    case 8:
-      return "Cruo lokemundux!";
-      break;
-    case 9:
-      return "Cruo-stragaraNa!";
-      break;
-    case 10:
-      return "Gero shay cruo!";
-      break;
-    case 11:
-      return "In marana domus-bhaava crunatus!";
-      break;
-    case 12:
-      return "Caecux infirmux!";
-      break;
-    case 13:
-      return "Malax sayti!";
-      break;
-    case 14:
-      return "Marana pallex!";
-      break;
-    case 15:
-      return "Marana malax!";
-      break;
-    case 16:
-      return "Pallex ti!";
-      break;
-    case 17:
-      return "Peroshay bibox malax!";
-      break;
-    case 18:
-      return "Pestis Cruento!";
-      break;
-    case 19:
-      return "Pestis cruento vilomaxus pretiacruento!";
-      break;
-    case 20:
-      return "Pretaanluxis cruonit!";
-      break;
-    case 21:
-      return "Pretiacruento!";
-      break;
-    case 22:
-      return "StragarNaya!";
-      break;
-    case 23:
-      return "Vorox esco marana!";
-      break;
-    case 24:
-      return "Vilomaxus!";
-      break;
-    case 25:
-      return "Prostragaranar malachtose!";
-      break;
-    default:
-      return "Apigami!";
-      break;
+  vector<string> phraseCandidates;
+
+  const God* const god = engine->gods->getCurrentGod();
+  if(god != NULL && engine->dice.coinToss()) {
+    const string name = god->getName();
+    const string descr = god->getDescr();
+    phraseCandidates.push_back(name + " save us!");
+    phraseCandidates.push_back(descr + " will save us!");
+    phraseCandidates.push_back(name + ", guide us!");
+    phraseCandidates.push_back(descr + " guides us!");
+    phraseCandidates.push_back("For " + name + "!");
+    phraseCandidates.push_back("For " + descr + "!");
+    phraseCandidates.push_back("Blood for " + name + "!");
+    phraseCandidates.push_back("Blood for " + descr + "!");
+    phraseCandidates.push_back("Perish for " + name + "!");
+    phraseCandidates.push_back("Perish for " + descr + "!");
+    phraseCandidates.push_back("In the name of " + name + "!");
+  } else {
+    phraseCandidates.push_back("Apigami!");
+    phraseCandidates.push_back("Bhuudesco invisuu!");
+    phraseCandidates.push_back("Bhuuesco marana!");
+    phraseCandidates.push_back("Crudux cruo!");
+    phraseCandidates.push_back("Cruento paashaeximus!");
+    phraseCandidates.push_back("Cruento pestis shatruex!");
+    phraseCandidates.push_back("Cruo crunatus durbe!");
+    phraseCandidates.push_back("Cruo lokemundux!");
+    phraseCandidates.push_back("Cruo-stragaraNa!");
+    phraseCandidates.push_back("Gero shay cruo!");
+    phraseCandidates.push_back("In marana domus-bhaava crunatus!");
+    phraseCandidates.push_back("Caecux infirmux!");
+    phraseCandidates.push_back("Malax sayti!");
+    phraseCandidates.push_back("Marana pallex!");
+    phraseCandidates.push_back("Marana malax!");
+    phraseCandidates.push_back("Pallex ti!");
+    phraseCandidates.push_back("Peroshay bibox malax!");
+    phraseCandidates.push_back("Pestis Cruento!");
+    phraseCandidates.push_back("Pestis cruento vilomaxus pretiacruento!");
+    phraseCandidates.push_back("Pretaanluxis cruonit!");
+    phraseCandidates.push_back("Pretiacruento!");
+    phraseCandidates.push_back("StragarNaya!");
+    phraseCandidates.push_back("Vorox esco marana!");
+    phraseCandidates.push_back("Vilomaxus!");
+    phraseCandidates.push_back("Prostragaranar malachtose!");
+    phraseCandidates.push_back("Apigami!");
   }
-  return "Apigami!";
+
+  return phraseCandidates.at(engine->dice.getInRange(0, phraseCandidates.size() - 1));
 }
 
 void Cultist::actorSpecific_spawnStartItems() {
@@ -716,7 +682,8 @@ bool MajorClaphamLee::actorSpecificAct() {
             eng->player->incrShock(shockValue_heavy);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               if(i == 0) {
-                Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
+                Monster* monster = dynamic_cast<Monster*>(
+                                     eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
                 monster->playerAwarenessCounter = 999;
                 monster->leader = this;
                 freeCells.erase(freeCells.begin());
@@ -724,17 +691,12 @@ bool MajorClaphamLee::actorSpecificAct() {
                 const int ZOMBIE_TYPE = eng->dice.getInRange(0, 2);
                 ActorId_t id = actor_zombie;
                 switch(ZOMBIE_TYPE) {
-                  case 0:
-                    id = actor_zombie;
-                    break;
-                  case 1:
-                    id = actor_zombieAxe;
-                    break;
-                  case 2:
-                    id = actor_bloatedZombie;
-                    break;
+                  case 0: id = actor_zombie;        break;
+                  case 1: id = actor_zombieAxe;     break;
+                  case 2: id = actor_bloatedZombie; break;
                 }
-                Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(id, freeCells.at(0)));
+                Monster* monster = dynamic_cast<Monster*>(
+                                     eng->actorFactory->spawnActor(id, freeCells.at(0)));
                 monster->playerAwarenessCounter = 999;
                 monster->leader = this;
                 freeCells.erase(freeCells.begin());

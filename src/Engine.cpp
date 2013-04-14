@@ -34,6 +34,7 @@
 #include "FeatureFactory.h"
 #include "Fov.h"
 #include "GameTime.h"
+#include "Gods.h"
 #include "Highscore.h"
 #include "Interface.h"
 #include "Input.h"
@@ -194,6 +195,7 @@ void Engine::initGame() {
   roomThemeMaker = new RoomThemeMaker(this);
   debugModeStatPrinter = new DebugModeStatPrinter(this);
   disarm = new Disarm(this);
+  gods = new Gods(this);
 
   tracer << "Engine::initGame() [DONE]" << endl;
 }
@@ -271,6 +273,7 @@ void Engine::cleanupGame() {
   delete roomThemeMaker;
   delete debugModeStatPrinter;
   delete disarm;
+  delete gods;
 
   delete marker;
 

@@ -9,11 +9,14 @@
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
 #include "Blood.h"
+#include "Gods.h"
 
 void RoomThemeMaker::run(const vector<Room*>& rooms) {
   tracer << "RoomThemeMaker::run()..." << endl;
 
   roomList = rooms;
+
+  eng->gods->setNoGod();
 
   assignRoomThemes();
 
@@ -52,8 +55,17 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
   }
 }
 
-bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTheme_t theme,
-    const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
+  for(unsigned int i = 0; i < roomList.size(); i++) {
+    if(roomList.at(i)->roomTheme == theme) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool RoomThemeMaker::isThemeAllowed(const Room* const room, const RoomTheme_t theme,
+                                    const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   (void)blockers;
 
@@ -63,15 +75,27 @@ bool RoomThemeMaker::isRoomEligibleForTheme(const Room* const room, const RoomTh
   const int MAX_DIM = max(ROOM_W, ROOM_H);
 
   switch(theme) {
-    case roomTheme_plain:     {return true;} break;
-    case roomTheme_human:     {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
-    case roomTheme_ritual:    {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
-    case roomTheme_spider:    {return MAX_DIM >= 4 && MIN_DIM >= 3;} break;
+    case roomTheme_plain: {
+        return true;
+      } break;
+    case roomTheme_human: {
+        return MAX_DIM >= 5 && MIN_DIM >= 4 && isThemeExistInMap(roomTheme_human) == false;
+      } break;
+    case roomTheme_ritual: {
+        return MAX_DIM >= 4 && MIN_DIM >= 3 && isThemeExistInMap(roomTheme_ritual) == false;
+      } break;
+    case roomTheme_spider: {
+        return MAX_DIM >= 4 && MIN_DIM >= 3;
+      } break;
 //    case roomTheme_dungeon: {
 //      return false;
 //    } break;
-    case roomTheme_crypt:     {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
-    case roomTheme_monster:   {return MAX_DIM >= 5 && MIN_DIM >= 4;} break;
+    case roomTheme_crypt: {
+        return MAX_DIM >= 5 && MIN_DIM >= 4;
+      } break;
+    case roomTheme_monster: {
+        return MAX_DIM >= 5 && MIN_DIM >= 4;
+      } break;
 //    case roomTheme_chasm: {
 //      if(MIN_DIM >= 5) {
 //        for(int y = room->getY0(); y <= room->getY1(); y++) {
@@ -136,10 +160,14 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
     }
   }
 
-  //Ritual chamber, somtimes make gore at altar (or random pos if no altar)
+  //Ritual chamber, set a random god for this level, sometimes make gore at altar
+  //(or at random pos if no altar)
   if(room.roomTheme == roomTheme_ritual) {
-    const int CHANCE_FOR_BLOODY_RITUAL_CHAMBER = 60;
-    if(eng->dice.percentile() < CHANCE_FOR_BLOODY_RITUAL_CHAMBER) {
+
+    eng->gods->setRandomGod();
+
+    const int CHANCE_FOR_BLOODY_CHAMBER = 60;
+    if(eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
 
       coord origin(-1, -1);
       vector<coord> originCandidates;
@@ -162,7 +190,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         }
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if((dx == 0 && dy == 0) || (eng->dice.percentile() < CHANCE_FOR_BLOODY_RITUAL_CHAMBER / 2)) {
+            if((dx == 0 && dy == 0) || (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
               const coord pos = origin + coord(dx, dy);
               if(blockers[pos.x][pos.y] == false) {
                 eng->gore->makeGore(pos);
@@ -383,7 +411,7 @@ void RoomThemeMaker::assignRoomThemes() {
         const RoomTheme_t theme = static_cast<RoomTheme_t>(eng->dice.getInRange(1, endOfRoomThemes - 1));
         Room* const room = roomList.at(ELEMENT);
 
-        if(isRoomEligibleForTheme(room, theme, blockers)) {
+        if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
           tracer << "RoomThemeMaker: Assigned non-plain theme (" << theme << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;

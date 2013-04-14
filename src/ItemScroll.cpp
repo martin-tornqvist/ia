@@ -421,8 +421,8 @@ void Scroll::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
 
 void Scroll::tryMemorizeIfLearnable(Engine* const engine) {
   if(def_->isScrollLearned == false && def_->isScrollLearnable) {
-    const int CHANCE_TO_LEARN = 80;
-    if(engine->dice.getInRange(0, 100) < CHANCE_TO_LEARN) {
+    const int CHANCE_TO_LEARN = 90;
+    if(engine->dice.percentile() < CHANCE_TO_LEARN) {
       engine->log->addMessage("I learn to cast this incantation by heart!");
       def_->isScrollLearned = true;
     } else {
@@ -445,9 +445,13 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
   const AbilityRollResult_t rollResult = engine->abilityRoll->roll(getChanceToCastFromMemory(engine));
   if(rollResult >= successSmall) {
     engine->log->addMessage("I cast " + getRealTypeName() + "...");
+    def_->castFromMemoryCurrentBaseChance = 0;
     specificRead(engine);
   } else {
     engine->log->addMessage("I miscast it.");
+    if(def_->castFromMemoryCurrentBaseChance > 0) {
+      def_->castFromMemoryCurrentBaseChance--;
+    }
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusWeak(engine));
     if(engine->dice.coinToss()) {
       engine->log->addMessage("I feel a sharp pain in my head!", clrMessageBad);
@@ -460,8 +464,6 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
   if(engine->player->deadState == actorDeadState_alive) {
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
     engine->gameTime->letNextAct();
-
-    def_->castFromMemoryCurrentBaseChance = 0;
   }
   return true;
 }

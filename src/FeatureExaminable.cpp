@@ -1,4 +1,4 @@
-#include "FeatureVariousExaminable.h"
+#include "FeatureExaminable.h"
 
 #include "Engine.h"
 #include "Log.h"
@@ -14,10 +14,6 @@
 //------------------------------------------------------------------ BASE CLASS
 FeatureExaminable::FeatureExaminable(Feature_t id, coord pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
-
-//sf::Color FeatureExaminable::getColorBg() const {
-//  return isExaminableFurther_ ? clrBlue : clrBlack;
-//}
 
 void FeatureExaminable::examine() {
   tracer << "FeatureExaminable::examine()..." << endl;

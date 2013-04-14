@@ -11,7 +11,7 @@
 #include "FeatureSmoke.h"
 #include "FeatureProxEvent.h"
 #include "Map.h"
-#include "FeatureVariousExaminable.h"
+#include "FeatureExaminable.h"
 #include "FeatureLiquid.h"
 #include "FeatureGrave.h"
 #include "FeatureWall.h"

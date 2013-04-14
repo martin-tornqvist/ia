@@ -1,5 +1,5 @@
-#ifndef FEATURE_VARIOUS_EXAMINABLE_H
-#define FEATURE_VARIOUS_EXAMINABLE_H
+#ifndef FEATURE_EXAMINABLE_H
+#define FEATURE_EXAMINABLE_H
 
 #include "Feature.h"
 
@@ -20,18 +20,10 @@ public:
 
   void examine();
 
-//  sf::Color getColorBg() const;
-
-//  bool isExaminableFurther() const {
-//    return isExaminableFurther_;
-//  }
-
 protected:
   virtual void featureSpecific_examine() = 0;
 
   EventRegularity_t getEventRegularity();
-
-//  bool isExaminableFurther_;
 
   friend class FeatureFactory;
   FeatureExaminable(Feature_t id, coord pos, Engine* engine);
