@@ -32,10 +32,10 @@
 		<Cursor position="559" topLine="12" />
 	</File>
 	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="5708" topLine="171" />
+		<Cursor position="5708" topLine="105" />
 	</File>
-	<File name="..\src\Actor.h" open="0" top="0" tabpos="1">
-		<Cursor position="464" topLine="33" />
+	<File name="..\src\Actor.h" open="1" top="0" tabpos="4">
+		<Cursor position="2387" topLine="64" />
 	</File>
 	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="784" topLine="13" />
@@ -55,8 +55,8 @@
 	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="3">
 		<Cursor position="10130" topLine="469" />
 	</File>
-	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="26095" topLine="167" />
+	<File name="..\src\ActorMonsterSpecific.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="625" topLine="6" />
 	</File>
 	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="29348" topLine="745" />
@@ -152,10 +152,10 @@
 		<Cursor position="1440" topLine="41" />
 	</File>
 	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="7646" topLine="243" />
+		<Cursor position="5982" topLine="171" />
 	</File>
 	<File name="..\src\Engine.h" open="0" top="0" tabpos="3">
-		<Cursor position="4057" topLine="152" />
+		<Cursor position="217" topLine="0" />
 	</File>
 	<File name="..\src\Examine.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="526" topLine="0" />
@@ -257,10 +257,10 @@
 		<Cursor position="2338" topLine="86" />
 	</File>
 	<File name="..\src\Gods.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1283" topLine="0" />
+		<Cursor position="5644" topLine="7" />
 	</File>
-	<File name="..\src\Gods.h" open="1" top="0" tabpos="1">
-		<Cursor position="306" topLine="0" />
+	<File name="..\src\Gods.h" open="1" top="1" tabpos="5">
+		<Cursor position="615" topLine="0" />
 	</File>
 	<File name="..\src\Highscore.cpp" open="0" top="0" tabpos="11">
 		<Cursor position="2104" topLine="54" />
@@ -316,8 +316,8 @@
 	<File name="..\src\ItemData.h" open="0" top="0" tabpos="3">
 		<Cursor position="436" topLine="6" />
 	</File>
-	<File name="..\src\ItemDefinition.h" open="1" top="1" tabpos="4">
-		<Cursor position="2860" topLine="106" />
+	<File name="..\src\ItemDefinition.h" open="0" top="0" tabpos="4">
+		<Cursor position="2325" topLine="106" />
 	</File>
 	<File name="..\src\ItemDevice.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="5247" topLine="137" />
@@ -337,8 +337,8 @@
 	<File name="..\src\ItemExplosive.h" open="0" top="0" tabpos="0">
 		<Cursor position="409" topLine="0" />
 	</File>
-	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="6794" topLine="79" />
+	<File name="..\src\ItemFactory.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="617" topLine="9" />
 	</File>
 	<File name="..\src\ItemFactory.h" open="0" top="0" tabpos="4">
 		<Cursor position="255" topLine="0" />
@@ -355,8 +355,8 @@
 	<File name="..\src\ItemPotion.h" open="0" top="0" tabpos="0">
 		<Cursor position="3192" topLine="72" />
 	</File>
-	<File name="..\src\ItemScroll.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="12865" topLine="355" />
+	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="10160" topLine="275" />
 	</File>
 	<File name="..\src\ItemScroll.h" open="0" top="0" tabpos="2">
 		<Cursor position="1065" topLine="23" />
@@ -538,11 +538,11 @@
 	<File name="..\src\RenderInventory.h" open="0" top="0" tabpos="3">
 		<Cursor position="247" topLine="4" />
 	</File>
-	<File name="..\src\RoomTheme.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="7157" topLine="185" />
+	<File name="..\src\RoomTheme.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="5666" topLine="157" />
 	</File>
 	<File name="..\src\RoomTheme.h" open="0" top="0" tabpos="4">
-		<Cursor position="634" topLine="18" />
+		<Cursor position="618" topLine="0" />
 	</File>
 	<File name="..\src\SaveHandler.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="2465" topLine="80" />

@@ -8689,7 +8689,7 @@
 
 1350580592 c:\_martin_\ia\src\ai_castrandomspell.h
 
-1365932376 source:c:\_martin_\ia\src\actormonsterspecific.cpp
+1365943006 source:c:\_martin_\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -8706,6 +8706,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 	"Knockback.h"
+	"Gods.h"
 
 1365280495 c:\_martin_\ia\src\itemfactory.h
 	<string>
