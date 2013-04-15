@@ -846,7 +846,8 @@ void Renderer::drawTiles() {
         actor->deadState == actorDeadState_alive &&
         actor->getTile() != tile_empty &&
         eng->player->checkIfSeeActor(*actor, NULL)) {
-        currentDrw = &renderArrayTiles[actor->pos.x][actor->pos.y];
+        currentDrw = &(renderArrayTiles[actor->pos.x][actor->pos.y]);
+        currentDrw->isLivingActorSeenHere = true;
         currentDrw->color = actor->getColor();
         currentDrw->tile = actor->getTile();
 
@@ -899,37 +900,41 @@ void Renderer::drawTiles() {
       //Walls are given perspective.
       //If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is
       //not a front or top wall tile, and that cell is explored, change the current tile to wall front
-      const Tile_t tileSeen = renderArrayActorsOmittedTiles[x][y].tile;
-      const Tile_t tileMem = eng->map->playerVisualMemoryTiles[x][y].tile;
-      bool isTileWall = eng->map->playerVision[x][y] ? Wall::isTileAnyWallTop(tileSeen) : Wall::isTileAnyWallTop(tileMem);
-      if(isTileWall) {
-        Feature* const f = eng->map->featuresStatic[x][y];
-        const Feature_t featureId = f->getId();
-        bool isHiddenDoor = false;
-        if(featureId == feature_door) {
-          isHiddenDoor = dynamic_cast<Door*>(f)->isSecret();
-        }
-        if(y < MAP_Y_CELLS - 1 && (featureId == feature_stoneWall || isHiddenDoor)) {
-          if(eng->map->explored[x][y + 1]) {
-            const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
+      if(tempDrw.isLivingActorSeenHere == false) {
+        const Tile_t tileSeen = renderArrayActorsOmittedTiles[x][y].tile;
+        const Tile_t tileMem = eng->map->playerVisualMemoryTiles[x][y].tile;
+        const bool IS_TILE_WALL =
+          eng->map->playerVision[x][y] ? Wall::isTileAnyWallTop(tileSeen) :
+          Wall::isTileAnyWallTop(tileMem);
+        if(IS_TILE_WALL) {
+          const Feature* const f = eng->map->featuresStatic[x][y];
+          const Feature_t featureId = f->getId();
+          bool isHiddenDoor = false;
+          if(featureId == feature_door) {
+            isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
+          }
+          if(y < MAP_Y_CELLS - 1 && (featureId == feature_stoneWall || isHiddenDoor)) {
+            if(eng->map->explored[x][y + 1]) {
+              const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
 
-            const Tile_t tileBelowSeen = renderArrayActorsOmittedTiles[x][y + 1].tile;
-            const Tile_t tileBelowMem = eng->map->playerVisualMemoryTiles[x][y + 1].tile;
+              const Tile_t tileBelowSeen = renderArrayActorsOmittedTiles[x][y + 1].tile;
+              const Tile_t tileBelowMem = eng->map->playerVisualMemoryTiles[x][y + 1].tile;
 
-            const bool TILE_BELOW_IS_WALL_FRONT =
-              IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
-              Wall::isTileAnyWallFront(tileBelowMem);
+              const bool TILE_BELOW_IS_WALL_FRONT =
+                IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
+                Wall::isTileAnyWallFront(tileBelowMem);
 
-            const bool TILE_BELOW_IS_WALL_TOP =
-              IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
-              Wall::isTileAnyWallTop(tileBelowMem);
+              const bool TILE_BELOW_IS_WALL_TOP =
+                IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
+                Wall::isTileAnyWallTop(tileBelowMem);
 
-            if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
-              if(isHiddenDoor) {
-                tempDrw.tile = tile_wallFront;
-              } else if(featureId == feature_stoneWall) {
-                const Wall* const wall = dynamic_cast<const Wall*>(f);
-                tempDrw.tile = wall->getFrontWallTile();
+              if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
+                if(isHiddenDoor) {
+                  tempDrw.tile = tile_wallFront;
+                } else if(featureId == feature_stoneWall) {
+                  const Wall* const wall = dynamic_cast<const Wall*>(f);
+                  tempDrw.tile = wall->getFrontWallTile();
+                }
               }
             }
           }

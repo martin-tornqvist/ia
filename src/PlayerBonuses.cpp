@@ -29,7 +29,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "50% more items found on map", playerBonus_observant);
-  setBonus(playerBonus_vigilant, "Vigilant", "You can not be backstabbed", playerBonus_observant, playerBonus_dexterous);
+  setBonus(playerBonus_vigilant, "Vigilant", "You cannot be backstabbed", playerBonus_observant, playerBonus_dexterous);
   setBonus(playerBonus_stealthy, "Stealthy", "+45% chance to avoid being spoted by monsters");
   setBonus(playerBonus_imperceptible, "Imperceptible", "+20% chance to avoid being spoted by monsters", playerBonus_stealthy, playerBonus_dexterous);
   setBonus(playerBonus_occultist, "Occultist", "Casting chance of memorized spells increases over time");
@@ -38,9 +38,9 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_unyielding, "Unyielding", "+20% mental status resistance, -5% shock received", playerBonus_strongMinded);
   setBonus(playerBonus_coolHeaded, "Cool-headed", "-20% shock received", playerBonus_strongMinded);
   setBonus(playerBonus_selfAware, "Self-aware", "Cannot be confused, number of remaining turns for status effects is displayed", playerBonus_strongMinded);
-//  setBonus(playerBonus_wakeful, "Wakeful", "Can not faint");
-//  setBonus(playerBonus_clearThinker, "Clear thinker", "Can not be confused");
-//  setBonus(playerBonus_courageous, "Courageous", "Can not be terrified");
+//  setBonus(playerBonus_wakeful, "Wakeful", "Cannot faint");
+//  setBonus(playerBonus_clearThinker, "Clear thinker", "Cannot be confused");
+//  setBonus(playerBonus_courageous, "Courageous", "Cannot be terrified");
   setBonus(playerBonus_skillfulWoundTreater, "Skillful wound treater", "Healing takes half the normal time");
   setBonus(playerBonus_curer, "Curer", "Can heal disease", playerBonus_skillfulWoundTreater);
   setBonus(playerBonus_rapidRecoverer, "Rapid recoverer", "Passive HP regeneration", playerBonus_curer, playerBonus_healthy);

@@ -46,7 +46,11 @@ void Monster::act() {
 
   if(playerAwarenessCounter > 0) {
     isRoamingAllowed = true;
-    if(leader != NULL) {
+    if(leader == NULL) {
+      if(eng->dice.percentile() < 10) {
+        speakPhrase();
+      }
+    } else {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng->player) {
           dynamic_cast<Monster*>(leader)->playerAwarenessCounter = leader->getDef()->nrTurnsAwarePlayer;
@@ -214,16 +218,19 @@ void Monster::hearSound(const Sound& sound) {
   }
 }
 
+void Monster::speakPhrase() {
+  const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
+  const string msg = IS_SEEN_BY_PLAYER ? getAggroPhraseMonsterSeen() : getAggroPhraseMonsterHidden();
+  eng->soundEmitter->emitSound(Sound(msg, false, pos, false, true));
+}
+
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
     const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
     playerAwarenessCounter = def_->nrTurnsAwarePlayer;
     if(PLAYER_AWARENESS_BEFORE <= 0) {
-      const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
-      const string msg = IS_SEEN_BY_PLAYER ? getAggroPhraseMonsterSeen() : getAggroPhraseMonsterHidden();
-      eng->soundEmitter->emitSound(Sound(msg, false, pos, false, true));
+      speakPhrase();
     }
-
   }
 }
 

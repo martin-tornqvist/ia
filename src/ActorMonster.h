@@ -104,6 +104,8 @@ public:
 
   double shockCausedCurrent;
 
+  void speakPhrase();
+
 protected:
   void monsterHit(int& dmg);
 

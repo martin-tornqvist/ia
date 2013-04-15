@@ -12,7 +12,7 @@
 	<string>
 	<iostream>
 
-1365596344 c:\dev\ia\src\engine.h
+1365972210 c:\dev\ia\src\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -23,7 +23,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1364152285 c:\dev\ia\src\consttypes.h
+1366055184 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -185,7 +185,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1365805329 c:\dev\ia\src\actormonster.h
+1366055675 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -757,7 +757,7 @@
 
 1323988860 source:c:\dev\ia\src\dungeonreadwrite.cpp
 
-1365596304 source:c:\dev\ia\src\engine.cpp
+1365972210 source:c:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"SFML/System/Sleep.hpp"
@@ -789,6 +789,7 @@
 	"FeatureFactory.h"
 	"Fov.h"
 	"GameTime.h"
+	"Gods.h"
 	"Highscore.h"
 	"Interface.h"
 	"Input.h"
@@ -969,7 +970,7 @@
 	"Postmortem.h"
 	"PlayerBonuses.h"
 
-1363203036 source:c:\dev\ia\src\featurefactory.cpp
+1365972210 source:c:\dev\ia\src\featurefactory.cpp
 	"FeatureFactory.h"
 	<cassert>
 	"Engine.h"
@@ -980,7 +981,7 @@
 	"FeatureSmoke.h"
 	"FeatureProxEvent.h"
 	"Map.h"
-	"FeatureVariousExaminable.h"
+	"FeatureExaminable.h"
 	"FeatureLiquid.h"
 	"FeatureGrave.h"
 	"FeatureWall.h"
@@ -1229,7 +1230,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1365780606 source:c:\dev\ia\src\itemscroll.cpp
+1365972210 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1488,7 +1489,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1365708392 source:c:\dev\ia\src\playerbonuses.cpp
+1366055456 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1579,7 +1580,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1365715720 source:c:\dev\ia\src\render.cpp
+1366055352 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -5704,7 +5705,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1365786908 source:c:\dev\ia\src\actormonsterspecific.cpp
+1365972210 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -5721,6 +5722,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 	"Knockback.h"
+	"Gods.h"
 
 1355677713 c:\dev\ia\src\releasemodeincl\debugmode.h
 
@@ -7777,12 +7779,12 @@
 	"Render.h"
 	"PlayerBonuses.h"
 
-1365780631 c:\dev\ia\src\roomtheme.h
+1365972210 c:\dev\ia\src\roomtheme.h
 	<vector>
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1365780631 source:c:\dev\ia\src\roomtheme.cpp
+1365972210 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -7793,6 +7795,7 @@
 	"PopulateMonsters.h"
 	"PopulateTraps.h"
 	"Blood.h"
+	"Gods.h"
 
 1352038075 source:c:\dev\ia\src\_maparea.cpp
 
@@ -10304,4 +10307,29 @@
 1365943022 c:\_martin_\ia\src\gods.h
 	<string>
 	<vector>
+
+1365972210 c:\dev\ia\src\gods.h
+	<string>
+	<vector>
+
+1365972210 source:c:\dev\ia\src\featureexaminable.cpp
+	"FeatureExaminable.h"
+	"Engine.h"
+	"Log.h"
+	"Render.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemFactory.h"
+	"ItemDrop.h"
+	"Popup.h"
+	"PlayerBonuses.h"
+	"ActorPlayer.h"
+
+1365972210 c:\dev\ia\src\featureexaminable.h
+	"Feature.h"
+	"FeatureDoor.h"
+
+1365972210 source:c:\dev\ia\src\gods.cpp
+	"Gods.h"
+	"Engine.h"
 

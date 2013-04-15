@@ -61,7 +61,7 @@ struct CellRenderDataAscii {
 struct CellRenderDataTile {
   CellRenderDataTile() :
     color(clrBlack), colorBg(clrBlack), drawBgColor(false), tile(tile_empty),
-    lifebarLength(-1), isFadeEffectAllowed(true) {
+    lifebarLength(-1), isFadeEffectAllowed(true), isLivingActorSeenHere(false) {
   }
   void clear() {
     color = clrBlack;
@@ -70,6 +70,7 @@ struct CellRenderDataTile {
     tile = tile_empty;
     lifebarLength = -1;
     isFadeEffectAllowed = true;
+    isLivingActorSeenHere = false;
   }
   sf::Color color;
   sf::Color colorBg;
@@ -77,6 +78,7 @@ struct CellRenderDataTile {
   Tile_t tile;
   int lifebarLength;
   bool isFadeEffectAllowed;
+  bool isLivingActorSeenHere;
 };
 
 struct StringAndColor {
