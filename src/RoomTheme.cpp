@@ -76,26 +76,26 @@ bool RoomThemeMaker::isThemeAllowed(const Room* const room, const RoomTheme_t th
 
   switch(theme) {
     case roomTheme_plain: {
-        return true;
-      } break;
+      return true;
+    } break;
     case roomTheme_human: {
-        return MAX_DIM >= 5 && MIN_DIM >= 4 && isThemeExistInMap(roomTheme_human) == false;
-      } break;
+      return MAX_DIM >= 5 && MIN_DIM >= 4 && isThemeExistInMap(roomTheme_human) == false;
+    } break;
     case roomTheme_ritual: {
-        return MAX_DIM >= 4 && MIN_DIM >= 3 && isThemeExistInMap(roomTheme_ritual) == false;
-      } break;
+      return MAX_DIM >= 4 && MIN_DIM >= 3 && isThemeExistInMap(roomTheme_ritual) == false;
+    } break;
     case roomTheme_spider: {
-        return MAX_DIM >= 4 && MIN_DIM >= 3;
-      } break;
+      return MAX_DIM >= 4 && MIN_DIM >= 3;
+    } break;
 //    case roomTheme_dungeon: {
 //      return false;
 //    } break;
     case roomTheme_crypt: {
-        return MAX_DIM >= 5 && MIN_DIM >= 4;
-      } break;
+      return MAX_DIM >= 5 && MIN_DIM >= 4;
+    } break;
     case roomTheme_monster: {
-        return MAX_DIM >= 5 && MIN_DIM >= 4;
-      } break;
+      return MAX_DIM >= 5 && MIN_DIM >= 4;
+    } break;
 //    case roomTheme_chasm: {
 //      if(MIN_DIM >= 5) {
 //        for(int y = room->getY0(); y <= room->getY1(); y++) {
@@ -378,7 +378,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   const int MIN_DIM = 3;
   const int MAX_DIM = 12;
-  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(1, 4);
+  const int NR_NON_PLAIN_THEMED = eng->dice.getInRange(2, 4);
 
   const int NR_ROOMS = roomList.size();
 

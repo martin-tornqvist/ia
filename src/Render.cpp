@@ -77,13 +77,13 @@ void Renderer::setupWindowAndImagesClearPrev() {
   tracer << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + eng->config->GAME_VERSION;
 
-  const int& SCR_W_INT = eng->config->SCREEN_WIDTH;
-  const int& SCR_H_INT = eng->config->SCREEN_HEIGHT;
-  const double& SCR_W_DB = static_cast<double>(SCR_W_INT);
-  const double& SCR_H_DB = static_cast<double>(SCR_H_INT);
-  const double& SCALE = eng->config->SCALE;
-  const int SCR_W_SCALED = static_cast<int>(SCR_W_DB * SCALE);
-  const int SCR_H_SCALED = static_cast<int>(SCR_H_DB * SCALE);
+  const int& SCR_W_INT    = eng->config->SCREEN_WIDTH;
+  const int& SCR_H_INT    = eng->config->SCREEN_HEIGHT;
+  const double& SCR_W_DB  = static_cast<double>(SCR_W_INT);
+  const double& SCR_H_DB  = static_cast<double>(SCR_H_INT);
+  const double& SCALE     = eng->config->SCALE;
+  const int SCR_W_SCALED  = static_cast<int>(SCR_W_DB * SCALE);
+  const int SCR_H_SCALED  = static_cast<int>(SCR_H_DB * SCALE);
 
 //  if(eng->config->FULLSCREEN) {
 //    renderWindow_ = new sf::RenderWindow(sf::VideoMode(SCR_W_SCALED, SCR_H_SCALED), title, sf::Style::Fullscreen);
@@ -94,8 +94,8 @@ void Renderer::setupWindowAndImagesClearPrev() {
   tracer << "Renderer: Enabling key repeat" << endl;
   renderWindow_->setKeyRepeatEnabled(true);
 
-//  tracer << "Renderer: Setting frame rate limit" << endl;
-  renderWindow_->setFramerateLimit(0/*60*/);
+  tracer << "Renderer: Setting frame rate limit (0)" << endl;
+  renderWindow_->setFramerateLimit(0);
 
   loadFont();
 
@@ -131,7 +131,6 @@ void Renderer::loadFont() {
   for(int y = 0; y < FONT_SHEET_Y_CELLS; y++) {
     for(int x = 0; x < FONT_SHEET_X_CELLS; x++) {
       spritesFont_[x][y] = new sf::Sprite(*textureFontSheet_, sf::Rect<int>(x * W, y * H, W, H));
-
       spritesFont_[x][y]->setScale(SCALE, SCALE);
     }
   }
@@ -148,9 +147,12 @@ void Renderer::loadTiles() {
   const int W = eng->config->CELL_W;
   const int H = eng->config->CELL_H;
 
+  const double& SCALE = eng->config->SCALE;
+
   for(int y = 0; y < TILE_SHEET_Y_CELLS; y++) {
     for(int x = 0; x < TILE_SHEET_X_CELLS; x++) {
       spritesTiles_[x][y] = new sf::Sprite(*textureTileSheet_, sf::Rect<int>(x * W, y * H, W, H));
+      spritesTiles_[x][y]->setScale(SCALE, SCALE);
     }
   }
 
@@ -166,6 +168,8 @@ void Renderer::loadMainMenuLogo() {
   tracer << "Renderer: Loading " << eng->config->MAIN_MENU_LOGO_IMAGE_NAME << " [DONE]" << endl;
   tracer << "Renderer: Setting main menu logo texture..." << endl;
   spriteMainMenuLogo_ = new sf::Sprite(*textureMainMenuLogo_);
+  double& SCALE = eng->config->SCALE;
+  spriteMainMenuLogo_->setScale(SCALE, SCALE);
   tracer << "Renderer: Setting main menu logo texture [DONE]" << endl;
 
   tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;

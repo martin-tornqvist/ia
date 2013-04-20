@@ -51,22 +51,22 @@ Config::Config(Engine* engine) :
 }
 
 void Config::setCellDimDependentVariables() {
-  MAINSCREEN_WIDTH = MAP_X_CELLS * CELL_W;
-  MAINSCREEN_HEIGHT = MAP_Y_CELLS * CELL_H;
+  MAINSCREEN_WIDTH          = MAP_X_CELLS * CELL_W;
+  MAINSCREEN_HEIGHT         = MAP_Y_CELLS * CELL_H;
 
-  LOG_X_OFFSET = LOG_X_CELLS_OFFSET * CELL_W;
-  LOG_Y_OFFSET = LOG_Y_CELLS_OFFSET * CELL_H;
+  LOG_X_OFFSET              = LOG_X_CELLS_OFFSET * CELL_W;
+  LOG_Y_OFFSET              = LOG_Y_CELLS_OFFSET * CELL_H;
 
-  LOG_WIDTH = LOG_X_CELLS * CELL_W;
-  LOG_HEIGHT = CELL_H;
+  LOG_WIDTH                 = LOG_X_CELLS * CELL_W;
+  LOG_HEIGHT                = CELL_H;
 
-  MAINSCREEN_Y_OFFSET = MAINSCREEN_Y_CELLS_OFFSET * CELL_H;
-  CHARACTER_LINES_Y_OFFSET = LOG_Y_OFFSET + LOG_HEIGHT + MAINSCREEN_HEIGHT;
+  MAINSCREEN_Y_OFFSET       = MAINSCREEN_Y_CELLS_OFFSET * CELL_H;
+  CHARACTER_LINES_Y_OFFSET  = LOG_Y_OFFSET + LOG_HEIGHT + MAINSCREEN_HEIGHT;
 
-  CHARACTER_LINES_HEIGHT = CHARACTER_LINES_Y_CELLS * CELL_H;
+  CHARACTER_LINES_HEIGHT    = CHARACTER_LINES_Y_CELLS * CELL_H;
 
-  SCREEN_WIDTH = MAP_X_CELLS * CELL_W;
-  SCREEN_HEIGHT = CHARACTER_LINES_Y_OFFSET + CHARACTER_LINES_HEIGHT;
+  SCREEN_WIDTH              = MAP_X_CELLS * CELL_W;
+  SCREEN_HEIGHT             = CHARACTER_LINES_Y_OFFSET + CHARACTER_LINES_HEIGHT;
 }
 
 void Config::runOptionsMenu() {
@@ -81,29 +81,29 @@ void Config::runOptionsMenu() {
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-    }
-    break;
+      case menuAction_browsed: {
+        draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+      }
+      break;
 
-    case menuAction_canceled: {
-      // Since ASCII mode wall symbol may have changed, we need to redefine the feature data list
-      eng->featureData->makeList();
-      return;
-    }
-    break;
+      case menuAction_canceled: {
+        // Since ASCII mode wall symbol may have changed, we need to redefine the feature data list
+        eng->featureData->makeList();
+        return;
+      }
+      break;
 
-    case menuAction_selected: {
-      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-      playerSetsOption(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-      collectLinesFromVariables(lines);
-      writeLinesToFile(lines);
-      draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-    }
-    break;
+      case menuAction_selected: {
+        draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+        playerSetsOption(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+        collectLinesFromVariables(lines);
+        writeLinesToFile(lines);
+        draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
+      }
+      break;
 
-    default:
-    {} break;
+      default:
+      {} break;
     }
   }
 }
@@ -237,102 +237,102 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
 void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
   switch(browser->getPos().y) {
-  case 0: {
-    USE_TILE_SET = !USE_TILE_SET;
-    if(USE_TILE_SET) {
-      if(CELL_W != 16 || CELL_H != 24) {
-        fontImageName = "images/16x24_clean_v1.png";
-      }
-    }
-    parseFontNameAndSetCellDims();
-    setCellDimDependentVariables();
-    eng->renderer->setupWindowAndImagesClearPrev();
-  }
-  break;
-
-  case 1: {
-    for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-      if(fontImageName == fontImageNames.at(i)) {
-        fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
-        break;
-      }
-    }
-    parseFontNameAndSetCellDims();
-
-    if(USE_TILE_SET) {
-      while(CELL_W != 16 && CELL_H != 24) {
-        for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-          if(fontImageName == fontImageNames.at(i)) {
-            fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
-            break;
-          }
+    case 0: {
+      USE_TILE_SET = !USE_TILE_SET;
+      if(USE_TILE_SET) {
+        if(CELL_W != 16 || CELL_H != 24) {
+          fontImageName = "images/16x24_clean_v1.png";
         }
-        parseFontNameAndSetCellDims();
       }
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->setupWindowAndImagesClearPrev();
     }
+    break;
 
-    setCellDimDependentVariables();
-    eng->renderer->setupWindowAndImagesClearPrev();
-  }
-  break;
+    case 1: {
+      for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+        if(fontImageName == fontImageNames.at(i)) {
+          fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+          break;
+        }
+      }
+      parseFontNameAndSetCellDims();
+
+      if(USE_TILE_SET) {
+        while(CELL_W != 16 && CELL_H != 24) {
+          for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+            if(fontImageName == fontImageNames.at(i)) {
+              fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+              break;
+            }
+          }
+          parseFontNameAndSetCellDims();
+        }
+      }
+
+      setCellDimDependentVariables();
+      eng->renderer->setupWindowAndImagesClearPrev();
+    }
+    break;
 
 //  case 2: {
 //    FULLSCREEN = !FULLSCREEN;
 //    eng->renderer->setupWindowAndImagesClearPrev();
 //  } break;
 
-  case 2: {
-    WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
-  }
-  break;
-
-  case 3: {
-    SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
-  }
-  break;
-
-  case 4: {
-    RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
-  }
-  break;
-
-  case 5: {
-    const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
-    if(NR != -1) {
-      DELAY_PROJECTILE_DRAW = NR;
+    case 2: {
+      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
     }
-  }
-  break;
+    break;
 
-  case 6: {
-    const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_SHOTGUN, true);
-    if(NR != -1) {
-      DELAY_SHOTGUN = NR;
+    case 3: {
+      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
     }
-  }
-  break;
+    break;
 
-  case 7: {
-    const int NR = eng->query->number(
-                     coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                     clrWhite, 1, 3, DELAY_EXPLOSION, true);
-    if(NR != -1) {
-      DELAY_EXPLOSION = NR;
+    case 4: {
+      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
     }
-  }
-  break;
+    break;
 
-  case 8: {
-    setDefaultVariables();
-    parseFontNameAndSetCellDims();
-    setCellDimDependentVariables();
-    eng->renderer->setupWindowAndImagesClearPrev();
-  }
-  break;
+    case 5: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
+      if(NR != -1) {
+        DELAY_PROJECTILE_DRAW = NR;
+      }
+    }
+    break;
+
+    case 6: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrWhite, 1, 3, DELAY_SHOTGUN, true);
+      if(NR != -1) {
+        DELAY_SHOTGUN = NR;
+      }
+    }
+    break;
+
+    case 7: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrWhite, 1, 3, DELAY_EXPLOSION, true);
+      if(NR != -1) {
+        DELAY_EXPLOSION = NR;
+      }
+    }
+    break;
+
+    case 8: {
+      setDefaultVariables();
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->setupWindowAndImagesClearPrev();
+    }
+    break;
   }
 }
 

@@ -50,14 +50,6 @@ enum TombAction_t {
   tombAction_leave
 };
 
-//enum TombTrap_t {
-//  tombTrap_fumes,
-//  tombTrap_cursed,
-//  tombTrap_monster,
-//  tombTrap_none
-//};
-
-//Tombs can have a combination of these (may be false clues)
 enum TombTraits_t {
   tombTrait_stench,                 //Fumes, Ooze-type monster
   tombTrait_auraOfUnrest,           //Ghost-type monster
@@ -84,16 +76,19 @@ private:
 
   void triggerTrap();
 
-  void setChoiceLabelsFromPossibleActions(const vector<TombAction_t>& possibleActions, vector<string>& actionLabels) const;
+  void getChoiceLabels(const vector<TombAction_t>& possibleActions,
+                       vector<string>& actionLabels) const;
 
-  void setDescription(string& description) const;
+  void doAction(const TombAction_t action);
 
-  bool isKnownEmpty_, isLidTooHeavyToPush_;
+  void getPossibleActions(vector<TombAction_t>& possibleActions) const;
+
+  void getDescription(string& description) const;
+
+  bool isContentKnown_, isTraitKnown_;
+  int chanceToPushLid_;
   TombAppearance_t appearance_;
-  TombTraits_t falseTrait_;
-
-  bool trueTraits_[endOfTombTraits];
-  bool traitsKnowledge_[endOfTombTraits];
+  TombTraits_t trait_;
 
   ExaminableItemContainer itemContainer_;
 };
@@ -134,9 +129,14 @@ private:
 
   void triggerTrap();
 
-  void setChoiceLabelsFromPossibleActions(const vector<ChestAction_t>& possibleActions, vector<string>& actionLabels) const;
+  void getChoiceLabels(const vector<ChestAction_t>& possibleActions,
+                       vector<string>& actionLabels) const;
 
-  void setDescription(string& description) const;
+  void getPossibleActions(vector<ChestAction_t>& possibleActions) const;
+
+  void doAction(const ChestAction_t action);
+
+  void getDescription(string& description) const;
 
   bool isContentKnown_, isLocked_, isTrapped_, isTrapStatusKnown_;
 

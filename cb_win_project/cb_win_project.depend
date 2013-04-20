@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365716460 c:\dev\ia\src\itemdefinition.h
+1366407290 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -302,7 +302,7 @@
 1355677712 c:\dev\ia\src\featuredoor.h
 	"Feature.h"
 
-1365786718 c:\dev\ia\src\ai_look_becomeplayeraware.h
+1366055623 c:\dev\ia\src\ai_look_becomeplayeraware.h
 	"Engine.h"
 	"ActorPlayer.h"
 
@@ -399,7 +399,7 @@
 1339441467 source:c:\dev\ia\src\actormigo.cpp
 	"monsterIncludeFiles.h"
 
-1365786735 source:c:\dev\ia\src\actormonster.cpp
+1366056143 source:c:\dev\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -1174,7 +1174,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365786961 source:c:\dev\ia\src\itemdata.cpp
+1366407360 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1205,7 +1205,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1365716558 source:c:\dev\ia\src\itemfactory.cpp
+1366407369 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1304,7 +1304,7 @@
 	"Query.h"
 	"Marker.h"
 
-1364824881 source:c:\dev\ia\src\mainmenu.cpp
+1366301637 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1580,7 +1580,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1366055352 source:c:\dev\ia\src\render.cpp
+1366302522 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -1745,7 +1745,7 @@
 
 1355674112 c:\dev\ia\src\declares.h
 
-1365147114 source:c:\dev\ia\src\config.cpp
+1366302608 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -7784,7 +7784,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1365972210 source:c:\dev\ia\src\roomtheme.cpp
+1366450359 source:c:\dev\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -10312,7 +10312,7 @@
 	<string>
 	<vector>
 
-1365972210 source:c:\dev\ia\src\featureexaminable.cpp
+1366450285 source:c:\dev\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -10325,11 +10325,11 @@
 	"PlayerBonuses.h"
 	"ActorPlayer.h"
 
-1365972210 c:\dev\ia\src\featureexaminable.h
+1366450156 c:\dev\ia\src\featureexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
-1365972210 source:c:\dev\ia\src\gods.cpp
+1366059339 source:c:\dev\ia\src\gods.cpp
 	"Gods.h"
 	"Engine.h"
 

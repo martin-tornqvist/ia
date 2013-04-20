@@ -23,8 +23,8 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
   }
 
   switch(itemId) {
-    case item_crowbar:                  item = new Item(d);                     break;
-    case item_lockpick:                 item = new Item(d);                     break;
+//    case item_crowbar:                  item = new Item(d);                     break;
+//    case item_lockpick:                 item = new Item(d);                     break;
     case item_trapezohedron:            item = new Item(d);                     break;
     case item_rock:                     item = new Weapon(d, ammoD);            break;
     case item_throwingKnife:            item = new Weapon(d, ammoD);            break;

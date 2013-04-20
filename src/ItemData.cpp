@@ -673,31 +673,31 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_cabinet);
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_crowbar);
-  resetDef(d, itemDef_general);
-  d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
-  d->chanceToIncludeInSpawnList = 70;
-  d->itemWeight = itemWeight_light;
-  d->tile = tile_crowbar;
-  d->isStackable = false;
-  d->color = clrGray;
-  d->glyph = '~';
-  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
-  addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
-
-  d = new ItemDefinition(item_lockpick);
-  resetDef(d, itemDef_general);
-  d->name = ItemName("Lockpick", "Lockpicks", "a Lockpick");
-  d->itemWeight = itemWeight_extraLight;
-  d->tile = tile_lockpick;
-  d->isStackable = true;
-  d->maxStackSizeAtSpawn = 1;
-  d->color = clrWhite;
-  d->glyph = '~';
-  d->landOnHardSurfaceSoundMessage = "I clinking sound.";
-  addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
+//  d = new ItemDefinition(item_crowbar);
+//  resetDef(d, itemDef_general);
+//  d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
+//  d->chanceToIncludeInSpawnList = 70;
+//  d->itemWeight = itemWeight_light;
+//  d->tile = tile_crowbar;
+//  d->isStackable = false;
+//  d->color = clrGray;
+//  d->glyph = '~';
+//  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+//  addFeatureFoundIn(d, feature_cabinet);
+//  itemDefinitions[d->id] = d;
+//
+//  d = new ItemDefinition(item_lockpick);
+//  resetDef(d, itemDef_general);
+//  d->name = ItemName("Lockpick", "Lockpicks", "a Lockpick");
+//  d->itemWeight = itemWeight_extraLight;
+//  d->tile = tile_lockpick;
+//  d->isStackable = true;
+//  d->maxStackSizeAtSpawn = 1;
+//  d->color = clrWhite;
+//  d->glyph = '~';
+//  d->landOnHardSurfaceSoundMessage = "I clinking sound.";
+//  addFeatureFoundIn(d, feature_cabinet);
+//  itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_playerKick);
   resetDef(d, itemDef_meleeWpnIntr);
