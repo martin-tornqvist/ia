@@ -169,6 +169,8 @@ void Actor::changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES) {
 }
 
 void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
+  (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
+
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArray(this, blockers);
   eng->basicUtils->reverseBoolArray(blockers);

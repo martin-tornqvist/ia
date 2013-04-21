@@ -491,7 +491,7 @@ void Chest::featureSpecific_examine() {
 }
 
 void Chest::doAction(const ChestAction_t action) {
-  const bool IS_NIMBLE = eng->playerBonusHandler->isBonusPicked(playerBonus_nimbleHanded);
+//  const bool IS_NIMBLE = eng->playerBonusHandler->isBonusPicked(playerBonus_nimbleHanded);
   const bool IS_OBSERVANT = eng->playerBonusHandler->isBonusPicked(playerBonus_observant);
   const bool IS_CONFUSED = eng->player->getStatusEffectsHandler()->hasEffect(statusConfused);
 

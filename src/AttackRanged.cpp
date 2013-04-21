@@ -67,7 +67,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
     }
   }
 
-  const bool LEAVE_TRAIL = weapon->getDef().rangedMissileLeavesTrail;
+//  const bool LEAVE_TRAIL = weapon->getDef().rangedMissileLeavesTrail;
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE = projectilePath.size() + (NR_OF_PROJECTILES - 1) * NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
 

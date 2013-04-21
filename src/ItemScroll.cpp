@@ -295,7 +295,7 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
 
 
 void ThaumaturgicAlteration::specificRead(Engine* const engine) {
-
+  (void)engine;
 }
 
 
