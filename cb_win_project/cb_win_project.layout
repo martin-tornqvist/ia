@@ -79,8 +79,8 @@
 	<File name="..\src\AttackMelee.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="1228" topLine="28" />
 	</File>
-	<File name="..\src\AttackRanged.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="2521" topLine="49" />
+	<File name="..\src\AttackRanged.cpp" open="1" top="1" tabpos="0">
+		<Cursor position="2499" topLine="49" />
 	</File>
 	<File name="..\src\AttackShotgun.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="4105" topLine="70" />
