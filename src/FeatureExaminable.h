@@ -76,27 +76,26 @@ private:
 
   Tomb(Feature_t id, coord pos, Engine* engine);
 
-  void openTomb();
-
+  void openFeature();
   void triggerTrap();
-
   void getChoiceLabels(const vector<TombAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
-
   void doAction(const TombAction_t action);
-
   void getPossibleActions(vector<TombAction_t>& possibleActions) const;
-
   void getDescr(string& descr) const;
+  bool isContentKnown_, isTraitKnown_;
+
+  ExaminableItemContainer itemContainer_;
 
   void getTraitDescr(string& descr) const;
-
-  bool isContentKnown_, isTraitKnown_;
   int chanceToPushLid_;
   TombAppearance_t appearance_;
   TombTraits_t trait_;
+};
 
-  ExaminableItemContainer itemContainer_;
+enum CabinetAction_t {
+  cabinetAction_open,
+  cabinetAction_leave
 };
 
 class Cabinet: public FeatureExaminable {
@@ -107,7 +106,15 @@ private:
   friend class FeatureFactory;
   Cabinet(Feature_t id, coord pos, Engine* engine);
 
-  ExaminableItemContainer itemContainer;
+  void triggerTrap();
+  void openFeature();
+  void getChoiceLabels(const vector<CabinetAction_t>& possibleActions,
+                       vector<string>& actionLabels) const;
+  void getPossibleActions(vector<CabinetAction_t>& possibleActions) const;
+  void doAction(const CabinetAction_t action);
+  void getDescr(string& descr) const;
+  ExaminableItemContainer itemContainer_;
+  bool isContentKnown_;
 };
 
 enum ChestAction_t {
@@ -134,19 +141,21 @@ private:
   Chest(Feature_t id, coord pos, Engine* engine);
 
   void triggerTrap();
-
+  void openFeature();
   void getChoiceLabels(const vector<ChestAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
-
   void getPossibleActions(vector<ChestAction_t>& possibleActions) const;
-
   void doAction(const ChestAction_t action);
-
   void getDescr(string& descr) const;
-
-  bool isContentKnown_, isLocked_, isTrapped_, isTrapStatusKnown_;
-
   ExaminableItemContainer itemContainer_;
+
+  bool isContentKnown_;
+  bool isLocked_, isTrapped_, isTrapStatusKnown_;
+};
+
+enum CocoonAction_t {
+  cocoonAction_open,
+  cocoonAction_leave
 };
 
 class Cocoon: public FeatureExaminable {
@@ -157,7 +166,15 @@ private:
   friend class FeatureFactory;
   Cocoon(Feature_t id, coord pos, Engine* engine);
 
-  ExaminableItemContainer itemContainer;
+  void triggerTrap();
+  void openFeature();
+  void getChoiceLabels(const vector<CocoonAction_t>& possibleActions,
+                       vector<string>& actionLabels) const;
+  void getPossibleActions(vector<CocoonAction_t>& possibleActions) const;
+  void doAction(const CocoonAction_t action);
+  void getDescr(string& descr) const;
+  ExaminableItemContainer itemContainer_;
+  bool isContentKnown_;
 };
 
 class Altar: public FeatureExaminable {

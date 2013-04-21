@@ -116,7 +116,7 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
   const int TEXT_HEIGHT = static_cast<int>(lines.size());
   const int NR_CHOICES = static_cast<int>(choices.size());
 
-  const int TEXT_AREA_HEIGHT = TEXT_HEIGHT + NR_CHOICES + 3; //Title + text + blank + choices + blank
+  const int TEXT_AREA_HEIGHT = TEXT_HEIGHT + NR_CHOICES + 3;
 
   MenuBrowser browser(NR_CHOICES, 0);
 
@@ -126,26 +126,26 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
 
     switch(action) {
-    case menuAction_browsed: {
-      multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
-    }
-    break;
-
-    case menuAction_canceled: {
-    }
-    break;
-
-    case menuAction_selected: {
-      if(DRAW_MAP_AND_INTERFACE) {
-        eng->renderer->drawMapAndInterface();
+      case menuAction_browsed: {
+        multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
       }
-      return browser.getPos().y;
-    }
-    break;
+      break;
 
-    case menuAction_selectedWithShift: {
-    }
-    break;
+      case menuAction_canceled: {
+      }
+      break;
+
+      case menuAction_selected: {
+        if(DRAW_MAP_AND_INTERFACE) {
+          eng->renderer->drawMapAndInterface();
+        }
+        return browser.getPos().y;
+      }
+      break;
+
+      case menuAction_selectedWithShift: {
+      }
+      break;
     }
   }
 }
@@ -178,6 +178,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
     eng->log->addLineToHistory(lines.at(i));
   }
   yPos++;
+
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
     sf::Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;

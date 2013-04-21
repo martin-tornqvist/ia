@@ -298,7 +298,9 @@ void PopulateMonsters::spawnGroupAt(const ActorId_t id, const vector<coord>& sor
   }
 }
 
-void PopulateMonsters::makeSortedFreeCellsVector(const coord& origin, const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) const {
+void PopulateMonsters::makeSortedFreeCellsVector(const coord& origin,
+    const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) const {
+
   vectorToFill.resize(0);
 
   for(int y = 1; y < MAP_Y_CELLS - 1; y++) {

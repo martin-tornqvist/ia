@@ -14,6 +14,7 @@
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "Explosion.h"
+#include "PopulateMonsters.h"
 
 //------------------------------------------------------------------ BASE CLASS
 FeatureExaminable::FeatureExaminable(Feature_t id, coord pos, Engine* engine) :
@@ -235,7 +236,7 @@ void Tomb::doAction(const TombAction_t action) {
       const int BON = IS_RUGGED ? 10 : (IS_TOUGH ? 5 : 0);
       if(eng->dice.percentile() < chanceToPushLid_ + BON) {
         eng->log->addMessage("The lid comes off!");
-        openTomb();
+        openFeature();
       } else {
         eng->log->addMessage("The lid resists.");
       }
@@ -262,7 +263,7 @@ void Tomb::doAction(const TombAction_t action) {
         if(eng->dice.coinToss()) {
           itemContainer_.destroySingleFragile(eng);
         }
-        openTomb();
+        openFeature();
       } else {
         eng->log->addMessage("The lid resists.");
       }
@@ -270,13 +271,13 @@ void Tomb::doAction(const TombAction_t action) {
   }
 }
 
-void Tomb::openTomb() {
+void Tomb::openFeature() {
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
     eng->log->addMessage("There are some items in the tomb.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("The tomb is empty.");
+    eng->log->addMessage("There is nothing of value inside the tomb.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = isTraitKnown_ = true;
@@ -469,16 +470,9 @@ Chest::Chest(Feature_t id, coord pos, Engine* engine) :
   }
 }
 
-//sf::Color Chest::getColor() const {
-//  return material_ == doorMaterial_wood ? clrBrownDark : clrGray;
-//}
-
-//string Chest::getDescr(const bool DEFINITE_ARTICLE) const {
-//}
-
 void Chest::featureSpecific_examine() {
   if(itemContainer_.items_.empty() && isContentKnown_) {
-    eng->log->addMessage("There is nothing of value in the chest.");
+    eng->log->addMessage("The chest is empty.");
   } else {
     vector<ChestAction_t> possibleActions;
     getPossibleActions(possibleActions);
@@ -503,19 +497,7 @@ void Chest::doAction(const ChestAction_t action) {
 
   switch(action) {
     case chestAction_open: {
-      if(isTrapped_) {
-        triggerTrap();
-      } else {
-        if(itemContainer_.items_.empty()) {
-          eng->log->addMessage("There is nothing of value in the chest.");
-        } else {
-          eng->log->addMessage("There are some items in the chest.");
-          itemContainer_.dropItems(pos_, eng);
-          eng->renderer->drawMapAndInterface(true);
-        }
-        isContentKnown_ = true;
-        isTrapStatusKnown_ = true;
-      }
+      openFeature();
     }
     break;
     case chestAction_searchForTrap: {
@@ -548,6 +530,23 @@ void Chest::doAction(const ChestAction_t action) {
   }
 }
 
+void Chest::openFeature() {
+  if(isTrapped_) {
+    triggerTrap();
+  }
+  if(eng->player->deadState == actorDeadState_alive) {
+    if(itemContainer_.items_.empty()) {
+      eng->log->addMessage("There is nothing of value in the chest.");
+    } else {
+      eng->log->addMessage("There are some items in the chest.");
+      itemContainer_.dropItems(pos_, eng);
+      eng->renderer->drawMapAndInterface(true);
+    }
+    isContentKnown_ = true;
+    isTrapStatusKnown_ = true;
+  }
+}
+
 void Chest::getPossibleActions(vector<ChestAction_t>& possibleActions) const {
   if(isTrapStatusKnown_ == false) {
     possibleActions.push_back(chestAction_searchForTrap);
@@ -575,12 +574,24 @@ void Chest::getChoiceLabels(const vector<ChestAction_t>& possibleActions,
   for(unsigned int i = 0; i < possibleActions.size(); i++) {
     ChestAction_t action = possibleActions.at(i);
     switch(action) {
-      case chestAction_open:          {actionLabels.push_back("Open it");} break;
-      case chestAction_searchForTrap: {actionLabels.push_back("Search it for traps");} break;
-      case chestAction_disarmTrap:    {actionLabels.push_back("Disarm the trap");} break;
-      case chestAction_forceLock:     {actionLabels.push_back("Force the lock");} break;
-      case chestAction_kick:          {actionLabels.push_back("Kick the lid");} break;
-      case chestAction_leave:         {actionLabels.push_back("Leave it");} break;
+      case chestAction_open: {
+        actionLabels.push_back("Open it");
+      } break;
+      case chestAction_searchForTrap: {
+        actionLabels.push_back("Search it for traps");
+      } break;
+      case chestAction_disarmTrap: {
+        actionLabels.push_back("Disarm the trap");
+      } break;
+      case chestAction_forceLock: {
+        actionLabels.push_back("Force the lock");
+      } break;
+      case chestAction_kick: {
+        actionLabels.push_back("Kick the lid");
+      } break;
+      case chestAction_leave: {
+        actionLabels.push_back("Leave it");
+      } break;
     }
   }
 }
@@ -599,18 +610,213 @@ void Chest::triggerTrap() {
 
 //--------------------------------------------------------- CABINET
 Cabinet::Cabinet(Feature_t id, coord pos, Engine* engine) :
-  FeatureExaminable(id, pos, engine) {
+  FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
+  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  const int CHANCE_FOR_EMPTY = 50;
+  const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
+  const int NR_ITEMS_MAX = bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 2 : 1;
+  itemContainer_.setRandomItemsForFeature(
+    feature_cabinet, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
 
 void Cabinet::featureSpecific_examine() {
+  if(itemContainer_.items_.empty() && isContentKnown_) {
+    eng->log->addMessage("The cabinet is empty.");
+  } else {
+    vector<CabinetAction_t> possibleActions;
+    getPossibleActions(possibleActions);
+
+    vector<string> actionLabels;
+    getChoiceLabels(possibleActions, actionLabels);
+
+    string descr = "";
+    getDescr(descr);
+
+    const int CHOICE_NR = eng->popup->showMultiChoiceMessage(
+                            descr, true, actionLabels, "A cabinet");
+    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+  }
+}
+
+void Cabinet::triggerTrap() {
+
+}
+
+void Cabinet::openFeature() {
+  triggerTrap();
+  if(itemContainer_.items_.size() > 0) {
+    eng->log->addMessage("There are some items in the cabinet.");
+    itemContainer_.dropItems(pos_, eng);
+  } else {
+    eng->log->addMessage("There is nothing of value inside.");
+  }
+  eng->renderer->drawMapAndInterface(true);
+  isContentKnown_ = true;
+}
+
+void Cabinet::getChoiceLabels(const vector<CabinetAction_t>& possibleActions,
+                              vector<string>& actionLabels) const {
+  for(unsigned int i = 0; i < possibleActions.size(); i++) {
+    const CabinetAction_t action = possibleActions.at(i);
+    switch(action) {
+
+      case cabinetAction_open: {
+        actionLabels.push_back("Open it");
+      } break;
+
+      case cabinetAction_leave: {
+        actionLabels.push_back("Leave it");
+      }
+    }
+  }
+}
+
+void Cabinet::getPossibleActions(vector<CabinetAction_t>& possibleActions) const {
+  possibleActions.resize(0);
+  possibleActions.push_back(cabinetAction_open);
+  possibleActions.push_back(cabinetAction_leave);
+}
+
+void Cabinet::doAction(const CabinetAction_t action) {
+  switch(action) {
+    case cabinetAction_open: {
+      openFeature();
+    } break;
+
+    case cabinetAction_leave: {
+      eng->log->addMessage("I leave the cabinet for now.");
+    } break;
+  }
+}
+
+void Cabinet::getDescr(string& descr) const {
+  descr = "";
 }
 
 //--------------------------------------------------------- COCOON
 Cocoon::Cocoon(Feature_t id, coord pos, Engine* engine) :
-  FeatureExaminable(id, pos, engine) {}
+  FeatureExaminable(id, pos, engine), isContentKnown_(false) {
+
+  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  const int CHANCE_FOR_EMPTY = 50;
+  const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
+  const int NR_ITEMS_MAX = bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 1 : 0;
+  itemContainer_.setRandomItemsForFeature(
+    feature_cocoon, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+}
 
 void Cocoon::featureSpecific_examine() {
+  if(itemContainer_.items_.empty() && isContentKnown_) {
+    eng->log->addMessage("The cocoon is empty.");
+  } else {
+    vector<CocoonAction_t> possibleActions;
+    getPossibleActions(possibleActions);
+
+    vector<string> actionLabels;
+    getChoiceLabels(possibleActions, actionLabels);
+
+    string descr = "";
+    getDescr(descr);
+
+    const int CHOICE_NR = eng->popup->showMultiChoiceMessage(
+                            descr, true, actionLabels, "A cocoon");
+    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+  }
+}
+
+void Cocoon::triggerTrap() {
+  const int RND = eng->dice.percentile();
+
+  if(RND < 15) {
+    eng->log->addMessage("There is a half-dissolved human body inside!");
+    eng->player->incrShock(shockValue_heavy);
+  } else if(RND < 40) {
+    tracer << "Cocoon: Attempting to spawn spiders" << endl;
+    vector<ActorId_t> spawnCandidates;
+    for(unsigned int i = 1; i < endOfActorIds; i++) {
+      const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+      if(d.isSpider && d.actorSize == actorSize_floor &&
+          d.isAutoSpawnAllowed && d.isUnique == false) {
+        spawnCandidates.push_back(d.id);
+      }
+    }
+
+    const int NR_CANDIDATES = spawnCandidates.size();
+    if(NR_CANDIDATES != 0) {
+      tracer << "Cocoon: Spawn candidates found, attempting to place" << endl;
+      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+      vector<coord> freeCells;
+      eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
+
+      const int NR_SPIDERS_MAX = min(eng->dice.getInRange(2, 4),
+                                     static_cast<int>(freeCells.size()));
+
+      if(NR_SPIDERS_MAX > 0) {
+        tracer << "Cocoon: Found positions, spawning spiders" << endl;
+        eng->log->addMessage("There are spiders inside!");
+        const ActorId_t id = spawnCandidates.at(
+                               eng->dice.getInRange(0, NR_CANDIDATES - 1));
+        for(int i = 0; i < NR_SPIDERS_MAX; i++) {
+          Actor* const actor = eng->actorFactory->spawnActor(id, freeCells.front());
+          dynamic_cast<Monster*>(actor)->becomeAware();
+          freeCells.erase(freeCells.begin());
+        }
+      }
+    }
+  }
+}
+
+void Cocoon::openFeature() {
+  triggerTrap();
+  if(itemContainer_.items_.size() > 0) {
+    eng->log->addMessage("There are some items in the cocoon.");
+    itemContainer_.dropItems(pos_, eng);
+  } else {
+    eng->log->addMessage("There is nothing of value inside.");
+  }
+  eng->renderer->drawMapAndInterface(true);
+  isContentKnown_ = true;
+}
+
+void Cocoon::getChoiceLabels(const vector<CocoonAction_t>& possibleActions,
+                             vector<string>& actionLabels) const {
+  for(unsigned int i = 0; i < possibleActions.size(); i++) {
+    const CocoonAction_t action = possibleActions.at(i);
+    switch(action) {
+
+      case cocoonAction_open: {
+        actionLabels.push_back("Break it open");
+      } break;
+
+      case cocoonAction_leave: {
+        actionLabels.push_back("Leave it");
+      }
+    }
+  }
+}
+
+void Cocoon::getPossibleActions(vector<CocoonAction_t>& possibleActions) const {
+  possibleActions.resize(0);
+  possibleActions.push_back(cocoonAction_open);
+  possibleActions.push_back(cocoonAction_leave);
+}
+
+void Cocoon::doAction(const CocoonAction_t action) {
+  switch(action) {
+    case cocoonAction_open: {
+      openFeature();
+    } break;
+
+    case cocoonAction_leave: {
+      eng->log->addMessage("I leave the cocoon for now.");
+    } break;
+  }
+}
+
+void Cocoon::getDescr(string& descr) const {
+  descr = "A cocoon spun from spider web.";
 }
 
 //--------------------------------------------------------- ALTAR

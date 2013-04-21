@@ -4,13 +4,17 @@
 
 vector<string> TextFormatting::lineToLines(string line, const int MAX_WIDTH) const {
   vector<string> lines;
-  lines.resize(1);
+  lines.resize(0);
 
   int curRow = 0;
 
   string curWord = readNextWord(line);
 
   while(curWord != "") {
+    if(lines.empty()) {
+      lines.resize(1);
+      lines.front() = "";
+    }
 
     if(isWordFit(lines.at(curRow), curWord, MAX_WIDTH) == false) {
       curRow++;

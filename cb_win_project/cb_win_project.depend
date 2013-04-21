@@ -8692,7 +8692,7 @@
 
 1350580592 c:\_martin_\ia\src\ai_castrandomspell.h
 
-1365943006 source:c:\_martin_\ia\src\actormonsterspecific.cpp
+1366538540 source:c:\_martin_\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -9491,7 +9491,7 @@
 	"Engine.h"
 	"Log.h"
 
-1366484517 source:c:\_martin_\ia\src\itemdata.cpp
+1366545454 source:c:\_martin_\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -9857,7 +9857,7 @@
 	"ActorPlayer.h"
 	"FeatureFactory.h"
 
-1364579806 source:c:\_martin_\ia\src\popup.cpp
+1366552564 source:c:\_martin_\ia\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Render.h"
@@ -9977,7 +9977,7 @@
 	"FeatureFactory.h"
 	"PlayerBonuses.h"
 
-1364654066 source:c:\_martin_\ia\src\textformatting.cpp
+1366552235 source:c:\_martin_\ia\src\textformatting.cpp
 	"TextFormatting.h"
 	"Engine.h"
 
@@ -10201,7 +10201,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1365885415 source:c:\_martin_\ia\src\populatemonsters.cpp
+1366544043 source:c:\_martin_\ia\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"
@@ -10283,11 +10283,11 @@
 
 1365885415 c:\_martin_\ia\src\disarm.h
 
-1366533977 c:\_martin_\ia\src\featureexaminable.h
+1366550017 c:\_martin_\ia\src\featureexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
-1366538184 source:c:\_martin_\ia\src\featureexaminable.cpp
+1366550364 source:c:\_martin_\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -10303,6 +10303,7 @@
 	"ActorFactory.h"
 	"ActorMonster.h"
 	"Explosion.h"
+	"PopulateMonsters.h"
 
 1365926489 source:c:\_martin_\ia\src\gods.cpp
 	"Gods.h"
