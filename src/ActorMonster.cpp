@@ -47,8 +47,10 @@ void Monster::act() {
   if(playerAwarenessCounter > 0) {
     isRoamingAllowed = true;
     if(leader == NULL) {
-      if(eng->dice.percentile() < 10) {
-        speakPhrase();
+      if(deadState == actorDeadState_alive) {
+        if(eng->dice.percentile() < 7) {
+          speakPhrase();
+        }
       }
     } else {
       if(leader->deadState == actorDeadState_alive) {

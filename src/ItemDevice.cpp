@@ -39,7 +39,7 @@ bool Device::toggle(Engine* const engine) {
       engine->log->addMessage(message);
     }
     specificToggle(engine);
-    runBadEffect(engine);
+//    runBadEffect(engine);
   }
   return false;
 }

@@ -8191,7 +8191,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1364579806 c:\_martin_\ia\src\consttypes.h
+1366461581 c:\_martin_\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -8221,7 +8221,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1365885415 c:\_martin_\ia\src\actordata.h
+1366470536 c:\_martin_\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -8262,7 +8262,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1365885415 c:\_martin_\ia\src\itemdefinition.h
+1366461581 c:\_martin_\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -8349,7 +8349,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1362765309 c:\_martin_\ia\src\featuredata.h
+1366472721 c:\_martin_\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -8363,7 +8363,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1365885415 c:\_martin_\ia\src\actormonster.h
+1366461581 c:\_martin_\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -8572,14 +8572,14 @@
 1364579806 c:\_martin_\ia\src\playercreatecharacter.h
 	<string>
 
-1365188945 c:\_martin_\ia\src\inventory.h
+1366463164 c:\_martin_\ia\src\inventory.h
 	<vector>
 	<string>
 	<iostream>
 	"ItemData.h"
 	"Item.h"
 
-1365885415 source:c:\_martin_\ia\src\actordata.cpp
+1366536460 source:c:\_martin_\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -8601,7 +8601,7 @@
 	<string>
 	"GameTime.h"
 
-1365885415 source:c:\_martin_\ia\src\actormonster.cpp
+1366469413 source:c:\_martin_\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -8723,7 +8723,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1365885415 source:c:\_martin_\ia\src\actorplayer.cpp
+1366534105 source:c:\_martin_\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -8946,7 +8946,7 @@
 1350580594 c:\_martin_\ia\src\close.h
 	"ConstTypes.h"
 
-1365188945 source:c:\_martin_\ia\src\config.cpp
+1366461581 source:c:\_martin_\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -9225,13 +9225,13 @@
 	"Log.h"
 	"Render.h"
 
-1365885415 source:c:\_martin_\ia\src\featuredata.cpp
+1366472751 source:c:\_martin_\ia\src\featuredata.cpp
 	"FeatureData.h"
 	<cassert>
 	"Engine.h"
 	"Colors.h"
 
-1365885415 source:c:\_martin_\ia\src\featuredoor.cpp
+1366465698 source:c:\_martin_\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -9243,7 +9243,7 @@
 	"Postmortem.h"
 	"PlayerBonuses.h"
 
-1365885786 source:c:\_martin_\ia\src\featurefactory.cpp
+1366472712 source:c:\_martin_\ia\src\featurefactory.cpp
 	"FeatureFactory.h"
 	<cassert>
 	"Engine.h"
@@ -9441,7 +9441,7 @@
 	"MapBuildBSP.h"
 	"PlayerBonuses.h"
 
-1365885415 source:c:\_martin_\ia\src\inventory.cpp
+1366463173 source:c:\_martin_\ia\src\inventory.cpp
 	"Inventory.h"
 	"ItemWeapon.h"
 	"Engine.h"
@@ -9491,7 +9491,7 @@
 	"Engine.h"
 	"Log.h"
 
-1365885415 source:c:\_martin_\ia\src\itemdata.cpp
+1366484517 source:c:\_martin_\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -9529,7 +9529,7 @@
 	"Log.h"
 	"Render.h"
 
-1365885415 source:c:\_martin_\ia\src\itemfactory.cpp
+1366461581 source:c:\_martin_\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -9812,7 +9812,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1365885415 source:c:\_martin_\ia\src\playerbonuses.cpp
+1366461581 source:c:\_martin_\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -9912,7 +9912,7 @@
 	"Log.h"
 	"Render.h"
 
-1365934785 source:c:\_martin_\ia\src\roomtheme.cpp
+1366461581 source:c:\_martin_\ia\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapBuildBSP.h"
@@ -10031,7 +10031,7 @@
 
 1350576994 c:\_martin_\ia\src\declares.h
 
-1365885415 source:c:\_martin_\ia\src\render.cpp
+1366461581 source:c:\_martin_\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -10179,7 +10179,7 @@
 1363370095 c:\_martin_\ia\src\populatetraps.h
 	"RoomTheme.h"
 
-1365885415 source:c:\_martin_\ia\src\itemdevice.cpp
+1366536248 source:c:\_martin_\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10283,11 +10283,11 @@
 
 1365885415 c:\_martin_\ia\src\disarm.h
 
-1365885786 c:\_martin_\ia\src\featureexaminable.h
+1366533977 c:\_martin_\ia\src\featureexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
-1365885793 source:c:\_martin_\ia\src\featureexaminable.cpp
+1366538184 source:c:\_martin_\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -10299,6 +10299,10 @@
 	"Popup.h"
 	"PlayerBonuses.h"
 	"ActorPlayer.h"
+	"Inventory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"Explosion.h"
 
 1365926489 source:c:\_martin_\ia\src\gods.cpp
 	"Gods.h"

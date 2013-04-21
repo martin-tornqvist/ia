@@ -44,7 +44,7 @@ void ActorDefinition::reset() {
   spellCastMessage = "[SPELL MESSAGE HERE]";
   erraticMovement = actorErratic_rare;
   monsterShockLevel = monsterShockLevel_none;
-  isRat = isCanine = isSpider = isUndead = false;
+  isRat = isCanine = isSpider = isUndead = isGhost = false;
   canBeSummoned = false;
   canBleed = true;
   canDodge = true;
@@ -847,6 +847,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
+  d.isGhost = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
@@ -866,7 +867,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
   d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
+  d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrWhite;
@@ -883,6 +884,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
+  d.isGhost = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
@@ -902,7 +904,7 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = true;
   d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
+  d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 4;
   d.glyph = 'G';
@@ -912,13 +914,14 @@ void ActorData::defineAllActors() {
   d.monsterLvl = 12;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
-  d.spellCastMessage = "The Wraith casts a spell";
+  d.spellCastMessage = "The Wraith casts a spell.";
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
   d.description = "A powerful spirit.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
+  d.isGhost = true;
   d.canBeSummoned = true;
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);

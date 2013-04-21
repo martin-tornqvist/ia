@@ -39,6 +39,8 @@ public:
 
   void dropItems(const coord& pos, Engine* const engine);
 
+  void destroySingleFragile(Engine* const engine);
+
   vector<Item*> items_;
 };
 
@@ -74,6 +76,8 @@ private:
 
   Tomb(Feature_t id, coord pos, Engine* engine);
 
+  void openTomb();
+
   void triggerTrap();
 
   void getChoiceLabels(const vector<TombAction_t>& possibleActions,
@@ -83,7 +87,9 @@ private:
 
   void getPossibleActions(vector<TombAction_t>& possibleActions) const;
 
-  void getDescription(string& description) const;
+  void getDescr(string& descr) const;
+
+  void getTraitDescr(string& descr) const;
 
   bool isContentKnown_, isTraitKnown_;
   int chanceToPushLid_;
@@ -119,7 +125,7 @@ public:
   }
   void featureSpecific_examine();
 
-//  string getDescription(const bool DEFINITE_ARTICLE) const;
+//  string getDescr(const bool DEFINITE_ARTICLE) const;
 
 //  sf::Color getColor() const;
 
@@ -136,7 +142,7 @@ private:
 
   void doAction(const ChestAction_t action);
 
-  void getDescription(string& description) const;
+  void getDescr(string& descr) const;
 
   bool isContentKnown_, isLocked_, isTrapped_, isTrapStatusKnown_;
 
@@ -163,24 +169,24 @@ private:
   Altar(Feature_t id, coord pos, Engine* engine);
 };
 
-class CarvedPillar: public FeatureExaminable {
-public:
-  ~CarvedPillar() {}
-  void featureSpecific_examine();
-private:
-  friend class FeatureFactory;
-  CarvedPillar(Feature_t id, coord pos, Engine* engine);
-};
+//class CarvedPillar: public FeatureExaminable {
+//public:
+//  ~CarvedPillar() {}
+//  void featureSpecific_examine();
+//private:
+//  friend class FeatureFactory;
+//  CarvedPillar(Feature_t id, coord pos, Engine* engine);
+//};
 
-class Barrel: public FeatureExaminable {
-public:
-  ~Barrel() {}
-  void featureSpecific_examine();
-private:
-  friend class FeatureFactory;
-  Barrel(Feature_t id, coord pos, Engine* engine);
-
-  ExaminableItemContainer itemContainer;
-};
+//class Barrel: public FeatureExaminable {
+//public:
+//  ~Barrel() {}
+//  void featureSpecific_examine();
+//private:
+//  friend class FeatureFactory;
+//  Barrel(Feature_t id, coord pos, Engine* engine);
+//
+//  ExaminableItemContainer itemContainer;
+//};
 
 #endif

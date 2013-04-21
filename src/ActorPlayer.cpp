@@ -59,7 +59,8 @@ void Player::actorSpecific_spawnStartItems() {
     default:  weaponId = item_dagger;   break;
   }
 
-  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+//  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(item_sledgeHammer), true, true);
   inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {

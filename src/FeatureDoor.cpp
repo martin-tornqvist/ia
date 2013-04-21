@@ -29,53 +29,53 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
     doorSpawnState_closed;
 
   switch(static_cast<DoorSpawnState_t>(doorState)) {
-  case doorSpawnState_broken: {
-    isOpen_ = true;
-    isBroken_ = true;
-    isStuck_ = false;
-    isSecret_ = false;
-  }
-  break;
+    case doorSpawnState_broken: {
+        isOpen_ = true;
+        isBroken_ = true;
+        isStuck_ = false;
+        isSecret_ = false;
+      }
+      break;
 
-  case doorSpawnState_open: {
-    isOpen_ = true;
-    isBroken_ = false;
-    isStuck_ = false;
-    isSecret_ = false;
-  }
-  break;
+    case doorSpawnState_open: {
+        isOpen_ = true;
+        isBroken_ = false;
+        isStuck_ = false;
+        isSecret_ = false;
+      }
+      break;
 
-  case doorSpawnState_closed: {
-    isOpen_ = false;
-    isBroken_ = false;
-    isStuck_ = false;
-    isSecret_ = false;
-  }
-  break;
+    case doorSpawnState_closed: {
+        isOpen_ = false;
+        isBroken_ = false;
+        isStuck_ = false;
+        isSecret_ = false;
+      }
+      break;
 
-  case doorSpawnState_stuck: {
-    isOpen_ = false;
-    isBroken_ = false;
-    isStuck_ = true;
-    isSecret_ = false;
-  }
-  break;
+    case doorSpawnState_stuck: {
+        isOpen_ = false;
+        isBroken_ = false;
+        isStuck_ = true;
+        isSecret_ = false;
+      }
+      break;
 
-  case doorSpawnState_secret: {
-    isOpen_ = false;
-    isBroken_ = false;
-    isStuck_ = false;
-    isSecret_ = true;
-  }
-  break;
+    case doorSpawnState_secret: {
+        isOpen_ = false;
+        isBroken_ = false;
+        isStuck_ = false;
+        isSecret_ = true;
+      }
+      break;
 
-  case doorSpawnState_secretAndStuck: {
-    isOpen_ = false;
-    isBroken_ = false;
-    isStuck_ = true;
-    isSecret_ = true;
-  }
-  break;
+    case doorSpawnState_secretAndStuck: {
+        isOpen_ = false;
+        isBroken_ = false;
+        isStuck_ = true;
+        isSecret_ = true;
+      }
+      break;
 
   }
 
@@ -89,21 +89,21 @@ bool Door::isMovePassable(Actor* const actorMoving) const {
 
 bool Door::isMoveTypePassable(const MoveType_t moveType) const {
   switch(moveType) {
-  case moveType_walk:
-    return isOpen_;
-    break;
-  case moveType_ethereal:
-    return true;
-    break;
-  case moveType_ooze:
-    return true;
-    break;
-  case moveType_fly:
-    return isOpen_;
-    break;
-  default:
-    return isOpen_;
-    break;
+    case moveType_walk:
+      return isOpen_;
+      break;
+    case moveType_ethereal:
+      return true;
+      break;
+    case moveType_ooze:
+      return true;
+      break;
+    case moveType_fly:
+      return isOpen_;
+      break;
+    default:
+      return isOpen_;
+      break;
   }
   return false;
 }

@@ -233,7 +233,7 @@ bool Ghost::actorSpecificAct() {
     if(playerAwarenessCounter > 0) {
 
       if(eng->mapTests->isCellsNeighbours(pos, eng->player->pos, false)) {
-        if(eng->dice.percentile() < 35) {
+        if(eng->dice.percentile() < 30) {
 
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
           eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);

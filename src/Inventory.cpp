@@ -508,7 +508,7 @@ bool Inventory::moveItemToGeneral(InventorySlot* inventorySlot) {
   }
 }
 
-bool Inventory::hasItemInSlot(SlotTypes_t slotName) {
+bool Inventory::hasItemInSlot(SlotTypes_t slotName) const {
   for(unsigned int i = 0; i < slots_.size(); i++) {
     if(slots_[i].id == slotName) {
       if(slots_[i].item != NULL) {
@@ -542,7 +542,7 @@ int Inventory::getElementWithItemType(const ItemId_t id) const {
   return -1;
 }
 
-Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) {
+Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) const {
   if(GLOBAL_ELEMENT_NR >= 0 && GLOBAL_ELEMENT_NR < signed(slots_.size())) {
     return slots_.at(GLOBAL_ELEMENT_NR).item;
   }
@@ -555,7 +555,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) {
   return NULL;
 }
 
-Item* Inventory::getItemInSlot(SlotTypes_t slotName) {
+Item* Inventory::getItemInSlot(SlotTypes_t slotName) const {
   if(hasItemInSlot(slotName)) {
     for(unsigned int i = 0; i < slots_.size(); i++) {
       if(slots_[i].id == slotName) {

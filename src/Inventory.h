@@ -58,7 +58,7 @@ public:
 
   void dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
 
-  bool hasItemInSlot(SlotTypes_t slotName);
+  bool hasItemInSlot(SlotTypes_t slotName) const;
 
   void putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true, bool putInGeneral_ifSlotNotFound = true);
 
@@ -85,8 +85,8 @@ public:
 
   int getElementWithItemType(const ItemId_t itemId) const;
 
-  Item* getItemInSlot(SlotTypes_t slotName);
-  Item* getItemInElement(const int GLOBAL_ELEMENT_NR);
+  Item* getItemInSlot(SlotTypes_t slotName) const;
+  Item* getItemInElement(const int GLOBAL_ELEMENT_NR) const;
 
   void removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
 

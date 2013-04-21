@@ -129,7 +129,7 @@ public:
   string spellCastMessage;
   ActorErratic_t erraticMovement;
   MonsterShockLevel monsterShockLevel;
-  bool isRat, isCanine, isSpider, isUndead;
+  bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
   bool canDodge;
