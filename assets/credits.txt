@@ -4,6 +4,6 @@ I (Martin) want to thank the following individuals for their great contributions
 
 * Kornel Dabrowiecki - Contributed countless ideas for gameplay improvements, which are now part of the game. Helped planning and designing the most ambitious version of IA ever released.
 
-* Agata Skrzypczyk  - Provided a gorgeous logo and icon.
+* Agata Skrzypczyk - Provided a gorgeous logo and icon.
 
 * All the people on the IA discussion page, Roguetemple, RPGCodex, Bay12 Games, etc, who give praise and motivation to continue with the project.

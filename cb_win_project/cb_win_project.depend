@@ -160,7 +160,7 @@
 	"DungeonMaster.h"
 	"Inventory.h"
 
-1363552200 c:\dev\ia\src\itemarmor.h
+1366658456 c:\dev\ia\src\itemarmor.h
 	"Engine.h"
 	"Item.h"
 
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1366655430 source:c:\dev\ia\src\actorplayer.cpp
+1366662969 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -861,7 +861,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1366654548 c:\dev\ia\src\itemscroll.h
+1366660010 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -1174,7 +1174,7 @@
 	"Engine.h"
 	"Log.h"
 
-1366655580 source:c:\dev\ia\src\itemdata.cpp
+1366661154 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1230,7 +1230,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1366656307 source:c:\dev\ia\src\itemscroll.cpp
+1366663534 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1249,6 +1249,9 @@
 	"ItemPotion.h"
 	"ItemDevice.h"
 	"Popup.h"
+	"ItemArmor.h"
+	"ItemWeapon.h"
+	"PlayerPowersHandler.h"
 
 1323988860 source:c:\dev\ia\src\itemusable.cpp
 	"ItemUsable.h"
@@ -1709,7 +1712,7 @@
 	"Log.h"
 	"Render.h"
 
-1366655478 source:c:\dev\ia\src\itempotion.cpp
+1366661689 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"StatusEffects.h"

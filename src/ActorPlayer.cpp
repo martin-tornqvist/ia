@@ -1183,8 +1183,6 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
 void Player::updateFov() {
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
 
-//  addLight(eng->map->light);
-
   for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
     eng->gameTime->getFeatureMobAt(i)->addLight(eng->map->light);
   }
@@ -1287,7 +1285,7 @@ void Player::grantMthPower() const {
     eng->itemData->itemDefinitions[item_thaumaturgicAlteration]->isScrollLearned = true;
     string str = "I have gained a deeper insight into the esoteric forces acting behind our apparent reality.";
     str += " With this knowledge, I can attempt to acquire hidden information or displace existence according to my will.";
-    str += " (Gained power \"Thaumaturgic Alteration\")";
+    str += " Gained spell: Thaumaturgic Alteration";
     eng->popup->showMessage(str, true, "Thaumaturgic Alteration");
   }
 }

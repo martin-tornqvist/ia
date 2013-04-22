@@ -303,8 +303,7 @@ private:
     vector<MthPowerAction_t>& possibleActions, Engine* const engine) const;
 
   void getChoiceLabelsFromPossibleActions(
-    const vector<MthPowerAction_t>& possibleActions, vector<string>& labels,
-    Engine* const engine) const;
+    const vector<MthPowerAction_t>& possibleActions, vector<string>& labels) const;
 };
 
 //class ScrollOfVoidChain: public Scroll {

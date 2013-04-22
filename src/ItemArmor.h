@@ -36,6 +36,8 @@ public:
     return clrGray;
   }
 
+  void setMaxDurability() {durability = 100;}
+
 private:
   int getAbsorptionPoints(const DamageTypes_t damageType) const;
 

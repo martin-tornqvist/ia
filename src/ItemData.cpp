@@ -1157,7 +1157,7 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_thaumaturgicAlteration);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 25;
+  d->spellTurnsPerPercentCooldown = 30;
   d->isIntrinsic = true;
   itemDefinitions[d->id] = d;
 
