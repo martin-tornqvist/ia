@@ -17,6 +17,8 @@ const int FIRST_CAVERN_LEVEL = 20;
 const int LAST_CAVERN_LEVEL = 29;
 const int LAST_ROOM_AND_CORRIDOR_LEVEL = FIRST_CAVERN_LEVEL - 2;
 
+const int MIN_DLVL_NASTY_TRAPS = 7;
+
 const int FOV_STANDARD_RADI_INT = 6;
 const int FOV_STANDARD_WIDTH_INT = 2 * FOV_STANDARD_RADI_INT + 1;
 const double FOV_STANDARD_RADI_DB = static_cast<const double>(FOV_STANDARD_RADI_INT);

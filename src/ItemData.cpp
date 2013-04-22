@@ -213,7 +213,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     case itemDef_device: {
       resetDef(d, itemDef_general);
       d->isDevice = true;
-      d->chanceToIncludeInSpawnList = 12;
+      d->chanceToIncludeInSpawnList = 6;
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';
@@ -1096,7 +1096,7 @@ void ItemData::makeList() {
 
   d = new ItemDefinition(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 4;
+  d->spellTurnsPerPercentCooldown = 7;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_scrollOfTeleportation);
@@ -1115,17 +1115,7 @@ void ItemData::makeList() {
   d->isScrollLearnable = false;
   itemDefinitions[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfConfuseEnemies);
-  resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->id] = d;
-
-  d = new ItemDefinition(item_scrollOfParalyzeEnemies);
-  resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->id] = d;
-
-  d = new ItemDefinition(item_scrollOfSlowEnemies);
+  d = new ItemDefinition(item_scrollOfEnfeebleEnemies);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
   itemDefinitions[d->id] = d;
@@ -1158,6 +1148,11 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_scrollOfAzathothsBlast);
   resetDef(d, itemDef_scroll);
   d->spellTurnsPerPercentCooldown = 2;
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_scrollOfOpening);
+  resetDef(d, itemDef_scroll);
+  d->spellTurnsPerPercentCooldown = 15;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_thaumaturgicAlteration);
@@ -1217,6 +1212,10 @@ void ItemData::makeList() {
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_potionOfPoison);
+  resetDef(d, itemDef_potion);
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_potionOfKnowledge);
   resetDef(d, itemDef_potion);
   itemDefinitions[d->id] = d;
 
@@ -1305,8 +1304,6 @@ void ItemData::setParametersFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
 
     if(itemDefinitions[i]->isScroll) {
-      itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
-      lines.erase(lines.begin());
       itemDefinitions[i]->isScrollLearned = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
       itemDefinitions[i]->isTried = lines.front() == "0" ? false : true;
@@ -1428,7 +1425,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string rollsStr = intToString(d.meleeDmg.first);
     const string sidesStr = intToString(d.meleeDmg.second);
     const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
-    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
     const int ITEM_SKILL = d.meleeBaseAttackSkill;
     const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityVals.getVal(
                                      ability_accuracyMelee, true, *(eng->player));
@@ -1444,7 +1441,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
     const string sidesStr = intToString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
-    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
     const int ITEM_SKILL = d.rangedBaseAttackSkill;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
@@ -1462,7 +1459,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string rollsStr = intToString(d.missileDmg.rolls);
     const string sidesStr = intToString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
-    const string plusStr = PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS);
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
     const int ITEM_SKILL = d.missileBaseAttackSkill;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";

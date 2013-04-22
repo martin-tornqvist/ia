@@ -130,9 +130,7 @@ enum ItemId_t {
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
   item_scrollOfDescent,
-  item_scrollOfConfuseEnemies,
-  item_scrollOfParalyzeEnemies,
-  item_scrollOfSlowEnemies,
+  item_scrollOfEnfeebleEnemies,
   item_scrollOfDetectTraps,
   item_scrollOfDetectItems,
   item_scrollOfIdentify,
@@ -140,6 +138,7 @@ enum ItemId_t {
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
   item_scrollOfAzathothsBlast,
+  item_scrollOfOpening,
 
   item_thaumaturgicAlteration,
 
@@ -154,6 +153,7 @@ enum ItemId_t {
   item_potionOfConfusion,
   item_potionOfSorcery,
   item_potionOfPoison,
+  item_potionOfKnowledge,
 //  item_potionOfForgetfulness,
 
   item_deviceSentry,

@@ -16,6 +16,7 @@
 #include "Inventory.h"
 #include "ItemPotion.h"
 #include "ItemDevice.h"
+#include "Popup.h"
 
 const int BLAST_ANIMATION_DELAY_FACTOR = 2;
 
@@ -124,8 +125,7 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
-  if(actors.size() > 0) {
-    setRealDefinitionNames(engine, false);
+  if(actors.empty() == false) {
     vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
@@ -135,26 +135,30 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrMagenta,
         BLAST_ANIMATION_DELAY_FACTOR, engine);
 
+    StatusEffect* const effect = getStatusEffect(engine);
+
     for(unsigned int i = 0; i < actors.size(); i++) {
-      StatusEffect* const effect = getStatusEffect(engine);
-      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(effect);
+      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(effect->copy());
     }
+
+    delete effect;
+
+    setRealDefinitionNames(engine, false);
 
   } else {
     failedToLearnRealName(engine);
   }
 }
 
-StatusEffect* ScrollOfConfuseEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusConfused(engine);
-}
-
-StatusEffect* ScrollOfParalyzeEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusParalyzed(engine);
-}
-
-StatusEffect* ScrollOfSlowEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusSlowed(engine);
+StatusEffect* ScrollOfEnfeebleEnemies::getStatusEffect(Engine* const engine) {
+  const int RND = engine->dice.getInRange(1, 4);
+  switch(RND) {
+    case 1: {return new StatusConfused(engine);}  break;
+    case 2: {return new StatusParalyzed(engine);} break;
+    case 3: {return new StatusSlowed(engine);}    break;
+    case 4: {return new StatusBlind(engine);}     break;
+  }
+  return NULL;
 }
 
 void ScrollOfDetectItems::specificRead(Engine* const engine) {
@@ -266,11 +270,42 @@ void ScrollOfClairvoyance::specificRead(Engine* const engine) {
   setRealDefinitionNames(engine, false);
 }
 
+void ScrollOfOpening::specificRead(Engine* const engine) {
+  bool isSomethingOpened;
+
+  bool playerVisionBefore[MAP_X_CELLS][MAP_Y_CELLS];
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      playerVisionBefore[x][y] = engine->map->playerVision[x][y];
+    }
+  }
+
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      if(playerVisionBefore[x][y]) {
+        if(engine->map->featuresStatic[x][y]->openFeature()) {
+          isSomethingOpened = true;
+        }
+      }
+    }
+  }
+
+  if(isSomethingOpened) {
+    engine->log->addMessage("Everything around me was opened.");
+    engine->player->updateFov();
+    engine->renderer->drawMapAndInterface();
+    setRealDefinitionNames(engine, false);
+  } else {
+    failedToLearnRealName(engine);
+  }
+}
+
+
 void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
-  if(actors.size() > 0) {
+  if(actors.empty() == false) {
     vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
@@ -293,11 +328,96 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   }
 }
 
-
 void ThaumaturgicAlteration::specificRead(Engine* const engine) {
-  (void)engine;
+  vector<MthPowerAction_t> possibleActions;
+  getPossibleActions(possibleActions, engine);
+  vector<string> choiceLabels;
+  getChoiceLabelsFromPossibleActions(possibleActions, choiceLabels, engine);
+  const unsigned int choiceNr =
+    engine->popup->showMultiChoiceMessage(
+      "I want to...", true, choiceLabels, "Thaumaturgic Alteration");
+  doAction(static_cast<MthPowerAction_t>(choiceNr), engine);
 }
 
+void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* const engine) const {
+  engine->player->getSpotedEnemies();
+  const vector<Actor*>& actors = engine->player->spotedEnemies;
+
+//  if(actors.size() > 0) {
+//    vector<coord> actorPositions;
+//
+//    for(unsigned int i = 0; i < actors.size(); i++) {
+//      actorPositions.push_back(actors.at(i)->pos);
+//    }
+}
+
+void ThaumaturgicAlteration::getPossibleActions(
+  vector<MthPowerAction_t>& possibleActions, Engine* const engine) const {
+
+  possibleActions.resize(0);
+
+  engine->player->getSpotedEnemies();
+  const vector<Actor*>& actors = engine->player->spotedEnemies;
+
+  const int MTH = engine->player->getMth();
+
+  if(MTH >= 35) {
+    if(actors.empty() == false) {
+      possibleActions.push_back(mthPowerAction_slayMonsters);
+    }
+  }
+
+  for(int y = 1; y < MAP_Y_CELLS; y++) {
+    for(int x = 1; x < MAP_X_CELLS; x++) {
+      if(engine->map->featuresStatic[x][y]->getId() == feature_stairsDown) {
+        if(engine->map->explored[x][y] == false) {
+          possibleActions.push_back(mthPowerAction_findStairs);
+        }
+      }
+    }
+  }
+
+  possibleActions.push_back(mthPowerAction_sorcery);
+  possibleActions.push_back(mthPowerAction_heal);
+  possibleActions.push_back(mthPowerAction_improveWeapon);
+  possibleActions.push_back(mthPowerAction_mendArmor);
+
+
+  possibleActions.push_back(mthPowerAction_fortitude);
+}
+
+void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
+  const vector<MthPowerAction_t>& possibleActions, vector<string>& labels,
+  Engine* const engine) const {
+
+  labels.resize(0);
+
+  for(unsigned int i = 0; i < possibleActions.size(); i++) {
+    switch(possibleActions.at(i)) {
+      case mthPowerAction_findStairs: {
+        labels.push_back("Reveal the way forward!");
+      } break;
+      case mthPowerAction_sorcery: {
+        labels.push_back("Restore my magic!");
+      } break;
+      case mthPowerAction_heal: {
+        labels.push_back("Heal myself!");
+      } break;
+      case mthPowerAction_improveWeapon: {
+        labels.push_back("Make my weapon deadlier!");
+      } break;
+      case mthPowerAction_mendArmor: {
+        labels.push_back("Mend my armor!");
+      } break;
+      case mthPowerAction_slayMonsters: {
+        labels.push_back("Slay my enemies!");
+      } break;
+      case mthPowerAction_fortitude: {
+        labels.push_back("Shield my mind!");
+      } break;
+    }
+  }
+}
 
 //void ScrollOfVoidChain::specificRead(Engine* const engine) {
 //  setRealDefinitionNames(engine, false);

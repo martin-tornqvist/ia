@@ -79,8 +79,8 @@
 	<File name="..\src\AttackMelee.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="1228" topLine="28" />
 	</File>
-	<File name="..\src\AttackRanged.cpp" open="1" top="1" tabpos="0">
-		<Cursor position="2499" topLine="49" />
+	<File name="..\src\AttackRanged.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="2444" topLine="37" />
 	</File>
 	<File name="..\src\AttackShotgun.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="4105" topLine="70" />
@@ -121,8 +121,8 @@
 	<File name="..\src\Config.h" open="0" top="0" tabpos="8">
 		<Cursor position="888" topLine="39" />
 	</File>
-	<File name="..\src\ConstDungeonSettings.h" open="0" top="0" tabpos="9">
-		<Cursor position="511" topLine="0" />
+	<File name="..\src\ConstDungeonSettings.h" open="1" top="0" tabpos="8">
+		<Cursor position="576" topLine="0" />
 	</File>
 	<File name="..\src\ConstTypes.h" open="0" top="0" tabpos="8">
 		<Cursor position="1571" topLine="53" />
@@ -184,11 +184,11 @@
 	<File name="..\src\FeatureDoor.h" open="0" top="0" tabpos="12">
 		<Cursor position="1452" topLine="51" />
 	</File>
-	<File name="..\src\FeatureExaminable.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="17251" topLine="473" />
+	<File name="..\src\FeatureExaminable.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="23971" topLine="635" />
 	</File>
-	<File name="..\src\FeatureExaminable.h" open="0" top="0" tabpos="2">
-		<Cursor position="2827" topLine="82" />
+	<File name="..\src\FeatureExaminable.h" open="1" top="0" tabpos="1">
+		<Cursor position="3105" topLine="94" />
 	</File>
 	<File name="..\src\FeatureFactory.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="4248" topLine="96" />
@@ -229,8 +229,8 @@
 	<File name="..\src\FeatureSmoke.h" open="0" top="0" tabpos="0">
 		<Cursor position="180" topLine="0" />
 	</File>
-	<File name="..\src\FeatureTrap.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="16913" topLine="438" />
+	<File name="..\src\FeatureTrap.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="8039" topLine="197" />
 	</File>
 	<File name="..\src\FeatureTrap.h" open="0" top="0" tabpos="11">
 		<Cursor position="1590" topLine="54" />
@@ -310,8 +310,8 @@
 	<File name="..\src\ItemArmor.h" open="0" top="0" tabpos="0">
 		<Cursor position="732" topLine="8" />
 	</File>
-	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="541" topLine="0" />
+	<File name="..\src\ItemData.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="6953" topLine="193" />
 	</File>
 	<File name="..\src\ItemData.h" open="0" top="0" tabpos="3">
 		<Cursor position="436" topLine="6" />
@@ -364,8 +364,8 @@
 	<File name="..\src\ItemWeapon.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="246" topLine="0" />
 	</File>
-	<File name="..\src\ItemWeapon.h" open="0" top="0" tabpos="3">
-		<Cursor position="4496" topLine="171" />
+	<File name="..\src\ItemWeapon.h" open="1" top="0" tabpos="5">
+		<Cursor position="376" topLine="3" />
 	</File>
 	<File name="..\src\JamWithSpike.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="1107" topLine="10" />
@@ -487,8 +487,8 @@
 	<File name="..\src\PlayerPowersHandler.h" open="0" top="0" tabpos="1">
 		<Cursor position="358" topLine="0" />
 	</File>
-	<File name="..\src\PopulateItems.cpp" open="0" top="0" tabpos="7">
-		<Cursor position="1770" topLine="21" />
+	<File name="..\src\PopulateItems.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1811" topLine="34" />
 	</File>
 	<File name="..\src\PopulateItems.h" open="0" top="0" tabpos="0">
 		<Cursor position="305" topLine="0" />
@@ -499,8 +499,8 @@
 	<File name="..\src\PopulateMonsters.h" open="0" top="0" tabpos="1">
 		<Cursor position="228" topLine="0" />
 	</File>
-	<File name="..\src\PopulateTraps.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="1107" topLine="12" />
+	<File name="..\src\PopulateTraps.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="3965" topLine="56" />
 	</File>
 	<File name="..\src\PopulateTraps.h" open="0" top="0" tabpos="1">
 		<Cursor position="76" topLine="0" />

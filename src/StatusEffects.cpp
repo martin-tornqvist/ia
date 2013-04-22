@@ -305,7 +305,7 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, c
     case statusFainted:           return new StatusFainted(TURNS_LEFT);               break;
     case statusPerfectReflexes:   return new StatusPerfectReflexes(TURNS_LEFT);       break;
     case statusPerfectAim:        return new StatusPerfectAim(TURNS_LEFT);            break;
-    case statusPerfectStealth:    return new StatusPerfectStealth(TURNS_LEFT);        break;
+//    case statusPerfectStealth:    return new StatusPerfectStealth(TURNS_LEFT);        break;
     case statusPerfectFortitude:  return new StatusPerfectFortitude(TURNS_LEFT);      break;
     case statusPerfectToughness:  return new StatusPerfectToughness(TURNS_LEFT);      break;
     case statusStill:             return new StatusStill(TURNS_LEFT);                 break;

@@ -67,6 +67,8 @@ public:
     isSecret_ = true;
   }
 
+  virtual bool openFeature();
+
 protected:
   friend class FeatureFactory;
   friend class MapBuildBSP;

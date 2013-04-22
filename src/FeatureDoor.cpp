@@ -30,52 +30,52 @@ Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
 
   switch(static_cast<DoorSpawnState_t>(doorState)) {
     case doorSpawnState_broken: {
-        isOpen_ = true;
-        isBroken_ = true;
-        isStuck_ = false;
-        isSecret_ = false;
-      }
-      break;
+      isOpen_ = true;
+      isBroken_ = true;
+      isStuck_ = false;
+      isSecret_ = false;
+    }
+    break;
 
     case doorSpawnState_open: {
-        isOpen_ = true;
-        isBroken_ = false;
-        isStuck_ = false;
-        isSecret_ = false;
-      }
-      break;
+      isOpen_ = true;
+      isBroken_ = false;
+      isStuck_ = false;
+      isSecret_ = false;
+    }
+    break;
 
     case doorSpawnState_closed: {
-        isOpen_ = false;
-        isBroken_ = false;
-        isStuck_ = false;
-        isSecret_ = false;
-      }
-      break;
+      isOpen_ = false;
+      isBroken_ = false;
+      isStuck_ = false;
+      isSecret_ = false;
+    }
+    break;
 
     case doorSpawnState_stuck: {
-        isOpen_ = false;
-        isBroken_ = false;
-        isStuck_ = true;
-        isSecret_ = false;
-      }
-      break;
+      isOpen_ = false;
+      isBroken_ = false;
+      isStuck_ = true;
+      isSecret_ = false;
+    }
+    break;
 
     case doorSpawnState_secret: {
-        isOpen_ = false;
-        isBroken_ = false;
-        isStuck_ = false;
-        isSecret_ = true;
-      }
-      break;
+      isOpen_ = false;
+      isBroken_ = false;
+      isStuck_ = false;
+      isSecret_ = true;
+    }
+    break;
 
     case doorSpawnState_secretAndStuck: {
-        isOpen_ = false;
-        isBroken_ = false;
-        isStuck_ = true;
-        isSecret_ = true;
-      }
-      break;
+      isOpen_ = false;
+      isBroken_ = false;
+      isStuck_ = true;
+      isSecret_ = true;
+    }
+    break;
 
   }
 
@@ -552,4 +552,12 @@ void Door::tryOpen(Actor* actorTrying) {
     eng->gameTime->letNextAct();
   }
 }
+
+bool Door::openFeature() {
+  isOpen_ = true;
+  return true;
+}
+
+
+
 

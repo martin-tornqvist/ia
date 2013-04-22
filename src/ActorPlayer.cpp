@@ -1286,7 +1286,7 @@ void Player::grantMthPower() const {
   if(eng->itemData->itemDefinitions[item_thaumaturgicAlteration]->isScrollLearned == false) {
     eng->itemData->itemDefinitions[item_thaumaturgicAlteration]->isScrollLearned = true;
     string str = "I have gained a deeper insight into the esoteric forces acting behind our apparent reality.";
-    str += " With this knowledge, I can attempt to acquire information or displace existence according to my will.";
+    str += " With this knowledge, I can attempt to acquire hidden information or displace existence according to my will.";
     str += " (Gained power \"Thaumaturgic Alteration\")";
     eng->popup->showMessage(str, true, "Thaumaturgic Alteration");
   }

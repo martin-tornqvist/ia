@@ -227,6 +227,13 @@ void PotionOfPoison::specificCollide(const coord& pos, Actor* const actor, Engin
   }
 }
 
+void PotionOfKnowledge::specificQuaff(Actor* const actor, Engine* const engine) {
+  (void)actor;
+  engine->log->addMessage("I feel more insightful about the mystic powers!");
+  engine->player->incrMth(4);
+  setRealDefinitionNames(engine, false);
+}
+
 void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
   const unsigned int NR_NAMES = m_falseNames.size();
 

@@ -37,30 +37,30 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slo
     const ItemDefinition& def = item->getDef();
 
     switch(slotToEquip) {
-    case slot_armorBody: {
-      if(def.isArmor) {
-        generalItemsToShow.push_back(i);
+      case slot_armorBody: {
+        if(def.isArmor) {
+          generalItemsToShow.push_back(i);
+        }
       }
-    }
-    break;
-    case slot_wielded: {
-      if(def.isMeleeWeapon || def.isRangedWeapon) {
-        generalItemsToShow.push_back(i);
+      break;
+      case slot_wielded: {
+        if(def.isMeleeWeapon || def.isRangedWeapon) {
+          generalItemsToShow.push_back(i);
+        }
       }
-    }
-    break;
-    case slot_wieldedAlt: {
-      if(def.isMeleeWeapon || def.isRangedWeapon) {
-        generalItemsToShow.push_back(i);
+      break;
+      case slot_wieldedAlt: {
+        if(def.isMeleeWeapon || def.isRangedWeapon) {
+          generalItemsToShow.push_back(i);
+        }
       }
-    }
-    break;
-    case slot_missiles: {
-      if(def.isMissileWeapon) {
-        generalItemsToShow.push_back(i);
+      break;
+      case slot_missiles: {
+        if(def.isMissileWeapon) {
+          generalItemsToShow.push_back(i);
+        }
       }
-    }
-    break;
+      break;
     }
   }
 }
@@ -136,54 +136,54 @@ void InventoryHandler::runSlotsScreen() {
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
-    }
-    break;
-    case menuAction_selectedWithShift: {
-      if(runDropScreen(browser.getPos().y)) {
-        screenToOpenAfterDrop = inventoryScreen_slots;
-        browserPosToSetAfterDrop = browser.getPos().y;
-        return;
+      case menuAction_browsed: {
+        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
       }
-      eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
-    }
-    break;
-    case menuAction_selected: {
-      const char charIndex = 'a' + browser.getPos().y;
-      if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
-        InventorySlot* const slot = &(invSlots->at(charIndex - 'a'));
-        if(slot->item == NULL) {
-          if(runEquipScreen(slot)) {
-            eng->renderer->drawMapAndInterface();
-            return;
+      break;
+      case menuAction_selectedWithShift: {
+        if(runDropScreen(browser.getPos().y)) {
+          screenToOpenAfterDrop = inventoryScreen_slots;
+          browserPosToSetAfterDrop = browser.getPos().y;
+          return;
+        }
+        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+      }
+      break;
+      case menuAction_selected: {
+        const char charIndex = 'a' + browser.getPos().y;
+        if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
+          InventorySlot* const slot = &(invSlots->at(charIndex - 'a'));
+          if(slot->item == NULL) {
+            if(runEquipScreen(slot)) {
+              eng->renderer->drawMapAndInterface();
+              return;
+            } else {
+              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+            }
           } else {
-            eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+            const bool IS_ARMOR = slot->id == slot_armorBody;
+            const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
+            inv->moveItemToGeneral(slot);
+            if(IS_ARMOR) {
+              eng->log->addMessage("I take off my " + itemName + ".");
+              eng->renderer->drawMapAndInterface();
+              eng->gameTime->letNextAct();
+              return;
+            } else {
+              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+            }
           }
         } else {
-          const bool IS_ARMOR = slot->id == slot_armorBody;
-          const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
-          inv->moveItemToGeneral(slot);
-          if(IS_ARMOR) {
-            eng->log->addMessage("I take off my " + itemName + ".");
-            eng->renderer->drawMapAndInterface();
-            eng->gameTime->letNextAct();
-            return;
-          } else {
-            eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
-          }
+          runBrowseInventoryMode();
+          return;
         }
-      } else {
-        runBrowseInventoryMode();
+      }
+      break;
+      case menuAction_canceled: {
+        eng->renderer->drawMapAndInterface();
         return;
       }
-    }
-    break;
-    case menuAction_canceled: {
-      eng->renderer->drawMapAndInterface();
-      return;
-    }
-    break;
+      break;
     }
   }
 }
@@ -204,31 +204,32 @@ bool InventoryHandler::runUseScreen() {
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
-    }
-    break;
-    case menuAction_selected: {
-      const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-      activateDefault(INV_ELEM);
-      eng->renderer->drawMapAndInterface();
-      return true;
-    }
-    break;
-    case menuAction_selectedWithShift: {
-      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
-      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        screenToOpenAfterDrop = inventoryScreen_use;
-        browserPosToSetAfterDrop = browser.getPos().y;
+      case menuAction_browsed: {
+        eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_selected: {
+        const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
+        activateDefault(INV_ELEM);
+        eng->renderer->drawMapAndInterface();
         return true;
       }
-    }
-    break;
-    case menuAction_canceled: {
-      eng->renderer->drawMapAndInterface();
-      return false;
-    }
-    break;
+      break;
+      case menuAction_selectedWithShift: {
+        const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+          screenToOpenAfterDrop = inventoryScreen_use;
+          browserPosToSetAfterDrop = browser.getPos().y;
+          return true;
+        }
+        eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_canceled: {
+        eng->renderer->drawMapAndInterface();
+        return false;
+      }
+      break;
     }
   }
 }
@@ -280,29 +281,30 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
-    }
-    break;
-    case menuAction_selected: {
-      const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-      eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(INV_ELEM, slotToEquip->id, eng);
-      return true;
-    }
-    break;
-    case menuAction_selectedWithShift: {
-      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
-      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        screenToOpenAfterDrop = inventoryScreen_equip;
-        browserPosToSetAfterDrop = browser.getPos().y;
+      case menuAction_browsed: {
+        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_selected: {
+        const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
+        eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(INV_ELEM, slotToEquip->id, eng);
         return true;
       }
-    }
-    break;
-    case menuAction_canceled: {
-      return false;
-    }
-    break;
+      break;
+      case menuAction_selectedWithShift: {
+        const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+          screenToOpenAfterDrop = inventoryScreen_equip;
+          browserPosToSetAfterDrop = browser.getPos().y;
+          return true;
+        }
+        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_canceled: {
+        return false;
+      }
+      break;
     }
   }
 }
@@ -323,26 +325,27 @@ void InventoryHandler::runBrowseInventoryMode() {
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
-    }
-    break;
-    case menuAction_selected: {
-    }
-    break;
-    case menuAction_selectedWithShift: {
-      const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
-      if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
-        screenToOpenAfterDrop = inventoryScreen_backpack;
-        browserPosToSetAfterDrop = browser.getPos().y;
+      case menuAction_browsed: {
+        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_selected: {
+      }
+      break;
+      case menuAction_selectedWithShift: {
+        const int SLOTS_SIZE = eng->player->getInventory()->getSlots()->size();
+        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+          screenToOpenAfterDrop = inventoryScreen_backpack;
+          browserPosToSetAfterDrop = browser.getPos().y;
+          return;
+        }
+        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
+      }
+      break;
+      case menuAction_canceled: {
         return;
       }
-    }
-    break;
-    case menuAction_canceled: {
-      return;
-    }
-    break;
+      break;
     }
   }
 }

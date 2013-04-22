@@ -15,6 +15,8 @@
 #include "ActorMonster.h"
 #include "Explosion.h"
 #include "PopulateMonsters.h"
+#include "Map.h"
+#include "FeatureFactory.h"
 
 //------------------------------------------------------------------ BASE CLASS
 FeatureExaminable::FeatureExaminable(Feature_t id, coord pos, Engine* engine) :
@@ -190,11 +192,13 @@ void Tomb::doAction(const TombAction_t action) {
   const bool IS_OBSERVANT = bonusHandler->isBonusPicked(playerBonus_observant);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
   const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
+  const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
+  const bool IS_BLESSED   = statusHandler->hasEffect(statusBlessed);
 
   switch(action) {
     case tombAction_carveCurseWard: {
-      const int CHANCE_OF_SUCCESS = 80;
-      if(eng->dice.percentile() < CHANCE_OF_SUCCESS) {
+      const int CHANCE_TO_CARVE = 80;
+      if(IS_CURSED == false && (IS_BLESSED || eng->dice.percentile() < CHANCE_TO_CARVE)) {
         eng->log->addMessage("The curse is cleared.");
       } else {
         eng->log->addMessage("I make a misstake, the curse is doubled!");
@@ -212,8 +216,8 @@ void Tomb::doAction(const TombAction_t action) {
     case tombAction_pushLid: {
       eng->log->addMessage("I attempt to push the lid.");
 
-      const int CHANCE_TO_SPRAIN    = 20;
-      const int CHANCE_TO_PARALYZE  = 35;
+      const int CHANCE_TO_SPRAIN    = 15;
+      const int CHANCE_TO_PARALYZE  = 30;
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMessage("I sprain myself.", clrMessageBad);
@@ -229,11 +233,11 @@ void Tomb::doAction(const TombAction_t action) {
         statusHandler->tryAddEffect(new StatusParalyzed(2));
       }
 
-      if(statusHandler->hasEffect(statusWeak)) {
+      if(IS_WEAK) {
         eng->log->addMessage("It seems futile.");
         return;
       }
-      const int BON = IS_RUGGED ? 10 : (IS_TOUGH ? 5 : 0);
+      const int BON = IS_RUGGED ? 20 : (IS_TOUGH ? 10 : 0);
       if(eng->dice.percentile() < chanceToPushLid_ + BON) {
         eng->log->addMessage("The lid comes off!");
         openFeature();
@@ -243,7 +247,7 @@ void Tomb::doAction(const TombAction_t action) {
     } break;
 
     case tombAction_searchExterior: {
-      const int CHANCE_TO_FIND = 40 + IS_OBSERVANT * 40 - IS_CONFUSED * 10;
+      const int CHANCE_TO_FIND = 50 + IS_OBSERVANT * 40 - IS_CONFUSED * 10;
       const bool IS_ROLL_SUCCESS = eng->dice.percentile() < CHANCE_TO_FIND;
       if(IS_ROLL_SUCCESS && trait_ != endOfTombTraits) {
         string traitDescr = "";
@@ -260,7 +264,7 @@ void Tomb::doAction(const TombAction_t action) {
       const int CHANCE_TO_BREAK = IS_WEAK ? 10 : 90;
       if(eng->dice.percentile() < CHANCE_TO_BREAK) {
         eng->log->addMessage("The lid cracks open!");
-        if(eng->dice.coinToss()) {
+        if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
           itemContainer_.destroySingleFragile(eng);
         }
         openFeature();
@@ -271,7 +275,8 @@ void Tomb::doAction(const TombAction_t action) {
   }
 }
 
-void Tomb::openFeature() {
+bool Tomb::openFeature() {
+  eng->log->addMessage("The tomb opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
     eng->log->addMessage("There are some items in the tomb.");
@@ -281,6 +286,8 @@ void Tomb::openFeature() {
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = isTraitKnown_ = true;
+
+  return true;
 }
 
 void Tomb::triggerTrap() {
@@ -312,6 +319,7 @@ void Tomb::triggerTrap() {
           fumeClr = clrGreenLight;
         } else if(RND < 40) {
           effect = new StatusDiseased(eng);
+          fumeClr = clrGreen;
         } else {
           effect = new StatusParalyzed(eng);
           effect->turnsLeft *= 2;
@@ -340,8 +348,6 @@ void Tomb::triggerTrap() {
 }
 
 void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
-  possibleActions.push_back(tombAction_pushLid);
-
   const bool IS_WARLOCK = eng->playerBonusHandler->isBonusPicked(playerBonus_warlock);
 
   if(isTraitKnown_) {
@@ -353,6 +359,8 @@ void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
   } else {
     possibleActions.push_back(tombAction_searchExterior);
   }
+
+  possibleActions.push_back(tombAction_pushLid);
 
   const Inventory* const inv = eng->player->getInventory();
   bool hasSledgehammer = false;
@@ -465,7 +473,7 @@ Chest::Chest(Feature_t id, coord pos, Engine* engine) :
     const int CHANCE_FOR_LOCKED = 80;
     isLocked_ = eng->dice.percentile() < CHANCE_FOR_LOCKED;
 
-    const int CHANCE_FOR_TRAPPED = 33;
+    const int CHANCE_FOR_TRAPPED = 60;
     isTrapped_ = eng->dice.percentile() < CHANCE_FOR_TRAPPED ? true : false;
   }
 }
@@ -491,9 +499,17 @@ void Chest::featureSpecific_examine() {
 }
 
 void Chest::doAction(const ChestAction_t action) {
-//  const bool IS_NIMBLE = eng->playerBonusHandler->isBonusPicked(playerBonus_nimbleHanded);
-  const bool IS_OBSERVANT = eng->playerBonusHandler->isBonusPicked(playerBonus_observant);
-  const bool IS_CONFUSED = eng->player->getStatusEffectsHandler()->hasEffect(statusConfused);
+  StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
+  PlayerBonusHandler* const bonHandler      = eng->playerBonusHandler;
+
+  const bool IS_OBSERVANT = bonHandler->isBonusPicked(playerBonus_observant);
+  const bool IS_TOUGH     = bonHandler->isBonusPicked(playerBonus_tough);
+  const bool IS_RUGGED    = bonHandler->isBonusPicked(playerBonus_rugged);
+//  const bool IS_NIMBLE    = bonHandler->isBonusPicked(playerBonus_nimbleHanded);
+  const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
+  const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
+  const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
+  const bool IS_BLESSED   = statusHandler->hasEffect(statusBlessed);
 
   switch(action) {
     case chestAction_open: {
@@ -512,15 +528,77 @@ void Chest::doAction(const ChestAction_t action) {
     }
     break;
     case chestAction_disarmTrap: {
+      eng->log->addMessage("I attempt to disarm the trap.");
 
+      const int CHANCE_TO_TRIGGER = 20;
+      if(eng->dice.percentile() < CHANCE_TO_TRIGGER) {
+        eng->log->addMessage("I accidentally trigger it!");
+        openFeature();
+      } else {
+        const int CHANCE_TO_DISARM = 50;
+        if(eng->dice.percentile() < CHANCE_TO_DISARM) {
+          eng->log->addMessage("I successfully disarm it!");
+          isTrapped_ = false;
+        } else {
+          eng->log->addMessage("I failed to disarm it.");
+        }
+      }
     }
     break;
     case chestAction_forceLock: {
+      Item* const wpn = eng->player->getInventory()->getItemInSlot(slot_wielded);
 
+      if(wpn == NULL) {
+        eng->log->addMessage("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
+        eng->player->hit(1, damageType_pure);
+      } else {
+        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
+
+        if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
+          const string wpnName = eng->itemData->getItemRef(wpn, itemRef_plain, true);
+          eng->log->addMessage("My " + wpnName + " is damaged!");
+          dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
+        }
+
+        if(IS_WEAK) {
+          eng->log->addMessage("It seems futile.");
+        } else {
+          const int CHANCE_TO_OPEN = 40;
+          if(eng->dice.percentile() < CHANCE_TO_OPEN) {
+            eng->log->addMessage("I force the lock open!");
+            openFeature();
+          } else {
+            eng->log->addMessage("The lock resists.");
+          }
+        }
+      }
     }
     break;
     case chestAction_kick: {
+      const int CHANCE_TO_SPRAIN    = 20;
 
+      if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
+        eng->log->addMessage("I sprain myself.", clrMessageBad);
+        eng->player->hit(1, damageType_pure);
+      }
+
+      if(eng->player->deadState == actorDeadState_alive) {
+        if(IS_WEAK) {
+          eng->log->addMessage("It seems futile.");
+          return;
+        }
+
+        if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
+          itemContainer_.destroySingleFragile(eng);
+        }
+        const int CHANCE_TO_OPEN = 20 + (IS_RUGGED ? 20 : (IS_TOUGH ? 10 : 0));
+        if(eng->dice.percentile() < CHANCE_TO_OPEN) {
+          eng->log->addMessage("I kick the lid open!");
+          openFeature();
+        } else {
+          eng->log->addMessage("The lock resists.");
+        }
+      }
     }
     break;
     case chestAction_leave: {
@@ -530,7 +608,8 @@ void Chest::doAction(const ChestAction_t action) {
   }
 }
 
-void Chest::openFeature() {
+bool Chest::openFeature() {
+  eng->log->addMessage("The chest opens.");
   if(isTrapped_) {
     triggerTrap();
   }
@@ -545,6 +624,7 @@ void Chest::openFeature() {
     isContentKnown_ = true;
     isTrapStatusKnown_ = true;
   }
+  return true;
 }
 
 void Chest::getPossibleActions(vector<ChestAction_t>& possibleActions) const {
@@ -556,10 +636,7 @@ void Chest::getPossibleActions(vector<ChestAction_t>& possibleActions) const {
 
   if(isLocked_) {
     possibleActions.push_back(chestAction_kick);
-
-    //TODO check wielded weapon
     possibleActions.push_back(chestAction_forceLock);
-
   } else {
     possibleActions.push_back(chestAction_open);
   }
@@ -584,7 +661,7 @@ void Chest::getChoiceLabels(const vector<ChestAction_t>& possibleActions,
         actionLabels.push_back("Disarm the trap");
       } break;
       case chestAction_forceLock: {
-        actionLabels.push_back("Force the lock");
+        actionLabels.push_back("Force the lock with weapon");
       } break;
       case chestAction_kick: {
         actionLabels.push_back("Kick the lid");
@@ -604,8 +681,39 @@ void Chest::getDescr(string& descr) const {
 }
 
 void Chest::triggerTrap() {
-  isTrapped_ = false;
   isTrapStatusKnown_ = true;
+
+  if(isTrapped_) {
+
+    isTrapped_ = false;
+
+    const int CHANCE_FOR_EXPLODING = 20;
+    if(
+      eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS &&
+      eng->dice.percentile() < CHANCE_FOR_EXPLODING) {
+      eng->log->addMessage("The trap explodes!");
+      eng->explosionMaker->runExplosion(pos_, true);
+      if(eng->player->deadState == actorDeadState_alive) {
+        eng->featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
+      }
+    } else {
+      eng->log->addMessage("Fumes burst out from the chest!");
+      StatusEffect* effect = NULL;
+      sf::Color fumeClr = clrMagenta;
+      const int RND = eng->dice.percentile();
+      if(RND < 20) {
+        effect = new StatusPoisoned(eng);
+        fumeClr = clrGreenLight;
+      } else if(RND < 40) {
+        effect = new StatusDiseased(eng);
+        fumeClr = clrGreen;
+      } else {
+        effect = new StatusParalyzed(eng);
+        effect->turnsLeft *= 2;
+      }
+      eng->explosionMaker->runExplosion(pos_, false, effect, true, fumeClr);
+    }
+  }
 }
 
 //--------------------------------------------------------- CABINET
@@ -643,7 +751,8 @@ void Cabinet::triggerTrap() {
 
 }
 
-void Cabinet::openFeature() {
+bool Cabinet::openFeature() {
+  eng->log->addMessage("The cabinet opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
     eng->log->addMessage("There are some items in the cabinet.");
@@ -653,6 +762,8 @@ void Cabinet::openFeature() {
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = true;
+
+  return true;
 }
 
 void Cabinet::getChoiceLabels(const vector<CabinetAction_t>& possibleActions,
@@ -699,9 +810,10 @@ Cocoon::Cocoon(Feature_t id, coord pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
   PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
-  const int CHANCE_FOR_EMPTY = 50;
+  const int CHANCE_FOR_EMPTY = 60;
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 1 : 0;
+  const int NR_ITEMS_MAX = NR_ITEMS_MIN +
+                           bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 1 : 0;
   itemContainer_.setRandomItemsForFeature(
     feature_cocoon, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
@@ -731,7 +843,7 @@ void Cocoon::triggerTrap() {
   if(RND < 15) {
     eng->log->addMessage("There is a half-dissolved human body inside!");
     eng->player->incrShock(shockValue_heavy);
-  } else if(RND < 40) {
+  } else if(RND < 50) {
     tracer << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId_t> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
@@ -768,7 +880,8 @@ void Cocoon::triggerTrap() {
   }
 }
 
-void Cocoon::openFeature() {
+bool Cocoon::openFeature() {
+  eng->log->addMessage("The cocoon opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
     eng->log->addMessage("There are some items in the cocoon.");
@@ -778,6 +891,8 @@ void Cocoon::openFeature() {
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = true;
+
+  return true;
 }
 
 void Cocoon::getChoiceLabels(const vector<CocoonAction_t>& possibleActions,
@@ -820,11 +935,11 @@ void Cocoon::getDescr(string& descr) const {
 }
 
 //--------------------------------------------------------- ALTAR
-Altar::Altar(Feature_t id, coord pos, Engine* engine) :
-  FeatureExaminable(id, pos, engine) {}
-
-void Altar::featureSpecific_examine() {
-}
+//Altar::Altar(Feature_t id, coord pos, Engine* engine) :
+//  FeatureExaminable(id, pos, engine) {}
+//
+//void Altar::featureSpecific_examine() {
+//}
 
 //--------------------------------------------------------- CARVED PILLAR
 //CarvedPillar::CarvedPillar(Feature_t id, coord pos, Engine* engine) :

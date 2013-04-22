@@ -13,7 +13,7 @@ void PopulateItems::spawnItems() {
   vector<coord> freeCells;
   eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
 
-  const int CELLS_PER_SPAWN = 125;
+  const int CELLS_PER_SPAWN = 135;
 
   int nrOfSpawns = freeCells.size() / CELLS_PER_SPAWN;
   nrOfSpawns = max(1, nrOfSpawns);
