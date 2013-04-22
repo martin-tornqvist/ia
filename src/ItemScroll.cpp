@@ -465,7 +465,7 @@ void ThaumaturgicAlteration::getPossibleActions(
     const ItemDefinition* d = engine->itemData->itemDefinitions[i];
     if(d->isScroll && d->isScrollLearned &&
         d->castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
-        d->id != ThaumaturgicAlteration()) {
+        d->id != item_thaumaturgicAlteration) {
       canAnySpellBeRestored = true;
     }
   }
