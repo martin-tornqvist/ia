@@ -1,4 +1,4 @@
-I (Martin) want to thank the following individuals for their great contributions to Infra Arcana:
+I (Martin) want to thank the following people for their great contributions to Infra Arcana:
 
 * Christopher Barrett ("Oryx") - Provided a fantastic and elegant tile set, and even continued to support and maintain the graphics long after the first draft was ready.
 

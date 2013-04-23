@@ -23,6 +23,7 @@
 #include "BresenhamLine.h"
 #include "CharacterInfo.h"
 #include "Close.h"
+#include "Credits.h"
 #include "DebugModeStatPrinter.h"
 #include "Disarm.h"
 #include "PlayerAllocBonus.h"
@@ -196,6 +197,7 @@ void Engine::initGame() {
   debugModeStatPrinter = new DebugModeStatPrinter(this);
   disarm = new Disarm(this);
   gods = new Gods(this);
+  credits = new Credits(this);
 
   tracer << "Engine::initGame() [DONE]" << endl;
 }
@@ -274,6 +276,7 @@ void Engine::cleanupGame() {
   delete debugModeStatPrinter;
   delete disarm;
   delete gods;
+  delete credits;
 
   delete marker;
 

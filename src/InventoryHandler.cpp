@@ -165,7 +165,9 @@ void InventoryHandler::runSlotsScreen() {
             const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
             inv->moveItemToGeneral(slot);
             if(IS_ARMOR) {
-              eng->log->addMessage("I take off my " + itemName + ".");
+              screenToOpenAfterDrop = inventoryScreen_slots;
+              browserPosToSetAfterDrop = browser.getPos().y;
+              eng->log->addMessage("I take off my " + itemName + ".", clrWhite, messageInterrupt_never, true);
               eng->renderer->drawMapAndInterface();
               eng->gameTime->letNextAct();
               return;

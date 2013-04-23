@@ -650,7 +650,7 @@ void Renderer::drawASCII() {
     yPos = actor->pos.y;
     if(actor->deadState == actorDeadState_corpse && actor->getDef()->glyph != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArray[xPos][yPos];
-      currentDrw->color = actor->getColor();
+      currentDrw->color = clrRed;
       currentDrw->glyph = actor->getGlyph();
     }
   }
@@ -809,7 +809,7 @@ void Renderer::drawTiles() {
     yPos = actor->pos.y;
     if(actor->deadState == actorDeadState_corpse && actor->getTile() != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayTiles[xPos][yPos];
-      currentDrw->color = actor->getColor();
+      currentDrw->color = clrRed;
       currentDrw->tile = actor->getTile();
     }
   }

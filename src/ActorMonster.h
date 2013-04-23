@@ -441,7 +441,7 @@ private:
 
 class GiantLocust: public Monster {
 public:
-  GiantLocust() : Monster(), chanceToSpawnNew(6) {}
+  GiantLocust() : Monster(), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
   bool actorSpecificAct();
   virtual void actorSpecific_spawnStartItems();

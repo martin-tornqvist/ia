@@ -33,7 +33,6 @@ void Manual::readFile() {
         lines.push_back(curLine);
       }
     }
-  } else {
   }
 
   file.close();

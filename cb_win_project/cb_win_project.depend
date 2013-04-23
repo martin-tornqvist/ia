@@ -12,7 +12,7 @@
 	<string>
 	<iostream>
 
-1365972210 c:\dev\ia\src\engine.h
+1366735232 c:\dev\ia\src\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -34,7 +34,7 @@
 
 1364131024 c:\dev\ia\src\art.h
 
-1365804203 c:\dev\ia\src\actor.h
+1366737330 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -185,7 +185,7 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1366055675 c:\dev\ia\src\actormonster.h
+1366737004 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -351,7 +351,7 @@
 	<string>
 	"Item.h"
 
-1366568673 source:c:\dev\ia\src\actordata.cpp
+1366734164 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -438,7 +438,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1366662969 source:c:\dev\ia\src\actorplayer.cpp
+1366737611 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -757,7 +757,7 @@
 
 1323988860 source:c:\dev\ia\src\dungeonreadwrite.cpp
 
-1365972210 source:c:\dev\ia\src\engine.cpp
+1366735057 source:c:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"SFML/System/Sleep.hpp"
@@ -778,6 +778,7 @@
 	"BresenhamLine.h"
 	"CharacterInfo.h"
 	"Close.h"
+	"Credits.h"
 	"DebugModeStatPrinter.h"
 	"Disarm.h"
 	"PlayerAllocBonus.h"
@@ -881,7 +882,7 @@
 	"MenuBrowser.h"
 	"ConstTypes.h"
 
-1355677713 c:\dev\ia\src\manual.h
+1366734707 c:\dev\ia\src\manual.h
 	<vector>
 	<string>
 
@@ -1139,7 +1140,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1366652612 source:c:\dev\ia\src\inventoryhandler.cpp
+1366736128 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1230,7 +1231,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1366733677 source:c:\dev\ia\src\itemscroll.cpp
+1366735377 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1308,7 +1309,7 @@
 	"Query.h"
 	"Marker.h"
 
-1366301637 source:c:\dev\ia\src\mainmenu.cpp
+1366735192 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1320,8 +1321,9 @@
 	"Manual.h"
 	"Popup.h"
 	"TextFormatting.h"
+	"Credits.h"
 
-1366731809 source:c:\dev\ia\src\manual.cpp
+1366734899 source:c:\dev\ia\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -1584,7 +1586,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1366302522 source:c:\dev\ia\src\render.cpp
+1366737701 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -5709,7 +5711,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1366568673 source:c:\dev\ia\src\actormonsterspecific.cpp
+1366737004 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -10348,4 +10350,17 @@
 1366059339 source:c:\dev\ia\src\gods.cpp
 	"Gods.h"
 	"Engine.h"
+
+1366735874 source:c:\dev\ia\src\credits.cpp
+	"Credits.h"
+	<fstream>
+	<iostream>
+	"Input.h"
+	"Engine.h"
+	"TextFormatting.h"
+	"Render.h"
+
+1366735013 c:\dev\ia\src\credits.h
+	<vector>
+	<string>
 

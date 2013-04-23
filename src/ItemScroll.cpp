@@ -688,8 +688,9 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
     specificRead(engine);
   } else {
     engine->log->addMessage("I miscast it.");
-    if(def_->castFromMemoryCurrentBaseChance > 0) {
-      def_->castFromMemoryCurrentBaseChance--;
+    const int CHANCE_DECR_WHEN_FAIL = 2;
+    if(def_->castFromMemoryCurrentBaseChance >= CHANCE_DECR_WHEN_FAIL) {
+      def_->castFromMemoryCurrentBaseChance -= CHANCE_DECR_WHEN_FAIL;
     }
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusWeak(engine));
     if(engine->dice.coinToss()) {
