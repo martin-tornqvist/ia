@@ -281,7 +281,7 @@ enum MthPowerAction_t {
   mthPowerAction_sorcery,
   mthPowerAction_mendArmor,
   mthPowerAction_improveWeapon,
-  mthPowerAction_fortitude
+  mthPowerAction_purgeEffects
 };
 
 class ThaumaturgicAlteration: public Scroll {

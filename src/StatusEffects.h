@@ -1918,7 +1918,9 @@ public:
     return false;
   }
 
-  void endEffect(const StatusEffects_t effect, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS], const bool RUN_STATUS_END_EFFECTS = true) {
+  void endEffect(const StatusEffects_t effect,
+                 const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
+                 const bool RUN_STATUS_END_EFFECTS = true) {
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(effects.at(i)->getEffectId() == effect) {
         if(RUN_STATUS_END_EFFECTS) {
@@ -1932,7 +1934,8 @@ public:
     }
   }
 
-  void endEffectsOfAbility(const Abilities_t ability, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+  void endEffectsOfAbility(const Abilities_t ability,
+                           const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int i = 0; i < static_cast<int>(effects.size()); i++) {
       const unsigned int ELEMENT = static_cast<unsigned int>(i);
       if(effects.at(ELEMENT)->getSaveAbility() == ability) {
@@ -1958,7 +1961,8 @@ private:
   Actor* owningActor;
   Engine* eng;
 
-  void runEffectEndAndRemoveFromList(const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+  void runEffectEndAndRemoveFromList(
+    const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 
   friend class GameTime;
   void newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);

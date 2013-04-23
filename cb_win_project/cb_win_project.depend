@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1366649973 c:\dev\ia\src\statuseffects.h
+1366733549 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -109,7 +109,7 @@
 1355677712 c:\dev\ia\src\audio.h
 	<string>
 
-1366645736 c:\dev\ia\src\constdungeonsettings.h
+1366733784 c:\dev\ia\src\constdungeonsettings.h
 
 1365146998 c:\dev\ia\src\config.h
 	<string>
@@ -861,7 +861,7 @@
 	"Item.h"
 	"ConstTypes.h"
 
-1366660010 c:\dev\ia\src\itemscroll.h
+1366733247 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -1230,7 +1230,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1366664196 source:c:\dev\ia\src\itemscroll.cpp
+1366733677 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1321,7 +1321,7 @@
 	"Popup.h"
 	"TextFormatting.h"
 
-1364824881 source:c:\dev\ia\src\manual.cpp
+1366731809 source:c:\dev\ia\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>

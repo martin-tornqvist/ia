@@ -426,10 +426,17 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
       weapon->meleeDmgPlus++;
     } break;
 
-    case mthPowerAction_fortitude: {
-      engine->player->getStatusEffectsHandler()->tryAddEffect(
-        new StatusPerfectFortitude(engine));
-      engine->player->restoreShock(999, false);
+    case mthPowerAction_purgeEffects: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 9999);
+
+      StatusEffectsHandler* const statusHandler = engine->player->getStatusEffectsHandler();
+      statusHandler->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
+      statusHandler->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
+
+//      engine->player->getStatusEffectsHandler()->tryAddEffect(
+//        new StatusPerfectFortitude(engine));
+//      engine->player->restoreShock(999, false);
     } break;
   }
 }
@@ -496,7 +503,7 @@ void ThaumaturgicAlteration::getPossibleActions(
     }
   }
 
-  possibleActions.push_back(mthPowerAction_fortitude);
+  possibleActions.push_back(mthPowerAction_purgeEffects);
 }
 
 void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
@@ -524,8 +531,8 @@ void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
       case mthPowerAction_slayMonsters: {
         labels.push_back("Slay my enemies!");
       } break;
-      case mthPowerAction_fortitude: {
-        labels.push_back("Shield my mind!");
+      case mthPowerAction_purgeEffects: {
+        labels.push_back("Purge all harmful effects!");
       } break;
     }
   }
