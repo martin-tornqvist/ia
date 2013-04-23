@@ -58,7 +58,7 @@
 	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="10107" topLine="200" />
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="1" top="0" tabpos="7">
+	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="45933" topLine="1228" />
 	</File>
 	<File name="..\src\ActorPlayer.h" open="0" top="0" tabpos="6">
@@ -250,7 +250,7 @@
 	<File name="..\src\FovPreCalc.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="2115" topLine="37" />
 	</File>
-	<File name="..\src\GameTime.cpp" open="1" top="0" tabpos="8">
+	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="3984" topLine="111" />
 	</File>
 	<File name="..\src\GameTime.h" open="0" top="0" tabpos="3">
@@ -286,7 +286,7 @@
 	<File name="..\src\Inventory.h" open="0" top="0" tabpos="4">
 		<Cursor position="1515" topLine="44" />
 	</File>
-	<File name="..\src\InventoryHandler.cpp" open="1" top="0" tabpos="1">
+	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="10739" topLine="259" />
 	</File>
 	<File name="..\src\InventoryHandler.h" open="0" top="0" tabpos="7">
@@ -307,7 +307,7 @@
 	<File name="..\src\ItemArmor.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="184" topLine="0" />
 	</File>
-	<File name="..\src\ItemArmor.h" open="1" top="0" tabpos="4">
+	<File name="..\src\ItemArmor.h" open="0" top="0" tabpos="4">
 		<Cursor position="890" topLine="7" />
 	</File>
 	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="6">
@@ -349,22 +349,22 @@
 	<File name="..\src\ItemPickup.h" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="..\src\ItemPotion.cpp" open="1" top="0" tabpos="6">
+	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="324" topLine="0" />
 	</File>
 	<File name="..\src\ItemPotion.h" open="0" top="0" tabpos="0">
 		<Cursor position="6040" topLine="163" />
 	</File>
-	<File name="..\src\ItemScroll.cpp" open="1" top="1" tabpos="3">
+	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="11555" topLine="340" />
 	</File>
-	<File name="..\src\ItemScroll.h" open="1" top="0" tabpos="2">
+	<File name="..\src\ItemScroll.h" open="0" top="0" tabpos="2">
 		<Cursor position="6979" topLine="297" />
 	</File>
 	<File name="..\src\ItemWeapon.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="246" topLine="0" />
 	</File>
-	<File name="..\src\ItemWeapon.h" open="1" top="0" tabpos="5">
+	<File name="..\src\ItemWeapon.h" open="0" top="0" tabpos="5">
 		<Cursor position="376" topLine="3" />
 	</File>
 	<File name="..\src\JamWithSpike.cpp" open="0" top="0" tabpos="0">
@@ -565,8 +565,8 @@
 	<File name="..\src\Spells.h" open="0" top="0" tabpos="7">
 		<Cursor position="283" topLine="0" />
 	</File>
-	<File name="..\src\StatusEffects.cpp" open="1" top="0" tabpos="9">
-		<Cursor position="8557" topLine="237" />
+	<File name="..\src\StatusEffects.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="8808" topLine="237" />
 	</File>
 	<File name="..\src\StatusEffects.h" open="0" top="0" tabpos="4">
 		<Cursor position="375" topLine="14" />
