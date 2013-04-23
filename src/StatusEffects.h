@@ -31,7 +31,7 @@ enum StatusEffects_t {
   statusWeak,
   statusPerfectReflexes,
   statusPerfectAim,
-  statusPerfectStealth,
+//  statusPerfectStealth,
   statusPerfectFortitude,
   statusPerfectToughness,
   statusCursed,
@@ -1390,16 +1390,16 @@ public:
   }
 
   string getInterfaceName() {
-    return "PerfReflex";
+    return "Reflexes";
   }
   string messageWhenStart() {
-    return "I have godlike reflexes!";
+    return "I have mighty reflexes!";
   }
   string messageWhenMore() {
-    return "I have godlike reflexes!";
+    return "I have mighty reflexes!";
   }
   string messageWhenMoreOther() {
-    return "has godlike reflexes.";
+    return "has mighty reflexes.";
   }
   string messageWhenEnd() {
     return "My reflexes are normal.";
@@ -1408,7 +1408,7 @@ public:
     return "";
   }
   string messageWhenStartOther() {
-    return "has godlike reflexes.";
+    return "has mighty reflexes.";
   }
   string messageWhenEndOther() {
     return "has normal reflexes.";
@@ -1479,16 +1479,16 @@ public:
   }
 
   string getInterfaceName() {
-    return "PerfAiming";
+    return "Aiming";
   }
   string messageWhenStart() {
-    return "I have godlike aiming!";
+    return "I have excellent aiming!";
   }
   string messageWhenMore() {
-    return "I have godlike aiming!";
+    return "I have excellent aiming!";
   }
   string messageWhenMoreOther() {
-    return "has godlike aiming.";
+    return "has excellent aiming.";
   }
   string messageWhenEnd() {
     return "My aiming is normal.";
@@ -1497,7 +1497,7 @@ public:
     return "";
   }
   string messageWhenStartOther() {
-    return "has godlike aiming.";
+    return "has excellent aiming.";
   }
   string messageWhenEndOther() {
     return "has normal aiming.";
@@ -1540,94 +1540,94 @@ private:
   }
 };
 
-class StatusPerfectStealth: public StatusEffect {
-public:
-  StatusPerfectStealth(Engine* const engine) :
-    StatusEffect(statusPerfectStealth) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusPerfectStealth(const int turns) :
-    StatusEffect(turns, statusPerfectStealth) {
-  }
-  ~StatusPerfectStealth() {
-  }
-
-  StatusPerfectStealth* copy() {
-    StatusPerfectStealth* cpy = new StatusPerfectStealth(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return true;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "PerfStealth";
-  }
-  string messageWhenStart() {
-    return "I move silent like a ghost!";
-  }
-  string messageWhenMore() {
-    return "I move silent like a ghost!";
-  }
-  string messageWhenMoreOther() {
-    return "";
-  }
-  string messageWhenEnd() {
-    return "My movements make noises again.";
-  }
-  string messageWhenSaves() {
-    return "";
-  }
-  string messageWhenStartOther() {
-    return "";
-  }
-  string messageWhenEndOther() {
-    return "";
-  }
-  string messageWhenSavesOther() {
-    return "";
-  }
-
-  Abilities_t getSaveAbility() {
-    return ability_empty;
-  }
-  int getSaveAbilityModifier() {
-    return 0;
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_stealth)
-      return 999;
-    return 0;
-  }
-
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(8, 8, 100);
-  }
-};
+//class StatusPerfectStealth: public StatusEffect {
+//public:
+//  StatusPerfectStealth(Engine* const engine) :
+//    StatusEffect(statusPerfectStealth) {
+//    setTurnsFromRandomStandard(engine);
+//  }
+//  StatusPerfectStealth(const int turns) :
+//    StatusEffect(turns, statusPerfectStealth) {
+//  }
+//  ~StatusPerfectStealth() {
+//  }
+//
+//  StatusPerfectStealth* copy() {
+//    StatusPerfectStealth* cpy = new StatusPerfectStealth(turnsLeft);
+//    return cpy;
+//  }
+//
+//  bool isMakingOwnerAwareOfPlayer() {
+//    return false;
+//  }
+//
+//  bool isConsideredBeneficial() {
+//    return true;
+//  }
+//
+//  bool allowDisplayTurnsInInterface() {
+//    return true;
+//  }
+//
+//  string getInterfaceName() {
+//    return "Stealth";
+//  }
+//  string messageWhenStart() {
+//    return "I move silent like a ghost!";
+//  }
+//  string messageWhenMore() {
+//    return "I move silent like a ghost!";
+//  }
+//  string messageWhenMoreOther() {
+//    return "";
+//  }
+//  string messageWhenEnd() {
+//    return "My movements make noises again.";
+//  }
+//  string messageWhenSaves() {
+//    return "";
+//  }
+//  string messageWhenStartOther() {
+//    return "";
+//  }
+//  string messageWhenEndOther() {
+//    return "";
+//  }
+//  string messageWhenSavesOther() {
+//    return "";
+//  }
+//
+//  Abilities_t getSaveAbility() {
+//    return ability_empty;
+//  }
+//  int getSaveAbilityModifier() {
+//    return 0;
+//  }
+//
+//  int getAbilityModifier(const Abilities_t ability) {
+//    if(ability == ability_stealth)
+//      return 999;
+//    return 0;
+//  }
+//
+//  void start(Engine* const engine) {
+//    (void)engine;
+//  }
+//
+//  void end(Engine* const engine) {
+//    (void)engine;
+//  }
+//
+//  void newTurn(Engine* const engine) {
+//    (void)engine;
+//    turnsLeft--;
+//  }
+//
+//private:
+//  DiceParam getRandomStandardNrTurns() {
+//    return DiceParam(8, 8, 100);
+//  }
+//};
 
 class StatusPerfectFortitude: public StatusEffect {
 public:
@@ -1659,16 +1659,16 @@ public:
   }
 
   string getInterfaceName() {
-    return "PerfFort";
+    return "Fortitude";
   }
   string messageWhenStart() {
-    return "I have godlike fortitude!";
+    return "I have mighty fortitude!";
   }
   string messageWhenMore() {
-    return "I have godlike fortitude!";
+    return "I have mighty fortitude!";
   }
   string messageWhenMoreOther() {
-    return "has godlike fortitude!";
+    return "has mighty fortitude!";
   }
   string messageWhenEnd() {
     return "My fortitude is normal.";
@@ -1677,7 +1677,7 @@ public:
     return "";
   }
   string messageWhenStartOther() {
-    return "has godlike fortitude!";
+    return "has mighty fortitude!";
   }
   string messageWhenEndOther() {
     return "has normal fortitude.";
@@ -1748,16 +1748,16 @@ public:
   }
 
   string getInterfaceName() {
-    return "PerfTough";
+    return "Toughness";
   }
   string messageWhenStart() {
-    return "I have godlike toughness!";
+    return "I have mighty toughness!";
   }
   string messageWhenMore() {
-    return "I have godlike toughness!";
+    return "I have mighty toughness!";
   }
   string messageWhenMoreOther() {
-    return "has godlike toughness!";
+    return "has mighty toughness!";
   }
   string messageWhenEnd() {
     return "My toughness is normal.";
@@ -1766,7 +1766,7 @@ public:
     return "";
   }
   string messageWhenStartOther() {
-    return "has godlike toughness!";
+    return "has mighty toughness!";
   }
   string messageWhenEndOther() {
     return "has normal toughness.";
@@ -1918,7 +1918,9 @@ public:
     return false;
   }
 
-  void endEffect(const StatusEffects_t effect, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS], const bool RUN_STATUS_END_EFFECTS = true) {
+  void endEffect(const StatusEffects_t effect,
+                 const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
+                 const bool RUN_STATUS_END_EFFECTS = true) {
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(effects.at(i)->getEffectId() == effect) {
         if(RUN_STATUS_END_EFFECTS) {
@@ -1932,7 +1934,8 @@ public:
     }
   }
 
-  void endEffectsOfAbility(const Abilities_t ability, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+  void endEffectsOfAbility(const Abilities_t ability,
+                           const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int i = 0; i < static_cast<int>(effects.size()); i++) {
       const unsigned int ELEMENT = static_cast<unsigned int>(i);
       if(effects.at(ELEMENT)->getSaveAbility() == ability) {
@@ -1958,7 +1961,8 @@ private:
   Actor* owningActor;
   Engine* eng;
 
-  void runEffectEndAndRemoveFromList(const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+  void runEffectEndAndRemoveFromList(
+    const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 
   friend class GameTime;
   void newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);

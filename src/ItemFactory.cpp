@@ -106,15 +106,14 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_scrollOfTeleportation:    item = new ScrollOfTeleportation(d);    break;
     case item_scrollOfDescent:          item = new ScrollOfDescent(d);          break;
     case item_scrollOfPestilence:       item = new ScrollOfPestilence(d);       break;
-    case item_scrollOfConfuseEnemies:   item = new ScrollOfConfuseEnemies(d);   break;
-    case item_scrollOfParalyzeEnemies:  item = new ScrollOfParalyzeEnemies(d);  break;
-    case item_scrollOfSlowEnemies:      item = new ScrollOfSlowEnemies(d);      break;
+    case item_scrollOfEnfeebleEnemies:  item = new ScrollOfEnfeebleEnemies(d);  break;
     case item_scrollOfDetectItems:      item = new ScrollOfDetectItems(d);      break;
     case item_scrollOfDetectTraps:      item = new ScrollOfDetectTraps(d);      break;
     case item_scrollOfIdentify:         item = new ScrollOfIdentify(d);         break;
     case item_scrollOfBlessing:         item = new ScrollOfBlessing(d);         break;
     case item_scrollOfClairvoyance:     item = new ScrollOfClairvoyance(d);     break;
     case item_scrollOfAzathothsBlast:   item = new ScrollOfAzathothsBlast(d);   break;
+    case item_scrollOfOpening:          item = new ScrollOfOpening(d);          break;
     case item_thaumaturgicAlteration:   item = new ThaumaturgicAlteration(d);   break;
 
     case item_potionOfHealing:          item = new PotionOfHealing(d);          break;
@@ -127,6 +126,7 @@ Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfConfusion:        item = new PotionOfConfusion(d);        break;
     case item_potionOfSorcery:          item = new PotionOfSorcery(d);          break;
     case item_potionOfPoison:           item = new PotionOfPoison(d);           break;
+    case item_potionOfKnowledge:        item = new PotionOfKnowledge(d);        break;
 
     case item_deviceSentry:             item = new DeviceSentry(d);             break;
     case item_deviceRepeller:           item = new DeviceRepeller(d);           break;

@@ -1,5 +1,5 @@
-#ifndef MANUAL_H
-#define MANUAL_H
+#ifndef CREDITS_H
+#define CREDITS_H
 
 #include <vector>
 #include <string>
@@ -8,9 +8,9 @@ using namespace std;
 
 class Engine;
 
-class Manual {
+class Credits {
 public:
-  Manual(Engine* engine) : eng(engine) {
+  Credits(Engine* engine) : eng(engine) {
     readFile();
   }
 
@@ -19,7 +19,7 @@ public:
 private:
   void readFile();
 
-  void drawManualInterface();
+  void drawInterface();
 
   vector<string> lines;
 

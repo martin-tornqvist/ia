@@ -16,6 +16,10 @@
 #include "Inventory.h"
 #include "ItemPotion.h"
 #include "ItemDevice.h"
+#include "Popup.h"
+#include "ItemArmor.h"
+#include "ItemWeapon.h"
+#include "PlayerPowersHandler.h"
 
 const int BLAST_ANIMATION_DELAY_FACTOR = 2;
 
@@ -124,8 +128,7 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
-  if(actors.size() > 0) {
-    setRealDefinitionNames(engine, false);
+  if(actors.empty() == false) {
     vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
@@ -135,26 +138,30 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrMagenta,
         BLAST_ANIMATION_DELAY_FACTOR, engine);
 
+    StatusEffect* const effect = getStatusEffect(engine);
+
     for(unsigned int i = 0; i < actors.size(); i++) {
-      StatusEffect* const effect = getStatusEffect(engine);
-      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(effect);
+      actors.at(i)->getStatusEffectsHandler()->tryAddEffect(effect->copy());
     }
+
+    delete effect;
+
+    setRealDefinitionNames(engine, false);
 
   } else {
     failedToLearnRealName(engine);
   }
 }
 
-StatusEffect* ScrollOfConfuseEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusConfused(engine);
-}
-
-StatusEffect* ScrollOfParalyzeEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusParalyzed(engine);
-}
-
-StatusEffect* ScrollOfSlowEnemies::getStatusEffect(Engine* const engine) {
-  return new StatusSlowed(engine);
+StatusEffect* ScrollOfEnfeebleEnemies::getStatusEffect(Engine* const engine) {
+  const int RND = engine->dice.getInRange(1, 4);
+  switch(RND) {
+    case 1: {return new StatusConfused(engine);}  break;
+    case 2: {return new StatusParalyzed(engine);} break;
+    case 3: {return new StatusSlowed(engine);}    break;
+    case 4: {return new StatusBlind(engine);}     break;
+  }
+  return NULL;
 }
 
 void ScrollOfDetectItems::specificRead(Engine* const engine) {
@@ -266,11 +273,42 @@ void ScrollOfClairvoyance::specificRead(Engine* const engine) {
   setRealDefinitionNames(engine, false);
 }
 
+void ScrollOfOpening::specificRead(Engine* const engine) {
+  bool isSomethingOpened;
+
+  bool playerVisionBefore[MAP_X_CELLS][MAP_Y_CELLS];
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      playerVisionBefore[x][y] = engine->map->playerVision[x][y];
+    }
+  }
+
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      if(playerVisionBefore[x][y]) {
+        if(engine->map->featuresStatic[x][y]->openFeature()) {
+          isSomethingOpened = true;
+        }
+      }
+    }
+  }
+
+  if(isSomethingOpened) {
+    engine->log->addMessage("Everything around me was opened.");
+    engine->player->updateFov();
+    engine->renderer->drawMapAndInterface();
+    setRealDefinitionNames(engine, false);
+  } else {
+    failedToLearnRealName(engine);
+  }
+}
+
+
 void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   engine->player->getSpotedEnemies();
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
-  if(actors.size() > 0) {
+  if(actors.empty() == false) {
     vector<coord> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
@@ -293,11 +331,212 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   }
 }
 
-
 void ThaumaturgicAlteration::specificRead(Engine* const engine) {
-  (void)engine;
+  vector<MthPowerAction_t> possibleActions;
+  getPossibleActions(possibleActions, engine);
+
+  if(possibleActions.empty()) {
+    engine->log->addMessage("I fail to grasp what I want to do.");
+  } else {
+    vector<string> choiceLabels;
+    getChoiceLabelsFromPossibleActions(possibleActions, choiceLabels);
+
+    const unsigned int choiceNr =
+      engine->popup->showMultiChoiceMessage("I want to...", true, choiceLabels, "");
+
+    doAction(possibleActions.at(choiceNr), engine);
+  }
 }
 
+void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* const engine) const {
+  switch(action) {
+    case mthPowerAction_slayMonsters: {
+      engine->player->getSpotedEnemies();
+      const vector<Actor*>& actors = engine->player->spotedEnemies;
+
+      vector<coord> actorPositions;
+      for(unsigned int i = 0; i < actors.size(); i++) {
+        actorPositions.push_back(actors.at(i)->pos);
+      }
+
+      engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+        actorPositions, clrYellow,
+        BLAST_ANIMATION_DELAY_FACTOR, engine);
+
+      for(unsigned int i = 0; i < actors.size(); i++) {
+        const string monsterName = actors.at(i)->getNameThe();
+        engine->log->addMessage(monsterName + " is crushed by an unseen force!", clrMessageGood);
+        actors.at(i)->hit(25, damageType_physical);
+      }
+
+      engine->renderer->drawMapAndInterface(true);
+    } break;
+
+    case mthPowerAction_heal: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+      engine->player->getStatusEffectsHandler()->endEffect(statusDiseased, visionBlockers);
+      engine->player->restoreHP(999);
+    } break;
+
+    case mthPowerAction_findStairs: {
+      tracer << "ThaumaturgicAlteration: Find stairs" << endl;
+      for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+        for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+          if(engine->map->featuresStatic[x][y]->getId() == feature_stairsDown) {
+            for(int dy = -1; dy <= 1; dy++) {
+              for(int dx = -1; dx <= 1; dx++) {
+                engine->map->playerVision[x + dx][y + dy] = true;
+                engine->map->explored[x + dx][y + dy] = true;
+              }
+            }
+          }
+        }
+      }
+      engine->log->addMessage("The way forward is revealed!");
+      engine->renderer->drawMapAndInterface(true);
+      engine->player->updateFov();
+      engine->renderer->drawMapAndInterface(true);
+    } break;
+
+    case mthPowerAction_sorcery: {
+      engine->log->addMessage("My magic is restored!");
+      const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfScrolls();
+      for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
+        Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+        const ItemDefinition& d = scroll->getDef();
+        if(d.isScrollLearnable && d.isScrollLearned && d.id != item_thaumaturgicAlteration) {
+          scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
+        }
+      }
+    } break;
+
+    case mthPowerAction_mendArmor: {
+      engine->log->addMessage("My armor is whole!");
+      Armor* const armor =
+        dynamic_cast<Armor*>(engine->player->getInventory()->getItemInSlot(slot_armorBody));
+      armor->setMaxDurability();
+      engine->renderer->drawMapAndInterface(true);
+    } break;
+
+    case mthPowerAction_improveWeapon: {
+      engine->log->addMessage("My weapon is deadlier!");
+      Weapon* const weapon =
+        dynamic_cast<Weapon*>(engine->player->getInventory()->getItemInSlot(slot_wielded));
+      weapon->meleeDmgPlus++;
+    } break;
+
+    case mthPowerAction_purgeEffects: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 9999);
+
+      StatusEffectsHandler* const statusHandler = engine->player->getStatusEffectsHandler();
+      statusHandler->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
+      statusHandler->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
+
+//      engine->player->getStatusEffectsHandler()->tryAddEffect(
+//        new StatusPerfectFortitude(engine));
+//      engine->player->restoreShock(999, false);
+    } break;
+  }
+}
+
+void ThaumaturgicAlteration::getPossibleActions(
+  vector<MthPowerAction_t>& possibleActions, Engine* const engine) const {
+
+  possibleActions.resize(0);
+
+  engine->player->getSpotedEnemies();
+  const vector<Actor*>& actors = engine->player->spotedEnemies;
+
+  const int MTH = engine->player->getMth();
+
+  if(MTH >= 35) {
+    if(actors.empty() == false) {
+      possibleActions.push_back(mthPowerAction_slayMonsters);
+    }
+  }
+
+  for(int y = 1; y < MAP_Y_CELLS; y++) {
+    for(int x = 1; x < MAP_X_CELLS; x++) {
+      if(engine->map->featuresStatic[x][y]->getId() == feature_stairsDown) {
+        if(engine->map->explored[x][y] == false) {
+          possibleActions.push_back(mthPowerAction_findStairs);
+        }
+      }
+    }
+  }
+
+  bool canAnySpellBeRestored = false;
+  for(unsigned int i = 0; i < endOfItemIds; i++) {
+    const ItemDefinition* d = engine->itemData->itemDefinitions[i];
+    if(d->isScroll && d->isScrollLearned &&
+        d->castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
+        d->id != item_thaumaturgicAlteration) {
+      canAnySpellBeRestored = true;
+    }
+  }
+  if(canAnySpellBeRestored) {
+    possibleActions.push_back(mthPowerAction_sorcery);
+  }
+
+  if(engine->player->getHp() < engine->player->getHpMax(true)) {
+    possibleActions.push_back(mthPowerAction_heal);
+  }
+
+  Item* item = engine->player->getInventory()->getItemInSlot(slot_wielded);
+  if(item != NULL) {
+    const ItemDefinition& d = item->getDef();
+    if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+      Weapon* const weapon = dynamic_cast<Weapon*>(item);
+      if(weapon->meleeDmgPlus < 3) {
+        possibleActions.push_back(mthPowerAction_improveWeapon);
+      }
+    }
+  }
+
+  item = engine->player->getInventory()->getItemInSlot(slot_armorBody);
+  if(item != NULL) {
+    Armor* const armor = dynamic_cast<Armor*>(item);
+    if(armor->getDurability() < 100) {
+      possibleActions.push_back(mthPowerAction_mendArmor);
+    }
+  }
+
+  possibleActions.push_back(mthPowerAction_purgeEffects);
+}
+
+void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
+  const vector<MthPowerAction_t>& possibleActions, vector<string>& labels) const {
+
+  labels.resize(0);
+
+  for(unsigned int i = 0; i < possibleActions.size(); i++) {
+    switch(possibleActions.at(i)) {
+      case mthPowerAction_findStairs: {
+        labels.push_back("Reveal the way forward!");
+      } break;
+      case mthPowerAction_sorcery: {
+        labels.push_back("Restore my magic!");
+      } break;
+      case mthPowerAction_heal: {
+        labels.push_back("Heal myself!");
+      } break;
+      case mthPowerAction_improveWeapon: {
+        labels.push_back("Make my weapon deadlier!");
+      } break;
+      case mthPowerAction_mendArmor: {
+        labels.push_back("Mend my armor!");
+      } break;
+      case mthPowerAction_slayMonsters: {
+        labels.push_back("Slay my enemies!");
+      } break;
+      case mthPowerAction_purgeEffects: {
+        labels.push_back("Purge all harmful effects!");
+      } break;
+    }
+  }
+}
 
 //void ScrollOfVoidChain::specificRead(Engine* const engine) {
 //  setRealDefinitionNames(engine, false);
@@ -449,8 +688,9 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
     specificRead(engine);
   } else {
     engine->log->addMessage("I miscast it.");
-    if(def_->castFromMemoryCurrentBaseChance > 0) {
-      def_->castFromMemoryCurrentBaseChance--;
+    const int CHANCE_DECR_WHEN_FAIL = 2;
+    if(def_->castFromMemoryCurrentBaseChance >= CHANCE_DECR_WHEN_FAIL) {
+      def_->castFromMemoryCurrentBaseChance -= CHANCE_DECR_WHEN_FAIL;
     }
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusWeak(engine));
     if(engine->dice.coinToss()) {

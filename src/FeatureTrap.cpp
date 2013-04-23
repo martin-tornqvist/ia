@@ -215,7 +215,7 @@ MaterialType_t Trap::getMaterialType() const {
 //================================================ SPECIFIC TRAPS
 TrapDart::TrapDart(coord pos, Engine* engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
-  isPoisoned = eng->map->getDungeonLevel() >= 6 && eng->dice.coinToss();
+  isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
 
 void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
@@ -276,7 +276,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
 
 TrapSpear::TrapSpear(coord pos, Engine* engine) :
   SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
-  isPoisoned = eng->map->getDungeonLevel() >= 6 && eng->dice.coinToss();
+  isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
 
 void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {

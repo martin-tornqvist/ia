@@ -364,12 +364,8 @@ bool Khephren::actorSpecificAct() {
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng->log->addMessage("Khephren calls a plague of Locusts!");
             eng->player->incrShock(shockValue_heavy);
-            Monster* leaderMonster = NULL;
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_giantLocust, freeCells.at(0)));
-              if(i == 0) {
-                leaderMonster = monster;
-              }
               monster->playerAwarenessCounter = 999;
               monster->leader = this;
               freeCells.erase(freeCells.begin());

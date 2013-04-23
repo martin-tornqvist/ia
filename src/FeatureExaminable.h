@@ -76,7 +76,7 @@ private:
 
   Tomb(Feature_t id, coord pos, Engine* engine);
 
-  void openFeature();
+  bool openFeature();
   void triggerTrap();
   void getChoiceLabels(const vector<TombAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
@@ -107,7 +107,7 @@ private:
   Cabinet(Feature_t id, coord pos, Engine* engine);
 
   void triggerTrap();
-  void openFeature();
+  bool openFeature();
   void getChoiceLabels(const vector<CabinetAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
   void getPossibleActions(vector<CabinetAction_t>& possibleActions) const;
@@ -141,7 +141,7 @@ private:
   Chest(Feature_t id, coord pos, Engine* engine);
 
   void triggerTrap();
-  void openFeature();
+  bool openFeature();
   void getChoiceLabels(const vector<ChestAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
   void getPossibleActions(vector<ChestAction_t>& possibleActions) const;
@@ -167,7 +167,7 @@ private:
   Cocoon(Feature_t id, coord pos, Engine* engine);
 
   void triggerTrap();
-  void openFeature();
+  bool openFeature();
   void getChoiceLabels(const vector<CocoonAction_t>& possibleActions,
                        vector<string>& actionLabels) const;
   void getPossibleActions(vector<CocoonAction_t>& possibleActions) const;
@@ -177,14 +177,14 @@ private:
   bool isContentKnown_;
 };
 
-class Altar: public FeatureExaminable {
-public:
-  ~Altar() {}
-  void featureSpecific_examine();
-private:
-  friend class FeatureFactory;
-  Altar(Feature_t id, coord pos, Engine* engine);
-};
+//class Altar: public FeatureExaminable {
+//public:
+//  ~Altar() {}
+//  void featureSpecific_examine();
+//private:
+//  friend class FeatureFactory;
+//  Altar(Feature_t id, coord pos, Engine* engine);
+//};
 
 //class CarvedPillar: public FeatureExaminable {
 //public:

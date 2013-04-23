@@ -39,10 +39,12 @@ public:
 
   void drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE = -1);
 
-  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
+  void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr,
+                     const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
-  inline void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const coord& pos, const sf::Color& clr) {
-    drawCharacter(CHARACTER, renderArea, pos.x, pos.y, clr);
+  inline void drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const coord& pos, const sf::Color& clr,
+                            const bool drawBgClr = false, const sf::Color& bgClr = clrBlue) {
+    drawCharacter(CHARACTER, renderArea, pos.x, pos.y, clr, drawBgClr, bgClr);
   }
 
   void drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr);
@@ -133,7 +135,8 @@ public:
 private:
   friend class Postmortem;
   friend class Input;
-  void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr);
+  void drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr,
+                            const bool drawBgClr = false, const sf::Color& bgClr = clrBlue);
 
   // This is used to keep a copy of the screen, for things
   // like player number entering to render over

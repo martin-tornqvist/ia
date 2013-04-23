@@ -238,8 +238,9 @@ void Renderer::drawMarker(vector<coord> &trace, const int EFFECTIVE_RANGE) {
   }
 }
 
-void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
-    const sf::Color& colorInner, const sf::Color& colorOuter, const int DURATION) {
+void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
+    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const sf::Color& colorInner,
+    const sf::Color& colorOuter, const int DURATION) {
   drawMapAndInterface();
   clearWindow();
 
@@ -369,7 +370,13 @@ void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y, const 
   drawSprite(X_PIXEL, Y_PIXEL, *spr);
 }
 
-void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y, const sf::Color& clr) {
+void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y,
+                                    const sf::Color& clr, const bool drawBgClr,
+                                    const sf::Color& bgClr) {
+  if(drawBgClr) {
+    drawRectangleSolid(X, Y, eng->config->CELL_W, eng->config->CELL_H, bgClr);
+  }
+
   const coord& glyphCoords = eng->art->getGlyphCoords(CHARACTER);
   sf::Sprite* const spr = spritesFont_[glyphCoords.x][glyphCoords.y];
   spr->setColor(clr);
@@ -401,9 +408,10 @@ coord Renderer::getPixelCoordsForCharacter(const RenderArea_t renderArea, const 
   return coord();
 }
 
-void Renderer::drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr) {
+void Renderer::drawCharacter(const char CHARACTER, const RenderArea_t renderArea, const int X, const int Y,
+                             const sf::Color& clr, const bool drawBgClr, const sf::Color& bgClr) {
   const coord pixelCoord = getPixelCoordsForCharacter(renderArea, X, Y);
-  drawCharacterAtPixel(CHARACTER, pixelCoord.x, pixelCoord.y, clr);
+  drawCharacterAtPixel(CHARACTER, pixelCoord.x, pixelCoord.y, clr, drawBgClr, bgClr);
 }
 
 void Renderer::drawText(const string& str, const RenderArea_t renderArea, const int X, const int Y, const sf::Color& clr) {
@@ -650,7 +658,7 @@ void Renderer::drawASCII() {
     yPos = actor->pos.y;
     if(actor->deadState == actorDeadState_corpse && actor->getDef()->glyph != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArray[xPos][yPos];
-      currentDrw->color = actor->getColor();
+      currentDrw->color = clrRed;
       currentDrw->glyph = actor->getGlyph();
     }
   }
@@ -704,8 +712,9 @@ void Renderer::drawASCII() {
         if(monster->leader == eng->player) {
           // TODO reimplement allied indicator
         } else {
-          if(monster->playerAwarenessCounter == 0) {
-            // TODO reimplement awareness indicator
+          if(monster->playerAwarenessCounter <= 0) {
+            currentDrw->colorBg = clrBlue;
+            currentDrw->drawBgColor = true;
           }
         }
       }
@@ -739,7 +748,7 @@ void Renderer::drawASCII() {
       }
 
       if(tempDrw.glyph != ' ') {
-        drawCharacter(tempDrw.glyph, renderArea_mainScreen, x, y, tempDrw.color);
+        drawCharacter(tempDrw.glyph, renderArea_mainScreen, x, y, tempDrw.color, tempDrw.drawBgColor, tempDrw.colorBg);
 
         if(tempDrw.lifebarLength != -1) {
           drawLifeBar(x, y, tempDrw.lifebarLength);
@@ -809,7 +818,7 @@ void Renderer::drawTiles() {
     yPos = actor->pos.y;
     if(actor->deadState == actorDeadState_corpse && actor->getTile() != ' ' && eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayTiles[xPos][yPos];
-      currentDrw->color = actor->getColor();
+      currentDrw->color = clrRed;
       currentDrw->tile = actor->getTile();
     }
   }

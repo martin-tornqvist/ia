@@ -655,7 +655,7 @@ void FeatureData::makeList() {
   d.id = feature_altar;
   d.name_a = "an altar";
   d.name_the = "the altar";
-  d.spawnType = featureSpawnType_other;
+  d.spawnType = featureSpawnType_static;
   d.glyph = '_';
   d.color = clrWhiteHigh;
   d.tile = tile_altar;

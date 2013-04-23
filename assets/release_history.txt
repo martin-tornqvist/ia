@@ -1,4 +1,102 @@
 --------------------------------------------------------------
+v14.0 (April 23, 2013)
+--------------------------------------------------------------
+New content and features
+* Changed API from SDL to SFML - The game should run much smoother on most systems
+* New inventory system which is easier to use, and requires much fewer keyboard commands to learn
+* Inventory items are color coded and sorted according to item type and name
+* New skill system - Instead of ranks there are separate abilities, each with their own name. Some abilities have prerequisites
+* In-game options menu
+* Some features in the game can be examined (by pressing [a]), to be interacted with in various ways - this includes tombs, cocoons, chests and cabinets
+* Added a new trait called “Mythos knowledge” (MTH) - this determines your insight about the mystical and hidden forces - increases damage dealt to all bizarre, alien, mystical and shocking creatures - raises spell casting chance - at a certain level of MTH, you gain a powerful spell
+* Monsters can trigger traps, and you can kick monsters into traps
+* New spell casting system
+* Changed the way monsters cause shock. Previously you would take a big hit on the first turn that you see the monster, then smaller hits for each turn. Now the shock taken starts at 0 instead, and increases slowly. This gives more opportunity to retreat, or to take down the monsters swiftly before taking too much shock.
+* The player character and monsters have a life bar (only visible while wounded)
+* The searching skill (now called “Observant”) no longer increases your chance of finding a secret door, instead if gives a chance to mark walls (you find a clue about a secret passage)
+* Added “Strange devices” - a new item type which causes various positive effects to occur while active, but may malfunction or break
+* Added “Electric Lantern” - lights up darkness while activate, but may flicker, malfunction or break
+* Added “Potion of Sorcery” - sets casting chance for all learned spells to 100%
+* Added “Potion of Knowledge” - increases Mythos knowledge
+* Added “Manuscript of Azathoth’s Blast” - damages and paralyzes all visible creatures
+* Added “Manuscript of Identify” - identifies a random unknown item in your inventory
+* Added “Manuscript of Opening” - opens all doors, chests etc around you
+* Changed “Potion of Clairvoyance” to a manuscript, and gave it a new effect
+* Merged all manuscripts that casts negative status effects into “Manuscript of Enfeeble Enemies”
+* Added an alarm trap
+* Added a monster summoning trap
+* Added status effect “Weak” - melee attacks does minimum damage, decreased carry weight limit, cannot bash doors, lower physical status resistance, and other effects
+* Improved postmortem/memorial information - Removed the decorative graveyard from the intro level, instead there are gravestones scattered along the path to the church. These graves represent the top highscore entries, and have inscriptions that can be read using the [l]ook command. Added date and time to the highscore entries and graves. Postmortem info is always kept (in text files with character name and timestamp)
+* Iron spikes can also be used as (bad) thrown weapons
+* Flares light up a circular area of darkness (the flare’s field of view), instead of lighting up the whole room
+* Carrying a lit flare lights up darkness around you, and you can walk around and fight while holding it
+* Burning monsters lights up a small area of darkness around them
+* Most non-human monsters can now see in darkness
+* If becoming paralyzed while holding a lit Dynamite, Molotov cocktail or Flare, it will be dropped (if it’s a Molotov, it will explode when it hits the ground)
+* Ranged weapons spawned on the floor have random amounts of ammo loaded, instead of always full
+* Hitting a monster with a medium or heavy melee weapon now makes noise (alerting other monsters)
+* Reloading while blind or terrified risks fumbling and wasting the turn
+* If healing is aborted, you are partially healed (if a minimum number of turns have passed)
+* Added phrases for many monsters (“I hear the flapping of great wings”, “I hear a gurgling noise”, etc)
+* If you wield a machete and step into a spider web, you will instantly cut down the web
+* A monster shot with a flare will take damage each turn, and may eventually catch fire (instead of exploding in flames on death)
+* Rewritten shotgun code - Now, if the shot hits a human sized creature and the shot is lethal, it may also hit a second creature standing directly behind the first
+* After a certain dungeon level, dart and spear traps can be poisoned
+* Attacking unarmed causes a punch-attack
+
+Graphics
+* Nicer looking main menu, with a new logo (thanks to Agata Skrzypczyk)
+* The Windows version has an icon (thanks to Agata Skrzypczyk)
+* Added “clean” 16x24 font for tiles and ASCII mode, and made it default
+* The typewriter font is fully available for ASCII mode
+* Shadows have a new tile, and there are new tiles for new features, items and monsters (thanks to Christopher Barrett, aka Oryx)
+* Added a new cave wall tile and general trap tile (thanks to Christopher Barrett, aka Oryx)
+* Added new magical trap tile (thanks to Agata Skrzypczyk)
+* The popup boxes have new border graphics (thanks to Christopher Barrett, aka Oryx), and the box and text layout is much nicer looking
+* Unaware monsters have blue backgrounds instead of a blue underscore
+* Added a secondary wall tile occasionally used as alternative (purely aesthetical)
+* Added an atmospheric fade effect to the field of view - further cells are rendered darker (monsters are always drawn at full brightness though)
+
+Balancing
+* Made changes to the AI to make it act less irrational and more aggressive, in particular it won’t run back and forth between melee attacks or pass attack opportunities as much as in the previous version
+* Made non-player aware monsters skip every second turn (they don’t move at full speed if nothing exciting is happening), this makes stealth tactics more powerful, and it looks cool when they discover you and start moving fast
+* Becoming aware of the player by looking counts as an action for monsters (to give the monsters some reaction time instead of attacking instantly), though you may still be gunned down instantly if you alert the monsters beforehand (e.g. by making noise)
+* Melee-attacking a creature who is unaware, fainted, paralyzed, or stuck has a very high hit chance bonus - melee-attacking a creature who is blind, confused, slowed or burning has a moderate hit chance bonus
+* While paralyzed, additional paralyzing effects are prevented (creatures with such an attack could very easily paralyze you permanently)
+* Knockback causes confusion
+* Sadistic/Masochistic obsessions makes shock unable to go below a certain percent (instead of increasing the shock rate)
+* Taking damage causes a small amount of shock (if not masochistic)
+* The Incinerator (Napalm launcher) now use clips (3 rounds) instead of single shots
+
+Usability
+* Added titles to most popups
+* Character info screen (accessed with [@]) gives more info - combat stats, resistances, item knowledge
+* Reading/drinking an unknown manuscript/potion and failing to identify it adds {tried} to the name
+* The name of your currently wielded weapon and missile weapon is shown in the interface
+* Melee damage is no longer shown in the interface for ranged weapons, and vice versa
+* When [l]ooking at a weapon on the ground, damage, hit chance and loaded ammo is displayed
+* Phobia effects no longer occur while healing (it could cause huge number of queries for canceling healing)
+* Messages about status effects ending no longer queries for canceling healing
+* Unload command also works for picking up ammo (convenient when you want to get all the ammo dropped from a monster, but not the gun)
+* Merged bash and kick to one command, [b]
+* Esc and space also works as “no” for all y/n prompts
+* Esc works as alternative quit command (same as [Q])
+* Attacking a monster in melee with a ranged weapon causes a warning prompt (can be turned off in the options menu)
+* Armor disappears when dropping to 0 protection value
+* Disease temporarily lowers your maximum HP, instead of making you rapidly lose HP down to a certain limit (with the old method it was always possible to heal yourself, even though it was useless)
+* Removed some useless attack messages (“I fumble”, “It was a great hit!!!”)
+
+Miscellaneous
+* Removed kill count info from the look screen, and added it to the postmortem info instead, as well as showing the total number of kills
+* Removed support for multiple save files
+* Switched colors of gas traps and teleport traps, gas traps are now magenta and teleport traps are cyan
+
+Bug fixes
+* Nuclear batteries occasionally spawned with the wrong weight (reported by Surrealistik)
+* Turn number is now stored in the save file
+
+
+--------------------------------------------------------------
 v13.1 (September 20, 2012)
 --------------------------------------------------------------
 * The Incinerator is a medium weight weapon

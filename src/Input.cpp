@@ -193,18 +193,18 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DISARM
-  else if(d.key_ == 'd') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowSee()) {
-        eng->disarm->playerDisarm();
-        eng->renderer->drawMapAndInterface();
-      } else {
-      }
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'd') {
+//    clearLogMessages();
+//    if(eng->player->deadState == actorDeadState_alive) {
+//      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+//        eng->disarm->playerDisarm();
+//        eng->renderer->drawMapAndInterface();
+//      } else {
+//      }
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------UNLOAD AMMO FROM GROUND
   else if(d.key_ == 'u') {
     clearLogMessages();

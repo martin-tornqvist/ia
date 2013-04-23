@@ -150,14 +150,14 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const coord pos, Fea
         return cocoon;
       }
       break;
-    case feature_altar: {
-        assert(spawnData == NULL);
-        Altar* altar = new Altar(id, pos, eng);
-        replaceStaticFeatureAt(altar, pos);
-        assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
-        return altar;
-      }
-      break;
+//    case feature_altar: {
+//        assert(spawnData == NULL);
+//        Altar* altar = new Altar(id, pos, eng);
+//        replaceStaticFeatureAt(altar, pos);
+//        assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
+//        return altar;
+//      }
+//      break;
     case feature_shallowMud:
     case feature_shallowWater:
     case feature_poolBlood: {
