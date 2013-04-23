@@ -21,7 +21,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CEL
     for(int y = max(1, data->y0 + 1); y <= min(MAP_Y_CELLS - 2, data->y1 - 1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow, true, clrBlack);
         }
       }
     }
@@ -39,7 +39,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CEL
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
           if(x == data->x0 || x == data->x1 || y == data->y0 || y == data->y1) {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrRedLight);
+            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrRedLight, true, clrBlack);
           }
         }
       }
@@ -58,7 +58,7 @@ void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, con
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clr);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clr, true, clrBlack);
         }
       }
     }
@@ -100,10 +100,12 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
     }
 
     if(OVERRIDE_EXPLOSION_RENDERING) {
-      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2, forbiddenRenderCells, colorOverride, colorOverride,
+      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
+          forbiddenRenderCells, colorOverride, colorOverride,
           eng->config->DELAY_EXPLOSION);
     } else {
-      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2, forbiddenRenderCells, clrYellow, clrRedLight,
+      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
+          forbiddenRenderCells, clrYellow, clrRedLight,
           eng->config->DELAY_EXPLOSION);
     }
   } else {

@@ -211,7 +211,7 @@
 	"Config.h"
 	"Render.h"
 
-1365803927 c:\dev\ia\src\render.h
+1366739233 c:\dev\ia\src\render.h
 	"SFML/Graphics/RenderWindow.hpp"
 	"SFML/Graphics/Texture.hpp"
 	"SFML/Graphics/Sprite.hpp"
@@ -929,7 +929,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1365780395 source:c:\dev\ia\src\explosion.cpp
+1366741062 source:c:\dev\ia\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -1075,7 +1075,7 @@
 	"Popup.h"
 	"Input.h"
 
-1365780711 source:c:\dev\ia\src\input.cpp
+1366740191 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SFML/Window/Event.hpp"
 	"Engine.h"
@@ -1323,7 +1323,7 @@
 	"TextFormatting.h"
 	"Credits.h"
 
-1366734899 source:c:\dev\ia\src\manual.cpp
+1366741239 source:c:\dev\ia\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -1586,7 +1586,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1366737701 source:c:\dev\ia\src\render.cpp
+1366740954 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -5711,7 +5711,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1366737004 source:c:\dev\ia\src\actormonsterspecific.cpp
+1366737984 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
