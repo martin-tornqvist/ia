@@ -158,6 +158,8 @@
 		<Unit filename="..\src\ConstTypes.h" />
 		<Unit filename="..\src\Converters.cpp" />
 		<Unit filename="..\src\Converters.h" />
+		<Unit filename="..\src\Credits.cpp" />
+		<Unit filename="..\src\Credits.h" />
 		<Unit filename="..\src\DebugModeStatPrinter.cpp" />
 		<Unit filename="..\src\DebugModeStatPrinter.h" />
 		<Unit filename="..\src\Disarm.cpp" />

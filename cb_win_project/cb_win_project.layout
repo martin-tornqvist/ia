@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug" />
+	<ActiveTarget name="Release" />
 	<File name="..\src\AI_castRandomSpell.h" open="0" top="0" tabpos="5">
 		<Cursor position="168" topLine="0" />
 	</File>
@@ -38,7 +38,7 @@
 		<Cursor position="2387" topLine="64" />
 	</File>
 	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="30902" topLine="850" />
+		<Cursor position="30829" topLine="835" />
 	</File>
 	<File name="..\src\ActorData.h" open="0" top="0" tabpos="2">
 		<Cursor position="3456" topLine="109" />
@@ -415,8 +415,8 @@
 	<File name="..\src\MapBuildCavern.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1125" topLine="32" />
 	</File>
-	<File name="..\src\MapBuildForest.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="7443" topLine="254" />
+	<File name="..\src\MapBuildForest.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="4816" topLine="151" />
 	</File>
 	<File name="..\src\MapBuildKingsTomb.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="600" topLine="3" />
@@ -493,8 +493,8 @@
 	<File name="..\src\PopulateItems.h" open="0" top="0" tabpos="0">
 		<Cursor position="305" topLine="0" />
 	</File>
-	<File name="..\src\PopulateMonsters.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="12154" topLine="289" />
+	<File name="..\src\PopulateMonsters.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="4283" topLine="108" />
 	</File>
 	<File name="..\src\PopulateMonsters.h" open="0" top="0" tabpos="1">
 		<Cursor position="228" topLine="0" />
