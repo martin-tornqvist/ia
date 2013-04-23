@@ -14,6 +14,7 @@ New content and features
 * Changed the way monsters cause shock. Previously you would take a big hit on the first turn that you see the monster, then smaller hits for each turn. Now the shock taken starts at 0 instead, and increases slowly. This gives more opportunity to retreat, or to take down the monsters swiftly before taking too much shock.
 * The player character and monsters have a life bar (only visible while wounded)
 * The searching skill (now called “Observant”) no longer increases your chance of finding a secret door, instead if gives a chance to mark walls (you find a clue about a secret passage)
+* Added more monsters
 * Added “Strange devices” - a new item type which causes various positive effects to occur while active, but may malfunction or break
 * Added “Electric Lantern” - lights up darkness while activate, but may flicker, malfunction or break
 * Added “Potion of Sorcery” - sets casting chance for all learned spells to 100%
