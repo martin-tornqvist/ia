@@ -48,7 +48,7 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
   return "[ERROR]";
 }
 
-sf::Color Wall::getColor() const {
+SDL_Color Wall::getColor() const {
   if(isSlimy) {
     return clrGreen;
   }

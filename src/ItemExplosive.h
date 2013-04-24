@@ -20,7 +20,7 @@ public:
     return "Ignite";
   }
 
-  virtual sf::Color getInterfaceClr() const {
+  virtual SDL_Color getInterfaceClr() const {
     return clrRedLight;
   }
 

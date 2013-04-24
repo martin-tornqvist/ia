@@ -39,7 +39,7 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
   //Get projectile path
   const vector<coord> projectilePath = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, stopAtTarget, chebTrvlLim);
 
-  const sf::Color projectileColor = weapon->getDef().rangedMissileColor;
+  const SDL_Color projectileColor = weapon->getDef().rangedMissileColor;
   char projectileGlyph = weapon->getDef().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;

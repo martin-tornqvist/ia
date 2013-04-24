@@ -105,7 +105,7 @@ void DungeonMaster::winGame() {
   const vector<string> winMessageLines = eng->textFormatting->lineToLines(winMessage, 68);
 
   eng->renderer->coverRenderArea(renderArea_screen);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
@@ -119,7 +119,7 @@ void DungeonMaster::winGame() {
         eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
       }
     }
-    eng->renderer->updateWindow();
+    eng->renderer->updateScreen();
     eng->sleep(DELAY_BETWEEN_LINES);
   }
 

@@ -3,8 +3,6 @@
 
 #include "InventoryHandler.h"
 
-#include "SFML/Graphics/Texture.hpp"
-
 #include "ItemData.h"
 #include "MenuBrowser.h"
 
@@ -15,20 +13,16 @@ public:
   RenderInventory(Engine* engine);
 
   void drawBrowseSlotsMode(const MenuBrowser& browser,
-                           const vector<InventorySlotButton>& invSlotButtons,
-                           const sf::Texture& bgTexture);
+                           const vector<InventorySlotButton>& invSlotButtons);
 
   void drawBrowseInventoryMode(const MenuBrowser& browser,
-                               const vector<unsigned int>& genInvIndexes,
-                               const sf::Texture& bgTexture);
+                               const vector<unsigned int>& genInvIndexes);
 
   void drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
-                     const vector<unsigned int>& genInvIndexes,
-                     const sf::Texture& bgTexture);
+                     const vector<unsigned int>& genInvIndexes);
 
   void drawUseMode(const MenuBrowser& browser,
-                   const vector<unsigned int>& genInvIndexes,
-                   const sf::Texture& bgTexture);
+                   const vector<unsigned int>& genInvIndexes);
 
 //  void drawDropMode(const Item* const itemToDrop);
 
@@ -38,7 +32,7 @@ private:
     return *this;
   }
 
-  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr);
+  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const SDL_Color& clr);
 
   Engine* eng;
 

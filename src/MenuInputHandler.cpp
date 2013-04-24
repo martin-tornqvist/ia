@@ -7,29 +7,29 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
     KeyboardReadReturnData d = eng->input->readKeysUntilFound();
 
-    if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
+    if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
       browser.navigate(direction_right);
       return menuAction_browsed;
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+    else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
       browser.navigate(direction_left);
       return menuAction_browsed;
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+    else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       browser.navigate(direction_up);
       return menuAction_browsed;
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+    else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       browser.navigate(direction_down);
       return menuAction_browsed;
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Return) {
+    else if(d.sdlKey_ == sf::Keyboard::Return) {
       d.key_ = browser.enter();
       if(d.isShiftHeld_) {
         d.key_ = d.key_ - 'a' + 'A';
       }
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       return menuAction_canceled;
     }
 

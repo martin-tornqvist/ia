@@ -33,7 +33,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 //  const int X_POS_LEFT = xPos - 11;
 
   tracer << "MainMenu: Calling clearWindow()" << endl;
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   tracer << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
@@ -45,7 +45,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       if(eng->dice.coinToss()) {
         cha = 'a' + eng->dice.getInRange(0, 25);
       }
-      sf::Color bgClr = clrGray;
+      SDL_Color bgClr = clrGray;
       bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
       eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
     }
@@ -53,15 +53,15 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   tracer << "MainMenu: Drawing HPL quote" << endl;
   const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
-  sf::Color quoteClr = clrGray;
+  SDL_Color quoteClr = clrGray;
   quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 2, 13 + i, quoteClr);
   }
 
-  sf::Color clrGeneral = clrRed;
-  sf::Color clrBright = clrRedLight;
+  SDL_Color clrGeneral = clrRed;
+  SDL_Color clrBright = clrRedLight;
 
   if(eng->config->USE_TILE_SET) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
@@ -73,7 +73,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       xPos = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
-          sf::Color clr = clrRed;
+          SDL_Color clr = clrRed;
           clr.r += eng->dice.getInRange(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
@@ -121,7 +121,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   tracer << "MainMenu::draw() [DONE]" << endl;
 }

@@ -12,7 +12,7 @@
 	<string>
 	<iostream>
 
-1366741504 c:\dev\ia\src\engine.h
+1366835191 c:\dev\ia\src\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -23,18 +23,18 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1366055184 c:\dev\ia\src\consttypes.h
+1366831586 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
 	"Art.h"
 
-1365614903 c:\dev\ia\src\colors.h
-	<SFML/Graphics/Color.hpp>
+1366830815 c:\dev\ia\src\colors.h
+	"SDL/SDL_video.h"
 
 1364131024 c:\dev\ia\src\art.h
 
-1366741504 c:\dev\ia\src\actor.h
+1366830893 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"ConstTypes.h"
@@ -45,7 +45,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1366568673 c:\dev\ia\src\actordata.h
+1366830842 c:\dev\ia\src\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -67,7 +67,7 @@
 	"ConstTypes.h"
 	"FeatureData.h"
 
-1366568673 c:\dev\ia\src\featuredata.h
+1366830872 c:\dev\ia\src\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1366741504 c:\dev\ia\src\statuseffects.h
+1366830864 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"ConstTypes.h"
@@ -98,7 +98,7 @@
 	"AbilityValues.h"
 	"ItemDefinition.h"
 
-1366741504 c:\dev\ia\src\itemdefinition.h
+1366830885 c:\dev\ia\src\itemdefinition.h
 	"Sound.h"
 	"AbilityValues.h"
 	"StatusEffects.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1366568673 source:c:\dev\ia\src\actor.cpp
+1366833211 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -160,11 +160,11 @@
 	"DungeonMaster.h"
 	"Inventory.h"
 
-1366741504 c:\dev\ia\src\itemarmor.h
+1366830934 c:\dev\ia\src\itemarmor.h
 	"Engine.h"
 	"Item.h"
 
-1365544928 c:\dev\ia\src\item.h
+1366830929 c:\dev\ia\src\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -175,7 +175,7 @@
 	"Feature.h"
 	"ActorData.h"
 
-1366741504 c:\dev\ia\src\feature.h
+1366830877 c:\dev\ia\src\feature.h
 	<vector>
 	<string>
 	<iostream>
@@ -185,14 +185,14 @@
 	"FeatureData.h"
 	"ConstDungeonSettings.h"
 
-1366741504 c:\dev\ia\src\actormonster.h
+1366830952 c:\dev\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
 	"Sound.h"
 	"Spells.h"
 
-1365631223 c:\dev\ia\src\itemweapon.h
+1366830943 c:\dev\ia\src\itemweapon.h
 	"Item.h"
 	"Converters.h"
 
@@ -200,7 +200,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1363965979 c:\dev\ia\src\map.h
+1366833092 c:\dev\ia\src\map.h
 	<vector>
 	<iostream>
 	"ConstDungeonSettings.h"
@@ -211,12 +211,10 @@
 	"Config.h"
 	"Render.h"
 
-1366741504 c:\dev\ia\src\render.h
-	"SFML/Graphics/RenderWindow.hpp"
-	"SFML/Graphics/Texture.hpp"
-	"SFML/Graphics/Sprite.hpp"
+1366835900 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
+	"SDL/SDL_video.h"
 	"ConstTypes.h"
 	"GameTime.h"
 	"Config.h"
@@ -228,7 +226,7 @@
 
 1355677713 c:\dev\ia\src\playervisualmemory.h
 
-1364422423 c:\dev\ia\src\log.h
+1366833121 c:\dev\ia\src\log.h
 	<string>
 	<vector>
 	<iostream>
@@ -238,7 +236,7 @@
 1355677712 c:\dev\ia\src\blood.h
 	"ConstTypes.h"
 
-1365780527 c:\dev\ia\src\featuretrap.h
+1366833141 c:\dev\ia\src\featuretrap.h
 	"Feature.h"
 	"AbilityValues.h"
 	"Art.h"
@@ -249,7 +247,7 @@
 	<iostream>
 	"ConstTypes.h"
 
-1355677712 c:\dev\ia\src\explosion.h
+1366833141 c:\dev\ia\src\explosion.h
 	<vector>
 	"ConstTypes.h"
 	"StatusEffects.h"
@@ -299,7 +297,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1366741504 c:\dev\ia\src\featuredoor.h
+1366833141 c:\dev\ia\src\featuredoor.h
 	"Feature.h"
 
 1366055623 c:\dev\ia\src\ai_look_becomeplayeraware.h
@@ -424,7 +422,7 @@
 	"AI_castRandomSpell.h"
 	"AI_handleInventory.h"
 
-1365426050 c:\dev\ia\src\attack.h
+1366833141 c:\dev\ia\src\attack.h
 	<vector>
 	<math.h>
 	<iostream>
@@ -438,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1366741504 source:c:\dev\ia\src\actorplayer.cpp
+1366833141 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -476,7 +474,7 @@
 	<vector>
 	<string>
 
-1355677713 c:\dev\ia\src\postmortem.h
+1366833141 c:\dev\ia\src\postmortem.h
 	<vector>
 	<string>
 	"MenuBrowser.h"
@@ -484,7 +482,7 @@
 1364421966 c:\dev\ia\src\menubrowser.h
 	"ConstTypes.h"
 
-1355677713 c:\dev\ia\src\query.h
+1366833141 c:\dev\ia\src\query.h
 	"ConstTypes.h"
 
 1339441554 source:c:\dev\ia\src\actorrat.cpp
@@ -513,7 +511,7 @@
 	"Art.h"
 	"Engine.h"
 
-1365786961 source:c:\dev\ia\src\attack.cpp
+1366833141 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -541,7 +539,7 @@
 1365780568 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1366741504 source:c:\dev\ia\src\attackranged.cpp
+1366833141 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -557,11 +555,11 @@
 
 1350576995 c:\dev\ia\src\timer.h
 
-1355677712 c:\dev\ia\src\input.h
-	"SFML/Window/Keyboard.hpp"
+1366833746 c:\dev\ia\src\input.h
+	"SDL/SDL_keyboard.h"
 	"ConstTypes.h"
 
-1365546041 source:c:\dev\ia\src\attackshotgun.cpp
+1366833834 source:c:\dev\ia\src\attackshotgun.cpp
 	"Attack.h"
 	"Engine.h"
 	"Item.h"
@@ -644,7 +642,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1366741504 source:c:\dev\ia\src\characterinfo.cpp
+1366834146 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -683,7 +681,7 @@
 	<sstream>
 	<iostream>
 
-1365780711 source:c:\dev\ia\src\dungeonclimb.cpp
+1366835806 source:c:\dev\ia\src\dungeonclimb.cpp
 	"DungeonClimb.h"
 	"Engine.h"
 	"Map.h"
@@ -731,7 +729,7 @@
 	<vector>
 	"ItemData.h"
 
-1365711052 source:c:\dev\ia\src\dungeonmaster.cpp
+1366834721 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -757,10 +755,10 @@
 
 1323988860 source:c:\dev\ia\src\dungeonreadwrite.cpp
 
-1366741504 source:c:\dev\ia\src\engine.cpp
+1366835208 source:c:\dev\ia\src\engine.cpp
 	"Engine.h"
 	<iostream>
-	"SFML/System/Sleep.hpp"
+	"SDL/SDL.h"
 	"Converters.h"
 	"Config.h"
 	"ActorPlayer.h"
@@ -858,11 +856,11 @@
 1355677713 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1366741504 c:\dev\ia\src\itempotion.h
+1366833141 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"ConstTypes.h"
 
-1366741504 c:\dev\ia\src\itemscroll.h
+1366833141 c:\dev\ia\src\itemscroll.h
 	"Item.h"
 	"StatusEffects.h"
 
@@ -891,20 +889,17 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1363817761 c:\dev\ia\src\marker.h
+1366835055 c:\dev\ia\src\marker.h
 	<iostream>
 	<vector>
-	"SFML/Graphics/Texture.hpp"
 	"ConstTypes.h"
 
-1363964956 c:\dev\ia\src\playerpowershandler.h
+1366834387 c:\dev\ia\src\playerpowershandler.h
 	<vector>
-	"SFML/Graphics/Texture.hpp"
 	"MenuBrowser.h"
 
-1355677713 c:\dev\ia\src\renderinventory.h
+1366835076 c:\dev\ia\src\renderinventory.h
 	"InventoryHandler.h"
-	"SFML/Graphics/Texture.hpp"
 	"ItemData.h"
 	"MenuBrowser.h"
 
@@ -929,7 +924,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1366741504 source:c:\dev\ia\src\explosion.cpp
+1366835845 source:c:\dev\ia\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -945,7 +940,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1364484215 source:c:\dev\ia\src\feature.cpp
+1366833141 source:c:\dev\ia\src\feature.cpp
 	"Feature.h"
 	"Engine.h"
 	"Actor.h"
@@ -959,7 +954,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1366741504 source:c:\dev\ia\src\featuredoor.cpp
+1366833141 source:c:\dev\ia\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -1017,9 +1012,10 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1366741504 source:c:\dev\ia\src\featuretrap.cpp
+1366835973 source:c:\dev\ia\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<cassert>
+	<algorithm>
 	"Engine.h"
 	"FeatureFactory.h"
 	"FeatureData.h"
@@ -1062,7 +1058,7 @@
 	"InventoryHandler.h"
 	"PlayerBonuses.h"
 
-1364569200 source:c:\dev\ia\src\highscore.cpp
+1366836012 source:c:\dev\ia\src\highscore.cpp
 	"Highscore.h"
 	<algorithm>
 	<iostream>
@@ -1751,7 +1747,7 @@
 
 1355674112 c:\dev\ia\src\declares.h
 
-1366302608 source:c:\dev\ia\src\config.cpp
+1366834303 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -5711,7 +5707,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1366741504 source:c:\dev\ia\src\actormonsterspecific.cpp
+1366833141 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -5739,10 +5735,10 @@
 
 1355677713 c:\dev\ia\src\debugmodeincl\debugmode.h
 
-1355677712 c:\dev\ia\src\featurelever.h
+1366833141 c:\dev\ia\src\featurelever.h
 	"Feature.h"
 
-1363552200 source:c:\dev\ia\src\featurelever.cpp
+1366833141 source:c:\dev\ia\src\featurelever.cpp
 	"FeatureLever.h"
 	"FeatureDoor.h"
 	"FeatureFactory.h"
@@ -7777,7 +7773,7 @@
 1355677712 c:\dev\ia\src\featureliquid.h
 	"Feature.h"
 
-1365780396 source:c:\dev\ia\src\featureliquid.cpp
+1366835806 source:c:\dev\ia\src\featureliquid.cpp
 	"FeatureLiquid.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10084,10 +10080,10 @@
 1355677712 source:c:\dev\ia\src\featuregrave.cpp
 	"FeatureGrave.h"
 
-1363902559 c:\dev\ia\src\featurewall.h
+1366833141 c:\dev\ia\src\featurewall.h
 	"Feature.h"
 
-1365374974 source:c:\dev\ia\src\featurewall.cpp
+1366833141 source:c:\dev\ia\src\featurewall.cpp
 	"FeatureWall.h"
 	"Engine.h"
 	"Map.h"
@@ -10171,7 +10167,7 @@
 	"Inventory.h"
 	"Map.h"
 
-1365374974 c:\dev\ia\src\itemdevice.h
+1366833141 c:\dev\ia\src\itemdevice.h
 	"Item.h"
 
 1365885415 c:\_martin_\ia\src\populatemonsters.h
@@ -10323,7 +10319,7 @@
 	<string>
 	<vector>
 
-1366741504 source:c:\dev\ia\src\featureexaminable.cpp
+1366833141 source:c:\dev\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -10343,7 +10339,7 @@
 	"Map.h"
 	"FeatureFactory.h"
 
-1366741504 c:\dev\ia\src\featureexaminable.h
+1366833141 c:\dev\ia\src\featureexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
@@ -10351,7 +10347,7 @@
 	"Gods.h"
 	"Engine.h"
 
-1366741504 source:c:\dev\ia\src\credits.cpp
+1366834366 source:c:\dev\ia\src\credits.cpp
 	"Credits.h"
 	<fstream>
 	<iostream>
@@ -10363,4 +10359,194 @@
 1366741504 c:\dev\ia\src\credits.h
 	<vector>
 	<string>
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1326114587 c:\dev\ia\api\sdl\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	"SDL_config_dreamcast.h"
+	"SDL_config_macos.h"
+	"SDL_config_macosx.h"
+	"SDL_config_symbian.h"
+	"SDL_config_win32.h"
+	"SDL_config_os2.h"
+	"SDL_config_minimal.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_platform.h
+
+1326114594 c:\dev\ia\api\sdl\include\sdl\sdl_config_win32.h
+	"SDL_platform.h"
+
+1326114600 c:\dev\ia\api\sdl\include\sdl\begin_code.h
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\close_code.h
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_keysym.h
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\dev\ia\api\sdl\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
 

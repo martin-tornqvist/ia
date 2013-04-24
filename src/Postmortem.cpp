@@ -23,8 +23,8 @@ void Postmortem::run(bool* const quitGame) {
 void Postmortem::makeInfoLines() {
   tracer << "Postmortem::makeInfoLines()..." << endl;
 
-  const sf::Color clrHeading = clrRedLight;
-  const sf::Color clrInfo = clrRedLight;
+  const SDL_Color clrHeading = clrRedLight;
+  const SDL_Color clrInfo = clrRedLight;
 
   postmortemLines.push_back(StringAndColor(" " + eng->player->getNameA(), clrHeading));
 
@@ -163,7 +163,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     y++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void Postmortem::runInfo() {
@@ -175,15 +175,15 @@ void Postmortem::runInfo() {
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+    if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderInfo(topElement);
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+    else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderInfo(topElement);
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }
@@ -308,5 +308,5 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   eng->renderer->drawText("e) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('e') ? clrWhite : clrRedLight);
   y += 1;
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }

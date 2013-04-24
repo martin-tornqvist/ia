@@ -1,6 +1,7 @@
 #include "FeatureTrap.h"
 
 #include <cassert>
+#include <algorithm>
 
 #include "Engine.h"
 
@@ -185,7 +186,7 @@ string Trap::getDescription(const bool DEFINITE_ARTICLE) const {
   }
 }
 
-sf::Color Trap::getColor() const {
+SDL_Color Trap::getColor() const {
   return isHidden_ ? mimicFeature_->color : specificTrap_->getTrapSpecificColor();
 }
 

@@ -312,7 +312,7 @@ void Tomb::triggerTrap() {
       if(eng->dice.coinToss()) {
         eng->log->addMessage("Fumes burst out from the tomb!");
         StatusEffect* effect = NULL;
-        sf::Color fumeClr = clrMagenta;
+        SDL_Color fumeClr = clrMagenta;
         const int RND = eng->dice.percentile();
         if(RND < 20) {
           effect = new StatusPoisoned(eng);
@@ -699,7 +699,7 @@ void Chest::triggerTrap() {
     } else {
       eng->log->addMessage("Fumes burst out from the chest!");
       StatusEffect* effect = NULL;
-      sf::Color fumeClr = clrMagenta;
+      SDL_Color fumeClr = clrMagenta;
       const int RND = eng->dice.percentile();
       if(RND < 20) {
         effect = new StatusPoisoned(eng);

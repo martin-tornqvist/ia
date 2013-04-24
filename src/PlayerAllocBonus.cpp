@@ -92,7 +92,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     const PlayerBonuses_t currentBonus = bonusesColumnOne.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == static_cast<int>(i);
-    sf::Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    SDL_Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_ONE, yPos, drwClr);
     yPos++;
   }
@@ -101,7 +101,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     const PlayerBonuses_t currentBonus = bonusesColumnTwo.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == static_cast<int>(i);
-    sf::Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    SDL_Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_TWO, yPos, drwClr);
     yPos++;
   }
@@ -141,7 +141,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     }
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 

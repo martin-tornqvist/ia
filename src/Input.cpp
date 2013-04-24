@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#include "SFML/Window/Event.hpp"
+#include "SDL/SDL_Keyboard.h"
 
 #include "Engine.h"
 #include "ItemWeapon.h"
@@ -48,7 +48,7 @@ void Input::handleMapModeInputUntilFound() {
 
 void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------MOVEMENT
-  if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
@@ -61,14 +61,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+  } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+  } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
@@ -81,35 +81,35 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+  } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, -1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, -1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '3') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '1') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '7') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, -1);
@@ -424,7 +424,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------AUTO MELEE
-  else if(d.sfmlKey_ == sf::Keyboard::Tab) {
+  else if(d.sdlKey_ == SDLK_TAB) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->player->autoMelee();
@@ -461,7 +461,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------QUIT
-  else if(d.sfmlKey_ == sf::Keyboard::Escape || d.key_ == 'Q') {
+  else if(d.sdlKey_ == SDLK_ESCAPE || d.key_ == 'Q') {
     if(eng->player->deadState == actorDeadState_alive) {
       eng->log->clearLog();
       eng->log->addMessage("Quit the current game (y/n)? Save and highscore are not kept.", clrWhiteHigh);
@@ -504,7 +504,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DESCEND CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F2) {
+  else if(d.sdlKey_ == SDLK_F2) {
     if(IS_DEBUG_MODE) {
       eng->dungeonClimb->travelDown(1);
       clearEvents();
@@ -512,7 +512,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------XP CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F3) {
+  else if(d.sdlKey_ == SDLK_F3) {
     if(IS_DEBUG_MODE) {
       eng->dungeonMaster->playerGainsExp(500);
       clearEvents();
@@ -520,7 +520,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------VISION CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F4) {
+  else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -536,7 +536,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
   }
   //----------------------------------------INSANITY CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F5) {
+  else if(d.sdlKey_ == SDLK_F5) {
     if(IS_DEBUG_MODE) {
       eng->player->incrShock(50);
       clearEvents();
@@ -544,7 +544,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------MTH CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F6) {
+  else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       eng->player->incrMth(8);
       clearEvents();
@@ -552,7 +552,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sfmlKey_ == sf::Keyboard::F7) {
+  else if(d.sdlKey_ == SDLK_F7) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
@@ -623,7 +623,7 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
 
         KeyboardReadReturnData ret(-1, sfmlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 
-        if(sfmlKey >= sf::Keyboard::F1 && sfmlKey <= sf::Keyboard::F15) {
+        if(sfmlKey >= SDLK_F1 && sfmlKey <= SDLK_F15) {
           // F-keys
           return ret;
         } else {
@@ -633,27 +633,27 @@ KeyboardReadReturnData Input::readKeysUntilFound() const {
             case sf::Keyboard::RSystem:     continue;   break;
             case sf::Keyboard::Menu:        continue;   break;
             case sf::Keyboard::Pause:       continue;   break;
-            case sf::Keyboard::Space:       return ret; break;
+            case SDLK_SPACE:       return ret; break;
             case sf::Keyboard::Return:      return ret; break;
             case sf::Keyboard::Back:        return ret; break;
             case sf::Keyboard::Tab:         return ret; break;
-            case sf::Keyboard::PageUp:      return ret; break;
+            case SDLK_PAGEUP:      return ret; break;
             case sf::Keyboard::PageDown:    return ret; break;
             case sf::Keyboard::End:         return ret; break;
             case sf::Keyboard::Home:        return ret; break;
             case sf::Keyboard::Insert:      return ret; break;
             case sf::Keyboard::Delete:      return ret; break;
-            case sf::Keyboard::Left:        return ret; break;
-            case sf::Keyboard::Right:       return ret; break;
-            case sf::Keyboard::Up:          return ret; break;
-            case sf::Keyboard::Down:        return ret; break;
-            case sf::Keyboard::Escape:      return ret; break;
+            case SDLK_LEFT:        return ret; break;
+            case SDLK_RIGHT:       return ret; break;
+            case SDLK_UP:          return ret; break;
+            case SDLK_DOWN:        return ret; break;
+            case SDLK_ESCAPE:      return ret; break;
           }
         }
       } else if(event.type == sf::Event::GainedFocus) {
-        eng->renderer->clearWindow();
+        eng->renderer->clearScreen();
         eng->renderer->drawScreenSizedTexture(eng->renderer->getScreenTextureCopy());
-        eng->renderer->updateWindow();
+        eng->renderer->updateScreen();
       }
     }
   }

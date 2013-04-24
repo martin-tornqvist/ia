@@ -32,7 +32,7 @@ public:
   ~Trap();
 
   void bump(Actor* actorBumping);
-  sf::Color getColor() const;
+  SDL_Color getColor() const;
   char getGlyph() const;
   Tile_t getTile() const;
   string getDescription(const bool DEFINITE_ARTICLE) const;
@@ -94,7 +94,7 @@ protected:
 
   virtual void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) = 0;
   virtual string getTrapSpecificTitle() const = 0;
-  virtual sf::Color getTrapSpecificColor() const = 0;
+  virtual SDL_Color getTrapSpecificColor() const = 0;
   virtual char getTrapSpecificGlyph() const = 0;
   virtual Tile_t getTrapSpecificTile() const = 0;
   virtual bool isMagical() const = 0;
@@ -111,7 +111,7 @@ private:
   friend class Trap;
   TrapDart(coord pos, Engine* engine);
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrWhiteHigh;}
+  SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Dart trap";}
   char getTrapSpecificGlyph() const {return '^';}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
@@ -126,7 +126,7 @@ private:
   friend class Trap;
   TrapSpear(coord pos, Engine* engine);
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrWhiteHigh;}
+  SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Spear trap";}
   char getTrapSpecificGlyph() const {return '^';}
   Tile_t getTrapSpecificTile() const {return tile_trapGeneral;}
@@ -142,7 +142,7 @@ private:
   TrapGasConfusion(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_gasConfusion, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrMagenta;}
+  SDL_Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -158,7 +158,7 @@ private:
     SpecificTrapBase(pos, trap_gasParalyze, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrMagenta;}
+  SDL_Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -173,7 +173,7 @@ private:
   TrapGasFear(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_gasFear, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrMagenta;}
+  SDL_Color getTrapSpecificColor() const {return clrMagenta;}
   string getTrapSpecificTitle() const {return "Gas trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -188,7 +188,7 @@ private:
   TrapBlindingFlash(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_blinding, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrYellow;}
+  SDL_Color getTrapSpecificColor() const {return clrYellow;}
   string getTrapSpecificTitle() const {return "Blinding trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -204,7 +204,7 @@ private:
     SpecificTrapBase(pos, trap_teleport, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrCyan;}
+  SDL_Color getTrapSpecificColor() const {return clrCyan;}
   string getTrapSpecificTitle() const {return "Teleporter trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return true;}
@@ -220,7 +220,7 @@ private:
     SpecificTrapBase(pos, trap_summonMonster, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrBrownDark;}
+  SDL_Color getTrapSpecificColor() const {return clrBrownDark;}
   string getTrapSpecificTitle() const {return "Monster summoning trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return true;}
@@ -235,7 +235,7 @@ private:
   TrapSmoke(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_smoke, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrGray;}
+  SDL_Color getTrapSpecificColor() const {return clrGray;}
   string getTrapSpecificTitle() const {return "Smoke trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -250,7 +250,7 @@ private:
   TrapAlarm(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_alarm, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrBrown;}
+  SDL_Color getTrapSpecificColor() const {return clrBrown;}
   string getTrapSpecificTitle() const {return "Alarm trap";}
   char getTrapSpecificGlyph() const {return '^';}
   bool isMagical() const {return false;}
@@ -270,7 +270,7 @@ private:
   TrapSpiderWeb(coord pos, Engine* engine) :
     SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
-  sf::Color getTrapSpecificColor() const {return clrWhiteHigh;}
+  SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Spider web";}
   char getTrapSpecificGlyph() const {return '*';}
   bool isMagical() const {return false;}

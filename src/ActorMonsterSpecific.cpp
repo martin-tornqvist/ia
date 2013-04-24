@@ -480,7 +480,7 @@ void ColourOutOfSpace::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_colourOutOfSpaceTouch));
 }
 
-const sf::Color& ColourOutOfSpace::getColor() {
+const SDL_Color& ColourOutOfSpace::getColor() {
   currentColor.r = eng->dice.getInRange(40, 255);
   currentColor.g = eng->dice.getInRange(40, 255);
   currentColor.b = eng->dice.getInRange(40, 255);

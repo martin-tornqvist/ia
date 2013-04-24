@@ -137,8 +137,8 @@ struct FeatureDef {
   Feature_t id;
   FeatureSpawnType_t spawnType;
   char glyph;
-  sf::Color color;
-  sf::Color colorBg;
+  SDL_Color color;
+  SDL_Color colorBg;
   Tile_t tile;
   bool isMovePassable[endOfMoveType];
   bool isShootPassable;

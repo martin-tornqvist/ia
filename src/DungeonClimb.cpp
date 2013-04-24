@@ -97,7 +97,7 @@ void DungeonClimb::tryUseDownStairs() {
     } else {
       eng->log->addMessage("I descend the stairs.");
     }
-//    eng->renderer->updateWindow();
+//    eng->renderer->updateScreen();
     travelDown();
     if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown &&
         eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
@@ -111,7 +111,7 @@ void DungeonClimb::tryUseDownStairs() {
     } else {
       eng->log->addMessage("I see no stairs leading downwards here.");
     }
-//    eng->renderer->updateWindow();
+//    eng->renderer->updateScreen();
   }
   tracer << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }

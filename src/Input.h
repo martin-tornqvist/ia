@@ -1,31 +1,31 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "SFML/Window/Keyboard.hpp"
-
+#include "SDL/SDL_keyboard.h"
 #include "ConstTypes.h"
 
 class Engine;
 
 struct KeyboardReadReturnData {
 public:
-  KeyboardReadReturnData() : key_(-1), sfmlKey_(sf::Keyboard::KeyCount), isShiftHeld_(false), isCtrlHeld_(false) {
+  KeyboardReadReturnData() : key_(-1), sdlKey_(SDLK_LAST), isShiftHeld_(false),
+    isCtrlHeld_(false) {
   }
 
-  KeyboardReadReturnData(char key, sf::Keyboard::Key sfmlKey, bool isShiftHeld, bool isCtrlHeld) :
-    key_(key), sfmlKey_(sfmlKey), isShiftHeld_(isShiftHeld), isCtrlHeld_(isCtrlHeld) {
+  KeyboardReadReturnData(char key, SDLKey sdlKey, bool isShiftHeld, bool isCtrlHeld) :
+    key_(key), sdlKey_(sdlKey), isShiftHeld_(isShiftHeld), isCtrlHeld_(isCtrlHeld) {
   }
 
   KeyboardReadReturnData(char key) :
-    key_(key), sfmlKey_(sf::Keyboard::KeyCount), isShiftHeld_(false), isCtrlHeld_(false) {
+    key_(key), sdlKey_(SDLK_LAST), isShiftHeld_(false), isCtrlHeld_(false) {
   }
 
-  KeyboardReadReturnData(sf::Keyboard::Key sfmlKey) :
-    key_(-1), sfmlKey_(sfmlKey), isShiftHeld_(false), isCtrlHeld_(false) {
+  KeyboardReadReturnData(SDLKey sdlKey) :
+    key_(-1), sdlKey_(sdlKey), isShiftHeld_(false), isCtrlHeld_(false) {
   }
 
   char key_;
-  sf::Keyboard::Key sfmlKey_;
+  SDLKey sdlKey_;
   bool isShiftHeld_, isCtrlHeld_;
 };
 

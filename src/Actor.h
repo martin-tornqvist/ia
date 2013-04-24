@@ -74,7 +74,7 @@ public:
   inline string getNameA() const {return def_->name_a;}
   inline bool isHumanoid() const {return def_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
-  virtual const sf::Color& getColor() {return clr_;}
+  virtual const SDL_Color& getColor() {return clr_;}
   inline const Tile_t& getTile() const {return tile_;}
   inline MoveType_t getMoveType() const {return def_->moveType;}
 
@@ -102,7 +102,7 @@ protected:
   virtual void monsterHit(int& dmg) {(void)dmg;}
   virtual void monsterDeath() {}
 
-  sf::Color clr_;
+  SDL_Color clr_;
   char glyph_;
   Tile_t tile_;
 

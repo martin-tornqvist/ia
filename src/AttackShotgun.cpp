@@ -70,13 +70,13 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
             if(data.attackResult >= successSmall) {
               if(eng->map->playerVision[curPos.x][curPos.y]) {
                 eng->renderer->drawMapAndInterface(false);
-                eng->renderer->coverCellInMap(curPos.x, curPos.y);
+                eng->renderer->coverCellInMap(curPos);
                 if(eng->config->USE_TILE_SET) {
                   eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
                 } else {
                   eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
                 }
-                eng->renderer->updateWindow();
+                eng->renderer->updateScreen();
                 eng->sleep(eng->config->DELAY_SHOTGUN);
               }
 
@@ -112,13 +112,13 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
           if(eng->dice.percentile() < CHANCE_FOR_STRAY_HIT) {
             if(eng->map->playerVision[curPos.x][curPos.y]) {
               eng->renderer->drawMapAndInterface(false);
-              eng->renderer->coverCellInMap(curPos.x, curPos.y);
+              eng->renderer->coverCellInMap(curPos);
               if(eng->config->USE_TILE_SET) {
                 eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
               } else {
                 eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
               }
-              eng->renderer->updateWindow();
+              eng->renderer->updateScreen();
               eng->sleep(eng->config->DELAY_SHOTGUN);
             }
 
@@ -154,13 +154,13 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
     if(featureBlockers[curPos.x][curPos.y]) {
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
-        eng->renderer->coverCellInMap(curPos.x, curPos.y);
+        eng->renderer->coverCellInMap(curPos);
         if(eng->config->USE_TILE_SET) {
           eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
         } else {
           eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
         }
-        eng->renderer->updateWindow();
+        eng->renderer->updateScreen();
         eng->sleep(eng->config->DELAY_SHOTGUN);
         eng->renderer->drawMapAndInterface();
       }
@@ -172,13 +172,13 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
     if(intendedAimLevel == actorSize_floor && curPos == target) {
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
-        eng->renderer->coverCellInMap(curPos.x, curPos.y);
+        eng->renderer->coverCellInMap(curPos);
         if(eng->config->USE_TILE_SET) {
           eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
         } else {
           eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
         }
-        eng->renderer->updateWindow();
+        eng->renderer->updateScreen();
         eng->sleep(eng->config->DELAY_SHOTGUN);
         eng->renderer->drawMapAndInterface();
       }

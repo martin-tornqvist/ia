@@ -214,7 +214,7 @@ private:
   ItemName name;
 public:
   char glyph;
-  sf::Color color;
+  SDL_Color color;
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
   bool isExplosive;
@@ -258,7 +258,7 @@ public:
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   Tile_t rangedMissileTile;
-  sf::Color rangedMissileColor;
+  SDL_Color rangedMissileColor;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttackMessages rangedAttackMessages;

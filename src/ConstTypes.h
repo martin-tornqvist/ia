@@ -50,16 +50,16 @@ struct CellRenderDataAscii {
     lifebarLength = -1;
     isFadeEffectAllowed = true;
   }
-  sf::Color color;
-  sf::Color colorBg;
+  SDL_Color color;
+  SDL_Color colorBg;
   bool drawBgColor;
   char glyph;
   int lifebarLength;
   bool isFadeEffectAllowed;
 };
 
-struct CellRenderDataTile {
-  CellRenderDataTile() :
+struct CellRenderDataTiles {
+  CellRenderDataTiles() :
     color(clrBlack), colorBg(clrBlack), drawBgColor(false), tile(tile_empty),
     lifebarLength(-1), isFadeEffectAllowed(true), isLivingActorSeenHere(false) {
   }
@@ -72,8 +72,8 @@ struct CellRenderDataTile {
     isFadeEffectAllowed = true;
     isLivingActorSeenHere = false;
   }
-  sf::Color color;
-  sf::Color colorBg;
+  SDL_Color color;
+  SDL_Color colorBg;
   bool drawBgColor;
   Tile_t tile;
   int lifebarLength;
@@ -86,7 +86,7 @@ struct StringAndColor {
     str(""), color(clrBlack) {
   }
 
-  StringAndColor(const string& text, const sf::Color& clr) :
+  StringAndColor(const string& text, const SDL_Color& clr) :
     str(text), color(clr) {
   }
 
@@ -97,7 +97,7 @@ struct StringAndColor {
   }
 
   string str;
-  sf::Color color;
+  SDL_Color color;
 };
 
 struct coord {

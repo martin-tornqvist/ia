@@ -655,7 +655,7 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
   for(unsigned int iGeneral = 0; iGeneral < general_.size(); iGeneral++) {
     bool isAddedToBuffer = false;
     for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
-      const sf::Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
+      const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
       if(general_.at(iGeneral)->getInterfaceClr() == clrCurrentGroup) {
         sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
         isAddedToBuffer = true;

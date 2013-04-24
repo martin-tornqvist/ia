@@ -93,105 +93,106 @@ class Player;
 
 class Engine {
 public:
-	Engine(bool* quitToMainMenu) : isCheatVisionEnabled(false), quitToMainMenu_(quitToMainMenu) {
-	}
-	~Engine() {
-	}
+  Engine(bool* quitToMainMenu) : isCheatVisionEnabled(false),
+    quitToMainMenu_(quitToMainMenu) {
+  }
+  ~Engine() {
+  }
 
-//  void initSDL();
-	void initConfigAndRenderer();
-	void initGame();
-	void initAudio();
-	void cleanupAudio();
-	void cleanupGame();
-	void cleanupConfigAndRenderer();
+  void initSDL();
+  void initConfigAndRenderer();
+  void initGame();
+  void initAudio();
+  void cleanupAudio();
+  void cleanupGame();
+  void cleanupConfigAndRenderer();
 
-	void sleep(const int DURATION) const;
+  void sleep(const Uint32 DURATION) const;
 
-	PlayerVisualMemory* playerVisualMemory;
-	Renderer* renderer;
-	ItemData* itemData;
-	Map* map;
-	MessageLog* log;
-	Phrases* phrases;
-	Pathfinder* pathfinder;
-	Fov* fov;
-	MapBuild* mapBuild;
-	MapBuildBSP* mapBuildBSP;
-	MapPatterns* mapPatterns;
-	SoundEmitter* soundEmitter;
-	FeatureData* featureData;
-	PlayerAllocBonus* playerAllocBonus;
-	DungeonMaster* dungeonMaster;
-	Input* input;
-	DungeonClimb* dungeonClimb;
-	ActorFactory* actorFactory;
-	MapTemplateHandler* mapTemplateHandler;
-	ItemDrop* itemDrop;
-	ItemPickup* itemPickup;
-	InventoryHandler* inventoryHandler;
-	Attack* attack;
-	Interface* interfaceRenderer;
-	GameTime* gameTime;
-	MainMenu* mainMenu;
-	ItemFactory* itemFactory;
-	Bot* bot;
-	FeatureFactory* featureFactory;
-	Art* art;
-	Marker* marker;
-	ExplosionMaker* explosionMaker;
-	Thrower* thrower;
-	Reload* reload;
-	BasicUtils* basicUtils;
-	Dice dice;
-	MapTests* mapTests;
-	Gore* gore;
-	Manual* manual;
-	FovPreCalc* fovPreCalc;
-	BresenhamLine* bresenhamLine;
-	PopulateItems* populateItems;
-	PopulateMonsters* populateMonsters;
-	PopulateTraps* populateTraps;
-	RenderInventory* renderInventory;
-	InventoryIndexes* inventoryIndexes;
-	Query* query;
-	ActorData* actorData;
-	ScrollNameHandler* scrollNameHandler;
-	PotionNameHandler* potionNameHandler;
-	Bash* bash;
-	Close* close;
-	Look* look;
-	AutoDescribeActor* autoDescribeActor;
-	TextFormatting* textFormatting;
-	Config* config;
-	AbilityRoll* abilityRoll;
-	PlayerBonusHandler* playerBonusHandler;
-	SpellHandler* spellHandler;
-	Postmortem* postmortem;
-	HighScore* highScore;
-	Audio* audio;
-	Popup* popup;
-	SaveHandler* saveHandler;
-	JamWithSpike* jamWithSpike;
-	TrimTravelVector* trimTravelVector;
-	MenuInputHandler* menuInputHandler;
-	PlayerPowersHandler* playerPowersHandler;
-	KnockBack* knockBack;
-	CharacterInfo* characterInfo;
-	Examine* examine;
-	PlayerCreateCharacter* playerCreateCharacter;
-	RoomThemeMaker* roomThemeMaker;
-	DebugModeStatPrinter* debugModeStatPrinter;
-	Disarm* disarm;
-	Gods* gods;
-	Credits* credits;
+  PlayerVisualMemory* playerVisualMemory;
+  Renderer* renderer;
+  ItemData* itemData;
+  Map* map;
+  MessageLog* log;
+  Phrases* phrases;
+  Pathfinder* pathfinder;
+  Fov* fov;
+  MapBuild* mapBuild;
+  MapBuildBSP* mapBuildBSP;
+  MapPatterns* mapPatterns;
+  SoundEmitter* soundEmitter;
+  FeatureData* featureData;
+  PlayerAllocBonus* playerAllocBonus;
+  DungeonMaster* dungeonMaster;
+  Input* input;
+  DungeonClimb* dungeonClimb;
+  ActorFactory* actorFactory;
+  MapTemplateHandler* mapTemplateHandler;
+  ItemDrop* itemDrop;
+  ItemPickup* itemPickup;
+  InventoryHandler* inventoryHandler;
+  Attack* attack;
+  Interface* interfaceRenderer;
+  GameTime* gameTime;
+  MainMenu* mainMenu;
+  ItemFactory* itemFactory;
+  Bot* bot;
+  FeatureFactory* featureFactory;
+  Art* art;
+  Marker* marker;
+  ExplosionMaker* explosionMaker;
+  Thrower* thrower;
+  Reload* reload;
+  BasicUtils* basicUtils;
+  Dice dice;
+  MapTests* mapTests;
+  Gore* gore;
+  Manual* manual;
+  FovPreCalc* fovPreCalc;
+  BresenhamLine* bresenhamLine;
+  PopulateItems* populateItems;
+  PopulateMonsters* populateMonsters;
+  PopulateTraps* populateTraps;
+  RenderInventory* renderInventory;
+  InventoryIndexes* inventoryIndexes;
+  Query* query;
+  ActorData* actorData;
+  ScrollNameHandler* scrollNameHandler;
+  PotionNameHandler* potionNameHandler;
+  Bash* bash;
+  Close* close;
+  Look* look;
+  AutoDescribeActor* autoDescribeActor;
+  TextFormatting* textFormatting;
+  Config* config;
+  AbilityRoll* abilityRoll;
+  PlayerBonusHandler* playerBonusHandler;
+  SpellHandler* spellHandler;
+  Postmortem* postmortem;
+  HighScore* highScore;
+  Audio* audio;
+  Popup* popup;
+  SaveHandler* saveHandler;
+  JamWithSpike* jamWithSpike;
+  TrimTravelVector* trimTravelVector;
+  MenuInputHandler* menuInputHandler;
+  PlayerPowersHandler* playerPowersHandler;
+  KnockBack* knockBack;
+  CharacterInfo* characterInfo;
+  Examine* examine;
+  PlayerCreateCharacter* playerCreateCharacter;
+  RoomThemeMaker* roomThemeMaker;
+  DebugModeStatPrinter* debugModeStatPrinter;
+  Disarm* disarm;
+  Gods* gods;
+  Credits* credits;
 
-	Player* player;
+  Player* player;
 
-	bool isCheatVisionEnabled;
+  bool isCheatVisionEnabled;
 
 private:
-	bool* quitToMainMenu_;
+  bool* quitToMainMenu_;
 };
 
 #endif

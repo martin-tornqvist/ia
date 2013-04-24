@@ -99,7 +99,7 @@ public:
   virtual bool isSlowed() {return false;}
   virtual void isHit() {}
 
-  virtual sf::Color getColorOwningActor() {return clrBlack;}
+  virtual SDL_Color getColorOwningActor() {return clrBlack;}
 
   virtual bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
@@ -568,7 +568,7 @@ public:
   Abilities_t getSaveAbility() {return ability_resistStatusBody;}
   int getSaveAbilityModifier() {return -20;}
 
-  sf::Color getColorOwningActor() {return clrRedLight;}
+  SDL_Color getColorOwningActor() {return clrRedLight;}
 
   void start(Engine* const engine);
   void end(Engine* const engine);
@@ -1945,9 +1945,9 @@ public:
     }
   }
 
-  sf::Color getColor() {
+  SDL_Color getColor() {
     for(unsigned int i = 0; i < effects.size(); i++) {
-      const sf::Color& clr = effects.at(i)->getColorOwningActor();
+      const SDL_Color& clr = effects.at(i)->getColorOwningActor();
       if(clr.r != 0 || clr.g != 0 || clr.b != 0) {
         return effects.at(i)->getColorOwningActor();
       }

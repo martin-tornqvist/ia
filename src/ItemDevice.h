@@ -15,7 +15,7 @@ public:
 
   virtual string getDefaultActivationLabel() const {return isActivated_ ? "Deactivate" : "Activate";}
 
-  virtual sf::Color getInterfaceClr() const {return clrCyan;}
+  virtual SDL_Color getInterfaceClr() const {return clrCyan;}
 
   void newTurnInInventory(Engine* const engine);
 

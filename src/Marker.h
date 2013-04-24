@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "SFML/Graphics/Texture.hpp"
-
 #include "ConstTypes.h"
 
 using namespace std;

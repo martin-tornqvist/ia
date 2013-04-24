@@ -17,7 +17,7 @@
 void Marker::readKeys(const MarkerTask_t markerTask) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-  if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(d.isShiftHeld_) {
       move(1, -1, markerTask);
     }
@@ -28,10 +28,10 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       move(1, 0, markerTask);
     }
   }
-  if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+  if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     move(0, -1, markerTask);
   }
-  if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+  if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
     if(d.isShiftHeld_) {
       move(-1, -1, markerTask);
     }
@@ -42,23 +42,23 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
       move(-1, 0, markerTask);
     }
   }
-  if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+  if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     move(0, 1, markerTask);
   }
-  if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  if(d.sdlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
     move(1, -1, markerTask);
   }
-  if(d.sfmlKey_ == sf::Keyboard::Home || d.key_ == '7') {
+  if(d.sdlKey_ == sf::Keyboard::Home || d.key_ == '7') {
     move(-1, -1, markerTask);
   }
-  if(d.sfmlKey_ == sf::Keyboard::End || d.key_ == '1') {
+  if(d.sdlKey_ == sf::Keyboard::End || d.key_ == '1') {
     move(-1, 1, markerTask);
   }
-  if(d.sfmlKey_ == sf::Keyboard::PageDown || d.key_ == '3') {
+  if(d.sdlKey_ == sf::Keyboard::PageDown || d.key_ == '3') {
     move(1, 1, markerTask);
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
-  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'f') {
+  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'f') {
     if(markerTask == markerTask_aim) {
       if(pos_ != eng->player->pos) {
 
@@ -81,14 +81,14 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- LOOK
-  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
+  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
     if(markerTask == markerTask_look) {
       eng->look->printExtraActorDescription(pos_);
       move(0, 0, markerTask_look);
     }
   }
   // ------------------------------------------------------- THROW
-  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 't') {
+  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 't') {
     if(markerTask == markerTask_throw) {
       if(pos_ == eng->player->pos) {
         eng->log->addMessage("I should throw this somewhere else.");
@@ -105,7 +105,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- THROW LIT EXPLOSIVE
-  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
+  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
     if(markerTask == markerTask_throwLitExplosive) {
       eng->renderer->drawMapAndInterface();
       eng->thrower->playerThrowLitExplosive(pos_);
@@ -113,7 +113,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- AZATHOTS BLAST SPELL
-//  if(d.sfmlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
+//  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
 //    if(markerTask == markerTask_spellAzathothsBlast) {
 //      if(eng->map->playerVision[pos_.x][pos_.y]) {
 //        eng->renderer->drawMapAndInterface();
@@ -122,7 +122,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
 //      }
 //    }
 //  }
-  if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+  if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
     cancel();
   }
 }
@@ -165,7 +165,7 @@ void Marker::place(const MarkerTask_t markerTask) {
 
   eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   if(markerTask == markerTask_look) {
     eng->look->markerAtCoord(pos_);
@@ -173,7 +173,7 @@ void Marker::place(const MarkerTask_t markerTask) {
 
   eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   isDone_ = false;
   while(isDone_ == false) {
@@ -229,7 +229,7 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask) {
 
   eng->renderer->drawMapAndInterface(false);
   draw(markerTask);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void Marker::done() {

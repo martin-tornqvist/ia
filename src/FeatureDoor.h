@@ -33,7 +33,7 @@ public:
   bool isVisionPassable() const;
   bool isShootPassable() const;
   bool isSmokePassable() const;
-  sf::Color getColor() const;
+  SDL_Color getColor() const;
   char getGlyph() const;
   Tile_t getTile() const;
 

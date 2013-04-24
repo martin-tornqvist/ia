@@ -13,26 +13,20 @@
 
 void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
-  eng->renderer->clearWindow();
-  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
-  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0 + 1); x <= min(MAP_X_CELLS - 2, data->x1 - 1); x++) {
     for(int y = max(1, data->y0 + 1); y <= min(MAP_Y_CELLS - 2, data->y1 - 1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow, true, clrBlack);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
+                                       clrYellow, true, clrBlack);
         }
       }
     }
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
   eng->sleep(eng->config->DELAY_EXPLOSION / 2);
-
-  eng->renderer->clearWindow();
-  screenTexture = eng->renderer->getScreenTextureCopy();
-  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
@@ -45,14 +39,12 @@ void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CEL
       }
     }
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
-void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, const sf::Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
+void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, const SDL_Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
-  eng->renderer->clearWindow();
-  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
-  eng->renderer->drawScreenSizedTexture(screenTexture);
+  eng->renderer->clearScreen();
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
@@ -63,11 +55,11 @@ void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, con
       }
     }
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
-                                  const bool OVERRIDE_EXPLOSION_RENDERING, const sf::Color colorOverride) {
+                                  const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
   BasicData data(origin, width, height);
 
   //Set up explosion reach array

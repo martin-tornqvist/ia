@@ -170,10 +170,10 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
 
 void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
 
-  const sf::Color clrSelected = clrWhite;
-  const sf::Color clrGeneral = clrRedLight;
+  const SDL_Color clrSelected = clrWhite;
+  const SDL_Color clrGeneral = clrRedLight;
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   int optionNr = 0;
 
@@ -232,7 +232,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 
   eng->renderer->drawText("space/esc to confirm changes", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
@@ -246,7 +246,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
       }
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
-      eng->renderer->setupWindowAndImagesClearPrev();
+      eng->renderer->initAndClearPrev();
     }
     break;
 
@@ -272,7 +272,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
       }
 
       setCellDimDependentVariables();
-      eng->renderer->setupWindowAndImagesClearPrev();
+      eng->renderer->initAndClearPrev();
     }
     break;
 
@@ -330,7 +330,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
-      eng->renderer->setupWindowAndImagesClearPrev();
+      eng->renderer->initAndClearPrev();
     }
     break;
   }

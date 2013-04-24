@@ -344,7 +344,7 @@ void Attack::printMeleeMessages(AttackData data, Weapon* weapon) {
             eng->log->addMessage("I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + data.dmgPunctuation, clrMessageGood);
           } else {
             const string ATTACK_MOD_TEXT = data.isWeakAttack ? "feebly " : (data.isBackStab ? "covertly " : "");
-            const sf::Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
+            const SDL_Color clr = data.isBackStab ? clrBlueLight : clrMessageGood;
             eng->log->addMessage("I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " + data.weaponName_a + data.dmgPunctuation, clr);
           }
         } else {

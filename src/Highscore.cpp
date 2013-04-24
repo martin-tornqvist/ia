@@ -54,7 +54,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
 }
 
 void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) const {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   if(entries.size() == 0) {
     const int X0 = 1;
@@ -90,7 +90,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
       const string DLVL = intToString(entries.at(i).getDlvl());
       const string INSANITY = intToString(entries.at(i).getInsanity());
 
-      const sf::Color clr = clrRedLight;
+      const SDL_Color clr = clrRedLight;
       eng->renderer->drawText(dateAndTime, renderArea_screen, X_POS_DATE, yPos, clr);
       eng->renderer->drawText(name, renderArea_screen, X_POS_NAME, yPos, clr);
       eng->renderer->drawText(SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);
@@ -101,7 +101,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
     }
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void HighScore::runHighScoreScreen() {
@@ -123,15 +123,15 @@ void HighScore::runHighScoreScreen() {
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderHighScoreScreen(entries, topElement);
     }
-    if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderHighScoreScreen(entries, topElement);
     }
-    if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

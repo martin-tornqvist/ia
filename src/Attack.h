@@ -53,12 +53,12 @@ struct Projectile {
     glyph(-1), tile(tile_empty), clr(clrWhite) {
   }
 
-  void setTile(const Tile_t tileToRender, const sf::Color clrToRender) {
+  void setTile(const Tile_t tileToRender, const SDL_Color clrToRender) {
     tile = tileToRender;
     clr = clrToRender;
   }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const sf::Color clrToRender) {
+  void setGlyph(const char GLYPH_TO_RENDER, const SDL_Color clrToRender) {
     glyph = GLYPH_TO_RENDER;
     clr = clrToRender;
   }
@@ -71,7 +71,7 @@ struct Projectile {
   bool isDoneRendering;
   char glyph;
   Tile_t tile;
-  sf::Color clr;
+  SDL_Color clr;
   AttackData data;
 };
 

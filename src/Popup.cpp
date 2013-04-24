@@ -28,7 +28,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
 
   const bool& USE_TILE_SET = eng->config->USE_TILE_SET;
 
-  const sf::Color clrBox = clrGray;
+  const SDL_Color clrBox = clrGray;
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
@@ -100,7 +100,7 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
 
   eng->renderer->drawTextCentered("space/esc to close", renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrWhiteHigh);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   eng->query->waitForEscOrSpace();
 
@@ -181,9 +181,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
 
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
-    sf::Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
+    SDL_Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
     eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clr, true);
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 

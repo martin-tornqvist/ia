@@ -522,9 +522,9 @@ public:
   ~ColourOutOfSpace() {}
   bool actorSpecificAct();
   void actorSpecific_spawnStartItems();
-  const sf::Color& getColor();
+  const SDL_Color& getColor();
 private:
-  sf::Color currentColor;
+  SDL_Color currentColor;
 };
 
 #endif

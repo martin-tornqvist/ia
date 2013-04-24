@@ -34,16 +34,9 @@
 					<Add option="-Wno-long-long" />
 					<Add directory="..\src\debugModeIncl" />
 				</Compiler>
-				<Linker>
-					<Add library="sfml-graphics-d" />
-					<Add library="sfml-window-d" />
-					<Add library="sfml-system-d" />
-				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-graphics-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-system-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-window-d-2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -76,26 +69,21 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="sfml-graphics" />
-					<Add library="sfml-window" />
-					<Add library="sfml-system" />
 				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-graphics-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-system-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SFML\sfml-window-2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add directory="..\src" />
-			<Add directory="..\API\SFML\include" />
+			<Add directory="..\API\SDL\include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32" />
-			<Add directory="..\API\SFML\lib" />
+			<Add option="-lmingw32 -lSDLmain -lSDL" />
+			<Add directory="..\API\SDL\lib" />
 		</Linker>
 		<Unit filename="..\icon\resource.rc">
 			<Option compilerVar="WINDRES" />

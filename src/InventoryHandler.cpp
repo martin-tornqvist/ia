@@ -248,7 +248,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
     eng->renderer->drawMapAndInterface(false);
     const string nrStr = "1-" + intToString(item->numberOfItems);
     eng->renderer->drawText("Drop how many (" + nrStr + ")?:      | enter to drop | space/esc to cancel", renderArea_screen, 1, 1, clrWhiteHigh);
-    eng->renderer->updateWindow();
+    eng->renderer->updateScreen();
     const int NR_TO_DROP = eng->query->number(coord(20 + nrStr.size(), 1), clrWhiteHigh, 0, 3, item->numberOfItems, false);
     if(NR_TO_DROP <= 0) {
       tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;

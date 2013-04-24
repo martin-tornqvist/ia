@@ -16,7 +16,7 @@ public:
   }
 
   string getDescription(const bool DEFINITE_ARTICLE) const;
-  sf::Color getColor() const;
+  SDL_Color getColor() const;
   char getGlyph() const;
 
   Tile_t getFrontWallTile() const;

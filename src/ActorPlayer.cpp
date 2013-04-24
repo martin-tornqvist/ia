@@ -611,7 +611,7 @@ void Player::updateColor() {
     return;
   }
 
-  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;

@@ -18,7 +18,7 @@ public:
   }
   virtual string getDefaultActivationLabel() const {return "Drink";}
 
-  sf::Color getInterfaceClr() const {return clrBlueLight;}
+  SDL_Color getInterfaceClr() const {return clrBlueLight;}
 
   void quaff(Actor* const actor, Engine* const engine);
 
@@ -233,7 +233,7 @@ public:
 private:
   vector<StringAndColor> m_falseNames;
 
-  void addFalse(const string& str, const sf::Color clr) {
+  void addFalse(const string& str, const SDL_Color clr) {
     m_falseNames.push_back(StringAndColor(str, clr));
   }
 

@@ -11,11 +11,11 @@ RenderInventory::RenderInventory(Engine* engine) :
   eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 60) {
 }
 
-void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const sf::Color& clr) {
+void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const SDL_Color& clr) {
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
-  sf::Color realColorDots = clr;
+  SDL_Color realColorDots = clr;
   realColorDots.r /= 3;
   realColorDots.g /= 3;
   realColorDots.b /= 3;
@@ -28,7 +28,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   int yPos = 1;
   int xPos = X_POS_LEFT;
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
   eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 2);
@@ -55,7 +55,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       str += "<empty>";
       eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
     } else {
-      const sf::Color itemInterfClr = IS_CUR_POS ?
+      const SDL_Color itemInterfClr = IS_CUR_POS ?
                                       clrWhiteHigh :
                                       item->getInterfaceClr();
 
@@ -85,7 +85,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(invSlotButtons.size());
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
@@ -94,7 +94,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
   eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
@@ -112,7 +112,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
-    const sf::Color itemInterfClr = IS_CUR_POS ?
+    const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
     str = "x) ";
@@ -128,7 +128,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     yPos++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
@@ -137,7 +137,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
   eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
@@ -178,7 +178,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
 
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
-    const sf::Color itemInterfClr = IS_CUR_POS ?
+    const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
@@ -198,7 +198,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
     yPos++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void RenderInventory::drawUseMode(const MenuBrowser& browser,
@@ -209,7 +209,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
   eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
@@ -227,7 +227,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
-    const sf::Color itemInterfClr = IS_CUR_POS ?
+    const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
@@ -264,7 +264,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     yPos++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 //void RenderInventory::drawDropMode(const Item* const itemToDrop) {
@@ -502,7 +502,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 //    eng->log->addMessage("[Space/esc] Exit", clrWhiteHigh);
 //  }
 //
-//  eng->renderer->updateWindow();
+//  eng->renderer->updateScreen();
 //}
 
 //void RenderInventory::drawSlots(vector<InventorySlotButton>* slotButtons, const MenuBrowser& browser, const bool DRAW_BROWSER) {
@@ -521,7 +521,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 //    slot = slotButton->inventorySlot;
 //    slotString += slot->interfaceName;
 //
-//    const sf::Color clr = DRAW_BROWSER && browser.getPos().x == 0 && browser.isPosAtKey('a' + i) ? clrWhite : clrRedLight;
+//    const SDL_Color clr = DRAW_BROWSER && browser.getPos().x == 0 && browser.isPosAtKey('a' + i) ? clrWhite : clrRedLight;
 //    eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft1, yPos, clr);
 //    slotString = ": ";
 //    eng->renderer->drawText(slotString, renderArea_mainScreen, xPosListsLeft2, yPos, clr);
@@ -556,7 +556,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 //    const bool ELEMENT_IS_SELECTED = ((browser.getNrOfItemsInFirstList() > 0 && browser.getPos().x == 1) ||
 //                                      browser.getNrOfItemsInSecondList() == 0) &&
 //                                     browser.getPos().y == static_cast<int>(i);
-//    const sf::Color clr = DRAW_BROWSER && ELEMENT_IS_SELECTED ? clrWhite : clrRedLight;
+//    const SDL_Color clr = DRAW_BROWSER && ELEMENT_IS_SELECTED ? clrWhite : clrRedLight;
 //    eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight1, yPos, clr);
 //    slotString = eng->itemData->itemInterfaceName(generalItems->at(currentElement), false);
 //    eng->renderer->drawText(slotString, renderArea_mainScreen, xPosOffset + xPosListsRight2, yPos, clr);

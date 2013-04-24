@@ -37,7 +37,7 @@ void Credits::readFile() {
 void Credits::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
+  eng->renderer->coverArea(renderArea_screen, coord(0, 1), MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
   eng->renderer->drawText(" Displaying credits.txt ", renderArea_screen, 3, 1, clrWhite);
@@ -48,7 +48,7 @@ void Credits::drawInterface() {
 }
 
 void Credits::run() {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   string str;
 
@@ -60,13 +60,13 @@ void Credits::run() {
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
-    if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

@@ -26,7 +26,7 @@ void MessageLog::clearLog() {
 }
 
 void MessageLog::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
-  sf::Color clr;
+  SDL_Color clr;
   string str;
   int drawXpos;
 
@@ -53,7 +53,7 @@ void MessageLog::drawLog() const {
 void MessageLog::displayHistory() {
   clearLog();
 
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   string str;
 
@@ -66,7 +66,7 @@ void MessageLog::displayHistory() {
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   const int LINE_JUMP = 3;
 
@@ -75,7 +75,7 @@ void MessageLog::displayHistory() {
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = max(0, min(topElement + LINE_JUMP, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
@@ -85,9 +85,9 @@ void MessageLog::displayHistory() {
         drawLine(history.at(static_cast<unsigned int>(i)), yCell);
         yCell++;
       }
-      eng->renderer->updateWindow();
+      eng->renderer->updateScreen();
     }
-    else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+    else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = max(0, min(topElement - LINE_JUMP, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
@@ -97,9 +97,9 @@ void MessageLog::displayHistory() {
         drawLine(history.at(static_cast<unsigned int>(i)), yCell);
         yCell++;
       }
-      eng->renderer->updateWindow();
+      eng->renderer->updateScreen();
     }
-    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }
@@ -153,7 +153,7 @@ int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int
   return xPos;
 }
 
-void MessageLog::addMessage(const string& text, const sf::Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
+void MessageLog::addMessage(const string& text, const SDL_Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
   bool repeated = false;
 
   //New message equal to previous?
@@ -175,7 +175,7 @@ void MessageLog::addMessage(const string& text, const sf::Color color, MessageIn
     if(MESSAGE_FITS == false) {
       eng->renderer->drawMapAndInterface(false);
       eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS, 0, clrCyanLight);
-      eng->renderer->updateWindow();
+      eng->renderer->updateScreen();
       eng->query->waitForKeyPress();
       clearLog();
       eng->renderer->drawMapAndInterface(true);
@@ -191,7 +191,7 @@ void MessageLog::addMessage(const string& text, const sf::Color color, MessageIn
     eng->renderer->drawMapAndInterface(false);
     const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
     eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS_AFTER, 0, clrCyanLight);
-    eng->renderer->updateWindow();
+    eng->renderer->updateScreen();
     eng->query->waitForKeyPress();
     clearLog();
     eng->renderer->drawMapAndInterface(true);

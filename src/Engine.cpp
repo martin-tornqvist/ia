@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "SFML/System/Sleep.hpp"
+#include "SDL/SDL.h"
 
 #include "Converters.h"
 
@@ -88,12 +88,12 @@
 
 using namespace std;
 
-//void Engine::initSDL() {
-//  tracer << "Engine::initSDL()..." << endl;
-//  SDL_Init(SDL_INIT_EVERYTHING);
-//  SDL_EnableUNICODE(1);
-//  tracer << "Engine::initSDL() [DONE]" << endl;
-//}
+void Engine::initSDL() {
+  tracer << "Engine::initSDL()..." << endl;
+  SDL_Init(SDL_INIT_EVERYTHING);
+  SDL_EnableUNICODE(1);
+  tracer << "Engine::initSDL() [DONE]" << endl;
+}
 
 void Engine::initConfigAndRenderer() {
   tracer << "Engine::initConfigAndRenderer()..." << endl;
@@ -283,8 +283,8 @@ void Engine::cleanupGame() {
   tracer << "Engine::cleanupGame() [DONE]" << endl;
 }
 
-void Engine::sleep(const int DURATION) const {
-  sf::sleep(sf::milliseconds(DURATION));
+void Engine::sleep(const Uint32 DURATION) const {
+  SDL_Delay(DURATION);
 }
 
 

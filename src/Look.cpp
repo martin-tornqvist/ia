@@ -90,7 +90,7 @@ void Look::printExtraActorDescription(const coord pos) const {
         eng->renderer->drawText(formattedText.at(i), renderArea_screen, START_X, START_Y + i, clrWhiteHigh);
       }
 
-      eng->renderer->updateWindow();
+      eng->renderer->updateScreen();
 
       eng->query->waitForKeyPress();
     }

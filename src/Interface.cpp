@@ -79,7 +79,7 @@ void Interface::drawInfoLines() {
   const int INS = eng->player->getInsanity();
   eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGray);
   xPos += 4;
-  const sf::Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
+  const SDL_Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
   str = intToString(SHOCK) + "%/";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
   xPos += str.length();
@@ -171,7 +171,7 @@ void Interface::drawInfoLines() {
   const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
   for(unsigned int i = 0; i < effects.size(); i++) {
     StatusEffect* const effect = effects.at(i);
-    const sf::Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    const SDL_Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
     string statusText = effect->getInterfaceName();
     if(IS_SELF_AWARE) {
       if(effect->allowDisplayTurnsInInterface()) {

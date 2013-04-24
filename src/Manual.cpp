@@ -52,7 +52,7 @@ void Manual::drawManualInterface() {
 }
 
 void Manual::run() {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   string str;
 
@@ -67,14 +67,14 @@ void Manual::run() {
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = max(0, min(topElement + 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
@@ -84,8 +84,8 @@ void Manual::run() {
         eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+      eng->renderer->updateScreen();
+    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = max(0, min(topElement - 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
@@ -95,8 +95,8 @@ void Manual::run() {
         eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      eng->renderer->updateScreen();
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

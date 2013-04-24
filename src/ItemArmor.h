@@ -32,7 +32,7 @@ public:
     return getAbsorptionPoints(damageType_physical) == 0;
   }
 
-  sf::Color getInterfaceClr() const {
+  SDL_Color getInterfaceClr() const {
     return clrGray;
   }
 

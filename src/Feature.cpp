@@ -64,11 +64,11 @@ void Feature::hit(const int DAMAGE, const DamageTypes_t damageType) {
 	(void)damageType;
 }
 
-sf::Color Feature::getColor() const {
+SDL_Color Feature::getColor() const {
 	return def_->color;
 }
 
-sf::Color Feature::getColorBg() const {
+SDL_Color Feature::getColorBg() const {
 	return def_->colorBg;
 }
 

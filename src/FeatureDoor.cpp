@@ -120,7 +120,7 @@ bool Door::isSmokePassable() const {
   return isOpen_;
 }
 
-sf::Color Door::getColor() const {
+SDL_Color Door::getColor() const {
   if(isSecret_) {
     if(isClued_) {
       return clrYellow;

@@ -191,7 +191,6 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
-    eng->renderer->updateWindow();
     statusEffectsHandler_->tryAddEffect(new StatusConfused(eng));
   }
 }
@@ -202,7 +201,7 @@ void Actor::updateColor() {
     return;
   }
 
-  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;

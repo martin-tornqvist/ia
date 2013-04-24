@@ -34,19 +34,19 @@ void PlayerEnterName::run(int& yPos) {
 }
 
 void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
   int x0 = MAP_X_CELLS_HALF;
   const string LABEL = "Enter character name";
   eng->renderer->drawTextCentered(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
   const string NAME_STR = currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" : currentString;
   eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x0, RENDER_Y_POS + 1, clrRedLight);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-  if(d.sfmlKey_ == sf::Keyboard::Return) {
+  if(d.sdlKey_ == sf::Keyboard::Return) {
     done = true;
     currentString = currentString == "" ? "Rogue" : currentString;
     return;
@@ -54,11 +54,11 @@ void PlayerEnterName::readKeys(string& currentString, bool& done, const int REND
 
   if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
     if(
-      d.sfmlKey_ == sf::Keyboard::Space ||
+      d.sdlKey_ == SDLK_SPACE ||
       (d.key_ >= int('a') && d.key_ <= int('z')) ||
       (d.key_ >= int('A') && d.key_ <= int('Z')) ||
       (d.key_ >= int('0') && d.key_ <= int('9'))) {
-      if(d.sfmlKey_ == sf::Keyboard::Space) {
+      if(d.sdlKey_ == SDLK_SPACE) {
         currentString.push_back(' ');
       } else {
         currentString.push_back(char(d.key_));
@@ -69,7 +69,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done, const int REND
   }
 
   if(currentString.size() > 0) {
-    if(d.sfmlKey_ == sf::Keyboard::Back) {
+    if(d.sdlKey_ == sf::Keyboard::Back) {
       currentString.erase(currentString.end() - 1);
       draw(currentString, RENDER_Y_POS);
     }

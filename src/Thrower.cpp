@@ -26,15 +26,15 @@ void Thrower::playerThrowLitExplosive(const coord aimCell) {
 
   //Render
   const char glyph = eng->itemData->itemDefinitions[item_dynamite]->glyph;
-  sf::Color clr = DYNAMITE_FUSE != -1 ? clrRedLight : clrYellow;
+  SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLight : clrYellow;
   for(unsigned int i = 1; i < path.size() - 1; i++) {
     eng->renderer->drawMapAndInterface(false);
     if(eng->map->playerVision[path[i].x][path[i].y]) {
       eng->renderer->drawCharacter(glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
-      eng->renderer->updateWindow();
+      eng->renderer->updateScreen();
       eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
     }
-//    eng->renderer->updateWindow();
+//    eng->renderer->updateScreen();
   }
 
   if(DYNAMITE_FUSE != -1) {
@@ -114,7 +114,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
     const int DMG = rollResult == successCritical ? dmg.rolls * dmg.sides + dmg.plus : eng->dice(dmg.rolls, dmg.sides) + dmg.plus;
     const char glyph = itemThrown->getGlyph();
-    const sf::Color clr = itemThrown->getColor();
+    const SDL_Color clr = itemThrown->getColor();
 
     int chanceToDestroyItem = 0;
 
@@ -129,10 +129,10 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
           if(rollResult >= successSmall) {
             if(eng->map->playerVision[path.at(i).x][path.at(i).y]) {
               eng->renderer->drawCharacter('*', renderArea_mainScreen, path[i].x, path[i].y, clrRedLight);
-              eng->renderer->updateWindow();
+              eng->renderer->updateScreen();
               eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
             }
-            const sf::Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
+            const SDL_Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
             eng->log->addMessage(actorHere->getNameThe() + " is hit.", hitMessageClr);
             actorHere->hit(DMG, damageType_physical); //TODO fix this if there ever is a non-physical thrown weapon
 
@@ -153,10 +153,10 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
         if(actorHere->getDef()->actorSize >= actorSize_humanoid && eng->dice.percentile() < 25) {
           if(eng->map->playerVision[path.at(i).x][path.at(i).y]) {
             eng->renderer->drawCharacter('*', renderArea_mainScreen, path.at(i).x, path.at(i).y, clrRedLight);
-            eng->renderer->updateWindow();
+            eng->renderer->updateScreen();
             eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
           }
-          const sf::Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
+          const SDL_Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
           eng->log->addMessage(actorHere->getNameThe() + " is hit.", hitMessageClr);
           eng->renderer->drawMapAndInterface();
           actorHere->hit(DMG / 2, damageType_physical); //TODO fix this if there ever is a non-physical thrown weapon
@@ -176,7 +176,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
       if(eng->map->playerVision[path[i].x][path[i].y]) {
         eng->renderer->drawCharacter(glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
-        eng->renderer->updateWindow();
+        eng->renderer->updateScreen();
         eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
       }
     }

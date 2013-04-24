@@ -16,9 +16,9 @@ void CharacterInfo::makeLines() {
   lines.resize(0);
 
   const string offsetSpaces = " ";
-  const sf::Color clrHeader = clrCyanLight;
-  const sf::Color clrText = clrRedLight;
-  const sf::Color clrTextDark = clrRed;
+  const SDL_Color clrHeader = clrCyanLight;
+  const SDL_Color clrText = clrRedLight;
+  const SDL_Color clrTextDark = clrRed;
 
   lines.push_back(StringAndColor("COMBAT SKILLS", clrHeader));
   const int BASE_MELEE = min(100, eng->player->getDef()->abilityVals.getVal(ability_accuracyMelee, true, *(eng->player)));
@@ -199,14 +199,14 @@ void CharacterInfo::run() {
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
@@ -216,8 +216,8 @@ void CharacterInfo::run() {
         eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+      eng->renderer->updateScreen();
+    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
@@ -227,8 +227,8 @@ void CharacterInfo::run() {
         eng->renderer->drawText(lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).color);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      eng->renderer->updateScreen();
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
 
