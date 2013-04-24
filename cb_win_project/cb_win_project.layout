@@ -55,8 +55,8 @@
 	<File name="..\src\ActorMonster.h" open="0" top="0" tabpos="1">
 		<Cursor position="1449" topLine="0" />
 	</File>
-	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="10">
-		<Cursor position="10107" topLine="200" />
+	<File name="..\src\ActorMonsterSpecific.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="623" topLine="9" />
 	</File>
 	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="7">
 		<Cursor position="45933" topLine="1228" />
@@ -152,7 +152,7 @@
 		<Cursor position="1440" topLine="41" />
 	</File>
 	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="5656" topLine="171" />
+		<Cursor position="5980" topLine="105" />
 	</File>
 	<File name="..\src\Engine.h" open="0" top="0" tabpos="3">
 		<Cursor position="217" topLine="0" />
@@ -256,11 +256,11 @@
 	<File name="..\src\GameTime.h" open="0" top="0" tabpos="3">
 		<Cursor position="2338" topLine="86" />
 	</File>
-	<File name="..\src\Gods.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="2167" topLine="30" />
+	<File name="..\src\Gods.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="71" topLine="0" />
 	</File>
-	<File name="..\src\Gods.h" open="0" top="0" tabpos="5">
-		<Cursor position="320" topLine="0" />
+	<File name="..\src\Gods.h" open="1" top="0" tabpos="4">
+		<Cursor position="718" topLine="12" />
 	</File>
 	<File name="..\src\Highscore.cpp" open="0" top="0" tabpos="11">
 		<Cursor position="2104" topLine="54" />
@@ -415,8 +415,8 @@
 	<File name="..\src\MapBuildCavern.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="1125" topLine="32" />
 	</File>
-	<File name="..\src\MapBuildForest.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="4816" topLine="151" />
+	<File name="..\src\MapBuildForest.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="4686" topLine="151" />
 	</File>
 	<File name="..\src\MapBuildKingsTomb.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="600" topLine="3" />
