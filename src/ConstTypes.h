@@ -39,20 +39,18 @@ enum GameEntry_t {
 
 struct CellRenderDataAscii {
   CellRenderDataAscii() :
-    color(clrBlack), colorBg(clrBlack), drawBgColor(false), glyph(' '),
+    color(clrBlack), colorBg(clrBlack), glyph(' '),
     lifebarLength(-1), isFadeEffectAllowed(true) {
   }
   void clear() {
     color = clrBlack;
     colorBg = clrBlack;
-    drawBgColor = false;
     glyph = ' ';
     lifebarLength = -1;
     isFadeEffectAllowed = true;
   }
   SDL_Color color;
   SDL_Color colorBg;
-  bool drawBgColor;
   char glyph;
   int lifebarLength;
   bool isFadeEffectAllowed;
@@ -60,13 +58,12 @@ struct CellRenderDataAscii {
 
 struct CellRenderDataTiles {
   CellRenderDataTiles() :
-    color(clrBlack), colorBg(clrBlack), drawBgColor(false), tile(tile_empty),
-    lifebarLength(-1), isFadeEffectAllowed(true), isLivingActorSeenHere(false) {
+    color(clrBlack), colorBg(clrBlack), tile(tile_empty), lifebarLength(-1),
+    isFadeEffectAllowed(true), isLivingActorSeenHere(false) {
   }
   void clear() {
     color = clrBlack;
     colorBg = clrBlack;
-    drawBgColor = false;
     tile = tile_empty;
     lifebarLength = -1;
     isFadeEffectAllowed = true;
@@ -74,7 +71,6 @@ struct CellRenderDataTiles {
   }
   SDL_Color color;
   SDL_Color colorBg;
-  bool drawBgColor;
   Tile_t tile;
   int lifebarLength;
   bool isFadeEffectAllowed;

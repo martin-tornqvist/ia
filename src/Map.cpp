@@ -95,13 +95,13 @@ void Map::clearGrids(const bool DELETE_INSTANCES) {
       items[x][y] = NULL;
       darkness[x][y] = false;
       light[x][y] = false;
-      playerVisualMemory[x][y].glyph = ' ';
-      playerVisualMemory[x][y].color = clrBlack;
+      playerVisualMemoryAscii[x][y].glyph = ' ';
+      playerVisualMemoryAscii[x][y].color = clrBlack;
       playerVisualMemoryTiles[x][y].tile = tile_empty;
       playerVisualMemoryTiles[x][y].color = clrBlack;
-      eng->renderer->renderArray[x][y].clear();
-      eng->renderer->renderArrayActorsOmitted[x][y].clear();
+      eng->renderer->renderArrayAscii[x][y].clear();
       eng->renderer->renderArrayTiles[x][y].clear();
+      eng->renderer->renderArrayActorsOmittedAscii[x][y].clear();
       eng->renderer->renderArrayActorsOmittedTiles[x][y].clear();
     }
   }

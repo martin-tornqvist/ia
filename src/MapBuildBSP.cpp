@@ -736,13 +736,9 @@ void MapBuildBSP::decorate() {
 
 void MapBuildBSP::connectRegions(Region* regions[3][3]) {
   tracer << "MapBuildBSP::connectRegions()..." << endl;
-//  const int MIN_NR_CONNECTIONS_LIMIT = 0;//16;
-//  const int MAX_NR_CONNECTIONS_LIMIT = 0;//22;
-//  const int MIN_NR_CONNECTIONS = eng->dice.getInRange(MIN_NR_CONNECTIONS_LIMIT, MAX_NR_CONNECTIONS_LIMIT);
-  int totalNrConnections = 0;
+
   bool isAllConnected = false;
-  while(isAllConnected == false /*|| totalNrConnections < MIN_NR_CONNECTIONS*/) {
-    totalNrConnections = getTotalNrOfConnections(regions);
+  while(isAllConnected == false) {
     isAllConnected = isAllRoomsConnected();
 
     coord c1(eng->dice(1, 3) - 1, eng->dice(1, 3) - 1);
@@ -804,15 +800,6 @@ bool MapBuildBSP::isAllRoomsConnected() {
   return true;
 }
 
-int MapBuildBSP::getTotalNrOfConnections(Region* regions[3][3]) const {
-  int nrOfConnections = 0;
-  for(int x = 0; x < 3; x++) {
-    for(int y = 0; y < 3; y++) {
-      nrOfConnections += regions[x][y]->getNrOfConnections();
-    }
-  }
-  return nrOfConnections;
-}
 
 bool MapBuildBSP::isRegionFoundInCardinalDirection(const coord pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const {
   for(int dy = -1; dy <= 1; dy++) {

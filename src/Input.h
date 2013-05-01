@@ -2,6 +2,8 @@
 #define INPUT_H
 
 #include "SDL/SDL_keyboard.h"
+#include "SDL/SDL_events.h"
+
 #include "ConstTypes.h"
 
 class Engine;
@@ -35,15 +37,15 @@ public:
 
   void handleMapModeInputUntilFound();
 
-  KeyboardReadReturnData readKeysUntilFound() const;
+  KeyboardReadReturnData readKeysUntilFound();
 
-  void clearEvents() const;
+  void clearEvents();
 
 private:
   friend class Bot;
   void handleKeyPress(const KeyboardReadReturnData& d);
-
   void clearLogMessages();
+  SDL_Event event_;
   int* dungeonLevel_;
   Engine* eng;
   bool* quitToMainMenu_;

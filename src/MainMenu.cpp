@@ -121,6 +121,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
 
+//  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
+
   eng->renderer->updateScreen();
 
   tracer << "MainMenu::draw() [DONE]" << endl;

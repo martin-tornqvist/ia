@@ -99,13 +99,14 @@ public:
   ~Engine() {
   }
 
-  void initSDL();
+  void initSdl();
   void initConfigAndRenderer();
   void initGame();
   void initAudio();
   void cleanupAudio();
   void cleanupGame();
   void cleanupConfigAndRenderer();
+  void cleanupSdl();
 
   void sleep(const Uint32 DURATION) const;
 

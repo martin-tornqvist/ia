@@ -36,20 +36,20 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
         if(y == Y0 || y == Y1) {
           if(USE_TILE_SET) {
             if(x == X0 && y == Y0) {
-              eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, clrBlack);
             } else if(x == X1 && y == Y0) {
-              eng->renderer->drawTileInMap(tile_popupCornerTopRight, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerTopRight, x, y, clrBox, clrBlack);
             } else if(x == X0 && y == Y1) {
-              eng->renderer->drawTileInMap(tile_popupCornerBottomLeft, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerBottomLeft, x, y, clrBox, clrBlack);
             } else {
-              eng->renderer->drawTileInMap(tile_popupCornerBottomRight, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerBottomRight, x, y, clrBox, clrBlack);
             }
           } else {
             eng->renderer->drawCharacter('#', renderArea_mainScreen, x, y, clrBox);
           }
         } else {
           if(USE_TILE_SET) {
-            eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, false, clrBlack);
+            eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('|', renderArea_mainScreen, x, y, clrBox);
           }
@@ -57,7 +57,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
       } else {
         if(y == Y0 || y == Y1) {
           if(USE_TILE_SET) {
-            eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, false, clrBlack);
+            eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('=', renderArea_mainScreen, x, y, clrBox);
           }
@@ -82,7 +82,9 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   int yPos = TITLE_Y_POS;
 
   if(title != "") {
-    eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
+    eng->renderer->drawTextCentered(title, renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight,
+                                    clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -90,7 +92,9 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
-      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrRedLight, true);
+      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
+                                      MAP_X_CELLS_HALF, yPos,
+                                      clrRedLight, clrBlack, true);
     } else {
       eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
     }
@@ -127,25 +131,25 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
 
     switch(action) {
       case menuAction_browsed: {
-        multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
-      }
-      break;
+          multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
+        }
+        break;
 
       case menuAction_canceled: {
-      }
-      break;
+        }
+        break;
 
       case menuAction_selected: {
-        if(DRAW_MAP_AND_INTERFACE) {
-          eng->renderer->drawMapAndInterface();
+          if(DRAW_MAP_AND_INTERFACE) {
+            eng->renderer->drawMapAndInterface();
+          }
+          return browser.getPos().y;
         }
-        return browser.getPos().y;
-      }
-      break;
+        break;
 
       case menuAction_selectedWithShift: {
-      }
-      break;
+        }
+        break;
     }
   }
 }
@@ -163,7 +167,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   int yPos = TITLE_Y_POS;
 
   if(title != "") {
-    eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
+    eng->renderer->drawTextCentered(title, renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, TITLE_Y_POS,
+                                    clrCyanLight, clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -171,7 +177,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
-      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrRedLight, true);
+      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
+                                      MAP_X_CELLS_HALF, yPos,
+                                      clrRedLight, clrBlack, true);
     } else {
       eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
     }
@@ -182,7 +190,8 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
     SDL_Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
-    eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clr, true);
+    eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, yPos, clr, clrBlack, true);
   }
   eng->renderer->updateScreen();
 }

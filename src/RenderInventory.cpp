@@ -23,13 +23,11 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_N
 }
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
-    const vector<InventorySlotButton>& invSlotButtons,
-    const sf::Texture& bgTexture) {
+    const vector<InventorySlotButton>& invSlotButtons) {
   int yPos = 1;
   int xPos = X_POS_LEFT;
 
   eng->renderer->clearScreen();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 2);
 
@@ -89,13 +87,11 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 }
 
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
-    const vector<unsigned int>& genInvIndexes,
-    const sf::Texture& bgTexture) {
+    const vector<unsigned int>& genInvIndexes) {
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
   eng->renderer->clearScreen();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
@@ -132,13 +128,11 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
 }
 
 void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
-                                    const vector<unsigned int>& genInvIndexes,
-                                    const sf::Texture& bgTexture) {
+                                    const vector<unsigned int>& genInvIndexes) {
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
   eng->renderer->clearScreen();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
@@ -202,15 +196,13 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
 }
 
 void RenderInventory::drawUseMode(const MenuBrowser& browser,
-                                  const vector<unsigned int>& genInvIndexes,
-                                  const sf::Texture& bgTexture) {
+                                  const vector<unsigned int>& genInvIndexes) {
   const int X_POS_CMD = X_POS_LEFT + 11;
 
   int xPos = X_POS_LEFT;
   int yPos = 1;
 
   eng->renderer->clearScreen();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 

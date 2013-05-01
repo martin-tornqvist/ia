@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
 
 #include "Converters.h"
 
@@ -88,11 +89,12 @@
 
 using namespace std;
 
-void Engine::initSDL() {
-  tracer << "Engine::initSDL()..." << endl;
+void Engine::initSdl() {
+  tracer << "Engine::initSdl()..." << endl;
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_EnableUNICODE(1);
-  tracer << "Engine::initSDL() [DONE]" << endl;
+  IMG_Init(IMG_INIT_PNG);
+  tracer << "Engine::initSdl() [DONE]" << endl;
 }
 
 void Engine::initConfigAndRenderer() {
@@ -100,6 +102,11 @@ void Engine::initConfigAndRenderer() {
   config = new Config(this);
   renderer = new Renderer(this);
   tracer << "Engine::initConfigAndRenderer() [DONE]" << endl;
+}
+
+void Engine::cleanupSdl() {
+  IMG_Quit();
+  SDL_Quit();
 }
 
 void Engine::cleanupConfigAndRenderer() {

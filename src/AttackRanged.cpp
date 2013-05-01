@@ -161,15 +161,10 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
                 // Knock-back?
                 if(weapon->getDef().rangedCausesKnockBack) {
                   const AttackData& currentAttData = projectiles.at(p)->data;
-                  const coord defenderPosBefore = currentAttData.currentDefender->pos;
                   if(currentAttData.attackResult >= successSmall) {
                     const bool IS_SPIKE_GUN = weapon->getDef().id == item_spikeGun;
                     eng->knockBack->tryKnockBack(currentAttData.currentDefender, currentAttData.attacker->pos, IS_SPIKE_GUN);
                   }
-//                  // If target was knocked back, update target attack cell to defenders new pos
-//                  if(target == defenderPosBefore) {
-//                    target = projectiles.at(p)->data.currentDefender->pos;
-//                  }
                 }
               }
             }

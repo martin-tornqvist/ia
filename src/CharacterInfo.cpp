@@ -171,7 +171,7 @@ void CharacterInfo::makeLines() {
 void CharacterInfo::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, coord(0, 1), MAP_X_CELLS, 2);
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
   eng->renderer->drawText(" Displaying character info ", renderArea_screen, 3, 1, clrWhite);
@@ -209,7 +209,7 @@ void CharacterInfo::run() {
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {
@@ -220,7 +220,7 @@ void CharacterInfo::run() {
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, coord(0, 2), MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {

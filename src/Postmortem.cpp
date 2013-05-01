@@ -124,20 +124,22 @@ void Postmortem::makeInfoLines() {
       }
     }
   }
-  eng->renderer->drawASCII(); //To set the glyph array
+  eng->renderer->drawAscii(); //To set the glyph array
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     string currentRow;
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(coord(x, y) == eng->player->pos) {
         currentRow.push_back('@');
       } else {
-        if(eng->renderer->renderArray[x][y].glyph == ' ' && (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
+        if(eng->renderer->renderArrayAscii[x][y].glyph == ' ' &&
+            (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
           currentRow.push_back('*');
         } else {
-          if(eng->renderer->renderArray[x][y].glyph == eng->featureData->getFeatureDef(feature_stoneWall)->glyph) {
+          if(eng->renderer->renderArrayAscii[x][y].glyph ==
+              eng->featureData->getFeatureDef(feature_stoneWall)->glyph) {
             currentRow.push_back('#');
           } else {
-            currentRow.push_back(eng->renderer->renderArray[x][y].glyph);
+            currentRow.push_back(eng->renderer->renderArrayAscii[x][y].glyph);
           }
         }
       }
@@ -178,12 +180,10 @@ void Postmortem::runInfo() {
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderInfo(topElement);
-    }
-    else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(postmortemLines.size()) - static_cast<int>(MAP_Y_CELLS)));
       renderInfo(topElement);
-    }
-    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }
@@ -218,37 +218,37 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
   while(done == false) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      renderMenu(browser);
-    }
-    break;
-    case menuAction_canceled: {
-    }
-    break;
-    case menuAction_selected: {
-      if(browser.isPosAtKey('a')) {
-        runInfo();
+      case menuAction_browsed: {
         renderMenu(browser);
       }
-      if(browser.isPosAtKey('b')) {
-        eng->highScore->runHighScoreScreen();
-        renderMenu(browser);
+      break;
+      case menuAction_canceled: {
       }
-      if(browser.isPosAtKey('c')) {
-        eng->log->displayHistory();
-        renderMenu(browser);
+      break;
+      case menuAction_selected: {
+        if(browser.isPosAtKey('a')) {
+          runInfo();
+          renderMenu(browser);
+        }
+        if(browser.isPosAtKey('b')) {
+          eng->highScore->runHighScoreScreen();
+          renderMenu(browser);
+        }
+        if(browser.isPosAtKey('c')) {
+          eng->log->displayHistory();
+          renderMenu(browser);
+        }
+        if(browser.isPosAtKey('d')) {
+          done = true;
+        }
+        if(browser.isPosAtKey('e')) {
+          *quitGame = true;
+          done = true;
+        }
       }
-      if(browser.isPosAtKey('d')) {
-        done = true;
-      }
-      if(browser.isPosAtKey('e')) {
-        *quitGame = true;
-        done = true;
-      }
-    }
-    break;
-    case menuAction_selectedWithShift:
-    {} break;
+      break;
+      case menuAction_selectedWithShift:
+      {} break;
     }
   }
 }

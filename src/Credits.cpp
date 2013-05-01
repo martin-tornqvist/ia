@@ -37,7 +37,7 @@ void Credits::readFile() {
 void Credits::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, coord(0, 1), MAP_X_CELLS, 2);
+  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
   eng->renderer->drawText(" Displaying credits.txt ", renderArea_screen, 3, 1, clrWhite);

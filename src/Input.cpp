@@ -38,7 +38,7 @@ void Input::clearLogMessages() {
 }
 
 Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu_(quitToMainMenu)  {
-
+  SDL_EnableKeyRepeat(110, 50);
 }
 
 void Input::handleMapModeInputUntilFound() {
@@ -576,84 +576,75 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
 }
 
-void Input::clearEvents() const {
-  sf::Event event;
-  while(eng->renderer->renderWindow_->pollEvent(event)) {
+void Input::clearEvents() {
+//  sf::Event event;
+  while(SDL_PollEvent(&event_)) {
   }
 }
 
-KeyboardReadReturnData Input::readKeysUntilFound() const {
+KeyboardReadReturnData Input::readKeysUntilFound() {
   while(true) {
 
     eng->sleep(1);
 
-    sf::Event event;
-    while(eng->renderer->renderWindow_->pollEvent(event)) {
-      if(event.type == sf::Event::TextEntered) {
+    while(SDL_PollEvent(&event_)) {
+      if(event_.type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        if(event.text.unicode >= 33 && event.text.unicode <= 126) {
+        if(event_.key.keysym.unicode >= 33 && event_.key.keysym.unicode < 126) {
+          return KeyboardReadReturnData(static_cast<char>(event_.key.keysym.unicode));
           clearEvents();
-          return KeyboardReadReturnData(static_cast<char>(event.text.unicode));
-        }
-        continue;
-      } else if(event.type == sf::Event::KeyPressed) {
-        // Other key pressed? (escape, return, space, etc)
-        const sf::Keyboard::Key sfmlKey = event.key.code;
-
-        // Don't register shift, control or alt as actual key events
-        if(
-          sfmlKey == sf::Keyboard::LShift ||
-          sfmlKey == sf::Keyboard::RShift ||
-          sfmlKey == sf::Keyboard::LControl ||
-          sfmlKey == sf::Keyboard::RControl ||
-          sfmlKey == sf::Keyboard::LAlt ||
-          sfmlKey == sf::Keyboard::RAlt) {
-          continue;
-        }
-
-        const bool IS_SHIFT_HELD =
-          sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-          sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
-        const bool IS_CTRL_HELD =
-          sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-          sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
-
-        KeyboardReadReturnData ret(-1, sfmlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
-
-        if(sfmlKey >= SDLK_F1 && sfmlKey <= SDLK_F15) {
-          // F-keys
-          return ret;
         } else {
-          switch(sfmlKey) {
-            default:                        continue;   break;
-            case sf::Keyboard::LSystem:     continue;   break;
-            case sf::Keyboard::RSystem:     continue;   break;
-            case sf::Keyboard::Menu:        continue;   break;
-            case sf::Keyboard::Pause:       continue;   break;
-            case SDLK_SPACE:       return ret; break;
-            case sf::Keyboard::Return:      return ret; break;
-            case sf::Keyboard::Back:        return ret; break;
-            case sf::Keyboard::Tab:         return ret; break;
-            case SDLK_PAGEUP:      return ret; break;
-            case sf::Keyboard::PageDown:    return ret; break;
-            case sf::Keyboard::End:         return ret; break;
-            case sf::Keyboard::Home:        return ret; break;
-            case sf::Keyboard::Insert:      return ret; break;
-            case sf::Keyboard::Delete:      return ret; break;
-            case SDLK_LEFT:        return ret; break;
-            case SDLK_RIGHT:       return ret; break;
-            case SDLK_UP:          return ret; break;
-            case SDLK_DOWN:        return ret; break;
-            case SDLK_ESCAPE:      return ret; break;
+          // Other key pressed? (escape, return, space, etc)
+          const SDLKey sdlKey = event_.key.keysym.sym;
+
+          // Don't register shift, control or alt as actual key events
+          if(
+            sdlKey == SDLK_LSHIFT ||
+            sdlKey == SDLK_RSHIFT ||
+            sdlKey == SDLK_LCTRL  ||
+            sdlKey == SDLK_RCTRL  ||
+            sdlKey == SDLK_LALT   ||
+            sdlKey == SDLK_RALT) {
+            continue;
+          }
+
+          SDLMod mod = event_.key.keysym.mod;
+
+          const bool IS_SHIFT_HELD = mod & SDLK_LSHIFT || mod & SDLK_RSHIFT;
+          const bool IS_CTRL_HELD  = mod & SDLK_LSHIFT || mod & SDLK_RSHIFT;
+
+          KeyboardReadReturnData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
+
+          if(sdlKey >= SDLK_F1 && sdlKey <= SDLK_F15) {
+            // F-keys
+            return ret;
+          } else {
+            switch(sdlKey) {
+              default:               continue;   break;
+              case SDLK_MENU:         continue;   break;
+              case SDLK_PAUSE:        continue;   break;
+              case SDLK_SPACE:        return ret; break;
+              case SDLK_RETURN:       return ret; break;
+              case SDLK_KP_ENTER:     {ret.sdlKey_ = SDLK_RETURN; return ret;} break;
+              case SDLK_BACKSPACE:    return ret; break;
+              case SDLK_TAB:          return ret; break;
+              case SDLK_PAGEUP:       return ret; break;
+              case SDLK_PAGEDOWN:     return ret; break;
+              case SDLK_END:          return ret; break;
+              case SDLK_HOME:         return ret; break;
+              case SDLK_INSERT:       return ret; break;
+              case SDLK_DELETE:       return ret; break;
+              case SDLK_LEFT:         return ret; break;
+              case SDLK_RIGHT:        return ret; break;
+              case SDLK_UP:           return ret; break;
+              case SDLK_DOWN:         return ret; break;
+              case SDLK_ESCAPE:       return ret; break;
+            }
           }
         }
-      } else if(event.type == sf::Event::GainedFocus) {
-        eng->renderer->clearScreen();
-        eng->renderer->drawScreenSizedTexture(eng->renderer->getScreenTextureCopy());
-        eng->renderer->updateScreen();
       }
     }
   }

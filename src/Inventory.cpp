@@ -1,5 +1,7 @@
 #include "Inventory.h"
 
+#include <algorithm>
+
 #include "ItemWeapon.h"
 #include "Engine.h"
 #include "ItemDrop.h"
@@ -577,8 +579,7 @@ Item* Inventory::getIntrinsicInElement(int element) const {
 void Inventory::putItemInIntrinsics(Item* item) {
   if(item->getDef().isIntrinsic) {
     intrinsics_.push_back(item);
-  }
-  else {
+  } else {
     tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
   }
 }
@@ -643,7 +644,8 @@ public:
     const string& itemName1 = eng->itemData->getItemRef(item1, itemRef_plain, true);
     const string& itemName2 = eng->itemData->getItemRef(item2, itemRef_plain, true);
     // tracer << "itemName1: " << itemName1 << "    itemName2: " << itemName2 << endl;
-    return std::lexicographical_compare(itemName1.begin(), itemName1.end(), itemName2.begin(), itemName2.end());
+    return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
+                                        itemName2.begin(), itemName2.end());
   }
   Engine* const eng;
 };
@@ -656,7 +658,7 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
     bool isAddedToBuffer = false;
     for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
       const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
-      if(general_.at(iGeneral)->getInterfaceClr() == clrCurrentGroup) {
+      if(engine->basicUtils->isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
         sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
         isAddedToBuffer = true;
         break;

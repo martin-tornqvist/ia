@@ -70,7 +70,7 @@ void Attack::shotgun(const coord& origin, const coord& target, Weapon* const wea
             if(data.attackResult >= successSmall) {
               if(eng->map->playerVision[curPos.x][curPos.y]) {
                 eng->renderer->drawMapAndInterface(false);
-                eng->renderer->coverCellInMap(curPos);
+                eng->renderer->coverCellInMap(curPos.x, curPos.y);
                 if(eng->config->USE_TILE_SET) {
                   eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
                 } else {

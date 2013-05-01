@@ -20,7 +20,6 @@ Config::Config(Engine* engine) :
   fontImageName(""),
   LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
   LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
-  SCALE(1.0),
   CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
   CHARACTER_LINES_Y_CELLS(3),
   SCREEN_BPP(32),
@@ -53,24 +52,19 @@ Config::Config(Engine* engine) :
 void Config::setCellDimDependentVariables() {
   MAINSCREEN_WIDTH          = MAP_X_CELLS * CELL_W;
   MAINSCREEN_HEIGHT         = MAP_Y_CELLS * CELL_H;
-
   LOG_X_OFFSET              = LOG_X_CELLS_OFFSET * CELL_W;
   LOG_Y_OFFSET              = LOG_Y_CELLS_OFFSET * CELL_H;
-
   LOG_WIDTH                 = LOG_X_CELLS * CELL_W;
   LOG_HEIGHT                = CELL_H;
-
   MAINSCREEN_Y_OFFSET       = MAINSCREEN_Y_CELLS_OFFSET * CELL_H;
   CHARACTER_LINES_Y_OFFSET  = LOG_Y_OFFSET + LOG_HEIGHT + MAINSCREEN_HEIGHT;
-
   CHARACTER_LINES_HEIGHT    = CHARACTER_LINES_Y_CELLS * CELL_H;
-
   SCREEN_WIDTH              = MAP_X_CELLS * CELL_W;
   SCREEN_HEIGHT             = CHARACTER_LINES_Y_OFFSET + CHARACTER_LINES_HEIGHT;
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(9, 0);
+  MenuBrowser browser(10, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -83,15 +77,14 @@ void Config::runOptionsMenu() {
     switch(action) {
       case menuAction_browsed: {
         draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-      }
-      break;
+      } break;
 
       case menuAction_canceled: {
-        // Since ASCII mode wall symbol may have changed, we need to redefine the feature data list
+        // Since ASCII mode wall symbol may have changed,
+        //we need to redefine the feature data list
         eng->featureData->makeList();
         return;
-      }
-      break;
+      } break;
 
       case menuAction_selected: {
         draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
@@ -99,8 +92,7 @@ void Config::runOptionsMenu() {
         collectLinesFromVariables(lines);
         writeLinesToFile(lines);
         draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
-      }
-      break;
+      } break;
 
       default:
       {} break;
@@ -135,16 +127,18 @@ void Config::parseFontNameAndSetCellDims() {
     ch = fontName.at(0);
   }
 
-  tracer << "Config: Parsed font image name, found dims: " << widthStr << "x" << heightStr << endl;
+  tracer << "Config: Parsed font image name, found dims: ";
+  tracer << widthStr << "x" << heightStr << endl;
 
-  CELL_W = stringToInt(widthStr);
-  CELL_H = stringToInt(heightStr);
+  CELL_W = stringToInt(widthStr)  * FONT_SCALE;
+  CELL_H = stringToInt(heightStr) * FONT_SCALE;
   tracer << "Config:: parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
 void Config::setDefaultVariables() {
   USE_TILE_SET = true;
   fontImageName = "images/16x24_clean_v1.png";
+  FONT_SCALE = 1;
   parseFontNameAndSetCellDims();
 //  FULLSCREEN = false;
   WALL_SYMBOL_FULL_SQUARE = false;
@@ -158,6 +152,7 @@ void Config::setDefaultVariables() {
 void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.resize(0);
   lines.push_back(USE_TILE_SET == false ? "0" : "1");
+  lines.push_back(intToString(FONT_SCALE));
   lines.push_back(fontImageName);
 //  lines.push_back(FULLSCREEN == false ? "0" : "1");
   lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
@@ -168,7 +163,8 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(intToString(DELAY_EXPLOSION));
 }
 
-void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
+void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
+                  const int OPTIONS_Y_POS) {
 
   const SDL_Color clrSelected = clrWhite;
   const SDL_Color clrGeneral = clrRedLight;
@@ -181,16 +177,34 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
   const int X1 = OPTION_VALUES_X_POS;
   const int Y0 = OPTIONS_Y_POS;
 
+  string str = "";
+
   eng->renderer->drawText("-OPTIONS-", renderArea_screen, X0, Y0 - 1, clrWhite);
 
-  eng->renderer->drawText("TILE MODE (16x24 FONT REQUIRED)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(USE_TILE_SET ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("USE TILE SET", renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = USE_TILE_SET ? "YES" : "NO";
+  eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(fontImageName, renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(fontImageName, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  optionNr++;
+
+  eng->renderer->drawText("SCALE FONT 2X", renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = FONT_SCALE == 2 ? "YES" : "NO";
+  eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
 //  eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
@@ -198,50 +212,89 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
 //  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
 //  optionNr++;
 
-  eng->renderer->drawText("ASCII MODE WALL SYMBOL", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "ASCII MODE WALL SYMBOL";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN";
+  eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("SKIP INTRO LEVEL", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(SKIP_INTRO_LEVEL ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText("SKIP INTRO LEVEL", renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = SKIP_INTRO_LEVEL ? "YES" : "NO";
+  eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("RANGED WEAPON MELEE ATTACK WARNING", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(RANGED_WPN_MELEE_PROMPT ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "RANGED WEAPON MELEE ATTACK WARNING";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = RANGED_WPN_MELEE_PROMPT ? "YES" : "NO";
+  eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("PROJECTILE DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "PROJECTILE DELAY (ms)";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen,
+                          X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("SHOTGUN DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "SHOTGUN DELAY (ms)";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen,
+                          X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("EXPLOSION DELAY (ms)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-  eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "EXPLOSION DELAY (ms)";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen,
+                          X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-  eng->renderer->drawText("RESET TO DEFAULTS", renderArea_screen, X0, Y0 + optionNr + 1, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  str = "RESET TO DEFAULTS";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr + 1,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
 
-  eng->renderer->drawText("space/esc to confirm changes", renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
+  str = "space/esc to confirm changes";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);
 
   eng->renderer->updateScreen();
 }
 
-void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS, const int OPTIONS_Y_POS) {
+void Config::playerSetsOption(const MenuBrowser* const browser,
+                              const int OPTION_VALUES_X_POS,
+                              const int OPTIONS_Y_POS) {
   switch(browser->getPos().y) {
     case 0: {
       USE_TILE_SET = !USE_TILE_SET;
       if(USE_TILE_SET) {
-        if(CELL_W != 16 || CELL_H != 24) {
-          fontImageName = "images/16x24_clean_v1.png";
+        if(CELL_W == 8 && CELL_H == 12) {
+          FONT_SCALE = 2;
+        } else {
+          FONT_SCALE = 1;
+          if(CELL_W != 16 || CELL_H != 24) {
+            fontImageName = "images/16x24_clean_v1.png";
+          }
         }
       }
       parseFontNameAndSetCellDims();
@@ -251,19 +304,32 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
     break;
 
     case 1: {
+      if(USE_TILE_SET) {
+        FONT_SCALE = 1;
+      }
+
       for(unsigned int i = 0; i < fontImageNames.size(); i++) {
         if(fontImageName == fontImageNames.at(i)) {
-          fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+          fontImageName = i == fontImageNames.size() - 1 ?
+                          fontImageNames.front() :
+                          fontImageNames.at(i + 1);
           break;
         }
       }
       parseFontNameAndSetCellDims();
 
       if(USE_TILE_SET) {
-        while(CELL_W != 16 && CELL_H != 24) {
+        if(CELL_W == 8 && CELL_H == 12) {
+          FONT_SCALE = 2;
+          parseFontNameAndSetCellDims();
+        }
+
+        while(CELL_W != 16 || CELL_H != 24) {
           for(unsigned int i = 0; i < fontImageNames.size(); i++) {
             if(fontImageName == fontImageNames.at(i)) {
-              fontImageName = i == fontImageNames.size() - 1 ? fontImageNames.front() : fontImageNames.at(i + 1);
+              fontImageName = i == fontImageNames.size() - 1 ?
+                              fontImageNames.front() :
+                              fontImageNames.at(i + 1);
               break;
             }
           }
@@ -276,63 +342,71 @@ void Config::playerSetsOption(const MenuBrowser* const browser, const int OPTION
     }
     break;
 
-//  case 2: {
+    case 2: {
+      if(FONT_SCALE == 1) {
+        if(USE_TILE_SET == false /*|| (CELL_W == 8 && CELL_H == 12)*/) {
+          FONT_SCALE = 2;
+        }
+      } else {
+        if(USE_TILE_SET == false) {
+          FONT_SCALE = 1;
+        }
+      }
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->initAndClearPrev();
+    } break;
+
+//  case 3: {
 //    FULLSCREEN = !FULLSCREEN;
 //    eng->renderer->setupWindowAndImagesClearPrev();
 //  } break;
 
-    case 2: {
-      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
-    }
-    break;
-
     case 3: {
-      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
-    }
-    break;
+      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
+    } break;
 
     case 4: {
-      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
-    }
-    break;
+      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
+    } break;
 
     case 5: {
+      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
+    } break;
+
+    case 6: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
       if(NR != -1) {
         DELAY_PROJECTILE_DRAW = NR;
       }
-    }
-    break;
+    } break;
 
-    case 6: {
+    case 7: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_SHOTGUN, true);
       if(NR != -1) {
         DELAY_SHOTGUN = NR;
       }
-    }
-    break;
+    } break;
 
-    case 7: {
+    case 8: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_EXPLOSION, true);
       if(NR != -1) {
         DELAY_EXPLOSION = NR;
       }
-    }
-    break;
+    } break;
 
-    case 8: {
+    case 9: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
       eng->renderer->initAndClearPrev();
-    }
-    break;
+    } break;
   }
 }
 
@@ -349,6 +423,10 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
       parseFontNameAndSetCellDims();
     }
   }
+  lines.erase(lines.begin());
+
+  curLine = lines.front();
+  FONT_SCALE = stringToInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();

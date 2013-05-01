@@ -45,15 +45,14 @@ void PlayerPowersHandler::run() {
     MenuBrowser browser(NR_MEMORIZED_SPELLS, 0);
 
     eng->renderer->drawMapAndInterface();
-    sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
-    draw(browser, memorizedScrollsToShow, bgTexture);
+    draw(browser, memorizedScrollsToShow);
 
     while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {
-          draw(browser, memorizedScrollsToShow, bgTexture);
+          draw(browser, memorizedScrollsToShow);
         }
         break;
         case menuAction_canceled: {
@@ -79,9 +78,9 @@ void PlayerPowersHandler::run() {
   }
 }
 
-void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> memorizedScrollsToShow, const sf::Texture& bgTexture) {
+void PlayerPowersHandler::draw(MenuBrowser& browser,
+                               const vector<unsigned int> memorizedScrollsToShow) {
   eng->renderer->clearScreen();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
 
   const unsigned int NR_OF_MEMORIZED = memorizedScrollsToShow.size();
 

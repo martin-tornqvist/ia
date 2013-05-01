@@ -22,8 +22,6 @@
 #include "DungeonMaster.h"
 #include "DebugModeStatPrinter.h"
 
-
-//FILE * ctt = fopen("CON", "w" );
 #undef main
 int main(int argc, char* argv[]) {
   tracer << "main()..." << endl;
@@ -31,6 +29,7 @@ int main(int argc, char* argv[]) {
   bool quitToMainMenu = false;
 
   Engine* const engine = new Engine(&quitToMainMenu);
+  engine->initSdl();
   engine->initConfigAndRenderer();
   engine->initAudio();
 
@@ -67,7 +66,7 @@ int main(int argc, char* argv[]) {
         if(engine->config->SKIP_INTRO_LEVEL == false) {
           //If intro level is used, build forest.
           engine->renderer->coverRenderArea(renderArea_screen);
-          engine->renderer->updateWindow();
+          engine->renderer->updateScreen();
           engine->mapBuild->buildForest();
         } else {
           //Else build first dungeon level
@@ -132,6 +131,7 @@ int main(int argc, char* argv[]) {
   }
   engine->cleanupConfigAndRenderer();
   engine->cleanupAudio();
+  engine->cleanupSdl();
   delete engine;
   tracer << "main() [DONE]" << endl;
   return 0;

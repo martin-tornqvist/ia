@@ -20,11 +20,9 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(d.isShiftHeld_) {
       move(1, -1, markerTask);
-    }
-    else if(d.isCtrlHeld_) {
+    } else if(d.isCtrlHeld_) {
       move(1, 1, markerTask);
-    }
-    else {
+    } else {
       move(1, 0, markerTask);
     }
   }
@@ -34,31 +32,29 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
     if(d.isShiftHeld_) {
       move(-1, -1, markerTask);
-    }
-    else if(d.isCtrlHeld_) {
+    } else if(d.isCtrlHeld_) {
       move(-1, 1, markerTask);
-    }
-    else {
+    } else {
       move(-1, 0, markerTask);
     }
   }
   if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     move(0, 1, markerTask);
   }
-  if(d.sdlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     move(1, -1, markerTask);
   }
-  if(d.sdlKey_ == sf::Keyboard::Home || d.key_ == '7') {
+  if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
     move(-1, -1, markerTask);
   }
-  if(d.sdlKey_ == sf::Keyboard::End || d.key_ == '1') {
+  if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
     move(-1, 1, markerTask);
   }
-  if(d.sdlKey_ == sf::Keyboard::PageDown || d.key_ == '3') {
+  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
     move(1, 1, markerTask);
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
-  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'f') {
+  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
     if(markerTask == markerTask_aim) {
       if(pos_ != eng->player->pos) {
 
@@ -81,14 +77,14 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- LOOK
-  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'l') {
+  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'l') {
     if(markerTask == markerTask_look) {
       eng->look->printExtraActorDescription(pos_);
       move(0, 0, markerTask_look);
     }
   }
   // ------------------------------------------------------- THROW
-  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 't') {
+  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
     if(markerTask == markerTask_throw) {
       if(pos_ == eng->player->pos) {
         eng->log->addMessage("I should throw this somewhere else.");
@@ -105,7 +101,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- THROW LIT EXPLOSIVE
-  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'e') {
+  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
     if(markerTask == markerTask_throwLitExplosive) {
       eng->renderer->drawMapAndInterface();
       eng->thrower->playerThrowLitExplosive(pos_);
@@ -113,7 +109,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
     }
   }
   // ------------------------------------------------------- AZATHOTS BLAST SPELL
-//  if(d.sdlKey_ == sf::Keyboard::Return || d.key_ == 'x') {
+//  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'x') {
 //    if(markerTask == markerTask_spellAzathothsBlast) {
 //      if(eng->map->playerVision[pos_.x][pos_.y]) {
 //        eng->renderer->drawMapAndInterface();

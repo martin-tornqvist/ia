@@ -23,7 +23,7 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
       browser.navigate(direction_down);
       return menuAction_browsed;
     }
-    else if(d.sdlKey_ == sf::Keyboard::Return) {
+    else if(d.sdlKey_ == SDLK_RETURN) {
       d.key_ = browser.enter();
       if(d.isShiftHeld_) {
         d.key_ = d.key_ - 'a' + 'A';

@@ -213,7 +213,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     case itemDef_device: {
       resetDef(d, itemDef_general);
       d->isDevice = true;
-      d->chanceToIncludeInSpawnList = 6;
+      d->chanceToIncludeInSpawnList = 5;
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';

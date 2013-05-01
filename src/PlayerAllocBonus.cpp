@@ -40,29 +40,29 @@ void PlayerAllocBonus::run() {
     while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
-      case menuAction_browsed: {
-        draw(bonusesColumnOne, bonusesColumnTwo, browser);
-      }
-      break;
+        case menuAction_browsed: {
+            draw(bonusesColumnOne, bonusesColumnTwo, browser);
+          }
+          break;
 
-      case menuAction_canceled: {
-      } break;
+        case menuAction_canceled: {
+          } break;
 
-      case menuAction_selected: {
-        const coord browserPos = browser.getPos();
-        if(browserPos.x == 0) {
-          eng->playerBonusHandler->pickBonus(bonusesColumnOne.at(browser.getPos().y));
-        } else {
-          eng->playerBonusHandler->pickBonus(bonusesColumnTwo.at(browser.getPos().y));
-        }
-        eng->log->drawLog();
-        eng->renderer->drawMapAndInterface();
-        return;
-      }
-      break;
+        case menuAction_selected: {
+            const coord browserPos = browser.getPos();
+            if(browserPos.x == 0) {
+              eng->playerBonusHandler->pickBonus(bonusesColumnOne.at(browser.getPos().y));
+            } else {
+              eng->playerBonusHandler->pickBonus(bonusesColumnTwo.at(browser.getPos().y));
+            }
+            eng->log->drawLog();
+            eng->renderer->drawMapAndInterface();
+            return;
+          }
+          break;
 
-      case menuAction_selectedWithShift:
-      {} break;
+        case menuAction_selectedWithShift:
+          {} break;
 
       }
     }
@@ -81,7 +81,8 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER; //Y0_CREATE_CHARACTER MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
 
-  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen, MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, true);
+  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen,
+                                  MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, clrBlack, true);
 
   const coord browserPos = browser.getPos();
 

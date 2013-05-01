@@ -41,6 +41,10 @@ public:
     eng = engine;
   }
 
+  inline bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
+    return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
+  }
+
   void lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect);
 
   void resetArray(int array[MAP_X_CELLS][MAP_Y_CELLS]) {
@@ -67,22 +71,22 @@ public:
     }
   }
 
-  int chebyshevDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int chebyshevDistance(const int X0, const int Y0, const int X1, const int Y1) const {
     if(X0 == X1 && Y0 == Y1) {
       return 0;
     }
     return max(abs(X1 - X0), abs(Y1 - Y0));
   }
 
-  int chebyshevDistance(const coord& c1, const coord& c2) const {
+  inline int chebyshevDistance(const coord& c1, const coord& c2) const {
     return chebyshevDistance(c1.x, c1.y, c2.x, c2.y);
   }
 
-  int manhattanDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int manhattanDistance(const int X0, const int Y0, const int X1, const int Y1) const {
     return abs(X1 - X0) + abs(Y1 - Y0);
   }
 
-  double pointDistance(const int x1, const int y1, const int x2, const int y2) const {
+  inline double pointDistance(const int x1, const int y1, const int x2, const int y2) const {
     if(x1 == x2 && y1 == y2)
       return 0.0;
 

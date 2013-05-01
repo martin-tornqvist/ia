@@ -46,7 +46,7 @@ void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) 
 void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-  if(d.sdlKey_ == sf::Keyboard::Return) {
+  if(d.sdlKey_ == SDLK_RETURN) {
     done = true;
     currentString = currentString == "" ? "Rogue" : currentString;
     return;
@@ -69,7 +69,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done, const int REND
   }
 
   if(currentString.size() > 0) {
-    if(d.sdlKey_ == sf::Keyboard::Back) {
+    if(d.sdlKey_ == SDLK_BACKSPACE) {
       currentString.erase(currentString.end() - 1);
       draw(currentString, RENDER_Y_POS);
     }
