@@ -381,20 +381,20 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
 
 void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
   const vector<coord>& positions, const SDL_Color& clr,
-  const int EXPLOSION_DELAY_FACTOR, Engine* const engine) {
+  const int EXPLOSION_DELAY_FACTOR) {
 
-  const int DELAY = engine->config->DELAY_EXPLOSION * EXPLOSION_DELAY_FACTOR;
+  const int DELAY = eng->config->DELAY_EXPLOSION * EXPLOSION_DELAY_FACTOR;
 
   vector<coord> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); i++) {
     const coord& pos = positions.at(i);
-    if(engine->map->playerVision[pos.x][pos.y]) {
+    if(eng->map->playerVision[pos.x][pos.y]) {
       positionsWithVision.push_back(pos);
     }
   }
 
-  if(engine->config->USE_TILE_SET) {
-    engine->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
+  if(eng->config->USE_TILE_SET) {
+    eng->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
   } else {
     //TODO
   }

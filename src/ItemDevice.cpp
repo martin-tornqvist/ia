@@ -121,7 +121,8 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
     Actor* const actor = targetCandidates.at(engine->dice.getInRange(0, NR_TARGET_CANDIDATES - 1));
     const coord& pos = actor->pos;
     engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(vector<coord>(1, pos), clrYellow, 1, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      vector<coord>(1, pos), clrYellow, 1);
     actor->hit(DMG, damageType_electric);
   }
 }

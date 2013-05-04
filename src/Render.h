@@ -126,7 +126,7 @@ public:
                                      const SDL_Color& color, const int DURATION);
 
   void drawBlastAnimationAtPositionsWithPlayerVision(const vector<coord>& positions,
-      const SDL_Color& clr, const int EXPLOSION_DELAY_FACTOR, Engine* const engine);
+      const SDL_Color& clr, const int EXPLOSION_DELAY_FACTOR);
 
   void drawMainMenuLogo(const int Y_POS);
 

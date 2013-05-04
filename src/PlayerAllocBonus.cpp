@@ -81,7 +81,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER; //Y0_CREATE_CHARACTER MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
 
-  eng->renderer->drawTextCentered("Choose new ability", renderArea_screen,
+  eng->renderer->drawTextCentered("Which ability do you gain?", renderArea_screen,
                                   MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, clrBlack, true);
 
   const coord browserPos = browser.getPos();

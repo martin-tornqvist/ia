@@ -28,7 +28,7 @@ $   s    Wait and search for 10 turns
 $   S    Save and quit (must stand on stairs)
 $   t    Throw a missile from the missile slot
 $   u    Unload or pick up ammunition from the ground
-$   v    Handle equipment
+$   w    Handle equipment (wear and wield things)
 $   Q    Quit to main menu (will erase the game)
 $   x    Cast memorized spell
 $   z    Swap to alternative weapon

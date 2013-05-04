@@ -135,8 +135,8 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrMagenta,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      actorPositions, clrMagenta, BLAST_ANIMATION_DELAY_FACTOR);
 
     StatusEffect* const effect = getStatusEffect(engine);
 
@@ -256,7 +256,7 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
       device->identify(true);
     } else {
       tracer << "[WARNING] Scroll of identify was unable to identify item with name \"" +
-      itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
+             itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
     }
 
     const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
@@ -315,8 +315,8 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrRedLight,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      actorPositions, clrRedLight, BLAST_ANIMATION_DELAY_FACTOR);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       const string monsterName = actors.at(i)->getNameThe();
@@ -360,12 +360,12 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
       }
 
       engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-        actorPositions, clrYellow,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+        actorPositions, clrYellow, BLAST_ANIMATION_DELAY_FACTOR);
 
       for(unsigned int i = 0; i < actors.size(); i++) {
         const string monsterName = actors.at(i)->getNameThe();
-        engine->log->addMessage(monsterName + " is crushed by an unseen force!", clrMessageGood);
+        engine->log->addMessage(monsterName + " is crushed by an unseen force!",
+                                clrMessageGood);
         actors.at(i)->hit(25, damageType_physical);
       }
 

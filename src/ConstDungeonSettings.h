@@ -8,7 +8,7 @@ const int MAP_Y_CELLS = 26;
 const int MAP_X_CELLS_HALF = MAP_X_CELLS / 2;
 const int MAP_Y_CELLS_HALF = MAP_Y_CELLS / 2;
 
-const int PLAYER_CLVL_MAX = 21;
+const int PLAYER_CLVL_MAX = 30;
 
 const int CAST_FROM_MEMORY_CHANCE_LIM = 95;
 const int CAST_FROM_MEMORY_MTH_BON_DIV = 3;

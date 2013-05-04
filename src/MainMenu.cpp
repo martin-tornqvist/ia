@@ -38,26 +38,33 @@ void MainMenu::draw(const MenuBrowser& browser) {
   tracer << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
   const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
-  const int BG_BRIGHTNESS = eng->dice.getInRange(9, 13);
+  const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25); //eng->dice.getInRange(9, 13);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
       if(eng->dice.coinToss()) {
         cha = 'a' + eng->dice.getInRange(0, 25);
       }
-      SDL_Color bgClr = clrGray;
-      bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
+      SDL_Color bgClr = clrBlack;
+      //bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
+      bgClr.r = BG_BRIGHTNESS / 2;
+      bgClr.g = BG_BRIGHTNESS / 2;
+      bgClr.b = BG_BRIGHTNESS;
       eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
     }
   }
 
   tracer << "MainMenu: Drawing HPL quote" << endl;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
-  SDL_Color quoteClr = clrGray;
-  quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 17;
+  SDL_Color quoteClr = clrBlack;
+  //quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
+  quoteClr.r = QUOTE_BRIGHTNESS / 2;
+  quoteClr.g = QUOTE_BRIGHTNESS / 2;
+  quoteClr.b = QUOTE_BRIGHTNESS;
+  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 45);
+  const int Y0_LOGO = eng->config->USE_TILE_SET ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 2, 13 + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 7, Y0_LOGO + i, quoteClr);
   }
 
   SDL_Color clrGeneral = clrRed;
@@ -65,7 +72,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   if(eng->config->USE_TILE_SET) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
-    eng->renderer->drawMainMenuLogo(1);
+    eng->renderer->drawMainMenuLogo(4);
     yPos += 10;
   } else {
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
@@ -85,41 +92,50 @@ void MainMenu::draw(const MenuBrowser& browser) {
     yPos += 3;
   }
 
-  xPos = MAP_X_CELLS / 2;
+  xPos = 48; //MAP_X_CELLS / 2;
 
   if(IS_DEBUG_MODE) {
     eng->renderer->drawText("## DEBUG MODE ##", renderArea_screen, 1, 1, clrYellow);
   }
 
-  yPos += 3;
+  yPos += 0;
 
-  eng->renderer->drawTextCentered("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
+  eng->renderer->drawText("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
+  eng->renderer->drawText("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
   yPos += 1;
+  xPos += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawTextCentered("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrBright : clrGeneral);
+    eng->renderer->drawText("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrBright : clrGeneral);
     yPos += 1;
   }
 
-  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
+  xPos = MAP_X_CELLS / 2;
+
+  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGray);
 
 //  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
 

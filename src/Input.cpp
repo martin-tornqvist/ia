@@ -267,7 +267,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------SLOTS SCREEN
-  else if(d.key_ == 'v') {
+  else if(d.key_ == 'w') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runSlotsScreen();

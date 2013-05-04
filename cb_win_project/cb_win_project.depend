@@ -109,7 +109,7 @@
 1355677712 c:\dev\ia\src\audio.h
 	<string>
 
-1366741504 c:\dev\ia\src\constdungeonsettings.h
+1367608115 c:\dev\ia\src\constdungeonsettings.h
 
 1367438877 c:\dev\ia\src\config.h
 	<string>
@@ -211,7 +211,7 @@
 	"Config.h"
 	"Render.h"
 
-1367418784 c:\dev\ia\src\render.h
+1367608372 c:\dev\ia\src\render.h
 	<vector>
 	<iostream>
 	"SDL/SDL_video.h"
@@ -525,7 +525,7 @@
 	"FeatureTrap.h"
 	"PlayerBonuses.h"
 
-1365780568 source:c:\dev\ia\src\attackmelee.cpp
+1367617967 source:c:\dev\ia\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -730,7 +730,7 @@
 	<vector>
 	"ItemData.h"
 
-1367400268 source:c:\dev\ia\src\dungeonmaster.cpp
+1367615875 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -1045,7 +1045,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1365780661 source:c:\dev\ia\src\gametime.cpp
+1367616928 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1073,7 +1073,7 @@
 	"Popup.h"
 	"Input.h"
 
-1367012144 source:c:\dev\ia\src\input.cpp
+1367617851 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SDL/SDL_Keyboard.h"
 	"Engine.h"
@@ -1230,7 +1230,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1366741504 source:c:\dev\ia\src\itemscroll.cpp
+1367608575 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1308,7 +1308,7 @@
 	"Query.h"
 	"Marker.h"
 
-1367438877 source:c:\dev\ia\src\mainmenu.cpp
+1367607098 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1481,7 +1481,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1367400539 source:c:\dev\ia\src\playerallocbonus.cpp
+1367614871 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1494,7 +1494,7 @@
 	"TextFormatting.h"
 	"PlayerCreateCharacter.h"
 
-1366741504 source:c:\dev\ia\src\playerbonuses.cpp
+1367618361 source:c:\dev\ia\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<cassert>
 	<algorithm>
@@ -1503,7 +1503,7 @@
 	"ActorPlayer.h"
 	"DungeonMaster.h"
 
-1366917799 source:c:\dev\ia\src\playercreatecharacter.cpp
+1367607856 source:c:\dev\ia\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Render.h"
@@ -1585,7 +1585,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1367439454 source:c:\dev\ia\src\render.cpp
+1367608587 source:c:\dev\ia\src\render.cpp
 	"Render.h"
 	<vector>
 	<iostream>
@@ -10158,7 +10158,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1366741504 source:c:\dev\ia\src\itemdevice.cpp
+1367608479 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
