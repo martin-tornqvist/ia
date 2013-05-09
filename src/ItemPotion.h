@@ -180,6 +180,20 @@ private:
   const string getRealTypeName() {return "Poison";}
 };
 
+class PotionOfKnowledge: public Potion {
+public:
+  PotionOfKnowledge(ItemDefinition* const itemDefinition) : Potion(itemDefinition) {}
+  ~PotionOfKnowledge() {}
+  void specificQuaff(Actor* const actor, Engine* const engine);
+private:
+  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+    (void)pos;
+    (void)actor;
+    (void)engine;
+  }
+  const string getRealTypeName() {return "Knowledge";}
+};
+
 class PotionNameHandler {
 public:
   PotionNameHandler(Engine* engine) :

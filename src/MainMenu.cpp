@@ -11,6 +11,7 @@
 #include "Manual.h"
 #include "Popup.h"
 #include "TextFormatting.h"
+#include "Credits.h"
 
 using namespace std;
 
@@ -104,14 +105,17 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
   yPos += 1;
 
-  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
+  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
+  yPos += 1;
+
+  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
   yPos += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawTextCentered("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
+    eng->renderer->drawTextCentered("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrBright : clrGeneral);
     yPos += 1;
   }
 
@@ -125,7 +129,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 GameEntry_t MainMenu::run(bool& quit) {
   tracer << "MainMenu::run()" << endl;
 
-  MenuBrowser browser(IS_DEBUG_MODE ? 7 : 6, 0);
+  MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
   const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();
 
@@ -135,59 +139,63 @@ GameEntry_t MainMenu::run(bool& quit) {
   while(proceed == false) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
-    case menuAction_browsed: {
-      draw(browser);
-    }
-    break;
-
-    case menuAction_canceled: {
-    }
-    break;
-
-    case menuAction_selected: {
-      if(browser.isPosAtKey('a')) {
-        proceed = true;
-        return gameEntry_new;
+      case menuAction_browsed: {
+        draw(browser);
       }
-      if(browser.isPosAtKey('b')) {
-        if(IS_SAVE_AVAILABLE) {
-          eng->saveHandler->load();
-          proceed = true;
-          return gameEntry_load;
-        } else {
-          eng->popup->showMessage("Sorry, no save available. Starting a new character instead.", false);
+      break;
+
+      case menuAction_canceled: {
+      }
+      break;
+
+      case menuAction_selected: {
+        if(browser.isPosAtKey('a')) {
           proceed = true;
           return gameEntry_new;
         }
-      }
-      if(browser.isPosAtKey('c')) {
-        eng->manual->run();
-        draw(browser);
-      }
-      if(browser.isPosAtKey('d')) {
-        eng->config->runOptionsMenu();
-        draw(browser);
-      }
-      if(browser.isPosAtKey('e')) {
-        eng->highScore->runHighScoreScreen();
-        draw(browser);
-      }
-      if(browser.isPosAtKey('f')) {
-        proceed = true;
-        quit = true;
-      }
-      if(IS_DEBUG_MODE) {
+        if(browser.isPosAtKey('b')) {
+          if(IS_SAVE_AVAILABLE) {
+            eng->saveHandler->load();
+            proceed = true;
+            return gameEntry_load;
+          } else {
+            eng->popup->showMessage("Sorry, no save available. Starting a new character instead.", false);
+            proceed = true;
+            return gameEntry_new;
+          }
+        }
+        if(browser.isPosAtKey('c')) {
+          eng->manual->run();
+          draw(browser);
+        }
+        if(browser.isPosAtKey('d')) {
+          eng->config->runOptionsMenu();
+          draw(browser);
+        }
+        if(browser.isPosAtKey('e')) {
+          eng->credits->run();
+          draw(browser);
+        }
+        if(browser.isPosAtKey('f')) {
+          eng->highScore->runHighScoreScreen();
+          draw(browser);
+        }
         if(browser.isPosAtKey('g')) {
           proceed = true;
-          eng->config->BOT_PLAYING = true;
+          quit = true;
+        }
+        if(IS_DEBUG_MODE) {
+          if(browser.isPosAtKey('h')) {
+            proceed = true;
+            eng->config->BOT_PLAYING = true;
+          }
         }
       }
-    }
-    break;
+      break;
 
-    default: {
-    }
-    break;
+      default: {
+      }
+      break;
 
     }
   }

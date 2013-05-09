@@ -114,6 +114,8 @@ public:
     hasBlood_ = false;
   }
 
+  virtual bool openFeature() { return false;}
+
 protected:
   friend class FeatureFactory;
   friend class Map;

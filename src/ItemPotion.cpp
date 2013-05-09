@@ -40,7 +40,7 @@ void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
   for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
     Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
     const ItemDefinition& d = scroll->getDef();
-    if(d.isScrollLearnable && d.isScrollLearned) {
+    if(d.isScrollLearnable && d.isScrollLearned && d.id != item_thaumaturgicAlteration) {
       if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
         scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
         isAnySpellRestored = true;
@@ -225,6 +225,13 @@ void PotionOfPoison::specificCollide(const coord& pos, Actor* const actor, Engin
   if(actor != NULL) {
     specificQuaff(actor, engine);
   }
+}
+
+void PotionOfKnowledge::specificQuaff(Actor* const actor, Engine* const engine) {
+  (void)actor;
+  engine->log->addMessage("I feel more insightful about the mystic powers!");
+  engine->player->incrMth(4);
+  setRealDefinitionNames(engine, false);
 }
 
 void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {

@@ -25,7 +25,7 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_sharpshooter, "Sharpshooter", "+15% hit chance with firearms and thrown wepaons", playerBonus_marksman);
   setBonus(playerBonus_steadyAimer, "Steady aimer", "Waiting a turn gives +20% hit chance with firearms and thrown weapons", playerBonus_marksman);
 //  setBonus(playerBonus_deadlyThrower, "Deadly thrower", "X% chance for 2x max dmg with thrown weapons", playerBonus_adeptRangedCombatant);
-  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "Can disarm mechanical traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
+//  setBonus(playerBonus_nimbleHanded, "Nimble-handed", "Can disarm mechanical traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBonus_dexterous);
 //  setBonus(playerBonus_quick, "Quick", "10% chance for free turn when moving");
   setBonus(playerBonus_observant, "Observant", "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
   setBonus(playerBonus_treasureHunter, "Treasure hunter", "50% more items found on map", playerBonus_observant);

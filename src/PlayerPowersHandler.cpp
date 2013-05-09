@@ -16,7 +16,8 @@ PlayerPowersHandler::PlayerPowersHandler(Engine* engine) :
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isScroll) {
-      scrollsToReadFromPlayerMemory.push_back(dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemId_t>(i))));
+      scrollsToReadFromPlayerMemory.push_back(
+        dynamic_cast<Scroll*>(eng->itemFactory->spawnItem(static_cast<ItemId_t>(i))));
     }
   }
 }

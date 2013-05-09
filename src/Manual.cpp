@@ -10,13 +10,13 @@
 
 void Manual::readFile() {
   string curLine;
-  ifstream file("manual.txt");
+  ifstream file("manual");
 
   vector<string> formated;
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
-      //The '$' symbol is used in manual.txt for lines that should not be formated.
+      //The '$' symbol is used in the manual file for lines that should not be formated.
       if(curLine.size() > 0) {
         if(curLine.at(0) == '$') {
           curLine.erase(curLine.begin());
@@ -33,7 +33,6 @@ void Manual::readFile() {
         lines.push_back(curLine);
       }
     }
-  } else {
   }
 
   file.close();
@@ -45,7 +44,7 @@ void Manual::drawManualInterface() {
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
   eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
 
-  eng->renderer->drawText(" Displaying manual.txt ", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(" Displaying manual ", renderArea_screen, 3, 1, clrWhite);
 
   eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
 
@@ -86,8 +85,7 @@ void Manual::run() {
         yCell++;
       }
       eng->renderer->updateWindow();
-    }
-    else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
+    } else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
       topElement = max(0, min(topElement - 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
       btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
@@ -98,8 +96,7 @@ void Manual::run() {
         yCell++;
       }
       eng->renderer->updateWindow();
-    }
-    else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    } else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
       done = true;
     }
   }

@@ -154,61 +154,16 @@ protected:
   virtual StatusEffect* getStatusEffect(Engine* const engine) = 0;
 };
 
-class ScrollOfConfuseEnemies: public ScrollOfStatusOnAllVisibleMonsters {
+class ScrollOfEnfeebleEnemies: public ScrollOfStatusOnAllVisibleMonsters {
 public:
-  ScrollOfConfuseEnemies(ItemDefinition* const ItemDefinition) :
+  ScrollOfEnfeebleEnemies(ItemDefinition* const ItemDefinition) :
     ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
   }
-  ~ScrollOfConfuseEnemies() {
+  ~ScrollOfEnfeebleEnemies() {
   }
 
   const string getRealTypeName() {
-    return "Confuse Enemies";
-  }
-private:
-  StatusEffect* getStatusEffect(Engine* const engine);
-};
-
-//class ScrollOfBlindEnemies: public ScrollOfStatusOnAllVisibleMonsters {
-//public:
-//  ScrollOfBlindEnemies(ItemDefinition* const ItemDefinition) :
-//    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-//  }
-//  ~ScrollOfBlindEnemies() {
-//  }
-//
-//  const string getRealTypeName() {
-//    return "Blind Enemies";
-//  }
-//private:
-//  StatusEffect* getStatusEffect(Engine* const engine);
-//};
-
-class ScrollOfParalyzeEnemies: public ScrollOfStatusOnAllVisibleMonsters {
-public:
-  ScrollOfParalyzeEnemies(ItemDefinition* const ItemDefinition) :
-    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-  }
-  ~ScrollOfParalyzeEnemies() {
-  }
-
-  const string getRealTypeName() {
-    return "Paralyze Enemies";
-  }
-private:
-  StatusEffect* getStatusEffect(Engine* const engine);
-};
-
-class ScrollOfSlowEnemies: public ScrollOfStatusOnAllVisibleMonsters {
-public:
-  ScrollOfSlowEnemies(ItemDefinition* const ItemDefinition) :
-    ScrollOfStatusOnAllVisibleMonsters(ItemDefinition) {
-  }
-  ~ScrollOfSlowEnemies() {
-  }
-
-  const string getRealTypeName() {
-    return "Slow Enemies";
+    return "Enfeeble Enemies";
   }
 private:
   StatusEffect* getStatusEffect(Engine* const engine);
@@ -304,6 +259,31 @@ public:
 private:
 };
 
+class ScrollOfOpening: public Scroll {
+public:
+  ScrollOfOpening(ItemDefinition* const itemDefinition) :
+    Scroll(itemDefinition) {
+  }
+  ~ScrollOfOpening() {
+  }
+  void specificRead(Engine* const engine);
+
+  const string getRealTypeName() {
+    return "Opening";
+  }
+private:
+};
+
+enum MthPowerAction_t {
+  mthPowerAction_slayMonsters,
+  mthPowerAction_heal,
+  mthPowerAction_findStairs,
+  mthPowerAction_sorcery,
+  mthPowerAction_mendArmor,
+  mthPowerAction_improveWeapon,
+  mthPowerAction_purgeEffects
+};
+
 class ThaumaturgicAlteration: public Scroll {
 public:
   ThaumaturgicAlteration(ItemDefinition* const itemDefinition) :
@@ -317,6 +297,13 @@ public:
     return "Thaumaturgic Alteration";
   }
 private:
+  void doAction(const MthPowerAction_t action, Engine* const engine) const;
+
+  void getPossibleActions(
+    vector<MthPowerAction_t>& possibleActions, Engine* const engine) const;
+
+  void getChoiceLabelsFromPossibleActions(
+    const vector<MthPowerAction_t>& possibleActions, vector<string>& labels) const;
 };
 
 //class ScrollOfVoidChain: public Scroll {

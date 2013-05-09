@@ -63,7 +63,15 @@ void CharacterInfo::makeLines() {
   if(MTH == 0) {
     lines.push_back(StringAndColor(offsetSpaces + "No effects", clrText));
   } else {
-    lines.push_back(StringAndColor(offsetSpaces + "+" + intToString(MTH) + "% damage against all bizarre, alien, mystical and shocking creatures", clrText));
+    lines.push_back(StringAndColor(
+                      offsetSpaces + "+" + intToString(MTH) +
+                      "% damage against all bizarre, alien, mystical and shocking creatures",
+                      clrText));
+    const int CASTING_BON = eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+    lines.push_back(StringAndColor(
+                      offsetSpaces + "+" + intToString(CASTING_BON) +
+                      "% chance to cast spells",
+                      clrText));
   }
 //  const int INS_FROM_MTH = eng->player->getSanityPenaltyFromMythosKnowledge();
 //  lines.push_back(StringAndColor(offsetSpaces + "Sanity penalty  : " + intToString(INS_FROM_MTH) + "%", clrText));

@@ -32,7 +32,7 @@ enum PlayerBonuses_t {
   playerBonus_marksman,
   playerBonus_masterfulMeleeCombatant,
   playerBonus_mobile,
-  playerBonus_nimbleHanded,
+//  playerBonus_nimbleHanded,
   playerBonus_observant,
   playerBonus_occultist,
   playerBonus_rapidRecoverer,
