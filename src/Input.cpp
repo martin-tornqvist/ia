@@ -615,6 +615,7 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
 
           const bool IS_SHIFT_HELD = mod & SDLK_LSHIFT || mod & SDLK_RSHIFT;
           const bool IS_CTRL_HELD  = mod & SDLK_LSHIFT || mod & SDLK_RSHIFT;
+          const bool IS_ALT_HELD   = mod & SDLK_LALT   || mod & SDLK_RALT;
 
           KeyboardReadReturnData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 
@@ -623,12 +624,20 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
             return ret;
           } else {
             switch(sdlKey) {
-              default:               continue;   break;
+              case SDLK_RETURN:
+              case SDLK_KP_ENTER: {
+                if(IS_ALT_HELD) {
+                  eng->config->toggleFullscreen();
+                  clearEvents();
+                  continue;
+                } else {
+                  ret.sdlKey_ = SDLK_RETURN;
+                  return ret;
+                }
+              } break;
               case SDLK_MENU:         continue;   break;
               case SDLK_PAUSE:        continue;   break;
               case SDLK_SPACE:        return ret; break;
-              case SDLK_RETURN:       return ret; break;
-              case SDLK_KP_ENTER:     {ret.sdlKey_ = SDLK_RETURN; return ret;} break;
               case SDLK_BACKSPACE:    return ret; break;
               case SDLK_TAB:          return ret; break;
               case SDLK_PAGEUP:       return ret; break;
@@ -642,6 +651,7 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
               case SDLK_UP:           return ret; break;
               case SDLK_DOWN:         return ret; break;
               case SDLK_ESCAPE:       return ret; break;
+              default:                continue;   break;
             }
           }
         }

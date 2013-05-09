@@ -141,6 +141,7 @@ public:
 private:
   friend class Postmortem;
   friend class Input;
+  friend class Config;
   void applySurface(const int PIXEL_X, const int PIXEL_Y, SDL_Surface* const source,
                     SDL_Rect* clip = NULL);
 

@@ -60,6 +60,8 @@ public:
   void runOptionsMenu();
   void setCellDimDependentVariables();
 
+  void toggleFullscreen();
+
 private:
   void playerSetsOption(const MenuBrowser* const browser,
                         const int OPTION_VALUES_X_POS,

@@ -414,6 +414,22 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
   }
 }
 
+void Config::toggleFullscreen() {
+  SDL_Surface* screenCpy = SDL_DisplayFormat(eng->renderer->screenSurface_);
+
+  FULLSCREEN = !FULLSCREEN;
+  parseFontNameAndSetCellDims();
+  setCellDimDependentVariables();
+  eng->renderer->initAndClearPrev();
+
+  eng->renderer->applySurface(0, 0, screenCpy, NULL);
+  eng->renderer->updateScreen();
+
+  vector<string> lines;
+  collectLinesFromVariables(lines);
+  writeLinesToFile(lines);
+}
+
 void Config::setAllVariablesFromLines(vector<string>& lines) {
   string curLine = "";
 
