@@ -172,7 +172,10 @@ void DungeonMaster::playerGainsExp(int exp) {
           if(playerExp >= getXpToNextLvl()) {
             playerLvl++;
 
-            bool isAbilityGained = playerLvl <= 6 || playerLvl % 2 == 0;
+            bool isAbilityGained =
+              (playerLvl <  6) ||
+              (playerLvl >= 6  && playerLvl < 12 && playerLvl % 2 == 0) ||
+              (playerLvl >= 12 && playerLvl % 3 == 0);
 
             const string levelUpStr = "Welcome to level " + intToString(playerLvl) + "!";
 

@@ -38,16 +38,6 @@ void Renderer::freeAssets() {
     screenSurface_ = NULL;
   }
 
-//  if(fontSurface_ != NULL) {
-//    SDL_FreeSurface(fontSurface_);
-//    fontSurface_ = NULL;
-//  }
-
-//  if(tileSurface_ != NULL) {
-//    SDL_FreeSurface(tileSurface_);
-//    tileSurface_ = NULL;
-//  }
-
   if(mainMenuLogoSurface_ != NULL) {
     delete mainMenuLogoSurface_;
     mainMenuLogoSurface_ = NULL;
@@ -63,7 +53,7 @@ void Renderer::initAndClearPrev() {
   tracer << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + eng->config->GAME_VERSION;
 
-  if(false /*ng->config->FULLSCREEN*/) {
+  if(eng->config->FULLSCREEN) {
     screenSurface_ = SDL_SetVideoMode(
                        eng->config->SCREEN_WIDTH,
                        eng->config->SCREEN_HEIGHT,
@@ -75,6 +65,11 @@ void Renderer::initAndClearPrev() {
                        eng->config->SCREEN_HEIGHT,
                        eng->config->SCREEN_BPP,
                        SDL_SWSURFACE);
+  }
+
+  if(screenSurface_ == NULL) {
+    tracer << "[WARNING] Failed to create screen surface, ";
+    tracer << "in Renderer::initAndClearPrev()" << endl;
   }
 
   loadFont();
@@ -311,7 +306,6 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color& colorInner,
     const SDL_Color& colorOuter, const int DURATION) {
   drawMapAndInterface();
-  clearScreen();
 
   bool isAnyBlastRendered = false;
 
@@ -324,8 +318,7 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
                    y == center.y - RADIUS ||
                    y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        coverCellInMap(x, y);
-        drawTileInMap(tile_blastAnimation1, x, y, color);
+        drawTileInMap(tile_blastAnimation1, x, y, color, clrBlack);
         isAnyBlastRendered = true;
       }
     }
@@ -334,7 +327,6 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
   if(isAnyBlastRendered) {
     eng->sleep(DURATION / 2);
   }
-  clearScreen();
 
   for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
     for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
@@ -344,8 +336,7 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
                               y == center.y - RADIUS ||
                               y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        coverCellInMap(x, y);
-        drawTileInMap(tile_blastAnimation2, x, y, color);
+        drawTileInMap(tile_blastAnimation2, x, y, color, clrBlack);
       }
     }
   }
@@ -360,7 +351,6 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
     const SDL_Color& color,
     const int DURATION) {
   drawMapAndInterface();
-  clearScreen();
 
   for(unsigned int i = 0; i < positions.size(); i++) {
     const coord& pos = positions.at(i);
@@ -368,7 +358,6 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
   }
   updateScreen();
   eng->sleep(DURATION / 2);
-  clearScreen();
 
   for(unsigned int i = 0; i < positions.size(); i++) {
     const coord& pos = positions.at(i);
@@ -589,7 +578,8 @@ void Renderer::drawLineVertical(const int X, const int Y, const int H, const SDL
 }
 
 void Renderer::drawLineHorizontal(const int X, const int Y, const int W, const SDL_Color& clr) {
-  drawRectangleSolid(X, Y, W, 2, clr);
+  const int Y_OFFSET = 1 - eng->config->FONT_SCALE;
+  drawRectangleSolid(X, Y + Y_OFFSET, W, 2 * eng->config->FONT_SCALE, clr);
 }
 
 void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H,

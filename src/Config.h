@@ -25,6 +25,8 @@ public:
   const string  MAIN_MENU_LOGO_IMAGE_NAME;
   string        fontImageName;
 
+  bool          FULLSCREEN;
+
   const int     LOG_X_CELLS_OFFSET;
   const int     LOG_Y_CELLS_OFFSET;
   const int     LOG_X_CELLS;

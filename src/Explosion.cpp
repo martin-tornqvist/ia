@@ -47,7 +47,6 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
 void ExplosionMaker::renderExplosionWithColorOverride(
   const BasicData* data, const SDL_Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
-  eng->renderer->clearScreen();
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {

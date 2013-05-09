@@ -64,7 +64,7 @@ void Config::setCellDimDependentVariables() {
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(10, 0);
+  MenuBrowser browser(11, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -140,7 +140,7 @@ void Config::setDefaultVariables() {
   fontImageName = "images/16x24_clean_v1.png";
   FONT_SCALE = 1;
   parseFontNameAndSetCellDims();
-//  FULLSCREEN = false;
+  FULLSCREEN = false;
   WALL_SYMBOL_FULL_SQUARE = false;
   SKIP_INTRO_LEVEL = false;
   RANGED_WPN_MELEE_PROMPT = true;
@@ -154,7 +154,7 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(USE_TILE_SET == false ? "0" : "1");
   lines.push_back(intToString(FONT_SCALE));
   lines.push_back(fontImageName);
-//  lines.push_back(FULLSCREEN == false ? "0" : "1");
+  lines.push_back(FULLSCREEN == false ? "0" : "1");
   lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
   lines.push_back(SKIP_INTRO_LEVEL == false ? "0" : "1");
   lines.push_back(RANGED_WPN_MELEE_PROMPT == false ? "0" : "1");
@@ -207,10 +207,14 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrSelected : clrGeneral);
   optionNr++;
 
-//  eng->renderer->drawText("FULLSCREEN (EXPERIMENTAL)", renderArea_screen, X0, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-//  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-//  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO", renderArea_screen, X1, Y0 + optionNr, browser->getPos().y == optionNr ? clrSelected : clrGeneral);
-//  optionNr++;
+  eng->renderer->drawText("FULLSCREEN (experimental)", renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO",
+                          renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+  optionNr++;
 
   str = "ASCII MODE WALL SYMBOL";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
@@ -291,8 +295,8 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
         if(CELL_W == 8 && CELL_H == 12) {
           FONT_SCALE = 2;
         } else {
-          FONT_SCALE = 1;
           if(CELL_W != 16 || CELL_H != 24) {
+            FONT_SCALE = 1;
             fontImageName = "images/16x24_clean_v1.png";
           }
         }
@@ -357,24 +361,24 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       eng->renderer->initAndClearPrev();
     } break;
 
-//  case 3: {
-//    FULLSCREEN = !FULLSCREEN;
-//    eng->renderer->setupWindowAndImagesClearPrev();
-//  } break;
-
     case 3: {
-      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
+      FULLSCREEN = !FULLSCREEN;
+      eng->renderer->initAndClearPrev();
     } break;
 
     case 4: {
-      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
+      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
     } break;
 
     case 5: {
-      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
+      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
     } break;
 
     case 6: {
+      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
+    } break;
+
+    case 7: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
@@ -383,7 +387,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 7: {
+    case 8: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_SHOTGUN, true);
@@ -392,7 +396,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 8: {
+    case 9: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrWhite, 1, 3, DELAY_EXPLOSION, true);
@@ -401,7 +405,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 9: {
+    case 10: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -434,9 +438,9 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   parseFontNameAndSetCellDims();
   lines.erase(lines.begin());
 
-//  curLine = lines.front();
-//  FULLSCREEN = curLine == "0" ? false : true;
-//  lines.erase(lines.begin());
+  curLine = lines.front();
+  FULLSCREEN = curLine == "0" ? false : true;
+  lines.erase(lines.begin());
 
   curLine = lines.front();
   WALL_SYMBOL_FULL_SQUARE = curLine == "0" ? false : true;
