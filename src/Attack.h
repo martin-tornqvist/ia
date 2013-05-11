@@ -21,30 +21,41 @@ enum ProjectileHitType_t {
   projectileHitType_cleanHit
 };
 
-struct AttackData {
-  AttackData() : aimLevel(actorSize_none) {
-  }
-
-  bool isBackStab, isWeakAttack;
-  string weaponName_a;
-  string verbPlayerAttacksMissile;
-  string verbOtherAttacksMissile;
+class AttackData {
+public:
   Actor* attacker;
   Actor* currentDefender;
-  int attackerX, attackerY;
-  Abilities_t abilityUsed;
-  bool isIntrinsic;
-  bool isMelee;
-  int wpnBaseSkill, attackSkill, totalSkill;
   AbilityRollResult_t attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
-  string dmgPunctuation;
-  bool isPlayerAttacking;
   bool isDefenderDodging;
-  ActorSizes_t aimLevel;
-  ActorSizes_t currentDefenderSize;
-  bool isTargetEthereal;
+
+protected:
+  AttackData(Engine* engine) : eng(engine) {}
+
+  Engine* const eng;
+
+private:
+  AttackData() {}
+};
+
+class MeleeAttackData: public AttackData {
+public:
+  MeleeAttackData() : AttackData() {}
+
+  bool isBackStab, isWeakAttack;
+};
+
+class RangedAttackData: public AttackData {
+public:
+  RangedAttackData() : AttackData(), aimLevel(actorSize_none) {
+  }
+
+  coord         attackPos;
+  ActorSizes_t  aimLevel;
+  ActorSizes_t  currentDefenderSize;
+  string        verbPlayerAttacks;
+  string        verbOtherAttacks;
 };
 
 struct Projectile {
@@ -72,31 +83,31 @@ struct Projectile {
   char glyph;
   Tile_t tile;
   SDL_Color clr;
-  AttackData data;
+  RangedAttackData data;
 };
 
 class Attack {
 public:
-  Attack(Engine* engine) :
-    shotgunSpreadAngleHalf(asin(0.5 / sqrt(12.5))),
-    eng(engine) {}
+  Attack(Engine* engine) : eng(engine) {}
 
-  bool ranged(int attackX, int attackY, Weapon* weapon);
-  void melee(const coord& defenderPos, Weapon* weapon);
+  bool ranged(const Actor& attacker, const coord& attackPos, Weapon& wpn);
+
+  void melee(const Actor& attacker, Actor& defender, const Weapon& wpn);
+
+  void getRangedHitChance(const Actor& attacker, const Actor& defender,
+                          const Weapon& wpn);
 
 private:
-  double shotgunSpreadAngleHalf;
+  void printMeleeMessages(const MeleeAttackData& data);
 
-  void getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE);
+  void printRangedInitiateMessages(const RangedAttackData& data);
+  void printProjectileAtActorMessages(const RangedAttackData& data,
+                                      const ProjectileHitType_t hitType);
 
-  void printMeleeMessages(AttackData data, Weapon* weapon);
+  void projectileFire(const Actor& attacker, const coord& target,
+                      const Weapon& weapon);
 
-  void printRangedInitiateMessages(AttackData data);
-  void printProjectileAtActorMessages(AttackData data, ProjectileHitType_t hitType);
-
-  void projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES);
-
-  void shotgun(const coord& origin, const coord& target, Weapon* const weapon);
+  void shotgun(const Actor& attacker, const coord& target, const Weapon& weapon);
 
   bool isCellOnLine(vector<coord> line, int x, int y);
 

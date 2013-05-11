@@ -16,7 +16,9 @@
 
 using namespace std;
 
-void Attack::getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE) {
+void Attack::getAttackData(AttackData& data, const coord& target,
+                           const coord& currentPos, Weapon* const weapon,
+                           const bool IS_MELEE) {
   data.isMelee = IS_MELEE;
   data.attacker = eng->gameTime->getCurrentActor();
   data.currentDefender = eng->mapTests->getActorAtPos(currentPos);
@@ -221,7 +223,10 @@ void Attack::printProjectileAtActorMessages(AttackData data, ProjectileHitType_t
       data.dmgPunctuation = ".";
       const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
       if(MAX_DMG_ROLL >= 4) {
-        data.dmgPunctuation = data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" : data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" : data.dmgPunctuation;
+        data.dmgPunctuation =
+          data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
+          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
+          data.dmgPunctuation;
       }
 
       if(hitType == projectileHitType_cleanHit || hitType == projectileHitType_strayHit) {

@@ -104,7 +104,7 @@ void Monster::act() {
 
   if(ai.triesAttack) {
     if(target != NULL) {
-      if(tryAttack(target->pos)) {
+      if(tryAttack(*target)) {
         return;
       }
     }
@@ -236,7 +236,7 @@ void Monster::becomeAware() {
   }
 }
 
-bool Monster::tryAttack(const coord& attackPos) {
+bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0 || leader == eng->player) {
 
@@ -244,13 +244,13 @@ bool Monster::tryAttack(const coord& attackPos) {
       eng->mapTests->makeVisionBlockerArray(pos, blockers);
 
       if(checkIfSeeActor(*eng->player, blockers)) {
-        AttackOpport opport = getAttackOpport(attackPos);
-        BestAttack const attack = getBestAttack(opport);
+        AttackOpport opport = getAttackOpport(defender);
+        const BestAttack attack = getBestAttack(opport);
 
         if(attack.weapon != NULL) {
           if(attack.melee) {
             if(attack.weapon->getDef().isMeleeWeapon) {
-              eng->attack->melee(attackPos, attack.weapon);
+              eng->attack->melee(*this, defender, *(attack.weapon));
               return true;
             }
           } else {
@@ -260,8 +260,10 @@ bool Monster::tryAttack(const coord& attackPos) {
                 return true;
               } else {
                 const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
-                statusEffectsHandler_->tryAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
-                eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
+                StatusDisabledAttackRanged* status =
+                  new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
+                statusEffectsHandler_->tryAddEffect(status);
+                eng->attack->ranged(*this, defender.pos, *attack.weapon);
                 return true;
               }
             }
@@ -273,7 +275,7 @@ bool Monster::tryAttack(const coord& attackPos) {
   return false;
 }
 
-AttackOpport Monster::getAttackOpport(const coord& attackPos) {
+AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(statusEffectsHandler_->allowAttack(false)) {
     opport.melee = eng->mapTests->isCellsNeighbours(pos, attackPos, false);

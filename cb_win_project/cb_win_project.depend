@@ -8367,7 +8367,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1368132357 c:\_martin_\ia\src\actormonster.h
+1368198767 c:\_martin_\ia\src\actormonster.h
 	"ConstTypes.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -8628,7 +8628,7 @@
 	"AI_castRandomSpell.h"
 	"AI_handleInventory.h"
 
-1368132357 c:\_martin_\ia\src\attack.h
+1368198433 c:\_martin_\ia\src\attack.h
 	<vector>
 	<math.h>
 	<iostream>

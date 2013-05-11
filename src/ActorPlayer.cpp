@@ -995,8 +995,9 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       if(actorAtDest != NULL) {
         if(statusEffectsHandler_->allowAttackMelee(true) == true) {
           bool hasMeleeWeapon = false;
-          Weapon* weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
-          if(weapon != NULL) {
+          Item* const item = inventory_->getItemInSlot(slot_wielded);
+          if(item != NULL) {
+            Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getDef().isMeleeWeapon) {
               if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getDef().isRangedWeapon) {
@@ -1011,7 +1012,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
                 }
               }
               hasMeleeWeapon = true;
-              eng->attack->melee(dest, weapon);
+              eng->attack->melee(*this, *actorAtDest, *weapon);
               target = actorAtDest;
               return;
             }
@@ -1128,7 +1129,7 @@ void Player::kick(Actor& actorToKick) {
   } else {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
-  eng->attack->melee(actorToKick.pos, kickWeapon);
+  eng->attack->melee(*this, actorToKick, *kickWeapon);
   delete kickWeapon;
 }
 

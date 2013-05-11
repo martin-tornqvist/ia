@@ -61,9 +61,9 @@ public:
 
   void moveToCell(const coord& targetCell);
 
-  AttackOpport getAttackOpport(const coord& attackPos);
+  AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
-  bool tryAttack(const coord& attackPos);
+  bool tryAttack(Actor& defender);
 
   virtual void actorSpecific_spawnStartItems() = 0;
 
