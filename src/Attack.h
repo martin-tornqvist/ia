@@ -15,12 +15,6 @@ class Engine;
 class Actor;
 class Weapon;
 
-enum ProjectileHitType_t {
-  projectileHitType_miss,
-  projectileHitType_strayHit,
-  projectileHitType_cleanHit
-};
-
 class AttackData {
 public:
   Actor* attacker;
@@ -28,31 +22,28 @@ public:
   AbilityRollResult_t attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
-  bool isDefenderDodging;
+  bool isIntrinsicAttack;
 
 protected:
-  AttackData(Engine* engine) : eng(engine) {}
-
+  AttackData(Actor& attacker_, const Weapon& wpn_, Engine* engine);
   Engine* const eng;
-
-private:
-  AttackData() {}
 };
 
 class MeleeAttackData: public AttackData {
 public:
-  MeleeAttackData() : AttackData() {}
-
-  bool isBackStab, isWeakAttack;
+  MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
+                  Actor& defender_, Engine* engine);
+  bool isDefenderDodging;
+  bool isBackstab;
+  bool isWeakAttack;
 };
 
 class RangedAttackData: public AttackData {
 public:
-  RangedAttackData() : AttackData(), aimLevel(actorSize_none) {
-  }
-
-  coord         attackPos;
-  ActorSizes_t  aimLevel;
+  RangedAttackData(Actor& attacker_, const Weapon& wpn_, const coord& aimPos_,
+                   const coord& curPos_, Engine* engine,
+                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+  ActorSizes_t  intendedAimLevel;
   ActorSizes_t  currentDefenderSize;
   string        verbPlayerAttacks;
   string        verbOtherAttacks;
@@ -61,7 +52,19 @@ public:
 struct Projectile {
   Projectile() : pos(coord(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
     actorHit(NULL), obstructedInElement(-1), isDoneRendering(false),
-    glyph(-1), tile(tile_empty), clr(clrWhite) {
+    glyph(-1), tile(tile_empty), clr(clrWhite), attackData(NULL) {}
+
+  ~Projectile() {
+    if(attackData != NULL) {
+      delete attackData;
+    }
+  }
+
+  void setAttackData(RangedAttackData* attackData_) {
+    if(attackData != NULL) {
+      delete attackData;
+    }
+    attackData = attackData_;
   }
 
   void setTile(const Tile_t tileToRender, const SDL_Color clrToRender) {
@@ -83,31 +86,30 @@ struct Projectile {
   char glyph;
   Tile_t tile;
   SDL_Color clr;
-  RangedAttackData data;
+  RangedAttackData* attackData;
 };
 
 class Attack {
 public:
   Attack(Engine* engine) : eng(engine) {}
 
-  bool ranged(const Actor& attacker, const coord& attackPos, Weapon& wpn);
+  bool ranged(Actor& attacker, Weapon& wpn, const coord& aimPos);
 
-  void melee(const Actor& attacker, Actor& defender, const Weapon& wpn);
+  void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
 
   void getRangedHitChance(const Actor& attacker, const Actor& defender,
                           const Weapon& wpn);
 
 private:
-  void printMeleeMessages(const MeleeAttackData& data);
+  void printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn);
 
-  void printRangedInitiateMessages(const RangedAttackData& data);
+  void printRangedInitiateMessages(const RangedAttackData& data) const;
   void printProjectileAtActorMessages(const RangedAttackData& data,
-                                      const ProjectileHitType_t hitType);
+                                      const bool IS_HIT) const;
 
-  void projectileFire(const Actor& attacker, const coord& target,
-                      const Weapon& weapon);
+  void projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos);
 
-  void shotgun(const Actor& attacker, const coord& target, const Weapon& weapon);
+  void shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos);
 
   bool isCellOnLine(vector<coord> line, int x, int y);
 

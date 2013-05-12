@@ -248,14 +248,14 @@ bool Monster::tryAttack(Actor& defender) {
         const BestAttack attack = getBestAttack(opport);
 
         if(attack.weapon != NULL) {
-          if(attack.melee) {
+          if(attack.isMelee) {
             if(attack.weapon->getDef().isMeleeWeapon) {
-              eng->attack->melee(*this, defender, *(attack.weapon));
+              eng->attack->melee(*this, *attack.weapon, defender);
               return true;
             }
           } else {
             if(attack.weapon->getDef().isRangedWeapon) {
-              if(opport.timeToReload) {
+              if(opport.isTimeToReload) {
                 eng->reload->reloadWeapon(this);
                 return true;
               } else {
@@ -263,7 +263,7 @@ bool Monster::tryAttack(Actor& defender) {
                 StatusDisabledAttackRanged* status =
                   new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
                 statusEffectsHandler_->tryAddEffect(status);
-                eng->attack->ranged(*this, defender.pos, *attack.weapon);
+                eng->attack->ranged(*this, *attack.weapon, defender.pos);
                 return true;
               }
             }
@@ -278,11 +278,11 @@ bool Monster::tryAttack(Actor& defender) {
 AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(statusEffectsHandler_->allowAttack(false)) {
-    opport.melee = eng->mapTests->isCellsNeighbours(pos, attackPos, false);
+    opport.isMelee = eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
-    if(opport.melee) {
+    if(opport.isMelee) {
       if(statusEffectsHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
@@ -313,7 +313,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
             //Check if reload time instead
             if(weapon->ammoLoaded == 0 && weapon->getDef().rangedHasInfiniteAmmo == false) {
               if(inventory_->hasAmmoForFirearmInInventory()) {
-                opport.timeToReload = true;
+                opport.isTimeToReload = true;
               }
             }
           }
@@ -336,7 +336,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 // TODO Instead of using "strongest" weapon, use random
 BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
-  attack.melee = attackOpport.melee;
+  attack.isMelee = attackOpport.isMelee;
 
   Weapon* newWeapon = NULL;
 
@@ -358,7 +358,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(eng->itemData->isWeaponStronger(*def, *newDef, attack.melee) == true) {
+        if(eng->itemData->isWeaponStronger(*def, *newDef, attack.isMelee)) {
           // - use new weapon instead.
           attack.weapon = newWeapon;
           def = newDef;

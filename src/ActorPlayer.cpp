@@ -1012,7 +1012,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
                 }
               }
               hasMeleeWeapon = true;
-              eng->attack->melee(*this, *actorAtDest, *weapon);
+              eng->attack->melee(*this, *weapon, *actorAtDest);
               target = actorAtDest;
               return;
             }
@@ -1129,14 +1129,15 @@ void Player::kick(Actor& actorToKick) {
   } else {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
-  eng->attack->melee(*this, actorToKick, *kickWeapon);
+  eng->attack->melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
 }
 
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
-  Weapon* punchWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
-  eng->attack->melee(actorToPunch.pos, punchWeapon);
+  Weapon* punchWeapon = dynamic_cast<Weapon*>(
+                          eng->itemFactory->spawnItem(item_playerPunch));
+  eng->attack->melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
 

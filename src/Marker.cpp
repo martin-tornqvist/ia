@@ -66,8 +66,9 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
           eng->player->target = actor;
         }
 
-        Weapon* const weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
-        if(eng->attack->ranged(pos_.x, pos_.y, weapon) == false) {
+        Weapon* const weapon = dynamic_cast<Weapon*>(
+                                 eng->player->getInventory()->getItemInSlot(slot_wielded));
+        if(eng->attack->ranged(*eng->player, *weapon, pos_) == false) {
           eng->log->addMessage("No ammunition loaded.");
         }
       } else {

@@ -23,12 +23,12 @@ void Bot::init() {
 
   if(eng->config->BOT_PLAYING == true) {
     //Switch to melee weapon
-    //		eng->input->handleKeyPress('z', false, false);
+    //    eng->input->handleKeyPress('z', false, false);
     //Make sure it's my turn
-    //		while(eng->gameTime->getCurrentActor() != eng->player) {
-    //			eng->gameTime->letNextAct();
-    //		}
-    //		runFunctionTests();
+    //    while(eng->gameTime->getCurrentActor() != eng->player) {
+    //      eng->gameTime->letNextAct();
+    //    }
+    //    runFunctionTests();
   }
 }
 
@@ -36,27 +36,27 @@ void Bot::runFunctionTests() {
   //TEST HIT CHANCE
   Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
   const Abilities_t weaponAbilityUsed = weaponUsed->getDef().meleeAbilityUsed;
-  const int HIT_CHANCE_WEAPON = weaponUsed->getDef().meleeBaseAttackSkill;
+  const int HIT_CHANCE_WEAPON = weaponUsed->getDef().meleeHitChanceMod;
   const int HIT_CHANCE_SKILL = eng->player->getDef()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
   const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
   const int NUMBER_OF_ATTACKS = 100;
   double hitChanceReal = 0;
 
   //Make sure an actor can be spawned next to the player
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + coord(1,0));
+  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + coord(1, 0));
 
   for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
     Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + coord(1, 0));
     dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
-    eng->attack->melee(eng->player->pos + coord(1, 0), dynamic_cast<Weapon*>(weaponUsed));
+    eng->attack->melee(*eng->player, *dynamic_cast<Weapon*>(weaponUsed), *actor);
 
     if(actor->getHp() < actor->getHpMax(true)) {
       hitChanceReal += 1.0;
     }
     for(unsigned int ii = 0; ii < eng->gameTime->getLoopSize(); ii++) {
       if(eng->gameTime->getActorAt(ii) == actor) {
-	eng->gameTime->eraseElement(ii);
-	break;
+        eng->gameTime->eraseElement(ii);
+        break;
       }
     }
     delete actor;
@@ -90,11 +90,11 @@ void Bot::act() {
       tracer << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
       if(runCount >= NR_OF_RUNS) {
-	tracer << "Bot: All runs finished, stopping" << endl;
-	eng->config->BOT_PLAYING = false;
+        tracer << "Bot: All runs finished, stopping" << endl;
+        eng->config->BOT_PLAYING = false;
       } else {
-	tracer << "Bot: Starting new run on first dungeon level" << endl;
-	eng->map->dungeonLevel_ = 0;
+        tracer << "Bot: Starting new run on first dungeon level" << endl;
+        eng->map->dungeonLevel_ = 0;
       }
     }
     eng->input->handleKeyPress(KeyboardReadReturnData('>'));
@@ -106,14 +106,14 @@ void Bot::act() {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f = eng->map->featuresStatic[eng->player->pos.x + dx][eng->player->pos.y + dy];
       if(f->getId() == feature_door) {
-	tracer << "Bot: Adjacent door found, revealing" << endl;
-	dynamic_cast<Door*>(f)->reveal(false);
-	//If adjacent door is stuck, bash at it
-	if(dynamic_cast<Door*>(f)->isStuck()) {
-	  tracer << "Bot: Door is stuck, attempting bash" << endl;
-	  dynamic_cast<Door*>(f)->tryBash(eng->player);
-	  return;
-	}
+        tracer << "Bot: Adjacent door found, revealing" << endl;
+        dynamic_cast<Door*>(f)->reveal(false);
+        //If adjacent door is stuck, bash at it
+        if(dynamic_cast<Door*>(f)->isStuck()) {
+          tracer << "Bot: Door is stuck, attempting bash" << endl;
+          dynamic_cast<Door*>(f)->tryBash(eng->player);
+          return;
+        }
       }
     }
   }
@@ -179,7 +179,7 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
   }
 
   const int CHANCE_FOR_RANDOM_DIRECTION = 50;
-  if(eng->dice(1,100) < CHANCE_FOR_RANDOM_DIRECTION) {
+  if(eng->dice(1, 100) < CHANCE_FOR_RANDOM_DIRECTION) {
     key = '0' + eng->dice.getInRange(1, 9);
   }
 
@@ -198,8 +198,8 @@ coord Bot::findNextStairs() {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       FeatureStatic* f = eng->map->featuresStatic[x][y];
       if(f->getId() == feature_stairsDown) {
-	tracer << "Bot::findNextStairs() [DONE]" << endl;
-	return coord(x, y);
+        tracer << "Bot::findNextStairs() [DONE]" << endl;
+        return coord(x, y);
       }
     }
   }
@@ -223,7 +223,7 @@ void Bot::findPathToNextStairs() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       FeatureStatic* f = eng->map->featuresStatic[x][y];
       if(f->getId() == feature_door) {
-	blockers[x][y] = false;
+        blockers[x][y] = false;
       }
     }
   }

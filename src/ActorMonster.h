@@ -10,34 +10,34 @@
 
 struct BestAttack {
   BestAttack() :
-    weapon(NULL), melee(true) {
+    weapon(NULL), isMelee(true) {
   }
 
   Weapon* weapon;
-  bool melee;
+  bool isMelee;
 };
 
 struct AttackOpport {
   AttackOpport() :
-    timeToReload(false), melee(true) {
+    isTimeToReload(false), isMelee(true) {
     weapons.resize(0);
   }
 
   AttackOpport(const AttackOpport& other) :
-    weapons(other.weapons), timeToReload(other.timeToReload), melee(other.melee) {
-  }
+    weapons(other.weapons), isTimeToReload(other.isTimeToReload),
+    isMelee(other.isMelee) {}
 
   AttackOpport& operator=(const AttackOpport& other) {
     weapons = other.weapons;
-    timeToReload = other.timeToReload;
-    melee = other.melee;
+    isTimeToReload = other.isTimeToReload;
+    isMelee = other.isMelee;
 
     return *this;
   }
 
   vector<Weapon*> weapons;
-  bool timeToReload;
-  bool melee;
+  bool isTimeToReload;
+  bool isMelee;
 };
 
 class Weapon;

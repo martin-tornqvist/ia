@@ -54,13 +54,13 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->isAmmoClip = false;
       d->isDevice = false;
       d->ammoContainedInClip = 0;
-      d->meleeBaseAttackSkill = 0;
+      d->meleeHitChanceMod = 0;
       d->meleeAbilityUsed = ability_accuracyMelee;
       d->meleeStatusEffect = NULL;
       d->meleeCausesKnockBack = false;
       d->rangedCausesKnockBack = false;
       d->meleeDamageType = damageType_physical;
-      d->rangedBaseAttackSkill = 0;
+      d->rangedHitChanceMod = 0;
       d->rangedDmgLabelOverRide = "";
       d->rangedAbilityUsed = ability_accuracyRanged;
       d->rangedAmmoTypeUsed = item_empty;
@@ -198,7 +198,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->tile = tile_potion;
       d->isQuaffable = true;
       d->isMissileWeapon = true;
-      d->missileBaseAttackSkill = -5;
+      d->missileHitChanceMod = -5;
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMessage = "";
@@ -377,7 +377,7 @@ void ItemData::makeList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tommy Gun");
   d->isMachineGun = true;
   d->rangedDmg = DiceParam(2, 2, 2);
-  d->rangedBaseAttackSkill = -10;
+  d->rangedHitChanceMod = -10;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAmmoTypeUsed = item_drumOfBullets;
@@ -452,7 +452,7 @@ void ItemData::makeList() {
   d->tile = tile_teslaCannon;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tesla Cannon");
   d->isMachineGun = true;
-  d->rangedBaseAttackSkill = -15;
+  d->rangedHitChanceMod = -15;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(2, 3, 3);
@@ -486,7 +486,7 @@ void ItemData::makeList() {
   d->color = clrBlueLight;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
-  d->rangedBaseAttackSkill = 0;
+  d->rangedHitChanceMod = 0;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(1, 7, 0);
@@ -544,7 +544,7 @@ void ItemData::makeList() {
   d->tile = tile_dagger;
   d->glyph = '/';
   d->color = clrWhite;
-  d->missileBaseAttackSkill = 0;
+  d->missileHitChanceMod = 0;
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
@@ -561,7 +561,7 @@ void ItemData::makeList() {
   d->tile = tile_rock;
   d->glyph = '*';
   d->color = clrGray;
-  d->missileBaseAttackSkill = 10;
+  d->missileHitChanceMod = 10;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->primaryAttackMode = primaryAttackMode_missile;
@@ -576,7 +576,7 @@ void ItemData::makeList() {
   d->tile = tile_dagger;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -591,9 +591,9 @@ void ItemData::makeList() {
   d->tile = tile_axe;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hatchet");
   d->meleeDmg = pair<int, int>(1, 5);
-  d->meleeBaseAttackSkill = 15;
+  d->meleeHitChanceMod = 15;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->missileBaseAttackSkill = -5;
+  d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
   addFeatureFoundIn(d, feature_chest);
@@ -611,7 +611,7 @@ void ItemData::makeList() {
   d->color = clrBrown;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
-  d->meleeBaseAttackSkill = 10;
+  d->meleeHitChanceMod = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   itemDefinitions[d->id] = d;
 
@@ -622,7 +622,7 @@ void ItemData::makeList() {
   d->tile = tile_hammer;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hammer");
   d->meleeDmg = pair<int, int>(2, 4);
-  d->meleeBaseAttackSkill = 5;
+  d->meleeHitChanceMod = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -635,7 +635,7 @@ void ItemData::makeList() {
   d->tile = tile_machete;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
-  d->meleeBaseAttackSkill = 0;
+  d->meleeHitChanceMod = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -648,7 +648,7 @@ void ItemData::makeList() {
   d->tile = tile_axe;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
-  d->meleeBaseAttackSkill = -5;
+  d->meleeHitChanceMod = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -662,7 +662,7 @@ void ItemData::makeList() {
   d->tile = tile_pitchfork;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Pitchfork");
   d->meleeDmg = pair<int, int>(3, 4);
-  d->meleeBaseAttackSkill = -5;
+  d->meleeHitChanceMod = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
@@ -676,7 +676,7 @@ void ItemData::makeList() {
   d->tile = tile_sledgeHammer;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledgehammer");
   d->meleeDmg = pair<int, int>(3, 5);
-  d->meleeBaseAttackSkill = -10;
+  d->meleeHitChanceMod = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
@@ -691,7 +691,7 @@ void ItemData::makeList() {
   d->isStackable = true;
   d->color = clrGray;
   d->glyph = '/';
-  d->missileBaseAttackSkill = -5;
+  d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
@@ -730,7 +730,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
   itemDefinitions[d->id] = d;
@@ -739,7 +739,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
   itemDefinitions[d->id] = d;
@@ -748,7 +748,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("punch", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 25;
+  d->meleeHitChanceMod = 25;
   d->meleeDmg = pair<int, int>(1, 2);
   itemDefinitions[d->id] = d;
 
@@ -1349,7 +1349,8 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
   return false;
 }
 
-string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const bool SKIP_EXTRA_INFO) const {
+string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
+                            const bool SKIP_EXTRA_INFO) const {
   const ItemDefinition& d = item->getDef();
   string ret = "";
 
@@ -1375,7 +1376,8 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
 //  }
 
   if(d.isAmmoClip) {
-    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+    const ItemAmmoClip* const ammoItem = dynamic_cast<const ItemAmmoClip*>(item);
+    return ret + " {" + intToString(ammoItem->ammo) + "}";
   }
 
   if(SKIP_EXTRA_INFO == false) {
@@ -1383,14 +1385,15 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
-        Weapon* const w = dynamic_cast<Weapon*>(item);
+        const Weapon* const w = dynamic_cast<const Weapon*>(item);
         ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
 
     if(d.isArmor) {
-      const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
+        const Armor* armor = dynamic_cast<const Armor*>(item);
+      const string armorDataLine = armor->getArmorDataLine(true);
       return armorDataLine == "" ? ret : ret + " " + armorDataLine;
     }
 
@@ -1426,7 +1429,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string sidesStr = intToString(d.meleeDmg.second);
     const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.meleeBaseAttackSkill;
+    const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityVals.getVal(
                                      ability_accuracyMelee, true, *(eng->player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
@@ -1442,7 +1445,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string sidesStr = intToString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.rangedBaseAttackSkill;
+    const int ITEM_SKILL = d.rangedHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
@@ -1460,7 +1463,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string sidesStr = intToString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.missileBaseAttackSkill;
+    const int ITEM_SKILL = d.missileHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;

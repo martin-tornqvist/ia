@@ -322,8 +322,6 @@
 		<Unit filename="../src/Thrower.h" />
 		<Unit filename="../src/TrimTravelVector.cpp" />
 		<Unit filename="../src/TrimTravelVector.h" />
-		<Unit filename="../src/ViewPort.cpp" />
-		<Unit filename="../src/ViewPort.h" />
 		<Unit filename="../src/main.cpp" />
 		<Extensions>
 			<code_completion />

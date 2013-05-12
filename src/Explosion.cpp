@@ -115,7 +115,7 @@ void ExplosionMaker::runExplosion(
   }
 
   //Delay before applying damage and effects
-  eng->sleep(eng->config->DELAY_EXPLOSION);
+//  eng->sleep(eng->config->DELAY_EXPLOSION);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;

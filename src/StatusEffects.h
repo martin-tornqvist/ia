@@ -1832,7 +1832,7 @@ public:
 
   void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false, const bool NO_MESSAGES = false);
 
-  void tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE);
+  void tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE);
 
   coord changeMoveCoord(const coord& actorPos, const coord& movePos) {
     coord ret = movePos;

@@ -455,8 +455,8 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
   delete effect;
 }
 
-void StatusEffectsHandler::tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE) {
-  const ItemDefinition& wpnDef = weapon->getDef();
+void StatusEffectsHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE) {
+  const ItemDefinition& wpnDef = wpn.getDef();
   StatusEffect* wpnEffect = IS_MELEE ? wpnDef.meleeStatusEffect : wpnDef.rangedStatusEffect;
 
   if(wpnEffect != NULL) {

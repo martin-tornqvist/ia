@@ -105,14 +105,17 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
     int blockedInElement = -1;
 
-    const int WPN_BASE_ABILITY = itemDefThrown.missileBaseAttackSkill;
-    const int ACTOR_ABILITY = actorThrowing->getDef()->abilityVals.getVal(ability_accuracyRanged, true, *(actorThrowing));
+    const int WPN_BASE_ABILITY = itemDefThrown.missileHitChanceMod;
+    const int ACTOR_ABILITY = actorThrowing->getDef()->abilityVals.getVal(
+                                ability_accuracyRanged, true, *(actorThrowing));
     const int TOTAL_ABILITY = WPN_BASE_ABILITY + ACTOR_ABILITY;
     const AbilityRollResult_t rollResult = eng->abilityRoll->roll(TOTAL_ABILITY);
 
     const DiceParam& dmg = itemDefThrown.missileDmg;
 
-    const int DMG = rollResult == successCritical ? dmg.rolls * dmg.sides + dmg.plus : eng->dice(dmg.rolls, dmg.sides) + dmg.plus;
+    const int DMG =
+      rollResult == successCritical ? dmg.rolls * dmg.sides + dmg.plus :
+      eng->dice(dmg.rolls, dmg.sides) + dmg.plus;
     const char glyph = itemThrown->getGlyph();
     const SDL_Color clr = itemThrown->getColor();
 
@@ -124,8 +127,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
 
       Actor* const actorHere = eng->mapTests->getActorAtPos(path.at(i));
       if(actorHere != NULL) {
-        //If actor was aimed for
-        if(path.at(i) == aim) {
+        if(path.at(i) == aim || actorHere->getDef()->actorSize >= actorSize_humanoid) {
           if(rollResult >= successSmall) {
             if(eng->map->playerVision[path.at(i).x][path.at(i).y]) {
               eng->renderer->drawCharacter('*', renderArea_mainScreen, path[i].x, path[i].y, clrRedLight);
@@ -134,7 +136,7 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
             }
             const SDL_Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
             eng->log->addMessage(actorHere->getNameThe() + " is hit.", hitMessageClr);
-            actorHere->hit(DMG, damageType_physical); //TODO fix this if there ever is a non-physical thrown weapon
+            actorHere->hit(DMG, damageType_physical);
 
             //If the thing that hit an actor is a potion, let it make stuff happen...
             if(itemDefThrown.isQuaffable) {
@@ -147,30 +149,6 @@ void Thrower::throwMissile(Actor* const actorThrowing, const coord aim) {
             chanceToDestroyItem = 25;
             break;
           }
-        }
-
-        //If actor hit by accident
-        if(actorHere->getDef()->actorSize >= actorSize_humanoid && eng->dice.percentile() < 25) {
-          if(eng->map->playerVision[path.at(i).x][path.at(i).y]) {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen, path.at(i).x, path.at(i).y, clrRedLight);
-            eng->renderer->updateScreen();
-            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
-          }
-          const SDL_Color hitMessageClr = actorHere == eng->player ? clrMessageBad : clrMessageGood;
-          eng->log->addMessage(actorHere->getNameThe() + " is hit.", hitMessageClr);
-          eng->renderer->drawMapAndInterface();
-          actorHere->hit(DMG / 2, damageType_physical); //TODO fix this if there ever is a non-physical thrown weapon
-
-          //If the thing that hit an actor is a potion, let it make stuff happen...
-          if(itemDefThrown.isQuaffable == true) {
-            dynamic_cast<Potion*>(itemThrown)->collide(path.at(i), actorHere, itemDefThrown, eng);
-            delete itemThrown;
-            return;
-          }
-
-          blockedInElement = i;
-          chanceToDestroyItem = 25;
-          break;
         }
       }
 

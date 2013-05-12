@@ -240,9 +240,9 @@ public:
   bool isAmmoClip;
   int ammoContainedInClip;
   DiceParam missileDmg;
-  int missileBaseAttackSkill;
+  int missileHitChanceMod;
   pair<int, int> meleeDmg;
-  int meleeBaseAttackSkill;
+  int meleeHitChanceMod;
   Abilities_t meleeAbilityUsed;
   ItemAttackMessages meleeAttackMessages;
   StatusEffect* meleeStatusEffect; //TODO This requires deep copy of items
@@ -251,7 +251,7 @@ public:
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
   string rangedDmgLabelOverRide;
-  int rangedBaseAttackSkill;
+  int rangedHitChanceMod;
   Abilities_t rangedAbilityUsed;
   ItemId_t rangedAmmoTypeUsed;
   DamageTypes_t rangedDamageType;

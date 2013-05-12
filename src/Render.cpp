@@ -16,7 +16,6 @@
 #include "Attack.h"
 #include "FeatureWall.h"
 #include "FeatureDoor.h"
-#include "Viewport.h"
 
 using namespace std;
 
@@ -305,6 +304,8 @@ void Renderer::drawMarker(const vector<coord>& trace, const int EFFECTIVE_RANGE)
 void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color& colorInner,
     const SDL_Color& colorOuter, const int DURATION) {
+  tracer << "Renderer::drawBlastAnimationAtField()..." << endl;
+
   drawMapAndInterface();
 
   bool isAnyBlastRendered = false;
@@ -345,11 +346,14 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
     eng->sleep(DURATION / 2);
   }
   drawMapAndInterface();
+
+  tracer << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
 }
 
 void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
-    const SDL_Color& color,
-    const int DURATION) {
+    const SDL_Color& color, const int DURATION) {
+  tracer << "Renderer::drawBlastAnimationAtPositions()..." << endl;
+
   drawMapAndInterface();
 
   for(unsigned int i = 0; i < positions.size(); i++) {
@@ -366,6 +370,8 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
   updateScreen();
   eng->sleep(DURATION / 2);
   drawMapAndInterface();
+
+  tracer << "Renderer::drawBlastAnimationAtPositions() [DONE]" << endl;
 }
 
 void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
