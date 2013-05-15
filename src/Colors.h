@@ -3,7 +3,7 @@
 
 #include "SDL/SDL_video.h"
 
-//STANDARD TERMINAL COLORS (somewhat modified...)
+//Standard terminal colors (somewhat modified...)
 //===========================================================
 const SDL_Color clrBlack        = {0, 0, 0, 0};
 const SDL_Color clrGray         = {128, 128, 128, 255};
@@ -29,14 +29,22 @@ const SDL_Color clrCyanLight    = {0, 255, 255, 0};
 const SDL_Color clrBrown        = {153, 102, 61, 0};
 //===========================================================
 
+//Colors taken from Nosferatu movie screen shots
+//===========================================================
+const SDL_Color clrNosferatuSepia     = {139, 114, 57, 0};
+const SDL_Color clrNosferatuSepiaLgt  = {225, 205, 154, 0};
+const SDL_Color clrNosferatuSepiaDrk  = {81, 72, 43, 0};
+
+const SDL_Color clrNosferatuTeal      = {57, 157, 155, 0};
+const SDL_Color clrNosferatuTealLgt   = {88, 226, 228, 0};
+const SDL_Color clrNosferatuTealDrk   = {29, 80, 75, 0};
+//===========================================================
+
 const SDL_Color clrBrownDark    = {96, 64, 32, 0};
-
 const SDL_Color clrBrownGray    = {92, 84, 78, 0};
-
 const SDL_Color clrGold         = {218, 165, 32, 0};
 
 const SDL_Color clrMessageGood  = clrGreenLight;
 const SDL_Color clrMessageBad   = clrRedLight;
-
 
 #endif

@@ -167,7 +167,8 @@ void Player::actorSpecific_hit(const int DMG) {
   //Hit aborts first aid
   if(firstAidTurnsLeft != -1) {
     firstAidTurnsLeft = -1;
-    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
+    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite,
+                         messageInterrupt_force);
   }
 
   if(insanityObsessions[insanityObsession_masochism]) {
@@ -213,7 +214,8 @@ void Player::incrShock(const int VAL) {
 }
 
 void Player::incrShock(const ShockValues_t shockValue) {
-  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(ability_resistStatusMind, true, *this);
+  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(
+                                 ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
     switch(shockValue) {
@@ -239,7 +241,8 @@ void Player::incrShock(const ShockValues_t shockValue) {
   }
 }
 
-void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED) {
+void Player::restoreShock(const int amountRestored,
+                          const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
   for(int i = 0; i < endOfInsanityObsessions; i++) {
@@ -248,7 +251,11 @@ void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RES
       break;
     }
   }
-  shock_ = max((isObsessionActive ? static_cast<double>(MIN_SHOCK_WHEN_OBSESSION) : 0.0), shock_ - amountRestored);
+  const double MIN_SHOCK_WHEN_OBSESSION_DB =
+    static_cast<double>(MIN_SHOCK_WHEN_OBSESSION);
+  shock_ = max(
+             (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
+             shock_ - amountRestored);
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
@@ -274,7 +281,8 @@ void Player::incrInsanity() {
   eng->renderer->drawMapAndInterface();
 
   if(getInsanity() >= 100) {
-    popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
+    popupMessage +=
+      "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true, "Complete insanity!");
     die(true, false, false);
   } else {
@@ -804,7 +812,9 @@ void Player::act() {
       }
     }
 
-    if(statusEffectsHandler_->allowSee() && statusEffectsHandler_->hasEffect(statusConfused) == false) {
+    if(
+      statusEffectsHandler_->allowSee() &&
+      statusEffectsHandler_->hasEffect(statusConfused) == false) {
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;
@@ -866,12 +876,16 @@ void Player::act() {
   }
 
   if(firstAidTurnsLeft > 0) {
+    eng->renderer->drawMapAndInterface();
+    eng->sleep(DELAY_PLAYER_WAITING);
     firstAidTurnsLeft--;
     eng->gameTime->letNextAct();
   }
 
   //Waiting?
   if(waitTurnsLeft > 0) {
+    eng->renderer->drawMapAndInterface();
+    eng->sleep(DELAY_PLAYER_WAITING);
     waitTurnsLeft--;
     eng->gameTime->letNextAct();
   }

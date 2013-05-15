@@ -93,7 +93,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     const PlayerBonuses_t currentBonus = bonusesColumnOne.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == static_cast<int>(i);
-    SDL_Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_ONE, yPos, drwClr);
     yPos++;
   }
@@ -102,7 +102,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     const PlayerBonuses_t currentBonus = bonusesColumnTwo.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == static_cast<int>(i);
-    SDL_Color drwClr = IS_BONUS_MARKED ? clrWhite : clrRedLight;
+    SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_TWO, yPos, drwClr);
     yPos++;
   }
@@ -115,7 +115,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
   const int MAX_WIDTH_DESCR = 50;
   vector<string> descrLines = eng->textFormatting->lineToLines("Effect(s): " + descr, MAX_WIDTH_DESCR);
   for(unsigned int i = 0; i < descrLines.size(); i++) {
-    eng->renderer->drawText(descrLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
+    eng->renderer->drawText(descrLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrNosferatuTealDrk);
     yPos++;
   }
   yPos++;
@@ -137,7 +137,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, con
     }
     vector<string> prereqLines = eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR);
     for(unsigned int i = 0; i < prereqLines.size(); i++) {
-      eng->renderer->drawText(prereqLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrRed);
+      eng->renderer->drawText(prereqLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrNosferatuTealDrk);
       yPos++;
     }
   }

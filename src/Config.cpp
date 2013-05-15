@@ -166,8 +166,8 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
 void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
                   const int OPTIONS_Y_POS) {
 
-  const SDL_Color clrSelected = clrWhite;
-  const SDL_Color clrGeneral = clrRedLight;
+  const SDL_Color clrActive     = clrNosferatuTealLgt;
+  const SDL_Color clrInactive   = clrNosferatuTealDrk;
 
   eng->renderer->clearScreen();
 
@@ -182,102 +182,102 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
   eng->renderer->drawText("-OPTIONS-", renderArea_screen, X0, Y0 - 1, clrWhite);
 
   eng->renderer->drawText("USE TILE SET", renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = USE_TILE_SET ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   eng->renderer->drawText("FONT", renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(fontImageName, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   eng->renderer->drawText("SCALE FONT 2X", renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = FONT_SCALE == 2 ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   eng->renderer->drawText("FULLSCREEN (experimental)", renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(FULLSCREEN ? "YES" : "NO",
                           renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "ASCII MODE WALL SYMBOL";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   eng->renderer->drawText("SKIP INTRO LEVEL", renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = SKIP_INTRO_LEVEL ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "RANGED WEAPON MELEE ATTACK WARNING";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = RANGED_WPN_MELEE_PROMPT ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "PROJECTILE DELAY (ms)";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen,
                           X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "SHOTGUN DELAY (ms)";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen,
                           X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "EXPLOSION DELAY (ms)";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen,
                           X1, Y0 + optionNr,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
   str = "RESET TO DEFAULTS";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr + 1,
-                          browser->getPos().y == optionNr ? clrSelected : clrGeneral);
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
 
   str = "space/esc to confirm changes";
   eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr + 4, clrWhite);

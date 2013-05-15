@@ -63,7 +63,7 @@ void Manual::run() {
 
   int yCell = 2;
   for(int i = topElement; i <= btmElement; i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
     yCell++;
   }
 
@@ -81,7 +81,7 @@ void Manual::run() {
       drawManualInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
         yCell++;
       }
       eng->renderer->updateScreen();
@@ -92,7 +92,7 @@ void Manual::run() {
       drawManualInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
         yCell++;
       }
       eng->renderer->updateScreen();

@@ -67,9 +67,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
     eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 7, Y0_LOGO + i, quoteClr);
   }
 
-  SDL_Color clrGeneral = clrRed;
-  SDL_Color clrBright = clrRedLight;
-
   if(eng->config->USE_TILE_SET) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng->renderer->drawMainMenuLogo(4);
@@ -100,36 +97,39 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   yPos += 0;
 
-  eng->renderer->drawText("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
+  SDL_Color clrActive   = clrNosferatuTealLgt;
+  SDL_Color clrInactive = clrNosferatuTealDrk;
+
+  eng->renderer->drawText("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
+  eng->renderer->drawText("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
-  eng->renderer->drawText("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrActive : clrInactive);
   yPos += 1;
   xPos += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrBright : clrGeneral);
+    eng->renderer->drawText("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrActive : clrInactive);
     yPos += 1;
   }
 

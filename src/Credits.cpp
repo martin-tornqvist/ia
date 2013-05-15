@@ -56,7 +56,7 @@ void Credits::run() {
 
   int yCell = 2;
   for(unsigned int i = 0; i < lines.size(); i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
     yCell++;
   }
 

@@ -90,7 +90,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries, con
       const string DLVL = intToString(entries.at(i).getDlvl());
       const string INSANITY = intToString(entries.at(i).getInsanity());
 
-      const SDL_Color clr = clrRedLight;
+      const SDL_Color clr = clrNosferatuTeal;
       eng->renderer->drawText(dateAndTime, renderArea_screen, X_POS_DATE, yPos, clr);
       eng->renderer->drawText(name, renderArea_screen, X_POS_NAME, yPos, clr);
       eng->renderer->drawText(SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);

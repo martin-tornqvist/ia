@@ -30,12 +30,15 @@ void Actor::newTurn() {
   } else {
     if(this == eng->player) {
       eng->renderer->drawMapAndInterface();
+      eng->sleep(DELAY_PLAYER_WAITING);
     }
     eng->gameTime->letNextAct();
   }
 }
 
-bool Actor::checkIfSeeActor(const Actor& other, const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool Actor::checkIfSeeActor(
+  const Actor& other,
+  const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
   if(other.deadState == actorDeadState_alive) {
     if(this == &other) {
       return true;

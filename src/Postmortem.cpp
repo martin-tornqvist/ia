@@ -23,8 +23,8 @@ void Postmortem::run(bool* const quitGame) {
 void Postmortem::makeInfoLines() {
   tracer << "Postmortem::makeInfoLines()..." << endl;
 
-  const SDL_Color clrHeading = clrRedLight;
-  const SDL_Color clrInfo = clrRedLight;
+  const SDL_Color clrHeading  = clrNosferatuTealLgt;
+  const SDL_Color clrInfo     = clrNosferatuTeal;
 
   postmortemLines.push_back(StringAndColor(" " + eng->player->getNameA(), clrHeading));
 

@@ -83,7 +83,7 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
 
   if(title != "") {
     eng->renderer->drawTextCentered(title, renderArea_mainScreen,
-                                    MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight,
+                                    MAP_X_CELLS_HALF, TITLE_Y_POS, clrNosferatuTealLgt,
                                     clrBlack, true);
   }
 
@@ -94,15 +94,15 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
     if(SHOW_MESSAGE_CENTERED) {
       eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
                                       MAP_X_CELLS_HALF, yPos,
-                                      clrRedLight, clrBlack, true);
+                                      clrWhite, clrBlack, true);
     } else {
-      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrWhite);
     }
     eng->log->addLineToHistory(lines.at(i));
   }
   yPos += 2;
 
-  eng->renderer->drawTextCentered("space/esc to close", renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrWhiteHigh);
+  eng->renderer->drawTextCentered("space/esc to close", renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrNosferatuTeal);
 
   eng->renderer->updateScreen();
 
@@ -131,25 +131,25 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
 
     switch(action) {
       case menuAction_browsed: {
-          multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
-        }
-        break;
+        multiChoiceMessageDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y, TEXT_AREA_HEIGHT, title);
+      }
+      break;
 
       case menuAction_canceled: {
-        }
-        break;
+      }
+      break;
 
       case menuAction_selected: {
-          if(DRAW_MAP_AND_INTERFACE) {
-            eng->renderer->drawMapAndInterface();
-          }
-          return browser.getPos().y;
+        if(DRAW_MAP_AND_INTERFACE) {
+          eng->renderer->drawMapAndInterface();
         }
-        break;
+        return browser.getPos().y;
+      }
+      break;
 
       case menuAction_selectedWithShift: {
-        }
-        break;
+      }
+      break;
     }
   }
 }
@@ -179,9 +179,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
     if(SHOW_MESSAGE_CENTERED) {
       eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
                                       MAP_X_CELLS_HALF, yPos,
-                                      clrRedLight, clrBlack, true);
+                                      clrWhite, clrBlack, true);
     } else {
-      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrWhite);
     }
     eng->log->addLineToHistory(lines.at(i));
   }
@@ -189,7 +189,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
 
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
-    SDL_Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
+    SDL_Color clr = i == currentChoice ? clrNosferatuTealLgt : clrNosferatuTealDrk;
     eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen,
                                     MAP_X_CELLS_HALF, yPos, clr, clrBlack, true);
   }

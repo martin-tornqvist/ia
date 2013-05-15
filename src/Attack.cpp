@@ -175,7 +175,7 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
     const coord& defPos(currentDefender->pos);
     const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
-    const int DIST_HIT_MOD        = 18 - (DIST_TO_TARGET * 6);
+    const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
     const ActorSpeed_t defSpeed   = currentDefender->getDef()->speed;
     const int SPEED_HIT_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :

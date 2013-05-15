@@ -61,7 +61,7 @@ SDL_Color Wall::getColor() const {
     return clrBrownGray;
   }
 
-  return clrGray;
+  return def_->color; // clrGray;
 }
 
 char Wall::getGlyph() const {
