@@ -14,73 +14,81 @@
 #include "DungeonMaster.h"
 #include "PlayerBonuses.h"
 
-void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon, Item* ammoItem, ReloadResult_t result, bool isSwift) {
+void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon,
+                                 Item* ammoItem, ReloadResult_t result,
+                                 bool isSwift) {
   const string actorName = actorReloading->getNameThe();
-  const string weaponName = weapon == NULL ? "" : eng->itemData->getItemRef(weapon, itemRef_plain, true);
-  const string ammoCapacity = weapon == NULL ? "" : intToString(weapon->ammoCapacity);
-  const string ammoCurrent = weapon == NULL ? "" : intToString(weapon->ammoLoaded);
+  const string weaponName =
+    weapon == NULL ? "" :
+    eng->itemData->getItemRef(*weapon, itemRef_plain, true);
+  const string ammoCapacity =
+    weapon == NULL ? "" :
+    intToString(weapon->ammoCapacity);
+  const string ammoCurrent =
+    weapon == NULL ? "" :
+    intToString(weapon->ammoLoaded);
   const bool isPlayer = actorReloading == eng->player;
 
   string ammoName = " ";
   bool isClip = false;
 
   if(ammoItem != NULL) {
-    ammoName = eng->itemData->getItemRef(ammoItem, itemRef_a);
+    ammoName = eng->itemData->getItemRef(*ammoItem, itemRef_a);
     isClip = ammoItem->getDef().isAmmoClip == true;
   }
 
   switch(result) {
-  case reloadResult_weaponNotUsingAmmo: {
-    if(isPlayer == true) {
-      eng->log->addMessage("Weapon does not use ammo.");
-    }
-  }
-  break;
-
-  case reloadResult_alreadyFull: {
-    if(isPlayer == true) {
-      eng->log->addMessage("Weapon already loaded.");
-    }
-  }
-  break;
-
-  case reloadResult_noAmmo: {
-    if(isPlayer == true) {
-      eng->log->addMessage("I carry no ammunition for this weapon.");
-    }
-  }
-  break;
-
-  case reloadResult_success: {
-    const string swiftStr = isSwift ? " swiftly" : "";
-    if(isPlayer) {
-      if(isClip) {
-        eng->log->addMessage("I" + swiftStr + " reload the " + weaponName + ".");
-      } else {
-        eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".");
-      }
-      eng->renderer->drawMapAndInterface();
-    } else {
-      if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
-        eng->log->addMessage(actorName + swiftStr + " reloads.");
+    case reloadResult_weaponNotUsingAmmo: {
+      if(isPlayer == true) {
+        eng->log->addMessage("Weapon does not use ammo.");
       }
     }
-  }
-  break;
-
-  case reloadResult_fumble: {
-    if(isPlayer) {
-      eng->log->addMessage("I fumble with the " + ammoName + ".");
-    } else {
-      if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
-        eng->log->addMessage(actorName + " fumbles with " + ammoName + ".");
-      }
-    }
-  }
-  break;
-
-  default:
     break;
+
+    case reloadResult_alreadyFull: {
+      if(isPlayer == true) {
+        eng->log->addMessage("Weapon already loaded.");
+      }
+    }
+    break;
+
+    case reloadResult_noAmmo: {
+      if(isPlayer == true) {
+        eng->log->addMessage("I carry no ammunition for this weapon.");
+      }
+    }
+    break;
+
+    case reloadResult_success: {
+      const string swiftStr = isSwift ? " swiftly" : "";
+      if(isPlayer) {
+        if(isClip) {
+          eng->log->addMessage("I" + swiftStr + " reload the " + weaponName + ".");
+        } else {
+          eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".");
+        }
+        eng->renderer->drawMapAndInterface();
+      } else {
+        if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
+          eng->log->addMessage(actorName + swiftStr + " reloads.");
+        }
+      }
+    }
+    break;
+
+    case reloadResult_fumble: {
+      if(isPlayer) {
+        eng->log->addMessage("I fumble with the " + ammoName + ".");
+      } else {
+        if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
+          eng->log->addMessage(actorName + " fumbles with " + ammoName + ".");
+        }
+      }
+    }
+    break;
+
+    default:
+      break;
   }
 }
 

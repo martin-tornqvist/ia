@@ -55,7 +55,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
-    if(markerTask == markerTask_aim) {
+    if(markerTask == markerTask_aimRangedWeapon) {
       if(pos_ != eng->player->pos) {
 
         eng->log->clearLog();
@@ -86,7 +86,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   }
   // ------------------------------------------------------- THROW
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
-    if(markerTask == markerTask_throw) {
+    if(markerTask == markerTask_aimThrownWeapon) {
       if(pos_ == eng->player->pos) {
         eng->log->addMessage("I should throw this somewhere else.");
       } else {
@@ -103,7 +103,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   }
   // ------------------------------------------------------- THROW LIT EXPLOSIVE
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
-    if(markerTask == markerTask_throwLitExplosive) {
+    if(markerTask == markerTask_aimLitExplosive) {
       eng->renderer->drawMapAndInterface();
       eng->thrower->playerThrowLitExplosive(pos_);
       done();
@@ -137,7 +137,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
   trace = eng->mapTests->getLine(playerPos.x, playerPos.y, pos_.x, pos_.y, true, 99999);
 //  }
 
-  if(markerTask == markerTask_aim) {
+  if(markerTask == markerTask_aimRangedWeapon) {
     Weapon* const weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
     effectiveRange = weapon->effectiveRangeLimit;
   }
@@ -148,7 +148,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 void Marker::place(const MarkerTask_t markerTask) {
   pos_ = eng->player->pos;
 
-  if(markerTask == markerTask_aim || markerTask == markerTask_look || markerTask == markerTask_throw) {
+  if(markerTask == markerTask_aimRangedWeapon || markerTask == markerTask_look || markerTask == markerTask_aimThrownWeapon) {
     //Attempt to place marker at target.
     if(setCoordToTargetIfVisible() == false) {
       //Else NULL the target, and attempt to place marker at closest visible enemy.
@@ -164,8 +164,10 @@ void Marker::place(const MarkerTask_t markerTask) {
   draw(markerTask);
   eng->renderer->updateScreen();
 
-  if(markerTask == markerTask_look) {
-    eng->look->markerAtCoord(pos_);
+  if(
+    markerTask == markerTask_look ||
+    markerTask == markerTask_aimRangedWeapon) {
+    eng->look->markerAtCoord(pos_, markerTask);
   }
 
   eng->renderer->drawMapAndInterface(false);
@@ -220,8 +222,12 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask) {
     isMoved = true;
   }
 
-  if(markerTask == markerTask_look && isMoved) {
-    eng->look->markerAtCoord(pos_);
+  if(isMoved) {
+    if(
+      markerTask == markerTask_look ||
+      markerTask == markerTask_aimRangedWeapon) {
+      eng->look->markerAtCoord(pos_, markerTask);
+    }
   }
 
   eng->renderer->drawMapAndInterface(false);

@@ -164,7 +164,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
             data.isWeakAttack  ? "feebly "    :
             data.isBackstab    ? "covertly "  : "";
           const SDL_Color clr = data.isBackstab ? clrBlueLight : clrMessageGood;
-          const string wpnName_a = eng->itemData->getItemRef(&wpn, itemRef_a, true);
+          const string wpnName_a = eng->itemData->getItemRef(wpn, itemRef_a, true);
           eng->log->addMessage(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " +
             wpnName_a + dmgPunctuation,

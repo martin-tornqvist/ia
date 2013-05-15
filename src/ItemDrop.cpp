@@ -16,7 +16,8 @@ void ItemDrop::dropAllCharactersItems(Actor* actor, bool died) {
   actor->getInventory()->dropAllNonIntrinsic(actor->pos, true, eng);
 }
 
-void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT, const int NR_ITEMS_TO_DROP) {
+void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
+                                     const int NR_ITEMS_TO_DROP) {
   Inventory* inventory = actorDropping->getInventory();
   Item* itemToDrop = inventory->getItemInElement(ELEMENT);
 
@@ -31,14 +32,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT, co
 
   if(itemToDrop != NULL) {
     if(IS_WHOLE_STACK_DROPPED) {
-      itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
+      itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
       eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng->itemFactory->copyItem(itemToKeep);
       itemToDrop->numberOfItems = NR_ITEMS_TO_DROP;
-      itemRef = eng->itemData->getItemRef(itemToDrop, itemRef_plural);
+      itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
       itemToKeep->numberOfItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
     }

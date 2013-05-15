@@ -394,11 +394,15 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wielded);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
-        engine->log->addMessage("I was wielding " + nameBefore + ".");
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+        engine->log->addMessage(
+          "I was wielding " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
-      engine->log->addMessage("I am now wielding " + nameAfter + ".");
+      const string nameAfter =
+        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+      engine->log->addMessage(
+        "I am now wielding " + nameAfter + ".");
     }
   }
 
@@ -408,11 +412,15 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
-        engine->log->addMessage("I was wielding " + nameBefore + " as a prepared weapon.");
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+        engine->log->addMessage(
+          "I was wielding " + nameBefore + " as a prepared weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
-      engine->log->addMessage("I am now wielding " + nameAfter + " as a prepared weapon.");
+      const string nameAfter =
+        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+      engine->log->addMessage(
+        "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
   }
 
@@ -422,10 +430,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_armorBody);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
+      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
       engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
@@ -437,10 +446,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_missiles);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_plural);
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_plural);
         engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
+      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
       engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
     }
   }
@@ -641,9 +651,8 @@ public:
   LexicograhicalCompareItems(Engine* const engine) : eng(engine) {
   }
   bool operator()(Item* const item1, Item* const item2) {
-    const string& itemName1 = eng->itemData->getItemRef(item1, itemRef_plain, true);
-    const string& itemName2 = eng->itemData->getItemRef(item2, itemRef_plain, true);
-    // tracer << "itemName1: " << itemName1 << "    itemName2: " << itemName2 << endl;
+    const string& itemName1 = eng->itemData->getItemRef(*item1, itemRef_plain, true);
+    const string& itemName2 = eng->itemData->getItemRef(*item2, itemRef_plain, true);
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }

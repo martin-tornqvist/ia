@@ -67,10 +67,12 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
         attackMode = primaryAttackMode_missile;
       }
 
-      str += eng->itemData->getItemInterfaceRef(item, false, attackMode);
+      str += eng->itemData->getItemInterfaceRef(*item, false, attackMode);
       eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
       drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
-      eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+      eng->renderer->drawText(item->getWeightLabel(),
+                              renderArea_screen,
+                              X_POS_WEIGHT, yPos, clrGray);
     }
 
 
@@ -118,10 +120,13 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
     xPos += 2;
 
-    str = eng->itemData->getItemInterfaceRef(item, false);
+    str = eng->itemData->getItemInterfaceRef(*item, false);
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
     drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
-    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+    eng->renderer->drawText(
+      item->getWeightLabel(),
+      renderArea_screen,
+      X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }
 
@@ -186,10 +191,13 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
       attackMode = primaryAttackMode_missile;
     }
 
-    str = eng->itemData->getItemInterfaceRef(item, false, attackMode);
+    str = eng->itemData->getItemInterfaceRef(*item, false, attackMode);
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
     drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
-    eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
+    eng->renderer->drawText(
+      item->getWeightLabel(),
+      renderArea_screen,
+      X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }
 
@@ -208,7 +216,9 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, NR_ITEMS + 1);
 
   const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
-  string str = IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" : "I carry no item to use.";
+  string str =
+    IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" :
+    "I carry no item to use.";
   str += " | space/esc to cancel";
 
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, clrWhiteHigh);
@@ -246,7 +256,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
     xPos += 2;
 
-    str = eng->itemData->getItemRef(item, itemRef_plain, false);
+    str = eng->itemData->getItemRef(*item, itemRef_plain, false);
     if(item->numberOfItems > 1 && item->getDef().isStackable) {
       str += " (" + intToString(item->numberOfItems) + ")";
     }

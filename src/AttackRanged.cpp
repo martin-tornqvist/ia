@@ -99,7 +99,11 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
       //All the following collision checks etc are only made if the projectiles current path element
       //corresponds to an element in the real path vector
-      if(projectilePathElement >= 1 && projectilePathElement < int(projectilePath.size()) && curProj->isObstructed == false) {
+      if(
+        projectilePathElement >= 1 &&
+        projectilePathElement < int(projectilePath.size()) &&
+        curProj->isObstructed == false) {
+
         curProj->pos = projectilePath.at(projectilePathElement);
 
         curProj->isVisibleToPlayer =
@@ -120,7 +124,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
           if(
             curProj->attackData->currentDefenderSize >= actorSize_humanoid ||
-            IS_ACTOR_AIMED_FOR == true) {
+            IS_ACTOR_AIMED_FOR) {
 
             if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT

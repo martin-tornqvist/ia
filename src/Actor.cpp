@@ -266,7 +266,8 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + eng->itemData->getItemRef(armor, itemRef_plain) + " is torn apart!");
+          eng->log->addMessage("My " + eng->itemData->getItemRef(
+                                 *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
         armor = NULL;

@@ -16,13 +16,16 @@
 using namespace std;
 
 AttackData::AttackData(Actor& attacker_, const Weapon& wpn_, Engine* engine) :
-  attacker(&attacker_), eng(engine) {
+  attacker(&attacker_), currentDefender(NULL), attackResult(failSmall),
+  dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
+  isIntrinsicAttack(false), eng(engine) {
   isIntrinsicAttack = wpn_.getDef().isIntrinsic;
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
                                  Actor& defender_, Engine* engine) :
-  AttackData(attacker_, wpn_, engine) {
+  AttackData(attacker_, wpn_, engine), isDefenderDodging(false), isBackstab(false),
+  isWeakAttack(false) {
   currentDefender = &defender_;
 
   const coord& defenderPos = currentDefender->pos;
@@ -78,7 +81,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     if(f->getId() == feature_trap) {
       const Trap* const t = dynamic_cast<const Trap*>(f);
       if(t->getTrapType() == trap_spiderWeb) {
-        const TrapSpiderWeb* const web = dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
+        const TrapSpiderWeb* const web =
+          dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
         if(web->isHolding()) {
           isDefenderHeldByWeb = true;
         }
@@ -136,9 +140,10 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
 RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
                                    const coord& aimPos_, const coord& curPos_,
-                                   Engine* engine,
-                                   ActorSizes_t intendedAimLevel_) :
-  AttackData(attacker_, wpn_, engine) {
+                                   Engine* engine, ActorSizes_t intendedAimLevel_) :
+  AttackData(attacker_, wpn_, engine), hitChanceTot(0),
+  intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none),
+  verbPlayerAttacks(""), verbOtherAttacks("")  {
 
   verbPlayerAttacks = wpn_.getDef().rangedAttackMessages.player;
   verbOtherAttacks  = wpn_.getDef().rangedAttackMessages.other;
@@ -165,15 +170,36 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
     tracer << "RangedAttackData: Defender found" << endl;
     const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
-    const int WPN_HIT_CHANCE_MOD  = wpn_.getDef().rangedHitChanceMod;
-    const int TOT_CHANCE_TO_HIT   = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
-    attackResult = eng->abilityRoll->roll(TOT_CHANCE_TO_HIT);
+    const int WPN_HIT_MOD         = wpn_.getDef().rangedHitChanceMod;
+    const coord& attPos(attacker->pos);
+    const coord& defPos(currentDefender->pos);
+    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
+                                      attPos.x, attPos.y, defPos.x, defPos.y);
+    const int DIST_HIT_MOD        = 18 - (DIST_TO_TARGET * 6);
+    const ActorSpeed_t defSpeed   = currentDefender->getDef()->speed;
+    const int SPEED_HIT_MOD =
+      defSpeed == actorSpeed_sluggish ?  20 :
+      defSpeed == actorSpeed_slow     ?  10 :
+      defSpeed == actorSpeed_normal   ?   0 :
+      defSpeed == actorSpeed_fast     ? -10 : -30;
+    currentDefenderSize           = currentDefender->getDef()->actorSize;
+    const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -10 : 0;
+    hitChanceTot = max(5,
+                       ATTACKER_SKILL +
+                       WPN_HIT_MOD    +
+                       DIST_HIT_MOD   +
+                       SPEED_HIT_MOD  +
+                       SIZE_HIT_MOD);
+
+    attackResult = eng->abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
       tracer << "RangedAttackData: Attack roll succeeded" << endl;
       dmgRolls  = wpn_.getDef().rangedDmg.rolls;
       dmgSides  = wpn_.getDef().rangedDmg.sides;
       dmgPlus   = wpn_.getDef().rangedDmg.plus;
+      dmgRoll   = eng->dice(dmgRolls, dmgSides);
+      dmg       = dmgRoll + dmgPlus;
     }
   }
 }

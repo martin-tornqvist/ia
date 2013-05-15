@@ -45,7 +45,7 @@ bool Device::toggle(Engine* const engine) {
 }
 
 void Device::printToggleMessage(Engine* const engine) {
-  const string name_a = engine->itemData->getItemRef(this, itemRef_a, true);
+  const string name_a = engine->itemData->getItemRef(*this, itemRef_a, true);
   engine->log->addMessage((isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
 }
 
@@ -74,7 +74,7 @@ void Device::newTurnInInventory(Engine* const engine) {
 }
 
 void Device::runBadEffect(Engine* const engine) {
-  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+  const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
 
   const int RND = engine->dice.percentile();
   if(RND < 2) {
@@ -169,8 +169,10 @@ string DeviceTranslocator::getSpecificActivateMessage() {
 void DeviceTranslocator::runGoodEffect(Engine* const engine) {
   Player* const player = engine->player;
   player->getSpotedEnemiesPositions();
-  if(player->getHp() <= player->getHpMax(true) / 4 && player->spotedEnemiesPositions.empty() == false) {
-    const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+  if(
+    player->getHp() <= player->getHpMax(true) / 4 &&
+    player->spotedEnemiesPositions.empty() == false) {
+    const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
     engine->log->addMessage("The " + name + " makes a droning noise...");
     player->teleport(true);
   }

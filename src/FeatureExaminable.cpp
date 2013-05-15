@@ -555,7 +555,8 @@ void Chest::doAction(const ChestAction_t action) {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 
         if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
-          const string wpnName = eng->itemData->getItemRef(wpn, itemRef_plain, true);
+          const string wpnName = eng->itemData->getItemRef(
+                                   *wpn, itemRef_plain, true);
           eng->log->addMessage("My " + wpnName + " is damaged!");
           dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
         }

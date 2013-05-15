@@ -12,6 +12,8 @@
 #include "TextFormatting.h"
 #include "Query.h"
 #include "Marker.h"
+#include "Inventory.h"
+#include "Attack.h"
 
 Entity::Entity(FeatureMob* feature_) :
   feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureMob) {
@@ -21,7 +23,7 @@ Entity::Entity(FeatureStatic* feature_) :
   feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureStatic) {
 }
 
-void Look::markerAtCoord(const coord pos) {
+void Look::markerAtCoord(const coord& pos, const MarkerTask_t markerTask) {
   eng->log->clearLog();
   if(eng->map->playerVision[pos.x][pos.y] == true) {
     eng->log->addMessage("I see here:");
@@ -29,40 +31,55 @@ void Look::markerAtCoord(const coord pos) {
     entityDescribed = getEntityToDescribe(pos);
 
     switch(entityDescribed.entityType) {
-    case entityType_actor:
-      describeBriefActor(entityDescribed.actor);
-      break;
-    case entityType_featureStatic:
-      describeBriefFeatureStatic(entityDescribed.feature);
-      break;
-    case entityType_featureMob:
-      describeBriefFeatureMob(entityDescribed.feature);
-      break;
-    case entityType_item:
-      describeBriefItem(entityDescribed.item);
-      break;
+      case entityType_actor:
+        describeBriefActor(*entityDescribed.actor, markerTask);
+        break;
+      case entityType_featureStatic:
+        describeBriefFeatureStatic(*entityDescribed.feature);
+        break;
+      case entityType_featureMob:
+        describeBriefFeatureMob(*entityDescribed.feature);
+        break;
+      case entityType_item:
+        describeBriefItem(*entityDescribed.item);
+        break;
     }
+  }
+
+  if(markerTask == markerTask_aimRangedWeapon && pos != eng->player->pos) {
+    eng->log->addMessage("| f to fire");
   }
 }
 
-void Look::describeBriefActor(const Actor* const actor) const {
-  eng->log->addMessage(actor->getNameA() + ".");
-  eng->log->addMessage("Press 'l' for description.");
+void Look::describeBriefActor(const Actor& actor,
+                              const MarkerTask_t markerTask) const {
+  eng->log->addMessage(actor.getNameA() + ".");
+
+  if(markerTask == markerTask_look) {
+    eng->log->addMessage("| l for description");
+  } else if(
+    markerTask == markerTask_aimRangedWeapon &&
+    actor.pos != eng->player->pos) {
+    Item* const item = eng->player->getInventory()->getItemInSlot(slot_wielded);
+    Weapon* const wpn = dynamic_cast<Weapon*>(item);
+    RangedAttackData data(*eng->player, *wpn, actor.pos, actor.pos, eng);
+    eng->log->addMessage("| " + intToString(data.hitChanceTot) + "% hit chance");
+  }
 }
 
-void Look::describeBriefFeatureMob(const Feature* const feature) const {
-  eng->log->addMessage(feature->getDescription(false) + ".");
+void Look::describeBriefFeatureMob(const Feature& feature) const {
+  eng->log->addMessage(feature.getDescription(false) + ".");
 }
 
-void Look::describeBriefItem(Item* const item) const {
+void Look::describeBriefItem(const Item& item) const {
   eng->log->addMessage(eng->itemData->getItemInterfaceRef(item, true) + ".");
 }
 
-void Look::describeBriefFeatureStatic(const Feature* const feature) const {
-  eng->log->addMessage(feature->getDescription(false) + ".");
+void Look::describeBriefFeatureStatic(const Feature& feature) const {
+  eng->log->addMessage(feature.getDescription(false) + ".");
 }
 
-void Look::printExtraActorDescription(const coord pos) const {
+void Look::printExtraActorDescription(const coord& pos) const {
   Actor* actor = eng->mapTests->getActorAtPos(pos);
   if(actor != NULL) {
     if(actor != eng->player) {
@@ -106,7 +123,9 @@ Entity Look::getEntityToDescribe(const coord pos) {
   //If there is a living actor there, describe the actor.
   if(actor != NULL && actor != eng->player) {
     if(actor->deadState == actorDeadState_alive) {
-      return Entity(actor);
+      if(eng->player->checkIfSeeActor(*actor, NULL)) {
+        return Entity(actor);
+      }
     }
   }
 

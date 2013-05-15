@@ -231,7 +231,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
               if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
               } else {
-                eng->marker->place(markerTask_aim);
+                eng->marker->place(markerTask_aimRangedWeapon);
               }
             } else {
               //If no ammo loaded, try a reload instead
@@ -292,7 +292,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->player->dynamiteFuseTurns > 0 ||
         eng->player->flareFuseTurns > 0 ||
         eng->player->molotovFuseTurns > 0) {
-        eng->marker->place(markerTask_throwLitExplosive);
+        eng->marker->place(markerTask_aimLitExplosive);
       } else {
         eng->inventoryHandler->runUseScreen();
       }
@@ -311,18 +311,25 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       Item* const itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
       Item* const itemAlt = eng->player->getInventory()->getItemInSlot(slot_wieldedAlt);
-      const string ITEM_WIELDED_NAME = itemWielded == NULL ? "" : eng->itemData->getItemRef(itemWielded, itemRef_a);
-      const string ITEM_ALT_NAME = itemAlt == NULL ? "" : eng->itemData->getItemRef(itemAlt, itemRef_a);
+      const string ITEM_WIELDED_NAME =
+        itemWielded == NULL ? "" :
+        eng->itemData->getItemRef(*itemWielded, itemRef_a);
+      const string ITEM_ALT_NAME =
+        itemAlt == NULL ? "" :
+        eng->itemData->getItemRef(*itemAlt, itemRef_a);
       if(itemWielded == NULL && itemAlt == NULL) {
         eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
       } else {
         if(itemWielded == NULL) {
-          eng->log->addMessage("I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
+          eng->log->addMessage(
+            "I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
         } else {
           if(itemAlt == NULL) {
-            eng->log->addMessage("I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
+            eng->log->addMessage(
+              "I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
           } else {
-            eng->log->addMessage("I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
+            eng->log->addMessage(
+              "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
           }
         }
         eng->player->getInventory()->swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
@@ -361,7 +368,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         if(item == NULL) {
           eng->log->addMessage("I have no missiles chosen for throwing (press 'v').");
         } else {
-          eng->marker->place(markerTask_throw);
+          eng->marker->place(markerTask_aimThrownWeapon);
         }
       }
     }

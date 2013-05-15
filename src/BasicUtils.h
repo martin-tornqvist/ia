@@ -13,12 +13,7 @@ using namespace std;
 class Engine;
 
 enum Time_t {
-  time_year,
-  time_month,
-  time_day,
-  time_hour,
-  time_minute,
-  time_second
+  time_year, time_month, time_day, time_hour, time_minute, time_second
 };
 
 struct TimeData {
@@ -71,7 +66,8 @@ public:
     }
   }
 
-  inline int chebyshevDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int chebyshevDistance(const int X0, const int Y0,
+                               const int X1, const int Y1) const {
     if(X0 == X1 && Y0 == Y1) {
       return 0;
     }

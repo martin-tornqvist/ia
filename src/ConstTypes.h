@@ -33,6 +33,13 @@ enum ShockValues_t
   shockValue_heavy
 };
 
+enum MarkerTask_t {
+  markerTask_aimRangedWeapon,
+  markerTask_look,
+  markerTask_aimThrownWeapon,
+  markerTask_aimLitExplosive
+};
+
 enum GameEntry_t {
   gameEntry_new, gameEntry_load
 };

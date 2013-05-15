@@ -21,11 +21,18 @@ void CharacterInfo::makeLines() {
   const SDL_Color clrTextDark = clrRed;
 
   lines.push_back(StringAndColor("COMBAT SKILLS", clrHeader));
-  const int BASE_MELEE = min(100, eng->player->getDef()->abilityVals.getVal(ability_accuracyMelee, true, *(eng->player)));
-  const int BASE_RANGED = min(100, eng->player->getDef()->abilityVals.getVal(ability_accuracyRanged, true, *(eng->player)));
-  const int BASE_DODGE_ATTACKS = min(100, eng->player->getDef()->abilityVals.getVal(ability_dodgeAttack, true, *(eng->player)));
+  const int BASE_MELEE =
+    min(100, eng->player->getDef()->abilityVals.getVal(
+          ability_accuracyMelee, true, *(eng->player)));
+  const int BASE_RANGED =
+    min(100, eng->player->getDef()->abilityVals.getVal(
+          ability_accuracyRanged, true, *(eng->player)));
+  const int BASE_DODGE_ATTACKS =
+    min(100, eng->player->getDef()->abilityVals.getVal
+        (ability_dodgeAttack, true, *(eng->player)));
   Weapon* kick = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
-  string kickStr = eng->itemData->getItemInterfaceRef(kick, false, primaryAttackMode_melee);
+  string kickStr = eng->itemData->getItemInterfaceRef(
+                     *kick, false, primaryAttackMode_melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
     if(kickStr.at(0) == ' ') {
@@ -35,7 +42,8 @@ void CharacterInfo::makeLines() {
     }
   }
   Weapon* punch = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
-  string punchStr = eng->itemData->getItemInterfaceRef(punch, false, primaryAttackMode_melee);
+  string punchStr = eng->itemData->getItemInterfaceRef(
+                      *punch, false, primaryAttackMode_melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
     if(punchStr.at(0) == ' ') {
@@ -134,12 +142,18 @@ void CharacterInfo::makeLines() {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
     if(d->isQuaffable && (d->isTried || d->isIdentified)) {
       Item* item = eng->itemFactory->spawnItem(d->id);
-      potionList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), d->color));
+      potionList.push_back(
+        StringAndColor(
+          offsetSpaces + eng->itemData->getItemRef(*item, itemRef_plain),
+          d->color));
       delete item;
     } else {
       if(d->isReadable && (d->isTried || d->isIdentified)) {
         Item* item = eng->itemFactory->spawnItem(d->id);
-        manuscriptList.push_back(StringAndColor(offsetSpaces + eng->itemData->getItemRef(item, itemRef_plain), item->getInterfaceClr()));
+        manuscriptList.push_back(
+          StringAndColor(
+            offsetSpaces + eng->itemData->getItemRef(*item, itemRef_plain),
+            item->getInterfaceClr()));
         delete item;
       }
     }

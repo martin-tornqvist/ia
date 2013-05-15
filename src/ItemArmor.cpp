@@ -41,7 +41,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const D
   const int PHYSICAL_AP_AFTER = getAbsorptionPoints(damageType_physical);
 
   if(PHYSICAL_AP_AFTER < PHYSICAL_AP_BEFORE && PHYSICAL_AP_AFTER != 0) {
-    const string armorName = eng->itemData->getItemRef(this, itemRef_plain, true);
+    const string armorName = eng->itemData->getItemRef(*this, itemRef_plain, true);
     eng->log->addMessage("My " + armorName + " is damaged!");
   }
 

@@ -1349,9 +1349,9 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
   return false;
 }
 
-string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
+string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
                             const bool SKIP_EXTRA_INFO) const {
-  const ItemDefinition& d = item->getDef();
+  const ItemDefinition& d = item.getDef();
   string ret = "";
 
   if(d.isDevice && d.isIdentified == false) {
@@ -1362,8 +1362,8 @@ string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
     }
   }
 
-  if(d.isStackable && item->numberOfItems > 1 && itemRefForm == itemRef_plural) {
-    ret = intToString(item->numberOfItems) + " ";
+  if(d.isStackable && item.numberOfItems > 1 && itemRefForm == itemRef_plural) {
+    ret = intToString(item.numberOfItems) + " ";
     ret += d.name.name_plural;
   } else {
     ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
@@ -1376,7 +1376,7 @@ string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
 //  }
 
   if(d.isAmmoClip) {
-    const ItemAmmoClip* const ammoItem = dynamic_cast<const ItemAmmoClip*>(item);
+    const ItemAmmoClip* const ammoItem = dynamic_cast<const ItemAmmoClip*>(&item);
     return ret + " {" + intToString(ammoItem->ammo) + "}";
   }
 
@@ -1385,14 +1385,14 @@ string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
-        const Weapon* const w = dynamic_cast<const Weapon*>(item);
+        const Weapon* const w = dynamic_cast<const Weapon*>(&item);
         ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
 
     if(d.isArmor) {
-        const Armor* armor = dynamic_cast<const Armor*>(item);
+      const Armor* armor = dynamic_cast<const Armor*>(&item);
       const string armorDataLine = armor->getArmorDataLine(true);
       return armorDataLine == "" ? ret : ret + " " + armorDataLine;
     }
@@ -1405,8 +1405,9 @@ string ItemData::getItemRef(const Item* const item, const ItemRef_t itemRefForm,
   return ret;
 }
 
-string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const PrimaryAttackMode_t attackMode) const {
-  const ItemDefinition& d = item->getDef();
+string ItemData::getItemInterfaceRef(const Item& item, const bool ADD_A,
+                                     const PrimaryAttackMode_t attackMode) const {
+  const ItemDefinition& d = item.getDef();
 
   if(d.isDevice && d.isIdentified == false) {
     return ADD_A ? "a Strange Device" : "Strange Device";
@@ -1414,8 +1415,8 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
 
   string ret = "";
 
-  if(d.isStackable && item->numberOfItems > 1) {
-    ret = intToString(item->numberOfItems) + " " + d.name.name_plural;
+  if(d.isStackable && item.numberOfItems > 1) {
+    ret = intToString(item.numberOfItems) + " " + d.name.name_plural;
   } else {
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
@@ -1427,7 +1428,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
     const string rollsStr = intToString(d.meleeDmg.first);
     const string sidesStr = intToString(d.meleeDmg.second);
-    const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
+    const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityVals.getVal(
@@ -1450,7 +1451,7 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(d.rangedHasInfiniteAmmo == false) {
-      Weapon* const w = dynamic_cast<Weapon*>(item);
+      const Weapon* const w = dynamic_cast<const Weapon*>(&item);
       ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
     }
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr + ammoLoadedStr;
@@ -1470,11 +1471,13 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
   }
 
   if(d.isAmmoClip) {
-    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+    const ItemAmmoClip* const clip = dynamic_cast<const ItemAmmoClip*>(&item);
+    return ret + " {" + intToString(clip->ammo) + "}";
   }
 
   if(d.isArmor) {
-    const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
+    const string armorDataLine =
+      dynamic_cast<const Armor*>(&item)->getArmorDataLine(true);
     return armorDataLine == "" ? ret : ret + " " + armorDataLine;
   }
 

@@ -55,14 +55,17 @@ void Monster::act() {
     } else {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng->player) {
-          dynamic_cast<Monster*>(leader)->playerAwarenessCounter = leader->getDef()->nrTurnsAwarePlayer;
+          dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
+            leader->getDef()->nrTurnsAwarePlayer;
         }
       }
     }
   }
 
-  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(ability_stealth, true, *this) > 0;
-  isStealth = eng->player->checkIfSeeActor(*this, NULL) == false && HAS_SNEAK_SKILL;
+  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(
+                                 ability_stealth, true, *this) > 0;
+  isStealth = eng->player->checkIfSeeActor(*this, NULL) == false &&
+              HAS_SNEAK_SKILL;
 
   const AiBehavior& ai = def_->aiBehavior;
 
@@ -259,12 +262,35 @@ bool Monster::tryAttack(Actor& defender) {
                 eng->reload->reloadWeapon(this);
                 return true;
               } else {
-                const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
-                StatusDisabledAttackRanged* status =
-                  new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
-                statusEffectsHandler_->tryAddEffect(status);
-                eng->attack->ranged(*this, *attack.weapon, defender.pos);
-                return true;
+                //Check if friend is in the way (with a small chance to ignore this)
+                bool isBlockedByFriend = false;
+                if(eng->dice.percentile() < 80) {
+                  vector<coord> line = eng->mapTests->getLine(
+                                         pos.x, pos.y,
+                                         defender.pos.x, defender.pos.y,
+                                         true, 9999);
+                  for(unsigned int i = 0; i < line.size(); i++) {
+                    const coord& curPos = line.at(i);
+                    if(curPos != pos && curPos != defender.pos) {
+                      Actor* const actorHere = eng->mapTests->getActorAtPos(curPos);
+                      if(actorHere != NULL) {
+                        isBlockedByFriend = true;
+                        break;
+                      }
+                    }
+                  }
+                }
+
+                if(isBlockedByFriend == false) {
+                  const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
+                  StatusDisabledAttackRanged* status =
+                    new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
+                  statusEffectsHandler_->tryAddEffect(status);
+                  eng->attack->ranged(*this, *attack.weapon, defender.pos);
+                  return true;
+                } else {
+                  return false;
+                }
               }
             }
           }
@@ -302,7 +328,9 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
       }
     } else {
-      if(statusEffectsHandler_->allowAttackRanged(false) && statusEffectsHandler_->hasEffect(statusBurning) == false) {
+      if(
+        statusEffectsHandler_->allowAttackRanged(false) &&
+        statusEffectsHandler_->hasEffect(statusBurning) == false) {
         //Ranged weapon in wielded slot?
         weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
 
@@ -311,7 +339,9 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
-            if(weapon->ammoLoaded == 0 && weapon->getDef().rangedHasInfiniteAmmo == false) {
+            if(
+              weapon->ammoLoaded == 0 &&
+              weapon->getDef().rangedHasInfiniteAmmo == false) {
               if(inventory_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;
               }

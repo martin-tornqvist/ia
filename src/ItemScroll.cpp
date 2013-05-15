@@ -240,9 +240,12 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
     failedToLearnRealName(engine);
     return;
   } else {
-    Item* const item = itemIdentifyCandidates.at(engine->dice.getInRange(0, NR_ELEMENTS - 1));
+    Item* const item =
+      itemIdentifyCandidates.at(
+        engine->dice.getInRange(0, NR_ELEMENTS - 1));
 
-    const string itemNameBefore = engine->itemData->getItemRef(item, itemRef_a, true);
+    const string itemNameBefore =
+      engine->itemData->getItemRef(*item, itemRef_a, true);
 
     const ItemDefinition& d = item->getDef();
     if(d.isScroll) {
@@ -259,7 +262,7 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
              itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
     }
 
-    const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
+    const string itemNameAfter = engine->itemData->getItemRef(*item, itemRef_a, true);
 
     engine->log->addMessage("I gain intuitions about " + itemNameBefore + "...");
     engine->log->addMessage("It is identified as " + itemNameAfter + "!");

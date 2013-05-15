@@ -43,6 +43,7 @@ public:
   RangedAttackData(Actor& attacker_, const Weapon& wpn_, const coord& aimPos_,
                    const coord& curPos_, Engine* engine,
                    ActorSizes_t intendedAimLevel_ = actorSize_none);
+  int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
   ActorSizes_t  currentDefenderSize;
   string        verbPlayerAttacks;

@@ -161,12 +161,14 @@ void InventoryHandler::runSlotsScreen() {
             }
           } else {
             const bool IS_ARMOR = slot->id == slot_armorBody;
-            const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
+            const string itemName = eng->itemData->getItemRef(*slot->item, itemRef_plain);
             inv->moveItemToGeneral(slot);
             if(IS_ARMOR) {
               screenToOpenAfterDrop = inventoryScreen_slots;
               browserPosToSetAfterDrop = browser.getPos().y;
-              eng->log->addMessage("I take off my " + itemName + ".", clrWhite, messageInterrupt_never, true);
+              eng->log->addMessage(
+                "I take off my " + itemName + ".", clrWhite,
+                messageInterrupt_never, true);
               eng->renderer->drawMapAndInterface();
               eng->gameTime->letNextAct();
               return;

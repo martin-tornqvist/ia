@@ -111,9 +111,10 @@ void Interface::drawInfoLines() {
 
   Item* itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
   if(itemWielded == NULL) {
-    eng->renderer->drawText("Unarmed", renderArea_characterLines, xPos, yPos, clrWhite);
+    eng->renderer->drawText(
+      "Unarmed", renderArea_characterLines, xPos, yPos, clrWhite);
   } else {
-    str = eng->itemData->getItemInterfaceRef(itemWielded, false);
+    str = eng->itemData->getItemInterfaceRef(*itemWielded, false);
     eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
     xPos += str.length() + 1;
   }
@@ -159,7 +160,7 @@ void Interface::drawInfoLines() {
   if(itemMissiles == NULL) {
     eng->renderer->drawText("No missile weapon", renderArea_characterLines, xPos, yPos, clrWhite);
   } else {
-    str = eng->itemData->getItemInterfaceRef(itemMissiles, false);
+    str = eng->itemData->getItemInterfaceRef(*itemMissiles, false);
     eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
     xPos += str.length() + 1;
   }

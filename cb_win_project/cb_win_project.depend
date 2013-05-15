@@ -16,14 +16,14 @@
 	"DebugMode.h"
 	"BasicUtils.h"
 
-1368269984 c:\dev\ia\src\basicutils.h
+1368561900 c:\dev\ia\src\basicutils.h
 	<vector>
 	<math.h>
 	"ConstTypes.h"
 	"Actor.h"
 	"MersenneTwister.h"
 
-1368269984 c:\dev\ia\src\consttypes.h
+1368560755 c:\dev\ia\src\consttypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -91,7 +91,7 @@
 	"ItemData.h"
 	"ConstDungeonSettings.h"
 
-1368310863 c:\dev\ia\src\itemdata.h
+1368370625 c:\dev\ia\src\itemdata.h
 	<vector>
 	<string>
 	"ConstTypes.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1368269984 source:c:\dev\ia\src\actor.cpp
+1368370640 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -397,7 +397,7 @@
 1339441467 source:c:\dev\ia\src\actormigo.cpp
 	"monsterIncludeFiles.h"
 
-1368302710 source:c:\dev\ia\src\actormonster.cpp
+1368568297 source:c:\dev\ia\src\actormonster.cpp
 	"ActorMonster.h"
 	<iostream>
 	"Engine.h"
@@ -422,7 +422,7 @@
 	"AI_castRandomSpell.h"
 	"AI_handleInventory.h"
 
-1368351589 c:\dev\ia\src\attack.h
+1368561106 c:\dev\ia\src\attack.h
 	<vector>
 	<math.h>
 	<iostream>
@@ -436,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1368300932 source:c:\dev\ia\src\actorplayer.cpp
+1368370662 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -511,7 +511,7 @@
 	"Art.h"
 	"Engine.h"
 
-1368360826 source:c:\dev\ia\src\attack.cpp
+1368563116 source:c:\dev\ia\src\attack.cpp
 	"Attack.h"
 	<cassert>
 	"Engine.h"
@@ -524,7 +524,7 @@
 	"FeatureTrap.h"
 	"PlayerBonuses.h"
 
-1368352333 source:c:\dev\ia\src\attackmelee.cpp
+1368370670 source:c:\dev\ia\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -539,7 +539,7 @@
 1365780568 c:\dev\ia\src\knockback.h
 	"ConstTypes.h"
 
-1368360663 source:c:\dev\ia\src\attackranged.cpp
+1368556256 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -644,7 +644,7 @@
 	<vector>
 	"ConstTypes.h"
 
-1368269984 source:c:\dev\ia\src\characterinfo.cpp
+1368370791 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -876,7 +876,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1355677713 c:\dev\ia\src\look.h
+1368370420 c:\dev\ia\src\look.h
 	"ConstTypes.h"
 
 1363555800 c:\dev\ia\src\mainmenu.h
@@ -892,7 +892,7 @@
 	"ConstTypes.h"
 	"ConstDungeonSettings.h"
 
-1368269984 c:\dev\ia\src\marker.h
+1368370408 c:\dev\ia\src\marker.h
 	<iostream>
 	<vector>
 	"ConstTypes.h"
@@ -1074,7 +1074,7 @@
 	"Popup.h"
 	"Input.h"
 
-1368269984 source:c:\dev\ia\src\input.cpp
+1368560755 source:c:\dev\ia\src\input.cpp
 	"Input.h"
 	"SDL/SDL_Keyboard.h"
 	"Engine.h"
@@ -1106,7 +1106,7 @@
 	"PlayerCreateCharacter.h"
 	"Disarm.h"
 
-1368269984 source:c:\dev\ia\src\interface.cpp
+1368370874 source:c:\dev\ia\src\interface.cpp
 	"Interface.h"
 	"Engine.h"
 	"ConstTypes.h"
@@ -1125,7 +1125,7 @@
 	<fstream>
 	"Colors.h"
 
-1368269984 source:c:\dev\ia\src\inventory.cpp
+1368371160 source:c:\dev\ia\src\inventory.cpp
 	"Inventory.h"
 	<algorithm>
 	"ItemWeapon.h"
@@ -1140,7 +1140,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1368269984 source:c:\dev\ia\src\inventoryhandler.cpp
+1368370925 source:c:\dev\ia\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -1170,12 +1170,12 @@
 
 1350576993 source:c:\dev\ia\src\itemammoclip.cpp
 
-1365374974 source:c:\dev\ia\src\itemarmor.cpp
+1368370962 source:c:\dev\ia\src\itemarmor.cpp
 	"ItemArmor.h"
 	"Engine.h"
 	"Log.h"
 
-1368352538 source:c:\dev\ia\src\itemdata.cpp
+1368371345 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1194,7 +1194,7 @@
 	"Item.h"
 	"Converters.h"
 
-1364422837 source:c:\dev\ia\src\itemdrop.cpp
+1368371580 source:c:\dev\ia\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"ConstDungeonSettings.h"
@@ -1218,7 +1218,7 @@
 	"ItemDrop.h"
 	"ItemDevice.h"
 
-1365117514 source:c:\dev\ia\src\itempickup.cpp
+1368371338 source:c:\dev\ia\src\itempickup.cpp
 	"ItemPickup.h"
 	"Engine.h"
 	"Item.h"
@@ -1231,7 +1231,7 @@
 	"ItemDrop.h"
 	"ItemFactory.h"
 
-1368269984 source:c:\dev\ia\src\itemscroll.cpp
+1368371377 source:c:\dev\ia\src\itemscroll.cpp
 	"ItemScroll.h"
 	"ItemData.h"
 	"Engine.h"
@@ -1295,7 +1295,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1368269984 source:c:\dev\ia\src\look.cpp
+1368564920 source:c:\dev\ia\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -1308,6 +1308,8 @@
 	"TextFormatting.h"
 	"Query.h"
 	"Marker.h"
+	"Inventory.h"
+	"Attack.h"
 
 1368269984 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
@@ -1449,7 +1451,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 
-1368358752 source:c:\dev\ia\src\marker.cpp
+1368560755 source:c:\dev\ia\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -1571,7 +1573,7 @@
 	"Input.h"
 	"Render.h"
 
-1365546042 source:c:\dev\ia\src\reload.cpp
+1368371454 source:c:\dev\ia\src\reload.cpp
 	"Reload.h"
 	"Engine.h"
 	"Converters.h"
@@ -1603,7 +1605,7 @@
 	"FeatureWall.h"
 	"FeatureDoor.h"
 
-1368269984 source:c:\dev\ia\src\renderinventory.cpp
+1368371522 source:c:\dev\ia\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1681,7 +1683,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1368360291 source:c:\dev\ia\src\thrower.cpp
+1368371532 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -1749,7 +1751,7 @@
 
 1355674112 c:\dev\ia\src\declares.h
 
-1368269984 source:c:\dev\ia\src\config.cpp
+1368556526 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -5709,7 +5711,7 @@
 	"Blood.h"
 	"FeatureFactory.h"
 
-1368269984 source:c:\dev\ia\src\actormonsterspecific.cpp
+1368370649 source:c:\dev\ia\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -10162,7 +10164,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1368269984 source:c:\dev\ia\src\itemdevice.cpp
+1368371211 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -10327,7 +10329,7 @@
 	<string>
 	<vector>
 
-1368269984 source:c:\dev\ia\src\featureexaminable.cpp
+1368370814 source:c:\dev\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
