@@ -683,7 +683,6 @@ void Renderer::drawAscii() {
       currentDrw->clear();
 
       if(eng->map->playerVision[x][y]) {
-        //Static features
         char goreGlyph = ' ';
         if(eng->map->featuresStatic[x][y]->canHaveGore()) {
           goreGlyph = eng->map->featuresStatic[x][y]->getGoreGlyph();
@@ -700,6 +699,11 @@ void Renderer::drawAscii() {
           currentDrw->glyph = goreGlyph;
           currentDrw->color = clrRed;
         }
+        if(eng->map->light[x][y]) {
+          if(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType_walk)) {
+            currentDrw->color = clrYellow;
+          }
+        }
       }
     }
   }
@@ -712,10 +716,16 @@ void Renderer::drawAscii() {
     actor = eng->gameTime->getActorAt(i);
     xPos = actor->pos.x;
     yPos = actor->pos.y;
-    if(actor->deadState == actorDeadState_corpse && actor->getDef()->glyph != ' ' && eng->map->playerVision[xPos][yPos]) {
+    if(
+      actor->deadState == actorDeadState_corpse &&
+      actor->getDef()->glyph != ' ' &&
+      eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayAscii[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->glyph = actor->getGlyph();
+      if(eng->map->light[x][y]) {
+        currentDrw->color = clrYellow;
+      }
     }
   }
 
@@ -835,7 +845,6 @@ void Renderer::drawTiles() {
 
         if(eng->map->playerVision[x][y]) {
 
-          //Static features
           Tile_t goreTile = tile_empty;
           if(eng->map->featuresStatic[x][y]->canHaveGore()) {
             goreTile = eng->map->featuresStatic[x][y]->getGoreTile();
@@ -858,6 +867,11 @@ void Renderer::drawTiles() {
             currentDrw->tile = goreTile;
             currentDrw->color = clrRed;
           }
+          if(eng->map->light[x][y]) {
+            if(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType_walk)) {
+              currentDrw->color = clrYellow;
+            }
+          }
         }
       }
     }
@@ -871,10 +885,16 @@ void Renderer::drawTiles() {
     actor = eng->gameTime->getActorAt(i);
     xPos = actor->pos.x;
     yPos = actor->pos.y;
-    if(actor->deadState == actorDeadState_corpse && actor->getTile() != ' ' && eng->map->playerVision[xPos][yPos]) {
+    if(
+      actor->deadState == actorDeadState_corpse &&
+      actor->getTile() != ' ' &&
+      eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayTiles[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->tile = actor->getTile();
+      if(eng->map->light[x][y]) {
+        currentDrw->color = clrYellow;
+      }
     }
   }
 
