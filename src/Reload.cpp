@@ -188,7 +188,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
   if(result == reloadResult_success || result == reloadResult_fumble) {
     acted = true;
     if(isSwiftReload == false) {
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
     }
   }
 

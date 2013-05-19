@@ -13,45 +13,47 @@
 #include "Render.h"
 #include "ItemScroll.h"
 #include "Map.h"
+#include "ItemFactory.h"
 
-void Marker::readKeys(const MarkerTask_t markerTask) {
+void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
+                      Item* itemThrown) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(d.isShiftHeld_) {
-      move(1, -1, markerTask);
+      move(1, -1, markerTask, itemThrown);
     } else if(d.isCtrlHeld_) {
-      move(1, 1, markerTask);
+      move(1, 1, markerTask, itemThrown);
     } else {
-      move(1, 0, markerTask);
+      move(1, 0, markerTask, itemThrown);
     }
   }
   if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
-    move(0, -1, markerTask);
+    move(0, -1, markerTask, itemThrown);
   }
   if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
     if(d.isShiftHeld_) {
-      move(-1, -1, markerTask);
+      move(-1, -1, markerTask, itemThrown);
     } else if(d.isCtrlHeld_) {
-      move(-1, 1, markerTask);
+      move(-1, 1, markerTask, itemThrown);
     } else {
-      move(-1, 0, markerTask);
+      move(-1, 0, markerTask, itemThrown);
     }
   }
   if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
-    move(0, 1, markerTask);
+    move(0, 1, markerTask, itemThrown);
   }
   if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
-    move(1, -1, markerTask);
+    move(1, -1, markerTask, itemThrown);
   }
   if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
-    move(-1, -1, markerTask);
+    move(-1, -1, markerTask, itemThrown);
   }
   if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
-    move(-1, 1, markerTask);
+    move(-1, 1, markerTask, itemThrown);
   }
   if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
-    move(1, 1, markerTask);
+    move(1, 1, markerTask, itemThrown);
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
@@ -81,7 +83,7 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'l') {
     if(markerTask == markerTask_look) {
       eng->look->printExtraActorDescription(pos_);
-      move(0, 0, markerTask_look);
+      move(0, 0, markerTask_look, itemThrown);
     }
   }
   // ------------------------------------------------------- THROW
@@ -95,7 +97,8 @@ void Marker::readKeys(const MarkerTask_t markerTask) {
         if(actor != NULL) {
           eng->player->target = actor;
         }
-        eng->thrower->throwMissile(eng->player, pos_);
+        eng->thrower->throwItem(*eng->player, pos_, *itemThrown);
+        data.didThrowMissile = true;
       }
 
       done();
@@ -134,7 +137,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 //    trace.push_back(coord(pos_.x, pos_.y));
 //  } else {
   const coord playerPos = eng->player->pos;
-  trace = eng->mapTests->getLine(playerPos.x, playerPos.y, pos_.x, pos_.y, true, 99999);
+  trace = eng->mapTests->getLine(playerPos, pos_, true, 99999);
 //  }
 
   if(markerTask == markerTask_aimRangedWeapon) {
@@ -145,10 +148,15 @@ void Marker::draw(const MarkerTask_t markerTask) const {
   eng->renderer->drawMarker(trace, effectiveRange);
 }
 
-void Marker::place(const MarkerTask_t markerTask) {
+MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
   pos_ = eng->player->pos;
 
-  if(markerTask == markerTask_aimRangedWeapon || markerTask == markerTask_look || markerTask == markerTask_aimThrownWeapon) {
+  MarkerReturnData data;
+
+  if(
+    markerTask == markerTask_aimRangedWeapon  ||
+    markerTask == markerTask_look             ||
+    markerTask == markerTask_aimThrownWeapon) {
     //Attempt to place marker at target.
     if(setCoordToTargetIfVisible() == false) {
       //Else NULL the target, and attempt to place marker at closest visible enemy.
@@ -166,8 +174,9 @@ void Marker::place(const MarkerTask_t markerTask) {
 
   if(
     markerTask == markerTask_look ||
-    markerTask == markerTask_aimRangedWeapon) {
-    eng->look->markerAtCoord(pos_, markerTask);
+    markerTask == markerTask_aimRangedWeapon ||
+    markerTask == markerTask_aimThrownWeapon) {
+    eng->look->markerAtCoord(pos_, markerTask, itemThrown);
   }
 
   eng->renderer->drawMapAndInterface(false);
@@ -176,8 +185,10 @@ void Marker::place(const MarkerTask_t markerTask) {
 
   isDone_ = false;
   while(isDone_ == false) {
-    readKeys(markerTask);
+    readKeys(markerTask, data, itemThrown);
   }
+
+  return data;
 }
 
 void Marker::setCoordToClosestEnemyIfVisible() {
@@ -215,18 +226,21 @@ bool Marker::setCoordToTargetIfVisible() {
   return false;
 }
 
-void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask) {
+void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
+                  const Item* itemThrown) {
   bool isMoved = false;
-  if(eng->mapTests->isCellInsideMainScreen(pos_.x + DX, pos_.y + DY)) {
-    pos_ += coord(DX, DY);
+  const coord newPos = pos_ + coord(DX, DY);
+  if(eng->mapTests->isCellInsideMap(newPos)) {
+    pos_ = newPos;
     isMoved = true;
   }
 
   if(isMoved) {
     if(
-      markerTask == markerTask_look ||
-      markerTask == markerTask_aimRangedWeapon) {
-      eng->look->markerAtCoord(pos_, markerTask);
+      markerTask == markerTask_look             ||
+      markerTask == markerTask_aimRangedWeapon  ||
+      markerTask == markerTask_aimThrownWeapon) {
+      eng->look->markerAtCoord(pos_, markerTask, itemThrown);
     }
   }
 

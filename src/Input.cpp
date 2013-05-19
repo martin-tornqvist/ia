@@ -231,7 +231,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
               if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
               } else {
-                eng->marker->place(markerTask_aimRangedWeapon);
+                eng->marker->run(markerTask_aimRangedWeapon, NULL);
               }
             } else {
               //If no ammo loaded, try a reload instead
@@ -292,7 +292,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->player->dynamiteFuseTurns > 0 ||
         eng->player->flareFuseTurns > 0 ||
         eng->player->molotovFuseTurns > 0) {
-        eng->marker->place(markerTask_aimLitExplosive);
+        eng->marker->run(markerTask_aimLitExplosive, NULL);
       } else {
         eng->inventoryHandler->runUseScreen();
       }
@@ -348,7 +348,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         const string TURNS_STR = intToString(TURNS_TO_APPLY);
         eng->log->addMessage("I pause for a while and search around (" + TURNS_STR + " turns).");
         eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
       } else {
         eng->log->addMessage("Not while an enemy is near.");
         eng->renderer->drawMapAndInterface();
@@ -363,12 +363,24 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
 
       if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true)) {
-        Item* item = eng->player->getInventory()->getItemInSlot(slot_missiles);
+        Inventory* const playerInv = eng->player->getInventory();
+        Item* itemStack = playerInv->getItemInSlot(slot_missiles);
 
-        if(item == NULL) {
-          eng->log->addMessage("I have no missiles chosen for throwing (press 'v').");
+        if(itemStack == NULL) {
+          eng->log->addMessage(
+            "I have no missiles chosen for throwing (press 'v').");
         } else {
-          eng->marker->place(markerTask_aimThrownWeapon);
+          Item* itemToThrow = eng->itemFactory->copyItem(itemStack);
+          itemToThrow->numberOfItems = 1;
+
+          const MarkerReturnData markerReturnData =
+            eng->marker->run(markerTask_aimThrownWeapon, itemToThrow);
+
+          if(markerReturnData.didThrowMissile) {
+            playerInv->decreaseItemInSlot(slot_missiles);
+          } else {
+            delete itemToThrow;
+          }
         }
       }
     }
@@ -380,7 +392,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getStatusEffectsHandler()->allowSee()) {
-        eng->marker->place(markerTask_look);
+        eng->marker->run(markerTask_look, NULL);
       } else {
         eng->log->addMessage("I am blind.");
       }
@@ -412,7 +424,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             const string TURNS_STR = intToString(TURNS_TO_HEAL);
             eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
             eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
-            eng->gameTime->letNextAct();
+            eng->gameTime->endTurnOfCurrentActor();
           } else {
             eng->log->addMessage("Not while an enemy is near.");
             eng->renderer->drawMapAndInterface();

@@ -34,14 +34,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
-      eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
+      eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng->itemFactory->copyItem(itemToKeep);
       itemToDrop->numberOfItems = NR_ITEMS_TO_DROP;
       itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
       itemToKeep->numberOfItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
-      eng->itemDrop->dropItemOnMap(actorDropping->pos, &itemToDrop);
+      eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
     }
 
     //Messages
@@ -58,16 +58,16 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     }
 
     //End turn
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
 
   }
 }
 
-void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
+Item* ItemDrop::dropItemOnMap(const coord& pos, Item& item) {
   //If target cell is bottomless, just destroy the item
   if(eng->map->featuresStatic[pos.x][pos.y]->isBottomless()) {
-    delete *item;
-    return;
+    delete &item;
+    return NULL;
   }
 
   //Make a vector of all cells on map with no blocking feature
@@ -79,14 +79,14 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
     }
   }
   vector<coord> freeCells;
-  eng->mapTests->makeMapVectorFromArray(freeCellArray, freeCells);
+  eng->mapTests->makeBoolVectorFromMapArray(freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
   IsCloserToOrigin isCloserToOrigin(pos, eng);
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
   int curX, curY, stackX, stackY;
-  const bool ITEM_STACKS = (*item)->getDef().isStackable;
+  const bool ITEM_STACKS = item.getDef().isStackable;
   int ii = 0;
   const unsigned int vectorSize = freeCells.size();
   for(unsigned int i = 0; i < vectorSize; i++) {
@@ -99,20 +99,20 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
         stackY = freeCells.at(ii).y;
         Item* itemFoundOnFloor = eng->map->items[stackX][stackY];
         if(itemFoundOnFloor != NULL) {
-          if(itemFoundOnFloor->getDef().id == (*item)->getDef().id) {
-            (*item)->numberOfItems += itemFoundOnFloor->numberOfItems;
+          if(itemFoundOnFloor->getDef().id == item.getDef().id) {
+            item.numberOfItems += itemFoundOnFloor->numberOfItems;
             delete itemFoundOnFloor;
-            eng->map->items[stackX][stackY] = *item;
-            return;
+            eng->map->items[stackX][stackY] = &item;
+            return &item;
           }
         }
         ii++;
       }
     } else {
-      (*item)->appplyDropEffects();
+      item.appplyDropEffects();
     }
 
-    if(*item == NULL) {
+    if(&item == NULL) {
       break;
     }
 
@@ -120,7 +120,7 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
     curY = freeCells.at(i).y;
     if(eng->map->items[curX][curY] == NULL) {
 
-      eng->map->items[curX][curY] = *item;
+      eng->map->items[curX][curY] = &item;
 
       if(eng->player->pos == coord(curX, curY)) {
         if(curX != pos.x || curY != pos.y) {
@@ -132,8 +132,8 @@ void ItemDrop::dropItemOnMap(const coord pos, Item** item) {
     }
 
     if(i == vectorSize - 1) {
-      delete *item;
-      *item = NULL;
+      delete &item;
+      return NULL;
     }
   }
 }

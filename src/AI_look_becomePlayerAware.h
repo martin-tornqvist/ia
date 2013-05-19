@@ -18,7 +18,7 @@ public:
         if(IS_AWARE_BEFORE) {
           return false;
         } else {
-          engine->gameTime->letNextAct();
+          engine->gameTime->endTurnOfCurrentActor();
           return true;
         }
       }
@@ -34,7 +34,7 @@ public:
             if(IS_AWARE_BEFORE) {
               return false;
             } else {
-              engine->gameTime->letNextAct();
+              engine->gameTime->endTurnOfCurrentActor();
               return true;
             }
           }
@@ -43,7 +43,7 @@ public:
           if(IS_AWARE_BEFORE) {
             return false;
           } else {
-            engine->gameTime->letNextAct();
+            engine->gameTime->endTurnOfCurrentActor();
             return true;
           }
         }

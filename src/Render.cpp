@@ -723,7 +723,7 @@ void Renderer::drawAscii() {
       currentDrw = &renderArrayAscii[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->glyph = actor->getGlyph();
-      if(eng->map->light[x][y]) {
+      if(eng->map->light[xPos][yPos]) {
         currentDrw->color = clrYellow;
       }
     }
@@ -892,7 +892,7 @@ void Renderer::drawTiles() {
       currentDrw = &renderArrayTiles[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->tile = actor->getTile();
-      if(eng->map->light[x][y]) {
+      if(eng->map->light[xPos][yPos]) {
         currentDrw->color = clrYellow;
       }
     }

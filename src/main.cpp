@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
           } else if(engine->player->deadState == actorDeadState_alive) {
             engine->gameTime->getCurrentActor()->newTurn();
           } else {
-            engine->gameTime->letNextAct();
+            engine->gameTime->endTurnOfCurrentActor();
           }
         }
 

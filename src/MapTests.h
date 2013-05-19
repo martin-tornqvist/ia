@@ -28,42 +28,63 @@ public:
     eng = engine;
   }
 
-  void makeVisionBlockerArray(const coord& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS], const int MAX_VISION_RANMGE = FOV_MAX_RADI_INT);
-  void makeMoveBlockerArray(const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-  void makeMoveBlockerArrayForMoveType(const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeVisionBlockerArray(
+    const coord& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
+    const int MAX_VISION_RANMGE = FOV_MAX_RADI_INT);
+
+  void makeMoveBlockerArray(
+    const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
+  void makeMoveBlockerArrayForMoveType(
+    const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
   void makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
   void makeItemBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-  void makeMoveBlockerArrayFeaturesOnly(const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-  void makeMoveBlockerArrayForMoveTypeFeaturesOnly(const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
+  void makeMoveBlockerArrayFeaturesOnly(
+    const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
+  void makeMoveBlockerArrayForMoveTypeFeaturesOnly(
+    const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
   void addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
   void addLivingActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+
   void addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-  void addAdjacentLivingActorsToBlockerArray(const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-  //Mostly for map generation
-  void makeWalkBlockingArrayFeaturesOnly(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], int valueArray[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
-                     const coord target);
+  void addAdjacentLivingActorsToBlockerArray(
+    const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void makeMapVectorFromArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill);
+  void makeWalkBlockingArrayFeaturesOnly(
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  bool isCellInsideMainScreen(const int x, const int y) const {
-    if(x < 0) {
+  void floodFill(
+    const coord& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
+    const coord& target);
+
+  void makeBoolVectorFromMapArray(
+    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill);
+
+  inline bool isCellInsideMap(const coord& pos) const {
+    if(pos.x < 0) {
       return false;
     }
-    if(y < 0) {
+    if(pos.y < 0) {
       return false;
     }
-    if(x >= MAP_X_CELLS) {
+    if(pos.x >= MAP_X_CELLS) {
       return false;
     }
-    if(y >= MAP_Y_CELLS) {
+    if(pos.y >= MAP_Y_CELLS) {
       return false;
     }
     return true;
   }
 
-  bool isAreaInsideMainScreen(const Rect& area) {
+  bool isAreaInsideMap(const Rect& area) {
     if(area.x0y0.x < 0) {
       return false;
     }
@@ -79,33 +100,42 @@ public:
     return true;
   }
 
-  bool isAreaStrictlyInsideOrSameAsArea(const Rect& innerArea, const Rect& outerArea) {
-    return innerArea.x0y0.x >= outerArea.x0y0.x && innerArea.x1y1.x <= outerArea.x1y1.x &&
-           innerArea.x0y0.y >= outerArea.x0y0.y && innerArea.x1y1.y <= outerArea.x1y1.y;
+  inline bool isAreaInsideOther(const Rect& inner, const Rect& outer,
+                                const bool COUNT_EQUAL_AS_INSIDE) const {
+    if(COUNT_EQUAL_AS_INSIDE) {
+      return
+        inner.x0y0.x >= outer.x0y0.x &&
+        inner.x1y1.x <= outer.x1y1.x &&
+        inner.x0y0.y >= outer.x0y0.y &&
+        inner.x1y1.y <= outer.x1y1.y;
+    } else {
+      return
+        inner.x0y0.x > outer.x0y0.x &&
+        inner.x1y1.x < outer.x1y1.x &&
+        inner.x0y0.y > outer.x0y0.y &&
+        inner.x1y1.y < outer.x1y1.y;
+    }
   }
 
-  bool isCellInside(const coord& pos, const coord& x0y0, const coord& x1y1) {
-    return isCellInside(pos, Rect(x0y0, x1y1));
+  inline bool isCellInside(const coord& pos, const Rect& area) const {
+    return
+      pos.x >= area.x0y0.x &&
+      pos.x <= area.x1y1.x &&
+      pos.y >= area.x0y0.y &&
+      pos.y <= area.x1y1.y;
   }
 
-  bool isCellInside(const coord& pos, const Rect& area) {
-    return pos.x >= area.x0y0.x && pos.x <= area.x1y1.x && pos.y >= area.x0y0.y && pos.y <= area.x1y1.y;
-  }
+  bool isCellNextToPlayer(const coord& pos,
+                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
-  bool isCellInsideMainScreen(const coord& c) const {
-    return isCellInsideMainScreen(c.x, c.y);
-  }
-
-  bool isCellNextToPlayer(const int x, const int y, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
-
-  bool isCellsNeighbours(const int x1, const int y1, const int x2, const int y2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
-  bool isCellsNeighbours(const coord c1, const coord c2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
+  bool isCellsNeighbours(const coord& pos1, const coord& pos2,
+                         const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
   coord getClosestPos(const coord c, const vector<coord>& positions) const;
   Actor* getClosestActor(const coord c, const vector<Actor*>& actors) const;
 
-  //getLine stops at first travel limiter (stop at target, max travel distance.
-  vector<coord> getLine(int originX, int originY, int targetX, int targetY, bool stopAtTarget, int chebTravelLimit);
+  vector<coord> getLine(const coord& origin, const coord& target,
+                        bool stopAtTarget, int chebTravelLimit);
 
   Actor* getActorAtPos(const coord pos) const;
 

@@ -152,7 +152,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   Item* item = eng->map->items[pos_.x][pos_.y];
   if(item != NULL) {
     eng->map->items[pos_.x][pos_.y] = NULL;
-    eng->itemDrop->dropItemOnMap(pos_, &item);
+    eng->itemDrop->dropItemOnMap(pos_, *item);
   }
 
   if(eng->map->playerVision[pos_.x][pos_.y]) {
@@ -494,7 +494,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingFeatures);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeFloodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
+  eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
   vector<PosAndVal> floodFillVector;
   bool actorArray[MAP_X_CELLS][MAP_Y_CELLS];
   for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {

@@ -48,7 +48,7 @@ void MapBuild::buildCavern() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeFloodFill(playerPos, blockers, floodFill, 99999, coord(-1, -1));
+  eng->mapTests->floodFill(playerPos, blockers, floodFill, 99999, coord(-1, -1));
   vector<PosAndVal> floodFillVector;
   for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {

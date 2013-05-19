@@ -38,10 +38,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
   }
 
   const coord origin = attacker.pos;
-  vector<coord> path = eng->mapTests->getLine(
-                         origin.x, origin.y,
-                         aimPos.x, aimPos.y,
-                         false, 9999);
+  vector<coord> path = eng->mapTests->getLine(origin, aimPos, false, 9999);
 
   int nrActorsHit = 0;
 

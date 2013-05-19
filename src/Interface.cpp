@@ -29,7 +29,7 @@ void Interface::drawLocationInfo() {
         const Room* const room = roomList.at(i);
         const coord& x0y0 = room->getX0Y0();
         const coord& x1y1 = room->getX1Y1();
-        if(eng->mapTests->isCellInside(playerPos, x0y0, x1y1)) {
+        if(eng->mapTests->isCellInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr != "") {
             str += room->roomDescr + " ";

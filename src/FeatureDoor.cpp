@@ -247,7 +247,7 @@ bool Door::trySpike(Actor* actorTrying) {
     }
     eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
   }
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
   return true;
 
 }
@@ -369,8 +369,8 @@ void Door::tryBash(Actor* actorTrying) {
 
     eng->renderer->drawMapAndInterface();
 
-    tracer << "Door: Calling GameTime::letNextAct()" << endl;
-    eng->gameTime->letNextAct();
+    tracer << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
+    eng->gameTime->endTurnOfCurrentActor();
   }
   tracer << "Door::tryBash() [DONE]" << endl;
 }
@@ -464,7 +464,7 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   if(isOpen_ == false && closable) {
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -548,8 +548,8 @@ void Door::tryOpen(Actor* actorTrying) {
       tracer << "Door: Was secret, now revealing" << endl;
       reveal(true);
     }
-    tracer << "Door: Calling GameTime::letNextAct()" << endl;
-    eng->gameTime->letNextAct();
+    tracer << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 

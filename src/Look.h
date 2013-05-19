@@ -44,13 +44,15 @@ public:
 		eng(engine) {
 	}
 
-	void markerAtCoord(const coord& pos, const MarkerTask_t markerTask);
+	void markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
+                    const Item* const itemThrown);
 	void printExtraActorDescription(const coord& pos) const;
 
 private:
 	Entity entityDescribed;
 
-	void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask) const;
+	void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask,
+                         const Item* const itemThrown) const;
 	void describeBriefFeatureMob(const Feature& feature) const;
 	void describeBriefFeatureStatic(const Feature& feature) const;
 	void describeBriefItem(const Item& item) const;

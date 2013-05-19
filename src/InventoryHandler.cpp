@@ -170,7 +170,7 @@ void InventoryHandler::runSlotsScreen() {
                 "I take off my " + itemName + ".", clrWhite,
                 messageInterrupt_never, true);
               eng->renderer->drawMapAndInterface();
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return;
             } else {
               eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);

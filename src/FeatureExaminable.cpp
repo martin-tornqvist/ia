@@ -26,7 +26,7 @@ void FeatureExaminable::examine() {
   tracer << "FeatureExaminable::examine()..." << endl;
 
   featureSpecific_examine();
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 
   tracer << "FeatureExaminable::examine() [DONE]" << endl;
 }
@@ -92,7 +92,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
 
 void ExaminableItemContainer::dropItems(const coord& pos, Engine* const engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
-    engine->itemDrop->dropItemOnMap(pos, &(items_.at(i)));
+    engine->itemDrop->dropItemOnMap(pos, *items_.at(i));
   }
   items_.resize(0);
 }

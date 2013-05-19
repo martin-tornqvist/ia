@@ -31,7 +31,7 @@ void Monster::act() {
 
   if(waiting_) {
     if(playerAwarenessCounter <= 0) {
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
       return;
     }
   }
@@ -172,7 +172,7 @@ void Monster::act() {
     return;
   }
 
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::monsterHit(int& dmg) {
@@ -194,7 +194,7 @@ void Monster::moveToCell(const coord& targetCell) {
       dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       if(dest == pos) {
         tracer << "Monster: Trap prevented leaving" << endl;
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     }
@@ -212,7 +212,7 @@ void Monster::moveToCell(const coord& targetCell) {
   }
   eng->map->featuresStatic[pos.x][pos.y]->bump(this);
 
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::hearSound(const Sound& sound) {
@@ -265,10 +265,8 @@ bool Monster::tryAttack(Actor& defender) {
                 //Check if friend is in the way (with a small chance to ignore this)
                 bool isBlockedByFriend = false;
                 if(eng->dice.percentile() < 80) {
-                  vector<coord> line = eng->mapTests->getLine(
-                                         pos.x, pos.y,
-                                         defender.pos.x, defender.pos.y,
-                                         true, 9999);
+                  vector<coord> line =
+                    eng->mapTests->getLine(pos, defender.pos, true, 9999);
                   for(unsigned int i = 0; i < line.size(); i++) {
                     const coord& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {

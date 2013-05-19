@@ -755,7 +755,7 @@ void Player::act() {
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
     incrInsanity();
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
     return;
   }
 
@@ -879,7 +879,7 @@ void Player::act() {
     eng->renderer->drawMapAndInterface();
     eng->sleep(DELAY_PLAYER_WAITING);
     firstAidTurnsLeft--;
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
   //Waiting?
@@ -887,7 +887,7 @@ void Player::act() {
     eng->renderer->drawMapAndInterface();
     eng->sleep(DELAY_PLAYER_WAITING);
     waitTurnsLeft--;
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
   //When this function ends, the system starts reading keys.
@@ -1096,7 +1096,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     //End turn (unless free turn due to bonus).
     if(pos == dest) {
       if(isFreeTurn == false) {
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     }
@@ -1236,7 +1236,7 @@ void Player::updateFov() {
     }
 
     int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeFloodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
+    eng->mapTests->floodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1281,8 +1281,11 @@ void Player::FOVhack() {
       if(visionBlockers[x][y] && moveBlocked[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if(eng->mapTests->isCellInsideMainScreen(coord(x + dx, y + dy))) {
-              if(eng->map->playerVision[x + dx][y + dy] == true && moveBlocked[x + dx][y + dy] == false) {
+            const coord adjCell(x + dx, y + dy);
+            if(eng->mapTests->isCellInsideMap(adjCell)) {
+              if(
+                eng->map->playerVision[adjCell.x][adjCell.y] &&
+                moveBlocked[adjCell.x][adjCell.y] == false) {
                 eng->map->playerVision[x][y] = true;
                 dx = 999;
                 dy = 999;

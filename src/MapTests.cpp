@@ -180,7 +180,8 @@ void MapTests::addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CE
   }
 }
 
-void MapTests::addAdjacentLivingActorsToBlockerArray(const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::addAdjacentLivingActorsToBlockerArray(
+  const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -195,10 +196,17 @@ void MapTests::addAdjacentLivingActorsToBlockerArray(const coord origin, bool ar
   }
 }
 
-void MapTests::makeMapVectorFromArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) {
+bool MapTests::isCellNextToPlayer(const coord& pos,
+                                  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+  return isCellsNeighbours(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
+}
+
+void MapTests::makeBoolVectorFromMapArray(
+  bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) {
+
   vectorToFill.resize(0);
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int x = 0; x < MAP_X_CELLS; x++) {
+    for(int y = 0; y < MAP_Y_CELLS; y++) {
       if(a[x][y]) {
         vectorToFill.push_back(coord(x, y));
       }
@@ -206,10 +214,11 @@ void MapTests::makeMapVectorFromArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<c
   }
 }
 
-void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-                             int valueArray[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
-                             const coord target) {
-  eng->basicUtils->resetArray(valueArray);
+void MapTests::floodFill(
+  const coord& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+  int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const coord& target) {
+
+  eng->basicUtils->resetArray(values);
 
   vector<coord> coordinates;
   coord c;
@@ -220,50 +229,49 @@ void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_
   int currentValue = 0;
 
   bool pathExists = true;
-  bool atTarget = false;
+  bool isAtTarget = false;
 
-  bool stopAtTarget = target.x != -1;
+  bool isStoppingAtTarget = target.x != -1;
+
+  const Rect bounds(coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
   bool done = false;
   while(done == false) {
     for(int dx = -1; dx <= 1; dx++) {
       for(int dy = -1; dy <= 1; dy++) {
         if((dx != 0 || dy != 0)) {
-          //TODO Improve readability
+          const coord newPos(currentX + dx, currentY + dy);
           if(
-            blockers[currentX + dx][currentY + dy] == false &&
-            (currentX + dx >= 1 && currentY + dy >= 1 &&
-             currentX + dx < MAP_X_CELLS - 1 && currentY + dy < MAP_Y_CELLS - 1) &&
-            (valueArray[currentX + dx][currentY + dy] == 0)) {
-            currentValue = valueArray[currentX][currentY];
+            blockers[newPos.x][newPos.y] == false           &&
+            isCellInside(coord(newPos.x, newPos.y), bounds) &&
+            values[newPos.x][newPos.y] == 0) {
+            currentValue = values[currentX][currentY];
 
             if(currentValue < travelLimit) {
-              valueArray[currentX + dx][currentY + dy] = currentValue + 1;
+              values[newPos.x][newPos.y] = currentValue + 1;
             }
 
-            if(stopAtTarget == true) {
+            if(isStoppingAtTarget) {
               if(currentX == target.x - dx && currentY == target.y - dy) {
-                atTarget = true;
+                isAtTarget = true;
                 dx = 9999;
                 dy = 9999;
               }
             }
 
-            if(stopAtTarget == false || atTarget == false) {
-              c.x = currentX + dx;
-              c.y = currentY + dy;
-              coordinates.push_back(c);
+            if(isStoppingAtTarget == false || isAtTarget == false) {
+              coordinates.push_back(newPos);
             }
           }
         }
       }
     }
 
-    if(stopAtTarget == true) {
+    if(isStoppingAtTarget) {
       if(coordinates.size() == 0) {
         pathExists = false;
       }
-      if(atTarget == true || pathExists == false) {
+      if(isAtTarget || pathExists == false) {
         done = true;
       }
     } else if(coordinates.size() == 0) {
@@ -274,7 +282,7 @@ void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_
       done = true;
     }
 
-    if(stopAtTarget == false || atTarget == false) {
+    if(isStoppingAtTarget == false || isAtTarget == false) {
       if(coordinates.size() == 0) {
         pathExists = false;
       } else {
@@ -287,80 +295,71 @@ void MapTests::makeFloodFill(const coord origin, bool blockers[MAP_X_CELLS][MAP_
   }
 }
 
-bool MapTests::isCellsNeighbours(const int x1, const int y1, const int x2, const int y2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
-  if(x1 == x2 && y1 == y2) {
+bool MapTests::isCellsNeighbours(const coord& pos1, const coord& pos2,
+                                 const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+  if(pos1.x == pos2.x && pos1.y == pos2.y) {
     return COUNT_SAME_CELL_AS_NEIGHBOUR;
   }
-  if(x1 < x2 - 1) {
+  if(pos1.x < pos2.x - 1) {
     return false;
   }
-  if(x1 > x2 + 1) {
+  if(pos1.x > pos2.x + 1) {
     return false;
   }
-  if(y1 < y2 - 1) {
+  if(pos1.y < pos2.y - 1) {
     return false;
   }
-  if(y1 > y2 + 1) {
+  if(pos1.y > pos2.y + 1) {
     return false;
   }
   return true;
 }
 
-bool MapTests::isCellsNeighbours(const coord c1, const coord c2, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
-  return isCellsNeighbours(c1.x, c1.y, c2.x, c2.y, COUNT_SAME_CELL_AS_NEIGHBOUR);
-}
-
-bool MapTests::isCellNextToPlayer(const int x, const int y, const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
-  return isCellsNeighbours(x, y, eng->player->pos.x, eng->player->pos.y, COUNT_SAME_CELL_AS_NEIGHBOUR);
-}
-
-vector<coord> MapTests::getLine(int originX, int originY, int targetX, int targetY, bool stopAtTarget, int chebTravelLimit) {
-  double deltaX = (double(targetX) - double(originX));
-  double deltaY = (double(targetY) - double(originY));
+vector<coord> MapTests::getLine(const coord& origin, const coord& target,
+                                bool stopAtTarget, int chebTravelLimit) {
+  double deltaX = (double(target.x) - double(origin.x));
+  double deltaY = (double(target.y) - double(origin.y));
 
   double hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
 
   double xIncr = (deltaX / hypot);
   double yIncr = (deltaY / hypot);
 
-  double curX_prec = double(originX) + 0.5;
-  double curY_prec = double(originY) + 0.5;
+  double curX_prec = double(origin.x) + 0.5;
+  double curY_prec = double(origin.y) + 0.5;
 
-  int curX = int(curX_prec);
-  int curY = int(curY_prec);
+  coord curPos = coord(int(curX_prec), int(curY_prec));
 
   vector<coord> line;
   line.resize(0);
-  coord c;
 
   for(double i = 0; i <= 9999.0; i += 0.04) {
     curX_prec += xIncr * 0.04;
     curY_prec += yIncr * 0.04;
 
-    curX = int(curX_prec);
-    curY = int(curY_prec);
+    curPos.set(curX_prec, curY_prec);
 
-    if(eng->mapTests->isCellInsideMainScreen(curX, curY) == false) {
+    if(eng->mapTests->isCellInsideMap(curPos) == false) {
       return line;
     }
 
+    bool isPosOkToAdd = false;
     if(line.size() == 0) {
-      c.x = curX;
-      c.y = curY;
-      line.push_back(c);
+      isPosOkToAdd = true;
     } else {
-      if(line.back().x != curX || line.back().y != curY) {
-        c.x = curX;
-        c.y = curY;
-        line.push_back(c);
-      }
+      isPosOkToAdd = line.back() != curPos;
+    }
+    if(isPosOkToAdd) {
+      line.push_back(curPos);
     }
 
     //Check distance limits
-    if(stopAtTarget == true && (curX == targetX && curY == targetY)) {
+    if(stopAtTarget && (curPos == target)) {
       return line;
     }
-    if(eng->basicUtils->chebyshevDistance(originX, originY, curX, curY) >= chebTravelLimit) {
+    const int DISTANCE_TRAVELED =
+      eng->basicUtils->chebyshevDistance(origin.x, origin.y, curPos.x, curPos.y);
+    if(DISTANCE_TRAVELED >= chebTravelLimit) {
       return line;
     }
   }

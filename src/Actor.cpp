@@ -32,7 +32,7 @@ void Actor::newTurn() {
       eng->renderer->drawMapAndInterface();
       eng->sleep(DELAY_PLAYER_WAITING);
     }
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -178,7 +178,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   eng->mapTests->makeMoveBlockerArray(this, blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   vector<coord> freeCells;
-  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
   const coord CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
 
   if(this == eng->player) {

@@ -25,7 +25,7 @@ public:
   bool isIntrinsicAttack;
 
 protected:
-  AttackData(Actor& attacker_, const Weapon& wpn_, Engine* engine);
+  AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine* engine);
   Engine* const eng;
 };
 
@@ -48,6 +48,16 @@ public:
   ActorSizes_t  currentDefenderSize;
   string        verbPlayerAttacks;
   string        verbOtherAttacks;
+};
+
+class MissileAttackData: public AttackData {
+public:
+  MissileAttackData(Actor& attacker_, const Item& item_, const coord& aimPos_,
+                   const coord& curPos_, Engine* engine,
+                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+  int           hitChanceTot;
+  ActorSizes_t  intendedAimLevel;
+  ActorSizes_t  currentDefenderSize;
 };
 
 struct Projectile {

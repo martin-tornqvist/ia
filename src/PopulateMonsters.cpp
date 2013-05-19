@@ -398,7 +398,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 //  eng->basicUtils->reverseBoolArray(blockers);
 //  vector<coord> freeCells;
-//  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+//  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
 //  const int MIN_DIST_FROM_PLAYER = eng->map->getDungeonLevel() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
 //
@@ -419,7 +419,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    eng->mapTests->makeItemBlockerArray(blockersTraps);
 //    eng->basicUtils->reverseBoolArray(blockersTraps);
 //    vector<coord> freeCellsTraps;
-//    eng->mapTests->makeMapVectorFromArray(blockersTraps, freeCellsTraps);
+//    eng->mapTests->makeBoolVectorFromMapArray(blockersTraps, freeCellsTraps);
 //
 //    const int MAX_CELLS_PER_TRAP = 210;
 //    int nrOfTrapsOnMap = static_cast<int>(freeCellsTraps.size()) / MAX_CELLS_PER_TRAP;
@@ -464,7 +464,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 //  eng->basicUtils->reverseBoolArray(blockers);
 //  vector<coord> freeCells;
-//  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+//  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
 //  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 4;
 //

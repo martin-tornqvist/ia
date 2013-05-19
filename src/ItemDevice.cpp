@@ -15,7 +15,7 @@ bool Device::activateDefault(Actor* const actor, Engine* const engine) {
 
   if(def_->isIdentified) {
     bool isDestroyed = toggle(engine);
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
     return isDestroyed;
   } else {
     engine->log->addMessage("I cannot yet use this.");

@@ -351,7 +351,7 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   specificQuaff(actor, engine);
 
   if(engine->player->deadState == actorDeadState_alive) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 

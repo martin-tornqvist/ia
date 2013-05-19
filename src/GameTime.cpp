@@ -56,7 +56,7 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * acted, if this is a normal speed phase - consider it a global new turn; update
  * status effects, update timed features, spawn more monsters etc.
  */
-void GameTime::letNextAct() {
+void GameTime::endTurnOfCurrentActor() {
   runNewAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();

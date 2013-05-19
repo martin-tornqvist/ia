@@ -53,10 +53,10 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
     monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
   }
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 //  const bool IS_SWIFT_ATTACK = data.attacker == eng->player && data.currentDefender->deadState != actorDeadState_alive && has swift assailant;
 //  if(IS_SWIFT_ATTACK == false) {
-//    eng->gameTime->letNextAct();
+//    eng->gameTime->endTurnOfCurrentActor();
 //  }
 }
 

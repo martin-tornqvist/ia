@@ -706,7 +706,7 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
   }
   if(engine->player->deadState == actorDeadState_alive) {
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
   return true;
 }
@@ -741,7 +741,7 @@ bool Scroll::tryReadFromScroll(Engine* const engine) {
     setCastFromMemoryCurrentBaseChance(def_->castFromMemoryCurrentBaseChance + 20);
   }
 
-  engine->gameTime->letNextAct();
+  engine->gameTime->endTurnOfCurrentActor();
   return true;
 }
 

@@ -201,7 +201,7 @@ bool Vortex::actorSpecificAct() {
               tracer << "Vortex: Attempt pull (knockback)" << endl;
               eng->knockBack->tryKnockBack(eng->player, knockBackFromPos, false, false);
               pullCooldown = 5;
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
           }
@@ -267,7 +267,7 @@ bool Ghost::actorSpecificAct() {
               restoreHP(999);
             }
           }
-          eng->gameTime->letNextAct();
+          eng->gameTime->endTurnOfCurrentActor();
           return true;
         }
       }
@@ -357,7 +357,7 @@ bool Khephren::actorSpecificAct() {
 
           eng->basicUtils->reverseBoolArray(blockers);
           vector<coord> freeCells;
-          eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+          eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
           const unsigned int NR_OF_SPAWNS = 15;
@@ -372,7 +372,7 @@ bool Khephren::actorSpecificAct() {
             }
             eng->renderer->drawMapAndInterface();
             hasSummonedLocusts = true;
-            eng->gameTime->letNextAct();
+            eng->gameTime->endTurnOfCurrentActor();
             return true;
           }
         }
@@ -418,19 +418,22 @@ bool KeziahMason::actorSpecificAct() {
 
           eng->mapTests->makeMoveBlockerArray(this, blockers);
 
-          vector<coord> line = eng->mapTests->getLine(pos.x, pos.y, eng->player->pos.x, eng->player->pos.y, true, 9999);
+          vector<coord> line = eng->mapTests->getLine(pos, eng->player->pos,
+                               true, 9999);
 
           for(unsigned int i = 0; i < line.size(); i++) {
             const coord c = line.at(i);
             if(blockers[c.x][c.y] == false) {
+              //TODO Make a generalized summoning funtionality
               eng->log->addMessage("Keziah summons Brown Jenkin!");
-              Monster* jenkin = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_brownJenkin, c));
-//              eng->explosionMaker->runSmokeExplosion(c);
+              Actor* const actor =
+                eng->actorFactory->spawnActor(actor_brownJenkin, c);
+              Monster* jenkin = dynamic_cast<Monster*>(actor);
               eng->renderer->drawMapAndInterface();
               hasSummonedJenkin = true;
               jenkin->playerAwarenessCounter = 999;
               jenkin->leader = this;
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
           }
@@ -538,7 +541,7 @@ bool WormMass::actorSpecificAct() {
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 2;
               worm->chanceToSpawnNew = chanceToSpawnNew;
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
           }
@@ -568,7 +571,7 @@ bool GiantLocust::actorSpecificAct() {
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
           }
@@ -669,7 +672,7 @@ bool MajorClaphamLee::actorSpecificAct() {
           eng->mapTests->makeMoveBlockerArray(this, blockers);
           eng->basicUtils->reverseBoolArray(blockers);
           vector<coord> freeCells;
-          eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+          eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
           const unsigned int NR_OF_SPAWNS = 5;
@@ -700,7 +703,7 @@ bool MajorClaphamLee::actorSpecificAct() {
             }
             eng->renderer->drawMapAndInterface();
             hasSummonedTombLegions = true;
-            eng->gameTime->letNextAct();
+            eng->gameTime->endTurnOfCurrentActor();
             return true;
           }
         }
@@ -730,7 +733,7 @@ bool Zombie::tryResurrect() {
           }
 
           playerAwarenessCounter = def_->nrTurnsAwarePlayer * 2;
-          eng->gameTime->letNextAct();
+          eng->gameTime->endTurnOfCurrentActor();
           return true;
         }
       }

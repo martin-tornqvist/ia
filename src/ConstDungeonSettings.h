@@ -30,6 +30,8 @@ const int FOV_MAX_WIDTH_INT = 2 * FOV_MAX_RADI_INT + 1;
 const double FOV_MAX_RADI_DB = static_cast<const double>(FOV_MAX_RADI_INT);
 const double FOV_MAX_WIDTH_DB = static_cast<const double>(FOV_MAX_WIDTH_INT);
 
+const int THROWING_RANGE_LIMIT = FOV_STANDARD_RADI_INT + 3;
+
 //How many skills to allocate per key press
 const int PLAYER_ALLOC_SKILLS_BATCH_SIZE = 10;
 

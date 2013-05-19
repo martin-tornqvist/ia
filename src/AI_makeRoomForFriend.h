@@ -86,10 +86,12 @@ public:
   }
 
 private:
-  static bool checkIfBlockingMonster(const coord& pos, Monster* other, Engine* engine) {
-    const vector<coord> line = engine->mapTests->getLine(other->pos.x, other->pos.y, engine->player->pos.x, engine->player->pos.y, true, 99999);
+  static bool checkIfBlockingMonster(const coord& pos, Monster* other,
+                                     Engine* engine) {
+    const vector<coord> line = engine->mapTests->getLine(
+                                 other->pos, engine->player->pos, true, 99999);
     for(unsigned int i = 0; i < line.size(); i++) {
-      if(line.at(i) == pos ) {
+      if(line.at(i) == pos) {
         return true;
       } else if(line.at(i) == engine->player->pos) {
         return false;

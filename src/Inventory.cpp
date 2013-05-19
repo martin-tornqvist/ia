@@ -227,10 +227,11 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   for(unsigned int i = 0; i < slots_.size(); i++) {
     item = slots_.at(i).item;
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+          CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slots_.at(i).item;
       } else {
-        engine->itemDrop->dropItemOnMap(pos, &item);
+        engine->itemDrop->dropItemOnMap(pos, *item);
       }
 
       slots_.at(i).item = NULL;
@@ -242,10 +243,11 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   while(i < general_.size()) {
     item = general_.at(i);
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+         CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
-        engine->itemDrop->dropItemOnMap(pos, &item);
+        engine->itemDrop->dropItemOnMap(pos, *item);
       }
 
       general_.erase(general_.begin() + i);
@@ -455,7 +457,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     }
   }
   if(isFreeTurn == false) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -476,7 +478,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 //  engine->renderer->drawMapAndInterface();
 //
 //  if(IS_FREE_TURN == false) {
-//    engine->gameTime->letNextAct();
+//    engine->gameTime->endTurnOfCurrentActor();
 //  }
 //}
 
@@ -491,7 +493,7 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* const engine
   engine->renderer->drawMapAndInterface();
 
   if(END_TURN) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 

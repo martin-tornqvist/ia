@@ -15,13 +15,14 @@ public:
     eng = engine;
   }
 
-  Item* spawnItem(ItemId_t itemId, const int NR_ITEMS = 1);
+  Item* spawnItem(const ItemId_t itemId, const int NR_ITEMS = 1);
 
   void setItemRandomizedProperties(Item* item);
 
-  Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
+  Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
+                                  const bool ALLOW_POTIONS);
 
-  Item* spawnItemOnMap(ItemId_t itemId, const coord pos);
+  Item* spawnItemOnMap(const ItemId_t itemId, const coord& pos);
 
   Item* copyItem(Item* oldItem);
 

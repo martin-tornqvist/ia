@@ -47,9 +47,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
   //Get projectile path
   const coord origin = attacker.pos;
-  const vector<coord> projectilePath = eng->mapTests->getLine(
-                                         origin.x, origin.y, aimPos.x, aimPos.y,
-                                         stopAtTarget, chebTrvlLim);
+  const vector<coord> projectilePath =
+    eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim);
 
   const SDL_Color projectileColor = wpn.getDef().rangedMissileColor;
   char projectileGlyph = wpn.getDef().rangedMissileGlyph;
@@ -351,7 +350,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const coord& aimPos) {
   eng->renderer->drawMapAndInterface();
 
   if(didAttack) {
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
   return didAttack;

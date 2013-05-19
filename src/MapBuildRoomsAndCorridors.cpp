@@ -25,7 +25,7 @@
 ////		eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
 ////		eng->basicUtils->reverseBoolArray(blockers);
 ////		vector<coord> freeCells;
-////		eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+////		eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 ////		nrOfCells = freeCells.size();
 ////	}
 ////
@@ -425,7 +425,7 @@
 //}
 //
 //bool MapBuild::tryConnectPoints(const coord& c, const coord& offset) {
-////	if(eng->mapTests->isCellInsideMainScreen(c) == true && eng->mapTests->isCellInsideMainScreen(c + offset) == true) {
+////	if(eng->mapTests->isCellInsideMap(c) == true && eng->mapTests->isCellInsideMap(c + offset) == true) {
 ////		if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor && eng->map->featuresStatic[(c + offset).x][(c + offset).y]->getId()
 ////				== feature_stoneFloor) {
 ////			const coord connectPoint = c + offset / 2;
@@ -567,7 +567,7 @@
 //}
 //
 //bool MapBuild::isPointPassable(const int x, const int y) {
-////	if(eng->mapTests->isCellInsideMainScreen(x, y) == true) {
+////	if(eng->mapTests->isCellInsideMap(x, y) == true) {
 ////		return eng->map->featuresStatic[x][y]->isMovePassable(eng->player);
 ////	}
 //	return false;
@@ -576,7 +576,7 @@
 //void MapBuild::placeDoorIfSingleEntrance(const vector<coord>& doorCandidates) {
 ////	if(doorCandidates.size() == 1) {
 ////		coord c(doorCandidates.back());
-////		if(eng->mapTests->isCellInsideMainScreen(c) == true) {
+////		if(eng->mapTests->isCellInsideMap(c) == true) {
 ////			if(doors[c.x][c.y] == false) {
 ////				eng->featureFactory->spawnFeatureAt(feature_door, c, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
 ////				doors[c.x][c.y] = true;
@@ -686,7 +686,7 @@
 //
 //	eng->basicUtils->reverseBoolArray(blockers);
 //	vector<coord> freeCells;
-//	eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+//	eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
 //	//Make sure the stairs are placed at least somewhat away from the player
 //	const unsigned int FREE_STAIR_CELLS_DIV = 4;

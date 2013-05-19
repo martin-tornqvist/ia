@@ -26,7 +26,7 @@ void Bot::init() {
     //    eng->input->handleKeyPress('z', false, false);
     //Make sure it's my turn
     //    while(eng->gameTime->getCurrentActor() != eng->player) {
-    //      eng->gameTime->letNextAct();
+    //      eng->gameTime->endTurnOfCurrentActor();
     //    }
     //    runFunctionTests();
   }
@@ -62,7 +62,7 @@ void Bot::runFunctionTests() {
     delete actor;
 
     while(eng->gameTime->getCurrentActor() != eng->player) {
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
     }
   }
   hitChanceReal /= static_cast<double>(NUMBER_OF_ATTACKS);

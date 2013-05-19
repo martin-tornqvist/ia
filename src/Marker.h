@@ -10,13 +10,19 @@ using namespace std;
 
 class Engine;
 class Actor;
+class Item;
+
+struct MarkerReturnData {
+  MarkerReturnData() : didThrowMissile(false) {}
+  bool didThrowMissile;
+};
 
 class Marker {
 public:
   Marker(Engine* engine) : eng(engine) {
   }
 
-  void place(const MarkerTask_t markerTask);
+  MarkerReturnData run(const MarkerTask_t markerTask, Item* itemThrown);
 
   const coord& getPos() {
     return pos_;
@@ -30,8 +36,10 @@ private:
   coord getClosestPos(const coord& c, const vector<coord>& positions) const;
   void setCoordToClosestEnemyIfVisible();
   bool setCoordToTargetIfVisible();
-  void readKeys(const MarkerTask_t markerTask);
-  void move(const int DX, const int DY, const MarkerTask_t markerTask);
+  void readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
+                Item* itemThrown);
+  void move(const int DX, const int DY, const MarkerTask_t markerTask,
+            const Item* itemThrown);
   void cancel();
   void done();
 

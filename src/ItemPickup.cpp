@@ -36,7 +36,7 @@ void ItemPickup::tryPick() {
           carriedMissile->numberOfItems += item->numberOfItems;
           delete item;
           eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
-          eng->gameTime->letNextAct();
+          eng->gameTime->endTurnOfCurrentActor();
           return;
         }
       }
@@ -50,7 +50,7 @@ void ItemPickup::tryPick() {
 
       eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
 
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
     } else {
       eng->log->clearLog();
       eng->log->addMessage("I cannot carry more.");
@@ -102,14 +102,15 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
           playerInventory->putItemInGeneral(spawnedAmmo);
         } else {
-          eng->itemDrop->dropItemOnMap(eng->player->pos, &spawnedAmmo);
-          eng->log->addMessage("I have no room to keep the unloaded ammunition, item dropped on ground.");
+          eng->itemDrop->dropItemOnMap(eng->player->pos, *spawnedAmmo);
+          string str =  "I have no room to keep the unloaded ammunition.";
+          eng->log->addMessage(str);
         }
 
         dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
 //        dynamic_cast<Weapon*>(item)->setColorForAmmoStatus();
 
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     } else {

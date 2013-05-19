@@ -15,11 +15,12 @@
 
 using namespace std;
 
-AttackData::AttackData(Actor& attacker_, const Weapon& wpn_, Engine* engine) :
+AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
+                       Engine* engine) :
   attacker(&attacker_), currentDefender(NULL), attackResult(failSmall),
   dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
   isIntrinsicAttack(false), eng(engine) {
-  isIntrinsicAttack = wpn_.getDef().isIntrinsic;
+  isIntrinsicAttack = itemAttackedWith_.getDef().isIntrinsic;
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
@@ -198,6 +199,68 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
       dmgRolls  = wpn_.getDef().rangedDmg.rolls;
       dmgSides  = wpn_.getDef().rangedDmg.sides;
       dmgPlus   = wpn_.getDef().rangedDmg.plus;
+      dmgRoll   = eng->dice(dmgRolls, dmgSides);
+      dmg       = dmgRoll + dmgPlus;
+    }
+  }
+}
+
+MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const coord& aimPos_,
+                                     const coord& curPos_, Engine* engine,
+                                     ActorSizes_t intendedAimLevel_) :
+  AttackData(attacker_, item_, engine), hitChanceTot(0),
+  intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none) {
+
+  Actor* const actorAimedAt = eng->mapTests->getActorAtPos(aimPos_);
+
+  //If aim level parameter not given, determine it now
+  if(intendedAimLevel_ == actorSize_none) {
+    if(actorAimedAt != NULL) {
+      intendedAimLevel = actorAimedAt->getDef()->actorSize;
+    } else {
+      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+      intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
+                         actorSize_humanoid : actorSize_floor;
+    }
+  } else {
+    intendedAimLevel = intendedAimLevel_;
+  }
+
+  currentDefender = eng->mapTests->getActorAtPos(curPos_);
+
+  if(currentDefender != NULL) {
+    tracer << "MissileAttackData: Defender found" << endl;
+    const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
+                                      ability_accuracyRanged, true, *attacker);
+    const int WPN_HIT_MOD         = item_.getDef().missileHitChanceMod;
+    const coord& attPos(attacker->pos);
+    const coord& defPos(currentDefender->pos);
+    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
+                                      attPos.x, attPos.y, defPos.x, defPos.y);
+    const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
+    const ActorSpeed_t defSpeed   = currentDefender->getDef()->speed;
+    const int SPEED_HIT_MOD =
+      defSpeed == actorSpeed_sluggish ?  20 :
+      defSpeed == actorSpeed_slow     ?  10 :
+      defSpeed == actorSpeed_normal   ?   0 :
+      defSpeed == actorSpeed_fast     ? -15 : -35;
+    currentDefenderSize           = currentDefender->getDef()->actorSize;
+    const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -15 : 0;
+    hitChanceTot = max(5,
+                       ATTACKER_SKILL +
+                       WPN_HIT_MOD    +
+                       DIST_HIT_MOD   +
+                       SPEED_HIT_MOD  +
+                       SIZE_HIT_MOD);
+
+    attackResult = eng->abilityRoll->roll(hitChanceTot);
+
+    if(attackResult >= successSmall) {
+      tracer << "MissileAttackData: Attack roll succeeded" << endl;
+      dmgRolls  = item_.getDef().missileDmg.rolls;
+      dmgSides  = item_.getDef().missileDmg.sides;
+      dmgPlus   = item_.getDef().missileDmg.plus;
       dmgRoll   = eng->dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }

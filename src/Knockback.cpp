@@ -7,16 +7,21 @@
 #include "Log.h"
 #include "Config.h"
 
-void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
+void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos,
+                             const bool IS_SPIKE_GUN,
+                             const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
   if(defender != eng->player || eng->config->BOT_PLAYING == false) {
     if(defender->getDef()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
 
       const MoveType_t defenderMoveType = defender->getDef()->moveType;
-      const bool WALKTYPE_CAN_BE_KNOCKED_BACK = defenderMoveType != moveType_ethereal && defenderMoveType != moveType_ooze;
+      const bool WALKTYPE_CAN_BE_KNOCKED_BACK =
+        defenderMoveType != moveType_ethereal &&
+        defenderMoveType != moveType_ooze;
 
       const coord delta = (defender->pos - attackedFromPos).getSigns();
-      const int KNOCK_BACK_RANGE = IS_SPIKE_GUN ? eng->dice.getInRange(2, 3) : eng->dice(1, 2);
+      const int KNOCK_BACK_RANGE =
+        IS_SPIKE_GUN ? eng->dice.getInRange(2, 3) : eng->dice(1, 2);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
@@ -25,9 +30,12 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(defender, blockers);
         const bool CELL_BLOCKED = blockers[c.x][c.y];
-        const bool CELL_IS_BOTTOMLESS = eng->map->featuresStatic[c.x][c.y]->isBottomless();
+        const bool CELL_IS_BOTTOMLESS =
+          eng->map->featuresStatic[c.x][c.y]->isBottomless();
 
-        if(WALKTYPE_CAN_BE_KNOCKED_BACK && (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
+        if(
+          (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
+          (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
           if(i == 0) {
             if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
               if(DEFENDER_IS_MONSTER) {
@@ -36,10 +44,10 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
                 eng->log->addMessage("I am knocked back!");
               }
             }
-//            if(IS_SPIKE_GUN == false) {
-              defender->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
-              defender->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng), false, false);
-//            }
+            defender->getStatusEffectsHandler()->tryAddEffect(
+              new StatusParalyzed(1), false, false);
+            defender->getStatusEffectsHandler()->tryAddEffect(
+              new StatusConfused(5), false, false);
           }
 
           defender->pos = c;

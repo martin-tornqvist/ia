@@ -330,7 +330,7 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
 
   if(freePositionsSeenByPlayer.empty()) {
     vector<coord> freeCellsVector;
-    eng->mapTests->makeMapVectorFromArray(blockers, freeCellsVector);
+    eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCellsVector);
     if(freeCellsVector.size() > 0) {
       sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToOrigin(monster->pos, eng));
       summonPos = freeCellsVector.at(0);
@@ -353,7 +353,7 @@ bool SpellSummonRandom::isGoodForMonsterNow(const Monster* const monster, Engine
 
 void Spell::cast(const SpellData& d, Engine* const eng) {
   specificCast(d, eng);
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 void Spell::monsterCast(Monster* const monster, Engine* const eng) {
@@ -364,7 +364,7 @@ void Spell::monsterCast(Monster* const monster, Engine* const eng) {
 
   monster->spellCoolDownCurrent = monster->getDef()->spellCooldownTurns;
   specificMonsterCast(monster, eng);
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 //--------------------------------------------------------------------------- HEAL SELF
