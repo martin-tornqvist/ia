@@ -284,7 +284,7 @@ void ItemData::makeList() {
   d->spawnStandardMaxDLVL = -1;
   d->isStackable = false;
   d->glyph = '*';
-  d->color = clrRedLight;
+  d->color = clrRedLgt;
   d->tile = tile_trapezohedron;
   itemDefinitions[d->id] = d;
 
@@ -349,7 +349,7 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSoundMessage = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
-  d->rangedMissileColor = clrRedLight;
+  d->rangedMissileColor = clrRedLgt;
   d->spawnStandardMinDLVL = 10;
   d->rangedDmgLabelOverRide = "?";
   addFeatureFoundIn(d, feature_chest, 25);
@@ -483,7 +483,7 @@ void ItemData::makeList() {
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
   d->tile = tile_tommyGun;
-  d->color = clrBlueLight;
+  d->color = clrBlueLgt;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
   d->rangedHitChanceMod = 0;
@@ -508,7 +508,7 @@ void ItemData::makeList() {
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
-  d->color = clrRedLight;
+  d->color = clrRedLgt;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -783,7 +783,7 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("", "spits pus at me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
   d->rangedSoundMessage = "I hear spitting.";
-  d->rangedMissileColor = clrGreenLight;
+  d->rangedMissileColor = clrGreenLgt;
   d->rangedDamageType = damageType_acid;
   d->rangedMissileGlyph = '*';
   itemDefinitions[d->id] = d;
@@ -858,7 +858,7 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a burst of flames.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
   d->rangedStatusEffect = new StatusBurning(eng);
-  d->rangedMissileColor = clrRedLight;
+  d->rangedMissileColor = clrRedLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
@@ -1079,7 +1079,7 @@ void ItemData::makeList() {
 //  d = new ItemDefinition(item_armorAsbestosSuit);
 //  resetDef(d, itemDef_armor);
 //  d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
-//  d->color = clrRedLight;
+//  d->color = clrRedLgt;
 //  d->spawnStandardMinDLVL = 3;
 //  d->armorData.absorptionPoints[damageType_acid] = 999;
 //  d->armorData.damageToDurabilityFactors[damageType_acid] = 0.1;

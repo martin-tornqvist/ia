@@ -46,13 +46,13 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
     str += slot->interfaceName;
     xPos = X_POS_LEFT;
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     xPos = X_POS_ITEM_NAME;
     str = ": ";
     Item* const item = slot->item;
     if(item == NULL) {
       str += "<empty>";
-      eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLight);
+      eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhite : clrRedLgt);
     } else {
       const SDL_Color itemInterfClr = IS_CUR_POS ?
                                       clrWhiteHigh :
@@ -84,7 +84,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   xPos = X_POS_LEFT;
   yPos += 1;
   const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(invSlotButtons.size());
-  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+  eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
 
   eng->renderer->updateScreen();
 }
@@ -117,7 +117,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_LEFT;
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     xPos += 2;
 
     str = eng->itemData->getItemInterfaceRef(*item, false);
@@ -173,7 +173,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_LEFT;
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     xPos += 2;
 
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
@@ -253,7 +253,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_CMD;
-    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLight);
+    eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     xPos += 2;
 
     str = eng->itemData->getItemRef(*item, itemRef_plain, false);

@@ -21,7 +21,7 @@
 void Bot::init() {
   currentPath_.resize(0);
 
-  if(eng->config->BOT_PLAYING == true) {
+  if(eng->config->isBotPlaying == true) {
     //Switch to melee weapon
     //    eng->input->handleKeyPress('z', false, false);
     //Make sure it's my turn
@@ -91,7 +91,7 @@ void Bot::act() {
       runCount++;
       if(runCount >= NR_OF_RUNS) {
         tracer << "Bot: All runs finished, stopping" << endl;
-        eng->config->BOT_PLAYING = false;
+        eng->config->isBotPlaying = false;
       } else {
         tracer << "Bot: Starting new run on first dungeon level" << endl;
         eng->map->dungeonLevel_ = 0;

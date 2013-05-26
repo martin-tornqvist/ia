@@ -187,13 +187,13 @@ void DungeonMaster::playerGainsExp(int exp) {
               eng->log->addMessage(levelUpStr, clrGreen);
             }
 
-            eng->player->hpMax_ += 2;
-//            eng->player->restoreHP(eng->player->hpMax_ / 2, false);
+            eng->player->changeMaxHP(2, false);
 
             if(isAbilityGained) {
               eng->playerAllocBonus->run();
               eng->log->clearLog();
             }
+
             eng->renderer->drawMapAndInterface();
           }
         }

@@ -16,8 +16,8 @@ void CharacterInfo::makeLines() {
   lines.resize(0);
 
   const string offsetSpaces = " ";
-  const SDL_Color clrHeader = clrCyanLight;
-  const SDL_Color clrText = clrRedLight;
+  const SDL_Color clrHeader = clrCyanLgt;
+  const SDL_Color clrText = clrRedLgt;
   const SDL_Color clrTextDark = clrRed;
 
   lines.push_back(StringAndColor("COMBAT SKILLS", clrHeader));

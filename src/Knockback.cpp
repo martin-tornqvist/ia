@@ -10,7 +10,7 @@
 void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos,
                              const bool IS_SPIKE_GUN,
                              const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
-  if(defender != eng->player || eng->config->BOT_PLAYING == false) {
+  if(defender != eng->player || eng->config->isBotPlaying == false) {
     if(defender->getDef()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
 
@@ -54,7 +54,7 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
 
           eng->renderer->drawMapAndInterface();
 
-          eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
+          eng->sleep(eng->config->delayProjectileDraw);
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {

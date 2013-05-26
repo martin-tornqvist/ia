@@ -299,7 +299,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
     return false;
   }
 
-  if(this != eng->player || eng->config->BOT_PLAYING == false) {
+  if(this != eng->player || eng->config->isBotPlaying == false) {
     hp_ -= dmg;
   }
 
@@ -394,7 +394,7 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
     }
   }
 
-  clr_ = clrRedLight;
+  clr_ = clrRedLgt;
 
   monsterDeath();
 

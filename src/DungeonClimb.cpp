@@ -20,7 +20,7 @@ void DungeonClimb::makeLevel() {
   const int DLVL = eng->map->getDungeonLevel();
 
   bool levelBuilt = false;
-  if(eng->config->BOT_PLAYING == false) {
+  if(eng->config->isBotPlaying == false) {
     //------------------------------------- TRAPEZOHEDRON LEVEL
     if(levelBuilt == false) {
       if(DLVL > LAST_CAVERN_LEVEL) {
@@ -41,7 +41,7 @@ void DungeonClimb::makeLevel() {
   }
   //------------------------------------- DUNGEON LEVELS
   if(levelBuilt == false) {
-    if(DLVL < FIRST_CAVERN_LEVEL || eng->config->BOT_PLAYING) {
+    if(DLVL < FIRST_CAVERN_LEVEL || eng->config->isBotPlaying) {
       //eng->mapBuild->buildDungeonLevel();
       tracer << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
       eng->mapBuildBSP->run();

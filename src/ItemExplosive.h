@@ -21,7 +21,7 @@ public:
   }
 
   virtual SDL_Color getInterfaceClr() const {
-    return clrRedLight;
+    return clrRedLgt;
   }
 
   virtual void setPlayerExplosive(Engine* const engine) const;

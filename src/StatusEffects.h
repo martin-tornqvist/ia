@@ -568,7 +568,7 @@ public:
   Abilities_t getSaveAbility() {return ability_resistStatusBody;}
   int getSaveAbilityModifier() {return -20;}
 
-  SDL_Color getColorOwningActor() {return clrRedLight;}
+  SDL_Color getColorOwningActor() {return clrRedLgt;}
 
   void start(Engine* const engine);
   void end(Engine* const engine);

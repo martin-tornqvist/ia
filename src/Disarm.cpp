@@ -9,7 +9,7 @@
 #include "FeatureTrap.h"
 
 void Disarm::playerDisarm() const {
-  eng->log->addMessage("Disarm trap in what direction? | space/esc to cancel", clrWhiteHigh);
+  eng->log->addMessage("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
   const coord disarmInPos(eng->player->pos + eng->query->direction());
   eng->log->clearLog();

@@ -66,7 +66,7 @@ void Interface::drawInfoLines() {
 
   //Name
 //  str = eng->player->getNameA();
-//  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+//  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLgt);
 //  xPos += str.length() + 1;
 
   //Health
@@ -75,7 +75,7 @@ void Interface::drawInfoLines() {
   eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 3;
   str = hp + "/" + hpMax;
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLgt);
   xPos += str.length() + 1;
 
   //Sanity
@@ -83,7 +83,7 @@ void Interface::drawInfoLines() {
   const int INS = eng->player->getInsanity();
   eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 4;
-  const SDL_Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
+  const SDL_Color shortSanClr = SHOCK < 50 ? clrGreenLgt : SHOCK < 75 ? clrYellow : clrMagenta;
   str = intToString(SHOCK) + "%/";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
   xPos += str.length();
@@ -105,7 +105,7 @@ void Interface::drawInfoLines() {
   const int MAX_W = eng->player->getCarryWeightLimit();
   const int ENC = static_cast<int>((static_cast<double>(TOTAL_W) / static_cast<double>(MAX_W)) * 100.0);
   str = intToString(ENC) + "%";
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLight : clrGenLgt);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   xPos += str.length() + 1;
 
   //Wielded weapon

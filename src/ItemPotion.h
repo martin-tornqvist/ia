@@ -18,7 +18,7 @@ public:
   }
   virtual string getDefaultActivationLabel() const {return "Drink";}
 
-  SDL_Color getInterfaceClr() const {return clrBlueLight;}
+  SDL_Color getInterfaceClr() const {return clrBlueLgt;}
 
   void quaff(Actor* const actor, Engine* const engine);
 
@@ -207,12 +207,12 @@ public:
     addFalse("Oily", clrGray);
     addFalse("Smoky", clrWhite);
     addFalse("Slimy green", clrGreen);
-    addFalse("Green", clrGreenLight);
-    addFalse("Fiery", clrRedLight);
+    addFalse("Green", clrGreenLgt);
+    addFalse("Fiery", clrRedLgt);
     addFalse("Murky", clrBrownDark);
     addFalse("Muddy", clrBrown);
-    addFalse("Pink", clrMagentaLight);
-    addFalse("Watery", clrBlueLight);
+    addFalse("Pink", clrMagentaLgt);
+    addFalse("Watery", clrBlueLgt);
     addFalse("Metallic", clrGray);
     addFalse("Clear", clrWhiteHigh);
     addFalse("Misty", clrWhiteHigh);

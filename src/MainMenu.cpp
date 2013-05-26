@@ -20,7 +20,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   vector<string> logo;
 
-  if(eng->config->USE_TILE_SET == false) {
+  if(eng->config->isTilesMode == false) {
     logo.push_back("        ___  __                __  __                  ");
     logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
     logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -36,8 +36,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng->renderer->clearScreen();
 
   tracer << "MainMenu: Drawing random background letters" << endl;
-  const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
-  const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
+  const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
+  const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
   const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25); //eng->dice.getInRange(9, 13);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
@@ -62,12 +62,12 @@ void MainMenu::draw(const MenuBrowser& browser) {
   quoteClr.g = QUOTE_BRIGHTNESS / 2;
   quoteClr.b = QUOTE_BRIGHTNESS;
   vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 45);
-  const int Y0_LOGO = eng->config->USE_TILE_SET ? 17 : 15;
+  const int Y0_LOGO = eng->config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 7, Y0_LOGO + i, quoteClr);
   }
 
-  if(eng->config->USE_TILE_SET) {
+  if(eng->config->isTilesMode) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng->renderer->drawMainMenuLogo(4);
     yPos += 10;
@@ -205,7 +205,7 @@ GameEntry_t MainMenu::run(bool& quit) {
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
             proceed = true;
-            eng->config->BOT_PLAYING = true;
+            eng->config->isBotPlaying = true;
           }
         }
       }

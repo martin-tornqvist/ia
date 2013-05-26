@@ -26,7 +26,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
 
   eng->renderer->coverArea(renderArea_mainScreen, X0, Y0, BOX_WIDTH, BOX_HEIGHT);
 
-  const bool& USE_TILE_SET = eng->config->USE_TILE_SET;
+  const bool& isTilesMode = eng->config->isTilesMode;
 
   const SDL_Color clrBox = clrGray;
 
@@ -34,7 +34,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
     for(int x = X0; x <= X1; x++) {
       if(x == X0 || x == X1) {
         if(y == Y0 || y == Y1) {
-          if(USE_TILE_SET) {
+          if(isTilesMode) {
             if(x == X0 && y == Y0) {
               eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, clrBlack);
             } else if(x == X1 && y == Y0) {
@@ -48,7 +48,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
             eng->renderer->drawCharacter('#', renderArea_mainScreen, x, y, clrBox);
           }
         } else {
-          if(USE_TILE_SET) {
+          if(isTilesMode) {
             eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('|', renderArea_mainScreen, x, y, clrBox);
@@ -56,7 +56,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
         }
       } else {
         if(y == Y0 || y == Y1) {
-          if(USE_TILE_SET) {
+          if(isTilesMode) {
             eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('=', renderArea_mainScreen, x, y, clrBox);
@@ -169,7 +169,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   if(title != "") {
     eng->renderer->drawTextCentered(title, renderArea_mainScreen,
                                     MAP_X_CELLS_HALF, TITLE_Y_POS,
-                                    clrCyanLight, clrBlack, true);
+                                    clrCyanLgt, clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;

@@ -27,7 +27,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   }
 
   eng->renderer->updateScreen();
-  eng->sleep(eng->config->DELAY_EXPLOSION / 2);
+  eng->sleep(eng->config->delayExplosion / 2);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
@@ -35,7 +35,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
         if(reach[x][y]) {
           if(x == data->x0 || x == data->x1 || y == data->y0 || y == data->y1) {
             eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
-                                         clrRedLight, true, clrBlack);
+                                         clrRedLgt, true, clrBlack);
           }
         }
       }
@@ -87,7 +87,7 @@ void ExplosionMaker::runExplosion(
   }
 
   //Render
-  if(eng->config->USE_TILE_SET) {
+  if(eng->config->isTilesMode) {
     bool forbiddenRenderCells[MAP_X_CELLS][MAP_Y_CELLS];
     eng->basicUtils->resetBoolArray(forbiddenRenderCells, true);
     for(int y = 1; y < MAP_Y_CELLS - 2; y++) {
@@ -100,11 +100,11 @@ void ExplosionMaker::runExplosion(
     if(OVERRIDE_EXPLOSION_RENDERING) {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
           forbiddenRenderCells, colorOverride, colorOverride,
-          eng->config->DELAY_EXPLOSION);
+          eng->config->delayExplosion);
     } else {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, clrYellow, clrRedLight,
-          eng->config->DELAY_EXPLOSION);
+          forbiddenRenderCells, clrYellow, clrRedLgt,
+          eng->config->delayExplosion);
     }
   } else {
     if(OVERRIDE_EXPLOSION_RENDERING) {
@@ -115,7 +115,7 @@ void ExplosionMaker::runExplosion(
   }
 
   //Delay before applying damage and effects
-//  eng->sleep(eng->config->DELAY_EXPLOSION);
+//  eng->sleep(eng->config->delayExplosion);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -219,5 +219,5 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
   eng->renderer->drawMapAndInterface();
 
   //Delay
-  eng->sleep(eng->config->DELAY_EXPLOSION);
+  eng->sleep(eng->config->delayExplosion);
 }

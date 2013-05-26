@@ -221,7 +221,7 @@ void DustVortex::actorSpecific_spawnStartItems() {
 }
 
 void FireVortex::monsterDeath() {
-  eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng), true, clrRedLight);
+  eng->explosionMaker->runExplosion(pos, false, new StatusBurning(eng), true, clrRedLgt);
 }
 
 void FireVortex::actorSpecific_spawnStartItems() {

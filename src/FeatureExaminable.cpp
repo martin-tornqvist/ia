@@ -316,7 +316,7 @@ void Tomb::triggerTrap() {
         const int RND = eng->dice.percentile();
         if(RND < 20) {
           effect = new StatusPoisoned(eng);
-          fumeClr = clrGreenLight;
+          fumeClr = clrGreenLgt;
         } else if(RND < 40) {
           effect = new StatusDiseased(eng);
           fumeClr = clrGreen;
@@ -704,7 +704,7 @@ void Chest::triggerTrap() {
       const int RND = eng->dice.percentile();
       if(RND < 20) {
         effect = new StatusPoisoned(eng);
-        fumeClr = clrGreenLight;
+        fumeClr = clrGreenLgt;
       } else if(RND < 40) {
         effect = new StatusDiseased(eng);
         fumeClr = clrGreen;

@@ -65,7 +65,7 @@ SDL_Color Wall::getColor() const {
 }
 
 char Wall::getGlyph() const {
-  if(eng->config->WALL_SYMBOL_FULL_SQUARE) {
+  if(eng->config->isAsciiWallSymbolFullSquare) {
     return 10;
   } else {
     return '#';

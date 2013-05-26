@@ -518,7 +518,7 @@ public:
 
 class ColourOutOfSpace: public Ooze {
 public:
-  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLight) {}
+  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
   bool actorSpecificAct();
   void actorSpecific_spawnStartItems();

@@ -33,7 +33,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
   const ActorSizes_t aimLevel =
     projectiles.at(0)->attackData->intendedAimLevel;
 
-  const int DELAY = eng->config->DELAY_PROJECTILE_DRAW / (IS_MACHINE_GUN ? 2 : 1);
+  const int DELAY = eng->config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
@@ -128,15 +128,15 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
             if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
-                if(eng->config->USE_TILE_SET) {
-                  curProj->setTile(tile_blastAnimation1, clrRedLight);
+                if(eng->config->isTilesMode) {
+                  curProj->setTile(tile_blastAnimation1, clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY / 2);
-                  curProj->setTile(tile_blastAnimation2, clrRedLight);
+                  curProj->setTile(tile_blastAnimation2, clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY / 2);
                 } else {
-                  curProj->setGlyph('*', clrRedLight);
+                  curProj->setGlyph('*', clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY);
                 }
@@ -194,7 +194,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
-            if(eng->config->USE_TILE_SET) {
+            if(eng->config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
@@ -219,7 +219,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
-            if(eng->config->USE_TILE_SET) {
+            if(eng->config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
@@ -236,7 +236,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
         //RENDER FLYING PROJECTILES
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
-          if(eng->config->USE_TILE_SET) {
+          if(eng->config->isTilesMode) {
             curProj->setTile(projectileTile, projectileColor);
             eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
           } else {

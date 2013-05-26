@@ -94,7 +94,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser,
 
   for(unsigned int i = 0; i < NR_OF_MEMORIZED; i++) {
     const char CURRENT_KEY = 'a' + currentListPos;
-    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
+    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
     Scroll* const scroll = scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(i));
     const string itemName = scroll->getRealTypeName();
     string str = "a";

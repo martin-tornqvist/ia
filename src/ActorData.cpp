@@ -242,7 +242,7 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
-  d.color = clrCyanLight;
+  d.color = clrCyanLgt;
   d.tile = tile_zombieUnarmed;
   d.spawnMinLevel = 4;
   d.monsterLvl = 4;
@@ -392,7 +392,7 @@ void ActorData::defineAllActors() {
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
-  d.color = clrBlueLight;
+  d.color = clrBlueLgt;
   d.tile = tile_cultistFirearm;
   d.spawnMinLevel = 4;
   d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
@@ -465,7 +465,7 @@ void ActorData::defineAllActors() {
 //  d.rangedCooldownTurns = 0;
 //  d.spellCooldownTurns = 2;
 //  d.glyph = 'P';
-//  d.color = clrRedLight;
+//  d.color = clrRedLgt;
 //  d.tile = tile_witchOrWarlock;
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
@@ -498,7 +498,7 @@ void ActorData::defineAllActors() {
 //  d.rangedCooldownTurns = 0;
 //  d.spellCooldownTurns = 2;
 //  d.glyph = 'P';
-//  d.color = clrRedLight;
+//  d.color = clrRedLgt;
 //  d.tile = tile_witchOrWarlock;
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
@@ -533,7 +533,7 @@ void ActorData::defineAllActors() {
 //  d.rangedCooldownTurns = 0;
 //  d.spellCooldownTurns = 2;
 //  d.glyph = 'P';
-//  d.color = clrRedLight;
+//  d.color = clrRedLgt;
 //  d.tile = tile_witchOrWarlock;
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
@@ -567,7 +567,7 @@ void ActorData::defineAllActors() {
 //  d.rangedCooldownTurns = 0;
 //  d.spellCooldownTurns = 2;
 //  d.glyph = 'P';
-//  d.color = clrRedLight;
+//  d.color = clrRedLgt;
 //  d.tile = tile_witchOrWarlock;
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
@@ -602,7 +602,7 @@ void ActorData::defineAllActors() {
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
   d.glyph = 'P';
-  d.color = clrCyanLight;
+  d.color = clrCyanLgt;
   d.tile = tile_cultistDagger;
   d.spawnMinLevel = 5;
   d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
@@ -637,7 +637,7 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
-  d.color = clrGreenLight;
+  d.color = clrGreenLgt;
   d.tile = tile_spider;
   d.spawnMinLevel = 1;
   d.spawnMaxLevel = d.spawnMinLevel + 5;
@@ -701,7 +701,7 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
-  d.color = clrRedLight;
+  d.color = clrRedLgt;
   d.tile = tile_spider;
   d.spawnMinLevel = 2;
   d.spawnMaxLevel = d.spawnMinLevel + 5;
@@ -1158,7 +1158,7 @@ void ActorData::defineAllActors() {
   d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.speed = actorSpeed_fastest;
   d.glyph = 'I';
-  d.color = clrGreenLight;
+  d.color = clrGreenLgt;
   d.tile = tile_mantis;
   d.spawnMinLevel = 8;
   d.monsterLvl = 8;
@@ -1414,7 +1414,7 @@ void ActorData::defineAllActors() {
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
   d.glyph = 'P';
-  d.color = clrRedLight;
+  d.color = clrRedLgt;
   d.tile = tile_mummy;
   d.spawnMinLevel = 11;
   d.monsterLvl = 11;
@@ -1714,7 +1714,7 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
-  d.color = clrGreenLight;
+  d.color = clrGreenLgt;
   d.tile = tile_ooze;
   d.spawnMinLevel = 9;
   d.spawnMaxLevel = d.spawnMinLevel + 5;
@@ -1756,7 +1756,7 @@ void ActorData::defineAllActors() {
   d.speed = actorSpeed_sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'O';
-  d.color = clrGreenLight;
+  d.color = clrGreenLgt;
   d.tile = tile_ooze;
   d.spawnMinLevel = 14;
   d.spawnMaxLevel = 999;

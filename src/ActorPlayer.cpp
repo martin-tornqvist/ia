@@ -269,7 +269,7 @@ void Player::incrInsanity() {
 
   const int INS_INCR = 6;
 
-  if(eng->config->BOT_PLAYING == false) {
+  if(eng->config->isBotPlaying == false) {
     insanity_ += INS_INCR;
   }
 
@@ -1013,7 +1013,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getDef().isMeleeWeapon) {
-              if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
+              if(eng->config->useRangedWpnMleeePrompt && checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getDef().isRangedWeapon) {
                   const string wpnName = eng->itemData->getItemRef(*weapon, itemRef_a);
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);

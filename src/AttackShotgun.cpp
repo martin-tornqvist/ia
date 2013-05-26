@@ -69,13 +69,13 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
             if(eng->map->playerVision[curPos.x][curPos.y]) {
               eng->renderer->drawMapAndInterface(false);
               eng->renderer->coverCellInMap(curPos.x, curPos.y);
-              if(eng->config->USE_TILE_SET) {
-                eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLight);
+              if(eng->config->isTilesMode) {
+                eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLgt);
               } else {
-                eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLight);
+                eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLgt);
               }
               eng->renderer->updateScreen();
-              eng->sleep(eng->config->DELAY_SHOTGUN);
+              eng->sleep(eng->config->delayShotgun);
             }
 
             //Messages
@@ -112,13 +112,13 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
-        if(eng->config->USE_TILE_SET) {
+        if(eng->config->isTilesMode) {
           eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
         } else {
           eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
         }
         eng->renderer->updateScreen();
-        eng->sleep(eng->config->DELAY_SHOTGUN);
+        eng->sleep(eng->config->delayShotgun);
         eng->renderer->drawMapAndInterface();
       }
       break;
@@ -129,13 +129,13 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
-        if(eng->config->USE_TILE_SET) {
+        if(eng->config->isTilesMode) {
           eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
         } else {
           eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
         }
         eng->renderer->updateScreen();
-        eng->sleep(eng->config->DELAY_SHOTGUN);
+        eng->sleep(eng->config->delayShotgun);
         eng->renderer->drawMapAndInterface();
       }
       break;

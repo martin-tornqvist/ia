@@ -293,19 +293,19 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   //Draw command labels
   x = 55;
   y = 14;
-  eng->renderer->drawText("a) Information", renderArea_screen, x, y, browser.isPosAtKey('a') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("a) Information", renderArea_screen, x, y, browser.isPosAtKey('a') ? clrWhite : clrRedLgt);
   y += 1;
 
-  eng->renderer->drawText("b) View the High Score", renderArea_screen, x, y, browser.isPosAtKey('b') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("b) View the High Score", renderArea_screen, x, y, browser.isPosAtKey('b') ? clrWhite : clrRedLgt);
   y += 1;
 
-  eng->renderer->drawText("c) View messages", renderArea_screen, x, y, browser.isPosAtKey('c') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("c) View messages", renderArea_screen, x, y, browser.isPosAtKey('c') ? clrWhite : clrRedLgt);
   y += 1;
 
-  eng->renderer->drawText("d) Return to main menu", renderArea_screen, x, y, browser.isPosAtKey('d') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("d) Return to main menu", renderArea_screen, x, y, browser.isPosAtKey('d') ? clrWhite : clrRedLgt);
   y += 1;
 
-  eng->renderer->drawText("e) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('e') ? clrWhite : clrRedLight);
+  eng->renderer->drawText("e) Quit the game", renderArea_screen, x, y, browser.isPosAtKey('e') ? clrWhite : clrRedLgt);
   y += 1;
 
   eng->renderer->updateScreen();

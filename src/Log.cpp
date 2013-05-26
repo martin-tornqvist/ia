@@ -174,7 +174,7 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, MessageIn
 
     if(MESSAGE_FITS == false) {
       eng->renderer->drawMapAndInterface(false);
-      eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS, 0, clrCyanLight);
+      eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS, 0, clrCyanLgt);
       eng->renderer->updateScreen();
       eng->query->waitForKeyPress();
       clearLog();
@@ -190,7 +190,7 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, MessageIn
   if(FORCE_MORE_PROMPT) {
     eng->renderer->drawMapAndInterface(false);
     const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
-    eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS_AFTER, 0, clrCyanLight);
+    eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS_AFTER, 0, clrCyanLgt);
     eng->renderer->updateScreen();
     eng->query->waitForKeyPress();
     clearLog();

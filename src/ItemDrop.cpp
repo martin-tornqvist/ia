@@ -136,5 +136,6 @@ Item* ItemDrop::dropItemOnMap(const coord& pos, Item& item) {
       return NULL;
     }
   }
+  return NULL;
 }
 

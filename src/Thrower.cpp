@@ -27,14 +27,14 @@ void Thrower::playerThrowLitExplosive(const coord& aimCell) {
 
   //Render
   const char glyph = eng->itemData->itemDefinitions[item_dynamite]->glyph;
-  SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLight : clrYellow;
+  SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
   for(unsigned int i = 1; i < path.size() - 1; i++) {
     eng->renderer->drawMapAndInterface(false);
     if(eng->map->playerVision[path[i].x][path[i].y]) {
       eng->renderer->drawCharacter(
         glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
       eng->renderer->updateScreen();
-      eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
+      eng->sleep(eng->config->delayProjectileDraw);
     }
   }
 
@@ -131,9 +131,9 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
         if(data->attackResult >= successSmall) {
           if(eng->map->playerVision[curPos.x][curPos.y]) {
             eng->renderer->drawCharacter('*', renderArea_mainScreen,
-                                         curPos, clrRedLight);
+                                         curPos, clrRedLgt);
             eng->renderer->updateScreen();
-            eng->sleep(eng->config->DELAY_PROJECTILE_DRAW * 4);
+            eng->sleep(eng->config->delayProjectileDraw * 4);
           }
           const SDL_Color hitMessageClr =
             actorHere == eng->player ? clrMessageBad : clrMessageGood;
@@ -161,7 +161,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
     if(eng->map->playerVision[curPos.x][curPos.y]) {
       eng->renderer->drawCharacter(glyph, renderArea_mainScreen, curPos, clr);
       eng->renderer->updateScreen();
-      eng->sleep(eng->config->DELAY_PROJECTILE_DRAW);
+      eng->sleep(eng->config->delayProjectileDraw);
     }
 
     if(curPos == targetCell) {

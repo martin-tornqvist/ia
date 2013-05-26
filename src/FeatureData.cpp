@@ -1,7 +1,5 @@
 #include "FeatureData.h"
 
-#include <cassert>
-
 #include "Engine.h"
 #include "Colors.h"
 
@@ -65,7 +63,7 @@ void FeatureData::makeList() {
   d.spawnType = featureSpawnType_other;
   d.name_a = "a stone wall";
   d.name_the = "the stone wall";
-  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
+  d.glyph = eng->config->isAsciiWallSymbolFullSquare == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_wallTop;
   d.isMovePassable[moveType_walk] = false;
@@ -84,30 +82,6 @@ void FeatureData::makeList() {
   d.featuresOnDestroyed.push_back(feature_rubbleLow);
   d.featuresOnDestroyed.push_back(feature_stoneFloor);
   addToListAndReset(d);
-  assert(featureDefs[feature_stoneWall].id == feature_stoneWall);
-  /*---------------------------------------------*/
-//  d.id = feature_stoneWallSlimy;
-//  d.name_a = "a slimy stone wall";
-//  d.name_the = "the slimy stone wall";
-//  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
-//  d.color = clrGreen;
-//  d.tile = tile_wall;
-//  d.isMovePassable[moveType_walk] = false;
-//  d.isMovePassable[moveType_ethereal] = true;
-//  d.isMovePassable[moveType_fly] = false;
-//  d.isMovePassable[moveType_ooze] = false;
-//  d.isShootPassable = false;
-//  d.isVisionPassable = false;
-//  d.isSmokePassable = false;
-//  d.canHaveBlood = true;
-//  d.canHaveGore = false;
-//  d.canHaveCorpse = false;
-//  d.canHaveStaticFeature = false;
-//  d.canHaveItem = false;
-//  d.featuresOnDestroyed.push_back(feature_rubbleHigh);
-//  d.featuresOnDestroyed.push_back(feature_rubbleLow);
-//  d.featuresOnDestroyed.push_back(feature_stoneFloor);
-//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_tree;
   d.name_a = "a tree";
@@ -261,7 +235,7 @@ void FeatureData::makeList() {
   d.name_a = "shallow water";
   d.name_the = "the shallow water";
   d.glyph = '~';
-  d.color = clrBlueLight;
+  d.color = clrBlueLgt;
   d.tile = tile_water1;
   d.isShootPassable = true;
   d.isVisionPassable = true;
@@ -357,29 +331,6 @@ void FeatureData::makeList() {
   d.materialType = materialType_empty;
   addToListAndReset(d);
   /*---------------------------------------------*/
-//  d.id = feature_caveWall;
-//  d.name_a = "a cavern wall";
-//  d.name_the = "the cavern wall";
-//  d.glyph = eng->config->WALL_SYMBOL_FULL_SQUARE == false ? '#' : 10;
-//  d.color = clrGray;
-//  d.tile = tile_squareCheckered;
-//  d.isMovePassable[moveType_walk] = false;
-//  d.isMovePassable[moveType_ethereal] = true;
-//  d.isMovePassable[moveType_fly] = false;
-//  d.isMovePassable[moveType_ooze] = false;
-//  d.isShootPassable = false;
-//  d.isVisionPassable = false;
-//  d.isSmokePassable = false;
-//  d.canHaveBlood = true;
-//  d.canHaveGore = false;
-//  d.canHaveCorpse = false;
-//  d.canHaveItem = false;
-//  d.canHaveStaticFeature = false;
-//  d.featuresOnDestroyed.push_back(feature_rubbleHigh);
-//  d.featuresOnDestroyed.push_back(feature_rubbleLow);
-//  d.featuresOnDestroyed.push_back(feature_stoneFloor);
-//  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = feature_caveFloor;
   d.name_a = "cavern floor";
   d.name_the = "the cavern floor";
@@ -455,7 +406,7 @@ void FeatureData::makeList() {
   d.name_a = "a big pile of debris";
   d.name_the = "the big pile of debris";
   d.glyph = 8;
-  d.color = clrGray;
+  d.color = featureDefs[feature_stoneWall].color;
   d.tile = tile_rubbleHigh;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ethereal] = true;
@@ -476,7 +427,7 @@ void FeatureData::makeList() {
   d.name_a = "rubble";
   d.name_the = "the rubble";
   d.glyph = ',';
-  d.color = clrGray;
+  d.color = featureDefs[feature_stoneWall].color;
   d.tile = tile_rubbleLow;
   d.isShootPassable = true;
   d.isVisionPassable = true;
@@ -559,24 +510,6 @@ void FeatureData::makeList() {
   d.canHaveItem = false;
   d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human/*, roomTheme_dungeon*/);
   addToListAndReset(d);
-  /*---------------------------------------------*/
-//  d.id = feature_barrel;
-//  d.name_a = "a barrel";
-//  d.name_the = "the barrel";
-//  d.spawnType = featureSpawnType_other;
-//  d.glyph = '0';
-//  d.color = clrBrown;
-//  d.tile = tile_barrel;
-//  d.isMovePassable[moveType_walk] = false;
-//  d.isShootPassable = true;
-//  d.isVisionPassable = true;
-//  d.canHaveBlood = false;
-//  d.canHaveGore = false;
-//  d.canHaveCorpse = false;
-//  d.canHaveStaticFeature = false;
-//  d.canHaveItem = false;
-////  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls, roomTheme_human, roomTheme_dungeon);
-//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cabinet;
   d.name_a = "a cabinet";
@@ -752,7 +685,7 @@ void FeatureData::makeList() {
   d.name_a = "a lit stick of dynamite";
   d.name_the = "the lit stick of dynamite";
   d.glyph = '/';
-  d.color = clrRedLight;
+  d.color = clrRedLgt;
   d.tile = tile_dynamiteLit;
   d.canHaveBlood = false;
   d.canHaveGore = false;

@@ -19,7 +19,7 @@ void PlayerEnterName::run(int& yPos) {
   draw(name, yPos);
   bool done = false;
   while(done == false) {
-    if(eng->config->BOT_PLAYING == false) {
+    if(eng->config->isBotPlaying == false) {
       readKeys(name, done, yPos);
     } else {
       name = "AZATHOTH";

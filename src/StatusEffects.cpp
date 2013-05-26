@@ -172,7 +172,7 @@ bool StatusBurning::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 
 void StatusBurning::doDamage(Engine* const engine) {
   if(owningActor == engine->player) {
-    engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
+    engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLgt);
 //    owningActor->eng->renderer->drawMapAndInterface();
   }
   owningActor->hit(engine->dice(1, 2), damageType_fire);

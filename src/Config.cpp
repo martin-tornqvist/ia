@@ -26,7 +26,7 @@ Config::Config(Engine* engine) :
   FRAMES_PER_SECOND(30),
   PLAYER_START_X(10),
   PLAYER_START_Y(MAP_Y_CELLS_HALF),
-  BOT_PLAYING(false),
+  isBotPlaying(false),
   MAINSCREEN_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1),
   eng(engine) {
 
@@ -50,17 +50,15 @@ Config::Config(Engine* engine) :
 }
 
 void Config::setCellDimDependentVariables() {
-  MAINSCREEN_WIDTH          = MAP_X_CELLS * CELL_W;
-  MAINSCREEN_HEIGHT         = MAP_Y_CELLS * CELL_H;
-  LOG_X_OFFSET              = LOG_X_CELLS_OFFSET * CELL_W;
-  LOG_Y_OFFSET              = LOG_Y_CELLS_OFFSET * CELL_H;
-  LOG_WIDTH                 = LOG_X_CELLS * CELL_W;
-  LOG_HEIGHT                = CELL_H;
-  MAINSCREEN_Y_OFFSET       = MAINSCREEN_Y_CELLS_OFFSET * CELL_H;
-  CHARACTER_LINES_Y_OFFSET  = LOG_Y_OFFSET + LOG_HEIGHT + MAINSCREEN_HEIGHT;
-  CHARACTER_LINES_HEIGHT    = CHARACTER_LINES_Y_CELLS * CELL_H;
-  SCREEN_WIDTH              = MAP_X_CELLS * CELL_W;
-  SCREEN_HEIGHT             = CHARACTER_LINES_Y_OFFSET + CHARACTER_LINES_HEIGHT;
+  mainscreenHeight         = MAP_Y_CELLS * cellH;
+  logOffsetX              = LOG_X_CELLS_OFFSET * cellW;
+  logOffsetY              = LOG_Y_CELLS_OFFSET * cellH;
+  logHeight                = cellH;
+  mainscreenOffsetY       = MAINSCREEN_Y_CELLS_OFFSET * cellH;
+  characterLinesOffsetY  = logOffsetY + logHeight + mainscreenHeight;
+  CHARACTER_LINES_HEIGHT    = CHARACTER_LINES_Y_CELLS * cellH;
+  screenWidth              = MAP_X_CELLS * cellW;
+  screenHeight             = characterLinesOffsetY + CHARACTER_LINES_HEIGHT;
 }
 
 void Config::runOptionsMenu() {
@@ -130,37 +128,37 @@ void Config::parseFontNameAndSetCellDims() {
   tracer << "Config: Parsed font image name, found dims: ";
   tracer << widthStr << "x" << heightStr << endl;
 
-  CELL_W = stringToInt(widthStr)  * FONT_SCALE;
-  CELL_H = stringToInt(heightStr) * FONT_SCALE;
+  cellW = stringToInt(widthStr)  * fontScale;
+  cellH = stringToInt(heightStr) * fontScale;
   tracer << "Config:: parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
 void Config::setDefaultVariables() {
-  USE_TILE_SET = true;
+  isTilesMode = true;
   fontImageName = "images/16x24_clean_v1.png";
-  FONT_SCALE = 1;
+  fontScale = 1;
   parseFontNameAndSetCellDims();
-  FULLSCREEN = false;
-  WALL_SYMBOL_FULL_SQUARE = false;
-  SKIP_INTRO_LEVEL = false;
-  RANGED_WPN_MELEE_PROMPT = true;
-  DELAY_PROJECTILE_DRAW = 45;
-  DELAY_SHOTGUN = 120;
-  DELAY_EXPLOSION = 350;
+  isFullscreen = false;
+  isAsciiWallSymbolFullSquare = false;
+  isIntroLevelSkipped = false;
+  useRangedWpnMleeePrompt = true;
+  delayProjectileDraw = 45;
+  delayShotgun = 120;
+  delayExplosion = 350;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.resize(0);
-  lines.push_back(USE_TILE_SET == false ? "0" : "1");
-  lines.push_back(intToString(FONT_SCALE));
+  lines.push_back(isTilesMode == false ? "0" : "1");
+  lines.push_back(intToString(fontScale));
   lines.push_back(fontImageName);
-  lines.push_back(FULLSCREEN == false ? "0" : "1");
-  lines.push_back(WALL_SYMBOL_FULL_SQUARE == false ? "0" : "1");
-  lines.push_back(SKIP_INTRO_LEVEL == false ? "0" : "1");
-  lines.push_back(RANGED_WPN_MELEE_PROMPT == false ? "0" : "1");
-  lines.push_back(intToString(DELAY_PROJECTILE_DRAW));
-  lines.push_back(intToString(DELAY_SHOTGUN));
-  lines.push_back(intToString(DELAY_EXPLOSION));
+  lines.push_back(isFullscreen == false ? "0" : "1");
+  lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
+  lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
+  lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
+  lines.push_back(intToString(delayProjectileDraw));
+  lines.push_back(intToString(delayShotgun));
+  lines.push_back(intToString(delayExplosion));
 }
 
 void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
@@ -185,7 +183,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  str = USE_TILE_SET ? "YES" : "NO";
+  str = isTilesMode ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -202,7 +200,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  str = FONT_SCALE == 2 ? "YES" : "NO";
+  str = fontScale == 2 ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -211,7 +209,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  eng->renderer->drawText(FULLSCREEN ? "YES" : "NO",
+  eng->renderer->drawText(isFullscreen ? "YES" : "NO",
                           renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -221,7 +219,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  str = WALL_SYMBOL_FULL_SQUARE ? "FULL SQUARE" : "HASH SIGN";
+  str = isAsciiWallSymbolFullSquare ? "FULL SQUARE" : "HASH SIGN";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -230,7 +228,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  str = SKIP_INTRO_LEVEL ? "YES" : "NO";
+  str = isIntroLevelSkipped ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -240,7 +238,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  str = RANGED_WPN_MELEE_PROMPT ? "YES" : "NO";
+  str = useRangedWpnMleeePrompt ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -250,7 +248,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  eng->renderer->drawText(intToString(DELAY_PROJECTILE_DRAW), renderArea_screen,
+  eng->renderer->drawText(intToString(delayProjectileDraw), renderArea_screen,
                           X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -260,7 +258,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  eng->renderer->drawText(intToString(DELAY_SHOTGUN), renderArea_screen,
+  eng->renderer->drawText(intToString(delayShotgun), renderArea_screen,
                           X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -270,7 +268,7 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
-  eng->renderer->drawText(intToString(DELAY_EXPLOSION), renderArea_screen,
+  eng->renderer->drawText(intToString(delayExplosion), renderArea_screen,
                           X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
@@ -290,13 +288,13 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
                               const int OPTIONS_Y_POS) {
   switch(browser->getPos().y) {
     case 0: {
-      USE_TILE_SET = !USE_TILE_SET;
-      if(USE_TILE_SET) {
-        if(CELL_W == 8 && CELL_H == 12) {
-          FONT_SCALE = 2;
+      isTilesMode = !isTilesMode;
+      if(isTilesMode) {
+        if(cellW == 8 && cellH == 12) {
+          fontScale = 2;
         } else {
-          if(CELL_W != 16 || CELL_H != 24) {
-            FONT_SCALE = 1;
+          if(cellW != 16 || cellH != 24) {
+            fontScale = 1;
             fontImageName = "images/16x24_clean_v1.png";
           }
         }
@@ -308,8 +306,8 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     break;
 
     case 1: {
-      if(USE_TILE_SET) {
-        FONT_SCALE = 1;
+      if(isTilesMode) {
+        fontScale = 1;
       }
 
       for(unsigned int i = 0; i < fontImageNames.size(); i++) {
@@ -322,13 +320,13 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
       parseFontNameAndSetCellDims();
 
-      if(USE_TILE_SET) {
-        if(CELL_W == 8 && CELL_H == 12) {
-          FONT_SCALE = 2;
+      if(isTilesMode) {
+        if(cellW == 8 && cellH == 12) {
+          fontScale = 2;
           parseFontNameAndSetCellDims();
         }
 
-        while(CELL_W != 16 || CELL_H != 24) {
+        while(cellW != 16 || cellH != 24) {
           for(unsigned int i = 0; i < fontImageNames.size(); i++) {
             if(fontImageName == fontImageNames.at(i)) {
               fontImageName = i == fontImageNames.size() - 1 ?
@@ -347,13 +345,13 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     break;
 
     case 2: {
-      if(FONT_SCALE == 1) {
-        if(USE_TILE_SET == false /*|| (CELL_W == 8 && CELL_H == 12)*/) {
-          FONT_SCALE = 2;
+      if(fontScale == 1) {
+        if(isTilesMode == false) {
+          fontScale = 2;
         }
       } else {
-        if(USE_TILE_SET == false) {
-          FONT_SCALE = 1;
+        if(isTilesMode == false) {
+          fontScale = 1;
         }
       }
       parseFontNameAndSetCellDims();
@@ -362,46 +360,46 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     } break;
 
     case 3: {
-      FULLSCREEN = !FULLSCREEN;
+      isFullscreen = !isFullscreen;
       eng->renderer->initAndClearPrev();
     } break;
 
     case 4: {
-      WALL_SYMBOL_FULL_SQUARE = !WALL_SYMBOL_FULL_SQUARE;
+      isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
     } break;
 
     case 5: {
-      SKIP_INTRO_LEVEL = !SKIP_INTRO_LEVEL;
+      isIntroLevelSkipped = !isIntroLevelSkipped;
     } break;
 
     case 6: {
-      RANGED_WPN_MELEE_PROMPT = !RANGED_WPN_MELEE_PROMPT;
+      useRangedWpnMleeePrompt = !useRangedWpnMleeePrompt;
     } break;
 
     case 7: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrWhite, 1, 3, DELAY_PROJECTILE_DRAW, true);
+                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
       if(NR != -1) {
-        DELAY_PROJECTILE_DRAW = NR;
+        delayProjectileDraw = NR;
       }
     } break;
 
     case 8: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrWhite, 1, 3, DELAY_SHOTGUN, true);
+                       clrNosferatuTealLgt, 1, 3, delayShotgun, true);
       if(NR != -1) {
-        DELAY_SHOTGUN = NR;
+        delayShotgun = NR;
       }
     } break;
 
     case 9: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrWhite, 1, 3, DELAY_EXPLOSION, true);
+                       clrNosferatuTealLgt, 1, 3, delayExplosion, true);
       if(NR != -1) {
-        DELAY_EXPLOSION = NR;
+        delayExplosion = NR;
       }
     } break;
 
@@ -417,7 +415,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
 void Config::toggleFullscreen() {
   SDL_Surface* screenCpy = SDL_DisplayFormat(eng->renderer->screenSurface_);
 
-  FULLSCREEN = !FULLSCREEN;
+  isFullscreen = !isFullscreen;
   parseFontNameAndSetCellDims();
   setCellDimDependentVariables();
   eng->renderer->initAndClearPrev();
@@ -435,10 +433,10 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
 
   curLine = lines.front();
   if(curLine == "0") {
-    USE_TILE_SET = false;
+    isTilesMode = false;
   } else {
-    USE_TILE_SET = true;
-    if(CELL_W != 16 || CELL_H != 24) {
+    isTilesMode = true;
+    if(cellW != 16 || cellH != 24) {
       fontImageName = "images/16x24_clean_v1.png";
       parseFontNameAndSetCellDims();
     }
@@ -446,7 +444,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  FONT_SCALE = stringToInt(curLine);
+  fontScale = stringToInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -455,31 +453,31 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  FULLSCREEN = curLine == "0" ? false : true;
+  isFullscreen = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  WALL_SYMBOL_FULL_SQUARE = curLine == "0" ? false : true;
+  isAsciiWallSymbolFullSquare = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  SKIP_INTRO_LEVEL = curLine == "0" ? false : true;
+  isIntroLevelSkipped = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  RANGED_WPN_MELEE_PROMPT = curLine == "0" ? false : true;
+  useRangedWpnMleeePrompt = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  DELAY_PROJECTILE_DRAW = stringToInt(curLine);
+  delayProjectileDraw = stringToInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  DELAY_SHOTGUN = stringToInt(curLine);
+  delayShotgun = stringToInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  DELAY_EXPLOSION = stringToInt(curLine);
+  delayExplosion = stringToInt(curLine);
   lines.erase(lines.begin());
 }
 

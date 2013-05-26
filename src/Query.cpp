@@ -10,45 +10,16 @@ using namespace std;
 
 
 void Query::waitForKeyPress() const {
-  if(eng->config->BOT_PLAYING == false) {
+  if(eng->config->isBotPlaying == false) {
     eng->input->readKeysUntilFound();
   }
 }
 
-//int Query::readKeys() const {
-//  while(true) {
-//    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
-//
-//        if(
-//          d.sdlKey_ == SDLK_RIGHT ||
-//          d.sdlKey_ == SDLK_UP ||
-//          d.sdlKey_ == SDLK_LEFT ||
-//          d.sdlKey_ == SDLK_DOWN ||
-//          d.sdlKey_ == SDLK_SPACE ||
-//          d.sdlKey_ == SDLK_ESCAPE ||
-//          d.sdlKey_ == SDLK_PAGEUP ||
-//          d.sdlKey_ == SDLK_HOME ||
-//          d.sdlKey_ == SDLK_END ||
-//          d.sdlKey_ == SDLK_PAGEDOWN) {
-//          return key;
-//        } else {
-//          return event.key.keysym.unicode;
-//        }
-//      }
-//      break;
-//      default: {
-//      }
-//      break;
-//      }
-//    }
-//    eng->sleep(1);
-//  }
-//  return 0;
-//}
-
 bool Query::yesOrNo() const {
   KeyboardReadReturnData d = eng->input->readKeysUntilFound();
-  while(d.key_ != 'y' && d.key_ != 'n' && d.sdlKey_ != SDLK_ESCAPE && d.sdlKey_ != SDLK_SPACE) {
+  while(
+    d.key_ != 'y' && d.key_ != 'n' &&
+    d.sdlKey_ != SDLK_ESCAPE && d.sdlKey_ != SDLK_SPACE) {
     d = eng->input->readKeysUntilFound();
   }
   if(d.key_ == 'y') {
@@ -57,13 +28,14 @@ bool Query::yesOrNo() const {
   return false;
 }
 
-int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MIN,
-                  const int MAX_NR_DIGITS, const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT) const {
-  eng->renderer->clearScreen();
-
+int Query::number(const coord& pos, const SDL_Color clr, const int MIN,
+                  const int MAX_NR_DIGITS, const int DEFAULT,
+                  const bool CANCEL_RETURNS_DEFAULT) const {
   int retNum = max(MIN, DEFAULT);
-  eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
-  eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_", renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+  eng->renderer->coverArea(renderArea_screen, pos.x,
+                           pos.y, MAX_NR_DIGITS + 1, 1);
+  const string str = (retNum == 0 ? "" : intToString(retNum)) + "_";
+  eng->renderer->drawText(str, renderArea_screen, pos.x, pos.y, clr);
   eng->renderer->updateScreen();
 
   while(true) {
@@ -87,10 +59,10 @@ int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MI
 
     if(d.sdlKey_ == SDLK_BACKSPACE) {
       retNum = retNum / 10;
-      eng->renderer->clearScreen();
-      eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+      eng->renderer->coverArea(renderArea_screen, pos.x, pos.y,
+                               MAX_NR_DIGITS + 1, 1);
       eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_",
-                              renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+                              renderArea_screen, pos.x, pos.y, clr);
       eng->renderer->updateScreen();
       continue;
     }
@@ -98,10 +70,10 @@ int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MI
     if(CUR_NUM_DIGITS < MAX_NR_DIGITS) {
       int curDigit = d.key_ - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
-      eng->renderer->clearScreen();
-      eng->renderer->coverArea(renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, MAX_NR_DIGITS + 1, 1);
+      eng->renderer->coverArea(renderArea_screen, pos.x, pos.y,
+                               MAX_NR_DIGITS + 1, 1);
       eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_",
-                              renderArea_screen, cellToRenderAt.x, cellToRenderAt.y, clr);
+                              renderArea_screen, pos.x, pos.y, clr);
       eng->renderer->updateScreen();
     }
   }
@@ -109,7 +81,7 @@ int Query::number(const coord& cellToRenderAt, const SDL_Color clr, const int MI
 }
 
 void Query::waitForEscOrSpace() const {
-  if(eng->config->BOT_PLAYING == false) {
+  if(eng->config->isBotPlaying == false) {
     KeyboardReadReturnData d = eng->input->readKeysUntilFound();
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
       d = eng->input->readKeysUntilFound();

@@ -319,7 +319,7 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
     }
 
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-      actorPositions, clrRedLight, BLAST_ANIMATION_DELAY_FACTOR);
+      actorPositions, clrRedLgt, BLAST_ANIMATION_DELAY_FACTOR);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       const string monsterName = actors.at(i)->getNameThe();
