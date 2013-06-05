@@ -32,7 +32,8 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(const int NR_LV
   }
 }
 
-void PopulateMonsters::spawnGroupOfRandomAt(const vector<coord>& sortedFreeCellsVector, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+void PopulateMonsters::spawnGroupOfRandomAt(const vector<coord>& sortedFreeCellsVector,
+    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
     const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, const bool IS_ROAMING_ALLOWED) const {
   vector<ActorId_t> idCandidates;
   makeListOfMonstersEligibleForAutoSpawning(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
@@ -53,7 +54,8 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   const int MIN_DIST_TO_PLAYER = FOV_STANDARD_RADI_INT + 3;
 
   const coord& playerPos = eng->player->pos;
-  for(int x = max(0, playerPos.x - MIN_DIST_TO_PLAYER); x <= min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_TO_PLAYER); x++) {
+  for(int x = max(0, playerPos.x - MIN_DIST_TO_PLAYER);
+      x <= min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_TO_PLAYER); x++) {
     for(int y = max(0, playerPos.y - MIN_DIST_TO_PLAYER); y <= min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_TO_PLAYER); y++) {
       blockers[x][y] = true;
     }
@@ -262,8 +264,10 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t r
   }
 }
 
-void PopulateMonsters::spawnGroupAt(const ActorId_t id, const vector<coord>& sortedFreeCellsVector,
-                                    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const {
+void PopulateMonsters::spawnGroupAt(const ActorId_t id,
+                                    const vector<coord>& sortedFreeCellsVector,
+                                    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+                                    const bool IS_ROAMING_ALLOWED) const {
 
   const ActorDefinition& d = eng->actorData->actorDefinitions[id];
 

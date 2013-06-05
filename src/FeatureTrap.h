@@ -84,7 +84,7 @@ protected:
     pos_(pos), trapType_(trapType), eng(engine) {
   }
   SpecificTrapBase() {}
-  ~SpecificTrapBase() {}
+  virtual ~SpecificTrapBase() {}
 
   virtual coord specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
     (void)actor;

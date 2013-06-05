@@ -176,6 +176,10 @@ void GameTime::runNewStandardTurnEvents() {
     //it has any active status effect.
     actor->getStatusEffectsHandler()->newTurnAllEffects(visionBlockingArray);
 
+    if(actor->deadState == actorDeadState_alive) {
+      actor->actorSpecificOnStandardTurn();
+    }
+
     //Delete dead, mangled actors
     if(actor->deadState == actorDeadState_mangled) {
       delete actor;

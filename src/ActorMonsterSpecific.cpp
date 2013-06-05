@@ -453,14 +453,8 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
-bool Ooze::actorSpecificAct() {
-  restoreHP(2, false);
-  return false;
-}
-
-bool OozeBlack::actorSpecificAct() {
-  restoreHP(3, false);
-  return false;
+void Ooze::actorSpecificOnStandardTurn() {
+  restoreHP(1, false);
 }
 
 void OozeBlack::actorSpecific_spawnStartItems() {
@@ -484,17 +478,19 @@ void ColourOutOfSpace::actorSpecific_spawnStartItems() {
 }
 
 const SDL_Color& ColourOutOfSpace::getColor() {
-  currentColor.r = eng->dice.getInRange(40, 255);
-  currentColor.g = eng->dice.getInRange(40, 255);
-  currentColor.b = eng->dice.getInRange(40, 255);
   return currentColor;
 }
 
-bool ColourOutOfSpace::actorSpecificAct() {
+void ColourOutOfSpace::actorSpecificOnStandardTurn() {
+  currentColor.r = eng->dice.getInRange(40, 255);
+  currentColor.g = eng->dice.getInRange(40, 255);
+  currentColor.b = eng->dice.getInRange(40, 255);
+
+  restoreHP(1, false);
+
   if(eng->player->checkIfSeeActor(*this, NULL)) {
     eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng));
   }
-  return false;
 }
 
 bool Spider::actorSpecificAct() {

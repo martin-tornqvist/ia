@@ -30,7 +30,7 @@ void Actor::newTurn() {
   } else {
     if(this == eng->player) {
       eng->renderer->drawMapAndInterface();
-      eng->sleep(DELAY_PLAYER_WAITING);
+      eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
     }
     eng->gameTime->endTurnOfCurrentActor();
   }

@@ -86,6 +86,8 @@ public:
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
+  virtual void actorSpecificOnStandardTurn() {}
+
 protected:
   //TODO Try to get rid of these friend declarations
   friend class AbilityValues;

@@ -73,9 +73,9 @@ public:
 
   void act();
 
-  virtual bool actorSpecificAct() {
-    return false;
-  }
+  virtual bool actorSpecificAct() {return false;}
+
+  virtual void actorSpecificOnStandardTurn() {}
 
   int playerAwarenessCounter;
 
@@ -483,7 +483,7 @@ class Ooze: public Monster {
 public:
   Ooze() : Monster() {}
   ~Ooze() {}
-  virtual bool actorSpecificAct();
+  virtual void actorSpecificOnStandardTurn();
   virtual void actorSpecific_spawnStartItems() = 0;
 };
 
@@ -491,7 +491,6 @@ class OozeBlack: public Ooze {
 public:
   OozeBlack() : Ooze() {}
   ~OozeBlack() {}
-  bool actorSpecificAct();
   void actorSpecific_spawnStartItems();
 };
 
@@ -520,7 +519,8 @@ class ColourOutOfSpace: public Ooze {
 public:
   ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
-  bool actorSpecificAct();
+//  bool actorSpecificAct();
+  void actorSpecificOnStandardTurn();
   void actorSpecific_spawnStartItems();
   const SDL_Color& getColor();
 private:

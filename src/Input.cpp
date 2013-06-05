@@ -630,17 +630,10 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
             continue;
           }
 
-          SDLMod mod = event_.key.keysym.mod;
-
-//          const bool IS_L_SHIFT_HELD  = asdf
-//          const bool IS_R_SHIFT_HELD  = asdf
-//          const bool IS_L_CTRL_HELD   = asdf
-//          const bool IS_R_CTRL_HELD   = asdf
-//          const bool IS_L_ALT_HELD    = asdf
-//          const bool IS_R_ALT_HELD    = asdf
-          const bool IS_SHIFT_HELD    = mod & SDLK_LSHIFT  || mod & SDLK_RSHIFT;
-          const bool IS_CTRL_HELD     = mod & SDLK_LCTRL   || mod & SDLK_RCTRL;
-          const bool IS_ALT_HELD      = mod & SDLK_LALT    || mod & SDLK_RALT;
+          SDLMod mod = SDL_GetModState();
+          const bool IS_SHIFT_HELD    = mod & KMOD_SHIFT;
+          const bool IS_CTRL_HELD     = mod & KMOD_CTRL;
+          const bool IS_ALT_HELD      = mod & KMOD_ALT;
 
           KeyboardReadReturnData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 

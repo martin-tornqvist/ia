@@ -41,35 +41,36 @@ void PlayerAllocBonus::run() {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {
-            draw(bonusesColumnOne, bonusesColumnTwo, browser);
-          }
-          break;
+          draw(bonusesColumnOne, bonusesColumnTwo, browser);
+        }
+        break;
 
         case menuAction_canceled: {
-          } break;
+        } break;
 
         case menuAction_selected: {
-            const coord browserPos = browser.getPos();
-            if(browserPos.x == 0) {
-              eng->playerBonusHandler->pickBonus(bonusesColumnOne.at(browser.getPos().y));
-            } else {
-              eng->playerBonusHandler->pickBonus(bonusesColumnTwo.at(browser.getPos().y));
-            }
-            eng->log->drawLog();
-            eng->renderer->drawMapAndInterface();
-            return;
+          const coord browserPos = browser.getPos();
+          if(browserPos.x == 0) {
+            eng->playerBonusHandler->pickBonus(bonusesColumnOne.at(browser.getPos().y));
+          } else {
+            eng->playerBonusHandler->pickBonus(bonusesColumnTwo.at(browser.getPos().y));
           }
-          break;
+          eng->log->drawLog();
+          eng->renderer->drawMapAndInterface();
+          return;
+        }
+        break;
 
         case menuAction_selectedWithShift:
-          {} break;
+        {} break;
 
       }
     }
   }
 }
 
-void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne, const vector<PlayerBonuses_t>& bonusesColumnTwo,
+void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
+                            const vector<PlayerBonuses_t>& bonusesColumnTwo,
                             const MenuBrowser& browser) const {
   eng->renderer->coverRenderArea(renderArea_screen);
 

@@ -188,6 +188,7 @@ void DungeonMaster::playerGainsExp(int exp) {
             }
 
             eng->player->changeMaxHP(2, false);
+            eng->player->restoreHP(999, false);
 
             if(isAbilityGained) {
               eng->playerAllocBonus->run();

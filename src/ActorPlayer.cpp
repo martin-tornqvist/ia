@@ -820,7 +820,6 @@ void Player::act() {
       int x1 = pos.x + 1;
       int y1 = pos.y + 1;
 
-      //Look for secret doors and traps
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
           if(eng->map->playerVision[x][y]) {
@@ -856,12 +855,10 @@ void Player::act() {
         }
       }
 
-      //Any item in the inventory that can be identified?
       tryIdentifyItems();
     }
   }
 
-  //First aid?
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
@@ -882,7 +879,6 @@ void Player::act() {
     eng->gameTime->endTurnOfCurrentActor();
   }
 
-  //Waiting?
   if(waitTurnsLeft > 0) {
     eng->renderer->drawMapAndInterface();
     eng->sleep(DELAY_PLAYER_WAITING);
