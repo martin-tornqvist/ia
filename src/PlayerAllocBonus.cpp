@@ -80,7 +80,10 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
   const int X_COLUMN_ONE = 14;
   const int X_COLUMN_TWO = MAP_X_CELLS_HALF + 6;
 
-  const int Y0_TITLE = Y0_CREATE_CHARACTER; //Y0_CREATE_CHARACTER MAP_Y_CELLS_HALF - (NR_BONUSES_COLUMN_ONE / 2);
+  const int Y0_TITLE = Y0_CREATE_CHARACTER;
+
+  eng->renderer->drawTextCentered("You have reached a new character level!", renderArea_screen,
+                                  MAP_X_CELLS_HALF, Y0_TITLE - 1, clrWhite, clrBlack, true);
 
   eng->renderer->drawTextCentered("Which ability do you gain?", renderArea_screen,
                                   MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, clrBlack, true);

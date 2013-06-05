@@ -109,7 +109,7 @@
 1355677712 c:\dev\ia\src\audio.h
 	<string>
 
-1370466172 c:\dev\ia\src\constdungeonsettings.h
+1370467224 c:\dev\ia\src\constdungeonsettings.h
 
 1369583353 c:\dev\ia\src\config.h
 	<string>
@@ -1484,7 +1484,7 @@
 	"Phrases.h"
 	"Engine.h"
 
-1370465538 source:c:\dev\ia\src\playerallocbonus.cpp
+1370466864 source:c:\dev\ia\src\playerallocbonus.cpp
 	"PlayerAllocBonus.h"
 	<math.h>
 	<iostream>
@@ -1683,7 +1683,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1369583353 source:c:\dev\ia\src\thrower.cpp
+1370467439 source:c:\dev\ia\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"

@@ -1273,7 +1273,7 @@ void ActorData::defineAllActors() {
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description
-  = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome isHumanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
+  = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
   d.aggroTextMonsterSeen = d.name_the + " howls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.erraticMovement = actorErratic_somewhat;

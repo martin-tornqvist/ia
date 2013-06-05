@@ -11,7 +11,7 @@ const int MAP_Y_CELLS_HALF = MAP_Y_CELLS / 2;
 const int PLAYER_CLVL_MAX = 30;
 
 const int DELAY_PLAYER_WAITING        = 2;
-const int DELAY_PLAYER_UNABLE_TO_ACT  = 100;
+const int DELAY_PLAYER_UNABLE_TO_ACT  = 60;
 
 const int CAST_FROM_MEMORY_CHANCE_LIM = 95;
 const int CAST_FROM_MEMORY_MTH_BON_DIV = 3;
