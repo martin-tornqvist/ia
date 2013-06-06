@@ -349,7 +349,7 @@
 	<string>
 	"Item.h"
 
-1369583353 source:c:\dev\ia\src\actordata.cpp
+1370469779 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -1060,7 +1060,7 @@
 	"InventoryHandler.h"
 	"PlayerBonuses.h"
 
-1368644643 source:c:\dev\ia\src\highscore.cpp
+1370504059 source:c:\dev\ia\src\highscore.cpp
 	"Highscore.h"
 	<algorithm>
 	<iostream>
@@ -1324,7 +1324,7 @@
 	"TextFormatting.h"
 	"Credits.h"
 
-1368643872 source:c:\dev\ia\src\manual.cpp
+1370504970 source:c:\dev\ia\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -1553,7 +1553,7 @@
 	"MenuBrowser.h"
 	"MenuInputHandler.h"
 
-1369583353 source:c:\dev\ia\src\postmortem.cpp
+1370504358 source:c:\dev\ia\src\postmortem.cpp
 	"Postmortem.h"
 	<fstream>
 	<iostream>
@@ -1614,7 +1614,7 @@
 	"Log.h"
 	"Render.h"
 
-1355677713 source:c:\dev\ia\src\savehandler.cpp
+1370504341 source:c:\dev\ia\src\savehandler.cpp
 	"SaveHandler.h"
 	<fstream>
 	<iostream>

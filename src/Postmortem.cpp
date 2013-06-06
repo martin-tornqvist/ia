@@ -192,7 +192,7 @@ void Postmortem::runInfo() {
 void Postmortem::makeMemorialFile() {
   const string timeStamp = eng->dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName = eng->player->getNameA() + "_" + timeStamp + ".txt";
-  const string memorialFilePath = "memorial/" + memorialFileName;
+  const string memorialFilePath = "data/" + memorialFileName;
 
   // Add memorial file
   ofstream file;
@@ -203,7 +203,7 @@ void Postmortem::makeMemorialFile() {
   file.close();
 
   // Add reference to memorial file in list
-  const string memorialList = "memorial/memorialFileList";
+  const string memorialList = "data/memorialFileList";
   file.open(memorialList.data(), ios::app);
   file << memorialFileName << endl;
   file.close();
@@ -257,7 +257,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   vector<string> art;
 
   string curLine;
-  ifstream file("ascii_graveyard");
+  ifstream file("data/ascii_graveyard");
 
   if(file.is_open()) {
     while(getline(file, curLine)) {

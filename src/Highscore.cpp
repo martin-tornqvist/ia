@@ -143,7 +143,7 @@ void HighScore::sortEntries(vector<HighScoreEntry>& entries) {
 
 void HighScore::writeFile(vector<HighScoreEntry>& entries) {
   ofstream file;
-  file.open("memorial/highscores", ios::trunc);
+  file.open("data/highscores", ios::trunc);
 
   for(unsigned int i = 0; i < entries.size(); i++) {
     const HighScoreEntry& entry = entries.at(i);
@@ -161,7 +161,7 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
 
 void HighScore::readFile(vector<HighScoreEntry>& entries) {
   ifstream file;
-  file.open("memorial/highscores");
+  file.open("data/highscores");
 
   if(file.is_open()) {
     string line;

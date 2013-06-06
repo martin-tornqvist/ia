@@ -47,8 +47,8 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   string playerName = lines.front();
   lines.erase(lines.begin());
   playerName.erase(playerName.begin());
-  eng->player->getDef()->name_a	= playerName;
-  eng->player->getDef()->name_the	= playerName;
+  eng->player->getDef()->name_a = playerName;
+  eng->player->getDef()->name_the = playerName;
 
   eng->dungeonMaster->setParametersFromSaveLines(lines);
   eng->scrollNameHandler->setParametersFromSaveLines(lines);
@@ -83,7 +83,7 @@ void SaveHandler::readFile(vector<string>& lines) {
   lines.resize(0);
 
   string curLine;
-  ifstream file("save/save");
+  ifstream file("data/save");
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
@@ -102,7 +102,7 @@ void SaveHandler::readFile(vector<string>& lines) {
 
 void SaveHandler::writeFile(const vector<string>& lines) const {
   ofstream file;
-  file.open("save/save", ios::trunc);
+  file.open("data/save", ios::trunc);
 
   for(unsigned int i = 0; i < lines.size(); i++) {
     file << lines.at(i);

@@ -9,64 +9,64 @@
 
 1. COMMAND LIST
 ------------------------------------------------
-$   @    Display character information
-$   TAB  Melee attack adjacent monster
-$   >    Go down staircase
-$   a    Examine object
-$   b    Bash door or kick monster
-$   c    Close door
-$   e    Use item or throw held explosive
-$   f    Aim/fire wielded firearm
-$   g    Pick up item
-$   h    Heal
-$   i    Browse backpack
-$   j    Jam door with an iron spike
-$   l    Display descriptions of things in view
-$   L    Display message history
-$   r    Reload wielded firearm
-$   s    Wait and search for 10 turns
-$   S    Save and quit (must stand on stairs)
-$   t    Throw a missile from the missile slot
-$   u    Unload or pick up ammunition from the ground
-$   w    Handle equipment (wear and wield things)
-$   Q    Quit to main menu (will erase the game)
-$   x    Cast memorized spell
-$   z    Swap to alternative weapon
-$   ?    Display manual
+   @    Display character information
+   TAB  Melee attack adjacent monster
+   >    Go down staircase
+   a    Examine object
+   b    Bash door or kick monster
+   c    Close door
+   e    Use item or throw held explosive
+   f    Aim/fire wielded firearm
+   g    Pick up item
+   h    Heal
+   i    Browse backpack
+   j    Jam door with an iron spike
+   l    Display descriptions of things in view
+   L    Display message history
+   r    Reload wielded firearm
+   s    Wait and search for 10 turns
+   S    Save and quit (must stand on stairs)
+   t    Throw a missile from the missile slot
+   u    Unload or pick up ammunition from the ground
+   w    Handle equipment (wear and wield things)
+   Q    Quit to main menu (will erase the game)
+   x    Cast memorized spell
+   z    Swap to alternative weapon
+   ?    Display manual
 
 
 2. MOVEMENT AND INTERACTION
 ------------------------------------------------
 You can move in eight directions by using the numpad keys in the following manner:
 
-$   7 8 9
-$    \|/
-$   4-5-6
-$    /|\
-$   1 2 3
+   7 8 9
+    \|/
+   4-5-6
+    /|\
+   1 2 3
 
 The '5' key or period (.) key issues a command to wait a turn.
 
 You can also use the arrow keys for movement. To move diagonally using the arrow keys, hold shift or ctrl:
-$   Shift + left  = up left
-$   Shift + right = up right
-$   Ctrl  + left  = down left
-$   Ctrl  + right = down right
+   Shift + left  = up left
+   Shift + right = up right
+   Ctrl  + left  = down left
+   Ctrl  + right = down right
 
 Page up/Page down/Home/End can also be used for diagonal movement.
 
 Certain things can be interacted with by moving into them (i.e. by "bumping" them), for example:
-$   * Moving into enemies results in a melee attack
-$   * Moving into closed doors makes an attempt to open them
+   * Moving into enemies results in a melee attack
+   * Moving into closed doors makes an attempt to open them
 
 
 3. THE INTERFACE
 ------------------------------------------------
 The following is an example of how the interface lines can look:
 
-$   Player HP:9/16 INS:45%/12% MTH:6% ENC:40%  M1911 Colt 1d8+4 50% 5/7
-$   DLVL:2 LVL:1 NXT:60 ARM:1                  7 Throwing Knives 2d4 50%
-$   Blind Diseased
+   Player HP:9/16 INS:45%/12% MTH:6% ENC:40%  M1911 Colt 1d8+4 50% 5/7
+   DLVL:2 LVL:1 NXT:60 ARM:1                  7 Throwing Knives 2d4 50%
+   Blind Diseased
 
 From left to right, the first line displays player name, Hit Points (current/max), shock/insanity (see section 4: "INSANITY"), Mythos knowledge (see section 5: "MYTHOS KNOWLEDGE"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
 
@@ -82,15 +82,15 @@ The third line displays status effects currently affecting you.
 Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other events. Finally, there is a slow perpetual draining of your sanity from simply exploring and dwelling in this ancient haunted dungeon.
 
 Your state of insanity is represented by two percentage values in the following manner:
-$   INS:X%/Y%
+   INS:X%/Y%
 
 The X-value represents your current state of shock, stress and paranoia, while the Y-value represents your long term insanity.
 
 When various disturbing events occur, the shock value rises. When shock hits 100%, the following happens:
-$   * You do something (scream, laugh, faint, babble, gain a phobia...)
-$   * The shock value is restored a bit
-$   * Insanity rises
-$   * Mythos knowledge rises by half the amount
+   * You do something (scream, laugh, faint, babble, gain a phobia...)
+   * The shock value is restored a bit
+   * Insanity rises
+   * Mythos knowledge rises by half the amount
 
 Each time you travel to the next dungeon level, shock is completely restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 
@@ -100,14 +100,14 @@ If your insanity reaches 100%, you are hopelessly lost, and the game is over.
 5. MYTHOS KNOWLEDGE
 ------------------------------------------------
 This trait describes your general insight about the mystical and hidden forces acting behind our apparent reality. It is represented by a percentage value:
-$   MTH:X%
+   MTH:X%
 
 Each event that primarily raises your insanity (INS) also raises your MTH by half the amount. This works the other way too; an event that primarily raises your MTH also raises your INS by half the amount.
 
 The effects of increasing MTH includes:
-$   * Increased damage to all bizarre, alien, mystical and shocking creatures
-$   * Raised spell casting chances
-$   * At a certain level of MTH, you gain a powerful spell
+   * Increased damage to all bizarre, alien, mystical and shocking creatures
+   * Raised spell casting chances
+   * At a certain level of MTH, you gain a powerful spell
 
 
 6. SNEAKING AND BACKSTABBING

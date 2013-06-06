@@ -10,27 +10,33 @@
 
 void Manual::readFile() {
   string curLine;
-  ifstream file("manual");
+  ifstream file("manual.txt");
 
   vector<string> formated;
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
-      //The '$' symbol is used in the manual file for lines that should not be formated.
-      if(curLine.size() > 0) {
-        if(curLine.at(0) == '$') {
-          curLine.erase(curLine.begin());
-          lines.push_back(curLine);
-        } else {
+      bool shouldFormatLine = true;
+
+      if(curLine.empty()) {
+        lines.push_back(curLine);
+      } else {
+        //Do not format lines that start with two spaces
+        if(curLine.size() > 1) {
+          if(curLine.at(0) == ' ' && curLine.at(1) == ' ') {
+            shouldFormatLine = false;
+          }
+        }
+        if(shouldFormatLine) {
           formated.resize(0);
           formated = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
-
           for(unsigned int i = 0; i < formated.size(); i++) {
             lines.push_back(formated.at(i));
           }
+        } else {
+          curLine.erase(curLine.begin());
+          lines.push_back(curLine);
         }
-      } else {
-        lines.push_back(curLine);
       }
     }
   }
