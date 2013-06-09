@@ -1,3 +1,4 @@
+
 #include "FeatureData.h"
 
 #include "Engine.h"
@@ -218,7 +219,7 @@ void FeatureData::makeList() {
   d.name_a = "a golden brazier";
   d.name_the = "the golden brazier";
   d.glyph = '0';
-  d.color = clrGold;
+  d.color = clrYellow;
   d.tile = tile_brazier;
   d.isShootPassable = true;
   d.isVisionPassable = true;

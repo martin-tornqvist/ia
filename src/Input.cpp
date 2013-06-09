@@ -38,7 +38,13 @@ void Input::clearLogMessages() {
 }
 
 Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu_(quitToMainMenu)  {
-  SDL_EnableKeyRepeat(110, 50);
+  setKeyRepeatDelays();
+}
+
+void Input::setKeyRepeatDelays() {
+  tracer << "Input::setKeyRepeatDelays()..." << endl;
+  SDL_EnableKeyRepeat(eng->config->keyRepeatDelay, eng->config->keyRepeatInterval);
+  tracer << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
 void Input::handleMapModeInputUntilFound() {

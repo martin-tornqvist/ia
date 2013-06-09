@@ -25,16 +25,32 @@ void Thrower::playerThrowLitExplosive(const coord& aimCell) {
   vector<coord> path =
     eng->mapTests->getLine(eng->player->pos, aimCell, true, THROWING_RANGE_LIMIT);
 
+  tracer << path.size() << endl;
+
+  //Remove cells after blocked cells
+  for(unsigned int i = 1; i < path.size(); i++) {
+    const coord curPos = path.at(i);
+    const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
+    if(featureHere->isShootPassable() == false) {
+      path.resize(i);
+      break;
+    }
+  }
+
+  tracer << path.size() << endl;
+
   //Render
-  const char glyph = eng->itemData->itemDefinitions[item_dynamite]->glyph;
-  SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
-  for(unsigned int i = 1; i < path.size() - 1; i++) {
-    eng->renderer->drawMapAndInterface(false);
-    if(eng->map->playerVision[path[i].x][path[i].y]) {
-      eng->renderer->drawCharacter(
-        glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
-      eng->renderer->updateScreen();
-      eng->sleep(eng->config->delayProjectileDraw);
+  if(path.size() > 1) {
+    const char glyph = eng->itemData->itemDefinitions[item_dynamite]->glyph;
+    SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
+    for(unsigned int i = 1; i < path.size() - 1; i++) {
+      eng->renderer->drawMapAndInterface(false);
+      if(eng->map->playerVision[path[i].x][path[i].y]) {
+        eng->renderer->drawCharacter(
+          glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
+        eng->renderer->updateScreen();
+        eng->sleep(eng->config->delayProjectileDraw);
+      }
     }
   }
 
@@ -71,9 +87,6 @@ void Thrower::playerThrowLitExplosive(const coord& aimCell) {
 
 void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
                         Item& itemThrown) {
-//  Inventory* inventory = actorThrowing->getInventory();
-//  Item* const itemStack = inventory->getItemInSlot(slot_missiles);
-
   MissileAttackData* data = new MissileAttackData(
     actorThrowing, itemThrown, targetCell, actorThrowing.pos, eng);
 
@@ -83,11 +96,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
                          actorThrowing.pos, targetCell,
                          false, THROWING_RANGE_LIMIT);
 
-//    Item* itemThrown = eng->itemFactory->copyItem(itemStack);
-//    itemThrown->numberOfItems = 1;
   const ItemDefinition& itemThrownDef = itemThrown.getDef();
-
-//    inventory->decreaseItemInSlot(slot_missiles);
 
   const string itemName_a =
     eng->itemData->getItemRef(itemThrown, itemRef_a, true);

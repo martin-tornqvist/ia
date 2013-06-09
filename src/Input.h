@@ -41,6 +41,8 @@ public:
 
   void clearEvents();
 
+  void setKeyRepeatDelays();
+
 private:
   friend class Bot;
   void handleKeyPress(const KeyboardReadReturnData& d);

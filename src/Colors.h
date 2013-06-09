@@ -45,7 +45,7 @@ const SDL_Color clrBrownWallLgt = {191, 115, 66, 0};
 
 const SDL_Color clrBrownDark    = {96, 64, 32, 0};
 const SDL_Color clrBrownGray    = {92, 84, 78, 0};
-const SDL_Color clrGold         = {218, 165, 32, 0};
+//const SDL_Color clrGold         = {218, 165, 32, 0};
 
 const SDL_Color clrMessageGood  = clrGreenLgt;
 const SDL_Color clrMessageBad   = clrRedLgt;

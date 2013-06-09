@@ -5,8 +5,7 @@
 #include "Map.h"
 
 Wall::Wall(Feature_t id, coord pos, Engine* engine) :
-  FeatureStatic(id, pos, engine), wallType(wall_common), isSlimy(false) {
-
+  FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
 }
 
 bool Wall::isTileAnyWallFront(const Tile_t tile) {
@@ -30,17 +29,17 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
   switch(wallType) {
   case wall_common:
   case wall_alt1: {
-    const string modStr = isSlimy ? "slimy " : "";
+    const string modStr = isMossGrown ? "moss-grown " : "";
     return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
   }
   break;
   case wall_cave: {
-    const string modStr = isSlimy ? "slimy " : "";
+    const string modStr = isMossGrown ? "moss-grown " : "";
     return DEFINITE_ARTICLE ? "the " + modStr + "cavern wall" : "a " + modStr + "cavern wall";
 
   }
   case wall_egypt: {
-    const string modStr = isSlimy ? "slimy " : "";
+    const string modStr = isMossGrown ? "moss-grown " : "";
     return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
 
   }
@@ -49,7 +48,7 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
 }
 
 SDL_Color Wall::getColor() const {
-  if(isSlimy) {
+  if(isMossGrown) {
     return clrGreen;
   }
 
@@ -125,8 +124,8 @@ void Wall::setRandomNormalWall() {
   }
 }
 
-void Wall::setRandomIsSlimy() {
-  isSlimy = eng->dice.getInRange(1, 40) == 1;
+void Wall::setRandomIsMossGrown() {
+  isMossGrown = eng->dice.getInRange(1, 40) == 1;
 }
 
 

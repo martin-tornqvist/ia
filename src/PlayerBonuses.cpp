@@ -10,6 +10,29 @@
 
 using namespace std;
 
+void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
+  bonuses_[bonus].isPicked_ = true;
+
+  switch(bonus) {
+    case playerBonus_healthy: {
+      eng->player->changeMaxHP(2, false);
+    }
+    break;
+    case playerBonus_vigorous: {
+      eng->player->changeMaxHP(2, false);
+    }
+    break;
+    case playerBonus_selfAware: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+      eng->player->getStatusEffectsHandler()->endEffect(statusConfused, visionBlockers);
+    }
+    break;
+    default: {
+    } break;
+  }
+}
+
 PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_dexterous, "Dexterous", "+25% chance to evade attacks and traps, every fifth move is a free action");
   setBonus(playerBonus_lithe, "Lithe", "+20% chance to evade attacks and traps, every fourth move is a free action", playerBonus_dexterous);
@@ -51,8 +74,11 @@ PlayerBonusHandler::PlayerBonusHandler(Engine* engine) : eng(engine) {
   setBonus(playerBonus_vigorous, "Vigorous", "+2 HP", playerBonus_healthy);
 }
 
-void PlayerBonusHandler::setBonus(const PlayerBonuses_t bonus, const string title, const string description,
-                                  const PlayerBonuses_t prereq1, const PlayerBonuses_t prereq2, const PlayerBonuses_t prereq3) {
+void PlayerBonusHandler::setBonus(const PlayerBonuses_t bonus, const string title,
+                                  const string description,
+                                  const PlayerBonuses_t prereq1,
+                                  const PlayerBonuses_t prereq2,
+                                  const PlayerBonuses_t prereq3) {
 
   vector<PlayerBonuses_t> prereqs;
   prereqs.resize(0);
@@ -67,29 +93,6 @@ void PlayerBonusHandler::setBonus(const PlayerBonuses_t bonus, const string titl
   }
 
   bonuses_[bonus] = PlayerBonus(title, description, prereqs);
-}
-
-void PlayerBonusHandler::pickBonus(const PlayerBonuses_t bonus) {
-  bonuses_[bonus].isPicked_ = true;
-
-  switch(bonus) {
-    case playerBonus_healthy: {
-      eng->player->changeMaxHP(2, false);
-    }
-    break;
-    case playerBonus_vigorous: {
-      eng->player->changeMaxHP(2, false);
-    }
-    break;
-    case playerBonus_selfAware: {
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
-      eng->player->getStatusEffectsHandler()->endEffect(statusConfused, visionBlockers);
-    }
-    break;
-    default: {
-    } break;
-  }
 }
 
 vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
@@ -113,7 +116,28 @@ vector<PlayerBonuses_t> PlayerBonusHandler::getBonusChoices() const {
   return ret;
 }
 
-vector<PlayerBonuses_t> PlayerBonusHandler::getBonusPrereqs(const PlayerBonuses_t bonusId) const {
+vector<PlayerBonuses_t> PlayerBonusHandler::getBonusPrereqs(
+  const PlayerBonuses_t bonusId) const {
   return bonuses_[bonusId].prereqs_;
 }
 
+void PlayerBonusHandler::getAllPickedBonusTitlesList(vector<string>& titles) {
+  titles.resize(0);
+  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    const PlayerBonus& bon = bonuses_[i];
+    if(bon.isPicked_) {
+      titles.push_back(bon.title_);
+    }
+  }
+}
+
+void PlayerBonusHandler::getAllPickedBonusTitlesLine(string& str) {
+  str = "";
+  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    const PlayerBonus& bon = bonuses_[i];
+    if(bon.isPicked_) {
+      const string title = "\"" + bon.title_ + "\"";
+      str += str == "" ? title : (", " + title);
+    }
+  }
+}

@@ -114,19 +114,25 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
   //Draw description
   const int Y0_DESCR = Y0_BONUSES + NR_BONUSES_COLUMN_ONE + 2;
   yPos = Y0_DESCR;
-  const PlayerBonuses_t markedBonus = browserPos.x == 0 ? bonusesColumnOne.at(browserPos.y) : bonusesColumnTwo.at(browserPos.y);
+  const PlayerBonuses_t markedBonus =
+    browserPos.x == 0 ? bonusesColumnOne.at(browserPos.y) :
+    bonusesColumnTwo.at(browserPos.y);
   string descr = eng->playerBonusHandler->getBonusDescription(markedBonus);
   const int MAX_WIDTH_DESCR = 50;
-  vector<string> descrLines = eng->textFormatting->lineToLines("Effect(s): " + descr, MAX_WIDTH_DESCR);
+  vector<string> descrLines =
+    eng->textFormatting->lineToLines("Effect(s): " + descr, MAX_WIDTH_DESCR);
   for(unsigned int i = 0; i < descrLines.size(); i++) {
-    eng->renderer->drawText(descrLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrNosferatuTealDrk);
+    eng->renderer->drawText(descrLines.at(i), renderArea_screen,
+                            X_COLUMN_ONE, yPos, clrGray);
     yPos++;
   }
   yPos++;
 
   yPos = max(Y0_DESCR + 3, yPos);
 
-  vector<PlayerBonuses_t> prereqsForCurrentBonus = eng->playerBonusHandler->getBonusPrereqs(markedBonus);
+  //Prerequisites
+  vector<PlayerBonuses_t> prereqsForCurrentBonus =
+    eng->playerBonusHandler->getBonusPrereqs(markedBonus);
   const unsigned int NR_PREREQS = prereqsForCurrentBonus.size();
   if(NR_PREREQS > 0) {
     string prereqStr = "This ability had the following prerequisite(s): ";
@@ -139,9 +145,26 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
         prereqStr += ", \"" + prereqTitle + "\"";
       }
     }
-    vector<string> prereqLines = eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR);
+    vector<string> prereqLines =
+      eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR);
     for(unsigned int i = 0; i < prereqLines.size(); i++) {
-      eng->renderer->drawText(prereqLines.at(i), renderArea_screen, X_COLUMN_ONE, yPos, clrNosferatuTealDrk);
+      eng->renderer->drawText(prereqLines.at(i), renderArea_screen,
+                              X_COLUMN_ONE, yPos, clrGray);
+      yPos++;
+    }
+    yPos++;
+  }
+
+  //Previously picked bonuses
+  string pickedBonusesLine = "";
+  eng->playerBonusHandler->getAllPickedBonusTitlesLine(pickedBonusesLine);
+  if(pickedBonusesLine != "") {
+    pickedBonusesLine = "Abilities previously gained: " + pickedBonusesLine;
+    vector<string> pickedBonusesLines =
+      eng->textFormatting->lineToLines(pickedBonusesLine, MAX_WIDTH_DESCR);
+    for(unsigned int i = 0; i < pickedBonusesLines.size(); i++) {
+      eng->renderer->drawText(pickedBonusesLines.at(i), renderArea_screen,
+                              X_COLUMN_ONE, yPos, clrGray);
       yPos++;
     }
   }

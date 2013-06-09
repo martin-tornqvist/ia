@@ -23,10 +23,10 @@ public:
   Tile_t getTopWallTile() const;
 
   void setRandomNormalWall();
-  void setRandomIsSlimy();
+  void setRandomIsMossGrown();
 
   Wall_t wallType;
-  bool isSlimy;
+  bool isMossGrown;
 
   static bool isTileAnyWallFront(const Tile_t tile);
 

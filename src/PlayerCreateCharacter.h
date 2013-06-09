@@ -7,7 +7,7 @@ using namespace std;
 
 class Engine;
 
-const int Y0_CREATE_CHARACTER = 8;
+const int Y0_CREATE_CHARACTER = 6;
 
 class PlayerCreateCharacter {
 public:

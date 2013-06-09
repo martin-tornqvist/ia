@@ -104,6 +104,9 @@ public:
     return bonuses_[bonus].title_;
   }
 
+  void getAllPickedBonusTitlesList(vector<string>& titles);
+  void getAllPickedBonusTitlesLine(string& str);
+
   string getBonusDescription(const PlayerBonuses_t bonus) const {
     return bonuses_[bonus].description_;
   }
@@ -121,8 +124,10 @@ public:
 private:
   Engine* eng;
 
-  void setBonus(const PlayerBonuses_t bonus, const string title, const string description,
-                const PlayerBonuses_t prereq1 = endOfPlayerBonuses, const PlayerBonuses_t prereq2 = endOfPlayerBonuses,
+  void setBonus(const PlayerBonuses_t bonus, const string title,
+                const string description,
+                const PlayerBonuses_t prereq1 = endOfPlayerBonuses,
+                const PlayerBonuses_t prereq2 = endOfPlayerBonuses,
                 const PlayerBonuses_t prereq3 = endOfPlayerBonuses);
 
   PlayerBonus bonuses_[endOfPlayerBonuses];

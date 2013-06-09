@@ -156,7 +156,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
       str = IS_ANY_ITEM_AVAILABLE ? "Wield which item?" : "I carry no weapon to wield.";
       break;
     case slot_wieldedAlt:
-      str = IS_ANY_ITEM_AVAILABLE ? "Use which item as prepared weapon?" : "I carry no weapon to wield.";
+      str = IS_ANY_ITEM_AVAILABLE ? "Prepare which weapon?" : "I carry no weapon to wield.";
       break;
   }
   if(IS_ANY_ITEM_AVAILABLE) {

@@ -19,7 +19,7 @@ void MapBuild::buildCavern() {
       eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
       Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
       wall->wallType = wall_cave;
-      wall->isSlimy = false;
+      wall->isMossGrown = false;
     }
   }
 

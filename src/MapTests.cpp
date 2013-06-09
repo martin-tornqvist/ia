@@ -317,6 +317,15 @@ bool MapTests::isCellsNeighbours(const coord& pos1, const coord& pos2,
 
 vector<coord> MapTests::getLine(const coord& origin, const coord& target,
                                 bool stopAtTarget, int chebTravelLimit) {
+
+  vector<coord> line;
+  line.resize(0);
+
+  if(target == origin) {
+    line.push_back(origin);
+    return line;
+  }
+
   double deltaX = (double(target.x) - double(origin.x));
   double deltaY = (double(target.y) - double(origin.y));
 
@@ -330,14 +339,11 @@ vector<coord> MapTests::getLine(const coord& origin, const coord& target,
 
   coord curPos = coord(int(curX_prec), int(curY_prec));
 
-  vector<coord> line;
-  line.resize(0);
-
   for(double i = 0; i <= 9999.0; i += 0.04) {
     curX_prec += xIncr * 0.04;
     curY_prec += yIncr * 0.04;
 
-    curPos.set(curX_prec, curY_prec);
+    curPos.set(int(curX_prec), int(curY_prec));
 
     if(eng->mapTests->isCellInsideMap(curPos) == false) {
       return line;

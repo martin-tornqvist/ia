@@ -62,7 +62,7 @@ void Config::setCellDimDependentVariables() {
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(11, 0);
+  MenuBrowser browser(13, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -78,7 +78,7 @@ void Config::runOptionsMenu() {
       } break;
 
       case menuAction_canceled: {
-        // Since ASCII mode wall symbol may have changed,
+        //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
         eng->featureData->makeList();
         return;
@@ -99,7 +99,7 @@ void Config::runOptionsMenu() {
 }
 
 void Config::parseFontNameAndSetCellDims() {
-  tracer << "Config:: parseFontNameAndSetCellDims()..." << endl;
+  tracer << "Config::parseFontNameAndSetCellDims()..." << endl;
   string fontName = fontImageName;
 
   char ch = 'a';
@@ -130,10 +130,11 @@ void Config::parseFontNameAndSetCellDims() {
 
   cellW = stringToInt(widthStr)  * fontScale;
   cellH = stringToInt(heightStr) * fontScale;
-  tracer << "Config:: parseFontNameAndSetCellDims() [DONE]" << endl;
+  tracer << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
 void Config::setDefaultVariables() {
+  tracer << "Config::setDefaultVariables()..." << endl;
   isTilesMode = true;
   fontImageName = "images/16x24_clean_v1.png";
   fontScale = 1;
@@ -142,12 +143,16 @@ void Config::setDefaultVariables() {
   isAsciiWallSymbolFullSquare = false;
   isIntroLevelSkipped = false;
   useRangedWpnMleeePrompt = true;
+  keyRepeatDelay = 130;
+  keyRepeatInterval = 60;
   delayProjectileDraw = 45;
   delayShotgun = 120;
   delayExplosion = 350;
+  tracer << "Config::setDefaultVariables() [DONE]" << endl;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
+  tracer << "Config::collectLinesFromVariables()..." << endl;
   lines.resize(0);
   lines.push_back(isTilesMode == false ? "0" : "1");
   lines.push_back(intToString(fontScale));
@@ -156,9 +161,12 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
   lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
   lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
+  lines.push_back(intToString(keyRepeatDelay));
+  lines.push_back(intToString(keyRepeatInterval));
   lines.push_back(intToString(delayProjectileDraw));
   lines.push_back(intToString(delayShotgun));
   lines.push_back(intToString(delayExplosion));
+  tracer << "Config::collectLinesFromVariables() [DONE]" << endl;
 }
 
 void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
@@ -240,6 +248,26 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   str = useRangedWpnMleeePrompt ? "YES" : "NO";
   eng->renderer->drawText(str, renderArea_screen, X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  optionNr++;
+
+  str = "KEY REPEAT DELAY (ms)";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  eng->renderer->drawText(intToString(keyRepeatDelay), renderArea_screen,
+                          X1, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  optionNr++;
+
+  str = "KEY REPEAT INTERVAL (ms)";
+  eng->renderer->drawText(str, renderArea_screen, X0, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  eng->renderer->drawText(":", renderArea_screen, X1 - 2, Y0 + optionNr,
+                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+  eng->renderer->drawText(intToString(keyRepeatInterval), renderArea_screen,
+                          X1, Y0 + optionNr,
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   optionNr++;
 
@@ -379,13 +407,42 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     case 7: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, keyRepeatDelay, true);
+      if(NR != -1) {
+        keyRepeatDelay = NR;
+        eng->input->setKeyRepeatDelays();
+      }
+    } break;
+
+    case 8: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, keyRepeatInterval, true);
+      if(NR != -1) {
+        keyRepeatInterval = NR;
+        eng->input->setKeyRepeatDelays();
+      }
+    } break;
+
+    case 9: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
       if(NR != -1) {
         delayProjectileDraw = NR;
       }
     } break;
 
-    case 8: {
+    case 10: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
+      if(NR != -1) {
+        delayProjectileDraw = NR;
+      }
+    } break;
+
+    case 11: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrNosferatuTealLgt, 1, 3, delayShotgun, true);
@@ -394,7 +451,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 9: {
+    case 12: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrNosferatuTealLgt, 1, 3, delayExplosion, true);
@@ -403,7 +460,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 10: {
+    case 13: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -429,6 +486,7 @@ void Config::toggleFullscreen() {
 }
 
 void Config::setAllVariablesFromLines(vector<string>& lines) {
+  tracer << "Config::setAllVariablesFromLines()..." << endl;
   string curLine = "";
 
   curLine = lines.front();
@@ -469,6 +527,14 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
+  keyRepeatDelay = stringToInt(curLine);
+  lines.erase(lines.begin());
+
+  curLine = lines.front();
+  keyRepeatInterval = stringToInt(curLine);
+  lines.erase(lines.begin());
+
+  curLine = lines.front();
   delayProjectileDraw = stringToInt(curLine);
   lines.erase(lines.begin());
 
@@ -479,6 +545,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   curLine = lines.front();
   delayExplosion = stringToInt(curLine);
   lines.erase(lines.begin());
+  tracer << "Config::setAllVariablesFromLines() [DONE]" << endl;
 }
 
 void Config::writeLinesToFile(vector<string>& lines) {

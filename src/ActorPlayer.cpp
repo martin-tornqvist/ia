@@ -1269,19 +1269,21 @@ void Player::FOVhack() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(pos, visionBlockers, 9999);
 
-  bool moveBlocked[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, moveBlocked);
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(visionBlockers[x][y] && moveBlocked[x][y]) {
+      if(visionBlockers[x][y] && blockers[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            const coord adjCell(x + dx, y + dy);
-            if(eng->mapTests->isCellInsideMap(adjCell)) {
+            const coord adj(x + dx, y + dy);
+            if(eng->mapTests->isCellInsideMap(adj)) {
               if(
-                eng->map->playerVision[adjCell.x][adjCell.y] &&
-                moveBlocked[adjCell.x][adjCell.y] == false) {
+                eng->map->playerVision[adj.x][adj.y] &&
+                (eng->map->darkness[adj.x][adj.y] == false ||
+                 eng->map->light[adj.x][adj.y]) &&
+                blockers[adj.x][adj.y] == false) {
                 eng->map->playerVision[x][y] = true;
                 dx = 999;
                 dy = 999;

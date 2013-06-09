@@ -1492,7 +1492,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 10;
-  d.description = "A slithering conglomeration of carnivorous worms. They multiply rapidly through splitting.";
+  d.description = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;

@@ -294,7 +294,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
                     eng->featureFactory->spawnFeatureAt(feature_stoneWall, c + coord(dx , dy));
                     Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x + dx][y + dy]);
                     wall->wallType = wall_cave;
-                    wall->setRandomIsSlimy();
+                    wall->setRandomIsMossGrown();
                   }
                 }
               }
@@ -708,9 +708,9 @@ void MapBuildBSP::decorate() {
           continue;
         }
 
-        //Slimy walls
+        //Moss grown walls
         Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
-        wall->setRandomIsSlimy();
+        wall->setRandomIsMossGrown();
 
         //Convert walls with no adjacent stone floor to cave walls
         if(nrAdjFloor == 0) {
