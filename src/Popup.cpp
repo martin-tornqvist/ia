@@ -75,7 +75,7 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   }
 
   vector<string> lines = eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH);
-  const int TEXT_AREA_HEIGHT =  static_cast<int>(lines.size()) + 3; //Title + text + blank + label
+  const int TEXT_AREA_HEIGHT =  int(lines.size()) + 3; //Title + text + blank + label
 
   const int TITLE_Y_POS = printBoxAndReturnTitleYPos(TEXT_AREA_HEIGHT);
 
@@ -117,8 +117,8 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
     const vector<string>& choices, const string title) const {
 
   vector<string> lines = eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH);
-  const int TEXT_HEIGHT = static_cast<int>(lines.size());
-  const int NR_CHOICES = static_cast<int>(choices.size());
+  const int TEXT_HEIGHT = int(lines.size());
+  const int NR_CHOICES = int(choices.size());
 
   const int TEXT_AREA_HEIGHT = TEXT_HEIGHT + NR_CHOICES + 3;
 

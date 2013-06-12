@@ -146,7 +146,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
             actorHere == eng->player ? clrMessageBad : clrMessageGood;
           eng->log->addMessage(
             actorHere->getNameThe() + " is hit.", hitMessageClr);
-          actorHere->hit(data->dmg, damageType_physical);
+          actorHere->hit(data->dmg, dmgType_physical);
 
           //If the thing that hit an actor is a potion, let it make stuff happen...
           if(itemThrownDef.isQuaffable) {

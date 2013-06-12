@@ -325,7 +325,7 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
       const string monsterName = actors.at(i)->getNameThe();
       engine->log->addMessage(monsterName + " is struck by a roaring blast!", clrMessageGood);
       actors.at(i)->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
-      actors.at(i)->hit(engine->dice(1, 8), damageType_physical);
+      actors.at(i)->hit(engine->dice(1, 8), dmgType_physical);
     }
 
     setRealDefinitionNames(engine, false);
@@ -369,7 +369,7 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
         const string monsterName = actors.at(i)->getNameThe();
         engine->log->addMessage(monsterName + " is crushed by an unseen force!",
                                 clrMessageGood);
-        actors.at(i)->hit(25, damageType_physical);
+        actors.at(i)->hit(25, dmgType_physical);
       }
 
       engine->renderer->drawMapAndInterface(true);
@@ -702,7 +702,7 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
       engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
     }
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(engine), false, false);
-    engine->player->hit(engine->dice(1, 6), damageType_pure);
+    engine->player->hit(engine->dice(1, 6), dmgType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);

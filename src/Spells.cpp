@@ -72,7 +72,7 @@ void SpellAzathothsBlast::specificCast(const SpellData& d, Engine* const eng) {
       eng->log->addMessage("I am struck by a roaring blast!", clrMessageBad);
     }
     actor->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
-    actor->hit(eng->dice(1, 8), damageType_physical);
+    actor->hit(eng->dice(1, 8), dmgType_physical);
   }
 }
 
@@ -320,7 +320,7 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
 //  eng->mapTests->makeVisionBlockerArray(blockers);
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-  for(int i = 0; i < static_cast<int>(freePositionsSeenByPlayer.size()); i++) {
+  for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
     const coord pos = freePositionsSeenByPlayer.at(i);
     if(blockers[pos.x][pos.y]) {
       freePositionsSeenByPlayer.erase(freePositionsSeenByPlayer.begin() + i);

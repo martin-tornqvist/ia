@@ -20,7 +20,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
 
   if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
     const bool IS_DEFENDER_KILLED =
-      data.currentDefender->hit(data.dmg, wpn.getDef().meleeDamageType);
+      data.currentDefender->hit(data.dmg, wpn.getDef().meleeDmgType);
 
     if(IS_DEFENDER_KILLED == false) {
       data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(wpn, true);

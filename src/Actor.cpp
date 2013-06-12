@@ -249,7 +249,7 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
   return IS_HP_GAINED;
 }
 
-bool Actor::hit(int dmg, const DamageTypes_t damageType) {
+bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   tracer << "Actor::hit()..." << endl;
   tracer << "Actor: Damage from parameter: " << dmg << endl;
 
@@ -264,7 +264,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
     if(armor != NULL) {
       tracer << "Actor: Has armor, running hit on armor" << endl;
 
-      dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg, damageType);
+      dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg, dmgType);
 
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;

@@ -169,7 +169,7 @@ enum ItemId_t {
 struct ArmorData {
   ArmorData() :
     overRideAbsorptionPointLabel(""), protectsAgainstStatusBurning(false) {
-    for(unsigned int i = 0; i < endOfDamageTypes; i++) {
+    for(unsigned int i = 0; i < endOfDmgTypes; i++) {
       absorptionPoints[i] = 0;
       damageToDurabilityFactors[i] = 0.0;
     }
@@ -177,8 +177,8 @@ struct ArmorData {
 
   string overRideAbsorptionPointLabel;
   bool protectsAgainstStatusBurning;
-  int absorptionPoints[endOfDamageTypes];
-  double damageToDurabilityFactors[endOfDamageTypes];
+  int absorptionPoints[endOfDmgTypes];
+  double damageToDurabilityFactors[endOfDmgTypes];
   int chanceToDeflectTouchAttacks;
 };
 
@@ -246,7 +246,7 @@ public:
   Abilities_t meleeAbilityUsed;
   ItemAttackMessages meleeAttackMessages;
   StatusEffect* meleeStatusEffect; //TODO This requires deep copy of items
-  DamageTypes_t meleeDamageType;
+  DmgTypes_t meleeDmgType;
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
@@ -254,7 +254,7 @@ public:
   int rangedHitChanceMod;
   Abilities_t rangedAbilityUsed;
   ItemId_t rangedAmmoTypeUsed;
-  DamageTypes_t rangedDamageType;
+  DmgTypes_t rangedDmgType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   Tile_t rangedMissileTile;

@@ -40,7 +40,7 @@ public:
     return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
   }
 
-  void lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect);
+  void lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect);
 
   void resetArray(int array[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -86,8 +86,8 @@ public:
     if(x1 == x2 && y1 == y2)
       return 0.0;
 
-    const double xSqr = static_cast<double>((x2 - x1) * (x2 - x1));
-    const double ySqr = static_cast<double>((y2 - y1) * (y2 - y1));
+    const double xSqr = double((x2 - x1) * (x2 - x1));
+    const double ySqr = double((y2 - y1) * (y2 - y1));
     return sqrt(xSqr + ySqr);
   }
 

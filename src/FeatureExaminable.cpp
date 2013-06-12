@@ -77,7 +77,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
         }
       }
 
-      const int NR_CANDIDATES = static_cast<int>(itemCandidates.size());
+      const int NR_CANDIDATES = int(itemCandidates.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
           const unsigned int ELEMENT = engine->dice.getInRange(0, NR_CANDIDATES - 1);
@@ -221,7 +221,7 @@ void Tomb::doAction(const TombAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMessage("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       }
 
       if(eng->player->deadState != actorDeadState_alive) {
@@ -550,7 +550,7 @@ void Chest::doAction(const ChestAction_t action) {
 
       if(wpn == NULL) {
         eng->log->addMessage("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       } else {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 
@@ -580,7 +580,7 @@ void Chest::doAction(const ChestAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMessage("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       }
 
       if(eng->player->deadState == actorDeadState_alive) {
@@ -864,7 +864,7 @@ void Cocoon::triggerTrap() {
       eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
 
       const int NR_SPIDERS_MAX = min(eng->dice.getInRange(2, 4),
-                                     static_cast<int>(freeCells.size()));
+                                     int(freeCells.size()));
 
       if(NR_SPIDERS_MAX > 0) {
         tracer << "Cocoon: Found positions, spawning spiders" << endl;

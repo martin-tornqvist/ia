@@ -6,7 +6,7 @@ void MenuBrowser::setY(const int Y) {
 }
 
 void MenuBrowser::navigate(const char KEY) {
-  const int ELEMENT = KEY >= 'a' ? static_cast<int>(KEY - 'a') : KEY >= 'A' ? static_cast<int>(KEY - 'A' + 'z' - 'a' + 1) : 0;
+  const int ELEMENT = KEY >= 'a' ? int(KEY - 'a') : KEY >= 'A' ? int(KEY - 'A' + 'z' - 'a' + 1) : 0;
   pos.x = ELEMENT < NR_ITEMS_FIRST ? 0 : 1;
   pos.y = ELEMENT < NR_ITEMS_FIRST ? ELEMENT : ELEMENT - NR_ITEMS_FIRST;
 }
@@ -16,7 +16,7 @@ char MenuBrowser::enter() const {
 }
 
 bool MenuBrowser::isPosAtKey(const char KEY) const {
-  const int ELEMENT = KEY >= 'a' ? static_cast<int>(KEY - 'a') : KEY >= 'A' ? static_cast<int>(KEY - 'A' + 'z' - 'a' + 1) : 0;
+  const int ELEMENT = KEY >= 'a' ? int(KEY - 'a') : KEY >= 'A' ? int(KEY - 'A' + 'z' - 'a' + 1) : 0;
   coord positionAtKey;
   positionAtKey.x = ELEMENT < NR_ITEMS_FIRST ? 0 : 1;
   positionAtKey.y = ELEMENT < NR_ITEMS_FIRST ? ELEMENT : ELEMENT - NR_ITEMS_FIRST;

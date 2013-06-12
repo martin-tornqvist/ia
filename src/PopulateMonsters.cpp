@@ -426,7 +426,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    eng->mapTests->makeBoolVectorFromMapArray(blockersTraps, freeCellsTraps);
 //
 //    const int MAX_CELLS_PER_TRAP = 210;
-//    int nrOfTrapsOnMap = static_cast<int>(freeCellsTraps.size()) / MAX_CELLS_PER_TRAP;
+//    int nrOfTrapsOnMap = int(freeCellsTraps.size()) / MAX_CELLS_PER_TRAP;
 //    nrOfTrapsOnMap = max(2, nrOfTrapsOnMap);
 //    nrOfTrapsOnMap += eng->dice.getInRange(0, nrOfTrapsOnMap / 4);
 //

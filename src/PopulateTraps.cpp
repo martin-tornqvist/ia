@@ -49,7 +49,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
           }
         }
 
-        const int NR_TRAP_POSITION_CANDIDATES = static_cast<int>(trapPositionCandidates.size());
+        const int NR_TRAP_POSITION_CANDIDATES = int(trapPositionCandidates.size());
         if(NR_TRAP_POSITION_CANDIDATES > 0) {
           const int MIN_NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES / 4, theme == roomTheme_spider ? 4 : 1);
           const int MAX_NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES / 2, theme == roomTheme_spider ? 8 : 2);
@@ -79,7 +79,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         }
       }
     }
-    const int NR_TRAP_POSITION_CANDIDATES = static_cast<int>(trapPositionCandidates.size());
+    const int NR_TRAP_POSITION_CANDIDATES = int(trapPositionCandidates.size());
     if(NR_TRAP_POSITION_CANDIDATES > 0) {
       const int NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES, eng->dice.getInRange(5, 9));
       for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {

@@ -63,7 +63,7 @@ void Manual::run() {
   string str;
 
   int topElement = 0;
-  int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+  int btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
 
   drawManualInterface();
 
@@ -81,8 +81,8 @@ void Manual::run() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = max(0, min(topElement + 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+      topElement = max(0, min(topElement + 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();
       yCell = 2;
@@ -92,8 +92,8 @@ void Manual::run() {
       }
       eng->renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = max(0, min(topElement - 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+      topElement = max(0, min(topElement - 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();
       yCell = 2;

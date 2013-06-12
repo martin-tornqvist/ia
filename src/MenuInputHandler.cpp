@@ -38,13 +38,13 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
 
     const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
 
-////    const int NR_LETTERS_A_TO_Z = static_cast<int>('z' - 'a');
+////    const int NR_LETTERS_A_TO_Z = int('z' - 'a');
 
-    if((d.key_ >= 'a' && static_cast<int>(d.key_ - 'a') < TOT_SIZE_OF_LISTS)) {
+    if((d.key_ >= 'a' && int(d.key_ - 'a') < TOT_SIZE_OF_LISTS)) {
       browser.navigate(d.key_);
       return menuAction_selected;
     }
-    if((d.key_ >= 'A' && static_cast<int>(d.key_ - 'A') < TOT_SIZE_OF_LISTS)) {
+    if((d.key_ >= 'A' && int(d.key_ - 'A') < TOT_SIZE_OF_LISTS)) {
       browser.navigate(d.key_ - 'A' + 'a');
       return menuAction_selectedWithShift;
     }

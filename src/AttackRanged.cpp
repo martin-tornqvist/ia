@@ -154,7 +154,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
 
               const bool DIED = curProj->attackData->currentDefender->hit(
                                   curProj->attackData->dmg,
-                                  wpn.getDef().rangedDamageType);
+                                  wpn.getDef().rangedDmgType);
               if(DIED == false) {
                 // Aply weapon hit status effects
                 StatusEffectsHandler* const defenderStatusHandler =

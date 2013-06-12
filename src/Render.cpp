@@ -51,6 +51,7 @@ void Renderer::initAndClearPrev() {
 
   tracer << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + eng->config->GAME_VERSION;
+  SDL_WM_SetCaption(title.data(), NULL);
 
   if(eng->config->isFullscreen) {
     screenSurface_ = SDL_SetVideoMode(

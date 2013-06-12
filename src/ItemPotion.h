@@ -231,10 +231,10 @@ public:
   void setParametersFromSaveLines(vector<string>& lines);
 
 private:
-  vector<StringAndColor> m_falseNames;
+  vector<StringAndClr> m_falseNames;
 
   void addFalse(const string& str, const SDL_Color clr) {
-    m_falseNames.push_back(StringAndColor(str, clr));
+    m_falseNames.push_back(StringAndClr(str, clr));
   }
 
   Engine* eng;

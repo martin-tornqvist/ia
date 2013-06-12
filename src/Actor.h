@@ -39,7 +39,7 @@ public:
 
   void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
 
-  bool hit(int dmg, const DamageTypes_t damageType);
+  bool hit(int dmg, const DmgTypes_t dmgType);
 
   bool restoreHP(int hpRestored, const bool ALLOW_MESSAGE = true);
   void changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES);

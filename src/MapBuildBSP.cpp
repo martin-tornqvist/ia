@@ -543,7 +543,7 @@ void MapBuildBSP::postProcessFillDeadEnds() {
   std::sort(floodFillVector.begin(), floodFillVector.end(), PosAndVal_compareForVal());
 
   //Fill all positions with only one cardinal floor neighbour
-  for(int i = static_cast<int>(floodFillVector.size()) - 1; i >= 0; i--) {
+  for(int i = int(floodFillVector.size()) - 1; i >= 0; i--) {
     const coord& pos = floodFillVector.at(i).pos;
     const int x = pos.x;
     const int y = pos.y;

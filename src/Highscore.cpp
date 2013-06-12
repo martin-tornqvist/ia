@@ -124,11 +124,11 @@ void HighScore::runHighScoreScreen() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = max(0, min(topElement + static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
+      topElement = max(0, min(topElement + int(MAP_Y_CELLS / 5), int(entries.size()) - int(MAP_Y_CELLS)));
       renderHighScoreScreen(entries, topElement);
     }
     if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = max(0, min(topElement - static_cast<int>(MAP_Y_CELLS / 5), static_cast<int>(entries.size()) - static_cast<int>(MAP_Y_CELLS)));
+      topElement = max(0, min(topElement - int(MAP_Y_CELLS / 5), int(entries.size()) - int(MAP_Y_CELLS)));
       renderHighScoreScreen(entries, topElement);
     }
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

@@ -62,7 +62,7 @@ void StatusPoisoned::newTurn(Engine* const engine) {
       }
     }
 
-    owningActor->hit(1, damageType_pure);
+    owningActor->hit(1, dmgType_pure);
   }
 
   turnsLeft--;
@@ -95,7 +95,7 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
     }
   }
 
-  owningActor->hit(engine->dice(1, 3), damageType_physical);
+  owningActor->hit(engine->dice(1, 3), dmgType_physical);
 
   if(owningActor->deadState == actorDeadState_alive) {
     const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *(owningActor));
@@ -175,7 +175,7 @@ void StatusBurning::doDamage(Engine* const engine) {
     engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLgt);
 //    owningActor->eng->renderer->drawMapAndInterface();
   }
-  owningActor->hit(engine->dice(1, 2), damageType_fire);
+  owningActor->hit(engine->dice(1, 2), dmgType_fire);
 }
 
 void StatusBurning::newTurn(Engine* const engine) {
@@ -276,7 +276,7 @@ void StatusFlared::end(Engine* const engine) {
 }
 
 void StatusFlared::newTurn(Engine* const engine) {
-  owningActor->hit(1, damageType_fire);
+  owningActor->hit(1, dmgType_fire);
   turnsLeft--;
 
   if(turnsLeft == 0) {
@@ -349,9 +349,11 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
     if(effect->getEffectId() == statusBurning) {
       Item* const armor = owningActor->getInventory()->getItemInSlot(slot_armorBody);
       if(armor != NULL) {
-        const bool ARMOR_PROTECTS_FROM_BURNING = armor->getDef().armorData.protectsAgainstStatusBurning;
+        const bool ARMOR_PROTECTS_FROM_BURNING =
+          armor->getDef().armorData.protectsAgainstStatusBurning;
         if(ARMOR_PROTECTS_FROM_BURNING) {
-          statusProtectionFromArmor = max(0, dynamic_cast<Armor*>(armor)->getDurability());
+          statusProtectionFromArmor =
+            max(0, dynamic_cast<Armor*>(armor)->getDurability());
         }
       }
     } else if(effect->getEffectId() == statusConfused) {

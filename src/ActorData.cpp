@@ -64,12 +64,12 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   const double HP_BASE_DB = 3.0;
   const double HP_INCR_DB = 1.75;
 
-  const double EFFECTIVE_LEVEL_DB = static_cast<double>(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
+  const double EFFECTIVE_LEVEL_DB = double(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
 
   const double HP_BEFORE_STRENGTH_DB = HP_BASE_DB + (HP_INCR_DB * (EFFECTIVE_LEVEL_DB - 1));
   const double STRENGTH_FACTOR = EntityStrength::getFactor(hpStrength);
 
-  const int HP_AFTER_STRENGTH = static_cast<int>(HP_BEFORE_STRENGTH_DB * STRENGTH_FACTOR);
+  const int HP_AFTER_STRENGTH = int(HP_BEFORE_STRENGTH_DB * STRENGTH_FACTOR);
   const int HP_CAP = 999;
   const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
   d.hpMax = HP_AFTER_CAP;
@@ -78,7 +78,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   const double ATTACK_BASE_DB = 14.0;
   const double ATTACK_INCR_DB = 10.0;
 
-  const int ATTACK = static_cast<int>(ceil(ATTACK_BASE_DB + ATTACK_INCR_DB * (EFFECTIVE_LEVEL_DB - 1.0)));
+  const int ATTACK = int(ceil(ATTACK_BASE_DB + ATTACK_INCR_DB * (EFFECTIVE_LEVEL_DB - 1.0)));
 
   const int ATTACK_CAP = 40;
   const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
@@ -90,7 +90,7 @@ void ActorData::setStrengthsFromFormula(ActorDefinition& d, const EntityStrength
   const double STATUS_RES_BASE = 5.0;
   const double STATUS_RES_INCR = 3.0;
 
-  const int STATUS_RES = static_cast<int>(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_DB - 1.0)));
+  const int STATUS_RES = int(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_DB - 1.0)));
   d.abilityVals.setVal(ability_resistStatusBody, STATUS_RES);
   d.abilityVals.setVal(ability_resistStatusMind, STATUS_RES);
 }

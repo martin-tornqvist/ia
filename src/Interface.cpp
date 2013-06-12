@@ -103,7 +103,7 @@ void Interface::drawInfoLines() {
   xPos += 4;
   const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
   const int MAX_W = eng->player->getCarryWeightLimit();
-  const int ENC = static_cast<int>((static_cast<double>(TOTAL_W) / static_cast<double>(MAX_W)) * 100.0);
+  const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = intToString(ENC) + "%";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   xPos += str.length() + 1;

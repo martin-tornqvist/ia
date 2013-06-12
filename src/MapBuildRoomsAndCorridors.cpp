@@ -359,7 +359,7 @@
 //	bool built = false;
 //
 //	for(int r = 0; r < 1; r++) {
-//		for(int i = 0; i < static_cast<int> (m_mapAreas.size()); i++) {
+//		for(int i = 0; i < int (m_mapAreas.size()); i++) {
 //
 //			if(m_mapAreas.at(i).m_areaType == mapArea_corridor) {
 //

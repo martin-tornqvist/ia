@@ -59,9 +59,9 @@ string Feature::getDescription(const bool DEFINITE_ARTICLE) const {
 	return DEFINITE_ARTICLE ? def_->name_the : def_->name_a;
 }
 
-void Feature::hit(const int DAMAGE, const DamageTypes_t damageType) {
-	(void)DAMAGE;
-	(void)damageType;
+void Feature::hit(const int DMG, const DmgTypes_t dmgType) {
+	(void)DMG;
+	(void)dmgType;
 }
 
 SDL_Color Feature::getColor() const {

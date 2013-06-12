@@ -96,7 +96,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
   for(unsigned int i = 0; i < NR_BONUSES_COLUMN_ONE; i++) {
     const PlayerBonuses_t currentBonus = bonusesColumnOne.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
-    const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == static_cast<int>(i);
+    const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
     SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_ONE, yPos, drwClr);
     yPos++;
@@ -105,7 +105,7 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
   for(unsigned int i = 0; i < NR_BONUSES_COLUMN_TWO; i++) {
     const PlayerBonuses_t currentBonus = bonusesColumnTwo.at(i);
     const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
-    const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == static_cast<int>(i);
+    const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
     SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
     eng->renderer->drawText(name, renderArea_screen, X_COLUMN_TWO, yPos, drwClr);
     yPos++;

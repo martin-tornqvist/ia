@@ -83,7 +83,7 @@ void Device::runBadEffect(Engine* const engine) {
   } else if(RND < 40) {
     engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
-    engine->player->hit(engine->dice.getInRange(1, 2), damageType_electric);
+    engine->player->hit(engine->dice.getInRange(1, 2), dmgType_electric);
   } else {
     engine->log->addMessage("The " + name + " hums ominously.");
   }
@@ -123,7 +123,7 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
     engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
       vector<coord>(1, pos), clrYellow, 1);
-    actor->hit(DMG, damageType_electric);
+    actor->hit(DMG, dmgType_electric);
   }
 }
 

@@ -1936,7 +1936,7 @@ public:
 
   void endEffectsOfAbility(const Abilities_t ability,
                            const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
-    for(int i = 0; i < static_cast<int>(effects.size()); i++) {
+    for(int i = 0; i < int(effects.size()); i++) {
       const unsigned int ELEMENT = static_cast<unsigned int>(i);
       if(effects.at(ELEMENT)->getSaveAbility() == ability) {
         runEffectEndAndRemoveFromList(i, visionBlockingArray);

@@ -18,7 +18,7 @@ private:
     void drawInterface();
     void makeLines();
 
-    vector<StringAndColor> lines;
+    vector<StringAndClr> lines;
 
     Engine* eng;
 };

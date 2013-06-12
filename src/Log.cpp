@@ -57,8 +57,8 @@ void MessageLog::displayHistory() {
 
   string str;
 
-  int topElement = max(0, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS));
-  int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
+  int topElement = max(0, int(history.size()) - int(MAP_Y_CELLS));
+  int btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
   drawHistoryInterface(topElement, btmElement);
   int yCell = 1;
   for(int i = topElement; i <= btmElement; i++) {
@@ -76,8 +76,8 @@ void MessageLog::displayHistory() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = max(0, min(topElement + LINE_JUMP, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
+      topElement = max(0, min(topElement + LINE_JUMP, int(history.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
@@ -88,8 +88,8 @@ void MessageLog::displayHistory() {
       eng->renderer->updateScreen();
     }
     else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = max(0, min(topElement - LINE_JUMP, static_cast<int>(history.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(history.size()) - 1);
+      topElement = max(0, min(topElement - LINE_JUMP, int(history.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
@@ -141,7 +141,7 @@ int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int
 
     const Message& curMessage = afterLine.at(i);
 
-    xPos += static_cast<int>(curMessage.str.length());
+    xPos += int(curMessage.str.length());
 
     if(curMessage.repeats > 1) {
       xPos += 4;
@@ -170,7 +170,7 @@ void MessageLog::addMessage(const string& text, const SDL_Color color, MessageIn
 
     const int CUR_X_POS = findCurXpos(line, line.size());
 
-    const bool MESSAGE_FITS = CUR_X_POS + static_cast<int>(text.size()) + REPEAT_LABEL_LENGTH + MORE_PROMPT_LENGTH < MAP_X_CELLS;
+    const bool MESSAGE_FITS = CUR_X_POS + int(text.size()) + REPEAT_LABEL_LENGTH + MORE_PROMPT_LENGTH < MAP_X_CELLS;
 
     if(MESSAGE_FITS == false) {
       eng->renderer->drawMapAndInterface(false);

@@ -103,7 +103,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 
   lines.push_back(intToString(insanity_));
-  lines.push_back(intToString(static_cast<int>(shock_)));
+  lines.push_back(intToString(int(shock_)));
   lines.push_back(intToString(mth));
   lines.push_back(intToString(hp_));
   lines.push_back(intToString(hpMax_));
@@ -134,7 +134,7 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 
   insanity_ = stringToInt(lines.front());
   lines.erase(lines.begin());
-  shock_ = static_cast<double>(stringToInt(lines.front()));
+  shock_ = double(stringToInt(lines.front()));
   lines.erase(lines.begin());
   mth = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -207,8 +207,8 @@ int Player::getShockResistance() const {
 }
 
 void Player::incrShock(const int VAL) {
-  const double SHOCK_RES_DB = static_cast<double>(getShockResistance());
-  const double VAL_DB = static_cast<double>(VAL);
+  const double SHOCK_RES_DB = double(getShockResistance());
+  const double VAL_DB = double(VAL);
   const double VAL_AFTER_SHOCK_RES = (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
   shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
 }
@@ -252,7 +252,7 @@ void Player::restoreShock(const int amountRestored,
     }
   }
   const double MIN_SHOCK_WHEN_OBSESSION_DB =
-    static_cast<double>(MIN_SHOCK_WHEN_OBSESSION);
+    double(MIN_SHOCK_WHEN_OBSESSION);
   shock_ = max(
              (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
              shock_ - amountRestored);
@@ -694,7 +694,7 @@ void Player::act() {
   //If obsessions are active, raise shock to a minimum level
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
     if(insanityObsessions[i] == true) {
-      shock_ = max(static_cast<double>(MIN_SHOCK_WHEN_OBSESSION), shock_);
+      shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
     }
   }
@@ -727,7 +727,7 @@ void Player::act() {
         {} break;
       }
       if(shockFromMonstersCurrentPlayerTurn < 3.0) {
-        incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));
+        incrShock(int(floor(monster->shockCausedCurrent)));
         shockFromMonstersCurrentPlayerTurn += monster->shockCausedCurrent;
       }
     }

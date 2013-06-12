@@ -69,7 +69,7 @@ bool ItemPickup::isInventoryFull(Inventory* inventory, Item* item) const {
 
   // Old way (full = slots + general >= z + 4):
 //  const int NR_ITEMS = inventory->getSlots()->size() + inventory->getGeneral()->size();
-//  return NR_ITEMS + static_cast<int>('a') - 1 >= static_cast<int>('z') + 4;
+//  return NR_ITEMS + int('a') - 1 >= int('z') + 4;
   return inventory->getGeneral()->size() + 'a' - 1 >= 'z';
 }
 

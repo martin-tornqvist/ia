@@ -68,6 +68,6 @@ void PopulateItems::buildCandidateList() {
 }
 
 ItemId_t PopulateItems::getFromCandidateList() {
-  const int NUMBER_CANDIDATES = static_cast<int>(candidates.size());
+  const int NUMBER_CANDIDATES = int(candidates.size());
   return candidates.at(eng->dice(1, NUMBER_CANDIDATES) - 1);
 }

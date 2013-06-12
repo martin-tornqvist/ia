@@ -65,9 +65,9 @@ void Bot::runFunctionTests() {
       eng->gameTime->endTurnOfCurrentActor();
     }
   }
-  hitChanceReal /= static_cast<double>(NUMBER_OF_ATTACKS);
+  hitChanceReal /= double(NUMBER_OF_ATTACKS);
   hitChanceReal *= 100;
-  const double RATIO = static_cast<double>(HIT_CHANCE_TOTAL) / hitChanceReal;
+  const double RATIO = double(HIT_CHANCE_TOTAL) / hitChanceReal;
 
   assert(RATIO > 0.80 && RATIO < 1.20);
 }

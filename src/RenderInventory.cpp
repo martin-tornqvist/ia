@@ -40,7 +40,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   yPos++;
 
   for(unsigned int i = 0; i < invSlotButtons.size(); i++) {
-    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    const bool IS_CUR_POS = browser.getPos().y == int(i);
     str = "x) ";
     str.at(0) = 'a' + i;
     InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
@@ -69,7 +69,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 
       str += eng->itemData->getItemInterfaceRef(*item, false, attackMode);
       eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
-      drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
+      drawDots(xPos, int(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
       eng->renderer->drawText(item->getWeightLabel(),
                               renderArea_screen,
                               X_POS_WEIGHT, yPos, clrGray);
@@ -83,7 +83,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   str.at(0) = invSlotButtons.back().key + 1;
   xPos = X_POS_LEFT;
   yPos += 1;
-  const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(invSlotButtons.size());
+  const bool IS_CUR_POS = browser.getPos().y == int(invSlotButtons.size());
   eng->renderer->drawText(str, renderArea_screen, xPos, yPos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
 
   eng->renderer->updateScreen();
@@ -108,7 +108,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   Inventory* const inv = eng->player->getInventory();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
-    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
@@ -122,7 +122,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
 
     str = eng->itemData->getItemInterfaceRef(*item, false);
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
+    drawDots(xPos, int(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(
       item->getWeightLabel(),
       renderArea_screen,
@@ -169,7 +169,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
   Inventory* const inv = eng->player->getInventory();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
-    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    const bool IS_CUR_POS = browser.getPos().y == int(i);
     str = "x) ";
     str.at(0) = 'a' + i;
     xPos = X_POS_LEFT;
@@ -193,7 +193,7 @@ void RenderInventory::drawEquipMode(const MenuBrowser& browser, const SlotTypes_
 
     str = eng->itemData->getItemInterfaceRef(*item, false, attackMode);
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
+    drawDots(xPos, int(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(
       item->getWeightLabel(),
       renderArea_screen,
@@ -227,7 +227,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   Inventory* const inv = eng->player->getInventory();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
-    const bool IS_CUR_POS = browser.getPos().y == static_cast<int>(i);
+    const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
@@ -262,7 +262,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     }
 
     eng->renderer->drawText(str, renderArea_screen, xPos, yPos, itemInterfClr);
-    drawDots(xPos, static_cast<int>(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
+    drawDots(xPos, int(str.size()), X_POS_WEIGHT, yPos, itemInterfClr);
     eng->renderer->drawText(item->getWeightLabel(), renderArea_screen, X_POS_WEIGHT, yPos, clrGray);
     yPos++;
   }

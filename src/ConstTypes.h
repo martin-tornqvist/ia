@@ -13,16 +13,16 @@ enum MoveType_t {
   moveType_walk, moveType_fly, moveType_ethereal, moveType_ooze, endOfMoveType
 };
 
-enum DamageTypes_t {
-  damageType_physical,
-  damageType_fire,
-  damageType_cold,
-  damageType_acid,
-  damageType_electric,
-  damageType_spirit,
-  damageType_light,
-  damageType_pure,
-  endOfDamageTypes
+enum DmgTypes_t {
+  dmgType_physical,
+  dmgType_fire,
+  dmgType_cold,
+  dmgType_acid,
+  dmgType_electric,
+  dmgType_spirit,
+  dmgType_light,
+  dmgType_pure,
+  endOfDmgTypes
 };
 
 enum ShockValues_t
@@ -84,24 +84,39 @@ struct CellRenderDataTiles {
   bool isLivingActorSeenHere;
 };
 
-struct StringAndColor {
-  StringAndColor() :
-    str(""), color(clrBlack) {
+struct StringAndClr {
+  StringAndClr() : str(""), clr(clrBlack) {}
+
+  StringAndClr(const string& text, const SDL_Color& color) :
+    str(text), clr(color) {
   }
 
-  StringAndColor(const string& text, const SDL_Color& clr) :
-    str(text), color(clr) {
-  }
-
-  StringAndColor& operator=(const StringAndColor& other) {
+  StringAndClr& operator=(const StringAndClr& other) {
     str = other.str;
-    color = other.color;
+    clr = other.clr;
     return *this;
   }
 
   string str;
-  SDL_Color color;
+  SDL_Color clr;
 };
+
+//struct CharAndClr {
+//  CharAndClr() : str(""), color(clrBlack) {}
+//
+//  CharAndClr(const char character, const SDL_Color& color) :
+//    str(text), clr(color) {
+//  }
+//
+//  CharAndClr& operator=(const CharAndClr& other) {
+//    cha = other.cha;
+//    clr = other.clr;
+//    return *this;
+//  }
+//
+//  char cha;
+//  SDL_Color clr;
+//};
 
 struct coord {
   coord() :

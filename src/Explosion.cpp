@@ -150,7 +150,7 @@ void ExplosionMaker::runExplosion(
               if(currentActor == eng->player) {
                 eng->log->addMessage("I am hit by an explosion!", clrMessageBad);
               }
-              currentActor->hit(EXPLOSION_DMG_AT_DIST, damageType_physical);
+              currentActor->hit(EXPLOSION_DMG_AT_DIST, dmgType_physical);
             }
 
             if(effect != NULL) {

@@ -95,9 +95,9 @@ int AbilityValues::getVal(const Abilities_t ability,
 AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
   const int ROLL = eng->dice.percentile();
 
-  const int successCriticalLimit  = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) / 20.0));
-  const int successBigLimit       = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) / 5.0));
-  const int successNormalLimit    = static_cast<int>(ceil(static_cast<float>(TOTAL_SKILL_VALUE) * 4.0 / 5.0));
+  const int successCriticalLimit  = int(ceil(float(TOTAL_SKILL_VALUE) / 20.0));
+  const int successBigLimit       = int(ceil(float(TOTAL_SKILL_VALUE) / 5.0));
+  const int successNormalLimit    = int(ceil(float(TOTAL_SKILL_VALUE) * 4.0 / 5.0));
   const int successSmallLimit     = TOTAL_SKILL_VALUE;
   const int failSmallLimit        = 2 * TOTAL_SKILL_VALUE - successNormalLimit;
   const int failNormalLimit       = 2 * TOTAL_SKILL_VALUE - successBigLimit;

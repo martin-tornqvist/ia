@@ -117,7 +117,7 @@ Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFS
 }
 
 void ActorFactory::deleteAllMonsters() {
-  for(int i = 0; i < static_cast<int>(eng->gameTime->getLoopSize()); i++) {
+  for(int i = 0; i < int(eng->gameTime->getLoopSize()); i++) {
     if(eng->gameTime->getActorAt(i) != eng->player) {
       eng->gameTime->eraseElement(i);
       i--;
