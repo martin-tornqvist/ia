@@ -59,3 +59,4 @@ void Bash::playerBashFeature(Feature* const feature) const {
     }
   }
 }
+
