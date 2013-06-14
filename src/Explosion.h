@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "StatusEffects.h"
 #include "Config.h"
 #include "Colors.h"

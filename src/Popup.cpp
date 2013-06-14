@@ -5,7 +5,7 @@
 #include "TextFormatting.h"
 #include "Log.h"
 #include "Query.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
 

@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"

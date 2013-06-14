@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "ConstTypes.h"
-#include "ConstDungeonSettings.h"
+#include "CommonTypes.h"
+#include "CommonSettings.h"
 
 using namespace std;
 

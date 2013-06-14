@@ -1,7 +1,7 @@
 #ifndef LOOK_H
 #define LOOK_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 class Actor;

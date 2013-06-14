@@ -1,7 +1,7 @@
 #include "ItemDrop.h"
 
 #include "Engine.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
 #include "Log.h"

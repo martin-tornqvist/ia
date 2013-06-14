@@ -6,7 +6,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 using namespace std;
 

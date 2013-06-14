@@ -5,8 +5,8 @@
 
 #include "MapTemplates.h"
 #include "GameTime.h"
-#include "ConstTypes.h"
-#include "ConstDungeonSettings.h"
+#include "CommonTypes.h"
+#include "CommonSettings.h"
 
 using namespace std;
 

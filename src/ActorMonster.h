@@ -1,7 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "Actor.h"
 #include "ItemWeapon.h"

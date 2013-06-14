@@ -3,7 +3,7 @@
 
 #include <queue>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "Config.h"
 
 class Engine;

@@ -146,10 +146,10 @@
 		<Unit filename="../src/Close.cpp" />
 		<Unit filename="../src/Close.h" />
 		<Unit filename="../src/Colors.h" />
+		<Unit filename="../src/CommonSettings.h" />
+		<Unit filename="../src/CommonTypes.h" />
 		<Unit filename="../src/Config.cpp" />
 		<Unit filename="../src/Config.h" />
-		<Unit filename="../src/ConstDungeonSettings.h" />
-		<Unit filename="../src/ConstTypes.h" />
 		<Unit filename="../src/Converters.cpp" />
 		<Unit filename="../src/Converters.h" />
 		<Unit filename="../src/Credits.cpp" />

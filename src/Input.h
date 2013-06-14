@@ -4,7 +4,7 @@
 #include "SDL/SDL_keyboard.h"
 #include "SDL/SDL_events.h"
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 

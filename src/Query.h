@@ -1,7 +1,7 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 

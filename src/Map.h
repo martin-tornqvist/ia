@@ -4,8 +4,8 @@
 #include <vector>
 #include <iostream>
 
-#include "ConstDungeonSettings.h"
-#include "ConstTypes.h"
+#include "CommonSettings.h"
+#include "CommonTypes.h"
 #include "Colors.h"
 #include "ItemData.h"
 #include "Feature.h"

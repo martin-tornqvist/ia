@@ -8,7 +8,7 @@
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ItemAmmo.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "ActorData.h"
 #include "ItemArmor.h"
 #include "ItemScroll.h"

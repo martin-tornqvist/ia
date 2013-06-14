@@ -4,7 +4,7 @@
 #include <vector>
 #include <math.h>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "Actor.h"
 #include "MersenneTwister.h"
 

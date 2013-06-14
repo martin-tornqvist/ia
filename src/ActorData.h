@@ -7,7 +7,7 @@
 #include "Converters.h"
 #include "AbilityValues.h"
 #include "RoomTheme.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 enum ActorId_t {
   actor_empty,
@@ -111,8 +111,8 @@ public:
   ActorSpeed_t speed;
   MoveType_t moveType;
   int rangedCooldownTurns, spellCooldownTurns;
-  bool isResPhys, isResFire, isResCold, isResAcid, isResElectric, isResSpirit, isResLight;
-  bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
+//  bool isResPhys, isResFire, isResCold, isResAcid, isResElectric, isResSpirit, isResLight;
+//  bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
   AiBehavior aiBehavior;
   int nrTurnsAwarePlayer;
   int spawnMinLevel, spawnMaxLevel;

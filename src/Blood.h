@@ -1,7 +1,7 @@
 #ifndef BLOOD_H
 #define BLOOD_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 

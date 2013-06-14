@@ -2,7 +2,7 @@
 #define ITEM_POTION_H
 
 #include "Item.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 

@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "Art.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "RoomTheme.h"
 #include "MapPatterns.h"
 

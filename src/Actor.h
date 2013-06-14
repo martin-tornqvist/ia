@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "ActorData.h"
 #include "StatusEffects.h"

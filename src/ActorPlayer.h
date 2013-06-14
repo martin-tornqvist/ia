@@ -4,7 +4,7 @@
 #include <math.h>
 
 #include "Actor.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 

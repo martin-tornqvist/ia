@@ -4,7 +4,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "AbilityValues.h"
 #include "Colors.h"
 #include "Converters.h"

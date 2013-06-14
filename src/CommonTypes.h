@@ -1,5 +1,5 @@
-#ifndef CONST_TYPES_H
-#define CONST_TYPES_H
+#ifndef COMMON_TYPES_H
+#define COMMON_TYPES_H
 
 #include <string>
 #include <stdlib.h>

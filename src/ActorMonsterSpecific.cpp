@@ -11,7 +11,7 @@
 #include "GameTime.h"
 #include "ActorFactory.h"
 #include "Render.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "Map.h"
 #include "Blood.h"
 #include "FeatureFactory.h"
@@ -106,7 +106,6 @@ void Cultist::actorSpecific_spawnStartItems() {
 
   if(eng->dice.percentile() < 8) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
 }
 
@@ -121,7 +120,6 @@ void CultistTeslaCannon::actorSpecific_spawnStartItems() {
   }
 
   if(eng->dice.percentile() < 10) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
 }
@@ -145,7 +143,6 @@ void CultistPriest::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 
   if(eng->dice.percentile() < 33) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
 }
@@ -187,8 +184,10 @@ bool Vortex::actorSpecificAct() {
           }
 
           if(knockBackFromPos != playerPos) {
-            tracer << "Vortex: Good pos found to pull (knockback) player from (" << knockBackFromPos.x << "," << knockBackFromPos.y << ")" << endl;
-            tracer << "Vortex: Player position: " << playerPos.x << "," << playerPos.y << ")" << endl;
+            tracer << "Vortex: Good pos found to pull (knockback) player from (";
+            tracer << knockBackFromPos.x << "," << knockBackFromPos.y << ")" << endl;
+            tracer << "Vortex: Player position: ";
+            tracer << playerPos.x << "," << playerPos.y << ")" << endl;
             bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
             eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
             if(checkIfSeeActor(*(eng->player), visionBlockers)) {
@@ -199,7 +198,8 @@ bool Vortex::actorSpecificAct() {
                 eng->log->addMessage("A powerful wind is pulling me!");
               }
               tracer << "Vortex: Attempt pull (knockback)" << endl;
-              eng->knockBack->tryKnockBack(eng->player, knockBackFromPos, false, false);
+              eng->knockBack->tryKnockBack(
+                eng->player, knockBackFromPos, false, false);
               pullCooldown = 5;
               eng->gameTime->endTurnOfCurrentActor();
               return true;
@@ -286,7 +286,8 @@ void Phantasm::actorSpecific_spawnStartItems() {
 
 void Wraith::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_wraithClaw));
-  eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
 void MiGo::actorSpecific_spawnStartItems() {
@@ -297,7 +298,6 @@ void MiGo::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
 
   if(eng->dice.coinToss()) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
 }
@@ -327,14 +327,16 @@ void Ghoul::actorSpecific_spawnStartItems() {
 void Mummy::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_mummyMaul));
 
-  for(int i = eng->dice(1, 3); i > 0; i--) {
+  for(int i = eng->dice.getInRange(1, 3); i > 0; i--) {
     spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
   }
 }
 
 void MummyUnique::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_mummyMaul));
-  eng->spellHandler->addAllCommonSpellsForMonsters(spellsKnown);
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
 }
 
 bool Khephren::actorSpecificAct() {

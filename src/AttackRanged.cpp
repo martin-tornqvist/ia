@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "Render.h"
