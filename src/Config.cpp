@@ -140,7 +140,7 @@ void Config::setDefaultVariables() {
   fontScale = 1;
   parseFontNameAndSetCellDims();
   isFullscreen = false;
-  isAsciiWallSymbolFullSquare = false;
+  isAsciiWallSymbolFullSquare = true;
   isIntroLevelSkipped = false;
   useRangedWpnMleeePrompt = true;
   keyRepeatDelay = 130;

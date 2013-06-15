@@ -339,7 +339,7 @@ void ThaumaturgicAlteration::specificRead(Engine* const engine) {
   getPossibleActions(possibleActions, engine);
 
   if(possibleActions.empty()) {
-    engine->log->addMessage("I fail to grasp what I want to do.");
+    engine->log->addMessage("I fail to channel the spell for any purpose.");
   } else {
     vector<string> choiceLabels;
     getChoiceLabelsFromPossibleActions(possibleActions, choiceLabels);
@@ -351,7 +351,8 @@ void ThaumaturgicAlteration::specificRead(Engine* const engine) {
   }
 }
 
-void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* const engine) const {
+void ThaumaturgicAlteration::doAction(const MthPowerAction_t action,
+                                      Engine* const engine) const {
   switch(action) {
     case mthPowerAction_slayMonsters: {
       engine->player->getSpotedEnemies();
@@ -404,11 +405,15 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
 
     case mthPowerAction_sorcery: {
       engine->log->addMessage("My magic is restored!");
-      const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfScrolls();
+      const unsigned int NR_OF_SCROLLS =
+        engine->playerPowersHandler->getNrOfSpells();
       for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
         Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
         const ItemDefinition& d = scroll->getDef();
-        if(d.isScrollLearnable && d.isScrollLearned && d.id != item_thaumaturgicAlteration) {
+        if(
+          d.isScrollLearnable &&
+          d.isScrollLearned   &&
+          d.id != item_thaumaturgicAlteration) {
           scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
         }
       }
@@ -431,15 +436,13 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
 
     case mthPowerAction_purgeEffects: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 9999);
+      engine->mapTests->makeVisionBlockerArray(engine->player->pos,
+          visionBlockers, 9999);
 
-      StatusEffectsHandler* const statusHandler = engine->player->getStatusEffectsHandler();
+      StatusEffectsHandler* const statusHandler =
+        engine->player->getStatusEffectsHandler();
       statusHandler->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
       statusHandler->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
-
-//      engine->player->getStatusEffectsHandler()->tryAddEffect(
-//        new StatusPerfectFortitude(engine));
-//      engine->player->restoreShock(999, false);
     } break;
   }
 }
@@ -471,11 +474,16 @@ void ThaumaturgicAlteration::getPossibleActions(
   }
 
   bool canAnySpellBeRestored = false;
-  for(unsigned int i = 0; i < endOfItemIds; i++) {
-    const ItemDefinition* d = engine->itemData->itemDefinitions[i];
-    if(d->isScroll && d->isScrollLearned &&
-        d->castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
-        d->id != item_thaumaturgicAlteration) {
+  const unsigned int NR_OF_SPELLS =
+    engine->playerPowersHandler->getNrOfSpells();
+  for(unsigned int i = 0; i < NR_OF_SPELLS; i++) {
+    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+    const ItemDefinition& d = scroll->getDef();
+    if(
+      d.isScrollLearnable &&
+      d.isScrollLearned &&
+      d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
+      d.id != item_thaumaturgicAlteration) {
       canAnySpellBeRestored = true;
     }
   }
@@ -506,7 +514,9 @@ void ThaumaturgicAlteration::getPossibleActions(
     }
   }
 
-  possibleActions.push_back(mthPowerAction_purgeEffects);
+  if(engine->player->getStatusEffectsHandler()->hasAnyBadEffect()) {
+    possibleActions.push_back(mthPowerAction_purgeEffects);
+  }
 }
 
 void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(

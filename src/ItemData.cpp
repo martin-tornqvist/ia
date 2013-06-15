@@ -546,7 +546,7 @@ void ItemData::makeList() {
   d->color = clrWhite;
   d->missileHitChanceMod = 0;
   d->missileDmg = DiceParam(2, 4);
-  d->maxStackSizeAtSpawn = 12;
+  d->maxStackSizeAtSpawn = 8;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_chest);
@@ -563,7 +563,7 @@ void ItemData::makeList() {
   d->color = clrGray;
   d->missileHitChanceMod = 10;
   d->missileDmg = DiceParam(1, 3);
-  d->maxStackSizeAtSpawn = 12;
+  d->maxStackSizeAtSpawn = 6;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);

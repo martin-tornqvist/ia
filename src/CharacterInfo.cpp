@@ -16,13 +16,13 @@ void CharacterInfo::makeLines() {
   lines.resize(0);
 
   const string offset = " ";
-  const SDL_Color clrHeader = clrCyanLgt;
-  const SDL_Color clrText = clrRedLgt;
-  const SDL_Color clrTextDark = clrRed;
+  const SDL_Color clrHeader = clrWhiteHigh;
+  const SDL_Color clrText = clrWhite;
+  const SDL_Color clrTextDark = clrGray;
 
   const AbilityValues& abilities = eng->player->getDef()->abilityVals;
 
-  lines.push_back(StringAndClr("COMBAT SKILLS", clrHeader));
+  lines.push_back(StringAndClr("Combat skills", clrHeader));
   const int BASE_MELEE =
     min(100, abilities.getVal(ability_accuracyMelee, true, *(eng->player)));
   const int BASE_RANGED =
@@ -70,7 +70,7 @@ void CharacterInfo::makeLines() {
                     punchStr, clrText));
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("RESISTANCE TO STATUS EFFECTS", clrHeader));
+  lines.push_back(StringAndClr("Resistance to status effects", clrHeader));
   const int STATUS_RES_PHYSICAL =
     min(100, abilities.getVal(ability_resistStatusBody, true, *(eng->player)));
   const int STATUS_RES_MENTAL =
@@ -83,7 +83,7 @@ void CharacterInfo::makeLines() {
                     intToString(STATUS_RES_MENTAL) + "%", clrText));
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("MYTHOS KNOWLEDGE EFFECTS", clrHeader));
+  lines.push_back(StringAndClr("Mythos knowledge effects", clrHeader));
   const int MTH = eng->player->getMth();
   if(MTH == 0) {
     lines.push_back(StringAndClr(offset + "No effects", clrText));
@@ -104,11 +104,11 @@ void CharacterInfo::makeLines() {
 
   const int SHOCK_RESISTANCE = eng->player->getShockResistance();
   lines.push_back(StringAndClr(
-                    "SHOCK RESISTANCE : " +
+                    "Shock resistance : " +
                     intToString(SHOCK_RESISTANCE) + "%", clrHeader));
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("MENTAL CONDITIONS", clrHeader));
+  lines.push_back(StringAndClr("Mental conditions", clrHeader));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
   if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
     lines.push_back(StringAndClr(offset + "Phobia of enclosed spaces", clrText));
@@ -136,7 +136,7 @@ void CharacterInfo::makeLines() {
   }
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("ABILITIES GAINED", clrHeader));
+  lines.push_back(StringAndClr("Abilities gained", clrHeader));
   string abilitiesLine = "";
   bool isAnyBonusPicked = false;
   for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
@@ -156,7 +156,7 @@ void CharacterInfo::makeLines() {
   }
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("POTION KNOWLEDGE", clrHeader));
+  lines.push_back(StringAndClr("Potion knowledge", clrHeader));
   vector<StringAndClr> potionList;
   vector<StringAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
@@ -190,7 +190,7 @@ void CharacterInfo::makeLines() {
   }
   lines.push_back(StringAndClr(" ", clrText));
 
-  lines.push_back(StringAndClr("MANUSCRIPT KNOWLEDGE", clrHeader));
+  lines.push_back(StringAndClr("Manuscript knowledge", clrHeader));
   if(manuscriptList.size() == 0) {
     lines.push_back(StringAndClr(offset + "No known manuscripts", clrText));
   } else {

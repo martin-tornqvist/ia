@@ -1208,11 +1208,10 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_floor;
   d.canBashDoors = false;
   d.nrTurnsAwarePlayer = 12;
-  d.description
-    = "A huge swarming insect. They breed rapidly.";
+  d.description = "A huge swarming insect. They breed rapidly.";
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_none;
-  d.canBeSummoned = true;
+  d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
   setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);

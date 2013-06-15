@@ -68,8 +68,8 @@ void StatusPoisoned::newTurn(Engine* const engine) {
   turnsLeft--;
 }
 
-bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  if(ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(ALLOW_MESSAGE_WHEN_FALSE) {
     if(owningActor == owningActor->eng->player) {
       owningActor->eng->log->addMessage("I am too terrified to engage in close combat!");
     }
@@ -77,8 +77,8 @@ bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
   return false;
 }
 
-bool StatusTerrified::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
 }
 
@@ -116,8 +116,8 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
   return actorPos;
 }
 
-bool StatusConfused::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusConfused::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
     return owningActor->eng->dice.coinToss();
@@ -125,8 +125,8 @@ bool StatusConfused::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE)
   return true;
 }
 
-bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
     return owningActor->eng->dice.coinToss();
@@ -519,18 +519,18 @@ void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_
   }
 }
 
-bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
-    if(effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+    if(effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }
   return true;
 }
 
-bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
-    if(effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+    if(effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }

@@ -47,7 +47,7 @@ enum GameEntry_t {
 struct CellRenderDataAscii {
   CellRenderDataAscii() :
     color(clrBlack), colorBg(clrBlack), glyph(' '),
-    lifebarLength(-1), isFadeEffectAllowed(true) {
+    lifebarLength(-1), isFadeEffectAllowed(true), isMarkedAsLit(false) {
   }
   void clear() {
     color = clrBlack;
@@ -55,18 +55,20 @@ struct CellRenderDataAscii {
     glyph = ' ';
     lifebarLength = -1;
     isFadeEffectAllowed = true;
+    isMarkedAsLit = false;
   }
   SDL_Color color;
   SDL_Color colorBg;
   char glyph;
   int lifebarLength;
-  bool isFadeEffectAllowed;
+  bool isFadeEffectAllowed, isMarkedAsLit;
 };
 
 struct CellRenderDataTiles {
   CellRenderDataTiles() :
     color(clrBlack), colorBg(clrBlack), tile(tile_empty), lifebarLength(-1),
-    isFadeEffectAllowed(true), isLivingActorSeenHere(false) {
+    isFadeEffectAllowed(true), isLivingActorSeenHere(false),
+    isMarkedAsLit(false) {
   }
   void clear() {
     color = clrBlack;
@@ -74,14 +76,13 @@ struct CellRenderDataTiles {
     tile = tile_empty;
     lifebarLength = -1;
     isFadeEffectAllowed = true;
-    isLivingActorSeenHere = false;
+    isLivingActorSeenHere = isMarkedAsLit = false;
   }
   SDL_Color color;
   SDL_Color colorBg;
   Tile_t tile;
   int lifebarLength;
-  bool isFadeEffectAllowed;
-  bool isLivingActorSeenHere;
+  bool isFadeEffectAllowed, isLivingActorSeenHere, isMarkedAsLit;
 };
 
 struct StringAndClr {
@@ -264,7 +265,12 @@ public:
 };
 
 enum SpawnRate_t {
-  spawnNever, spawnExtremelyRare, spawnVeryRare, spawnRare, spawnCommon, spawnVeryCommon
+  spawnNever,
+  spawnExtremelyRare,
+  spawnVeryRare,
+  spawnRare,
+  spawnCommon,
+  spawnVeryCommon
 };
 
 struct DirectionNames {

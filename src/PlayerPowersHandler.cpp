@@ -80,7 +80,7 @@ void PlayerPowersHandler::run() {
 
 void PlayerPowersHandler::draw(MenuBrowser& browser,
                                const vector<unsigned int> memorizedScrollsToShow) {
-  eng->renderer->clearScreen();
+//  eng->renderer->clearScreen();
 
   const unsigned int NR_OF_MEMORIZED = memorizedScrollsToShow.size();
 

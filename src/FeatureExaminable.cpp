@@ -279,10 +279,10 @@ bool Tomb::openFeature() {
   eng->log->addMessage("The tomb opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the tomb.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("There is nothing of value inside the tomb.");
+    eng->log->addMessage("There is nothing of value inside.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = isTraitKnown_ = true;
@@ -616,9 +616,9 @@ bool Chest::openFeature() {
   }
   if(eng->player->deadState == actorDeadState_alive) {
     if(itemContainer_.items_.empty()) {
-      eng->log->addMessage("There is nothing of value in the chest.");
+      eng->log->addMessage("There is nothing of value inside.");
     } else {
-      eng->log->addMessage("There are some items in the chest.");
+      eng->log->addMessage("There are some items inside.");
       itemContainer_.dropItems(pos_, eng);
       eng->renderer->drawMapAndInterface(true);
     }
@@ -756,7 +756,7 @@ bool Cabinet::openFeature() {
   eng->log->addMessage("The cabinet opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the cabinet.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
     eng->log->addMessage("There is nothing of value inside.");
@@ -885,7 +885,7 @@ bool Cocoon::openFeature() {
   eng->log->addMessage("The cocoon opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the cocoon.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
     eng->log->addMessage("There is nothing of value inside.");

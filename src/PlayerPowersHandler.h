@@ -24,7 +24,7 @@ public:
 
 	void run();
 
-	unsigned int getNrOfScrolls() const {
+	inline unsigned int getNrOfSpells() const {
 	  return scrollsToReadFromPlayerMemory.size();
 	}
 

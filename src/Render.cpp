@@ -702,7 +702,7 @@ void Renderer::drawAscii() {
         }
         if(eng->map->light[x][y]) {
           if(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType_walk)) {
-            currentDrw->color = clrYellow;
+            currentDrw->isMarkedAsLit = true;
           }
         }
       }
@@ -725,7 +725,7 @@ void Renderer::drawAscii() {
       currentDrw->color = clrRed;
       currentDrw->glyph = actor->getGlyph();
       if(eng->map->light[xPos][yPos]) {
-        currentDrw->color = clrYellow;
+        currentDrw->isMarkedAsLit = true;
       }
     }
   }
@@ -742,6 +742,11 @@ void Renderer::drawAscii() {
 
         //COPY ARRAY TO PLAYER MEMORY (BEFORE LIVING ACTORS AND TIME ENTITIES)
         renderArrayActorsOmittedAscii[x][y] = renderArrayAscii[x][y];
+
+        //COLOR CELLS MARKED AS LIT YELLOW
+        if(currentDrw->isMarkedAsLit) {
+          currentDrw->color = clrYellow;
+        }
       }
     }
   }
@@ -775,6 +780,8 @@ void Renderer::drawAscii() {
 
         currentDrw->lifebarLength = getLifebarLength(*actor);
 
+        currentDrw->isFadeEffectAllowed = false;
+
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
         if(monster->leader == eng->player) {
           // TODO reimplement allied indicator
@@ -796,9 +803,11 @@ void Renderer::drawAscii() {
       if(eng->map->playerVision[x][y]) {
         tempDrw = renderArrayAscii[x][y];
         if(tempDrw.isFadeEffectAllowed) {
-          const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+          const int DIST_FROM_PLAYER =
+            eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
           if(DIST_FROM_PLAYER > 1) {
-            const double DIST_FADE_DIV = min(2.0, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.33));
+            const double DIST_FADE_DIV =
+              min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
             tempDrw.color.r /= DIST_FADE_DIV;
             tempDrw.color.g /= DIST_FADE_DIV;
             tempDrw.color.b /= DIST_FADE_DIV;
@@ -870,7 +879,7 @@ void Renderer::drawTiles() {
           }
           if(eng->map->light[x][y]) {
             if(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType_walk)) {
-              currentDrw->color = clrYellow;
+              currentDrw->isMarkedAsLit = true;
             }
           }
         }
@@ -894,7 +903,7 @@ void Renderer::drawTiles() {
       currentDrw->color = clrRed;
       currentDrw->tile = actor->getTile();
       if(eng->map->light[xPos][yPos]) {
-        currentDrw->color = clrYellow;
+        currentDrw->isMarkedAsLit = true;
       }
     }
   }
@@ -910,6 +919,11 @@ void Renderer::drawTiles() {
         }
         //COPY ARRAY TO PLAYER MEMORY (BEFORE LIVING ACTORS AND MOBILE FEATURES)
         renderArrayActorsOmittedTiles[x][y] = renderArrayTiles[x][y];
+
+        //COLOR CELLS MARKED AS LIT YELLOW
+        if(currentDrw->isMarkedAsLit) {
+          currentDrw->color = clrYellow;
+        }
       }
     }
   }
@@ -965,9 +979,11 @@ void Renderer::drawTiles() {
       if(eng->map->playerVision[x][y]) {
         tempDrw = renderArrayTiles[x][y];
         if(tempDrw.isFadeEffectAllowed) {
-          const int DIST_FROM_PLAYER = eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+          const int DIST_FROM_PLAYER =
+            eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
           if(DIST_FROM_PLAYER > 1) {
-            const double DIST_FADE_DIV = min(2.0, 1.0 + ((DIST_FROM_PLAYER - 1) * 0.33));
+            const double DIST_FADE_DIV =
+              min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
             tempDrw.color.r /= DIST_FADE_DIV;
             tempDrw.color.g /= DIST_FADE_DIV;
             tempDrw.color.b /= DIST_FADE_DIV;
@@ -986,8 +1002,9 @@ void Renderer::drawTiles() {
       }
 
       //Walls are given perspective.
-      //If the tile to be set is a (top) wall tile, check the tile beneath it. If the tile beneath is
-      //not a front or top wall tile, and that cell is explored, change the current tile to wall front
+      //If the tile to be set is a (top) wall tile, check the tile beneath it.
+      //If the tile beneath is not a front or top wall tile, and that cell is
+      //explored, change the current tile to wall front
       if(tempDrw.isLivingActorSeenHere == false) {
         const Tile_t tileSeen = renderArrayActorsOmittedTiles[x][y].tile;
         const Tile_t tileMem = eng->map->playerVisualMemoryTiles[x][y].tile;
@@ -1005,8 +1022,11 @@ void Renderer::drawTiles() {
             if(eng->map->explored[x][y + 1]) {
               const bool IS_CELL_BELOW_SEEN = eng->map->playerVision[x][y + 1];
 
-              const Tile_t tileBelowSeen = renderArrayActorsOmittedTiles[x][y + 1].tile;
-              const Tile_t tileBelowMem = eng->map->playerVisualMemoryTiles[x][y + 1].tile;
+              const Tile_t tileBelowSeen =
+                renderArrayActorsOmittedTiles[x][y + 1].tile;
+
+              const Tile_t tileBelowMem =
+                eng->map->playerVisualMemoryTiles[x][y + 1].tile;
 
               const bool TILE_BELOW_IS_WALL_FRONT =
                 IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
@@ -1016,13 +1036,23 @@ void Renderer::drawTiles() {
                 IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
                 Wall::isTileAnyWallTop(tileBelowMem);
 
-              if(TILE_BELOW_IS_WALL_FRONT == false && TILE_BELOW_IS_WALL_TOP == false) {
-                if(isHiddenDoor) {
-                  tempDrw.tile = tile_wallFront;
-                } else if(featureId == feature_stoneWall) {
+              bool tileBelowIsRevealedDoor =
+                IS_CELL_BELOW_SEEN ? Door::isTileAnyDoor(tileBelowSeen) :
+                Door::isTileAnyDoor(tileBelowMem);
+
+              if(
+                TILE_BELOW_IS_WALL_FRONT  ||
+                TILE_BELOW_IS_WALL_TOP    ||
+                tileBelowIsRevealedDoor) {
+                if(featureId == feature_stoneWall) {
                   const Wall* const wall = dynamic_cast<const Wall*>(f);
-                  tempDrw.tile = wall->getFrontWallTile();
+                  tempDrw.tile = wall->getTopWallTile();
                 }
+              } else if(featureId == feature_stoneWall) {
+                const Wall* const wall = dynamic_cast<const Wall*>(f);
+                tempDrw.tile = wall->getFrontWallTile();
+              } else if(isHiddenDoor) {
+                tempDrw.tile = tile_wallFront;
               }
             }
           }

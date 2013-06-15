@@ -1,13 +1,13 @@
 
-1. COMMAND LIST
-2. MOVEMENT AND INTERACTION
-3. THE INTERFACE
-4. INSANITY
-5. MYTHOS KNOWLEDGE
-6. SNEAKING AND BACKSTABBING
+1. Command list
+2. Movement and interaction
+3. The interface
+4. Insanity
+5. Mythos knowledge
+6. Sneaking and backstabbing
 
 
-1. COMMAND LIST
+1. Command list
 ------------------------------------------------
    @    Display character information
    TAB  Melee attack adjacent monster
@@ -35,7 +35,7 @@
    ?    Display manual
 
 
-2. MOVEMENT AND INTERACTION
+2. Movement and interaction
 ------------------------------------------------
 You can move in eight directions by using the numpad keys in the following manner:
 
@@ -60,31 +60,31 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
    * Moving into closed doors makes an attempt to open them
 
 
-3. THE INTERFACE
+3. The interface
 ------------------------------------------------
-The following is an example of how the interface lines can look:
+The following is an example of how The interface lines can look:
 
    Player HP:9/16 INS:45%/12% MTH:6% ENC:40%  M1911 Colt 1d8+4 50% 5/7
    DLVL:2 LVL:1 NXT:60 ARM:1                  7 Throwing Knives 2d4 50%
    Blind Diseased
 
-From left to right, the first line displays player name, Hit Points (current/max), shock/insanity (see section 4: "INSANITY"), Mythos knowledge (see section 5: "MYTHOS KNOWLEDGE"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
+From left to right, the first line displays player name, Hit Points (current/max), shock/Insanity (see section 4: "Insanity"), Mythos knowledge (see section 5: "Mythos knowledge"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
 
 The second line displays the dungeon level, player level, experience points needed for next level, armor value, and your thrown weapon.
 
 The third line displays status effects currently affecting you.
 
 
-4. INSANITY
+4. Insanity
 ------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
 Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other events. Finally, there is a slow perpetual draining of your sanity from simply exploring and dwelling in this ancient haunted dungeon.
 
-Your state of insanity is represented by two percentage values in the following manner:
+Your state of Insanity is represented by two percentage values in the following manner:
    INS:X%/Y%
 
-The X-value represents your current state of shock, stress and paranoia, while the Y-value represents your long term insanity.
+The X-value represents your current state of shock, stress and paranoia, while the Y-value represents your long term Insanity.
 
 When various disturbing events occur, the shock value rises. When shock hits 100%, the following happens:
    * You do something (scream, laugh, faint, babble, gain a phobia...)
@@ -94,15 +94,15 @@ When various disturbing events occur, the shock value rises. When shock hits 100
 
 Each time you travel to the next dungeon level, shock is completely restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 
-If your insanity reaches 100%, you are hopelessly lost, and the game is over.
+If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 
-5. MYTHOS KNOWLEDGE
+5. Mythos knowledge
 ------------------------------------------------
 This trait describes your general insight about the mystical and hidden forces acting behind our apparent reality. It is represented by a percentage value:
    MTH:X%
 
-Each event that primarily raises your insanity (INS) also raises your MTH by half the amount. This works the other way too; an event that primarily raises your MTH also raises your INS by half the amount.
+Each event that primarily raises your Insanity (INS) also raises your MTH by half the amount. This works the other way too; an event that primarily raises your MTH also raises your INS by half the amount.
 
 The effects of increasing MTH includes:
    * Increased damage to all bizarre, alien, mystical and shocking creatures
@@ -110,7 +110,7 @@ The effects of increasing MTH includes:
    * At a certain level of MTH, you gain a powerful spell
 
 
-6. SNEAKING AND BACKSTABBING
+6. Sneaking and backstabbing
 ------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam around the map, but they will not actively search for you or purposefully attack you.
 

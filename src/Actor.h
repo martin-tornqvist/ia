@@ -24,7 +24,7 @@ class Actor {
 public:
   Actor() {}
 
-  StatusEffectsHandler* getStatusEffectsHandler() {
+  inline StatusEffectsHandler* getStatusEffectsHandler() {
     return statusEffectsHandler_;
   }
 
@@ -37,7 +37,8 @@ public:
 
   Inventory* getInventory() {return inventory_;}
 
-  void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
+  void place(const coord& pos_, ActorDefinition* const actorDefinition,
+             Engine* engine);
 
   bool hit(int dmg, const DmgTypes_t dmgType);
 
@@ -56,7 +57,9 @@ public:
 
   //Function taking into account FOV, invisibility, status, etc
   //This is the final word on wether an actor can visually percieve another actor.
-  bool checkIfSeeActor(const Actor& other, const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  bool checkIfSeeActor(
+    const Actor& other,
+    const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   vector<Actor*> spotedEnemies;
   vector<coord> spotedEnemiesPositions;
@@ -80,7 +83,9 @@ public:
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {(void)light;}
+  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+    (void)light;
+  }
 
   Engine* eng;
 
