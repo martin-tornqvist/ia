@@ -2,7 +2,7 @@
 v14.1 (June 16, 2013)
 --------------------------------------------------------------
 Miscellaneous
-* Using SDL for rendering/input again (it seems more compatible with a wider range of systems, and has fewer/no external library dependencies)
+* Using SDL for rendering/input again (it seems more compatible with a wider range of systems)
 * Dark areas now have less permissive field of view for spotting walls, previously it was easy to explore the walls in dark areas, whereas now you need to be adjacent to it - for a more atmospheric and oppressive feeling
 * “Slimy” walls are now “Moss-grown” walls instead
 * Added 15 more quotes to the main menu
