@@ -59,9 +59,9 @@ void Look::markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
       }
     } else   if(markerTask == markerTask_aimThrownWeapon) {
       if(IS_VISION) {
-        eng->log->addMessage("| f to throw");
+        eng->log->addMessage("| t to throw");
       } else {
-        eng->log->addMessage("f to throw");
+        eng->log->addMessage("t to throw");
       }
     }
   }
