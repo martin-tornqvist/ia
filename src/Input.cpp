@@ -1,7 +1,5 @@
 #include "Input.h"
 
-#include "SDL/SDL.h"
-
 #include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
