@@ -135,8 +135,8 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrMagenta,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      actorPositions, clrMagenta, BLAST_ANIMATION_DELAY_FACTOR);
 
     StatusEffect* const effect = getStatusEffect(engine);
 
@@ -240,9 +240,12 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
     failedToLearnRealName(engine);
     return;
   } else {
-    Item* const item = itemIdentifyCandidates.at(engine->dice.getInRange(0, NR_ELEMENTS - 1));
+    Item* const item =
+      itemIdentifyCandidates.at(
+        engine->dice.getInRange(0, NR_ELEMENTS - 1));
 
-    const string itemNameBefore = engine->itemData->getItemRef(item, itemRef_a, true);
+    const string itemNameBefore =
+      engine->itemData->getItemRef(*item, itemRef_a, true);
 
     const ItemDefinition& d = item->getDef();
     if(d.isScroll) {
@@ -256,10 +259,10 @@ void ScrollOfIdentify::specificRead(Engine* const engine) {
       device->identify(true);
     } else {
       tracer << "[WARNING] Scroll of identify was unable to identify item with name \"" +
-      itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
+             itemNameBefore + "\", in ScrollOfIdentify::specificRead()" << endl;
     }
 
-    const string itemNameAfter = engine->itemData->getItemRef(item, itemRef_a, true);
+    const string itemNameAfter = engine->itemData->getItemRef(*item, itemRef_a, true);
 
     engine->log->addMessage("I gain intuitions about " + itemNameBefore + "...");
     engine->log->addMessage("It is identified as " + itemNameAfter + "!");
@@ -315,14 +318,14 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
       actorPositions.push_back(actors.at(i)->pos);
     }
 
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(actorPositions, clrRedLight,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      actorPositions, clrRedLgt, BLAST_ANIMATION_DELAY_FACTOR);
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       const string monsterName = actors.at(i)->getNameThe();
       engine->log->addMessage(monsterName + " is struck by a roaring blast!", clrMessageGood);
       actors.at(i)->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(1), false, false);
-      actors.at(i)->hit(engine->dice(1, 8), damageType_physical);
+      actors.at(i)->hit(engine->dice(1, 8), dmgType_physical);
     }
 
     setRealDefinitionNames(engine, false);
@@ -336,7 +339,7 @@ void ThaumaturgicAlteration::specificRead(Engine* const engine) {
   getPossibleActions(possibleActions, engine);
 
   if(possibleActions.empty()) {
-    engine->log->addMessage("I fail to grasp what I want to do.");
+    engine->log->addMessage("I fail to channel the spell for any purpose.");
   } else {
     vector<string> choiceLabels;
     getChoiceLabelsFromPossibleActions(possibleActions, choiceLabels);
@@ -348,7 +351,8 @@ void ThaumaturgicAlteration::specificRead(Engine* const engine) {
   }
 }
 
-void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* const engine) const {
+void ThaumaturgicAlteration::doAction(const MthPowerAction_t action,
+                                      Engine* const engine) const {
   switch(action) {
     case mthPowerAction_slayMonsters: {
       engine->player->getSpotedEnemies();
@@ -360,13 +364,13 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
       }
 
       engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-        actorPositions, clrYellow,
-        BLAST_ANIMATION_DELAY_FACTOR, engine);
+        actorPositions, clrYellow, BLAST_ANIMATION_DELAY_FACTOR);
 
       for(unsigned int i = 0; i < actors.size(); i++) {
         const string monsterName = actors.at(i)->getNameThe();
-        engine->log->addMessage(monsterName + " is crushed by an unseen force!", clrMessageGood);
-        actors.at(i)->hit(25, damageType_physical);
+        engine->log->addMessage(monsterName + " is crushed by an unseen force!",
+                                clrMessageGood);
+        actors.at(i)->hit(25, dmgType_physical);
       }
 
       engine->renderer->drawMapAndInterface(true);
@@ -401,11 +405,15 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
 
     case mthPowerAction_sorcery: {
       engine->log->addMessage("My magic is restored!");
-      const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfScrolls();
+      const unsigned int NR_OF_SCROLLS =
+        engine->playerPowersHandler->getNrOfSpells();
       for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
         Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
         const ItemDefinition& d = scroll->getDef();
-        if(d.isScrollLearnable && d.isScrollLearned && d.id != item_thaumaturgicAlteration) {
+        if(
+          d.isScrollLearnable &&
+          d.isScrollLearned   &&
+          d.id != item_thaumaturgicAlteration) {
           scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
         }
       }
@@ -428,15 +436,13 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action, Engine* con
 
     case mthPowerAction_purgeEffects: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 9999);
+      engine->mapTests->makeVisionBlockerArray(engine->player->pos,
+          visionBlockers, 9999);
 
-      StatusEffectsHandler* const statusHandler = engine->player->getStatusEffectsHandler();
+      StatusEffectsHandler* const statusHandler =
+        engine->player->getStatusEffectsHandler();
       statusHandler->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
       statusHandler->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
-
-//      engine->player->getStatusEffectsHandler()->tryAddEffect(
-//        new StatusPerfectFortitude(engine));
-//      engine->player->restoreShock(999, false);
     } break;
   }
 }
@@ -468,11 +474,16 @@ void ThaumaturgicAlteration::getPossibleActions(
   }
 
   bool canAnySpellBeRestored = false;
-  for(unsigned int i = 0; i < endOfItemIds; i++) {
-    const ItemDefinition* d = engine->itemData->itemDefinitions[i];
-    if(d->isScroll && d->isScrollLearned &&
-        d->castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
-        d->id != item_thaumaturgicAlteration) {
+  const unsigned int NR_OF_SPELLS =
+    engine->playerPowersHandler->getNrOfSpells();
+  for(unsigned int i = 0; i < NR_OF_SPELLS; i++) {
+    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+    const ItemDefinition& d = scroll->getDef();
+    if(
+      d.isScrollLearnable &&
+      d.isScrollLearned &&
+      d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
+      d.id != item_thaumaturgicAlteration) {
       canAnySpellBeRestored = true;
     }
   }
@@ -503,7 +514,9 @@ void ThaumaturgicAlteration::getPossibleActions(
     }
   }
 
-  possibleActions.push_back(mthPowerAction_purgeEffects);
+  if(engine->player->getStatusEffectsHandler()->hasAnyBadEffect()) {
+    possibleActions.push_back(mthPowerAction_purgeEffects);
+  }
 }
 
 void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
@@ -699,11 +712,11 @@ bool Scroll::tryReadFromMemory(Engine* const engine) {
       engine->log->addMessage("It feels like a dagger piercing my skull!", clrMessageBad);
     }
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(engine), false, false);
-    engine->player->hit(engine->dice(1, 6), damageType_pure);
+    engine->player->hit(engine->dice(1, 6), dmgType_pure);
   }
   if(engine->player->deadState == actorDeadState_alive) {
     engine->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
   return true;
 }
@@ -738,7 +751,7 @@ bool Scroll::tryReadFromScroll(Engine* const engine) {
     setCastFromMemoryCurrentBaseChance(def_->castFromMemoryCurrentBaseChance + 20);
   }
 
-  engine->gameTime->letNextAct();
+  engine->gameTime->endTurnOfCurrentActor();
   return true;
 }
 

@@ -3,7 +3,7 @@
 
 #include "Map.h"
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Actor;
 

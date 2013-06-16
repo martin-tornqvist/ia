@@ -169,7 +169,7 @@ enum ItemId_t {
 struct ArmorData {
   ArmorData() :
     overRideAbsorptionPointLabel(""), protectsAgainstStatusBurning(false) {
-    for(unsigned int i = 0; i < endOfDamageTypes; i++) {
+    for(unsigned int i = 0; i < endOfDmgTypes; i++) {
       absorptionPoints[i] = 0;
       damageToDurabilityFactors[i] = 0.0;
     }
@@ -177,8 +177,8 @@ struct ArmorData {
 
   string overRideAbsorptionPointLabel;
   bool protectsAgainstStatusBurning;
-  int absorptionPoints[endOfDamageTypes];
-  double damageToDurabilityFactors[endOfDamageTypes];
+  int absorptionPoints[endOfDmgTypes];
+  double damageToDurabilityFactors[endOfDmgTypes];
   int chanceToDeflectTouchAttacks;
 };
 
@@ -214,7 +214,7 @@ private:
   ItemName name;
 public:
   char glyph;
-  sf::Color color;
+  SDL_Color color;
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
   bool isExplosive;
@@ -240,25 +240,25 @@ public:
   bool isAmmoClip;
   int ammoContainedInClip;
   DiceParam missileDmg;
-  int missileBaseAttackSkill;
+  int missileHitChanceMod;
   pair<int, int> meleeDmg;
-  int meleeBaseAttackSkill;
+  int meleeHitChanceMod;
   Abilities_t meleeAbilityUsed;
   ItemAttackMessages meleeAttackMessages;
   StatusEffect* meleeStatusEffect; //TODO This requires deep copy of items
-  DamageTypes_t meleeDamageType;
+  DmgTypes_t meleeDmgType;
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
   string rangedDmgLabelOverRide;
-  int rangedBaseAttackSkill;
+  int rangedHitChanceMod;
   Abilities_t rangedAbilityUsed;
   ItemId_t rangedAmmoTypeUsed;
-  DamageTypes_t rangedDamageType;
+  DmgTypes_t rangedDmgType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   Tile_t rangedMissileTile;
-  sf::Color rangedMissileColor;
+  SDL_Color rangedMissileColor;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttackMessages rangedAttackMessages;

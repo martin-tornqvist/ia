@@ -15,50 +15,75 @@ class Engine;
 class Actor;
 class Weapon;
 
-enum ProjectileHitType_t {
-  projectileHitType_miss,
-  projectileHitType_strayHit,
-  projectileHitType_cleanHit
-};
-
-struct AttackData {
-  AttackData() : aimLevel(actorSize_none) {
-  }
-
-  bool isBackStab, isWeakAttack;
-  string weaponName_a;
-  string verbPlayerAttacksMissile;
-  string verbOtherAttacksMissile;
+class AttackData {
+public:
   Actor* attacker;
   Actor* currentDefender;
-  int attackerX, attackerY;
-  Abilities_t abilityUsed;
-  bool isIntrinsic;
-  bool isMelee;
-  int wpnBaseSkill, attackSkill, totalSkill;
   AbilityRollResult_t attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
-  string dmgPunctuation;
-  bool isPlayerAttacking;
+  bool isIntrinsicAttack;
+
+protected:
+  AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine* engine);
+  Engine* const eng;
+};
+
+class MeleeAttackData: public AttackData {
+public:
+  MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
+                  Actor& defender_, Engine* engine);
   bool isDefenderDodging;
-  ActorSizes_t aimLevel;
-  ActorSizes_t currentDefenderSize;
-  bool isTargetEthereal;
+  bool isBackstab;
+  bool isWeakAttack;
+};
+
+class RangedAttackData: public AttackData {
+public:
+  RangedAttackData(Actor& attacker_, const Weapon& wpn_, const coord& aimPos_,
+                   const coord& curPos_, Engine* engine,
+                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+  int           hitChanceTot;
+  ActorSizes_t  intendedAimLevel;
+  ActorSizes_t  currentDefenderSize;
+  string        verbPlayerAttacks;
+  string        verbOtherAttacks;
+};
+
+class MissileAttackData: public AttackData {
+public:
+  MissileAttackData(Actor& attacker_, const Item& item_, const coord& aimPos_,
+                   const coord& curPos_, Engine* engine,
+                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+  int           hitChanceTot;
+  ActorSizes_t  intendedAimLevel;
+  ActorSizes_t  currentDefenderSize;
 };
 
 struct Projectile {
   Projectile() : pos(coord(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
     actorHit(NULL), obstructedInElement(-1), isDoneRendering(false),
-    glyph(-1), tile(tile_empty), clr(clrWhite) {
+    glyph(-1), tile(tile_empty), clr(clrWhite), attackData(NULL) {}
+
+  ~Projectile() {
+    if(attackData != NULL) {
+      delete attackData;
+    }
   }
 
-  void setTile(const Tile_t tileToRender, const sf::Color clrToRender) {
+  void setAttackData(RangedAttackData* attackData_) {
+    if(attackData != NULL) {
+      delete attackData;
+    }
+    attackData = attackData_;
+  }
+
+  void setTile(const Tile_t tileToRender, const SDL_Color clrToRender) {
     tile = tileToRender;
     clr = clrToRender;
   }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const sf::Color clrToRender) {
+  void setGlyph(const char GLYPH_TO_RENDER, const SDL_Color clrToRender) {
     glyph = GLYPH_TO_RENDER;
     clr = clrToRender;
   }
@@ -71,32 +96,31 @@ struct Projectile {
   bool isDoneRendering;
   char glyph;
   Tile_t tile;
-  sf::Color clr;
-  AttackData data;
+  SDL_Color clr;
+  RangedAttackData* attackData;
 };
 
 class Attack {
 public:
-  Attack(Engine* engine) :
-    shotgunSpreadAngleHalf(asin(0.5 / sqrt(12.5))),
-    eng(engine) {}
+  Attack(Engine* engine) : eng(engine) {}
 
-  bool ranged(int attackX, int attackY, Weapon* weapon);
-  void melee(const coord& defenderPos, Weapon* weapon);
+  bool ranged(Actor& attacker, Weapon& wpn, const coord& aimPos);
+
+  void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
+
+  void getRangedHitChance(const Actor& attacker, const Actor& defender,
+                          const Weapon& wpn);
 
 private:
-  double shotgunSpreadAngleHalf;
+  void printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn);
 
-  void getAttackData(AttackData& data, const coord& target, const coord& currentPos, Weapon* const weapon, const bool IS_MELEE);
+  void printRangedInitiateMessages(const RangedAttackData& data) const;
+  void printProjectileAtActorMessages(const RangedAttackData& data,
+                                      const bool IS_HIT) const;
 
-  void printMeleeMessages(AttackData data, Weapon* weapon);
+  void projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos);
 
-  void printRangedInitiateMessages(AttackData data);
-  void printProjectileAtActorMessages(AttackData data, ProjectileHitType_t hitType);
-
-  void projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES);
-
-  void shotgun(const coord& origin, const coord& target, Weapon* const weapon);
+  void shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos);
 
   bool isCellOnLine(vector<coord> line, int x, int y);
 

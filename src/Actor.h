@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "ActorData.h"
 #include "StatusEffects.h"
@@ -24,7 +24,7 @@ class Actor {
 public:
   Actor() {}
 
-  StatusEffectsHandler* getStatusEffectsHandler() {
+  inline StatusEffectsHandler* getStatusEffectsHandler() {
     return statusEffectsHandler_;
   }
 
@@ -37,14 +37,15 @@ public:
 
   Inventory* getInventory() {return inventory_;}
 
-  void place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine);
+  void place(const coord& pos_, ActorDefinition* const actorDefinition,
+             Engine* engine);
 
-  bool hit(int dmg, const DamageTypes_t damageType);
+  bool hit(int dmg, const DmgTypes_t dmgType);
 
   bool restoreHP(int hpRestored, const bool ALLOW_MESSAGE = true);
   void changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES);
 
-  void die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
+  void die(const bool IS_MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
 
   void newTurn();
 
@@ -56,7 +57,9 @@ public:
 
   //Function taking into account FOV, invisibility, status, etc
   //This is the final word on wether an actor can visually percieve another actor.
-  bool checkIfSeeActor(const Actor& other, const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  bool checkIfSeeActor(
+    const Actor& other,
+    const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   vector<Actor*> spotedEnemies;
   vector<coord> spotedEnemiesPositions;
@@ -74,17 +77,21 @@ public:
   inline string getNameA() const {return def_->name_a;}
   inline bool isHumanoid() const {return def_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
-  virtual const sf::Color& getColor() {return clr_;}
+  virtual const SDL_Color& getColor() {return clr_;}
   inline const Tile_t& getTile() const {return tile_;}
   inline MoveType_t getMoveType() const {return def_->moveType;}
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {(void)light;}
+  virtual void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+    (void)light;
+  }
 
   Engine* eng;
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
+
+  virtual void actorSpecificOnStandardTurn() {}
 
 protected:
   //TODO Try to get rid of these friend declarations
@@ -102,7 +109,7 @@ protected:
   virtual void monsterHit(int& dmg) {(void)dmg;}
   virtual void monsterDeath() {}
 
-  sf::Color clr_;
+  SDL_Color clr_;
   char glyph_;
   Tile_t tile_;
 

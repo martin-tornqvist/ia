@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "ItemData.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 
 using namespace std;
 

@@ -20,7 +20,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   vector<string> logo;
 
-  if(eng->config->USE_TILE_SET == false) {
+  if(eng->config->isTilesMode == false) {
     logo.push_back("        ___  __                __  __                  ");
     logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
     logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -33,39 +33,43 @@ void MainMenu::draw(const MenuBrowser& browser) {
 //  const int X_POS_LEFT = xPos - 11;
 
   tracer << "MainMenu: Calling clearWindow()" << endl;
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   tracer << "MainMenu: Drawing random background letters" << endl;
-  const int NR_X_CELLS = eng->config->SCREEN_WIDTH / eng->config->CELL_W;
-  const int NR_Y_CELLS = eng->config->SCREEN_HEIGHT / eng->config->CELL_H;
-  const int BG_BRIGHTNESS = eng->dice.getInRange(9, 13);
+  const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
+  const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
+  const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25); //eng->dice.getInRange(9, 13);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
       if(eng->dice.coinToss()) {
         cha = 'a' + eng->dice.getInRange(0, 25);
       }
-      sf::Color bgClr = clrGray;
-      bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
+      SDL_Color bgClr = clrBlack;
+      //bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
+      bgClr.r = BG_BRIGHTNESS / 2;
+      bgClr.g = BG_BRIGHTNESS / 2;
+      bgClr.b = BG_BRIGHTNESS;
       eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
     }
   }
 
   tracer << "MainMenu: Drawing HPL quote" << endl;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
-  sf::Color quoteClr = clrGray;
-  quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 28);
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 17;
+  SDL_Color quoteClr = clrBlack;
+  //quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
+  quoteClr.r = QUOTE_BRIGHTNESS / 2;
+  quoteClr.g = QUOTE_BRIGHTNESS / 2;
+  quoteClr.b = QUOTE_BRIGHTNESS;
+  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 45);
+  const int Y0_LOGO = eng->config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 2, 13 + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 7, Y0_LOGO + i, quoteClr);
   }
 
-  sf::Color clrGeneral = clrRed;
-  sf::Color clrBright = clrRedLight;
-
-  if(eng->config->USE_TILE_SET) {
+  if(eng->config->isTilesMode) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
-    eng->renderer->drawMainMenuLogo(1);
+    eng->renderer->drawMainMenuLogo(4);
     yPos += 10;
   } else {
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
@@ -73,7 +77,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       xPos = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
-          sf::Color clr = clrRed;
+          SDL_Color clr = clrRed;
           clr.r += eng->dice.getInRange(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
@@ -85,43 +89,57 @@ void MainMenu::draw(const MenuBrowser& browser) {
     yPos += 3;
   }
 
-  xPos = MAP_X_CELLS / 2;
+  xPos = 48; //MAP_X_CELLS / 2;
 
   if(IS_DEBUG_MODE) {
     eng->renderer->drawText("## DEBUG MODE ##", renderArea_screen, 1, 1, clrYellow);
   }
 
-  yPos += 3;
+  yPos += 0;
 
-  eng->renderer->drawTextCentered("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrBright : clrGeneral);
-  yPos += 1;
+  SDL_Color clrActive   = clrNosferatuTealLgt;
+  SDL_Color clrInactive = clrNosferatuTealDrk;
 
-  eng->renderer->drawTextCentered("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrBright : clrGeneral);
+  eng->renderer->drawText("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrBright : clrGeneral);
+  eng->renderer->drawText("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
 
-  eng->renderer->drawTextCentered("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrBright : clrGeneral);
+  eng->renderer->drawText("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrActive : clrInactive);
   yPos += 1;
+  xPos += 1;
+
+  eng->renderer->drawText("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrActive : clrInactive);
+  yPos += 1;
+  xPos += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawTextCentered("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrBright : clrGeneral);
+    eng->renderer->drawText("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrActive : clrInactive);
     yPos += 1;
   }
 
-  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGeneral);
+  xPos = MAP_X_CELLS / 2;
 
-  eng->renderer->updateWindow();
+  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGray);
+
+//  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
+
+  eng->renderer->updateScreen();
 
   tracer << "MainMenu::draw() [DONE]" << endl;
 }
@@ -187,7 +205,7 @@ GameEntry_t MainMenu::run(bool& quit) {
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
             proceed = true;
-            eng->config->BOT_PLAYING = true;
+            eng->config->isBotPlaying = true;
           }
         }
       }
@@ -208,7 +226,6 @@ string MainMenu::getHplQuote() {
   quotes.push_back("Happy is the tomb where no wizard hath lain and happy the town at night whose wizards are all ashes.");
   quotes.push_back("Our means of receiving impressions are absurdly few, and our notions of surrounding objects infinitely narrow. We see things only as we are constructed to see them, and can gain no idea of their absolute nature. With five feeble senses we pretend to comprehend the boundlessly complex cosmos...");
   quotes.push_back("Disintegration is quite painless, I assure you.");
-  quotes.push_back("...the prosaic materialism of the majority condemns as madness the flashes of super-sight which penetrate the common veil of obvious empiricism...");
   quotes.push_back("I am writing this under an appreciable mental strain, since by tonight I shall be no more...");
   quotes.push_back("The end is near. I hear a noise at the door, as of some immense slippery body lumbering against it. It shall not find me...");
   quotes.push_back("In broad daylight, and at most seasons I am apt to think the greater part of it a mere dream; but sometimes in the autumn, about two in the morning when winds and animals howl dismally, there comes from inconceivable depths below a damnable suggestions of rhythmical throbbing ... and I feel that the transition of Juan Romero was a terrible one indeed...");
@@ -217,7 +234,6 @@ string MainMenu::getHplQuote() {
   quotes.push_back("Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
   quotes.push_back("Madness rides the star-wind... claws and teeth sharpened on centuries of corpses... dripping death astride a bacchanale of bats from nigh-black ruins of buried temples of Belial...");
   quotes.push_back("Memories and possibilities are ever more hideous than realities.");
-  quotes.push_back("The only saving grace of the present is that it's too damned stupid to question the past very closely.");
   quotes.push_back("Yog-Sothoth knows the gate. Yog-Sothoth is the gate. Yog-Sothoth is the key and guardian of the gate. Past, present, future, all are one in Yog-Sothoth. He knows where the Old Ones broke through of old, and where They shall break through again. He knows where They have trod earth's fields, and where They still tread them, and why no one can behold Them as They tread.");
   quotes.push_back("Slowly but inexorably crawling upon my consciousness and rising above every other impression, came a dizzying fear of the unknown; a fear all the greater because I could not analyse it, and seeming to concern a stealthily approaching menace; not death, but some nameless, unheard-of thing inexpressibly more ghastly and abhorrent.");
   quotes.push_back("I felt that some horrible scene or object lurked beyond the silk-hung walls, and shrank from glancing through the arched, latticed windows that opened so bewilderingly on every hand.");
@@ -237,5 +253,20 @@ string MainMenu::getHplQuote() {
   quotes.push_back("Man's respect for the imponderables varies according to his mental constitution and environment. Through certain modes of thought and training it can be elevated tremendously, yet there is always a limit.");
   quotes.push_back("As human beings, our only sensible scale of values is one based on lessening the agony of existence.");
   quotes.push_back("The oldest and strongest emotion of mankind is fear, and the oldest and strongest kind of fear is fear of the unknown.");
+  quotes.push_back("I have seen the dark universe yawning, where the black planets roll without aim, where they roll in their horror unheeded, without knowledge, or lustre, or name.");
+  quotes.push_back("Searchers after horror haunt strange, far places.");
+  quotes.push_back("The sciences, each straining in its own direction, have hitherto harmed us little; but some day the piecing together of dissociated knowledge will open up such terrifying vistas of reality, and of our frightful position therein, that we shall either go mad from the revelation or flee from the deadly light into the peace and safety of a new dark age.");
+  quotes.push_back("There are horrors beyond life's edge that we do not suspect, and once in a while man's evil prying calls them just within our range.");
+  quotes.push_back("We live on a placid island of ignorance in the midst of black seas of infinity, and it was not meant that we should voyage far.");
+  quotes.push_back("There are black zones of shadow close to our daily paths, and now and then some evil soul breaks a passage through. When that happens, the man who knows must strike before reckoning the consequences." );
+  quotes.push_back("Non-Euclidean calculus and quantum physics are enough to stretch any brain; and when one mixes them with folklore, and tries to trace a strange background of multi-dimensional reality behind the ghoulish hints of Gothic tales and the wild whispers of the chimney-corner, one can hardly expect to be wholly free from mental tension.");
+  quotes.push_back("I could not help feeling that they were evil things-- mountains of madness whose farther slopes looked out over some accursed ultimate abyss. That seething, half-luminous cloud-background held ineffable suggestions of a vague, ethereal beyondness far more than terrestrially spatial; and gave appalling reminders of the utter remoteness, separateness, desolation, and aeon-long death of this untrodden and unfathomed austral world.");
+  quotes.push_back("With five feeble senses we pretend to comprehend the boundlessly complex cosmos, yet other beings with wider, stronger, or different range of senses might not only see very differently the things we see, but might see and study whole worlds of matter, energy, and life which lie close at hand yet can never be detected with the senses we have.");
+  quotes.push_back("It is absolutely necessary, for the peace and safety of mankind, that some of earth's dark, dead corners and unplumbed depths be left alone; lest sleeping abnormalities wake to resurgent life, and blasphemously surviving nightmares squirm and splash out of their black lairs to newer and wider conquests.");
+  quotes.push_back("I felt myself on the edge of the world; peering over the rim into a fathomless chaos of eternal night.");
+  quotes.push_back("And where Nyarlathotep went, rest vanished, for the small hours were rent with the screams of nightmare.");
+  quotes.push_back("It was just a colour out of space - a frightful messenger from unformed realms of infinity beyond all Nature as we know it; from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes.");
+  quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed Its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness. … The Thing cannot be described—there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
+  quotes.push_back("I could tell I was at the gateway of a region half-bewitched through the piling-up of unbroken time-accumulations; a region where old, strange things have had a chance to grow and linger because they have never been stirred up.");
   return "\"" + quotes.at(eng->dice.getInRange(0, quotes.size() - 1)) + "\"";
 }

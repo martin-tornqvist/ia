@@ -45,7 +45,9 @@ void ProxEventWallCrumble::playerIsNear() {
     bool done = false;
     while(done == false) {
       for(unsigned int i = 0; i < wallCells_.size(); i++) {
-        if(eng->mapTests->isCellInside(wallCells_.at(i), coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2))) {
+        if(eng->mapTests->isCellInside(
+              wallCells_.at(i),
+              Rect(coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
           eng->map->switchToDestroyedFeatAt(wallCells_.at(i));
         }
       }
@@ -53,7 +55,9 @@ void ProxEventWallCrumble::playerIsNear() {
       bool isOpeningMade = true;
       for(unsigned int ii = 0; ii < wallCells_.size(); ii++) {
         if(eng->mapTests->isCellsNeighbours(eng->player->pos, wallCells_.at(ii), true)) {
-          if(eng->map->featuresStatic[wallCells_.at(ii).x][wallCells_.at(ii).y]->isMoveTypePassable(moveType_walk) == false) {
+          FeatureStatic* const f =
+            eng->map->featuresStatic[wallCells_.at(ii).x][wallCells_.at(ii).y];
+          if(f->isMoveTypePassable(moveType_walk) == false) {
             isOpeningMade = false;
           }
         }
@@ -70,12 +74,12 @@ void ProxEventWallCrumble::playerIsNear() {
     ActorId_t monsterType = actor_zombie;
     const int RND = eng->dice.getInRange(0, 4);
     switch(RND) {
-    case 0: {monsterType = actor_zombie; nrMonsterLimitExceptAdjToEntry = 4;} break;
-    case 1: {monsterType = actor_zombieAxe; nrMonsterLimitExceptAdjToEntry = 3;} break;
-    case 2: {monsterType = actor_bloatedZombie; nrMonsterLimitExceptAdjToEntry = 1;} break;
-    case 3: {monsterType = actor_rat; nrMonsterLimitExceptAdjToEntry = 30;} break;
-    case 4: {monsterType = actor_ratThing; nrMonsterLimitExceptAdjToEntry = 20;} break;
-    default: {} break;
+      case 0: {monsterType = actor_zombie; nrMonsterLimitExceptAdjToEntry = 4;} break;
+      case 1: {monsterType = actor_zombieAxe; nrMonsterLimitExceptAdjToEntry = 3;} break;
+      case 2: {monsterType = actor_bloatedZombie; nrMonsterLimitExceptAdjToEntry = 1;} break;
+      case 3: {monsterType = actor_rat; nrMonsterLimitExceptAdjToEntry = 30;} break;
+      case 4: {monsterType = actor_ratThing; nrMonsterLimitExceptAdjToEntry = 20;} break;
+      default: {} break;
     }
     int nrMonstersSpawned = 0;
     for(unsigned int i = 0; i < innerCells_.size(); i++) {

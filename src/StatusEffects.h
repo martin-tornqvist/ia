@@ -4,9 +4,9 @@
 #include <string>
 
 #include "AbilityValues.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "Converters.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 
 using namespace std;
 
@@ -99,14 +99,14 @@ public:
   virtual bool isSlowed() {return false;}
   virtual void isHit() {}
 
-  virtual sf::Color getColorOwningActor() {return clrBlack;}
+  virtual SDL_Color getColorOwningActor() {return clrBlack;}
 
-  virtual bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  virtual bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return true;
   }
-  virtual bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  virtual bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return true;
   }
 
@@ -169,9 +169,9 @@ public:
   void start(Engine* const engine) {(void)engine;}
   void end(Engine* const engine) {(void)engine;}
 
-  bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
   void newTurn(Engine* const engine) {
     (void)engine;
@@ -568,7 +568,7 @@ public:
   Abilities_t getSaveAbility() {return ability_resistStatusBody;}
   int getSaveAbilityModifier() {return -20;}
 
-  sf::Color getColorOwningActor() {return clrRedLight;}
+  SDL_Color getColorOwningActor() {return clrRedLgt;}
 
   void start(Engine* const engine);
   void end(Engine* const engine);
@@ -648,8 +648,8 @@ public:
 
   coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine);
 
-  bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
   void start(Engine* const engine) {(void)engine;}
   void end(Engine* const engine) {(void)engine;}
@@ -788,12 +788,12 @@ public:
   bool allowAct() {
     return false;
   }
-  bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 
@@ -877,12 +877,12 @@ public:
     (void)engine;
   }
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
-  bool allowAttackMleee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackMleee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 private:
@@ -965,8 +965,8 @@ public:
     (void)engine;
   }
 
-  bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 private:
@@ -1049,8 +1049,8 @@ public:
     (void)engine;
   }
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 private:
@@ -1139,12 +1139,12 @@ public:
     return 0;
   }
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
-  bool allowAttackMleee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackMleee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 
@@ -1244,12 +1244,12 @@ public:
     return 0;
   }
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
-  bool allowAttackMleee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+  bool allowAttackMleee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 
@@ -1826,13 +1826,11 @@ public:
     effects.resize(0);
   }
 
-  //This function was created so that the id could be saved to file when saving the game,
-  //in other cases, a status effect instance should be created by simply using "new"
-  StatusEffect* makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT);
+  void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false,
+                    const bool NO_MESSAGES = false,
+                    const bool DISABLE_REDRAW = false);
 
-  void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false, const bool NO_MESSAGES = false);
-
-  void tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE);
+  void tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE);
 
   coord changeMoveCoord(const coord& actorPos, const coord& movePos) {
     coord ret = movePos;
@@ -1842,20 +1840,20 @@ public:
     return ret;
   }
 
-  bool allowAttack(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+  bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     for(unsigned int i = 0; i < effects.size(); i++) {
       if(
-        effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false &&
-        effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+        effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
+        effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
         return false;
       }
     }
     return true;
   }
 
-  bool allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
-  bool allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE);
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
   bool isSlowed() {
     for(unsigned int i = 0; i < effects.size(); i++) {
@@ -1918,6 +1916,15 @@ public:
     return false;
   }
 
+  bool hasAnyBadEffect() const {
+    for(unsigned int i = 0; i < effects.size(); i++) {
+      if(effects.at(i)->isConsideredBeneficial() == false) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void endEffect(const StatusEffects_t effect,
                  const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
                  const bool RUN_STATUS_END_EFFECTS = true) {
@@ -1934,9 +1941,10 @@ public:
     }
   }
 
-  void endEffectsOfAbility(const Abilities_t ability,
-                           const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
-    for(int i = 0; i < static_cast<int>(effects.size()); i++) {
+  void endEffectsOfAbility(
+    const Abilities_t ability,
+    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+    for(int i = 0; i < int(effects.size()); i++) {
       const unsigned int ELEMENT = static_cast<unsigned int>(i);
       if(effects.at(ELEMENT)->getSaveAbility() == ability) {
         runEffectEndAndRemoveFromList(i, visionBlockingArray);
@@ -1945,9 +1953,9 @@ public:
     }
   }
 
-  sf::Color getColor() {
+  SDL_Color getColor() {
     for(unsigned int i = 0; i < effects.size(); i++) {
-      const sf::Color& clr = effects.at(i)->getColorOwningActor();
+      const SDL_Color& clr = effects.at(i)->getColorOwningActor();
       if(clr.r != 0 || clr.g != 0 || clr.b != 0) {
         return effects.at(i)->getColorOwningActor();
       }
@@ -1958,6 +1966,12 @@ public:
   vector<StatusEffect*> effects;
 
 private:
+  //This function was created so that the id can be saved to file when saving
+  //the game, and then have the effect recreated from this.
+  //In other cases, a status effect should be created by simply using "new"
+  friend class Player;
+  StatusEffect* makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT);
+
   Actor* owningActor;
   Engine* eng;
 

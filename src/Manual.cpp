@@ -10,27 +10,33 @@
 
 void Manual::readFile() {
   string curLine;
-  ifstream file("manual");
+  ifstream file("manual.txt");
 
   vector<string> formated;
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
-      //The '$' symbol is used in the manual file for lines that should not be formated.
-      if(curLine.size() > 0) {
-        if(curLine.at(0) == '$') {
-          curLine.erase(curLine.begin());
-          lines.push_back(curLine);
-        } else {
+      bool shouldFormatLine = true;
+
+      if(curLine.empty()) {
+        lines.push_back(curLine);
+      } else {
+        //Do not format lines that start with two spaces
+        if(curLine.size() > 1) {
+          if(curLine.at(0) == ' ' && curLine.at(1) == ' ') {
+            shouldFormatLine = false;
+          }
+        }
+        if(shouldFormatLine) {
           formated.resize(0);
           formated = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
-
           for(unsigned int i = 0; i < formated.size(); i++) {
             lines.push_back(formated.at(i));
           }
+        } else {
+          curLine.erase(curLine.begin());
+          lines.push_back(curLine);
         }
-      } else {
-        lines.push_back(curLine);
       }
     }
   }
@@ -52,51 +58,51 @@ void Manual::drawManualInterface() {
 }
 
 void Manual::run() {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   string str;
 
   int topElement = 0;
-  int btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+  int btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
 
   drawManualInterface();
 
   int yCell = 2;
   for(int i = topElement; i <= btmElement; i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sfmlKey_ == sf::Keyboard::Down) {
-      topElement = max(0, min(topElement + 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
+      topElement = max(0, min(topElement + 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.key_ == '8' || d.sfmlKey_ == sf::Keyboard::Up) {
-      topElement = max(0, min(topElement - 3, static_cast<int>(lines.size()) - static_cast<int>(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, static_cast<int>(lines.size()) - 1);
+      eng->renderer->updateScreen();
+    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
+      topElement = max(0, min(topElement - 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
       eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
       drawManualInterface();
       yCell = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
         yCell++;
       }
-      eng->renderer->updateWindow();
-    } else if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+      eng->renderer->updateScreen();
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

@@ -25,7 +25,7 @@ void ItemPickup::tryPick() {
   if(item != NULL) {
     Inventory* const playerInventory = eng->player->getInventory();
 
-    const string ITEM_NAME = eng->itemData->getItemInterfaceRef(item, true);
+    const string ITEM_NAME = eng->itemData->getItemInterfaceRef(*item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getDef().isMissileWeapon) {
@@ -36,7 +36,7 @@ void ItemPickup::tryPick() {
           carriedMissile->numberOfItems += item->numberOfItems;
           delete item;
           eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
-          eng->gameTime->letNextAct();
+          eng->gameTime->endTurnOfCurrentActor();
           return;
         }
       }
@@ -50,7 +50,7 @@ void ItemPickup::tryPick() {
 
       eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
 
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
     } else {
       eng->log->clearLog();
       eng->log->addMessage("I cannot carry more.");
@@ -69,7 +69,7 @@ bool ItemPickup::isInventoryFull(Inventory* inventory, Item* item) const {
 
   // Old way (full = slots + general >= z + 4):
 //  const int NR_ITEMS = inventory->getSlots()->size() + inventory->getGeneral()->size();
-//  return NR_ITEMS + static_cast<int>('a') - 1 >= static_cast<int>('z') + 4;
+//  return NR_ITEMS + int('a') - 1 >= int('z') + 4;
   return inventory->getGeneral()->size() + 'a' - 1 >= 'z';
 }
 
@@ -96,20 +96,21 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           //Unload loose ammo
           spawnedAmmo->numberOfItems = ammoLoaded;
         }
-        const string WEAPON_REF_A = eng->itemData->getItemRef(weapon, itemRef_a);
+        const string WEAPON_REF_A = eng->itemData->getItemRef(*weapon, itemRef_a);
         eng->log->addMessage("I unload " + WEAPON_REF_A);
 
         if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
           playerInventory->putItemInGeneral(spawnedAmmo);
         } else {
-          eng->itemDrop->dropItemOnMap(eng->player->pos, &spawnedAmmo);
-          eng->log->addMessage("I have no room to keep the unloaded ammunition, item dropped on ground.");
+          eng->itemDrop->dropItemOnMap(eng->player->pos, *spawnedAmmo);
+          string str =  "I have no room to keep the unloaded ammunition.";
+          eng->log->addMessage(str);
         }
 
         dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
 //        dynamic_cast<Weapon*>(item)->setColorForAmmoStatus();
 
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     } else {

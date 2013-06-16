@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "Colors.h"
 #include "ItemWeapon.h"
@@ -29,7 +29,7 @@ void Interface::drawLocationInfo() {
         const Room* const room = roomList.at(i);
         const coord& x0y0 = room->getX0Y0();
         const coord& x1y1 = room->getX1Y1();
-        if(eng->mapTests->isCellInside(playerPos, x0y0, x1y1)) {
+        if(eng->mapTests->isCellInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr != "") {
             str += room->roomDescr + " ";
@@ -60,26 +60,30 @@ void Interface::drawInfoLines() {
   int yPos = CHARACTER_LINE_Y0;
   string str = "";
 
+  const SDL_Color clrGenDrk = clrNosferatuTealDrk;
+  const SDL_Color clrGenLgt = clrNosferatuTealLgt;
+  const SDL_Color clrGenMed = clrNosferatuTeal;
+
   //Name
-  str = eng->player->getNameA();
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
-  xPos += str.length() + 1;
+//  str = eng->player->getNameA();
+//  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLgt);
+//  xPos += str.length() + 1;
 
   //Health
   const string hp = intToString(eng->player->getHp());
   const string hpMax = intToString(eng->player->getHpMax(true));
-  eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("HP:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 3;
   str = hp + "/" + hpMax;
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLight);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrRedLgt);
   xPos += str.length() + 1;
 
   //Sanity
   const int SHOCK = eng->player->getShockTotal();
   const int INS = eng->player->getInsanity();
-  eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("INS:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 4;
-  const sf::Color shortSanClr = SHOCK < 50 ? clrGreenLight : SHOCK < 75 ? clrYellow : clrMagenta;
+  const SDL_Color shortSanClr = SHOCK < 50 ? clrGreenLgt : SHOCK < 75 ? clrYellow : clrMagenta;
   str = intToString(SHOCK) + "%/";
   eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, shortSanClr);
   xPos += str.length();
@@ -88,20 +92,20 @@ void Interface::drawInfoLines() {
   xPos += str.length() + 1;
 
   const int MTH = eng->player->getMth();
-  eng->renderer->drawText("MTH:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("MTH:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 4;
   str = intToString(MTH) + "%";
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrMagenta);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenLgt);
   xPos += str.length() + 1;
 
   //Encumbrance
-  eng->renderer->drawText("ENC:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("ENC:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 4;
   const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
   const int MAX_W = eng->player->getCarryWeightLimit();
-  const int ENC = static_cast<int>((static_cast<double>(TOTAL_W) / static_cast<double>(MAX_W)) * 100.0);
+  const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = intToString(ENC) + "%";
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLight : clrWhite);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   xPos += str.length() + 1;
 
   //Wielded weapon
@@ -111,44 +115,45 @@ void Interface::drawInfoLines() {
 
   Item* itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
   if(itemWielded == NULL) {
-    eng->renderer->drawText("Unarmed", renderArea_characterLines, xPos, yPos, clrWhite);
+    eng->renderer->drawText(
+      "Unarmed", renderArea_characterLines, xPos, yPos, clrGenMed);
   } else {
-    str = eng->itemData->getItemInterfaceRef(itemWielded, false);
-    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+    str = eng->itemData->getItemInterfaceRef(*itemWielded, false);
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenMed);
     xPos += str.length() + 1;
   }
 
   //Dungeon level
   xPos = CHARACTER_LINE_X0;
   yPos += 1;
-  eng->renderer->drawText("DLVL:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("DLVL:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 5;
   const int DLVL = eng->map->getDungeonLevel();
   str = DLVL >= 0 ? intToString(DLVL) : "?";
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenLgt);
   xPos += str.length() + 1;
 
   DungeonMaster* const dm = eng->dungeonMaster;
 
   //Level and xp
   str = "LVL:" + intToString(dm->getLevel());
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += str.length() + 1;
   str = "NXT:";
   str += dm->getLevel() >= PLAYER_CLVL_MAX ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGreenLight);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenLgt);
   xPos += str.length() + 1;
 
   //Armor
-  eng->renderer->drawText("ARM:", renderArea_characterLines, xPos, yPos, clrGray);
+  eng->renderer->drawText("ARM:", renderArea_characterLines, xPos, yPos, clrGenDrk);
   xPos += 4;
   const Item* const armor = eng->player->getInventory()->getItemInSlot(slot_armorBody);
   if(armor == NULL) {
-    eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrWhite);
+    eng->renderer->drawText("N/A", renderArea_characterLines, xPos, yPos, clrGenLgt);
     xPos += 4;
   } else {
     str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
-    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenLgt);
     xPos += str.length() + 1;
   }
 
@@ -157,10 +162,10 @@ void Interface::drawInfoLines() {
 
   Item* const itemMissiles = eng->player->getInventory()->getItemInSlot(slot_missiles);
   if(itemMissiles == NULL) {
-    eng->renderer->drawText("No missile weapon", renderArea_characterLines, xPos, yPos, clrWhite);
+    eng->renderer->drawText("No missile weapon", renderArea_characterLines, xPos, yPos, clrGenMed);
   } else {
-    str = eng->itemData->getItemInterfaceRef(itemMissiles, false);
-    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+    str = eng->itemData->getItemInterfaceRef(*itemMissiles, false);
+    eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenMed);
     xPos += str.length() + 1;
   }
 
@@ -171,7 +176,7 @@ void Interface::drawInfoLines() {
   const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
   for(unsigned int i = 0; i < effects.size(); i++) {
     StatusEffect* const effect = effects.at(i);
-    const sf::Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    const SDL_Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
     string statusText = effect->getInterfaceName();
     if(IS_SELF_AWARE) {
       if(effect->allowDisplayTurnsInInterface()) {
@@ -186,6 +191,6 @@ void Interface::drawInfoLines() {
   // Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());
   xPos = MAP_X_CELLS - str.length() - 1;
-  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrWhite);
+  eng->renderer->drawText(str, renderArea_characterLines, xPos, yPos, clrGenLgt);
 }
 

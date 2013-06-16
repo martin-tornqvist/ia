@@ -1,7 +1,7 @@
 #ifndef KNOCKBACK_H
 #define KNOCKBACK_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 class Actor;

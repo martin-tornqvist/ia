@@ -22,8 +22,6 @@
 #include "DungeonMaster.h"
 #include "DebugModeStatPrinter.h"
 
-
-//FILE * ctt = fopen("CON", "w" );
 #undef main
 int main(int argc, char* argv[]) {
   tracer << "main()..." << endl;
@@ -31,6 +29,7 @@ int main(int argc, char* argv[]) {
   bool quitToMainMenu = false;
 
   Engine* const engine = new Engine(&quitToMainMenu);
+  engine->initSdl();
   engine->initConfigAndRenderer();
   engine->initAudio();
 
@@ -41,7 +40,7 @@ int main(int argc, char* argv[]) {
     if(argc > 1) {
       const string arg1 = argv[1];
       if(arg1 == "-b") {
-        engine->config->BOT_PLAYING = true;
+        engine->config->isBotPlaying = true;
       }
     }
 
@@ -55,7 +54,7 @@ int main(int argc, char* argv[]) {
       quitToMainMenu = false;
 
       if(ENTRY_TYPE == gameEntry_new) {
-        if(engine->config->BOT_PLAYING) {
+        if(engine->config->isBotPlaying) {
           engine->playerBonusHandler->setAllBonusesToPicked();
           engine->bot->init();
         }
@@ -64,10 +63,10 @@ int main(int argc, char* argv[]) {
 
         engine->gameTime->insertActorInLoop(engine->player);
 
-        if(engine->config->SKIP_INTRO_LEVEL == false) {
+        if(engine->config->isIntroLevelSkipped == false) {
           //If intro level is used, build forest.
           engine->renderer->coverRenderArea(renderArea_screen);
-          engine->renderer->updateWindow();
+          engine->renderer->updateScreen();
           engine->mapBuild->buildForest();
         } else {
           //Else build first dungeon level
@@ -82,7 +81,7 @@ int main(int argc, char* argv[]) {
       engine->renderer->drawMapAndInterface();
 
       if(ENTRY_TYPE == gameEntry_new) {
-        if(engine->config->SKIP_INTRO_LEVEL == 0) {
+        if(engine->config->isIntroLevelSkipped == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
           introMessage += "\"Cult of Starry Wisdom\". ";
@@ -101,7 +100,7 @@ int main(int argc, char* argv[]) {
         if(engine->gameTime->getLoopSize() != 0) {
           if(engine->gameTime->getCurrentActor() == engine->player) {
 
-            if(engine->config->BOT_PLAYING) {
+            if(engine->config->isBotPlaying) {
               engine->bot->act();
             } else {
               engine->renderer->drawMapAndInterface();
@@ -111,7 +110,7 @@ int main(int argc, char* argv[]) {
           } else if(engine->player->deadState == actorDeadState_alive) {
             engine->gameTime->getCurrentActor()->newTurn();
           } else {
-            engine->gameTime->letNextAct();
+            engine->gameTime->endTurnOfCurrentActor();
           }
         }
 
@@ -132,6 +131,7 @@ int main(int argc, char* argv[]) {
   }
   engine->cleanupConfigAndRenderer();
   engine->cleanupAudio();
+  engine->cleanupSdl();
   delete engine;
   tracer << "main() [DONE]" << endl;
   return 0;

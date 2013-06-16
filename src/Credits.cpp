@@ -48,7 +48,7 @@ void Credits::drawInterface() {
 }
 
 void Credits::run() {
-  eng->renderer->clearWindow();
+  eng->renderer->clearScreen();
 
   string str;
 
@@ -56,17 +56,17 @@ void Credits::run() {
 
   int yCell = 2;
   for(unsigned int i = 0; i < lines.size(); i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrRedLight);
+    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
     yCell++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
-    if(d.sfmlKey_ == sf::Keyboard::Space || d.sfmlKey_ == sf::Keyboard::Escape) {
+    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

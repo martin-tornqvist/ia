@@ -9,7 +9,7 @@
 #include "Query.h"
 
 void Examine::playerExamine() const {
-  eng->log->addMessage("Examine in what direction? | space/esc to cancel", clrWhiteHigh);
+  eng->log->addMessage("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
   coord examineInPos = eng->player->pos + eng->query->direction();
   eng->log->clearLog();

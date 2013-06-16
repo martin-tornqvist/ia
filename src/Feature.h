@@ -7,10 +7,10 @@
 #include <iostream>
 
 #include "Colors.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "ActorData.h"
 #include "FeatureData.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 
 using namespace std;
 
@@ -32,9 +32,9 @@ public:
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
   virtual string getDescription(const bool DEFINITE_ARTICLE) const;
-  virtual void hit(const int DAMAGE, const DamageTypes_t damageType);
-  virtual sf::Color getColor() const;
-  virtual sf::Color getColorBg() const;
+  virtual void hit(const int DMG, const DmgTypes_t dmgType);
+  virtual SDL_Color getColor() const;
+  virtual SDL_Color getColorBg() const;
   virtual char getGlyph() const;
   virtual Tile_t getTile() const;
   virtual void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;

@@ -1,7 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "Actor.h"
 #include "ItemWeapon.h"
@@ -10,34 +10,34 @@
 
 struct BestAttack {
   BestAttack() :
-    weapon(NULL), melee(true) {
+    weapon(NULL), isMelee(true) {
   }
 
   Weapon* weapon;
-  bool melee;
+  bool isMelee;
 };
 
 struct AttackOpport {
   AttackOpport() :
-    timeToReload(false), melee(true) {
+    isTimeToReload(false), isMelee(true) {
     weapons.resize(0);
   }
 
   AttackOpport(const AttackOpport& other) :
-    weapons(other.weapons), timeToReload(other.timeToReload), melee(other.melee) {
-  }
+    weapons(other.weapons), isTimeToReload(other.isTimeToReload),
+    isMelee(other.isMelee) {}
 
   AttackOpport& operator=(const AttackOpport& other) {
     weapons = other.weapons;
-    timeToReload = other.timeToReload;
-    melee = other.melee;
+    isTimeToReload = other.isTimeToReload;
+    isMelee = other.isMelee;
 
     return *this;
   }
 
   vector<Weapon*> weapons;
-  bool timeToReload;
-  bool melee;
+  bool isTimeToReload;
+  bool isMelee;
 };
 
 class Weapon;
@@ -61,9 +61,9 @@ public:
 
   void moveToCell(const coord& targetCell);
 
-  AttackOpport getAttackOpport(const coord& attackPos);
+  AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
-  bool tryAttack(const coord& attackPos);
+  bool tryAttack(Actor& defender);
 
   virtual void actorSpecific_spawnStartItems() = 0;
 
@@ -73,9 +73,9 @@ public:
 
   void act();
 
-  virtual bool actorSpecificAct() {
-    return false;
-  }
+  virtual bool actorSpecificAct() {return false;}
+
+  virtual void actorSpecificOnStandardTurn() {}
 
   int playerAwarenessCounter;
 
@@ -483,7 +483,7 @@ class Ooze: public Monster {
 public:
   Ooze() : Monster() {}
   ~Ooze() {}
-  virtual bool actorSpecificAct();
+  virtual void actorSpecificOnStandardTurn();
   virtual void actorSpecific_spawnStartItems() = 0;
 };
 
@@ -491,7 +491,6 @@ class OozeBlack: public Ooze {
 public:
   OozeBlack() : Ooze() {}
   ~OozeBlack() {}
-  bool actorSpecificAct();
   void actorSpecific_spawnStartItems();
 };
 
@@ -518,13 +517,14 @@ public:
 
 class ColourOutOfSpace: public Ooze {
 public:
-  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLight) {}
+  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
-  bool actorSpecificAct();
+//  bool actorSpecificAct();
+  void actorSpecificOnStandardTurn();
   void actorSpecific_spawnStartItems();
-  const sf::Color& getColor();
+  const SDL_Color& getColor();
 private:
-  sf::Color currentColor;
+  SDL_Color currentColor;
 };
 
 #endif

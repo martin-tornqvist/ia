@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "Render.h"
@@ -12,49 +12,62 @@
 #include "Postmortem.h"
 #include "Knockback.h"
 #include "Input.h"
+#include "Log.h"
 
 using namespace std;
 
-void Attack::projectileFire(const coord& origin, coord target, Weapon* const weapon, const unsigned int NR_OF_PROJECTILES) {
+void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
   vector<Projectile*> projectiles;
 
-  for(unsigned int i = 0; i < NR_OF_PROJECTILES; i++) {
+  const bool IS_MACHINE_GUN = wpn.getDef().isMachineGun;
+
+  const unsigned int NR_PROJECTILES = IS_MACHINE_GUN ?
+                                      NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
+
+  for(unsigned int i = 0; i < NR_PROJECTILES; i++) {
     Projectile* const p = new Projectile;
-    getAttackData(p->data, target, origin, weapon, false);
+    p->setAttackData(new RangedAttackData(attacker, wpn, aimPos, attacker.pos, eng));
     projectiles.push_back(p);
   }
 
-  const int DELAY = eng->config->DELAY_PROJECTILE_DRAW / (weapon->getDef().isMachineGun ? 2 : 1);
+  const ActorSizes_t aimLevel =
+    projectiles.at(0)->attackData->intendedAimLevel;
 
-  printRangedInitiateMessages(projectiles.at(0)->data);
+  const int DELAY = eng->config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
 
-  const Audio_t rangedAudio = weapon->getDef().rangedAudio;
-  if(rangedAudio != audio_none) {
-    eng->audio->playSound(rangedAudio);
-  }
+  printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
-  const bool stopAtTarget = projectiles.at(0)->data.aimLevel == actorSize_floor;
+//  const Audio_t rangedAudio = weapon->getDef().rangedAudio;
+//  if(rangedAudio != audio_none) {
+//    eng->audio->playSound(rangedAudio);
+//  }
+
+  const bool stopAtTarget = aimLevel == actorSize_floor;
   const int chebTrvlLim = 30;
 
   //Get projectile path
-  const vector<coord> projectilePath = eng->mapTests->getLine(origin.x, origin.y, target.x, target.y, stopAtTarget, chebTrvlLim);
+  const coord origin = attacker.pos;
+  const vector<coord> projectilePath =
+    eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim);
 
-  const sf::Color projectileColor = weapon->getDef().rangedMissileColor;
-  char projectileGlyph = weapon->getDef().rangedMissileGlyph;
+  const SDL_Color projectileColor = wpn.getDef().rangedMissileColor;
+  char projectileGlyph = wpn.getDef().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;
     if(projectilePath.at(i).y == origin.y)
       projectileGlyph = '-';
     if(projectilePath.at(i).x == origin.x)
       projectileGlyph = '|';
-    if((projectilePath.at(i).x > origin.x && projectilePath.at(i).y < origin.y) || (projectilePath.at(i).x < origin.x && projectilePath.at(i).y
-        > origin.y))
+    if(
+      (projectilePath.at(i).x > origin.x && projectilePath.at(i).y < origin.y) ||
+      (projectilePath.at(i).x < origin.x && projectilePath.at(i).y > origin.y))
       projectileGlyph = '/';
-    if((projectilePath.at(i).x > origin.x && projectilePath.at(i).y > origin.y) || (projectilePath.at(i).x < origin.x && projectilePath.at(i).y
-        < origin.y))
+    if((
+          projectilePath.at(i).x > origin.x && projectilePath.at(i).y > origin.y) ||
+        (projectilePath.at(i).x < origin.x && projectilePath.at(i).y < origin.y))
       projectileGlyph = '\\';
   }
-  Tile_t projectileTile = weapon->getDef().rangedMissileTile;
+  Tile_t projectileTile = wpn.getDef().rangedMissileTile;
   if(projectileTile == tile_projectileStandardFrontSlash) {
     if(projectileGlyph == '-') {
       projectileTile = tile_projectileStandardDash;
@@ -70,106 +83,92 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
   //TODO Reimplement projectile trail functionality
 //  const bool LEAVE_TRAIL = weapon->getDef().rangedMissileLeavesTrail;
 
-  const unsigned int SIZE_OF_PATH_PLUS_ONE = projectilePath.size() + (NR_OF_PROJECTILES - 1) * NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
+  const unsigned int SIZE_OF_PATH_PLUS_ONE =
+    projectilePath.size() + (NR_PROJECTILES - 1) *
+    NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
 
-  //Run projectile path. The variable 'i' is the "global path element".
-  //The individual projectiles are offset from this global element according
-  //to their place in the projectile vector.
   for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
 
-    for(unsigned int p = 0; p < NR_OF_PROJECTILES; p++) {
+    for(unsigned int p = 0; p < NR_PROJECTILES; p++) {
       //Current projectile's place in the path is the current global place (i)
       //minus a certain number of elements
       int projectilePathElement = i - (p * NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES);
 
+      Projectile* const curProj = projectiles.at(p);
+
       //All the following collision checks etc are only made if the projectiles current path element
       //corresponds to an element in the real path vector
-      if(projectilePathElement >= 1 && projectilePathElement < int(projectilePath.size()) && projectiles.at(p)->isObstructed == false) {
-        projectiles.at(p)->pos = projectilePath.at(projectilePathElement);
+      if(
+        projectilePathElement >= 1 &&
+        projectilePathElement < int(projectilePath.size()) &&
+        curProj->isObstructed == false) {
 
-        projectiles.at(p)->isVisibleToPlayer =
-          eng->map->playerVision[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y];
+        curProj->pos = projectilePath.at(projectilePathElement);
 
-        //Get attack data again for every cell traveled through,
-        //Aim-level and such are only retrieved the first time
-        getAttackData(projectiles.at(p)->data, target, projectiles.at(p)->pos, weapon, false);
+        curProj->isVisibleToPlayer =
+          eng->map->playerVision[curProj->pos.x][curProj->pos.y];
 
-        const coord drawPos(projectiles.at(p)->pos.x, projectiles.at(p)->pos.y);
+        //Get attack data again for every cell traveled through
+        curProj->setAttackData(
+          new RangedAttackData(attacker, wpn, aimPos, curProj->pos , eng, aimLevel));
+
+        const coord drawPos(curProj->pos);
 
         //HIT ACTOR?
-        if(projectiles.at(p)->data.currentDefender != NULL && projectiles.at(p)->isObstructed == false) {
+        if(
+          curProj->attackData->currentDefender != NULL &&
+          curProj->isObstructed == false) {
 
-          const bool AIMED_FOR_THIS_ACTOR = (projectiles.at(p)->pos == target);
+          const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
-          //Floor-sized actors never obstruct projectiles when not aimed for
-          if(projectiles.at(p)->data.currentDefenderSize > actorSize_floor || AIMED_FOR_THIS_ACTOR == true) {
+          if(
+            curProj->attackData->currentDefenderSize >= actorSize_humanoid ||
+            IS_ACTOR_AIMED_FOR) {
 
-            ProjectileHitType_t hitType = projectileHitType_miss;
-
-            //If this is the actor aimed for, check skill roll for hit
-            if(AIMED_FOR_THIS_ACTOR) {
-              if(projectiles.at(p)->data.attackResult >= successSmall) {
-                hitType = projectileHitType_cleanHit;
-              }
-            }
-            //If clean hit failed (because of not cell aimed for, or failed skill roll), try a stray hit
-            if(hitType == projectileHitType_miss) {
-              //placeholder value, but it might do the trick?***
-              if(eng->dice.percentile() < 25) {
-                hitType = projectileHitType_strayHit;
-              }
-            }
-
-            if(hitType >= projectileHitType_strayHit) {
+            if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT
-              if(projectiles.at(p)->isVisibleToPlayer) {
-                if(eng->config->USE_TILE_SET) {
-                  projectiles.at(p)->setTile(tile_blastAnimation1, clrRedLight);
+              if(curProj->isVisibleToPlayer) {
+                if(eng->config->isTilesMode) {
+                  curProj->setTile(tile_blastAnimation1, clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY / 2);
-                  projectiles.at(p)->setTile(tile_blastAnimation2, clrRedLight);
+                  curProj->setTile(tile_blastAnimation2, clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY / 2);
                 } else {
-                  projectiles.at(p)->setGlyph('*', clrRedLight);
+                  curProj->setGlyph('*', clrRedLgt);
                   eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
                   eng->sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
-                printProjectileAtActorMessages(projectiles.at(p)->data, hitType);
+                printProjectileAtActorMessages(*curProj->attackData, true);
                 //Need to draw again here to show log message
                 eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               }
 
-              projectiles.at(p)->isDoneRendering = true;
-              projectiles.at(p)->isObstructed = true;
-              projectiles.at(p)->actorHit = projectiles.at(p)->data.currentDefender;
-              projectiles.at(p)->obstructedInElement = projectilePathElement;
+              curProj->isDoneRendering = true;
+              curProj->isObstructed = true;
+              curProj->actorHit = curProj->attackData->currentDefender;
+              curProj->obstructedInElement = projectilePathElement;
 
-              if(hitType == projectileHitType_strayHit) {
-                projectiles.at(p)->data.dmg = projectiles.at(p)->data.dmg / 2;
-              }
-
-              //Damage
-              const bool DIED = projectiles.at(p)->data.currentDefender->hit(projectiles.at(p)->data.dmg,
-                                weapon->getDef().rangedDamageType);
+              const bool DIED = curProj->attackData->currentDefender->hit(
+                                  curProj->attackData->dmg,
+                                  wpn.getDef().rangedDmgType);
               if(DIED == false) {
                 // Aply weapon hit status effects
-                projectiles.at(p)->data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(weapon, false);
+                StatusEffectsHandler* const defenderStatusHandler =
+                  curProj->attackData->currentDefender->getStatusEffectsHandler();
+                defenderStatusHandler->tryAddEffectsFromWeapon(wpn, false);
 
                 // Knock-back?
-                if(weapon->getDef().rangedCausesKnockBack) {
-                  const AttackData& currentAttData = projectiles.at(p)->data;
-                  const coord defenderPosBefore = currentAttData.currentDefender->pos;
-                  if(currentAttData.attackResult >= successSmall) {
-                    const bool IS_SPIKE_GUN = weapon->getDef().id == item_spikeGun;
-                    eng->knockBack->tryKnockBack(currentAttData.currentDefender, currentAttData.attacker->pos, IS_SPIKE_GUN);
+                if(wpn.getDef().rangedCausesKnockBack) {
+                  const AttackData* const curData = curProj->attackData;
+                  if(curData->attackResult >= successSmall) {
+                    const bool IS_SPIKE_GUN = wpn.getDef().id == item_spikeGun;
+                    eng->knockBack->tryKnockBack(curData->currentDefender,
+                                                 curData->attacker->pos, IS_SPIKE_GUN);
                   }
-//                  // If target was knocked back, update target attack cell to defenders new pos
-//                  if(target == defenderPosBefore) {
-//                    target = projectiles.at(p)->data.currentDefender->pos;
-//                  }
                 }
               }
             }
@@ -177,33 +176,33 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
         }
 
         //PROJECTILE HIT FEATURE?
-        vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(projectiles.at(p)->pos);
+        vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(curProj->pos);
         Feature* featureBlockingShot = NULL;
         for(unsigned int featMobIndex = 0; featMobIndex < featureMobs.size(); featMobIndex++) {
           if(featureMobs.at(featMobIndex)->isShootPassable() == false) {
             featureBlockingShot = featureMobs.at(featMobIndex);
           }
         }
-        FeatureStatic* featureStatic = eng->map->featuresStatic[projectiles.at(p)->pos.x][projectiles.at(p)->pos.y];
+        FeatureStatic* featureStatic = eng->map->featuresStatic[curProj->pos.x][curProj->pos.y];
         if(featureStatic->isShootPassable() == false) {
           featureBlockingShot = featureStatic;
         }
 
-        if(featureBlockingShot != NULL && projectiles.at(p)->isObstructed == false) {
-          projectiles.at(p)->obstructedInElement = projectilePathElement - 1;
-          projectiles.at(p)->isObstructed = true;
+        if(featureBlockingShot != NULL && curProj->isObstructed == false) {
+          curProj->obstructedInElement = projectilePathElement - 1;
+          curProj->isObstructed = true;
 
           //RENDER FEATURE HIT
-          if(projectiles.at(p)->isVisibleToPlayer) {
-            if(eng->config->USE_TILE_SET) {
-              projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
+          if(curProj->isVisibleToPlayer) {
+            if(eng->config->isTilesMode) {
+              curProj->setTile(tile_blastAnimation1, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
-              projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
+              curProj->setTile(tile_blastAnimation2, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
             } else {
-              projectiles.at(p)->setGlyph('*', clrYellow);
+              curProj->setGlyph('*', clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY);
             }
@@ -211,21 +210,24 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
         }
 
         //PROJECTILE HIT THE GROUND?
-        if(projectiles.at(p)->pos == target && projectiles.at(p)->data.aimLevel == actorSize_floor && projectiles.at(p)->isObstructed == false) {
-          projectiles.at(p)->isObstructed = true;
-          projectiles.at(p)->obstructedInElement = projectilePathElement;
+        if(
+          curProj->pos == aimPos       &&
+          aimLevel == actorSize_floor  &&
+          curProj->isObstructed == false) {
+          curProj->isObstructed = true;
+          curProj->obstructedInElement = projectilePathElement;
 
           //RENDER GROUND HITS
-          if(projectiles.at(p)->isVisibleToPlayer) {
-            if(eng->config->USE_TILE_SET) {
-              projectiles.at(p)->setTile(tile_blastAnimation1, clrYellow);
+          if(curProj->isVisibleToPlayer) {
+            if(eng->config->isTilesMode) {
+              curProj->setTile(tile_blastAnimation1, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
-              projectiles.at(p)->setTile(tile_blastAnimation2, clrYellow);
+              curProj->setTile(tile_blastAnimation2, clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY / 2);
             } else {
-              projectiles.at(p)->setGlyph('*', clrYellow);
+              curProj->setGlyph('*', clrYellow);
               eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
               eng->sleep(DELAY);
             }
@@ -233,12 +235,12 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
         }
 
         //RENDER FLYING PROJECTILES
-        if(projectiles.at(p)->isObstructed == false && projectiles.at(p)->isVisibleToPlayer) {
-          if(eng->config->USE_TILE_SET) {
-            projectiles.at(p)->setTile(projectileTile, projectileColor);
+        if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
+          if(eng->config->isTilesMode) {
+            curProj->setTile(projectileTile, projectileColor);
             eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
           } else {
-            projectiles.at(p)->setGlyph(projectileGlyph, projectileColor);
+            curProj->setGlyph(projectileGlyph, projectileColor);
             eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
           }
         }
@@ -274,67 +276,70 @@ void Attack::projectileFire(const coord& origin, coord target, Weapon* const wea
 
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
-  if(projectiles.at(0)->isObstructed == false) {
-    weapon->weaponSpecific_projectileObstructed(target.x, target.y, projectiles.at(0)->actorHit, eng);
+  const Projectile* const projectile = projectiles.at(0);
+  if(projectile->isObstructed == false) {
+    wpn.weaponSpecific_projectileObstructed(
+      aimPos.x, aimPos.y, projectile->actorHit, eng);
   } else {
-    const int element = projectiles.at(0)->obstructedInElement;
-    weapon->weaponSpecific_projectileObstructed(projectilePath.at(element).x, projectilePath.at(element).y, projectiles.at(0)->actorHit, eng);
+    const int element = projectile->obstructedInElement;
+    const coord& pos = projectilePath.at(element);
+    wpn.weaponSpecific_projectileObstructed(
+      pos.x, pos.y, projectile->actorHit, eng);
   }
   //Cleanup
-  for(unsigned int p = 0; p < projectiles.size(); p++) {
-    delete projectiles.at(p);
+  for(unsigned int i = 0; i < projectiles.size(); i++) {
+    delete projectiles.at(i);
   }
 
   eng->renderer->drawMapAndInterface();
 }
 
-bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
-  bool attacked = false;
+bool Attack::ranged(Actor& attacker, Weapon& wpn, const coord& aimPos) {
+  bool didAttack = false;
 
-  Actor* const attacker = eng->gameTime->getCurrentActor();
-  const bool IS_ATTACKER_PLAYER = attacker == eng->player;
+  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
+  const bool WPN_HAS_INF_AMMO   = wpn.getDef().rangedHasInfiniteAmmo;
 
-  const bool infAmmo = weapon->getDef().rangedHasInfiniteAmmo;
+  if(wpn.getDef().isShotgun) {
+    if(wpn.ammoLoaded != 0 || WPN_HAS_INF_AMMO) {
+      shotgun(attacker, wpn, aimPos);
 
-  //If it's a shotgun, run shotgun function instead of common projectile
-  if(weapon->getDef().isShotgun) {
-    if(weapon->ammoLoaded != 0 || infAmmo == true) {
-      shotgun(attacker->pos, coord(attackX, attackY), weapon);
-
-      const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
+      const string soundMessage = IS_ATTACKER_PLAYER ? "" :
+                                  wpn.getDef().rangedSoundMessage;
       if(IS_ATTACKER_PLAYER || soundMessage != "") {
-        const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
-        eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
+        const bool IS_LOUD = wpn.getDef().rangedSoundIsLoud;
+        eng->soundEmitter->emitSound(
+          Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
       }
 
-      attacked = true;
-      weapon->ammoLoaded -= 1;
+      didAttack = true;
+      if(WPN_HAS_INF_AMMO == false) {
+        wpn.ammoLoaded -= 1;
+      }
     }
   } else {
     int nrOfProjectiles = 1;
 
-    //If weapon is a type of machinegun, several projectiles are fired
-    if(weapon->getDef().isMachineGun == true) {
+    if(wpn.getDef().isMachineGun) {
       nrOfProjectiles = NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
     }
 
-    //If weapon has more ammo loaded than projectiles to be fired -
-    if(weapon->ammoLoaded >= nrOfProjectiles || infAmmo == true) {
-      // - Shoot.
-      projectileFire(attacker->pos, coord(attackX, attackY), weapon, nrOfProjectiles);
+    if(wpn.ammoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
+      projectileFire(attacker, wpn, aimPos);
 
       if(eng->player->deadState == actorDeadState_alive) {
-        const string soundMessage = IS_ATTACKER_PLAYER ? "" : weapon->getDef().rangedSoundMessage;
+        const string soundMessage = IS_ATTACKER_PLAYER ? "" :
+                                    wpn.getDef().rangedSoundMessage;
         if(IS_ATTACKER_PLAYER || soundMessage != "") {
-          const bool IS_LOUD = weapon->getDef().rangedSoundIsLoud;
-          eng->soundEmitter->emitSound(Sound(soundMessage, true, attacker->pos, IS_LOUD, true));
+          const bool IS_LOUD = wpn.getDef().rangedSoundIsLoud;
+          eng->soundEmitter->emitSound(
+            Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
         }
 
-        attacked = true;
+        didAttack = true;
 
-        //Subtract current loaded ammo.
-        if(infAmmo == false) {
-          weapon->ammoLoaded -= nrOfProjectiles;
+        if(WPN_HAS_INF_AMMO == false) {
+          wpn.ammoLoaded -= nrOfProjectiles;
         }
       } else {
         return true;
@@ -344,10 +349,74 @@ bool Attack::ranged(int attackX, int attackY, Weapon* weapon) {
 
   eng->renderer->drawMapAndInterface();
 
-  if(attacked) {
-    eng->gameTime->letNextAct();
+  if(didAttack) {
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
-  return attacked;
+  return didAttack;
+}
+
+void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
+  if(data.attacker == eng->player)
+    eng->log->addMessage("I " + data.verbPlayerAttacks + ".");
+  else {
+    if(eng->map->playerVision[data.attacker->pos.x][data.attacker->pos.y] == true) {
+      const string attackerName = data.attacker->getNameThe();
+      const string attackVerb = data.verbOtherAttacks;
+      eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
+    }
+  }
+
+  eng->renderer->drawMapAndInterface();
+}
+
+void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
+    const bool IS_HIT) const {
+  //Only print messages if player can see the cell
+  const int defX = data.currentDefender->pos.x;
+  const int defY = data.currentDefender->pos.y;
+  if(eng->map->playerVision[defX][defY]) {
+//    if(data.isTargetEthereal == true) {
+//      if(data.currentDefender == eng->player) {
+//        //Perhaps no text is needed here?
+//      } else {
+//        eng->log->addMessage("Projectile hits nothing but void.");
+//      }
+//    } else {
+    //Punctuation or exclamation marks depending on attack strength
+
+
+    if(IS_HIT) {
+      string dmgPunctuation = ".";
+      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      if(MAX_DMG_ROLL >= 4) {
+        dmgPunctuation =
+          data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
+          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
+          dmgPunctuation;
+      }
+
+      if(data.currentDefender == eng->player) {
+        eng->log->addMessage("I am hit" + dmgPunctuation, clrMessageBad,
+                             messageInterrupt_force);
+
+//          if(data.attackResult == successCritical) {
+//            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
+//          }
+      } else {
+        string otherName = "It";
+
+        if(eng->map->playerVision[defX][defY] == true)
+          otherName = data.currentDefender->getNameThe();
+
+        eng->log->addMessage(otherName + " is hit" + dmgPunctuation, clrMessageGood);
+
+//          if(data.attackResult == successCritical) {
+//            eng->log->addMessage("It was a great hit!", clrMessageGood);
+//          }
+      }
+    }
+//    }
+  }
 }
 

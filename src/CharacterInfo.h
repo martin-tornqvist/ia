@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 
@@ -18,7 +18,7 @@ private:
     void drawInterface();
     void makeLines();
 
-    vector<StringAndColor> lines;
+    vector<StringAndClr> lines;
 
     Engine* eng;
 };

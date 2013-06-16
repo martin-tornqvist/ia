@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "Art.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "RoomTheme.h"
 #include "MapPatterns.h"
 
@@ -18,7 +18,6 @@ enum Feature_t {
   feature_empty,
   feature_stoneFloor,
   feature_stoneWall,
-//  feature_stoneWallSlimy,
   feature_tree,
   feature_grass,
   feature_grassWithered,
@@ -28,7 +27,6 @@ enum Feature_t {
   feature_stairsDown,
   feature_lever,
   feature_brazierGolden,
-//  feature_caveWall,
   feature_caveFloor,
   feature_gravestone,
   feature_tomb,
@@ -137,8 +135,8 @@ struct FeatureDef {
   Feature_t id;
   FeatureSpawnType_t spawnType;
   char glyph;
-  sf::Color color;
-  sf::Color colorBg;
+  SDL_Color color;
+  SDL_Color colorBg;
   Tile_t tile;
   bool isMovePassable[endOfMoveType];
   bool isShootPassable;

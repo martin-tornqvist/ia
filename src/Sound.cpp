@@ -23,7 +23,7 @@ void SoundEmitter::emitSound(Sound sound) {
   }
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   const coord& origin = sound.getOrigin();
-  eng->mapTests->makeFloodFill(origin, blockers, floodFill, 999, coord(-1, -1));
+  eng->mapTests->floodFill(origin, blockers, floodFill, 999, coord(-1, -1));
 
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 

@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-#include "SFML/System/Sleep.hpp"
+#include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
 
 #include "Converters.h"
 
@@ -88,18 +89,24 @@
 
 using namespace std;
 
-//void Engine::initSDL() {
-//  tracer << "Engine::initSDL()..." << endl;
-//  SDL_Init(SDL_INIT_EVERYTHING);
-//  SDL_EnableUNICODE(1);
-//  tracer << "Engine::initSDL() [DONE]" << endl;
-//}
+void Engine::initSdl() {
+  tracer << "Engine::initSdl()..." << endl;
+  SDL_Init(SDL_INIT_EVERYTHING);
+  SDL_EnableUNICODE(1);
+  IMG_Init(IMG_INIT_PNG);
+  tracer << "Engine::initSdl() [DONE]" << endl;
+}
 
 void Engine::initConfigAndRenderer() {
   tracer << "Engine::initConfigAndRenderer()..." << endl;
   config = new Config(this);
   renderer = new Renderer(this);
   tracer << "Engine::initConfigAndRenderer() [DONE]" << endl;
+}
+
+void Engine::cleanupSdl() {
+  IMG_Quit();
+  SDL_Quit();
 }
 
 void Engine::cleanupConfigAndRenderer() {
@@ -283,8 +290,8 @@ void Engine::cleanupGame() {
   tracer << "Engine::cleanupGame() [DONE]" << endl;
 }
 
-void Engine::sleep(const int DURATION) const {
-  sf::sleep(sf::milliseconds(DURATION));
+void Engine::sleep(const Uint32 DURATION) const {
+  SDL_Delay(DURATION);
 }
 
 

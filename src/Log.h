@@ -25,7 +25,9 @@ public:
     clearLog();
   }
 
-  void addMessage(const string& text, const sf::Color = clrWhite, MessageInterrupt_t interrupt = messageInterrupt_never, const bool FORCE_MORE_PROMPT = false);
+  void addMessage(const string& text, const SDL_Color = clrWhite,
+                  MessageInterrupt_t interrupt = messageInterrupt_never,
+                  const bool FORCE_MORE_PROMPT = false);
 
   void drawLog() const;
 
@@ -41,7 +43,7 @@ public:
 
 private:
   struct Message {
-    Message(const string& text, const sf::Color color) :
+    Message(const string& text, const SDL_Color color) :
       str(text), clr(color), repeats(1), strRepeats("") {
     }
 
@@ -56,7 +58,7 @@ private:
     }
 
     string str;
-    sf::Color clr;
+    SDL_Color clr;
     int repeats;
     string strRepeats;
   };

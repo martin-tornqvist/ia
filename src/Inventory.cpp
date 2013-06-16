@@ -1,5 +1,7 @@
 #include "Inventory.h"
 
+#include <algorithm>
+
 #include "ItemWeapon.h"
 #include "Engine.h"
 #include "ItemDrop.h"
@@ -225,10 +227,11 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   for(unsigned int i = 0; i < slots_.size(); i++) {
     item = slots_.at(i).item;
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+          CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slots_.at(i).item;
       } else {
-        engine->itemDrop->dropItemOnMap(pos, &item);
+        engine->itemDrop->dropItemOnMap(pos, *item);
       }
 
       slots_.at(i).item = NULL;
@@ -240,10 +243,11 @@ void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUC
   while(i < general_.size()) {
     item = general_.at(i);
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() < CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+         CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
-        engine->itemDrop->dropItemOnMap(pos, &item);
+        engine->itemDrop->dropItemOnMap(pos, *item);
       }
 
       general_.erase(general_.begin() + i);
@@ -392,11 +396,15 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wielded);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
-        engine->log->addMessage("I was wielding " + nameBefore + ".");
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+        engine->log->addMessage(
+          "I was wielding " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
-      engine->log->addMessage("I am now wielding " + nameAfter + ".");
+      const string nameAfter =
+        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+      engine->log->addMessage(
+        "I am now wielding " + nameAfter + ".");
     }
   }
 
@@ -406,11 +414,15 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
-        engine->log->addMessage("I was wielding " + nameBefore + " as a prepared weapon.");
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+        engine->log->addMessage(
+          "I was wielding " + nameBefore + " as a prepared weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_a);
-      engine->log->addMessage("I am now wielding " + nameAfter + " as a prepared weapon.");
+      const string nameAfter =
+        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+      engine->log->addMessage(
+        "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
   }
 
@@ -420,10 +432,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_armorBody);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_a);
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
+      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
       engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
@@ -435,15 +448,16 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     Item* const itemAfter = getItemInSlot(slot_missiles);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
-        const string nameBefore = engine->itemData->getItemRef(itemBefore, itemRef_plural);
+        const string nameBefore =
+          engine->itemData->getItemRef(*itemBefore, itemRef_plural);
         engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(itemAfter, itemRef_plural);
+      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
       engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
     }
   }
   if(isFreeTurn == false) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -464,7 +478,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 //  engine->renderer->drawMapAndInterface();
 //
 //  if(IS_FREE_TURN == false) {
-//    engine->gameTime->letNextAct();
+//    engine->gameTime->endTurnOfCurrentActor();
 //  }
 //}
 
@@ -479,7 +493,7 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* const engine
   engine->renderer->drawMapAndInterface();
 
   if(END_TURN) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -577,8 +591,7 @@ Item* Inventory::getIntrinsicInElement(int element) const {
 void Inventory::putItemInIntrinsics(Item* item) {
   if(item->getDef().isIntrinsic) {
     intrinsics_.push_back(item);
-  }
-  else {
+  } else {
     tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
   }
 }
@@ -640,10 +653,10 @@ public:
   LexicograhicalCompareItems(Engine* const engine) : eng(engine) {
   }
   bool operator()(Item* const item1, Item* const item2) {
-    const string& itemName1 = eng->itemData->getItemRef(item1, itemRef_plain, true);
-    const string& itemName2 = eng->itemData->getItemRef(item2, itemRef_plain, true);
-    // tracer << "itemName1: " << itemName1 << "    itemName2: " << itemName2 << endl;
-    return std::lexicographical_compare(itemName1.begin(), itemName1.end(), itemName2.begin(), itemName2.end());
+    const string& itemName1 = eng->itemData->getItemRef(*item1, itemRef_plain, true);
+    const string& itemName2 = eng->itemData->getItemRef(*item2, itemRef_plain, true);
+    return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
+                                        itemName2.begin(), itemName2.end());
   }
   Engine* const eng;
 };
@@ -655,8 +668,8 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
   for(unsigned int iGeneral = 0; iGeneral < general_.size(); iGeneral++) {
     bool isAddedToBuffer = false;
     for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
-      const sf::Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
-      if(general_.at(iGeneral)->getInterfaceClr() == clrCurrentGroup) {
+      const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
+      if(engine->basicUtils->isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
         sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
         isAddedToBuffer = true;
         break;

@@ -2,7 +2,7 @@
 #define ITEM_POTION_H
 
 #include "Item.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 
@@ -18,7 +18,7 @@ public:
   }
   virtual string getDefaultActivationLabel() const {return "Drink";}
 
-  sf::Color getInterfaceClr() const {return clrBlueLight;}
+  SDL_Color getInterfaceClr() const {return clrBlueLgt;}
 
   void quaff(Actor* const actor, Engine* const engine);
 
@@ -207,12 +207,12 @@ public:
     addFalse("Oily", clrGray);
     addFalse("Smoky", clrWhite);
     addFalse("Slimy green", clrGreen);
-    addFalse("Green", clrGreenLight);
-    addFalse("Fiery", clrRedLight);
+    addFalse("Green", clrGreenLgt);
+    addFalse("Fiery", clrRedLgt);
     addFalse("Murky", clrBrownDark);
     addFalse("Muddy", clrBrown);
-    addFalse("Pink", clrMagentaLight);
-    addFalse("Watery", clrBlueLight);
+    addFalse("Pink", clrMagentaLgt);
+    addFalse("Watery", clrBlueLgt);
     addFalse("Metallic", clrGray);
     addFalse("Clear", clrWhiteHigh);
     addFalse("Misty", clrWhiteHigh);
@@ -231,10 +231,10 @@ public:
   void setParametersFromSaveLines(vector<string>& lines);
 
 private:
-  vector<StringAndColor> m_falseNames;
+  vector<StringAndClr> m_falseNames;
 
-  void addFalse(const string& str, const sf::Color clr) {
-    m_falseNames.push_back(StringAndColor(str, clr));
+  void addFalse(const string& str, const SDL_Color clr) {
+    m_falseNames.push_back(StringAndClr(str, clr));
   }
 
   Engine* eng;

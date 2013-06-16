@@ -11,7 +11,7 @@
 #include "ItemDrop.h"
 #include "ItemDevice.h"
 
-Item* ItemFactory::spawnItem(ItemId_t itemId, const int NR_ITEMS) {
+Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   Item* item = NULL;
 
   ItemDefinition* const d = eng->itemData->itemDefinitions[itemId];
@@ -178,10 +178,10 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   }
 }
 
-Item* ItemFactory::spawnItemOnMap(ItemId_t itemId, const coord pos) {
+Item* ItemFactory::spawnItemOnMap(const ItemId_t itemId, const coord& pos) {
   Item* item = spawnItem(itemId);
   setItemRandomizedProperties(item);
-  eng->itemDrop->dropItemOnMap(pos, &item);
+  eng->itemDrop->dropItemOnMap(pos, *item);
   return item;
 }
 

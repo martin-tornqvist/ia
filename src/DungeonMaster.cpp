@@ -105,7 +105,7 @@ void DungeonMaster::winGame() {
   const vector<string> winMessageLines = eng->textFormatting->lineToLines(winMessage, 68);
 
   eng->renderer->coverRenderArea(renderArea_screen);
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
@@ -113,13 +113,18 @@ void DungeonMaster::winGame() {
   eng->sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
-      eng->renderer->drawTextCentered(winMessageLines.at(ii), renderArea_screen, MAP_X_CELLS_HALF, Y0 + ii, clrMessageBad, true);
+      eng->renderer->drawTextCentered(winMessageLines.at(ii), renderArea_screen,
+                                      MAP_X_CELLS_HALF, Y0 + ii, clrMessageBad,
+                                      clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
-        eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen, MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2, clrWhite, true);
+        eng->renderer->drawTextCentered(CMD_LABEL, renderArea_screen,
+                                        MAP_X_CELLS_HALF,
+                                        Y0 + NR_OF_WIN_MESSAGE_LINES + 2,
+                                        clrWhite, clrBlack, true);
       }
     }
-    eng->renderer->updateWindow();
+    eng->renderer->updateScreen();
     eng->sleep(DELAY_BETWEEN_LINES);
   }
 
@@ -167,7 +172,10 @@ void DungeonMaster::playerGainsExp(int exp) {
           if(playerExp >= getXpToNextLvl()) {
             playerLvl++;
 
-            bool isAbilityGained = playerLvl <= 6 || playerLvl % 2 == 0;
+            bool isAbilityGained =
+              (playerLvl <  6) ||
+              (playerLvl >= 6  && playerLvl < 12 && playerLvl % 2 == 0) ||
+              (playerLvl >= 12 && playerLvl % 3 == 0);
 
             const string levelUpStr = "Welcome to level " + intToString(playerLvl) + "!";
 
@@ -179,13 +187,14 @@ void DungeonMaster::playerGainsExp(int exp) {
               eng->log->addMessage(levelUpStr, clrGreen);
             }
 
-            eng->player->hpMax_ += 2;
-            eng->player->restoreHP(eng->player->hpMax_ / 2, false);
+            eng->player->changeMaxHP(2, false);
+            eng->player->restoreHP(999, false);
 
             if(isAbilityGained) {
               eng->playerAllocBonus->run();
               eng->log->clearLog();
             }
+
             eng->renderer->drawMapAndInterface();
           }
         }

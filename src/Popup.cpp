@@ -5,7 +5,7 @@
 #include "TextFormatting.h"
 #include "Log.h"
 #include "Query.h"
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
 
@@ -26,38 +26,38 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
 
   eng->renderer->coverArea(renderArea_mainScreen, X0, Y0, BOX_WIDTH, BOX_HEIGHT);
 
-  const bool& USE_TILE_SET = eng->config->USE_TILE_SET;
+  const bool& isTilesMode = eng->config->isTilesMode;
 
-  const sf::Color clrBox = clrGray;
+  const SDL_Color clrBox = clrGray;
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       if(x == X0 || x == X1) {
         if(y == Y0 || y == Y1) {
-          if(USE_TILE_SET) {
+          if(isTilesMode) {
             if(x == X0 && y == Y0) {
-              eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerTopLeft, x, y, clrBox, clrBlack);
             } else if(x == X1 && y == Y0) {
-              eng->renderer->drawTileInMap(tile_popupCornerTopRight, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerTopRight, x, y, clrBox, clrBlack);
             } else if(x == X0 && y == Y1) {
-              eng->renderer->drawTileInMap(tile_popupCornerBottomLeft, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerBottomLeft, x, y, clrBox, clrBlack);
             } else {
-              eng->renderer->drawTileInMap(tile_popupCornerBottomRight, x, y, clrBox, false, clrBlack);
+              eng->renderer->drawTileInMap(tile_popupCornerBottomRight, x, y, clrBox, clrBlack);
             }
           } else {
             eng->renderer->drawCharacter('#', renderArea_mainScreen, x, y, clrBox);
           }
         } else {
-          if(USE_TILE_SET) {
-            eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, false, clrBlack);
+          if(isTilesMode) {
+            eng->renderer->drawTileInMap(tile_popupVerticalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('|', renderArea_mainScreen, x, y, clrBox);
           }
         }
       } else {
         if(y == Y0 || y == Y1) {
-          if(USE_TILE_SET) {
-            eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, false, clrBlack);
+          if(isTilesMode) {
+            eng->renderer->drawTileInMap(tile_popupHorizontalBar, x, y, clrBox, clrBlack);
           } else {
             eng->renderer->drawCharacter('=', renderArea_mainScreen, x, y, clrBox);
           }
@@ -75,14 +75,16 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   }
 
   vector<string> lines = eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH);
-  const int TEXT_AREA_HEIGHT =  static_cast<int>(lines.size()) + 3; //Title + text + blank + label
+  const int TEXT_AREA_HEIGHT =  int(lines.size()) + 3; //Title + text + blank + label
 
   const int TITLE_Y_POS = printBoxAndReturnTitleYPos(TEXT_AREA_HEIGHT);
 
   int yPos = TITLE_Y_POS;
 
   if(title != "") {
-    eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
+    eng->renderer->drawTextCentered(title, renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, TITLE_Y_POS, clrNosferatuTealLgt,
+                                    clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -90,17 +92,19 @@ void Popup::showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
-      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrRedLight, true);
+      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
+                                      MAP_X_CELLS_HALF, yPos,
+                                      clrWhite, clrBlack, true);
     } else {
-      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrWhite);
     }
     eng->log->addLineToHistory(lines.at(i));
   }
   yPos += 2;
 
-  eng->renderer->drawTextCentered("space/esc to close", renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrWhiteHigh);
+  eng->renderer->drawTextCentered("space/esc to close", renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrNosferatuTeal);
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 
   eng->query->waitForEscOrSpace();
 
@@ -113,8 +117,8 @@ unsigned int Popup::showMultiChoiceMessage(const string& message, const bool DRA
     const vector<string>& choices, const string title) const {
 
   vector<string> lines = eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH);
-  const int TEXT_HEIGHT = static_cast<int>(lines.size());
-  const int NR_CHOICES = static_cast<int>(choices.size());
+  const int TEXT_HEIGHT = int(lines.size());
+  const int NR_CHOICES = int(choices.size());
 
   const int TEXT_AREA_HEIGHT = TEXT_HEIGHT + NR_CHOICES + 3;
 
@@ -163,7 +167,9 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   int yPos = TITLE_Y_POS;
 
   if(title != "") {
-    eng->renderer->drawTextCentered(title, renderArea_mainScreen, MAP_X_CELLS_HALF, TITLE_Y_POS, clrCyanLight, true);
+    eng->renderer->drawTextCentered(title, renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, TITLE_Y_POS,
+                                    clrCyanLgt, clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -171,9 +177,11 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
   for(unsigned int i = 0; i < lines.size(); i++) {
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
-      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clrRedLight, true);
+      eng->renderer->drawTextCentered(lines.at(i), renderArea_mainScreen,
+                                      MAP_X_CELLS_HALF, yPos,
+                                      clrWhite, clrBlack, true);
     } else {
-      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrRedLight);
+      eng->renderer->drawText(lines.at(i), renderArea_mainScreen, TEXT_AREA_X0, yPos, clrWhite);
     }
     eng->log->addLineToHistory(lines.at(i));
   }
@@ -181,9 +189,10 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines, const v
 
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
-    sf::Color clr = i == currentChoice ? clrWhiteHigh : clrRedLight;
-    eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen, MAP_X_CELLS_HALF, yPos, clr, true);
+    SDL_Color clr = i == currentChoice ? clrNosferatuTealLgt : clrNosferatuTealDrk;
+    eng->renderer->drawTextCentered(choices.at(i), renderArea_mainScreen,
+                                    MAP_X_CELLS_HALF, yPos, clr, clrBlack, true);
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 

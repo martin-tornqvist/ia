@@ -30,12 +30,15 @@ void Actor::newTurn() {
   } else {
     if(this == eng->player) {
       eng->renderer->drawMapAndInterface();
+      eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
     }
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 
-bool Actor::checkIfSeeActor(const Actor& other, const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool Actor::checkIfSeeActor(
+  const Actor& other,
+  const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
   if(other.deadState == actorDeadState_alive) {
     if(this == &other) {
       return true;
@@ -175,7 +178,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   eng->mapTests->makeMoveBlockerArray(this, blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   vector<coord> freeCells;
-  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
   const coord CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
 
   if(this == eng->player) {
@@ -191,7 +194,6 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
-    eng->renderer->updateWindow();
     statusEffectsHandler_->tryAddEffect(new StatusConfused(eng));
   }
 }
@@ -202,7 +204,7 @@ void Actor::updateColor() {
     return;
   }
 
-  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
@@ -247,7 +249,7 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
   return IS_HP_GAINED;
 }
 
-bool Actor::hit(int dmg, const DamageTypes_t damageType) {
+bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   tracer << "Actor::hit()..." << endl;
   tracer << "Actor: Damage from parameter: " << dmg << endl;
 
@@ -262,12 +264,13 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
     if(armor != NULL) {
       tracer << "Actor: Has armor, running hit on armor" << endl;
 
-      dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg, damageType);
+      dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg, dmgType);
 
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + eng->itemData->getItemRef(armor, itemRef_plain) + " is torn apart!");
+          eng->log->addMessage("My " + eng->itemData->getItemRef(
+                                 *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
         armor = NULL;
@@ -296,7 +299,7 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
     return false;
   }
 
-  if(this != eng->player || eng->config->BOT_PLAYING == false) {
+  if(this != eng->player || eng->config->isBotPlaying == false) {
     hp_ -= dmg;
   }
 
@@ -313,7 +316,8 @@ bool Actor::hit(int dmg, const DamageTypes_t damageType) {
   }
 }
 
-void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS) {
+void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
+                const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
   for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
     Actor* const actor = eng->gameTime->getActorAt(i);
@@ -356,32 +360,15 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   }
 
   //If mangled because of damage, or if a monster died on a visible trap, gib the corpse.
-  deadState = (MANGLED || (diedOnVisibleTrap && this != eng->player)) ? actorDeadState_mangled : actorDeadState_corpse;
+  deadState =
+    (IS_MANGLED || (diedOnVisibleTrap && this != eng->player)) ?
+    actorDeadState_mangled : actorDeadState_corpse;
 
   if(ALLOW_DROP_ITEMS) {
     eng->itemDrop->dropAllCharactersItems(this, true);
   }
 
-  if(MANGLED == false) {
-    coord newCoord;
-    Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
-    //TODO this should be decided with a floodfill instead
-    if(featureHere->canHaveCorpse() == false) {
-      for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
-          newCoord = pos + coord(dx, dy);
-          featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-          if(featureHere->canHaveCorpse() == true) {
-            pos.set(newCoord);
-            dx = 9999;
-            dy = 9999;
-          }
-        }
-      }
-    }
-    glyph_ = '&';
-    tile_ = tile_corpse2;
-  } else {
+  if(IS_MANGLED) {
     glyph_ = ' ';
     tile_ = tile_empty;
     if(isHumanoid() == true) {
@@ -389,9 +376,30 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
         eng->gore->makeGore(pos);
       }
     }
+  } else {
+    if(this != eng->player) {
+      coord newCoord;
+      Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
+      //TODO this should be decided with a floodfill instead
+      if(featureHere->canHaveCorpse() == false) {
+        for(int dx = -1; dx <= 1; dx++) {
+          for(int dy = -1; dy <= 1; dy++) {
+            newCoord = pos + coord(dx, dy);
+            featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+            if(featureHere->canHaveCorpse()) {
+              pos.set(newCoord);
+              dx = 9999;
+              dy = 9999;
+            }
+          }
+        }
+      }
+    }
+    glyph_ = '&';
+    tile_ = tile_corpse2;
   }
 
-  clr_ = clrRedLight;
+  clr_ = clrRedLgt;
 
   monsterDeath();
 
