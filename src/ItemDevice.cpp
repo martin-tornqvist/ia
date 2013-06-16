@@ -90,12 +90,12 @@ void Device::runBadEffect(Engine* const engine) {
 }
 
 void Device::itemSpecificAddSaveLines(vector<string>& lines) {
-  lines.push_back(isActivated_ ? "0" : "1");
+  lines.push_back(isActivated_ ? "1" : "0");
   deviceSpecificAddSaveLines(lines);
 }
 
 void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-  isActivated_ = lines.back() == "0" ? false : true;
+  isActivated_ = lines.back() == "1";
   lines.erase(lines.begin());
   deviceSpecificSetParametersFromSaveLines(lines);
 }

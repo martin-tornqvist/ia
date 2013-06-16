@@ -556,9 +556,8 @@
 
 1350576995 c:\dev\ia\src\timer.h
 
-1371235926 c:\dev\ia\src\input.h
-	"SDL/SDL_keyboard.h"
-	"SDL/SDL_events.h"
+1371380811 c:\dev\ia\src\input.h
+	"SDL/SDL.h"
 	"CommonTypes.h"
 
 1371153565 source:c:\dev\ia\src\attackshotgun.cpp
@@ -1073,9 +1072,8 @@
 	"Popup.h"
 	"Input.h"
 
-1371153566 source:c:\dev\ia\src\input.cpp
+1371380811 source:c:\dev\ia\src\input.cpp
 	"Input.h"
-	"SDL/SDL_Keyboard.h"
 	"Engine.h"
 	"ItemWeapon.h"
 	"ActorPlayer.h"
@@ -10170,7 +10168,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1371153566 source:c:\dev\ia\src\itemdevice.cpp
+1371385031 source:c:\dev\ia\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
