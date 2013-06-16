@@ -8,7 +8,7 @@
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ItemAmmo.h"
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "ActorData.h"
 #include "ItemArmor.h"
 #include "ItemScroll.h"
@@ -54,17 +54,17 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->isAmmoClip = false;
       d->isDevice = false;
       d->ammoContainedInClip = 0;
-      d->meleeBaseAttackSkill = 0;
+      d->meleeHitChanceMod = 0;
       d->meleeAbilityUsed = ability_accuracyMelee;
       d->meleeStatusEffect = NULL;
       d->meleeCausesKnockBack = false;
       d->rangedCausesKnockBack = false;
-      d->meleeDamageType = damageType_physical;
-      d->rangedBaseAttackSkill = 0;
+      d->meleeDmgType = dmgType_physical;
+      d->rangedHitChanceMod = 0;
       d->rangedDmgLabelOverRide = "";
       d->rangedAbilityUsed = ability_accuracyRanged;
       d->rangedAmmoTypeUsed = item_empty;
-      d->rangedDamageType = damageType_physical;
+      d->rangedDmgType = dmgType_physical;
       d->rangedHasInfiniteAmmo = false;
       d->rangedMissileGlyph = 'X';
       d->rangedMissileTile = tile_projectileStandardFrontSlash;
@@ -198,7 +198,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->tile = tile_potion;
       d->isQuaffable = true;
       d->isMissileWeapon = true;
-      d->missileBaseAttackSkill = -5;
+      d->missileHitChanceMod = -5;
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMessage = "";
@@ -213,7 +213,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
     case itemDef_device: {
       resetDef(d, itemDef_general);
       d->isDevice = true;
-      d->chanceToIncludeInSpawnList = 6;
+      d->chanceToIncludeInSpawnList = 5;
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';
@@ -265,8 +265,8 @@ void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& ownin
   const double DMG_ROLLS_BASE_DB = 1.0;
   const double DMG_ROLLS_INCR_DB = 0.4;
   const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
-  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_DB + (static_cast<double>(ACTOR_LVL - 1) * DMG_ROLLS_INCR_DB);
-  const int DMG_ROLLS_AFTER_STR = static_cast<int>(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
+  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_DB + (double(ACTOR_LVL - 1) * DMG_ROLLS_INCR_DB);
+  const int DMG_ROLLS_AFTER_STR = int(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
   const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
 
   d.meleeDmg = pair<int, int>(1, DMG_ROLLS_AFTER_CAP);
@@ -284,7 +284,7 @@ void ItemData::makeList() {
   d->spawnStandardMaxDLVL = -1;
   d->isStackable = false;
   d->glyph = '*';
-  d->color = clrRedLight;
+  d->color = clrRedLgt;
   d->tile = tile_trapezohedron;
   itemDefinitions[d->id] = d;
 
@@ -349,7 +349,7 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSoundMessage = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
-  d->rangedMissileColor = clrRedLight;
+  d->rangedMissileColor = clrRedLgt;
   d->spawnStandardMinDLVL = 10;
   d->rangedDmgLabelOverRide = "?";
   addFeatureFoundIn(d, feature_chest, 25);
@@ -377,7 +377,7 @@ void ItemData::makeList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tommy Gun");
   d->isMachineGun = true;
   d->rangedDmg = DiceParam(2, 2, 2);
-  d->rangedBaseAttackSkill = -10;
+  d->rangedHitChanceMod = -10;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAmmoTypeUsed = item_drumOfBullets;
@@ -452,11 +452,11 @@ void ItemData::makeList() {
   d->tile = tile_teslaCannon;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tesla Cannon");
   d->isMachineGun = true;
-  d->rangedBaseAttackSkill = -15;
+  d->rangedHitChanceMod = -15;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(2, 3, 3);
-  d->rangedDamageType = damageType_electric;
+  d->rangedDmgType = dmgType_electric;
   d->rangedAmmoTypeUsed = item_teslaCanister;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
   d->rangedSoundMessage = "I hear loud electric crackle.";
@@ -483,14 +483,14 @@ void ItemData::makeList() {
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
   d->tile = tile_tommyGun;
-  d->color = clrBlueLight;
+  d->color = clrBlueLgt;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
-  d->rangedBaseAttackSkill = 0;
+  d->rangedHitChanceMod = 0;
   d->rangedAbilityUsed = ability_accuracyRanged;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(1, 7, 0);
-  d->rangedDamageType = damageType_physical;
+  d->rangedDmgType = dmgType_physical;
   d->rangedCausesKnockBack = true;
   d->rangedAmmoTypeUsed = item_ironSpike;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
@@ -508,7 +508,7 @@ void ItemData::makeList() {
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
-  d->color = clrRedLight;
+  d->color = clrRedLgt;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -544,9 +544,9 @@ void ItemData::makeList() {
   d->tile = tile_dagger;
   d->glyph = '/';
   d->color = clrWhite;
-  d->missileBaseAttackSkill = 0;
+  d->missileHitChanceMod = 0;
   d->missileDmg = DiceParam(2, 4);
-  d->maxStackSizeAtSpawn = 12;
+  d->maxStackSizeAtSpawn = 8;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_chest);
@@ -561,9 +561,9 @@ void ItemData::makeList() {
   d->tile = tile_rock;
   d->glyph = '*';
   d->color = clrGray;
-  d->missileBaseAttackSkill = 10;
+  d->missileHitChanceMod = 10;
   d->missileDmg = DiceParam(1, 3);
-  d->maxStackSizeAtSpawn = 12;
+  d->maxStackSizeAtSpawn = 6;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -576,7 +576,7 @@ void ItemData::makeList() {
   d->tile = tile_dagger;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -591,9 +591,9 @@ void ItemData::makeList() {
   d->tile = tile_axe;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hatchet");
   d->meleeDmg = pair<int, int>(1, 5);
-  d->meleeBaseAttackSkill = 15;
+  d->meleeHitChanceMod = 15;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->missileBaseAttackSkill = -5;
+  d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
   addFeatureFoundIn(d, feature_chest);
@@ -611,7 +611,7 @@ void ItemData::makeList() {
   d->color = clrBrown;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
-  d->meleeBaseAttackSkill = 10;
+  d->meleeHitChanceMod = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   itemDefinitions[d->id] = d;
 
@@ -622,7 +622,7 @@ void ItemData::makeList() {
   d->tile = tile_hammer;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hammer");
   d->meleeDmg = pair<int, int>(2, 4);
-  d->meleeBaseAttackSkill = 5;
+  d->meleeHitChanceMod = 5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -635,7 +635,7 @@ void ItemData::makeList() {
   d->tile = tile_machete;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
-  d->meleeBaseAttackSkill = 0;
+  d->meleeHitChanceMod = 0;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -648,7 +648,7 @@ void ItemData::makeList() {
   d->tile = tile_axe;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
-  d->meleeBaseAttackSkill = -5;
+  d->meleeHitChanceMod = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -662,7 +662,7 @@ void ItemData::makeList() {
   d->tile = tile_pitchfork;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Pitchfork");
   d->meleeDmg = pair<int, int>(3, 4);
-  d->meleeBaseAttackSkill = -5;
+  d->meleeHitChanceMod = -5;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
@@ -676,7 +676,7 @@ void ItemData::makeList() {
   d->tile = tile_sledgeHammer;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledgehammer");
   d->meleeDmg = pair<int, int>(3, 5);
-  d->meleeBaseAttackSkill = -10;
+  d->meleeHitChanceMod = -10;
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
@@ -691,7 +691,7 @@ void ItemData::makeList() {
   d->isStackable = true;
   d->color = clrGray;
   d->glyph = '/';
-  d->missileBaseAttackSkill = -5;
+  d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
@@ -730,7 +730,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
   itemDefinitions[d->id] = d;
@@ -739,7 +739,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 20;
+  d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
   itemDefinitions[d->id] = d;
@@ -748,7 +748,7 @@ void ItemData::makeList() {
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("punch", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
-  d->meleeBaseAttackSkill = 25;
+  d->meleeHitChanceMod = 25;
   d->meleeDmg = pair<int, int>(1, 2);
   itemDefinitions[d->id] = d;
 
@@ -783,8 +783,8 @@ void ItemData::makeList() {
   d->rangedAttackMessages = ItemAttackMessages("", "spits pus at me");
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
   d->rangedSoundMessage = "I hear spitting.";
-  d->rangedMissileColor = clrGreenLight;
-  d->rangedDamageType = damageType_acid;
+  d->rangedMissileColor = clrGreenLgt;
+  d->rangedDmgType = dmgType_acid;
   d->rangedMissileGlyph = '*';
   itemDefinitions[d->id] = d;
 
@@ -858,11 +858,11 @@ void ItemData::makeList() {
   d->rangedSoundMessage = "I hear a burst of flames.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
   d->rangedStatusEffect = new StatusBurning(eng);
-  d->rangedMissileColor = clrRedLight;
+  d->rangedMissileColor = clrRedLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
-  d->rangedDamageType = damageType_fire;
+  d->rangedDmgType = dmgType_fire;
   itemDefinitions[d->id] = d;
 
   d = new ItemDefinition(item_hellHoundBite);
@@ -918,7 +918,7 @@ void ItemData::makeList() {
   d->rangedMissileColor = clrYellow;
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
-  d->rangedDamageType = damageType_electric;
+  d->rangedDmgType = dmgType_electric;
   d->rangedStatusEffect = new StatusParalyzed(2);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
   setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
@@ -1025,14 +1025,14 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_light;
   d->color = clrBrown;
   d->spawnStandardMinDLVL = 1;
-  d->armorData.absorptionPoints[damageType_acid] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electric] = 2;
-  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
-  d->armorData.absorptionPoints[damageType_fire] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
-  d->armorData.absorptionPoints[damageType_physical] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_physical] = 1.0;
+  d->armorData.absorptionPoints[dmgType_acid] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_acid] = 2.0;
+  d->armorData.absorptionPoints[dmgType_electric] = 2;
+  d->armorData.damageToDurabilityFactors[dmgType_electric] = 0.0;
+  d->armorData.absorptionPoints[dmgType_fire] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_fire] = 2.0;
+  d->armorData.absorptionPoints[dmgType_physical] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_physical] = 1.0;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "";
   addFeatureFoundIn(d, feature_cabinet);
@@ -1044,14 +1044,14 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_heavy;
   d->color = clrWhite;
   d->spawnStandardMinDLVL = 2;
-  d->armorData.absorptionPoints[damageType_acid] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electric] = 0;
-  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
-  d->armorData.absorptionPoints[damageType_fire] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
-  d->armorData.absorptionPoints[damageType_physical] = 4;
-  d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
+  d->armorData.absorptionPoints[dmgType_acid] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_acid] = 2.0;
+  d->armorData.absorptionPoints[dmgType_electric] = 0;
+  d->armorData.damageToDurabilityFactors[dmgType_electric] = 0.0;
+  d->armorData.absorptionPoints[dmgType_fire] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_fire] = 2.0;
+  d->armorData.absorptionPoints[dmgType_physical] = 4;
+  d->armorData.damageToDurabilityFactors[dmgType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 80;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
   addFeatureFoundIn(d, feature_cabinet);
@@ -1063,14 +1063,14 @@ void ItemData::makeList() {
   d->itemWeight = itemWeight_heavy;
   d->color = clrGreen;
   d->spawnStandardMinDLVL = 3;
-  d->armorData.absorptionPoints[damageType_acid] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_acid] = 2.0;
-  d->armorData.absorptionPoints[damageType_electric] = 0;
-  d->armorData.damageToDurabilityFactors[damageType_electric] = 0.0;
-  d->armorData.absorptionPoints[damageType_fire] = 1;
-  d->armorData.damageToDurabilityFactors[damageType_fire] = 2.0;
-  d->armorData.absorptionPoints[damageType_physical] = 3;
-  d->armorData.damageToDurabilityFactors[damageType_physical] = 0.5;
+  d->armorData.absorptionPoints[dmgType_acid] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_acid] = 2.0;
+  d->armorData.absorptionPoints[dmgType_electric] = 0;
+  d->armorData.damageToDurabilityFactors[dmgType_electric] = 0.0;
+  d->armorData.absorptionPoints[dmgType_fire] = 1;
+  d->armorData.damageToDurabilityFactors[dmgType_fire] = 2.0;
+  d->armorData.absorptionPoints[dmgType_physical] = 3;
+  d->armorData.damageToDurabilityFactors[dmgType_physical] = 0.5;
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
   addFeatureFoundIn(d, feature_cabinet);
@@ -1079,16 +1079,16 @@ void ItemData::makeList() {
 //  d = new ItemDefinition(item_armorAsbestosSuit);
 //  resetDef(d, itemDef_armor);
 //  d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
-//  d->color = clrRedLight;
+//  d->color = clrRedLgt;
 //  d->spawnStandardMinDLVL = 3;
-//  d->armorData.absorptionPoints[damageType_acid] = 999;
-//  d->armorData.damageToDurabilityFactors[damageType_acid] = 0.1;
-//  d->armorData.absorptionPoints[damageType_electricity] = 999;
-//  d->armorData.damageToDurabilityFactors[damageType_electricity] = 0.0;
-//  d->armorData.absorptionPoints[damageType_fire] = 999;
-//  d->armorData.damageToDurabilityFactors[damageType_fire] = 0.1;
-//  d->armorData.absorptionPoints[damageType_physical] = 0;
-//  d->armorData.damageToDurabilityFactors[damageType_physical] = 2.0;
+//  d->armorData.absorptionPoints[dmgType_acid] = 999;
+//  d->armorData.damageToDurabilityFactors[dmgType_acid] = 0.1;
+//  d->armorData.absorptionPoints[dmgType_electricity] = 999;
+//  d->armorData.damageToDurabilityFactors[dmgType_electricity] = 0.0;
+//  d->armorData.absorptionPoints[dmgType_fire] = 999;
+//  d->armorData.damageToDurabilityFactors[dmgType_fire] = 0.1;
+//  d->armorData.absorptionPoints[dmgType_physical] = 0;
+//  d->armorData.damageToDurabilityFactors[dmgType_physical] = 2.0;
 //  d->armorData.chanceToDeflectTouchAttacks = 95;
 //  d->armorData.protectsAgainstStatusBurning = true;
 //  d->armorData.overRideAbsorptionPointLabel = "?";
@@ -1349,8 +1349,9 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
   return false;
 }
 
-string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const bool SKIP_EXTRA_INFO) const {
-  const ItemDefinition& d = item->getDef();
+string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
+                            const bool SKIP_EXTRA_INFO) const {
+  const ItemDefinition& d = item.getDef();
   string ret = "";
 
   if(d.isDevice && d.isIdentified == false) {
@@ -1361,8 +1362,8 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
     }
   }
 
-  if(d.isStackable && item->numberOfItems > 1 && itemRefForm == itemRef_plural) {
-    ret = intToString(item->numberOfItems) + " ";
+  if(d.isStackable && item.numberOfItems > 1 && itemRefForm == itemRef_plural) {
+    ret = intToString(item.numberOfItems) + " ";
     ret += d.name.name_plural;
   } else {
     ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
@@ -1375,7 +1376,8 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
 //  }
 
   if(d.isAmmoClip) {
-    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+    const ItemAmmoClip* const ammoItem = dynamic_cast<const ItemAmmoClip*>(&item);
+    return ret + " {" + intToString(ammoItem->ammo) + "}";
   }
 
   if(SKIP_EXTRA_INFO == false) {
@@ -1383,14 +1385,15 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
-        Weapon* const w = dynamic_cast<Weapon*>(item);
+        const Weapon* const w = dynamic_cast<const Weapon*>(&item);
         ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
 
     if(d.isArmor) {
-      const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
+      const Armor* armor = dynamic_cast<const Armor*>(&item);
+      const string armorDataLine = armor->getArmorDataLine(true);
       return armorDataLine == "" ? ret : ret + " " + armorDataLine;
     }
 
@@ -1402,8 +1405,9 @@ string ItemData::getItemRef(Item* const item, const ItemRef_t itemRefForm, const
   return ret;
 }
 
-string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const PrimaryAttackMode_t attackMode) const {
-  const ItemDefinition& d = item->getDef();
+string ItemData::getItemInterfaceRef(const Item& item, const bool ADD_A,
+                                     const PrimaryAttackMode_t attackMode) const {
+  const ItemDefinition& d = item.getDef();
 
   if(d.isDevice && d.isIdentified == false) {
     return ADD_A ? "a Strange Device" : "Strange Device";
@@ -1411,8 +1415,8 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
 
   string ret = "";
 
-  if(d.isStackable && item->numberOfItems > 1) {
-    ret = intToString(item->numberOfItems) + " " + d.name.name_plural;
+  if(d.isStackable && item.numberOfItems > 1) {
+    ret = intToString(item.numberOfItems) + " " + d.name.name_plural;
   } else {
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
@@ -1424,9 +1428,9 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
     const string rollsStr = intToString(d.meleeDmg.first);
     const string sidesStr = intToString(d.meleeDmg.second);
-    const int PLUS = dynamic_cast<Weapon*>(item)->meleeDmgPlus;
+    const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.meleeBaseAttackSkill;
+    const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityVals.getVal(
                                      ability_accuracyMelee, true, *(eng->player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
@@ -1442,12 +1446,12 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string sidesStr = intToString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.rangedBaseAttackSkill;
+    const int ITEM_SKILL = d.rangedHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(d.rangedHasInfiniteAmmo == false) {
-      Weapon* const w = dynamic_cast<Weapon*>(item);
+      const Weapon* const w = dynamic_cast<const Weapon*>(&item);
       ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
     }
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr + ammoLoadedStr;
@@ -1460,18 +1464,20 @@ string ItemData::getItemInterfaceRef(Item* const item, const bool ADD_A, const P
     const string sidesStr = intToString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
-    const int ITEM_SKILL = d.missileBaseAttackSkill;
+    const int ITEM_SKILL = d.missileHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(d.isAmmoClip) {
-    return ret + " {" + intToString((dynamic_cast<ItemAmmoClip*>(item))->ammo) + "}";
+    const ItemAmmoClip* const clip = dynamic_cast<const ItemAmmoClip*>(&item);
+    return ret + " {" + intToString(clip->ammo) + "}";
   }
 
   if(d.isArmor) {
-    const string armorDataLine = dynamic_cast<Armor*>(item)->getArmorDataLine(true);
+    const string armorDataLine =
+      dynamic_cast<const Armor*>(&item)->getArmorDataLine(true);
     return armorDataLine == "" ? ret : ret + " " + armorDataLine;
   }
 

@@ -134,7 +134,7 @@ public:
 
 //  string getDescr(const bool DEFINITE_ARTICLE) const;
 
-//  sf::Color getColor() const;
+//  SDL_Color getColor() const;
 
 private:
   friend class FeatureFactory;

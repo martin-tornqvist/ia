@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 #include "FeatureData.h"
 #include "FeatureDoor.h"
@@ -105,8 +105,6 @@ private:
   void buildRoomsInRooms();
 
   void postProcessFillDeadEnds();
-
-  int getTotalNrOfConnections(Region* regions[3][3]) const;
 
   bool globalDoorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 

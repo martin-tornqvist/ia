@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 
-coord Art::getColumnAndRow(const char glyph) {
+coord Art::getColumnAndRowGlyph(const char glyph) {
   switch(glyph) {
   default:  return coord(-1, -1);  break;
   case ' ': return coord(0, 0);  break;
@@ -250,11 +250,9 @@ coord Art::getColumnAndRowTile(const Tile_t tile) {
 
 
 coord Art::getGlyphCoords(const char glyph) {
-  coord c = getColumnAndRow(glyph);
-  return c;
+  return getColumnAndRowGlyph(glyph);
 }
 
 coord Art::getTileCoords(const Tile_t tile) {
-  coord c = getColumnAndRowTile(tile);
-  return c;
+  return getColumnAndRowTile(tile);
 }

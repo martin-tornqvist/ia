@@ -85,50 +85,48 @@ void MapBuild::buildForestTreePatch() {
 
   int terrain_size = terrain_size_min + eng->dice(1, terrain_size_max - terrain_size_min);
 
-  int terrain_size_created = 0;
+  int nrTerrainCreated = 0;
 
   //Set a start position where trees start to spawn
-  int terrain_start_x = eng->dice(1, MAP_X_CELLS - 1);
-  int terrain_start_y = eng->dice(1, MAP_Y_CELLS - 1);
+  int terrainStartX = eng->dice(1, MAP_X_CELLS - 1);
+  int terrainStartY = eng->dice(1, MAP_Y_CELLS - 1);
 
-  int step_x = 0;
-  int step_y = 0;
+  int stepX = 0;
+  int stepY = 0;
 
-  int x_cur = terrain_start_x + step_x;
-  int y_cur = terrain_start_y + step_y;
+  coord curPos(terrainStartX + stepX, terrainStartY + stepY);
 
-  while(terrain_size_created < terrain_size) {
-    const int playerX = eng->player->pos.x;
-    const int playerY = eng->player->pos.y;
+  while(nrTerrainCreated < terrain_size) {
+    if(
+      eng->mapTests->isCellInsideMap(curPos) &&
+      eng->basicUtils->chebyshevDistance(curPos, eng->player->pos) > 2) {
+      eng->featureFactory->spawnFeatureAt(feature_tree, curPos);
+      nrTerrainCreated++;
 
-    if(eng->mapTests->isCellInsideMainScreen(x_cur, y_cur) == true && eng->basicUtils->chebyshevDistance(x_cur, y_cur, playerX, playerY) > 2) {
-      eng->featureFactory->spawnFeatureAt(feature_tree, coord(x_cur, y_cur));
-      terrain_size_created++;
-
-      while(eng->map->featuresStatic[x_cur][y_cur]->getId() == feature_tree || eng->basicUtils->chebyshevDistance(x_cur, y_cur, playerX,
-            playerY) <= 2) {
+      while(
+        eng->map->featuresStatic[curPos.x][curPos.y]->getId() == feature_tree ||
+        eng->basicUtils->chebyshevDistance(curPos, eng->player->pos) <= 2) {
 
         if(eng->dice(1, 2) == 1) {
-          while(step_x == 0) {
-            step_x = eng->dice(1, 3) - 2;
+          while(stepX == 0) {
+            stepX = eng->dice(1, 3) - 2;
           }
-          step_y = 0;
+          stepY = 0;
         } else {
-          while(step_y == 0) {
-            step_y = eng->dice(1, 3) - 2;
+          while(stepY == 0) {
+            stepY = eng->dice(1, 3) - 2;
           }
-          step_x = 0;
+          stepX = 0;
         }
 
-        x_cur += step_x;
-        y_cur += step_y;
+        curPos += coord(stepX, stepY);
 
-        if(eng->mapTests->isCellInsideMainScreen(x_cur, y_cur) == false) {
-          terrain_size_created = 99999;
+        if(eng->mapTests->isCellInsideMap(curPos) == false) {
+          nrTerrainCreated = 99999;
           break;
         }
       }
-    } else terrain_size_created = 9999;
+    } else nrTerrainCreated = 9999;
   }
 }
 
@@ -179,7 +177,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const coord c(path.at(i) + coord(dx, dy));
-        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isCellInsideMainScreen(c)) {
+        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isCellInsideMap(c)) {
           eng->featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
       }

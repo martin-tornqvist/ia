@@ -15,7 +15,7 @@ bool Device::activateDefault(Actor* const actor, Engine* const engine) {
 
   if(def_->isIdentified) {
     bool isDestroyed = toggle(engine);
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
     return isDestroyed;
   } else {
     engine->log->addMessage("I cannot yet use this.");
@@ -45,7 +45,7 @@ bool Device::toggle(Engine* const engine) {
 }
 
 void Device::printToggleMessage(Engine* const engine) {
-  const string name_a = engine->itemData->getItemRef(this, itemRef_a, true);
+  const string name_a = engine->itemData->getItemRef(*this, itemRef_a, true);
   engine->log->addMessage((isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
 }
 
@@ -74,7 +74,7 @@ void Device::newTurnInInventory(Engine* const engine) {
 }
 
 void Device::runBadEffect(Engine* const engine) {
-  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+  const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
 
   const int RND = engine->dice.percentile();
   if(RND < 2) {
@@ -83,19 +83,19 @@ void Device::runBadEffect(Engine* const engine) {
   } else if(RND < 40) {
     engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
     engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
-    engine->player->hit(engine->dice.getInRange(1, 2), damageType_electric);
+    engine->player->hit(engine->dice.getInRange(1, 2), dmgType_electric);
   } else {
     engine->log->addMessage("The " + name + " hums ominously.");
   }
 }
 
 void Device::itemSpecificAddSaveLines(vector<string>& lines) {
-  lines.push_back(isActivated_ ? "0" : "1");
+  lines.push_back(isActivated_ ? "1" : "0");
   deviceSpecificAddSaveLines(lines);
 }
 
 void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-  isActivated_ = lines.back() == "0" ? false : true;
+  isActivated_ = lines.back() == "1";
   lines.erase(lines.begin());
   deviceSpecificSetParametersFromSaveLines(lines);
 }
@@ -121,8 +121,9 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
     Actor* const actor = targetCandidates.at(engine->dice.getInRange(0, NR_TARGET_CANDIDATES - 1));
     const coord& pos = actor->pos;
     engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(vector<coord>(1, pos), clrYellow, 1, engine);
-    actor->hit(DMG, damageType_electric);
+    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      vector<coord>(1, pos), clrYellow, 1);
+    actor->hit(DMG, dmgType_electric);
   }
 }
 
@@ -168,8 +169,10 @@ string DeviceTranslocator::getSpecificActivateMessage() {
 void DeviceTranslocator::runGoodEffect(Engine* const engine) {
   Player* const player = engine->player;
   player->getSpotedEnemiesPositions();
-  if(player->getHp() <= player->getHpMax(true) / 4 && player->spotedEnemiesPositions.empty() == false) {
-    const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
+  if(
+    player->getHp() <= player->getHpMax(true) / 4 &&
+    player->spotedEnemiesPositions.empty() == false) {
+    const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
     engine->log->addMessage("The " + name + " makes a droning noise...");
     player->teleport(true);
   }

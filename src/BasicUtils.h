@@ -4,7 +4,7 @@
 #include <vector>
 #include <math.h>
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 #include "Actor.h"
 #include "MersenneTwister.h"
 
@@ -13,12 +13,7 @@ using namespace std;
 class Engine;
 
 enum Time_t {
-  time_year,
-  time_month,
-  time_day,
-  time_hour,
-  time_minute,
-  time_second
+  time_year, time_month, time_day, time_hour, time_minute, time_second
 };
 
 struct TimeData {
@@ -41,7 +36,11 @@ public:
     eng = engine;
   }
 
-  void lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect);
+  inline bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
+    return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
+  }
+
+  void lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect);
 
   void resetArray(int array[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -67,27 +66,28 @@ public:
     }
   }
 
-  int chebyshevDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int chebyshevDistance(const int X0, const int Y0,
+                               const int X1, const int Y1) const {
     if(X0 == X1 && Y0 == Y1) {
       return 0;
     }
     return max(abs(X1 - X0), abs(Y1 - Y0));
   }
 
-  int chebyshevDistance(const coord& c1, const coord& c2) const {
+  inline int chebyshevDistance(const coord& c1, const coord& c2) const {
     return chebyshevDistance(c1.x, c1.y, c2.x, c2.y);
   }
 
-  int manhattanDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int manhattanDistance(const int X0, const int Y0, const int X1, const int Y1) const {
     return abs(X1 - X0) + abs(Y1 - Y0);
   }
 
-  double pointDistance(const int x1, const int y1, const int x2, const int y2) const {
+  inline double pointDistance(const int x1, const int y1, const int x2, const int y2) const {
     if(x1 == x2 && y1 == y2)
       return 0.0;
 
-    const double xSqr = static_cast<double>((x2 - x1) * (x2 - x1));
-    const double ySqr = static_cast<double>((y2 - y1) * (y2 - y1));
+    const double xSqr = double((x2 - x1) * (x2 - x1));
+    const double ySqr = double((y2 - y1) * (y2 - y1));
     return sqrt(xSqr + ySqr);
   }
 

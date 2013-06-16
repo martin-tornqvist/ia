@@ -19,7 +19,7 @@ public:
   virtual void reset();
 
   const ItemDefinition& getDef() const  {return *def_;}
-  virtual sf::Color getColor() const    {return def_->color;}
+  virtual SDL_Color getColor() const    {return def_->color;}
   char getGlyph() const                 {return def_->glyph;}
   Tile_t getTile() const                {return def_->tile;}
 
@@ -49,7 +49,7 @@ public:
     return false;
   }
   virtual string getDefaultActivationLabel() const  {return "";}
-  virtual sf::Color getInterfaceClr() const         {return clrBrown;}
+  virtual SDL_Color getInterfaceClr() const         {return clrBrown;}
 
   virtual void newTurnInInventory(Engine* const engine) {(void)engine;}
 

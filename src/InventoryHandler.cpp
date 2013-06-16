@@ -111,7 +111,6 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
 void InventoryHandler::runSlotsScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   Inventory* const inv = eng->player->getInventory();
   vector<InventorySlot>* invSlots = inv->getSlots();
@@ -131,13 +130,13 @@ void InventoryHandler::runSlotsScreen() {
   MenuBrowser browser(invSlots->size() + 1, 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+  eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
       }
       break;
       case menuAction_selectedWithShift: {
@@ -146,7 +145,7 @@ void InventoryHandler::runSlotsScreen() {
           browserPosToSetAfterDrop = browser.getPos().y;
           return;
         }
-        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
       }
       break;
       case menuAction_selected: {
@@ -158,21 +157,23 @@ void InventoryHandler::runSlotsScreen() {
               eng->renderer->drawMapAndInterface();
               return;
             } else {
-              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
             }
           } else {
             const bool IS_ARMOR = slot->id == slot_armorBody;
-            const string itemName = eng->itemData->getItemRef(slot->item, itemRef_plain);
+            const string itemName = eng->itemData->getItemRef(*slot->item, itemRef_plain);
             inv->moveItemToGeneral(slot);
             if(IS_ARMOR) {
               screenToOpenAfterDrop = inventoryScreen_slots;
               browserPosToSetAfterDrop = browser.getPos().y;
-              eng->log->addMessage("I take off my " + itemName + ".", clrWhite, messageInterrupt_never, true);
+              eng->log->addMessage(
+                "I take off my " + itemName + ".", clrWhite,
+                messageInterrupt_never, true);
               eng->renderer->drawMapAndInterface();
-              eng->gameTime->letNextAct();
+              eng->gameTime->endTurnOfCurrentActor();
               return;
             } else {
-              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons, bgTexture);
+              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
             }
           }
         } else {
@@ -193,7 +194,6 @@ void InventoryHandler::runSlotsScreen() {
 bool InventoryHandler::runUseScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
@@ -201,13 +201,13 @@ bool InventoryHandler::runUseScreen() {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
+  eng->renderInventory->drawUseMode(browser, generalItemsToShow);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawUseMode(browser, generalItemsToShow);
       }
       break;
       case menuAction_selected: {
@@ -224,7 +224,7 @@ bool InventoryHandler::runUseScreen() {
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
         }
-        eng->renderInventory->drawUseMode(browser, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawUseMode(browser, generalItemsToShow);
       }
       break;
       case menuAction_canceled: {
@@ -248,7 +248,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
     eng->renderer->drawMapAndInterface(false);
     const string nrStr = "1-" + intToString(item->numberOfItems);
     eng->renderer->drawText("Drop how many (" + nrStr + ")?:      | enter to drop | space/esc to cancel", renderArea_screen, 1, 1, clrWhiteHigh);
-    eng->renderer->updateWindow();
+    eng->renderer->updateScreen();
     const int NR_TO_DROP = eng->query->number(coord(20 + nrStr.size(), 1), clrWhiteHigh, 0, 3, item->numberOfItems, false);
     if(NR_TO_DROP <= 0) {
       tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
@@ -269,7 +269,6 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   screenToOpenAfterDrop = endOfInventoryScreens;
   equipSlotToOpenAfterDrop = slotToEquip;
   eng->renderer->drawMapAndInterface();
-  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
@@ -278,13 +277,13 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
+  eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
       }
       break;
       case menuAction_selected: {
@@ -300,7 +299,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
         }
-        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
       }
       break;
       case menuAction_canceled: {
@@ -314,7 +313,6 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
 void InventoryHandler::runBrowseInventoryMode() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng->renderer->drawMapAndInterface();
-  const sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
   eng->player->getInventory()->sortGeneralInventory(eng);
 
@@ -322,13 +320,13 @@ void InventoryHandler::runBrowseInventoryMode() {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
+  eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
       }
       break;
       case menuAction_selected: {
@@ -341,7 +339,7 @@ void InventoryHandler::runBrowseInventoryMode() {
           browserPosToSetAfterDrop = browser.getPos().y;
           return;
         }
-        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow, bgTexture);
+        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
       }
       break;
       case menuAction_canceled: {

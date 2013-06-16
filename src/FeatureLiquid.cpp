@@ -19,7 +19,7 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
 //    const bool IS_PLAYER = actorBumping == eng->player;
 //    if(IS_PLAYER) {
 //      eng->log->addMessage("*glop*");
-//      eng->renderer->updateWindow();
+//      eng->renderer->updateScreen();
 //    }
   }
 }

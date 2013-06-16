@@ -45,15 +45,14 @@ void PlayerPowersHandler::run() {
     MenuBrowser browser(NR_MEMORIZED_SPELLS, 0);
 
     eng->renderer->drawMapAndInterface();
-    sf::Texture bgTexture = eng->renderer->getScreenTextureCopy();
 
-    draw(browser, memorizedScrollsToShow, bgTexture);
+    draw(browser, memorizedScrollsToShow);
 
     while(true) {
       const MenuAction_t action = eng->menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {
-          draw(browser, memorizedScrollsToShow, bgTexture);
+          draw(browser, memorizedScrollsToShow);
         }
         break;
         case menuAction_canceled: {
@@ -79,9 +78,9 @@ void PlayerPowersHandler::run() {
   }
 }
 
-void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> memorizedScrollsToShow, const sf::Texture& bgTexture) {
-  eng->renderer->clearWindow();
-  eng->renderer->drawScreenSizedTexture(bgTexture);
+void PlayerPowersHandler::draw(MenuBrowser& browser,
+                               const vector<unsigned int> memorizedScrollsToShow) {
+//  eng->renderer->clearScreen();
 
   const unsigned int NR_OF_MEMORIZED = memorizedScrollsToShow.size();
 
@@ -95,7 +94,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> 
 
   for(unsigned int i = 0; i < NR_OF_MEMORIZED; i++) {
     const char CURRENT_KEY = 'a' + currentListPos;
-    const sf::Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLight;
+    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
     Scroll* const scroll = scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(i));
     const string itemName = scroll->getRealTypeName();
     string str = "a";
@@ -110,7 +109,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> 
     for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {
       fill.push_back('.');
     }
-    sf::Color fillClr = clrGray;
+    SDL_Color fillClr = clrGray;
     fillClr.r /= 3;
     fillClr.g /= 3;
     fillClr.b /= 3;
@@ -134,7 +133,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser, const vector<unsigned int> 
     currentListPos++;
   }
 
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
 Scroll* PlayerPowersHandler::getScrollAt(const unsigned int SCROLL_VECTOR_ELEMENT) const {

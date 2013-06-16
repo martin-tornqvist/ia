@@ -36,11 +36,14 @@ void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
   (void)actor;
   bool isAnySpellRestored = false;
 
-  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfScrolls();
+  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfSpells();
   for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
     Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
     const ItemDefinition& d = scroll->getDef();
-    if(d.isScrollLearnable && d.isScrollLearned && d.id != item_thaumaturgicAlteration) {
+    if(
+      d.isScrollLearnable &&
+      d.isScrollLearned   &&
+      d.id != item_thaumaturgicAlteration) {
       if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
         scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
         isAnySpellRestored = true;
@@ -240,7 +243,7 @@ void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
   const unsigned int ELEMENT = static_cast<unsigned int>(eng->dice(1, NR_NAMES) - 1);
 
   const string DESCRIPTION = m_falseNames.at(ELEMENT).str;
-  const sf::Color clr = m_falseNames.at(ELEMENT).color;
+  const SDL_Color clr = m_falseNames.at(ELEMENT).clr;
 
   m_falseNames.erase(m_falseNames.begin() + ELEMENT);
 
@@ -351,7 +354,7 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   specificQuaff(actor, engine);
 
   if(engine->player->deadState == actorDeadState_alive) {
-    engine->gameTime->letNextAct();
+    engine->gameTime->endTurnOfCurrentActor();
   }
 }
 

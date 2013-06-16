@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 void Gods::setRandomGod() {
-  const int NR_GODS = static_cast<int>(godList.size());
+  const int NR_GODS = int(godList.size());
   currentGodElem_ = eng->dice.getInRange(0, NR_GODS - 1);
 }
 

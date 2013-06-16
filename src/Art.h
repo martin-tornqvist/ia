@@ -145,7 +145,7 @@ public:
   coord getTileCoords(const Tile_t tile);
 
 private:
-  coord getColumnAndRow(const char glyph);
+  coord getColumnAndRowGlyph(const char glyph);
   coord getColumnAndRowTile(const Tile_t tile);
 };
 

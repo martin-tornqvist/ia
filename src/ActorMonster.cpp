@@ -31,7 +31,7 @@ void Monster::act() {
 
   if(waiting_) {
     if(playerAwarenessCounter <= 0) {
-      eng->gameTime->letNextAct();
+      eng->gameTime->endTurnOfCurrentActor();
       return;
     }
   }
@@ -55,14 +55,17 @@ void Monster::act() {
     } else {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng->player) {
-          dynamic_cast<Monster*>(leader)->playerAwarenessCounter = leader->getDef()->nrTurnsAwarePlayer;
+          dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
+            leader->getDef()->nrTurnsAwarePlayer;
         }
       }
     }
   }
 
-  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(ability_stealth, true, *this) > 0;
-  isStealth = eng->player->checkIfSeeActor(*this, NULL) == false && HAS_SNEAK_SKILL;
+  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(
+                                 ability_stealth, true, *this) > 0;
+  isStealth = eng->player->checkIfSeeActor(*this, NULL) == false &&
+              HAS_SNEAK_SKILL;
 
   const AiBehavior& ai = def_->aiBehavior;
 
@@ -104,7 +107,7 @@ void Monster::act() {
 
   if(ai.triesAttack) {
     if(target != NULL) {
-      if(tryAttack(target->pos)) {
+      if(tryAttack(*target)) {
         return;
       }
     }
@@ -169,7 +172,7 @@ void Monster::act() {
     return;
   }
 
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::monsterHit(int& dmg) {
@@ -191,7 +194,7 @@ void Monster::moveToCell(const coord& targetCell) {
       dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       if(dest == pos) {
         tracer << "Monster: Trap prevented leaving" << endl;
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     }
@@ -209,7 +212,7 @@ void Monster::moveToCell(const coord& targetCell) {
   }
   eng->map->featuresStatic[pos.x][pos.y]->bump(this);
 
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::hearSound(const Sound& sound) {
@@ -236,7 +239,7 @@ void Monster::becomeAware() {
   }
 }
 
-bool Monster::tryAttack(const coord& attackPos) {
+bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0 || leader == eng->player) {
 
@@ -244,25 +247,48 @@ bool Monster::tryAttack(const coord& attackPos) {
       eng->mapTests->makeVisionBlockerArray(pos, blockers);
 
       if(checkIfSeeActor(*eng->player, blockers)) {
-        AttackOpport opport = getAttackOpport(attackPos);
-        BestAttack const attack = getBestAttack(opport);
+        AttackOpport opport = getAttackOpport(defender);
+        const BestAttack attack = getBestAttack(opport);
 
         if(attack.weapon != NULL) {
-          if(attack.melee) {
+          if(attack.isMelee) {
             if(attack.weapon->getDef().isMeleeWeapon) {
-              eng->attack->melee(attackPos, attack.weapon);
+              eng->attack->melee(*this, *attack.weapon, defender);
               return true;
             }
           } else {
             if(attack.weapon->getDef().isRangedWeapon) {
-              if(opport.timeToReload) {
+              if(opport.isTimeToReload) {
                 eng->reload->reloadWeapon(this);
                 return true;
               } else {
-                const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
-                statusEffectsHandler_->tryAddEffect(new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED));
-                eng->attack->ranged(attackPos.x, attackPos.y, attack.weapon);
-                return true;
+                //Check if friend is in the way (with a small chance to ignore this)
+                bool isBlockedByFriend = false;
+                if(eng->dice.percentile() < 80) {
+                  vector<coord> line =
+                    eng->mapTests->getLine(pos, defender.pos, true, 9999);
+                  for(unsigned int i = 0; i < line.size(); i++) {
+                    const coord& curPos = line.at(i);
+                    if(curPos != pos && curPos != defender.pos) {
+                      Actor* const actorHere = eng->mapTests->getActorAtPos(curPos);
+                      if(actorHere != NULL) {
+                        isBlockedByFriend = true;
+                        break;
+                      }
+                    }
+                  }
+                }
+
+                if(isBlockedByFriend == false) {
+                  const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
+                  StatusDisabledAttackRanged* status =
+                    new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
+                  statusEffectsHandler_->tryAddEffect(status);
+                  eng->attack->ranged(*this, *attack.weapon, defender.pos);
+                  return true;
+                } else {
+                  return false;
+                }
               }
             }
           }
@@ -273,14 +299,14 @@ bool Monster::tryAttack(const coord& attackPos) {
   return false;
 }
 
-AttackOpport Monster::getAttackOpport(const coord& attackPos) {
+AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(statusEffectsHandler_->allowAttack(false)) {
-    opport.melee = eng->mapTests->isCellsNeighbours(pos, attackPos, false);
+    opport.isMelee = eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
-    if(opport.melee) {
+    if(opport.isMelee) {
       if(statusEffectsHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
@@ -300,7 +326,9 @@ AttackOpport Monster::getAttackOpport(const coord& attackPos) {
         }
       }
     } else {
-      if(statusEffectsHandler_->allowAttackRanged(false) && statusEffectsHandler_->hasEffect(statusBurning) == false) {
+      if(
+        statusEffectsHandler_->allowAttackRanged(false) &&
+        statusEffectsHandler_->hasEffect(statusBurning) == false) {
         //Ranged weapon in wielded slot?
         weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
 
@@ -309,9 +337,11 @@ AttackOpport Monster::getAttackOpport(const coord& attackPos) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
-            if(weapon->ammoLoaded == 0 && weapon->getDef().rangedHasInfiniteAmmo == false) {
+            if(
+              weapon->ammoLoaded == 0 &&
+              weapon->getDef().rangedHasInfiniteAmmo == false) {
               if(inventory_->hasAmmoForFirearmInInventory()) {
-                opport.timeToReload = true;
+                opport.isTimeToReload = true;
               }
             }
           }
@@ -334,7 +364,7 @@ AttackOpport Monster::getAttackOpport(const coord& attackPos) {
 // TODO Instead of using "strongest" weapon, use random
 BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
-  attack.melee = attackOpport.melee;
+  attack.isMelee = attackOpport.isMelee;
 
   Weapon* newWeapon = NULL;
 
@@ -356,7 +386,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(eng->itemData->isWeaponStronger(*def, *newDef, attack.melee) == true) {
+        if(eng->itemData->isWeaponStronger(*def, *newDef, attack.isMelee)) {
           // - use new weapon instead.
           attack.weapon = newWeapon;
           def = newDef;

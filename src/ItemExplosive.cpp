@@ -19,7 +19,7 @@ void Dynamite::setPlayerExplosive(Engine* const engine) const {
 	engine->player->clr_ = clrYellow;
 	engine->log->addMessage("I light a dynamite stick.");
 	engine->renderer->drawMapAndInterface();
-	engine->gameTime->letNextAct();
+	engine->gameTime->endTurnOfCurrentActor();
 }
 
 void Molotov::setPlayerExplosive(Engine* const engine) const {
@@ -28,7 +28,7 @@ void Molotov::setPlayerExplosive(Engine* const engine) const {
 	engine->player->clr_ = clrYellow;
 	engine->log->addMessage("I light a Molotov Cocktail.");
 	engine->renderer->drawMapAndInterface();
-	engine->gameTime->letNextAct();
+	engine->gameTime->endTurnOfCurrentActor();
 }
 
 void Flare::setPlayerExplosive(Engine* const engine) const {
@@ -39,5 +39,5 @@ void Flare::setPlayerExplosive(Engine* const engine) const {
   engine->gameTime->updateLightMap();
   engine->player->updateFov();
 	engine->renderer->drawMapAndInterface();
-	engine->gameTime->letNextAct();
+	engine->gameTime->endTurnOfCurrentActor();
 }

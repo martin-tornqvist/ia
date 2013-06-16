@@ -8,41 +8,38 @@
 class Armor: public Item {
 public:
   Armor(ItemDefinition* const itemDefinition, Engine* engine);
-  ~Armor() {
-  }
 
-  int getDurability() const {
-    return durability;
-  }
+  ~Armor() {}
+
+  int getDurability() const {return dur_;}
 
   string getArmorDataLine(const bool WITH_BRACKETS) const;
 
-  int takeDurabilityHitAndGetReducedDamage(const int DAMAGE_BEFORE, const DamageTypes_t damageType);
+  int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE,
+      const DmgTypes_t dmgType);
 
   void itemSpecificAddSaveLines(vector<string>& lines) {
-    lines.push_back(intToString(durability));
+    lines.push_back(intToString(dur_));
   }
 
   void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-    durability = stringToInt(lines.front());
+    dur_ = stringToInt(lines.front());
     lines.erase(lines.begin());
   }
 
   bool isDestroyed() {
-    return getAbsorptionPoints(damageType_physical) == 0;
+    return getAbsorptionPoints(dmgType_physical) <= 0;
   }
 
-  sf::Color getInterfaceClr() const {
-    return clrGray;
-  }
+  SDL_Color getInterfaceClr() const {return clrGray;}
 
-  void setMaxDurability() {durability = 100;}
+  void setMaxDurability() {dur_ = 100;}
 
 private:
-  int getAbsorptionPoints(const DamageTypes_t damageType) const;
+  int getAbsorptionPoints(const DmgTypes_t dmgType) const;
 
   Engine* eng;
-  int durability;
+  int dur_;
 };
 
 #endif

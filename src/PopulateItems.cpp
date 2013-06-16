@@ -11,7 +11,7 @@ void PopulateItems::spawnItems() {
   eng->mapTests->makeItemBlockerArray(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   vector<coord> freeCells;
-  eng->mapTests->makeMapVectorFromArray(blockers, freeCells);
+  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 
   const int CELLS_PER_SPAWN = 135;
 
@@ -68,6 +68,6 @@ void PopulateItems::buildCandidateList() {
 }
 
 ItemId_t PopulateItems::getFromCandidateList() {
-  const int NUMBER_CANDIDATES = static_cast<int>(candidates.size());
+  const int NUMBER_CANDIDATES = int(candidates.size());
   return candidates.at(eng->dice(1, NUMBER_CANDIDATES) - 1);
 }

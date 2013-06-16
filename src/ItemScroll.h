@@ -25,7 +25,7 @@ public:
     return "Read";
   }
 
-  virtual sf::Color getInterfaceClr() const {
+  virtual SDL_Color getInterfaceClr() const {
     return clrMagenta;
   }
 

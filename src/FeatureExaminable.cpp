@@ -26,7 +26,7 @@ void FeatureExaminable::examine() {
   tracer << "FeatureExaminable::examine()..." << endl;
 
   featureSpecific_examine();
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 
   tracer << "FeatureExaminable::examine() [DONE]" << endl;
 }
@@ -77,7 +77,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
         }
       }
 
-      const int NR_CANDIDATES = static_cast<int>(itemCandidates.size());
+      const int NR_CANDIDATES = int(itemCandidates.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
           const unsigned int ELEMENT = engine->dice.getInRange(0, NR_CANDIDATES - 1);
@@ -92,7 +92,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
 
 void ExaminableItemContainer::dropItems(const coord& pos, Engine* const engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
-    engine->itemDrop->dropItemOnMap(pos, &(items_.at(i)));
+    engine->itemDrop->dropItemOnMap(pos, *items_.at(i));
   }
   items_.resize(0);
 }
@@ -221,7 +221,7 @@ void Tomb::doAction(const TombAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMessage("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       }
 
       if(eng->player->deadState != actorDeadState_alive) {
@@ -279,10 +279,10 @@ bool Tomb::openFeature() {
   eng->log->addMessage("The tomb opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the tomb.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("There is nothing of value inside the tomb.");
+    eng->log->addMessage("There is nothing of value inside.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = isTraitKnown_ = true;
@@ -312,11 +312,11 @@ void Tomb::triggerTrap() {
       if(eng->dice.coinToss()) {
         eng->log->addMessage("Fumes burst out from the tomb!");
         StatusEffect* effect = NULL;
-        sf::Color fumeClr = clrMagenta;
+        SDL_Color fumeClr = clrMagenta;
         const int RND = eng->dice.percentile();
         if(RND < 20) {
           effect = new StatusPoisoned(eng);
-          fumeClr = clrGreenLight;
+          fumeClr = clrGreenLgt;
         } else if(RND < 40) {
           effect = new StatusDiseased(eng);
           fumeClr = clrGreen;
@@ -550,12 +550,13 @@ void Chest::doAction(const ChestAction_t action) {
 
       if(wpn == NULL) {
         eng->log->addMessage("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       } else {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 
         if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
-          const string wpnName = eng->itemData->getItemRef(wpn, itemRef_plain, true);
+          const string wpnName = eng->itemData->getItemRef(
+                                   *wpn, itemRef_plain, true);
           eng->log->addMessage("My " + wpnName + " is damaged!");
           dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
         }
@@ -579,7 +580,7 @@ void Chest::doAction(const ChestAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMessage("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, damageType_pure);
+        eng->player->hit(1, dmgType_pure);
       }
 
       if(eng->player->deadState == actorDeadState_alive) {
@@ -615,9 +616,9 @@ bool Chest::openFeature() {
   }
   if(eng->player->deadState == actorDeadState_alive) {
     if(itemContainer_.items_.empty()) {
-      eng->log->addMessage("There is nothing of value in the chest.");
+      eng->log->addMessage("There is nothing of value inside.");
     } else {
-      eng->log->addMessage("There are some items in the chest.");
+      eng->log->addMessage("There are some items inside.");
       itemContainer_.dropItems(pos_, eng);
       eng->renderer->drawMapAndInterface(true);
     }
@@ -699,11 +700,11 @@ void Chest::triggerTrap() {
     } else {
       eng->log->addMessage("Fumes burst out from the chest!");
       StatusEffect* effect = NULL;
-      sf::Color fumeClr = clrMagenta;
+      SDL_Color fumeClr = clrMagenta;
       const int RND = eng->dice.percentile();
       if(RND < 20) {
         effect = new StatusPoisoned(eng);
-        fumeClr = clrGreenLight;
+        fumeClr = clrGreenLgt;
       } else if(RND < 40) {
         effect = new StatusDiseased(eng);
         fumeClr = clrGreen;
@@ -755,7 +756,7 @@ bool Cabinet::openFeature() {
   eng->log->addMessage("The cabinet opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the cabinet.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
     eng->log->addMessage("There is nothing of value inside.");
@@ -863,7 +864,7 @@ void Cocoon::triggerTrap() {
       eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
 
       const int NR_SPIDERS_MAX = min(eng->dice.getInRange(2, 4),
-                                     static_cast<int>(freeCells.size()));
+                                     int(freeCells.size()));
 
       if(NR_SPIDERS_MAX > 0) {
         tracer << "Cocoon: Found positions, spawning spiders" << endl;
@@ -884,7 +885,7 @@ bool Cocoon::openFeature() {
   eng->log->addMessage("The cocoon opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items in the cocoon.");
+    eng->log->addMessage("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
     eng->log->addMessage("There is nothing of value inside.");

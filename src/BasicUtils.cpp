@@ -9,18 +9,18 @@
 
 #include "Converters.h"
 
-// Function for lexicographically comparing two StringAndColor structs
-struct LexicograhicalCompareStringAndColor {
+// Function for lexicographically comparing two StringAndClr structs
+struct LexicograhicalCompareStringAndClr {
 public:
-  LexicograhicalCompareStringAndColor() {
+  LexicograhicalCompareStringAndClr() {
   }
-  bool operator()(const StringAndColor& entry1, const StringAndColor& entry2) {
+  bool operator()(const StringAndClr& entry1, const StringAndClr& entry2) {
     return std::lexicographical_compare(entry1.str.begin(), entry1.str.end(), entry2.str.begin(), entry2.str.end());
   }
 };
 
-void BasicUtils::lexicographicalSortStringAndColorVector(vector<StringAndColor>& vect) {
-  LexicograhicalCompareStringAndColor cmp;
+void BasicUtils::lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect) {
+  LexicograhicalCompareStringAndClr cmp;
   std::sort(vect.begin(), vect.end(), cmp);
 }
 

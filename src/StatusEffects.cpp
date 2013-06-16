@@ -62,14 +62,14 @@ void StatusPoisoned::newTurn(Engine* const engine) {
       }
     }
 
-    owningActor->hit(1, damageType_pure);
+    owningActor->hit(1, dmgType_pure);
   }
 
   turnsLeft--;
 }
 
-bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  if(ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(ALLOW_MESSAGE_WHEN_FALSE) {
     if(owningActor == owningActor->eng->player) {
       owningActor->eng->log->addMessage("I am too terrified to engage in close combat!");
     }
@@ -77,8 +77,8 @@ bool StatusTerrified::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE
   return false;
 }
 
-bool StatusTerrified::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
 }
 
@@ -95,7 +95,7 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
     }
   }
 
-  owningActor->hit(engine->dice(1, 3), damageType_physical);
+  owningActor->hit(engine->dice(1, 3), dmgType_physical);
 
   if(owningActor->deadState == actorDeadState_alive) {
     const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *(owningActor));
@@ -116,8 +116,8 @@ coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos,
   return actorPos;
 }
 
-bool StatusConfused::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusConfused::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
     return owningActor->eng->dice.coinToss();
@@ -125,8 +125,8 @@ bool StatusConfused::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE)
   return true;
 }
 
-bool StatusConfused::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
-  (void)ALLOW_PRINT_MESSAGE_WHEN_FALSE;
+bool StatusConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  (void)ALLOW_MESSAGE_WHEN_FALSE;
 
   if(owningActor != owningActor->eng->player) {
     return owningActor->eng->dice.coinToss();
@@ -172,10 +172,10 @@ bool StatusBurning::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 
 void StatusBurning::doDamage(Engine* const engine) {
   if(owningActor == engine->player) {
-    engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLight);
+    engine->log->addMessage("AAAARGH IT BURNS!!!", clrRedLgt);
 //    owningActor->eng->renderer->drawMapAndInterface();
   }
-  owningActor->hit(engine->dice(1, 2), damageType_fire);
+  owningActor->hit(engine->dice(1, 2), dmgType_fire);
 }
 
 void StatusBurning::newTurn(Engine* const engine) {
@@ -276,7 +276,7 @@ void StatusFlared::end(Engine* const engine) {
 }
 
 void StatusFlared::newTurn(Engine* const engine) {
-  owningActor->hit(1, damageType_fire);
+  owningActor->hit(1, dmgType_fire);
   turnsLeft--;
 
   if(turnsLeft == 0) {
@@ -333,7 +333,10 @@ bool StatusEffectsHandler::allowSee() {
   return true;
 }
 
-void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT, const bool NO_MESSAGES) {
+void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
+                                        const bool FORCE_EFFECT,
+                                        const bool NO_MESSAGES,
+                                        const bool DISABLE_REDRAW) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -349,9 +352,11 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
     if(effect->getEffectId() == statusBurning) {
       Item* const armor = owningActor->getInventory()->getItemInSlot(slot_armorBody);
       if(armor != NULL) {
-        const bool ARMOR_PROTECTS_FROM_BURNING = armor->getDef().armorData.protectsAgainstStatusBurning;
+        const bool ARMOR_PROTECTS_FROM_BURNING =
+          armor->getDef().armorData.protectsAgainstStatusBurning;
         if(ARMOR_PROTECTS_FROM_BURNING) {
-          statusProtectionFromArmor = max(0, dynamic_cast<Armor*>(armor)->getDurability());
+          statusProtectionFromArmor =
+            max(0, dynamic_cast<Armor*>(armor)->getDurability());
         }
       }
     } else if(effect->getEffectId() == statusConfused) {
@@ -412,10 +417,12 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
     effects.push_back(effect);
     effect->start(eng);
 
-    if(effect->isPlayerVisualUpdateNeededWhenStartOrEnd()) {
-      effect->owningActor->updateColor();
-      eng->player->updateFov();
-      eng->renderer->drawMapAndInterface();
+    if(DISABLE_REDRAW == false) {
+      if(effect->isPlayerVisualUpdateNeededWhenStartOrEnd()) {
+        effect->owningActor->updateColor();
+        eng->player->updateFov();
+        eng->renderer->drawMapAndInterface();
+      }
     }
 
     if(OWNER_IS_PLAYER) {
@@ -455,8 +462,8 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
   delete effect;
 }
 
-void StatusEffectsHandler::tryAddEffectsFromWeapon(Weapon* weapon, const bool IS_MELEE) {
-  const ItemDefinition& wpnDef = weapon->getDef();
+void StatusEffectsHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE) {
+  const ItemDefinition& wpnDef = wpn.getDef();
   StatusEffect* wpnEffect = IS_MELEE ? wpnDef.meleeStatusEffect : wpnDef.rangedStatusEffect;
 
   if(wpnEffect != NULL) {
@@ -517,18 +524,18 @@ void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_
   }
 }
 
-bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
-    if(effects.at(i)->allowAttackMelee(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+    if(effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }
   return true;
 }
 
-bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_PRINT_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
-    if(effects.at(i)->allowAttackRanged(ALLOW_PRINT_MESSAGE_WHEN_FALSE) == false) {
+    if(effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }

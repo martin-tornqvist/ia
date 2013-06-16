@@ -1,7 +1,5 @@
 #include "Input.h"
 
-#include "SFML/Window/Event.hpp"
-
 #include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
@@ -38,7 +36,13 @@ void Input::clearLogMessages() {
 }
 
 Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu_(quitToMainMenu)  {
+  setKeyRepeatDelays();
+}
 
+void Input::setKeyRepeatDelays() {
+  tracer << "Input::setKeyRepeatDelays()..." << endl;
+  SDL_EnableKeyRepeat(eng->config->keyRepeatDelay, eng->config->keyRepeatInterval);
+  tracer << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
 void Input::handleMapModeInputUntilFound() {
@@ -48,7 +52,7 @@ void Input::handleMapModeInputUntilFound() {
 
 void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------MOVEMENT
-  if(d.sfmlKey_ == sf::Keyboard::Right || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
@@ -61,14 +65,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Down || d.key_ == '2') {
+  } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Left || d.key_ == '4') {
+  } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
@@ -81,35 +85,35 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::Up || d.key_ == '8') {
+  } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(0, -1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '9') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, -1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '3') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(1, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '1') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, 1);
     }
     clearEvents();
     return;
-  } else if(d.sfmlKey_ == sf::Keyboard::PageUp || d.key_ == '7') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(-1, -1);
@@ -231,7 +235,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
               if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
               } else {
-                eng->marker->place(markerTask_aim);
+                eng->marker->run(markerTask_aimRangedWeapon, NULL);
               }
             } else {
               //If no ammo loaded, try a reload instead
@@ -267,7 +271,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------SLOTS SCREEN
-  else if(d.key_ == 'v') {
+  else if(d.key_ == 'w') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->inventoryHandler->runSlotsScreen();
@@ -292,7 +296,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->player->dynamiteFuseTurns > 0 ||
         eng->player->flareFuseTurns > 0 ||
         eng->player->molotovFuseTurns > 0) {
-        eng->marker->place(markerTask_throwLitExplosive);
+        eng->marker->run(markerTask_aimLitExplosive, NULL);
       } else {
         eng->inventoryHandler->runUseScreen();
       }
@@ -311,18 +315,25 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       Item* const itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
       Item* const itemAlt = eng->player->getInventory()->getItemInSlot(slot_wieldedAlt);
-      const string ITEM_WIELDED_NAME = itemWielded == NULL ? "" : eng->itemData->getItemRef(itemWielded, itemRef_a);
-      const string ITEM_ALT_NAME = itemAlt == NULL ? "" : eng->itemData->getItemRef(itemAlt, itemRef_a);
+      const string ITEM_WIELDED_NAME =
+        itemWielded == NULL ? "" :
+        eng->itemData->getItemRef(*itemWielded, itemRef_a);
+      const string ITEM_ALT_NAME =
+        itemAlt == NULL ? "" :
+        eng->itemData->getItemRef(*itemAlt, itemRef_a);
       if(itemWielded == NULL && itemAlt == NULL) {
         eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
       } else {
         if(itemWielded == NULL) {
-          eng->log->addMessage("I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
+          eng->log->addMessage(
+            "I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
         } else {
           if(itemAlt == NULL) {
-            eng->log->addMessage("I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
+            eng->log->addMessage(
+              "I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
           } else {
-            eng->log->addMessage("I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
+            eng->log->addMessage(
+              "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
           }
         }
         eng->player->getInventory()->swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
@@ -341,7 +352,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         const string TURNS_STR = intToString(TURNS_TO_APPLY);
         eng->log->addMessage("I pause for a while and search around (" + TURNS_STR + " turns).");
         eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
       } else {
         eng->log->addMessage("Not while an enemy is near.");
         eng->renderer->drawMapAndInterface();
@@ -356,12 +367,24 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
 
       if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true)) {
-        Item* item = eng->player->getInventory()->getItemInSlot(slot_missiles);
+        Inventory* const playerInv = eng->player->getInventory();
+        Item* itemStack = playerInv->getItemInSlot(slot_missiles);
 
-        if(item == NULL) {
-          eng->log->addMessage("I have no missiles chosen for throwing (press 'v').");
+        if(itemStack == NULL) {
+          eng->log->addMessage(
+            "I have no missiles chosen for throwing (press 'v').");
         } else {
-          eng->marker->place(markerTask_throw);
+          Item* itemToThrow = eng->itemFactory->copyItem(itemStack);
+          itemToThrow->numberOfItems = 1;
+
+          const MarkerReturnData markerReturnData =
+            eng->marker->run(markerTask_aimThrownWeapon, itemToThrow);
+
+          if(markerReturnData.didThrowMissile) {
+            playerInv->decreaseItemInSlot(slot_missiles);
+          } else {
+            delete itemToThrow;
+          }
         }
       }
     }
@@ -373,7 +396,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->player->getStatusEffectsHandler()->allowSee()) {
-        eng->marker->place(markerTask_look);
+        eng->marker->run(markerTask_look, NULL);
       } else {
         eng->log->addMessage("I am blind.");
       }
@@ -405,7 +428,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             const string TURNS_STR = intToString(TURNS_TO_HEAL);
             eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
             eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
-            eng->gameTime->letNextAct();
+            eng->gameTime->endTurnOfCurrentActor();
           } else {
             eng->log->addMessage("Not while an enemy is near.");
             eng->renderer->drawMapAndInterface();
@@ -424,7 +447,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------AUTO MELEE
-  else if(d.sfmlKey_ == sf::Keyboard::Tab) {
+  else if(d.sdlKey_ == SDLK_TAB) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
       eng->player->autoMelee();
@@ -461,7 +484,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------QUIT
-  else if(d.sfmlKey_ == sf::Keyboard::Escape || d.key_ == 'Q') {
+  else if(d.sdlKey_ == SDLK_ESCAPE || d.key_ == 'Q') {
     if(eng->player->deadState == actorDeadState_alive) {
       eng->log->clearLog();
       eng->log->addMessage("Quit the current game (y/n)? Save and highscore are not kept.", clrWhiteHigh);
@@ -504,7 +527,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DESCEND CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F2) {
+  else if(d.sdlKey_ == SDLK_F2) {
     if(IS_DEBUG_MODE) {
       eng->dungeonClimb->travelDown(1);
       clearEvents();
@@ -512,7 +535,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------XP CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F3) {
+  else if(d.sdlKey_ == SDLK_F3) {
     if(IS_DEBUG_MODE) {
       eng->dungeonMaster->playerGainsExp(500);
       clearEvents();
@@ -520,7 +543,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------VISION CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F4) {
+  else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -536,7 +559,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
   }
   //----------------------------------------INSANITY CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F5) {
+  else if(d.sdlKey_ == SDLK_F5) {
     if(IS_DEBUG_MODE) {
       eng->player->incrShock(50);
       clearEvents();
@@ -544,7 +567,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------MTH CHEAT
-  else if(d.sfmlKey_ == sf::Keyboard::F6) {
+  else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       eng->player->incrMth(8);
       clearEvents();
@@ -552,7 +575,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sfmlKey_ == sf::Keyboard::F7) {
+  else if(d.sdlKey_ == SDLK_F7) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
@@ -576,84 +599,84 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
 }
 
-void Input::clearEvents() const {
-  sf::Event event;
-  while(eng->renderer->renderWindow_->pollEvent(event)) {
+void Input::clearEvents() {
+//  sf::Event event;
+  while(SDL_PollEvent(&event_)) {
   }
 }
 
-KeyboardReadReturnData Input::readKeysUntilFound() const {
+KeyboardReadReturnData Input::readKeysUntilFound() {
   while(true) {
 
     eng->sleep(1);
 
-    sf::Event event;
-    while(eng->renderer->renderWindow_->pollEvent(event)) {
-      if(event.type == sf::Event::TextEntered) {
+    while(SDL_PollEvent(&event_)) {
+      if(event_.type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        if(event.text.unicode >= 33 && event.text.unicode <= 126) {
+        if(event_.key.keysym.unicode >= 33 && event_.key.keysym.unicode < 126) {
+          return KeyboardReadReturnData(static_cast<char>(event_.key.keysym.unicode));
           clearEvents();
-          return KeyboardReadReturnData(static_cast<char>(event.text.unicode));
-        }
-        continue;
-      } else if(event.type == sf::Event::KeyPressed) {
-        // Other key pressed? (escape, return, space, etc)
-        const sf::Keyboard::Key sfmlKey = event.key.code;
-
-        // Don't register shift, control or alt as actual key events
-        if(
-          sfmlKey == sf::Keyboard::LShift ||
-          sfmlKey == sf::Keyboard::RShift ||
-          sfmlKey == sf::Keyboard::LControl ||
-          sfmlKey == sf::Keyboard::RControl ||
-          sfmlKey == sf::Keyboard::LAlt ||
-          sfmlKey == sf::Keyboard::RAlt) {
-          continue;
-        }
-
-        const bool IS_SHIFT_HELD =
-          sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-          sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
-        const bool IS_CTRL_HELD =
-          sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-          sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
-
-        KeyboardReadReturnData ret(-1, sfmlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
-
-        if(sfmlKey >= sf::Keyboard::F1 && sfmlKey <= sf::Keyboard::F15) {
-          // F-keys
-          return ret;
         } else {
-          switch(sfmlKey) {
-            default:                        continue;   break;
-            case sf::Keyboard::LSystem:     continue;   break;
-            case sf::Keyboard::RSystem:     continue;   break;
-            case sf::Keyboard::Menu:        continue;   break;
-            case sf::Keyboard::Pause:       continue;   break;
-            case sf::Keyboard::Space:       return ret; break;
-            case sf::Keyboard::Return:      return ret; break;
-            case sf::Keyboard::Back:        return ret; break;
-            case sf::Keyboard::Tab:         return ret; break;
-            case sf::Keyboard::PageUp:      return ret; break;
-            case sf::Keyboard::PageDown:    return ret; break;
-            case sf::Keyboard::End:         return ret; break;
-            case sf::Keyboard::Home:        return ret; break;
-            case sf::Keyboard::Insert:      return ret; break;
-            case sf::Keyboard::Delete:      return ret; break;
-            case sf::Keyboard::Left:        return ret; break;
-            case sf::Keyboard::Right:       return ret; break;
-            case sf::Keyboard::Up:          return ret; break;
-            case sf::Keyboard::Down:        return ret; break;
-            case sf::Keyboard::Escape:      return ret; break;
+          // Other key pressed? (escape, return, space, etc)
+          const SDLKey sdlKey = event_.key.keysym.sym;
+
+          // Don't register shift, control or alt as actual key events
+          if(
+            sdlKey == SDLK_LSHIFT ||
+            sdlKey == SDLK_RSHIFT ||
+            sdlKey == SDLK_LCTRL  ||
+            sdlKey == SDLK_RCTRL  ||
+            sdlKey == SDLK_LALT   ||
+            sdlKey == SDLK_RALT) {
+            continue;
+          }
+
+          SDLMod mod = SDL_GetModState();
+          const bool IS_SHIFT_HELD    = mod & KMOD_SHIFT;
+          const bool IS_CTRL_HELD     = mod & KMOD_CTRL;
+          const bool IS_ALT_HELD      = mod & KMOD_ALT;
+
+          KeyboardReadReturnData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
+
+          if(sdlKey >= SDLK_F1 && sdlKey <= SDLK_F15) {
+            // F-keys
+            return ret;
+          } else {
+            switch(sdlKey) {
+              case SDLK_RETURN:
+              case SDLK_KP_ENTER: {
+                if(IS_ALT_HELD) {
+                  eng->config->toggleFullscreen();
+                  clearEvents();
+                  continue;
+                } else {
+                  ret.sdlKey_ = SDLK_RETURN;
+                  return ret;
+                }
+              } break;
+              case SDLK_MENU:         continue;   break;
+              case SDLK_PAUSE:        continue;   break;
+              case SDLK_SPACE:        return ret; break;
+              case SDLK_BACKSPACE:    return ret; break;
+              case SDLK_TAB:          return ret; break;
+              case SDLK_PAGEUP:       return ret; break;
+              case SDLK_PAGEDOWN:     return ret; break;
+              case SDLK_END:          return ret; break;
+              case SDLK_HOME:         return ret; break;
+              case SDLK_INSERT:       return ret; break;
+              case SDLK_DELETE:       return ret; break;
+              case SDLK_LEFT:         return ret; break;
+              case SDLK_RIGHT:        return ret; break;
+              case SDLK_UP:           return ret; break;
+              case SDLK_DOWN:         return ret; break;
+              case SDLK_ESCAPE:       return ret; break;
+              default:                continue;   break;
+            }
           }
         }
-      } else if(event.type == sf::Event::GainedFocus) {
-        eng->renderer->clearWindow();
-        eng->renderer->drawScreenSizedTexture(eng->renderer->getScreenTextureCopy());
-        eng->renderer->updateWindow();
       }
     }
   }

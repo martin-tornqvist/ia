@@ -1,6 +1,7 @@
 #include "FeatureTrap.h"
 
 #include <cassert>
+#include <algorithm>
 
 #include "Engine.h"
 
@@ -151,7 +152,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   Item* item = eng->map->items[pos_.x][pos_.y];
   if(item != NULL) {
     eng->map->items[pos_.x][pos_.y] = NULL;
-    eng->itemDrop->dropItemOnMap(pos_, &item);
+    eng->itemDrop->dropItemOnMap(pos_, *item);
   }
 
   if(eng->map->playerVision[pos_.x][pos_.y]) {
@@ -185,7 +186,7 @@ string Trap::getDescription(const bool DEFINITE_ARTICLE) const {
   }
 }
 
-sf::Color Trap::getColor() const {
+SDL_Color Trap::getColor() const {
   return isHidden_ ? mimicFeature_->color : specificTrap_->getTrapSpecificColor();
 }
 
@@ -263,7 +264,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
       }
 
       const int DMG = eng->dice(1, 8);
-      actor->hit(DMG, damageType_physical);
+      actor->hit(DMG, dmgType_physical);
       if(actor->deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
@@ -328,7 +329,7 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
       }
 
       const int DMG = eng->dice(2, 6);
-      actor->hit(DMG, damageType_physical);
+      actor->hit(DMG, dmgType_physical);
       if(actor->deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
@@ -493,7 +494,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingFeatures);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeFloodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
+  eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
   vector<PosAndVal> floodFillVector;
   bool actorArray[MAP_X_CELLS][MAP_Y_CELLS];
   for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {

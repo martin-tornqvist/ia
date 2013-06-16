@@ -8,46 +8,39 @@
 #include "Postmortem.h"
 #include "Blood.h"
 #include "Knockback.h"
+#include "Log.h"
 
 using namespace std;
 
-void Attack::melee(const coord& defenderPos, Weapon* weapon) {
-  //Get attack data
-  AttackData data;
-  getAttackData(data, defenderPos, defenderPos, weapon, true);
+void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
+  MeleeAttackData data(attacker, wpn, defender, eng);
 
-  //Print messages
-  printMeleeMessages(data, weapon);
+  printMeleeMessages(data, wpn);
   eng->renderer->drawMapAndInterface();
 
   if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
-    //Do damage
-    const bool DIED = data.currentDefender->hit(data.dmg, weapon->getDef().meleeDamageType);
+    const bool IS_DEFENDER_KILLED =
+      data.currentDefender->hit(data.dmg, wpn.getDef().meleeDmgType);
 
-    if(DIED == false) {
-      //Apply weapon status effects
-      data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(weapon, true);
+    if(IS_DEFENDER_KILLED == false) {
+      data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(wpn, true);
     }
-    //Blood
     if(data.attackResult >= successNormal) {
       if(data.currentDefender->getDef()->canBleed == true) {
-        eng->gore->makeBlood(defenderPos);
+        eng->gore->makeBlood(data.currentDefender->pos);
       }
     }
-
-    //Knock-back?
-    if(DIED == false) {
-      if(weapon->getDef().meleeCausesKnockBack) {
+    if(IS_DEFENDER_KILLED == false) {
+      if(wpn.getDef().meleeCausesKnockBack) {
         if(data.attackResult > successSmall) {
           eng->knockBack->tryKnockBack(data.currentDefender, data.attacker->pos, false);
         }
       }
     }
-
-    //If weapon not light, make a sound
-    const ItemDefinition& itemDef = weapon->getDef();
+    const ItemDefinition& itemDef = wpn.getDef();
     if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsic == false) {
-      eng->soundEmitter->emitSound(Sound("", true, defenderPos, false, true));
+      eng->soundEmitter->emitSound(Sound("", true, data.currentDefender->pos,
+                                         false, true));
     }
   }
 
@@ -60,12 +53,138 @@ void Attack::melee(const coord& defenderPos, Weapon* weapon) {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
     monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
   }
-
-  //Let next act
-  eng->gameTime->letNextAct();
+  eng->gameTime->endTurnOfCurrentActor();
 //  const bool IS_SWIFT_ATTACK = data.attacker == eng->player && data.currentDefender->deadState != actorDeadState_alive && has swift assailant;
 //  if(IS_SWIFT_ATTACK == false) {
-//    eng->gameTime->letNextAct();
+//    eng->gameTime->endTurnOfCurrentActor();
 //  }
 }
+
+void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) {
+  string otherName = "";
+
+//  if(data.isTargetEthereal == true) {
+//    if(data.isPlayerAttacking == true) {
+//      eng->log->addMessage("I hit nothing but void.");
+//    } else {
+//      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+//        otherName = data.attacker->getNameThe();
+//      } else {
+//        otherName = "its";
+//      }
+//
+//      eng->log->addMessage("I am unaffected by " + otherName + " attack.", clrWhite, messageInterrupt_force);
+//    }
+//  } else {
+  //----- ATTACK FUMBLE -----
+//    if(data.attackResult == failCritical) {
+//      if(data.isPlayerAttacking) {
+//        eng->log->addMessage("I fumble!");
+//      } else {
+//        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+//          otherName = data.attacker->getNameThe();
+//        } else {
+//          otherName = "It";
+//        }
+//        eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
+//      }
+//    }
+
+  //----- ATTACK MISS -------
+  if(/*data.attackResult > failCritical &&*/ data.attackResult <= failSmall) {
+    if(data.attacker == eng->player) {
+      if(data.attackResult == failSmall) {
+        eng->log->addMessage("I barely miss!");
+      } else if(data.attackResult == failNormal) {
+        eng->log->addMessage("I miss.");
+      } else if(data.attackResult == failBig) {
+        eng->log->addMessage("I miss completely.");
+      }
+    } else {
+      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+        otherName = data.attacker->getNameThe();
+      } else {
+        otherName = "It";
+      }
+      if(data.attackResult == failSmall) {
+        eng->log->addMessage(otherName + " barely misses me!", clrWhite, messageInterrupt_force);
+      } else if(data.attackResult == failNormal) {
+        eng->log->addMessage(otherName + " misses me.", clrWhite, messageInterrupt_force);
+      } else if(data.attackResult == failBig) {
+        eng->log->addMessage(otherName + " misses me completely.", clrWhite, messageInterrupt_force);
+      }
+    }
+  }
+
+  //----- ATTACK HIT -------- //----- ATTACK CRITICAL ---
+  if(data.attackResult >= successSmall) {
+    if(data.isDefenderDodging) {
+      if(data.attacker == eng->player) {
+        if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+          otherName = data.currentDefender->getNameThe();
+        } else {
+          otherName = "It ";
+        }
+        eng->log->addMessage(otherName + " dodges my attack.");
+      } else {
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+          otherName = data.attacker->getNameThe();
+        } else {
+          otherName = "It";
+        }
+        eng->log->addMessage("I dodge an attack from " + otherName + ".", clrMessageGood);
+      }
+    } else {
+      //Punctuation or exclamation marks depending on attack strength
+      string dmgPunctuation = ".";
+      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      if(MAX_DMG_ROLL >= 4) {
+        dmgPunctuation =
+          data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
+          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
+          dmgPunctuation;
+      }
+
+      if(data.attacker == eng->player) {
+        const string wpnVerb = wpn.getDef().meleeAttackMessages.player;
+
+        if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+          otherName = data.currentDefender->getNameThe();
+        } else {
+          otherName = "it";
+        }
+
+        if(data.isIntrinsicAttack) {
+          const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly" : "";
+          eng->log->addMessage(
+            "I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + dmgPunctuation,
+            clrMessageGood);
+        } else {
+          const string ATTACK_MOD_TEXT =
+            data.isWeakAttack  ? "feebly "    :
+            data.isBackstab    ? "covertly "  : "";
+          const SDL_Color clr = data.isBackstab ? clrBlueLgt : clrMessageGood;
+          const string wpnName_a = eng->itemData->getItemRef(wpn, itemRef_a, true);
+          eng->log->addMessage(
+            "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " +
+            wpnName_a + dmgPunctuation,
+            clr);
+        }
+      } else {
+        const string wpnVerb = wpn.getDef().meleeAttackMessages.other;
+
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+          otherName = data.attacker->getNameThe();
+        } else {
+          otherName = "It";
+        }
+
+        eng->log->addMessage(otherName + " " + wpnVerb + dmgPunctuation,
+                             clrMessageBad, messageInterrupt_force);
+      }
+    }
+  }
+//  }
+}
+
 

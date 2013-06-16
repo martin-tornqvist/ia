@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "ConstDungeonSettings.h"
+#include "CommonSettings.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -56,7 +56,7 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * acted, if this is a normal speed phase - consider it a global new turn; update
  * status effects, update timed features, spawn more monsters etc.
  */
-void GameTime::letNextAct() {
+void GameTime::endTurnOfCurrentActor() {
   runNewAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
@@ -127,7 +127,7 @@ void GameTime::letNextAct() {
     eng->input->clearEvents();
     eng->player->newTurn();
 
-    if(eng->player->getMth() >= 10) {
+    if(eng->player->getMth() >= 15) {
       eng->player->grantMthPower();
     }
 
@@ -176,6 +176,10 @@ void GameTime::runNewStandardTurnEvents() {
     //it has any active status effect.
     actor->getStatusEffectsHandler()->newTurnAllEffects(visionBlockingArray);
 
+    if(actor->deadState == actorDeadState_alive) {
+      actor->actorSpecificOnStandardTurn();
+    }
+
     //Delete dead, mangled actors
     if(actor->deadState == actorDeadState_mangled) {
       delete actor;
@@ -203,7 +207,7 @@ void GameTime::runNewStandardTurnEvents() {
 
   //Spawn more monsters? (If an unexplored cell is selected, the spawn is aborted)
   if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
-    const int SPAWN_N_TURN = 100;
+    const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       eng->populateMonsters->trySpawnDueToTimePassed();
     }

@@ -103,7 +103,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 
   lines.push_back(intToString(insanity_));
-  lines.push_back(intToString(static_cast<int>(shock_)));
+  lines.push_back(intToString(int(shock_)));
   lines.push_back(intToString(mth));
   lines.push_back(intToString(hp_));
   lines.push_back(intToString(hpMax_));
@@ -125,16 +125,19 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   const unsigned int NR_STATUS_EFFECTS = stringToInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    const StatusEffects_t id = static_cast<StatusEffects_t>(stringToInt(lines.front()));
+    const StatusEffects_t id =
+      static_cast<StatusEffects_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
     const int TURNS = stringToInt(lines.front());
     lines.erase(lines.begin());
-    statusEffectsHandler_->tryAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
+    StatusEffect* const effect =
+      statusEffectsHandler_->makeEffectFromId(id, TURNS);
+    statusEffectsHandler_->tryAddEffect(effect, true, true, true);
   }
 
   insanity_ = stringToInt(lines.front());
   lines.erase(lines.begin());
-  shock_ = static_cast<double>(stringToInt(lines.front()));
+  shock_ = double(stringToInt(lines.front()));
   lines.erase(lines.begin());
   mth = stringToInt(lines.front());
   lines.erase(lines.begin());
@@ -167,7 +170,8 @@ void Player::actorSpecific_hit(const int DMG) {
   //Hit aborts first aid
   if(firstAidTurnsLeft != -1) {
     firstAidTurnsLeft = -1;
-    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite, messageInterrupt_force);
+    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite,
+                         messageInterrupt_force);
   }
 
   if(insanityObsessions[insanityObsession_masochism]) {
@@ -206,14 +210,15 @@ int Player::getShockResistance() const {
 }
 
 void Player::incrShock(const int VAL) {
-  const double SHOCK_RES_DB = static_cast<double>(getShockResistance());
-  const double VAL_DB = static_cast<double>(VAL);
+  const double SHOCK_RES_DB = double(getShockResistance());
+  const double VAL_DB = double(VAL);
   const double VAL_AFTER_SHOCK_RES = (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
   shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
 }
 
 void Player::incrShock(const ShockValues_t shockValue) {
-  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(ability_resistStatusMind, true, *this);
+  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(
+                                 ability_resistStatusMind, true, *this);
 
   if(PLAYER_FORTITUDE < 99) {
     switch(shockValue) {
@@ -239,7 +244,8 @@ void Player::incrShock(const ShockValues_t shockValue) {
   }
 }
 
-void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED) {
+void Player::restoreShock(const int amountRestored,
+                          const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
   for(int i = 0; i < endOfInsanityObsessions; i++) {
@@ -248,7 +254,11 @@ void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RES
       break;
     }
   }
-  shock_ = max((isObsessionActive ? static_cast<double>(MIN_SHOCK_WHEN_OBSESSION) : 0.0), shock_ - amountRestored);
+  const double MIN_SHOCK_WHEN_OBSESSION_DB =
+    double(MIN_SHOCK_WHEN_OBSESSION);
+  shock_ = max(
+             (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
+             shock_ - amountRestored);
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
@@ -262,7 +272,7 @@ void Player::incrInsanity() {
 
   const int INS_INCR = 6;
 
-  if(eng->config->BOT_PLAYING == false) {
+  if(eng->config->isBotPlaying == false) {
     insanity_ += INS_INCR;
   }
 
@@ -274,7 +284,8 @@ void Player::incrInsanity() {
   eng->renderer->drawMapAndInterface();
 
   if(getInsanity() >= 100) {
-    popupMessage += "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
+    popupMessage +=
+      "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true, "Complete insanity!");
     die(true, false, false);
   } else {
@@ -611,7 +622,7 @@ void Player::updateColor() {
     return;
   }
 
-  const sf::Color clrFromStatusEffect = statusEffectsHandler_->getColor();
+  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
   if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
@@ -686,7 +697,7 @@ void Player::act() {
   //If obsessions are active, raise shock to a minimum level
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
     if(insanityObsessions[i] == true) {
-      shock_ = max(static_cast<double>(MIN_SHOCK_WHEN_OBSESSION), shock_);
+      shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
     }
   }
@@ -719,7 +730,7 @@ void Player::act() {
         {} break;
       }
       if(shockFromMonstersCurrentPlayerTurn < 3.0) {
-        incrShock(static_cast<int>(floor(monster->shockCausedCurrent)));
+        incrShock(int(floor(monster->shockCausedCurrent)));
         shockFromMonstersCurrentPlayerTurn += monster->shockCausedCurrent;
       }
     }
@@ -747,7 +758,7 @@ void Player::act() {
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
     incrInsanity();
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
     return;
   }
 
@@ -804,13 +815,14 @@ void Player::act() {
       }
     }
 
-    if(statusEffectsHandler_->allowSee() && statusEffectsHandler_->hasEffect(statusConfused) == false) {
+    if(
+      statusEffectsHandler_->allowSee() &&
+      statusEffectsHandler_->hasEffect(statusConfused) == false) {
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;
       int y1 = pos.y + 1;
 
-      //Look for secret doors and traps
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
           if(eng->map->playerVision[x][y]) {
@@ -846,12 +858,10 @@ void Player::act() {
         }
       }
 
-      //Any item in the inventory that can be identified?
       tryIdentifyItems();
     }
   }
 
-  //First aid?
   if(firstAidTurnsLeft == 0) {
     eng->log->clearLog();
     eng->log->addMessage("I finish applying first aid.");
@@ -866,14 +876,17 @@ void Player::act() {
   }
 
   if(firstAidTurnsLeft > 0) {
+    eng->renderer->drawMapAndInterface();
+    eng->sleep(DELAY_PLAYER_WAITING);
     firstAidTurnsLeft--;
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
-  //Waiting?
   if(waitTurnsLeft > 0) {
+    eng->renderer->drawMapAndInterface();
+    eng->sleep(DELAY_PLAYER_WAITING);
     waitTurnsLeft--;
-    eng->gameTime->letNextAct();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 
   //When this function ends, the system starts reading keys.
@@ -995,12 +1008,13 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       if(actorAtDest != NULL) {
         if(statusEffectsHandler_->allowAttackMelee(true) == true) {
           bool hasMeleeWeapon = false;
-          Weapon* weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
-          if(weapon != NULL) {
+          Item* const item = inventory_->getItemInSlot(slot_wielded);
+          if(item != NULL) {
+            Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getDef().isMeleeWeapon) {
-              if(eng->config->RANGED_WPN_MELEE_PROMPT && checkIfSeeActor(*actorAtDest, NULL)) {
+              if(eng->config->useRangedWpnMleeePrompt && checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getDef().isRangedWeapon) {
-                  const string wpnName = eng->itemData->getItemRef(weapon, itemRef_a);
+                  const string wpnName = eng->itemData->getItemRef(*weapon, itemRef_a);
                   eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng->renderer->drawMapAndInterface();
                   if(eng->query->yesOrNo() == false) {
@@ -1011,7 +1025,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
                 }
               }
               hasMeleeWeapon = true;
-              eng->attack->melee(dest, weapon);
+              eng->attack->melee(*this, *weapon, *actorAtDest);
               target = actorAtDest;
               return;
             }
@@ -1066,7 +1080,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
           string message = statusEffectsHandler_->allowSee() == false ? "I feel here: " : "I see here: ";
-          message += eng->itemData->getItemInterfaceRef(item, true);
+          message += eng->itemData->getItemInterfaceRef(*item, true);
           eng->log->addMessage(message + ".");
         }
       }
@@ -1081,7 +1095,7 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     //End turn (unless free turn due to bonus).
     if(pos == dest) {
       if(isFreeTurn == false) {
-        eng->gameTime->letNextAct();
+        eng->gameTime->endTurnOfCurrentActor();
         return;
       }
     }
@@ -1128,14 +1142,15 @@ void Player::kick(Actor& actorToKick) {
   } else {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
   }
-  eng->attack->melee(actorToKick.pos, kickWeapon);
+  eng->attack->melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
 }
 
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
-  Weapon* punchWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
-  eng->attack->melee(actorToPunch.pos, punchWeapon);
+  Weapon* punchWeapon = dynamic_cast<Weapon*>(
+                          eng->itemFactory->spawnItem(item_playerPunch));
+  eng->attack->melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
 
@@ -1220,7 +1235,7 @@ void Player::updateFov() {
     }
 
     int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeFloodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
+    eng->mapTests->floodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1257,16 +1272,21 @@ void Player::FOVhack() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(pos, visionBlockers, 9999);
 
-  bool moveBlocked[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, moveBlocked);
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(visionBlockers[x][y] && moveBlocked[x][y]) {
+      if(visionBlockers[x][y] && blockers[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if(eng->mapTests->isCellInsideMainScreen(coord(x + dx, y + dy))) {
-              if(eng->map->playerVision[x + dx][y + dy] == true && moveBlocked[x + dx][y + dy] == false) {
+            const coord adj(x + dx, y + dy);
+            if(eng->mapTests->isCellInsideMap(adj)) {
+              if(
+                eng->map->playerVision[adj.x][adj.y] &&
+                (eng->map->darkness[adj.x][adj.y] == false ||
+                 eng->map->light[adj.x][adj.y]) &&
+                blockers[adj.x][adj.y] == false) {
                 eng->map->playerVision[x][y] = true;
                 dx = 999;
                 dy = 999;

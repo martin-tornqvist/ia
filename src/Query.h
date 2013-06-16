@@ -1,7 +1,7 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 
@@ -17,8 +17,9 @@ public:
 
   void waitForEscOrSpace() const;
 
-  int number(const coord& cellToRenderAt, const sf::Color clr, const int MIN,
-             const int MAX_NR_DIGITS, const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT) const;
+  int number(const coord& pos, const SDL_Color clr, const int MIN,
+             const int MAX_NR_DIGITS, const int DEFAULT,
+             const bool CANCEL_RETURNS_DEFAULT) const;
 
 private:
 //  int readKeys() const;

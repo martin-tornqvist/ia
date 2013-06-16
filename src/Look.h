@@ -1,15 +1,7 @@
 #ifndef LOOK_H
 #define LOOK_H
 
-/*---------------------------------------------------------------------
- Purpose: Recieveing a coordinate from the marker, this class prints a
- monster/feature/item-line in the log-space. It can also a command from
- the marker to print a "pop-up" describing the thing in greater detail.
- Some of this information is auto-generated, by the Look class, i.e.
- text of the "It normally appears beneath depth 5"-variety.
- ------------------------------------------------------------------*/
-
-#include "ConstTypes.h"
+#include "CommonTypes.h"
 
 class Engine;
 class Actor;
@@ -52,16 +44,18 @@ public:
 		eng(engine) {
 	}
 
-	void markerAtCoord(const coord pos);
-	void printExtraActorDescription(const coord pos) const;
+	void markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
+                    const Item* const itemThrown);
+	void printExtraActorDescription(const coord& pos) const;
 
 private:
 	Entity entityDescribed;
 
-	void describeBriefActor(const Actor* const actor) const;
-	void describeBriefFeatureMob(const Feature* const feature) const;
-	void describeBriefFeatureStatic(const Feature* const feature) const;
-	void describeBriefItem(Item* const item) const;
+	void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask,
+                         const Item* const itemThrown) const;
+	void describeBriefFeatureMob(const Feature& feature) const;
+	void describeBriefFeatureStatic(const Feature& feature) const;
+	void describeBriefItem(const Item& item) const;
 
 	Entity getEntityToDescribe(const coord pos);
 

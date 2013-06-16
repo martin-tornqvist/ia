@@ -10,7 +10,7 @@ vector<coord> Pathfinder::findPath(const coord origin, bool blockingCells[MAP_X_
 	vector<coord> path;
 
 	int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
-	eng->mapTests->makeFloodFill(origin, blockingCells, floodValues, 1000, target);
+	eng->mapTests->floodFill(origin, blockingCells, floodValues, 1000, target);
 
 	bool pathExists = floodValues[target.x][target.y] != 0;
 

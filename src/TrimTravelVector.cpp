@@ -5,7 +5,7 @@
 vector<bool> TrimTravelVector::trimVector(const vector<coord>& path) {
 	vector<bool> elementsToUse;
 
-	const int PATH_SIZE = static_cast<int> (path.size());
+	const int PATH_SIZE = int (path.size());
 
 	elementsToUse.resize(PATH_SIZE);
 

@@ -16,17 +16,17 @@ public:
   }
 
   string getDescription(const bool DEFINITE_ARTICLE) const;
-  sf::Color getColor() const;
+  SDL_Color getColor() const;
   char getGlyph() const;
 
   Tile_t getFrontWallTile() const;
   Tile_t getTopWallTile() const;
 
   void setRandomNormalWall();
-  void setRandomIsSlimy();
+  void setRandomIsMossGrown();
 
   Wall_t wallType;
-  bool isSlimy;
+  bool isMossGrown;
 
   static bool isTileAnyWallFront(const Tile_t tile);
 

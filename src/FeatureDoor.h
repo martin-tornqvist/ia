@@ -33,7 +33,7 @@ public:
   bool isVisionPassable() const;
   bool isShootPassable() const;
   bool isSmokePassable() const;
-  sf::Color getColor() const;
+  SDL_Color getColor() const;
   char getGlyph() const;
   Tile_t getTile() const;
 
@@ -68,6 +68,13 @@ public:
   }
 
   virtual bool openFeature();
+
+  static bool isTileAnyDoor(const Tile_t tile) {
+    return
+      tile == tile_doorBroken ||
+      tile == tile_doorClosed ||
+      tile == tile_doorOpen;
+  }
 
 protected:
   friend class FeatureFactory;

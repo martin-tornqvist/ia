@@ -38,7 +38,7 @@ public:
 
   void insertActorInLoop(Actor* actor);
 
-  void letNextAct();
+  void endTurnOfCurrentActor();
 
   int getTurn() {
     return turn_;

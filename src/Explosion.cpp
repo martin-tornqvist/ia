@@ -11,63 +11,59 @@
 #include "Log.h"
 #include "Postmortem.h"
 
-void ExplosionMaker::renderExplosion(const BasicData* data, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
+void ExplosionMaker::renderExplosion(const BasicData* data,
+                                     bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
-  eng->renderer->clearWindow();
-  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
-  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0 + 1); x <= min(MAP_X_CELLS - 2, data->x1 - 1); x++) {
     for(int y = max(1, data->y0 + 1); y <= min(MAP_Y_CELLS - 2, data->y1 - 1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrYellow, true, clrBlack);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
+                                       clrYellow, true, clrBlack);
         }
       }
     }
   }
 
-  eng->renderer->updateWindow();
-  eng->sleep(eng->config->DELAY_EXPLOSION / 2);
-
-  eng->renderer->clearWindow();
-  screenTexture = eng->renderer->getScreenTextureCopy();
-  eng->renderer->drawScreenSizedTexture(screenTexture);
+  eng->renderer->updateScreen();
+  eng->sleep(eng->config->delayExplosion / 2);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
           if(x == data->x0 || x == data->x1 || y == data->y0 || y == data->y1) {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clrRedLight, true, clrBlack);
+            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
+                                         clrRedLgt, true, clrBlack);
           }
         }
       }
     }
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
-void ExplosionMaker::renderExplosionWithColorOverride(const BasicData* data, const sf::Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
+void ExplosionMaker::renderExplosionWithColorOverride(
+  const BasicData* data, const SDL_Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
-  eng->renderer->clearWindow();
-  sf::Texture screenTexture(eng->renderer->getScreenTextureCopy());
-  eng->renderer->drawScreenSizedTexture(screenTexture);
 
   for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
     for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y, clr, true, clrBlack);
+          eng->renderer->drawCharacter('*', renderArea_mainScreen,
+                                       x, y, clr, true, clrBlack);
         }
       }
     }
   }
-  eng->renderer->updateWindow();
+  eng->renderer->updateScreen();
 }
 
-void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
-                                  const bool OVERRIDE_EXPLOSION_RENDERING, const sf::Color colorOverride) {
+void ExplosionMaker::runExplosion(
+  const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
+  const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
   BasicData data(origin, width, height);
 
   //Set up explosion reach array
@@ -78,7 +74,8 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
 
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
-      reach[x][y] = eng->fov->checkOneCell(blockers, coord(x, y), origin, false) && !blockers[x][y];
+      reach[x][y] = eng->fov->checkOneCell(
+                      blockers, coord(x, y), origin, false) && !blockers[x][y];
     }
   }
   reach[origin.x][origin.y] = true;
@@ -90,23 +87,24 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
   }
 
   //Render
-  if(eng->config->USE_TILE_SET) {
+  if(eng->config->isTilesMode) {
     bool forbiddenRenderCells[MAP_X_CELLS][MAP_Y_CELLS];
     eng->basicUtils->resetBoolArray(forbiddenRenderCells, true);
     for(int y = 1; y < MAP_Y_CELLS - 2; y++) {
       for(int x = 1; x < MAP_X_CELLS - 2; x++) {
-        forbiddenRenderCells[x][y] = reach[x][y] == false || eng->map->playerVision[x][y] == false;
+        forbiddenRenderCells[x][y] = reach[x][y] == false ||
+                                     eng->map->playerVision[x][y] == false;
       }
     }
 
     if(OVERRIDE_EXPLOSION_RENDERING) {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
           forbiddenRenderCells, colorOverride, colorOverride,
-          eng->config->DELAY_EXPLOSION);
+          eng->config->delayExplosion);
     } else {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, clrYellow, clrRedLight,
-          eng->config->DELAY_EXPLOSION);
+          forbiddenRenderCells, clrYellow, clrRedLgt,
+          eng->config->delayExplosion);
     }
   } else {
     if(OVERRIDE_EXPLOSION_RENDERING) {
@@ -117,12 +115,12 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
   }
 
   //Delay before applying damage and effects
-  eng->sleep(eng->config->DELAY_EXPLOSION);
+//  eng->sleep(eng->config->delayExplosion);
 
   //Do damage, apply effect
-  const int EXPLOSION_DMG_ROLLS = 5;
-  const int EXPLOSION_DMG_SIDES = 6;
-  const int EXPLOSION_DMG_PLUS = 10;
+  const int DMG_ROLLS = 5;
+  const int DMG_SIDES = 6;
+  const int DMG_PLUS = 10;
   Actor* currentActor;
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
@@ -139,7 +137,8 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
 
       if(reach[x][y] == true) {
         const int CHEBY_DIST = eng->basicUtils->chebyshevDistance(origin.x, origin.y, x, y);
-        const int EXPLOSION_DMG_AT_DIST = eng->dice(EXPLOSION_DMG_ROLLS - CHEBY_DIST, EXPLOSION_DMG_SIDES) + EXPLOSION_DMG_PLUS;
+        const int EXPLOSION_DMG_AT_DIST =
+          eng->dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
 
         //Damage actor, or apply effect?
         const unsigned int SIZE_OF_ACTOR_LOOP = eng->gameTime->getLoopSize();
@@ -151,7 +150,7 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
               if(currentActor == eng->player) {
                 eng->log->addMessage("I am hit by an explosion!", clrMessageBad);
               }
-              currentActor->hit(EXPLOSION_DMG_AT_DIST, damageType_physical);
+              currentActor->hit(EXPLOSION_DMG_AT_DIST, dmgType_physical);
             }
 
             if(effect != NULL) {
@@ -167,7 +166,8 @@ void ExplosionMaker::runExplosion(const coord& origin, const bool DO_EXPLOSION_D
 
         if(DO_EXPLOSION_DMG == true) {
           if(eng->dice.percentile() < 55) {
-            eng->featureFactory->spawnFeatureAt(feature_smoke, coord(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
+            eng->featureFactory->spawnFeatureAt(
+              feature_smoke, coord(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
           }
         }
       }
@@ -199,7 +199,8 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       //As opposed to the explosion reach, the smoke explosion must not reach into walls and other solid objects
-      reach[x][y] = !blockers[x][y] && eng->fov->checkOneCell(blockers, coord(x, y), origin, false);
+      reach[x][y] = blockers[x][y] == false && eng->fov->checkOneCell(
+                      blockers, coord(x, y), origin, false);
     }
   }
   reach[origin.x][origin.y] = true;
@@ -207,7 +208,8 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       if(reach[x][y] == true) {
-        eng->featureFactory->spawnFeatureAt(feature_smoke, coord(x, y), new SmokeSpawnData(16 + eng->dice(1, 6)));
+        eng->featureFactory->spawnFeatureAt(
+          feature_smoke, coord(x, y), new SmokeSpawnData(16 + eng->dice(1, 6)));
       }
     }
   }
@@ -217,5 +219,5 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
   eng->renderer->drawMapAndInterface();
 
   //Delay
-  eng->sleep(eng->config->DELAY_EXPLOSION);
+  eng->sleep(eng->config->delayExplosion);
 }

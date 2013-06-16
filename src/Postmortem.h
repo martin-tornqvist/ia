@@ -19,17 +19,17 @@ public:
   void run(bool* const quitGame);
 
 private:
-  struct StringAndColor {
-    StringAndColor(const string str_, const sf::Color clr_) :
+  struct StringAndClr {
+    StringAndClr(const string str_, const SDL_Color clr_) :
       str(str_), clr(clr_) {
     }
-    StringAndColor() {
+    StringAndClr() {
     }
     string str;
-    sf::Color clr;
+    SDL_Color clr;
   };
 
-  vector<StringAndColor> postmortemLines;
+  vector<StringAndClr> postmortemLines;
 
   void readKeysMenu(bool* const quitGame);
 
