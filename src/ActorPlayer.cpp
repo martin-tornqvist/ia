@@ -125,11 +125,14 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   const unsigned int NR_STATUS_EFFECTS = stringToInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    const StatusEffects_t id = static_cast<StatusEffects_t>(stringToInt(lines.front()));
+    const StatusEffects_t id =
+      static_cast<StatusEffects_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
     const int TURNS = stringToInt(lines.front());
     lines.erase(lines.begin());
-    statusEffectsHandler_->tryAddEffect(statusEffectsHandler_->makeEffectFromId(id, TURNS), true, true);
+    StatusEffect* const effect =
+      statusEffectsHandler_->makeEffectFromId(id, TURNS);
+    statusEffectsHandler_->tryAddEffect(effect, true, true, true);
   }
 
   insanity_ = stringToInt(lines.front());

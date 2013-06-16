@@ -1827,7 +1827,8 @@ public:
   }
 
   void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false,
-                    const bool NO_MESSAGES = false);
+                    const bool NO_MESSAGES = false,
+                    const bool DISABLE_REDRAW = false);
 
   void tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE);
 

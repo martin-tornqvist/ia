@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1371303805 c:\dev\ia\src\statuseffects.h
+1371389289 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"CommonTypes.h"
@@ -436,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1371373936 source:c:\dev\ia\src\actorplayer.cpp
+1371389447 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1663,7 +1663,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1371303559 source:c:\dev\ia\src\statuseffects.cpp
+1371389360 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1752,7 +1752,7 @@
 
 1355674112 c:\dev\ia\src\declares.h
 
-1371338490 source:c:\dev\ia\src\config.cpp
+1371388070 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>

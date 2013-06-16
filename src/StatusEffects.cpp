@@ -333,7 +333,10 @@ bool StatusEffectsHandler::allowSee() {
   return true;
 }
 
-void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT, const bool NO_MESSAGES) {
+void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
+                                        const bool FORCE_EFFECT,
+                                        const bool NO_MESSAGES,
+                                        const bool DISABLE_REDRAW) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -414,10 +417,12 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect, const bool F
     effects.push_back(effect);
     effect->start(eng);
 
-    if(effect->isPlayerVisualUpdateNeededWhenStartOrEnd()) {
-      effect->owningActor->updateColor();
-      eng->player->updateFov();
-      eng->renderer->drawMapAndInterface();
+    if(DISABLE_REDRAW == false) {
+      if(effect->isPlayerVisualUpdateNeededWhenStartOrEnd()) {
+        effect->owningActor->updateColor();
+        eng->player->updateFov();
+        eng->renderer->drawMapAndInterface();
+      }
     }
 
     if(OWNER_IS_PLAYER) {
