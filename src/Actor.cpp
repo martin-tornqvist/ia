@@ -316,7 +316,8 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   }
 }
 
-void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS) {
+void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
+                const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
   for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
     Actor* const actor = eng->gameTime->getActorAt(i);
@@ -359,32 +360,15 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
   }
 
   //If mangled because of damage, or if a monster died on a visible trap, gib the corpse.
-  deadState = (MANGLED || (diedOnVisibleTrap && this != eng->player)) ? actorDeadState_mangled : actorDeadState_corpse;
+  deadState =
+    (IS_MANGLED || (diedOnVisibleTrap && this != eng->player)) ?
+    actorDeadState_mangled : actorDeadState_corpse;
 
   if(ALLOW_DROP_ITEMS) {
     eng->itemDrop->dropAllCharactersItems(this, true);
   }
 
-  if(MANGLED == false) {
-    coord newCoord;
-    Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
-    //TODO this should be decided with a floodfill instead
-    if(featureHere->canHaveCorpse() == false) {
-      for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
-          newCoord = pos + coord(dx, dy);
-          featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-          if(featureHere->canHaveCorpse() == true) {
-            pos.set(newCoord);
-            dx = 9999;
-            dy = 9999;
-          }
-        }
-      }
-    }
-    glyph_ = '&';
-    tile_ = tile_corpse2;
-  } else {
+  if(IS_MANGLED) {
     glyph_ = ' ';
     tile_ = tile_empty;
     if(isHumanoid() == true) {
@@ -392,6 +376,27 @@ void Actor::die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP
         eng->gore->makeGore(pos);
       }
     }
+  } else {
+    if(this != eng->player) {
+      coord newCoord;
+      Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
+      //TODO this should be decided with a floodfill instead
+      if(featureHere->canHaveCorpse() == false) {
+        for(int dx = -1; dx <= 1; dx++) {
+          for(int dy = -1; dy <= 1; dy++) {
+            newCoord = pos + coord(dx, dy);
+            featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+            if(featureHere->canHaveCorpse()) {
+              pos.set(newCoord);
+              dx = 9999;
+              dy = 9999;
+            }
+          }
+        }
+      }
+    }
+    glyph_ = '&';
+    tile_ = tile_corpse2;
   }
 
   clr_ = clrRedLgt;

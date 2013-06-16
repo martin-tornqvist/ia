@@ -989,7 +989,7 @@ void ActorData::defineAllActors() {
   d.glyph = 'r';
   d.color = clrBrown;
   d.tile = tile_ratThing;
-  d.spawnMinLevel = 1;
+  d.spawnMinLevel = 2;
   d.spawnMaxLevel = d.spawnMinLevel + 5;
   d.monsterLvl = 1;
   d.canSeeInDarkness = true;
@@ -1655,7 +1655,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.erraticMovement = actorErratic_somewhat;
-  d.abilityVals.setVal(ability_stealth, 100);
+  d.abilityVals.setVal(ability_stealth, 90);
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);

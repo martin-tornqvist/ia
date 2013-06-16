@@ -34,7 +34,7 @@
 
 1371153565 c:\dev\ia\src\art.h
 
-1371303433 c:\dev\ia\src\actor.h
+1371377225 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"CommonTypes.h"
@@ -142,7 +142,7 @@
 	"Engine.h"
 	<math.h>
 
-1371153565 source:c:\dev\ia\src\actor.cpp
+1371377290 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -349,7 +349,7 @@
 	<string>
 	"Item.h"
 
-1371302612 source:c:\dev\ia\src\actordata.cpp
+1371378949 source:c:\dev\ia\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -436,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1371153565 source:c:\dev\ia\src\actorplayer.cpp
+1371373936 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -644,7 +644,7 @@
 	<vector>
 	"CommonTypes.h"
 
-1371305371 source:c:\dev\ia\src\characterinfo.cpp
+1371376621 source:c:\dev\ia\src\characterinfo.cpp
 	"CharacterInfo.h"
 	"Engine.h"
 	"PlayerBonuses.h"
@@ -1294,7 +1294,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1371153566 source:c:\dev\ia\src\look.cpp
+1371378109 source:c:\dev\ia\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -1310,7 +1310,7 @@
 	"Inventory.h"
 	"Attack.h"
 
-1371153566 source:c:\dev\ia\src\mainmenu.cpp
+1371319604 source:c:\dev\ia\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -1754,7 +1754,7 @@
 
 1355674112 c:\dev\ia\src\declares.h
 
-1371299042 source:c:\dev\ia\src\config.cpp
+1371338490 source:c:\dev\ia\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>

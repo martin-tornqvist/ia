@@ -25,8 +25,11 @@ Entity::Entity(FeatureStatic* feature_) :
 
 void Look::markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
                          const Item* const itemThrown) {
+
+  const bool IS_VISION = eng->map->playerVision[pos.x][pos.y];
+
   eng->log->clearLog();
-  if(eng->map->playerVision[pos.x][pos.y] == true) {
+  if(IS_VISION) {
     eng->log->addMessage("I see here:");
 
     entityDescribed = getEntityToDescribe(pos);
@@ -49,9 +52,17 @@ void Look::markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
 
   if(pos != eng->player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
-      eng->log->addMessage("| f to fire");
+      if(IS_VISION) {
+        eng->log->addMessage("| f to fire");
+      } else {
+        eng->log->addMessage("f to fire");
+      }
     } else   if(markerTask == markerTask_aimThrownWeapon) {
-      eng->log->addMessage("| t to throw");
+      if(IS_VISION) {
+        eng->log->addMessage("| f to throw");
+      } else {
+        eng->log->addMessage("f to throw");
+      }
     }
   }
 }

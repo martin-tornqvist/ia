@@ -436,22 +436,13 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     case 10: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
-      if(NR != -1) {
-        delayProjectileDraw = NR;
-      }
-    } break;
-
-    case 11: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrNosferatuTealLgt, 1, 3, delayShotgun, true);
       if(NR != -1) {
         delayShotgun = NR;
       }
     } break;
 
-    case 12: {
+    case 11: {
       const int NR = eng->query->number(
                        coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
                        clrNosferatuTealLgt, 1, 3, delayExplosion, true);
@@ -460,7 +451,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 13: {
+    case 12: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();

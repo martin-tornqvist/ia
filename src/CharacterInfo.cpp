@@ -70,6 +70,7 @@ void CharacterInfo::makeLines() {
                     punchStr, clrText));
   lines.push_back(StringAndClr(" ", clrText));
 
+
   lines.push_back(StringAndClr("Resistance to status effects", clrHeader));
   const int STATUS_RES_PHYSICAL =
     min(100, abilities.getVal(ability_resistStatusBody, true, *(eng->player)));
@@ -82,6 +83,14 @@ void CharacterInfo::makeLines() {
                     offset + "Mental          : " +
                     intToString(STATUS_RES_MENTAL) + "%", clrText));
   lines.push_back(StringAndClr(" ", clrText));
+
+
+  const int SHOCK_RESISTANCE = eng->player->getShockResistance();
+  lines.push_back(StringAndClr(
+                    "Shock resistance : " +
+                    intToString(SHOCK_RESISTANCE) + "%", clrHeader));
+  lines.push_back(StringAndClr(" ", clrText));
+
 
   lines.push_back(StringAndClr("Mythos knowledge effects", clrHeader));
   const int MTH = eng->player->getMth();
@@ -99,14 +108,8 @@ void CharacterInfo::makeLines() {
                       "% chance to cast spells",
                       clrText));
   }
-
   lines.push_back(StringAndClr(" ", clrText));
 
-  const int SHOCK_RESISTANCE = eng->player->getShockResistance();
-  lines.push_back(StringAndClr(
-                    "Shock resistance : " +
-                    intToString(SHOCK_RESISTANCE) + "%", clrHeader));
-  lines.push_back(StringAndClr(" ", clrText));
 
   lines.push_back(StringAndClr("Mental conditions", clrHeader));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
@@ -136,6 +139,7 @@ void CharacterInfo::makeLines() {
   }
   lines.push_back(StringAndClr(" ", clrText));
 
+
   lines.push_back(StringAndClr("Abilities gained", clrHeader));
   string abilitiesLine = "";
   bool isAnyBonusPicked = false;
@@ -155,6 +159,7 @@ void CharacterInfo::makeLines() {
     lines.push_back(StringAndClr(offset + "None", clrText));
   }
   lines.push_back(StringAndClr(" ", clrText));
+
 
   lines.push_back(StringAndClr("Potion knowledge", clrHeader));
   vector<StringAndClr> potionList;
@@ -189,6 +194,7 @@ void CharacterInfo::makeLines() {
     }
   }
   lines.push_back(StringAndClr(" ", clrText));
+
 
   lines.push_back(StringAndClr("Manuscript knowledge", clrHeader));
   if(manuscriptList.size() == 0) {

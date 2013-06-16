@@ -45,7 +45,7 @@ public:
   bool restoreHP(int hpRestored, const bool ALLOW_MESSAGE = true);
   void changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES);
 
-  void die(const bool MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
+  void die(const bool IS_MANGLED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
 
   void newTurn();
 
