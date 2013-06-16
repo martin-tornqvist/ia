@@ -1,4 +1,51 @@
 --------------------------------------------------------------
+v14.1 (June 16, 2013)
+--------------------------------------------------------------
+Miscellaneous
+* Using SDL for rendering/input again (it seems more compatible with a wider range of systems, and has fewer/no external library dependencies)
+* Dark areas now have less permissive field of view for spotting walls, previously it was easy to explore the walls in dark areas, whereas now you need to be adjacent to it - for a more atmospheric and oppressive feeling
+* “Slimy” walls are now “Moss-grown” walls instead
+* Added 15 more quotes to the main menu
+
+New content and features
+* Hit chance with ranged weapons is now affected by the size, speed and proximity of the target creature
+* While aiming, you are informed what you are looking at, and hit chances are shown when aiming at monsters
+* Monsters now avoid shooting each other (though there is still a small chance that it happens)
+
+Balancing
+* You no longer pick an ability when creating a new character
+* The monster spawn rate on explored levels (spawning due to passage of time) is now lower
+* The “Self-aware” bonus now has “Observant” as an additional prerequisite
+* You now gain the mythos spell at 15% MTH instead of 10%
+* Raised max character level from 21 to 30
+* Greatly reduced duration of confusion caused by knockback
+* Oozes now regenerate HP each standard turn instead of on their own turn (since these monsters are very slow, their regeneration occurred in bursts, which seemed erratic and unpredictable)
+* Clear Oozes are somewhat easier to spot
+
+Usability
+* Floor cells lit by an Electric lantern, flare, burning creature, etc are now marked with yellow color
+* The menu for picking a new ability also shows previously picked abilities
+* The postmortem info shows gained abilities
+* Renamed the manual to a .txt file, and removed all special formatting symbols from it - it should now be conveniently readable externally
+* Changed texts in some screens (e.g. “Enter character name” -> “What is your name?”)
+* Changed equipment screen command (wear, wield) from ‘v’ to ‘w’ (more traditional/intuitive key)
+* Added a small delay per turn when waiting/healing/fainted/paralyzed
+* Changed the “Kick/bash in what direction?” message to simply “Which direction?”, and vice versa for other actions
+* Options for setting keyboard repeat delay and interval
+
+Graphics
+* Made layout changes to the main menu
+* Made some changes to the wall tiles
+* Changed the general color theme in the game - the “blood red” style has been changed to a teal style (inspired by how certain old black and white movies were tinted, e.g. Nosferatu)
+* Added option to scale the font to 2x size (so you can for example use the small DOS-like font scaled up to a nice readable size) - if tiles mode is enabled, the scaled font must match the tile size
+* Fullscreen can be toggled in the options menu, or by pressing alt-enter (fullscreen mode is highly experimental, it may or may not work for you)
+
+Bug fixes
+* Corrected a spelling error in an ability description
+* Corrected a misplaced word in a monster description
+
+
+--------------------------------------------------------------
 v14.0 (April 23, 2013)
 --------------------------------------------------------------
 New content and features
