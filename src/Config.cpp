@@ -14,7 +14,7 @@
 using namespace std;
 
 Config::Config(Engine* engine) :
-  GAME_VERSION("v14.0.2"),
+  GAME_VERSION("v14.1"),
   TILES_IMAGE_NAME("images/gfx_16x24.png"),
   MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.png"),
   fontImageName(""),
