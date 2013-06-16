@@ -20,7 +20,7 @@ release : _CFLAGS=-O2
 
 #Flags
 CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-LDFLAGS=$(shell sdl-config --libs)
+LDFLAGS=$(shell sdl-config --libs) -lSDL_image
 
 # Output and sources
 EXECUTABLE=ia
@@ -51,12 +51,6 @@ $(EXECUTABLE): $(OBJECTS_STAMP_FILE)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
-
-
-#	$(MKDIR) $(TARGET_DIR)/$(SDL_LIB_DIR)
-#	$(CP) $(SDL_LIB_DIR)/* $(TARGET_DIR)/$(SDL_LIB_DIR)
-#	echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(SDL_LIB_DIR) ./$(EXECUTABLE)" > $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
-#	chmod 777 $(TARGET_DIR)/$(RUN_GAME_SCRIPT)
 
 .PHONY: $(OBJECTS_STAMP_FILE)
 $(OBJECTS_STAMP_FILE): $(SOURCES)
