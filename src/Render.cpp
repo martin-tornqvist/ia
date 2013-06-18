@@ -7,7 +7,7 @@
 
 #include "Engine.h"
 #include "Item.h"
-#include "Interface.h"
+#include "CharacterLines.h"
 #include "Marker.h"
 #include "Map.h"
 #include "ActorPlayer.h"
@@ -16,6 +16,7 @@
 #include "Attack.h"
 #include "FeatureWall.h"
 #include "FeatureDoor.h"
+#include "Inventory.h"
 
 using namespace std;
 
@@ -634,8 +635,8 @@ void Renderer::drawMapAndInterface(const bool UPDATE_SCREEN) {
     drawAscii();
   }
 
-  eng->interfaceRenderer->drawInfoLines();
-  eng->interfaceRenderer->drawLocationInfo();
+  eng->characterLines->drawInfoLines();
+  eng->characterLines->drawLocationInfo();
   eng->log->drawLog();
 
   if(UPDATE_SCREEN) {

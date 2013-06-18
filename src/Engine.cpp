@@ -22,7 +22,7 @@
 #include "Blood.h"
 #include "Bot.h"
 #include "BresenhamLine.h"
-#include "CharacterInfo.h"
+#include "CharacterDescr.h"
 #include "Close.h"
 #include "Credits.h"
 #include "DebugModeStatPrinter.h"
@@ -38,7 +38,7 @@
 #include "GameTime.h"
 #include "Gods.h"
 #include "Highscore.h"
-#include "Interface.h"
+#include "CharacterLines.h"
 #include "Input.h"
 #include "InventoryHandler.h"
 #include "InventoryIndexes.h"
@@ -144,7 +144,7 @@ void Engine::initGame() {
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   marker = new Marker(this);
-  log = new MessageLog(this);
+  log = new Log(this);
   pathfinder = new Pathfinder(this);
   fov = new Fov(this);
   mapBuild = new MapBuild(this);
@@ -161,7 +161,7 @@ void Engine::initGame() {
   itemDrop = new ItemDrop(this);
   itemPickup = new ItemPickup(this);
   attack = new Attack(this);
-  interfaceRenderer = new Interface(this);
+  characterLines = new CharacterLines(this);
   gameTime = new GameTime(this);
   mainMenu = new MainMenu(this);
   bot = new Bot(this);
@@ -199,7 +199,7 @@ void Engine::initGame() {
   playerPowersHandler = new PlayerPowersHandler(this);
   knockBack = new KnockBack(this);
   examine = new Examine(this);
-  characterInfo = new CharacterInfo(this);
+  characterDescr = new CharacterDescr(this);
   roomThemeMaker = new RoomThemeMaker(this);
   debugModeStatPrinter = new DebugModeStatPrinter(this);
   disarm = new Disarm(this);
@@ -235,7 +235,7 @@ void Engine::cleanupGame() {
   delete itemPickup;
   delete inventoryHandler;
   delete attack;
-  delete interfaceRenderer;
+  delete characterLines;
   delete gameTime;
   delete mainMenu;
   delete itemFactory;
@@ -278,7 +278,7 @@ void Engine::cleanupGame() {
   delete playerPowersHandler;
   delete knockBack;
   delete examine;
-  delete characterInfo;
+  delete characterDescr;
   delete roomThemeMaker;
   delete debugModeStatPrinter;
   delete disarm;

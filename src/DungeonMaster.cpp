@@ -6,7 +6,7 @@
 #include "Render.h"
 #include "Query.h"
 #include "ActorPlayer.h"
-#include "Interface.h"
+#include "CharacterLines.h"
 #include "Log.h"
 #include "PlayerAllocBonus.h"
 

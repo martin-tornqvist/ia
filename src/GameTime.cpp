@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"

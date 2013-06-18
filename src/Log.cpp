@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void MessageLog::clearLog() {
+void Log::clearLog() {
   if(line.empty() == false) {
 
     history.push_back(line);
@@ -25,7 +25,7 @@ void MessageLog::clearLog() {
   }
 }
 
-void MessageLog::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
+void Log::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
   SDL_Color clr;
   string str;
   int drawXpos;
@@ -46,11 +46,11 @@ void MessageLog::drawLine(const vector<Message>& lineToDraw, const int yCell) co
   }
 }
 
-void MessageLog::drawLog() const {
+void Log::drawLog() const {
   drawLine(line, 0);
 }
 
-void MessageLog::displayHistory() {
+void Log::displayHistory() {
   clearLog();
 
   eng->renderer->clearScreen();
@@ -107,7 +107,7 @@ void MessageLog::displayHistory() {
   eng->renderer->drawMapAndInterface();
 }
 
-void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) const {
+void Log::drawHistoryInterface(const int topLine, const int bottomLine) const {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
   eng->renderer->coverRenderArea(renderArea_log);
@@ -120,11 +120,13 @@ void MessageLog::drawHistoryInterface(const int topLine, const int bottomLine) c
       + intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
   }
 
-  eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(
+    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+  eng->renderer->drawText(
+    " 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
-int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int messageNr) const {
+int Log::findCurXpos(const vector<Message>& afterLine, const unsigned int messageNr) const {
   if(messageNr == 0) {
     return 0;
   }
@@ -153,7 +155,7 @@ int MessageLog::findCurXpos(const vector<Message>& afterLine, const unsigned int
   return xPos;
 }
 
-void MessageLog::addMessage(const string& text, const SDL_Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
+void Log::addMessage(const string& text, const SDL_Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
   bool repeated = false;
 
   //New message equal to previous?

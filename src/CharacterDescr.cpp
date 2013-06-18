@@ -1,4 +1,4 @@
-#include "CharacterInfo.h"
+#include "CharacterDescr.h"
 
 #include "Engine.h"
 #include "PlayerBonuses.h"
@@ -12,7 +12,7 @@
 #include "Item.h"
 #include "ItemWeapon.h"
 
-void CharacterInfo::makeLines() {
+void CharacterDescr::makeLines() {
   lines.resize(0);
 
   const string offset = " ";
@@ -209,14 +209,14 @@ void CharacterInfo::makeLines() {
 
 }
 
-void CharacterInfo::drawInterface() {
+void CharacterDescr::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
   eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
   eng->renderer->drawText(
     decorationLine, renderArea_screen, 1, 1, clrWhite);
   eng->renderer->drawText(
-    " Displaying character info ", renderArea_screen, 3, 1, clrWhite);
+    " Displaying character description ", renderArea_screen, 3, 1, clrWhite);
   eng->renderer->drawText(
     decorationLine, renderArea_characterLines, 1, 1, clrWhite);
   eng->renderer->drawText(
@@ -224,7 +224,7 @@ void CharacterInfo::drawInterface() {
     renderArea_characterLines, 3, 1, clrWhite);
 }
 
-void CharacterInfo::run() {
+void CharacterDescr::run() {
   makeLines();
 
   eng->renderer->coverRenderArea(renderArea_screen);

@@ -1,5 +1,5 @@
-#ifndef COMMON_SETTINGS_H
-#define COMMON_SETTINGS_H
+#ifndef COMMON_DATA_H
+#define COMMON_DATA_H
 
 const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
 

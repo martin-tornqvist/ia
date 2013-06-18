@@ -11,55 +11,56 @@ class FeatureStatic;
 class Feature;
 
 enum EntityType_t {
-	entityType_actor, entityType_item, entityType_featureStatic, entityType_featureMob
+  entityType_actor, entityType_item, entityType_featureStatic,
+  entityType_featureMob
 };
 
 struct Entity {
 public:
-	Entity() :
-		actor(NULL), item(NULL), feature(NULL), entityType(entityType_featureStatic) {
-	}
+  Entity() :
+    actor(NULL), item(NULL), feature(NULL),
+    entityType(entityType_featureStatic) {}
 
-	Entity(Actor* actor_) :
-		actor(actor_), entityType(entityType_actor) {
-	}
+  Entity(Actor* actor_) :
+    actor(actor_), entityType(entityType_actor) {
+  }
 
-	Entity(Item* item_) :
-		item(item_), entityType(entityType_item) {
-	}
+  Entity(Item* item_) :
+    item(item_), entityType(entityType_item) {
+  }
 
-	Entity(FeatureMob* feature_);
-	Entity(FeatureStatic* feature_);
+  Entity(FeatureMob* feature_);
+  Entity(FeatureStatic* feature_);
 
-	const Actor* actor;
-	Item* item;
-	const Feature* feature;
+  const Actor* actor;
+  Item* item;
+  const Feature* feature;
 
-	EntityType_t entityType;
+  EntityType_t entityType;
 };
 
 class Look {
 public:
-	Look(Engine* engine) :
-		eng(engine) {
-	}
+  Look(Engine* engine) :
+    eng(engine) {
+  }
 
-	void markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
-                    const Item* const itemThrown);
-	void printExtraActorDescription(const coord& pos) const;
+  void markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
+                     const Item* const itemThrown);
+  void printExtraActorDescription(const coord& pos) const;
 
 private:
-	Entity entityDescribed;
+  Entity entityDescribed;
 
-	void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask,
-                         const Item* const itemThrown) const;
-	void describeBriefFeatureMob(const Feature& feature) const;
-	void describeBriefFeatureStatic(const Feature& feature) const;
-	void describeBriefItem(const Item& item) const;
+  void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask,
+                          const Item* const itemThrown) const;
+  void describeBriefFeatureMob(const Feature& feature) const;
+  void describeBriefFeatureStatic(const Feature& feature) const;
+  void describeBriefItem(const Item& item) const;
 
-	Entity getEntityToDescribe(const coord pos);
+  Entity getEntityToDescribe(const coord pos);
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

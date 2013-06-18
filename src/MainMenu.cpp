@@ -228,7 +228,6 @@ string MainMenu::getHplQuote() {
   quotes.push_back("Disintegration is quite painless, I assure you.");
   quotes.push_back("I am writing this under an appreciable mental strain, since by tonight I shall be no more...");
   quotes.push_back("The end is near. I hear a noise at the door, as of some immense slippery body lumbering against it. It shall not find me...");
-  quotes.push_back("In broad daylight, and at most seasons I am apt to think the greater part of it a mere dream; but sometimes in the autumn, about two in the morning when winds and animals howl dismally, there comes from inconceivable depths below a damnable suggestions of rhythmical throbbing ... and I feel that the transition of Juan Romero was a terrible one indeed...");
   quotes.push_back("Sometimes I believe that this less material life is our truer life, and that our vain presence on the terraqueous globe is itself the secondary or merely virtual phenomenon.");
   quotes.push_back("Life is a hideous thing, and from the background behind what we know of it peer daemoniacal hints of truth which make it sometimes a thousandfold more hideous.");
   quotes.push_back("Science, already oppressive with its shocking revelations, will perhaps be the ultimate exterminator of our human species, if separate species we be, for its reserve of unguessed horrors could never be borne by mortal brains if loosed upon the world....");
@@ -266,7 +265,7 @@ string MainMenu::getHplQuote() {
   quotes.push_back("I felt myself on the edge of the world; peering over the rim into a fathomless chaos of eternal night.");
   quotes.push_back("And where Nyarlathotep went, rest vanished, for the small hours were rent with the screams of nightmare.");
   quotes.push_back("It was just a colour out of space - a frightful messenger from unformed realms of infinity beyond all Nature as we know it; from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes.");
-  quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed Its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness. … The Thing cannot be described—there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
+  quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness. The Thing cannot be described - there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
   quotes.push_back("I could tell I was at the gateway of a region half-bewitched through the piling-up of unbroken time-accumulations; a region where old, strange things have had a chance to grow and linger because they have never been stirred up.");
   return "\"" + quotes.at(eng->dice.getInRange(0, quotes.size() - 1)) + "\"";
 }

@@ -4,7 +4,7 @@
 
 #include "ActorData.h"
 
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 #include "Converters.h"
 #include "Item.h"
 #include "Engine.h"

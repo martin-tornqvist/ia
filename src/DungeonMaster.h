@@ -4,7 +4,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 #include "AbilityValues.h"
 #include "Colors.h"
 #include "Converters.h"
@@ -16,38 +16,25 @@ class Engine;
 class DungeonMaster
 {
 public:
-  DungeonMaster(Engine* engine) : eng(engine) {
-    init();
-  }
-  ~DungeonMaster() {
-  }
+  DungeonMaster(Engine* engine) : eng(engine) {init();}
+  ~DungeonMaster() {}
 
-  int getXp() const {
-    return playerExp;
-  }
-
-  int getLevel() const {
-    return playerLvl;
-  }
-
-  int getXpToNextLvl() const {
-    return expTable[playerLvl];
-  }
-
-  int getXpToNextLvlAtLvl(int lvl) const {
-    return expTable[lvl];
-  }
+  inline int getXp()                      const {return playerExp;}
+  inline int getLevel()                   const {return playerLvl;}
+  inline int getXpToNextLvl()             const {return expTable[playerLvl];}
+  inline int getXpToNextLvlAtLvl(int lvl) const {return expTable[lvl];}
 
   void monsterKilled(Actor* monster);
 
   void playerGainsExp(int exp);
 
   void playerGainsXpPercent(const int PERCENT, const int PLUS_XP) {
-    const int XP_GAINED = PLUS_XP + int((float(PERCENT) / 100) * float(playerExp));
+    const int XP_GAINED =
+      PLUS_XP + int((float(PERCENT) / 100) * float(playerExp));
     playerGainsExp(XP_GAINED);
   }
 
-  void playerLoseXpPercent(const int PERCENT) {
+  inline void playerLoseXpPercent(const int PERCENT) {
     playerExp = int((float(100 - PERCENT) / 100) * float(playerExp));
   }
 
@@ -56,9 +43,7 @@ public:
 
   void winGame();
 
-  TimeData getTimeStarted() const {
-    return timeStarted;
-  }
+  TimeData getTimeStarted() const {return timeStarted;}
   void setTimeStartedToNow();
 
 private:

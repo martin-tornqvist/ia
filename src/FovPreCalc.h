@@ -4,8 +4,8 @@
 #include <vector>
 #include <iostream>
 
+#include "CommonData.h"
 #include "CommonTypes.h"
-#include "CommonSettings.h"
 
 using namespace std;
 

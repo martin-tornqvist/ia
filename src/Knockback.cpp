@@ -39,7 +39,8 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
           if(i == 0) {
             if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
               if(DEFENDER_IS_MONSTER) {
-                eng->log->addMessage(defender->getNameThe() + " is knocked back!");
+                eng->log->addMessage(
+                  defender->getNameThe() + " is knocked back!");
               } else {
                 eng->log->addMessage("I am knocked back!");
               }
@@ -58,17 +59,23 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {
-              eng->log->addMessage(defender->getNameThe() + " plummets down the depths.", clrMessageGood);
+              eng->log->addMessage(
+                defender->getNameThe() + " plummets down the depths.", clrMessageGood);
             } else {
-              eng->log->addMessage("I plummet down the depths!", clrMessageBad);
+              eng->log->addMessage(
+                "I plummet down the depths!", clrMessageBad);
             }
             defender->die(true, false, false);
             return;
           }
 
-          // Bump features on the way (so for example monsters can be knocked back into traps)
-          vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(defender->pos);
-          for(unsigned int featureMobIndex = 0; featureMobIndex < featureMobs.size(); featureMobIndex++) {
+          // Bump features (e.g. so monsters can be knocked back into traps)
+          vector<FeatureMob*> featureMobs =
+            eng->gameTime->getFeatureMobsAtPos(defender->pos);
+          for(
+            unsigned int featureMobIndex = 0;
+            featureMobIndex < featureMobs.size();
+            featureMobIndex++) {
             featureMobs.at(featureMobIndex)->bump(defender);
           }
 

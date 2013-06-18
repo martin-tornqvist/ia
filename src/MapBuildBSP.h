@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 #include "FeatureData.h"
 #include "FeatureDoor.h"

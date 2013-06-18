@@ -11,7 +11,7 @@
 #include "GameTime.h"
 #include "ActorFactory.h"
 #include "Render.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 #include "Map.h"
 #include "Blood.h"
 #include "FeatureFactory.h"

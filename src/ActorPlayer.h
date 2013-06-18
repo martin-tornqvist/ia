@@ -4,7 +4,7 @@
 #include <math.h>
 
 #include "Actor.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
@@ -94,7 +94,7 @@ public:
 private:
   friend class DungeonMaster;
   friend class GameTime;
-  friend class MessageLog;
+  friend class Log;
 
   void incrInsanity();
   void tryIdentifyItems();

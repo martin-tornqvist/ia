@@ -18,7 +18,7 @@
 #include "DungeonMaster.h"
 #include "PlayerPowersHandler.h"
 #include "Manual.h"
-#include "CharacterInfo.h"
+#include "CharacterDescr.h"
 #include "Query.h"
 #include "SaveHandler.h"
 #include "ItemFactory.h"
@@ -473,7 +473,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
   //----------------------------------------CHARACTER INFO
   else if(d.key_ == '@') {
-    eng->characterInfo->run();
+    eng->characterDescr->run();
     clearEvents();
     return;
   }
@@ -487,7 +487,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_ESCAPE || d.key_ == 'Q') {
     if(eng->player->deadState == actorDeadState_alive) {
       eng->log->clearLog();
-      eng->log->addMessage("Quit the current game (y/n)? Save and highscore are not kept.", clrWhiteHigh);
+      eng->log->addMessage(
+        "Quit the current game (y/n)? Save and highscore are not kept.",
+        clrWhiteHigh);
       eng->renderer->drawMapAndInterface();
       if(eng->query->yesOrNo()) {
         *quitToMainMenu_ = true;

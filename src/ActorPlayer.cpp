@@ -6,7 +6,7 @@
 #include "FeatureTrap.h"
 #include "PlayerCreateCharacter.h"
 #include "Log.h"
-#include "Interface.h"
+#include "CharacterLines.h"
 #include "Popup.h"
 #include "Postmortem.h"
 #include "DungeonMaster.h"
@@ -23,6 +23,8 @@
 #include "PlayerBonuses.h"
 #include "FeatureLitDynamite.h"
 #include "ItemDevice.h"
+#include "Inventory.h"
+#include "InventoryHandler.h"
 
 Player::Player() :
   firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -59,15 +61,19 @@ void Player::actorSpecific_spawnStartItems() {
     default:  weaponId = item_dagger;   break;
   }
 
-  inventory_->putItemInSlot(slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
-  inventory_->putItemInSlot(slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
+  inventory_->putItemInSlot(
+    slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+  inventory_->putItemInSlot(
+    slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
   }
 
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
 
 //  if(NR_FLARES > 0) {
 //    item = eng->itemFactory->spawnItem(item_flare);
@@ -76,14 +82,21 @@ void Player::actorSpecific_spawnStartItems() {
 //  }
 
   if(NR_THROWING_KNIVES > 0) {
-    inventory_->putItemInSlot(slot_missiles, eng->itemFactory->spawnItem(item_throwingKnife, NR_THROWING_KNIVES), true, true);
+    inventory_->putItemInSlot(
+      slot_missiles,
+      eng->itemFactory->spawnItem(item_throwingKnife, NR_THROWING_KNIVES),
+      true, true);
   }
 
   if(NR_SPIKES > 0) {
-    inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
+    inventory_->putItemInGeneral(
+                                 eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
   }
 
-  inventory_->putItemInSlot(slot_armorBody, eng->itemFactory->spawnItem(item_armorLeatherJacket), true, true);
+  inventory_->putItemInSlot(
+                            slot_armorBody,
+                            eng->itemFactory->spawnItem(item_armorLeatherJacket),
+                            true, true);
 
   inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
 

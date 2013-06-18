@@ -3,7 +3,7 @@
 
 #include "Engine.h"
 #include "Actor.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 class AI_moveToRandomAdjacentCell {
 public:

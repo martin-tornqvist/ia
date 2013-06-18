@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "Render.h"

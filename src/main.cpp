@@ -14,7 +14,7 @@
 #include "Bot.h"
 #include "Popup.h"
 #include "Input.h"
-#include "Interface.h"
+#include "CharacterLines.h"
 #include "Log.h"
 #include "Query.h"
 #include "Highscore.h"

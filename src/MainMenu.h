@@ -2,7 +2,7 @@
 #define MAIN_MENU_H
 
 #include "MenuBrowser.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 class Engine;
 

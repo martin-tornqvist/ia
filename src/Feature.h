@@ -7,10 +7,10 @@
 #include <iostream>
 
 #include "Colors.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 #include "ActorData.h"
 #include "FeatureData.h"
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 
 using namespace std;
 

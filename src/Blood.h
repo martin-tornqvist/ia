@@ -12,7 +12,6 @@ public:
 	}
 
 	void makeBlood(const coord& origin);
-
 	void makeGore(const coord& origin);
 
 private:

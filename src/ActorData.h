@@ -7,7 +7,7 @@
 #include "Converters.h"
 #include "AbilityValues.h"
 #include "RoomTheme.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 enum ActorId_t {
   actor_empty,

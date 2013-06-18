@@ -1,4 +1,4 @@
-#include "Interface.h"
+#include "CharacterLines.h"
 
 #include "Engine.h"
 
@@ -13,10 +13,11 @@
 #include "DungeonMaster.h"
 #include "MapBuildBSP.h"
 #include "PlayerBonuses.h"
+#include "Inventory.h"
 
 using namespace std;
 
-void Interface::drawLocationInfo() {
+void CharacterLines::drawLocationInfo() {
   if(eng->player->getStatusEffectsHandler()->allowSee()) {
     string str = "";
 
@@ -50,7 +51,7 @@ void Interface::drawLocationInfo() {
   }
 }
 
-void Interface::drawInfoLines() {
+void CharacterLines::drawInfoLines() {
   eng->renderer->coverRenderArea(renderArea_characterLines);
 
   const int CHARACTER_LINE_X0 = 1;

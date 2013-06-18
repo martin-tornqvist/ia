@@ -49,18 +49,6 @@ Config::Config(Engine* engine) :
   setCellDimDependentVariables();
 }
 
-void Config::setCellDimDependentVariables() {
-  mainscreenHeight         = MAP_Y_CELLS * cellH;
-  logOffsetX              = LOG_X_CELLS_OFFSET * cellW;
-  logOffsetY              = LOG_Y_CELLS_OFFSET * cellH;
-  logHeight                = cellH;
-  mainscreenOffsetY       = MAINSCREEN_Y_CELLS_OFFSET * cellH;
-  characterLinesOffsetY  = logOffsetY + logHeight + mainscreenHeight;
-  CHARACTER_LINES_HEIGHT    = CHARACTER_LINES_Y_CELLS * cellH;
-  screenWidth              = MAP_X_CELLS * cellW;
-  screenHeight             = characterLinesOffsetY + CHARACTER_LINES_HEIGHT;
-}
-
 void Config::runOptionsMenu() {
   MenuBrowser browser(13, 0);
   vector<string> lines;
@@ -98,79 +86,163 @@ void Config::runOptionsMenu() {
   }
 }
 
-void Config::parseFontNameAndSetCellDims() {
-  tracer << "Config::parseFontNameAndSetCellDims()..." << endl;
-  string fontName = fontImageName;
+void Config::playerSetsOption(const MenuBrowser* const browser,
+                                 const int OPTION_VALUES_X_POS,
+                                 const int OPTIONS_Y_POS) {
+  switch(browser->getPos().y) {
+    case 0: {
+      isTilesMode = !isTilesMode;
+      if(isTilesMode) {
+        if(cellW == 8 && cellH == 12) {
+          fontScale = 2;
+        } else {
+          if(cellW != 16 || cellH != 24) {
+            fontScale = 1;
+            fontImageName = "images/16x24_clean_v1.png";
+          }
+        }
+      }
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->initAndClearPrev();
+    }
+    break;
 
-  char ch = 'a';
-  while(ch < '0' || ch > '9') {
-    fontName.erase(fontName.begin());
-    ch = fontName.at(0);
+    case 1: {
+      if(isTilesMode) {
+        fontScale = 1;
+      }
+
+      for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+        if(fontImageName == fontImageNames.at(i)) {
+          fontImageName = i == fontImageNames.size() - 1 ?
+                          fontImageNames.front() :
+                          fontImageNames.at(i + 1);
+          break;
+        }
+      }
+      parseFontNameAndSetCellDims();
+
+      if(isTilesMode) {
+        if(cellW == 8 && cellH == 12) {
+          fontScale = 2;
+          parseFontNameAndSetCellDims();
+        }
+
+        while(cellW != 16 || cellH != 24) {
+          for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+            if(fontImageName == fontImageNames.at(i)) {
+              fontImageName = i == fontImageNames.size() - 1 ?
+                              fontImageNames.front() :
+                              fontImageNames.at(i + 1);
+              break;
+            }
+          }
+          parseFontNameAndSetCellDims();
+        }
+      }
+
+      setCellDimDependentVariables();
+      eng->renderer->initAndClearPrev();
+    }
+    break;
+
+    case 2: {
+      if(fontScale == 1) {
+        if(isTilesMode == false) {
+          fontScale = 2;
+        }
+      } else {
+        if(isTilesMode == false) {
+          fontScale = 1;
+        }
+      }
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->initAndClearPrev();
+    } break;
+
+    case 3: {
+      isFullscreen = !isFullscreen;
+      eng->renderer->initAndClearPrev();
+    } break;
+
+    case 4: {
+      isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
+    } break;
+
+    case 5: {
+      isIntroLevelSkipped = !isIntroLevelSkipped;
+    } break;
+
+    case 6: {
+      useRangedWpnMleeePrompt = !useRangedWpnMleeePrompt;
+    } break;
+
+    case 7: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS,
+                             OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, keyRepeatDelay, true);
+      if(NR != -1) {
+        keyRepeatDelay = NR;
+        eng->input->setKeyRepeatDelays();
+      }
+    } break;
+
+    case 8: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS,
+                             OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, keyRepeatInterval, true);
+      if(NR != -1) {
+        keyRepeatInterval = NR;
+        eng->input->setKeyRepeatDelays();
+      }
+    } break;
+
+    case 9: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS,
+                             OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
+      if(NR != -1) {
+        delayProjectileDraw = NR;
+      }
+    } break;
+
+    case 10: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS,
+                             OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, delayShotgun, true);
+      if(NR != -1) {
+        delayShotgun = NR;
+      }
+    } break;
+
+    case 11: {
+      const int NR = eng->query->number(
+                       coord(OPTION_VALUES_X_POS,
+                             OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, delayExplosion, true);
+      if(NR != -1) {
+        delayExplosion = NR;
+      }
+    } break;
+
+    case 12: {
+      setDefaultVariables();
+      parseFontNameAndSetCellDims();
+      setCellDimDependentVariables();
+      eng->renderer->initAndClearPrev();
+    } break;
   }
-
-  string widthStr = "";
-  while(ch != 'x') {
-    fontName.erase(fontName.begin());
-    widthStr += ch;
-    ch = fontName.at(0);
-  }
-
-  fontName.erase(fontName.begin());
-  ch = fontName.at(0);
-
-  string heightStr = "";
-  while(ch != '_' && ch != '.') {
-    fontName.erase(fontName.begin());
-    heightStr += ch;
-    ch = fontName.at(0);
-  }
-
-  tracer << "Config: Parsed font image name, found dims: ";
-  tracer << widthStr << "x" << heightStr << endl;
-
-  cellW = stringToInt(widthStr)  * fontScale;
-  cellH = stringToInt(heightStr) * fontScale;
-  tracer << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
-void Config::setDefaultVariables() {
-  tracer << "Config::setDefaultVariables()..." << endl;
-  isTilesMode = true;
-  fontImageName = "images/16x24_clean_v1.png";
-  fontScale = 1;
-  parseFontNameAndSetCellDims();
-  isFullscreen = false;
-  isAsciiWallSymbolFullSquare = true;
-  isIntroLevelSkipped = false;
-  useRangedWpnMleeePrompt = true;
-  keyRepeatDelay = 130;
-  keyRepeatInterval = 60;
-  delayProjectileDraw = 45;
-  delayShotgun = 120;
-  delayExplosion = 350;
-  tracer << "Config::setDefaultVariables() [DONE]" << endl;
-}
-
-void Config::collectLinesFromVariables(vector<string>& lines) {
-  tracer << "Config::collectLinesFromVariables()..." << endl;
-  lines.resize(0);
-  lines.push_back(isTilesMode == false ? "0" : "1");
-  lines.push_back(intToString(fontScale));
-  lines.push_back(fontImageName);
-  lines.push_back(isFullscreen == false ? "0" : "1");
-  lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
-  lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
-  lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
-  lines.push_back(intToString(keyRepeatDelay));
-  lines.push_back(intToString(keyRepeatInterval));
-  lines.push_back(intToString(delayProjectileDraw));
-  lines.push_back(intToString(delayShotgun));
-  lines.push_back(intToString(delayExplosion));
-  tracer << "Config::collectLinesFromVariables() [DONE]" << endl;
-}
-
-void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
-                  const int OPTIONS_Y_POS) {
+void Config::draw(const MenuBrowser* const browser,
+                     const int OPTION_VALUES_X_POS,
+                     const int OPTIONS_Y_POS) {
 
   const SDL_Color clrActive     = clrNosferatuTealLgt;
   const SDL_Color clrInactive   = clrNosferatuTealDrk;
@@ -311,153 +383,87 @@ void Config::draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_PO
   eng->renderer->updateScreen();
 }
 
-void Config::playerSetsOption(const MenuBrowser* const browser,
-                              const int OPTION_VALUES_X_POS,
-                              const int OPTIONS_Y_POS) {
-  switch(browser->getPos().y) {
-    case 0: {
-      isTilesMode = !isTilesMode;
-      if(isTilesMode) {
-        if(cellW == 8 && cellH == 12) {
-          fontScale = 2;
-        } else {
-          if(cellW != 16 || cellH != 24) {
-            fontScale = 1;
-            fontImageName = "images/16x24_clean_v1.png";
-          }
-        }
-      }
-      parseFontNameAndSetCellDims();
-      setCellDimDependentVariables();
-      eng->renderer->initAndClearPrev();
-    }
-    break;
+void Config::setCellDimDependentVariables() {
+  mainscreenHeight        = MAP_Y_CELLS * cellH;
+  logOffsetX              = LOG_X_CELLS_OFFSET * cellW;
+  logOffsetY              = LOG_Y_CELLS_OFFSET * cellH;
+  logHeight               = cellH;
+  mainscreenOffsetY       = MAINSCREEN_Y_CELLS_OFFSET * cellH;
+  characterLinesOffsetY   = logOffsetY + logHeight + mainscreenHeight;
+  CHARACTER_LINES_HEIGHT  = CHARACTER_LINES_Y_CELLS * cellH;
+  screenWidth             = MAP_X_CELLS * cellW;
+  screenHeight            = characterLinesOffsetY + CHARACTER_LINES_HEIGHT;
+}
 
-    case 1: {
-      if(isTilesMode) {
-        fontScale = 1;
-      }
+void Config::parseFontNameAndSetCellDims() {
+  tracer << "Config::parseFontNameAndSetCellDims()..." << endl;
+  string fontName = fontImageName;
 
-      for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-        if(fontImageName == fontImageNames.at(i)) {
-          fontImageName = i == fontImageNames.size() - 1 ?
-                          fontImageNames.front() :
-                          fontImageNames.at(i + 1);
-          break;
-        }
-      }
-      parseFontNameAndSetCellDims();
-
-      if(isTilesMode) {
-        if(cellW == 8 && cellH == 12) {
-          fontScale = 2;
-          parseFontNameAndSetCellDims();
-        }
-
-        while(cellW != 16 || cellH != 24) {
-          for(unsigned int i = 0; i < fontImageNames.size(); i++) {
-            if(fontImageName == fontImageNames.at(i)) {
-              fontImageName = i == fontImageNames.size() - 1 ?
-                              fontImageNames.front() :
-                              fontImageNames.at(i + 1);
-              break;
-            }
-          }
-          parseFontNameAndSetCellDims();
-        }
-      }
-
-      setCellDimDependentVariables();
-      eng->renderer->initAndClearPrev();
-    }
-    break;
-
-    case 2: {
-      if(fontScale == 1) {
-        if(isTilesMode == false) {
-          fontScale = 2;
-        }
-      } else {
-        if(isTilesMode == false) {
-          fontScale = 1;
-        }
-      }
-      parseFontNameAndSetCellDims();
-      setCellDimDependentVariables();
-      eng->renderer->initAndClearPrev();
-    } break;
-
-    case 3: {
-      isFullscreen = !isFullscreen;
-      eng->renderer->initAndClearPrev();
-    } break;
-
-    case 4: {
-      isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
-    } break;
-
-    case 5: {
-      isIntroLevelSkipped = !isIntroLevelSkipped;
-    } break;
-
-    case 6: {
-      useRangedWpnMleeePrompt = !useRangedWpnMleeePrompt;
-    } break;
-
-    case 7: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, keyRepeatDelay, true);
-      if(NR != -1) {
-        keyRepeatDelay = NR;
-        eng->input->setKeyRepeatDelays();
-      }
-    } break;
-
-    case 8: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, keyRepeatInterval, true);
-      if(NR != -1) {
-        keyRepeatInterval = NR;
-        eng->input->setKeyRepeatDelays();
-      }
-    } break;
-
-    case 9: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
-      if(NR != -1) {
-        delayProjectileDraw = NR;
-      }
-    } break;
-
-    case 10: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayShotgun, true);
-      if(NR != -1) {
-        delayShotgun = NR;
-      }
-    } break;
-
-    case 11: {
-      const int NR = eng->query->number(
-                       coord(OPTION_VALUES_X_POS , OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayExplosion, true);
-      if(NR != -1) {
-        delayExplosion = NR;
-      }
-    } break;
-
-    case 12: {
-      setDefaultVariables();
-      parseFontNameAndSetCellDims();
-      setCellDimDependentVariables();
-      eng->renderer->initAndClearPrev();
-    } break;
+  char ch = 'a';
+  while(ch < '0' || ch > '9') {
+    fontName.erase(fontName.begin());
+    ch = fontName.at(0);
   }
+
+  string widthStr = "";
+  while(ch != 'x') {
+    fontName.erase(fontName.begin());
+    widthStr += ch;
+    ch = fontName.at(0);
+  }
+
+  fontName.erase(fontName.begin());
+  ch = fontName.at(0);
+
+  string heightStr = "";
+  while(ch != '_' && ch != '.') {
+    fontName.erase(fontName.begin());
+    heightStr += ch;
+    ch = fontName.at(0);
+  }
+
+  tracer << "Config: Parsed font image name, found dims: ";
+  tracer << widthStr << "x" << heightStr << endl;
+
+  cellW = stringToInt(widthStr)  * fontScale;
+  cellH = stringToInt(heightStr) * fontScale;
+  tracer << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
+}
+
+void Config::setDefaultVariables() {
+  tracer << "Config::setDefaultVariables()..." << endl;
+  isTilesMode = true;
+  fontImageName = "images/16x24_clean_v1.png";
+  fontScale = 1;
+  parseFontNameAndSetCellDims();
+  isFullscreen = false;
+  isAsciiWallSymbolFullSquare = true;
+  isIntroLevelSkipped = false;
+  useRangedWpnMleeePrompt = true;
+  keyRepeatDelay = 130;
+  keyRepeatInterval = 60;
+  delayProjectileDraw = 45;
+  delayShotgun = 120;
+  delayExplosion = 350;
+  tracer << "Config::setDefaultVariables() [DONE]" << endl;
+}
+
+void Config::collectLinesFromVariables(vector<string>& lines) {
+  tracer << "Config::collectLinesFromVariables()..." << endl;
+  lines.resize(0);
+  lines.push_back(isTilesMode == false ? "0" : "1");
+  lines.push_back(intToString(fontScale));
+  lines.push_back(fontImageName);
+  lines.push_back(isFullscreen == false ? "0" : "1");
+  lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
+  lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
+  lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
+  lines.push_back(intToString(keyRepeatDelay));
+  lines.push_back(intToString(keyRepeatInterval));
+  lines.push_back(intToString(delayProjectileDraw));
+  lines.push_back(intToString(delayShotgun));
+  lines.push_back(intToString(delayExplosion));
+  tracer << "Config::collectLinesFromVariables() [DONE]" << endl;
 }
 
 void Config::toggleFullscreen() {

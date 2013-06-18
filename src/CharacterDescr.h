@@ -1,5 +1,5 @@
-#ifndef CHARACTER_INFO_H
-#define CHARACTER_INFO_H
+#ifndef CHARACTER_DESCR_H
+#define CHARACTER_DESCR_H
 
 #include <vector>
 
@@ -7,21 +7,15 @@
 
 class Engine;
 
-class CharacterInfo {
+class CharacterDescr {
 public:
-	CharacterInfo(Engine* engine) : eng(engine) {
-	}
-
+	CharacterDescr(Engine* engine) : eng(engine) {}
 	void run();
-
 private:
     void drawInterface();
     void makeLines();
-
     vector<StringAndClr> lines;
-
     Engine* eng;
 };
-
 
 #endif

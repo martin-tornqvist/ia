@@ -4,9 +4,9 @@
 #include <string>
 
 #include "AbilityValues.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 #include "Converters.h"
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 
 using namespace std;
 

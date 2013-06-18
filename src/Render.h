@@ -6,7 +6,7 @@
 
 #include "SDL/SDL_video.h"
 
-#include "CommonTypes.h"
+#include "CommonData.h"
 #include "GameTime.h"
 #include "Config.h"
 #include "Art.h"

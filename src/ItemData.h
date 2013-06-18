@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 #include "AbilityValues.h"
 

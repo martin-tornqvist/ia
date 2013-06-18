@@ -1,7 +1,7 @@
 #ifndef CLOSE_H
 #define CLOSE_H
 
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 class Engine;
 class Actor;

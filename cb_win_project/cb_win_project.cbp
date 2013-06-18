@@ -141,12 +141,14 @@
 		<Unit filename="../src/Bot.h" />
 		<Unit filename="../src/BresenhamLine.cpp" />
 		<Unit filename="../src/BresenhamLine.h" />
-		<Unit filename="../src/CharacterInfo.cpp" />
-		<Unit filename="../src/CharacterInfo.h" />
+		<Unit filename="../src/CharacterDescr.cpp" />
+		<Unit filename="../src/CharacterDescr.h" />
+		<Unit filename="../src/CharacterLines.cpp" />
+		<Unit filename="../src/CharacterLines.h" />
 		<Unit filename="../src/Close.cpp" />
 		<Unit filename="../src/Close.h" />
 		<Unit filename="../src/Colors.h" />
-		<Unit filename="../src/CommonSettings.h" />
+		<Unit filename="../src/CommonData.h" />
 		<Unit filename="../src/CommonTypes.h" />
 		<Unit filename="../src/Config.cpp" />
 		<Unit filename="../src/Config.h" />
@@ -206,8 +208,6 @@
 		<Unit filename="../src/Highscore.h" />
 		<Unit filename="../src/Input.cpp" />
 		<Unit filename="../src/Input.h" />
-		<Unit filename="../src/Interface.cpp" />
-		<Unit filename="../src/Interface.h" />
 		<Unit filename="../src/Inventory.cpp" />
 		<Unit filename="../src/Inventory.h" />
 		<Unit filename="../src/InventoryHandler.cpp" />
@@ -275,6 +275,8 @@
 		<Unit filename="../src/MenuInputHandler.cpp" />
 		<Unit filename="../src/MenuInputHandler.h" />
 		<Unit filename="../src/MersenneTwister.h" />
+		<Unit filename="../src/Panel.cpp" />
+		<Unit filename="../src/Panel.h" />
 		<Unit filename="../src/Pathfinding.cpp" />
 		<Unit filename="../src/Pathfinding.h" />
 		<Unit filename="../src/PlayerAllocBonus.cpp" />
@@ -320,8 +322,6 @@
 		<Unit filename="../src/TextFormatting.h" />
 		<Unit filename="../src/Thrower.cpp" />
 		<Unit filename="../src/Thrower.h" />
-		<Unit filename="../src/TrimTravelVector.cpp" />
-		<Unit filename="../src/TrimTravelVector.h" />
 		<Unit filename="../src/main.cpp" />
 		<Extensions>
 			<code_completion />

@@ -5,7 +5,7 @@
 
 #include "Engine.h"
 #include "FovPreCalc.h"
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 
 void Fov::allUnseen(bool array[MAP_X_CELLS][MAP_Y_CELLS]) {
   for(int x = 0; x < MAP_X_CELLS; x++) {

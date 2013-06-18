@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "CommonTypes.h"
-#include "CommonSettings.h"
+#include "CommonData.h"
 
 using namespace std;
 
@@ -15,9 +14,7 @@ class MenuBrowser;
 class Config {
 public:
   Config(Engine* engine);
-
-  ~Config() {
-  }
+  ~Config() {}
 
   const string  GAME_VERSION;
 
@@ -58,16 +55,18 @@ public:
   int           cellW, cellH;
 
   void runOptionsMenu();
-  void setCellDimDependentVariables();
 
+  void setCellDimDependentVariables();
   void toggleFullscreen();
 
 private:
   void playerSetsOption(const MenuBrowser* const browser,
                         const int OPTION_VALUES_X_POS,
                         const int OPTIONS_Y_POS);
+
   void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS,
             const int OPTIONS_Y_POS);
+
   void readFile(vector<string>& lines);
   void setAllVariablesFromLines(vector<string>& lines);
   void writeLinesToFile(vector<string>& lines);

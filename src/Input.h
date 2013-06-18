@@ -3,7 +3,7 @@
 
 #include "SDL/SDL.h"
 
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 class Engine;
 

@@ -22,7 +22,8 @@ void Credits::readFile() {
         lines.push_back(curLine);
       } else {
         formatedLines.resize(0);
-        formatedLines = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
+        formatedLines =
+          eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
 
         for(unsigned int i = 0; i < formatedLines.size(); i++) {
           lines.push_back(formatedLines.at(i));
@@ -37,14 +38,20 @@ void Credits::readFile() {
 void Credits::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
-  eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
+  eng->renderer->coverArea(
+    renderArea_screen, 0, 1, MAP_X_CELLS, 2);
 
-  eng->renderer->drawText(" Displaying credits.txt ", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(
+    decorationLine, renderArea_screen, 1, 1, clrWhite);
 
-  eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+  eng->renderer->drawText(
+    " Displaying credits.txt ", renderArea_screen, 3, 1, clrWhite);
 
-  eng->renderer->drawText(" space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(
+    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+
+  eng->renderer->drawText(
+    " space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
 }
 
 void Credits::run() {
@@ -70,6 +77,5 @@ void Credits::run() {
       done = true;
     }
   }
-
   eng->renderer->coverRenderArea(renderArea_screen);
 }

@@ -9,12 +9,14 @@ struct AttackData;
 
 class KnockBack {
 public:
-	KnockBack(Engine* engine) : eng(engine) {}
+  KnockBack(Engine* engine) : eng(engine) {}
 
-	void tryKnockBack(Actor* const defender, const coord& attackedFromPos, const bool IS_SPIKE_GUN, const bool IS_KNOCKBACK_MESSAGE_ALLOWED = true);
+  void tryKnockBack(Actor* const defender, const coord& attackedFromPos,
+                    const bool IS_SPIKE_GUN,
+                    const bool IS_KNOCKBACK_MESSAGE_ALLOWED = true);
 
 private:
-	Engine* eng;
+  Engine* eng;
 
 };
 

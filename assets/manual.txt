@@ -9,7 +9,7 @@
 
 1. Command list
 ------------------------------------------------
-   @    Display character information
+   @    Display character description
    TAB  Melee attack adjacent monster
    >    Go down staircase
    a    Examine object

@@ -18,9 +18,9 @@ enum MessageInterrupt_t {
   messageInterrupt_force
 };
 
-class MessageLog {
+class Log {
 public:
-  MessageLog(Engine* engine) :
+  Log(Engine* engine) :
     eng(engine) {
     clearLog();
   }

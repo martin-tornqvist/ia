@@ -14,8 +14,10 @@ public:
 		eng(engine) {
 	}
 
-	//TODO Let the pathfinder till a referenced parameter coordinate vector instead of returning a vector
-	vector<coord> findPath(const coord origin, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS], const coord target);
+	//TODO Let the pathfinder fill a referenced parameter coordinate vector instead of returning a vector
+	vector<coord> findPath(const coord origin,
+                        bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS],
+                        const coord target);
 
 private:
 	Engine* eng;

@@ -5,7 +5,7 @@
 #include "AbilityValues.h"
 #include "Art.h"
 #include "Feature.h"
-#include "CommonTypes.h"
+#include "CommonData.h"
 
 class Engine;
 class SpecificTrapBase;

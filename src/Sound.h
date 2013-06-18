@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "CommonTypes.h"
+#include "CommonData.h"
 #include "ItemData.h"
-#include "CommonSettings.h"
+#include "CommonTypes.h"
 
 using namespace std;
 
