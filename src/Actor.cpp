@@ -125,7 +125,7 @@ void Actor::getSpotedEnemiesPositions() {
   }
 }
 
-void Actor::place(const coord& pos_, ActorDefinition* const actorDefinition, Engine* engine) {
+void Actor::place(const Pos& pos_, ActorDefinition* const actorDefinition, Engine* engine) {
   eng = engine;
   pos = pos_;
   def_ = actorDefinition;
@@ -177,9 +177,9 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArray(this, blockers);
   eng->basicUtils->reverseBoolArray(blockers);
-  vector<coord> freeCells;
+  vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
-  const coord CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
+  const Pos CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
 
   if(this == eng->player) {
     eng->player->updateFov();
@@ -303,8 +303,11 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     hp_ -= dmg;
   }
 
-  const bool IS_ON_BOTTOMLESS = eng->map->featuresStatic[pos.x][pos.y]->isBottomless();
-  const bool IS_MANGLED = IS_ON_BOTTOMLESS == true ? true : (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
+  const bool IS_ON_BOTTOMLESS =
+    eng->map->featuresStatic[pos.x][pos.y]->isBottomless();
+  const bool IS_MANGLED =
+    IS_ON_BOTTOMLESS == true ? true :
+    (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
     die(IS_MANGLED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     actorSpecificDie();
@@ -378,16 +381,16 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   } else {
     if(this != eng->player) {
-      coord newCoord;
+      Pos newPos;
       Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
       //TODO this should be decided with a floodfill instead
       if(featureHere->canHaveCorpse() == false) {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
-            newCoord = pos + coord(dx, dy);
+            newPos = pos + Pos(dx, dy);
             featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
             if(featureHere->canHaveCorpse()) {
-              pos.set(newCoord);
+              pos.set(newPos);
               dx = 9999;
               dy = 9999;
             }

@@ -3,16 +3,16 @@
 #include "Engine.h"
 #include "Map.h"
 
-void MapPatterns::setPositionsInArea(const Rect& area, vector<coord>& nextToWalls, vector<coord>& awayFromWalls) {
+void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
   tracer << "MapPatterns::setPositionsInArea()..." << endl;
-  vector<coord> positionCandidates;
+  vector<Pos> positionCandidates;
   positionCandidates.resize(0);
 
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       FeatureStatic* const f = eng->map->featuresStatic[x][y];
       if(f->isMoveTypePassable(moveType_walk) && f->canHaveStaticFeature()) {
-        positionCandidates.push_back(coord(x, y));
+        positionCandidates.push_back(Pos(x, y));
       }
     }
   }
@@ -21,7 +21,7 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<coord>& nextToWall
   awayFromWalls.resize(0);
 
   for(unsigned int i = 0; i < positionCandidates.size(); i++) {
-    const coord pos = positionCandidates.at(i);
+    const Pos pos = positionCandidates.at(i);
 
     const int BLOCKERS_RIGHT = getWalkBlockersInDirection(direction_right, pos);
     const int BLOCKERS_DOWN = getWalkBlockersInDirection(direction_down, pos);
@@ -62,7 +62,7 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<coord>& nextToWall
   tracer << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
-int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const coord pos) {
+int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos pos) {
   int nrBlockers = 0;
   switch(dir) {
   case direction_right: {

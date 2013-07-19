@@ -22,7 +22,7 @@ void ProxEventWallCrumble::playerIsNear() {
   //Check that it still makes sense to run the crumbling
   bool isCrumbleOk = true;
   for(unsigned int i = 0; i < wallCells_.size(); i++) {
-    const coord c = wallCells_.at(i);
+    const Pos c = wallCells_.at(i);
     const bool IS_VISION_PASSABLE = eng->map->featuresStatic[c.x][c.y]->isVisionPassable();
     const bool IS_WALK_PASSABLE = eng->map->featuresStatic[c.x][c.y]->isMoveTypePassable(moveType_walk);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -31,7 +31,7 @@ void ProxEventWallCrumble::playerIsNear() {
     }
   }
   for(unsigned int i = 0; i < innerCells_.size(); i++) {
-    const coord c = innerCells_.at(i);
+    const Pos c = innerCells_.at(i);
     const bool IS_VISION_PASSABLE = eng->map->featuresStatic[c.x][c.y]->isVisionPassable();
     const bool IS_WALK_PASSABLE = eng->map->featuresStatic[c.x][c.y]->isMoveTypePassable(moveType_walk);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -47,7 +47,7 @@ void ProxEventWallCrumble::playerIsNear() {
       for(unsigned int i = 0; i < wallCells_.size(); i++) {
         if(eng->mapTests->isCellInside(
               wallCells_.at(i),
-              Rect(coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
+              Rect(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
           eng->map->switchToDestroyedFeatAt(wallCells_.at(i));
         }
       }

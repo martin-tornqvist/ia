@@ -17,11 +17,11 @@ class Actor;
 
 //struct ThrownObject {
 ////  double xIncr, yIncr, xPos_prec, yPos_prec, hypot;
-//  coord pos;
-//  coord aimPos;
+//  Pos pos;
+//  Pos aimPos;
 //  int cellPotential;
-//  vector<coord> flightPath;
-//  //  coord blockedByCell;
+//  vector<Pos> flightPath;
+//  //  Pos blockedByCell;
 //};
 
 class Thrower {
@@ -30,10 +30,10 @@ public:
     eng(engine) {
   }
 
-  void throwItem(Actor& actorThrowing, const coord& targetCell,
+  void throwItem(Actor& actorThrowing, const Pos& targetCell,
                  Item& itemThrown);
 
-  void playerThrowLitExplosive(const coord& aimCell);
+  void playerThrowLitExplosive(const Pos& aimCell);
 
 private:
   Engine* eng;

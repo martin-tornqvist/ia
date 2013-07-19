@@ -60,11 +60,11 @@ public:
 
 class ProxEventWallCrumbleSpawnData: public FeatureSpawnData {
 public:
-  ProxEventWallCrumbleSpawnData(vector<coord> wallCells, vector<coord> innerCells) :
+  ProxEventWallCrumbleSpawnData(vector<Pos> wallCells, vector<Pos> innerCells) :
     FeatureSpawnData(featureSpawnData_proxEventWallCrumble), wallCells_(wallCells), innerCells_(innerCells) {
   }
-  vector<coord> wallCells_;
-  vector<coord> innerCells_;
+  vector<Pos> wallCells_;
+  vector<Pos> innerCells_;
 };
 
 class TrapSpawnData: public FeatureSpawnData {
@@ -101,10 +101,10 @@ public:
     eng = engine;
   }
 
-  Feature* spawnFeatureAt(const Feature_t id, const coord pos, FeatureSpawnData* spawnData = NULL);
+  Feature* spawnFeatureAt(const Feature_t id, const Pos pos, FeatureSpawnData* spawnData = NULL);
 
 private:
-  void replaceStaticFeatureAt(FeatureStatic* const newFeature, const coord pos);
+  void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos pos);
 
   Engine* eng;
 };

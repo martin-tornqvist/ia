@@ -60,7 +60,7 @@ public:
     }
   }
 
-  vector<FeatureMob*> getFeatureMobsAtPos(const coord& pos);
+  vector<FeatureMob*> getFeatureMobsAtPos(const Pos& pos);
 
   void addFeatureMob(FeatureMob* const feature) {
     featureMobs_.push_back(feature);

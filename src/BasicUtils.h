@@ -74,7 +74,7 @@ public:
     return max(abs(X1 - X0), abs(Y1 - Y0));
   }
 
-  inline int chebyshevDistance(const coord& c1, const coord& c2) const {
+  inline int chebyshevDistance(const Pos& c1, const Pos& c2) const {
     return chebyshevDistance(c1.x, c1.y, c2.x, c2.y);
   }
 

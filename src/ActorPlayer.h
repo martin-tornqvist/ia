@@ -26,6 +26,7 @@ enum InsanityObsession_t {
 };
 
 class Monster;
+class MedicalBag;
 
 class Player: public Actor {
 public:
@@ -36,8 +37,7 @@ public:
 
   void updateFov();
 
-  void moveDirection(const coord& dir) {moveDirection(dir.x, dir.y);}
-  void moveDirection(const int X_DIR, int Y_DIR);
+  void moveDirection(const Pos& dir);
 
   void actorSpecific_init() {}
 
@@ -49,12 +49,13 @@ public:
 
   void explosiveThrown();
 
-  int firstAidTurnsLeft;
+  MedicalBag* activeMedicalBag;
   int waitTurnsLeft;
 
   void incrShock(const ShockValues_t shockValue);
   void incrShock(const int VAL);
-  void restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED);
+  void restoreShock(const int amountRestored,
+                    const bool IS_TEMP_SHOCK_RESTORED);
   int getShockTotal() {return int(floor(shock_ + shockTemp_));}
   int getShockTmp() {return shockTemp_;}
   int getInsanity() const {return min(100, insanity_);}
@@ -84,8 +85,6 @@ public:
   void punch(Actor& actorToPunch);
 
   void updateColor();
-
-  int getHealingTimeTotal() const;
 
   void actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 

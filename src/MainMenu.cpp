@@ -28,9 +28,8 @@ void MainMenu::draw(const MenuBrowser& browser) {
     logo.push_back("               \\                 \\                      ");
   }
 
-  int xPos = MAP_X_CELLS / 2;
-  int yPos = 3;
-//  const int X_POS_LEFT = xPos - 11;
+  Pos pos(MAP_X_CELLS / 2, 3);
+//  const int X_POS_LEFT = pos.x - 11;
 
   tracer << "MainMenu: Calling clearWindow()" << endl;
   eng->renderer->clearScreen();
@@ -38,7 +37,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   tracer << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
   const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
-  const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25); //eng->dice.getInRange(9, 13);
+  const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
@@ -50,7 +49,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       bgClr.r = BG_BRIGHTNESS / 2;
       bgClr.g = BG_BRIGHTNESS / 2;
       bgClr.b = BG_BRIGHTNESS;
-      eng->renderer->drawCharacter(cha, renderArea_screen, x, y, bgClr);
+      eng->renderer->drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
     }
   }
 
@@ -61,81 +60,93 @@ void MainMenu::draw(const MenuBrowser& browser) {
   quoteClr.r = QUOTE_BRIGHTNESS / 2;
   quoteClr.g = QUOTE_BRIGHTNESS / 2;
   quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines = eng->textFormatting->lineToLines(getHplQuote(), 45);
+  vector<string> quoteLines =
+    eng->textFormatting->lineToLines(getHplQuote(), 45);
   const int Y0_LOGO = eng->config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), renderArea_screen, 7, Y0_LOGO + i, quoteClr);
+    eng->renderer->drawText(quoteLines.at(i), panel_screen,
+                            Pos(7, Y0_LOGO + i), quoteClr);
   }
 
   if(eng->config->isTilesMode) {
     tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng->renderer->drawMainMenuLogo(4);
-    yPos += 10;
+    pos.y += 10;
   } else {
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
     for(unsigned int i = 0; i < logo.size(); i++) {
-      xPos = LOGO_X_POS_LEFT;
+      pos.x = LOGO_X_POS_LEFT;
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
           SDL_Color clr = clrRed;
           clr.r += eng->dice.getInRange(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
-          eng->renderer->drawCharacter(logo.at(i).at(ii), renderArea_screen, xPos, yPos, clr);
+          eng->renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
+                                       pos, clr);
         }
-        xPos++;
+        pos.x++;
       }
-      yPos += 1;
+      pos.y += 1;
     }
-    yPos += 3;
+    pos.y += 3;
   }
 
-  xPos = 48; //MAP_X_CELLS / 2;
+  pos.x = 48; //MAP_X_CELLS / 2;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("## DEBUG MODE ##", renderArea_screen, 1, 1, clrYellow);
+    eng->renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1), clrYellow);
   }
 
-  yPos += 0;
 
   SDL_Color clrActive   = clrNosferatuTealLgt;
   SDL_Color clrInactive = clrNosferatuTealDrk;
 
-  eng->renderer->drawText("New journey", renderArea_screen, xPos, yPos, browser.isPosAtKey('a') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("New journey", panel_screen, pos,
+                          browser.isPosAtKey('a') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("Resurrect", renderArea_screen, xPos, yPos,  browser.isPosAtKey('b') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("Resurrect", panel_screen, pos,
+                          browser.isPosAtKey('b') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("Manual", renderArea_screen, xPos, yPos, browser.isPosAtKey('c') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("Manual", panel_screen, pos,
+                          browser.isPosAtKey('c') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("Options", renderArea_screen, xPos, yPos, browser.isPosAtKey('d') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("Options", panel_screen, pos,
+                          browser.isPosAtKey('d') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("Credits", renderArea_screen, xPos, yPos, browser.isPosAtKey('e') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("Credits", panel_screen, pos,
+                          browser.isPosAtKey('e') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("High scores", renderArea_screen, xPos, yPos, browser.isPosAtKey('f') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("High scores", panel_screen, pos,
+                          browser.isPosAtKey('f') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
-  eng->renderer->drawText("Escape to reality", renderArea_screen, xPos, yPos, browser.isPosAtKey('g') ? clrActive : clrInactive);
-  yPos += 1;
-  xPos += 1;
+  eng->renderer->drawText("Escape to reality", panel_screen, pos,
+                          browser.isPosAtKey('g') ? clrActive : clrInactive);
+  pos.y += 1;
+  pos.x += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("DEBUG: RUN BOT", renderArea_screen, xPos, yPos, browser.isPosAtKey('h') ? clrActive : clrInactive);
-    yPos += 1;
+    eng->renderer->drawText("DEBUG: RUN BOT", panel_screen, pos,
+                            browser.isPosAtKey('h') ? clrActive : clrInactive);
+    pos.y += 1;
   }
 
-  xPos = MAP_X_CELLS / 2;
+  pos.x = MAP_X_CELLS / 2;
 
-  eng->renderer->drawTextCentered(eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist", renderArea_characterLines, xPos, 1, clrGray);
+  eng->renderer->drawTextCentered(
+    eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist",
+    panel_character, Pos(pos.x, 1), clrGray);
 
 //  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
 
@@ -177,7 +188,8 @@ GameEntry_t MainMenu::run(bool& quit) {
             proceed = true;
             return gameEntry_load;
           } else {
-            eng->popup->showMessage("Sorry, no save available. Starting a new character instead.", false);
+            eng->popup->showMessage(
+              "No save available. Starting a new character instead.", false);
             proceed = true;
             return gameEntry_new;
           }
@@ -257,7 +269,7 @@ string MainMenu::getHplQuote() {
   quotes.push_back("The sciences, each straining in its own direction, have hitherto harmed us little; but some day the piecing together of dissociated knowledge will open up such terrifying vistas of reality, and of our frightful position therein, that we shall either go mad from the revelation or flee from the deadly light into the peace and safety of a new dark age.");
   quotes.push_back("There are horrors beyond life's edge that we do not suspect, and once in a while man's evil prying calls them just within our range.");
   quotes.push_back("We live on a placid island of ignorance in the midst of black seas of infinity, and it was not meant that we should voyage far.");
-  quotes.push_back("There are black zones of shadow close to our daily paths, and now and then some evil soul breaks a passage through. When that happens, the man who knows must strike before reckoning the consequences." );
+  quotes.push_back("There are black zones of shadow close to our daily paths, and now and then some evil soul breaks a passage through. When that happens, the man who knows must strike before reckoning the consequences.");
   quotes.push_back("Non-Euclidean calculus and quantum physics are enough to stretch any brain; and when one mixes them with folklore, and tries to trace a strange background of multi-dimensional reality behind the ghoulish hints of Gothic tales and the wild whispers of the chimney-corner, one can hardly expect to be wholly free from mental tension.");
   quotes.push_back("I could not help feeling that they were evil things-- mountains of madness whose farther slopes looked out over some accursed ultimate abyss. That seething, half-luminous cloud-background held ineffable suggestions of a vague, ethereal beyondness far more than terrestrially spatial; and gave appalling reminders of the utter remoteness, separateness, desolation, and aeon-long death of this untrodden and unfathomed austral world.");
   quotes.push_back("With five feeble senses we pretend to comprehend the boundlessly complex cosmos, yet other beings with wider, stronger, or different range of senses might not only see very differently the things we see, but might see and study whole worlds of matter, energy, and life which lie close at hand yet can never be detected with the senses we have.");

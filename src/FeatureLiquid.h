@@ -12,7 +12,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  FeatureLiquidShallow(Feature_t id, coord pos, Engine* engine);
+  FeatureLiquidShallow(Feature_t id, Pos pos, Engine* engine);
 };
 
 class FeatureLiquidDeep: public FeatureStatic {
@@ -24,7 +24,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  FeatureLiquidDeep(Feature_t id, coord pos, Engine* engine);
+  FeatureLiquidDeep(Feature_t id, Pos pos, Engine* engine);
 };
 
 #endif

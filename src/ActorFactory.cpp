@@ -73,7 +73,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
   }
 }
 
-Actor* ActorFactory::spawnActor(const ActorId_t id, const coord& pos) {
+Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
   actor->place(pos, &(eng->actorData->actorDefinitions[id]), eng);
@@ -87,7 +87,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const coord& pos) {
   return actor;
 }
 
-Actor* ActorFactory::spawnRandomActor(const coord& pos, const int SPAWN_LVL_OFFSET) {
+Actor* ActorFactory::spawnRandomActor(const Pos& pos, const int SPAWN_LVL_OFFSET) {
   const int DLVL = eng->map->getDungeonLevel();
   vector<ActorId_t> monsterCandidates;
   const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorIds);

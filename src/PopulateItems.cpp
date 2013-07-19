@@ -10,7 +10,7 @@ void PopulateItems::spawnItems() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeItemBlockerArray(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
-  vector<coord> freeCells;
+  vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 
   const int CELLS_PER_SPAWN = 135;
@@ -19,13 +19,13 @@ void PopulateItems::spawnItems() {
   nrOfSpawns = max(1, nrOfSpawns);
   nrOfSpawns += eng->dice(1, (nrOfSpawns / 2) + 2) - 1;
 
-  if(eng->playerBonusHandler->isBonusPicked(playerBonus_treasureHunter)) {
+  if(eng->playerBonHandler->isBonPicked(playerBon_treasureHunter)) {
     nrOfSpawns = (nrOfSpawns * 3) / 2;
   }
 
   buildCandidateList();
 
-  //Spawn randomly from the coord-vector
+  //Spawn randomly from the Pos-vector
   int n = 0;
   ItemId_t id;
 
@@ -34,7 +34,7 @@ void PopulateItems::spawnItems() {
 
       //Roll the dice for random element
       n = eng->dice(1, freeCells.size()) - 1;
-      const coord pos(freeCells.at(n));
+      const Pos pos(freeCells.at(n));
 
       //Get type to spawn
       id = getFromCandidateList();
@@ -42,7 +42,7 @@ void PopulateItems::spawnItems() {
       //Spawn
       eng->itemFactory->spawnItemOnMap(id, pos);
 
-      //Erase coordinate from the vector
+      //Erase position from the vector
       freeCells.erase(freeCells.begin() + n);
     }
   }

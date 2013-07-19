@@ -126,7 +126,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
     for(int y = room.getY0(); y <= room.getY1(); y++) {
       for(int x = room.getX0(); x <= room.getX1(); x++) {
         if(blockers[x][y] == false) {
-          eng->featureFactory->spawnFeatureAt(featureId, coord(x, y));
+          eng->featureFactory->spawnFeatureAt(featureId, Pos(x, y));
         }
       }
     }
@@ -135,7 +135,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 //  if(room.roomTheme == roomTheme_chasm) {
 //    for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
 //      for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
-//        eng->featureFactory->spawnFeatureAt(feature_chasm, coord(x, y));
+//        eng->featureFactory->spawnFeatureAt(feature_chasm, Pos(x, y));
 //      }
 //    }
 //  }
@@ -149,8 +149,8 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
           if(blockers[x][y] == false) {
             const int CHANCE_TO_PUT_BLOOD = 40;
             if(eng->dice.percentile() < CHANCE_TO_PUT_BLOOD) {
-              eng->gore->makeGore(coord(x, y));
-              eng->gore->makeBlood(coord(x, y));
+              eng->gore->makeGore(Pos(x, y));
+              eng->gore->makeBlood(Pos(x, y));
               nrBloodPut++;
             }
           }
@@ -169,17 +169,17 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
     const int CHANCE_FOR_BLOODY_CHAMBER = 60;
     if(eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
 
-      coord origin(-1, -1);
-      vector<coord> originCandidates;
+      Pos origin(-1, -1);
+      vector<Pos> originCandidates;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
-            origin = coord(x, y);
+            origin = Pos(x, y);
             y = 999;
             x = 999;
           } else {
             if(blockers[x][y] == false) {
-              originCandidates.push_back(coord(x, y));
+              originCandidates.push_back(Pos(x, y));
             }
           }
         }
@@ -191,7 +191,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             if((dx == 0 && dy == 0) || (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
-              const coord pos = origin + coord(dx, dy);
+              const Pos pos = origin + Pos(dx, dy);
               if(blockers[pos.x][pos.y] == false) {
                 eng->gore->makeGore(pos);
                 eng->gore->makeBlood(pos);
@@ -216,8 +216,8 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
     }
   }
 
-  vector<coord> nextToWalls;
-  vector<coord> awayFromWalls;
+  vector<Pos> nextToWalls;
+  vector<Pos> awayFromWalls;
   eng->mapPatterns->setPositionsInArea(room.getDims(), nextToWalls, awayFromWalls);
 
   vector<int> featuresSpawnCount(featureDefsBelongingToTheme.size(), 0);
@@ -225,7 +225,7 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
   int featuresLeftToPlace = eng->dice.getInRange(3, 8);
   while(true) {
     const FeatureDef* d = NULL;
-    coord pos(-1, -1);
+    Pos pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureDefsBelongingToTheme);
 
@@ -289,8 +289,8 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   }
 }
 
-int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, coord& pos, vector<coord>& nextToWalls,
-    vector<coord>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme) {
+int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, Pos& pos, vector<Pos>& nextToWalls,
+    vector<Pos>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme) {
   tracer << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
 
   if(featureDefsBelongingToTheme.empty()) {
@@ -350,7 +350,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, coord& pos, vec
   return -1;
 }
 
-void RoomThemeMaker::eraseAdjacentCellsFromVectors(const coord& pos,  vector<coord>& nextToWalls, vector<coord>& awayFromWalls) {
+void RoomThemeMaker::eraseAdjacentCellsFromVectors(const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
   tracer << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
     if(eng->mapTests->isCellsNeighbours(pos, nextToWalls.at(i), true)) {

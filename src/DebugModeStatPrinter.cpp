@@ -89,7 +89,7 @@ void DebugModeStatPrinter::run() {
     ActorDefinition& d = *(actorDefsSorted.at(i));
 
     Actor* const actor = eng->actorFactory->makeActorFromId(d.id);
-    actor->place(coord(-1, -1), &d, eng);
+    actor->place(Pos(-1, -1), &d, eng);
 
     const string uniqueStr = d.isUnique ? " (U)" : "";
     printLine(indent1 + actor->getNameA() + uniqueStr);

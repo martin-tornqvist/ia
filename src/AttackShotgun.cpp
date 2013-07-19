@@ -10,7 +10,7 @@
 #include "Map.h"
 #include "Postmortem.h"
 
-void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
+void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   RangedAttackData* data = new RangedAttackData(
     attacker, wpn, aimPos, attacker.pos, eng);
 
@@ -37,8 +37,8 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
     }
   }
 
-  const coord origin = attacker.pos;
-  vector<coord> path = eng->mapTests->getLine(origin, aimPos, false, 9999);
+  const Pos origin = attacker.pos;
+  vector<Pos> path = eng->mapTests->getLine(origin, aimPos, false, 9999);
 
   int nrActorsHit = 0;
 
@@ -52,7 +52,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
       }
     }
 
-    const coord curPos(path.at(i));
+    const Pos curPos(path.at(i));
 
     if(actorArray[curPos.x][curPos.y] != NULL) {
 
@@ -63,16 +63,20 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
 
         //Actor hit?
         delete data;
-        data = new RangedAttackData(attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
-        if(eng->basicUtils->chebyshevDistance(origin, curPos) <= wpn.effectiveRangeLimit) {
+        data = new RangedAttackData(
+          attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
+        if(
+          eng->basicUtils->chebyshevDistance(origin, curPos) <=
+          wpn.effectiveRangeLimit) {
           if(data->attackResult >= successSmall) {
             if(eng->map->playerVision[curPos.x][curPos.y]) {
               eng->renderer->drawMapAndInterface(false);
-              eng->renderer->coverCellInMap(curPos.x, curPos.y);
+              eng->renderer->coverCellInMap(curPos);
               if(eng->config->isTilesMode) {
-                eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrRedLgt);
+                eng->renderer->drawTile(
+                  tile_blastAnimation2, panel_map, curPos, clrRedLgt);
               } else {
-                eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrRedLgt);
+                eng->renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
               }
               eng->renderer->updateScreen();
               eng->sleep(eng->config->delayShotgun);
@@ -113,9 +117,10 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
         if(eng->config->isTilesMode) {
-          eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
+          eng->renderer->drawTile(
+            tile_blastAnimation2, panel_map, curPos, clrYellow);
         } else {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
+          eng->renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }
         eng->renderer->updateScreen();
         eng->sleep(eng->config->delayShotgun);
@@ -130,9 +135,10 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
         if(eng->config->isTilesMode) {
-          eng->renderer->drawTileInMap(tile_blastAnimation2, curPos, clrYellow);
+          eng->renderer->drawTile(
+            tile_blastAnimation2, panel_map, curPos, clrYellow);
         } else {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, curPos, clrYellow);
+          eng->renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }
         eng->renderer->updateScreen();
         eng->sleep(eng->config->delayShotgun);

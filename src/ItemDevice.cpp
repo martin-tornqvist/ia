@@ -119,10 +119,10 @@ void DeviceSentry::runGoodEffect(Engine* const engine) {
   const unsigned int NR_TARGET_CANDIDATES = targetCandidates.size();
   if(NR_TARGET_CANDIDATES > 0) {
     Actor* const actor = targetCandidates.at(engine->dice.getInRange(0, NR_TARGET_CANDIDATES - 1));
-    const coord& pos = actor->pos;
+    const Pos& pos = actor->pos;
     engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-      vector<coord>(1, pos), clrYellow, 1);
+      vector<Pos>(1, pos), clrYellow, 1);
     actor->hit(DMG, dmgType_electric);
   }
 }
@@ -133,12 +133,12 @@ string DeviceRepeller::getSpecificActivateMessage() {
 }
 
 void DeviceRepeller::runGoodEffect(Engine* const engine) {
-  const coord& playerPos = engine->player->pos;
+  const Pos& playerPos = engine->player->pos;
   const unsigned int NR_ACTORS = engine->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
     Actor* const actor = engine->gameTime->getActorAt(i);
     if(actor != engine->player) {
-      const coord& otherPos = actor->pos;
+      const Pos& otherPos = actor->pos;
       if(engine->mapTests->isCellsNeighbours(playerPos, otherPos, false)) {
         engine->knockBack->tryKnockBack(actor, playerPos, false, true);
       }

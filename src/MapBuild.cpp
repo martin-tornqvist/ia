@@ -16,7 +16,7 @@ void MapBuild::backupMap() {
 void MapBuild::restoreMap() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->featureFactory->spawnFeatureAt(backup[x][y], coord(x, y));
+      eng->featureFactory->spawnFeatureAt(backup[x][y], Pos(x, y));
     }
   }
 }
@@ -36,13 +36,13 @@ void MapBuild::restoreMap() {
 //  return true;
 //}
 
-void MapBuild::makeStraightPathByPathfinder(const coord origin, const coord target, Feature_t feature,
+void MapBuild::makeStraightPathByPathfinder(const Pos origin, const Pos target, Feature_t feature,
     const bool SMOOTH, const bool TUNNEL_THROUGH_ANY_FEATURE) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(blockers, false);
-  vector<coord> path = eng->pathfinder->findPath(origin, blockers, target);
+  vector<Pos> path = eng->pathfinder->findPath(origin, blockers, target);
   for(unsigned int i = 0; i < path.size(); i++) {
-    const coord c = path.at(i);
+    const Pos c = path.at(i);
     if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       eng->featureFactory->spawnFeatureAt(feature, c);
       if(SMOOTH == false && eng->dice.percentile() < 33) {
@@ -53,13 +53,13 @@ void MapBuild::makeStraightPathByPathfinder(const coord origin, const coord targ
 }
 
 void MapBuild::makePathByRandomWalk(int originX, int originY, int len, Feature_t featureToMake, const bool TUNNEL_THROUGH_ANY_FEATURE,
-                                    const bool ONLY_STRAIGHT, const coord x0y0Lim, const coord x1y1Lim) {
+                                    const bool ONLY_STRAIGHT, const Pos x0y0Lim, const Pos x1y1Lim) {
   int dx = 0;
   int dy = 0;
   int xPos = originX;
   int yPos = originY;
 
-  vector<coord> positionsToFill;
+  vector<Pos> positionsToFill;
 
   bool directionOk = false;
   while(len > 0) {
@@ -70,7 +70,7 @@ void MapBuild::makePathByRandomWalk(int originX, int originY, int len, Feature_t
                       || (ONLY_STRAIGHT == true && dx != 0 && dy != 0));
     }
     if(eng->map->featuresStatic[xPos + dx][yPos + dy]->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
-      positionsToFill.push_back(coord(xPos + dx, yPos + dy));
+      positionsToFill.push_back(Pos(xPos + dx, yPos + dy));
       xPos += dx;
       yPos += dy;
       len--;
@@ -82,18 +82,18 @@ void MapBuild::makePathByRandomWalk(int originX, int originY, int len, Feature_t
   }
 }
 
-void MapBuild::buildFromTemplate(const coord pos, MapTemplate* t) {
+void MapBuild::buildFromTemplate(const Pos pos, MapTemplate* t) {
   for(int dy = 0; dy < t->height; dy++) {
     for(int dx = 0; dx < t->width; dx++) {
       const Feature_t featureId = t->featureVector[dy][dx];
       if(featureId != feature_empty) {
-        eng->featureFactory->spawnFeatureAt(featureId, pos + coord(dx, dy));
+        eng->featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));
       }
     }
   }
 }
 
-void MapBuild::buildFromTemplate(const coord pos, MapTemplateId_t templateId) {
+void MapBuild::buildFromTemplate(const Pos pos, MapTemplateId_t templateId) {
   MapTemplate* t = eng->mapTemplateHandler->getTemplate(templateId);
   buildFromTemplate(pos, t);
 }

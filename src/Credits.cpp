@@ -39,19 +39,19 @@ void Credits::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
   eng->renderer->coverArea(
-    renderArea_screen, 0, 1, MAP_X_CELLS, 2);
+    panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
 
   eng->renderer->drawText(
-    decorationLine, renderArea_screen, 1, 1, clrWhite);
+    decorationLine, panel_screen, Pos(1, 1), clrWhite);
 
   eng->renderer->drawText(
-    " Displaying credits.txt ", renderArea_screen, 3, 1, clrWhite);
+    " Displaying credits.txt ", panel_screen, Pos(3, 1), clrWhite);
 
   eng->renderer->drawText(
-    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+    decorationLine, panel_character, Pos(1, 1), clrWhite);
 
   eng->renderer->drawText(
-    " space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
+    " space/esc to exit ", panel_character, Pos(3, 1), clrWhite);
 }
 
 void Credits::run() {
@@ -61,10 +61,10 @@ void Credits::run() {
 
   drawInterface();
 
-  int yCell = 2;
+  Pos pos(1, 2);
   for(unsigned int i = 0; i < lines.size(); i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
-    yCell++;
+    eng->renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
+    pos.y++;
   }
 
   eng->renderer->updateScreen();
@@ -77,5 +77,5 @@ void Credits::run() {
       done = true;
     }
   }
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
 }

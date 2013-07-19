@@ -6,7 +6,7 @@
 #include "Render.h"
 #include "PlayerBonuses.h"
 
-FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, coord pos, Engine* engine) :
+FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {
 
 }
@@ -24,7 +24,7 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
   }
 }
 
-FeatureLiquidDeep::FeatureLiquidDeep(Feature_t id, coord pos, Engine* engine) :
+FeatureLiquidDeep::FeatureLiquidDeep(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {
 
 }

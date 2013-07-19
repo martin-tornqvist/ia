@@ -18,7 +18,7 @@ public:
     calcLineTravelVectors();
   }
 
-  void getLineTravelVector(vector<coord>& vectorUsed, const coord& delta, const double MAX_DIST_ABS) const {
+  void getLineTravelVector(vector<Pos>& vectorUsed, const Pos& delta, const double MAX_DIST_ABS) const {
     if(absDistances[delta.x + FOV_MAX_RADI_INT][delta.y +  FOV_MAX_RADI_INT] <= MAX_DIST_ABS) {
       vectorUsed = lineTravelVectors[delta.x + FOV_MAX_RADI_INT][delta.y + FOV_MAX_RADI_INT];
     }
@@ -36,7 +36,7 @@ private:
   double absDistances[FOV_MAX_WIDTH_INT][FOV_MAX_WIDTH_INT];
 
   void calcLineTravelVectors();
-  vector<coord> lineTravelVectors[FOV_MAX_WIDTH_INT][FOV_MAX_WIDTH_INT];
+  vector<Pos> lineTravelVectors[FOV_MAX_WIDTH_INT][FOV_MAX_WIDTH_INT];
 
   Engine* eng;
 };

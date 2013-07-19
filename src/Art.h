@@ -28,6 +28,7 @@ enum Tile_t {
   tile_chestClosed,
   tile_chestOpen,
   tile_electricLantern,
+  tile_medicalBag,
   tile_rat,
   tile_spider,
   tile_wolf,
@@ -137,16 +138,16 @@ enum Tile_t {
 };
 
 class Engine;
-struct coord;
+struct Pos;
 
 class Art {
 public:
-  coord getGlyphCoords(const char glyph);
-  coord getTileCoords(const Tile_t tile);
+  Pos getGlyphPoss(const char glyph);
+  Pos getTilePoss(const Tile_t tile);
 
 private:
-  coord getColumnAndRowGlyph(const char glyph);
-  coord getColumnAndRowTile(const Tile_t tile);
+  Pos getColumnAndRowGlyph(const char glyph);
+  Pos getColumnAndRowTile(const Tile_t tile);
 };
 
 #endif

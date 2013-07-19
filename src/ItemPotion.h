@@ -22,12 +22,12 @@ public:
 
   void quaff(Actor* const actor, Engine* const engine);
 
-  void collide(const coord& pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);
+  void collide(const Pos& pos, Actor* actor, const ItemDefinition& itemDef, Engine* const engine);
 
   void setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY);
 
 protected:
-  virtual void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) = 0;
+  virtual void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) = 0;
 
   virtual void specificQuaff(Actor* const actor, Engine* const engine) {
     (void) actor;
@@ -45,7 +45,7 @@ public:
   ~PotionOfHealing() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Healing";}
 };
 
@@ -55,7 +55,7 @@ public:
   ~PotionOfSorcery() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
     (void)pos;
     (void)actor;
     (void)engine;
@@ -69,7 +69,7 @@ public:
   ~PotionOfBlindness() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Blindness";}
 };
 
@@ -79,7 +79,7 @@ public:
   ~PotionOfParalyzation() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Paralyzation";}
 };
 
@@ -89,7 +89,7 @@ public:
   ~PotionOfDisease() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
     (void)pos;
     (void)actor;
     (void)engine;
@@ -103,7 +103,7 @@ public:
   ~PotionOfConfusion() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Confusion";}
 };
 
@@ -113,7 +113,7 @@ private:
 //  ~PotionOfCorruption() {}
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
-//  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+//  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
 //  const string getRealTypeName() {return "Corruption";}
 //};
 
@@ -123,7 +123,7 @@ public:
   ~PotionOfTheCobra() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "the Cobra";}
 };
 
@@ -138,7 +138,7 @@ private:
 //  }
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
-//  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+//  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
 //    (void)pos;
 //    (void)actor;
 //    (void)engine;
@@ -154,7 +154,7 @@ public:
   ~PotionOfFortitude() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {
     return "Fortitude";
   }
@@ -166,7 +166,7 @@ public:
   ~PotionOfToughness() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Toughness";}
 };
 
@@ -176,7 +176,7 @@ public:
   ~PotionOfPoison() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine);
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine);
   const string getRealTypeName() {return "Poison";}
 };
 
@@ -186,7 +186,7 @@ public:
   ~PotionOfKnowledge() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
-  void specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+  void specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
     (void)pos;
     (void)actor;
     (void)engine;

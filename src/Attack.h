@@ -40,8 +40,8 @@ public:
 
 class RangedAttackData: public AttackData {
 public:
-  RangedAttackData(Actor& attacker_, const Weapon& wpn_, const coord& aimPos_,
-                   const coord& curPos_, Engine* engine,
+  RangedAttackData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
+                   const Pos& curPos_, Engine* engine,
                    ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
@@ -52,8 +52,8 @@ public:
 
 class MissileAttackData: public AttackData {
 public:
-  MissileAttackData(Actor& attacker_, const Item& item_, const coord& aimPos_,
-                   const coord& curPos_, Engine* engine,
+  MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+                   const Pos& curPos_, Engine* engine,
                    ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
@@ -61,7 +61,7 @@ public:
 };
 
 struct Projectile {
-  Projectile() : pos(coord(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
+  Projectile() : pos(Pos(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
     actorHit(NULL), obstructedInElement(-1), isDoneRendering(false),
     glyph(-1), tile(tile_empty), clr(clrWhite), attackData(NULL) {}
 
@@ -88,7 +88,7 @@ struct Projectile {
     clr = clrToRender;
   }
 
-  coord pos;
+  Pos pos;
   bool isObstructed;
   bool isVisibleToPlayer;
   Actor* actorHit;
@@ -104,7 +104,7 @@ class Attack {
 public:
   Attack(Engine* engine) : eng(engine) {}
 
-  bool ranged(Actor& attacker, Weapon& wpn, const coord& aimPos);
+  bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
 
   void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
 
@@ -118,11 +118,11 @@ private:
   void printProjectileAtActorMessages(const RangedAttackData& data,
                                       const bool IS_HIT) const;
 
-  void projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos);
+  void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos);
 
-  void shotgun(Actor& attacker, const Weapon& wpn, const coord& aimPos);
+  void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos);
 
-  bool isCellOnLine(vector<coord> line, int x, int y);
+  bool isCellOnLine(vector<Pos> line, int x, int y);
 
   Engine* eng;
 };

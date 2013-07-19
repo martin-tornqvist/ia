@@ -22,8 +22,8 @@ void SoundEmitter::emitSound(Sound sound) {
     }
   }
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  const coord& origin = sound.getOrigin();
-  eng->mapTests->floodFill(origin, blockers, floodFill, 999, coord(-1, -1));
+  const Pos& origin = sound.getOrigin();
+  eng->mapTests->floodFill(origin, blockers, floodFill, 999, Pos(-1, -1));
 
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
@@ -60,22 +60,22 @@ void SoundEmitter::emitSound(Sound sound) {
 }
 
 string SoundEmitter::getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER,
-    const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
+    const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
-  const coord& playerPos = eng->player->pos;
+  const Pos& playerPos = eng->player->pos;
   string sourceDirectionName = "";
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
 
-      const coord checkedCoord = playerPos + coord(dx, dy);
+      const Pos checkedPos = playerPos + Pos(dx, dy);
 
       //If player is next to origin, simply return the direction checked in.
-      if(checkedCoord == origin) {
+      if(checkedPos == origin) {
         return directionNames.directions[dx + 1][dy + 1];
       } else {
         //Origin is further away
-        const int currentValue = floodFill[checkedCoord.x][checkedCoord.y];
+        const int currentValue = floodFill[checkedPos.x][checkedPos.y];
         //If current value is less than players, this is the direction of the sound.
         if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
           sourceDirectionName = directionNames.directions[dx + 1][dy + 1];

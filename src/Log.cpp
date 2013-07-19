@@ -42,7 +42,7 @@ void Log::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
 
     drawXpos = findCurXpos(lineToDraw, i);
 
-    eng->renderer->drawText(str, renderArea_log, drawXpos, yCell, clr);
+    eng->renderer->drawText(str, panel_log, Pos(drawXpos, yCell), clr);
   }
 }
 
@@ -76,9 +76,13 @@ void Log::displayHistory() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = max(0, min(topElement + LINE_JUMP, int(history.size()) - int(MAP_Y_CELLS)));
-      btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      topElement = min(topElement + LINE_JUMP,
+                       int(history.size()) - int(MAP_Y_CELLS));
+      topElement = max(0, topElement);
+      btmElement = min(topElement + MAP_Y_CELLS - 1,
+                       int(history.size()) - 1);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
@@ -88,9 +92,12 @@ void Log::displayHistory() {
       eng->renderer->updateScreen();
     }
     else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = max(0, min(topElement - LINE_JUMP, int(history.size()) - int(MAP_Y_CELLS)));
+      topElement = min(topElement - LINE_JUMP,
+                       int(history.size()) - int(MAP_Y_CELLS));
+      topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
@@ -110,52 +117,48 @@ void Log::displayHistory() {
 void Log::drawHistoryInterface(const int topLine, const int bottomLine) const {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverRenderArea(renderArea_log);
-  eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
+  eng->renderer->coverPanel(panel_log);
+  eng->renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
   if(history.empty()) {
-    eng->renderer->drawText(" No message history ", renderArea_screen, 3, 1, clrWhite);
+    eng->renderer->drawText(" No message history ", panel_screen,
+                            Pos(3, 1), clrWhite);
   } else {
     eng ->renderer->drawText(
-      " Displaying messages " + intToString(topLine) + "-" + intToString(bottomLine) + " of "
-      + intToString(history.size()) + " ", renderArea_screen, 3, 1, clrWhite);
+      " Displaying messages " + intToString(topLine) + "-" +
+      intToString(bottomLine) + " of " +
+      intToString(history.size()) + " ", panel_screen, Pos(3, 1), clrWhite);
   }
 
   eng->renderer->drawText(
-    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+    decorationLine, panel_character, Pos(1, 1), clrWhite);
   eng->renderer->drawText(
-    " 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
+    " 2/8, down/up to navigate | space/esc to exit ",
+    panel_character, Pos(3, 1), clrWhite);
 }
 
-int Log::findCurXpos(const vector<Message>& afterLine, const unsigned int messageNr) const {
-  if(messageNr == 0) {
-    return 0;
-  }
+int Log::findCurXpos(const vector<Message>& afterLine,
+                     const unsigned int messageNr) const {
+  if(messageNr == 0) {return 0;}
 
   const unsigned int LINE_SIZE = afterLine.size();
 
-  if(LINE_SIZE == 0) {
-    return 0;
-  }
+  if(LINE_SIZE == 0) {return 0;}
 
   int xPos = 0;
 
   for(unsigned int i = 0; i < messageNr; i++) {
-
     const Message& curMessage = afterLine.at(i);
-
     xPos += int(curMessage.str.length());
-
-    if(curMessage.repeats > 1) {
-      xPos += 4;
-    }
-
+    if(curMessage.repeats > 1) {xPos += 4;}
     xPos++;
   }
 
   return xPos;
 }
 
-void Log::addMessage(const string& text, const SDL_Color color, MessageInterrupt_t interrupt, const bool FORCE_MORE_PROMPT) {
+void Log::addMessage(const string& text, const SDL_Color color,
+                     MessageInterrupt_t interrupt,
+                     const bool FORCE_MORE_PROMPT) {
   bool repeated = false;
 
   //New message equal to previous?
@@ -167,16 +170,17 @@ void Log::addMessage(const string& text, const SDL_Color color, MessageInterrupt
   }
 
   if(repeated == false) {
-    const int REPEAT_LABEL_LENGTH = 4;
-    const int MORE_PROMPT_LENGTH = 7;
+    const int REPEAT_LEN  = 4;
+    const int MORE_LEN    = 7;
 
     const int CUR_X_POS = findCurXpos(line, line.size());
 
-    const bool MESSAGE_FITS = CUR_X_POS + int(text.size()) + REPEAT_LABEL_LENGTH + MORE_PROMPT_LENGTH < MAP_X_CELLS;
+    const bool IS_MSG_FIT =
+      CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
 
-    if(MESSAGE_FITS == false) {
+    if(IS_MSG_FIT == false) {
       eng->renderer->drawMapAndInterface(false);
-      eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS, 0, clrCyanLgt);
+      eng->renderer->drawText("[MORE]", panel_log, Pos(CUR_X_POS, 0), clrCyanLgt);
       eng->renderer->updateScreen();
       eng->query->waitForKeyPress();
       clearLog();
@@ -192,7 +196,8 @@ void Log::addMessage(const string& text, const SDL_Color color, MessageInterrupt
   if(FORCE_MORE_PROMPT) {
     eng->renderer->drawMapAndInterface(false);
     const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
-    eng->renderer->drawText("[MORE]", renderArea_log, CUR_X_POS_AFTER, 0, clrCyanLgt);
+    eng->renderer->drawText("[MORE]", panel_log,
+                            Pos(CUR_X_POS_AFTER, 0), clrCyanLgt);
     eng->renderer->updateScreen();
     eng->query->waitForKeyPress();
     clearLog();

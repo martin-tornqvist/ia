@@ -103,7 +103,7 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
   bool isSwiftReload = false;
   const bool IS_PLAYER = actorReloading == eng->player;
   if(IS_PLAYER) {
-    isSwiftReload = false; //eng->playerBonusHandler->isBonusPicked(playerBonus_nimble) && eng->dice.coinToss();
+    isSwiftReload = false; //eng->playerBonHandler->isBonPicked(playerBon_nimble) && eng->dice.coinToss();
   }
 
   if(weaponToReload != NULL) {

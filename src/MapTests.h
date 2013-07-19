@@ -14,11 +14,11 @@ class Feature;
 //Function object for sorting containers by distance to origin
 struct IsCloserToOrigin {
 public:
-  IsCloserToOrigin(const coord& c, const Engine* engine) :
+  IsCloserToOrigin(const Pos& c, const Engine* engine) :
     c_(c), eng(engine) {
   }
-  bool operator()(const coord& c1, const coord& c2);
-  coord c_;
+  bool operator()(const Pos& c1, const Pos& c2);
+  Pos c_;
   const Engine* eng;
 };
 
@@ -29,7 +29,7 @@ public:
   }
 
   void makeVisionBlockerArray(
-    const coord& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
+    const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
     const int MAX_VISION_RANMGE = FOV_MAX_RADI_INT);
 
   void makeMoveBlockerArray(
@@ -55,20 +55,20 @@ public:
   void addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void addAdjacentLivingActorsToBlockerArray(
-    const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+    const Pos origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeWalkBlockingArrayFeaturesOnly(
     bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void floodFill(
-    const coord& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+    const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
     int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
-    const coord& target);
+    const Pos& target);
 
   void makeBoolVectorFromMapArray(
-    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill);
+    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
 
-  inline bool isCellInsideMap(const coord& pos) const {
+  inline bool isCellInsideMap(const Pos& pos) const {
     if(pos.x < 0) {
       return false;
     }
@@ -117,7 +117,7 @@ public:
     }
   }
 
-  inline bool isCellInside(const coord& pos, const Rect& area) const {
+  inline bool isCellInside(const Pos& pos, const Rect& area) const {
     return
       pos.x >= area.x0y0.x &&
       pos.x <= area.x1y1.x &&
@@ -125,19 +125,19 @@ public:
       pos.y <= area.x1y1.y;
   }
 
-  bool isCellNextToPlayer(const coord& pos,
+  bool isCellNextToPlayer(const Pos& pos,
                           const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
-  bool isCellsNeighbours(const coord& pos1, const coord& pos2,
+  bool isCellsNeighbours(const Pos& pos1, const Pos& pos2,
                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
-  coord getClosestPos(const coord c, const vector<coord>& positions) const;
-  Actor* getClosestActor(const coord c, const vector<Actor*>& actors) const;
+  Pos getClosestPos(const Pos c, const vector<Pos>& positions) const;
+  Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 
-  vector<coord> getLine(const coord& origin, const coord& target,
+  vector<Pos> getLine(const Pos& origin, const Pos& target,
                         bool stopAtTarget, int chebTravelLimit);
 
-  Actor* getActorAtPos(const coord pos) const;
+  Actor* getActorAtPos(const Pos pos) const;
 
 private:
   Engine* eng;

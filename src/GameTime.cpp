@@ -23,7 +23,7 @@ void GameTime::setParametersFromSaveLines(vector<string>& lines) {
   lines.erase(lines.begin());
 }
 
-vector<FeatureMob*> GameTime::getFeatureMobsAtPos(const coord& pos) {
+vector<FeatureMob*> GameTime::getFeatureMobsAtPos(const Pos& pos) {
   vector<FeatureMob*> returnVector;
   for(unsigned int i = 0; i < featureMobs_.size(); i++) {
     if(featureMobs_.at(i)->getPos() == pos) {
@@ -218,7 +218,7 @@ void GameTime::runNewStandardTurnEvents() {
     ItemDefinition& d = *(eng->itemData->itemDefinitions[i]);
     if(d.isScroll) {
       if(d.isScrollLearned) {
-        if(eng->playerBonusHandler->isBonusPicked(playerBonus_occultist)) {
+        if(eng->playerBonHandler->isBonPicked(playerBon_occultist)) {
           if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
             if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
               d.castFromMemoryCurrentBaseChance++;

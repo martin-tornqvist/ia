@@ -13,7 +13,7 @@ public:
 
 protected:
 	friend class FeatureFactory;
-	Smoke(Feature_t id, coord pos, Engine* engine, SmokeSpawnData* spawnData) :
+	Smoke(Feature_t id, Pos pos, Engine* engine, SmokeSpawnData* spawnData) :
 		FeatureMob(id, pos, engine), life_(spawnData->life_), isPermanent_(life_ == -1) {
 	}
 

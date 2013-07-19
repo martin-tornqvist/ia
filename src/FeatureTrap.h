@@ -52,7 +52,7 @@ public:
 
   MaterialType_t getMaterialType() const;
 
-  coord actorTryLeave(Actor* const actor, const coord& pos, const coord& dest);
+  Pos actorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest);
 
   Trap_t getTrapType() const;
 
@@ -61,7 +61,7 @@ public:
 protected:
   friend class FeatureFactory;
   friend class Disarm;
-  Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData);
+  Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData);
 
   void trigger(Actor* const actor);
 
@@ -80,13 +80,13 @@ public:
 
 protected:
   friend class Trap;
-  SpecificTrapBase(coord pos, Trap_t trapType, Engine* engine) :
+  SpecificTrapBase(Pos pos, Trap_t trapType, Engine* engine) :
     pos_(pos), trapType_(trapType), eng(engine) {
   }
   SpecificTrapBase() {}
   virtual ~SpecificTrapBase() {}
 
-  virtual coord specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
+  virtual Pos specificTrapActorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest) {
     (void)actor;
     (void)pos;
     return dest;
@@ -100,7 +100,7 @@ protected:
   virtual bool isMagical() const = 0;
   virtual bool isDisarmable() const = 0;
 
-  coord pos_;
+  Pos pos_;
   Trap_t trapType_;
   Engine* eng;
 };
@@ -109,7 +109,7 @@ class TrapDart: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapDart(coord pos, Engine* engine);
+  TrapDart(Pos pos, Engine* engine);
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Dart trap";}
@@ -124,7 +124,7 @@ class TrapSpear: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSpear(coord pos, Engine* engine);
+  TrapSpear(Pos pos, Engine* engine);
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
   string getTrapSpecificTitle() const {return "Spear trap";}
@@ -139,7 +139,7 @@ class TrapGasConfusion: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasConfusion(coord pos, Engine* engine) :
+  TrapGasConfusion(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_gasConfusion, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrMagenta;}
@@ -154,7 +154,7 @@ class TrapGasParalyzation: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasParalyzation(coord pos, Engine* engine) :
+  TrapGasParalyzation(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_gasParalyze, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
@@ -170,7 +170,7 @@ class TrapGasFear: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasFear(coord pos, Engine* engine) :
+  TrapGasFear(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_gasFear, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrMagenta;}
@@ -185,7 +185,7 @@ class TrapBlindingFlash: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapBlindingFlash(coord pos, Engine* engine) :
+  TrapBlindingFlash(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_blinding, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrYellow;}
@@ -200,7 +200,7 @@ class TrapTeleport: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapTeleport(coord pos, Engine* engine) :
+  TrapTeleport(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_teleport, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
@@ -216,7 +216,7 @@ class TrapSummonMonster: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSummonMonster(coord pos, Engine* engine) :
+  TrapSummonMonster(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_summonMonster, engine) {
   }
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
@@ -232,7 +232,7 @@ class TrapSmoke: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSmoke(coord pos, Engine* engine) :
+  TrapSmoke(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_smoke, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrGray;}
@@ -247,7 +247,7 @@ class TrapAlarm: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapAlarm(coord pos, Engine* engine) :
+  TrapAlarm(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_alarm, engine) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrBrown;}
@@ -261,13 +261,13 @@ private:
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
-  coord specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest);
+  Pos specificTrapActorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest);
 
   bool isHolding() const {return isHoldingActor;}
 
 private:
   friend class Trap;
-  TrapSpiderWeb(coord pos, Engine* engine) :
+  TrapSpiderWeb(Pos pos, Engine* engine) :
     SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {}
   void trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}

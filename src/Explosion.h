@@ -24,10 +24,10 @@ public:
 		return *this;
 	}
 
-	void runExplosion(const coord& origin, const bool DO_EXPLOSION_DMG = true, StatusEffect* const effect = NULL,
+	void runExplosion(const Pos& origin, const bool DO_EXPLOSION_DMG = true, StatusEffect* const effect = NULL,
 	                  const bool OVERRIDE_EXPLOSION_RENDERING = false, const SDL_Color colorOverride = clrWhite);
 
-	void runSmokeExplosion(const coord& origin, const bool SMALL_RADIUS = false);
+	void runSmokeExplosion(const Pos& origin, const bool SMALL_RADIUS = false);
 
 private:
 
@@ -35,7 +35,7 @@ private:
 	const int height;
 
 	struct BasicData {
-		BasicData(const coord& origin, const int width, const int height) :
+		BasicData(const Pos& origin, const int width, const int height) :
 			x0(origin.x - (width - 1) / 2), y0(origin.y - (height - 1) / 2),
 			x1(origin.x + (width - 1) / 2), y1(origin.y + (height - 1) / 2) {
 		}

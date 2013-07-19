@@ -128,15 +128,15 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
 }
 
 void Marker::draw(const MarkerTask_t markerTask) const {
-  vector<coord> trace;
+  vector<Pos> trace;
   trace.resize(0);
 
   int effectiveRange = -1;
 
 //  if(markerTask == markerTask_spellAzathothsBlast) {
-//    trace.push_back(coord(pos_.x, pos_.y));
+//    trace.push_back(Pos(pos_.x, pos_.y));
 //  } else {
-  const coord playerPos = eng->player->pos;
+  const Pos playerPos = eng->player->pos;
   trace = eng->mapTests->getLine(playerPos, pos_, true, 99999);
 //  }
 
@@ -158,11 +158,11 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
     markerTask == markerTask_look             ||
     markerTask == markerTask_aimThrownWeapon) {
     //Attempt to place marker at target.
-    if(setCoordToTargetIfVisible() == false) {
+    if(setPosToTargetIfVisible() == false) {
       //Else NULL the target, and attempt to place marker at closest visible enemy.
       //This sets a new target if successful.
       eng->player->target = NULL;
-      setCoordToClosestEnemyIfVisible();
+      setPosToClosestEnemyIfVisible();
     }
   }
 
@@ -176,7 +176,7 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
     markerTask == markerTask_look ||
     markerTask == markerTask_aimRangedWeapon ||
     markerTask == markerTask_aimThrownWeapon) {
-    eng->look->markerAtCoord(pos_, markerTask, itemThrown);
+    eng->look->markerAtPos(pos_, markerTask, itemThrown);
   }
 
   eng->renderer->drawMapAndInterface(false);
@@ -191,13 +191,13 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
   return data;
 }
 
-void Marker::setCoordToClosestEnemyIfVisible() {
+void Marker::setPosToClosestEnemyIfVisible() {
   eng->player->getSpotedEnemiesPositions();
 
   //If player sees enemies, suggest one for targeting
-  const vector<coord>& positions = eng->player->spotedEnemiesPositions;
+  const vector<Pos>& positions = eng->player->spotedEnemiesPositions;
   if(positions.size() != 0) {
-    coord pos = eng->mapTests->getClosestPos(eng->player->pos, positions);
+    Pos pos = eng->mapTests->getClosestPos(eng->player->pos, positions);
 
     pos_ = pos;
 
@@ -206,7 +206,7 @@ void Marker::setCoordToClosestEnemyIfVisible() {
   }
 }
 
-bool Marker::setCoordToTargetIfVisible() {
+bool Marker::setPosToTargetIfVisible() {
   const Actor* const target = eng->player->target;
 
   if(target != NULL) {
@@ -229,7 +229,7 @@ bool Marker::setCoordToTargetIfVisible() {
 void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
                   const Item* itemThrown) {
   bool isMoved = false;
-  const coord newPos = pos_ + coord(DX, DY);
+  const Pos newPos = pos_ + Pos(DX, DY);
   if(eng->mapTests->isCellInsideMap(newPos)) {
     pos_ = newPos;
     isMoved = true;
@@ -240,7 +240,7 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
       markerTask == markerTask_look             ||
       markerTask == markerTask_aimRangedWeapon  ||
       markerTask == markerTask_aimThrownWeapon) {
-      eng->look->markerAtCoord(pos_, markerTask, itemThrown);
+      eng->look->markerAtPos(pos_, markerTask, itemThrown);
     }
   }
 

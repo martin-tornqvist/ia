@@ -19,19 +19,19 @@
 
 void MapBuild::buildForestLimit() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
-    eng->featureFactory->spawnFeatureAt(feature_tree, coord(0, y));
+    eng->featureFactory->spawnFeatureAt(feature_tree, Pos(0, y));
   }
 
   for(int x = 0; x < MAP_X_CELLS; x++) {
-    eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, 0));
+    eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, 0));
   }
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
-    eng->featureFactory->spawnFeatureAt(feature_tree, coord(MAP_X_CELLS - 1, y));
+    eng->featureFactory->spawnFeatureAt(feature_tree, Pos(MAP_X_CELLS - 1, y));
   }
 
   for(int x = 0; x < MAP_X_CELLS; x++) {
-    eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, MAP_Y_CELLS - 1));
+    eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, MAP_Y_CELLS - 1));
   }
 }
 
@@ -41,7 +41,7 @@ void MapBuild::buildForestOuterTreeline() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x <= MAX_LEN; x++) {
       if(eng->dice(1, 4) > 1 || x == 0) {
-        eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, y));
+        eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         x = 9999;
       }
@@ -51,7 +51,7 @@ void MapBuild::buildForestOuterTreeline() {
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAX_LEN; y++) {
       if(eng->dice(1, 4) > 1 || y == 0) {
-        eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, y));
+        eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         y = 9999;
       }
@@ -61,7 +61,7 @@ void MapBuild::buildForestOuterTreeline() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = MAP_X_CELLS - 1; x >= MAP_X_CELLS - MAX_LEN; x--) {
       if(eng->dice(1, 4) > 1 || x == MAP_X_CELLS - 1) {
-        eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, y));
+        eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         x = -1;
       }
@@ -71,7 +71,7 @@ void MapBuild::buildForestOuterTreeline() {
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = MAP_Y_CELLS - 1; y >= MAP_Y_CELLS - MAX_LEN; y--) {
       if(eng->dice(1, 4) > 1 || y == MAP_Y_CELLS - 1) {
-        eng->featureFactory->spawnFeatureAt(feature_tree, coord(x, y));
+        eng->featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         y = -1;
       }
@@ -94,7 +94,7 @@ void MapBuild::buildForestTreePatch() {
   int stepX = 0;
   int stepY = 0;
 
-  coord curPos(terrainStartX + stepX, terrainStartY + stepY);
+  Pos curPos(terrainStartX + stepX, terrainStartY + stepY);
 
   while(nrTerrainCreated < terrain_size) {
     if(
@@ -119,7 +119,7 @@ void MapBuild::buildForestTreePatch() {
           stepX = 0;
         }
 
-        curPos += coord(stepX, stepY);
+        curPos += Pos(stepX, stepY);
 
         if(eng->mapTests->isCellInsideMap(curPos) == false) {
           nrTerrainCreated = 99999;
@@ -130,17 +130,17 @@ void MapBuild::buildForestTreePatch() {
   }
 }
 
-void MapBuild::buildForestTrees(const coord& stairsCoord) {
+void MapBuild::buildForestTrees(const Pos& stairsPos) {
   unsigned minPathLength = 1;
   unsigned maxPathLength = 999;
 
   int forestPatches = 40 + eng->dice(1, 15);
 
-  vector<coord> path;
+  vector<Pos> path;
 
   backupMap();
 
-  const coord churchPos = stairsCoord - coord(26, 7);
+  const Pos churchPos = stairsPos - Pos(26, 7);
 
   bool proceed = false;
   while(proceed == false) {
@@ -153,9 +153,9 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
 
-    path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsCoord);
+    path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
 
-    eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsCoord);
+    eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
 
     if(path.size() >= minPathLength && path.size() <= maxPathLength) {
       proceed = true;
@@ -166,17 +166,17 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     maxPathLength++;
   }
 
-//  const coord cultistCoordRelStairs = coord(-1, 1);
-//  const coord cultistCoord(stairsCoord + cultistCoordRelStairs);
+//  const Pos cultistPosRelStairs = Pos(-1, 1);
+//  const Pos cultistPos(stairsPos + cultistPosRelStairs);
 
-//  Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_cultist, cultistCoord));
+//  Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_cultist, cultistPos));
 //  monster->isRoamingAllowed = false;
 
   //Build path
   for(unsigned int i = 0; i < path.size(); i++) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
-        const coord c(path.at(i) + coord(dx, dy));
+        const Pos c(path.at(i) + Pos(dx, dy));
         if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isCellInsideMap(c)) {
           eng->featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
@@ -197,7 +197,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
     const int SEARCH_RADI = FOV_STANDARD_RADI_INT - 2;
     const int TRY_PLACE_EVERY_N_STEP = 2;
 
-    vector<coord> gravePositions;
+    vector<Pos> gravePositions;
 
     int pathWalkCount = 0;
     for(unsigned int i = 0; i < path.size(); i++) {
@@ -230,7 +230,7 @@ void MapBuild::buildForestTrees(const coord& stairsCoord) {
                 }
               }
               if(isPosOk) {
-                gravePositions.push_back(coord(X, Y));
+                gravePositions.push_back(Pos(X, Y));
                 blockers[X][Y] = true;
                 if(gravePositions.size() == static_cast<unsigned int>(NR_HIGHSCORES)) {
                   i = 9999;
@@ -261,7 +261,7 @@ void MapBuild::buildForest() {
   int grass = 0;
   for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-      const coord c(x, y);
+      const Pos c(x, y);
       grass = eng->dice(1, 12);
       if(grass == 1) {
         eng->featureFactory->spawnFeatureAt(feature_bush, c);
@@ -278,7 +278,7 @@ void MapBuild::buildForest() {
     }
   }
 
-  coord stairCell(MAP_X_CELLS - 6, 9);
+  Pos stairCell(MAP_X_CELLS - 6, 9);
   buildForestOuterTreeline();
   buildForestTrees(stairCell);
   buildForestLimit();

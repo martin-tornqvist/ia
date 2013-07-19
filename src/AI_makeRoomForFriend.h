@@ -3,13 +3,6 @@
 
 #include <algorithm>
 
-/*===========================================================================++
- Purpose:
- Check if monster blocks the path to the player for another monster. If that is
- the case, try to move to a coordinate that lets the pal through. This should
- make monsters using this better at surrounding the player.
- ++===========================================================================*/
-
 class AI_makeRoomForFriend {
 public:
   static bool action(Monster* monsterActing, Engine* engine) {
@@ -45,7 +38,7 @@ public:
                 if(checkIfBlockingMonster(monsterActing->pos, otherMonster, engine) || isOtherNeighbourWithoutVision) {
 
                   // Get a list of neighbouring free cells
-                  vector<coord> candidates = getMoveCandidates(monsterActing, engine);
+                  vector<Pos> candidates = getMoveCandidates(monsterActing, engine);
 
                   // Sort the list by closeness to player
                   IsCloserToOrigin sorter(engine->player->pos, engine);
@@ -86,9 +79,9 @@ public:
   }
 
 private:
-  static bool checkIfBlockingMonster(const coord& pos, Monster* other,
+  static bool checkIfBlockingMonster(const Pos& pos, Monster* other,
                                      Engine* engine) {
-    const vector<coord> line = engine->mapTests->getLine(
+    const vector<Pos> line = engine->mapTests->getLine(
                                  other->pos, engine->player->pos, true, 99999);
     for(unsigned int i = 0; i < line.size(); i++) {
       if(line.at(i) == pos) {
@@ -100,10 +93,10 @@ private:
     return false;
   }
 
-  //Returns all the coordinates around the acting monster, that
+  //Returns all the position around the acting monster, that
   //is not occupied by landscape, actors or blocking features.
-  static vector<coord> getMoveCandidates(Monster* self, Engine* engine) {
-    vector<coord> ret;
+  static vector<Pos> getMoveCandidates(Monster* self, Engine* engine) {
+    vector<Pos> ret;
 
     const int PLAYER_X = engine->player->pos.x;
     const int PLAYER_Y = engine->player->pos.y;
@@ -123,7 +116,7 @@ private:
 
           if(DIST_NEW <= DIST_CUR) {
             if(blockers[NEW_X][NEW_Y] == false) {
-              ret.push_back(coord(NEW_X, NEW_Y));
+              ret.push_back(Pos(NEW_X, NEW_Y));
             }
           }
         }

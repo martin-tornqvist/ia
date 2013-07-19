@@ -13,9 +13,7 @@ public:
   virtual ~ItemAmmo() {
   }
 
-  virtual SDL_Color getInterfaceClr() const {
-    return clrWhite;
-  }
+  virtual SDL_Color getInterfaceClr() const {return clrWhite;}
 
 private:
 };

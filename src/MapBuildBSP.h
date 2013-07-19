@@ -25,7 +25,7 @@ public:
   Room(Rect dims) : roomTheme(roomTheme_plain), dims_(dims) {
   }
 
-  Room() : roomTheme(roomTheme_plain), roomDescr(""), dims_(Rect(coord(-1, -1), coord(-1, -1))) {
+  Room() : roomTheme(roomTheme_plain), roomDescr(""), dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {
   }
 
   Rect getDims() const {
@@ -43,10 +43,10 @@ public:
   int getY1() const {
     return dims_.x1y1.y;
   }
-  coord getX0Y0() const {
+  Pos getX0Y0() const {
     return dims_.x0y0;
   }
-  coord getX1Y1() const {
+  Pos getX1Y1() const {
     return dims_.x1y1;
   }
 
@@ -75,30 +75,30 @@ public:
 
   void coverAreaWithFeature(const Rect& area, const Feature_t feature);
 
-  int getNrStepsInDirectionUntilWallFound(coord c, const Directions_t dir) const;
+  int getNrStepsInDirectionUntilWallFound(Pos c, const Directions_t dir) const;
 
   void clearRooms();
 
 private:
   bool isAllRoomsConnected();
 
-  Room* buildRoom(const Rect& roomCoords);
+  Room* buildRoom(const Rect& roomPoss);
 
   bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for helping to build the map
   bool regionsToBuildCave[3][3];
 
-  void makeCrumbleRoom(const Rect roomAreaIncludingWalls, const coord proxEventPos);
+  void makeCrumbleRoom(const Rect roomAreaIncludingWalls, const Pos proxEventPos);
 
   void connectRegions(Region* regions[3][3]);
   void buildAuxRooms(Region* regions[3][3]);
-  bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], const coord doorPos);
+  bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], const Pos doorPos);
 
   void buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2, const int SPLIT_Y1, const int SPLIT_Y2);
 
   void buildCaves(Region* regions[3][3]);
 
   void buildCorridorBetweenRooms(const Region& region1, const Region& region2);
-  void placeDoorAtPosIfSuitable(const coord pos);
+  void placeDoorAtPosIfSuitable(const Pos pos);
 
   void reshapeRoom(const Room& room);
 
@@ -108,9 +108,9 @@ private:
 
   bool globalDoorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 
-//  void findEdgesOfRoom(const Rect roomCoords, vector<coord>& vectorToFill);
+//  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToFill);
 
-  bool isRegionFoundInCardinalDirection(const coord pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  bool isRegionFoundInCardinalDirection(const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   bool isAreaFree(const Rect& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
   bool isAreaAndBorderFree(const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
@@ -118,12 +118,12 @@ private:
 
   void decorate();
 
-  coord placeStairs();
+  Pos placeStairs();
 
 //  void makeLevers();
-//  void spawnLeverAdaptAndLinkDoor(const coord& leverPos, Door& door);
+//  void spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door);
 
-  void revealAllDoorsBetweenPlayerAndStairs(const coord& stairsCoord);
+  void revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos);
 
 //	void buildNaturalArea(Region* regions[3][3]);
 //	void makeRiver(Region* regions[3][3]);
@@ -138,37 +138,37 @@ private:
 
 struct ConnectionPointsAndDistance {
 public:
-  ConnectionPointsAndDistance(coord c1_, coord c2_, int dist_) :
+  ConnectionPointsAndDistance(Pos c1_, Pos c2_, int dist_) :
     c1(c1_), c2(c2_), dist(dist_) {
   }
   ConnectionPointsAndDistance() {
   }
 
-  coord c1;
-  coord c2;
+  Pos c1;
+  Pos c2;
   int dist;
 };
 
 struct Region {
 public:
-  Region(coord x0y0, coord x1y1);
+  Region(Pos x0y0, Pos x1y1);
   Region();
   ~Region();
 
-  Rect getRandomCoordsForRoom(Engine* eng) const;
-  Rect getRegionCoords() const {
+  Rect getRandomPossForRoom(Engine* eng) const;
+  Rect getRegionPoss() const {
     return Rect(x0y0_, x1y1_);
   }
 
   bool isRegionNeighbour(const Region& other, Engine* const engine);
 
-  coord getCenterCoord() const {
+  Pos getCenterPos() const {
     return (x1y1_ + x0y0_) / 2;
   }
-  coord getX0Y0() const {
+  Pos getX0Y0() const {
     return x0y0_;
   }
-  coord getX1Y1() const {
+  Pos getX1Y1() const {
     return x1y1_;
   }
 
@@ -181,7 +181,7 @@ public:
   bool isConnected;
 
 private:
-  coord x0y0_, x1y1_;
+  Pos x0y0_, x1y1_;
 };
 
 #endif

@@ -63,7 +63,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
   }
 }
 
-Item* ItemDrop::dropItemOnMap(const coord& pos, Item& item) {
+Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
   //If target cell is bottomless, just destroy the item
   if(eng->map->featuresStatic[pos.x][pos.y]->isBottomless()) {
     delete &item;
@@ -78,7 +78,7 @@ Item* ItemDrop::dropItemOnMap(const coord& pos, Item& item) {
       freeCellArray[x][y] = f->canHaveItem() && f->isBottomless() == false;
     }
   }
-  vector<coord> freeCells;
+  vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
@@ -122,7 +122,7 @@ Item* ItemDrop::dropItemOnMap(const coord& pos, Item& item) {
 
       eng->map->items[curX][curY] = &item;
 
-      if(eng->player->pos == coord(curX, curY)) {
+      if(eng->player->pos == Pos(curX, curY)) {
         if(curX != pos.x || curY != pos.y) {
           eng->log->addMessage("I feel something by my feet.");
         }

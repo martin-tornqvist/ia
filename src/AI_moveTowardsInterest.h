@@ -19,7 +19,7 @@ public:
 	{
 		if(monster->deadState == actorDeadState_alive) {
 			//Get most interesting cell
-			const coord targetCell(getMostInterestingCell(arrayOfInterest));
+			const Pos targetCell(getMostInterestingCell(arrayOfInterest));
 
 			//If no good cell was found, quit
 			if(targetCell.x == -1) return false;
@@ -38,14 +38,14 @@ public:
 			}
 
 			//Get blocking array
-			coord source = monster->pos;
+			Pos source = monster->pos;
 			engine->mapTests->makeBlockingArray(actorsBlock_adjToSource, true, false, false, source);
 
 			//Get path towards cell
-			vector<coord> path = engine->pathfinder->findPath(
+			vector<Pos> path = engine->pathfinder->findPath(
 				monster->pos.x, monster->pos.y, engine->mapTests->blockingArray, targetCell.x, targetCell.y);
 
-			coord result(-1, -1);
+			Pos result(-1, -1);
 
 			//Get first step in path
 			if(path.size() > 0) {
@@ -61,9 +61,9 @@ public:
 		return false;
 	}
 
-	static coord getMostInterestingCell(int arrayOfInterest[MAP_X_CELLS][MAP_Y_CELLS])
+	static Pos getMostInterestingCell(int arrayOfInterest[MAP_X_CELLS][MAP_Y_CELLS])
 	{
-		coord result(-1, -1);
+		Pos result(-1, -1);
 		int   highestVal = 0;
 
 		for(int x = 0; x < MAP_X_CELLS; x++) {

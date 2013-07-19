@@ -16,17 +16,17 @@ void Fov::allUnseen(bool array[MAP_X_CELLS][MAP_Y_CELLS]) {
 }
 
 void Fov::performCheck(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
-                       const coord& cellToCheck, const coord& origin,
+                       const Pos& cellToCheck, const Pos& origin,
                        bool array[MAP_X_CELLS][MAP_Y_CELLS],
                        const bool IS_AFFECTED_BY_DARKNESS) {
-  const coord deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
-  vector<coord> pathDeltas;
+  const Pos deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
+  vector<Pos> pathDeltas;
   eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_DB);
 
   const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 
-  coord curPos;
-  coord prevPos;
+  Pos curPos;
+  Pos prevPos;
   const unsigned int PATH_SIZE = pathDeltas.size();
 
   for(unsigned int i = 0; i < PATH_SIZE; i++) {
@@ -57,8 +57,8 @@ void Fov::performCheck(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
 }
 
 bool Fov::checkOneCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
-                       const coord& cellToCheck,
-                       const coord& origin,
+                       const Pos& cellToCheck,
+                       const Pos& origin,
                        const bool IS_AFFECTED_BY_DARKNESS) {
   if(
     eng->basicUtils->chebyshevDistance(
@@ -67,14 +67,14 @@ bool Fov::checkOneCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
     return false;
   }
 
-  const coord deltaToTarget(cellToCheck - origin);
-  vector<coord> pathDeltas;
+  const Pos deltaToTarget(cellToCheck - origin);
+  vector<Pos> pathDeltas;
   eng->fovPreCalc->getLineTravelVector(pathDeltas, deltaToTarget, FOV_STANDARD_RADI_DB);
 
   const bool TARGET_IS_LIGHT = eng->map->light[cellToCheck.x][cellToCheck.y];
 
-  coord curPos;
-  coord prevPos;
+  Pos curPos;
+  Pos prevPos;
   const unsigned int PATH_SIZE = pathDeltas.size();
 
   for(unsigned int i = 0; i < PATH_SIZE; i++) {
@@ -105,7 +105,7 @@ bool Fov::checkOneCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
 }
 
 void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
-                        const coord& origin,
+                        const Pos& origin,
                         bool array[MAP_X_CELLS][MAP_Y_CELLS],
                         const bool IS_AFFECTED_BY_DARKNESS) {
   int checkX, checkY;
@@ -123,7 +123,7 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
     checkY = origin.y - FOV_STANDARD_RADI_INT;
 
     while(checkY <= checkY_end) {
-      performCheck(obstructions, coord(checkX, checkY),
+      performCheck(obstructions, Pos(checkX, checkY),
                    origin, array, IS_AFFECTED_BY_DARKNESS);
       checkY++;
     }
@@ -132,7 +132,7 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
 }
 
 void Fov::runPlayerFov(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
-                       const coord& origin) {
+                       const Pos& origin) {
   int checkX, checkY;
 
   allUnseen(eng->map->playerVision);
@@ -148,7 +148,7 @@ void Fov::runPlayerFov(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
     checkY = origin.y - FOV_STANDARD_RADI_INT;
 
     while(checkY <= checkY_end) {
-      performCheck(obstructions, coord(checkX, checkY),
+      performCheck(obstructions, Pos(checkX, checkY),
                    origin, eng->map->playerVision, true);
       checkY++;
     }

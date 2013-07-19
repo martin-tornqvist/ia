@@ -37,7 +37,7 @@ void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   eng->itemData->addSaveLines(lines);
   eng->player->getInventory()->addSaveLines(lines);
   eng->player->addSaveLines(lines);
-  eng->playerBonusHandler->addSaveLines(lines);
+  eng->playerBonHandler->addSaveLines(lines);
   eng->map->addSaveLines(lines);
   eng->actorData->addSaveLines(lines);
   eng->gameTime->addSaveLines(lines);
@@ -56,7 +56,7 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   eng->itemData->setParametersFromSaveLines(lines);
   eng->player->getInventory()->setParametersFromSaveLines(lines, eng);
   eng->player->setParametersFromSaveLines(lines);
-  eng->playerBonusHandler->setParametersFromSaveLines(lines);
+  eng->playerBonHandler->setParametersFromSaveLines(lines);
   eng->map->setParametersFromSaveLines(lines);
   eng->actorData->setParametersFromSaveLines(lines);
   eng->gameTime->setParametersFromSaveLines(lines);

@@ -36,7 +36,7 @@ void ScrollOfMayhem::specificRead(Engine* const engine) {
   for(int i = 0; i < NR_OF_SWEEPS; i++) {
     for(int y = max(1, PLAYER_Y - AREA_RADI); y < min(MAP_Y_CELLS - 1, PLAYER_Y + AREA_RADI); y++) {
       for(int x = max(1, PLAYER_X - AREA_RADI); x < min(MAP_X_CELLS - 1, PLAYER_X + AREA_RADI); x++) {
-        const coord c(x, y);
+        const Pos c(x, y);
         bool isAdjToWalkableCell = false;
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
@@ -100,7 +100,7 @@ void ScrollOfPestilence::specificRead(Engine* const engine) {
                     (dice.coinToss() ? actor_greenSpider :
                      (dice.coinToss() ? actor_whiteSpider : actor_redSpider)) :
                       actor_rat;
-        engine->actorFactory->spawnActor(monsterId, coord(x, y));
+        engine->actorFactory->spawnActor(monsterId, Pos(x, y));
       }
     }
   }
@@ -129,7 +129,7 @@ void ScrollOfStatusOnAllVisibleMonsters::specificRead(Engine* const engine) {
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
   if(actors.empty() == false) {
-    vector<coord> actorPositions;
+    vector<Pos> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       actorPositions.push_back(actors.at(i)->pos);
@@ -312,7 +312,7 @@ void ScrollOfAzathothsBlast::specificRead(Engine* const engine) {
   const vector<Actor*>& actors = engine->player->spotedEnemies;
 
   if(actors.empty() == false) {
-    vector<coord> actorPositions;
+    vector<Pos> actorPositions;
 
     for(unsigned int i = 0; i < actors.size(); i++) {
       actorPositions.push_back(actors.at(i)->pos);
@@ -358,7 +358,7 @@ void ThaumaturgicAlteration::doAction(const MthPowerAction_t action,
       engine->player->getSpotedEnemies();
       const vector<Actor*>& actors = engine->player->spotedEnemies;
 
-      vector<coord> actorPositions;
+      vector<Pos> actorPositions;
       for(unsigned int i = 0; i < actors.size(); i++) {
         actorPositions.push_back(actors.at(i)->pos);
       }
@@ -560,9 +560,9 @@ void ThaumaturgicAlteration::getChoiceLabelsFromPossibleActions(
 //  }
 //}
 
-//void ScrollOfVoidChain::castAt(const coord& pos, Engine* const engine) {
-//  const coord playerPos = engine->player->pos;
-//  const vector<coord> projectilePath =
+//void ScrollOfVoidChain::castAt(const Pos& pos, Engine* const engine) {
+//  const Pos playerPos = engine->player->pos;
+//  const vector<Pos> projectilePath =
 //    engine->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
 //                              true, FOV_STANDARD_RADI_INT);
 //}
@@ -625,7 +625,7 @@ int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
 
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
-      const coord pos(engine->player->pos + coord(dx, dy));
+      const Pos pos(engine->player->pos + Pos(dx, dy));
       if(engine->map->featuresStatic[pos.x][pos.y]->getId() == feature_altar) {
         bon += 20;
         break;
@@ -633,7 +633,7 @@ int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
     }
   }
 
-  bon += engine->playerBonusHandler->isBonusPicked(playerBonus_warlock)       ? 20 : 0;
+  bon += engine->playerBonHandler->isBonPicked(playerBon_warlock)       ? 20 : 0;
 
   bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlessed)  ? 10 : 0;
   bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlind)    ? 10 : 0;
@@ -727,7 +727,7 @@ bool Scroll::tryReadFromScroll(Engine* const engine) {
     return false;
   }
 
-//  if(engine->playerBonusHandler->isBonusPicked(playerBonus_learned) == false) {
+//  if(engine->playerBonHandler->isBonPicked(playerBon_learned) == false) {
 //    engine->log->addMessage("I cannot yet comprehend this.");
 //    return false;
 //  }

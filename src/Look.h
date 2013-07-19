@@ -45,9 +45,9 @@ public:
     eng(engine) {
   }
 
-  void markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
+  void markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                      const Item* const itemThrown);
-  void printExtraActorDescription(const coord& pos) const;
+  void printExtraActorDescription(const Pos& pos) const;
 
 private:
   Entity entityDescribed;
@@ -58,7 +58,7 @@ private:
   void describeBriefFeatureStatic(const Feature& feature) const;
   void describeBriefItem(const Item& item) const;
 
-  Entity getEntityToDescribe(const coord pos);
+  Entity getEntityToDescribe(const Pos pos);
 
   Engine* eng;
 };

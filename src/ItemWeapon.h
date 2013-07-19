@@ -16,8 +16,7 @@ public:
     clip = false;
     meleeDmgPlus = 0;
   }
-  virtual ~Weapon() {
-  }
+  virtual ~Weapon() {}
 
   int ammoLoaded;
   int effectiveRangeLimit;
@@ -75,9 +74,7 @@ public:
     return def_->color;
   }
 
-  SDL_Color getInterfaceClr() const {
-    return clrGray;
-  }
+  SDL_Color getInterfaceClr() const {return clrGray;}
 
 
 protected:

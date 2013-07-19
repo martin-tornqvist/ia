@@ -32,12 +32,12 @@ public:
 
   virtual ~Actor();
 
-  coord pos;
+  Pos pos;
   ActorDeadState_t deadState;
 
   Inventory* getInventory() {return inventory_;}
 
-  void place(const coord& pos_, ActorDefinition* const actorDefinition,
+  void place(const Pos& pos_, ActorDefinition* const actorDefinition,
              Engine* engine);
 
   bool hit(int dmg, const DmgTypes_t dmgType);
@@ -62,7 +62,7 @@ public:
     const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   vector<Actor*> spotedEnemies;
-  vector<coord> spotedEnemiesPositions;
+  vector<Pos> spotedEnemiesPositions;
   void getSpotedEnemies();
   void getSpotedEnemiesPositions();
 
@@ -115,7 +115,7 @@ protected:
 
   int hp_, hpMax_;
 
-  coord lairCell_;
+  Pos lairCell_;
 
   StatusEffectsHandler* statusEffectsHandler_;
   ActorDefinition* def_;

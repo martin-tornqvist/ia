@@ -15,7 +15,7 @@ public:
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         engine->mapTests->makeMoveBlockerArray(monster, blockers);
 
-        const coord result = getRandomAdjacentFreeCell(monster, blockers, engine);
+        const Pos result = getRandomAdjacentFreeCell(monster, blockers, engine);
         if(result != monster->pos) {
           monster->moveToCell(result);
           return true;
@@ -26,13 +26,13 @@ public:
   }
 
 private:
-  static coord getRandomAdjacentFreeCell(Monster* const monster, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], Engine* const engine) {
+  static Pos getRandomAdjacentFreeCell(Monster* const monster, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], Engine* const engine) {
 
-    const Rect areaAllowed(coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+    const Rect areaAllowed(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
     //First, try the same direction as last travelled
-    if(monster->lastDirectionTraveled != coord(0, 0)) {
-      const coord result(monster->pos + monster->lastDirectionTraveled);
+    if(monster->lastDirectionTraveled != Pos(0, 0)) {
+      const Pos result(monster->pos + monster->lastDirectionTraveled);
       if(blockers[result.x][result.y] == false && engine->mapTests->isCellInside(result, areaAllowed)) {
         return result;
       }
@@ -42,7 +42,7 @@ private:
     for(int i = 0; i < 16; i++) {
       const int DX = engine->dice.getInRange(-1, 1);
       const int DY = engine->dice.getInRange(-1, 1);
-      const coord result(monster->pos + coord(DX, DY));
+      const Pos result(monster->pos + Pos(DX, DY));
 
       if(blockers[result.x][result.y] == false && engine->mapTests->isCellInside(result, areaAllowed)) {
         return result;

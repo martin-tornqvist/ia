@@ -14,7 +14,7 @@ void Close::playerClose() const {
   eng->log->clearLog();
 	eng->log->addMessage("Which direction? | space/esc to cancel", clrWhiteHigh);
 	eng->renderer->drawMapAndInterface();
-	coord closeInPos(eng->player->pos + eng->query->direction());
+	Pos closeInPos(eng->player->pos + eng->query->direction());
 	eng->log->clearLog();
 
 	if(closeInPos != eng->player->pos) {

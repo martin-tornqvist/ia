@@ -25,9 +25,10 @@
 #include "ItemDevice.h"
 #include "Inventory.h"
 #include "InventoryHandler.h"
+#include "ItemMedicalBag.h"
 
 Player::Player() :
-  firstAidTurnsLeft(-1), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
+  activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
   molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
   mth(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {
@@ -90,15 +91,18 @@ void Player::actorSpecific_spawnStartItems() {
 
   if(NR_SPIKES > 0) {
     inventory_->putItemInGeneral(
-                                 eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
+      eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
   }
 
   inventory_->putItemInSlot(
-                            slot_armorBody,
-                            eng->itemFactory->spawnItem(item_armorLeatherJacket),
-                            true, true);
+    slot_armorBody,
+    eng->itemFactory->spawnItem(item_armorLeatherJacket),
+    true, true);
 
-  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceElectricLantern));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_deviceElectricLantern));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_medicalBag));
 
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
@@ -181,10 +185,9 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
 
 void Player::actorSpecific_hit(const int DMG) {
   //Hit aborts first aid
-  if(firstAidTurnsLeft != -1) {
-    firstAidTurnsLeft = -1;
-    eng->log->addMessage("My applying of first aid is disrupted.", clrWhite,
-                         messageInterrupt_force);
+  if(activeMedicalBag != NULL) {
+    activeMedicalBag->interrupted(eng);
+    activeMedicalBag = NULL;
   }
 
   if(insanityObsessions[insanityObsession_masochism]) {
@@ -195,28 +198,35 @@ void Player::actorSpecific_hit(const int DMG) {
     incrShock(1);
   }
 
+  if(DMG >= 5) {
+    StatusEffect* const effect = new StatusWound(eng);
+    statusEffectsHandler_->tryAddEffect(effect);
+  }
+
   eng->renderer->drawMapAndInterface();
 }
 
 int Player::getCarryWeightLimit() const {
-  const bool IS_TOUGH = eng->playerBonusHandler->isBonusPicked(playerBonus_tough);
-  const bool IS_RUGGED = eng->playerBonusHandler->isBonusPicked(playerBonus_rugged);
-  const bool IS_STRONG_BACKED = eng->playerBonusHandler->isBonusPicked(playerBonus_strongBacked);
-  const bool IS_WEAK = statusEffectsHandler_->hasEffect(statusWeak);
-  const int CARRY_WEIGHT_MOD = IS_TOUGH * 10 + IS_RUGGED * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
+  PlayerBonHandler* const bon = eng->playerBonHandler;
+  const bool IS_TOUGH         = bon->isBonPicked(playerBon_tough);
+  const bool IS_RUGGED        = bon->isBonPicked(playerBon_rugged);
+  const bool IS_STRONG_BACKED = bon->isBonPicked(playerBon_strongBacked);
+  const bool IS_WEAK          = statusEffectsHandler_->hasEffect(statusWeak);
+  const int CARRY_WEIGHT_MOD =
+    IS_TOUGH * 10 + IS_RUGGED * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::getShockResistance() const {
   int ret = 0;
-  if(eng->playerBonusHandler->isBonusPicked(playerBonus_strongMinded)) {
+  if(eng->playerBonHandler->isBonPicked(playerBon_strongMinded)) {
     ret += 5;
   }
-  if(eng->playerBonusHandler->isBonusPicked(playerBonus_unyielding)) {
+  if(eng->playerBonHandler->isBonPicked(playerBon_unyielding)) {
     ret += 5;
   }
-  if(eng->playerBonusHandler->isBonusPicked(playerBonus_coolHeaded)) {
+  if(eng->playerBonHandler->isBonPicked(playerBon_coolHeaded)) {
     ret += 20;
   }
   return min(100, max(0, ret));
@@ -297,8 +307,8 @@ void Player::incrInsanity() {
   eng->renderer->drawMapAndInterface();
 
   if(getInsanity() >= 100) {
-    popupMessage +=
-      "My mind can no longer withstand what it has grasped. I am hopelessly lost.";
+    popupMessage += "My mind can no longer withstand what it has grasped.";
+    popupMessage += " I am hopelessly lost.";
     eng->popup->showMessage(popupMessage, true, "Complete insanity!");
     die(true, false, false);
   } else {
@@ -313,7 +323,7 @@ void Player::incrInsanity() {
 
     //When long term sanity decreases something happens (mostly bad)
     //(Reroll until something actually happens)
-    for(unsigned int insAttemptCount = 0; insAttemptCount < 10000; insAttemptCount++) {
+    for(int attempts = 0; attempts < 10000; attempts++) {
       const int ROLL = eng->dice(1, 9);
       switch(ROLL) {
         case 1: {
@@ -479,14 +489,14 @@ void Player::incrInsanity() {
             bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
             eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
-            vector<coord> spawnPosCandidates;
+            vector<Pos> spawnPosCandidates;
 
             const int D_MAX = 3;
             for(int dx = -D_MAX; dx <= D_MAX; dx++) {
               for(int dy = -D_MAX; dy <= D_MAX; dy++) {
                 if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
                   if(blockers[pos.x + dx][pos.y + dy] == false) {
-                    spawnPosCandidates.push_back(pos + coord(dx, dy));
+                    spawnPosCandidates.push_back(pos + Pos(dx, dy));
                   }
                 }
               }
@@ -496,7 +506,7 @@ void Player::incrInsanity() {
               const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDungeonLevel() + 1) / 2)));
               for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
                 const unsigned int SPAWN_POS_ELEMENT = eng->dice.getInRange(0, spawnPosCandidates.size() - 1);
-                const coord spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
+                const Pos spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
                 spawnPosCandidates.erase(spawnPosCandidates.begin() + SPAWN_POS_ELEMENT);
                 Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_shadow, spawnPos));
                 monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
@@ -511,7 +521,7 @@ void Player::incrInsanity() {
         break;
 
         case 9: {
-          if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware) == false) {
+          if(eng->playerBonHandler->isBonPicked(playerBon_selfAware) == false) {
             popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
             eng->popup->showMessage(popupMessage, true, "Confusion!");
             statusEffectsHandler_->tryAddEffect(new StatusConfused(eng), true);
@@ -703,7 +713,7 @@ void Player::act() {
 
   getSpotedEnemies();
 
-  if(firstAidTurnsLeft == -1) {
+  if(activeMedicalBag == NULL) {
     testPhobias();
   }
 
@@ -724,23 +734,22 @@ void Player::act() {
       switch(def->monsterShockLevel) {
         case monsterShockLevel_unsettling: {
           monster->shockCausedCurrent += 0.10;
-          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.05, 1.0);
-        }
-        break;
+          monster->shockCausedCurrent =
+            min(monster->shockCausedCurrent + 0.05, 1.0);
+        } break;
         case monsterShockLevel_scary: {
-          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.15, 1.0);
-        }
-        break;
+          monster->shockCausedCurrent =
+            min(monster->shockCausedCurrent + 0.15, 1.0);
+        } break;
         case monsterShockLevel_terrifying: {
-          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.5, 2.0);
-        }
-        break;
+          monster->shockCausedCurrent =
+            min(monster->shockCausedCurrent + 0.5, 2.0);
+        } break;
         case monsterShockLevel_mindShattering: {
-          monster->shockCausedCurrent = min(monster->shockCausedCurrent + 0.75, 3.0);
-        }
-        break;
-        default:
-        {} break;
+          monster->shockCausedCurrent =
+            min(monster->shockCausedCurrent + 0.75, 3.0);
+        } break;
+        default: {} break;
       }
       if(shockFromMonstersCurrentPlayerTurn < 3.0) {
         incrShock(int(floor(monster->shockCausedCurrent)));
@@ -789,8 +798,9 @@ void Player::act() {
         const bool IS_MONSTER_SEEN = checkIfSeeActor(*actor, NULL);
         if(IS_MONSTER_SEEN) {
           if(monster->messageMonsterInViewPrinted == false) {
-            if(firstAidTurnsLeft > 0 || waitTurnsLeft > 0) {
-              eng->log->addMessage(actor->getNameA() + " comes into my view.", clrWhite, messageInterrupt_force);
+            if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
+              eng->log->addMessage(actor->getNameA() + " comes into my view.",
+                                   clrWhite, messageInterrupt_force);
             }
             monster->messageMonsterInViewPrinted = true;
           }
@@ -800,8 +810,10 @@ void Player::act() {
           //Is the monster sneaking? Try to spot it
           if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
             if(monster->isStealth) {
-              const int PLAYER_SEARCH_SKILL = def_->abilityVals.getVal(ability_searching, true, *this);
-              const AbilityRollResult_t rollResult = eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
+              const int PLAYER_SEARCH_SKILL =
+                def_->abilityVals.getVal(ability_searching, true, *this);
+              const AbilityRollResult_t rollResult =
+                eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
               if(rollResult == successSmall) {
                 eng->log->addMessage("I see something moving in the shadows.");
               } else if(rollResult > successSmall) {
@@ -817,14 +829,13 @@ void Player::act() {
     }
   }
 
-  if(firstAidTurnsLeft == -1) {
+  if(activeMedicalBag == NULL) {
+    const int REGEN_N_TURN =
+      eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer) ? 7 : 12;
 
-    if(eng->playerBonusHandler->isBonusPicked(playerBonus_rapidRecoverer)) {
-      const int REGEN_N_TURN = 7;
-      if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
-        if(getHp() < getHpMax(true)) {
-          hp_++;
-        }
+    if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
+      if(getHp() < getHpMax(true)) {
+        hp_++;
       }
     }
 
@@ -851,7 +862,7 @@ void Player::act() {
         }
       }
 
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_observant)) {
+      if(eng->playerBonHandler->isBonPicked(playerBon_observant)) {
         const int CLUE_RADI = 3;
         x0 = max(0, pos.x - CLUE_RADI);
         y0 = max(0, pos.y - CLUE_RADI);
@@ -875,24 +886,10 @@ void Player::act() {
     }
   }
 
-  if(firstAidTurnsLeft == 0) {
-    eng->log->clearLog();
-    eng->log->addMessage("I finish applying first aid.");
-    if(eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
-      statusEffectsHandler_->endEffect(statusDiseased, visionBlockers);
-    }
-    restoreHP(99999);
-    eng->renderer->drawMapAndInterface();
-    firstAidTurnsLeft = -1;
-  }
-
-  if(firstAidTurnsLeft > 0) {
+  if(activeMedicalBag != NULL) {
     eng->renderer->drawMapAndInterface();
     eng->sleep(DELAY_PLAYER_WAITING);
-    firstAidTurnsLeft--;
-    eng->gameTime->endTurnOfCurrentActor();
+    activeMedicalBag->continueAction(eng);
   }
 
   if(waitTurnsLeft > 0) {
@@ -926,13 +923,8 @@ void Player::tryIdentifyItems() {
   //  }
 }
 
-int Player::getHealingTimeTotal() const {
-  const int TURNS_BEFORE_BON = 70;
-  const int PLAYER_HEALING_RANK = eng->playerBonusHandler->isBonusPicked(playerBonus_skillfulWoundTreater);
-  return PLAYER_HEALING_RANK >= 1 ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
-}
-
 void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
+  (void)PROMPT_FOR_ABORT;
   eng->renderer->drawMapAndInterface();
 
   eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
@@ -945,43 +937,8 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
   }
   waitTurnsLeft = -1;
 
-  const bool IS_FAINTED = statusEffectsHandler_->hasEffect(statusFainted);
-  const bool IS_PARALYSED = statusEffectsHandler_->hasEffect(statusParalyzed);
-  const bool IS_DEAD = deadState != actorDeadState_alive;
-
-  //If monster is in view, or player is paralysed, fainted or dead, abort first aid - else query abort
-  if(firstAidTurnsLeft > 0) {
-    getSpotedEnemies();
-    const int TOTAL_TURNS = getHealingTimeTotal();
-    const bool IS_ENOUGH_TIME_PASSED = firstAidTurnsLeft < TOTAL_TURNS - 10;
-    const int MISSING_HP = getHpMax(true) - getHp();
-    const int HP_HEALED_IF_ABORTED = IS_ENOUGH_TIME_PASSED ? (MISSING_HP * (TOTAL_TURNS - firstAidTurnsLeft)) / TOTAL_TURNS  : 0;
-
-    bool isAborted = false;
-    if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD || PROMPT_FOR_ABORT == false) {
-      firstAidTurnsLeft = -1;
-      isAborted = true;
-      eng->log->addMessage("I stop tending to my wounds.", clrWhite);
-      eng->renderer->drawMapAndInterface();
-    } else {
-      const string TURNS_STR = intToString(firstAidTurnsLeft);
-      const string ABORTED_HP_STR = intToString(HP_HEALED_IF_ABORTED);
-      string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
-      abortStr += ABORTED_HP_STR + " HP restored if canceled.";
-      eng->log->addMessage(abortStr , clrWhiteHigh);
-      eng->renderer->drawMapAndInterface();
-
-      if(eng->query->yesOrNo() == false) {
-        firstAidTurnsLeft = -1;
-        isAborted = true;
-      }
-
-      eng->log->clearLog();
-      eng->renderer->drawMapAndInterface();
-    }
-    if(isAborted && IS_ENOUGH_TIME_PASSED) {
-      restoreHP(HP_HEALED_IF_ABORTED);
-    }
+  if(activeMedicalBag != NULL) {
+    activeMedicalBag->interrupted(eng);
   }
 }
 
@@ -1000,15 +957,16 @@ void Player::hearSound(const Sound& sound) {
   }
 }
 
-void Player::moveDirection(const int X_DIR, const int Y_DIR) {
+void Player::moveDirection(const Pos& dir) {
   if(deadState == actorDeadState_alive) {
-    coord dest = statusEffectsHandler_->changeMoveCoord(pos, pos + coord(X_DIR, Y_DIR));
+
+    Pos dest = statusEffectsHandler_->changeMovePos(pos, pos + dir);
 
     //Trap affects leaving?
     if(dest != pos) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
-        tracer << "Player: Standing on trap, check if trap affects leaving the cell" << endl;
+        tracer << "Player: Standing on trap, check if affects move" << endl;
         dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       }
     }
@@ -1025,10 +983,14 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getDef().isMeleeWeapon) {
-              if(eng->config->useRangedWpnMleeePrompt && checkIfSeeActor(*actorAtDest, NULL)) {
+              if(eng->config->useRangedWpnMleeePrompt &&
+                  checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getDef().isRangedWeapon) {
-                  const string wpnName = eng->itemData->getItemRef(*weapon, itemRef_a);
-                  eng->log->addMessage("Attack " + actorAtDest->getNameThe() + " with " + wpnName + "? (y/n)", clrWhiteHigh);
+                  const string wpnName =
+                    eng->itemData->getItemRef(*weapon, itemRef_a);
+                  eng->log->addMessage(
+                    "Attack " + actorAtDest->getNameThe() +
+                    " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng->renderer->drawMapAndInterface();
                   if(eng->query->yesOrNo() == false) {
                     eng->log->clearLog();
@@ -1053,8 +1015,10 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or static features?
-      bool featuresAllowMove = eng->map->featuresStatic[dest.x][dest.y]->isMovePassable(this);
-      vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(dest);
+      bool featuresAllowMove =
+        eng->map->featuresStatic[dest.x][dest.y]->isMovePassable(this);
+      vector<FeatureMob*> featureMobs =
+        eng->gameTime->getFeatureMobsAtPos(dest);
       if(featuresAllowMove) {
         for(unsigned int i = 0; i < featureMobs.size(); i++) {
           if(featureMobs.at(i)->isMovePassable(this) == false) {
@@ -1074,11 +1038,13 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
 
         pos = dest;
 
-        const bool IS_DEXTEROUS_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_dexterous);
-        const bool IS_LITHE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_lithe);
-        const bool IS_MOBILE_PICKED = eng->playerBonusHandler->isBonusPicked(playerBonus_mobile);
-        if(IS_MOBILE_PICKED || IS_DEXTEROUS_PICKED || IS_LITHE_PICKED) {
-          const int FREE_MOVE_EVERY_N_TURN = IS_MOBILE_PICKED ? 2 : (IS_LITHE_PICKED ? 4 : 5);
+        PlayerBonHandler* const bon = eng->playerBonHandler;
+        const bool IS_DEXT_PICKED   = bon->isBonPicked(playerBon_dexterous);
+        const bool IS_LITHE_PICKED  = bon->isBonPicked(playerBon_lithe);
+        const bool IS_MOBILE_PICKED = bon->isBonPicked(playerBon_mobile);
+        if(IS_MOBILE_PICKED || IS_DEXT_PICKED || IS_LITHE_PICKED) {
+          const int FREE_MOVE_EVERY_N_TURN =
+            IS_MOBILE_PICKED ? 2 : (IS_LITHE_PICKED ? 4 : 5);
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
           } else if(nrMovesUntilFreeAction == 0) {
@@ -1092,7 +1058,8 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
         //Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
-          string message = statusEffectsHandler_->allowSee() == false ? "I feel here: " : "I see here: ";
+          string message = statusEffectsHandler_->allowSee() == false ?
+                           "I feel here: " : "I see here: ";
           message += eng->itemData->getItemInterfaceRef(*item, true);
           eng->log->addMessage(message + ".");
         }
@@ -1106,11 +1073,9 @@ void Player::moveDirection(const int X_DIR, const int Y_DIR) {
     }
     //If destination reached, then we either moved or were held by something.
     //End turn (unless free turn due to bonus).
-    if(pos == dest) {
-      if(isFreeTurn == false) {
-        eng->gameTime->endTurnOfCurrentActor();
-        return;
-      }
+    if(pos == dest && isFreeTurn == false) {
+      eng->gameTime->endTurnOfCurrentActor();
+      return;
     }
     eng->gameTime->updateLightMap();
     updateFov();
@@ -1132,11 +1097,11 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
-        const Actor* const actor = eng->mapTests->getActorAtPos(pos + coord(dx, dy));
+        const Actor* const actor = eng->mapTests->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(checkIfSeeActor(*actor, NULL) == true) {
             target = actor;
-            moveDirection(coord(dx, dy));
+            moveDirection(Pos(dx, dy));
             return;
           }
         }
@@ -1186,8 +1151,8 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
     bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
     eng->basicUtils->resetBoolArray(myLight, false);
     const int RADI = FOV_STANDARD_RADI_INT; //LitFlare::getLightRadius();
-    coord x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
-    coord x1y1(min(MAP_X_CELLS - 1, pos.x + RADI), min(MAP_Y_CELLS - 1, pos.y + RADI));
+    Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
+    Pos x1y1(min(MAP_X_CELLS - 1, pos.x + RADI), min(MAP_Y_CELLS - 1, pos.y + RADI));
 
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
     for(int y = x0y0.y; y <= x1y1.y; y++) {
@@ -1248,7 +1213,7 @@ void Player::updateFov() {
     }
 
     int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->floodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, coord(-1, -1));
+    eng->mapTests->floodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, Pos(-1, -1));
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1293,7 +1258,7 @@ void Player::FOVhack() {
       if(visionBlockers[x][y] && blockers[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            const coord adj(x + dx, y + dy);
+            const Pos adj(x + dx, y + dy);
             if(eng->mapTests->isCellInsideMap(adj)) {
               if(
                 eng->map->playerVision[adj.x][adj.y] &&
@@ -1313,11 +1278,14 @@ void Player::FOVhack() {
 }
 
 void Player::grantMthPower() const {
-  if(eng->itemData->itemDefinitions[item_thaumaturgicAlteration]->isScrollLearned == false) {
-    eng->itemData->itemDefinitions[item_thaumaturgicAlteration]->isScrollLearned = true;
-    string str = "I have gained a deeper insight into the esoteric forces acting behind our apparent reality.";
-    str += " With this knowledge, I can attempt to acquire hidden information or displace existence according to my will.";
-    str += " Gained spell: Thaumaturgic Alteration";
+  ItemDefinition* const mthPowerDef =
+    eng->itemData->itemDefinitions[item_thaumaturgicAlteration];
+  if(mthPowerDef->isScrollLearned == false) {
+    mthPowerDef->isScrollLearned = true;
+    string str = "I have gained a deeper insight into the esoteric forces";
+    str += " acting behind our apparent reality. With this knowledge, I can";
+    str += " attempt to acquire hidden information or displace existence";
+    str += " according to my will. Gained spell: Thaumaturgic Alteration";
     eng->popup->showMessage(str, true, "Thaumaturgic Alteration");
   }
 }

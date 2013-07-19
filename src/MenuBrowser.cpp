@@ -17,7 +17,7 @@ char MenuBrowser::enter() const {
 
 bool MenuBrowser::isPosAtKey(const char KEY) const {
   const int ELEMENT = KEY >= 'a' ? int(KEY - 'a') : KEY >= 'A' ? int(KEY - 'A' + 'z' - 'a' + 1) : 0;
-  coord positionAtKey;
+  Pos positionAtKey;
   positionAtKey.x = ELEMENT < NR_ITEMS_FIRST ? 0 : 1;
   positionAtKey.y = ELEMENT < NR_ITEMS_FIRST ? ELEMENT : ELEMENT - NR_ITEMS_FIRST;
 

@@ -15,12 +15,16 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
                                      bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
 
-  for(int x = max(1, data->x0 + 1); x <= min(MAP_X_CELLS - 2, data->x1 - 1); x++) {
-    for(int y = max(1, data->y0 + 1); y <= min(MAP_Y_CELLS - 2, data->y1 - 1); y++) {
+  int x0 = max(1, data->x0 + 1);
+  int y0 = max(1, data->y0 + 1);
+  int x1 = min(MAP_X_CELLS - 2, data->x1 - 1);
+  int y1 = min(MAP_Y_CELLS - 2, data->y1 - 1);
+  for(int x = x0; x <= x1; x++) {
+    for(int y = y0; y <= y1; y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
-                                       clrYellow, true, clrBlack);
+          eng->renderer->drawGlyph(
+            '*', panel_map, Pos(x, y), clrYellow, true, clrBlack);
         }
       }
     }
@@ -29,13 +33,19 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   eng->renderer->updateScreen();
   eng->sleep(eng->config->delayExplosion / 2);
 
-  for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
-    for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
+  x0 = max(1, data->x0);
+  y0 = max(1, data->y0);
+  x1 = min(MAP_X_CELLS - 2, data->x1);
+  y1 = min(MAP_Y_CELLS - 2, data->y1);
+  for(int x = x0; x <= x1; x++) {
+    for(int y = y0; y <= y1; y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          if(x == data->x0 || x == data->x1 || y == data->y0 || y == data->y1) {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen, x, y,
-                                         clrRedLgt, true, clrBlack);
+          if(
+            x == data->x0 || x == data->x1 ||
+            y == data->y0 || y == data->y1) {
+            eng->renderer->drawGlyph(
+              '*', panel_map, Pos(x, y), clrRedLgt, true, clrBlack);
           }
         }
       }
@@ -45,15 +55,20 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
 }
 
 void ExplosionMaker::renderExplosionWithColorOverride(
-  const BasicData* data, const SDL_Color clr, bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
+  const BasicData* data, const SDL_Color clr,
+  bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
   eng->renderer->drawMapAndInterface();
 
-  for(int x = max(1, data->x0); x <= min(MAP_X_CELLS - 2, data->x1); x++) {
-    for(int y = max(1, data->y0); y <= min(MAP_Y_CELLS - 2, data->y1); y++) {
+  const int X0 = max(1, data->x0);
+  const int Y0 = max(1, data->y0);
+  const int X1 = min(MAP_X_CELLS - 2, data->x1);
+  const int Y1 = min(MAP_Y_CELLS - 2, data->y1);
+  for(int x = X0; x <= X1; x++) {
+    for(int y = Y0; y <= Y1; y++) {
       if(eng->map->playerVision[x][y]) {
         if(reach[x][y]) {
-          eng->renderer->drawCharacter('*', renderArea_mainScreen,
-                                       x, y, clr, true, clrBlack);
+          eng->renderer->drawGlyph(
+            '*', panel_map, Pos(x, y), clr, true, clrBlack);
         }
       }
     }
@@ -62,7 +77,7 @@ void ExplosionMaker::renderExplosionWithColorOverride(
 }
 
 void ExplosionMaker::runExplosion(
-  const coord& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
+  const Pos& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
   const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
   BasicData data(origin, width, height);
 
@@ -75,7 +90,7 @@ void ExplosionMaker::runExplosion(
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       reach[x][y] = eng->fov->checkOneCell(
-                      blockers, coord(x, y), origin, false) && !blockers[x][y];
+                      blockers, Pos(x, y), origin, false) && !blockers[x][y];
     }
   }
   reach[origin.x][origin.y] = true;
@@ -126,11 +141,11 @@ void ExplosionMaker::runExplosion(
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
 
       if(DO_EXPLOSION_DMG) {
-        if(eng->mapTests->isCellsNeighbours(coord(x, y), origin, false)) {
-          eng->map->switchToDestroyedFeatAt(coord(x, y));
+        if(eng->mapTests->isCellsNeighbours(Pos(x, y), origin, false)) {
+          eng->map->switchToDestroyedFeatAt(Pos(x, y));
 
           if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
-            eng->map->switchToDestroyedFeatAt(coord(x, y));
+            eng->map->switchToDestroyedFeatAt(Pos(x, y));
           }
         }
       }
@@ -167,7 +182,7 @@ void ExplosionMaker::runExplosion(
         if(DO_EXPLOSION_DMG == true) {
           if(eng->dice.percentile() < 55) {
             eng->featureFactory->spawnFeatureAt(
-              feature_smoke, coord(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
+              feature_smoke, Pos(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
           }
         }
       }
@@ -183,7 +198,7 @@ void ExplosionMaker::runExplosion(
   }
 }
 
-void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RADIUS) {
+void ExplosionMaker::runSmokeExplosion(const Pos& origin, const bool SMALL_RADIUS) {
   const int RADIUS = SMALL_RADIUS == true ? 3 : width;
   BasicData data(origin, RADIUS, RADIUS);
 
@@ -200,7 +215,7 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       //As opposed to the explosion reach, the smoke explosion must not reach into walls and other solid objects
       reach[x][y] = blockers[x][y] == false && eng->fov->checkOneCell(
-                      blockers, coord(x, y), origin, false);
+                      blockers, Pos(x, y), origin, false);
     }
   }
   reach[origin.x][origin.y] = true;
@@ -209,7 +224,7 @@ void ExplosionMaker::runSmokeExplosion(const coord& origin, const bool SMALL_RAD
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       if(reach[x][y] == true) {
         eng->featureFactory->spawnFeatureAt(
-          feature_smoke, coord(x, y), new SmokeSpawnData(16 + eng->dice(1, 6)));
+          feature_smoke, Pos(x, y), new SmokeSpawnData(16 + eng->dice(1, 6)));
       }
     }
   }

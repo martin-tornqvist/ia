@@ -20,7 +20,8 @@ public:
 
   const string  TILES_IMAGE_NAME;
   const string  MAIN_MENU_LOGO_IMAGE_NAME;
-  string        fontImageName;
+//  string        fontInterface;
+  string        fontBig;
 
   bool          isFullscreen;
 

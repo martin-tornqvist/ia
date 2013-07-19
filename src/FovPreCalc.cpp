@@ -15,9 +15,9 @@ void FovPreCalc::calcLineTravelVectors() {
   const double originX = 0.5;
   const double originY = 0.5;
 
-  coord currentDelta;
+  Pos currentDelta;
 
-  vector<coord> currentPath;
+  vector<Pos> currentPath;
 
   pair<double, double> angles;
 
@@ -42,7 +42,7 @@ void FovPreCalc::calcLineTravelVectors() {
         if(isPositionGoodToAdd == true) {
           currentPath.push_back(currentDelta);
         }
-        if(currentDelta == coord(deltaX, deltaY)) {
+        if(currentDelta == Pos(deltaX, deltaY)) {
           i = 999999;
         }
         incrInX += xStep;

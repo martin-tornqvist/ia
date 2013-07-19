@@ -15,122 +15,122 @@ using namespace std;
 // *************************************************** //
 // Keep the following values lexicographically sorted! //
 // *************************************************** //
-enum PlayerBonuses_t {
-  playerBonus_adeptMeleeCombatant,
-//playerBonus_aggressive,
-//  playerBonus_athletic,
-//playerBonus_clearThinker,
-  playerBonus_coolHeaded,
-//playerBonus_courageous,
-  playerBonus_curer,
-//playerBonus_deadlyThrower,
-  playerBonus_dexterous,
-//  playerBonus_elusive,
-  playerBonus_healthy,
-  playerBonus_imperceptible,
-  playerBonus_lithe,
-  playerBonus_marksman,
-  playerBonus_masterfulMeleeCombatant,
-  playerBonus_mobile,
-//  playerBonus_nimbleHanded,
-  playerBonus_observant,
-  playerBonus_occultist,
-  playerBonus_rapidRecoverer,
-  playerBonus_rugged,
-  playerBonus_selfAware,
-  playerBonus_sharpshooter,
-  playerBonus_skillfulWoundTreater,
-  playerBonus_steadyAimer,
-  playerBonus_stealthy,
-  playerBonus_strongBacked,
-  playerBonus_strongMinded,
-//playerBonus_swiftAssailant,
-//playerBonus_swiftRetaliator,
-  playerBonus_tough,
-  playerBonus_treasureHunter,
-//playerBonus_tumbler,
-  playerBonus_unyielding,
-  playerBonus_vigilant,
-  playerBonus_vigorous,
-//playerBonus_wakeful,
-  playerBonus_warlock,
-  endOfPlayerBonuses
+enum PlayerBon_t {
+  playerBon_adeptMeleeCombatant,
+//playerBon_aggressive,
+//  playerBon_athletic,
+//playerBon_clearThinker,
+  playerBon_coolHeaded,
+//playerBon_courageous,
+  playerBon_curer,
+//playerBon_deadlyThrower,
+  playerBon_dexterous,
+//  playerBon_elusive,
+  playerBon_healthy,
+  playerBon_imperceptible,
+  playerBon_lithe,
+  playerBon_marksman,
+  playerBon_masterfulMeleeCombatant,
+  playerBon_mobile,
+//  playerBon_nimbleHanded,
+  playerBon_observant,
+  playerBon_occultist,
+  playerBon_rapidRecoverer,
+  playerBon_rugged,
+  playerBon_selfAware,
+  playerBon_sharpshooter,
+  playerBon_skillfulWoundTreater,
+  playerBon_steadyAimer,
+  playerBon_stealthy,
+  playerBon_strongBacked,
+  playerBon_strongMinded,
+//playerBon_swiftAssailant,
+//playerBon_swiftRetaliator,
+  playerBon_tough,
+  playerBon_treasureHunter,
+//playerBon_tumbler,
+  playerBon_unyielding,
+  playerBon_vigilant,
+  playerBon_vigorous,
+//playerBon_wakeful,
+  playerBon_warlock,
+  endOfPlayerBons
 };
 
 class PlayerBonus {
 public:
-  PlayerBonus(string title, string description, vector<PlayerBonuses_t> prereqs) :
+  PlayerBonus(string title, string description, vector<PlayerBon_t> prereqs) :
     title_(title), description_(description), prereqs_(prereqs), isPicked_(false) {
   }
   PlayerBonus() {
   }
   string title_;
   string description_;
-  vector<PlayerBonuses_t> prereqs_;
+  vector<PlayerBon_t> prereqs_;
   bool isPicked_;
 protected:
 };
 
-class PlayerBonusHandler {
+class PlayerBonHandler {
 public:
-  PlayerBonusHandler(Engine* engine);
+  PlayerBonHandler(Engine* engine);
 
   void addSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    for(unsigned int i = 0; i < endOfPlayerBons; i++) {
       lines.push_back(bonuses_[i].isPicked_ ? intToString(1) : intToString(0));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    for(unsigned int i = 0; i < endOfPlayerBons; i++) {
       bonuses_[i].isPicked_ = lines.front() == intToString(0) ? false : true;
       lines.erase(lines.begin());
     }
   }
 
-  bool isBonusPicked(const PlayerBonuses_t bonus) {
+  bool isBonPicked(const PlayerBon_t bonus) {
     return bonuses_[bonus].isPicked_;
   }
 
   void setAllToUnpicked() {
-    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    for(unsigned int i = 0; i < endOfPlayerBons; i++) {
       bonuses_[i].isPicked_ = false;
     }
   }
 
-  vector<PlayerBonuses_t> getBonusChoices() const;
+  vector<PlayerBon_t> getBonusChoices() const;
 
-  string getBonusTitle(const PlayerBonuses_t bonus) const {
+  string getBonusTitle(const PlayerBon_t bonus) const {
     return bonuses_[bonus].title_;
   }
 
   void getAllPickedBonusTitlesList(vector<string>& titles);
   void getAllPickedBonusTitlesLine(string& str);
 
-  string getBonusDescription(const PlayerBonuses_t bonus) const {
+  string getBonusDescription(const PlayerBon_t bonus) const {
     return bonuses_[bonus].description_;
   }
 
-  void pickBonus(const PlayerBonuses_t bonus);
+  void pickBonus(const PlayerBon_t bonus);
 
   void setAllBonusesToPicked() {
-    for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
+    for(unsigned int i = 0; i < endOfPlayerBons; i++) {
       bonuses_[i].isPicked_ = true;
     }
   }
 
-  vector<PlayerBonuses_t> getBonusPrereqs(const PlayerBonuses_t bonusId) const;
+  vector<PlayerBon_t> getBonusPrereqs(const PlayerBon_t bonusId) const;
 
 private:
   Engine* eng;
 
-  void setBonus(const PlayerBonuses_t bonus, const string title,
+  void setBonus(const PlayerBon_t bonus, const string title,
                 const string description,
-                const PlayerBonuses_t prereq1 = endOfPlayerBonuses,
-                const PlayerBonuses_t prereq2 = endOfPlayerBonuses,
-                const PlayerBonuses_t prereq3 = endOfPlayerBonuses);
+                const PlayerBon_t prereq1 = endOfPlayerBons,
+                const PlayerBon_t prereq2 = endOfPlayerBons,
+                const PlayerBon_t prereq3 = endOfPlayerBons);
 
-  PlayerBonus bonuses_[endOfPlayerBonuses];
+  PlayerBonus bonuses_[endOfPlayerBons];
 };
 
 #endif

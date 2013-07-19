@@ -45,7 +45,7 @@ class Weapon;
 class Monster: public Actor {
 public:
   Monster() :
-    playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(coord(0, 0)), spellCoolDownCurrent(0),
+    playerAwarenessCounter(0), messageMonsterInViewPrinted(false), lastDirectionTraveled(Pos(0, 0)), spellCoolDownCurrent(0),
     isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL), waiting_(false), shockCausedCurrent(0.0) {
   }
 
@@ -59,7 +59,7 @@ public:
     }
   }
 
-  void moveToCell(const coord& targetCell);
+  void moveToCell(const Pos& targetCell);
 
   AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
@@ -81,7 +81,7 @@ public:
 
   bool messageMonsterInViewPrinted;
 
-  coord lastDirectionTraveled;
+  Pos lastDirectionTraveled;
 
   vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;

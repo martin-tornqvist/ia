@@ -33,17 +33,23 @@ void PlayerEnterName::run(int& yPos) {
   yPos++;
 }
 
-void PlayerEnterName::draw(const string& currentString, const int RENDER_Y_POS) {
+void PlayerEnterName::draw(const string& currentString,
+                           const int RENDER_Y_POS) {
   eng->renderer->clearScreen();
   int x0 = MAP_X_CELLS_HALF;
   const string LABEL = "What is your name?";
-  eng->renderer->drawTextCentered(LABEL, renderArea_screen, x0, RENDER_Y_POS, clrWhite);
-  const string NAME_STR = currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" : currentString;
-  eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x0, RENDER_Y_POS + 1, clrNosferatuTealLgt);
+  eng->renderer->drawTextCentered(LABEL, panel_screen,
+                                  Pos(x0, RENDER_Y_POS), clrWhite);
+  const string NAME_STR =
+    currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
+    currentString;
+  eng->renderer->drawTextCentered(
+    NAME_STR, panel_screen, Pos(x0, RENDER_Y_POS + 1), clrNosferatuTealLgt);
   eng->renderer->updateScreen();
 }
 
-void PlayerEnterName::readKeys(string& currentString, bool& done, const int RENDER_Y_POS) {
+void PlayerEnterName::readKeys(string& currentString, bool& done,
+                               const int RENDER_Y_POS) {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RETURN) {

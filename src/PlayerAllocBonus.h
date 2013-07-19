@@ -16,8 +16,8 @@ public:
   void run();
 
 private:
-  void draw(const vector<PlayerBonuses_t>& bonusesColumnOne,
-            const vector<PlayerBonuses_t>& bonusesColumnTwo,
+  void draw(const vector<PlayerBon_t>& bonusesColumnOne,
+            const vector<PlayerBon_t>& bonusesColumnTwo,
             const MenuBrowser& browser) const;
 
   Engine* eng;

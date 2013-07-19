@@ -16,7 +16,7 @@
 
 using namespace std;
 
-void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
+void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   vector<Projectile*> projectiles;
 
   const bool IS_MACHINE_GUN = wpn.getDef().isMachineGun;
@@ -46,8 +46,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
   const int chebTrvlLim = 30;
 
   //Get projectile path
-  const coord origin = attacker.pos;
-  const vector<coord> projectilePath =
+  const Pos origin = attacker.pos;
+  const vector<Pos> projectilePath =
     eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim);
 
   const SDL_Color projectileColor = wpn.getDef().rangedMissileColor;
@@ -112,7 +112,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
         curProj->setAttackData(
           new RangedAttackData(attacker, wpn, aimPos, curProj->pos , eng, aimLevel));
 
-        const coord drawPos(curProj->pos);
+        const Pos drawPos(curProj->pos);
 
         //HIT ACTOR?
         if(
@@ -130,21 +130,21 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
               if(curProj->isVisibleToPlayer) {
                 if(eng->config->isTilesMode) {
                   curProj->setTile(tile_blastAnimation1, clrRedLgt);
-                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->renderer->drawProjectiles(projectiles);
                   eng->sleep(DELAY / 2);
                   curProj->setTile(tile_blastAnimation2, clrRedLgt);
-                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->renderer->drawProjectiles(projectiles);
                   eng->sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                  eng->renderer->drawProjectiles(projectiles);
                   eng->sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjectileAtActorMessages(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+                eng->renderer->drawProjectiles(projectiles);
               }
 
               curProj->isDoneRendering = true;
@@ -196,14 +196,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(eng->config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY / 2);
               curProj->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY);
             }
           }
@@ -221,14 +221,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(eng->config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY / 2);
               curProj->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+              eng->renderer->drawProjectiles(projectiles);
               eng->sleep(DELAY);
             }
           }
@@ -238,10 +238,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
           if(eng->config->isTilesMode) {
             curProj->setTile(projectileTile, projectileColor);
-            eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+            eng->renderer->drawProjectiles(projectiles);
           } else {
             curProj->setGlyph(projectileGlyph, projectileColor);
-            eng->renderer->drawProjectilesAndUpdateWindow(projectiles);
+            eng->renderer->drawProjectiles(projectiles);
           }
         }
       }
@@ -282,7 +282,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
       aimPos.x, aimPos.y, projectile->actorHit, eng);
   } else {
     const int element = projectile->obstructedInElement;
-    const coord& pos = projectilePath.at(element);
+    const Pos& pos = projectilePath.at(element);
     wpn.weaponSpecific_projectileObstructed(
       pos.x, pos.y, projectile->actorHit, eng);
   }
@@ -294,7 +294,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const coord& aimPos) {
   eng->renderer->drawMapAndInterface();
 }
 
-bool Attack::ranged(Actor& attacker, Weapon& wpn, const coord& aimPos) {
+bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   bool didAttack = false;
 
   const bool IS_ATTACKER_PLAYER = &attacker == eng->player;

@@ -17,5 +17,5 @@ void Weapon::setRandomMeleePlus(Engine* const engine) {
 
 void Incinerator::weaponSpecific_projectileObstructed(int originX, int originY, Actor* actorHit, Engine* engine) {
   (void)actorHit;
-  engine->explosionMaker->runExplosion(coord(originX, originY), true, new StatusBurning(engine));
+  engine->explosionMaker->runExplosion(Pos(originX, originY), true, new StatusBurning(engine));
 }

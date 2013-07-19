@@ -29,7 +29,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   isWeakAttack(false) {
   currentDefender = &defender_;
 
-  const coord& defenderPos = currentDefender->pos;
+  const Pos& defenderPos = currentDefender->pos;
 
   bool isDefenderAware = true;
   if(attacker == eng->player) {
@@ -38,7 +38,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   } else {
     isDefenderAware =
       eng->player->checkIfSeeActor(*attacker, NULL) &&
-      eng->playerBonusHandler->isBonusPicked(playerBonus_vigilant) == false;
+      eng->playerBonHandler->isBonPicked(playerBon_vigilant) == false;
   }
 
   isDefenderDodging = false;
@@ -140,7 +140,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 }
 
 RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
-                                   const coord& aimPos_, const coord& curPos_,
+                                   const Pos& aimPos_, const Pos& curPos_,
                                    Engine* engine, ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, wpn_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none),
@@ -172,8 +172,8 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
     const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = wpn_.getDef().rangedHitChanceMod;
-    const coord& attPos(attacker->pos);
-    const coord& defPos(currentDefender->pos);
+    const Pos& attPos(attacker->pos);
+    const Pos& defPos(currentDefender->pos);
     const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
@@ -205,8 +205,8 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 }
 
-MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const coord& aimPos_,
-                                     const coord& curPos_, Engine* engine,
+MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+                                     const Pos& curPos_, Engine* engine,
                                      ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, item_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none) {
@@ -234,8 +234,8 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
     const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = item_.getDef().missileHitChanceMod;
-    const coord& attPos(attacker->pos);
-    const coord& defPos(currentDefender->pos);
+    const Pos& attPos(attacker->pos);
+    const Pos& defPos(currentDefender->pos);
     const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);

@@ -14,7 +14,7 @@ class BresenhamLine
 public:
 	BresenhamLine(Engine* engine) : eng(engine) {}
 
-	//void getLine(vector<coord>& lineVector, int x1, int y1, int x2, int y2);
+	//void getLine(vector<Pos>& lineVector, int x1, int y1, int x2, int y2);
 
 private:
 	Engine* eng;

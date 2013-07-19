@@ -87,21 +87,25 @@ void PlayerPowersHandler::draw(MenuBrowser& browser,
   string endLetter = "a";
   endLetter[0] += static_cast<char>(NR_OF_MEMORIZED) - 1;
 
-  const string label = "Choose a memorized power to evoke [a-" + endLetter + "] | Space/esc to exit";
-  eng->renderer->drawText(label, renderArea_screen, 1, 1, clrWhiteHigh);
+  const string label =
+    "Choose a memorized power to evoke [a-" + endLetter + "]" +
+    " | Space/esc to exit";
+  eng->renderer->drawText(label, panel_screen, Pos(1, 1), clrWhiteHigh);
 
   int currentListPos = 0;
 
   for(unsigned int i = 0; i < NR_OF_MEMORIZED; i++) {
     const char CURRENT_KEY = 'a' + currentListPos;
-    const SDL_Color clr = browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
-    Scroll* const scroll = scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(i));
+    const SDL_Color clr =
+      browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
+    Scroll* const scroll =
+      scrollsToReadFromPlayerMemory.at(memorizedScrollsToShow.at(i));
     const string itemName = scroll->getRealTypeName();
     string str = "a";
     str[0] = CURRENT_KEY;
     str += ") " + itemName;
 
-    eng->renderer->drawText(str, renderArea_mainScreen, 1, currentListPos, clr);
+    eng->renderer->drawText(str, panel_map, Pos(1, currentListPos), clr);
 
     string fill;
     fill.resize(0);
@@ -113,22 +117,27 @@ void PlayerPowersHandler::draw(MenuBrowser& browser,
     fillClr.r /= 3;
     fillClr.g /= 3;
     fillClr.b /= 3;
-    eng->renderer->drawText(fill, renderArea_mainScreen, 1 + str.size(), currentListPos, fillClr);
+    eng->renderer->drawText(
+      fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
     const int x = 28;
 
-    const int CHANCE_OF_SUCCESS = scroll->getChanceToCastFromMemory(eng);
-    string s = intToString(CHANCE_OF_SUCCESS) + "% ";
-    if(eng->playerBonusHandler->isBonusPicked(playerBonus_occultist)) {
+    const int CHANCE_TO_CAST = scroll->getChanceToCastFromMemory(eng);
+
+    string s = intToString(CHANCE_TO_CAST) + "% ";
+    if(eng->playerBonHandler->isBonPicked(playerBon_occultist)) {
       const int TURNS_PER_PERCENT = scroll->getDef().spellTurnsPerPercentCooldown;
       const int TURN = eng->gameTime->getTurn();
-      const int TURNS_SINCE_LAST_TICK = TURN - ((TURN / TURNS_PER_PERCENT) * TURNS_PER_PERCENT);
-      const int TURNS_LEFT = max(0, ((CAST_FROM_MEMORY_CHANCE_LIM - CHANCE_OF_SUCCESS) * TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK);
+      const int TURNS_SINCE_LAST_TICK =
+        TURN - ((TURN / TURNS_PER_PERCENT) * TURNS_PER_PERCENT);
+      const int TURNS_LEFT =
+        max(0, ((CAST_FROM_MEMORY_CHANCE_LIM - CHANCE_TO_CAST) *
+                TURNS_PER_PERCENT) - TURNS_SINCE_LAST_TICK);
       if(TURNS_LEFT > 0) {
         s += "(" + intToString(TURNS_LEFT) + " turns left)";
       }
     }
 
-    eng->renderer->drawText(s, renderArea_mainScreen, x, currentListPos, clrWhite);
+    eng->renderer->drawText(s, panel_map, Pos(x, currentListPos), clrWhite);
 
     currentListPos++;
   }
@@ -136,7 +145,8 @@ void PlayerPowersHandler::draw(MenuBrowser& browser,
   eng->renderer->updateScreen();
 }
 
-Scroll* PlayerPowersHandler::getScrollAt(const unsigned int SCROLL_VECTOR_ELEMENT) const {
+Scroll* PlayerPowersHandler::getScrollAt(
+  const unsigned int SCROLL_VECTOR_ELEMENT) const {
   return scrollsToReadFromPlayerMemory.at(SCROLL_VECTOR_ELEMENT);
 }
 

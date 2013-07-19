@@ -16,20 +16,20 @@
 #include "ItemFactory.h"
 #include "Attack.h"
 
-void Thrower::playerThrowLitExplosive(const coord& aimCell) {
+void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = eng->player->dynamiteFuseTurns;
   const int FLARE_FUSE = eng->player->flareFuseTurns;
 
   eng->player->explosiveThrown();
 
-  vector<coord> path =
+  vector<Pos> path =
     eng->mapTests->getLine(eng->player->pos, aimCell, true, THROWING_RANGE_LIMIT);
 
   tracer << path.size() << endl;
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
-    const coord curPos = path.at(i);
+    const Pos curPos = path.at(i);
     const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
     if(featureHere->isShootPassable() == false) {
       path.resize(i);
@@ -46,8 +46,7 @@ void Thrower::playerThrowLitExplosive(const coord& aimCell) {
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       eng->renderer->drawMapAndInterface(false);
       if(eng->map->playerVision[path[i].x][path[i].y]) {
-        eng->renderer->drawCharacter(
-          glyph, renderArea_mainScreen, path[i].x, path[i].y, clr);
+        eng->renderer->drawGlyph(glyph, panel_map, path[i], clr);
         eng->renderer->updateScreen();
         eng->sleep(eng->config->delayProjectileDraw);
       }
@@ -85,16 +84,16 @@ void Thrower::playerThrowLitExplosive(const coord& aimCell) {
   eng->gameTime->endTurnOfCurrentActor();
 }
 
-void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
+void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                         Item& itemThrown) {
   MissileAttackData* data = new MissileAttackData(
     actorThrowing, itemThrown, targetCell, actorThrowing.pos, eng);
 
   const ActorSizes_t aimLevel = data->intendedAimLevel;
 
-  vector<coord> path = eng->mapTests->getLine(
-                         actorThrowing.pos, targetCell,
-                         false, THROWING_RANGE_LIMIT);
+  vector<Pos> path = eng->mapTests->getLine(
+                       actorThrowing.pos, targetCell,
+                       false, THROWING_RANGE_LIMIT);
 
   const ItemDefinition& itemThrownDef = itemThrown.getDef();
 
@@ -118,7 +117,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
 
   int chanceToDestroyItem = 0;
 
-  coord curPos(-1, -1);
+  Pos curPos(-1, -1);
 
   for(unsigned int i = 1; i < path.size(); i++) {
     eng->renderer->drawMapAndInterface(false);
@@ -137,7 +136,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
 
         if(data->attackResult >= successSmall) {
           if(eng->map->playerVision[curPos.x][curPos.y]) {
-            eng->renderer->drawCharacter('*', renderArea_mainScreen,
+            eng->renderer->drawGlyph('*', panel_map,
                                          curPos, clrRedLgt);
             eng->renderer->updateScreen();
             eng->sleep(eng->config->delayProjectileDraw * 4);
@@ -166,7 +165,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
     }
 
     if(eng->map->playerVision[curPos.x][curPos.y]) {
-      eng->renderer->drawCharacter(glyph, renderArea_mainScreen, curPos, clr);
+      eng->renderer->drawGlyph(glyph, panel_map, curPos, clr);
       eng->renderer->updateScreen();
       eng->sleep(eng->config->delayProjectileDraw);
     }
@@ -200,7 +199,7 @@ void Thrower::throwItem(Actor& actorThrowing, const coord& targetCell,
   } else {
     const int DROP_ELEMENT = blockedInElement == -1 ?
                              path.size() - 1 : blockedInElement;
-    const coord dropPos = path.at(DROP_ELEMENT);
+    const Pos dropPos = path.at(DROP_ELEMENT);
     const MaterialType_t materialAtDropPos =
       eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
     if(materialAtDropPos == materialType_hard) {

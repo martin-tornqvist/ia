@@ -24,18 +24,18 @@ public:
 
   MarkerReturnData run(const MarkerTask_t markerTask, Item* itemThrown);
 
-  const coord& getPos() {
+  const Pos& getPos() {
     return pos_;
   }
 
   void draw(const MarkerTask_t markerTask) const;
 
 private:
-  coord lastKnownPlayerPos_;
+  Pos lastKnownPlayerPos_;
 
-  coord getClosestPos(const coord& c, const vector<coord>& positions) const;
-  void setCoordToClosestEnemyIfVisible();
-  bool setCoordToTargetIfVisible();
+  Pos getClosestPos(const Pos& c, const vector<Pos>& positions) const;
+  void setPosToClosestEnemyIfVisible();
+  bool setPosToTargetIfVisible();
   void readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
                 Item* itemThrown);
   void move(const int DX, const int DY, const MarkerTask_t markerTask,
@@ -45,7 +45,7 @@ private:
 
   bool isDone_;
 
-  coord pos_;
+  Pos pos_;
 
   Engine* eng;
 };

@@ -97,7 +97,7 @@ void SpellTeleport::specificCast(const SpellData& d, Engine* const eng) {
 }
 
 void SpellTeleport::specificMonsterCast(Monster* const monster, Engine* const eng) {
-  specificCast(SpellData(monster, coord(-1, -1)), eng);
+  specificCast(SpellData(monster, Pos(-1, -1)), eng);
 }
 
 bool SpellTeleport::isGoodForMonsterNow(const Monster* const monster, Engine* const engine) {
@@ -305,13 +305,13 @@ void SpellSummonRandom::specificCast(const SpellData& d, Engine* const eng) {
 }
 
 void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* const eng) {
-  coord summonPos(monster->pos);
+  Pos summonPos(monster->pos);
 
-  vector<coord> freePositionsSeenByPlayer;
+  vector<Pos> freePositionsSeenByPlayer;
   for(int x = max(0, eng->player->pos.x - FOV_STANDARD_RADI_INT); x < min(MAP_X_CELLS, eng->player->pos.x + FOV_STANDARD_RADI_INT); x++) {
     for(int y = max(0, eng->player->pos.y - FOV_STANDARD_RADI_INT); y < min(MAP_Y_CELLS, eng->player->pos.y + FOV_STANDARD_RADI_INT); y++) {
       if(eng->map->playerVision[x][y]) {
-        freePositionsSeenByPlayer.push_back(coord(x, y));
+        freePositionsSeenByPlayer.push_back(Pos(x, y));
       }
     }
   }
@@ -321,7 +321,7 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
-    const coord pos = freePositionsSeenByPlayer.at(i);
+    const Pos pos = freePositionsSeenByPlayer.at(i);
     if(blockers[pos.x][pos.y]) {
       freePositionsSeenByPlayer.erase(freePositionsSeenByPlayer.begin() + i);
       i--;
@@ -329,7 +329,7 @@ void SpellSummonRandom::specificMonsterCast(Monster* const monster, Engine* cons
   }
 
   if(freePositionsSeenByPlayer.empty()) {
-    vector<coord> freeCellsVector;
+    vector<Pos> freeCellsVector;
     eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCellsVector);
     if(freeCellsVector.size() > 0) {
       sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToOrigin(monster->pos, eng));

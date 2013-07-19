@@ -82,7 +82,7 @@ void Postmortem::makeInfoLines() {
   tracer << "Postmortem: Listing abilities gained" << endl;
   postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
-  eng->playerBonusHandler->getAllPickedBonusTitlesLine(abilitiesLine);
+  eng->playerBonHandler->getAllPickedBonusTitlesLine(abilitiesLine);
   if(abilitiesLine == "") {
     postmortemLines.push_back(StringAndClr("   * None", clrInfo));
   } else {
@@ -157,7 +157,7 @@ void Postmortem::makeInfoLines() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
-          if(eng->mapTests->isCellInsideMap(coord(x + dx, y + dy))) {
+          if(eng->mapTests->isCellInsideMap(Pos(x + dx, y + dy))) {
             if(eng->map->featuresStatic[x + dx][y + dy]->isVisionPassable()) {
               eng->map->playerVision[x][y] = true;
             }
@@ -170,7 +170,7 @@ void Postmortem::makeInfoLines() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     string currentRow = "";
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(coord(x, y) == eng->player->pos) {
+      if(Pos(x, y) == eng->player->pos) {
         currentRow.push_back('@');
       } else {
         if(eng->renderer->renderArrayAscii[x][y].glyph == ' ' &&
@@ -194,23 +194,23 @@ void Postmortem::makeInfoLines() {
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
   const string decorationLine(MAP_X_CELLS - 2, '-');
-  eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
+  eng->renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
   eng->renderer->drawText(
-    " Displaying postmortem information ", renderArea_screen, 3, 1, clrWhite);
+    " Displaying postmortem information ", panel_screen, Pos(3, 1), clrWhite);
   eng->renderer->drawText(
-    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+    decorationLine, panel_character, Pos(1, 1), clrWhite);
   eng->renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit  ",
-    renderArea_characterLines, 3, 1, clrWhite);
+    panel_character, Pos(3, 1), clrWhite);
   int x = 0;
   int y = 0;
   const int NR_LINES = int(postmortemLines.size());
 
   for(int i = TOP_ELEMENT; i < NR_LINES && (i - TOP_ELEMENT) <= MAP_Y_CELLS; i++) {
     eng->renderer->drawText(
-      postmortemLines.at(i).str, renderArea_mainScreen, x, y,
+      postmortemLines.at(i).str, panel_map, Pos(x, y),
       postmortemLines.at(i).clr);
     y++;
   }
@@ -332,52 +332,49 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
 
-  int x = 1;
-  int y = 1;
+  Pos pos(1, 1);
 
   for(unsigned int i = 0; i < art.size(); i++) {
-    eng->renderer->drawText(art.at(i), renderArea_screen, x, y, clrWhiteHigh);
-    y += 1;
+    eng->renderer->drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
+    pos.y += 1;
   }
 
-  x = 45;
-  y = 18;
+  pos.set(45, 18);
   const string NAME_STR = eng->player->getDef()->name_a;
-  eng->renderer->drawTextCentered(NAME_STR, renderArea_screen, x, y, clrWhiteHigh);
+  eng->renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
-  y += 2;
+  pos.y += 2;
   const string LVL_STR = "LVL " + intToString(eng->dungeonMaster->getLevel());
-  eng->renderer->drawTextCentered(LVL_STR, renderArea_screen, x, y, clrWhiteHigh);
+  eng->renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
 
   //Draw command labels
-  x = 55;
-  y = 14;
+  pos.set(55, 14);
   eng->renderer->drawText(
-    "a) Information", renderArea_screen, x, y,
+    "a) Information", panel_screen, pos,
     browser.isPosAtKey('a') ? clrWhite : clrRedLgt);
-  y += 1;
+  pos.y += 1;
 
   eng->renderer->drawText(
-    "b) View the High Score", renderArea_screen, x, y,
+    "b) View the High Score", panel_screen, pos,
     browser.isPosAtKey('b') ? clrWhite : clrRedLgt);
-  y += 1;
+  pos.y += 1;
 
   eng->renderer->drawText(
-    "c) View messages", renderArea_screen, x, y,
+    "c) View messages", panel_screen, pos,
     browser.isPosAtKey('c') ? clrWhite : clrRedLgt);
-  y += 1;
+  pos.y += 1;
 
   eng->renderer->drawText(
-    "d) Return to main menu", renderArea_screen, x, y,
+    "d) Return to main menu", panel_screen, pos,
     browser.isPosAtKey('d') ? clrWhite : clrRedLgt);
-  y += 1;
+  pos.y += 1;
 
   eng->renderer->drawText(
-    "e) Quit the game", renderArea_screen, x, y,
+    "e) Quit the game", panel_screen, pos,
     browser.isPosAtKey('e') ? clrWhite : clrRedLgt);
-  y += 1;
+  pos.y += 1;
 
   eng->renderer->updateScreen();
 }

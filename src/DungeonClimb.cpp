@@ -88,7 +88,7 @@ void DungeonClimb::tryUseDownStairs() {
   eng->log->clearLog();
 
   const int DLVL = eng->map->getDungeonLevel();
-  const coord& playerPos = eng->player->pos;
+  const Pos& playerPos = eng->player->pos;
 
   if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
     tracer << "DungeonClimb: Player is on stairs" << endl;

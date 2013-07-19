@@ -12,7 +12,7 @@
 #include "PlayerBonuses.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData) :
+Door::Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), nrOfSpikes_(0) {
 
   isOpenedAndClosedExternally_ = false;
@@ -206,7 +206,7 @@ void Door::clue() {
 
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
-    if(eng->mapTests->isCellsNeighbours(coord(pos_.x, pos_.y), eng->player->pos, false)) {
+    if(eng->mapTests->isCellsNeighbours(Pos(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
       const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
@@ -245,7 +245,7 @@ bool Door::trySpike(Actor* actorTrying) {
     } else {
       eng->log->addMessage("I jam a door with a spike.");
     }
-    eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+    eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
   }
   eng->gameTime->endTurnOfCurrentActor();
   return true;
@@ -286,7 +286,7 @@ void Door::tryBash(Actor* actorTrying) {
       } else {
         eng->log->addMessage("I smash into the door!");
       }
-      eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+      eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
     } else {
       if(PLAYER_SEE_TRYER) {
         eng->log->addMessage(actorTrying->getNameThe() + " bashes at a door!");
@@ -301,7 +301,7 @@ void Door::tryBash(Actor* actorTrying) {
     bool isBasherWeak = actorTrying->getStatusEffectsHandler()->hasEffect(statusWeak);
     if(isBasherWeak == false) {
       if(actorTrying == eng->player) {
-        const int BON = eng->playerBonusHandler->isBonusPicked(playerBonus_tough) ? 20 : 0;
+        const int BON = eng->playerBonHandler->isBonPicked(playerBon_tough) ? 20 : 0;
         skillValueBash = 60 + BON - min(58, nrOfSpikes_ * 20);
       } else {
         skillValueBash = 10 - min(9, nrOfSpikes_ * 3);
@@ -355,7 +355,7 @@ void Door::tryBash(Actor* actorTrying) {
         } else {
           eng->log->addMessage("I feel the door crashing open!");
         }
-        eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+        eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
         if(PLAYER_SEE_TRYER) {
           eng->log->addMessage(actorTrying->getNameThe() + " smashes into a door.");
@@ -363,7 +363,7 @@ void Door::tryBash(Actor* actorTrying) {
         } else if(PLAYER_SEE_DOOR) {
           eng->log->addMessage("A door crashes open!");
         }
-        eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+        eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       }
     }
 
@@ -500,14 +500,14 @@ void Door::tryOpen(Actor* actorTrying) {
       isOpen_ = true;
       if(IS_PLAYER) {
         eng->log->addMessage("I open the door.");
-        eng->soundEmitter->emitSound(Sound("", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+        eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
         if(PLAYER_SEE_TRYER) {
           eng->log->addMessage(actorTrying->getNameThe() + " opens a door.");
         } else if(PLAYER_SEE_DOOR) {
           eng->log->addMessage("I see a door opening.");
         }
-        eng->soundEmitter->emitSound(Sound("I hear a door open.", true, coord(pos_.x, pos_.y), false, IS_PLAYER));
+        eng->soundEmitter->emitSound(Sound("I hear a door open.", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       }
     } else {
       if(eng->dice.percentile() < 50) {

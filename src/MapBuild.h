@@ -28,21 +28,21 @@ public:
 
   void makePathByRandomWalk(
     int originX, int originY, int len, Feature_t featureToMake,
-    const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true, const coord x0y0Lim =
-      coord(1, 1), const coord x1y1Lim = coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+    const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true, const Pos x0y0Lim =
+      Pos(1, 1), const Pos x1y1Lim = Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
 private:
   void makeStraightPathByPathfinder(
-    const coord origin, const coord target, Feature_t feature, const bool SMOOTH,
+    const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
     const bool TUNNEL_THROUGH_ANY_FEATURE);
 
   void buildForestLimit();
   void buildForestOuterTreeline();
   void buildForestTreePatch();
-  void buildForestTrees(const coord& stairsCoord);
+  void buildForestTrees(const Pos& stairsPos);
 
-  void buildFromTemplate(const coord pos, MapTemplate* t);
-  void buildFromTemplate(const coord pos, MapTemplateId_t templateId);
+  void buildFromTemplate(const Pos pos, MapTemplate* t);
+  void buildFromTemplate(const Pos pos, MapTemplateId_t templateId);
 
   Feature_t backup[MAP_X_CELLS][MAP_Y_CELLS];
   void backupMap();

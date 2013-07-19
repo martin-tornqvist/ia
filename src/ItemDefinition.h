@@ -163,6 +163,8 @@ enum ItemId_t {
 //  item_deviceSpellReflector,
   item_deviceElectricLantern,
 
+  item_medicalBag,
+
   endOfItemIds
 };
 
@@ -217,27 +219,11 @@ public:
   SDL_Color color;
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
-  bool isExplosive;
-  bool isReadable;
-  bool isScroll;
-  bool isScrollLearned;
-  bool isScrollLearnable;
-  bool isQuaffable;
-  bool isDevice;
-  bool isEatable;
-  bool isArmor;
+  bool isExplosive, isReadable, isScroll, isScrollLearned, isScrollLearnable;
+  bool isQuaffable, isDevice, isEatable, isArmor, isCloak, isRing, isAmulet;
+  bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
+  bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
   ArmorData armorData;
-  bool isCloak;
-  bool isRing;
-  bool isAmulet;
-  bool isIntrinsic;
-  bool isMeleeWeapon;
-  bool isRangedWeapon;
-  bool isMissileWeapon;
-  bool isShotgun;
-  bool isMachineGun;
-  bool isAmmo;
-  bool isAmmoClip;
   int ammoContainedInClip;
   DiceParam missileDmg;
   int missileHitChanceMod;
@@ -273,7 +259,6 @@ public:
   int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;
   vector< pair<Feature_t, int> > featuresCanBeFoundIn;
-
 private:
 };
 

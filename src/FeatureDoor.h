@@ -80,7 +80,7 @@ protected:
   friend class FeatureFactory;
   friend class MapBuildBSP;
   friend class FeatureLever;
-  Door(Feature_t id, coord pos, Engine* engine, DoorSpawnData* spawnData);
+  Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData);
 
   const FeatureDef* const mimicFeature_;
   int nrOfSpikes_;

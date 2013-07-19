@@ -56,7 +56,7 @@ public:
       delete intrinsics_.at(i);
   }
 
-  void dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
+  void dropAllNonIntrinsic(const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
 
   bool hasItemInSlot(SlotTypes_t slotName) const;
 

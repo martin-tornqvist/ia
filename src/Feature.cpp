@@ -6,7 +6,7 @@
 #include "Log.h"
 #include "Render.h"
 
-Feature::Feature(Feature_t id, coord pos, Engine* engine, FeatureSpawnData* spawnData) :
+Feature::Feature(Feature_t id, Pos pos, Engine* engine, FeatureSpawnData* spawnData) :
 	pos_(pos), eng(engine), def_(eng->featureData->getFeatureDef(id)), hasBlood_(false) {
 	(void)spawnData;
 }

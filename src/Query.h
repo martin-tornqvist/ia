@@ -13,11 +13,11 @@ public:
 
   bool yesOrNo() const;
 
-  coord direction() const;
+  Pos direction() const;
 
   void waitForEscOrSpace() const;
 
-  int number(const coord& pos, const SDL_Color clr, const int MIN,
+  int number(const Pos& pos, const SDL_Color clr, const int MIN,
              const int MAX_NR_DIGITS, const int DEFAULT,
              const bool CANCEL_RETURNS_DEFAULT) const;
 

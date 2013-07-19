@@ -71,7 +71,8 @@ void StatusPoisoned::newTurn(Engine* const engine) {
 bool StatusTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   if(ALLOW_MESSAGE_WHEN_FALSE) {
     if(owningActor == owningActor->eng->player) {
-      owningActor->eng->log->addMessage("I am too terrified to engage in close combat!");
+      owningActor->eng->log->addMessage(
+        "I am too terrified to engage in close combat!");
     }
   }
   return false;
@@ -82,38 +83,58 @@ bool StatusTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-coord StatusNailed::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
-  (void)movePos;
+void StatusWound::more() {
+  nrWounds++;
 
-  Actor* const player = owningActor->eng->player;
-
-  if(owningActor == player) {
-    engine->log->addMessage("I struggle to tear out the spike!", clrMessageBad);
-  } else {
-    if(player->checkIfSeeActor(*owningActor, NULL)) {
-      engine->log->addMessage(owningActor->getNameThe() +  " struggles in pain!", clrMessageGood);
+  Engine* const eng = owningActor->eng;
+  if(nrWounds >= 5) {
+    if(owningActor == eng->player) {
+      eng->log->addMessage("I die from my wounds!");
     }
+    owningActor->die(false, false, true);
   }
+}
 
-  owningActor->hit(engine->dice(1, 3), dmgType_physical);
+Pos StatusNailed::changeMovePos(const Pos& actorPos, const Pos& movePos,
+                                Engine* const engine) {
+  if(actorPos != movePos) {
+    Actor* const player = owningActor->eng->player;
 
-  if(owningActor->deadState == actorDeadState_alive) {
-    const int ACTOR_TOUGHNESS = owningActor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *(owningActor));
-    if(engine->abilityRoll->roll(ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
-      nrOfSpikes--;
-      if(nrOfSpikes > 0) {
-        if(owningActor == player) {
-          engine->log->addMessage("I rip out a spike from my flesh!");
-        } else {
-          if(engine->player->checkIfSeeActor(*owningActor, NULL)) {
-            engine->log->addMessage(owningActor->getNameThe() + " tears out a spike!");
+    if(owningActor == player) {
+      engine->log->addMessage(
+        "I struggle to tear out the spike!", clrMessageBad);
+    } else {
+      if(player->checkIfSeeActor(*owningActor, NULL)) {
+        engine->log->addMessage(
+          owningActor->getNameThe() +  " struggles in pain!", clrMessageGood);
+      }
+    }
+
+    owningActor->hit(engine->dice(1, 3), dmgType_physical);
+
+    if(owningActor->deadState == actorDeadState_alive) {
+      const AbilityValues& ownerAbilities = owningActor->getDef()->abilityVals;
+      const int ACTOR_TOUGHNESS =
+        ownerAbilities.getVal(ability_resistStatusBody, true, *(owningActor));
+      if(engine->abilityRoll->roll(
+            ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
+        nrOfSpikes--;
+        if(nrOfSpikes > 0) {
+          if(owningActor == player) {
+            engine->log->addMessage("I rip out a spike from my flesh!");
+          } else {
+            if(engine->player->checkIfSeeActor(*owningActor, NULL)) {
+              engine->log->addMessage(
+                owningActor->getNameThe() + " tears out a spike!");
+            }
           }
         }
       }
     }
-  }
 
-  return actorPos;
+    return actorPos;
+  }
+  return movePos;
 }
 
 bool StatusConfused::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
@@ -134,7 +155,8 @@ bool StatusConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
+Pos StatusConfused::changeMovePos(const Pos& actorPos, const Pos& movePos,
+                                  Engine* const engine) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeMoveBlockerArray(owningActor, blockers);
 
@@ -144,9 +166,9 @@ coord StatusConfused::changeMoveCoord(const coord& actorPos, const coord& movePo
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y
-        const coord delta(engine->dice(1, 3) - 2, engine->dice(1, 3) - 2);
+        const Pos delta(engine->dice(1, 3) - 2, engine->dice(1, 3) - 2);
         if(delta.x != 0 || delta.y != 0) {
-          const coord c = actorPos + delta;
+          const Pos c = actorPos + delta;
           if(blockers[c.x][c.y] == false) {
             return actorPos + delta;
           }
@@ -186,8 +208,10 @@ void StatusBurning::newTurn(Engine* const engine) {
 
 void StatusBlind::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers, false);
+  engine->mapTests->makeVisionBlockerArray(
+    engine->player->pos, visionBlockers);
+  owningActor->getStatusEffectsHandler()->endEffect(
+    statusClairvoyant, visionBlockers, false);
 }
 
 void StatusBlind::end(Engine* const engine) {
@@ -201,7 +225,7 @@ bool StatusBlind::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 void StatusParalyzed::start(Engine* const engine) {
   Player* const player = engine->player;
   if(owningActor == player) {
-    const coord& playerPos = player->pos;
+    const Pos& playerPos = player->pos;
     const int DYNAMITE_FUSE = engine->player->dynamiteFuseTurns;
     const int FLARE_FUSE = engine->player->flareFuseTurns;
     const int MOLOTOV_FUSE = engine->player->molotovFuseTurns;
@@ -211,7 +235,8 @@ void StatusParalyzed::start(Engine* const engine) {
       player->updateColor();
       engine->log->addMessage("The lit Dynamite stick falls from my hands!");
       if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
-        engine->featureFactory->spawnFeatureAt(feature_litDynamite, playerPos, new DynamiteSpawnData(DYNAMITE_FUSE));
+        engine->featureFactory->spawnFeatureAt(
+          feature_litDynamite, playerPos, new DynamiteSpawnData(DYNAMITE_FUSE));
       }
     }
     if(FLARE_FUSE > 0) {
@@ -219,7 +244,8 @@ void StatusParalyzed::start(Engine* const engine) {
       player->updateColor();
       engine->log->addMessage("The lit Flare falls from my hands.");
       if(engine->map->featuresStatic[playerPos.x][playerPos.y]->isBottomless() == false) {
-        engine->featureFactory->spawnFeatureAt(feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
+        engine->featureFactory->spawnFeatureAt(
+          feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
       }
       engine->gameTime->updateLightMap();
       player->updateFov();
@@ -288,8 +314,10 @@ void StatusFlared::newTurn(Engine* const engine) {
 }
 
 //================================================================ STATUS EFFECTS HANDLER
-StatusEffect* StatusEffectsHandler::makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT) {
+StatusEffect* StatusEffectsHandler::makeEffectFromId(
+  const StatusEffects_t id, const int TURNS_LEFT) {
   switch(id) {
+    case statusWound:             return new StatusWound(TURNS_LEFT);                 break;
     case statusNailed:            return new StatusNailed(TURNS_LEFT);                break;
     case statusBlind:             return new StatusBlind(TURNS_LEFT);                 break;
     case statusBurning:           return new StatusBurning(TURNS_LEFT);               break;
@@ -341,16 +369,19 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
-  const bool PLAYER_SEE_OWNER = eng->player->checkIfSeeActor(*owningActor, blockers);
+  const bool PLAYER_SEE_OWNER =
+    eng->player->checkIfSeeActor(*owningActor, blockers);
 
   const Abilities_t saveAbility = effect->getSaveAbility();
-  const int ACTOR_ABILITY = owningActor->getDef()->abilityVals.getVal(saveAbility, true, *(owningActor));
+  const int ACTOR_ABILITY =
+    owningActor->getDef()->abilityVals.getVal(saveAbility, true, *owningActor);
   const int SAVE_ABILITY_MOD = effect->getSaveAbilityModifier();
   int statusProtectionFromArmor = 0;
 
   if(OWNER_IS_PLAYER) {
     if(effect->getEffectId() == statusBurning) {
-      Item* const armor = owningActor->getInventory()->getItemInSlot(slot_armorBody);
+      Item* const armor =
+        owningActor->getInventory()->getItemInSlot(slot_armorBody);
       if(armor != NULL) {
         const bool ARMOR_PROTECTS_FROM_BURNING =
           armor->getDef().armorData.protectsAgainstStatusBurning;
@@ -360,7 +391,7 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
         }
       }
     } else if(effect->getEffectId() == statusConfused) {
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_selfAware)) {
+      if(eng->playerBonHandler->isBonPicked(playerBon_selfAware)) {
         eng->log->addMessage(effect->messageWhenSaves());
         delete effect;
         return;
@@ -368,7 +399,8 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
     }
   }
 
-  const int TOTAL_SAVE_ABILITY = ACTOR_ABILITY + SAVE_ABILITY_MOD + statusProtectionFromArmor;
+  const int TOTAL_SAVE_ABILITY =
+    ACTOR_ABILITY + SAVE_ABILITY_MOD + statusProtectionFromArmor;
 
   AbilityRollResult_t result = eng->abilityRoll->roll(TOTAL_SAVE_ABILITY);
 
@@ -398,13 +430,16 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
             if(PLAYER_SEE_OWNER) {
               if(NO_MESSAGES == false) {
                 if(effect->messageWhenMore() != "") {
-                  eng->log->addMessage(owningActor->getNameThe() + " " + effect->messageWhenMoreOther());
+                  eng->log->addMessage(
+                    owningActor->getNameThe() + " " +
+                    effect->messageWhenMoreOther());
                 }
               }
             }
           }
         }
 
+        effects.at(i)->more();
         effects.at(i)->turnsLeft = max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
 
         delete effect;
@@ -435,7 +470,9 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
       if(PLAYER_SEE_OWNER) {
         if(NO_MESSAGES == false) {
           if(effect->messageWhenStartOther() != "") {
-            eng->log->addMessage(owningActor->getNameThe() + " " + effect->messageWhenStartOther());
+            eng->log->addMessage(
+              owningActor->getNameThe() + " " +
+              effect->messageWhenStartOther());
           }
         }
       }
@@ -454,7 +491,9 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
     if(PLAYER_SEE_OWNER) {
       if(NO_MESSAGES == false) {
         if(effect->messageWhenSavesOther() != "") {
-          eng->log->addMessage(owningActor->getNameThe() + " " + effect->messageWhenSavesOther());
+          eng->log->addMessage(
+            owningActor->getNameThe() + " " +
+            effect->messageWhenSavesOther());
         }
       }
     }
@@ -476,15 +515,20 @@ void StatusEffectsHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool
   }
 }
 
-void StatusEffectsHandler::runEffectEndAndRemoveFromList(const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+void StatusEffectsHandler::runEffectEndAndRemoveFromList(
+  const unsigned int index,
+  const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
-  const bool PLAYER_SEE_OWNER = OWNER_IS_PLAYER ? true : eng->player->checkIfSeeActor(*owningActor, visionBlockingArray);
+  const bool PLAYER_SEE_OWNER =
+    OWNER_IS_PLAYER ? true :
+    eng->player->checkIfSeeActor(*owningActor, visionBlockingArray);
 
   StatusEffect* const effect = effects.at(index);
 
   effect->end(eng);
 
-  const bool IS_VISUAL_UPDATE_NEEDED = effect->isPlayerVisualUpdateNeededWhenStartOrEnd();
+  const bool IS_VISUAL_UPDATE_NEEDED =
+    effect->isPlayerVisualUpdateNeededWhenStartOrEnd();
 
   effects.erase(effects.begin() + index);
 
@@ -498,20 +542,24 @@ void StatusEffectsHandler::runEffectEndAndRemoveFromList(const unsigned int inde
     eng->log->addMessage(effect->messageWhenEnd(), clrWhite);
   } else {
     if(PLAYER_SEE_OWNER && effect->messageWhenEndOther() != "") {
-      eng->log->addMessage(owningActor->getNameThe() + " " + effect->messageWhenEndOther());
+      eng->log->addMessage(
+        owningActor->getNameThe() + " " +
+        effect->messageWhenEndOther());
     }
   }
 
   delete effect;
 }
 
-void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+void StatusEffectsHandler::newTurnAllEffects(
+  const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   for(unsigned int i = 0; i < effects.size();) {
     StatusEffect* const curEffect = effects.at(i);
 
     if(owningActor != eng->player) {
       if(curEffect->isMakingOwnerAwareOfPlayer()) {
-        dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter = owningActor->getDef()->nrTurnsAwarePlayer;
+        dynamic_cast<Monster*>(owningActor)->playerAwarenessCounter =
+          owningActor->getDef()->nrTurnsAwarePlayer;
       }
     }
 
@@ -524,7 +572,8 @@ void StatusEffectsHandler::newTurnAllEffects(const bool visionBlockingArray[MAP_
   }
 }
 
-bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackMelee(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
     if(effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
@@ -533,7 +582,8 @@ bool StatusEffectsHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE)
   return true;
 }
 
-bool StatusEffectsHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool StatusEffectsHandler::allowAttackRanged(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
     if(effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;

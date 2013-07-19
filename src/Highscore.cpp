@@ -62,37 +62,37 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
     const int Y0 = 4;
     eng->renderer->drawText(
       "No High Score entries found | space/esc to exit ",
-      renderArea_screen, X0, Y0, clrWhite);
+      panel_screen, Pos(X0, Y0), clrWhite);
   } else {
     const string decorationLine(MAP_X_CELLS - 2, '-');
 
     eng->renderer->drawText(
-      decorationLine, renderArea_characterLines, 0, 1, clrWhite);
+      decorationLine, panel_character, Pos(0, 1), clrWhite);
     eng->renderer->drawText(
       " 2/8, down/up to navigate | space/esc to exit ",
-      renderArea_characterLines, 3, 1, clrWhite);
+      panel_character, Pos(3, 1), clrWhite);
 
     int yPos = 1;
 
     eng->renderer->drawText(
-      decorationLine, renderArea_screen, 1, yPos, clrWhite);
+      decorationLine, panel_screen, Pos(1, yPos), clrWhite);
     eng->renderer->drawText(
-      " Displaying High Scores ", renderArea_screen, 3, yPos, clrWhite);
+      " Displaying High Scores ", panel_screen, Pos(3, yPos), clrWhite);
 
     yPos++;
 
     eng->renderer->drawText(
-      "Ended", renderArea_screen, X_POS_DATE, yPos, clrGray);
+      "Ended", panel_screen, Pos(X_POS_DATE, yPos), clrGray);
     eng->renderer->drawText(
-      "Name", renderArea_screen, X_POS_NAME, yPos, clrGray);
+      "Name", panel_screen, Pos(X_POS_NAME, yPos), clrGray);
     eng->renderer->drawText(
-      "Score", renderArea_screen, X_POS_SCORE, yPos, clrGray);
+      "Score", panel_screen, Pos(X_POS_SCORE, yPos), clrGray);
     eng->renderer->drawText(
-      "Level", renderArea_screen, X_POS_LVL, yPos, clrGray);
+      "Level", panel_screen, Pos(X_POS_LVL, yPos), clrGray);
     eng->renderer->drawText(
-      "Depth", renderArea_screen, X_POS_DLVL, yPos, clrGray);
+      "Depth", panel_screen, Pos(X_POS_DLVL, yPos), clrGray);
     eng->renderer->drawText(
-      "Insanity", renderArea_screen, X_POS_INSANITY, yPos, clrGray);
+      "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
 
     yPos++;
 
@@ -109,17 +109,17 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
       const SDL_Color clr = clrNosferatuTeal;
       eng->renderer->drawText(
-        dateAndTime, renderArea_screen, X_POS_DATE, yPos, clr);
+        dateAndTime, panel_screen, Pos(X_POS_DATE, yPos), clr);
       eng->renderer->drawText(
-        name, renderArea_screen, X_POS_NAME, yPos, clr);
+        name, panel_screen, Pos(X_POS_NAME, yPos), clr);
       eng->renderer->drawText(
-        SCORE, renderArea_screen, X_POS_SCORE, yPos, clr);
+        SCORE, panel_screen, Pos(X_POS_SCORE, yPos), clr);
       eng->renderer->drawText(
-        LVL, renderArea_screen, X_POS_LVL, yPos, clr);
+        LVL, panel_screen, Pos(X_POS_LVL, yPos), clr);
       eng->renderer->drawText(
-        DLVL, renderArea_screen, X_POS_DLVL, yPos, clr);
+        DLVL, panel_screen, Pos(X_POS_DLVL, yPos), clr);
       eng->renderer->drawText(
-        INSANITY + "%", renderArea_screen, X_POS_INSANITY, yPos, clr);
+        INSANITY + "%", panel_screen, Pos(X_POS_INSANITY, yPos), clr);
       yPos++;
     }
   }

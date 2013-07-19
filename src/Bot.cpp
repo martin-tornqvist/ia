@@ -43,10 +43,10 @@ void Bot::runFunctionTests() {
   double hitChanceReal = 0;
 
   //Make sure an actor can be spawned next to the player
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + coord(1, 0));
+  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + Pos(1, 0));
 
   for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
-    Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + coord(1, 0));
+    Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + Pos(1, 0));
     dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
     eng->attack->melee(*eng->player, *dynamic_cast<Weapon*>(weaponUsed), *actor);
 
@@ -128,19 +128,19 @@ void Bot::act() {
 
   findPathToNextStairs();
 
-  const coord nextCell = currentPath_.back();
+  const Pos nextCell = currentPath_.back();
 
   walkToAdjacentCell(nextCell);
 }
 
-bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
+bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   tracer << "Bot::walkToAdjacentCell()..." << endl;
 
-  coord playerCell(eng->player->pos);
+  Pos playerCell(eng->player->pos);
 
   assert(eng->mapTests->isCellsNeighbours(playerCell, cellToGoTo, true));
 
-  //Get relative coordinates
+  //Get relative positions
   const int xRel = cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
   const int yRel = cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
@@ -192,28 +192,28 @@ bool Bot::walkToAdjacentCell(const coord& cellToGoTo) {
   return playerCell == cellToGoTo;
 }
 
-coord Bot::findNextStairs() {
+Pos Bot::findNextStairs() {
   tracer << "Bot::findNextStairs()..." << endl;
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       FeatureStatic* f = eng->map->featuresStatic[x][y];
       if(f->getId() == feature_stairsDown) {
         tracer << "Bot::findNextStairs() [DONE]" << endl;
-        return coord(x, y);
+        return Pos(x, y);
       }
     }
   }
-  tracer << "[WARNING] Could not find stairs coord, in Bot::findNextStairs()" << endl;
-  return coord(-1, -1);
+  tracer << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()" << endl;
+  return Pos(-1, -1);
 }
 
 void Bot::findPathToNextStairs() {
   tracer << "Bot::findPathToNextStairs()..." << endl;
   currentPath_.resize(0);
 
-  const coord stairPos = findNextStairs();
+  const Pos stairPos = findNextStairs();
 
-  assert(stairPos != coord(-1, -1));
+  assert(stairPos != Pos(-1, -1));
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);

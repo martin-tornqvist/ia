@@ -23,8 +23,8 @@ Entity::Entity(FeatureStatic* feature_) :
   feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureStatic) {
 }
 
-void Look::markerAtCoord(const coord& pos, const MarkerTask_t markerTask,
-                         const Item* const itemThrown) {
+void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
+                       const Item* const itemThrown) {
 
   const bool IS_VISION = eng->map->playerVision[pos.x][pos.y];
 
@@ -99,7 +99,7 @@ void Look::describeBriefFeatureStatic(const Feature& feature) const {
   eng->log->addMessage(feature.getDescription(false) + ".");
 }
 
-void Look::printExtraActorDescription(const coord& pos) const {
+void Look::printExtraActorDescription(const Pos& pos) const {
   Actor* actor = eng->mapTests->getActorAtPos(pos);
   if(actor != NULL) {
     if(actor != eng->player) {
@@ -111,8 +111,8 @@ void Look::printExtraActorDescription(const coord& pos) const {
         eng->autoDescribeActor->addAutoDescriptionLines(actor, description);
       }
 
-      //Format the text
-      vector<string> formattedText = eng->textFormatting->lineToLines(description, MAP_X_CELLS - 1);
+      vector<string> formattedText =
+        eng->textFormatting->lineToLines(description, MAP_X_CELLS - 1);
 
       const unsigned int NR_OF_LINES = formattedText.size();
 
@@ -121,11 +121,13 @@ void Look::printExtraActorDescription(const coord& pos) const {
 
       eng->renderer->drawMapAndInterface(false);
       eng->marker->draw(markerTask_look);
-      eng->renderer->coverArea(renderArea_screen, START_X, START_Y, 1, NR_OF_LINES);
+      eng->renderer->coverArea(panel_screen,
+                               Pos(START_X, START_Y),
+                               Pos(1, NR_OF_LINES));
 
       for(unsigned int i = 0; i < NR_OF_LINES; i++) {
-        eng->renderer->drawText(formattedText.at(i), renderArea_screen,
-                                START_X, START_Y + i, clrWhiteHigh);
+        eng->renderer->drawText(formattedText.at(i), panel_screen,
+                                Pos(START_X, START_Y + i), clrWhiteHigh);
       }
 
       eng->renderer->updateScreen();
@@ -135,7 +137,7 @@ void Look::printExtraActorDescription(const coord& pos) const {
   }
 }
 
-Entity Look::getEntityToDescribe(const coord pos) {
+Entity Look::getEntityToDescribe(const Pos pos) {
 
   //TODO this method is a little wonky
 

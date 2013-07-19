@@ -15,7 +15,7 @@ class Actor;
 class Sound {
 public:
   Sound(
-    const string& message, const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN, const coord& origin,
+    const string& message, const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN, const Pos& origin,
     const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
     message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
     origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
@@ -37,7 +37,7 @@ public:
     return isMessageIgnoredIfPlayerSeeOrigin_;
   }
 
-  coord getOrigin() const {
+  Pos getOrigin() const {
     return origin_;
   }
 
@@ -56,7 +56,7 @@ public:
 private:
   string message_;
   bool isMessageIgnoredIfPlayerSeeOrigin_;
-  coord origin_;
+  Pos origin_;
   bool isLoud_;
   bool isAlertingMonsters_;
 };
@@ -78,7 +78,7 @@ private:
 
   string getPlayerToOriginDirectionString(
     const int FLOOD_VALUE_AT_PLAYER,
-    const coord& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
+    const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
 

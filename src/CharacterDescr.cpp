@@ -143,15 +143,15 @@ void CharacterDescr::makeLines() {
   lines.push_back(StringAndClr("Abilities gained", clrHeader));
   string abilitiesLine = "";
   bool isAnyBonusPicked = false;
-  for(unsigned int i = 0; i < endOfPlayerBonuses; i++) {
-    const PlayerBonuses_t bonus = static_cast<PlayerBonuses_t>(i);
-    if(eng->playerBonusHandler->isBonusPicked(bonus)) {
+  for(unsigned int i = 0; i < endOfPlayerBons; i++) {
+    const PlayerBon_t bonus = static_cast<PlayerBon_t>(i);
+    if(eng->playerBonHandler->isBonPicked(bonus)) {
       isAnyBonusPicked = true;
       const string currentTitle =
-        eng->playerBonusHandler->getBonusTitle(bonus);
+        eng->playerBonHandler->getBonusTitle(bonus);
       lines.push_back(StringAndClr(offset + currentTitle, clrText));
       const string currentDescr =
-        eng->playerBonusHandler->getBonusDescription(bonus);
+        eng->playerBonHandler->getBonusDescription(bonus);
       lines.push_back(StringAndClr(offset + currentDescr, clrTextDark));
     }
   }
@@ -212,22 +212,22 @@ void CharacterDescr::makeLines() {
 void CharacterDescr::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
+  eng->renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
   eng->renderer->drawText(
-    decorationLine, renderArea_screen, 1, 1, clrWhite);
+    decorationLine, panel_screen, Pos(1, 1), clrWhite);
   eng->renderer->drawText(
-    " Displaying character description ", renderArea_screen, 3, 1, clrWhite);
+    " Displaying character description ", panel_screen, Pos(3, 1), clrWhite);
   eng->renderer->drawText(
-    decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+    decorationLine, panel_character, Pos(1, 1), clrWhite);
   eng->renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit ",
-    renderArea_characterLines, 3, 1, clrWhite);
+    panel_character, Pos(3, 1), clrWhite);
 }
 
 void CharacterDescr::run() {
   makeLines();
 
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
 
   StringAndClr currentLine;
 
@@ -236,11 +236,11 @@ void CharacterDescr::run() {
 
   drawInterface();
 
-  int yCell = 2;
+  Pos pos(1, 2);
   for(int i = topElement; i <= btmElement; i++) {
     eng->renderer->drawText(
-      lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).clr);
-    yCell++;
+      lines.at(i).str , panel_screen, pos, lines.at(i).clr);
+    pos.y++;
   }
 
   eng->renderer->updateScreen();
@@ -256,13 +256,14 @@ void CharacterDescr::run() {
                      int(lines.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawInterface();
-      yCell = 2;
+      pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
         eng->renderer->drawText(
-          lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).clr);
-        yCell++;
+          lines.at(i).str , panel_screen, pos, lines.at(i).clr);
+        pos.y++;
       }
       eng->renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
@@ -271,13 +272,14 @@ void CharacterDescr::run() {
                      int(lines.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawInterface();
-      yCell = 2;
+      pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
         eng->renderer->drawText(
-          lines.at(i).str , renderArea_screen, 1, yCell, lines.at(i).clr);
-        yCell++;
+          lines.at(i).str , panel_screen, pos, lines.at(i).clr);
+        pos.y++;
       }
       eng->renderer->updateScreen();
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
@@ -285,6 +287,6 @@ void CharacterDescr::run() {
     }
 
   }
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
   eng->renderer->drawMapAndInterface();
 }

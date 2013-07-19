@@ -131,7 +131,7 @@ void Monster::act() {
     }
   }
 
-  vector<coord> path;
+  vector<Pos> path;
 
   if(ai.pathsToTargetWhenAware) {
     if(leader != eng->player) {
@@ -183,8 +183,8 @@ void Monster::monsterHit(int& dmg) {
   }
 }
 
-void Monster::moveToCell(const coord& targetCell) {
-  coord dest = getStatusEffectsHandler()->changeMoveCoord(pos, targetCell);
+void Monster::moveToCell(const Pos& targetCell) {
+  Pos dest = getStatusEffectsHandler()->changeMovePos(pos, targetCell);
 
   //Trap affects leaving?
   if(dest != pos) {
@@ -265,10 +265,10 @@ bool Monster::tryAttack(Actor& defender) {
                 //Check if friend is in the way (with a small chance to ignore this)
                 bool isBlockedByFriend = false;
                 if(eng->dice.percentile() < 80) {
-                  vector<coord> line =
+                  vector<Pos> line =
                     eng->mapTests->getLine(pos, defender.pos, true, 9999);
                   for(unsigned int i = 0; i < line.size(); i++) {
-                    const coord& curPos = line.at(i);
+                    const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
                       Actor* const actorHere = eng->mapTests->getActorAtPos(curPos);
                       if(actorHere != NULL) {

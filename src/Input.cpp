@@ -56,11 +56,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
-        eng->player->moveDirection(1, -1);
+        eng->player->moveDirection(Pos(1, -1));
       } else if(d.isCtrlHeld_) {
-        eng->player->moveDirection(1, 1);
+        eng->player->moveDirection(Pos(1, 1));
       } else {
-        eng->player->moveDirection(1, 0);
+        eng->player->moveDirection(Pos(1, 0));
       }
     }
     clearEvents();
@@ -68,7 +68,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(0, 1);
+      eng->player->moveDirection(Pos(0, 1));
     }
     clearEvents();
     return;
@@ -76,11 +76,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
-        eng->player->moveDirection(-1, -1);
+        eng->player->moveDirection(Pos(-1, -1));
       } else if(d.isCtrlHeld_) {
-        eng->player->moveDirection(-1, 1);
+        eng->player->moveDirection(Pos(-1, 1));
       } else {
-        eng->player->moveDirection(-1, 0);
+        eng->player->moveDirection(Pos(-1, 0));
       }
     }
     clearEvents();
@@ -88,43 +88,43 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(0, -1);
+      eng->player->moveDirection(Pos(0, -1));
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(1, -1);
+      eng->player->moveDirection(Pos(1, -1));
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(1, 1);
+      eng->player->moveDirection(Pos(1, 1));
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(-1, 1);
+      eng->player->moveDirection(Pos(-1, 1));
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(-1, -1);
+      eng->player->moveDirection(Pos(-1, -1));
     }
     clearEvents();
     return;
   } else if(d.key_ == '5' || d.key_ == '.') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(0, 0);
-      if(eng->playerBonusHandler->isBonusPicked(playerBonus_steadyAimer)) {
+      eng->player->moveDirection(Pos(0, 0));
+      if(eng->playerBonHandler->isBonPicked(playerBon_steadyAimer)) {
         eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusStill(1));
       }
     }
@@ -309,7 +309,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      const bool IS_FREE_TURN = false; //eng->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+      const bool IS_FREE_TURN = false; //eng->playerBonHandler->isBonPicked(playerBon_nimble);
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 
@@ -399,48 +399,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->marker->run(markerTask_look, NULL);
       } else {
         eng->log->addMessage("I am blind.");
-      }
-    }
-    clearEvents();
-    return;
-  }
-  //----------------------------------------FIRST AID
-  else if(d.key_ == 'h') {
-    clearLogMessages();
-    if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->hasEffect(statusPoisoned)) {
-        eng->log->addMessage("Not while poisoned.");
-        eng->renderer->drawMapAndInterface();
-      } else {
-        bool allowHeal = false;
-        const bool IS_DISEASED = eng->player->getStatusEffectsHandler()->hasEffect(statusDiseased);
-
-        if(eng->player->getHp() < eng->player->getHpMax(true)) {
-          allowHeal = true;
-        } else if(IS_DISEASED && eng->playerBonusHandler->isBonusPicked(playerBonus_curer)) {
-          allowHeal = true;
-        }
-
-        if(allowHeal) {
-          eng->player->getSpotedEnemies();
-          if(eng->player->spotedEnemies.size() == 0) {
-            const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
-            const string TURNS_STR = intToString(TURNS_TO_HEAL);
-            eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
-            eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
-            eng->gameTime->endTurnOfCurrentActor();
-          } else {
-            eng->log->addMessage("Not while an enemy is near.");
-            eng->renderer->drawMapAndInterface();
-          }
-        } else {
-          if(IS_DISEASED) {
-            eng->log->addMessage("I cannot heal this disease.");
-          } else {
-            eng->log->addMessage("I am already at good health.");
-          }
-          eng->renderer->drawMapAndInterface();
-        }
       }
     }
     clearEvents();

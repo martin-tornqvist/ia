@@ -220,7 +220,7 @@ int Inventory::getElementToStackItem(Item* item) const {
   return -1;
 }
 
-void Inventory::dropAllNonIntrinsic(const coord pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine) {
+void Inventory::dropAllNonIntrinsic(const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine) {
   Item* item;
 
   //Drop from slots
@@ -386,7 +386,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
-      isFreeTurn = false; //engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+      isFreeTurn = false; //engine->playerBonHandler->isBonPicked(playerBon_nimble);
     }
   }
 
@@ -462,7 +462,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 }
 
 //void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine) {
-//  const bool IS_FREE_TURN = engine->playerBonusHandler->isBonusPicked(playerBonus_nimble);
+//  const bool IS_FREE_TURN = engine->playerBonHandler->isBonPicked(playerBon_nimble);
 //
 //  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
 //  moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);

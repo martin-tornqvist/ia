@@ -19,7 +19,7 @@
 #include "FeatureFactory.h"
 
 //------------------------------------------------------------------ BASE CLASS
-FeatureExaminable::FeatureExaminable(Feature_t id, coord pos, Engine* engine) :
+FeatureExaminable::FeatureExaminable(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
 
 void FeatureExaminable::examine() {
@@ -90,7 +90,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
   }
 }
 
-void ExaminableItemContainer::dropItems(const coord& pos, Engine* const engine) {
+void ExaminableItemContainer::dropItems(const Pos& pos, Engine* const engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     engine->itemDrop->dropItemOnMap(pos, *items_.at(i));
   }
@@ -113,16 +113,16 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
 
 //------------------------------------------------------------------ SPECIFIC FEATURES
 //--------------------------------------------------------- TOMB
-Tomb::Tomb(Feature_t id, coord pos, Engine* engine) :
+Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false),
   isTraitKnown_(false), chanceToPushLid_(100), appearance_(tombAppearance_common),
   trait_(endOfTombTraits) {
 
   //Contained items
-  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const int NR_ITEMS_MIN = eng->dice.percentile() < 30 ? 0 : 1;
   const int NR_ITEMS_MAX =
-    NR_ITEMS_MIN + (bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 1 : 0);
+    NR_ITEMS_MIN + (bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
     feature_tomb, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
@@ -185,11 +185,11 @@ void Tomb::featureSpecific_examine() {
 
 void Tomb::doAction(const TombAction_t action) {
   StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
-  PlayerBonusHandler* const bonusHandler = eng->playerBonusHandler;
+  PlayerBonHandler* const bonusHandler = eng->playerBonHandler;
 
-  const bool IS_TOUGH     = bonusHandler->isBonusPicked(playerBonus_tough);
-  const bool IS_RUGGED    = bonusHandler->isBonusPicked(playerBonus_rugged);
-  const bool IS_OBSERVANT = bonusHandler->isBonusPicked(playerBonus_observant);
+  const bool IS_TOUGH     = bonusHandler->isBonPicked(playerBon_tough);
+  const bool IS_RUGGED    = bonusHandler->isBonPicked(playerBon_rugged);
+  const bool IS_OBSERVANT = bonusHandler->isBonPicked(playerBon_observant);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
   const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
   const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
@@ -348,7 +348,7 @@ void Tomb::triggerTrap() {
 }
 
 void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
-  const bool IS_WARLOCK = eng->playerBonusHandler->isBonusPicked(playerBonus_warlock);
+  const bool IS_WARLOCK = eng->playerBonHandler->isBonPicked(playerBon_warlock);
 
   if(isTraitKnown_) {
     if(IS_WARLOCK) {
@@ -409,7 +409,7 @@ void Tomb::getChoiceLabels(const vector<TombAction_t>& possibleActions,
 }
 
 void Tomb::getTraitDescr(string& descr) const {
-  const bool IS_WARLOCK   = eng->playerBonusHandler->isBonusPicked(playerBonus_warlock);
+  const bool IS_WARLOCK   = eng->playerBonHandler->isBonPicked(playerBon_warlock);
 
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
@@ -458,14 +458,14 @@ void Tomb::getDescr(string& descr) const {
 }
 
 //--------------------------------------------------------- CHEST
-Chest::Chest(Feature_t id, coord pos, Engine* engine) :
+Chest::Chest(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false),
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false) {
 
-  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const int CHANCE_FOR_EMPTY = 10;
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 4 : 3;
+  const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 4 : 3;
   itemContainer_.setRandomItemsForFeature(
     feature_chest, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
@@ -500,12 +500,12 @@ void Chest::featureSpecific_examine() {
 
 void Chest::doAction(const ChestAction_t action) {
   StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
-  PlayerBonusHandler* const bonHandler      = eng->playerBonusHandler;
+  PlayerBonHandler* const bonHandler      = eng->playerBonHandler;
 
-  const bool IS_OBSERVANT = bonHandler->isBonusPicked(playerBonus_observant);
-  const bool IS_TOUGH     = bonHandler->isBonusPicked(playerBonus_tough);
-  const bool IS_RUGGED    = bonHandler->isBonusPicked(playerBonus_rugged);
-//  const bool IS_NIMBLE    = bonHandler->isBonusPicked(playerBonus_nimbleHanded);
+  const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
+  const bool IS_TOUGH     = bonHandler->isBonPicked(playerBon_tough);
+  const bool IS_RUGGED    = bonHandler->isBonPicked(playerBon_rugged);
+//  const bool IS_NIMBLE    = bonHandler->isBonPicked(playerBon_nimbleHanded);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
   const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
   const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
@@ -718,13 +718,13 @@ void Chest::triggerTrap() {
 }
 
 //--------------------------------------------------------- CABINET
-Cabinet::Cabinet(Feature_t id, coord pos, Engine* engine) :
+Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
-  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const int CHANCE_FOR_EMPTY = 50;
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 2 : 1;
+  const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
     feature_cabinet, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
@@ -807,14 +807,14 @@ void Cabinet::getDescr(string& descr) const {
 }
 
 //--------------------------------------------------------- COCOON
-Cocoon::Cocoon(Feature_t id, coord pos, Engine* engine) :
+Cocoon::Cocoon(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
-  PlayerBonusHandler* const bonHandler = eng->playerBonusHandler;
+  PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const int CHANCE_FOR_EMPTY = 60;
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
   const int NR_ITEMS_MAX = NR_ITEMS_MIN +
-                           bonHandler->isBonusPicked(playerBonus_treasureHunter) ? 1 : 0;
+                           bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0;
   itemContainer_.setRandomItemsForFeature(
     feature_cocoon, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
@@ -860,7 +860,7 @@ void Cocoon::triggerTrap() {
       tracer << "Cocoon: Spawn candidates found, attempting to place" << endl;
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
-      vector<coord> freeCells;
+      vector<Pos> freeCells;
       eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
 
       const int NR_SPIDERS_MAX = min(eng->dice.getInRange(2, 4),
@@ -936,21 +936,21 @@ void Cocoon::getDescr(string& descr) const {
 }
 
 //--------------------------------------------------------- ALTAR
-//Altar::Altar(Feature_t id, coord pos, Engine* engine) :
+//Altar::Altar(Feature_t id, Pos pos, Engine* engine) :
 //  FeatureExaminable(id, pos, engine) {}
 //
 //void Altar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- CARVED PILLAR
-//CarvedPillar::CarvedPillar(Feature_t id, coord pos, Engine* engine) :
+//CarvedPillar::CarvedPillar(Feature_t id, Pos pos, Engine* engine) :
 //  FeatureExaminable(id, pos, engine) {}
 //
 //void CarvedPillar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- BARREL
-//Barrel::Barrel(Feature_t id, coord pos, Engine* engine) :
+//Barrel::Barrel(Feature_t id, Pos pos, Engine* engine) :
 //  FeatureExaminable(id, pos, engine) {}
 //
 //void Barrel::featureSpecific_examine() {

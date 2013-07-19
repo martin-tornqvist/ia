@@ -6,7 +6,7 @@
 #include "Render.h"
 #include "ActorPlayer.h"
 
-FeatureLever::FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnData* spawnData) :
+FeatureLever::FeatureLever(Feature_t id, Pos pos, Engine* engine, LeverSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 

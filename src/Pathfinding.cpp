@@ -6,8 +6,8 @@
 
 using namespace std;
 
-vector<coord> Pathfinder::findPath(const coord origin, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS], const coord target) {
-	vector<coord> path;
+vector<Pos> Pathfinder::findPath(const Pos origin, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS], const Pos target) {
+	vector<Pos> path;
 
 	int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
 	eng->mapTests->floodFill(origin, blockingCells, floodValues, 1000, target);
@@ -15,8 +15,8 @@ vector<coord> Pathfinder::findPath(const coord origin, bool blockingCells[MAP_X_
 	bool pathExists = floodValues[target.x][target.y] != 0;
 
 	if(pathExists == true) {
-		vector<coord> coordinates;
-		coord c;
+		vector<Pos> positions;
+		Pos c;
 
 		int currentX = target.x;
 		int currentY = target.y;

@@ -13,7 +13,7 @@
 #include "PlayerCreateCharacter.h"
 
 void PlayerAllocBonus::run() {
-  vector<PlayerBonuses_t> bonuses = eng->playerBonusHandler->getBonusChoices();
+  vector<PlayerBon_t> bonuses = eng->playerBonHandler->getBonusChoices();
 
   if(bonuses.empty() == false) {
 
@@ -22,11 +22,11 @@ void PlayerAllocBonus::run() {
     const unsigned int NR_BONUSES_COL_TWO = NR_BONUSES_TOT / 2;
     const unsigned int NR_BONUSES_COL_ONE = NR_BONUSES_TOT - NR_BONUSES_COL_TWO;
 
-    vector<PlayerBonuses_t> bonusesColOne;
-    vector<PlayerBonuses_t> bonusesColTwo;
+    vector<PlayerBon_t> bonusesColOne;
+    vector<PlayerBon_t> bonusesColTwo;
 
     for(unsigned int i = 0; i < NR_BONUSES_TOT; i++) {
-      const PlayerBonuses_t bonus = bonuses.at(i);
+      const PlayerBon_t bonus = bonuses.at(i);
       if(i < NR_BONUSES_COL_ONE) {
         bonusesColOne.push_back(bonus);
       } else {
@@ -49,11 +49,13 @@ void PlayerAllocBonus::run() {
         } break;
 
         case menuAction_selected: {
-          const coord browserPos = browser.getPos();
+          const Pos browserPos = browser.getPos();
           if(browserPos.x == 0) {
-            eng->playerBonusHandler->pickBonus(bonusesColOne.at(browser.getPos().y));
+            eng->playerBonHandler->pickBonus(
+              bonusesColOne.at(browser.getPos().y));
           } else {
-            eng->playerBonusHandler->pickBonus(bonusesColTwo.at(browser.getPos().y));
+            eng->playerBonHandler->pickBonus(
+              bonusesColTwo.at(browser.getPos().y));
           }
           eng->log->clearLog();
           eng->renderer->drawMapAndInterface();
@@ -69,10 +71,10 @@ void PlayerAllocBonus::run() {
   }
 }
 
-void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColOne,
-                            const vector<PlayerBonuses_t>& bonusesColTwo,
+void PlayerAllocBonus::draw(const vector<PlayerBon_t>& bonusesColOne,
+                            const vector<PlayerBon_t>& bonusesColTwo,
                             const MenuBrowser& browser) const {
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
 
   const unsigned int NR_BONUSES_COL_ONE = bonusesColOne.size();
   const unsigned int NR_BONUSES_COL_TWO = bonusesColTwo.size();
@@ -82,48 +84,52 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColOne,
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
-  eng->renderer->drawTextCentered("You have reached a new character level!", renderArea_screen,
-                                  MAP_X_CELLS_HALF, Y0_TITLE - 1, clrWhite, clrBlack, true);
+  eng->renderer->drawTextCentered(
+    "You have reached a new character level!", panel_screen,
+    Pos(MAP_X_CELLS_HALF, Y0_TITLE - 1), clrWhite, clrBlack, true);
 
-  eng->renderer->drawTextCentered("Which ability do you gain?", renderArea_screen,
-                                  MAP_X_CELLS_HALF, Y0_TITLE, clrWhite, clrBlack, true);
+  eng->renderer->drawTextCentered(
+    "Which ability do you gain?", panel_screen,
+    Pos(MAP_X_CELLS_HALF, Y0_TITLE), clrWhite, clrBlack, true);
 
-  const coord browserPos = browser.getPos();
+  const Pos browserPos = browser.getPos();
 
   //Draw bonuses
   const int Y0_BONUSES = Y0_TITLE + 2;
   int yPos = Y0_BONUSES;
   for(unsigned int i = 0; i < NR_BONUSES_COL_ONE; i++) {
-    const PlayerBonuses_t currentBonus = bonusesColOne.at(i);
-    const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
+    const PlayerBon_t currentBonus = bonusesColOne.at(i);
+    const string name = eng->playerBonHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
-    eng->renderer->drawText(name, renderArea_screen, X_COL_ONE, yPos, drwClr);
+    SDL_Color drwClr =
+      IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
+    eng->renderer->drawText(name, panel_screen, Pos(X_COL_ONE, yPos), drwClr);
     yPos++;
   }
   yPos = Y0_BONUSES;
   for(unsigned int i = 0; i < NR_BONUSES_COL_TWO; i++) {
-    const PlayerBonuses_t currentBonus = bonusesColTwo.at(i);
-    const string name = eng->playerBonusHandler->getBonusTitle(currentBonus);
+    const PlayerBon_t currentBonus = bonusesColTwo.at(i);
+    const string name = eng->playerBonHandler->getBonusTitle(currentBonus);
     const bool IS_BONUS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    SDL_Color drwClr = IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
-    eng->renderer->drawText(name, renderArea_screen, X_COL_TWO, yPos, drwClr);
+    SDL_Color drwClr =
+      IS_BONUS_MARKED ? clrNosferatuTealLgt : clrNosferatuTealDrk;
+    eng->renderer->drawText(name, panel_screen, Pos(X_COL_TWO, yPos), drwClr);
     yPos++;
   }
 
   //Draw description
   const int Y0_DESCR = Y0_BONUSES + NR_BONUSES_COL_ONE + 2;
   yPos = Y0_DESCR;
-  const PlayerBonuses_t markedBonus =
+  const PlayerBon_t markedBonus =
     browserPos.x == 0 ? bonusesColOne.at(browserPos.y) :
     bonusesColTwo.at(browserPos.y);
-  string descr = eng->playerBonusHandler->getBonusDescription(markedBonus);
+  string descr = eng->playerBonHandler->getBonusDescription(markedBonus);
   const int MAX_WIDTH_DESCR = 50;
   vector<string> descrLines =
     eng->textFormatting->lineToLines("Effect(s): " + descr, MAX_WIDTH_DESCR);
   for(unsigned int i = 0; i < descrLines.size(); i++) {
-    eng->renderer->drawText(descrLines.at(i), renderArea_screen,
-                            X_COL_ONE, yPos, clrGray);
+    eng->renderer->drawText(descrLines.at(i), panel_screen,
+                            Pos(X_COL_ONE, yPos), clrGray);
     yPos++;
   }
   yPos++;
@@ -131,14 +137,14 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColOne,
   yPos = max(Y0_DESCR + 3, yPos);
 
   //Prerequisites
-  vector<PlayerBonuses_t> prereqsForCurrentBonus =
-    eng->playerBonusHandler->getBonusPrereqs(markedBonus);
+  vector<PlayerBon_t> prereqsForCurrentBonus =
+    eng->playerBonHandler->getBonusPrereqs(markedBonus);
   const unsigned int NR_PREREQS = prereqsForCurrentBonus.size();
   if(NR_PREREQS > 0) {
     string prereqStr = "This ability had the following prerequisite(s): ";
     for(unsigned int i = 0; i < NR_PREREQS; i++) {
-      const PlayerBonuses_t prereq = prereqsForCurrentBonus.at(i);
-      const string prereqTitle = eng->playerBonusHandler->getBonusTitle(prereq);
+      const PlayerBon_t prereq = prereqsForCurrentBonus.at(i);
+      const string prereqTitle = eng->playerBonHandler->getBonusTitle(prereq);
       if(i == 0) {
         prereqStr += "\"" + prereqTitle + "\"";
       } else {
@@ -148,8 +154,8 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColOne,
     vector<string> prereqLines =
       eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR);
     for(unsigned int i = 0; i < prereqLines.size(); i++) {
-      eng->renderer->drawText(prereqLines.at(i), renderArea_screen,
-                              X_COL_ONE, yPos, clrGray);
+      eng->renderer->drawText(prereqLines.at(i), panel_screen,
+                              Pos(X_COL_ONE, yPos), clrGray);
       yPos++;
     }
     yPos++;
@@ -157,14 +163,14 @@ void PlayerAllocBonus::draw(const vector<PlayerBonuses_t>& bonusesColOne,
 
   //Previously picked bonuses
   string pickedBonusesLine = "";
-  eng->playerBonusHandler->getAllPickedBonusTitlesLine(pickedBonusesLine);
+  eng->playerBonHandler->getAllPickedBonusTitlesLine(pickedBonusesLine);
   if(pickedBonusesLine != "") {
     pickedBonusesLine = "Abilities previously gained: " + pickedBonusesLine;
     vector<string> pickedBonusesLines =
       eng->textFormatting->lineToLines(pickedBonusesLine, MAX_WIDTH_DESCR);
     for(unsigned int i = 0; i < pickedBonusesLines.size(); i++) {
-      eng->renderer->drawText(pickedBonusesLines.at(i), renderArea_screen,
-                              X_COL_ONE, yPos, clrGray);
+      eng->renderer->drawText(pickedBonusesLines.at(i), panel_screen,
+                              Pos(X_COL_ONE, yPos), clrGray);
       yPos++;
     }
   }

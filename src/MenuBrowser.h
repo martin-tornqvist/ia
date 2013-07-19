@@ -6,10 +6,10 @@
 class MenuBrowser {
 public:
   MenuBrowser(int nrItemsFirst, int nrItemsSecond) :
-    upLeft(coord(0, 0)),
-    upRight(nrItemsSecond == 0 ? coord(0, 0) : coord(1, 0)),
-    btmLeft(coord(0, nrItemsFirst - 1)),
-    btmRight(nrItemsSecond == 0 ? coord(0, nrItemsFirst - 1) : coord(1, nrItemsSecond - 1)),
+    upLeft(Pos(0, 0)),
+    upRight(nrItemsSecond == 0 ? Pos(0, 0) : Pos(1, 0)),
+    btmLeft(Pos(0, nrItemsFirst - 1)),
+    btmRight(nrItemsSecond == 0 ? Pos(0, nrItemsFirst - 1) : Pos(1, nrItemsSecond - 1)),
     pos(upLeft), NR_ITEMS_FIRST(nrItemsFirst),
     NR_ITEMS_SECOND(nrItemsSecond) {
   }
@@ -30,7 +30,7 @@ public:
   int getNrOfItemsInSecondList() const {
     return NR_ITEMS_SECOND;
   }
-  coord getPos() const {
+  Pos getPos() const {
     return pos;
   }
 
@@ -39,11 +39,11 @@ public:
   void setY(const int Y);
 
 private:
-  const coord upLeft;
-  const coord upRight;
-  const coord btmLeft;
-  const coord btmRight;
-  coord pos;
+  const Pos upLeft;
+  const Pos upRight;
+  const Pos btmLeft;
+  const Pos btmRight;
+  Pos pos;
   const int NR_ITEMS_FIRST;
   const int NR_ITEMS_SECOND;
 };

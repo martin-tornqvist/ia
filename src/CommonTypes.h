@@ -9,40 +9,27 @@
 
 using namespace std;
 
+enum Font_t {font_interface, font_big};
+
 enum MoveType_t {
   moveType_walk, moveType_fly, moveType_ethereal, moveType_ooze, endOfMoveType
 };
 
 enum DmgTypes_t {
-  dmgType_physical,
-  dmgType_fire,
-  dmgType_cold,
-  dmgType_acid,
-  dmgType_electric,
-  dmgType_spirit,
-  dmgType_light,
-  dmgType_pure,
-  endOfDmgTypes
+  dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid, dmgType_electric,
+  dmgType_spirit, dmgType_light, dmgType_pure, endOfDmgTypes
 };
 
-enum ShockValues_t
-{
-  shockValue_none,
-  shockValue_mild,
-  shockValue_some,
-  shockValue_heavy
+enum ShockValues_t {
+  shockValue_none, shockValue_mild, shockValue_some, shockValue_heavy
 };
 
 enum MarkerTask_t {
-  markerTask_aimRangedWeapon,
-  markerTask_look,
-  markerTask_aimThrownWeapon,
-  markerTask_aimLitExplosive
+  markerTask_aimRangedWeapon, markerTask_look,
+  markerTask_aimThrownWeapon, markerTask_aimLitExplosive
 };
 
-enum GameEntry_t {
-  gameEntry_new, gameEntry_load
-};
+enum GameEntry_t {gameEntry_new, gameEntry_load};
 
 struct CellRenderDataAscii {
   CellRenderDataAscii() :
@@ -102,84 +89,70 @@ struct StringAndClr {
   SDL_Color clr;
 };
 
-//struct CharAndClr {
-//  CharAndClr() : str(""), color(clrBlack) {}
-//
-//  CharAndClr(const char character, const SDL_Color& color) :
-//    str(text), clr(color) {
-//  }
-//
-//  CharAndClr& operator=(const CharAndClr& other) {
-//    cha = other.cha;
-//    clr = other.clr;
-//    return *this;
-//  }
-//
-//  char cha;
-//  SDL_Color clr;
-//};
-
-struct coord {
-  coord() :
+struct Pos {
+  Pos() :
     x(0), y(0) {
   }
-  coord(const int x_, const int y_) :
+  Pos(const int x_, const int y_) :
     x(x_), y(y_) {
   }
-  coord(const coord& other) :
+  Pos(const Pos& other) :
     x(other.x), y(other.y) {
   }
 
-  coord& operator/=(const int div) {
+  Pos& operator/=(const int div) {
     x /= div;
     y /= div;
     return *this;
   }
-  coord& operator+=(const coord& offset) {
+  Pos& operator+=(const Pos& offset) {
     x += offset.x;
     y += offset.y;
     return *this;
   }
-  coord& operator-=(const coord& offset) {
+  Pos& operator-=(const Pos& offset) {
     x -= offset.x;
     y -= offset.y;
     return *this;
   }
-  coord operator+(const coord& other) const {
-    return coord(x + other.x, y + other.y);
+  Pos operator+(const Pos& other) const {
+    return Pos(x + other.x, y + other.y);
   }
-  coord operator-(const coord& other) const {
-    return coord(x - other.x, y - other.y);
+  Pos operator-(const Pos& other) const {
+    return Pos(x - other.x, y - other.y);
   }
-  coord operator/(const int div) const {
-    return coord(x / div, y / div);
+  Pos operator/(const int DIV) const {
+    return Pos(x / DIV, y / DIV);
   }
-  coord operator*(const int factor) const {
-    return coord(x * factor, y * factor);
+  Pos operator*(const int FACTOR) const {
+    return Pos(x * FACTOR, y * FACTOR);
+  }
+  Pos operator*(const Pos& other) const {
+    return Pos(x * other.x, y * other.y);
   }
 
-  bool operator==(const coord& other) const {
+  bool operator==(const Pos& other) const {
     return x == other.x && y == other.y;
   }
-  bool operator!=(const coord& other) const {
+  bool operator!=(const Pos& other) const {
     return x != other.x || y != other.y;
   }
 
-  coord getSigns() const {
-    return coord(x == 0 ? 0 : x / abs(x), y == 0 ? 0 : y / abs(y));
+  Pos getSigns() const {
+    return Pos(x == 0 ? 0 : x / abs(x), y == 0 ? 0 : y / abs(y));
   }
 
   void set(const int x_, const int y_) {
     x = x_;
     y = y_;
   }
-  void set(const coord& other) {
+  void set(const Pos& other) {
     x = other.x;
     y = other.y;
   }
 
-  void swap(coord& other) {
-    coord otherTemp(other);
+  void swap(Pos& other) {
+    Pos otherTemp(other);
     other.set(*this);
     set(otherTemp);
   }
@@ -189,31 +162,31 @@ struct coord {
 
 struct Rect {
   Rect() :
-    x0y0(coord()), x1y1(coord()) {
+    x0y0(Pos()), x1y1(Pos()) {
   }
-  Rect(const coord& x0y0_, const coord& x1y1_) :
+  Rect(const Pos& x0y0_, const Pos& x1y1_) :
     x0y0(x0y0_), x1y1(x1y1_) {
   }
   Rect(const Rect& other) :
     x0y0(other.x0y0), x1y1(other.x1y1) {
   }
 
-  coord x0y0;
-  coord x1y1;
+  Pos x0y0;
+  Pos x1y1;
 };
 
 struct PosAndVal {
   PosAndVal() :
-    pos(coord()), val(-1) {
+    pos(Pos()), val(-1) {
   }
-  PosAndVal(const coord& pos_, const int val_) :
+  PosAndVal(const Pos& pos_, const int val_) :
     pos(pos_), val(val_) {
   }
   PosAndVal(const PosAndVal& other) :
     pos(other.pos), val(other.val) {
   }
 
-  coord pos;
+  Pos pos;
   int val;
 };
 
@@ -265,12 +238,8 @@ public:
 };
 
 enum SpawnRate_t {
-  spawnNever,
-  spawnExtremelyRare,
-  spawnVeryRare,
-  spawnRare,
-  spawnCommon,
-  spawnVeryCommon
+  spawnNever, spawnExtremelyRare, spawnVeryRare,
+  spawnRare, spawnCommon, spawnVeryCommon
 };
 
 struct DirectionNames {
@@ -289,30 +258,6 @@ struct DirectionNames {
   string directions[3][3];
 };
 
-//enum InventoryPurpose_t {
-//  inventoryPurpose_look,
-//  inventoryPurpose_wieldWear,
-//  inventoryPurpose_wieldAlt,
-//  inventoryPurpose_missileSelect,
-//  inventoryPurpose_use,
-////  inventoryPurpose_read,
-//  inventoryPurpose_quaff,
-//  inventoryPurpose_eat,
-//  inventoryPurpose_selectDrop,
-//  inventoryPurpose_readyExplosive
-//};
-
-//enum GeneralInventoryFilters_t {
-//  generalInventoryFilter_wieldable,
-//  generalInventoryFilter_wieldableAndWearable,
-//  generalInventoryFilter_missile,
-//  generalInventoryFilter_usable,
-////  generalInventoryFilter_readable,
-//  generalInventoryFilter_quaffable,
-//  generalInventoryFilter_eatable,
-//  generalInventoryFilter_explosives
-//};
-
 enum EntityStrength_t {
   weak, normal, strong, superStrong
 };
@@ -320,18 +265,13 @@ enum EntityStrength_t {
 class EntityStrength {
 public:
   static double getFactor(EntityStrength_t const strength) {
-    if(strength == weak)
-      return 0.7;
-    if(strength == strong)
-      return 1.6;
-    if(strength == superStrong)
-      return 2.5;
+    if(strength == weak)        return 0.7;
+    if(strength == strong)      return 1.6;
+    if(strength == superStrong) return 2.5;
     return 1.0;
   }
-
 protected:
-  EntityStrength() {
-  }
+  EntityStrength() {}
 };
 
 enum Directions_t {

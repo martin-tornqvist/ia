@@ -47,12 +47,12 @@ private:
 
 //Struct for spell casting info
 struct SpellData {
-  SpellData(Actor* const caster, const coord& targetCell = coord(-1, -1)) :
+  SpellData(Actor* const caster, const Pos& targetCell = Pos(-1, -1)) :
     caster_(caster), targetCell_(targetCell) {
   }
 
   Actor* caster_;
-  coord targetCell_;
+  Pos targetCell_;
 };
 
 //Base spell class

@@ -6,13 +6,13 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 
-bool IsCloserToOrigin::operator()(const coord& c1, const coord& c2) {
+bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
   const int chebDist1 = eng->basicUtils->chebyshevDistance(c_.x, c_.y, c1.x, c1.y);
   const int chebDist2 = eng->basicUtils->chebyshevDistance(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 
-coord MapTests::getClosestPos(const coord c, const vector<coord>& positions) const {
+Pos MapTests::getClosestPos(const Pos c, const vector<Pos>& positions) const {
   int distToNearest = 99999;
   int closestElement = 0;
   for(unsigned int i = 0; i < positions.size(); i++) {
@@ -26,7 +26,7 @@ coord MapTests::getClosestPos(const coord c, const vector<coord>& positions) con
   return positions.at(closestElement);
 }
 
-Actor* MapTests::getClosestActor(const coord c, const vector<Actor*>& actors) const {
+Actor* MapTests::getClosestActor(const Pos c, const vector<Actor*>& actors) const {
   if(actors.size() == 0) return NULL;
 
   int distToNearest = 99999;
@@ -42,7 +42,7 @@ Actor* MapTests::getClosestActor(const coord c, const vector<Actor*>& actors) co
   return actors.at(closestElement);
 }
 
-void MapTests::makeVisionBlockerArray(const coord& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS], const int MAX_VISION_RANMGE) {
+void MapTests::makeVisionBlockerArray(const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS], const int MAX_VISION_RANMGE) {
   const int X0 = max(0, origin.x - MAX_VISION_RANMGE - 1);
   const int Y0 = max(0, origin.y - MAX_VISION_RANMGE - 1);
   const int X1 = min(MAP_X_CELLS - 1, origin.x + MAX_VISION_RANMGE + 1);
@@ -181,7 +181,7 @@ void MapTests::addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CE
 }
 
 void MapTests::addAdjacentLivingActorsToBlockerArray(
-  const coord origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+  const Pos origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -196,32 +196,32 @@ void MapTests::addAdjacentLivingActorsToBlockerArray(
   }
 }
 
-bool MapTests::isCellNextToPlayer(const coord& pos,
+bool MapTests::isCellNextToPlayer(const Pos& pos,
                                   const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
   return isCellsNeighbours(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
 }
 
 void MapTests::makeBoolVectorFromMapArray(
-  bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<coord>& vectorToFill) {
+  bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill) {
 
   vectorToFill.resize(0);
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       if(a[x][y]) {
-        vectorToFill.push_back(coord(x, y));
+        vectorToFill.push_back(Pos(x, y));
       }
     }
   }
 }
 
 void MapTests::floodFill(
-  const coord& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-  int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const coord& target) {
+  const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+  int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const Pos& target) {
 
   eng->basicUtils->resetArray(values);
 
-  vector<coord> coordinates;
-  coord c;
+  vector<Pos> positions;
+  Pos c;
 
   int currentX = origin.x;
   int currentY = origin.y;
@@ -233,17 +233,17 @@ void MapTests::floodFill(
 
   bool isStoppingAtTarget = target.x != -1;
 
-  const Rect bounds(coord(1, 1), coord(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+  const Rect bounds(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
   bool done = false;
   while(done == false) {
     for(int dx = -1; dx <= 1; dx++) {
       for(int dy = -1; dy <= 1; dy++) {
         if((dx != 0 || dy != 0)) {
-          const coord newPos(currentX + dx, currentY + dy);
+          const Pos newPos(currentX + dx, currentY + dy);
           if(
             blockers[newPos.x][newPos.y] == false           &&
-            isCellInside(coord(newPos.x, newPos.y), bounds) &&
+            isCellInside(Pos(newPos.x, newPos.y), bounds) &&
             values[newPos.x][newPos.y] == 0) {
             currentValue = values[currentX][currentY];
 
@@ -260,7 +260,7 @@ void MapTests::floodFill(
             }
 
             if(isStoppingAtTarget == false || isAtTarget == false) {
-              coordinates.push_back(newPos);
+              positions.push_back(newPos);
             }
           }
         }
@@ -268,13 +268,13 @@ void MapTests::floodFill(
     }
 
     if(isStoppingAtTarget) {
-      if(coordinates.size() == 0) {
+      if(positions.size() == 0) {
         pathExists = false;
       }
       if(isAtTarget || pathExists == false) {
         done = true;
       }
-    } else if(coordinates.size() == 0) {
+    } else if(positions.size() == 0) {
       done = true;
     }
 
@@ -283,19 +283,19 @@ void MapTests::floodFill(
     }
 
     if(isStoppingAtTarget == false || isAtTarget == false) {
-      if(coordinates.size() == 0) {
+      if(positions.size() == 0) {
         pathExists = false;
       } else {
-        c = coordinates.front();
+        c = positions.front();
         currentX = c.x;
         currentY = c.y;
-        coordinates.erase(coordinates.begin());
+        positions.erase(positions.begin());
       }
     }
   }
 }
 
-bool MapTests::isCellsNeighbours(const coord& pos1, const coord& pos2,
+bool MapTests::isCellsNeighbours(const Pos& pos1, const Pos& pos2,
                                  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
   if(pos1.x == pos2.x && pos1.y == pos2.y) {
     return COUNT_SAME_CELL_AS_NEIGHBOUR;
@@ -315,10 +315,10 @@ bool MapTests::isCellsNeighbours(const coord& pos1, const coord& pos2,
   return true;
 }
 
-vector<coord> MapTests::getLine(const coord& origin, const coord& target,
+vector<Pos> MapTests::getLine(const Pos& origin, const Pos& target,
                                 bool stopAtTarget, int chebTravelLimit) {
 
-  vector<coord> line;
+  vector<Pos> line;
   line.resize(0);
 
   if(target == origin) {
@@ -337,7 +337,7 @@ vector<coord> MapTests::getLine(const coord& origin, const coord& target,
   double curX_prec = double(origin.x) + 0.5;
   double curY_prec = double(origin.y) + 0.5;
 
-  coord curPos = coord(int(curX_prec), int(curY_prec));
+  Pos curPos = Pos(int(curX_prec), int(curY_prec));
 
   for(double i = 0; i <= 9999.0; i += 0.04) {
     curX_prec += xIncr * 0.04;
@@ -373,7 +373,7 @@ vector<coord> MapTests::getLine(const coord& origin, const coord& target,
   return line;
 }
 
-Actor* MapTests::getActorAtPos(const coord pos) const {
+Actor* MapTests::getActorAtPos(const Pos pos) const {
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
     Actor* actor = eng->gameTime->getActorAt(i);

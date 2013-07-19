@@ -25,9 +25,7 @@ public:
     return "Read";
   }
 
-  virtual SDL_Color getInterfaceClr() const {
-    return clrMagenta;
-  }
+  virtual SDL_Color getInterfaceClr() const {return clrMagenta;}
 
   bool read(const bool IS_FROM_MEMORY, Engine* const engine);
 
@@ -315,7 +313,7 @@ private:
 //  }
 //  void specificRead(Engine* const engine);
 //
-//  static void castAt(const coord& pos, Engine* const engine);
+//  static void castAt(const Pos& pos, Engine* const engine);
 //
 //  const string getRealTypeName() {
 //    return "Void Chain";

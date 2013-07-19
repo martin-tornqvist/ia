@@ -13,9 +13,7 @@ using namespace std;
 class Engine;
 
 enum MessageInterrupt_t {
-  messageInterrupt_never,
-  messageInterrupt_query,
-  messageInterrupt_force
+  messageInterrupt_never, messageInterrupt_query, messageInterrupt_force
 };
 
 class Log {
@@ -47,8 +45,7 @@ private:
       str(text), clr(color), repeats(1), strRepeats("") {
     }
 
-    Message() {
-    }
+    Message() {}
 
     void addRepeat() {
       repeats++;

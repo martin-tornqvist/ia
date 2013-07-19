@@ -19,7 +19,7 @@
 #include "Sound.h"
 #include "ActorFactory.h"
 
-Trap::Trap(Feature_t id, coord pos, Engine* engine, TrapSpawnData* spawnData) :
+Trap::Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), isHidden_(true) {
 
   assert(spawnData->trapType_ != endOfTraps);
@@ -203,7 +203,7 @@ bool Trap::canHaveBlood() const {return isHidden_;}
 bool Trap::canHaveGore() const {return isHidden_;}
 bool Trap::canHaveItem() const {return isHidden_;}
 
-coord Trap::actorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
+Pos Trap::actorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest) {
   tracer << "Trap::actorTryLeave()" << endl;
   assert(specificTrap_ != NULL);
   return specificTrap_->specificTrapActorTryLeave(actor, pos, dest);
@@ -214,7 +214,7 @@ MaterialType_t Trap::getMaterialType() const {
 }
 
 //================================================ SPECIFIC TRAPS
-TrapDart::TrapDart(coord pos, Engine* engine) :
+TrapDart::TrapDart(Pos pos, Engine* engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
   isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
@@ -275,7 +275,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
   }
 }
 
-TrapSpear::TrapSpear(coord pos, Engine* engine) :
+TrapSpear::TrapSpear(Pos pos, Engine* engine) :
   SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
   isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
@@ -494,14 +494,14 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingFeatures);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, coord(-1, -1));
+  eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;
   bool actorArray[MAP_X_CELLS][MAP_Y_CELLS];
   for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {
       const int VAL = floodFill[x][y];
       if(VAL > 0) {
-        floodFillVector.push_back(PosAndVal(coord(x, y), VAL));
+        floodFillVector.push_back(PosAndVal(Pos(x, y), VAL));
       }
       actorArray[x][y] = false;
     }
@@ -510,7 +510,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
 
   for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-    const coord curPos = eng->gameTime->getActorAt(i)->pos;
+    const Pos curPos = eng->gameTime->getActorAt(i)->pos;
     actorArray[curPos.x][curPos.y] = true;
   }
 
@@ -526,7 +526,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   const ActorId_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
 
   for(unsigned int i = 0; i < floodFillVector.size(); i++) {
-    const coord curPos = floodFillVector.at(i).pos;
+    const Pos curPos = floodFillVector.at(i).pos;
     if(actorArray[curPos.x][curPos.y] == false) {
       Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, curPos));
       monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
@@ -629,7 +629,7 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
   }
 }
 
-coord TrapSpiderWeb::specificTrapActorTryLeave(Actor* const actor, const coord& pos, const coord& dest) {
+Pos TrapSpiderWeb::specificTrapActorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest) {
   tracer << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 
   if(isHoldingActor) {

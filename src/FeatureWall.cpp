@@ -4,7 +4,7 @@
 
 #include "Map.h"
 
-Wall::Wall(Feature_t id, coord pos, Engine* engine) :
+Wall::Wall(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
 }
 

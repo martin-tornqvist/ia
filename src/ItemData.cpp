@@ -14,11 +14,13 @@
 #include "ItemScroll.h"
 #include "ItemPotion.h"
 #include "ActorPlayer.h"
+#include "ItemMedicalBag.h"
 
 using namespace std;
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
-void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const archetype) const {
+void ItemData::resetDef(ItemDefinition* const d,
+                        ItemDefArchetypes_t const archetype) const {
   switch(archetype) {
     case itemDef_general: {
       d->itemValue = itemValue_normal;
@@ -34,25 +36,12 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->color = clrWhite;
       d->tile = tile_empty;
       d->primaryAttackMode = primaryAttackMode_none;
-      d->isReadable = false;
-      d->isScroll = false;
-      d->isScrollLearned = false;
-      d->isScrollLearnable = false;
-      d->isQuaffable = false;
-      d->isEatable = false;
-      d->isArmor = false;
-      d->isCloak = false;
-      d->isRing = false;
-      d->isAmulet = false;
-      d->isIntrinsic = false;
-      d->isMeleeWeapon = false;
-      d->isRangedWeapon = false;
-      d->isMissileWeapon = false;
-      d->isShotgun = false;
-      d->isMachineGun = false;
-      d->isAmmo = false;
-      d->isAmmoClip = false;
-      d->isDevice = false;
+      d->isReadable = d->isScroll = d->isScrollLearned = false;
+      d->isScrollLearnable = d->isQuaffable = d->isEatable = false;
+      d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
+      d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
+      d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
+      d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
       d->meleeAbilityUsed = ability_accuracyMelee;
@@ -129,7 +118,7 @@ void ItemData::resetDef(ItemDefinition* const d, ItemDefArchetypes_t const arche
       d->rangedHasInfiniteAmmo = true;
       d->spawnStandardMinDLVL = -1;
       d->spawnStandardMaxDLVL = -1;
-      d->isMeleeWeapon = false; //(Extrinsic ranged weapons tend to double as melee weapons, while intrinsics do not)
+      d->isMeleeWeapon = false;
       d->rangedMissileGlyph = '*';
       d->rangedSoundIsLoud = false;
     }
@@ -1274,7 +1263,7 @@ void ItemData::makeList() {
   d = new ItemDefinition(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
-  d->spawnStandardMaxDLVL = 1;
+  d->spawnStandardMinDLVL = 1;
   d->spawnStandardMaxDLVL = 10;
   d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
@@ -1283,6 +1272,21 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
+  itemDefinitions[d->id] = d;
+
+  d = new ItemDefinition(item_medicalBag);
+  resetDef(d, itemDef_general);
+  d->isMedicalBag = true;
+  d->name = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
+  d->itemValue = itemValue_normal;
+  d->itemWeight = itemWeight_medium;
+  d->spawnStandardMinDLVL = 1;
+  d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LEVEL;
+  d->isStackable = false;
+  d->glyph = '~';
+  d->color = clrBrownDark;
+  d->tile = tile_medicalBag;
+//  d->nativeRooms.resize(0);
   itemDefinitions[d->id] = d;
 }
 
@@ -1355,11 +1359,8 @@ string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
   string ret = "";
 
   if(d.isDevice && d.isIdentified == false) {
-    if(itemRefForm == itemRef_plain) {
-      return "Strange Device";
-    } else {
-      return "a Strange Device";
-    }
+    return itemRefForm == itemRef_plain ?
+           "Strange Device" : "a Strange Device";
   }
 
   if(d.isStackable && item.numberOfItems > 1 && itemRefForm == itemRef_plural) {
@@ -1369,24 +1370,25 @@ string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
     ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
   }
 
-//  if(d.primaryAttackMode == primaryAttackMode_melee) {
-//    Weapon* const w = dynamic_cast<Weapon*>(item);
-//    const int PLUS = w->meleeDmgPlus;
-//    return ret + (PLUS ==  0 ? "" : PLUS > 0 ? "+" + intToString(PLUS) : "-" + intToString(PLUS));
-//  }
-
   if(d.isAmmoClip) {
-    const ItemAmmoClip* const ammoItem = dynamic_cast<const ItemAmmoClip*>(&item);
+    const ItemAmmoClip* const ammoItem =
+      dynamic_cast<const ItemAmmoClip*>(&item);
     return ret + " {" + intToString(ammoItem->ammo) + "}";
   }
 
-  if(SKIP_EXTRA_INFO == false) {
+  if(d.isMedicalBag) {
+    const MedicalBag* const medicalBag =
+      dynamic_cast<const MedicalBag*>(&item);
+    return ret + " {" + intToString(medicalBag->getNrSupplies()) + "}";
+  }
 
+  if(SKIP_EXTRA_INFO == false) {
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
         const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-        ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
+        ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" +
+                        intToString(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
@@ -1405,8 +1407,9 @@ string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
   return ret;
 }
 
-string ItemData::getItemInterfaceRef(const Item& item, const bool ADD_A,
-                                     const PrimaryAttackMode_t attackMode) const {
+string ItemData::getItemInterfaceRef(
+  const Item& item, const bool ADD_A,
+  const PrimaryAttackMode_t attackMode) const {
   const ItemDefinition& d = item.getDef();
 
   if(d.isDevice && d.isIdentified == false) {
@@ -1421,53 +1424,70 @@ string ItemData::getItemInterfaceRef(const Item& item, const bool ADD_A,
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
 
-  const int PLAYER_RANGED_SKILL = eng->player->getDef()->abilityVals.getVal(ability_accuracyRanged, true, *(eng->player));
+  const int PLAYER_RANGED_SKILL =
+    eng->player->getDef()->abilityVals.getVal(
+      ability_accuracyRanged, true, *(eng->player));
 
   if(
-    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_melee) ||
+    (attackMode == primaryAttackMode_none &&
+     d.primaryAttackMode == primaryAttackMode_melee) ||
     (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
     const string rollsStr = intToString(d.meleeDmg.first);
     const string sidesStr = intToString(d.meleeDmg.second);
     const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
-    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
+                           intToString(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
-    const int PLAYER_MELEE_SKILL = eng->player->getDef()->abilityVals.getVal(
-                                     ability_accuracyMelee, true, *(eng->player));
+    const int PLAYER_MELEE_SKILL =
+      eng->player->getDef()->abilityVals.getVal(
+        ability_accuracyMelee, true, *(eng->player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(
-    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_ranged) ||
+    (attackMode == primaryAttackMode_none &&
+     d.primaryAttackMode == primaryAttackMode_ranged) ||
     (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
-    const int MULTIPL = d.isMachineGun == true ? NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
+    const int MULTIPL = d.isMachineGun == true ?
+                        NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
     const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
     const string sidesStr = intToString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
-    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
+                           intToString(PLUS));
     const int ITEM_SKILL = d.rangedHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(d.rangedHasInfiniteAmmo == false) {
       const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-      ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" + intToString(w->ammoCapacity);
+      ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" +
+                      intToString(w->ammoCapacity);
     }
-    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr + ammoLoadedStr;
+    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr +
+           ammoLoadedStr;
   }
 
   if(
-    (attackMode == primaryAttackMode_none && d.primaryAttackMode == primaryAttackMode_missile) ||
+    (attackMode == primaryAttackMode_none &&
+     d.primaryAttackMode == primaryAttackMode_missile) ||
     (attackMode == primaryAttackMode_missile && d.isMissileWeapon)) {
     const string rollsStr = intToString(d.missileDmg.rolls);
     const string sidesStr = intToString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
-    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + intToString(PLUS));
+    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
+                           intToString(PLUS));
     const int ITEM_SKILL = d.missileHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = intToString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+  }
+
+  if(d.isMedicalBag) {
+    const MedicalBag* const medicalBag = dynamic_cast<const MedicalBag*>(&item);
+    return ret + " {" + intToString(medicalBag->getNrSupplies()) + "}";
   }
 
   if(d.isAmmoClip) {

@@ -6,14 +6,16 @@
 class Device: public Item {
 public:
   Device(ItemDefinition* const itemDefinition) :
-    Item(itemDefinition), isActivated_(false), nrTurnsToNextGoodEffect_(-1), nrTurnsToNextBadEffect_(-1) {
-  }
+    Item(itemDefinition), isActivated_(false), nrTurnsToNextGoodEffect_(-1),
+    nrTurnsToNextBadEffect_(-1) {}
 
   virtual ~Device() {}
 
   bool activateDefault(Actor* const actor, Engine* const engine);
 
-  virtual string getDefaultActivationLabel() const {return isActivated_ ? "Deactivate" : "Activate";}
+  virtual string getDefaultActivationLabel() const {
+    return isActivated_ ? "Deactivate" : "Activate";
+  }
 
   virtual SDL_Color getInterfaceClr() const {return clrCyan;}
 
@@ -26,7 +28,9 @@ public:
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
-  virtual void deviceSpecificSetParametersFromSaveLines(vector<string>& lines) {(void)lines;}
+  virtual void deviceSpecificSetParametersFromSaveLines(vector<string>& lines) {
+    (void)lines;
+  }
 
   bool toggle(Engine* const engine);
 

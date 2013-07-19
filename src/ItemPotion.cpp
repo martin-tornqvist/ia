@@ -25,7 +25,7 @@ void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   }
 }
 
-void PotionOfHealing::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -64,7 +64,7 @@ void PotionOfBlindness::specificQuaff(Actor* const actor, Engine* const engine) 
   }
 }
 
-void PotionOfBlindness::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -78,7 +78,7 @@ void PotionOfParalyzation::specificQuaff(Actor* const actor, Engine* const engin
   }
 }
 
-void PotionOfParalyzation::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfParalyzation::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -99,7 +99,7 @@ void PotionOfConfusion::specificQuaff(Actor* const actor, Engine* const engine) 
   }
 }
 
-void PotionOfConfusion::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -116,7 +116,7 @@ void PotionOfConfusion::specificCollide(const coord& pos, Actor* const actor, En
 //  }
 //}
 //
-//void PotionOfCorruption::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+//void PotionOfCorruption::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
 //  if(actor != NULL) {
 //    specificQuaff(actor, engine);
 //  } else {
@@ -136,7 +136,7 @@ void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
   }
 }
 
-void PotionOfTheCobra::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfTheCobra::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -189,7 +189,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
   setRealDefinitionNames(engine, false);
 }
 
-void PotionOfFortitude::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -208,7 +208,7 @@ void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) 
   }
 }
 
-void PotionOfToughness::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -223,7 +223,7 @@ void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
   }
 }
 
-void PotionOfPoison::specificCollide(const coord& pos, Actor* const actor, Engine* const engine) {
+void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);
@@ -287,7 +287,8 @@ void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_IDENTIFY) {
+void Potion::setRealDefinitionNames(Engine* const engine,
+                                    const bool IS_SILENT_IDENTIFY) {
   if(def_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
@@ -308,21 +309,29 @@ void Potion::setRealDefinitionNames(Engine* const engine, const bool IS_SILENT_I
   }
 }
 
-void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition& itemDef, Engine* const engine) {
-  if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false || actor != NULL) {
-    ItemDefinition* const potionDef = engine->itemData->itemDefinitions[itemDef.id];
+void Potion::collide(const Pos& pos, Actor* const actor,
+                     const ItemDefinition& itemDef, Engine* const engine) {
+  if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false ||
+      actor != NULL) {
+    ItemDefinition* const potionDef =
+      engine->itemData->itemDefinitions[itemDef.id];
 
     const bool PLAYER_SEE_CELL = engine->map->playerVision[pos.x][pos.y];
 
     if(PLAYER_SEE_CELL) {
-      engine->renderer->drawCharacter('*', renderArea_mainScreen, pos.x, pos.y, potionDef->color);
+      engine->renderer->drawGlyph('*', panel_map, pos, potionDef->color);
 
       if(actor != NULL) {
         if(actor->deadState == actorDeadState_alive) {
-          engine->log->addMessage("The potion shatters on " + actor->getNameThe() + ".");
+          engine->log->addMessage(
+            "The potion shatters on " +
+            actor->getNameThe() + ".");
         }
       } else {
-        engine->log->addMessage("The potion shatters on " + engine->map->featuresStatic[pos.x][pos.y]->getDescription(true) + ".");
+        engine->log->addMessage(
+          "The potion shatters on " +
+          engine->map->featuresStatic[pos.x][pos.y]->getDescription(true) +
+          ".");
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
@@ -330,7 +339,9 @@ void Potion::collide(const coord& pos, Actor* const actor, const ItemDefinition&
       if(actor->deadState == actorDeadState_alive) {
         specificCollide(pos, actor, engine);
 
-        if(actor->deadState == actorDeadState_alive && potionDef->isIdentified == false && PLAYER_SEE_CELL) {
+        if(
+          actor->deadState == actorDeadState_alive &&
+          potionDef->isIdentified == false && PLAYER_SEE_CELL) {
           engine->log->addMessage("It had no apparent effect...");
         }
       }
@@ -358,7 +369,8 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
   }
 }
 
-void Potion::failedToLearnRealName(Engine* const engine, const string overrideFailString) {
+void Potion::failedToLearnRealName(Engine* const engine,
+                                   const string overrideFailString) {
   if(def_->isIdentified == false) {
     if(overrideFailString != "") {
       engine->log->addMessage(overrideFailString);

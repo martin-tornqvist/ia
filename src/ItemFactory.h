@@ -22,7 +22,7 @@ public:
   Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
                                   const bool ALLOW_POTIONS);
 
-  Item* spawnItemOnMap(const ItemId_t itemId, const coord& pos);
+  Item* spawnItemOnMap(const ItemId_t itemId, const Pos& pos);
 
   Item* copyItem(Item* oldItem);
 

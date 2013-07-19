@@ -3,22 +3,24 @@
 
 #include "CommonTypes.h"
 
+enum Panel_t {panel_screen, panel_map, panel_character, panel_log};
+
 class Panel {
 public:
-  Panel() {}
+  Panel(const Pos& dims, const Pos& offset, Font_t standardFont,
+        const Pos& bigFontDims) :
+    dims_(dims), offset_(offset), standardFont_(standardFont),
+    bigFontDims_(bigFontDims) {}
   ~Panel() {}
-  virtual void draw() const;
-  coord getPixelDims() const;
-private:
-};
 
-class LogPanel : public Panel  {
-public:
-private:
-};
+  inline Pos getPixelDims()   const {return Pos(dims_ * bigFontDims_);}
+  inline Pos getPixelOffset() const {return Pos(offset_ * bigFontDims_);}
 
-class CharacterLinesPanel : public Panel {
-public:
+  const Pos dims_;
+  const Pos offset_;
+  const Font_t standardFont_;
+  const Pos bigFontDims_;
+
 private:
 };
 

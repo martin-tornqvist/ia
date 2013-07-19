@@ -6,7 +6,7 @@
 
 class AI_setPathToPlayerIfAware {
 public:
-  static void learn(Monster* monster, vector<coord>* path, Engine* engine) {
+  static void learn(Monster* monster, vector<Pos>* path, Engine* engine) {
     if(monster->deadState == actorDeadState_alive) {
       if(monster->playerAwarenessCounter > 0) {
 

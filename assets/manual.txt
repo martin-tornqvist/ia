@@ -18,7 +18,6 @@
    e    Use item or throw held explosive
    f    Aim/fire wielded firearm
    g    Pick up item
-   h    Heal
    i    Browse backpack
    j    Jam door with an iron spike
    l    Display descriptions of things in view

@@ -47,14 +47,18 @@ void Manual::readFile() {
 void Manual::drawManualInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(renderArea_screen, 0, 1, MAP_X_CELLS, 2);
-  eng->renderer->drawText(decorationLine, renderArea_screen, 1, 1, clrWhite);
+  eng->renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
+  eng->renderer->drawText(decorationLine, panel_screen,
+                          Pos(1, 1), clrWhite);
 
-  eng->renderer->drawText(" Displaying manual ", renderArea_screen, 3, 1, clrWhite);
+  eng->renderer->drawText(" Displaying manual ", panel_screen,
+                          Pos(3, 1), clrWhite);
 
-  eng->renderer->drawText(decorationLine, renderArea_characterLines, 1, 1, clrWhite);
+  eng->renderer->drawText(decorationLine, panel_character,
+                          Pos(1, 1), clrWhite);
 
-  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ", renderArea_characterLines, 3, 1, clrWhite);
+  eng->renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+                          panel_character, Pos(3, 1), clrWhite);
 }
 
 void Manual::run() {
@@ -67,10 +71,11 @@ void Manual::run() {
 
   drawManualInterface();
 
-  int yCell = 2;
+  Pos pos(1, 2);
+
   for(int i = topElement; i <= btmElement; i++) {
-    eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
-    yCell++;
+    eng->renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
+    pos.y++;
   }
 
   eng->renderer->updateScreen();
@@ -81,25 +86,29 @@ void Manual::run() {
     const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = max(0, min(topElement + 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      topElement = min(topElement + 3, int(lines.size()) - int(MAP_Y_CELLS));
+      topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawManualInterface();
-      yCell = 2;
+      pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
-        yCell++;
+        eng->renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
+        pos.y++;
       }
       eng->renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = max(0, min(topElement - 3, int(lines.size()) - int(MAP_Y_CELLS)));
+      topElement = min(topElement - 3, int(lines.size()) - int(MAP_Y_CELLS));
+      topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(renderArea_screen, 0, 2, MAP_X_CELLS, MAP_Y_CELLS);
+      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawManualInterface();
-      yCell = 2;
+      pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(lines.at(i), renderArea_screen, 1, yCell, clrWhite);
-        yCell++;
+        eng->renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
+        pos.y++;
       }
       eng->renderer->updateScreen();
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
@@ -107,5 +116,5 @@ void Manual::run() {
     }
   }
 
-  eng->renderer->coverRenderArea(renderArea_screen);
+  eng->renderer->coverPanel(panel_screen);
 }

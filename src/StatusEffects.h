@@ -17,6 +17,7 @@ class TimedEntity;
 class Weapon;
 
 enum StatusEffects_t {
+  statusWound,
   statusBlind,
   statusBurning,
   statusFlared,
@@ -31,7 +32,6 @@ enum StatusEffects_t {
   statusWeak,
   statusPerfectReflexes,
   statusPerfectAim,
-//  statusPerfectStealth,
   statusPerfectFortitude,
   statusPerfectToughness,
   statusCursed,
@@ -51,8 +51,8 @@ enum StatusEffects_t {
 
 class StatusEffect {
 public:
-  StatusEffect(const int turns, const StatusEffects_t effectId) :
-    turnsLeft(turns), owningActor(NULL), effectId_(effectId) {}
+  StatusEffect(const int TURNS, const StatusEffects_t effectId) :
+    turnsLeft(TURNS), owningActor(NULL), effectId_(effectId) {}
   StatusEffect(const StatusEffects_t effectId) : effectId_(effectId) {}
   StatusEffect(const StatusEffect& other) : turnsLeft(other.turnsLeft) {}
   virtual ~StatusEffect();
@@ -115,7 +115,8 @@ public:
     return 0;
   }
 
-  virtual coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine) {
+  virtual Pos changeMovePos(const Pos& actorPos, const Pos& movePos,
+                            Engine* const engine) {
     (void)actorPos;
     (void)engine;
     return movePos;
@@ -132,10 +133,64 @@ protected:
   StatusEffects_t effectId_;
 };
 
+class StatusWound: public StatusEffect {
+public:
+  StatusWound(Engine* const engine) :
+    StatusEffect(statusWound), nrWounds(1) {(void)engine;}
+
+  StatusWound(const int TURNS) :
+    StatusEffect(TURNS, statusWound), nrWounds(TURNS) {}
+
+  ~StatusWound() {}
+
+  StatusWound* copy() {
+    StatusWound* cpy = new StatusWound(turnsLeft);
+    return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer()   {return true;}
+  bool isConsideredBeneficial()       {return false;}
+  bool allowDisplayTurnsInInterface() {return false;}
+
+  string getInterfaceName()       {return "Wound(" + intToString(nrWounds) + ")";}
+  string messageWhenStart()       {return "I am wounded!";}
+  string messageWhenStartOther()  {return "";}
+  string messageWhenMore()        {return "I am more wounded!";}
+  string messageWhenMoreOther()   {return "";}
+  string messageWhenEnd()         {return "My wound is healed.";}
+  string messageWhenSaves()       {return "I resist wounding!";}
+  string messageWhenSavesOther()  {return "";}
+  string messageWhenEndOther()    {return "";}
+
+  Abilities_t getSaveAbility() {return ability_resistStatusBody;}
+  int getSaveAbilityModifier() {return -10;}
+
+  int getAbilityModifier(const Abilities_t ability) {
+    if(ability == ability_accuracyMelee)  return nrWounds * -10;
+    if(ability == ability_accuracyRanged) return nrWounds * -10;
+    if(ability == ability_dodgeAttack)    return nrWounds * -10;
+    if(ability == ability_dodgeTrap)      return nrWounds * -10;
+    return 0;
+  }
+
+  void more();
+
+  void start(Engine* const engine) {(void)engine;}
+  void end(Engine* const engine) {(void)engine;}
+
+  void newTurn(Engine* const engine) {(void)engine;}
+
+private:
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 1, 0);}
+  int nrWounds;
+};
+
 class StatusTerrified: public StatusEffect {
 public:
-  StatusTerrified(Engine* const engine) : StatusEffect(statusTerrified) {setTurnsFromRandomStandard(engine);}
-  StatusTerrified(const int turns) : StatusEffect(turns, statusTerrified) {}
+  StatusTerrified(Engine* const engine) : StatusEffect(statusTerrified) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusTerrified(const int TURNS) : StatusEffect(TURNS, statusTerrified) {}
   ~StatusTerrified() {}
 
   StatusTerrified* copy() {
@@ -184,8 +239,10 @@ private:
 
 class StatusWeak: public StatusEffect {
 public:
-  StatusWeak(Engine* const engine) : StatusEffect(statusWeak) {setTurnsFromRandomStandard(engine);}
-  StatusWeak(const int turns) : StatusEffect(turns, statusWeak) {}
+  StatusWeak(Engine* const engine) : StatusEffect(statusWeak) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusWeak(const int TURNS) : StatusEffect(TURNS, statusWeak) {}
   ~StatusWeak() {}
 
   StatusWeak* copy() {
@@ -265,7 +322,7 @@ public:
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 1450);}
   friend class StatusEffectsHandler;
-  StatusDiseased(const int turns) : StatusEffect(turns, statusDiseased) {}
+  StatusDiseased(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
 };
 
 class StatusPoisoned: public StatusEffect {
@@ -303,13 +360,13 @@ public:
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
   friend class StatusEffectsHandler;
-  StatusPoisoned(const int turns) : StatusEffect(turns, statusPoisoned) {}
+  StatusPoisoned(const int TURNS) : StatusEffect(TURNS, statusPoisoned) {}
 };
 
 class StatusStill: public StatusEffect {
 public:
   StatusStill(Engine* const engine) : StatusEffect(statusStill) {setTurnsFromRandomStandard(engine);}
-  StatusStill(const int turns) : StatusEffect(turns, statusStill) {}
+  StatusStill(const int TURNS) : StatusEffect(TURNS, statusStill) {}
   ~StatusStill() {}
 
   StatusStill* copy() {
@@ -354,7 +411,7 @@ private:
 class StatusBlind: public StatusEffect {
 public:
   StatusBlind(Engine* const engine) : StatusEffect(statusBlind) {setTurnsFromRandomStandard(engine);}
-  StatusBlind(const int turns) : StatusEffect(turns, statusBlind) {}
+  StatusBlind(const int TURNS) : StatusEffect(TURNS, statusBlind) {}
   ~StatusBlind() {}
 
   StatusBlind* copy() {
@@ -407,7 +464,7 @@ private:
 class StatusBlessed: public StatusEffect {
 public:
   StatusBlessed(Engine* const engine) : StatusEffect(statusBlessed) {setTurnsFromRandomStandard(engine);}
-  StatusBlessed(const int turns) : StatusEffect(turns, statusBlessed) {}
+  StatusBlessed(const int TURNS) : StatusEffect(TURNS, statusBlessed) {}
   ~StatusBlessed() {}
 
   StatusBlessed* copy() {
@@ -452,7 +509,7 @@ private:
 class StatusCursed: public StatusEffect {
 public:
   StatusCursed(Engine* const engine) : StatusEffect(statusCursed) {setTurnsFromRandomStandard(engine);}
-  StatusCursed(const int turns) : StatusEffect(turns, statusCursed) {}
+  StatusCursed(const int TURNS) : StatusEffect(TURNS, statusCursed) {}
   ~StatusCursed() {}
 
   StatusCursed* copy() {
@@ -498,7 +555,7 @@ private:
 class StatusClairvoyant: public StatusEffect {
 public:
   StatusClairvoyant(Engine* const engine) : StatusEffect(statusClairvoyant) {setTurnsFromRandomStandard(engine);}
-  StatusClairvoyant(const int turns) : StatusEffect(turns, statusClairvoyant) {}
+  StatusClairvoyant(const int TURNS) : StatusEffect(TURNS, statusClairvoyant) {}
   ~StatusClairvoyant() {}
 
   StatusClairvoyant* copy() {
@@ -577,7 +634,7 @@ public:
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 6, 3);}
   friend class StatusEffectsHandler;
-  StatusBurning(const int turns) : StatusEffect(turns, statusBurning) {}
+  StatusBurning(const int TURNS) : StatusEffect(TURNS, statusBurning) {}
   void doDamage(Engine* const engine);
 };
 
@@ -615,13 +672,13 @@ public:
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 2, 2);}
   friend class StatusEffectsHandler;
-  StatusFlared(const int turns) : StatusEffect(turns, statusFlared) {}
+  StatusFlared(const int TURNS) : StatusEffect(TURNS, statusFlared) {}
 };
 
 class StatusConfused: public StatusEffect {
 public:
   StatusConfused(Engine* const engine) : StatusEffect(statusConfused) {setTurnsFromRandomStandard(engine);}
-  StatusConfused(const int turns) : StatusEffect(turns, statusConfused) {}
+  StatusConfused(const int TURNS) : StatusEffect(TURNS, statusConfused) {}
   ~StatusConfused() {}
 
   StatusConfused* copy() {
@@ -646,7 +703,7 @@ public:
   Abilities_t getSaveAbility() {return ability_resistStatusMind;}
   int getSaveAbilityModifier() {return 0;}
 
-  coord changeMoveCoord(const coord& actorPos, const coord& movePos, Engine* const engine);
+  Pos changeMovePos(const Pos& actorPos, const Pos& movePos, Engine* const engine);
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
@@ -665,8 +722,12 @@ private:
 
 class StatusNailed: public StatusEffect {
 public:
-  StatusNailed(Engine* const engine) : StatusEffect(statusNailed), nrOfSpikes(1) {setTurnsFromRandomStandard(engine);}
-  StatusNailed(const int turns) : StatusEffect(turns, statusNailed), nrOfSpikes(1) {}
+  StatusNailed(Engine* const engine) :
+    StatusEffect(statusNailed), nrOfSpikes(1) {
+    setTurnsFromRandomStandard(engine);
+  }
+  StatusNailed(const int TURNS) :
+    StatusEffect(TURNS, statusNailed), nrOfSpikes(1) {}
   ~StatusNailed() {}
 
   StatusNailed* copy() {
@@ -692,7 +753,8 @@ public:
   Abilities_t getSaveAbility() {return ability_resistStatusBody;}
   int getSaveAbilityModifier() {return 27;}
 
-  coord changeMoveCoord(const coord& actorPos , const coord& movePos, Engine* const engine);
+  Pos changeMovePos(const Pos& actorPos , const Pos& movePos,
+                    Engine* const engine);
 
   void more() {nrOfSpikes++;}
 
@@ -714,8 +776,8 @@ public:
     StatusEffect(statusWaiting) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusWaiting(const int turns) :
-    StatusEffect(turns, statusWaiting) {
+  StatusWaiting(const int TURNS) :
+    StatusEffect(TURNS, statusWaiting) {
   }
   ~StatusWaiting() {
   }
@@ -809,8 +871,8 @@ public:
     StatusEffect(statusDisabledAttack) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusDisabledAttack(const int turns) :
-    StatusEffect(turns, statusDisabledAttack) {
+  StatusDisabledAttack(const int TURNS) :
+    StatusEffect(TURNS, statusDisabledAttack) {
   }
   ~StatusDisabledAttack() {
   }
@@ -897,8 +959,8 @@ public:
     StatusEffect(statusDisabledMelee) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusDisabledAttackMelee(const int turns) :
-    StatusEffect(turns, statusDisabledMelee) {
+  StatusDisabledAttackMelee(const int TURNS) :
+    StatusEffect(TURNS, statusDisabledMelee) {
   }
   ~StatusDisabledAttackMelee() {
   }
@@ -981,8 +1043,8 @@ public:
     StatusEffect(statusDisabledRanged) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusDisabledAttackRanged(const int turns) :
-    StatusEffect(turns, statusDisabledRanged) {
+  StatusDisabledAttackRanged(const int TURNS) :
+    StatusEffect(TURNS, statusDisabledRanged) {
   }
   ~StatusDisabledAttackRanged() {
   }
@@ -1065,8 +1127,8 @@ public:
     StatusEffect(statusParalyzed) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusParalyzed(const int turns) :
-    StatusEffect(turns, statusParalyzed) {
+  StatusParalyzed(const int TURNS) :
+    StatusEffect(TURNS, statusParalyzed) {
   }
   ~StatusParalyzed() {
   }
@@ -1268,8 +1330,8 @@ private:
   }
 
   friend class StatusEffectsHandler;
-  StatusFainted(const int turns) :
-    StatusEffect(turns, statusFainted) {
+  StatusFainted(const int TURNS) :
+    StatusEffect(TURNS, statusFainted) {
   }
 };
 
@@ -1279,8 +1341,8 @@ public:
     StatusEffect(statusSlowed) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusSlowed(const int turns) :
-    StatusEffect(turns, statusSlowed) {
+  StatusSlowed(const int TURNS) :
+    StatusEffect(TURNS, statusSlowed) {
   }
   ~StatusSlowed() {
   }
@@ -1366,8 +1428,8 @@ public:
     StatusEffect(statusPerfectReflexes) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusPerfectReflexes(const int turns) :
-    StatusEffect(turns, statusPerfectReflexes) {
+  StatusPerfectReflexes(const int TURNS) :
+    StatusEffect(TURNS, statusPerfectReflexes) {
   }
   ~StatusPerfectReflexes() {
   }
@@ -1455,8 +1517,8 @@ public:
     StatusEffect(statusPerfectAim) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusPerfectAim(const int turns) :
-    StatusEffect(turns, statusPerfectAim) {
+  StatusPerfectAim(const int TURNS) :
+    StatusEffect(TURNS, statusPerfectAim) {
   }
   ~StatusPerfectAim() {
   }
@@ -1546,8 +1608,8 @@ private:
 //    StatusEffect(statusPerfectStealth) {
 //    setTurnsFromRandomStandard(engine);
 //  }
-//  StatusPerfectStealth(const int turns) :
-//    StatusEffect(turns, statusPerfectStealth) {
+//  StatusPerfectStealth(const int TURNS) :
+//    StatusEffect(TURNS, statusPerfectStealth) {
 //  }
 //  ~StatusPerfectStealth() {
 //  }
@@ -1635,8 +1697,8 @@ public:
     StatusEffect(statusPerfectFortitude) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusPerfectFortitude(const int turns) :
-    StatusEffect(turns, statusPerfectFortitude) {
+  StatusPerfectFortitude(const int TURNS) :
+    StatusEffect(TURNS, statusPerfectFortitude) {
   }
   ~StatusPerfectFortitude() {
   }
@@ -1724,8 +1786,8 @@ public:
     StatusEffect(statusPerfectToughness) {
     setTurnsFromRandomStandard(engine);
   }
-  StatusPerfectToughness(const int turns) :
-    StatusEffect(turns, statusPerfectToughness) {
+  StatusPerfectToughness(const int TURNS) :
+    StatusEffect(TURNS, statusPerfectToughness) {
   }
   ~StatusPerfectToughness() {
   }
@@ -1832,10 +1894,10 @@ public:
 
   void tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE);
 
-  coord changeMoveCoord(const coord& actorPos, const coord& movePos) {
-    coord ret = movePos;
+  Pos changeMovePos(const Pos& actorPos, const Pos& movePos) {
+    Pos ret = movePos;
     for(unsigned int i = 0; i < effects.size(); i++) {
-      ret = effects.at(i)->changeMoveCoord(actorPos, movePos, eng);
+      ret = effects.at(i)->changeMovePos(actorPos, movePos, eng);
     }
     return ret;
   }
@@ -1970,16 +2032,19 @@ private:
   //the game, and then have the effect recreated from this.
   //In other cases, a status effect should be created by simply using "new"
   friend class Player;
-  StatusEffect* makeEffectFromId(const StatusEffects_t id, const int TURNS_LEFT);
+  StatusEffect* makeEffectFromId(
+    const StatusEffects_t id, const int TURNS_LEFT);
 
   Actor* owningActor;
   Engine* eng;
 
   void runEffectEndAndRemoveFromList(
-    const unsigned int index, const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+    const unsigned int index,
+    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 
   friend class GameTime;
-  void newTurnAllEffects(const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+  void newTurnAllEffects(
+    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 };
 
 #endif

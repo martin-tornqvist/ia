@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
       if(ENTRY_TYPE == gameEntry_new) {
         if(engine->config->isBotPlaying) {
-          engine->playerBonusHandler->setAllBonusesToPicked();
+          engine->playerBonHandler->setAllBonusesToPicked();
           engine->bot->init();
         }
         engine->playerCreateCharacter->run();
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
 
         if(engine->config->isIntroLevelSkipped == false) {
           //If intro level is used, build forest.
-          engine->renderer->coverRenderArea(renderArea_screen);
+          engine->renderer->coverPanel(panel_screen);
           engine->renderer->updateScreen();
           engine->mapBuild->buildForest();
         } else {

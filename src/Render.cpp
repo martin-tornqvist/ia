@@ -86,8 +86,7 @@ void Renderer::initAndClearPrev() {
 void Renderer::loadFont() {
   tracer << "Renderer::loadFont()..." << endl;
 
-  SDL_Surface* fontSurfaceTmp =
-    IMG_Load(eng->config->fontImageName.data());
+  SDL_Surface* fontSurfaceTmp = IMG_Load(eng->config->fontBig.data());
 //    IMG_LoadPNG_RW(SDL_RWFromFile(, "r"));
 
 //  fontSurface_ = SDL_DisplayFormatAlpha(fontSurfaceTmp);
@@ -96,7 +95,7 @@ void Renderer::loadFont() {
 
   for(int y = 0; y < fontSurfaceTmp->h; y++) {
     for(int x = 0; x < fontSurfaceTmp->w; x++) {
-      fontPixelData_[x][y] = (getpixel(fontSurfaceTmp, x, y) == imgClr);
+      fontPixelData_[x][y] = (getpixel(fontSurfaceTmp, Pos(x, y)) == imgClr);
     }
   }
 
@@ -114,7 +113,7 @@ void Renderer::loadTiles() {
   Uint32 imgClr = SDL_MapRGB(tileSurfaceTmp->format, 255, 255, 255);
   for(int y = 0; y < tileSurfaceTmp->h; y++) {
     for(int x = 0; x < tileSurfaceTmp->w; x++) {
-      tilePixelData_[x][y] = (getpixel(tileSurfaceTmp, x, y) == imgClr);
+      tilePixelData_[x][y] = (getpixel(tileSurfaceTmp, Pos(x, y)) == imgClr);
     }
   }
 
@@ -137,8 +136,8 @@ void Renderer::loadMainMenuLogo() {
 }
 
 
-void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const int PIXEL_X,
-                                        const int PIXEL_Y, const SDL_Color& clr) {
+void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const Pos& pixelPos,
+                                        const SDL_Color& clr) {
   const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
 
   SDL_LockSurface(screenSurface_);
@@ -146,14 +145,13 @@ void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const int PIXEL_X,
   const int cellW = eng->config->cellW;
   const int cellH = eng->config->cellH;
 
-  const coord sheetCoords = eng->art->getTileCoords(tile);
-  const int SHEET_X0 = sheetCoords.x * cellW;
-  const int SHEET_Y0 = sheetCoords.y * cellH;
+  const Pos sheetPoss = eng->art->getTilePoss(tile);
+  const Pos sheetX0Y0(sheetPoss.x * cellW, sheetPoss.y * cellH);
 
   for(int dy = 0; dy < cellH; dy++) {
     for(int dx = 0; dx < cellW; dx++) {
-      if(tilePixelData_[SHEET_X0 + dx][SHEET_Y0 + dy]) {
-        putpixel(screenSurface_, PIXEL_X + dx, PIXEL_Y + dy, CLR_TO);
+      if(tilePixelData_[sheetX0Y0.x + dx][sheetX0Y0.y + dy]) {
+        putpixel(screenSurface_, pixelPos + Pos(dx, dy), CLR_TO);
       }
     }
   }
@@ -161,8 +159,8 @@ void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const int PIXEL_X,
   SDL_UnlockSurface(screenSurface_);
 }
 
-void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const int PIXEL_X,
-    const int PIXEL_Y, const SDL_Color& clr) {
+void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
+    const SDL_Color& clr) {
   const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
 
   SDL_LockSurface(screenSurface_);
@@ -175,9 +173,9 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const int PIXEL_X,
   const int cellW_SHEET = cellW / SCALE;
   const int cellH_SHEET = cellH / SCALE;
 
-  const coord sheetCoords = eng->art->getGlyphCoords(GLYPH);
-  const int SHEET_X0 = sheetCoords.x * cellW_SHEET;
-  const int SHEET_Y0 = sheetCoords.y * cellH_SHEET;
+  const Pos sheetPoss = eng->art->getGlyphPoss(GLYPH);
+  const int SHEET_X0 = sheetPoss.x * cellW_SHEET;
+  const int SHEET_Y0 = sheetPoss.y * cellH_SHEET;
 
   for(int dy = 0; dy < cellH_SHEET; dy++) {
     for(int dx = 0; dx < cellW_SHEET; dx++) {
@@ -187,9 +185,7 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const int PIXEL_X,
         for(int m = 0; m < SCALE; m++) {
           for(int n = 0; n < SCALE; n++) {
             putpixel(screenSurface_,
-                     PIXEL_X + DX_SCALED + m,
-                     PIXEL_Y + DY_SCALED + n,
-                     CLR_TO);
+                     pixelPos + Pos(DX_SCALED + m, DY_SCALED + n), CLR_TO);
           }
         }
       }
@@ -199,10 +195,10 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const int PIXEL_X,
   SDL_UnlockSurface(screenSurface_);
 }
 
-Uint32 Renderer::getpixel(SDL_Surface* const surface, const int X, const int Y) {
+Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to retrieve */
-  Uint8* p = (Uint8 *)surface->pixels + Y * surface->pitch + X * bpp;
+  Uint8* p = (Uint8 *)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
 
   switch(bpp) {
     case 1:   return *p;            break;
@@ -220,10 +216,10 @@ Uint32 Renderer::getpixel(SDL_Surface* const surface, const int X, const int Y) 
   return -1;
 }
 
-void Renderer::putpixel(SDL_Surface* const surface, const int X, const int Y, Uint32 pixel) {
+void Renderer::putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to set */
-  Uint8* p = (Uint8 *)surface->pixels + Y * surface->pitch + X * bpp;
+  Uint8* p = (Uint8 *)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
 
   switch(bpp) {
     case 1:   *p = pixel;             break;
@@ -244,23 +240,21 @@ void Renderer::putpixel(SDL_Surface* const surface, const int X, const int Y, Ui
   }
 }
 
-void Renderer::applySurface(const int PIXEL_X, const int PIXEL_Y,
-                            SDL_Surface* const source, SDL_Rect* clip) {
+void Renderer::applySurface(const Pos& pixelPos, SDL_Surface* const src,
+                            SDL_Rect* clip) {
   SDL_Rect offset;
-  offset.x = PIXEL_X;
-  offset.y = PIXEL_Y;
-
-  SDL_BlitSurface(source, clip, screenSurface_, &offset);
+  offset.x = pixelPos.x;
+  offset.y = pixelPos.y;
+  SDL_BlitSurface(src, clip, screenSurface_, &offset);
 }
 
 void Renderer::drawMainMenuLogo(const int Y_POS) {
-  const int IMG_W = mainMenuLogoSurface_->w;
-  const int X = (eng->config->screenWidth - IMG_W) / 2;
-  const int Y = eng->config->cellH * Y_POS;
-  applySurface(X, Y, mainMenuLogoSurface_);
+  const Pos pos((eng->config->screenWidth - mainMenuLogoSurface_->w) / 2,
+                eng->config->cellH * Y_POS);
+  applySurface(pos, mainMenuLogoSurface_);
 }
 
-void Renderer::drawMarker(const vector<coord>& trace, const int EFFECTIVE_RANGE) {
+void Renderer::drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE) {
   if(trace.size() > 2) {
     for(unsigned int i = 1; i < trace.size() - 1; i++) {
       coverCellInMap(trace.at(i));
@@ -268,20 +262,21 @@ void Renderer::drawMarker(const vector<coord>& trace, const int EFFECTIVE_RANGE)
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trace.at(0), trace.at(i));
+        const int CHEB_DIST =
+          eng->basicUtils->chebyshevDistance(trace.at(0), trace.at(i));
         if(CHEB_DIST > EFFECTIVE_RANGE) {
           clr = clrYellow;
         }
       }
       if(eng->config->isTilesMode) {
-        drawTileInMap(tile_aimMarkerTrail, trace.at(i), clr);
+        drawTile(tile_aimMarkerTrail, panel_map, trace.at(i), clr);
       } else {
-        drawCharacter('*', renderArea_mainScreen, trace.at(i), clr);
+        drawGlyph('*', panel_map, trace.at(i), clr);
       }
     }
   }
 
-  const coord& headPos = eng->marker->getPos();
+  const Pos& headPos = eng->marker->getPos();
 
   SDL_Color clr = clrGreenLgt;
 
@@ -297,13 +292,13 @@ void Renderer::drawMarker(const vector<coord>& trace, const int EFFECTIVE_RANGE)
   coverCellInMap(headPos);
 
   if(eng->config->isTilesMode) {
-    drawTileInMap(tile_aimMarkerHead, headPos, clr);
+    drawTile(tile_aimMarkerHead, panel_map, headPos, clr);
   } else {
-    drawCharacter('X', renderArea_mainScreen, headPos, clr);
+    drawGlyph('X', panel_map, headPos, clr);
   }
 }
 
-void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
+void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color& colorInner,
     const SDL_Color& colorOuter, const int DURATION) {
   tracer << "Renderer::drawBlastAnimationAtField()..." << endl;
@@ -312,62 +307,71 @@ void Renderer::drawBlastAnimationAtField(const coord& center, const int RADIUS,
 
   bool isAnyBlastRendered = false;
 
-  for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
-    for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
-      if(forbiddenCells[x][y] == false) {
-        const bool
-        IS_OUTER = x == center.x - RADIUS ||
-                   x == center.x + RADIUS ||
-                   y == center.y - RADIUS ||
-                   y == center.y + RADIUS;
+  Pos pos;
+
+  for(
+    pos.y = max(1, center.y - RADIUS);
+    pos.y <= min(MAP_Y_CELLS - 2, center.y + RADIUS);
+    pos.y++) {
+    for(
+      pos.x = max(1, center.x - RADIUS);
+      pos.x <= min(MAP_X_CELLS - 2, center.x + RADIUS);
+      pos.x++) {
+      if(forbiddenCells[pos.x][pos.y] == false) {
+        const bool IS_OUTER = pos.x == center.x - RADIUS ||
+                              pos.x == center.x + RADIUS ||
+                              pos.y == center.y - RADIUS ||
+                              pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        drawTileInMap(tile_blastAnimation1, x, y, color, clrBlack);
+        drawTile(tile_blastAnimation1, panel_map, pos, color, clrBlack);
         isAnyBlastRendered = true;
       }
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {
-    eng->sleep(DURATION / 2);
-  }
+  if(isAnyBlastRendered) {eng->sleep(DURATION / 2);}
 
-  for(int y = max(1, center.y - RADIUS); y <= min(MAP_Y_CELLS - 2, center.y + RADIUS); y++) {
-    for(int x = max(1, center.x - RADIUS); x <= min(MAP_X_CELLS - 2, center.x + RADIUS); x++) {
-      if(forbiddenCells[x][y] == false) {
-        const bool IS_OUTER = x == center.x - RADIUS ||
-                              x == center.x + RADIUS ||
-                              y == center.y - RADIUS ||
-                              y == center.y + RADIUS;
+  for(
+    pos.y = max(1, center.y - RADIUS);
+    pos.y <= min(MAP_Y_CELLS - 2, center.y + RADIUS);
+    pos.y++) {
+    for(
+      pos.x = max(1, center.x - RADIUS);
+      pos.x <= min(MAP_X_CELLS - 2, center.x + RADIUS);
+      pos.x++) {
+      if(forbiddenCells[pos.x][pos.y] == false) {
+        const bool IS_OUTER = pos.x == center.x - RADIUS ||
+                              pos.x == center.x + RADIUS ||
+                              pos.y == center.y - RADIUS ||
+                              pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        drawTileInMap(tile_blastAnimation2, x, y, color, clrBlack);
+        drawTile(tile_blastAnimation2, panel_map, pos, color, clrBlack);
       }
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {
-    eng->sleep(DURATION / 2);
-  }
+  if(isAnyBlastRendered) {eng->sleep(DURATION / 2);}
   drawMapAndInterface();
 
   tracer << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
 }
 
-void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
+void Renderer::drawBlastAnimationAtPositions(const vector<Pos>& positions,
     const SDL_Color& color, const int DURATION) {
   tracer << "Renderer::drawBlastAnimationAtPositions()..." << endl;
 
   drawMapAndInterface();
 
   for(unsigned int i = 0; i < positions.size(); i++) {
-    const coord& pos = positions.at(i);
-    drawTileInMap(tile_blastAnimation1, pos.x, pos.y, color, clrBlack);
+    const Pos& pos = positions.at(i);
+    drawTile(tile_blastAnimation1, panel_map, pos, color, clrBlack);
   }
   updateScreen();
   eng->sleep(DURATION / 2);
 
   for(unsigned int i = 0; i < positions.size(); i++) {
-    const coord& pos = positions.at(i);
-    drawTileInMap(tile_blastAnimation2, pos.x, pos.y, color, clrBlack);
+    const Pos& pos = positions.at(i);
+    drawTile(tile_blastAnimation2, panel_map, pos, color, clrBlack);
   }
   updateScreen();
   eng->sleep(DURATION / 2);
@@ -377,234 +381,222 @@ void Renderer::drawBlastAnimationAtPositions(const vector<coord>& positions,
 }
 
 void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
-  const vector<coord>& positions, const SDL_Color& clr,
+  const vector<Pos>& positions, const SDL_Color& clr,
   const int EXPLOSION_DELAY_FACTOR) {
 
   const int DELAY = eng->config->delayExplosion * EXPLOSION_DELAY_FACTOR;
 
-  vector<coord> positionsWithVision;
+  vector<Pos> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); i++) {
-    const coord& pos = positions.at(i);
+    const Pos& pos = positions.at(i);
     if(eng->map->playerVision[pos.x][pos.y]) {
       positionsWithVision.push_back(pos);
     }
   }
 
   if(eng->config->isTilesMode) {
-    eng->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr, DELAY);
+    eng->renderer->drawBlastAnimationAtPositions(
+      positionsWithVision, clr, DELAY);
   } else {
     //TODO
   }
 }
 
-void Renderer::drawTileInScreen(const Tile_t tile, const int X, const int Y,
-                                const SDL_Color& clr, const SDL_Color& bgClr) {
-  const int& cellW = eng->config->cellW;
-  const int& cellH = eng->config->cellH;
-
-  const int PIXEL_X = X * cellW;
-  const int PIXEL_Y = Y * cellH;
-
-  drawRectangleSolid(PIXEL_X, PIXEL_Y, cellW, cellH, bgClr);
-
-  putPixelsOnScreenForTile(tile, PIXEL_X, PIXEL_Y, clr);
+void Renderer::drawTile(const Tile_t tile, const Panel_t panel, const Pos& pos,
+                        const SDL_Color& clr, const SDL_Color& bgClr) {
+  const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+  drawRectangleSolid(pixelPos, cellDims, bgClr);
+  putPixelsOnScreenForTile(tile, pixelPos, clr);
 }
 
-void Renderer::drawTileInMap(const Tile_t tile, const int X, const int Y,
-                             const SDL_Color& clr, const SDL_Color& bgClr) {
-  drawTileInScreen(tile, X, Y + eng->config->MAINSCREEN_Y_CELLS_OFFSET, clr, bgClr);
-}
+//void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y,
+//                              const SDL_Color& clr, const bool DRAW_BG_CLR,
+//                              const SDL_Color& bgClr) {
+//  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+//  const Pos pixelPos(pos.x * cellDims.x, pos.y * cellDims.y);
+//  const int PIXEL_X = X * cellW;
+//  const int PIXEL_Y = Y * cellH + eng->config->mainscreenOffsetY;
+//
+//  if(DRAW_BG_CLR) {
+//    drawRectangleSolid(PIXEL_X, PIXEL_Y, cellW, cellH, bgClr);
+//  }
+//
+//  putPixelsOnScreenForGlyph(GLYPH, PIXEL_X, PIXEL_Y, clr);
+//}
 
-void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y,
-                              const SDL_Color& clr, const bool DRAW_BG_CLR,
-                              const SDL_Color& bgClr) {
-  const int& cellW = eng->config->cellW;
-  const int& cellH = eng->config->cellH;
-
-  const int PIXEL_X = X * cellW;
-  const int PIXEL_Y = Y * cellH + eng->config->mainscreenOffsetY;
-
+void Renderer::drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
+                                const SDL_Color& clr, const bool DRAW_BG_CLR,
+                                const SDL_Color& bgClr) {
   if(DRAW_BG_CLR) {
-    drawRectangleSolid(PIXEL_X, PIXEL_Y, cellW, cellH, bgClr);
+    const Pos cellDims(eng->config->cellW, eng->config->cellH);
+    drawRectangleSolid(pixelPos, cellDims, bgClr);
   }
 
-  putPixelsOnScreenForGlyph(GLYPH, PIXEL_X, PIXEL_Y, clr);
+  putPixelsOnScreenForGlyph(GLYPH, pixelPos, clr);
 }
 
-void Renderer::drawCharacterAtPixel(const char CHARACTER, const int X, const int Y,
-                                    const SDL_Color& clr, const bool DRAW_BG_CLR,
-                                    const SDL_Color& bgClr) {
-  if(DRAW_BG_CLR) {
-    const int& cellW = eng->config->cellW;
-    const int& cellH = eng->config->cellH;
-    drawRectangleSolid(X, Y, cellW, cellH, bgClr);
+Pos Renderer::getPixelPosForCellInPanel(const Panel_t panel, const Pos& pos) {
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+
+  switch(panel) {
+    case panel_screen: {
+      return Pos(pos.x * cellDims.x, pos.y * cellDims.y);
+    } break;
+
+    case panel_map: {
+      return (pos * cellDims) + Pos(0, eng->config->mainscreenOffsetY);
+    } break;
+
+    case panel_log: {
+      return (pos * cellDims) +
+             Pos(eng->config->logOffsetX, eng->config->logOffsetY);
+    } break;
+
+    case panel_character: {
+      return (pos * cellDims) + Pos(0, eng->config->characterLinesOffsetY);
+    } break;
   }
-
-  putPixelsOnScreenForGlyph(CHARACTER, X, Y, clr);
+  return Pos();
 }
 
-coord Renderer::getPixelPosForCharacter(const RenderArea_t renderArea, const int X, const int Y) {
-  const int cellW = eng->config->cellW;
-  const int cellH = eng->config->cellH;
-
-  switch(renderArea) {
-    case renderArea_screen: {
-      return coord(X * cellW, Y * cellH);
-    }
-    break;
-    case renderArea_mainScreen: {
-      return coord(X * cellW, eng->config->mainscreenOffsetY + Y * cellH);
-    }
-    break;
-    case renderArea_log: {
-      return coord(eng->config->logOffsetX + X * cellW, eng->config->logOffsetY + Y * cellH);
-    }
-    break;
-    case renderArea_characterLines: {
-      return coord(X * cellW, eng->config->characterLinesOffsetY + Y * cellH);
-    }
-    break;
-  }
-  return coord();
+void Renderer::drawGlyph(const char GLYPH, const Panel_t panel, const Pos& pos,
+                         const SDL_Color& clr, const bool DRAW_BG_CLR,
+                         const SDL_Color& bgClr) {
+  const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+  drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
 }
 
-void Renderer::drawCharacter(const char CHARACTER, const RenderArea_t renderArea,
-                             const int X, const int Y, const SDL_Color& clr,
-                             const bool DRAW_BG_CLR,
-                             const SDL_Color& bgClr) {
-  const coord pixelCoord = getPixelPosForCharacter(renderArea, X, Y);
-  drawCharacterAtPixel(CHARACTER, pixelCoord.x, pixelCoord.y, clr, DRAW_BG_CLR, bgClr);
-}
-
-void Renderer::drawText(const string& str, const RenderArea_t renderArea,
-                        const int X, const int Y, const SDL_Color& clr,
+void Renderer::drawText(const string& str, const Panel_t panel,
+                        const Pos& pos, const SDL_Color& clr,
                         const SDL_Color& bgClr) {
-  coord pixelCoord = getPixelPosForCharacter(renderArea, X, Y);
+  Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
-  if(pixelCoord.y < 0 || pixelCoord.y >= eng->config->screenHeight) {
+  if(pixelPos.y < 0 || pixelPos.y >= eng->config->screenHeight) {
     return;
   }
 
-  const int& cellW = eng->config->cellW;
-  const int& cellH = eng->config->cellH;
-  const int TOT_W = cellW * str.size();
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+  const int LEN = str.size();
+  drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
 
-  drawRectangleSolid(pixelCoord.x, pixelCoord.y, TOT_W, cellH, bgClr);
-
-  const unsigned int W_TOT = str.size();
-
-  for(unsigned int i = 0; i < W_TOT; i++) {
-    if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->screenWidth) {
+  for(int i = 0; i < LEN; i++) {
+    if(pixelPos.x < 0 || pixelPos.x >= eng->config->screenWidth) {
       return;
     }
-    drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr, false);
-    pixelCoord.x += cellW;
+    drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
+    pixelPos.x += cellDims.x;
   }
 }
 
-int Renderer::drawTextCentered(const string& str, const RenderArea_t renderArea,
-                               const int X, const int Y, const SDL_Color& clr,
+int Renderer::drawTextCentered(const string& str, const Panel_t panel,
+                               const Pos& pos, const SDL_Color& clr,
                                const SDL_Color& bgClr,
                                const bool IS_PIXEL_POS_ADJ_ALLOWED) {
-  const unsigned int STR_LEN_HALF = str.size() / 2;
-  const int X_POS_LEFT = X - STR_LEN_HALF;
+  const int LEN         = str.size();
+  const int LEN_HALF    = LEN / 2;
+  const int X_POS_LEFT  = pos.x - LEN_HALF;
 
-  const int cellH = eng->config->cellH;
-  const int cellW = eng->config->cellW;
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
 
-  coord pixelCoord = getPixelPosForCharacter(renderArea, X_POS_LEFT, Y);
+  Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(X_POS_LEFT, pos.y));
 
   if(IS_PIXEL_POS_ADJ_ALLOWED) {
-    const int PIXEL_X_ADJ = STR_LEN_HALF * 2 == str.size() ? cellW / 2 : 0;
-    pixelCoord += coord(PIXEL_X_ADJ, 0);
+    const int PIXEL_X_ADJ = LEN_HALF * 2 == LEN ? cellDims.x / 2 : 0;
+    pixelPos += Pos(PIXEL_X_ADJ, 0);
   }
 
-  const unsigned int W_TOT  = str.size();
-  const int W_TOT_PIXEL     = W_TOT * cellW;
+  const int W_TOT_PIXEL = LEN * cellDims.x;
 
   SDL_Rect sdlRect = {
-    (Sint16)pixelCoord.x, (Sint16)pixelCoord.y,
-    (Uint16)W_TOT_PIXEL, (Uint16)cellH
+    (Sint16)pixelPos.x, (Sint16)pixelPos.y,
+    (Uint16)W_TOT_PIXEL, (Uint16)cellDims.y
   };
   SDL_FillRect(screenSurface_, &sdlRect, SDL_MapRGB(screenSurface_->format,
                bgClr.r, bgClr.g, bgClr.b));
 
-  for(unsigned int i = 0; i < W_TOT; i++) {
-    if(pixelCoord.x < 0 || pixelCoord.x >= eng->config->screenWidth) {
+  for(int i = 0; i < LEN; i++) {
+    if(pixelPos.x < 0 || pixelPos.x >= eng->config->screenWidth) {
       return X_POS_LEFT;
     }
-    drawCharacterAtPixel(str.at(i), pixelCoord.x, pixelCoord.y, clr, false);
-    pixelCoord.x += eng->config->cellW;
+    drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
+    pixelPos.x += cellDims.x;
   }
   return X_POS_LEFT;
 }
 
-void Renderer::coverRenderArea(const RenderArea_t renderArea) {
-  const coord x0y0Pixel = getPixelPosForCharacter(renderArea, 0, 0);
-  switch(renderArea) {
-    case renderArea_characterLines: {
-      coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->screenWidth,
-                     eng->config->CHARACTER_LINES_HEIGHT);
-    }
-    break;
-    case renderArea_log: {
-      coverAreaPixel(0, 0, eng->config->screenWidth,
-                     eng->config->logHeight + eng->config->logOffsetY);
-    }
-    break;
-    case renderArea_mainScreen: {
-      coverAreaPixel(x0y0Pixel.x, x0y0Pixel.y, eng->config->screenWidth,
-                     eng->config->mainscreenHeight);
-    }
-    break;
-    case renderArea_screen: {
-      clearScreen();
-    }
-    break;
+void Renderer::coverPanel(const Panel_t panel) {
+  const int SCREEN_W = eng->config->screenWidth;
 
+  switch(panel) {
+    case panel_character: {
+      const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
+      coverAreaPixel(
+        pixelPos, Pos(SCREEN_W, eng->config->CHARACTER_LINES_HEIGHT));
+    } break;
+
+    case panel_log: {
+      coverAreaPixel(
+        Pos(0, 0),
+        Pos(SCREEN_W, eng->config->logHeight + eng->config->logOffsetY));
+    } break;
+
+    case panel_map: {
+      const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
+      coverAreaPixel(pixelPos, Pos(SCREEN_W, eng->config->mainscreenHeight));
+    } break;
+
+    case panel_screen: {clearScreen();} break;
   }
 }
 
-void Renderer::coverArea(const RenderArea_t renderArea, const int X, const int Y, const int W, const int H) {
-  const coord x0y0 = getPixelPosForCharacter(renderArea, X, Y);
-  coverAreaPixel(x0y0.x, x0y0.y, W * eng->config->cellW, H * eng->config->cellH);
+void Renderer::coverArea(const Panel_t panel, const Pos& pos,
+                         const Pos& dims) {
+  const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+  coverAreaPixel(pixelPos, dims * cellDims);
 }
 
-void Renderer::coverAreaPixel(const int X, const int Y, const int W, const int H) {
-  drawRectangleSolid(X, Y, W, H, clrBlack);
+void Renderer::coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims) {
+  drawRectangleSolid(pixelPos, pixelDims, clrBlack);
 }
 
-void Renderer::coverCellInMap(const int X, const int Y) {
-  const int cellW = eng->config->cellW;
-  const int cellH = eng->config->cellH;
-  coverAreaPixel(X * cellW, eng->config->mainscreenOffsetY + (Y * cellH),
-                 cellW, cellH);
+void Renderer::coverCellInMap(const Pos& pos) {
+  const Pos cellDims(eng->config->cellW, eng->config->cellH);
+  const Pos offset = Pos(0, eng->config->mainscreenOffsetY);
+  coverAreaPixel((pos + offset) * cellDims, cellDims);
 }
 
-void Renderer::drawLineVertical(const int X, const int Y, const int H, const SDL_Color& clr) {
-  drawRectangleSolid(X, Y, 1, H, clr);
-}
-
-void Renderer::drawLineHorizontal(const int X, const int Y, const int W, const SDL_Color& clr) {
-  const int Y_OFFSET = 1 - eng->config->fontScale;
-  drawRectangleSolid(X, Y + Y_OFFSET, W, 2 * eng->config->fontScale, clr);
-}
-
-void Renderer::drawRectangleSolid(const int X, const int Y, const int W, const int H,
+void Renderer::drawLineHorizontal(const Pos& pixelPos, const int W,
                                   const SDL_Color& clr) {
-  SDL_Rect sdlRect = {(Sint16)X, (Sint16)Y, (Uint16)W, (Uint16)H};
-  SDL_FillRect(screenSurface_, &sdlRect, SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b));
+  const Pos offset(0, 1 - eng->config->fontScale);
+  drawRectangleSolid(
+    pixelPos + offset, Pos(W, 2 * eng->config->fontScale), clr);
 }
 
-void Renderer::coverCharAtPixel(const int X, const int Y) {
-  coverAreaPixel(X, Y, eng->config->cellW, eng->config->cellH);
+void Renderer::drawLineVertical(const Pos& pixelPos, const int H,
+                                const SDL_Color& clr) {
+  drawRectangleSolid(pixelPos, Pos(1, H), clr);
 }
 
-void Renderer::coverTileAtPixel(const int X, const int Y) {
-  coverAreaPixel(X, Y, eng->config->cellW, eng->config->cellH);
+void Renderer::drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
+                                  const SDL_Color& clr) {
+  SDL_Rect sdlRect = {(Sint16)pixelPos.x, (Sint16)pixelPos.y,
+                      (Uint16)pixelDims.x, (Uint16)pixelDims.y
+                     };
+  SDL_FillRect(screenSurface_, &sdlRect,
+               SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b));
 }
 
-void Renderer::drawProjectilesAndUpdateWindow(vector<Projectile*>& projectiles) {
+void Renderer::coverGlyphAtPixel(const Pos& pixelPos) {
+  coverAreaPixel(pixelPos, Pos(eng->config->cellW, eng->config->cellH));
+}
+
+void Renderer::coverTileAtPixel(const Pos& pixelPos) {
+  coverAreaPixel(pixelPos, Pos(eng->config->cellW, eng->config->cellH));
+}
+
+void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
   drawMapAndInterface(false);
 
   for(unsigned int i = 0; i < projectiles.size(); i++) {
@@ -613,11 +605,11 @@ void Renderer::drawProjectilesAndUpdateWindow(vector<Projectile*>& projectiles) 
       coverCellInMap(p->pos);
       if(eng->config->isTilesMode) {
         if(p->tile != tile_empty) {
-          drawTileInMap(p->tile, p->pos, p->clr);
+          drawTile(p->tile, panel_map, p->pos, p->clr);
         }
       } else {
         if(p->glyph != -1) {
-          drawCharacter(p->glyph, renderArea_mainScreen, p->pos, p->clr);
+          drawGlyph(p->glyph, panel_map, p->pos, p->clr);
         }
       }
     }
@@ -654,21 +646,22 @@ int Renderer::getLifebarLength(const Actor& actor) const {
   return -1;
 }
 
-void Renderer::drawLifeBar(const int X_CELL, const int Y_CELL, const int LENGTH) {
+void Renderer::drawLifeBar(const Pos& pos, const int LENGTH) {
   if(LENGTH >= 0) {
     const int W_GREEN = LENGTH;
-    const int& W_CELL = eng->config->cellW;
-    const int W_BAR_TOT = W_CELL - 2;
+    const Pos cellDims(eng->config->cellW,  eng->config->cellH);
+    const int W_BAR_TOT = cellDims.x - 2;
     const int W_RED = W_BAR_TOT - W_GREEN;
-    const int Y0 = eng->config->mainscreenOffsetY + ((Y_CELL + 1) * eng->config->cellH) - 2;
-    const int X0_GREEN = X_CELL * W_CELL + 1;
+    const int Y0 = eng->config->mainscreenOffsetY +
+                   ((pos.y + 1) * cellDims.y) - 2;
+    const int X0_GREEN = pos.x * cellDims.x + 1;
     const int X0_RED = X0_GREEN + W_GREEN;
 
     if(W_GREEN > 0) {
-      drawLineHorizontal(X0_GREEN, Y0, W_GREEN, clrGreenLgt);
+      drawLineHorizontal(Pos(X0_GREEN, Y0), W_GREEN, clrGreenLgt);
     }
     if(W_RED > 0) {
-      drawLineHorizontal(X0_RED, Y0, W_RED, clrRedLgt);
+      drawLineHorizontal(Pos(X0_RED, Y0), W_RED, clrRedLgt);
     }
   }
 }
@@ -805,7 +798,7 @@ void Renderer::drawAscii() {
         tempDrw = renderArrayAscii[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER =
-            eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+            eng->basicUtils->chebyshevDistance(eng->player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
             const double DIST_FADE_DIV =
               min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -823,23 +816,24 @@ void Renderer::drawAscii() {
         tempDrw.color.b /= 4;
       }
 
+      Pos pos(x, y);
       if(tempDrw.glyph != ' ') {
-        drawCharacter(tempDrw.glyph, renderArea_mainScreen, x, y, tempDrw.color,
-                      true, tempDrw.colorBg);
+        drawGlyph(tempDrw.glyph, panel_map, pos, tempDrw.color,
+                  true, tempDrw.colorBg);
 
         if(tempDrw.lifebarLength != -1) {
-          drawLifeBar(x, y, tempDrw.lifebarLength);
+          drawLifeBar(pos, tempDrw.lifebarLength);
         }
       }
     }
   }
 
   //-------------------------------------------- DRAW PLAYER CHARACTER
-  drawGlyphInMap(eng->player->getGlyph(), eng->player->pos.x, eng->player->pos.y,
-                 eng->player->getColor(), true, clrBlack);
+  drawGlyph(eng->player->getGlyph(), panel_map, eng->player->pos,
+            eng->player->getColor(), true, clrBlack);
   const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
   if(LIFE_BAR_LENGTH != -1) {
-    drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
+    drawLifeBar(eng->player->pos, LIFE_BAR_LENGTH);
   }
 }
 
@@ -981,7 +975,7 @@ void Renderer::drawTiles() {
         tempDrw = renderArrayTiles[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER =
-            eng->basicUtils->chebyshevDistance(eng->player->pos, coord(x, y));
+            eng->basicUtils->chebyshevDistance(eng->player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
             const double DIST_FADE_DIV =
               min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -1060,11 +1054,13 @@ void Renderer::drawTiles() {
         }
       }
 
+      Pos pos(x, y);
       if(tempDrw.tile != tile_empty) {
-        drawTileInMap(tempDrw.tile, x, y, tempDrw.color, tempDrw.colorBg);
+        drawTile(tempDrw.tile, panel_map, pos, tempDrw.color,
+                 tempDrw.colorBg);
 
         if(tempDrw.lifebarLength != -1) {
-          drawLifeBar(x, y, tempDrw.lifebarLength);
+          drawLifeBar(pos, tempDrw.lifebarLength);
         }
       }
     }
@@ -1076,11 +1072,11 @@ void Renderer::drawTiles() {
   if(item != NULL) {
     isWieldingRangedWeapon = item->getDef().isRangedWeapon;
   }
-  drawTileInMap(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
-                eng->player->pos, eng->player->getColor(), clrBlack);
+  drawTile(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
+           panel_map, eng->player->pos, eng->player->getColor(), clrBlack);
   const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
   if(LIFE_BAR_LENGTH != -1) {
-    drawLifeBar(eng->player->pos.x, eng->player->pos.y, LIFE_BAR_LENGTH);
+    drawLifeBar(eng->player->pos, LIFE_BAR_LENGTH);
   }
 }
 

@@ -18,7 +18,7 @@ public:
 protected:
   friend class FeatureFactory;
   friend class MapBuildBSP;
-  FeatureLever(Feature_t id, coord pos, Engine* engine, LeverSpawnData* spawnData);
+  FeatureLever(Feature_t id, Pos pos, Engine* engine, LeverSpawnData* spawnData);
 
   void pull();
 

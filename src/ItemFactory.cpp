@@ -10,6 +10,7 @@
 #include "ItemPotion.h"
 #include "ItemDrop.h"
 #include "ItemDevice.h"
+#include "ItemMedicalBag.h"
 
 Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   Item* item = NULL;
@@ -134,6 +135,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_deviceTranslocator:       item = new DeviceTranslocator(d);       break;
     case item_deviceElectricLantern:    item = new DeviceElectricLantern(d);    break;
 
+    case item_medicalBag:               item = new MedicalBag(d);               break;
+
     default: item = new Item(d); break;
   }
 
@@ -166,9 +169,12 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
         const int MIN = CAP / 2;
         const int CAP_SCALED = CAP / NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
         const int MIN_SCALED = MIN / NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
-        weapon->ammoLoaded = eng->dice.getInRange(MIN_SCALED, CAP_SCALED) * NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
+        weapon->ammoLoaded =
+          eng->dice.getInRange(MIN_SCALED, CAP_SCALED) *
+          NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
       } else {
-        weapon->ammoLoaded = eng->dice.getInRange(weapon->ammoCapacity / 4, weapon->ammoCapacity);
+        weapon->ammoLoaded =
+          eng->dice.getInRange(weapon->ammoCapacity / 4, weapon->ammoCapacity);
       }
     }
   }
@@ -178,7 +184,7 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   }
 }
 
-Item* ItemFactory::spawnItemOnMap(const ItemId_t itemId, const coord& pos) {
+Item* ItemFactory::spawnItemOnMap(const ItemId_t itemId, const Pos& pos) {
   Item* item = spawnItem(itemId);
   setItemRandomizedProperties(item);
   eng->itemDrop->dropItemOnMap(pos, *item);
@@ -191,12 +197,16 @@ Item* ItemFactory::copyItem(Item* oldItem) {
   return newItem;
 }
 
-Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS) {
+Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
+    const bool ALLOW_POTIONS) {
   vector<ItemId_t> itemCandidates;
 
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
-    if(d->isIntrinsic == false && ((d->isReadable && ALLOW_SCROLLS) || (d->isQuaffable && ALLOW_POTIONS))) {
+    if(
+      d->isIntrinsic == false &&
+      ((d->isReadable && ALLOW_SCROLLS) ||
+       (d->isQuaffable && ALLOW_POTIONS))) {
       itemCandidates.push_back(static_cast<ItemId_t>(i));
     }
   }

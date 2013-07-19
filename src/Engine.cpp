@@ -85,7 +85,6 @@
 #include "TextFormatting.h"
 #include "Thrower.h"
 #include "MenuInputHandler.h"
-#include "TrimTravelVector.h"
 
 using namespace std;
 
@@ -137,10 +136,10 @@ void Engine::initGame() {
   abilityRoll = new AbilityRoll(this);
   itemFactory = new ItemFactory(this);
   inventoryHandler = new InventoryHandler(this);
-  playerBonusHandler = new PlayerBonusHandler(this);
+  playerBonHandler = new PlayerBonHandler(this);
   playerCreateCharacter = new PlayerCreateCharacter(this);
   player = new Player;
-  player->place(coord(config->PLAYER_START_X, config->PLAYER_START_Y), &(actorData->actorDefinitions[actor_player]), this);
+  player->place(Pos(config->PLAYER_START_X, config->PLAYER_START_Y), &(actorData->actorDefinitions[actor_player]), this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   marker = new Marker(this);
@@ -194,7 +193,6 @@ void Engine::initGame() {
   popup = new Popup(this);
   saveHandler = new SaveHandler(this);
   jamWithSpike = new JamWithSpike(this);
-  trimTravelVector = new TrimTravelVector(this);
   menuInputHandler = new MenuInputHandler(this);
   playerPowersHandler = new PlayerPowersHandler(this);
   knockBack = new KnockBack(this);
@@ -214,7 +212,7 @@ void Engine::cleanupGame() {
 
   map->clearDungeon();
 
-  delete playerBonusHandler;
+  delete playerBonHandler;
   delete playerVisualMemory;
   delete itemData;
   delete map;
@@ -273,7 +271,6 @@ void Engine::cleanupGame() {
   delete bresenhamLine;
   delete playerAllocBonus;
   delete jamWithSpike;
-  delete trimTravelVector;
   delete menuInputHandler;
   delete playerPowersHandler;
   delete knockBack;

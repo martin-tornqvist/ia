@@ -22,12 +22,12 @@ public:
 
 private:
 	void findPathToNextStairs();
-	coord findNextStairs();
-	bool walkToAdjacentCell(const coord& cellToGoTo);
+	Pos findNextStairs();
+	bool walkToAdjacentCell(const Pos& cellToGoTo);
 
 	void runFunctionTests();
 
-	vector<coord> currentPath_;
+	vector<Pos> currentPath_;
 	Engine* eng;
 };
 

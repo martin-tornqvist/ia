@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Config.h"
 
-void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos,
+void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
                              const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
   if(defender != eng->player || eng->config->isBotPlaying == false) {
@@ -19,13 +19,13 @@ void KnockBack::tryKnockBack(Actor* const defender, const coord& attackedFromPos
         defenderMoveType != moveType_ethereal &&
         defenderMoveType != moveType_ooze;
 
-      const coord delta = (defender->pos - attackedFromPos).getSigns();
+      const Pos delta = (defender->pos - attackedFromPos).getSigns();
       const int KNOCK_BACK_RANGE =
         IS_SPIKE_GUN ? eng->dice.getInRange(2, 3) : eng->dice(1, 2);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
-        const coord c = defender->pos + delta;
+        const Pos c = defender->pos + delta;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(defender, blockers);

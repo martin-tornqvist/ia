@@ -247,14 +247,19 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
     tracer << "InventoryHandler: item is stackable and more than one" << endl;
     eng->renderer->drawMapAndInterface(false);
     const string nrStr = "1-" + intToString(item->numberOfItems);
-    eng->renderer->drawText("Drop how many (" + nrStr + ")?:      | enter to drop | space/esc to cancel", renderArea_screen, 1, 1, clrWhiteHigh);
+    const string dropStr = "Drop how many (" + nrStr + ")?:      " +
+                           "| enter to drop | space/esc to cancel";
+    eng->renderer->drawText(dropStr, panel_screen, Pos(1, 1), clrWhiteHigh);
     eng->renderer->updateScreen();
-    const int NR_TO_DROP = eng->query->number(coord(20 + nrStr.size(), 1), clrWhiteHigh, 0, 3, item->numberOfItems, false);
+    const int NR_TO_DROP = eng->query->number(
+                             Pos(20 + nrStr.size(), 1),
+                             clrWhiteHigh, 0, 3, item->numberOfItems, false);
     if(NR_TO_DROP <= 0) {
       tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
-      eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR, NR_TO_DROP);
+      eng->itemDrop->dropItemFromInventory(
+        eng->player, GLOBAL_ELEMENT_NR, NR_TO_DROP);
       return true;
     }
   } else {
@@ -277,18 +282,21 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
+  eng->renderInventory->drawEquipMode(
+    browser, slotToEquip->id, generalItemsToShow);
 
   while(true) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
+        eng->renderInventory->drawEquipMode(
+          browser, slotToEquip->id, generalItemsToShow);
       }
       break;
       case menuAction_selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-        eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(INV_ELEM, slotToEquip->id, eng);
+        eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(
+          INV_ELEM, slotToEquip->id, eng);
         return true;
       }
       break;
@@ -299,7 +307,8 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
         }
-        eng->renderInventory->drawEquipMode(browser, slotToEquip->id, generalItemsToShow);
+        eng->renderInventory->drawEquipMode(
+          browser, slotToEquip->id, generalItemsToShow);
       }
       break;
       case menuAction_canceled: {
@@ -326,7 +335,8 @@ void InventoryHandler::runBrowseInventoryMode() {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
+        eng->renderInventory->drawBrowseInventoryMode(
+          browser, generalItemsToShow);
       }
       break;
       case menuAction_selected: {

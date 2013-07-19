@@ -16,7 +16,7 @@ Map::Map(Engine* engine) :
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      featuresStatic[x][y] = new FeatureStatic(feature_stoneWall, coord(x, y), eng);
+      featuresStatic[x][y] = new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
       assert(featuresStatic[x][y]->getId() == feature_stoneWall);
     }
   }
@@ -33,7 +33,7 @@ Map::~Map() {
 }
 
 //TODO This should probably go in a virtual method in Feature instead
-void Map::switchToDestroyedFeatAt(const coord pos) {
+void Map::switchToDestroyedFeatAt(const Pos pos) {
   if(eng->mapTests->isCellInsideMap(pos)) {
 
     const Feature_t OLD_FEATURE_ID = eng->map->featuresStatic[pos.x][pos.y]->getId();
@@ -52,7 +52,7 @@ void Map::switchToDestroyedFeatAt(const coord pos) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
               if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
-                eng->featureFactory->spawnFeatureAt(feature_rubbleLow, coord(x, y));
+                eng->featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
               }
             }
           }
@@ -85,7 +85,7 @@ void Map::clearGrids(const bool DELETE_INSTANCES) {
       playerVision[x][y] = false;
 
       if(DELETE_INSTANCES == true) {
-        eng->featureFactory->spawnFeatureAt(feature_stoneWall, coord(x, y));
+        eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
 
         if(items[x][y] != NULL) {
           delete(items[x][y]);

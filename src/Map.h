@@ -52,7 +52,7 @@ public:
 
   void clearDungeon();
 
-  void switchToDestroyedFeatAt(const coord pos);
+  void switchToDestroyedFeatAt(const Pos pos);
 
   void addSaveLines(vector<string>& lines) const {
     lines.push_back(intToString(dungeonLevel_));

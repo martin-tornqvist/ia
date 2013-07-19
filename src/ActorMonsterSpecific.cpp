@@ -161,15 +161,15 @@ bool Vortex::actorSpecificAct() {
     if(playerAwarenessCounter > 0) {
       tracer << "Vortex: pullCooldown: " << pullCooldown << endl;
       tracer << "Vortex: Is player aware" << endl;
-      const coord& playerPos = eng->player->pos;
+      const Pos& playerPos = eng->player->pos;
       if(eng->mapTests->isCellsNeighbours(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
         if(eng->dice.percentile() < CHANCE_TO_KNOCK) {
           tracer << "Vortex: Passed random chance to pull" << endl;
 
-          const coord playerDelta = playerPos - pos;
-          coord knockBackFromPos = playerPos;
+          const Pos playerDelta = playerPos - pos;
+          Pos knockBackFromPos = playerPos;
           if(playerDelta.x > 1) {
             knockBackFromPos.x++;
           }
@@ -358,7 +358,7 @@ bool Khephren::actorSpecificAct() {
           }
 
           eng->basicUtils->reverseBoolArray(blockers);
-          vector<coord> freeCells;
+          vector<Pos> freeCells;
           eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
@@ -420,11 +420,11 @@ bool KeziahMason::actorSpecificAct() {
 
           eng->mapTests->makeMoveBlockerArray(this, blockers);
 
-          vector<coord> line = eng->mapTests->getLine(pos, eng->player->pos,
+          vector<Pos> line = eng->mapTests->getLine(pos, eng->player->pos,
                                true, 9999);
 
           for(unsigned int i = 0; i < line.size(); i++) {
-            const coord c = line.at(i);
+            const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
               //TODO Make a generalized summoning funtionality
               eng->log->addMessage("Keziah summons Brown Jenkin!");
@@ -535,7 +535,7 @@ bool WormMass::actorSpecificAct() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
-              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + coord(dx, dy));
+              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + Pos(dx, dy));
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 2;
               worm->chanceToSpawnNew = chanceToSpawnNew;
@@ -565,7 +565,7 @@ bool GiantLocust::actorSpecificAct() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             if(blockers[pos.x + dx][pos.y + dy] == false) {
-              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + coord(dx, dy));
+              Actor* const actor = eng->actorFactory->spawnActor(def_->id, pos + Pos(dx, dy));
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
@@ -598,7 +598,7 @@ bool LordOfSpiders::actorSpecificAct() {
 
     if(eng->dice.coinToss()) {
 
-      const coord playerPos = eng->player->pos;
+      const Pos playerPos = eng->player->pos;
 
       if(eng->player->checkIfSeeActor(*this, NULL)) {
         eng->log->addMessage(def_->spellCastMessage);
@@ -609,7 +609,7 @@ bool LordOfSpiders::actorSpecificAct() {
 
           if(eng->dice.percentile() < 75) {
 
-            const coord c(playerPos + coord(dx, dy));
+            const Pos c(playerPos + Pos(dx, dy));
             const FeatureStatic* const mimicFeature = eng->map->featuresStatic[c.x][c.y];
 
             if(mimicFeature->canHaveStaticFeature()) {
@@ -669,7 +669,7 @@ bool MajorClaphamLee::actorSpecificAct() {
         if(checkIfSeeActor(*(eng->player), blockers)) {
           eng->mapTests->makeMoveBlockerArray(this, blockers);
           eng->basicUtils->reverseBoolArray(blockers);
-          vector<coord> freeCells;
+          vector<Pos> freeCells;
           eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 

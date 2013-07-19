@@ -231,6 +231,8 @@
 		<Unit filename="../src/ItemExplosive.h" />
 		<Unit filename="../src/ItemFactory.cpp" />
 		<Unit filename="../src/ItemFactory.h" />
+		<Unit filename="../src/ItemMedicalBag.cpp" />
+		<Unit filename="../src/ItemMedicalBag.h" />
 		<Unit filename="../src/ItemPickup.cpp" />
 		<Unit filename="../src/ItemPickup.h" />
 		<Unit filename="../src/ItemPotion.cpp" />
