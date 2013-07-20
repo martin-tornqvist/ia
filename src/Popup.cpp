@@ -127,9 +127,10 @@ void Popup::showMessage(const string& message,
   }
 }
 
-unsigned int Popup::showMultiChoiceMessage(const string& message,
-    const bool DRAW_MAP_AND_INTERFACE, const vector<string>& choices,
-    const string title) const {
+int Popup::showMultiChoiceMessage(const string& message,
+                                  const bool DRAW_MAP_AND_INTERFACE,
+                                  const vector<string>& choices,
+                                  const string title) const {
 
   vector<string> lines = eng->textFormatting->lineToLines(
                            message, TEXT_AREA_WIDTH);
@@ -152,24 +153,20 @@ unsigned int Popup::showMultiChoiceMessage(const string& message,
         multiChoiceMessageDrawingHelper(
           lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
           TEXT_AREA_HEIGHT, title);
-      }
-      break;
+      } break;
 
       case menuAction_canceled: {
-      }
-      break;
+      } break;
 
       case menuAction_selected: {
         if(DRAW_MAP_AND_INTERFACE) {
           eng->renderer->drawMapAndInterface();
         }
         return browser.getPos().y;
-      }
-      break;
+      } break;
 
       case menuAction_selectedWithShift: {
-      }
-      break;
+      } break;
     }
   }
 }

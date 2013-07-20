@@ -80,6 +80,15 @@ void CharacterLines::drawInfoLines() {
   eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
   pos.x += str.length() + 1;
 
+  //Wounds
+//  const string wnd = "0"; //intToString(eng->player->getNrWounds());
+//  const string wndMax = "5"; //intToString(eng->player->getWndMax());
+//  eng->renderer->drawText("WND:", panel_character, pos, clrGenDrk);
+//  pos.x += 4;
+//  str = wnd + "/" + wndMax;
+//  eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
+//  pos.x += str.length() + 1;
+
   //Sanity
   const int SHOCK = eng->player->getShockTotal();
   const int INS = eng->player->getInsanity();
@@ -98,16 +107,6 @@ void CharacterLines::drawInfoLines() {
   pos.x += 4;
   str = intToString(MTH) + "%";
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
-  pos.x += str.length() + 1;
-
-  //Encumbrance
-  eng->renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
-  pos.x += 4;
-  const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
-  const int MAX_W = eng->player->getCarryWeightLimit();
-  const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
-  str = intToString(ENC) + "%";
-  eng->renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   pos.x += str.length() + 1;
 
   //Wielded weapon
@@ -135,16 +134,16 @@ void CharacterLines::drawInfoLines() {
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
-  DungeonMaster* const dm = eng->dungeonMaster;
+//  DungeonMaster* const dm = eng->dungeonMaster;
 
   //Level and xp
-  str = "LVL:" + intToString(dm->getLevel());
-  eng->renderer->drawText(str, panel_character, pos, clrGenDrk);
-  pos.x += str.length() + 1;
-  str = "NXT:";
-  str += dm->getLevel() >= PLAYER_CLVL_MAX ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
-  pos.x += str.length() + 1;
+//  str = "LVL:" + intToString(dm->getLevel());
+//  eng->renderer->drawText(str, panel_character, pos, clrGenDrk);
+//  pos.x += str.length() + 1;
+//  str = "NXT:";
+//  str += dm->getLevel() >= PLAYER_CLVL_MAX ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
+//  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+//  pos.x += str.length() + 1;
 
   //Armor
   eng->renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
@@ -158,6 +157,16 @@ void CharacterLines::drawInfoLines() {
     eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
     pos.x += str.length() + 1;
   }
+
+  //Encumbrance
+  eng->renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
+  pos.x += 4;
+  const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
+  const int MAX_W = eng->player->getCarryWeightLimit();
+  const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
+  str = intToString(ENC) + "%";
+  eng->renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
+  pos.x += str.length() + 1;
 
   //Missile weapon
   pos.x = X_POS_MISSILE;
@@ -178,7 +187,8 @@ void CharacterLines::drawInfoLines() {
   const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
   for(unsigned int i = 0; i < effects.size(); i++) {
     StatusEffect* const effect = effects.at(i);
-    const SDL_Color statusColor = effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
+    const SDL_Color statusColor =
+      effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
     string statusText = effect->getInterfaceName();
     if(IS_SELF_AWARE) {
       if(effect->allowDisplayTurnsInInterface()) {

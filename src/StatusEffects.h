@@ -26,6 +26,7 @@ enum StatusEffects_t {
   statusConfused,
   statusWaiting,
   statusSlowed,
+  statusInfected,
   statusDiseased,
   statusPoisoned,
   statusFainted,
@@ -180,6 +181,8 @@ public:
 
   void newTurn(Engine* const engine) {(void)engine;}
 
+  void healOneWound(Engine* const engine);
+
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 1, 0);}
   int nrWounds;
@@ -284,9 +287,51 @@ private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 50, 100);}
 };
 
+class StatusInfected: public StatusEffect {
+public:
+  StatusInfected(Engine* const engine) : StatusEffect(statusInfected) {
+    setTurnsFromRandomStandard(engine);
+  }
+  ~StatusInfected() {}
+
+  StatusInfected* copy() {
+    StatusInfected* cpy = new StatusInfected(turnsLeft);
+    return cpy;
+  }
+
+  bool isMakingOwnerAwareOfPlayer()   {return false;}
+  bool isConsideredBeneficial()       {return false;}
+  bool allowDisplayTurnsInInterface() {return true;}
+
+  string getInterfaceName()       {return "Infected";}
+  string messageWhenStart()       {return "I am infected!";}
+  string messageWhenStartOther()  {return "is infected.";}
+  string messageWhenMore()        {return "I am more infected.";}
+  string messageWhenMoreOther()   {return "is more infected.";}
+  string messageWhenEnd()         {return "My infection is cured!";}
+  string messageWhenSaves()       {return "I resist infection.";}
+  string messageWhenSavesOther()  {return "resists infection.";}
+  string messageWhenEndOther()    {return "is no longer infected.";}
+
+  Abilities_t getSaveAbility() {return ability_resistStatusBody;}
+  int getSaveAbilityModifier() {return 10;}
+
+  void start(Engine* const engine)  {(void)engine;}
+  void end(Engine* const engine)    {(void)engine;}
+
+  void newTurn(Engine* const engine);
+
+private:
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 20, 100);}
+  friend class StatusEffectsHandler;
+  StatusInfected(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
+};
+
 class StatusDiseased: public StatusEffect {
 public:
-  StatusDiseased(Engine* const engine) : StatusEffect(statusDiseased) {setTurnsFromRandomStandard(engine);}
+  StatusDiseased(Engine* const engine) : StatusEffect(statusDiseased) {
+    setTurnsFromRandomStandard(engine);
+  }
   ~StatusDiseased() {}
 
   StatusDiseased* copy() {
@@ -313,9 +358,7 @@ public:
 
   void start(Engine* const engine);
 
-  void end(Engine* const engine) {
-    (void)engine;
-  }
+  void end(Engine* const engine) {(void)engine;}
 
   void newTurn(Engine* const engine);
 
@@ -1976,6 +2019,15 @@ public:
       }
     }
     return false;
+  }
+
+  StatusEffect* getEffect(const StatusEffects_t effect) const {
+    for(unsigned int i = 0; i < effects.size(); i++) {
+      if(effects.at(i)->getEffectId() == effect) {
+        return effects.at(i);
+      }
+    }
+    return NULL;
   }
 
   bool hasAnyBadEffect() const {

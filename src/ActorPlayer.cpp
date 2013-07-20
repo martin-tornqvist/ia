@@ -365,10 +365,10 @@ void Player::incrInsanity() {
         }
         break;
         case 5: {
-          popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
-          eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
-          eng->dungeonMaster->playerLoseXpPercent(10);
-          return;
+//          popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
+//          eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
+//          eng->dungeonMaster->playerLoseXpPercent(10);
+//          return;
         }
         break;
         case 6: {

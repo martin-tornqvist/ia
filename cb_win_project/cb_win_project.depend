@@ -78,7 +78,7 @@
 
 1348417067 c:\dev\ia\src\spawncounter.h
 
-1373653949 c:\dev\ia\src\statuseffects.h
+1374311607 c:\dev\ia\src\statuseffects.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -254,7 +254,7 @@
 	"Config.h"
 	"Colors.h"
 
-1371590797 c:\dev\ia\src\dungeonmaster.h
+1374358470 c:\dev\ia\src\dungeonmaster.h
 	<iostream>
 	<math.h>
 	"CommonTypes.h"
@@ -436,7 +436,7 @@
 1339441486 source:c:\dev\ia\src\actorooze.cpp
 	"monsterIncludeFiles.h"
 
-1373892029 source:c:\dev\ia\src\actorplayer.cpp
+1374358309 source:c:\dev\ia\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -473,7 +473,7 @@
 1364421674 c:\dev\ia\src\inventoryhandler.h
 	"Inventory.h"
 
-1364147511 c:\dev\ia\src\popup.h
+1374238373 c:\dev\ia\src\popup.h
 	<vector>
 	<string>
 
@@ -733,7 +733,7 @@
 	<vector>
 	"ItemData.h"
 
-1372796496 source:c:\dev\ia\src\dungeonmaster.cpp
+1374358498 source:c:\dev\ia\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -1544,7 +1544,7 @@
 	"ActorPlayer.h"
 	"FeatureFactory.h"
 
-1372955215 source:c:\dev\ia\src\popup.cpp
+1374239996 source:c:\dev\ia\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Render.h"
@@ -1668,7 +1668,7 @@
 	"Map.h"
 	"ActorFactory.h"
 
-1373470069 source:c:\dev\ia\src\statuseffects.cpp
+1374312452 source:c:\dev\ia\src\statuseffects.cpp
 	"StatusEffects.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -1731,7 +1731,7 @@
 	"PlayerPowersHandler.h"
 	"ItemScroll.h"
 
-1373284085 source:c:\dev\ia\src\main.cpp
+1374311031 source:c:\dev\ia\src\main.cpp
 	<cassert>
 	"Engine.h"
 	"MainMenu.h"
@@ -10822,7 +10822,7 @@
 	<vector>
 	"CommonTypes.h"
 
-1373284122 source:c:\dev\ia\src\characterlines.cpp
+1374244821 source:c:\dev\ia\src\characterlines.cpp
 	"CharacterLines.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -10846,7 +10846,7 @@
 1373891997 c:\dev\ia\src\itemmedicalbag.h
 	"Item.h"
 
-1373814570 source:c:\dev\ia\src\itemmedicalbag.cpp
+1374311825 source:c:\dev\ia\src\itemmedicalbag.cpp
 	"ItemMedicalBag.h"
 	"Engine.h"
 	"StatusEffects.h"
@@ -10855,4 +10855,5 @@
 	"Render.h"
 	"Inventory.h"
 	"PlayerBonuses.h"
+	"Popup.h"
 

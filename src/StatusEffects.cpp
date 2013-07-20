@@ -28,13 +28,27 @@ void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
 void StatusBlessed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusCursed, visionBlockers, false);
+  owningActor->getStatusEffectsHandler()->endEffect(
+    statusCursed, visionBlockers, false);
 }
 
 void StatusCursed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlessed, visionBlockers, false);
+  owningActor->getStatusEffectsHandler()->endEffect(
+    statusBlessed, visionBlockers, false);
+}
+
+void StatusInfected::newTurn(Engine* const engine) {
+  if(engine->dice.percentile() <= 4) {
+    owningActor->getStatusEffectsHandler()->tryAddEffect(
+      new StatusDiseased(engine));
+    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+
+    engine->mapTests->makeVisionBlockerArray(owningActor->pos, visionBlockers);
+    owningActor->getStatusEffectsHandler()->endEffect(
+      statusInfected, visionBlockers, false);
+  }
 }
 
 void StatusDiseased::start(Engine* const engine) {
@@ -81,6 +95,20 @@ bool StatusTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
 bool StatusTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
+}
+
+void StatusWound::healOneWound(Engine* const engine) {
+  tracer << "StatusWound: Nr wounds before healing one: " << nrWounds << endl;
+  if(--nrWounds > 0) {
+    engine->log->addMessage("A wound is healed!", clrMessageGood);
+  } else {
+    engine->log->addMessage("All my wounds are healed!", clrMessageGood);
+    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+    engine->mapTests->makeVisionBlockerArray(
+      engine->player->pos, visionBlockers);
+    owningActor->getStatusEffectsHandler()->endEffect(
+      statusWound, visionBlockers, false);
+  }
 }
 
 void StatusWound::more() {
@@ -328,6 +356,7 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(
     case statusConfused:          return new StatusConfused(TURNS_LEFT);              break;
     case statusWaiting:           return new StatusWaiting(TURNS_LEFT);               break;
     case statusSlowed:            return new StatusSlowed(TURNS_LEFT);                break;
+    case statusInfected:          return new StatusInfected(TURNS_LEFT);              break;
     case statusDiseased:          return new StatusDiseased(TURNS_LEFT);              break;
     case statusPoisoned:          return new StatusPoisoned(TURNS_LEFT);              break;
     case statusFainted:           return new StatusFainted(TURNS_LEFT);               break;

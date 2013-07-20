@@ -7,6 +7,7 @@
 #include "Render.h"
 #include "Inventory.h"
 #include "PlayerBonuses.h"
+#include "Popup.h"
 
 bool MedicalBag::activateDefault(Actor* const actor,
                                  Engine* const engine) {
@@ -14,54 +15,119 @@ bool MedicalBag::activateDefault(Actor* const actor,
 
   curAction_ = playerChooseAction(engine);
 
-  if(curAction_ == endOfMedicalBagActions) {
+  if(curAction_ != endOfMedicalBagActions) {
+    //Check if chosen action can be done
+    const StatusEffectsHandler* const status =
+      engine->player->getStatusEffectsHandler();
+    switch(curAction_) {
+      case medicalBagAction_sanitizeInfection: {
+        if(status->hasEffect(statusInfected) == false) {
+          engine->log->addMessage("I have no infections to sanitize.");
+          curAction_ = endOfMedicalBagActions;
+        }
+      } break;
 
-  } else {
-    nrTurnsLeft_ = getTotTurnsForAction(curAction_, engine);
-    engine->player->activeMedicalBag = this;
-    engine->gameTime->endTurnOfCurrentActor();
+      case medicalBagAction_treatWound: {
+        if(status->hasEffect(statusWound) == false) {
+          engine->log->addMessage("I have no wounds to treat.");
+          curAction_ = endOfMedicalBagActions;
+        }
+      } break;
+
+      case endOfMedicalBagActions: {} break;
+    }
+
+    if(curAction_ != endOfMedicalBagActions) {
+      if(getNrSuppliesNeededForAction(curAction_, engine) > nrSupplies_) {
+        engine->log->addMessage("I do not have enough supplies for that.");
+        curAction_ = endOfMedicalBagActions;
+      }
+    }
+
+    if(curAction_ != endOfMedicalBagActions) {
+      //Action can be done
+      nrTurnsLeft_ = getTotTurnsForAction(curAction_, engine);
+      engine->player->activeMedicalBag = this;
+      engine->gameTime->endTurnOfCurrentActor();
+    }
   }
 
   return false;
 }
 
 MedicalBagAction_t MedicalBag::playerChooseAction(Engine* const engine) const {
+  vector<string> choiceLabels;
+  for(int actionNr = 0; actionNr < endOfMedicalBagActions; actionNr++) {
+    string label = "";
+    switch(actionNr) {
+      case medicalBagAction_sanitizeInfection: {
+        label = "Sanitize infection";
+      } break;
 
+      case medicalBagAction_treatWound: {
+        label = "Treat wound";
+      } break;
+    }
+
+    const int NR_TURNS_NEEDED =
+      getTotTurnsForAction(MedicalBagAction_t(actionNr), engine);
+    const int NR_SUPPL_NEEDED =
+      getNrSuppliesNeededForAction(MedicalBagAction_t(actionNr), engine);
+    label += " (" + intToString(NR_SUPPL_NEEDED) + " suppl";
+    label += "/"  + intToString(NR_TURNS_NEEDED) + " turns)";
+    choiceLabels.push_back(label);
+  }
+  choiceLabels.push_back("Cancel");
+
+  const string nrSuppliesMsg =
+    intToString(nrSupplies_) + " medical supplies available.";
+
+  return MedicalBagAction_t(engine->popup->showMultiChoiceMessage(
+                              nrSuppliesMsg, true, choiceLabels,
+                              "Use medical bag"));
 }
 
 void MedicalBag::continueAction(Engine* const engine) {
   nrTurnsLeft_--;
   if(nrTurnsLeft_ <= 0) {
-
     finishCurAction(engine);
-
-    engine->player->activeMedicalBag = NULL;
-    curAction_ = endOfMedicalBagActions;
-
-    if(nrSupplies_ <= 0) {
-      Inventory* const inv = engine->player->getInventory();
-      inv->removetemInGeneralWithPointer(this, true);
-    }
-
   } else {
     engine->gameTime->endTurnOfCurrentActor();
   }
 }
 
 void MedicalBag::finishCurAction(Engine* const engine) {
+  engine->player->activeMedicalBag = NULL;
+
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
     } break;
 
     case medicalBagAction_treatWound: {
+      StatusEffect* effect =
+        engine->player->getStatusEffectsHandler()->getEffect(statusWound);
+      if(effect == NULL) {
+        tracer << "[WARNING] No wound status effect found, ";
+        tracer << "in MedicalBag::finishCurAction()" << endl;
+      } else {
+        StatusWound* wound = dynamic_cast<StatusWound*>(effect);
+        wound->healOneWound(engine);
+      }
 //        engine->log->clearLog();
 //        engine->log->addMessage("I finish applying first aid.");
 //        engine->renderer->drawMapAndInterface();
     } break;
 
-    case endOfMedicalBagActions: {
-      //Should not happen
-    } break;
+    case endOfMedicalBagActions: {} break;
+  }
+
+  nrSupplies_ -= getNrSuppliesNeededForAction(curAction_, engine);
+
+  curAction_ = endOfMedicalBagActions;
+
+  if(nrSupplies_ <= 0) {
+    Inventory* const inv = engine->player->getInventory();
+    inv->removetemInGeneralWithPointer(this, true);
   }
 }
 
