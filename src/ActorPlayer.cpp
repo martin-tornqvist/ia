@@ -324,7 +324,7 @@ void Player::incrInsanity() {
     //When long term sanity decreases something happens (mostly bad)
     //(Reroll until something actually happens)
     for(int attempts = 0; attempts < 10000; attempts++) {
-      const int ROLL = eng->dice(1, 9);
+      const int ROLL = eng->dice(1, 8);
       switch(ROLL) {
         case 1: {
           if(playerSeeShockingMonster) {
@@ -337,8 +337,7 @@ void Player::incrInsanity() {
             eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
             return;
           }
-        }
-        break;
+        } break;
         case 2: {
           popupMessage += "I find myself babbling incoherently.";
           eng->popup->showMessage(popupMessage, true, "Babbling!");
@@ -348,30 +347,20 @@ void Player::incrInsanity() {
           }
           eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
           return;
-        }
-        break;
+        } break;
         case 3: {
           popupMessage += "I struggle to not fall into a stupor.";
           eng->popup->showMessage(popupMessage, true, "Fainting!");
           statusEffectsHandler_->tryAddEffect(new StatusFainted(eng));
           return;
-        }
-        break;
+        } break;
         case 4: {
           popupMessage += "I laugh nervously.";
           eng->popup->showMessage(popupMessage, true, "HAHAHA!");
           eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
           return;
-        }
-        break;
+        } break;
         case 5: {
-//          popupMessage += "Thanks to the mercy of the mind, some past experiences are forgotten (lost 10% of current XP).";
-//          eng->popup->showMessage(popupMessage, true, "Suppressing memories!");
-//          eng->dungeonMaster->playerLoseXpPercent(10);
-//          return;
-        }
-        break;
-        case 6: {
           if(insanity_ > 5) {
             //There is a limit to the number of phobias you can have
             int phobiasActive = 0;
@@ -440,10 +429,9 @@ void Player::incrInsanity() {
               }
             }
           }
-        }
-        break;
+        } break;
 
-        case 7: {
+        case 6: {
           if(insanity_ > 20) {
             int obsessionsActive = 0;
             for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
@@ -461,8 +449,7 @@ void Player::incrInsanity() {
                   eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
                   insanityObsessions[insanityObsession_masochism] = true;
                   return;
-                }
-                break;
+                } break;
                 case insanityObsession_sadism: {
                   popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
                   popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
@@ -470,18 +457,14 @@ void Player::incrInsanity() {
                   eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
                   insanityObsessions[insanityObsession_sadism] = true;
                   return;
-                }
-                break;
-                default: {
-                }
-                break;
+                } break;
+                default: {} break;
               }
             }
           }
-        }
-        break;
+        } break;
 
-        case 8: {
+        case 7: {
           if(insanity_ > 8) {
             popupMessage += "The shadows are closing in on me!";
             eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
@@ -517,22 +500,18 @@ void Player::incrInsanity() {
             }
             return;
           }
-        }
-        break;
+        } break;
 
-        case 9: {
+        case 8: {
           if(eng->playerBonHandler->isBonPicked(playerBon_selfAware) == false) {
             popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
             eng->popup->showMessage(popupMessage, true, "Confusion!");
             statusEffectsHandler_->tryAddEffect(new StatusConfused(eng), true);
             return;
           }
-        }
-        break;
+        } break;
 
-        default: {
-        }
-        break;
+        default: {} break;
       }
     }
   }

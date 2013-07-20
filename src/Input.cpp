@@ -350,7 +350,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng->player->spotedEnemies.size() == 0) {
         const int TURNS_TO_APPLY = 10;
         const string TURNS_STR = intToString(TURNS_TO_APPLY);
-        eng->log->addMessage("I pause for a while and search around (" + TURNS_STR + " turns).");
+        eng->log->addMessage("I pause for a while (" + TURNS_STR + " turns).");
         eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         eng->gameTime->endTurnOfCurrentActor();
       } else {
@@ -494,16 +494,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     return;
   }
-  //----------------------------------------XP CHEAT
-  else if(d.sdlKey_ == SDLK_F3) {
-    if(IS_DEBUG_MODE) {
-      eng->dungeonMaster->playerGainsExp(500);
-      clearEvents();
-    }
-    return;
-  }
   //----------------------------------------VISION CHEAT
-  else if(d.sdlKey_ == SDLK_F4) {
+  else if(d.sdlKey_ == SDLK_F3) {
     if(IS_DEBUG_MODE) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -519,7 +511,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
   }
   //----------------------------------------INSANITY CHEAT
-  else if(d.sdlKey_ == SDLK_F5) {
+  else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       eng->player->incrShock(50);
       clearEvents();
@@ -527,7 +519,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------MTH CHEAT
-  else if(d.sdlKey_ == SDLK_F6) {
+  else if(d.sdlKey_ == SDLK_F5) {
     if(IS_DEBUG_MODE) {
       eng->player->incrMth(8);
       clearEvents();
@@ -535,7 +527,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sdlKey_ == SDLK_F7) {
+  else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDefinition* const def = eng->itemData->itemDefinitions[i];

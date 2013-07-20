@@ -185,76 +185,76 @@ void MapBuild::buildForestTrees(const Pos& stairsPos) {
   }
 
   //Place graves
-  vector<HighScoreEntry> highscoreEntries = eng->highScore->getEntriesSorted();
-  const unsigned PLACE_TOP_N_HIGHSCORES = 7;
-  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
-  if(NR_HIGHSCORES > 0) {
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
-
-    bool vision[MAP_X_CELLS][MAP_Y_CELLS];
-
-    const int SEARCH_RADI = FOV_STANDARD_RADI_INT - 2;
-    const int TRY_PLACE_EVERY_N_STEP = 2;
-
-    vector<Pos> gravePositions;
-
-    int pathWalkCount = 0;
-    for(unsigned int i = 0; i < path.size(); i++) {
-      if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
-
-        eng->fov->runFovOnArray(blockers, path.at(i), vision, false);
-
-        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; dy++) {
-          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; dx++) {
-
-            const int X = path.at(i).x + dx;
-            const int Y = path.at(i).y + dy;
-
-            const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
-            const bool IS_ON_STONE_PATH = eng->map->featuresStatic[X][Y]->getId() == feature_forestPath;
-
-            bool isLeftOfPrev = true;
-            if(gravePositions.empty() == false) {
-              isLeftOfPrev = X < gravePositions.back().x;
-            }
-
-            bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH && IS_ON_STONE_PATH == false && isLeftOfPrev;
-
-            if(isPosOk) {
-              for(int dy_small = -1; dy_small <= 1; dy_small++) {
-                for(int dx_small = -1; dx_small <= 1; dx_small++) {
-                  if(blockers[X + dx_small][Y + dy_small]) {
-                    isPosOk = false;
-                  }
-                }
-              }
-              if(isPosOk) {
-                gravePositions.push_back(Pos(X, Y));
-                blockers[X][Y] = true;
-                if(gravePositions.size() == static_cast<unsigned int>(NR_HIGHSCORES)) {
-                  i = 9999;
-                }
-                dy = 99999;
-                dx = 99999;
-              }
-            }
-          }
-        }
-        pathWalkCount = 0;
-      }
-      pathWalkCount++;
-    }
-    for(unsigned int i = 0; i < gravePositions.size(); i++) {
-      Feature* f = eng->featureFactory->spawnFeatureAt(feature_gravestone, gravePositions.at(i));
-      Grave* const grave = dynamic_cast<Grave*>(f);
-      HighScoreEntry curHighscore = highscoreEntries.at(i);
-      const string name = curHighscore.getName();
-      const string date = eng->textFormatting->getSpaceSeparatedList(curHighscore.getDateAndTime()).at(0);
-      const string score = intToString(curHighscore.getScore());
-      grave->setInscription("RIP " + name + " " + date + " Score: " + score);
-    }
-  }
+//  vector<HighScoreEntry> highscoreEntries = eng->highScore->getEntriesSorted();
+//  const unsigned PLACE_TOP_N_HIGHSCORES = 7;
+//  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
+//  if(NR_HIGHSCORES > 0) {
+//    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+//
+//    bool vision[MAP_X_CELLS][MAP_Y_CELLS];
+//
+//    const int SEARCH_RADI = FOV_STANDARD_RADI_INT - 2;
+//    const int TRY_PLACE_EVERY_N_STEP = 2;
+//
+//    vector<Pos> gravePositions;
+//
+//    int pathWalkCount = 0;
+//    for(unsigned int i = 0; i < path.size(); i++) {
+//      if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
+//
+//        eng->fov->runFovOnArray(blockers, path.at(i), vision, false);
+//
+//        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; dy++) {
+//          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; dx++) {
+//
+//            const int X = path.at(i).x + dx;
+//            const int Y = path.at(i).y + dy;
+//
+//            const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
+//            const bool IS_ON_STONE_PATH = eng->map->featuresStatic[X][Y]->getId() == feature_forestPath;
+//
+//            bool isLeftOfPrev = true;
+//            if(gravePositions.empty() == false) {
+//              isLeftOfPrev = X < gravePositions.back().x;
+//            }
+//
+//            bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH && IS_ON_STONE_PATH == false && isLeftOfPrev;
+//
+//            if(isPosOk) {
+//              for(int dy_small = -1; dy_small <= 1; dy_small++) {
+//                for(int dx_small = -1; dx_small <= 1; dx_small++) {
+//                  if(blockers[X + dx_small][Y + dy_small]) {
+//                    isPosOk = false;
+//                  }
+//                }
+//              }
+//              if(isPosOk) {
+//                gravePositions.push_back(Pos(X, Y));
+//                blockers[X][Y] = true;
+//                if(gravePositions.size() == static_cast<unsigned int>(NR_HIGHSCORES)) {
+//                  i = 9999;
+//                }
+//                dy = 99999;
+//                dx = 99999;
+//              }
+//            }
+//          }
+//        }
+//        pathWalkCount = 0;
+//      }
+//      pathWalkCount++;
+//    }
+//    for(unsigned int i = 0; i < gravePositions.size(); i++) {
+//      Feature* f = eng->featureFactory->spawnFeatureAt(feature_gravestone, gravePositions.at(i));
+//      Grave* const grave = dynamic_cast<Grave*>(f);
+//      HighScoreEntry curHighscore = highscoreEntries.at(i);
+//      const string name = curHighscore.getName();
+//      const string date = eng->textFormatting->getSpaceSeparatedList(curHighscore.getDateAndTime()).at(0);
+//      const string score = intToString(curHighscore.getScore());
+//      grave->setInscription("RIP " + name + " " + date + " Score: " + score);
+//    }
+//  }
 }
 
 void MapBuild::buildForest() {

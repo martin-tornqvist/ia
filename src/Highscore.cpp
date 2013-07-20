@@ -40,8 +40,6 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   HighScoreEntry currentPlayer(
     eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true),
     eng->player->getNameA(),
-//    eng->dungeonMaster->getXp(),
-//    eng->dungeonMaster->getLevel(),
     eng->map->getDungeonLevel(),
     eng->player->getInsanity(),
     IS_VICTORY);
@@ -103,7 +101,6 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       const string dateAndTime = entries.at(i).getDateAndTime();
       const string name = entries.at(i).getName();
       const string SCORE = intToString(entries.at(i).getScore());
-      const string LVL = intToString(entries.at(i).getLvl());
       const string DLVL = intToString(entries.at(i).getDlvl());
       const string INSANITY = intToString(entries.at(i).getInsanity());
 
@@ -114,8 +111,6 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
         name, panel_screen, Pos(X_POS_NAME, yPos), clr);
       eng->renderer->drawText(
         SCORE, panel_screen, Pos(X_POS_SCORE, yPos), clr);
-      eng->renderer->drawText(
-        LVL, panel_screen, Pos(X_POS_LVL, yPos), clr);
       eng->renderer->drawText(
         DLVL, panel_screen, Pos(X_POS_DLVL, yPos), clr);
       eng->renderer->drawText(
@@ -181,8 +176,6 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
     file << VICTORY_STR << endl;
     file << entry.getDateAndTime() << endl;
     file << entry.getName() << endl;
-    file << entry.getXp() << endl;
-    file << entry.getLvl() << endl;
     file << entry.getDlvl() << endl;
     file << entry.getInsanity() << endl;
   }
@@ -210,7 +203,7 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       getline(file, line);
       const int INSANITY = stringToInt(line);
       entries.push_back(
-        HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INSANITY, isVictory));
+        HighScoreEntry(dateAndTime, name, DLVL, INSANITY, isVictory));
     }
     file.close();
   }

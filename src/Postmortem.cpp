@@ -32,12 +32,6 @@ void Postmortem::makeInfoLines() {
     StringAndClr(" " + eng->player->getNameA(), clrHeading));
 
   postmortemLines.push_back(
-    StringAndClr("   * Advanced to character level " +
-                 intToString(eng->dungeonMaster->getLevel()), clrInfo));
-  postmortemLines.push_back(
-    StringAndClr("   * Gained " + intToString(eng->dungeonMaster->getXp()) +
-                 " experience points", clrInfo));
-  postmortemLines.push_back(
     StringAndClr("   * Explored to the depth of dungeon level " +
                  intToString(eng->map->getDungeonLevel()), clrInfo));
   postmortemLines.push_back(
@@ -345,9 +339,9 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   const string NAME_STR = eng->player->getDef()->name_a;
   eng->renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
-  pos.y += 2;
-  const string LVL_STR = "LVL " + intToString(eng->dungeonMaster->getLevel());
-  eng->renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
+//  pos.y += 2;
+//  const string LVL_STR = "LVL " + intToString(eng->dungeonMaster->getLevel());
+//  eng->renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
 
   //Draw command labels
   pos.set(55, 14);
