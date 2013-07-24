@@ -618,6 +618,57 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
   updateScreen();
 }
 
+void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
+                            const SDL_Color& clr) {
+  const bool IS_TILES = eng->config->isTilesMode;
+
+//   eng->renderer->drawGlyph('#', panel_map, pos, clrBox);
+//eng->renderer->drawGlyph('=', panel_map, pos, clrBox);
+//eng->renderer->drawGlyph('|', panel_map, pos, clrBox);
+
+  //Vertical bars
+  const int Y0_VERT = border.x0y0.y + 1;
+  const int Y1_VERT = border.x1y1.y - 1;
+  for(int y = Y0_VERT; y <= Y1_VERT; y++) {
+    if(IS_TILES) {
+      drawTile(tile_popupVerticalBar,
+               panel, Pos(border.x0y0.x, y), clr, clrBlack);
+      drawTile(tile_popupVerticalBar,
+               panel, Pos(border.x1y1.x, y), clr, clrBlack);
+    } else {
+
+    }
+  }
+
+  //Horizontal bars
+  const int X0_VERT = border.x0y0.x + 1;
+  const int X1_VERT = border.x1y1.x - 1;
+  for(int x = X0_VERT; x <= X1_VERT; x++) {
+    if(IS_TILES) {
+      drawTile(tile_popupHorizontalBar,
+               panel, Pos(x, border.x0y0.y), clr, clrBlack);
+      drawTile(tile_popupHorizontalBar,
+               panel, Pos(x, border.x1y1.y), clr, clrBlack);
+    } else {
+
+    }
+  }
+
+  //Corners
+  if(IS_TILES) {
+    drawTile(tile_popupCornerTopLeft,
+             panel, Pos(border.x0y0.x, border.x0y0.y), clr, clrBlack);
+    drawTile(tile_popupCornerTopRight,
+             panel, Pos(border.x1y1.x, border.x0y0.y), clr, clrBlack);
+    drawTile(tile_popupCornerBottomLeft,
+             panel, Pos(border.x0y0.x, border.x1y1.y), clr, clrBlack);
+    drawTile(tile_popupCornerBottomRight,
+             panel, Pos(border.x1y1.x, border.x1y1.y), clr, clrBlack);
+  } else {
+
+  }
+}
+
 void Renderer::drawMapAndInterface(const bool UPDATE_SCREEN) {
   clearScreen();
 
@@ -811,9 +862,7 @@ void Renderer::drawAscii() {
         renderArrayAscii[x][y] = eng->map->playerVisualMemoryAscii[x][y];
         tempDrw = renderArrayAscii[x][y];
 
-        tempDrw.color.r /= 4;
-        tempDrw.color.g /= 4;
-        tempDrw.color.b /= 4;
+        tempDrw.color.r /= 4; tempDrw.color.g /= 4; tempDrw.color.b /= 4;
       }
 
       Pos pos(x, y);
@@ -988,12 +1037,8 @@ void Renderer::drawTiles() {
         renderArrayTiles[x][y] = eng->map->playerVisualMemoryTiles[x][y];
         tempDrw = renderArrayTiles[x][y];
 
-        tempDrw.color.r /= 4;
-        tempDrw.color.g /= 4;
-        tempDrw.color.b /= 4;
-        tempDrw.colorBg.r /= 4;
-        tempDrw.colorBg.g /= 4;
-        tempDrw.colorBg.b /= 4;
+        tempDrw.color.r /= 4; tempDrw.color.g /= 4; tempDrw.color.b /= 4;
+        tempDrw.colorBg.r /= 4; tempDrw.colorBg.g /= 4; tempDrw.colorBg.b /= 4;
       }
 
       //Walls are given perspective.

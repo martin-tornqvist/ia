@@ -281,8 +281,6 @@
 		<Unit filename="../src/Panel.h" />
 		<Unit filename="../src/Pathfinding.cpp" />
 		<Unit filename="../src/Pathfinding.h" />
-		<Unit filename="../src/PlayerAllocBonus.cpp" />
-		<Unit filename="../src/PlayerAllocBonus.h" />
 		<Unit filename="../src/PlayerBonuses.cpp" />
 		<Unit filename="../src/PlayerBonuses.h" />
 		<Unit filename="../src/PlayerCreateCharacter.cpp" />

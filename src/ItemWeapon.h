@@ -65,9 +65,7 @@ public:
     if(def_->isRangedWeapon && def_->rangedHasInfiniteAmmo == false) {
       if(ammoLoaded == 0) {
         SDL_Color ret = def_->color;
-        ret.r /= 2;
-        ret.g /= 2;
-        ret.b /= 2;
+        ret.r /= 2; ret.g /= 2; ret.b /= 2;
         return ret;
       }
     }

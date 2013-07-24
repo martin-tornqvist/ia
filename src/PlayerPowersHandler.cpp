@@ -114,9 +114,7 @@ void PlayerPowersHandler::draw(MenuBrowser& browser,
       fill.push_back('.');
     }
     SDL_Color fillClr = clrGray;
-    fillClr.r /= 3;
-    fillClr.g /= 3;
-    fillClr.b /= 3;
+    fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     eng->renderer->drawText(
       fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
     const int x = 28;

@@ -8,7 +8,6 @@
 #include "ActorPlayer.h"
 #include "CharacterLines.h"
 #include "Log.h"
-#include "PlayerAllocBonus.h"
 
 void DungeonMaster::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(timeStarted.year_));

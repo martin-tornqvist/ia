@@ -258,21 +258,21 @@ void Config::draw(const MenuBrowser* const browser,
 
   string str = "";
 
-  eng->renderer->drawText("-OPTIONS-", panel_screen, Pos(X0, Y0 - 1), clrWhite);
+  eng->renderer->drawText("-Options-", panel_screen, Pos(X0, Y0 - 1), clrWhite);
 
-  eng->renderer->drawText("USE TILE SET", panel_screen, Pos(X0, Y0 + optionNr),
+  eng->renderer->drawText("Use tile set", panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = isTilesMode ? "YES" : "NO";
+  str = isTilesMode ? "Yes" : "No";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  eng->renderer->drawText("FONT", panel_screen, Pos(X0, Y0 + optionNr),
+  eng->renderer->drawText("Font", panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
@@ -283,70 +283,70 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  eng->renderer->drawText("SCALE FONT 2X", panel_screen, Pos(X0, Y0 + optionNr),
+  eng->renderer->drawText("Scale font 2x", panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = fontScale == 2 ? "YES" : "NO";
+  str = fontScale == 2 ? "Yes" : "No";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  eng->renderer->drawText("FULLSCREEN (experimental)", panel_screen,
+  eng->renderer->drawText("Fullscreen (experimental)", panel_screen,
                           Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(isFullscreen ? "YES" : "NO",
+  eng->renderer->drawText(isFullscreen ? "Yes" : "No",
                           panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "ASCII MODE WALL SYMBOL";
+  str = "Ascii mode wall symbol";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = isAsciiWallSymbolFullSquare ? "FULL SQUARE" : "HASH SIGN";
+  str = isAsciiWallSymbolFullSquare ? "Full square" : "Hash sign";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  eng->renderer->drawText("SKIP INTRO LEVEL", panel_screen,
+  eng->renderer->drawText("Skip intro level", panel_screen,
                           Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = isIntroLevelSkipped ? "YES" : "NO";
+  str = isIntroLevelSkipped ? "Yes" : "No";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "RANGED WEAPON MELEE ATTACK WARNING";
+  str = "Ranged weapon melee attack warning";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = useRangedWpnMleeePrompt ? "YES" : "NO";
+  str = useRangedWpnMleeePrompt ? "Yes" : "No";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "KEY REPEAT DELAY (ms)";
+  str = "Key repeat delay (ms)";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -359,7 +359,7 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "KEY REPEAT INTERVAL (ms)";
+  str = "Key repeat interval (ms)";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -372,7 +372,7 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "PROJECTILE DELAY (ms)";
+  str = "Projectile delay (ms)";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -385,7 +385,7 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "SHOTGUN DELAY (ms)";
+  str = "Shotgun delay (ms)";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -398,7 +398,7 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "EXPLOSION DELAY (ms)";
+  str = "Explosion delay (ms)";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -411,7 +411,7 @@ void Config::draw(const MenuBrowser* const browser,
                           clrActive : clrInactive);
   optionNr++;
 
-  str = "RESET TO DEFAULTS";
+  str = "Reset to defaults";
   eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr + 1),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);

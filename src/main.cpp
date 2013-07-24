@@ -7,7 +7,6 @@
 #include "PlayerBonuses.h"
 #include "PlayerCreateCharacter.h"
 #include "ActorPlayer.h"
-#include "PlayerAllocBonus.h"
 #include "MapBuild.h"
 #include "PopulateMonsters.h"
 #include "DungeonClimb.h"
@@ -55,7 +54,7 @@ int main(int argc, char* argv[]) {
 
       if(ENTRY_TYPE == gameEntry_new) {
         if(engine->config->isBotPlaying) {
-          engine->playerBonHandler->setAllBonusesToPicked();
+          engine->playerBonHandler->setAllBonsToPicked();
           engine->bot->init();
         }
         engine->playerCreateCharacter->run();

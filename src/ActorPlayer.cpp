@@ -208,21 +208,17 @@ void Player::actorSpecific_hit(const int DMG) {
 
 int Player::getCarryWeightLimit() const {
   PlayerBonHandler* const bon = eng->playerBonHandler;
-  const bool IS_TOUGH         = bon->isBonPicked(playerBon_tough);
   const bool IS_RUGGED        = bon->isBonPicked(playerBon_rugged);
   const bool IS_STRONG_BACKED = bon->isBonPicked(playerBon_strongBacked);
   const bool IS_WEAK          = statusEffectsHandler_->hasEffect(statusWeak);
   const int CARRY_WEIGHT_MOD =
-    IS_TOUGH * 10 + IS_RUGGED * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
+    IS_RUGGED * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::getShockResistance() const {
   int ret = 0;
-  if(eng->playerBonHandler->isBonPicked(playerBon_strongMinded)) {
-    ret += 5;
-  }
   if(eng->playerBonHandler->isBonPicked(playerBon_unyielding)) {
     ret += 5;
   }
@@ -1018,12 +1014,8 @@ void Player::moveDirection(const Pos& dir) {
         pos = dest;
 
         PlayerBonHandler* const bon = eng->playerBonHandler;
-        const bool IS_DEXT_PICKED   = bon->isBonPicked(playerBon_dexterous);
-        const bool IS_LITHE_PICKED  = bon->isBonPicked(playerBon_lithe);
-        const bool IS_MOBILE_PICKED = bon->isBonPicked(playerBon_mobile);
-        if(IS_MOBILE_PICKED || IS_DEXT_PICKED || IS_LITHE_PICKED) {
-          const int FREE_MOVE_EVERY_N_TURN =
-            IS_MOBILE_PICKED ? 2 : (IS_LITHE_PICKED ? 4 : 5);
+        if(bon->isBonPicked(playerBon_dexterous)) {
+          const int FREE_MOVE_EVERY_N_TURN = 4;
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
           } else if(nrMovesUntilFreeAction == 0) {

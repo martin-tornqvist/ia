@@ -26,15 +26,11 @@ int AbilityValues::getVal(const Abilities_t ability,
         val += 45;
         if(eng->playerBonHandler->isBonPicked(playerBon_adeptMeleeCombatant))
           val += 15;
-        if(eng->playerBonHandler->isBonPicked(playerBon_masterfulMeleeCombatant))
-          val += 15;
       } break;
 
       case ability_accuracyRanged: {
         val += 50;
         if(eng->playerBonHandler->isBonPicked(playerBon_marksman))
-          val += 15;
-        if(eng->playerBonHandler->isBonPicked(playerBon_sharpshooter))
           val += 15;
       } break;
 
@@ -42,30 +38,22 @@ int AbilityValues::getVal(const Abilities_t ability,
         val += 5;
         if(eng->playerBonHandler->isBonPicked(playerBon_dexterous))
           val += 20;
-        if(eng->playerBonHandler->isBonPicked(playerBon_lithe))
-          val += 20;
       } break;
 
       case ability_dodgeAttack: {
         val += 10;
         if(eng->playerBonHandler->isBonPicked(playerBon_dexterous))
           val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_lithe))
-          val += 20;
       } break;
 
       case ability_resistStatusBody: {
         val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_tough))
-          val += 20;
         if(eng->playerBonHandler->isBonPicked(playerBon_rugged))
           val += 20;
       } break;
 
       case ability_resistStatusMind: {
         val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_strongMinded))
-          val += 20;
         if(eng->playerBonHandler->isBonPicked(playerBon_unyielding))
           val += 20;
       } break;
@@ -73,9 +61,7 @@ int AbilityValues::getVal(const Abilities_t ability,
       case ability_stealth: {
         val += 30;
         if(eng->playerBonHandler->isBonPicked(playerBon_stealthy))
-          val += 45;
-        if(eng->playerBonHandler->isBonPicked(playerBon_imperceptible))
-          val += 20;
+          val += 60;
       } break;
       default: {
       } break;

@@ -124,7 +124,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDirection(Pos(0, 0));
-      if(eng->playerBonHandler->isBonPicked(playerBon_steadyAimer)) {
+      if(eng->playerBonHandler->isBonPicked(playerBon_marksman)) {
         eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusStill(1));
       }
     }

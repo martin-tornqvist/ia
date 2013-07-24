@@ -195,10 +195,6 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       getline(file, line);
       const string name = line;
       getline(file, line);
-      const int XP = stringToInt(line);
-      getline(file, line);
-      const int LVL = stringToInt(line);
-      getline(file, line);
       const int DLVL = stringToInt(line);
       getline(file, line);
       const int INSANITY = stringToInt(line);

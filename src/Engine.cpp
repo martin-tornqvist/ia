@@ -27,7 +27,6 @@
 #include "Credits.h"
 #include "DebugModeStatPrinter.h"
 #include "Disarm.h"
-#include "PlayerAllocBonus.h"
 #include "Map.h"
 #include "DungeonClimb.h"
 #include "DungeonMaster.h"
@@ -151,7 +150,6 @@ void Engine::initGame() {
   mapPatterns = new MapPatterns(this);
   soundEmitter = new SoundEmitter(this);
   featureData = new FeatureData(this);
-  playerAllocBonus = new PlayerAllocBonus(this);
   dungeonMaster = new DungeonMaster(this);
   input = new Input(this, quitToMainMenu_);
   dungeonClimb = new DungeonClimb(this);
@@ -269,7 +267,6 @@ void Engine::cleanupGame() {
   delete popup;
   delete saveHandler;
   delete bresenhamLine;
-  delete playerAllocBonus;
   delete jamWithSpike;
   delete menuInputHandler;
   delete playerPowersHandler;

@@ -17,9 +17,7 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_N
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
   SDL_Color realColorDots = clr;
-  realColorDots.r /= 3;
-  realColorDots.g /= 3;
-  realColorDots.b /= 3;
+  realColorDots.r /= 3; realColorDots.g /= 3; realColorDots.b /= 3;
   eng->renderer->drawText(dots, panel_screen, Pos(X_DOTS, Y), realColorDots);
 }
 

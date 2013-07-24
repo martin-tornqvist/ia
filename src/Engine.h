@@ -24,7 +24,6 @@ class MapBuildBSP;
 class MapPatterns;
 class SoundEmitter;
 class FeatureData;
-class PlayerAllocBonus;
 class DungeonMaster;
 class Input;
 class DungeonClimb;
@@ -122,7 +121,6 @@ public:
   MapPatterns* mapPatterns;
   SoundEmitter* soundEmitter;
   FeatureData* featureData;
-  PlayerAllocBonus* playerAllocBonus;
   DungeonMaster* dungeonMaster;
   Input* input;
   DungeonClimb* dungeonClimb;

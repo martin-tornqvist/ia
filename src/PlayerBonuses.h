@@ -26,49 +26,50 @@ enum PlayerBon_t {
 //playerBon_deadlyThrower,
   playerBon_dexterous,
 //  playerBon_elusive,
-  playerBon_healthy,
-  playerBon_imperceptible,
-  playerBon_lithe,
+//  playerBon_healthy,
+//  playerBon_imperceptible,
+//  playerBon_lithe,
   playerBon_marksman,
-  playerBon_masterfulMeleeCombatant,
-  playerBon_mobile,
+//  playerBon_masterfulMeleeCombatant,
+//  playerBon_mobile,
 //  playerBon_nimbleHanded,
   playerBon_observant,
   playerBon_occultist,
   playerBon_rapidRecoverer,
   playerBon_rugged,
   playerBon_selfAware,
-  playerBon_sharpshooter,
+//  playerBon_sharpshooter,
   playerBon_skillfulWoundTreater,
-  playerBon_steadyAimer,
+//  playerBon_steadyAimer,
   playerBon_stealthy,
   playerBon_strongBacked,
-  playerBon_strongMinded,
+//  playerBon_strongMinded,
 //playerBon_swiftAssailant,
 //playerBon_swiftRetaliator,
-  playerBon_tough,
+//  playerBon_tough,
   playerBon_treasureHunter,
 //playerBon_tumbler,
   playerBon_unyielding,
   playerBon_vigilant,
   playerBon_vigorous,
 //playerBon_wakeful,
-  playerBon_warlock,
+//  playerBon_warlock,
   endOfPlayerBons
 };
 
-class PlayerBonus {
+enum PlayerBonType_t {
+  playerBonType_trait, playerBonType_skill
+};
+
+class PlayerBon {
 public:
-  PlayerBonus(string title, string description, vector<PlayerBon_t> prereqs) :
-    title_(title), description_(description), prereqs_(prereqs), isPicked_(false) {
-  }
-  PlayerBonus() {
-  }
+  PlayerBon(string title, PlayerBonType_t type, string effectDescr) :
+    title_(title), type_(type), effectDescr_(effectDescr), isPicked_(false) {}
+  PlayerBon() {}
   string title_;
-  string description_;
-  vector<PlayerBon_t> prereqs_;
+  PlayerBonType_t type_;
+  string effectDescr_;
   bool isPicked_;
-protected:
 };
 
 class PlayerBonHandler {
@@ -77,60 +78,60 @@ public:
 
   void addSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      lines.push_back(bonuses_[i].isPicked_ ? intToString(1) : intToString(0));
+      lines.push_back(bons_[i].isPicked_ ? intToString(1) : intToString(0));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      bonuses_[i].isPicked_ = lines.front() == intToString(0) ? false : true;
+      bons_[i].isPicked_ = lines.front() == intToString(0) ? false : true;
       lines.erase(lines.begin());
     }
   }
 
-  bool isBonPicked(const PlayerBon_t bonus) {
-    return bonuses_[bonus].isPicked_;
+  inline bool isBonPicked(const PlayerBon_t bon) const {
+    return bons_[bon].isPicked_;
   }
 
   void setAllToUnpicked() {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      bonuses_[i].isPicked_ = false;
+      bons_[i].isPicked_ = false;
     }
   }
 
-  vector<PlayerBon_t> getBonusChoices() const;
-
-  string getBonusTitle(const PlayerBon_t bonus) const {
-    return bonuses_[bonus].title_;
+  inline string getBonTitle(const PlayerBon_t bon) const {
+    return bons_[bon].title_;
   }
 
-  void getAllPickedBonusTitlesList(vector<string>& titles);
-  void getAllPickedBonusTitlesLine(string& str);
-
-  string getBonusDescription(const PlayerBon_t bonus) const {
-    return bonuses_[bonus].description_;
+  inline PlayerBonType_t getBonType(const PlayerBon_t bon) const {
+    return bons_[bon].type_;
   }
 
-  void pickBonus(const PlayerBon_t bonus);
+  void getAllPickedBonTitlesList(vector<string>& titles);
+  void getAllPickedBonTitlesLine(string& str);
 
-  void setAllBonusesToPicked() {
+  string getBonEffectDescr(const PlayerBon_t bon) const {
+    return bons_[bon].effectDescr_;
+  }
+
+  void pickBon(const PlayerBon_t bon);
+
+  void setAllBonsToPicked() {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      bonuses_[i].isPicked_ = true;
+      bons_[i].isPicked_ = true;
     }
   }
-
-  vector<PlayerBon_t> getBonusPrereqs(const PlayerBon_t bonusId) const;
 
 private:
   Engine* eng;
 
-  void setBonus(const PlayerBon_t bonus, const string title,
-                const string description,
-                const PlayerBon_t prereq1 = endOfPlayerBons,
-                const PlayerBon_t prereq2 = endOfPlayerBons,
-                const PlayerBon_t prereq3 = endOfPlayerBons);
+  inline void addBon(const PlayerBon_t bon, const string title,
+                     const PlayerBonType_t type,
+                     const string effectDescr) {
+    bons_[bon] = PlayerBon(title, type, effectDescr);
+  }
 
-  PlayerBonus bonuses_[endOfPlayerBons];
+  PlayerBon bons_[endOfPlayerBons];
 };
 
 #endif

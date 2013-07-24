@@ -633,7 +633,7 @@ int Scroll::getChanceToCastFromMemory(Engine* const engine) const {
     }
   }
 
-  bon += engine->playerBonHandler->isBonPicked(playerBon_warlock)       ? 20 : 0;
+  bon += engine->playerBonHandler->isBonPicked(playerBon_occultist)           ? 20 : 0;
 
   bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlessed)  ? 10 : 0;
   bon += engine->player->getStatusEffectsHandler()->hasEffect(statusBlind)    ? 10 : 0;

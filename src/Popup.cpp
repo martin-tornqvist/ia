@@ -25,54 +25,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
   const int Y1 = Y0 + BOX_HEIGHT - 1;
 
   eng->renderer->coverArea(panel_map, Pos(X0, Y0), Pos(BOX_WIDTH, BOX_HEIGHT));
-
-  const bool& isTilesMode = eng->config->isTilesMode;
-
-  const SDL_Color clrBox = clrGray;
-
-  Pos pos;
-
-  for(pos.y = Y0; pos.y <= Y1; pos.y++) {
-    for(pos.x = X0; pos.x <= X1; pos.x++) {
-      if(pos.x == X0 || pos.x == X1) {
-        if(pos.y == Y0 || pos.y == Y1) {
-          if(isTilesMode) {
-            if(pos == Pos(X0, Y0)) {
-              eng->renderer->drawTile(
-                tile_popupCornerTopLeft, panel_map, pos, clrBox, clrBlack);
-            } else if(pos == Pos(X1, Y0)) {
-              eng->renderer->drawTile(
-                tile_popupCornerTopRight, panel_map, pos, clrBox, clrBlack);
-            } else if(pos == Pos(X0, Y1)) {
-              eng->renderer->drawTile(
-                tile_popupCornerBottomLeft, panel_map, pos, clrBox, clrBlack);
-            } else {
-              eng->renderer->drawTile(
-                tile_popupCornerBottomRight, panel_map, pos, clrBox, clrBlack);
-            }
-          } else {
-            eng->renderer->drawGlyph('#', panel_map, pos, clrBox);
-          }
-        } else {
-          if(isTilesMode) {
-            eng->renderer->drawTile(
-              tile_popupVerticalBar, panel_map, pos, clrBox, clrBlack);
-          } else {
-            eng->renderer->drawGlyph('|', panel_map, pos, clrBox);
-          }
-        }
-      } else {
-        if(pos.y == Y0 || pos.y == Y1) {
-          if(isTilesMode) {
-            eng->renderer->drawTile(
-              tile_popupHorizontalBar, panel_map, pos, clrBox, clrBlack);
-          } else {
-            eng->renderer->drawGlyph('=', panel_map, pos, clrBox);
-          }
-        }
-      }
-    }
-  }
+  eng->renderer->drawPopupBox(Rect(X0, Y0, X1, Y1), panel_map);
 
   return Y0 + 1;
 }

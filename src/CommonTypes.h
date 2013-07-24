@@ -90,15 +90,9 @@ struct StringAndClr {
 };
 
 struct Pos {
-  Pos() :
-    x(0), y(0) {
-  }
-  Pos(const int x_, const int y_) :
-    x(x_), y(y_) {
-  }
-  Pos(const Pos& other) :
-    x(other.x), y(other.y) {
-  }
+  Pos() : x(0), y(0) {}
+  Pos(const int x_, const int y_) : x(x_), y(y_) {}
+  Pos(const Pos& other) : x(other.x), y(other.y) {}
 
   Pos& operator/=(const int div) {
     x /= div;
@@ -161,15 +155,11 @@ struct Pos {
 };
 
 struct Rect {
-  Rect() :
-    x0y0(Pos()), x1y1(Pos()) {
-  }
-  Rect(const Pos& x0y0_, const Pos& x1y1_) :
-    x0y0(x0y0_), x1y1(x1y1_) {
-  }
-  Rect(const Rect& other) :
-    x0y0(other.x0y0), x1y1(other.x1y1) {
-  }
+  Rect() : x0y0(Pos()), x1y1(Pos()) {}
+  Rect(const Pos& x0y0_, const Pos& x1y1_) :  x0y0(x0y0_), x1y1(x1y1_) {}
+  Rect(const int X0, const int Y0, const int X1, const int Y1) :
+    x0y0(Pos(X0, Y0)), x1y1(Pos(X1, Y1)) {}
+  Rect(const Rect& other) : x0y0(other.x0y0), x1y1(other.x1y1) {}
 
   Pos x0y0;
   Pos x1y1;

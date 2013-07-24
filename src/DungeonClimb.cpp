@@ -10,8 +10,6 @@
 #include "Log.h"
 #include "Item.h"
 
-#include "PlayerAllocBonus.h"
-
 void DungeonClimb::makeLevel() {
   tracer << "DungeonClimb::makeLevel()..." << endl;
 

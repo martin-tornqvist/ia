@@ -187,7 +187,6 @@ void Tomb::doAction(const TombAction_t action) {
   StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
   PlayerBonHandler* const bonusHandler = eng->playerBonHandler;
 
-  const bool IS_TOUGH     = bonusHandler->isBonPicked(playerBon_tough);
   const bool IS_RUGGED    = bonusHandler->isBonPicked(playerBon_rugged);
   const bool IS_OBSERVANT = bonusHandler->isBonPicked(playerBon_observant);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
@@ -237,7 +236,7 @@ void Tomb::doAction(const TombAction_t action) {
         eng->log->addMessage("It seems futile.");
         return;
       }
-      const int BON = IS_RUGGED ? 20 : (IS_TOUGH ? 10 : 0);
+      const int BON = IS_RUGGED ? 20 : 0;
       if(eng->dice.percentile() < chanceToPushLid_ + BON) {
         eng->log->addMessage("The lid comes off!");
         openFeature();
@@ -348,10 +347,11 @@ void Tomb::triggerTrap() {
 }
 
 void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
-  const bool IS_WARLOCK = eng->playerBonHandler->isBonPicked(playerBon_warlock);
+  const bool IS_OCCULTIST =
+    eng->playerBonHandler->isBonPicked(playerBon_occultist);
 
   if(isTraitKnown_) {
-    if(IS_WARLOCK) {
+    if(IS_OCCULTIST) {
       if(trait_ == tombTrait_forebodingCarvedSigns) {
         possibleActions.push_back(tombAction_carveCurseWard);
       }
@@ -409,7 +409,7 @@ void Tomb::getChoiceLabels(const vector<TombAction_t>& possibleActions,
 }
 
 void Tomb::getTraitDescr(string& descr) const {
-  const bool IS_WARLOCK   = eng->playerBonHandler->isBonPicked(playerBon_warlock);
+  const bool IS_OCCULTIST = eng->playerBonHandler->isBonPicked(playerBon_occultist);
 
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
@@ -417,7 +417,7 @@ void Tomb::getTraitDescr(string& descr) const {
     } break;
 
     case tombTrait_forebodingCarvedSigns: {
-      if(IS_WARLOCK) {
+      if(IS_OCCULTIST) {
         descr = "There is a curse carved on the box.";
       } else {
         descr = "There are some ominous runes carved on the box.";
@@ -503,7 +503,6 @@ void Chest::doAction(const ChestAction_t action) {
   PlayerBonHandler* const bonHandler      = eng->playerBonHandler;
 
   const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
-  const bool IS_TOUGH     = bonHandler->isBonPicked(playerBon_tough);
   const bool IS_RUGGED    = bonHandler->isBonPicked(playerBon_rugged);
 //  const bool IS_NIMBLE    = bonHandler->isBonPicked(playerBon_nimbleHanded);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
@@ -592,7 +591,7 @@ void Chest::doAction(const ChestAction_t action) {
         if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
           itemContainer_.destroySingleFragile(eng);
         }
-        const int CHANCE_TO_OPEN = 20 + (IS_RUGGED ? 20 : (IS_TOUGH ? 10 : 0));
+        const int CHANCE_TO_OPEN = 20 + (IS_RUGGED ? 20 : 0);
         if(eng->dice.percentile() < CHANCE_TO_OPEN) {
           eng->log->addMessage("I kick the lid open!");
           openFeature();

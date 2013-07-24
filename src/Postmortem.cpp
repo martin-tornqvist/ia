@@ -76,7 +76,7 @@ void Postmortem::makeInfoLines() {
   tracer << "Postmortem: Listing abilities gained" << endl;
   postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
-  eng->playerBonHandler->getAllPickedBonusTitlesLine(abilitiesLine);
+  eng->playerBonHandler->getAllPickedBonTitlesLine(abilitiesLine);
   if(abilitiesLine == "") {
     postmortemLines.push_back(StringAndClr("   * None", clrInfo));
   } else {

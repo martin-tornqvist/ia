@@ -90,6 +90,9 @@ public:
 
   void drawProjectiles(vector<Projectile*>& projectiles);
 
+  void drawPopupBox(const Rect& area, const Panel_t panel,
+                    const SDL_Color& clr = clrGray);
+
 private:
   friend class Postmortem;
   friend class Input;

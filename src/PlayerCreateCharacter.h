@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "CommonTypes.h"
+#include "PlayerBonuses.h"
+
 using namespace std;
 
 class Engine;
@@ -16,6 +19,11 @@ public:
   void run();
 
 private:
+  void draw(const vector<PlayerBon_t>& bonsTraits,
+            const vector<PlayerBon_t>& bonsSkills,
+            const MenuBrowser& browser,
+            const bool IS_DONE_PICKING_BONS) const;
+
   Engine* eng;
 };
 
@@ -24,9 +32,9 @@ public:
 private:
   friend class PlayerCreateCharacter;
   PlayerEnterName(Engine* engine) : eng(engine) {}
-  void run(int& yPos);
-  void draw(const string& currentString, const int RENDER_Y_POS);
-  void readKeys(string& currentString, bool& done, const int RENDER_Y_POS);
+  void run(const Pos& pos);
+  void draw(const string& currentString, const Pos& pos);
+  void readKeys(string& currentString, bool& done, const Pos& pos);
   Engine* eng;
 };
 
