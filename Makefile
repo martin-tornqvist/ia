@@ -1,65 +1,115 @@
-CC=g++
+# Infra Arcana Makefile
 
-# Directiories
-SRC_DIR=src
-DEBUG_MODE_INC_DIR=$(SRC_DIR)/debugModeIncl
-RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
-TARGET_DIR=target
-ASSETS_DIR=assets
+# optimized build; default is debug build
+# RELEASE = 1
 
-# Includes
-INCLUDES=
+# build for macosx w/ sdl frameworks
+# TARGETOS = macosx
 
-# Target specific include files
-_INCLUDES=
-_CFLAGS=
-debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
-debug : _CFLAGS=-O0 -g
-release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
-release : _CFLAGS=-O2
+# clang
+# C = cc
+# CXX = c++
 
-#Flags
-CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-LDFLAGS=$(shell sdl-config --libs) -lSDL_image
+# gcc
+# CC = gcc
+# CXX = g++
+
+# Directories
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+DEBUG_INC_DIR = $(SRC_DIR)/debugModeIncl
+RELEASE_INC_DIR = $(SRC_DIR)/releaseModeIncl
+INSTALL_DIR = ./build
+ASSETS_DIR = ./assets
+OSX_DIR = ./osx
 
 # Output and sources
-EXECUTABLE=ia
-SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
-OBJECTS=$(SOURCES:.cpp=.o)
-OBJECTS_STAMP_FILE=obj_stamp
+TARGET = ia
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+OBJECTS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SOURCES))
 
-# Various bash commands
-RM=rm -rf
-MV=mv -f
-MKDIR=mkdir -p
-CP=cp -r
+# check for sdl-config in PATH
+ifndef FRAMEWORK
+  SDLCONFIG_PATH := $(shell sdl-config --prefix 2>/dev/null 1>&2; echo $$?)
+  ifneq ($(SDLCONFIG_PATH),0)
+    $(error sdl-config not in PATH) 
+  endif
+endif
 
-# Dependencies 
-debug: $(SOURCES) $(EXECUTABLE)
-release: $(SOURCES) $(EXECUTABLE)
+# Flags
+# using '_EXTRA' to be able to 'export CXXFLAGS=-my-option'
+# from the command line and including them when building, maybe
+# this isn't the best way...
+CFLAGS_EXTRA = $(shell sdl-config --cflags)
+WARNINGS = -Wall -Wextra
+OPTFLAGS = -O0 -g
+LDFLAGS_EXTRA = $(shell sdl-config --libs) -lSDL -lSDL_image
+BUILD_INC = -I$(DEBUG_INC_DIR)
 
-# Make targets
-.DEFAULT_GOAL=default_target
-.PHONY: default_target
-default_target:
-	@echo "Use \"make debug\" or \"make release\""
+# optimized build
+ifdef RELEASE
+  OPTFLAGS = -O2
+  BUILD_INC = -I$(RELEASE_INC_DIR)
+endif
 
-.PHONY: $(EXECUTABLE)
-$(EXECUTABLE): $(OBJECTS_STAMP_FILE)
-	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
-	$(RM) $(TARGET_DIR)
-	$(MKDIR) $(TARGET_DIR)
-	$(MV) $(EXECUTABLE) $(TARGET_DIR)
-	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
+# supress clang warnings
+ifeq ($(CC),cc)
+  WARNINGS += -Wno-mismatched-tags
+endif
 
-.PHONY: $(OBJECTS_STAMP_FILE)
-$(OBJECTS_STAMP_FILE): $(SOURCES)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
-	$(MV) *.o ./$(SRC_DIR)/
+# OSX
+ifeq ($(TARGETOS),macosx)
+  OSX_MIN = 10.6
+  # ARCH = -arch i386 -arch x86_64
+  DEFS = -DMACOSX
+  ifdef FRAMEWORK
+    DEFS += -DOSX_SDL_FW
+    CFLAGS_EXTRA = -F/Library/Frameworks \
+		   -F$(HOME)/Library/Frameworks \
+		   -I/Library/Frameworks/SDL.framework/Headers \
+		   -I$(HOME)/Library/Frameworks/SDL.framework/Headers \
+		   -I/Library/Frameworks/SDL_image.framework/Headers \
+		   -I$(HOME)/Library/Frameworks/SDL_image.framework/Headers
+    OPTFLAGS += $(ARCH) -mmacosx-version-min=$(OSX_MIN)
+    LDFLAGS_EXTRA = -F/Library/Frameworks \
+		    -F$(HOME)/Library/Frameworks \
+		    -framework SDL -framework SDL_image -framework Cocoa $(ARCH)
+  else
+    DEFS += -DOSX_SDL_LIBS
+    # headers could be in /path/include/ or /path/include/SDL/ (macports)
+    CFLAGS_EXTRA += -I$(shell dirname $(shell sdl-config --cflags | sed 's/-I\(.[^ ]*\) .*/\1/'))
+    CXXFLAGS += $(ARCH) -mmacosx-version-min=$(OSX_MIN)
+  endif
+  OBJECTS += $(OBJ_DIR)/SDLMain.o
+endif
 
-.PHONY: clean
+CXXFLAGS += $(WARNINGS) $(OPTFLAGS) $(BUILD_INC) $(CFLAGS_EXTRA) $(DEFS)
+LDFLAGS += $(LDFLAGS_EXTRA)
+
+all: $(OBJ_DIR)/$(TARGET)
+
+$(OBJ_DIR)/$(TARGET): $(OBJ_DIR) $(OBJECTS)
+	$(CXX) -o $@ $(DEFS) $(OBJECTS) $(LDFLAGS)
+	rm -rf $(INSTALL_DIR)
+	mkdir -p $(INSTALL_DIR)
+	cp -R $(ASSETS_DIR)/ $(INSTALL_DIR)/
+	cp $(OBJ_DIR)/$(TARGET) $(INSTALL_DIR)
+	@echo \`cd $(INSTALL_DIR)\; .\/$(TARGET)\` to run $(TARGET)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(OSX_DIR)/%.m
+	$(CC) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	find . -type f -name '*~' | xargs $(RM)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(RM) $(TARGET_DIR)
+	rm -rf $(OBJ_DIR)
+	rm -f $(TARGET)
+
+uninstall:
+	rm -rf $(INSTALL_DIR)
+
+.PHONY: all clean uninstall

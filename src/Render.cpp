@@ -3,7 +3,11 @@
 #include <vector>
 #include <iostream>
 
+#if (defined OSX_SDL_FW)
+#include "SDL_image/SDL_image.h"
+#else
 #include "SDL/SDL_image.h"
+#endif
 
 #include "Engine.h"
 #include "Item.h"
