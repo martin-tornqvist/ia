@@ -7,12 +7,12 @@
 # TARGETOS = macosx
 
 # clang
-# C = cc
-# CXX = c++
+# C ?= cc
+# CXX ?= c++
 
 # gcc
-# CC = gcc
-# CXX = g++
+# CC ?= gcc
+# CXX ?= g++
 
 # Directories
 SRC_DIR = ./src
@@ -37,14 +37,11 @@ ifndef FRAMEWORK
 endif
 
 # Flags
-# using '_EXTRA' to be able to 'export CXXFLAGS=-my-option'
-# from the command line and including them when building, maybe
-# this isn't the best way...
-CFLAGS_EXTRA = $(shell sdl-config --cflags)
 WARNINGS = -Wall -Wextra
 OPTFLAGS = -O0 -g
-LDFLAGS_EXTRA = $(shell sdl-config --libs) -lSDL -lSDL_image
+INCLUDES = $(shell sdl-config --cflags)
 BUILD_INC = -I$(DEBUG_INC_DIR)
+LIBS = $(shell sdl-config --libs) -lSDL -lSDL_image
 
 # optimized build
 ifdef RELEASE
@@ -53,7 +50,7 @@ ifdef RELEASE
 endif
 
 # supress clang warnings
-ifeq ($(CC),cc)
+ifeq ($(CXX),c++)
   WARNINGS += -Wno-mismatched-tags
 endif
 
@@ -63,33 +60,35 @@ ifeq ($(TARGETOS),macosx)
   # ARCH = -arch i386 -arch x86_64
   DEFS = -DMACOSX
   ifdef FRAMEWORK
-    DEFS += -DOSX_SDL_FW
-    CFLAGS_EXTRA = -F/Library/Frameworks \
-		   -F$(HOME)/Library/Frameworks \
-		   -I/Library/Frameworks/SDL.framework/Headers \
-		   -I$(HOME)/Library/Frameworks/SDL.framework/Headers \
-		   -I/Library/Frameworks/SDL_image.framework/Headers \
-		   -I$(HOME)/Library/Frameworks/SDL_image.framework/Headers
     OPTFLAGS += $(ARCH) -mmacosx-version-min=$(OSX_MIN)
-    LDFLAGS_EXTRA = -F/Library/Frameworks \
-		    -F$(HOME)/Library/Frameworks \
-		    -framework SDL -framework SDL_image -framework Cocoa $(ARCH)
+    DEFS += -DOSX_SDL_FW
+    INCLUDES = -F/Library/Frameworks \
+	       -F$(HOME)/Library/Frameworks \
+	       -I/Library/Frameworks/SDL.framework/Headers \
+	       -I$(HOME)/Library/Frameworks/SDL.framework/Headers \
+	       -I/Library/Frameworks/SDL_image.framework/Headers \
+	       -I$(HOME)/Library/Frameworks/SDL_image.framework/Headers
+    LIBS = -F/Library/Frameworks \
+	   -F$(HOME)/Library/Frameworks \
+	   -framework SDL -framework SDL_image -framework Cocoa $(ARCH)
   else
     DEFS += -DOSX_SDL_LIBS
+    OPTFLAGS += $(ARCH) -mmacosx-version-min=$(OSX_MIN)
     # headers could be in /path/include/ or /path/include/SDL/ (macports)
-    CFLAGS_EXTRA += -I$(shell dirname $(shell sdl-config --cflags | sed 's/-I\(.[^ ]*\) .*/\1/'))
-    CXXFLAGS += $(ARCH) -mmacosx-version-min=$(OSX_MIN)
+    INCLUDES += -I$(shell dirname $(shell sdl-config --cflags | sed 's/-I\(.[^ ]*\) .*/\1/'))
   endif
   OBJECTS += $(OBJ_DIR)/SDLMain.o
 endif
 
-CXXFLAGS += $(WARNINGS) $(OPTFLAGS) $(BUILD_INC) $(CFLAGS_EXTRA) $(DEFS)
-LDFLAGS += $(LDFLAGS_EXTRA)
+CFLAGS_EXTRA = $(WARNINGS) $(OPTFLAGS) $(INCLUDES) $(BUILD_INC) $(DEFS)
+
+.SUFFIXES:
+.SUFFIXES: .cpp .m .o
 
 all: $(OBJ_DIR)/$(TARGET)
 
 $(OBJ_DIR)/$(TARGET): $(OBJ_DIR) $(OBJECTS)
-	$(CXX) -o $@ $(DEFS) $(OBJECTS) $(LDFLAGS)
+	$(CXX) -o $@ $(DEFS) $(OBJECTS) $(LIBS) $(LDFLAGS)
 	rm -rf $(INSTALL_DIR)
 	mkdir -p $(INSTALL_DIR)
 	cp -R $(ASSETS_DIR)/ $(INSTALL_DIR)/
@@ -100,10 +99,10 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS_EXTRA) $(CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(OSX_DIR)/%.m
-	$(CC) $(CXXFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS_EXTRA) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)
