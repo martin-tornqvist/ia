@@ -34,13 +34,20 @@ follow instructions in the source archives.
 
 ## Build
 
-    $ make -f Makefile_osx TARGETOS=macosx RELEASE=1 FRAMEWORK=1
+    $ make TARGETOS=macosx RELEASE=1 OSXLIBSDL=1
 
-`TARGETOS=macosx` builds for OS X
+`TARGETOS=macosx` builds for OS X. Omit for non-OS X build (default).
 
-`RELEASE=1` builds an optimized 'release' version; omit for debug version.
+`RELEASE=1` builds an optimized 'release' version. Omit for the the debug version (default).
 
-`FRAMEWORK=1` uses frameworks; omit for libsdl, libsdl\_image.
+`OSXLIBSDL=1` uses libsdl and libsdl\_image for OS X. Omit to use SDL frameworks (default).
+
+You can export these to avoid typing them in for every `make` command:
+
+    $ export TARGETOS=macosx RELEASE=1 OSXLIBSDL=1
+    $ make
+
+Additional compiler flags can be set via `CXXFLAGS='...'`.
 
 ## Run
 
