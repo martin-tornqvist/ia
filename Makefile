@@ -57,7 +57,7 @@ ifeq ($(TARGETOS),macosx)
   OBJECTS += $(OBJDIR)/SDLMain.o
   ifdef OSXLIBSDL
     DEFS += -DOSX_SDL_LIBS
-    # headers could be in /path/include/ or /path/include/SDL/ (macports)
+    # handle #include "SDL/SDL.h" and "SDL.h", etc.
     INCLUDES += -I$(shell dirname $(shell sdl-config --cflags | sed 's/-I\(.[^ ]*\) .*/\1/'))
   else
     OSXFW = 1
