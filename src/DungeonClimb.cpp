@@ -15,7 +15,7 @@ void DungeonClimb::makeLevel() {
 
   eng->map->clearDungeon();
 
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
 
   bool levelBuilt = false;
   if(eng->config->isBotPlaying == false) {
@@ -69,7 +69,7 @@ void DungeonClimb::travelDown(const int levels) {
 
   eng->player->restoreShock(999, true);
 
-  eng->map->incrDungeonLevel(levels);
+  eng->map->incrDLVL(levels);
 
   makeLevel();
 
@@ -85,7 +85,7 @@ void DungeonClimb::tryUseDownStairs() {
 
   eng->log->clearLog();
 
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
   const Pos& playerPos = eng->player->pos;
 
   if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
@@ -100,7 +100,7 @@ void DungeonClimb::tryUseDownStairs() {
     if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown &&
         eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
       eng->log->addMessage("I am plagued by my phobia of deep places!");
-      eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusTerrified(eng));
+      eng->player->getStatusHandler()->tryAddEffect(new StatusTerrified(eng));
       return;
     }
   } else {

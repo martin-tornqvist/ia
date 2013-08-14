@@ -33,7 +33,7 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(
     StringAndClr("   * Explored to the depth of dungeon level " +
-                 intToString(eng->map->getDungeonLevel()), clrInfo));
+                 intToString(eng->map->getDLVL()), clrInfo));
   postmortemLines.push_back(
     StringAndClr("   * Was " +
                  intToString(min(100, eng->player->getInsanity())) +
@@ -95,7 +95,7 @@ void Postmortem::makeInfoLines() {
   vector< pair<string, int> > killList;
   int nrOfTotalKills = 0;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+    const ActorDef& d = eng->actorData->actorDefs[i];
     if(d.nrOfKills > 0) {
 
       nrOfTotalKills += d.nrOfKills;

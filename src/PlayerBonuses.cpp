@@ -21,7 +21,7 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
     case playerBon_selfAware: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
-      eng->player->getStatusEffectsHandler()->endEffect(statusConfused, visionBlockers);
+      eng->player->getStatusHandler()->endEffect(statusConfused, visionBlockers);
     } break;
 
     default: {} break;
@@ -29,29 +29,36 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
 }
 
 PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
-  addBon(playerBon_dexterous, "Dexterous", playerBonType_trait,
-         "+25% chance to evade attacks and traps, every fourth move is a free action");
+  string descr = "";
 
-  addBon(playerBon_observant, "Observant", playerBonType_trait,
-         "You occasionally spot clues about hidden passages, and your attentiveness is higher when examining objects (for example when searching a chest for traps)");
+  descr  = "+25% chance to evade attacks and traps, ";
+  descr += "every fourth move is a free action";
+  addBon(playerBon_dexterous, "Dexterous", playerBonType_trait, descr);
 
-  addBon(playerBon_vigilant, "Vigilant", playerBonType_trait,
-         "You cannot be backstabbed");
+  descr  = "You occasionally spot clues about hidden passages, and ";
+  descr += "your attentiveness is higher when examining objects ";
+  descr += "(for example when searching a chest for traps)";
+  addBon(playerBon_observant, "Observant", playerBonType_trait, descr);
 
-  addBon(playerBon_unyielding, "Unyielding", playerBonType_trait,
-         "+20% mental status resistance, -5% shock received");
+  descr  = "You cannot be backstabbed";
+  addBon(playerBon_vigilant, "Vigilant", playerBonType_trait, descr);
 
-  addBon(playerBon_coolHeaded, "Cool-headed", playerBonType_trait,
-         "-20% shock received");
+  descr  = "+20% mental status resistance, -5% shock";
+  addBon(playerBon_unyielding, "Unyielding", playerBonType_trait, descr);
 
-  addBon(playerBon_selfAware, "Self-aware", playerBonType_trait,
-         "Cannot be confused, number of remaining turns for status effects is displayed");
+  descr  = "-20% shock";
+  addBon(playerBon_coolHeaded, "Cool-headed", playerBonType_trait, descr);
 
-  addBon(playerBon_rugged, "Rugged", playerBonType_trait,
-         "+20% physical status resistance, +20% chance to force open doors, +10% carry weight limit");
+  descr  = "Cannot be confused, number of remaining turns for status effects ";
+  descr += "is displayed";
+  addBon(playerBon_selfAware, "Self-aware", playerBonType_trait, descr);
 
-  addBon(playerBon_vigorous, "Vigorous", playerBonType_trait,
-         "+3 hit points");
+  descr  = "+20% physical status resistance, +20% chance to force open doors, ";
+  descr += "+10% carry weight limit";
+  addBon(playerBon_tough, "Tough", playerBonType_trait, descr);
+
+  descr  = "+3 hit points";
+  addBon(playerBon_vigorous, "Vigorous", playerBonType_trait, descr);
 
 //  addBon(playerBon_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
 
@@ -59,15 +66,17 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
 
 //  addBon(playerBon_tumbler, "Tumbler", "Can evade explosions", playerBon_athletic);
 
-  addBon(playerBon_adeptMeleeCombatant, "Adept melee combatant", playerBonType_skill,
-         "+15% hit chance with melee weapons");
+  descr  = "+15% hit chance with melee weapons";
+  addBon(playerBon_adeptMeleeCombatant, "Adept melee combatant",
+         playerBonType_skill, descr);
 
 //  addBon(playerBon_swiftAssailant, "Swift assailant", "Killing a monster with a melee weapon is considered a free turn");
 
 //  addBon(playerBon_aggressive, "Aggressive", "+X melee dmg when attacking in same direction as previous move");
 
-  addBon(playerBon_marksman, "Marksman", playerBonType_skill,
-         "+15% hit chance with firearms and thrown weapons, waiting a turn gives +20% hit chance with firearms and thrown weapons");
+  descr  = "+15% hit chance with firearms and thrown weapons, ";
+  descr += "standing still for a turn gives another 10%";
+  addBon(playerBon_marksman, "Marksman", playerBonType_skill, descr);
 
 //  addBon(playerBon_steadyAimer, "Steady aimer", playerBonType_skill,
 //         "Waiting a turn gives +20% hit chance with firearms and thrown weapons");
@@ -76,14 +85,18 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
 
 //  addBon(playerBon_nimbleHanded, "Nimble-handed", "Can disarm mechanical traps, can use lockpicks, X% chance to reload or swap weapons instantly", playerBon_dexterous);
 
-  addBon(playerBon_treasureHunter, "Treasure hunter", playerBonType_skill,
-         "50% more items found on map");
+  descr  = "50% more items found on map";
+  addBon(playerBon_treasureHunter, "Treasure hunter",
+         playerBonType_skill, descr);
 
-  addBon(playerBon_stealthy, "Stealthy", playerBonType_skill,
-         "+60% chance to avoid being spotted by monsters");
+  descr  = "Half of all potions are known";
+  addBon(playerBon_alchemist, "Alchemist", playerBonType_skill, descr);
 
-  addBon(playerBon_occultist, "Occultist", playerBonType_skill,
-         "Casting chance of memorized spells increases over time");
+  descr  = "You have less chance to be spotted by monsters";
+  addBon(playerBon_stealthy, "Stealthy", playerBonType_skill, descr);
+
+  descr  = "Casting chance of memorized spells increases over time";
+  addBon(playerBon_occultist, "Occultist", playerBonType_skill, descr);
 
 //  addBon(playerBon_wakeful, "Wakeful", "Cannot faint");
 
@@ -91,17 +104,19 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
 
 //  addBon(playerBon_courageous, "Courageous", "Cannot be terrified");
 
-  addBon(playerBon_skillfulWoundTreater, "Skillful wound treater", playerBonType_skill,
-         "Healing takes half the normal time");
+  descr  = "Healing takes half the normal time";
+  addBon(playerBon_skillfulWoundTreater, "Skillful wound treater",
+         playerBonType_skill, descr);
 
-  addBon(playerBon_curer, "Curer", playerBonType_skill,
-         "Can heal disease");
+  descr  = "Can heal disease";
+  addBon(playerBon_curer, "Curer", playerBonType_skill, descr);
 
-  addBon(playerBon_rapidRecoverer, "Rapid recoverer", playerBonType_skill,
-         "Double hit point regeneration rate");
+  descr  = "Double hit point regeneration rate";
+  addBon(playerBon_rapidRecoverer, "Rapid recoverer",
+         playerBonType_skill, descr);
 
-  addBon(playerBon_strongBacked, "Strong-backed", playerBonType_trait,
-         "+30% carry weight limit");
+  descr  = "+30% carry weight limit";
+  addBon(playerBon_strongBacked, "Strong-backed", playerBonType_trait, descr);
 }
 
 void PlayerBonHandler::getAllPickedBonTitlesList(vector<string>& titles) {

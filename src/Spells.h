@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "CommonTypes.h"
+#include "StatusEffects.h"
 
 using namespace std;
 
@@ -12,212 +13,360 @@ class Actor;
 class Monster;
 
 enum Spells_t {
+  //Player and monster available spells
   spell_azathothsBlast,
-  spell_blind,
-  spell_fear,
-  spell_slow,
+  spell_enfeeble,
+  spell_teleport,
+  spell_bless, //TODO Add a curse spell as well, available for player
+
+  //Player only
+  spell_mayhem,
+  spell_pestilence,
+  spell_descent,
+  spell_detectItems,
+  spell_detectTraps,
+  spell_identify,
+  spell_clairvoyance,
+  spell_opening,
+  spell_mthPower,
+
+  //Monsters only
   spell_disease,
   spell_summonRandom,
-  spell_healSelf,
+  spell_healSelf, //TODO Make it heal over time, and avail for player too
   spell_knockBack,
-  spell_teleport,
-  spell_confuse,
-  spell_weakness,
 
   endOfSpells
 };
 
 class Spell;
 
-//Class for keeping track of all available spells
 class SpellHandler {
 public:
-  SpellHandler(Engine* const engine) :
-    eng(engine) {
-  }
-
-  Spell* getRandomSpellForMonsters();
-  void addAllCommonSpellsForMonsters(vector<Spell*>& knownSpells) const;
-
+  SpellHandler(Engine* const engine) : eng(engine) {}
+  Spell* getRandomSpellForMonster();
+  Spell* getSpellFromId(const Spells_t spellId) const;
 private:
-  Spell* getSpellFromEnum(const Spells_t spell) const;
-
   Engine* eng;
 };
 
-//Struct for spell casting info
-struct SpellData {
-  SpellData(Actor* const caster, const Pos& targetCell = Pos(-1, -1)) :
-    caster_(caster), targetCell_(targetCell) {
-  }
-
-  Actor* caster_;
-  Pos targetCell_;
+struct SpellCastRetData {
+public:
+  SpellCastRetData(bool isCastIdentifying) :
+    IS_CAST_IDENTIFYING(isCastIdentifying) {}
+  const bool IS_CAST_IDENTIFYING;
 };
 
-//Base spell class
 class Spell {
 public:
-  Spell() {
-  }
+  Spell() {}
+  virtual ~Spell() {}
+  SpellCastRetData cast(Actor* const caster, Engine* const eng);
+  virtual bool isGoodForMonsterToCastNow(Monster* const monster,
+                                         Engine* const eng) = 0;
+  virtual bool isLearnableForMonsters() const = 0;
+  virtual bool isLearnableForPlayer() const = 0;
+  virtual string getName() const = 0;
+  virtual Spells_t getId() const = 0;
 
-  virtual ~Spell() {
-  }
-
-  void cast(const SpellData& d, Engine* const eng);
-
-  //AI support function. Each individuall spell knows best how to
-  //set target cell parameters etc.
-  void monsterCast(Monster* const monster, Engine* const eng);
-
-  virtual bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine) = 0;
-
+  int getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
+                 Engine* const eng) const;
 protected:
-  virtual void specificCast(const SpellData& d, Engine* const eng) = 0;
-  virtual void specificMonsterCast(Monster* const monster, Engine* const eng) = 0;
+  virtual SpellCastRetData specificCast(Actor* const caster,
+                                        Engine* const eng) = 0;
+
+  virtual int getSpecificSpiCost() const = 0;
+};
+
+class SpellIdentify: public Spell {
+public:
+  SpellIdentify() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Identify";}
+  Spells_t getId()              const {return spell_identify;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 class SpellAzathothsBlast: public Spell {
 public:
-  SpellAzathothsBlast() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellAzathothsBlast() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Azathoths Blast";}
+  Spells_t getId()              const {return spell_azathothsBlast;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellMayhem: public Spell {
+public:
+  SpellMayhem() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Mayhem";}
+  Spells_t getId()              const {return spell_mayhem;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellPestilence: public Spell {
+public:
+  SpellPestilence() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Pestilence";}
+  Spells_t getId()              const {return spell_pestilence;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellDescent: public Spell {
+public:
+  SpellDescent() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Descent";}
+  Spells_t getId()              const {return spell_descent;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellDetectItems: public Spell {
+public:
+  SpellDetectItems() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Detect Items";}
+  Spells_t getId()              const {return spell_detectItems;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellDetectTraps: public Spell {
+public:
+  SpellDetectTraps() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Detect Traps";}
+  Spells_t getId()              const {return spell_detectTraps;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellClairvoyance: public Spell {
+public:
+  SpellClairvoyance() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Clairvoyance";}
+  Spells_t getId()              const {return spell_clairvoyance;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+class SpellOpening: public Spell {
+public:
+  SpellOpening() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Opening";}
+  Spells_t getId()              const {return spell_opening;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+};
+
+enum MthPowerAction_t {
+  mthPowerAction_slayMonsters,
+  mthPowerAction_heal,
+  mthPowerAction_findStairs,
+//  mthPowerAction_sorcery,
+  mthPowerAction_mendArmor,
+  mthPowerAction_improveWeapon,
+  mthPowerAction_purgeEffects
+};
+
+class SpellMthPower: public Spell {
+public:
+  SpellMthPower() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
+  bool isLearnableForMonsters() const {return false;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Thaumaturgic Alteration";}
+  Spells_t getId()              const {return spell_mthPower;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
+
+  void getPossibleActions(
+    vector<MthPowerAction_t>& possibleActions, Engine* const eng) const;
+
+  void doAction(const MthPowerAction_t action, Engine* const eng) const;
+};
+
+class SpellBless: public Spell {
+public:
+  SpellBless() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Bless";}
+  Spells_t getId()              const {return spell_bless;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 class SpellKnockBack: public Spell {
 public:
-  SpellKnockBack() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellKnockBack() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return false;}
+  string getName()              const {return "Knockback";}
+  Spells_t getId()              const {return spell_knockBack;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 class SpellTeleport: public Spell {
 public:
-  SpellTeleport() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellTeleport() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Teleport";}
+  Spells_t getId()              const {return spell_teleport;}
+  int getSpecificSpiCost()      const {return 4;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
 };
 
-class SpellConfuse: public Spell {
+class SpellEnfeeble: public Spell {
 public:
-  SpellConfuse() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellEnfeeble() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return true;}
+  string getName()              const {return "Enfeeble";}
+  Spells_t getId()              const {return spell_enfeeble;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
-};
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 
-class SpellWeakness: public Spell {
-public:
-  SpellWeakness() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
-private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
-};
-
-class SpellBlind: public Spell {
-public:
-  SpellBlind() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
-private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
-};
-
-class SpellFear: public Spell {
-public:
-  SpellFear() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
-private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
-};
-
-class SpellSlow: public Spell {
-public:
-  SpellSlow() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
-private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  StatusEffect* getStatusEffect(Engine* const eng) const;
 };
 
 class SpellDisease: public Spell {
 public:
-  SpellDisease() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellDisease() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return false;}
+  string getName()              const {return "Disease";}
+  Spells_t getId()              const {return spell_disease;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 class SpellSummonRandom: public Spell {
 public:
-  SpellSummonRandom() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellSummonRandom() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return false;}
+  string getName()              const {return "Summon monster";}
+  Spells_t getId()              const {return spell_summonRandom;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 class SpellHealSelf: public Spell {
 public:
-  SpellHealSelf() :
-    Spell() {
-  }
-
-  bool isGoodForMonsterNow(const Monster* const monster, Engine* const engine);
-
+  SpellHealSelf() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine* const eng);
+  bool isLearnableForMonsters() const {return true;}
+  bool isLearnableForPlayer()   const {return false;}
+  string getName()              const {return "Healing";}
+  Spells_t getId()              const {return spell_healSelf;}
 private:
-  void specificMonsterCast(Monster* const monster, Engine* const eng);
-  void specificCast(const SpellData& d, Engine* const eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
+  int getSpecificSpiCost()      const {return 4;}
 };
 
 #endif

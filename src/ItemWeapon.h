@@ -8,7 +8,7 @@ class Engine;
 
 class Weapon: public Item {
 public:
-  Weapon(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDef) :
+  Weapon(ItemDef* const itemDefinition, ItemDef* const ammoDef) :
     Item(itemDefinition), ammoDef_(ammoDef) {
     ammoLoaded = 0;
     ammoCapacity = 0;
@@ -45,7 +45,7 @@ public:
     (void) engine;
   }
 
-  const ItemDefinition& getAmmoDef() {
+  const ItemDef& getAmmoDef() {
     return *ammoDef_;
   }
 
@@ -81,12 +81,12 @@ protected:
     return *this;
   }
 
-  ItemDefinition* const ammoDef_;
+  ItemDef* const ammoDef_;
 };
 
 class SawedOff: public Weapon {
 public:
-  SawedOff(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  SawedOff(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = 2;
     ammoLoaded = ammoCapacity;
@@ -100,7 +100,7 @@ private:
 
 class PumpShotgun: public Weapon {
 public:
-  PumpShotgun(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  PumpShotgun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = 8;
     ammoLoaded = ammoCapacity;
@@ -114,7 +114,7 @@ private:
 
 class Pistol: public Weapon {
 public:
-  Pistol(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  Pistol(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = 7;
     ammoLoaded = ammoCapacity;
@@ -128,7 +128,7 @@ private:
 
 class FlareGun: public Weapon {
 public:
-  FlareGun(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  FlareGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoLoaded = 1;
     ammoCapacity = 1;
@@ -142,7 +142,7 @@ private:
 
 class MachineGun: public Weapon {
 public:
-  MachineGun(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  MachineGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = ammoDef_->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
@@ -157,7 +157,7 @@ private:
 
 class Incinerator: public Weapon {
 public:
-  Incinerator(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  Incinerator(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = ammoDef_->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
@@ -173,7 +173,7 @@ private:
 
 class TeslaCanon: public Weapon {
 public:
-  TeslaCanon(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  TeslaCanon(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = ammoDef_->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
@@ -187,7 +187,7 @@ private:
 
 class SpikeGun: public Weapon {
 public:
-  SpikeGun(ItemDefinition* const itemDefinition, ItemDefinition* const ammoDefinition) :
+  SpikeGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
     Weapon(itemDefinition, ammoDefinition) {
     ammoCapacity = 12;
     ammoLoaded = ammoCapacity;

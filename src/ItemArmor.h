@@ -7,7 +7,7 @@
 
 class Armor: public Item {
 public:
-  Armor(ItemDefinition* const itemDefinition, Engine* engine);
+  Armor(ItemDef* const itemDefinition, Engine* engine);
 
   ~Armor() {}
 

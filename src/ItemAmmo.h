@@ -7,7 +7,7 @@
 
 class ItemAmmo: public Item {
 public:
-  ItemAmmo(ItemDefinition* const itemDefinition) : Item(itemDefinition) {
+  ItemAmmo(ItemDef* const itemDefinition) : Item(itemDefinition) {
   }
 
   virtual ~ItemAmmo() {
@@ -20,7 +20,7 @@ private:
 
 class ItemAmmoClip: public ItemAmmo {
 public:
-  ItemAmmoClip(ItemDefinition* const itemDefinition) : ItemAmmo(itemDefinition) {
+  ItemAmmoClip(ItemDef* const itemDefinition) : ItemAmmo(itemDefinition) {
     setFullAmmo();
   }
 

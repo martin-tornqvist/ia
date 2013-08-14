@@ -22,7 +22,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const bool IS_MACHINE_GUN = wpn.getDef().isMachineGun;
 
   const unsigned int NR_PROJECTILES = IS_MACHINE_GUN ?
-                                      NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
+                                      NR_MACHINEGUN_PROJECTILES : 1;
 
   for(unsigned int i = 0; i < NR_PROJECTILES; i++) {
     Projectile* const p = new Projectile;
@@ -85,14 +85,15 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE =
     projectilePath.size() + (NR_PROJECTILES - 1) *
-    NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
+    NR_CELL_JUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
 
   for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
 
     for(unsigned int p = 0; p < NR_PROJECTILES; p++) {
       //Current projectile's place in the path is the current global place (i)
       //minus a certain number of elements
-      int projectilePathElement = i - (p * NUMBER_OF_CELLJUMPS_BETWEEN_MACHINEGUN_PROJECTILES);
+      int projectilePathElement =
+        i - (p * NR_CELL_JUMPS_BETWEEN_MACHINEGUN_PROJECTILES);
 
       Projectile* const curProj = projectiles.at(p);
 
@@ -110,7 +111,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //Get attack data again for every cell traveled through
         curProj->setAttackData(
-          new RangedAttackData(attacker, wpn, aimPos, curProj->pos , eng, aimLevel));
+          new RangedAttackData(
+            attacker, wpn, aimPos, curProj->pos , eng, aimLevel));
 
         const Pos drawPos(curProj->pos);
 
@@ -157,8 +159,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                                   wpn.getDef().rangedDmgType);
               if(DIED == false) {
                 // Aply weapon hit status effects
-                StatusEffectsHandler* const defenderStatusHandler =
-                  curProj->attackData->currentDefender->getStatusEffectsHandler();
+                StatusHandler* const defenderStatusHandler =
+                  curProj->attackData->currentDefender->getStatusHandler();
                 defenderStatusHandler->tryAddEffectsFromWeapon(wpn, false);
 
                 // Knock-back?
@@ -321,7 +323,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     int nrOfProjectiles = 1;
 
     if(wpn.getDef().isMachineGun) {
-      nrOfProjectiles = NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
+      nrOfProjectiles = NR_MACHINEGUN_PROJECTILES;
     }
 
     if(wpn.ammoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {

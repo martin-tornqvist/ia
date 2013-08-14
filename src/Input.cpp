@@ -16,7 +16,7 @@
 #include "Marker.h"
 #include "Map.h"
 #include "DungeonMaster.h"
-#include "PlayerPowersHandler.h"
+#include "PlayerSpellsHandler.h"
 #include "Manual.h"
 #include "CharacterDescr.h"
 #include "Query.h"
@@ -125,7 +125,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       clearLogMessages();
       eng->player->moveDirection(Pos(0, 0));
       if(eng->playerBonHandler->isBonPicked(playerBon_marksman)) {
-        eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusStill(1));
+        eng->player->getStatusHandler()->tryAddEffect(new StatusStill(1));
       }
     }
     clearEvents();
@@ -146,7 +146,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'a') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+      if(eng->player->getStatusHandler()->allowSee()) {
         eng->examine->playerExamine();
         eng->renderer->drawMapAndInterface();
       } else {
@@ -200,7 +200,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 //  else if(d.key_ == 'd') {
 //    clearLogMessages();
 //    if(eng->player->deadState == actorDeadState_alive) {
-//      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+//      if(eng->player->getStatusHandler()->allowSee()) {
 //        eng->disarm->playerDisarm();
 //        eng->renderer->drawMapAndInterface();
 //      } else {
@@ -223,7 +223,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true)) {
+      if(eng->player->getStatusHandler()->allowAttackRanged(true)) {
 
         Weapon* firearm = NULL;
 
@@ -346,8 +346,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 's') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->player->getSpotedEnemies();
-      if(eng->player->spotedEnemies.size() == 0) {
+      vector<Actor*> spotedEnemies;
+      eng->player->getSpotedEnemies(spotedEnemies);
+      if(spotedEnemies.empty()) {
         const int TURNS_TO_APPLY = 10;
         const string TURNS_STR = intToString(TURNS_TO_APPLY);
         eng->log->addMessage("I pause for a while (" + TURNS_STR + " turns).");
@@ -366,7 +367,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      if(eng->player->getStatusEffectsHandler()->allowAttackRanged(true)) {
+      if(eng->player->getStatusHandler()->allowAttackRanged(true)) {
         Inventory* const playerInv = eng->player->getInventory();
         Item* itemStack = playerInv->getItemInSlot(slot_missiles);
 
@@ -395,7 +396,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'l') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusEffectsHandler()->allowSee()) {
+      if(eng->player->getStatusHandler()->allowSee()) {
         eng->marker->run(markerTask_look, NULL);
       } else {
         eng->log->addMessage("I am blind.");
@@ -417,7 +418,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'x') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->playerPowersHandler->run();
+      eng->playerSpellsHandler->run();
     }
     clearEvents();
     return;
@@ -530,7 +531,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
-        const ItemDefinition* const def = eng->itemData->itemDefinitions[i];
+        const ItemDef* const def = eng->itemData->itemDefs[i];
         if(def->isIntrinsic == false && (def->isQuaffable || def->isReadable)) {
           eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
         }

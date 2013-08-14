@@ -26,6 +26,15 @@ Pos MapTests::getClosestPos(const Pos c, const vector<Pos>& positions) const {
   return positions.at(closestElement);
 }
 
+void MapTests::getActorsPositions(const vector<Actor*>& actors,
+                                  vector<Pos>& vectorToFill) {
+  vectorToFill.resize(0);
+  const unsigned int NR_ACTORS = actors.size();
+  for(unsigned int i = 0; i < NR_ACTORS; i++) {
+    vectorToFill.push_back(actors.at(i)->pos);
+  }
+}
+
 Actor* MapTests::getClosestActor(const Pos c, const vector<Actor*>& actors) const {
   if(actors.size() == 0) return NULL;
 
@@ -316,7 +325,7 @@ bool MapTests::isCellsNeighbours(const Pos& pos1, const Pos& pos2,
 }
 
 vector<Pos> MapTests::getLine(const Pos& origin, const Pos& target,
-                                bool stopAtTarget, int chebTravelLimit) {
+                              bool stopAtTarget, int chebTravelLimit) {
 
   vector<Pos> line;
   line.resize(0);

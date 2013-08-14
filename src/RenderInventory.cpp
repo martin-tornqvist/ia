@@ -58,7 +58,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       const SDL_Color itemInterfClr =
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
-      const ItemDefinition& d = item->getDef();
+      const ItemDef& d = item->getDef();
       PrimaryAttackMode_t attackMode = primaryAttackMode_none;
       if(slot->id == slot_wielded || slot->id == slot_wieldedAlt) {
         attackMode =
@@ -193,7 +193,7 @@ void RenderInventory::drawEquipMode(
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
-    const ItemDefinition& d = item->getDef();
+    const ItemDef& d = item->getDef();
     PrimaryAttackMode_t attackMode = primaryAttackMode_none;
     if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
       attackMode =

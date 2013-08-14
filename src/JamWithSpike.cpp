@@ -49,7 +49,7 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
   }
 
   if(jamableObjectFound == false) {
-    const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
+    const bool PLAYER_IS_BLIND = eng->player->getStatusHandler()->allowSee();
     if(PLAYER_IS_BLIND == false) {
       eng->log->addMessage("I see nothing there to jam with a spike.");
     } else {

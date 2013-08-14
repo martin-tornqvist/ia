@@ -36,8 +36,8 @@ void Monster::act() {
     }
   }
 
-  getSpotedEnemies();
-
+  vector<Actor*> spotedEnemies;
+  getSpotedEnemies(spotedEnemies);
   target = eng->mapTests->getClosestActor(pos, spotedEnemies);
 
   if(spellCoolDownCurrent != 0) {
@@ -184,7 +184,7 @@ void Monster::monsterHit(int& dmg) {
 }
 
 void Monster::moveToCell(const Pos& targetCell) {
-  Pos dest = getStatusEffectsHandler()->changeMovePos(pos, targetCell);
+  Pos dest = getStatusHandler()->changeMovePos(pos, targetCell);
 
   //Trap affects leaving?
   if(dest != pos) {
@@ -270,7 +270,8 @@ bool Monster::tryAttack(Actor& defender) {
                   for(unsigned int i = 0; i < line.size(); i++) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
-                      Actor* const actorHere = eng->mapTests->getActorAtPos(curPos);
+                      Actor* const actorHere =
+                        eng->mapTests->getActorAtPos(curPos);
                       if(actorHere != NULL) {
                         isBlockedByFriend = true;
                         break;
@@ -280,10 +281,11 @@ bool Monster::tryAttack(Actor& defender) {
                 }
 
                 if(isBlockedByFriend == false) {
-                  const int NR_TURNS_DISABLED_RANGED = def_->rangedCooldownTurns;
+                  const int NR_TURNS_DISABLED_RANGED =
+                    def_->rangedCooldownTurns;
                   StatusDisabledAttackRanged* status =
                     new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
-                  statusEffectsHandler_->tryAddEffect(status);
+                  statusHandler_->tryAddEffect(status);
                   eng->attack->ranged(*this, *attack.weapon, defender.pos);
                   return true;
                 } else {
@@ -301,16 +303,18 @@ bool Monster::tryAttack(Actor& defender) {
 
 AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
-  if(statusEffectsHandler_->allowAttack(false)) {
-    opport.isMelee = eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
+  if(statusHandler_->allowAttack(false)) {
+    opport.isMelee =
+      eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
     if(opport.isMelee) {
-      if(statusEffectsHandler_->allowAttackMelee(false)) {
+      if(statusHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
-        weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
+        weapon =
+          dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
         if(weapon != NULL) {
           if(weapon->getDef().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
@@ -327,10 +331,11 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       }
     } else {
       if(
-        statusEffectsHandler_->allowAttackRanged(false) &&
-        statusEffectsHandler_->hasEffect(statusBurning) == false) {
+        statusHandler_->allowAttackRanged(false) &&
+        statusHandler_->hasEffect(statusBurning) == false) {
         //Ranged weapon in wielded slot?
-        weapon = dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
+        weapon =
+          dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
 
         if(weapon != NULL) {
           if(weapon->getDef().isRangedWeapon == true) {
@@ -374,7 +379,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   if(nrOfWeapons > 0) {
     attack.weapon = attackOpport.weapons.at(0);
 
-    const ItemDefinition* def = &(attack.weapon->getDef());
+    const ItemDef* def = &(attack.weapon->getDef());
 
     //If there are more than one possible weapon, find strongest.
     if(nrOfWeapons > 1) {
@@ -382,7 +387,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Found new weapon in element i.
         newWeapon = attackOpport.weapons.at(i);
-        const ItemDefinition* newDef = &(newWeapon->getDef());
+        const ItemDef* newDef = &(newWeapon->getDef());
 
         //Compare definitions.
         //If weapon i is stronger -

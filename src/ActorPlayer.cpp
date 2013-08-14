@@ -26,6 +26,7 @@
 #include "Inventory.h"
 #include "InventoryHandler.h"
 #include "ItemMedicalBag.h"
+#include "PlayerSpellsHandler.h"
 
 Player::Player() :
   activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -112,11 +113,11 @@ void Player::actorSpecific_spawnStartItems() {
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
-  const unsigned int NR_STATUS_EFFECTS = statusEffectsHandler_->effects.size();
+  const unsigned int NR_STATUS_EFFECTS = statusHandler_->effects.size();
   lines.push_back(intToString(NR_STATUS_EFFECTS));
   for(unsigned int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->getEffectId()));
-    lines.push_back(intToString(statusEffectsHandler_->effects.at(i)->turnsLeft));
+    lines.push_back(intToString(statusHandler_->effects.at(i)->getEffectId()));
+    lines.push_back(intToString(statusHandler_->effects.at(i)->turnsLeft));
   }
 
   lines.push_back(intToString(insanity_));
@@ -148,8 +149,8 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
     const int TURNS = stringToInt(lines.front());
     lines.erase(lines.begin());
     StatusEffect* const effect =
-      statusEffectsHandler_->makeEffectFromId(id, TURNS);
-    statusEffectsHandler_->tryAddEffect(effect, true, true, true);
+      statusHandler_->makeEffectFromId(id, TURNS);
+    statusHandler_->tryAddEffect(effect, true, true, true);
   }
 
   insanity_ = stringToInt(lines.front());
@@ -200,7 +201,7 @@ void Player::actorSpecific_hit(const int DMG) {
 
   if(DMG >= 5) {
     StatusEffect* const effect = new StatusWound(eng);
-    statusEffectsHandler_->tryAddEffect(effect);
+    statusHandler_->tryAddEffect(effect);
   }
 
   eng->renderer->drawMapAndInterface();
@@ -208,11 +209,11 @@ void Player::actorSpecific_hit(const int DMG) {
 
 int Player::getCarryWeightLimit() const {
   PlayerBonHandler* const bon = eng->playerBonHandler;
-  const bool IS_RUGGED        = bon->isBonPicked(playerBon_rugged);
+  const bool IS_TOUGH         = bon->isBonPicked(playerBon_tough);
   const bool IS_STRONG_BACKED = bon->isBonPicked(playerBon_strongBacked);
-  const bool IS_WEAK          = statusEffectsHandler_->hasEffect(statusWeak);
+  const bool IS_WEAK          = statusHandler_->hasEffect(statusWeak);
   const int CARRY_WEIGHT_MOD =
-    IS_RUGGED * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
+    IS_TOUGH * 10 + IS_STRONG_BACKED * 30 - IS_WEAK * 15;
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
@@ -309,9 +310,10 @@ void Player::incrInsanity() {
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
-    getSpotedEnemies();
+    vector<Actor*> spotedEnemies;
+    getSpotedEnemies(spotedEnemies);
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      const ActorDefinition* const def = spotedEnemies.at(i)->getDef();
+      const ActorDef* const def = spotedEnemies.at(i)->getDef();
       if(def->monsterShockLevel != monsterShockLevel_none) {
         playerSeeShockingMonster = true;
       }
@@ -347,7 +349,7 @@ void Player::incrInsanity() {
         case 3: {
           popupMessage += "I struggle to not fall into a stupor.";
           eng->popup->showMessage(popupMessage, true, "Fainting!");
-          statusEffectsHandler_->tryAddEffect(new StatusFainted(eng));
+          statusHandler_->tryAddEffect(new StatusFainted(eng));
           return;
         } break;
         case 4: {
@@ -361,7 +363,7 @@ void Player::incrInsanity() {
             //There is a limit to the number of phobias you can have
             int phobiasActive = 0;
             for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-              if(insanityPhobias[i] == true) {
+              if(insanityPhobias[i]) {
                 phobiasActive++;
               }
             }
@@ -369,25 +371,25 @@ void Player::incrInsanity() {
               if(eng->dice.coinToss()) {
                 if(spotedEnemies.size() > 0) {
                   const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
-                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == false) {
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isRat && insanityPhobias[insanityPhobia_rat] == false) {
                     popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
                     eng->popup->showMessage(popupMessage, true, "Murophobia!");
                     insanityPhobias[insanityPhobia_rat] = true;
                     return;
                   }
-                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == false) {
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isSpider && insanityPhobias[insanityPhobia_spider] == false) {
                     popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
                     eng->popup->showMessage(popupMessage, true, "Arachnophobia!");
                     insanityPhobias[insanityPhobia_spider] = true;
                     return;
                   }
-                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == false) {
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isCanine && insanityPhobias[insanityPhobia_dog] == false) {
                     popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
                     eng->popup->showMessage(popupMessage, true, "Cynophobia!");
                     insanityPhobias[insanityPhobia_dog] = true;
                     return;
                   }
-                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == false) {
+                  if(spotedEnemies.at(MONSTER_ROLL)->getDef()->isUndead && insanityPhobias[insanityPhobia_undead] == false) {
                     popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
                     eng->popup->showMessage(popupMessage, true, "Necrophobia!");
                     insanityPhobias[insanityPhobia_undead] = true;
@@ -413,7 +415,7 @@ void Player::incrInsanity() {
                     }
                   }
                 } else {
-                  if(eng->map->getDungeonLevel() >= 5) {
+                  if(eng->map->getDLVL() >= 5) {
                     if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
                       popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
                       eng->popup->showMessage(popupMessage, true, "Bathophobia!");
@@ -431,7 +433,7 @@ void Player::incrInsanity() {
           if(insanity_ > 20) {
             int obsessionsActive = 0;
             for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-              if(insanityObsessions[i] == true) {
+              if(insanityObsessions[i]) {
                 obsessionsActive++;
               }
             }
@@ -482,7 +484,7 @@ void Player::incrInsanity() {
             }
             const int NR_SPAWN_POS_CANDIDATES = spawnPosCandidates.size();
             if(NR_SPAWN_POS_CANDIDATES > 0) {
-              const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDungeonLevel() + 1) / 2)));
+              const int NR_SHADOWS_TO_SPAWN = min(NR_SPAWN_POS_CANDIDATES, eng->dice(1, min(5, (eng->map->getDLVL() + 1) / 2)));
               for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
                 const unsigned int SPAWN_POS_ELEMENT = eng->dice.getInRange(0, spawnPosCandidates.size() - 1);
                 const Pos spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
@@ -500,9 +502,11 @@ void Player::incrInsanity() {
 
         case 8: {
           if(eng->playerBonHandler->isBonPicked(playerBon_selfAware) == false) {
-            popupMessage += "I find myself in a peculiar detached daze, a tranced state of mind. I am not sure where I am, or what I am doing exactly.";
+            popupMessage += "I find myself in a peculiar detached daze, ";
+            popupMessage += "a tranced state of mind. I am not sure where ";
+            popupMessage += "I am, or what I am doing exactly.";
             eng->popup->showMessage(popupMessage, true, "Confusion!");
-            statusEffectsHandler_->tryAddEffect(new StatusConfused(eng), true);
+            statusHandler_->tryAddEffect(new StatusConfused(eng), true);
             return;
           }
         } break;
@@ -560,45 +564,57 @@ bool Player::isStandingInCrampedSpace() const {
 }
 
 void Player::testPhobias() {
+  vector<Actor*> spotedEnemies;
+  getSpotedEnemies(spotedEnemies);
+
   const int ROLL = eng->dice.percentile();
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      if(spotedEnemies.at(0)->getDef()->isCanine == true && insanityPhobias[insanityPhobia_dog] == true) {
+      if(
+        spotedEnemies.at(0)->getDef()->isCanine &&
+        insanityPhobias[insanityPhobia_dog]) {
         eng->log->addMessage("I am plagued by my canine phobia!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getDef()->isRat == true && insanityPhobias[insanityPhobia_rat] == true) {
+      if(
+        spotedEnemies.at(0)->getDef()->isRat &&
+        insanityPhobias[insanityPhobia_rat]) {
         eng->log->addMessage("I am plagued by my rat phobia!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getDef()->isUndead == true && insanityPhobias[insanityPhobia_undead] == true) {
+      if(
+        spotedEnemies.at(0)->getDef()->isUndead &&
+        insanityPhobias[insanityPhobia_undead]) {
         eng->log->addMessage("I am plagued by my phobia of the dead!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
-      if(spotedEnemies.at(0)->getDef()->isSpider == true && insanityPhobias[insanityPhobia_spider] == true) {
+      if(
+        spotedEnemies.at(0)->getDef()->isSpider &&
+        insanityPhobias[insanityPhobia_spider]) {
         eng->log->addMessage("I am plagued by my spider phobia!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
   }
   if(ROLL < 5) {
-    if(insanityPhobias[insanityPhobia_openPlace] == true) {
+    if(insanityPhobias[insanityPhobia_openPlace]) {
       if(isStandingInOpenSpace()) {
         eng->log->addMessage("I am plagued by my phobia of open places!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
 
-    if(insanityPhobias[insanityPhobia_closedPlace] == true) {
+    if(insanityPhobias[insanityPhobia_closedPlace]) {
       if(isStandingInCrampedSpace()) {
         eng->log->addMessage("I am plagued by my phobia of closed places!");
-        statusEffectsHandler_->tryAddEffect(new StatusTerrified(eng->dice(1, 6)));
+        statusHandler_->tryAddEffect(
+          new StatusTerrified(eng->dice(1, 6)));
         return;
       }
     }
@@ -607,7 +623,7 @@ void Player::testPhobias() {
 
 int Player::getHpMax(const bool WITH_MODIFIERS) const {
   if(WITH_MODIFIERS) {
-    if(statusEffectsHandler_->hasEffect(statusDiseased)) {
+    if(statusHandler_->hasEffect(statusDiseased)) {
       return (hpMax_ * 3) / 4;
     }
   }
@@ -620,8 +636,11 @@ void Player::updateColor() {
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
-  if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+  const SDL_Color clrFromStatusEffect = statusHandler_->getColor();
+  if(
+    clrFromStatusEffect.r != 0 ||
+    clrFromStatusEffect.g != 0 ||
+    clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
   }
@@ -686,25 +705,25 @@ void Player::act() {
     flareFuseTurns = -1;
   }
 
-  getSpotedEnemies();
-
   if(activeMedicalBag == NULL) {
     testPhobias();
   }
 
   //If obsessions are active, raise shock to a minimum level
   for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-    if(insanityObsessions[i] == true) {
+    if(insanityObsessions[i]) {
       shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
     }
   }
 
   //Shock from seen monsters
+  vector<Actor*> spotedEnemies;
+  getSpotedEnemies(spotedEnemies);
   double shockFromMonstersCurrentPlayerTurn = 0.0;
   for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
     Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
-    const ActorDefinition* const def = monster->getDef();
+    const ActorDef* const def = monster->getDef();
     if(def->monsterShockLevel != monsterShockLevel_none) {
       switch(def->monsterShockLevel) {
         case monsterShockLevel_unsettling: {
@@ -746,7 +765,7 @@ void Player::act() {
       incrShock(shockValue_heavy);
       eng->renderer->drawMapAndInterface();
     } else {
-      if(eng->map->getDungeonLevel() != 0) {
+      if(eng->map->getDLVL() != 0) {
         incrShock(1);
       }
     }
@@ -815,8 +834,8 @@ void Player::act() {
     }
 
     if(
-      statusEffectsHandler_->allowSee() &&
-      statusEffectsHandler_->hasEffect(statusConfused) == false) {
+      statusHandler_->allowSee() &&
+      statusHandler_->hasEffect(statusConfused) == false) {
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;
@@ -856,8 +875,6 @@ void Player::act() {
           }
         }
       }
-
-      tryIdentifyItems();
     }
   }
 
@@ -877,26 +894,26 @@ void Player::act() {
   //When this function ends, the system starts reading keys.
 }
 
-void Player::tryIdentifyItems() {
-  //  const vector<Item*>* const general = inventory_->getGeneral();
-  //  for(unsigned int i = 0; i < general->size(); i++) {
-  //    Item* const item = general->at(i);
-  //    const ItemDefinition& def = item->getInstanceDefinition();
-  //
-  //    //It must not be a readable item (those must be actively identified)
-  //    if(def.isReadable == false) {
-  //      if(def.isIdentified == false) {
-  //        if(def.abilityToIdentify != ability_empty) {
-  //          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);
-  //          if(SKILL > (100 - def.identifySkillFactor)) {
-  //            item->setRealDefinitionNames(eng, false);
-  //            eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
-  //          }
-  //        }
-  //      }
-  //    }
-  //  }
-}
+//void Player::tryIdentifyItems() {
+//  const vector<Item*>* const general = inventory_->getGeneral();
+//  for(unsigned int i = 0; i < general->size(); i++) {
+//    Item* const item = general->at(i);
+//    const ItemDef& def = item->getInstanceDefinition();
+//
+//    //It must not be a readable item (those must be actively identified)
+//    if(def.isReadable == false) {
+//      if(def.isIdentified == false) {
+//        if(def.abilityToIdentify != ability_empty) {
+//          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);
+//          if(SKILL > (100 - def.identifySkillFactor)) {
+//            item->setRealDefinitionNames(eng, false);
+//            eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
 
 void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
   (void)PROMPT_FOR_ABORT;
@@ -935,7 +952,7 @@ void Player::hearSound(const Sound& sound) {
 void Player::moveDirection(const Pos& dir) {
   if(deadState == actorDeadState_alive) {
 
-    Pos dest = statusEffectsHandler_->changeMovePos(pos, pos + dir);
+    Pos dest = statusHandler_->changeMovePos(pos, pos + dir);
 
     //Trap affects leaving?
     if(dest != pos) {
@@ -952,7 +969,7 @@ void Player::moveDirection(const Pos& dir) {
       //Attack?
       Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
       if(actorAtDest != NULL) {
-        if(statusEffectsHandler_->allowAttackMelee(true) == true) {
+        if(statusHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
           Item* const item = inventory_->getItemInSlot(slot_wielded);
           if(item != NULL) {
@@ -1029,7 +1046,7 @@ void Player::moveDirection(const Pos& dir) {
         //Print message if walking on item
         Item* const item = eng->map->items[pos.x][pos.y];
         if(item != NULL) {
-          string message = statusEffectsHandler_->allowSee() == false ?
+          string message = statusHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
           message += eng->itemData->getItemInterfaceRef(*item, true);
           eng->log->addMessage(message + ".");
@@ -1070,7 +1087,7 @@ void Player::autoMelee() {
       if(dx != 0 || dy != 0) {
         const Actor* const actor = eng->mapTests->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
-          if(checkIfSeeActor(*actor, NULL) == true) {
+          if(checkIfSeeActor(*actor, NULL)) {
             target = actor;
             moveDirection(Pos(dx, dy));
             return;
@@ -1084,9 +1101,9 @@ void Player::autoMelee() {
 void Player::kick(Actor& actorToKick) {
   Weapon* kickWeapon = NULL;
 
-  const ActorDefinition* const d = actorToKick.getDef();
+  const ActorDef* const d = actorToKick.getDef();
 
-  if(d->actorSize == actorSize_floor && (d->isSpider == true || d->isRat == true)) {
+  if(d->actorSize == actorSize_floor && (d->isSpider || d->isRat)) {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerStomp));
   } else {
     kickWeapon = dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
@@ -1157,14 +1174,14 @@ void Player::updateFov() {
     }
   }
 
-  if(statusEffectsHandler_->allowSee()) {
+  if(statusHandler_->allowSee()) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeVisionBlockerArray(pos, blockers);
     eng->fov->runPlayerFov(blockers, pos);
     eng->map->playerVision[pos.x][pos.y] = true;
   }
 
-  if(statusEffectsHandler_->hasEffect(statusClairvoyant)) {
+  if(statusHandler_->hasEffect(statusClairvoyant)) {
     const int FLOODFILL_TRAVEL_LIMIT = FOV_STANDARD_RADI_INT + 2;
 
     const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
@@ -1195,9 +1212,7 @@ void Player::updateFov() {
     }
   }
 
-  if(statusEffectsHandler_->allowSee()) {
-    FOVhack();
-  }
+  if(statusHandler_->allowSee()) {FOVhack();}
 
   if(eng->isCheatVisionEnabled) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -1210,7 +1225,7 @@ void Player::updateFov() {
   //Explore
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
-      if(eng->map->playerVision[x][y] == true) {
+      if(eng->map->playerVision[x][y]) {
         eng->map->explored[x][y] = true;
       }
     }
@@ -1249,10 +1264,8 @@ void Player::FOVhack() {
 }
 
 void Player::grantMthPower() const {
-  ItemDefinition* const mthPowerDef =
-    eng->itemData->itemDefinitions[item_thaumaturgicAlteration];
-  if(mthPowerDef->isScrollLearned == false) {
-    mthPowerDef->isScrollLearned = true;
+  if(eng->playerSpellsHandler->isSpellLearned(spell_mthPower) == false) {
+    eng->playerSpellsHandler->learnSpellIfNotKnown(spell_mthPower);
     string str = "I have gained a deeper insight into the esoteric forces";
     str += " acting behind our apparent reality. With this knowledge, I can";
     str += " attempt to acquire hidden information or displace existence";

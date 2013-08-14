@@ -40,7 +40,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   HighScoreEntry currentPlayer(
     eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true),
     eng->player->getNameA(),
-    eng->map->getDungeonLevel(),
+    eng->map->getDLVL(),
     eng->player->getInsanity(),
     IS_VICTORY);
 

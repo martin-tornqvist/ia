@@ -277,7 +277,7 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       default: break;
     }
 
-    chanceToMakeDark += eng->map->getDungeonLevel() - 1;
+    chanceToMakeDark += eng->map->getDLVL() - 1;
 
     if(eng->dice.getInRange(1, 100) < chanceToMakeDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {

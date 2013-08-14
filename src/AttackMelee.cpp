@@ -23,7 +23,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       data.currentDefender->hit(data.dmg, wpn.getDef().meleeDmgType);
 
     if(IS_DEFENDER_KILLED == false) {
-      data.currentDefender->getStatusEffectsHandler()->tryAddEffectsFromWeapon(wpn, true);
+      data.currentDefender->getStatusHandler()->tryAddEffectsFromWeapon(wpn, true);
     }
     if(data.attackResult >= successNormal) {
       if(data.currentDefender->getDef()->canBleed == true) {
@@ -37,7 +37,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         }
       }
     }
-    const ItemDefinition& itemDef = wpn.getDef();
+    const ItemDef& itemDef = wpn.getDef();
     if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsic == false) {
       eng->soundEmitter->emitSound(Sound("", true, data.currentDefender->pos,
                                          false, true));

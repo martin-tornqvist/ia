@@ -24,11 +24,11 @@ class Actor {
 public:
   Actor() {}
 
-  inline StatusEffectsHandler* getStatusEffectsHandler() {
-    return statusEffectsHandler_;
+  inline StatusHandler* getStatusHandler() {
+    return statusHandler_;
   }
 
-  inline ActorDefinition* getDef() {return def_;}
+  inline ActorDef* getDef() {return def_;}
 
   virtual ~Actor();
 
@@ -37,7 +37,7 @@ public:
 
   Inventory* getInventory() {return inventory_;}
 
-  void place(const Pos& pos_, ActorDefinition* const actorDefinition,
+  void place(const Pos& pos_, ActorDef* const actorDefinition,
              Engine* engine);
 
   bool hit(int dmg, const DmgTypes_t dmgType);
@@ -61,10 +61,7 @@ public:
     const Actor& other,
     const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  vector<Actor*> spotedEnemies;
-  vector<Pos> spotedEnemiesPositions;
-  void getSpotedEnemies();
-  void getSpotedEnemiesPositions();
+  void getSpotedEnemies(vector<Actor*>& vectorToFill);
 
   //Various "shortcuts" to the instance definition
   inline ActorId_t getId() const {return def_->id;}
@@ -117,8 +114,8 @@ protected:
 
   Pos lairCell_;
 
-  StatusEffectsHandler* statusEffectsHandler_;
-  ActorDefinition* def_;
+  StatusHandler* statusHandler_;
+  ActorDef* def_;
   Inventory* inventory_;
 };
 

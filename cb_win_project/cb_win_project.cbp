@@ -285,8 +285,8 @@
 		<Unit filename="../src/PlayerBonuses.h" />
 		<Unit filename="../src/PlayerCreateCharacter.cpp" />
 		<Unit filename="../src/PlayerCreateCharacter.h" />
-		<Unit filename="../src/PlayerPowersHandler.cpp" />
-		<Unit filename="../src/PlayerPowersHandler.h" />
+		<Unit filename="../src/PlayerSpellsHandler.cpp" />
+		<Unit filename="../src/PlayerSpellsHandler.h" />
 		<Unit filename="../src/PlayerVisualMemory.cpp" />
 		<Unit filename="../src/PlayerVisualMemory.h" />
 		<Unit filename="../src/PopulateItems.cpp" />

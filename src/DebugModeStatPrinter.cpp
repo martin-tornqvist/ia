@@ -8,16 +8,17 @@
 #include "ActorFactory.h"
 #include "Inventory.h"
 #include "Item.h"
-#include "PlayerPowersHandler.h"
+#include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
 #include "ItemData.h"
+#include "Spells.h"
+#include "ActorPlayer.h"
 
-struct IsHigherMonsterLvl {
+struct IsHigherSpawnMinLvl {
 public:
-  IsHigherMonsterLvl() {
-  }
-  bool operator()(const ActorDefinition* const d1, const ActorDefinition* const d2) {
-    return d1->monsterLvl < d2->monsterLvl;
+  IsHigherSpawnMinLvl() {}
+  bool operator()(const ActorDef* const d1, const ActorDef* const d2) {
+    return d1->spawnMinDLVL < d2->spawnMinDLVL;
   }
 };
 
@@ -28,53 +29,53 @@ void DebugModeStatPrinter::run() {
 
   statFile.open("debug_mode_stats_file.txt", ios::trunc);
   printLine("This file was created because Infra Arcana was run in Debug mode\n");
-  printLine("Created at   : " + eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true));
+  printLine("Created on   : " + eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true));
   printLine("Game version : " + eng->config->GAME_VERSION);
   printLine("\n");
 
-  printLine("SPELL COOLDOWN TURNS (0% -> " + intToString(CAST_FROM_MEMORY_CHANCE_LIM) + "%)");
+  printLine("SPELL SPI COSTS");
   printLine(separator);
-  const unsigned int NR_LEARNABLE_SCROLLS = eng->playerPowersHandler->getNrOfSpells();
-  for(unsigned int i = 0; i < NR_LEARNABLE_SCROLLS; i++) {
-    Scroll* const scroll = eng->playerPowersHandler->getScrollAt(i);
-    const ItemDefinition& d = scroll->getDef();
-    if(d.isScrollLearnable) {
-      string name = scroll->getRealTypeName();
-      name.insert(name.end(), 24 - name.size(), ' ');
-      const string cooldownTurnsStr = intToString(d.spellTurnsPerPercentCooldown * 100);
-      printLine(indent1 + name + cooldownTurnsStr);
-    }
+  for(int i = 0; i < endOfSpells; i++) {
+    Spell* const spell = eng->spellHandler->getSpellFromId(Spells_t(i));
+    string name = spell->getName();
+    name.insert(name.end(), 24 - name.size(), ' ');
+    const string cost =
+      intToString(spell->getSpiCost(true, eng->player, eng));
+    printLine(indent1 + name + cost);
   }
   printLine("\n");
 
-  vector<ActorDefinition*> actorDefsSorted;
+  vector<ActorDef*> actorDefsSorted;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    actorDefsSorted.push_back(&(eng->actorData->actorDefinitions[i]));
+    actorDefsSorted.push_back(&(eng->actorData->actorDefs[i]));
   }
-  IsHigherMonsterLvl isHigherMonsterLvl;
-  std::sort(actorDefsSorted.begin(), actorDefsSorted.end(), isHigherMonsterLvl);
+  IsHigherSpawnMinLvl isHigherSpawnMinLvl;
+  std::sort(actorDefsSorted.begin(), actorDefsSorted.end(), isHigherSpawnMinLvl);
 
-  printLine("MONSTER LVL SPREAD");
+  printLine("MONSTERS PER MIN DLVL");
   printLine(separator);
   printLine(indent1 + "LVL   NR");
   printLine(indent1 + "---------");
 
-  vector<int> monstersPerLvl(actorDefsSorted.back()->monsterLvl, 0);
+  vector<int> monstersPerMinDLVL(actorDefsSorted.back()->spawnMinDLVL + 1, 0);
   for(unsigned int i = 0; i < actorDefsSorted.size(); i++) {
-    monstersPerLvl.at(actorDefsSorted.at(i)->monsterLvl - 1)++;
+//    tracer << actorDefsSorted.at(i)->name_a << endl;
+//    tracer << actorDefsSorted.at(i)->spawnMinDLVL << endl;
+    monstersPerMinDLVL.at(actorDefsSorted.at(i)->spawnMinDLVL)++;
   }
-  for(unsigned int i = 0; i < monstersPerLvl.size(); i++) {
-    const int LVL = i + 1;
+  for(unsigned int i = 0; i < monstersPerMinDLVL.size(); i++) {
+    const int LVL = i;
     string lvlStr = intToString(LVL);
     lvlStr.insert(lvlStr.end(), 6 - lvlStr.size(), ' ');
-    string nrStr = intToString(monstersPerLvl.at(i));
+    string nrStr = intToString(monstersPerMinDLVL.at(i));
     nrStr.insert(nrStr.end(), 3, ' ');
-    if(monstersPerLvl.at(i) > 0) {
-      nrStr.insert(nrStr.end(), monstersPerLvl.at(i), '*');
+    if(monstersPerMinDLVL.at(i) > 0) {
+      nrStr.insert(nrStr.end(), monstersPerMinDLVL.at(i), '*');
     }
     printLine(indent1 + lvlStr + nrStr);
   }
-  printLine("\n" + indent1 + "Total number of monsters: " + intToString(actorDefsSorted.size()));
+  printLine("\n" + indent1 + "Total number of monsters: " +
+            intToString(actorDefsSorted.size()));
   printLine("\n");
 
   printLine("STATS FOR EACH MONSTER");
@@ -86,26 +87,24 @@ void DebugModeStatPrinter::run() {
   printLine("");
 
   for(unsigned int i = 0; i < actorDefsSorted.size(); i++) {
-    ActorDefinition& d = *(actorDefsSorted.at(i));
+    ActorDef& d = *(actorDefsSorted.at(i));
 
     Actor* const actor = eng->actorFactory->makeActorFromId(d.id);
     actor->place(Pos(-1, -1), &d, eng);
 
     const string uniqueStr = d.isUnique ? " (U)" : "";
     printLine(indent1 + actor->getNameA() + uniqueStr);
-    string lvlStr = "LVL:" + intToString(d.monsterLvl);
-    lvlStr.insert(lvlStr.end(), 8 - lvlStr.size(), ' ');
-    string hpStr = "HP:" + intToString(d.hpMax);
+    string hpStr = "HP:" + intToString(d.hp);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
     const int attackSkill = d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
     const string attackSkillStr = "Attack skill:" + intToString(attackSkill) + "%";
-    printLine(indent2 + lvlStr + hpStr + attackSkillStr);
+    printLine(indent2 + hpStr + attackSkillStr);
 
     const Inventory* const inv = actor->getInventory();
     const unsigned int NR_INTRINSIC_ATTACKS = inv->getIntrinsicsSize();
     for(unsigned int i_intr = 0; i_intr < NR_INTRINSIC_ATTACKS; i_intr++) {
       const Item* const item = inv->getIntrinsicInElement(i_intr);
-      const ItemDefinition& itemDef = item->getDef();
+      const ItemDef& itemDef = item->getDef();
       const string meleeOrRangedStr = itemDef.isRangedWeapon ? "(R)" : "(M)";
       const string attackNrStr = "Attack " + intToString(i_intr + 1);
       const string dmgStr = intToString(itemDef.meleeDmg.first) + "d" + intToString(itemDef.meleeDmg.second);

@@ -25,10 +25,10 @@ public:
   void addAutoDescriptionLines(Actor* const actor, string& line) const;
 
 private:
-  string getNormalGroupSizeStr(const ActorDefinition& def) const;
-  string getDwellingLevelStr(const ActorDefinition& def) const;
-  string getNrOfKillsStr(const ActorDefinition& def) const;
-  string getSpeedStr(const ActorDefinition& def) const;
+  string getNormalGroupSizeStr(const ActorDef& def) const;
+  string getDwellingLevelStr(const ActorDef& def) const;
+  string getNrOfKillsStr(const ActorDef& def) const;
+  string getSpeedStr(const ActorDef& def) const;
 
   Engine* eng;
 };

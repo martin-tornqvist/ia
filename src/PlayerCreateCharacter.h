@@ -12,6 +12,12 @@ class Engine;
 
 const int Y0_CREATE_CHARACTER = 6;
 
+enum CharGenStep_t {
+  CharGenStep_traits,
+  CharGenStep_skills,
+  CharGenStep_name
+};
+
 class PlayerCreateCharacter {
 public:
   PlayerCreateCharacter(Engine* engine) : eng(engine) {}
@@ -22,7 +28,7 @@ private:
   void draw(const vector<PlayerBon_t>& bonsTraits,
             const vector<PlayerBon_t>& bonsSkills,
             const MenuBrowser& browser,
-            const bool IS_DONE_PICKING_BONS) const;
+            const CharGenStep_t step) const;
 
   Engine* eng;
 };

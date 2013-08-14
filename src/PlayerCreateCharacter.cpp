@@ -27,39 +27,41 @@ void PlayerCreateCharacter::run() {
   int nrTraitsPicked = 0;
   int nrSkillsPicked = 0;
 
-  bool isDonePickingBons = false;
+  CharGenStep_t step = CharGenStep_traits;
 
-  MenuBrowser browser(bonsTraits.size(), bonsSkills.size());
-  draw(bonsTraits, bonsSkills, browser, isDonePickingBons);
-  while(isDonePickingBons == false) {
+  MenuBrowser browser(bonsTraits.size(), 0);
+  draw(bonsTraits, bonsSkills, browser, step);
+  while(step != CharGenStep_name) {
     const MenuAction_t action = eng->menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
-        draw(bonsTraits, bonsSkills, browser, isDonePickingBons);
+        draw(bonsTraits, bonsSkills, browser, step);
       } break;
 
       case menuAction_canceled: {} break;
 
       case menuAction_selected: {
-        const Pos browserPos = browser.getPos();
-        if(browserPos.x == 0) {
+        if(step == CharGenStep_traits) {
           const PlayerBon_t bon = bonsTraits.at(browser.getPos().y);
-          if(nrTraitsPicked < NR_TRAITS &&
-              eng->playerBonHandler->isBonPicked(bon) == false) {
+          if(eng->playerBonHandler->isBonPicked(bon) == false) {
             eng->playerBonHandler->pickBon(bon);
             nrTraitsPicked++;
           }
+          if(nrTraitsPicked == NR_TRAITS) {
+            step = CharGenStep_skills;
+            browser = MenuBrowser(bonsSkills.size(), 0);
+          }
         } else {
           const PlayerBon_t bon = bonsSkills.at(browser.getPos().y);
-          if(nrSkillsPicked < NR_SKILLS &&
-              eng->playerBonHandler->isBonPicked(bon) == false) {
+          if(eng->playerBonHandler->isBonPicked(bon) == false) {
             eng->playerBonHandler->pickBon(bon);
             nrSkillsPicked++;
           }
+          if(nrSkillsPicked == NR_SKILLS) {
+            step = CharGenStep_name;
+          }
         }
-        isDonePickingBons =
-          nrTraitsPicked == NR_TRAITS && nrSkillsPicked == NR_SKILLS;
-        draw(bonsTraits, bonsSkills, browser, isDonePickingBons);
+        draw(bonsTraits, bonsSkills, browser, step);
       }
       break;
 
@@ -75,13 +77,13 @@ void PlayerCreateCharacter::run() {
 void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
                                  const vector<PlayerBon_t>& bonsSkills,
                                  const MenuBrowser& browser,
-                                 const bool IS_DONE_PICKING_BONS) const {
+                                 const CharGenStep_t step) const {
   eng->renderer->coverPanel(panel_screen);
 
   const unsigned int NR_BONS_TRAITS = bonsTraits.size();
   const unsigned int NR_BONS_SKILLS = bonsSkills.size();
 
-  const int LEN_OF_LONGEST_LIST = max(NR_BONS_SKILLS, NR_BONS_SKILLS);
+  const int LEN_OF_LONGEST_LIST = max(NR_BONS_TRAITS, NR_BONS_SKILLS);
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
@@ -89,21 +91,23 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
     "Describe yourself", panel_screen,
     Pos(MAP_X_CELLS_HALF, Y0_TITLE), clrWhite, clrBlack, true);
 
-  const Pos browserPos = browser.getPos();
+  const int browserY = browser.getPos().y;
 
-  const int X_TRAITS = 5; //14;
+  const int X_TRAITS = 5;
 
   const int Y0_BONUSES = Y0_TITLE + 4;
   int yPos = Y0_BONUSES;
   int lenOfWidestName = 0;
-  eng->renderer->drawText(
-    "Pick two traits", panel_screen, Pos(X_TRAITS - 2, yPos - 2), clrWhite);
+  if(step == CharGenStep_traits) {
+    eng->renderer->drawText(
+      "* Pick two traits", panel_screen, Pos(X_TRAITS - 2, yPos - 2), clrWhite);
+  }
   for(unsigned int i = 0; i < NR_BONS_TRAITS; i++) {
     const PlayerBon_t bon = bonsTraits.at(i);
     const string name     = eng->playerBonHandler->getBonTitle(bon);
     if(int(name.size()) > lenOfWidestName) {lenOfWidestName = name.size();}
-    const bool IS_MARKED  = browserPos.x == 0 && browserPos.y == int(i) &&
-                            IS_DONE_PICKING_BONS == false;
+    const bool IS_MARKED  = browserY == int(i) &&
+                            step == CharGenStep_traits;
     const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
     const SDL_Color clr   = IS_MARKED ? clrNosferatuTealLgt :
                             clrNosferatuTealDrk;
@@ -120,47 +124,51 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
   }
   const Rect traitsBorders(X_TRAITS - 3, Y0_BONUSES - 1,
                            X_TRAITS + lenOfWidestName + 1,
-                           Y0_BONUSES + LEN_OF_LONGEST_LIST + 1);
+                           Y0_BONUSES + LEN_OF_LONGEST_LIST);
   eng->renderer->drawPopupBox(traitsBorders, panel_screen);
 
-  const int X_SKILLS = X_TRAITS + lenOfWidestName + 5;
+  if(step > CharGenStep_traits) {
+    const int X_SKILLS = X_TRAITS + lenOfWidestName + 5;
 
-  yPos = Y0_BONUSES;
-  lenOfWidestName = 0;
-  eng->renderer->drawText(
-    "Pick two skills", panel_screen, Pos(X_SKILLS - 2, yPos - 2), clrWhite);
-  for(unsigned int i = 0; i < NR_BONS_SKILLS; i++) {
-    const PlayerBon_t bon = bonsSkills.at(i);
-    const string name     = eng->playerBonHandler->getBonTitle(bon);
-    if(int(name.size()) > lenOfWidestName) {lenOfWidestName = name.size();}
-    const bool IS_MARKED  = browserPos.x == 1 && browserPos.y == int(i) &&
-                            IS_DONE_PICKING_BONS == false;
-    const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
-    const SDL_Color clr   = IS_MARKED ? clrNosferatuTealLgt :
-                            clrNosferatuTealDrk;
-    eng->renderer->drawText(name, panel_screen, Pos(X_SKILLS, yPos), clr);
-    if(IS_PICKED) {
-      if(eng->config->isTilesMode) {
-        eng->renderer->drawTile(
-          tile_elderSign, panel_screen, Pos(X_SKILLS - 2, yPos), clrGray);
-      } else {
-
-      }
+    yPos = Y0_BONUSES;
+    lenOfWidestName = 0;
+    if(step == CharGenStep_skills) {
+      eng->renderer->drawText(
+        "* Pick two skills", panel_screen, Pos(X_SKILLS - 2, yPos - 2), clrWhite);
     }
-    yPos++;
+    for(unsigned int i = 0; i < NR_BONS_SKILLS; i++) {
+      const PlayerBon_t bon = bonsSkills.at(i);
+      const string name     = eng->playerBonHandler->getBonTitle(bon);
+      if(int(name.size()) > lenOfWidestName) {lenOfWidestName = name.size();}
+      const bool IS_MARKED  = browserY == int(i) &&
+                              step == CharGenStep_skills;
+      const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
+      const SDL_Color clr   = IS_MARKED ? clrNosferatuTealLgt :
+                              clrNosferatuTealDrk;
+      eng->renderer->drawText(name, panel_screen, Pos(X_SKILLS, yPos), clr);
+      if(IS_PICKED) {
+        if(eng->config->isTilesMode) {
+          eng->renderer->drawTile(
+            tile_elderSign, panel_screen, Pos(X_SKILLS - 2, yPos), clrGray);
+        } else {
+
+        }
+      }
+      yPos++;
+    }
+    const Rect skillsBorders(X_SKILLS - 3, Y0_BONUSES - 1,
+                             X_SKILLS + lenOfWidestName + 1,
+                             Y0_BONUSES + LEN_OF_LONGEST_LIST);
+    eng->renderer->drawPopupBox(skillsBorders, panel_screen);
   }
-  const Rect skillsBorders(X_SKILLS - 3, Y0_BONUSES - 1,
-                           X_SKILLS + lenOfWidestName + 1,
-                           Y0_BONUSES + LEN_OF_LONGEST_LIST + 1);
-  eng->renderer->drawPopupBox(skillsBorders, panel_screen);
 
   //Draw effects description
-  if(IS_DONE_PICKING_BONS == false) {
+  if(step < CharGenStep_name) {
     const int Y0_DESCR = Y0_BONUSES + NR_BONS_SKILLS + 2;
     yPos = Y0_DESCR;
     const PlayerBon_t markedBon =
-      browserPos.x == 0 ? bonsTraits.at(browserPos.y) :
-      bonsSkills.at(browserPos.y);
+      step == CharGenStep_traits ? bonsTraits.at(browserY) :
+      bonsSkills.at(browserY);
     string effectDescr =
       "Effect(s): " + eng->playerBonHandler->getBonEffectDescr(markedBon);
     const int MAX_WIDTH_DESCR = 60;
@@ -189,7 +197,7 @@ void PlayerEnterName::run(const Pos& pos) {
     }
   }
 
-  ActorDefinition& iDef = *(eng->player->getDef());
+  ActorDef& iDef = *(eng->player->getDef());
   iDef.name_a = iDef.name_the = name;
 }
 

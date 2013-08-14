@@ -11,16 +11,15 @@
 
 using namespace std;
 
-void ActorDefinition::reset() {
+void ActorDef::reset() {
   id = actor_empty;
   name_a = "";
   name_the = "";
   tile = tile_empty;
   glyph = 'X';
   color = clrYellow;
-  monsterLvl = 1;
   groupSize = monsterGroupSize_alone;
-  hpMax = 1;
+  hp = dmgMelee = dmgRanged = 1;
   speed = actorSpeed_normal;
   moveType = moveType_walk;
   rangedCooldownTurns = spellCooldownTurns = 0;
@@ -30,7 +29,7 @@ void ActorDefinition::reset() {
   abilityVals.reset();
   aiBehavior.reset();
   nrTurnsAwarePlayer = 0;
-  spawnMinLevel = spawnMaxLevel = 999;
+  spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
   isHumanoid = false;
   isAutoDescriptionAllowed = true;
@@ -54,57 +53,57 @@ void ActorDefinition::reset() {
   aggroTextMonsterHidden = "";
 }
 
-void ActorData::finalizeDefinition(ActorDefinition& d) {
-  actorDefinitions[d.id] = d;
+void ActorData::finalizeDefinition(ActorDef& d) {
+  actorDefs[d.id] = d;
   d.description.resize(0);
 }
 
-void ActorData::setStrengthsFromFormula(
-  ActorDefinition& d, const EntityStrength_t hpStrength) const {
-  //----------------------------------------------- HP
-  const double HP_BASE_DB = 3.0;
-  const double HP_INCR_DB = 1.75;
-
-  const double EFFECTIVE_LEVEL_DB =
-    double(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
-
-  const double HP_BEFORE_STRENGTH_DB =
-    HP_BASE_DB + (HP_INCR_DB * (EFFECTIVE_LEVEL_DB - 1));
-
-  const double STRENGTH_FACTOR =
-    EntityStrength::getFactor(hpStrength);
-
-  const int HP_AFTER_STRENGTH =
-    int(HP_BEFORE_STRENGTH_DB * STRENGTH_FACTOR);
-  const int HP_CAP = 999;
-  const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
-  d.hpMax = HP_AFTER_CAP;
-
-  //----------------------------------------------- ATTACK SKILL
-  const double ATTACK_BASE_DB = 14.0;
-  const double ATTACK_INCR_DB = 10.0;
-
-  const int ATTACK =
-    int(ceil(ATTACK_BASE_DB + ATTACK_INCR_DB * (EFFECTIVE_LEVEL_DB - 1.0)));
-
-  const int ATTACK_CAP = 40;
-  const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
-
-  d.abilityVals.setVal(ability_accuracyMelee, ATTACK_AFTER_CAP);
-  d.abilityVals.setVal(ability_accuracyRanged, ATTACK_AFTER_CAP);
-
-  //----------------------------------------------- STATUS RESISTANCE
-  const double STATUS_RES_BASE = 5.0;
-  const double STATUS_RES_INCR = 3.0;
-
-  const int STATUS_RES =
-    int(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_DB - 1.0)));
-  d.abilityVals.setVal(ability_resistStatusBody, STATUS_RES);
-  d.abilityVals.setVal(ability_resistStatusMind, STATUS_RES);
-}
+//void ActorData::setStrengthsFromFormula(
+//  ActorDef& d, const EntityStrength_t hpStrength) const {
+//  //----------------------------------------------- HP
+//  const double HP_BASE_DB = 3.0;
+//  const double HP_INCR_DB = 1.75;
+//
+//  const double EFFECTIVE_LEVEL_DB =
+//    double(d.monsterLvl) + (d.isUnique ? 4.0 : 0.0);
+//
+//  const double HP_BEFORE_STRENGTH_DB =
+//    HP_BASE_DB + (HP_INCR_DB * (EFFECTIVE_LEVEL_DB - 1));
+//
+//  const double STRENGTH_FACTOR =
+//    EntityStrength::getFactor(hpStrength);
+//
+//  const int HP_AFTER_STRENGTH =
+//    int(HP_BEFORE_STRENGTH_DB * STRENGTH_FACTOR);
+//  const int HP_CAP = 999;
+//  const int HP_AFTER_CAP = min(HP_CAP, HP_AFTER_STRENGTH);
+//  d.hp = HP_AFTER_CAP;
+//
+//  //----------------------------------------------- ATTACK SKILL
+//  const double ATTACK_BASE_DB = 14.0;
+//  const double ATTACK_INCR_DB = 10.0;
+//
+//  const int ATTACK =
+//    int(ceil(ATTACK_BASE_DB + ATTACK_INCR_DB * (EFFECTIVE_LEVEL_DB - 1.0)));
+//
+//  const int ATTACK_CAP = 40;
+//  const int ATTACK_AFTER_CAP = min(ATTACK_CAP, ATTACK);
+//
+//  d.abilityVals.setVal(ability_accuracyMelee, ATTACK_AFTER_CAP);
+//  d.abilityVals.setVal(ability_accuracyRanged, ATTACK_AFTER_CAP);
+//
+//  //----------------------------------------------- STATUS RESISTANCE
+//  const double STATUS_RES_BASE = 5.0;
+//  const double STATUS_RES_INCR = 3.0;
+//
+//  const int STATUS_RES =
+//    int(ceil(STATUS_RES_BASE + STATUS_RES_INCR * (EFFECTIVE_LEVEL_DB - 1.0)));
+//  d.abilityVals.setVal(ability_resistStatusBody, STATUS_RES);
+//  d.abilityVals.setVal(ability_resistStatusMind, STATUS_RES);
+//}
 
 void ActorData::defineAllActors() {
-  ActorDefinition d;
+  ActorDef d;
   d.reset();
   finalizeDefinition(d);
 
@@ -112,7 +111,7 @@ void ActorData::defineAllActors() {
   d.name_the = "Player";
   d.moveType = moveType_walk;
   d.id = actor_player;
-  d.hpMax = 16;
+  d.hp = 16;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
@@ -139,9 +138,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrBrown;
   d.tile = tile_zombieUnarmed;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 2;
+  d.hp = 12;
+  d.dmgMelee = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 24);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -157,7 +160,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -177,9 +179,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrGray;
   d.tile = tile_zombieArmed;
-  d.spawnMinLevel = 2;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 3;
+  d.hp = 12;
+  d.dmgMelee = 9;
+  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_accuracyRanged, 0);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 2;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -195,7 +202,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -215,9 +221,15 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrWhiteHigh;
   d.tile = tile_zombieBloated;
-  d.spawnMinLevel = 3;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 4;
+  d.hp = 13;
+  d.dmgMelee = 4;
+  d.dmgRanged = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 3;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -232,7 +244,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -252,8 +263,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrCyanLgt;
   d.tile = tile_zombieUnarmed;
-  d.spawnMinLevel = 4;
-  d.monsterLvl = 4;
+  d.hp = 24;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -270,7 +286,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -290,9 +305,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrCyan;
   d.tile = tile_zombieUnarmed;
+  d.hp = 24;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.isAutoSpawnAllowed = false;
-  d.spawnMinLevel = 4;
-  d.monsterLvl = 4;
+  d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -309,7 +329,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -330,9 +349,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrGray;
   d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 3;
+  d.hp = 4;
+//  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_accuracyRanged, 34);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -345,7 +369,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -366,9 +389,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrYellow;
   d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 7;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 4;
+  d.hp = 5;
+//  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 7;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -381,7 +409,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -402,9 +429,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrBlueLgt;
   d.tile = tile_cultistFirearm;
-  d.spawnMinLevel = 4;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 5;
+  d.hp = 6;
+//  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 4;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -417,7 +449,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -437,11 +468,16 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrMagenta;
   d.tile = tile_witchOrWarlock;
+  d.hp = 10;
+//  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.nrLeftAllowedToSpawn = 1;
   d.isUnique = true;
   d.canSeeInDarkness = true;
-  d.spawnMinLevel = 3;
-  d.monsterLvl = 4;
+  d.spawnMinDLVL = 3;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -455,7 +491,45 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_ritual);
-  setStrengthsFromFormula(d, weak);
+  finalizeDefinition(d);
+  d.reset();
+
+  d.name_a = "Brown Jenkin";
+  d.name_the = "Brown Jenkin";
+  d.moveType = moveType_walk;
+  d.id = actor_brownJenkin;
+  d.aiBehavior.looks = true;
+  d.aiBehavior.makesRoomForFriend = false;
+  d.aiBehavior.triesAttack = true;
+  d.aiBehavior.pathsToTargetWhenAware = true;
+  d.aiBehavior.movesTowardTargetWhenVision = true;
+  d.aiBehavior.movesTowardLair = false;
+  d.aiBehavior.movesTowardLeader = true;
+  d.speed = actorSpeed_normal;
+  d.rangedCooldownTurns = 0;
+  d.glyph = 'r';
+  d.color = clrBrownDark;
+  d.tile = tile_ratThing;
+  d.hp = 15;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.isAutoSpawnAllowed = false;
+  d.nrLeftAllowedToSpawn = 0;
+  d.isUnique = true;
+  d.canSeeInDarkness = true;
+  d.spawnMinDLVL = actorDefs[actor_keziahMason].spawnMinDLVL;
+  d.groupSize = monsterGroupSize_alone;
+  d.actorSize = actorSize_floor;
+  d.description
+    = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
+  d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
+  d.aggroTextMonsterHidden = "I hear a loathsome titter.";
+  d.nrTurnsAwarePlayer = 999;
+  d.erraticMovement = actorErratic_rare;
+  d.monsterShockLevel = monsterShockLevel_scary;
+  d.isRat = true;
   finalizeDefinition(d);
   d.reset();
 
@@ -478,7 +552,7 @@ void ActorData::defineAllActors() {
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
 //  d.canSeeInDarkness = true;
-//  d.spawnMinLevel = 100;
+//  d.spawnMinDLVL = 100;
 //  d.monsterLvl = 15;
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
@@ -511,7 +585,7 @@ void ActorData::defineAllActors() {
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
 //  d.canSeeInDarkness = true;
-//  d.spawnMinLevel = 100;
+//  d.spawnMinDLVL = 100;
 //  d.monsterLvl = 15;
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
@@ -546,7 +620,7 @@ void ActorData::defineAllActors() {
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
 //  d.canSeeInDarkness = true;
-//  d.spawnMinLevel = 100;
+//  d.spawnMinDLVL = 100;
 //  d.monsterLvl = 15;
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
@@ -580,7 +654,7 @@ void ActorData::defineAllActors() {
 //  d.nrLeftAllowedToSpawn = 0;
 //  d.isUnique = true;
 //  d.canSeeInDarkness = true;
-//  d.spawnMinLevel = 100;
+//  d.spawnMinDLVL = 100;
 //  d.monsterLvl = 15;
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
@@ -612,9 +686,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrCyanLgt;
   d.tile = tile_cultistDagger;
-  d.spawnMinLevel = 5;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 5;
+  d.hp = 6;
+//  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 5;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -627,7 +705,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -647,9 +724,13 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrGreenLgt;
   d.tile = tile_spider;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 1;
+  d.hp = 2;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 1;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -659,7 +740,6 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -679,9 +759,13 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrWhiteHigh;
   d.tile = tile_spider;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 1;
+  d.hp = 2;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 1;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -691,7 +775,6 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -711,9 +794,13 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrRedLgt;
   d.tile = tile_spider;
-  d.spawnMinLevel = 2;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 2;
+  d.hp = 3;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 24);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 2;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -723,7 +810,6 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -743,9 +829,14 @@ void ActorData::defineAllActors() {
   d.glyph = 's';
   d.color = clrGray;
   d.tile = tile_spiderLeng;
-  d.spawnMinLevel = 6;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL - 1;
-  d.monsterLvl = 6;
+  d.hp = 8;
+  d.dmgMelee = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_stealth, 90);
+  d.spawnMinDLVL = 6;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.nrTurnsAwarePlayer = 5;
@@ -755,8 +846,6 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, weak);
-  d.abilityVals.setVal(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 
@@ -776,8 +865,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'S';
   d.color = clrMagenta;
   d.tile = tile_spiderLeng;
-  d.spawnMinLevel = 10;
-  d.monsterLvl = 10;
+  d.hp = 30;
+  d.dmgMelee = 8;
+//  d.dmgRanged = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+//  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 10;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.nrTurnsAwarePlayer = 20;
@@ -789,7 +884,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -804,14 +898,20 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityVals.setVal(ability_dodgeAttack, 35);
   d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrRed;
   d.tile = tile_hound;
-  d.spawnMinLevel = 9;
-  d.monsterLvl = 7;
+  d.hp = 13;
+  d.dmgMelee = 4;
+  d.dmgRanged = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_dodgeAttack, 35);
+  d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_floor;
@@ -824,7 +924,6 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -844,9 +943,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'G';
   d.color = clrGray;
   d.tile = tile_ghost;
-  d.spawnMinLevel = 3;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 3;
+  d.hp = 4;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 3;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -860,7 +963,6 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -880,9 +982,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'G';
   d.color = clrWhite;
   d.tile = tile_phantasm;
-  d.spawnMinLevel = 7;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 7;
+  d.hp = 9;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 7;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -897,7 +1003,6 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -918,8 +1023,12 @@ void ActorData::defineAllActors() {
   d.glyph = 'G';
   d.color = clrRed;
   d.tile = tile_wraith;
-  d.spawnMinLevel = 12;
-  d.monsterLvl = 12;
+  d.hp = 15;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 12;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.spellCastMessage = "The Wraith casts a spell.";
@@ -934,7 +1043,6 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -954,9 +1062,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'r';
   d.color = clrGray;
   d.tile = tile_rat;
-  d.spawnMinLevel = 1;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 1;
+  d.hp = 2;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 1;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
@@ -969,7 +1081,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -989,9 +1100,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'r';
   d.color = clrBrown;
   d.tile = tile_ratThing;
-  d.spawnMinLevel = 2;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 1;
+  d.hp = 4;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 2;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
@@ -1006,43 +1121,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
-  finalizeDefinition(d);
-  d.reset();
-
-  d.name_a = "Brown Jenkin";
-  d.name_the = "Brown Jenkin";
-  d.moveType = moveType_walk;
-  d.id = actor_brownJenkin;
-  d.aiBehavior.looks = true;
-  d.aiBehavior.makesRoomForFriend = false;
-  d.aiBehavior.triesAttack = true;
-  d.aiBehavior.pathsToTargetWhenAware = true;
-  d.aiBehavior.movesTowardTargetWhenVision = true;
-  d.aiBehavior.movesTowardLair = false;
-  d.aiBehavior.movesTowardLeader = true;
-  d.speed = actorSpeed_normal;
-  d.rangedCooldownTurns = 0;
-  d.glyph = 'r';
-  d.color = clrBrownDark;
-  d.tile = tile_ratThing;
-  d.isAutoSpawnAllowed = false;
-  d.nrLeftAllowedToSpawn = 0;
-  d.isUnique = true;
-  d.canSeeInDarkness = true;
-  d.spawnMinLevel = 3;
-  d.monsterLvl = 4;
-  d.groupSize = monsterGroupSize_alone;
-  d.actorSize = actorSize_floor;
-  d.description
-    = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
-  d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
-  d.aggroTextMonsterHidden = "I hear a loathsome titter.";
-  d.nrTurnsAwarePlayer = 999;
-  d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
-  d.isRat = true;
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -1057,16 +1135,20 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.speed = actorSpeed_fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
   d.color = clrGray;
   d.tile = tile_wolf;
+  d.hp = 4;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 24);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.canSeeInDarkness = true;
-  d.spawnMinLevel = 0;
-  d.spawnMaxLevel = 10;
-  d.monsterLvl = 2;
+  d.spawnMinDLVL = 0;
+  d.spawnMaxDLVL = 10;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
@@ -1077,7 +1159,6 @@ void ActorData::defineAllActors() {
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -1092,14 +1173,17 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityVals.setVal(ability_dodgeAttack, 75);
   d.speed = actorSpeed_fastest;
-  d.rangedCooldownTurns = 0;
   d.glyph = 'B';
   d.color = clrGray;
   d.tile = tile_bat;
-  d.spawnMinLevel = 4;
-  d.monsterLvl = 4;
+  d.hp = 8;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_dodgeAttack, 75);
+  d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
@@ -1112,7 +1196,6 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -1127,14 +1210,18 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.speed = actorSpeed_fastest;
-  d.rangedCooldownTurns = 0;
   d.glyph = 'B';
   d.color = clrBrownDark;
   d.tile = tile_byakhee;
-  d.spawnMinLevel = 6;
-  d.monsterLvl = 6;
+  d.hp = 11;
+  d.dmgMelee = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_dodgeAttack, 40);
+  d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -1148,7 +1235,6 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -1163,13 +1249,18 @@ void ActorData::defineAllActors() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.speed = actorSpeed_fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
   d.tile = tile_mantis;
-  d.spawnMinLevel = 8;
-  d.monsterLvl = 8;
+  d.hp = 15;
+  d.dmgMelee = 7;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_dodgeAttack, 40);
+  d.abilityVals.setVal(ability_stealth, 20);
+  d.spawnMinDLVL = 8;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1180,8 +1271,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, normal);
-  d.abilityVals.setVal(ability_stealth, 20);
   finalizeDefinition(d);
   d.reset();
 
@@ -1200,9 +1289,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'I';
   d.color = clrBrown;
   d.tile = tile_locust;
-  d.spawnMinLevel = 7;
-  d.spawnMaxLevel = FIRST_CAVERN_LEVEL;
-  d.monsterLvl = 2;
+  d.hp = 3;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 24);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 7;
+  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_swarm;
   d.actorSize = actorSize_floor;
@@ -1213,7 +1306,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1234,8 +1326,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'E';
   d.color = clrMagenta;
   d.tile = tile_migo;
-  d.spawnMinLevel = 6;
-  d.monsterLvl = 5;
+  d.hp = 6;
+//  d.dmgMelee = 1;
+  d.dmgRanged = 5;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1250,7 +1348,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1270,8 +1367,12 @@ void ActorData::defineAllActors() {
   d.glyph = 'M';
   d.color = clrGreen;
   d.tile = tile_ghoul;
-  d.spawnMinLevel = 5;
-  d.monsterLvl = 5;
+  d.hp = 10;
+  d.dmgMelee = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
@@ -1286,7 +1387,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  setStrengthsFromFormula(d, normal);
   finalizeDefinition(d);
   d.reset();
 
@@ -1306,9 +1406,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'M';
   d.color = clrGray;
   d.tile = tile_shadow;
-  d.spawnMinLevel = 4;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 3;
+  d.hp = 4;
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_stealth, 90);
+  d.spawnMinDLVL = 4;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -1324,8 +1429,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, weak);
-  d.abilityVals.setVal(ability_stealth, 90);
   finalizeDefinition(d);
   d.reset();
 
@@ -1346,8 +1449,12 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrMagenta;
   d.tile = tile_mummy;
-  d.spawnMinLevel = 7;
-  d.monsterLvl = 7;
+  d.hp = 21;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 7;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1359,7 +1466,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
   d.isHumanoid = true;
-  setStrengthsFromFormula(d, strong);
   d.nativeRooms.push_back(roomTheme_plain);
   finalizeDefinition(d);
   d.reset();
@@ -1383,9 +1489,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrRed;
   d.tile = tile_mummy;
+  d.hp = 44;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = FIRST_CAVERN_LEVEL - 1;
   d.isAutoSpawnAllowed = false;
-  d.spawnMinLevel = 999;
-  d.monsterLvl = 11;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1398,7 +1508,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
-  setStrengthsFromFormula(d, strong);
   d.nativeRooms.push_back(roomTheme_plain);
   finalizeDefinition(d);
   d.reset();
@@ -1422,8 +1531,12 @@ void ActorData::defineAllActors() {
   d.glyph = 'P';
   d.color = clrRedLgt;
   d.tile = tile_mummy;
-  d.spawnMinLevel = 11;
-  d.monsterLvl = 11;
+  d.hp = 44;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 11;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
@@ -1437,7 +1550,6 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1457,8 +1569,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'F';
   d.color = clrWhite;
   d.tile = tile_deepOne;
-  d.spawnMinLevel = 6;
-  d.monsterLvl = 6;
+  d.hp = 8;
+  d.dmgMelee = 3;
+  d.dmgRanged = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -1469,7 +1587,6 @@ void ActorData::defineAllActors() {
     = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
-  setStrengthsFromFormula(d, weak);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
   finalizeDefinition(d);
@@ -1491,9 +1608,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'w';
   d.color = clrWhite;
   d.tile = tile_massOfWorms;
-  d.spawnMinLevel = 4;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 1;
+  d.hp = 2;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 4;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -1504,7 +1625,6 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1524,9 +1644,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'V';
   d.color = clrGray;
   d.tile = tile_vortex;
-  d.spawnMinLevel = 8;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 8;
+  d.hp = 10;
+  d.dmgMelee = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 8;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
@@ -1540,7 +1664,6 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1560,8 +1683,12 @@ void ActorData::defineAllActors() {
   d.glyph = 'V';
   d.color = clrRed;
   d.tile = tile_vortex;
-  d.spawnMinLevel = 13;
-  d.monsterLvl = 13;
+  d.hp = 16;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 13;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
@@ -1575,7 +1702,6 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
-  setStrengthsFromFormula(d, weak);
   finalizeDefinition(d);
   d.reset();
 
@@ -1595,9 +1721,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'o';
   d.color = clrGray;
   d.tile = tile_ooze;
-  d.spawnMinLevel = 3;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 3;
+  d.hp = 10;
+  d.dmgMelee = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 3;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -1617,7 +1747,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1637,9 +1766,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'o';
   d.color = clrWhiteHigh;
   d.tile = tile_ooze;
-  d.spawnMinLevel = 4;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 4;
+  d.hp = 13;
+  d.dmgMelee = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.abilityVals.setVal(ability_stealth, 90);
+  d.spawnMinDLVL = 4;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -1655,12 +1789,10 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.erraticMovement = actorErratic_somewhat;
-  d.abilityVals.setVal(ability_stealth, 90);
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1680,9 +1812,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'o';
   d.color = clrGreen;
   d.tile = tile_ooze;
-  d.spawnMinLevel = 5;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 5;
+  d.hp = 16;
+  d.dmgMelee = 15;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 5;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -1702,7 +1838,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1722,9 +1857,14 @@ void ActorData::defineAllActors() {
   d.glyph = 'o';
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
-  d.spawnMinLevel = 9;
-  d.spawnMaxLevel = d.spawnMinLevel + 5;
-  d.monsterLvl = 9;
+  d.hp = 27;
+  d.dmgMelee = 7;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = 9;
+  d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_floor;
@@ -1744,7 +1884,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 
@@ -1764,9 +1903,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'O';
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
-  d.spawnMinLevel = 14;
-  d.spawnMaxLevel = 999;
-  d.monsterLvl = 14;
+  d.hp = 64;
+  d.dmgMelee = 10;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 100);
+  d.abilityVals.setVal(ability_resistStatusMind, 100);
+  d.spawnMinDLVL = 14;
+  d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1783,9 +1926,6 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
-  setStrengthsFromFormula(d, superStrong);
-  d.abilityVals.setVal(ability_resistStatusBody, 100);
-  d.abilityVals.setVal(ability_resistStatusMind, 100);
   finalizeDefinition(d);
   d.reset();
 
@@ -1805,9 +1945,13 @@ void ActorData::defineAllActors() {
   d.glyph = 'W';
   d.color = clrGray;
   d.tile = tile_huntingHorror;
-  d.spawnMinLevel = LAST_CAVERN_LEVEL - 1;
-  d.spawnMaxLevel = 999;
-  d.monsterLvl = 20;
+  d.hp = 58;
+  d.dmgMelee = 10;
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_resistStatusBody, 0);
+  d.abilityVals.setVal(ability_resistStatusMind, 0);
+  d.spawnMinDLVL = LAST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1822,7 +1966,6 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.erraticMovement = actorErratic_somewhat;
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  setStrengthsFromFormula(d, strong);
   finalizeDefinition(d);
   d.reset();
 }

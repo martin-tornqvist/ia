@@ -121,8 +121,8 @@ bool Reload::reloadWeapon(Actor* actorReloading) {
           ammoItem = genInv->at(i);
 
           if(ammoItem->getDef().id == ammoType) {
-            const bool IS_RELOADER_BLIND = actorReloading->getStatusEffectsHandler()->allowSee() == false;
-            const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusEffectsHandler()->hasEffect(statusTerrified);
+            const bool IS_RELOADER_BLIND = actorReloading->getStatusHandler()->allowSee() == false;
+            const bool IS_REALOADER_TERRIFIED = actorReloading->getStatusHandler()->hasEffect(statusTerrified);
             const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
             if(eng->dice.percentile() < CHANCE_TO_FUMBLE) {

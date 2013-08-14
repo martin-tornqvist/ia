@@ -53,10 +53,10 @@ enum ActorSpeed_t {
 };
 
 enum ActorErratic_t {
-  actorErratic_never = 0,
-  actorErratic_rare = 8,
+  actorErratic_never    = 0,
+  actorErratic_rare     = 8,
   actorErratic_somewhat = 25,
-  actorErratic_very = 50
+  actorErratic_very     = 50
 };
 
 enum ActorSizes_t {
@@ -89,11 +89,9 @@ public:
   bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
 };
 
-struct ActorDefinition {
+struct ActorDef {
 public:
-  ActorDefinition() {
-    reset();
-  }
+  ActorDef() {reset();}
 
   void reset();
 
@@ -104,10 +102,10 @@ public:
   Tile_t tile;
   char glyph;
   SDL_Color color;
-  int monsterLvl;
+//  int monsterLvl;
   AbilityValues abilityVals;
   MonsterGroupSize_t groupSize;
-  int hpMax;
+  int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed_t speed;
   MoveType_t moveType;
   int rangedCooldownTurns, spellCooldownTurns;
@@ -115,7 +113,7 @@ public:
 //  bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
   AiBehavior aiBehavior;
   int nrTurnsAwarePlayer;
-  int spawnMinLevel, spawnMaxLevel;
+  int spawnMinDLVL, spawnMaxDLVL;
   ActorSizes_t actorSize;
   bool isHumanoid;
   bool isAutoDescriptionAllowed;
@@ -143,35 +141,35 @@ class ActorData {
 public:
   ActorData(Engine* engine) : eng(engine) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      actorDefinitions[i].abilityVals.eng = engine;
+      actorDefs[i].abilityVals.eng = engine;
     }
     defineAllActors();
   }
 
   void defineAllActors();
 
-  ActorDefinition actorDefinitions[endOfActorIds];
+  ActorDef actorDefs[endOfActorIds];
 
   void addSaveLines(vector<string>& lines) const {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      lines.push_back(intToString(actorDefinitions[i].nrLeftAllowedToSpawn));
-      lines.push_back(intToString(actorDefinitions[i].nrOfKills));
+      lines.push_back(intToString(actorDefs[i].nrLeftAllowedToSpawn));
+      lines.push_back(intToString(actorDefs[i].nrOfKills));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      actorDefinitions[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
+      actorDefs[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
       lines.erase(lines.begin());
-      actorDefinitions[i].nrOfKills = stringToInt(lines.front());
+      actorDefs[i].nrOfKills = stringToInt(lines.front());
       lines.erase(lines.begin());
     }
   }
 
 private:
-  void setStrengthsFromFormula(ActorDefinition& d, const EntityStrength_t hpStrength) const;
+//  void setStrengthsFromFormula(ActorDef& d, const EntityStrength_t hpStrength) const;
 
-  void finalizeDefinition(ActorDefinition& d);
+  void finalizeDefinition(ActorDef& d);
 
   Engine* eng;
 };

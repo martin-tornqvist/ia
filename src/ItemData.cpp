@@ -19,7 +19,7 @@
 using namespace std;
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
-void ItemData::resetDef(ItemDefinition* const d,
+void ItemData::resetDef(ItemDef* const d,
                         ItemDefArchetypes_t const archetype) const {
   switch(archetype) {
     case itemDef_general: {
@@ -36,12 +36,12 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->color = clrWhite;
       d->tile = tile_empty;
       d->primaryAttackMode = primaryAttackMode_none;
-      d->isReadable = d->isScroll = d->isScrollLearned = false;
-      d->isScrollLearnable = d->isQuaffable = d->isEatable = false;
+      d->isReadable = d->isScroll = d->isQuaffable = d->isEatable = false;
       d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
       d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
       d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
+      d->spellCastFromScroll = endOfSpells;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
       d->meleeAbilityUsed = ability_accuracyMelee;
@@ -68,13 +68,10 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
       d->rangedStatusEffect = NULL;
       d->isExplosive = false;
-      d->castFromMemoryCurrentBaseChance = 0;
-      d->spellTurnsPerPercentCooldown = 10;
       d->armorData = ArmorData();
       d->nativeRooms.resize(0);
       d->featuresCanBeFoundIn.resize(0);
-    }
-    break;
+    } break;
 
     case itemDef_meleeWpn: {
       resetDef(d, itemDef_general);
@@ -84,16 +81,14 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->color = clrWhite;
       d->primaryAttackMode = primaryAttackMode_melee;
       d->isMeleeWeapon = true;
-    }
-    break;
+    } break;
 
     case itemDef_meleeWpnIntr: {
       resetDef(d, itemDef_meleeWpn);
       d->isIntrinsic = true;
       d->spawnStandardMinDLVL = -1;
       d->spawnStandardMaxDLVL = -1;
-    }
-    break;
+    } break;
 
     case itemDef_rangedWpn: {
       resetDef(d, itemDef_general);
@@ -109,8 +104,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->rangedMissileColor = clrWhite;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
       d->rangedSoundIsLoud = true;
-    }
-    break;
+    } break;
 
     case itemDef_rangedWpnIntr: {
       resetDef(d, itemDef_rangedWpn);
@@ -121,8 +115,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->isMeleeWeapon = false;
       d->rangedMissileGlyph = '*';
       d->rangedSoundIsLoud = false;
-    }
-    break;
+    } break;
 
     case itemDef_missileWeapon: {
       resetDef(d, itemDef_general);
@@ -131,8 +124,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->isMissileWeapon = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
       d->rangedSoundIsLoud = false;
-    }
-    break;
+    } break;
 
     case itemDef_ammo: {
       resetDef(d, itemDef_general);
@@ -142,8 +134,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->tile = tile_ammo;
       d->isAmmo = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-    }
-    break;
+    } break;
 
     case itemDef_ammoClip: {
       resetDef(d, itemDef_ammo);
@@ -151,8 +142,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->isStackable = false;
       d->isAmmoClip = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-    }
-    break;
+    } break;
 
     case itemDef_scroll: {
       resetDef(d, itemDef_general);
@@ -165,8 +155,6 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->tile = tile_scroll;
       d->isReadable = true;
       d->isScroll = true;
-      d->isScrollLearnable = true;
-      d->isScrollLearned = 0;
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMessage = "";
       addFeatureFoundIn(d, feature_chest);
@@ -174,8 +162,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       addFeatureFoundIn(d, feature_cabinet, 25);
       addFeatureFoundIn(d, feature_cocoon, 25);
       eng->scrollNameHandler->setFalseScrollName(d);
-    }
-    break;
+    } break;
 
     case itemDef_potion: {
       resetDef(d, itemDef_general);
@@ -196,8 +183,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       addFeatureFoundIn(d, feature_cabinet, 25);
       addFeatureFoundIn(d, feature_cocoon, 25);
       eng->potionNameHandler->setColorAndFalseName(d);
-    }
-    break;
+    } break;
 
     case itemDef_device: {
       resetDef(d, itemDef_general);
@@ -211,8 +197,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->spawnStandardMinDLVL = 4;
       d->spawnStandardMaxDLVL = 999;
       d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
-    }
-    break;
+    } break;
 
     case itemDef_armor: {
       resetDef(d, itemDef_general);
@@ -221,8 +206,7 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->tile = tile_armor;
       d->isArmor = true;
       d->isStackable = false;
-    }
-    break;
+    } break;
 
     case itemDef_explosive: {
       resetDef(d, itemDef_general);
@@ -231,42 +215,43 @@ void ItemData::resetDef(ItemDefinition* const d,
       d->glyph = '-';
       d->maxStackSizeAtSpawn = 2;
       d->landOnHardSurfaceSoundMessage = "";
-    }
-    break;
+    } break;
 
-    default:
-    {} break;
+    default: {} break;
   }
 }
 
-void ItemData::addFeatureFoundIn(ItemDefinition* const itemDef, const Feature_t featureId, const int CHANCE_TO_INCLUDE) const {
-  itemDef->featuresCanBeFoundIn.push_back(pair<Feature_t, int>(featureId, CHANCE_TO_INCLUDE));
+void ItemData::addFeatureFoundIn(ItemDef* const itemDef,
+                                 const Feature_t featureId,
+                                 const int CHANCE_TO_INCLUDE) const {
+  itemDef->featuresCanBeFoundIn.push_back(
+    pair<Feature_t, int>(featureId, CHANCE_TO_INCLUDE));
 }
 
-void ItemData::setDmgFromFormula(ItemDefinition& d, const ActorDefinition& owningActor,
-                                 const EntityStrength_t dmgStrength) const {
+void ItemData::setDmgFromMonsterDef(ItemDef& d, const ActorDef& def) const {
+//  const int ACTOR_LVL = owningActor.monsterLvl;
 
-  const int ACTOR_LVL = owningActor.monsterLvl;
-//  const int EFFECTIVE_L
+//  //Set 1dY dmg from formula
+//  const int DMG_ROLLS_CAP = 10;
+//  const double DMG_ROLLS_BASE_DB = 1.0;
+//  const double DMG_ROLLS_INCR_DB = 0.4;
+//  const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
+//  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_DB + (double(ACTOR_LVL - 1) * DMG_ROLLS_INCR_DB);
+//  const int DMG_ROLLS_AFTER_STR = int(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
+//  const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
+//
+//  d.meleeDmg = pair<int, int>(1, DMG_ROLLS_AFTER_CAP);
+//  d.rangedDmg = DiceParam(1, DMG_ROLLS_AFTER_CAP, 0);
 
-  //Set 1dY dmg from formula
-  const int DMG_ROLLS_CAP = 10;
-  const double DMG_ROLLS_BASE_DB = 1.0;
-  const double DMG_ROLLS_INCR_DB = 0.4;
-  const double DMG_STRENGTH_FACTOR = EntityStrength::getFactor(dmgStrength);
-  const double DMG_ROLLS_BEFORE_STR = DMG_ROLLS_BASE_DB + (double(ACTOR_LVL - 1) * DMG_ROLLS_INCR_DB);
-  const int DMG_ROLLS_AFTER_STR = int(ceil(DMG_ROLLS_BEFORE_STR * DMG_STRENGTH_FACTOR));
-  const int DMG_ROLLS_AFTER_CAP = max(1, min(DMG_ROLLS_CAP, DMG_ROLLS_AFTER_STR));
-
-  d.meleeDmg = pair<int, int>(1, DMG_ROLLS_AFTER_CAP);
-  d.rangedDmg = DiceParam(1, DMG_ROLLS_AFTER_CAP, 0);
+  d.meleeDmg  = pair<int, int>(1, def.dmgMelee);
+  d.rangedDmg = DiceParam(1, def.dmgRanged, 0);
 }
 
 //------------------------------- LIST OF ITEMS
 void ItemData::makeList() {
-  ItemDefinition* d = NULL;
+  ItemDef* d = NULL;
 
-  d = new ItemDefinition(item_trapezohedron);
+  d = new ItemDef(item_trapezohedron);
   resetDef(d, itemDef_general);
   d->name = ItemName("Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron");
   d->spawnStandardMinDLVL = -1;
@@ -275,9 +260,9 @@ void ItemData::makeList() {
   d->glyph = '*';
   d->color = clrRedLgt;
   d->tile = tile_trapezohedron;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_sawedOff);
+  d = new ItemDef(item_sawedOff);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun");
   d->itemWeight = itemWeight_medium;
@@ -294,9 +279,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_pumpShotgun);
+  d = new ItemDef(item_pumpShotgun);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
   d->itemWeight = itemWeight_medium;
@@ -314,18 +299,18 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_shotgunShell);
+  d = new ItemDef(item_shotgunShell);
   resetDef(d, itemDef_ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_incinerator);
+  d = new ItemDef(item_incinerator);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
   d->itemWeight = itemWeight_heavy;
@@ -344,9 +329,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 25);
   addFeatureFoundIn(d, feature_cabinet, 25);
   addFeatureFoundIn(d, feature_cocoon, 25);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_napalmCartridge);
+  d = new ItemDef(item_napalmCartridge);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Napalm Cartridge", "Napalm Cartridges", "a Napalm Cartridge");
   d->itemWeight = itemWeight_light;
@@ -356,9 +341,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 25);
   addFeatureFoundIn(d, feature_cabinet, 25);
   addFeatureFoundIn(d, feature_cocoon, 25);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_machineGun);
+  d = new ItemDef(item_machineGun);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
   d->itemWeight = itemWeight_medium;
@@ -376,18 +361,18 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_drumOfBullets);
+  d = new ItemDef(item_drumOfBullets);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_pistol);
+  d = new ItemDef(item_pistol);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
   d->itemWeight = itemWeight_light;
@@ -404,9 +389,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_flareGun);
+  d = new ItemDef(item_flareGun);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
   d->itemWeight = itemWeight_light;
@@ -423,18 +408,18 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_pistolClip);
+  d = new ItemDef(item_pistolClip);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_teslaCanon);
+  d = new ItemDef(item_teslaCanon);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Tesla Canon", "Tesla Canons", "a Tesla Canon");
   d->itemWeight = itemWeight_medium;
@@ -455,9 +440,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_teslaCanister);
+  d = new ItemDef(item_teslaCanister);
   resetDef(d, itemDef_ammoClip);
   d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
   d->ammoContainedInClip = 30;
@@ -465,9 +450,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_spikeGun);
+  d = new ItemDef(item_spikeGun);
   resetDef(d, itemDef_rangedWpn);
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
@@ -490,9 +475,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_dynamite);
+  d = new ItemDef(item_dynamite);
   resetDef(d, itemDef_explosive);
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
@@ -501,9 +486,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_flare);
+  d = new ItemDef(item_flare);
   resetDef(d, itemDef_explosive);
   d->name = ItemName("Flare", "Flares", "a Flare");
   d->itemWeight = itemWeight_light;
@@ -513,9 +498,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_molotov);
+  d = new ItemDef(item_molotov);
   resetDef(d, itemDef_explosive);
   d->name = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
   d->itemWeight = itemWeight_light;
@@ -524,9 +509,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_throwingKnife);
+  d = new ItemDef(item_throwingKnife);
   resetDef(d, itemDef_missileWeapon);
   d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
   d->itemWeight = itemWeight_extraLight;
@@ -541,9 +526,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_rock);
+  d = new ItemDef(item_rock);
   resetDef(d, itemDef_missileWeapon);
   d->name = ItemName("Rock", "Rocks", "a Rock");
   d->itemWeight = itemWeight_extraLight;
@@ -556,9 +541,9 @@ void ItemData::makeList() {
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_dagger);
+  d = new ItemDef(item_dagger);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Dagger", "Daggers", "a Dagger");
   d->itemWeight = itemWeight_light;
@@ -571,9 +556,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_hatchet);
+  d = new ItemDef(item_hatchet);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Hatchet", "Hatchets", "a Hatchet");
   d->itemWeight = itemWeight_light;
@@ -588,9 +573,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_club);
+  d = new ItemDef(item_club);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Club", "Clubs", "a Club");
   d->spawnStandardMinDLVL = FIRST_CAVERN_LEVEL;
@@ -602,9 +587,9 @@ void ItemData::makeList() {
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeHitChanceMod = 10;
   d->meleeAbilityUsed = ability_accuracyMelee;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_hammer);
+  d = new ItemDef(item_hammer);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Hammer", "Hammers", "a Hammer");
   d->itemWeight = itemWeight_medium;
@@ -615,9 +600,9 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_machete);
+  d = new ItemDef(item_machete);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Machete", "Machetes", "a Machete");
   d->itemWeight = itemWeight_medium;
@@ -628,9 +613,9 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_axe);
+  d = new ItemDef(item_axe);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Axe", "Axes", "an Axe");
   d->itemWeight = itemWeight_medium;
@@ -642,9 +627,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_pitchFork);
+  d = new ItemDef(item_pitchFork);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
   d->itemWeight = itemWeight_heavy;
@@ -656,9 +641,9 @@ void ItemData::makeList() {
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_sledgeHammer);
+  d = new ItemDef(item_sledgeHammer);
   resetDef(d, itemDef_meleeWpn);
   d->name = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
   d->itemWeight = itemWeight_heavy;
@@ -669,9 +654,9 @@ void ItemData::makeList() {
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ironSpike);
+  d = new ItemDef(item_ironSpike);
   resetDef(d, itemDef_missileWeapon);
   d->name = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->isAmmo = true;
@@ -687,9 +672,9 @@ void ItemData::makeList() {
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_crowbar);
+//  d = new ItemDef(item_crowbar);
 //  resetDef(d, itemDef_general);
 //  d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
 //  d->chanceToIncludeInSpawnList = 70;
@@ -700,9 +685,9 @@ void ItemData::makeList() {
 //  d->glyph = '~';
 //  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
 //  addFeatureFoundIn(d, feature_cabinet);
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 //
-//  d = new ItemDefinition(item_lockpick);
+//  d = new ItemDef(item_lockpick);
 //  resetDef(d, itemDef_general);
 //  d->name = ItemName("Lockpick", "Lockpicks", "a Lockpick");
 //  d->itemWeight = itemWeight_extraLight;
@@ -713,195 +698,195 @@ void ItemData::makeList() {
 //  d->glyph = '~';
 //  d->landOnHardSurfaceSoundMessage = "I clinking sound.";
 //  addFeatureFoundIn(d, feature_cabinet);
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_playerKick);
+  d = new ItemDef(item_playerKick);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_playerStomp);
+  d = new ItemDef(item_playerStomp);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_playerPunch);
+  d = new ItemDef(item_playerPunch);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("punch", "");
   d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 25;
   d->meleeDmg = pair<int, int>(1, 2);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_zombieClaw);
+  d = new ItemDef(item_zombieClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_zombie]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_zombieClawDiseased);
+  d = new ItemDef(item_zombieClawDiseased);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombie], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_zombie]);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_zombieAxe);
+  d = new ItemDef(item_zombieAxe);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_zombieAxe]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_bloatedZombiePunch);
+  d = new ItemDef(item_bloatedZombiePunch);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_bloatedZombie], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_bloatedZombie]);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_bloatedZombieSpit);
+  d = new ItemDef(item_bloatedZombieSpit);
   resetDef(d, itemDef_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "spits pus at me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_zombieAxe], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_zombieAxe]);
   d->rangedSoundMessage = "I hear spitting.";
   d->rangedMissileColor = clrGreenLgt;
   d->rangedDmgType = dmgType_acid;
   d->rangedMissileGlyph = '*';
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ratBite);
+  d = new ItemDef(item_ratBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_rat]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ratBiteDiseased);
+  d = new ItemDef(item_ratBiteDiseased);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_rat], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_rat]);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ratThingBite);
+  d = new ItemDef(item_ratThingBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ratThing], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_ratThing]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_wormMassBite);
+  d = new ItemDef(item_wormMassBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wormMass], weak);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_wormMass]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_wolfBite);
+  d = new ItemDef(item_wolfBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wolf], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_wolf]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_greenSpiderBite);
+  d = new ItemDef(item_greenSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_greenSpider], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_greenSpider]);
   d->meleeStatusEffect = new StatusBlind(4);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_whiteSpiderBite);
+  d = new ItemDef(item_whiteSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_whiteSpider], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_whiteSpider]);
   d->meleeStatusEffect = new StatusParalyzed(3);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_redSpiderBite);
+  d = new ItemDef(item_redSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_redSpider], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_redSpider]);
   d->meleeStatusEffect = new StatusWeak(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_shadowSpiderBite);
+  d = new ItemDef(item_shadowSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadowSpider], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_shadowSpider]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_lengSpiderBite);
+  d = new ItemDef(item_lengSpiderBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_lengSpider], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_lengSpider]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_hellHoundFireBreath);
+  d = new ItemDef(item_hellHoundFireBreath);
   resetDef(d, itemDef_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
   d->rangedSoundMessage = "I hear a burst of flames.";
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_fireHound]);
   d->rangedStatusEffect = new StatusBurning(eng);
   d->rangedMissileColor = clrRedLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
   d->rangedDmgType = dmgType_fire;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_hellHoundBite);
+  d = new ItemDef(item_hellHoundBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireHound], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_fireHound]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_dustVortexEngulf);
+  d = new ItemDef(item_dustVortexEngulf);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_dustVortex], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_dustVortex]);
   d->meleeStatusEffect = new StatusBlind(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_fireVortexEngulf);
+  d = new ItemDef(item_fireVortexEngulf);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_fireVortex], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_fireVortex]);
   d->meleeStatusEffect = new StatusBurning(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ghostClaw);
+  d = new ItemDef(item_ghostClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghost], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_ghost]);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_phantasmSickle);
+  d = new ItemDef(item_phantasmSickle);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_phantasm], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_phantasm]);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_wraithClaw);
+  d = new ItemDef(item_wraithClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_wraith], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_wraith]);
   d->meleeStatusEffect = new StatusTerrified(4);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_giantBatBite);
+  d = new ItemDef(item_giantBatBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantBat], weak);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_giantBat]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_miGoElectricGun);
+  d = new ItemDef(item_miGoElectricGun);
   resetDef(d, itemDef_rangedWpnIntr);
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileColor = clrYellow;
@@ -910,105 +895,105 @@ void ItemData::makeList() {
   d->rangedDmgType = dmgType_electric;
   d->rangedStatusEffect = new StatusParalyzed(2);
   d->rangedSoundMessage = "I hear a bolt of electricity.";
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_miGo], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_miGo]);
   d->rangedSoundIsLoud = true;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_ghoulClaw);
+  d = new ItemDef(item_ghoulClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_ghoul], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_ghoul]);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_shadowClaw);
+  d = new ItemDef(item_shadowClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_shadow], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_shadow]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_byakheeClaw);
+  d = new ItemDef(item_byakheeClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_byakhee], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_byakhee]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_giantMantisClaw);
+  d = new ItemDef(item_giantMantisClaw);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantMantis], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_giantMantis]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_giantLocustBite);
+  d = new ItemDef(item_giantLocustBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_giantLocust], weak);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_giantLocust]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_mummyMaul);
+  d = new ItemDef(item_mummyMaul);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_mummy], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_mummy]);
   d->meleeStatusEffect = new StatusCursed(eng);
   d->meleeCausesKnockBack = true;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deepOneJavelinAttack);
+  d = new ItemDef(item_deepOneJavelinAttack);
   resetDef(d, itemDef_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_deepOne]);
   d->rangedSoundMessage = "";
   d->rangedMissileColor = clrBrown;
   d->rangedMissileGlyph = '/';
   d->rangedSoundIsLoud = false;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deepOneSpearAttack);
+  d = new ItemDef(item_deepOneSpearAttack);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "thrusts a spear at me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_deepOne], normal);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_deepOne]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_oozeBlackSpewPus);
+  d = new ItemDef(item_oozeBlackSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeBlack], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_oozeBlack]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_oozeClearSpewPus);
+  d = new ItemDef(item_oozeClearSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozeClear], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_oozeClear]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_oozePutridSpewPus);
+  d = new ItemDef(item_oozePutridSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozePutrid], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_oozePutrid]);
   d->meleeStatusEffect = new StatusDiseased(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_oozePoisonSpewPus);
+  d = new ItemDef(item_oozePoisonSpewPus);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews poisonous pus on me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_oozePoison], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_oozePoison]);
   d->meleeStatusEffect = new StatusPoisoned(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_colourOutOfSpaceTouch);
+  d = new ItemDef(item_colourOutOfSpaceTouch);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "touches me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_colourOutOfSpace], strong);
-  itemDefinitions[d->id] = d;
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_colourOutOfSpace]);
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_huntingHorrorBite);
+  d = new ItemDef(item_huntingHorrorBite);
   resetDef(d, itemDef_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromFormula(*d, eng->actorData->actorDefinitions[actor_huntingHorror], strong);
+  setDmgFromMonsterDef(*d, eng->actorData->actorDefs[actor_huntingHorror]);
   d->meleeStatusEffect = new StatusParalyzed(eng);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_armorLeatherJacket);
+  d = new ItemDef(item_armorLeatherJacket);
   resetDef(d, itemDef_armor);
   d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
   d->itemWeight = itemWeight_light;
@@ -1025,9 +1010,9 @@ void ItemData::makeList() {
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "";
   addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_armorIronSuit);
+  d = new ItemDef(item_armorIronSuit);
   resetDef(d, itemDef_armor);
   d->name = ItemName("Iron Suit", "", "an Iron Suit");
   d->itemWeight = itemWeight_heavy;
@@ -1044,9 +1029,9 @@ void ItemData::makeList() {
   d->armorData.chanceToDeflectTouchAttacks = 80;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
   addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_armorFlackJacket);
+  d = new ItemDef(item_armorFlackJacket);
   resetDef(d, itemDef_armor);
   d->name = ItemName("Flak Jacket", "", "a Flak Jacket");
   d->itemWeight = itemWeight_heavy;
@@ -1063,9 +1048,9 @@ void ItemData::makeList() {
   d->armorData.chanceToDeflectTouchAttacks = 20;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
   addFeatureFoundIn(d, feature_cabinet);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_armorAsbestosSuit);
+//  d = new ItemDef(item_armorAsbestosSuit);
 //  resetDef(d, itemDef_armor);
 //  d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
 //  d->color = clrRedLgt;
@@ -1081,134 +1066,132 @@ void ItemData::makeList() {
 //  d->armorData.chanceToDeflectTouchAttacks = 95;
 //  d->armorData.protectsAgainstStatusBurning = true;
 //  d->armorData.overRideAbsorptionPointLabel = "?";
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfMayhem);
+  d = new ItemDef(item_scrollOfMayhem);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 7;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_mayhem;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfTeleportation);
+  d = new ItemDef(item_scrollOfTeleportation);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 7;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_teleport;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfDescent);
+  d = new ItemDef(item_scrollOfDescent);
   resetDef(d, itemDef_scroll);
+  d->spellCastFromScroll = spell_descent;
   d->spawnStandardMinDLVL = 6;
-  d->isScrollLearnable = false;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfPestilence);
+  d = new ItemDef(item_scrollOfPestilence);
   resetDef(d, itemDef_scroll);
-  d->isScrollLearnable = false;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_pestilence;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfEnfeebleEnemies);
+  d = new ItemDef(item_scrollOfEnfeebleEnemies);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_enfeeble;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfDetectItems);
+  d = new ItemDef(item_scrollOfDetectItems);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_detectItems;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfDetectTraps);
+  d = new ItemDef(item_scrollOfDetectTraps);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_detectTraps;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfIdentify);
+  d = new ItemDef(item_scrollOfIdentify);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_identify;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfBlessing);
+  d = new ItemDef(item_scrollOfBlessing);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 30;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_bless;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfClairvoyance);
+  d = new ItemDef(item_scrollOfClairvoyance);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 20;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_clairvoyance;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfAzathothsBlast);
+  d = new ItemDef(item_scrollOfAzathothsBlast);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 2;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_azathothsBlast;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_scrollOfOpening);
+  d = new ItemDef(item_scrollOfOpening);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 15;
-  itemDefinitions[d->id] = d;
+  d->spellCastFromScroll = spell_opening;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_thaumaturgicAlteration);
+  d = new ItemDef(item_thaumaturgicAlteration);
   resetDef(d, itemDef_scroll);
-  d->spellTurnsPerPercentCooldown = 30;
+  d->spellCastFromScroll = spell_mthPower;
   d->isIntrinsic = true;
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_scrollOfVoidChain);
+//  d = new ItemDef(item_scrollOfVoidChain);
 //  resetDef(d, itemDef_scroll);
-//  d->spellTurnsPerPercentCooldown = 1;
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_scrollOfIbnGhazisPowder);
+//  d = new ItemDef(item_scrollOfIbnGhazisPowder);
 //  resetDef(d, itemDef_scroll);
-//  d->spellTurnsPerPercentCooldown = 1;
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfHealing);
+  d = new ItemDef(item_potionOfHealing);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfBlindness);
+  d = new ItemDef(item_potionOfBlindness);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_potionOfCorruption);
+//  d = new ItemDef(item_potionOfCorruption);
 //  resetDef(d, itemDef_potion);
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfTheCobra);
+  d = new ItemDef(item_potionOfTheCobra);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_potionOfStealth);
+//  d = new ItemDef(item_potionOfStealth);
 //  resetDef(d, itemDef_potion);
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfFortitude);
+  d = new ItemDef(item_potionOfFortitude);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfToughness);
+  d = new ItemDef(item_potionOfToughness);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfParalyzation);
+  d = new ItemDef(item_potionOfParalyzation);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfConfusion);
+  d = new ItemDef(item_potionOfConfusion);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfSorcery);
+//  d = new ItemDef(item_potionOfSorcery);
+//  resetDef(d, itemDef_potion);
+//  itemDefs[d->id] = d;
+
+  d = new ItemDef(item_potionOfPoison);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfPoison);
+  d = new ItemDef(item_potionOfKnowledge);
   resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_potionOfKnowledge);
-  resetDef(d, itemDef_potion);
-  itemDefinitions[d->id] = d;
-
-  d = new ItemDefinition(item_deviceSentry);
+  d = new ItemDef(item_deviceSentry);
   resetDef(d, itemDef_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->itemValue = itemValue_majorTreasure;
@@ -1217,9 +1200,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deviceRepeller);
+  d = new ItemDef(item_deviceRepeller);
   resetDef(d, itemDef_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
   d->itemValue = itemValue_majorTreasure;
@@ -1228,9 +1211,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deviceRejuvenator);
+  d = new ItemDef(item_deviceRejuvenator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
   d->itemValue = itemValue_majorTreasure;
@@ -1239,9 +1222,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deviceTranslocator);
+  d = new ItemDef(item_deviceTranslocator);
   resetDef(d, itemDef_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
   d->itemValue = itemValue_majorTreasure;
@@ -1250,17 +1233,17 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-//  d = new ItemDefinition(item_deviceSpellReflector);
+//  d = new ItemDef(item_deviceSpellReflector);
 //  resetDef(d, itemDef_device);
 //  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
 //  d->color = clrGray;
 //  d->featuresCanBeFoundIn.push_back(feature_chest);
 //  d->featuresCanBeFoundIn.push_back(feature_tomb);
-//  itemDefinitions[d->id] = d;
+//  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_deviceElectricLantern);
+  d = new ItemDef(item_deviceElectricLantern);
   resetDef(d, itemDef_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
   d->spawnStandardMinDLVL = 1;
@@ -1272,9 +1255,9 @@ void ItemData::makeList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 
-  d = new ItemDefinition(item_medicalBag);
+  d = new ItemDef(item_medicalBag);
   resetDef(d, itemDef_general);
   d->isMedicalBag = true;
   d->name = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
@@ -1287,38 +1270,32 @@ void ItemData::makeList() {
   d->color = clrBrownDark;
   d->tile = tile_medicalBag;
 //  d->nativeRooms.resize(0);
-  itemDefinitions[d->id] = d;
+  itemDefs[d->id] = d;
 }
 
 void ItemData::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    lines.push_back(itemDefinitions[i]->isIdentified ? "1" : "0");
+    lines.push_back(itemDefs[i]->isIdentified ? "1" : "0");
 
-    if(itemDefinitions[i]->isScroll) {
-      lines.push_back(itemDefinitions[i]->isScrollLearned ? "1" : "0");
-      lines.push_back(itemDefinitions[i]->isTried ? "1" : "0");
-      lines.push_back(intToString(itemDefinitions[i]->castFromMemoryCurrentBaseChance));
+    if(itemDefs[i]->isScroll) {
+      lines.push_back(itemDefs[i]->isTried ? "1" : "0");
     }
   }
 }
 
 void ItemData::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    itemDefinitions[i]->isIdentified = lines.front() == "0" ? false : true;
+    itemDefs[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
 
-    if(itemDefinitions[i]->isScroll) {
-      itemDefinitions[i]->isScrollLearned = lines.front() == "0" ? false : true;
-      lines.erase(lines.begin());
-      itemDefinitions[i]->isTried = lines.front() == "0" ? false : true;
-      lines.erase(lines.begin());
-      itemDefinitions[i]->castFromMemoryCurrentBaseChance = stringToInt(lines.front());
+    if(itemDefs[i]->isScroll) {
+      itemDefs[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(lines.begin());
     }
   }
 }
 
-bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefinition& newDef, bool melee) {
+bool ItemData::isWeaponStronger(const ItemDef& oldDef, const ItemDef& newDef, bool melee) {
   (void)oldDef;
   (void)newDef;
   (void)melee;
@@ -1355,7 +1332,7 @@ bool ItemData::isWeaponStronger(const ItemDefinition& oldDef, const ItemDefiniti
 
 string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
                             const bool SKIP_EXTRA_INFO) const {
-  const ItemDefinition& d = item.getDef();
+  const ItemDef& d = item.getDef();
   string ret = "";
 
   if(d.isDevice && d.isIdentified == false) {
@@ -1410,7 +1387,7 @@ string ItemData::getItemRef(const Item& item, const ItemRef_t itemRefForm,
 string ItemData::getItemInterfaceRef(
   const Item& item, const bool ADD_A,
   const PrimaryAttackMode_t attackMode) const {
-  const ItemDefinition& d = item.getDef();
+  const ItemDef& d = item.getDef();
 
   if(d.isDevice && d.isIdentified == false) {
     return ADD_A ? "a Strange Device" : "Strange Device";
@@ -1451,7 +1428,7 @@ string ItemData::getItemInterfaceRef(
      d.primaryAttackMode == primaryAttackMode_ranged) ||
     (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
     const int MULTIPL = d.isMachineGun == true ?
-                        NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST : 1;
+                        NR_MACHINEGUN_PROJECTILES : 1;
     const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
     const string sidesStr = intToString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;

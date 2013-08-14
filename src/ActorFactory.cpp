@@ -76,7 +76,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
 Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
-  actor->place(pos, &(eng->actorData->actorDefinitions[id]), eng);
+  actor->place(pos, &(eng->actorData->actorDefs[id]), eng);
 
   if(actor->getDef()->nrLeftAllowedToSpawn != -1) {
     actor->getDef()->nrLeftAllowedToSpawn--;
@@ -87,22 +87,32 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   return actor;
 }
 
-Actor* ActorFactory::spawnRandomActor(const Pos& pos, const int SPAWN_LVL_OFFSET) {
-  const int DLVL = eng->map->getDungeonLevel();
+Actor* ActorFactory::spawnRandomActor(const Pos& pos,
+                                      const int SPAWN_LVL_OFFSET) {
+  const int DLVL = eng->map->getDLVL();
   vector<ActorId_t> monsterCandidates;
-  const unsigned int ACTORS_DEFINED = static_cast<unsigned int>(endOfActorIds);
-  for(unsigned int i = 1; i < ACTORS_DEFINED; i++) {
-    const ActorDefinition& def = eng->actorData->actorDefinitions[i];
+  const unsigned int NR_ACTORS_DEFINED =
+    static_cast<unsigned int>(endOfActorIds);
+  for(unsigned int i = 1; i < NR_ACTORS_DEFINED; i++) {
+    const ActorDef& def = eng->actorData->actorDefs[i];
 
-    const bool IS_LVL_OK = DLVL + SPAWN_LVL_OFFSET >= def.spawnMinLevel && DLVL <= def.spawnMaxLevel;
+    const bool IS_LVL_OK =
+      DLVL + SPAWN_LVL_OFFSET >= def.spawnMinDLVL &&
+      DLVL <= def.spawnMaxDLVL;
 
-    const bool IS_ALLOWED_TO_SPAWN = def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
+    const bool IS_ALLOWED_TO_SPAWN =
+      def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
 
-    const bool IS_FEATURE_PASSABLE = eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
+    const bool IS_FEATURE_PASSABLE =
+      eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
 
     bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
 
-    if(IS_LVL_OK && IS_ALLOWED_TO_SPAWN && IS_FEATURE_PASSABLE && IS_NO_ACTOR_AT_POS) {
+    if(
+      IS_LVL_OK &&
+      IS_ALLOWED_TO_SPAWN &&
+      IS_FEATURE_PASSABLE &&
+      IS_NO_ACTOR_AT_POS) {
       monsterCandidates.push_back(static_cast<ActorId_t>(i));
     }
   }

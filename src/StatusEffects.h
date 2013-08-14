@@ -284,7 +284,7 @@ public:
   }
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 50, 100);}
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 100);}
 };
 
 class StatusInfected: public StatusEffect {
@@ -323,7 +323,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 20, 100);}
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusInfected(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
 };
 
@@ -364,7 +364,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 1450);}
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusDiseased(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
 };
 
@@ -402,7 +402,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusPoisoned(const int TURNS) : StatusEffect(TURNS, statusPoisoned) {}
 };
 
@@ -438,7 +438,7 @@ public:
   void end(Engine* const engine) {(void)engine;}
 
   int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_accuracyRanged) return 20;
+    if(ability == ability_accuracyRanged) return 10;
     return 0;
   }
 
@@ -551,7 +551,9 @@ private:
 
 class StatusCursed: public StatusEffect {
 public:
-  StatusCursed(Engine* const engine) : StatusEffect(statusCursed) {setTurnsFromRandomStandard(engine);}
+  StatusCursed(Engine* const engine) : StatusEffect(statusCursed) {
+    setTurnsFromRandomStandard(engine);
+  }
   StatusCursed(const int TURNS) : StatusEffect(TURNS, statusCursed) {}
   ~StatusCursed() {}
 
@@ -592,7 +594,7 @@ public:
   }
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
+  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 500, 500);}
 };
 
 class StatusClairvoyant: public StatusEffect {
@@ -676,7 +678,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 6, 3);}
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusBurning(const int TURNS) : StatusEffect(TURNS, statusBurning) {}
   void doDamage(Engine* const engine);
 };
@@ -714,7 +716,7 @@ public:
 
 private:
   DiceParam getRandomStandardNrTurns() {return DiceParam(1, 2, 2);}
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusFlared(const int TURNS) : StatusEffect(TURNS, statusFlared) {}
 };
 
@@ -1372,7 +1374,7 @@ private:
     return DiceParam(1, 50, 50);
   }
 
-  friend class StatusEffectsHandler;
+  friend class StatusHandler;
   StatusFainted(const int TURNS) :
     StatusEffect(TURNS, statusFainted) {
   }
@@ -1916,15 +1918,13 @@ private:
   }
 };
 
-//Every actor has a StatusEffectHandler member. This class contains a vector of StatusEffects.
-//It handles communication with the effects, and recieves attempts to add new effects to the actor.
-class StatusEffectsHandler {
+class StatusHandler {
 public:
-  StatusEffectsHandler(Actor* const owningActor_, Engine* const engine) :
+  StatusHandler(Actor* const owningActor_, Engine* const engine) :
     owningActor(owningActor_), eng(engine) {
     effects.resize(0);
   }
-  ~StatusEffectsHandler() {
+  ~StatusHandler() {
     for(unsigned int i = 0; i < effects.size(); i++) {
       delete effects.at(i);
     }

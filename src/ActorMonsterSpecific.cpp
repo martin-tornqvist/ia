@@ -71,7 +71,7 @@ string Cultist::getCultistPhrase(Engine* const engine) {
 }
 
 void Cultist::actorSpecific_spawnStartItems() {
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
 
   const int PISTOL = 6;
   const int PUMP_SHOTGUN = PISTOL + 4;
@@ -105,7 +105,7 @@ void Cultist::actorSpecific_spawnStartItems() {
   }
 
   if(eng->dice.percentile() < 8) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
   }
 }
 
@@ -120,7 +120,7 @@ void CultistTeslaCannon::actorSpecific_spawnStartItems() {
   }
 
   if(eng->dice.percentile() < 10) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
   }
 }
 
@@ -139,11 +139,11 @@ void CultistPriest::actorSpecific_spawnStartItems() {
   inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
   inventory_->putItemInGeneral(eng->itemFactory->spawnRandomScrollOrPotion(true, true));
 
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 
   if(eng->dice.percentile() < 33) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
   }
 }
 
@@ -260,9 +260,9 @@ bool Ghost::actorSpecificAct() {
               eng->log->addMessage("The touch is deflected by my " + armorName + "!");
             } else {
               if(eng->dice.coinToss()) {
-                eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusSlowed(eng));
+                eng->player->getStatusHandler()->tryAddEffect(new StatusSlowed(eng));
               } else {
-                eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusCursed(eng));
+                eng->player->getStatusHandler()->tryAddEffect(new StatusCursed(eng));
               }
               restoreHP(999);
             }
@@ -286,8 +286,8 @@ void Phantasm::actorSpecific_spawnStartItems() {
 
 void Wraith::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_wraithClaw));
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 }
 
 void MiGo::actorSpecific_spawnStartItems() {
@@ -298,7 +298,7 @@ void MiGo::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
 
   if(eng->dice.coinToss()) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
   }
 }
 
@@ -328,15 +328,15 @@ void Mummy::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_mummyMaul));
 
   for(int i = eng->dice.getInRange(1, 3); i > 0; i--) {
-    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+    spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
   }
 }
 
 void MummyUnique::actorSpecific_spawnStartItems() {
   inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_mummyMaul));
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 }
 
 bool Khephren::actorSpecificAct() {
@@ -452,7 +452,7 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonRandom);
   spellsKnown.push_back(new SpellAzathothsBlast);
-  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonsters());
+  spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 }
 
 void Ooze::actorSpecificOnStandardTurn() {
@@ -491,7 +491,7 @@ void ColourOutOfSpace::actorSpecificOnStandardTurn() {
   restoreHP(1, false);
 
   if(eng->player->checkIfSeeActor(*this, NULL)) {
-    eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(eng));
+    eng->player->getStatusHandler()->tryAddEffect(new StatusConfused(eng));
   }
 }
 

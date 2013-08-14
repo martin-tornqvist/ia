@@ -11,7 +11,7 @@ enum MedicalBagAction_t {
 
 class MedicalBag: public Item {
 public:
-  MedicalBag(ItemDefinition* const itemDefinition) :
+  MedicalBag(ItemDef* const itemDefinition) :
     Item(itemDefinition), nrSupplies_(30), nrTurnsLeft_(-1) {}
 
   virtual ~MedicalBag() {}

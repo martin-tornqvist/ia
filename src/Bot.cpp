@@ -86,7 +86,7 @@ void Bot::act() {
 
   tracer << "Bot: Checking if can use stairs here" << endl;
   if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
-    if(eng->map->getDungeonLevel() >= PLAY_TO_DLVL) {
+    if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
       tracer << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
       if(runCount >= NR_OF_RUNS) {
@@ -94,7 +94,7 @@ void Bot::act() {
         eng->config->isBotPlaying = false;
       } else {
         tracer << "Bot: Starting new run on first dungeon level" << endl;
-        eng->map->dungeonLevel_ = 0;
+        eng->map->dlvl_ = 0;
       }
     }
     eng->input->handleKeyPress(KeyboardReadReturnData('>'));
@@ -102,9 +102,11 @@ void Bot::act() {
   }
 
   tracer << "Bot: Looking for adjacent doors" << endl;
+  const Pos& playerPos = eng->player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
-      FeatureStatic* f = eng->map->featuresStatic[eng->player->pos.x + dx][eng->player->pos.y + dy];
+      FeatureStatic* f =
+        eng->map->featuresStatic[playerPos.x + dx][playerPos.y + dy];
       if(f->getId() == feature_door) {
         tracer << "Bot: Adjacent door found, revealing" << endl;
         dynamic_cast<Door*>(f)->reveal(false);
@@ -119,9 +121,9 @@ void Bot::act() {
   }
 
   tracer << "Bot: Checking if terrified (to ignore stairs-path)" << endl;
-  if(eng->player->getStatusEffectsHandler()->hasEffect(statusTerrified)) {
+  if(eng->player->getStatusHandler()->hasEffect(statusTerrified)) {
     tracer << "Bot: Is terrified, walking to current pos or randomly" << endl;
-    if(walkToAdjacentCell(eng->player->pos)) {
+    if(walkToAdjacentCell(playerPos)) {
       return;
     }
   }

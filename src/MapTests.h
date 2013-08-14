@@ -24,9 +24,10 @@ public:
 
 class MapTests {
 public:
-  MapTests(Engine* engine) {
-    eng = engine;
-  }
+  MapTests(Engine* engine) : eng(engine) {}
+
+  void getActorsPositions(const vector<Actor*>& actors,
+                          vector<Pos>& vectorToFill);
 
   void makeVisionBlockerArray(
     const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
@@ -135,7 +136,7 @@ public:
   Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 
   vector<Pos> getLine(const Pos& origin, const Pos& target,
-                        bool stopAtTarget, int chebTravelLimit);
+                      bool stopAtTarget, int chebTravelLimit);
 
   Actor* getActorAtPos(const Pos pos) const;
 

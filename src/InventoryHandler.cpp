@@ -34,7 +34,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slo
 
   for(unsigned int i = 0; i < general->size(); i++) {
     const Item* const item = general->at(i);
-    const ItemDefinition& def = item->getDef();
+    const ItemDef& def = item->getDef();
 
     switch(slotToEquip) {
       case slot_armorBody: {
@@ -240,7 +240,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   tracer << "InventoryHandler::runDropScreen()" << endl;
   Inventory* const inv = eng->player->getInventory();
   Item* const item = inv->getItemInElement(GLOBAL_ELEMENT_NR);
-  const ItemDefinition& def = item->getDef();
+  const ItemDef& def = item->getDef();
 
   eng->log->clearLog();
   if(def.isStackable && item->numberOfItems > 1) {

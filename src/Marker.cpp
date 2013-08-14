@@ -192,14 +192,15 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
 }
 
 void Marker::setPosToClosestEnemyIfVisible() {
-  eng->player->getSpotedEnemiesPositions();
+  vector<Actor*> spotedEnemies;
+  eng->player->getSpotedEnemies(spotedEnemies);
+  vector<Pos> spotedEnemiesPositions;
+  eng->mapTests->getActorsPositions(spotedEnemies, spotedEnemiesPositions);
 
   //If player sees enemies, suggest one for targeting
-  const vector<Pos>& positions = eng->player->spotedEnemiesPositions;
-  if(positions.size() != 0) {
-    Pos pos = eng->mapTests->getClosestPos(eng->player->pos, positions);
-
-    pos_ = pos;
+  if(spotedEnemiesPositions.empty() == false) {
+    pos_ = eng->mapTests->getClosestPos(eng->player->pos,
+                                        spotedEnemiesPositions);
 
     const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
     eng->player->target = actor;
@@ -210,10 +211,10 @@ bool Marker::setPosToTargetIfVisible() {
   const Actor* const target = eng->player->target;
 
   if(target != NULL) {
-    eng->player->getSpotedEnemies();
+    vector<Actor*> spotedEnemies;
+    eng->player->getSpotedEnemies(spotedEnemies);
 
-    const vector<Actor*>& spotedEnemies = eng->player->spotedEnemies;
-    if(spotedEnemies.size() != 0) {
+    if(spotedEnemies.empty() == false) {
 
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
         if(target == spotedEnemies.at(i)) {

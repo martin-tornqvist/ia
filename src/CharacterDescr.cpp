@@ -104,8 +104,8 @@ void CharacterDescr::makeLines() {
                       clrText));
     const int CASTING_BON = eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
     lines.push_back(StringAndClr(
-                      offset + "+" + intToString(CASTING_BON) +
-                      "% chance to cast spells",
+                      offset + "-" + intToString(CASTING_BON) +
+                      " spirit required to cast spells",
                       clrText));
   }
   lines.push_back(StringAndClr(" ", clrText));
@@ -163,7 +163,7 @@ void CharacterDescr::makeLines() {
   vector<StringAndClr> potionList;
   vector<StringAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    const ItemDef* const d = eng->itemData->itemDefs[i];
     if(d->isQuaffable && (d->isTried || d->isIdentified)) {
       Item* item = eng->itemFactory->spawnItem(d->id);
       potionList.push_back(

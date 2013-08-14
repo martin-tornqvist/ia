@@ -51,7 +51,7 @@ void MapBuildBSP::run() {
   buildMergedRegionsAndRooms(regions, SPLIT_X1, SPLIT_X2, SPLIT_Y1, SPLIT_Y2);
 
   const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
   const int CHANCE_FOR_CAVE_AREA = (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
   if(eng->dice.percentile() < CHANCE_FOR_CAVE_AREA) {
     const bool IS_TWO_CAVES = eng->dice.percentile() < CHANCE_FOR_CAVE_AREA / 3;
@@ -134,7 +134,7 @@ void MapBuildBSP::run() {
   const Pos stairsPos = placeStairs();
 
   const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 9;
-  if(eng->map->getDungeonLevel() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
+  if(eng->map->getDLVL() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
     revealAllDoorsBetweenPlayerAndStairs(stairsPos);
   }
 

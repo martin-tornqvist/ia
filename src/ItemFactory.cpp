@@ -15,12 +15,12 @@
 Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   Item* item = NULL;
 
-  ItemDefinition* const d = eng->itemData->itemDefinitions[itemId];
+  ItemDef* const d = eng->itemData->itemDefs[itemId];
 
-  ItemDefinition* ammoD = NULL;
+  ItemDef* ammoD = NULL;
 
   if(d->rangedAmmoTypeUsed != item_empty) {
-    ammoD = eng->itemData->itemDefinitions[d->rangedAmmoTypeUsed];
+    ammoD = eng->itemData->itemDefs[d->rangedAmmoTypeUsed];
   }
 
   switch(itemId) {
@@ -103,19 +103,19 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_dustVortexEngulf:         item = new Weapon(d, ammoD);            break;
     case item_fireVortexEngulf:         item = new Weapon(d, ammoD);            break;
 
-    case item_scrollOfMayhem:           item = new ScrollOfMayhem(d);           break;
-    case item_scrollOfTeleportation:    item = new ScrollOfTeleportation(d);    break;
-    case item_scrollOfDescent:          item = new ScrollOfDescent(d);          break;
-    case item_scrollOfPestilence:       item = new ScrollOfPestilence(d);       break;
-    case item_scrollOfEnfeebleEnemies:  item = new ScrollOfEnfeebleEnemies(d);  break;
-    case item_scrollOfDetectItems:      item = new ScrollOfDetectItems(d);      break;
-    case item_scrollOfDetectTraps:      item = new ScrollOfDetectTraps(d);      break;
-    case item_scrollOfIdentify:         item = new ScrollOfIdentify(d);         break;
-    case item_scrollOfBlessing:         item = new ScrollOfBlessing(d);         break;
-    case item_scrollOfClairvoyance:     item = new ScrollOfClairvoyance(d);     break;
-    case item_scrollOfAzathothsBlast:   item = new ScrollOfAzathothsBlast(d);   break;
-    case item_scrollOfOpening:          item = new ScrollOfOpening(d);          break;
-    case item_thaumaturgicAlteration:   item = new ThaumaturgicAlteration(d);   break;
+    case item_scrollOfMayhem:           item = new Scroll(d);                   break;
+    case item_scrollOfTeleportation:    item = new Scroll(d);                   break;
+    case item_scrollOfDescent:          item = new Scroll(d);                   break;
+    case item_scrollOfPestilence:       item = new Scroll(d);                   break;
+    case item_scrollOfEnfeebleEnemies:  item = new Scroll(d);                   break;
+    case item_scrollOfDetectItems:      item = new Scroll(d);                   break;
+    case item_scrollOfDetectTraps:      item = new Scroll(d);                   break;
+    case item_scrollOfIdentify:         item = new Scroll(d);                   break;
+    case item_scrollOfBlessing:         item = new Scroll(d);                   break;
+    case item_scrollOfClairvoyance:     item = new Scroll(d);                   break;
+    case item_scrollOfAzathothsBlast:   item = new Scroll(d);                   break;
+    case item_scrollOfOpening:          item = new Scroll(d);                   break;
+    case item_thaumaturgicAlteration:   item = new Scroll(d);                   break;
 
     case item_potionOfHealing:          item = new PotionOfHealing(d);          break;
     case item_potionOfBlindness:        item = new PotionOfBlindness(d);        break;
@@ -125,7 +125,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfToughness:        item = new PotionOfToughness(d);        break;
     case item_potionOfParalyzation:     item = new PotionOfParalyzation(d);     break;
     case item_potionOfConfusion:        item = new PotionOfConfusion(d);        break;
-    case item_potionOfSorcery:          item = new PotionOfSorcery(d);          break;
+//    case item_potionOfSorcery:          item = new PotionOfSorcery(d);          break;
     case item_potionOfPoison:           item = new PotionOfPoison(d);           break;
     case item_potionOfKnowledge:        item = new PotionOfKnowledge(d);        break;
 
@@ -151,7 +151,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
 }
 
 void ItemFactory::setItemRandomizedProperties(Item* item) {
-  const ItemDefinition& d = item->getDef();
+  const ItemDef& d = item->getDef();
 
   //If it is a pure melee weapon, it may get a plus
   if(d.isMeleeWeapon && d.isRangedWeapon == false) {
@@ -167,11 +167,11 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
       if(d.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
-        const int CAP_SCALED = CAP / NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
-        const int MIN_SCALED = MIN / NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
+        const int CAP_SCALED = CAP / NR_MACHINEGUN_PROJECTILES;
+        const int MIN_SCALED = MIN / NR_MACHINEGUN_PROJECTILES;
         weapon->ammoLoaded =
           eng->dice.getInRange(MIN_SCALED, CAP_SCALED) *
-          NUMBER_OF_MACHINEGUN_PROJECTILES_PER_BURST;
+          NR_MACHINEGUN_PROJECTILES;
       } else {
         weapon->ammoLoaded =
           eng->dice.getInRange(weapon->ammoCapacity / 4, weapon->ammoCapacity);
@@ -202,7 +202,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   vector<ItemId_t> itemCandidates;
 
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    const ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    const ItemDef* const d = eng->itemData->itemDefs[i];
     if(
       d->isIntrinsic == false &&
       ((d->isReadable && ALLOW_SCROLLS) ||

@@ -5,7 +5,7 @@
 
 class Device: public Item {
 public:
-  Device(ItemDefinition* const itemDefinition) :
+  Device(ItemDef* const itemDefinition) :
     Item(itemDefinition), isActivated_(false), nrTurnsToNextGoodEffect_(-1),
     nrTurnsToNextBadEffect_(-1) {}
 
@@ -24,7 +24,7 @@ public:
   void itemSpecificAddSaveLines(vector<string>& lines);
   void itemSpecificSetParametersFromSaveLines(vector<string>& lines);
 
-  void identify(const bool IS_SILENT_IDENTIFY);
+  void identify(const bool IS_SILENT_IDENTIFY, Engine* const engine);
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
@@ -55,7 +55,7 @@ protected:
 
 class DeviceSentry: public Device {
 public:
-  DeviceSentry(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
+  DeviceSentry(ItemDef* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceSentry() {}
 
@@ -66,7 +66,7 @@ private:
 
 class DeviceRepeller: public Device {
 public:
-  DeviceRepeller(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
+  DeviceRepeller(ItemDef* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceRepeller() {}
 
@@ -78,7 +78,7 @@ private:
 
 class DeviceRejuvenator: public Device {
 public:
-  DeviceRejuvenator(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
+  DeviceRejuvenator(ItemDef* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceRejuvenator() {}
 
@@ -89,7 +89,7 @@ private:
 
 class DeviceTranslocator: public Device {
 public:
-  DeviceTranslocator(ItemDefinition* const itemDefinition) : Device(itemDefinition) {}
+  DeviceTranslocator(ItemDef* const itemDefinition) : Device(itemDefinition) {}
 
   ~DeviceTranslocator() {}
 
@@ -100,7 +100,7 @@ private:
 
 //class DeviceSpellReflector: public Device {
 //public:
-//  DeviceSpellReflector(ItemDefinition* const itemDefinition) :
+//  DeviceSpellReflector(ItemDef* const itemDefinition) :
 //    Device(itemDefinition) {}
 //
 //  ~DeviceSpellReflector() {}
@@ -111,7 +111,7 @@ private:
 
 class DeviceElectricLantern: public Device {
 public:
-  DeviceElectricLantern(ItemDefinition* const itemDefinition) :
+  DeviceElectricLantern(ItemDef* const itemDefinition) :
     Device(itemDefinition), malfunctCooldown_(-1) {}
 
   ~DeviceElectricLantern() {}

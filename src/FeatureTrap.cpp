@@ -69,13 +69,13 @@ void Trap::triggerOnPurpose(Actor* actorTriggering) {
 void Trap::bump(Actor* actorBumping) {
   tracer << "Trap::bump()..." << endl;
 
-  const ActorDefinition* const d = actorBumping->getDef();
+  const ActorDef* const d = actorBumping->getDef();
 
   tracer << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
 
   if(d->moveType == moveType_walk) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
-    const bool ACTOR_CAN_SEE = actorBumping->getStatusEffectsHandler()->allowSee();
+    const bool ACTOR_CAN_SEE = actorBumping->getStatusHandler()->allowSee();
     const int DODGE_SKILL_VALUE = actorBumping->getDef()->abilityVals.getVal(ability_dodgeTrap, true, *actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
@@ -125,7 +125,7 @@ void Trap::bump(Actor* actorBumping) {
 void Trap::trigger(Actor* const actor) {
   tracer << "Trap::trigger()..." << endl;
 
-  const ActorDefinition* const d = actor->getDef();
+  const ActorDef* const d = actor->getDef();
   const int DODGE_SKILL_VALUE =  actor->getDef()->abilityVals.getVal(ability_dodgeTrap, true, *actor);
 
   if(actor == eng->player) {
@@ -216,12 +216,14 @@ MaterialType_t Trap::getMaterialType() const {
 //================================================ SPECIFIC TRAPS
 TrapDart::TrapDart(Pos pos, Engine* engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
-  isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
+  isPoisoned =
+    eng->map->getDLVL() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
 
-void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapDart::trapSpecificTrigger(Actor* const actor,
+                                   const AbilityRollResult_t dodgeResult) {
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -231,7 +233,9 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
       if(CAN_SEE) {
         eng->log->addMessage("I dodge a dart!", clrMessageGood);
       } else {
-        eng->log->addMessage("I feel a mechanism trigger and quickly leap aside!", clrMessageGood);
+        eng->log->addMessage(
+          "I feel a mechanism trigger and quickly leap aside!",
+          clrMessageGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
@@ -246,7 +250,9 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         if(CAN_SEE) {
           eng->log->addMessage("A dart barely misses me!", clrMessageGood);
         } else {
-          eng->log->addMessage("A mechanism triggers, I hear something barely missing me!", clrMessageGood);
+          eng->log->addMessage(
+            "A mechanism triggers, I hear something barely missing me!",
+            clrMessageGood);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
         eng->log->addMessage("A dart barely misses " + actorName + "!");
@@ -257,7 +263,9 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         if(CAN_SEE) {
           eng->log->addMessage("I am hit by a dart!", clrMessageBad);
         } else {
-          eng->log->addMessage("A mechanism triggers, I feel a needle piercing my skin!", clrMessageBad);
+          eng->log->addMessage(
+            "A mechanism triggers, I feel a needle piercing my skin!",
+            clrMessageBad);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
         eng->log->addMessage(actorName + " is hit by a dart!", clrMessageGood);
@@ -269,7 +277,7 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
         }
-        actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(eng));
+        actor->getStatusHandler()->tryAddEffect(new StatusPoisoned(eng));
       }
     }
   }
@@ -277,12 +285,14 @@ void TrapDart::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t
 
 TrapSpear::TrapSpear(Pos pos, Engine* engine) :
   SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
-  isPoisoned = eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
+  isPoisoned =
+    eng->map->getDLVL() >= MIN_DLVL_NASTY_TRAPS && eng->dice.coinToss();
 }
 
-void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapSpear::trapSpecificTrigger(Actor* const actor,
+                                    const AbilityRollResult_t dodgeResult) {
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -292,7 +302,9 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
       if(CAN_SEE) {
         eng->log->addMessage("I dodge a spear!", clrMessageGood);
       } else {
-        eng->log->addMessage("I feel a mechanism trigger and quickly leap aside!", clrMessageGood);
+        eng->log->addMessage(
+          "I feel a mechanism trigger and quickly leap aside!",
+          clrMessageGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
@@ -307,7 +319,9 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
         if(CAN_SEE) {
           eng->log->addMessage("A spear barely misses me!", clrMessageGood);
         } else {
-          eng->log->addMessage("A mechanism triggers, I hear a *swoosh*!", clrMessageGood);
+          eng->log->addMessage(
+            "A mechanism triggers, I hear a *swoosh*!",
+            clrMessageGood);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
@@ -320,7 +334,9 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
         if(CAN_SEE) {
           eng->log->addMessage("I am hit by a spear!", clrMessageBad);
         } else {
-          eng->log->addMessage("A mechanism triggers, something sharp pierces my skin!", clrMessageBad);
+          eng->log->addMessage(
+            "A mechanism triggers, something sharp pierces my skin!",
+            clrMessageBad);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
@@ -334,17 +350,18 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
         if(IS_PLAYER) {
           eng->log->addMessage("It was poisoned!");
         }
-        actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(eng));
+        actor->getStatusHandler()->tryAddEffect(new StatusPoisoned(eng));
       }
     }
   }
 }
 
-void TrapGasConfusion::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapGasConfusion::trapSpecificTrigger(Actor* const actor,
+    const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -360,14 +377,16 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor, const AbilityRoll
     }
   }
 
-  eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng), true, getTrapSpecificColor());
+  eng->explosionMaker->runExplosion(pos_, false, new StatusConfused(eng),
+                                    true, getTrapSpecificColor());
 }
 
-void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor,
+    const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -375,7 +394,8 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityR
     if(CAN_SEE) {
       eng->log->addMessage("I am hit by a burst of gas!");
     } else {
-      eng->log->addMessage("A mechanism triggers, I am hit by a burst of gas!");
+      eng->log->addMessage(
+        "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
@@ -383,14 +403,16 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor, const AbilityR
     }
   }
 
-  eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng), true, getTrapSpecificColor());
+  eng->explosionMaker-> runExplosion(pos_, false, new StatusParalyzed(eng),
+                                     true, getTrapSpecificColor());
 }
 
-void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapGasFear::trapSpecificTrigger(Actor* const actor,
+                                      const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -398,7 +420,8 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResul
     if(CAN_SEE) {
       eng->log->addMessage("I am hit by a burst of gas!");
     } else {
-      eng->log->addMessage("A mechanism triggers, I am hit by a burst of gas!");
+      eng->log->addMessage(
+        "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
@@ -406,12 +429,14 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor, const AbilityRollResul
     }
   }
 
-  eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng), true, getTrapSpecificColor());
+  eng->explosionMaker-> runExplosion(pos_, false, new StatusTerrified(eng),
+                                     true, getTrapSpecificColor());
 }
 
-void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor,
+    const AbilityRollResult_t dodgeResult) {
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -419,7 +444,9 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRol
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage("I cover my eyes just in time to avoid an intense flash!", clrMessageGood);
+        eng->log->addMessage(
+          "I cover my eyes just in time to avoid an intense flash!",
+          clrMessageGood);
       } else {
         eng->log->addMessage("I feel a mechanism trigger!", clrMessageGood);
       }
@@ -432,49 +459,56 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor, const AbilityRol
     //Dodge failed
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage("A sharp flash of light pierces my eyes!", clrWhite);
-        actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(eng));
+        eng->log->addMessage(
+          "A sharp flash of light pierces my eyes!", clrWhite);
+        actor->getStatusHandler()->tryAddEffect(new StatusBlind(eng));
       } else {
         eng->log->addMessage("I feel a mechanism trigger!", clrWhite);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(actorName + " is hit by a flash of blinding light!");
-        actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(eng));
+        eng->log->addMessage(
+          actorName + " is hit by a flash of blinding light!");
+        actor->getStatusHandler()->tryAddEffect(new StatusBlind(eng));
       }
     }
   }
 }
 
-void TrapTeleport::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapTeleport::trapSpecificTrigger(Actor* const actor,
+                                       const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
   if(IS_PLAYER) {
     eng->player->updateFov();
     if(CAN_SEE) {
-      eng->popup->showMessage("A curious shape on the floor starts to glow!", true);
+      eng->popup->showMessage(
+        "A curious shape on the floor starts to glow!", true);
     } else {
       eng->popup->showMessage("I feel a peculiar energy around me!", true);
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName + ".");
+      eng->log->addMessage(
+        "A curious shape on the floor starts go glow under "
+        + actorName + ".");
     }
   }
 
   actor->teleport(false);
 }
 
-void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapSummonMonster::trapSpecificTrigger(Actor* const actor,
+    const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -487,7 +521,9 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("A curious shape on the floor starts go glow under " + actorName + ".");
+      eng->log->addMessage(
+        "A curious shape on the floor starts go glow under "
+        + actorName + ".");
     }
   }
 
@@ -516,19 +552,22 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
 
   vector<ActorId_t> summonCandidates;
   for(unsigned int i = 1; i < endOfActorIds; i++) {
-    const ActorDefinition& def = eng->actorData->actorDefinitions[i];
+    const ActorDef& def = eng->actorData->actorDefs[i];
     if(def.canBeSummoned) {
-      if(def.monsterLvl <= eng->map->getDungeonLevel() + 3) {
+      if(def.spawnMinDLVL <= eng->map->getDLVL() - 3) {
         summonCandidates.push_back(static_cast<ActorId_t>(i));
       }
     }
   }
-  const ActorId_t actorSummoned = summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
+  const ActorId_t actorSummoned =
+    summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
 
   for(unsigned int i = 0; i < floodFillVector.size(); i++) {
     const Pos curPos = floodFillVector.at(i).pos;
     if(actorArray[curPos.x][curPos.y] == false) {
-      Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actorSummoned, curPos));
+      Monster* monster = dynamic_cast<Monster*>(
+                           eng->actorFactory->spawnActor(
+                             actorSummoned, curPos));
       monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->log->addMessage(monster->getNameA() + " appears.");
@@ -538,11 +577,12 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor, const AbilityRol
   }
 }
 
-void TrapSmoke::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapSmoke::trapSpecificTrigger(Actor* const actor,
+                                    const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -550,18 +590,21 @@ void TrapSmoke::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
     if(CAN_SEE) {
       eng->log->addMessage("Suddenly the air is thick with smoke!");
     } else {
-      eng->log->addMessage("A mechanism triggers, the air is thick with smoke!");
+      eng->log->addMessage(
+        "A mechanism triggers, the air is thick with smoke!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("Suddenly the air around " + actorName + " is thick with smoke!");
+      eng->log->addMessage("Suddenly the air around " + actorName +
+                           " is thick with smoke!");
     }
   }
 
   eng->explosionMaker->runSmokeExplosion(pos_);
 }
 
-void TrapAlarm::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapAlarm::trapSpecificTrigger(Actor* const actor,
+                                    const AbilityRollResult_t dodgeResult) {
   (void)dodgeResult;
 
   const bool IS_PLAYER = actor == eng->player;
@@ -572,21 +615,26 @@ void TrapAlarm::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_
     eng->log->addMessage("An alarm sounds!");
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("Suddenly the air around " + actorName + " is thick with smoke!");
+      eng->log->addMessage("Suddenly the air around " + actorName +
+                           " is thick with smoke!");
     } else {
     }
   }
 
-  eng->soundEmitter->emitSound(Sound("I hear an alarm sounding!", IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true));
+  eng->soundEmitter->emitSound(Sound("I hear an alarm sounding!",
+                                     IS_PLAYER || CAN_PLAYER_SEE_ACTOR,
+                                     pos_, true, true));
 }
 
-void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollResult_t dodgeResult) {
+void TrapSpiderWeb::trapSpecificTrigger(
+  Actor* const actor, const AbilityRollResult_t dodgeResult) {
+
   (void)dodgeResult;
 
   isHoldingActor = true;
 
   const bool IS_PLAYER = actor == eng->player;
-  const bool CAN_SEE = actor->getStatusEffectsHandler()->allowSee();
+  const bool CAN_SEE = actor->getStatusHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
   const string actorName = actor->getNameThe();
 
@@ -629,14 +677,16 @@ void TrapSpiderWeb::trapSpecificTrigger(Actor* const actor, const AbilityRollRes
   }
 }
 
-Pos TrapSpiderWeb::specificTrapActorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest) {
+Pos TrapSpiderWeb::specificTrapActorTryLeave(
+  Actor* const actor, const Pos& pos, const Pos& dest) {
+
   tracer << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 
   if(isHoldingActor) {
     tracer << "TrapSpiderWeb: Is holding actor" << endl;
 
     const bool IS_PLAYER = actor == eng->player;
-    const bool PLAYER_CAN_SEE = eng->player->getStatusEffectsHandler()->allowSee();
+    const bool PLAYER_CAN_SEE = eng->player->getStatusHandler()->allowSee();
     const bool PLAYER_CAN_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
     const string actorName = actor->getNameThe();
 

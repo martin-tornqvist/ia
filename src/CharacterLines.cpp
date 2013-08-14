@@ -18,12 +18,12 @@
 using namespace std;
 
 void CharacterLines::drawLocationInfo() {
-  if(eng->player->getStatusEffectsHandler()->allowSee()) {
+  if(eng->player->getStatusHandler()->allowSee()) {
     string str = "";
 
     const Pos& playerPos = eng->player->pos;
 
-    const int DLVL = eng->map->getDungeonLevel();
+    const int DLVL = eng->map->getDLVL();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
       const vector<Room*>& roomList = eng->roomThemeMaker->roomList;
       for(unsigned int i = 0; i < roomList.size(); i++) {
@@ -80,6 +80,15 @@ void CharacterLines::drawInfoLines() {
   eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
   pos.x += str.length() + 1;
 
+  //Spirit
+  const string spi    = intToString(8 /*eng->player->getHp()*/);
+  const string spiMax = intToString(8 /*eng->player->getHpMax(true)*/);
+  eng->renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
+  pos.x += 4;
+  str = spi + "/" + spiMax;
+  eng->renderer->drawText(str, panel_character, pos, clrBlueLgt);
+  pos.x += str.length() + 1;
+
   //Wounds
 //  const string wnd = "0"; //intToString(eng->player->getNrWounds());
 //  const string wndMax = "5"; //intToString(eng->player->getWndMax());
@@ -129,7 +138,7 @@ void CharacterLines::drawInfoLines() {
   pos.y += 1;
   eng->renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
   pos.x += 5;
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
   str = DLVL >= 0 ? intToString(DLVL) : "?";
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
@@ -184,7 +193,7 @@ void CharacterLines::drawInfoLines() {
   pos.x = CHARACTER_LINE_X0;
 
   const bool IS_SELF_AWARE = eng->playerBonHandler->isBonPicked(playerBon_selfAware);
-  const vector<StatusEffect*>& effects = eng->player->getStatusEffectsHandler()->effects;
+  const vector<StatusEffect*>& effects = eng->player->getStatusHandler()->effects;
   for(unsigned int i = 0; i < effects.size(); i++) {
     StatusEffect* const effect = effects.at(i);
     const SDL_Color statusColor =
@@ -203,6 +212,6 @@ void CharacterLines::drawInfoLines() {
   // Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());
   pos.x = MAP_X_CELLS - str.length() - 1;
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  eng->renderer->drawText(str, panel_character, pos, clrGenMed);
 }
 

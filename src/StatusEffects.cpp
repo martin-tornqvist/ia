@@ -16,9 +16,7 @@
 
 using namespace std;
 
-StatusEffect::~StatusEffect() {
-
-}
+StatusEffect::~StatusEffect() {}
 
 void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
   const DiceParam diceParam = getRandomStandardNrTurns();
@@ -28,25 +26,25 @@ void StatusEffect::setTurnsFromRandomStandard(Engine* const engine) {
 void StatusBlessed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(
+  owningActor->getStatusHandler()->endEffect(
     statusCursed, visionBlockers, false);
 }
 
 void StatusCursed::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(
+  owningActor->getStatusHandler()->endEffect(
     statusBlessed, visionBlockers, false);
 }
 
 void StatusInfected::newTurn(Engine* const engine) {
   if(engine->dice.percentile() <= 4) {
-    owningActor->getStatusEffectsHandler()->tryAddEffect(
+    owningActor->getStatusHandler()->tryAddEffect(
       new StatusDiseased(engine));
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
 
     engine->mapTests->makeVisionBlockerArray(owningActor->pos, visionBlockers);
-    owningActor->getStatusEffectsHandler()->endEffect(
+    owningActor->getStatusHandler()->endEffect(
       statusInfected, visionBlockers, false);
   }
 }
@@ -106,7 +104,7 @@ void StatusWound::healOneWound(Engine* const engine) {
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
     engine->mapTests->makeVisionBlockerArray(
       engine->player->pos, visionBlockers);
-    owningActor->getStatusEffectsHandler()->endEffect(
+    owningActor->getStatusHandler()->endEffect(
       statusWound, visionBlockers, false);
   }
 }
@@ -238,7 +236,7 @@ void StatusBlind::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(
     engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(
+  owningActor->getStatusHandler()->endEffect(
     statusClairvoyant, visionBlockers, false);
 }
 
@@ -291,7 +289,7 @@ void StatusParalyzed::start(Engine* const engine) {
 void StatusFainted::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusClairvoyant, visionBlockers, false);
+  owningActor->getStatusHandler()->endEffect(statusClairvoyant, visionBlockers, false);
 }
 
 void StatusFainted::end(Engine* const engine) {
@@ -305,7 +303,7 @@ bool StatusFainted::isPlayerVisualUpdateNeededWhenStartOrEnd() {
 void StatusClairvoyant::start(Engine* const engine) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  owningActor->getStatusEffectsHandler()->endEffect(statusBlind, visionBlockers, false);
+  owningActor->getStatusHandler()->endEffect(statusBlind, visionBlockers, false);
 }
 
 void StatusClairvoyant::end(Engine* const engine) {
@@ -336,13 +334,13 @@ void StatusFlared::newTurn(Engine* const engine) {
   if(turnsLeft == 0) {
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
     engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers, 99999);
-    owningActor->getStatusEffectsHandler()->tryAddEffect(new StatusBurning(engine));
-    owningActor->getStatusEffectsHandler()->endEffect(statusFlared, visionBlockers, false);
+    owningActor->getStatusHandler()->tryAddEffect(new StatusBurning(engine));
+    owningActor->getStatusHandler()->endEffect(statusFlared, visionBlockers, false);
   }
 }
 
 //================================================================ STATUS EFFECTS HANDLER
-StatusEffect* StatusEffectsHandler::makeEffectFromId(
+StatusEffect* StatusHandler::makeEffectFromId(
   const StatusEffects_t id, const int TURNS_LEFT) {
   switch(id) {
     case statusWound:             return new StatusWound(TURNS_LEFT);                 break;
@@ -377,7 +375,7 @@ StatusEffect* StatusEffectsHandler::makeEffectFromId(
   return NULL;
 }
 
-bool StatusEffectsHandler::allowSee() {
+bool StatusHandler::allowSee() {
   if(hasEffect(statusClairvoyant)) {
     return true;
   }
@@ -390,7 +388,7 @@ bool StatusEffectsHandler::allowSee() {
   return true;
 }
 
-void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
+void StatusHandler::tryAddEffect(StatusEffect* const effect,
                                         const bool FORCE_EFFECT,
                                         const bool NO_MESSAGES,
                                         const bool DISABLE_REDRAW) {
@@ -530,8 +528,8 @@ void StatusEffectsHandler::tryAddEffect(StatusEffect* const effect,
   delete effect;
 }
 
-void StatusEffectsHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE) {
-  const ItemDefinition& wpnDef = wpn.getDef();
+void StatusHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE) {
+  const ItemDef& wpnDef = wpn.getDef();
   StatusEffect* wpnEffect = IS_MELEE ? wpnDef.meleeStatusEffect : wpnDef.rangedStatusEffect;
 
   if(wpnEffect != NULL) {
@@ -544,7 +542,7 @@ void StatusEffectsHandler::tryAddEffectsFromWeapon(const Weapon& wpn, const bool
   }
 }
 
-void StatusEffectsHandler::runEffectEndAndRemoveFromList(
+void StatusHandler::runEffectEndAndRemoveFromList(
   const unsigned int index,
   const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
@@ -580,7 +578,7 @@ void StatusEffectsHandler::runEffectEndAndRemoveFromList(
   delete effect;
 }
 
-void StatusEffectsHandler::newTurnAllEffects(
+void StatusHandler::newTurnAllEffects(
   const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
   for(unsigned int i = 0; i < effects.size();) {
     StatusEffect* const curEffect = effects.at(i);
@@ -601,7 +599,7 @@ void StatusEffectsHandler::newTurnAllEffects(
   }
 }
 
-bool StatusEffectsHandler::allowAttackMelee(
+bool StatusHandler::allowAttackMelee(
   const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
     if(effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
@@ -611,7 +609,7 @@ bool StatusEffectsHandler::allowAttackMelee(
   return true;
 }
 
-bool StatusEffectsHandler::allowAttackRanged(
+bool StatusHandler::allowAttackRanged(
   const bool ALLOW_MESSAGE_WHEN_FALSE) {
   for(unsigned int i = 0; i < effects.size(); i++) {
     if(effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {

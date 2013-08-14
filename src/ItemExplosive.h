@@ -8,7 +8,7 @@ class Engine;
 
 class Explosive : public Item {
 public:
-  Explosive(ItemDefinition* const itemDefinition) : Item(itemDefinition) {}
+  Explosive(ItemDef* const itemDefinition) : Item(itemDefinition) {}
   virtual ~Explosive();
 
   virtual bool activateDefault(Actor* const actor, Engine* const engine) {
@@ -29,7 +29,7 @@ protected:
 
 class Dynamite: public Explosive {
 public:
-  Dynamite(ItemDefinition* const itemDefinition) : Explosive(itemDefinition) {
+  Dynamite(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
   }
   ~Dynamite() {
   }
@@ -41,7 +41,7 @@ private:
 
 class Molotov: public Explosive {
 public:
-  Molotov(ItemDefinition* const itemDefinition) : Explosive(itemDefinition) {
+  Molotov(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
   }
   ~Molotov() {
   }
@@ -53,7 +53,7 @@ private:
 
 class Flare: public Explosive {
 public:
-  Flare(ItemDefinition* const itemDefinition) : Explosive(itemDefinition) {
+  Flare(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
   }
   ~Flare() {
   }

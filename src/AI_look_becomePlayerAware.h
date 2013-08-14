@@ -11,9 +11,10 @@ public:
 
     if(monster->deadState == actorDeadState_alive) {
 
-      monster->getSpotedEnemies();
+      vector<Actor*> spotedEnemies;
+      monster->getSpotedEnemies(spotedEnemies);
 
-      if(monster->spotedEnemies.size() > 0 && IS_AWARE_BEFORE) {
+      if(spotedEnemies.empty() == false && IS_AWARE_BEFORE) {
         monster->becomeAware();
         if(IS_AWARE_BEFORE) {
           return false;
@@ -23,12 +24,25 @@ public:
         }
       }
 
-      for(unsigned int i = 0; i < monster->spotedEnemies.size(); i++) {
-        Actor* const actor = monster->spotedEnemies.at(i);
+      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
+        Actor* const actor = spotedEnemies.at(i);
         if(actor == engine->player) {
-          const Pos playerPos = engine->player->pos;
-          const bool IS_LGT_AT_PLAYER = engine->map->light[playerPos.x][playerPos.y];
-          const int PLAYER_SNEAK = IS_LGT_AT_PLAYER ? 0 : engine->player->getDef()->abilityVals.getVal(ability_stealth, true, *(engine->player));
+          const Pos& playerPos = engine->player->pos;
+
+          const bool IS_LGT_AT_PLAYER =
+            engine->map->light[playerPos.x][playerPos.y];
+
+          const int PLAYER_SNEAK_BASE =
+            engine->player->getDef()->abilityVals.getVal(
+              ability_stealth, true, *(engine->player));
+
+          const int DIST_TO_PLAYER =
+            engine->basicUtils->chebyshevDistance(monster->pos, playerPos);
+          const int DIST_BON = max(0, (DIST_TO_PLAYER - 1) * 10);
+
+          const int PLAYER_SNEAK =
+            IS_LGT_AT_PLAYER ? 0 : PLAYER_SNEAK_BASE + DIST_BON;
+
           if(engine->abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
             monster->becomeAware();
             if(IS_AWARE_BEFORE) {

@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "RoomTheme.h"
 #include "Feature.h"
+#include "Spells.h"
 
 enum ItemWeight_t {
   itemWeight_none       = 0,
@@ -151,7 +152,7 @@ enum ItemId_t {
   item_potionOfToughness,
   item_potionOfParalyzation,
   item_potionOfConfusion,
-  item_potionOfSorcery,
+//  item_potionOfSorcery,
   item_potionOfPoison,
   item_potionOfKnowledge,
 //  item_potionOfForgetfulness,
@@ -184,13 +185,13 @@ struct ArmorData {
   int chanceToDeflectTouchAttacks;
 };
 
-class ItemDefinition {
+class ItemDef {
 public:
-  ItemDefinition(const ItemId_t itemId) :
+  ItemDef(const ItemId_t itemId) :
     id(itemId), meleeStatusEffect(NULL), rangedStatusEffect(NULL) {
   }
 
-  ~ItemDefinition() {
+  ~ItemDef() {
     if(meleeStatusEffect != NULL)
       delete meleeStatusEffect;
     if(rangedStatusEffect != NULL)
@@ -219,10 +220,11 @@ public:
   SDL_Color color;
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
-  bool isExplosive, isReadable, isScroll, isScrollLearned, isScrollLearnable;
+  bool isExplosive, isReadable, isScroll;
   bool isQuaffable, isDevice, isEatable, isArmor, isCloak, isRing, isAmulet;
   bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
   bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
+  Spells_t spellCastFromScroll;
   ArmorData armorData;
   int ammoContainedInClip;
   DiceParam missileDmg;
@@ -255,8 +257,6 @@ public:
   Audio_t meleeAudio;
   Audio_t reloadAudio;
   StatusEffect* rangedStatusEffect;
-  int castFromMemoryCurrentBaseChance;
-  int spellTurnsPerPercentCooldown;
   vector<RoomTheme_t> nativeRooms;
   vector< pair<Feature_t, int> > featuresCanBeFoundIn;
 private:

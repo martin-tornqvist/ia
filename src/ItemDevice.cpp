@@ -82,7 +82,7 @@ void Device::runBadEffect(Engine* const engine) {
     engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
   } else if(RND < 40) {
     engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
-    engine->player->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
+    engine->player->getStatusHandler()->tryAddEffect(new StatusParalyzed(2));
     engine->player->hit(engine->dice.getInRange(1, 2), dmgType_electric);
   } else {
     engine->log->addMessage("The " + name + " hums ominously.");
@@ -100,7 +100,9 @@ void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
   deviceSpecificSetParametersFromSaveLines(lines);
 }
 
-void Device::identify(const bool IS_SILENT_IDENTIFY) {
+void Device::identify(const bool IS_SILENT_IDENTIFY,
+                      Engine* const engine) {
+  (void)engine;
   (void)IS_SILENT_IDENTIFY;
 
   def_->isIdentified = true;
@@ -114,15 +116,18 @@ string DeviceSentry::getSpecificActivateMessage() {
 void DeviceSentry::runGoodEffect(Engine* const engine) {
   const int DMG = engine->dice(1, 6) + 2;
 
-  engine->player->getSpotedEnemies();
-  vector<Actor*>& targetCandidates = engine->player->spotedEnemies;
-  const unsigned int NR_TARGET_CANDIDATES = targetCandidates.size();
-  if(NR_TARGET_CANDIDATES > 0) {
-    Actor* const actor = targetCandidates.at(engine->dice.getInRange(0, NR_TARGET_CANDIDATES - 1));
+  vector<Actor*> targetCandidates;
+  engine->player->getSpotedEnemies(targetCandidates);
+  const unsigned int NR_CANDIDATES = targetCandidates.size();
+  if(NR_CANDIDATES > 0) {
+    const int ELEMENT = engine->dice.getInRange(0, NR_CANDIDATES - 1);
+    Actor* const actor = targetCandidates.at(ELEMENT);
     const Pos& pos = actor->pos;
-    engine->log->addMessage(actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood, messageInterrupt_force);
+    engine->log->addMessage(
+      actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood,
+      messageInterrupt_force);
     engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-      vector<Pos>(1, pos), clrYellow, 1);
+      vector<Pos>(1, pos), clrYellow);
     actor->hit(DMG, dmgType_electric);
   }
 }
@@ -168,11 +173,13 @@ string DeviceTranslocator::getSpecificActivateMessage() {
 
 void DeviceTranslocator::runGoodEffect(Engine* const engine) {
   Player* const player = engine->player;
-  player->getSpotedEnemiesPositions();
+  vector<Actor*> spotedEnemies;
+  player->getSpotedEnemies(spotedEnemies);
   if(
     player->getHp() <= player->getHpMax(true) / 4 &&
-    player->spotedEnemiesPositions.empty() == false) {
-    const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
+    spotedEnemies.empty() == false) {
+    const string name = engine->itemData->getItemRef(
+                          *this, itemRef_plain, true);
     engine->log->addMessage("The " + name + " makes a droning noise...");
     player->teleport(true);
   }

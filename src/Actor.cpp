@@ -19,12 +19,12 @@
 using namespace std;
 
 Actor::~Actor() {
-  delete statusEffectsHandler_;
+  delete statusHandler_;
   delete inventory_;
 }
 
 void Actor::newTurn() {
-  if(statusEffectsHandler_->allowAct()) {
+  if(statusHandler_->allowAct()) {
     updateColor();
     act();
   } else {
@@ -54,7 +54,7 @@ bool Actor::checkIfSeeActor(
       if(IS_MONSTER_SNEAKING) return false;
     }
 
-    if(statusEffectsHandler_->allowSee() == false) {
+    if(statusHandler_->allowSee() == false) {
       return false;
     }
 
@@ -71,8 +71,8 @@ bool Actor::checkIfSeeActor(
   return false;
 }
 
-void Actor::getSpotedEnemies() {
-  spotedEnemies.resize(0);
+void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
+  vectorToFill.resize(0);
 
   const bool IS_SELF_PLAYER = this == eng->player;
 
@@ -90,13 +90,15 @@ void Actor::getSpotedEnemies() {
       if(IS_SELF_PLAYER) {
         if(dynamic_cast<Monster*>(actor)->leader != this) {
           if(checkIfSeeActor(*actor, NULL)) {
-            spotedEnemies.push_back(actor);
+            vectorToFill.push_back(actor);
           }
         }
       } else {
         const bool IS_OTHER_PLAYER = actor == eng->player;
-        const bool IS_SELF_HOSTILE_TO_PLAYER = dynamic_cast<Monster*>(this)->leader != eng->player;
-        const bool IS_OTHER_HOSTILE_TO_PLAYER = IS_OTHER_PLAYER ? false : dynamic_cast<Monster*>(actor)->leader != eng->player;
+        const bool IS_SELF_HOSTILE_TO_PLAYER =
+          dynamic_cast<Monster*>(this)->leader != eng->player;
+        const bool IS_OTHER_HOSTILE_TO_PLAYER =
+          IS_OTHER_PLAYER ? false : dynamic_cast<Monster*>(actor)->leader != eng->player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if the other IS the player,
         //so there is no need to check if IS_SELF_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
@@ -104,7 +106,7 @@ void Actor::getSpotedEnemies() {
           (IS_SELF_HOSTILE_TO_PLAYER == true && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_SELF_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER == true)) {
           if(checkIfSeeActor(*actor, visionBlockers)) {
-            spotedEnemies.push_back(actor);
+            vectorToFill.push_back(actor);
           }
         }
       }
@@ -112,31 +114,17 @@ void Actor::getSpotedEnemies() {
   }
 }
 
-void Actor::getSpotedEnemiesPositions() {
-  spotedEnemiesPositions.resize(0);
-  getSpotedEnemies();
-
-  const unsigned int SIZE_OF_LOOP = spotedEnemies.size();
-  for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
-    const Actor* const actor = spotedEnemies.at(i);
-    if(actor != NULL) {
-      spotedEnemiesPositions.push_back(actor->pos);
-    }
-  }
-}
-
-void Actor::place(const Pos& pos_, ActorDefinition* const actorDefinition, Engine* engine) {
+void Actor::place(const Pos& pos_, ActorDef* const actorDefinition, Engine* engine) {
   eng = engine;
   pos = pos_;
   def_ = actorDefinition;
   inventory_ = new Inventory(def_->isHumanoid);
-  statusEffectsHandler_ = new StatusEffectsHandler(this, eng);
+  statusHandler_ = new StatusHandler(this, eng);
   deadState = actorDeadState_alive;
   clr_ = def_->color;
   glyph_ = def_->glyph;
   tile_ = def_->tile;
-  hp_ = def_->hpMax;
-  hpMax_ = def_->hpMax;
+  hp_ = hpMax_ = def_->hp;
   lairCell_ = pos;
 
   if(this != eng->player) {
@@ -194,7 +182,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
-    statusEffectsHandler_->tryAddEffect(new StatusConfused(eng));
+    statusHandler_->tryAddEffect(new StatusConfused(eng));
   }
 }
 
@@ -204,8 +192,11 @@ void Actor::updateColor() {
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = statusEffectsHandler_->getColor();
-  if(clrFromStatusEffect.r != 0 || clrFromStatusEffect.g != 0 || clrFromStatusEffect.b != 0) {
+  const SDL_Color clrFromStatusEffect = statusHandler_->getColor();
+  if(
+    clrFromStatusEffect.r != 0 ||
+    clrFromStatusEffect.g != 0 ||
+    clrFromStatusEffect.b != 0) {
     clr_ = clrFromStatusEffect;
     return;
   }
@@ -282,7 +273,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   // Filter damage through intrinsic armor
   // TODO Stuff goes here
 
-  statusEffectsHandler_->isHit();
+  statusHandler_->isHit();
 
   actorSpecific_hit(dmg);
 
@@ -415,7 +406,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 }
 
 void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-  if(statusEffectsHandler_->hasEffect(statusBurning)) {
+  if(statusHandler_->hasEffect(statusBurning)) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         light[pos.x + dx][pos.y + dy] = true;

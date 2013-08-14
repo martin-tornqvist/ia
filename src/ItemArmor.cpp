@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Log.h"
 
-Armor::Armor(ItemDefinition* const itemDefinition, Engine* engine) :
+Armor::Armor(ItemDef* const itemDefinition, Engine* engine) :
   Item(itemDefinition), eng(engine), dur_(eng->dice.getInRange(60, 100)) {
 }
 

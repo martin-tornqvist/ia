@@ -51,14 +51,14 @@ void PopulateItems::spawnItems() {
 void PopulateItems::buildCandidateList() {
   candidates.resize(0);
 
-  ItemDefinition** defs = eng->itemData->itemDefinitions;
+  ItemDef** defs = eng->itemData->itemDefs;
 
   const unsigned int NUMBER_DEFINED = static_cast<unsigned int>(endOfItemIds);
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
     if(
-      eng->map->getDungeonLevel() >= defs[i]->spawnStandardMinDLVL &&
-      eng->map->getDungeonLevel() <= defs[i]->spawnStandardMaxDLVL &&
+      eng->map->getDLVL() >= defs[i]->spawnStandardMinDLVL &&
+      eng->map->getDLVL() <= defs[i]->spawnStandardMaxDLVL &&
       defs[i]->isIntrinsic == false) {
       if(eng->dice.percentile() < defs[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));

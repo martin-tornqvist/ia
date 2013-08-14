@@ -229,7 +229,7 @@ void Door::playerTryClueHidden() {
 
 bool Door::trySpike(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
 
   if(isSecret_ || isOpen_) {
     return false;
@@ -255,7 +255,7 @@ bool Door::trySpike(Actor* actorTrying) {
 void Door::tryBash(Actor* actorTrying) {
   tracer << "Door::tryBash()..." << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -298,10 +298,10 @@ void Door::tryBash(Actor* actorTrying) {
 
     //Various things that can happen...
     int skillValueBash = 0;
-    bool isBasherWeak = actorTrying->getStatusEffectsHandler()->hasEffect(statusWeak);
+    bool isBasherWeak = actorTrying->getStatusHandler()->hasEffect(statusWeak);
     if(isBasherWeak == false) {
       if(actorTrying == eng->player) {
-        const int BON = eng->playerBonHandler->isBonPicked(playerBon_rugged) ? 20 : 0;
+        const int BON = eng->playerBonHandler->isBonPicked(playerBon_tough) ? 20 : 0;
         skillValueBash = 60 + BON - min(58, nrOfSpikes_ * 20);
       } else {
         skillValueBash = 10 - min(9, nrOfSpikes_ * 3);
@@ -335,7 +335,7 @@ void Door::tryBash(Actor* actorTrying) {
           eng->log->addMessage(actorTrying->getNameThe() + " is off-balance.");
         }
 
-        actorTrying->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(2));
+        actorTrying->getStatusHandler()->tryAddEffect(new StatusParalyzed(2));
       }
 
       if(IS_PLAYER && (material_ == doorMaterial_metal || isBasherWeak)) {
@@ -377,7 +377,7 @@ void Door::tryBash(Actor* actorTrying) {
 
 void Door::tryClose(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -471,7 +471,7 @@ void Door::tryClose(Actor* actorTrying) {
 void Door::tryOpen(Actor* actorTrying) {
   tracer << "Door::tryOpen()" << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusEffectsHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);

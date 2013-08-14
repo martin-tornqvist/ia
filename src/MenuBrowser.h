@@ -5,19 +5,19 @@
 
 class MenuBrowser {
 public:
-  MenuBrowser(int nrItemsFirst, int nrItemsSecond) :
-    upLeft(Pos(0, 0)),
-    upRight(nrItemsSecond == 0 ? Pos(0, 0) : Pos(1, 0)),
-    btmLeft(Pos(0, nrItemsFirst - 1)),
-    btmRight(nrItemsSecond == 0 ? Pos(0, nrItemsFirst - 1) : Pos(1, nrItemsSecond - 1)),
-    pos(upLeft), NR_ITEMS_FIRST(nrItemsFirst),
-    NR_ITEMS_SECOND(nrItemsSecond) {
-  }
+  MenuBrowser(int nrItemsA, int nrItemsB) :
+    upLeft_(Pos(0, 0)),
+    upRight_(nrItemsB == 0 ? Pos(0, 0) : Pos(1, 0)),
+    btmLeft_(Pos(0, nrItemsA - 1)),
+    btmRight_(nrItemsB == 0 ? Pos(0, nrItemsA - 1) : Pos(1, nrItemsB - 1)),
+    nrItemsA_(nrItemsA),
+    nrItemsB_(nrItemsB),
+    pos_(upLeft_) {}
 
-  MenuBrowser& operator=(const MenuBrowser& other) {
-    (void)other;
-    return *this;
-  }
+//  MenuBrowser& operator=(const MenuBrowser& other) {
+//    (void)other;
+//    return *this;
+//  }
 
   void navigate(const Directions_t direction);
   void navigate(const char KEY);
@@ -25,13 +25,13 @@ public:
   char enter() const;
 
   int getNrOfItemsInFirstList() const {
-    return NR_ITEMS_FIRST;
+    return nrItemsA_;
   }
   int getNrOfItemsInSecondList() const {
-    return NR_ITEMS_SECOND;
+    return nrItemsB_;
   }
   Pos getPos() const {
-    return pos;
+    return pos_;
   }
 
   bool isPosAtKey(const char KEY) const;
@@ -39,13 +39,13 @@ public:
   void setY(const int Y);
 
 private:
-  const Pos upLeft;
-  const Pos upRight;
-  const Pos btmLeft;
-  const Pos btmRight;
-  Pos pos;
-  const int NR_ITEMS_FIRST;
-  const int NR_ITEMS_SECOND;
+  Pos upLeft_;
+  Pos upRight_;
+  Pos btmLeft_;
+  Pos btmRight_;
+  int nrItemsA_;
+  int nrItemsB_;
+  Pos pos_;
 };
 
 #endif

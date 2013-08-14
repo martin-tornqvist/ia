@@ -95,7 +95,7 @@ void GameTime::endTurnOfCurrentActor() {
 
     currentActor = getCurrentActor();
 
-    const bool IS_SLOWED = currentActor->getStatusEffectsHandler()->hasEffect(statusSlowed);
+    const bool IS_SLOWED = currentActor->getStatusHandler()->hasEffect(statusSlowed);
     const ActorSpeed_t defSpeed = currentActor->getDef()->speed;
     const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
     switch(realSpeed) {
@@ -132,27 +132,28 @@ void GameTime::endTurnOfCurrentActor() {
     }
 
     //If player was dropping an item, check if should go back to inventory screen
-    eng->player->getSpotedEnemiesPositions();
-    if(eng->player->spotedEnemiesPositions.empty()) {
+    vector<Actor*> spotedEnemies;
+    eng->player->getSpotedEnemies(spotedEnemies);
+    if(spotedEnemies.empty()) {
       switch(eng->inventoryHandler->screenToOpenAfterDrop) {
         case inventoryScreen_backpack: {
           eng->inventoryHandler->runBrowseInventoryMode();
-        }
-        break;
+        } break;
+
         case inventoryScreen_use: {
           eng->inventoryHandler->runUseScreen();
-        }
-        break;
+        } break;
+
         case inventoryScreen_equip: {
-          eng->inventoryHandler->runEquipScreen(eng->inventoryHandler->equipSlotToOpenAfterDrop);
-        }
-        break;
+          eng->inventoryHandler->runEquipScreen(
+            eng->inventoryHandler->equipSlotToOpenAfterDrop);
+        } break;
+
         case inventoryScreen_slots: {
           eng->inventoryHandler->runSlotsScreen();
-        }
-        break;
-        default:
-        {} break;
+        } break;
+
+        case endOfInventoryScreens: {} break;
       }
     } else {
       eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
@@ -174,7 +175,7 @@ void GameTime::runNewStandardTurnEvents() {
     actor = actors_.at(i);
     //Update status effects on all actors, this also makes the monster player-aware if
     //it has any active status effect.
-    actor->getStatusEffectsHandler()->newTurnAllEffects(visionBlockingArray);
+    actor->getStatusHandler()->newTurnAllEffects(visionBlockingArray);
 
     if(actor->deadState == actorDeadState_alive) {
       actor->actorSpecificOnStandardTurn();
@@ -206,26 +207,10 @@ void GameTime::runNewStandardTurnEvents() {
   }
 
   //Spawn more monsters? (If an unexplored cell is selected, the spawn is aborted)
-  if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() <= LAST_CAVERN_LEVEL) {
+  if(eng->map->getDLVL() >= 1 && eng->map->getDLVL() <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       eng->populateMonsters->trySpawnDueToTimePassed();
-    }
-  }
-
-  //Player spell cooldowns
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
-    ItemDefinition& d = *(eng->itemData->itemDefinitions[i]);
-    if(d.isScroll) {
-      if(d.isScrollLearned) {
-        if(eng->playerBonHandler->isBonPicked(playerBon_occultist)) {
-          if(turn_ == (turn_ / d.spellTurnsPerPercentCooldown) * d.spellTurnsPerPercentCooldown) {
-            if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
-              d.castFromMemoryCurrentBaseChance++;
-            }
-          }
-        }
-      }
     }
   }
 

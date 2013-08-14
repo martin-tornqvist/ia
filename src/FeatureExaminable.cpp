@@ -63,7 +63,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
     while(items_.empty()) {
       vector<ItemId_t> itemCandidates;
       for(unsigned int i = 1; i < endOfItemIds; i++) {
-        ItemDefinition* const currentDef = engine->itemData->itemDefinitions[i];
+        ItemDef* const currentDef = engine->itemData->itemDefs[i];
         for(unsigned int ii = 0; ii < currentDef->featuresCanBeFoundIn.size(); ii++) {
           pair<Feature_t, int> featuresFoundIn = currentDef->featuresCanBeFoundIn.at(ii);
           if(featuresFoundIn.first == featureId) {
@@ -102,7 +102,7 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
 
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
-    const ItemDefinition& d = item->getDef();
+    const ItemDef& d = item->getDef();
     if(d.isQuaffable || d.id == item_molotov) {
       delete item;
       items_.erase(items_.begin() + i);
@@ -184,10 +184,10 @@ void Tomb::featureSpecific_examine() {
 }
 
 void Tomb::doAction(const TombAction_t action) {
-  StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
+  StatusHandler* const statusHandler = eng->player->getStatusHandler();
   PlayerBonHandler* const bonusHandler = eng->playerBonHandler;
 
-  const bool IS_RUGGED    = bonusHandler->isBonPicked(playerBon_rugged);
+  const bool IS_TOUGH    = bonusHandler->isBonPicked(playerBon_tough);
   const bool IS_OBSERVANT = bonusHandler->isBonPicked(playerBon_observant);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
   const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
@@ -236,7 +236,7 @@ void Tomb::doAction(const TombAction_t action) {
         eng->log->addMessage("It seems futile.");
         return;
       }
-      const int BON = IS_RUGGED ? 20 : 0;
+      const int BON = IS_TOUGH ? 20 : 0;
       if(eng->dice.percentile() < chanceToPushLid_ + BON) {
         eng->log->addMessage("The lid comes off!");
         openFeature();
@@ -295,7 +295,7 @@ void Tomb::triggerTrap() {
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
       for(unsigned int i = 1; i < endOfActorIds; i++) {
-        const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+        const ActorDef& d = eng->actorData->actorDefs[i];
         if(d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false) {
           actorCandidates.push_back(static_cast<ActorId_t>(i));
         }
@@ -304,7 +304,7 @@ void Tomb::triggerTrap() {
     } break;
 
     case tombTrait_forebodingCarvedSigns: {
-      eng->player->getStatusEffectsHandler()->tryAddEffect(new StatusCursed(eng));
+      eng->player->getStatusHandler()->tryAddEffect(new StatusCursed(eng));
     } break;
 
     case tombTrait_stench: {
@@ -326,7 +326,7 @@ void Tomb::triggerTrap() {
         eng->explosionMaker->runExplosion(pos_, false, effect, true, fumeClr);
       } else {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
-          const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+          const ActorDef& d = eng->actorData->actorDefs[i];
           if(d.moveType == moveType_ooze && d.isAutoSpawnAllowed && d.isUnique == false) {
             actorCandidates.push_back(static_cast<ActorId_t>(i));
           }
@@ -446,7 +446,7 @@ void Tomb::getDescr(string& descr) const {
     descr += " " + traitDescr;
   }
 
-  const bool IS_WEAK = eng->player->getStatusEffectsHandler()->hasEffect(statusWeak);
+  const bool IS_WEAK = eng->player->getStatusHandler()->hasEffect(statusWeak);
 
   if(chanceToPushLid_ < 10 || IS_WEAK) {
     descr += " The lid seems very heavy.";
@@ -499,11 +499,11 @@ void Chest::featureSpecific_examine() {
 }
 
 void Chest::doAction(const ChestAction_t action) {
-  StatusEffectsHandler* const statusHandler = eng->player->getStatusEffectsHandler();
+  StatusHandler* const statusHandler = eng->player->getStatusHandler();
   PlayerBonHandler* const bonHandler      = eng->playerBonHandler;
 
   const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
-  const bool IS_RUGGED    = bonHandler->isBonPicked(playerBon_rugged);
+  const bool IS_TOUGH    = bonHandler->isBonPicked(playerBon_tough);
 //  const bool IS_NIMBLE    = bonHandler->isBonPicked(playerBon_nimbleHanded);
   const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
   const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
@@ -591,7 +591,7 @@ void Chest::doAction(const ChestAction_t action) {
         if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
           itemContainer_.destroySingleFragile(eng);
         }
-        const int CHANCE_TO_OPEN = 20 + (IS_RUGGED ? 20 : 0);
+        const int CHANCE_TO_OPEN = 20 + (IS_TOUGH ? 20 : 0);
         if(eng->dice.percentile() < CHANCE_TO_OPEN) {
           eng->log->addMessage("I kick the lid open!");
           openFeature();
@@ -689,7 +689,7 @@ void Chest::triggerTrap() {
 
     const int CHANCE_FOR_EXPLODING = 20;
     if(
-      eng->map->getDungeonLevel() >= MIN_DLVL_NASTY_TRAPS &&
+      eng->map->getDLVL() >= MIN_DLVL_NASTY_TRAPS &&
       eng->dice.percentile() < CHANCE_FOR_EXPLODING) {
       eng->log->addMessage("The trap explodes!");
       eng->explosionMaker->runExplosion(pos_, true);
@@ -847,7 +847,7 @@ void Cocoon::triggerTrap() {
     tracer << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId_t> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
-      const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+      const ActorDef& d = eng->actorData->actorDefs[i];
       if(d.isSpider && d.actorSize == actorSize_floor &&
           d.isAutoSpawnAllowed && d.isUnique == false) {
         spawnCandidates.push_back(d.id);

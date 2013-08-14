@@ -8,12 +8,12 @@
 #include "BasicUtils.h"
 
 int AbilityValues::getVal(const Abilities_t ability,
-                                   const bool IS_AFFECTED_BY_STATUS_EFFECTS,
-                                   Actor& actor) const {
+                          const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+                          Actor& actor) const {
   int val = abilityList[ability];
 
   if(IS_AFFECTED_BY_STATUS_EFFECTS) {
-    val += actor.getStatusEffectsHandler()->getAbilityModifier(ability);
+    val += actor.getStatusHandler()->getAbilityModifier(ability);
   }
 
   if(&actor == eng->player) {
@@ -48,7 +48,7 @@ int AbilityValues::getVal(const Abilities_t ability,
 
       case ability_resistStatusBody: {
         val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_rugged))
+        if(eng->playerBonHandler->isBonPicked(playerBon_tough))
           val += 20;
       } break;
 
@@ -59,9 +59,9 @@ int AbilityValues::getVal(const Abilities_t ability,
       } break;
 
       case ability_stealth: {
-        val += 30;
+        val += 5;
         if(eng->playerBonHandler->isBonPicked(playerBon_stealthy))
-          val += 60;
+          val += 40;
       } break;
       default: {
       } break;

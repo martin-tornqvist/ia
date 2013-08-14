@@ -17,8 +17,8 @@ bool MedicalBag::activateDefault(Actor* const actor,
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    const StatusEffectsHandler* const status =
-      engine->player->getStatusEffectsHandler();
+    const StatusHandler* const status =
+      engine->player->getStatusHandler();
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
         if(status->hasEffect(statusInfected) == false) {
@@ -105,7 +105,7 @@ void MedicalBag::finishCurAction(Engine* const engine) {
 
     case medicalBagAction_treatWound: {
       StatusEffect* effect =
-        engine->player->getStatusEffectsHandler()->getEffect(statusWound);
+        engine->player->getStatusHandler()->getEffect(statusWound);
       if(effect == NULL) {
         tracer << "[WARNING] No wound status effect found, ";
         tracer << "in MedicalBag::finishCurAction()" << endl;
@@ -229,12 +229,12 @@ int MedicalBag::getNrSuppliesNeededForAction(const MedicalBagAction_t action,
 // (Request healing)
 //    clearLogMessages();
 //    if(eng->player->deadState == actorDeadState_alive) {
-//      if(eng->player->getStatusEffectsHandler()->hasEffect(statusPoisoned)) {
+//      if(eng->player->getStatusHandler()->hasEffect(statusPoisoned)) {
 //        eng->log->addMessage("Not while poisoned.");
 //        eng->renderer->drawMapAndInterface();
 //      } else {
 //        bool allowHeal = false;
-//        const bool IS_DISEASED = eng->player->getStatusEffectsHandler()->hasEffect(statusDiseased);
+//        const bool IS_DISEASED = eng->player->getStatusHandler()->hasEffect(statusDiseased);
 //
 //        if(eng->player->getHp() < eng->player->getHpMax(true)) {
 //          allowHeal = true;

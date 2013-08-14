@@ -12,7 +12,7 @@
 using namespace std;
 
 Map::Map(Engine* engine) :
-  eng(engine), dungeonLevel_(0) {
+  eng(engine), dlvl_(0) {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {

@@ -381,10 +381,9 @@ void Renderer::drawBlastAnimationAtPositions(const vector<Pos>& positions,
 }
 
 void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
-  const vector<Pos>& positions, const SDL_Color& clr,
-  const int EXPLOSION_DELAY_FACTOR) {
+  const vector<Pos>& positions, const SDL_Color& clr) {
 
-  const int DELAY = eng->config->delayExplosion * EXPLOSION_DELAY_FACTOR;
+  const int DELAY = eng->config->delayExplosion;
 
   vector<Pos> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); i++) {

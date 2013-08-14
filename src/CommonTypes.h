@@ -208,8 +208,8 @@ public:
   ItemName() :
     name(""), name_plural(""), name_a("") {
   }
-  ItemName(const string& NAME, const string& NAME_PLURAL, const string& NAME_A) :
-    name(NAME), name_plural(NAME_PLURAL), name_a(NAME_A) {
+  ItemName(const string& NAME, const string& NAME_PL, const string& NAME_A) :
+    name(NAME), name_plural(NAME_PL), name_a(NAME_A) {
   }
 
   string name, name_plural, name_a;
@@ -248,21 +248,21 @@ struct DirectionNames {
   string directions[3][3];
 };
 
-enum EntityStrength_t {
-  weak, normal, strong, superStrong
-};
+//enum EntityStrength_t {
+//  weak, normal, strong, superStrong
+//};
 
-class EntityStrength {
-public:
-  static double getFactor(EntityStrength_t const strength) {
-    if(strength == weak)        return 0.7;
-    if(strength == strong)      return 1.6;
-    if(strength == superStrong) return 2.5;
-    return 1.0;
-  }
-protected:
-  EntityStrength() {}
-};
+//class EntityStrength {
+//public:
+//  static double getFactor(EntityStrength_t const strength) {
+//    if(strength == weak)        return 0.7;
+//    if(strength == strong)      return 1.6;
+//    if(strength == superStrong) return 2.5;
+//    return 1.0;
+//  }
+//protected:
+//  EntityStrength() {}
+//};
 
 enum Directions_t {
   direction_down = 2, direction_left = 4, direction_right = 6, direction_up = 8

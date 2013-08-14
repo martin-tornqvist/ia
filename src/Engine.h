@@ -76,7 +76,7 @@ class SaveHandler;
 class SpecialRoomHandler;
 class JamWithSpike;
 class MenuInputHandler;
-class PlayerPowersHandler;
+class PlayerSpellsHandler;
 class KnockBack;
 class CharacterDescr;
 class Examine;
@@ -173,7 +173,7 @@ public:
   SaveHandler* saveHandler;
   JamWithSpike* jamWithSpike;
   MenuInputHandler* menuInputHandler;
-  PlayerPowersHandler* playerPowersHandler;
+  PlayerSpellsHandler* playerSpellsHandler;
   KnockBack* knockBack;
   CharacterDescr* characterDescr;
   Examine* examine;

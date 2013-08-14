@@ -79,11 +79,10 @@ void DungeonMaster::winGame() {
 }
 
 void DungeonMaster::monsterKilled(Actor* monster) {
-  const int MONSTER_LVL = monster->getDef()->monsterLvl;
+  ActorDef* const d = monster->getDef();
+  d->nrOfKills += 1;
 
-  monster->getDef()->nrOfKills += 1;
-
-  if(MONSTER_LVL > 1) {
+  if(d->hp >= 3) {
     if(eng->player->insanityObsessions[insanityObsession_sadism] == true) {
       eng->player->shock_ = max(0.0, eng->player->shock_ - 3.0);
     }

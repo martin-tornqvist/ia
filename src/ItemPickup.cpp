@@ -85,7 +85,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         Inventory* const playerInventory = eng->player->getInventory();
         const ItemId_t ammoType = weapon->getDef().rangedAmmoTypeUsed;
 
-        ItemDefinition* const ammoDef = eng->itemData->itemDefinitions[ammoType];
+        ItemDef* const ammoDef = eng->itemData->itemDefs[ammoType];
 
         Item* spawnedAmmo = eng->itemFactory->spawnItem(ammoType);
 

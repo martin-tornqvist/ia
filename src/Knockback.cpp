@@ -45,9 +45,9 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                 eng->log->addMessage("I am knocked back!");
               }
             }
-            defender->getStatusEffectsHandler()->tryAddEffect(
+            defender->getStatusHandler()->tryAddEffect(
               new StatusParalyzed(1), false, false);
-            defender->getStatusEffectsHandler()->tryAddEffect(
+            defender->getStatusHandler()->tryAddEffect(
               new StatusConfused(5), false, false);
           }
 
@@ -93,7 +93,7 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
           // Defender nailed to a wall from a  spike gun?
           if(IS_SPIKE_GUN) {
             if(eng->map->featuresStatic[c.x][c.y]->isVisionPassable() == false) {
-              defender->getStatusEffectsHandler()->tryAddEffect(new StatusNailed(eng));
+              defender->getStatusHandler()->tryAddEffect(new StatusNailed(eng));
             }
           }
 

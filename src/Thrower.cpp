@@ -41,7 +41,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   //Render
   if(path.size() > 1) {
-    const char glyph = eng->itemData->itemDefinitions[item_dynamite]->glyph;
+    const char glyph = eng->itemData->itemDefs[item_dynamite]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       eng->renderer->drawMapAndInterface(false);
@@ -95,7 +95,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                        actorThrowing.pos, targetCell,
                        false, THROWING_RANGE_LIMIT);
 
-  const ItemDefinition& itemThrownDef = itemThrown.getDef();
+  const ItemDef& itemThrownDef = itemThrown.getDef();
 
   const string itemName_a =
     eng->itemData->getItemRef(itemThrown, itemRef_a, true);

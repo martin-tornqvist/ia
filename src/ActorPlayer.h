@@ -96,7 +96,7 @@ private:
   friend class Log;
 
   void incrInsanity();
-  void tryIdentifyItems();
+//  void tryIdentifyItems();
   void testPhobias();
   void actorSpecific_hit(const int DMG);
   void FOVhack();

@@ -13,35 +13,42 @@
 
 using namespace std;
 
-void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-    vector<ActorId_t>& listToFill) const {
+void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
+  const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+  vector<ActorId_t>& listToFill) const {
 
   listToFill.resize(0);
 
-  const int DLVL = eng->map->getDungeonLevel();
+  const int DLVL = eng->map->getDLVL();
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorDefinition& d = eng->actorData->actorDefinitions[i];
+    const ActorDef& d = eng->actorData->actorDefs[i];
     if(
       d.isAutoSpawnAllowed &&
       (d.nrLeftAllowedToSpawn == -1 || d.nrLeftAllowedToSpawn > 0) &&
-      DLVL >= (d.spawnMinLevel - NR_LVLS_OUT_OF_DEPTH_ALLOWED) &&
-      DLVL <= d.spawnMaxLevel) {
+      DLVL >= (d.spawnMinDLVL - NR_LVLS_OUT_OF_DEPTH_ALLOWED) &&
+      DLVL <= d.spawnMaxDLVL) {
       listToFill.push_back(static_cast<ActorId_t>(i));
     }
   }
 }
 
-void PopulateMonsters::spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
-    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
-    const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, const bool IS_ROAMING_ALLOWED) const {
+void PopulateMonsters::spawnGroupOfRandomAt(
+  const vector<Pos>& sortedFreeCellsVector,
+  bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+  const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+  const bool IS_ROAMING_ALLOWED) const {
+
   vector<ActorId_t> idCandidates;
-  makeListOfMonstersEligibleForAutoSpawning(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
+  makeListOfMonstersEligibleForAutoSpawning(
+    NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   if(idCandidates.empty() == false) {
-    const ActorId_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
+    const ActorId_t id =
+      idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
 
-    spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells, IS_ROAMING_ALLOWED);
+    spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells,
+                 IS_ROAMING_ALLOWED);
   }
 }
 
@@ -54,9 +61,13 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   const int MIN_DIST_TO_PLAYER = FOV_STANDARD_RADI_INT + 3;
 
   const Pos& playerPos = eng->player->pos;
-  for(int x = max(0, playerPos.x - MIN_DIST_TO_PLAYER);
-      x <= min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_TO_PLAYER); x++) {
-    for(int y = max(0, playerPos.y - MIN_DIST_TO_PLAYER); y <= min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_TO_PLAYER); y++) {
+  const int X0 = max(0, playerPos.x - MIN_DIST_TO_PLAYER);
+  const int Y0 = max(0, playerPos.y - MIN_DIST_TO_PLAYER);
+  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_TO_PLAYER);
+  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_TO_PLAYER);
+
+  for(int x = X0; x <= X1; x++) {
+    for(int y = Y0; y <= Y1; y++) {
       blockers[x][y] = true;
     }
   }
@@ -71,14 +82,17 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   }
   if(freeCellsVector.empty() == false) {
 
-    const Pos& origin = freeCellsVector.at(eng->dice.getInRange(0, freeCellsVector.size() - 1));
+    const Pos& origin =
+      freeCellsVector.at(eng->dice.getInRange(0, freeCellsVector.size() - 1));
 
     makeSortedFreeCellsVector(origin, blockers, freeCellsVector);
 
-    const Pos& pos = freeCellsVector.at(eng->dice.getInRange(0, freeCellsVector.size() - 1));
+    const Pos& pos =
+      freeCellsVector.at(eng->dice.getInRange(0, freeCellsVector.size() - 1));
 
     if(eng->map->explored[pos.x][pos.y]) {
-      spawnGroupOfRandomAt(freeCellsVector, blockers, getRandomOutOfDepth(), true);
+      spawnGroupOfRandomAt(freeCellsVector, blockers,
+                           getRandomOutOfDepth(), true);
     }
   }
   tracer << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
@@ -93,8 +107,13 @@ void PopulateMonsters::populateCaveLevel() const {
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
-  for(int y = max(0, playerPos.y - MIN_DIST_FROM_PLAYER); y < min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER); y++) {
-    for(int x = max(0, playerPos.x - MIN_DIST_FROM_PLAYER); x < min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER); x++) {
+  const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
+  const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
+  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
+  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
+
+  for(int y = Y0; y <= Y1; y++) {
+    for(int x = X0; x <= X1; x++) {
       forbiddenCells[x][y] = true;
     }
   }
@@ -108,10 +127,12 @@ void PopulateMonsters::populateCaveLevel() const {
         }
       }
     }
-    const Pos origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+    const int ELEMENT = eng->dice.getInRange(0, originCandidates.size() - 1);
+    const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, forbiddenCells, sortedFreeCellsVector);
-    spawnGroupOfRandomAt(sortedFreeCellsVector, forbiddenCells, getRandomOutOfDepth(), true);
+    spawnGroupOfRandomAt(sortedFreeCellsVector, forbiddenCells,
+                         getRandomOutOfDepth(), true);
   }
 }
 
@@ -124,8 +145,12 @@ void PopulateMonsters::populateIntroLevel() {
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
-  for(int y = max(0, playerPos.y - MIN_DIST_FROM_PLAYER); y < min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER); y++) {
-    for(int x = max(0, playerPos.x - MIN_DIST_FROM_PLAYER); x < min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER); x++) {
+  const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
+  const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
+  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
+  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
+  for(int y = Y0; y <= Y1; y++) {
+    for(int x = X0; x <= X1; x++) {
       forbiddenCells[x][y] = true;
     }
   }
@@ -139,14 +164,18 @@ void PopulateMonsters::populateIntroLevel() {
         }
       }
     }
-    const Pos origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+    const int ELEMENT = eng->dice.getInRange(0, originCandidates.size() - 1);
+    const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, forbiddenCells, sortedFreeCellsVector);
     spawnGroupAt(actor_wolf, sortedFreeCellsVector, forbiddenCells, true);
   }
 }
 
-void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
+void PopulateMonsters::populateRoomAndCorridorLevel(
+  RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS],
+  const vector<Room*>& rooms) const {
+
   const int NR_GROUPS_ALLOWED = eng->dice.getInRange(8, 10);
   int nrGroupsSpawned = 0;
 
@@ -156,8 +185,12 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
-  for(int y = max(0, playerPos.y - MIN_DIST_FROM_PLAYER); y < min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER); y++) {
-    for(int x = max(0, playerPos.x - MIN_DIST_FROM_PLAYER); x < min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER); x++) {
+  const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
+  const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
+  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
+  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
+  for(int y = Y0; y <= Y1; y++) {
+    for(int x = X0; x <= X1; x++) {
       forbiddenCells[x][y] = true;
     }
   }
@@ -168,7 +201,10 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
     if(room->roomTheme != roomTheme_plain) {
 
       const unsigned int MAX_NR_GROUPS_IN_ROOM = 2;
-      for(unsigned int i_groupsInRoom = 0; i_groupsInRoom < MAX_NR_GROUPS_IN_ROOM; i_groupsInRoom++) {
+      for(
+        unsigned int i_groupsInRoom = 0;
+        i_groupsInRoom < MAX_NR_GROUPS_IN_ROOM;
+        i_groupsInRoom++) {
 
         //Randomly pick a free position inside the room
         vector<Pos> originCandidates;
@@ -191,11 +227,15 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
 
         //Spawn monsters in room
         if(originCandidates.empty() == false) {
-          const Pos& origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+          const int ELEMENT =
+            eng->dice.getInRange(0, originCandidates.size() - 1);
+          const Pos& origin = originCandidates.at(ELEMENT);
           vector<Pos> sortedFreeCellsVector;
           makeSortedFreeCellsVector(origin, forbiddenCells, sortedFreeCellsVector);
 
-          if(spawnGroupOfRandomNativeToRoomThemeAt(room->roomTheme, sortedFreeCellsVector, forbiddenCells, false)) {
+          if(spawnGroupOfRandomNativeToRoomThemeAt(
+                room->roomTheme, sortedFreeCellsVector,
+                forbiddenCells, false)) {
             nrGroupsSpawned++;
             if(nrGroupsSpawned >= NR_GROUPS_ALLOWED) {
               return;
@@ -223,26 +263,36 @@ void PopulateMonsters::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_C
         }
       }
     }
-    const Pos origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+    const int ELEMENT = eng->dice.getInRange(0, originCandidates.size() - 1);
+    const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, forbiddenCells, sortedFreeCellsVector);
-    if(spawnGroupOfRandomNativeToRoomThemeAt(roomTheme_plain, sortedFreeCellsVector, forbiddenCells, true)) {
+    if(spawnGroupOfRandomNativeToRoomThemeAt(
+          roomTheme_plain, sortedFreeCellsVector,
+          forbiddenCells, true)) {
       nrGroupsSpawned++;
     }
   }
 }
 
-bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t roomTheme, const vector<Pos>& sortedFreeCellsVector,
-    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const bool IS_ROAMING_ALLOWED) const {
+bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
+  const RoomTheme_t roomTheme, const vector<Pos>& sortedFreeCellsVector,
+  bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+  const bool IS_ROAMING_ALLOWED) const {
+
   tracer << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId_t> idCandidates;
-  makeListOfMonstersEligibleForAutoSpawning(NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
+  makeListOfMonstersEligibleForAutoSpawning(
+    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   for(unsigned int i = 0; i < idCandidates.size(); i++) {
-    const ActorDefinition& d = eng->actorData->actorDefinitions[idCandidates.at(i)];
+    const ActorDef& d = eng->actorData->actorDefs[idCandidates.at(i)];
     bool monsterIsNativeToRoom = false;
-    for(unsigned int i_nativeRooms = 0; i_nativeRooms < d.nativeRooms.size(); i_nativeRooms++) {
+    for(
+      unsigned int i_nativeRooms = 0;
+      i_nativeRooms < d.nativeRooms.size();
+      i_nativeRooms++) {
       if(d.nativeRooms.at(i_nativeRooms) == roomTheme) {
         monsterIsNativeToRoom = true;
         break;
@@ -258,7 +308,8 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(const RoomTheme_t r
     tracer << "PopulateMonsters: Found no valid monsters to spawn at room theme (" + intToString(roomTheme) + ")" << endl;
     return false;
   } else {
-    const ActorId_t id = idCandidates.at(eng->dice.getInRange(0, idCandidates.size() - 1));
+    const int ELEMENT = eng->dice.getInRange(0, idCandidates.size() - 1);
+    const ActorId_t id = idCandidates.at(ELEMENT);
     spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells, IS_ROAMING_ALLOWED);
     return true;
   }
@@ -269,7 +320,7 @@ void PopulateMonsters::spawnGroupAt(const ActorId_t id,
                                     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
                                     const bool IS_ROAMING_ALLOWED) const {
 
-  const ActorDefinition& d = eng->actorData->actorDefinitions[id];
+  const ActorDef& d = eng->actorData->actorDefs[id];
 
   int maxNrInGroup = 1;
 
@@ -285,8 +336,8 @@ void PopulateMonsters::spawnGroupAt(const ActorId_t id,
 
   const int NR_FREE_CELLS = sortedFreeCellsVector.size();
   const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);
-  for(unsigned int i = 0; i < static_cast<unsigned int>(NR_CAN_BE_SPAWNED); i++) {
-    const Pos& pos = sortedFreeCellsVector.at(i);
+  for(int i = 0; i < NR_CAN_BE_SPAWNED; i++) {
+    const Pos& pos = sortedFreeCellsVector.at((unsigned int)i);
 
     Actor* const actor = eng->actorFactory->spawnActor(id, pos);
     Monster* const monster = dynamic_cast<Monster*>(actor);
@@ -302,8 +353,9 @@ void PopulateMonsters::spawnGroupAt(const ActorId_t id,
   }
 }
 
-void PopulateMonsters::makeSortedFreeCellsVector(const Pos& origin,
-    const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill) const {
+void PopulateMonsters::makeSortedFreeCellsVector(
+  const Pos& origin, const bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+  vector<Pos>& vectorToFill) const {
 
   vectorToFill.resize(0);
 
@@ -320,7 +372,7 @@ void PopulateMonsters::makeSortedFreeCellsVector(const Pos& origin,
 }
 
 int PopulateMonsters::getRandomOutOfDepth() const {
-  if(eng->map->getDungeonLevel() == 0) {
+  if(eng->map->getDLVL() == 0) {
     return 0;
   }
 
@@ -359,7 +411,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //
 //      int extraSpawns = 0;
 //
-//      const ActorDefinition* const d = originActor->getDef();
+//      const ActorDef* const d = originActor->getDef();
 //      switch(d->groupSize) {
 //      case monsterGroupSize_few: {
 //        extraSpawns = eng->dice.getInRange(0, 2);
@@ -404,7 +456,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  vector<Pos> freeCells;
 //  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
-//  const int MIN_DIST_FROM_PLAYER = eng->map->getDungeonLevel() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
+//  const int MIN_DIST_FROM_PLAYER = eng->map->getDLVL() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
 //
 //  unsigned int i = 0;
 //  bool increaseIndex = true;
@@ -418,7 +470,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    i += increaseIndex ? 1 : 0;
 //  }
 //
-//  if(eng->map->getDungeonLevel() >= 1 && eng->map->getDungeonLevel() < FIRST_CAVERN_LEVEL) {
+//  if(eng->map->getDLVL() >= 1 && eng->map->getDLVL() < FIRST_CAVERN_LEVEL) {
 //    bool blockersTraps[MAP_X_CELLS][MAP_Y_CELLS];
 //    eng->mapTests->makeItemBlockerArray(blockersTraps);
 //    eng->basicUtils->reverseBoolArray(blockersTraps);
@@ -445,7 +497,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    }
 //  }
 //
-//  const int CELLS_PER_MONSTER_GROUP = eng->map->getDungeonLevel() == 0 ? 500 : 110;
+//  const int CELLS_PER_MONSTER_GROUP = eng->map->getDLVL() == 0 ? 500 : 110;
 //
 //  tracer << "PopulateMonsters: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 //

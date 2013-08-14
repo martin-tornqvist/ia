@@ -90,8 +90,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       }
     }
     if(isAttackerAware) {
-      StatusEffectsHandler* const defenderStatusHandler =
-        currentDefender->getStatusEffectsHandler();
+      StatusHandler* const defenderStatusHandler =
+        currentDefender->getStatusHandler();
       if(
         (isDefenderAware == false ||
          isDefenderHeldByWeb ||
@@ -117,7 +117,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     dmgPlus   = wpn_.meleeDmgPlus;
 
     isWeakAttack = false;
-    if(attacker->getStatusEffectsHandler()->hasEffect(statusWeak)) {
+    if(attacker->getStatusHandler()->hasEffect(statusWeak)) {
       //Weak attack (min damage)
       dmgRoll = dmgRolls;
       dmg = dmgRoll + dmgPlus;

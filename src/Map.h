@@ -39,27 +39,21 @@ public:
 
   bool darkness[MAP_X_CELLS][MAP_Y_CELLS];
 
-  int getDungeonLevel() {
-    return dungeonLevel_;
-  }
+  inline int getDLVL() {return dlvl_;}
 
-  void incrDungeonLevel(const int levels = 1) {
-    dungeonLevel_ += levels;
-  }
-  void decrDungeonLevel(const int levels = 1) {
-    dungeonLevel_ -= levels;
-  }
+  inline void incrDLVL(const int levels = 1) {dlvl_ += levels;}
+  inline void decrDLVL(const int levels = 1) {dlvl_ -= levels;}
 
   void clearDungeon();
 
   void switchToDestroyedFeatAt(const Pos pos);
 
   void addSaveLines(vector<string>& lines) const {
-    lines.push_back(intToString(dungeonLevel_));
+    lines.push_back(intToString(dlvl_));
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
-    dungeonLevel_ = stringToInt(lines.front());
+    dlvl_ = stringToInt(lines.front());
     lines.erase(lines.begin());
   }
 
@@ -71,7 +65,7 @@ private:
   friend class SaveHandler;
   friend class Bot;
   friend class Renderer;
-  int dungeonLevel_;
+  int dlvl_;
 };
 
 #endif

@@ -26,7 +26,7 @@ void Bash::playerBash() const {
       playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
     }  else {
       tracer << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
-      if(eng->player->getStatusEffectsHandler()->allowAttackMelee(true)) {
+      if(eng->player->getStatusHandler()->allowAttackMelee(true)) {
         tracer << "Bash: Player is allowed to do melee attack" << endl;
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -51,7 +51,7 @@ void Bash::playerBashFeature(Feature* const feature) const {
   }
 
   if(bashableObjectFound == false) {
-    const bool PLAYER_IS_BLIND = eng->player->getStatusEffectsHandler()->allowSee();
+    const bool PLAYER_IS_BLIND = eng->player->getStatusHandler()->allowSee();
     if(PLAYER_IS_BLIND == false) {
       eng->log->addMessage("I see nothing there to bash.");
     } else {

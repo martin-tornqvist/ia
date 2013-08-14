@@ -382,7 +382,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
   bool isFreeTurn = false;
 
   Item* item = general_.at(GENERAL_INV_ELEMENT);
-  const ItemDefinition& d = item->getDef();
+  const ItemDef& d = item->getDef();
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {

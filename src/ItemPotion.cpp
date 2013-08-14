@@ -6,14 +6,14 @@
 #include "Log.h"
 #include "Map.h"
 #include "ActorMonster.h"
-#include "PlayerPowersHandler.h"
+#include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   //End disease
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  actor->getStatusEffectsHandler()->endEffect(statusDiseased, visionBlockers);
+  actor->getStatusHandler()->endEffect(statusDiseased, visionBlockers);
 
   //Attempt to heal the actor. If no hp was healed (already at full hp), boost the hp instead.
   if(actor->restoreHP(engine->dice(2, 6) + 12) == false) {
@@ -21,7 +21,7 @@ void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   }
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -32,35 +32,35 @@ void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor, Engine
   }
 }
 
-void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
-  (void)actor;
-  bool isAnySpellRestored = false;
-
-  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfSpells();
-  for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
-    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
-    const ItemDefinition& d = scroll->getDef();
-    if(
-      d.isScrollLearnable &&
-      d.isScrollLearned   &&
-      d.id != item_thaumaturgicAlteration) {
-      if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
-        scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
-        isAnySpellRestored = true;
-      }
-    }
-  }
-
-  if(isAnySpellRestored) {
-    engine->log->addMessage("My magic is restored!");
-    setRealDefinitionNames(engine, false);
-  }
-}
+//void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
+//  (void)actor;
+//  bool isAnySpellRestored = false;
+//
+//  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfSpells();
+//  for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
+//    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+//    const ItemDef& d = scroll->getDef();
+//    if(
+//      d.isScrollLearnable &&
+//      d.isScrollLearned   &&
+//      d.id != item_thaumaturgicAlteration) {
+//      if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
+//        scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
+//        isAnySpellRestored = true;
+//      }
+//    }
+//  }
+//
+//  if(isAnySpellRestored) {
+//    engine->log->addMessage("My magic is restored!");
+//    identify(false, engine);
+//  }
+//}
 
 void PotionOfBlindness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusBlind(8 + engine->dice(1, 8)));
+  actor->getStatusHandler()->tryAddEffect(new StatusBlind(8 + engine->dice(1, 8)));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -72,9 +72,9 @@ void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor, Engi
 }
 
 void PotionOfParalyzation::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusParalyzed(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusParalyzed(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -86,16 +86,16 @@ void PotionOfParalyzation::specificCollide(const Pos& pos, Actor* const actor, E
 }
 
 void PotionOfDisease::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusDiseased(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusDiseased(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
 void PotionOfConfusion::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusConfused(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusConfused(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -112,7 +112,7 @@ void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor, Engi
 //  actor->changeMaxHP(CHANGE, true);
 //
 //  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-//    setRealDefinitionNames(engine, false);
+//    identify(false, engine);
 //  }
 //}
 //
@@ -123,16 +123,16 @@ void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor, Engi
 //    engine->map->switchToDestroyedFeatAt(pos);
 //
 //    if(engine->map->playerVision[pos.x][pos.y]) {
-//      setRealDefinitionNames(engine, false);
+//      identify(false, engine);
 //    }
 //  }
 //}
 
 void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectAim(engine));
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectReflexes(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusPerfectAim(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusPerfectReflexes(engine));
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -144,22 +144,22 @@ void PotionOfTheCobra::specificCollide(const Pos& pos, Actor* const actor, Engin
 }
 
 //void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
+//  actor->getStatusHandler()->tryAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
 //  for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
 //    Actor* otherActor = engine->gameTime->getActorAt(i);
 //    if(otherActor != engine->player) {
 //      dynamic_cast<Monster*>(otherActor)->playerAwarenessCounter = 0;
 //    }
 //  }
-//  setRealDefinitionNames(engine, false);
+//  identify(false, engine);
 //}
 
 void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectFortitude(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusPerfectFortitude(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
+  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
 
   bool isPhobiasCured = false;
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -186,7 +186,7 @@ void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) 
   engine->player->restoreShock(999, false);
   engine->log->addMessage("I feel more at ease.");
 
-  setRealDefinitionNames(engine, false);
+  identify(false, engine);
 }
 
 void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
@@ -197,14 +197,14 @@ void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engi
 }
 
 void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPerfectToughness(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusPerfectToughness(engine));
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  actor->getStatusEffectsHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
+  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -216,10 +216,10 @@ void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, Engi
 }
 
 void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusEffectsHandler()->tryAddEffect(new StatusPoisoned(engine));
+  actor->getStatusHandler()->tryAddEffect(new StatusPoisoned(engine));
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    setRealDefinitionNames(engine, false);
+    identify(false, engine);
   }
 }
 
@@ -234,10 +234,10 @@ void PotionOfKnowledge::specificQuaff(Actor* const actor, Engine* const engine) 
   (void)actor;
   engine->log->addMessage("I feel more insightful about the mystic powers!");
   engine->player->incrMth(4);
-  setRealDefinitionNames(engine, false);
+  identify(false, engine);
 }
 
-void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
+void PotionNameHandler::setColorAndFalseName(ItemDef* d) {
   const unsigned int NR_NAMES = m_falseNames.size();
 
   const unsigned int ELEMENT = static_cast<unsigned int>(eng->dice(1, NR_NAMES) - 1);
@@ -255,7 +255,7 @@ void PotionNameHandler::setColorAndFalseName(ItemDefinition* d) {
 
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    ItemDef* const d = eng->itemData->itemDefs[i];
     if(d->isQuaffable) {
       lines.push_back(d->name.name);
       lines.push_back(d->name.name_plural);
@@ -269,7 +269,7 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
 
 void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    ItemDefinition* const d = eng->itemData->itemDefinitions[i];
+    ItemDef* const d = eng->itemData->itemDefs[i];
     if(d->isQuaffable) {
       d->name.name = lines.front();
       lines.erase(lines.begin());
@@ -287,8 +287,8 @@ void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Potion::setRealDefinitionNames(Engine* const engine,
-                                    const bool IS_SILENT_IDENTIFY) {
+void Potion::identify(const bool IS_SILENT_IDENTIFY,
+                      Engine* const engine) {
   if(def_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
@@ -310,11 +310,11 @@ void Potion::setRealDefinitionNames(Engine* const engine,
 }
 
 void Potion::collide(const Pos& pos, Actor* const actor,
-                     const ItemDefinition& itemDef, Engine* const engine) {
+                     const ItemDef& itemDef, Engine* const engine) {
   if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false ||
       actor != NULL) {
-    ItemDefinition* const potionDef =
-      engine->itemData->itemDefinitions[itemDef.id];
+    ItemDef* const potionDef =
+      engine->itemData->itemDefs[itemDef.id];
 
     const bool PLAYER_SEE_CELL = engine->map->playerVision[pos.x][pos.y];
 

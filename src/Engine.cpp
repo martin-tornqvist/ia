@@ -68,7 +68,7 @@
 #include "Pathfinding.h"
 #include "PlayerCreateCharacter.h"
 #include "PlayerBonuses.h"
-#include "PlayerPowersHandler.h"
+#include "PlayerSpellsHandler.h"
 #include "PlayerVisualMemory.h"
 #include "Popup.h"
 #include "Postmortem.h"
@@ -138,7 +138,9 @@ void Engine::initGame() {
   playerBonHandler = new PlayerBonHandler(this);
   playerCreateCharacter = new PlayerCreateCharacter(this);
   player = new Player;
-  player->place(Pos(config->PLAYER_START_X, config->PLAYER_START_Y), &(actorData->actorDefinitions[actor_player]), this);
+  player->place(
+    Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
+    &(actorData->actorDefs[actor_player]), this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   marker = new Marker(this);
@@ -192,7 +194,7 @@ void Engine::initGame() {
   saveHandler = new SaveHandler(this);
   jamWithSpike = new JamWithSpike(this);
   menuInputHandler = new MenuInputHandler(this);
-  playerPowersHandler = new PlayerPowersHandler(this);
+  playerSpellsHandler = new PlayerSpellsHandler(this);
   knockBack = new KnockBack(this);
   examine = new Examine(this);
   characterDescr = new CharacterDescr(this);
@@ -269,7 +271,7 @@ void Engine::cleanupGame() {
   delete bresenhamLine;
   delete jamWithSpike;
   delete menuInputHandler;
-  delete playerPowersHandler;
+  delete playerSpellsHandler;
   delete knockBack;
   delete examine;
   delete characterDescr;
