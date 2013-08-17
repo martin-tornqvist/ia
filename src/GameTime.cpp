@@ -45,6 +45,13 @@ GameTime::~GameTime() {
   featureMobs_.resize(0);
 }
 
+void GameTime::eraseElement(const unsigned int i) {
+  if(actors_.empty() == false) {
+    delete actors_.at(i);
+    actors_.erase(actors_.begin() + i);
+  }
+}
+
 void GameTime::insertActorInLoop(Actor* actor) {
   //actors_.insert(actors_.begin() + eng->dice.getInRange(0, actors_.size()), actor);
   actors_.push_back(actor);

@@ -33,14 +33,14 @@ void DebugModeStatPrinter::run() {
   printLine("Game version : " + eng->config->GAME_VERSION);
   printLine("\n");
 
-  printLine("SPELL SPI COSTS");
+  printLine("SPELL MAX SPI COSTS");
   printLine(separator);
   for(int i = 0; i < endOfSpells; i++) {
     Spell* const spell = eng->spellHandler->getSpellFromId(Spells_t(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');
     const string cost =
-      intToString(spell->getSpiCost(true, eng->player, eng));
+      intToString(spell->getMaxSpiCost(true, eng->player, eng));
     printLine(indent1 + name + cost);
   }
   printLine("\n");

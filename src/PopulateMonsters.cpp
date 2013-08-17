@@ -25,7 +25,7 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
     const ActorDef& d = eng->actorData->actorDefs[i];
     if(
       d.isAutoSpawnAllowed &&
-      (d.nrLeftAllowedToSpawn == -1 || d.nrLeftAllowedToSpawn > 0) &&
+      d.nrLeftAllowedToSpawn != 0 &&
       DLVL >= (d.spawnMinDLVL - NR_LVLS_OUT_OF_DEPTH_ALLOWED) &&
       DLVL <= d.spawnMaxDLVL) {
       listToFill.push_back(static_cast<ActorId_t>(i));
@@ -305,20 +305,22 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
   }
 
   if(idCandidates.empty()) {
-    tracer << "PopulateMonsters: Found no valid monsters to spawn at room theme (" + intToString(roomTheme) + ")" << endl;
+    tracer << "PopulateMonsters: Found no valid monsters to spawn ";
+    tracer << "at room theme (" + intToString(roomTheme) + ")" << endl;
     return false;
   } else {
     const int ELEMENT = eng->dice.getInRange(0, idCandidates.size() - 1);
     const ActorId_t id = idCandidates.at(ELEMENT);
-    spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells, IS_ROAMING_ALLOWED);
+    spawnGroupAt(id, sortedFreeCellsVector, forbiddenCells,
+                 IS_ROAMING_ALLOWED);
     return true;
   }
 }
 
-void PopulateMonsters::spawnGroupAt(const ActorId_t id,
-                                    const vector<Pos>& sortedFreeCellsVector,
-                                    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
-                                    const bool IS_ROAMING_ALLOWED) const {
+void PopulateMonsters::spawnGroupAt(
+  const ActorId_t id, const vector<Pos>& sortedFreeCellsVector,
+  bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+  const bool IS_ROAMING_ALLOWED) const {
 
   const ActorDef& d = eng->actorData->actorDefs[id];
 
@@ -372,18 +374,18 @@ void PopulateMonsters::makeSortedFreeCellsVector(
 }
 
 int PopulateMonsters::getRandomOutOfDepth() const {
-  if(eng->map->getDLVL() == 0) {
+  const int DLVL = eng->map->getDLVL();
+  if(DLVL == 0) {
     return 0;
   }
 
-  const int RND = eng->dice(1, 1000);
+  const int RND = eng->dice(1, 100);
 
-  if(RND <= 7) {
-    return 5;
+  if(RND <= 3 && DLVL > 1) {
+    return 6;
   }
-
-  if(RND <= 75) {
-    return 2;
+  if(RND <= 20) {
+    return 3;
   }
 
   return 0;

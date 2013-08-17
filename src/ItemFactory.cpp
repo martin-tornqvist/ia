@@ -118,6 +118,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_thaumaturgicAlteration:   item = new Scroll(d);                   break;
 
     case item_potionOfHealing:          item = new PotionOfHealing(d);          break;
+    case item_potionOfSpirit:           item = new PotionOfSpirit(d);           break;
     case item_potionOfBlindness:        item = new PotionOfBlindness(d);        break;
 //    case item_potionOfCorruption:       item = new PotionOfCorruption(d);       break;
     case item_potionOfTheCobra:         item = new PotionOfTheCobra(d);         break;

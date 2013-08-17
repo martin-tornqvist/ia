@@ -86,12 +86,12 @@ bool Scroll::read(Engine* const engine) {
   if(def_->isIdentified) {
     engine->log->addMessage(
       "I read a scroll of " + getRealTypeName() + "...");
-    spell->cast(engine->player, engine);
+    spell->cast(engine->player, false, engine);
     tryLearn(engine);
   } else {
     engine->log->addMessage("I recite forbidden incantations...");
     def_->isTried = true;
-    if(spell->cast(engine->player, engine).IS_CAST_IDENTIFYING) {
+    if(spell->cast(engine->player, false, engine).IS_CAST_IDENTIFYING) {
       identify(false, engine);
     } else {
       failedToLearnRealName(engine);
@@ -99,7 +99,6 @@ bool Scroll::read(Engine* const engine) {
   }
   delete spell;
 
-  engine->gameTime->endTurnOfCurrentActor();
   return true;
 }
 

@@ -15,7 +15,7 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
 
   switch(bon) {
     case playerBon_vigorous: {
-      eng->player->changeMaxHP(3, false);
+      eng->player->changeMaxHp(3, false);
     } break;
 
     case playerBon_selfAware: {

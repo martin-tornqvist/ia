@@ -57,8 +57,8 @@ Spell* SpellHandler::getSpellFromId(const Spells_t spellId) const {
   return NULL;
 }
 
-int Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
-                      Engine* const eng) const {
+int Spell::getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
+                         Engine* const eng) const {
   int cost = getSpecificSpiCost();
 
   if(IS_BASE_COST_ONLY == false) {
@@ -88,7 +88,8 @@ int Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 }
 
 
-SpellCastRetData Spell::cast(Actor* const caster, Engine* const eng) {
+SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
+                             Engine* const eng) {
   tracer << "Spell::cast()..." << endl;
   if(caster == eng->player) {
     tracer << "Spell: Player casting spell" << endl;
@@ -104,6 +105,10 @@ SpellCastRetData Spell::cast(Actor* const caster, Engine* const eng) {
   }
 
   SpellCastRetData ret = specificCast(caster, eng);
+
+  if(IS_INTRINSIC) {
+    caster->hitSpi(eng->dice(1, getMaxSpiCost(false, caster, eng)));
+  }
 
   eng->gameTime->endTurnOfCurrentActor();
   tracer << "Spell::cast() [DONE]" << endl;
@@ -547,7 +552,7 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
         eng->player->pos, visionBlockers);
       eng->player->getStatusHandler()->endEffect(
         statusDiseased, visionBlockers);
-      eng->player->restoreHP(999);
+      eng->player->restoreHp(999, true);
     } break;
 
     case mthPowerAction_findStairs: {
@@ -948,7 +953,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 //--------------------------------------------------------------------------- HEAL SELF
 SpellCastRetData SpellHealSelf::specificCast(
   Actor* const caster, Engine* const eng) {
-  return SpellCastRetData(caster->restoreHP(999, true));
+  return SpellCastRetData(caster->restoreHp(999, true));
 }
 
 bool SpellHealSelf::isGoodForMonsterToCastNow(

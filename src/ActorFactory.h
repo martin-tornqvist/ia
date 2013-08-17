@@ -19,7 +19,7 @@ public:
 
   Actor* spawnActor(const ActorId_t id, const Pos& pos);
 
-  Actor* spawnRandomActor(const Pos& pos, const int SPAWN_LVL_OFFSET);
+//  Actor* spawnRandomActor(const Pos& pos, const int SPAWN_LVL_OFFSET);
 
 private:
   friend class DebugModeStatPrinter;

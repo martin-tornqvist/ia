@@ -264,7 +264,7 @@ bool Ghost::actorSpecificAct() {
               } else {
                 eng->player->getStatusHandler()->tryAddEffect(new StatusCursed(eng));
               }
-              restoreHP(999);
+              restoreHp(999, true);
             }
           }
           eng->gameTime->endTurnOfCurrentActor();
@@ -456,7 +456,7 @@ void KeziahMason::actorSpecific_spawnStartItems() {
 }
 
 void Ooze::actorSpecificOnStandardTurn() {
-  restoreHP(1, false);
+  restoreHp(1, false);
 }
 
 void OozeBlack::actorSpecific_spawnStartItems() {
@@ -488,7 +488,7 @@ void ColourOutOfSpace::actorSpecificOnStandardTurn() {
   currentColor.g = eng->dice.getInRange(40, 255);
   currentColor.b = eng->dice.getInRange(40, 255);
 
-  restoreHP(1, false);
+  restoreHp(1, false);
 
   if(eng->player->checkIfSeeActor(*this, NULL)) {
     eng->player->getStatusHandler()->tryAddEffect(new StatusConfused(eng));

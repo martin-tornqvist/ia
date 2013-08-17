@@ -61,7 +61,8 @@ class Spell {
 public:
   Spell() {}
   virtual ~Spell() {}
-  SpellCastRetData cast(Actor* const caster, Engine* const eng);
+  SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC,
+                        Engine* const eng);
   virtual bool isGoodForMonsterToCastNow(Monster* const monster,
                                          Engine* const eng) = 0;
   virtual bool isLearnableForMonsters() const = 0;
@@ -69,8 +70,8 @@ public:
   virtual string getName() const = 0;
   virtual Spells_t getId() const = 0;
 
-  int getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
-                 Engine* const eng) const;
+  int getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
+                    Engine* const eng) const;
 protected:
   virtual SpellCastRetData specificCast(Actor* const caster,
                                         Engine* const eng) = 0;

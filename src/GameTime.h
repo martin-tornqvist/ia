@@ -54,11 +54,7 @@ public:
     return actors_.at(i);
   }
 
-  void eraseElement(const unsigned int i) {
-    if(actors_.empty() == false) {
-      actors_.erase(actors_.begin() + i);
-    }
-  }
+  void eraseElement(const unsigned int i);
 
   vector<FeatureMob*> getFeatureMobsAtPos(const Pos& pos);
 

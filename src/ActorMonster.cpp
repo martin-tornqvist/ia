@@ -26,6 +26,25 @@
 #include "AI_castRandomSpell.h"
 #include "AI_handleInventory.h"
 
+Monster::Monster() :
+  playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
+  lastDirectionTraveled(Pos(0, 0)), spellCoolDownCurrent(0),
+  isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL),
+  waiting_(false), shockCausedCurrent(0.0) {}
+
+Monster::~Monster() {
+  tracer << "Monster destructor" << endl;
+
+  asdf;
+  if(deadState == actorDeadState_alive && def_->nrLeftAllowedToSpawn == 0) {
+    def_->nrLeftAllowedToSpawn = 1;
+  }
+
+  for(unsigned int i = 0; i < spellsKnown.size(); i++) {
+    delete spellsKnown.at(i);
+  }
+}
+
 void Monster::act() {
   waiting_ = !waiting_;
 

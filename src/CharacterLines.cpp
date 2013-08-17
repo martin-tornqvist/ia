@@ -81,8 +81,8 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Spirit
-  const string spi    = intToString(8 /*eng->player->getHp()*/);
-  const string spiMax = intToString(8 /*eng->player->getHpMax(true)*/);
+  const string spi    = intToString(eng->player->getSpi());
+  const string spiMax = intToString(eng->player->getSpiMax());
   eng->renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;

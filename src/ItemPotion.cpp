@@ -9,15 +9,18 @@
 #include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
 
-void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
+void PotionOfHealing::specificQuaff(Actor* const actor,
+                                    Engine* const engine) {
   //End disease
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+  engine->mapTests->makeVisionBlockerArray(
+    engine->player->pos, visionBlockers);
   actor->getStatusHandler()->endEffect(statusDiseased, visionBlockers);
 
-  //Attempt to heal the actor. If no hp was healed (already at full hp), boost the hp instead.
-  if(actor->restoreHP(engine->dice(2, 6) + 12) == false) {
-    actor->changeMaxHP(1, true);
+  //Attempt to heal the actor. If no hp was healed (already at full hp),
+  //boost the hp instead.
+  if(actor->restoreHp(engine->dice(2, 6) + 12, true) == false) {
+    actor->changeMaxHp(1, true);
   }
 
   if(engine->player->checkIfSeeActor(*actor, NULL)) {
@@ -25,7 +28,29 @@ void PotionOfHealing::specificQuaff(Actor* const actor, Engine* const engine) {
   }
 }
 
-void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
+void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor,
+                                      Engine* const engine) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor, engine);
+  }
+}
+
+void PotionOfSpirit::specificQuaff(Actor* const actor,
+                                   Engine* const engine) {
+  //Attempt to restore spirit. If no hp was healed (already at full hp),
+  //boost the hp instead.
+  if(actor->restoreSpi(engine->dice(2, 6) + 12, true) == false) {
+    actor->changeMaxSpi(1, true);
+  }
+
+  if(engine->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false, engine);
+  }
+}
+
+void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor,
+                                     Engine* const engine) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor, engine);

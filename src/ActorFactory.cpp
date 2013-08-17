@@ -87,44 +87,44 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   return actor;
 }
 
-Actor* ActorFactory::spawnRandomActor(const Pos& pos,
-                                      const int SPAWN_LVL_OFFSET) {
-  const int DLVL = eng->map->getDLVL();
-  vector<ActorId_t> monsterCandidates;
-  const unsigned int NR_ACTORS_DEFINED =
-    static_cast<unsigned int>(endOfActorIds);
-  for(unsigned int i = 1; i < NR_ACTORS_DEFINED; i++) {
-    const ActorDef& def = eng->actorData->actorDefs[i];
-
-    const bool IS_LVL_OK =
-      DLVL + SPAWN_LVL_OFFSET >= def.spawnMinDLVL &&
-      DLVL <= def.spawnMaxDLVL;
-
-    const bool IS_ALLOWED_TO_SPAWN =
-      def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
-
-    const bool IS_FEATURE_PASSABLE =
-      eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
-
-    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
-
-    if(
-      IS_LVL_OK &&
-      IS_ALLOWED_TO_SPAWN &&
-      IS_FEATURE_PASSABLE &&
-      IS_NO_ACTOR_AT_POS) {
-      monsterCandidates.push_back(static_cast<ActorId_t>(i));
-    }
-  }
-
-  if(monsterCandidates.empty() == false) {
-    const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
-    const ActorId_t monsterType = monsterCandidates.at(ELEMENT);
-    return spawnActor(monsterType, pos);
-  }
-
-  return NULL;
-}
+//Actor* ActorFactory::spawnRandomActor(const Pos& pos,
+//                                      const int SPAWN_LVL_OFFSET) {
+//  const int DLVL = eng->map->getDLVL();
+//  vector<ActorId_t> monsterCandidates;
+//  const unsigned int NR_ACTORS_DEFINED =
+//    static_cast<unsigned int>(endOfActorIds);
+//  for(unsigned int i = 1; i < NR_ACTORS_DEFINED; i++) {
+//    const ActorDef& def = eng->actorData->actorDefs[i];
+//
+//    const bool IS_LVL_OK =
+//      DLVL + SPAWN_LVL_OFFSET >= def.spawnMinDLVL &&
+//      DLVL <= def.spawnMaxDLVL;
+//
+//    const bool IS_ALLOWED_TO_SPAWN =
+//      def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
+//
+//    const bool IS_FEATURE_PASSABLE =
+//      eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
+//
+//    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
+//
+//    if(
+//      IS_LVL_OK &&
+//      IS_ALLOWED_TO_SPAWN &&
+//      IS_FEATURE_PASSABLE &&
+//      IS_NO_ACTOR_AT_POS) {
+//      monsterCandidates.push_back(static_cast<ActorId_t>(i));
+//    }
+//  }
+//
+//  if(monsterCandidates.empty() == false) {
+//    const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
+//    const ActorId_t monsterType = monsterCandidates.at(ELEMENT);
+//    return spawnActor(monsterType, pos);
+//  }
+//
+//  return NULL;
+//}
 
 void ActorFactory::deleteAllMonsters() {
   for(int i = 0; i < int(eng->gameTime->getLoopSize()); i++) {

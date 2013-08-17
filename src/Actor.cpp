@@ -19,6 +19,7 @@
 using namespace std;
 
 Actor::~Actor() {
+  tracer << "Actor destructor" << endl;
   delete statusHandler_;
   delete inventory_;
 }
@@ -114,49 +115,26 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
   }
 }
 
-void Actor::place(const Pos& pos_, ActorDef* const actorDefinition, Engine* engine) {
-  eng = engine;
-  pos = pos_;
-  def_ = actorDefinition;
-  inventory_ = new Inventory(def_->isHumanoid);
-  statusHandler_ = new StatusHandler(this, eng);
-  deadState = actorDeadState_alive;
-  clr_ = def_->color;
-  glyph_ = def_->glyph;
-  tile_ = def_->tile;
-  hp_ = hpMax_ = def_->hp;
-  lairCell_ = pos;
+void Actor::place(const Pos& pos_, ActorDef* const actorDefinition,
+                  Engine* engine) {
+  eng             = engine;
+  pos             = pos_;
+  def_            = actorDefinition;
+  inventory_      = new Inventory(def_->isHumanoid);
+  statusHandler_  = new StatusHandler(this, eng);
+  deadState       = actorDeadState_alive;
+  clr_            = def_->color;
+  glyph_          = def_->glyph;
+  tile_           = def_->tile;
+  hp_             = hpMax_  = def_->hp;
+  spi_            = spiMax_ = def_->spi;
+  lairCell_       = pos;
 
   if(this != eng->player) {
     actorSpecific_spawnStartItems();
   }
 
   updateColor();
-}
-
-void Actor::changeMaxHP(const int CHANGE, const bool ALLOW_MESSAGES) {
-  hpMax_ = max(1, hpMax_ + CHANGE);
-  hp_ = max(1, hp_ + CHANGE);
-
-  if(ALLOW_MESSAGES) {
-    if(this == eng->player) {
-      if(CHANGE > 0) {
-        eng->log->addMessage("I feel more vigorous!", clrMessageGood);
-      }
-      if(CHANGE < 0) {
-        eng->log->addMessage("I feel frailer!", clrMessageBad);
-      }
-    } else {
-      if(eng->map->playerVision[pos.x][pos.y] == true) {
-        if(CHANGE > 0) {
-          eng->log->addMessage(getNameThe() + " looks more vigorous.");
-        }
-        if(CHANGE < 0) {
-          eng->log->addMessage(getNameThe() + " looks frailer.");
-        }
-      }
-    }
-  }
 }
 
 void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
@@ -204,28 +182,29 @@ void Actor::updateColor() {
   clr_ = def_->color;
 }
 
-bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
-  bool IS_HP_GAINED = false;
+bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
+  bool isHpGained = false;
 
-  const int DIF_FROM_MAX = getHpMax(true) - hpRestored;
+  const int DIF_FROM_MAX = getHpMax(true) - HP_RESTORED;
 
-  //If hp is below limit, but restored hp will push it over the limit - hp is set to max.
+  //If hp is below limit, but restored hp will push it over the limit,
+  //hp is set to max.
   if(getHp() > DIF_FROM_MAX && getHp() < getHpMax(true)) {
     hp_ = getHpMax(true);
-    IS_HP_GAINED = true;
+    isHpGained = true;
   }
 
   //If hp is below limit, and restored hp will NOT push it
   //over the limit - restored hp is added to current.
   if(getHp() <= DIF_FROM_MAX) {
-    hp_ += hpRestored;
-    IS_HP_GAINED = true;
+    hp_ += HP_RESTORED;
+    isHpGained = true;
   }
 
   updateColor();
 
-  if(ALLOW_MESSAGE) {
-    if(IS_HP_GAINED) {
+  if(ALLOW_MESSAGES) {
+    if(isHpGained) {
       if(this == eng->player) {
         eng->log->addMessage("I feel healthier!", clrMessageGood);
       } else {
@@ -237,7 +216,92 @@ bool Actor::restoreHP(int hpRestored, const bool ALLOW_MESSAGE) {
     }
   }
 
-  return IS_HP_GAINED;
+  return isHpGained;
+}
+
+bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MESSAGES) {
+  bool isSpiGained = false;
+
+  const int DIF_FROM_MAX = getSpiMax() - SPI_RESTORED;
+
+  //If spi is below limit, but restored spi will push it over the limit,
+  //spi is set to max.
+  if(getSpi() > DIF_FROM_MAX && getSpi() < getSpiMax()) {
+    spi_ = getSpiMax();
+    isSpiGained = true;
+  }
+
+  //If spi is below limit, and restored spi will NOT push it
+  //over the limit - restored spi is added to current.
+  if(getSpi() <= DIF_FROM_MAX) {
+    spi_ += SPI_RESTORED;
+    isSpiGained = true;
+  }
+
+  if(ALLOW_MESSAGES) {
+    if(isSpiGained) {
+      if(this == eng->player) {
+        eng->log->addMessage("I feel more spirited!", clrMessageGood);
+      } else {
+        if(eng->player->checkIfSeeActor(*this, NULL)) {
+          eng->log->addMessage(def_->name_the + " looks more spirited.");
+        }
+      }
+      eng->renderer->drawMapAndInterface();
+    }
+  }
+
+  return isSpiGained;
+}
+
+void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES) {
+  hpMax_  = max(1, hpMax_ + CHANGE);
+  hp_     = max(1, hp_ + CHANGE);
+
+  if(ALLOW_MESSAGES) {
+    if(this == eng->player) {
+      if(CHANGE > 0) {
+        eng->log->addMessage("I feel more vigorous!");
+      }
+      if(CHANGE < 0) {
+        eng->log->addMessage("I feel frailer!");
+      }
+    } else {
+      if(eng->player->checkIfSeeActor(*this, NULL)) {
+        if(CHANGE > 0) {
+          eng->log->addMessage(getNameThe() + " looks more vigorous.");
+        }
+        if(CHANGE < 0) {
+          eng->log->addMessage(getNameThe() + " looks frailer.");
+        }
+      }
+    }
+  }
+}
+
+void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
+  spiMax_ = max(1, spiMax_ + CHANGE);
+  spi_    = max(1, spi_ + CHANGE);
+
+  if(ALLOW_MESSAGES) {
+    if(this == eng->player) {
+      if(CHANGE > 0) {
+        eng->log->addMessage("My spirit is stronger!");
+      }
+      if(CHANGE < 0) {
+        eng->log->addMessage("My spirit is weaker!");
+      }
+    } else {
+      if(eng->player->checkIfSeeActor(*this, NULL)) {
+        if(CHANGE > 0) {
+          eng->log->addMessage(getNameThe() + " appears to grow in spirit.");
+        }
+        if(CHANGE < 0) {
+          eng->log->addMessage(getNameThe() + " appears to shrink in spirit.");
+        }
+      }
+    }
+  }
 }
 
 bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
@@ -251,7 +315,8 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
 
   //Filter damage through worn armor
   if(isHumanoid()) {
-    Armor* armor = dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
+    Armor* armor =
+      dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
       tracer << "Actor: Has armor, running hit on armor" << endl;
 
@@ -310,6 +375,20 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   }
 }
 
+void Actor::hitSpi(const int DMG) {
+  spi_ = max(0, spi_ - DMG);
+  if(spi_ <= 0) {
+    if(this == eng->player) {
+      eng->log->addMessage("All my spirit is depleted, I am devoid of life!");
+    } else {
+      if(eng->player->checkIfSeeActor(*this, NULL)) {
+        eng->log->addMessage(getNameThe() + " has no spirit left!");
+      }
+    }
+    die(false, false, true);
+  }
+}
+
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
@@ -325,7 +404,8 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 
   if(this != eng->player) {
     if(isHumanoid() == true) {
-      eng->soundEmitter->emitSound(Sound("I hear agonised screaming.", true, pos, false, false));
+      eng->soundEmitter->emitSound(
+        Sound("I hear agonised screaming.", true, pos, false, false));
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
   }

@@ -163,7 +163,7 @@ string DeviceRejuvenator::getSpecificActivateMessage() {
 void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
 //  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
 //  engine->log->addMessage(name + " repairs my wounds.");
-  engine->player->restoreHP(1, false);
+  engine->player->restoreHp(1, false);
 }
 
 //---------------------------------------------------- TRANSLOCATOR

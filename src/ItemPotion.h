@@ -54,6 +54,18 @@ private:
   const string getRealTypeName() {return "Healing";}
 };
 
+class PotionOfSpirit: public Potion {
+public:
+  PotionOfSpirit(ItemDef* const itemDefinition) :
+    Potion(itemDefinition) {}
+  ~PotionOfSpirit() {}
+  void specificQuaff(Actor* const actor, Engine* const engine);
+private:
+  void specificCollide(const Pos& pos, Actor* const actor,
+                       Engine* const engine);
+  const string getRealTypeName() {return "Spirit";}
+};
+
 //class PotionOfSorcery: public Potion {
 //public:
 //  PotionOfSorcery(ItemDef* const itemDefinition) :
@@ -216,7 +228,7 @@ private:
     (void)actor;
     (void)engine;
   }
-  const string getRealTypeName() {return "Knowledge";}
+  const string getRealTypeName() {return "Arcane Knowledge";}
 };
 
 class PotionNameHandler {

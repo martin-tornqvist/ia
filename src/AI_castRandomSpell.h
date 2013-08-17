@@ -1,6 +1,8 @@
 #ifndef AI_CAST_RANDOM_SPELL_H
 #define AI_CAST_RANDOM_SPELL_H
 
+#include "Log.h"
+
 class AI_castRandomSpellIfAware {
 public:
   static bool action(Monster* monsterActing, Engine* engine) {
@@ -18,8 +20,29 @@ public:
               Spell* const spell = spellCandidates.at(ELEMENT);
 
               if(spell->isGoodForMonsterToCastNow(monsterActing, engine)) {
-                spell->cast(monsterActing, engine);
-                return true;
+                const int CUR_SPI = monsterActing->getSpi();
+                const int SPELL_MAX_SPI =
+                  spell->getMaxSpiCost(false, monsterActing, engine);
+
+                // Cast spell if max spirit cost is lower than current spirit,
+                if(SPELL_MAX_SPI < CUR_SPI) {
+                  spell->cast(monsterActing, true, engine);
+                  return true;
+                }
+
+                const int CUR_HP  = monsterActing->getHp();
+                const int MAX_HP  = monsterActing->getHpMax(true);
+
+                // Cast spell with a certain chance if HP is low.
+                if(CUR_HP < MAX_HP / 3 && engine->dice.percentile() <= 5) {
+                  if(engine->player->checkIfSeeActor(*monsterActing, NULL)) {
+                    engine->log->addMessage(
+                      monsterActing->getNameThe() + " looks desperate.");
+                  }
+                  spell->cast(monsterActing, true, engine);
+                  return true;
+                }
+                return false;
               } else {
                 spellCandidates.erase(spellCandidates.begin() + ELEMENT);
               }

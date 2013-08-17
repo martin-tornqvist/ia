@@ -19,7 +19,7 @@ void ActorDef::reset() {
   glyph = 'X';
   color = clrYellow;
   groupSize = monsterGroupSize_alone;
-  hp = dmgMelee = dmgRanged = 1;
+  hp = spi = dmgMelee = dmgRanged = 1;
   speed = actorSpeed_normal;
   moveType = moveType_walk;
   rangedCooldownTurns = spellCooldownTurns = 0;
@@ -112,6 +112,7 @@ void ActorData::defineAllActors() {
   d.moveType = moveType_walk;
   d.id = actor_player;
   d.hp = 16;
+  d.spi = 12;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
@@ -276,8 +277,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
-  d.description
-    = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
+  d.description = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
@@ -319,8 +319,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
-  d.description
-    = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
+  d.description = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
@@ -481,8 +480,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  d.description
-    = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familier; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
+  d.description = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familier; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " chortles at me in a croaking voice.";
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
@@ -522,8 +520,7 @@ void ActorData::defineAllActors() {
   d.spawnMinDLVL = actorDefs[actor_keziahMason].spawnMinDLVL;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
-  d.description
-    = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
+  d.description = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
   d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
   d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
@@ -590,8 +587,7 @@ void ActorData::defineAllActors() {
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
 //  d.isHumanoid = true;
-//  d.description
-//  = "Asdf";
+//  d.description = "Asdf";
 //  d.spellCastMessage = "The Lord of Shadows makes strange gestures in the air.";
 //  d.nrTurnsAwarePlayer = 999;
 //  d.erraticMovement = actorErratic_rare;
@@ -625,8 +621,7 @@ void ActorData::defineAllActors() {
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
 //  d.isHumanoid = true;
-//  d.description
-//  = "Asdf";
+//  d.description = "Asdf";
 //  d.spellCastMessage = "The Lord of Spiders makes strange gestures in the air.";
 //  d.nrTurnsAwarePlayer = 999;
 //  d.erraticMovement = actorErratic_rare;
@@ -659,8 +654,7 @@ void ActorData::defineAllActors() {
 //  d.groupSize = monsterGroupSize_alone;
 //  d.actorSize = actorSize_humanoid;
 //  d.isHumanoid = true;
-//  d.description
-//  = "Asdf";
+//  d.description = "Asdf";
 //  d.spellCastMessage = "The Lord of Spirits makes strange gestures in the air.";
 //  d.nrTurnsAwarePlayer = 999;
 //  d.erraticMovement = actorErratic_rare;
@@ -877,8 +871,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_few;
   d.nrTurnsAwarePlayer = 20;
   d.actorSize = actorSize_giant;
-  d.description
-    = "Leng spiders are huge, purplish arachnids, with pustulent bloated bodies and long, bristly legs. Native to the Dreamlands, the spiders of Leng are intelligent, dangerous, and gigantic.";
+  d.description = "Leng spiders are huge, purplish arachnids, with pustulent bloated bodies and long, bristly legs. Native to the Dreamlands, the spiders of Leng are intelligent, dangerous, and gigantic.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -993,8 +986,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 7;
-  d.description
-    = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
+  d.description = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.isUndead = true;
@@ -1111,8 +1103,7 @@ void ActorData::defineAllActors() {
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
-  d.description
-    = "At first sight, a Rat-thing can easily be mistaken for a large, dark rat. On closer examination, however, their human hands and evil caricatures of human heads reveal their unnatural nature. Rat-things are said to be created from dead cultists by foul witchcraft. Thus, they are found where the witch who created them had her lair.";
+  d.description = "At first sight, a Rat-thing can easily be mistaken for a large, dark rat. On closer examination, however, their human hands and evil caricatures of human heads reveal their unnatural nature. Rat-things are said to be created from dead cultists by foul witchcraft. Thus, they are found where the witch who created them had her lair.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.isRat = true;
@@ -1227,8 +1218,7 @@ void ActorData::defineAllActors() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
-  d.description
-    = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
+  d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -1339,8 +1329,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description
-    = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
+  d.description = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
@@ -1379,8 +1368,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description
-    = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
+  d.description = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
   d.aggroTextMonsterSeen = d.name_the + " howls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.erraticMovement = actorErratic_somewhat;
@@ -1501,8 +1489,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description
-    = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
+  d.description = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_terrifying;
@@ -1542,8 +1529,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description
-    = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
+  d.description = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_terrifying;
@@ -1583,8 +1569,7 @@ void ActorData::defineAllActors() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 20;
-  d.description
-    = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
+  d.description = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_flooded);
@@ -1959,8 +1944,7 @@ void ActorData::defineAllActors() {
   d.isAutoDescriptionAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
-  d.description
-    = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
+  d.description = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monsterShockLevel = monsterShockLevel_mindShattering;

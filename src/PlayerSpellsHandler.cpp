@@ -42,7 +42,7 @@ void PlayerSpellsHandler::run() {
         case menuAction_selected: {
           eng->log->clearLog();
           eng->renderer->drawMapAndInterface();
-          learnedSpells.at(browser.getPos().y)->cast(eng->player, eng);
+          learnedSpells.at(browser.getPos().y)->cast(eng->player, true, eng);
           return;
         }
         break;
@@ -89,9 +89,10 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
       fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
     const int x = 28;
 
-    const int SPI_COST = spell->getSpiCost(false, eng->player, eng);
+    const int SPI_COST_MAX = spell->getMaxSpiCost(false, eng->player, eng);
 
-    str = "SPI:" + (SPI_COST == 1 ? "1" : ("1-" + intToString(SPI_COST)));
+    str = "SPI:";
+    str += SPI_COST_MAX == 1 ? "1" : ("1-" + intToString(SPI_COST_MAX));
     eng->renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
     currentListPos++;
   }

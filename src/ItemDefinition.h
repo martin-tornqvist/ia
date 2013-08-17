@@ -144,6 +144,7 @@ enum ItemId_t {
   item_thaumaturgicAlteration,
 
   item_potionOfHealing,
+  item_potionOfSpirit,
   item_potionOfBlindness,
 //  item_potionOfCorruption,
   item_potionOfTheCobra,
