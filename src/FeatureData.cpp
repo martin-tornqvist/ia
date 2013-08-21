@@ -531,6 +531,24 @@ void FeatureData::makeList() {
   d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls, roomTheme_human);
   addToListAndReset(d);
   /*---------------------------------------------*/
+  d.id = feature_fountain;
+  d.name_a = "a fountain";
+  d.name_the = "the fountain";
+  d.spawnType = featureSpawnType_other;
+  d.glyph = '%';
+  d.color = clrWhite;
+  d.tile = tile_fountain;
+  d.isMovePassable[moveType_walk] = false;
+  d.isShootPassable = false;
+  d.isVisionPassable = false;
+  d.canHaveBlood = false;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveStaticFeature = false;
+  d.canHaveItem = false;
+  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_plain);
+  addToListAndReset(d);
+  /*---------------------------------------------*/
 //  d.id = feature_pillarCarved;
 //  d.name_a = "a carved pillar";
 //  d.name_the = "the carved pillar";

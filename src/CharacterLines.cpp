@@ -119,7 +119,7 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Wielded weapon
-  pos.x += 4;
+  pos.x += 6;
   //Store x position, because missile wpn info will be directly beaneath wielded wpn info
   const int X_POS_MISSILE = pos.x;
 
@@ -133,26 +133,30 @@ void CharacterLines::drawInfoLines() {
     pos.x += str.length() + 1;
   }
 
-  //Dungeon level
   pos.x = CHARACTER_LINE_X0;
   pos.y += 1;
+
+  // Level and xp
+  DungeonMaster* const dm = eng->dungeonMaster;
+  eng->renderer->drawText("LVL:", panel_character, pos, clrGenDrk);
+  pos.x += 4;
+  str = intToString(dm->getCLvl());
+  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  pos.x += str.length() + 1;
+  eng->renderer->drawText("NXT:", panel_character, pos, clrGenDrk);
+  pos.x += 4;
+  str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" :
+        intToString(dm->getXpToNextLvl());
+  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  pos.x += str.length() + 1;
+
+  //Dungeon level
   eng->renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
   pos.x += 5;
   const int DLVL = eng->map->getDLVL();
   str = DLVL >= 0 ? intToString(DLVL) : "?";
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
-
-//  DungeonMaster* const dm = eng->dungeonMaster;
-
-  //Level and xp
-//  str = "LVL:" + intToString(dm->getLevel());
-//  eng->renderer->drawText(str, panel_character, pos, clrGenDrk);
-//  pos.x += str.length() + 1;
-//  str = "NXT:";
-//  str += dm->getLevel() >= PLAYER_CLVL_MAX ? "-" : intToString(dm->getXpToNextLvl() - dm->getXp());
-//  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
-//  pos.x += str.length() + 1;
 
   //Armor
   eng->renderer->drawText("ARM:", panel_character, pos, clrGenDrk);

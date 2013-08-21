@@ -15,15 +15,15 @@ class Actor;
 class Sound {
 public:
   Sound(
-    const string& message, const bool IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN, const Pos& origin,
-    const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
-    message_(message), isMessageIgnoredIfPlayerSeeOrigin_(IS_MESSAGE_IGNORED_IF_PLAYER_SEE_ORIGIN),
-    origin_(origin), isLoud_(IS_LOUD), isAlertingMonsters_(IS_ALERTING_MONSTER) {}
+    const string& message, const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG,
+    const Pos& origin, const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
+    message_(message),
+    isMsgIgnoredIfPlayerSeeOrig_(IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG),
+    origin_(origin), isLoud_(IS_LOUD),
+    isAlertingMonsters_(IS_ALERTING_MONSTER) {}
 
-  Sound() {
-  }
-  ~Sound() {
-  }
+  Sound() {}
+  ~Sound() {}
 
   const string& getMessage() const {
     return message_;
@@ -34,7 +34,7 @@ public:
   }
 
   bool getIsMessageIgnoredIfPlayerSeeOrigin() const {
-    return isMessageIgnoredIfPlayerSeeOrigin_;
+    return isMsgIgnoredIfPlayerSeeOrig_;
   }
 
   Pos getOrigin() const {
@@ -55,7 +55,7 @@ public:
 
 private:
   string message_;
-  bool isMessageIgnoredIfPlayerSeeOrigin_;
+  bool isMsgIgnoredIfPlayerSeeOrig_;
   Pos origin_;
   bool isLoud_;
   bool isAlertingMonsters_;
@@ -64,8 +64,7 @@ private:
 class SoundEmitter {
 public:
   SoundEmitter(Engine* engine) :
-    eng(engine) {
-  }
+    eng(engine) {}
 
   void emitSound(Sound sound);
 

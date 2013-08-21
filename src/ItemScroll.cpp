@@ -62,14 +62,16 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY,
 }
 
 void Scroll::tryLearn(Engine* const engine) {
-  Spell* const spell = getSpell(engine);
-  if(
-    spell->isLearnableForPlayer() &&
-    engine->playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
-    engine->log->addMessage("I learn to cast this incantation by heart!");
-    engine->playerSpellsHandler->learnSpellIfNotKnown(spell);
-  } else {
-    delete spell;
+  if(engine->playerBonHandler->isBonPicked(playerBon_occultist)) {
+    Spell* const spell = getSpell(engine);
+    if(
+      spell->isLearnableForPlayer() &&
+      engine->playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
+      engine->log->addMessage("I learn to cast this incantation by heart!");
+      engine->playerSpellsHandler->learnSpellIfNotKnown(spell);
+    } else {
+      delete spell;
+    }
   }
 }
 

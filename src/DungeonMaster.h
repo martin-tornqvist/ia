@@ -16,7 +16,9 @@ class Engine;
 class DungeonMaster
 {
 public:
-  DungeonMaster(Engine* engine) : eng(engine) {}
+  DungeonMaster(Engine* engine) : clvl(1), xp(0), eng(engine) {
+    initXpArray();
+  }
   ~DungeonMaster() {}
 
   void monsterKilled(Actor* monster);
@@ -29,9 +31,27 @@ public:
   TimeData getTimeStarted() const {return timeStarted;}
   void setTimeStartedToNow();
 
-private:
-  TimeData timeStarted;
+  void playerGainXp(int XP_GAINED);
 
+  void playerLoseXpPercent(const int PERCENT);
+
+  int getMonsterXpWorth(const ActorDef& d) const;
+
+  inline int getCLvl()  const {return clvl;}
+  inline int getXp()    const {return xp;}
+
+  int getXpToNextLvl() const;
+
+private:
+  void playerGainLvl();
+
+  void initXpArray();
+
+  int xpForLvl[PLAYER_MAX_CLVL + 1];
+
+  int clvl, xp;
+
+  TimeData timeStarted;
   Engine* const eng;
 };
 

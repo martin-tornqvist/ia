@@ -7,7 +7,8 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 
-bool SoundEmitter::isSoundHeardAtRange(const int RANGE, const Sound& sound) const {
+bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
+                                       const Sound& sound) const {
   return sound.isLoud() ? RANGE <= 25 : RANGE <= 10;
 }
 
@@ -17,7 +18,8 @@ void SoundEmitter::emitSound(Sound sound) {
   for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
     for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
       f = eng->map->featuresStatic[x][y];
-      const bool SOUND_CAN_PASS_CELL = f->isMoveTypePassable(moveType_ooze) == true || f->isBottomless() == true;
+      const bool SOUND_CAN_PASS_CELL =
+        f->isMoveTypePassable(moveType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
     }
   }
@@ -37,13 +39,14 @@ void SoundEmitter::emitSound(Sound sound) {
         if(
           eng->map->playerVision[origin.x][origin.y] == false ||
           sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
-          // Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
+          //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
           if(sound.getMessage() != "") {
             if(nrSoundsHeardByPlayerCurTurn_ >= 1) {
               sound.clearMessage();
             } else {
-              const string DIR_STR = getPlayerToOriginDirectionString(
-                                       FLOOD_VALUE_AT_ACTOR, origin, floodFill);
+              const string DIR_STR =
+                getPlayerToOriginDirectionString(
+                  FLOOD_VALUE_AT_ACTOR, origin, floodFill);
               if(DIR_STR != "") {
                 sound.addString("(" + DIR_STR + ")");
               }
@@ -59,8 +62,9 @@ void SoundEmitter::emitSound(Sound sound) {
   }
 }
 
-string SoundEmitter::getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_PLAYER,
-    const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
+string SoundEmitter::getPlayerToOriginDirectionString(
+  const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
+  int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   const Pos& playerPos = eng->player->pos;
   string sourceDirectionName = "";
@@ -76,10 +80,12 @@ string SoundEmitter::getPlayerToOriginDirectionString(const int FLOOD_VALUE_AT_P
       } else {
         //Origin is further away
         const int currentValue = floodFill[checkedPos.x][checkedPos.y];
-        //If current value is less than players, this is the direction of the sound.
+        //If current value is less than players,
+        //this is the direction of the sound.
         if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
           sourceDirectionName = directionNames.directions[dx + 1][dy + 1];
-          //If cardinal direction, stop search (To give priority to cardinal directions)
+          //If cardinal direction, stop search
+          //(To give priority to cardinal directions)
           if(dx == 0 || dy == 0)
             return sourceDirectionName;
         }

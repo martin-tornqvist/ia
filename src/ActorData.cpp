@@ -19,7 +19,8 @@ void ActorDef::reset() {
   glyph = 'X';
   color = clrYellow;
   groupSize = monsterGroupSize_alone;
-  hp = spi = dmgMelee = dmgRanged = 1;
+  hp = dmgMelee = dmgRanged = 1;
+  spi = 12;
   speed = actorSpeed_normal;
   moveType = moveType_walk;
   rangedCooldownTurns = spellCooldownTurns = 0;
@@ -139,7 +140,7 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrBrown;
   d.tile = tile_zombieUnarmed;
-  d.hp = 12;
+  d.hp = 10;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -180,7 +181,7 @@ void ActorData::defineAllActors() {
   d.glyph = 'Z';
   d.color = clrGray;
   d.tile = tile_zombieArmed;
-  d.hp = 12;
+  d.hp = 10;
   d.dmgMelee = 9;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_accuracyRanged, 0);
@@ -349,7 +350,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_cultistFirearm;
   d.hp = 4;
-//  d.dmgMelee = 1;
+  d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_accuracyRanged, 34);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -389,7 +390,7 @@ void ActorData::defineAllActors() {
   d.color = clrYellow;
   d.tile = tile_cultistFirearm;
   d.hp = 5;
-//  d.dmgMelee = 1;
+  d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -429,7 +430,7 @@ void ActorData::defineAllActors() {
   d.color = clrBlueLgt;
   d.tile = tile_cultistFirearm;
   d.hp = 6;
-//  d.dmgMelee = 1;
+  d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -468,7 +469,7 @@ void ActorData::defineAllActors() {
   d.color = clrMagenta;
   d.tile = tile_witchOrWarlock;
   d.hp = 10;
-//  d.dmgMelee = 1;
+  d.spi = 40;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -681,7 +682,7 @@ void ActorData::defineAllActors() {
   d.color = clrCyanLgt;
   d.tile = tile_cultistDagger;
   d.hp = 6;
-//  d.dmgMelee = 1;
+  d.spi = 20;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
   d.abilityVals.setVal(ability_resistStatusMind, 0);
@@ -937,6 +938,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_ghost;
   d.hp = 4;
+  d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -976,6 +978,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhite;
   d.tile = tile_phantasm;
   d.hp = 9;
+  d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1016,6 +1019,7 @@ void ActorData::defineAllActors() {
   d.color = clrRed;
   d.tile = tile_wraith;
   d.hp = 15;
+  d.spi = 20;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1055,6 +1059,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_rat;
   d.hp = 2;
+  d.spi = 1;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1093,6 +1098,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_ratThing;
   d.hp = 4;
+  d.spi = 4;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1132,6 +1138,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_wolf;
   d.hp = 4;
+  d.spi = 2;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1169,6 +1176,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_bat;
   d.hp = 8;
+  d.spi = 6;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1206,6 +1214,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrownDark;
   d.tile = tile_byakhee;
   d.hp = 11;
+  d.spi = 20;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
@@ -1244,6 +1253,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLgt;
   d.tile = tile_mantis;
   d.hp = 15;
+  d.spi = 20;
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1280,6 +1290,7 @@ void ActorData::defineAllActors() {
   d.color = clrBrown;
   d.tile = tile_locust;
   d.hp = 3;
+  d.spi = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1317,7 +1328,7 @@ void ActorData::defineAllActors() {
   d.color = clrMagenta;
   d.tile = tile_migo;
   d.hp = 6;
-//  d.dmgMelee = 1;
+  d.spi = 20;
   d.dmgRanged = 5;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
@@ -1357,6 +1368,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreen;
   d.tile = tile_ghoul;
   d.hp = 10;
+  d.spi = 20;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1395,6 +1407,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_shadow;
   d.hp = 4;
+  d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1438,6 +1451,7 @@ void ActorData::defineAllActors() {
   d.color = clrMagenta;
   d.tile = tile_mummy;
   d.hp = 21;
+  d.spi = 30;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1478,6 +1492,7 @@ void ActorData::defineAllActors() {
   d.color = clrRed;
   d.tile = tile_mummy;
   d.hp = 44;
+  d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1519,6 +1534,7 @@ void ActorData::defineAllActors() {
   d.color = clrRedLgt;
   d.tile = tile_mummy;
   d.hp = 44;
+  d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1556,6 +1572,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhite;
   d.tile = tile_deepOne;
   d.hp = 8;
+  d.spi = 12;
   d.dmgMelee = 3;
   d.dmgRanged = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -1594,6 +1611,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhite;
   d.tile = tile_massOfWorms;
   d.hp = 2;
+  d.spi = 1;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1630,6 +1648,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_vortex;
   d.hp = 10;
+  d.spi = 12;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1669,6 +1688,7 @@ void ActorData::defineAllActors() {
   d.color = clrRed;
   d.tile = tile_vortex;
   d.hp = 16;
+  d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1707,6 +1727,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_ooze;
   d.hp = 10;
+  d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1752,6 +1773,7 @@ void ActorData::defineAllActors() {
   d.color = clrWhiteHigh;
   d.tile = tile_ooze;
   d.hp = 13;
+  d.spi = 12;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1798,6 +1820,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreen;
   d.tile = tile_ooze;
   d.hp = 16;
+  d.spi = 12;
   d.dmgMelee = 15;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);
@@ -1843,6 +1866,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
   d.hp = 27;
+  d.spi = 12;
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
@@ -1889,6 +1913,7 @@ void ActorData::defineAllActors() {
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
   d.hp = 64;
+  d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 100);
@@ -1931,6 +1956,7 @@ void ActorData::defineAllActors() {
   d.color = clrGray;
   d.tile = tile_huntingHorror;
   d.hp = 58;
+  d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_resistStatusBody, 0);

@@ -28,41 +28,37 @@ public:
   FeatureSpawnData_t getFeatureSpawnDataType() const {
     return featureSpawnDataType_;
   }
-  virtual ~FeatureSpawnData() {
-  }
+  virtual ~FeatureSpawnData() {}
 
-  FeatureSpawnData_t getFeatureSpawnDataType() {
-    return featureSpawnDataType_;
-  }
+  FeatureSpawnData_t getFeatureSpawnDataType() {return featureSpawnDataType_;}
 
 protected:
   FeatureSpawnData(FeatureSpawnData_t featureSpawnDataType) :
-    featureSpawnDataType_(featureSpawnDataType) {
-  }
+    featureSpawnDataType_(featureSpawnDataType) {}
   const FeatureSpawnData_t featureSpawnDataType_;
 };
 
 class DynamiteSpawnData: public FeatureSpawnData {
 public:
   DynamiteSpawnData(int turnsLeftToExplosion) :
-    FeatureSpawnData(featureSpawnData_dynamite), turnsLeftToExplosion_(turnsLeftToExplosion) {
-  }
+    FeatureSpawnData(featureSpawnData_dynamite),
+    turnsLeftToExplosion_(turnsLeftToExplosion) {}
   int turnsLeftToExplosion_;
 };
 
 class SmokeSpawnData: public FeatureSpawnData {
 public:
   SmokeSpawnData(int life) :
-    FeatureSpawnData(featureSpawnData_smoke), life_(life) {
-  }
+    FeatureSpawnData(featureSpawnData_smoke), life_(life) {}
   int life_;
 };
 
 class ProxEventWallCrumbleSpawnData: public FeatureSpawnData {
 public:
-  ProxEventWallCrumbleSpawnData(vector<Pos> wallCells, vector<Pos> innerCells) :
-    FeatureSpawnData(featureSpawnData_proxEventWallCrumble), wallCells_(wallCells), innerCells_(innerCells) {
-  }
+  ProxEventWallCrumbleSpawnData(vector<Pos> wallCells,
+                                vector<Pos> innerCells) :
+    FeatureSpawnData(featureSpawnData_proxEventWallCrumble),
+    wallCells_(wallCells), innerCells_(innerCells) {}
   vector<Pos> wallCells_;
   vector<Pos> innerCells_;
 };
@@ -70,11 +66,11 @@ public:
 class TrapSpawnData: public FeatureSpawnData {
 public:
   TrapSpawnData(const FeatureDef* const mimicFeature, Trap_t trapType) :
-    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature), trapType_(trapType) {
-  }
+    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
+    trapType_(trapType) {}
   TrapSpawnData(const FeatureDef* const mimicFeature) :
-    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature), trapType_(trap_any) {
-  }
+    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
+    trapType_(trap_any) {}
   const FeatureDef* const mimicFeature_;
   const Trap_t trapType_;
 };
@@ -82,29 +78,26 @@ public:
 class DoorSpawnData: public FeatureSpawnData {
 public:
   DoorSpawnData(const FeatureDef* const mimicFeature) :
-    FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {
-  }
+    FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {}
   const FeatureDef* const mimicFeature_;
 };
 
 class LeverSpawnData: public FeatureSpawnData {
 public:
   LeverSpawnData(Door* const doorLinkedTo) :
-    FeatureSpawnData(featureSpawnData_lever), doorLinkedTo_(doorLinkedTo) {
-  }
+    FeatureSpawnData(featureSpawnData_lever), doorLinkedTo_(doorLinkedTo) {}
   Door* const doorLinkedTo_;
 };
 
 class FeatureFactory {
 public:
-  FeatureFactory(Engine* engine) {
-    eng = engine;
-  }
+  FeatureFactory(Engine* engine) : eng(engine) {}
 
-  Feature* spawnFeatureAt(const Feature_t id, const Pos pos, FeatureSpawnData* spawnData = NULL);
+  Feature* spawnFeatureAt(const Feature_t id, const Pos& pos,
+                          FeatureSpawnData* spawnData = NULL);
 
 private:
-  void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos pos);
+  void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos);
 
   Engine* eng;
 };

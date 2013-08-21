@@ -15,9 +15,7 @@ class Item;
 
 class FeatureExaminable: public FeatureStatic {
 public:
-  ~FeatureExaminable() {
-  }
-
+  ~FeatureExaminable() {}
   void examine();
 
 protected:
@@ -35,7 +33,9 @@ public:
 
   ~ExaminableItemContainer();
 
-  void setRandomItemsForFeature(const Feature_t featureId, const int NR_ITEMS_TO_ATTEMPT, Engine* const engine);
+  void setRandomItemsForFeature(const Feature_t featureId,
+                                const int NR_ITEMS_TO_ATTEMPT,
+                                Engine* const engine);
 
   void dropItems(const Pos& pos, Engine* const engine);
 
@@ -128,8 +128,7 @@ enum ChestAction_t {
 
 class Chest: public FeatureExaminable {
 public:
-  ~Chest() {
-  }
+  ~Chest() {}
   void featureSpecific_examine();
 
 //  string getDescr(const bool DEFINITE_ARTICLE) const;
@@ -151,6 +150,37 @@ private:
 
   bool isContentKnown_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
+};
+
+enum Fountain_t {
+  fountain_tepid,
+  fountain_refreshing
+};
+
+class Fountain: public FeatureExaminable {
+public:
+  ~Fountain() {}
+  void featureSpecific_examine();
+
+//  string getDescr(const bool DEFINITE_ARTICLE) const;
+
+//  SDL_Color getColor() const;
+
+private:
+  friend class FeatureFactory;
+  Fountain(Feature_t id, Pos pos, Engine* engine);
+
+//  void triggerTrap();
+//  bool openFeature();
+//  void getChoiceLabels(const vector<ChestAction_t>& possibleActions,
+//                       vector<string>& actionLabels) const;
+//  void getPossibleActions(vector<ChestAction_t>& possibleActions) const;
+//  void doAction(const ChestAction_t action);
+//  void getDescr(string& descr) const;
+//  ExaminableItemContainer itemContainer_;
+
+//  bool isContentKnown_;
+//  bool isLocked_, isTrapped_, isTrapStatusKnown_;
 };
 
 enum CocoonAction_t {

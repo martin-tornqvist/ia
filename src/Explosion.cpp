@@ -114,12 +114,10 @@ void ExplosionMaker::runExplosion(
 
     if(OVERRIDE_EXPLOSION_RENDERING) {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, colorOverride, colorOverride,
-          eng->config->delayExplosion);
+          forbiddenRenderCells, colorOverride, colorOverride);
     } else {
       eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, clrYellow, clrRedLgt,
-          eng->config->delayExplosion);
+          forbiddenRenderCells, clrYellow, clrRedLgt);
     }
   } else {
     if(OVERRIDE_EXPLOSION_RENDERING) {

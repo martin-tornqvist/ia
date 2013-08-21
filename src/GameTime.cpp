@@ -176,15 +176,25 @@ void GameTime::runNewStandardTurnEvents() {
   unsigned int loopSize = actors_.size();
 
   bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockingArray);
+  eng->mapTests->makeVisionBlockerArray(
+    eng->player->pos, visionBlockingArray);
+
+  //Check if time to regen spirit on all actors
+  const int REGEN_SPI_N_TURNS = 10;
+  const bool IS_SPI_REGEN_THIS_TURN =
+    turn_ == (turn_ / REGEN_SPI_N_TURNS) * REGEN_SPI_N_TURNS;
 
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
-    //Update status effects on all actors, this also makes the monster player-aware if
-    //it has any active status effect.
+    //Update status effects on all actors, this also makes the monster
+    //player-aware if it has any active status effect.
     actor->getStatusHandler()->newTurnAllEffects(visionBlockingArray);
 
     if(actor->deadState == actorDeadState_alive) {
+      if(IS_SPI_REGEN_THIS_TURN) {
+        actor->restoreSpi(1, false);
+      }
+
       actor->actorSpecificOnStandardTurn();
     }
 
@@ -197,7 +207,7 @@ void GameTime::runNewStandardTurnEvents() {
       actors_.erase(actors_.begin() + i);
       i--;
       loopSize--;
-      if(static_cast<unsigned int>(currentActorVectorPos_) >= actors_.size()) {
+      if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
         currentActorVectorPos_ = 0;
       }
     }
@@ -213,8 +223,10 @@ void GameTime::runNewStandardTurnEvents() {
     }
   }
 
-  //Spawn more monsters? (If an unexplored cell is selected, the spawn is aborted)
-  if(eng->map->getDLVL() >= 1 && eng->map->getDLVL() <= LAST_CAVERN_LEVEL) {
+  //Spawn more monsters?
+  //(If an unexplored cell is selected, the spawn is aborted)
+  const int DLVL = eng->map->getDLVL();
+  if(DLVL >= 1 && DLVL <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       eng->populateMonsters->trySpawnDueToTimePassed();

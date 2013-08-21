@@ -495,8 +495,16 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     return;
   }
-  //----------------------------------------VISION CHEAT
+  //----------------------------------------XP CHEAT
   else if(d.sdlKey_ == SDLK_F3) {
+    if(IS_DEBUG_MODE) {
+      eng->dungeonMaster->playerGainXp(100);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------VISION CHEAT
+  else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -512,7 +520,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
   }
   //----------------------------------------INSANITY CHEAT
-  else if(d.sdlKey_ == SDLK_F4) {
+  else if(d.sdlKey_ == SDLK_F5) {
     if(IS_DEBUG_MODE) {
       eng->player->incrShock(50);
       clearEvents();
@@ -520,7 +528,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------MTH CHEAT
-  else if(d.sdlKey_ == SDLK_F5) {
+  else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       eng->player->incrMth(8);
       clearEvents();
@@ -528,7 +536,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sdlKey_ == SDLK_F6) {
+  else if(d.sdlKey_ == SDLK_F7) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemDef* const def = eng->itemData->itemDefs[i];

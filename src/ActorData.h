@@ -45,11 +45,11 @@ enum MonsterGroupSize_t {
 };
 
 enum ActorSpeed_t {
-  actorSpeed_sluggish,
-  actorSpeed_slow,
-  actorSpeed_normal,
-  actorSpeed_fast,
-  actorSpeed_fastest
+  actorSpeed_sluggish = 0,
+  actorSpeed_slow     = 1,
+  actorSpeed_normal   = 2,
+  actorSpeed_fast     = 3,
+  actorSpeed_fastest  = 4
 };
 
 enum ActorErratic_t {
@@ -67,11 +67,11 @@ enum ActorSizes_t {
 };
 
 enum MonsterShockLevel {
-  monsterShockLevel_none,
-  monsterShockLevel_unsettling,
-  monsterShockLevel_scary,
-  monsterShockLevel_terrifying,
-  monsterShockLevel_mindShattering
+  monsterShockLevel_none            = 0,
+  monsterShockLevel_unsettling      = 1,
+  monsterShockLevel_scary           = 2,
+  monsterShockLevel_terrifying      = 3,
+  monsterShockLevel_mindShattering  = 4
 };
 
 struct AiBehavior {

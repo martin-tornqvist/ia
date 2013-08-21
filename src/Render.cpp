@@ -300,7 +300,7 @@ void Renderer::drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE) {
 
 void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color& colorInner,
-    const SDL_Color& colorOuter, const int DURATION) {
+    const SDL_Color& colorOuter) {
   tracer << "Renderer::drawBlastAnimationAtField()..." << endl;
 
   drawMapAndInterface();
@@ -329,7 +329,7 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {eng->sleep(DURATION / 2);}
+  if(isAnyBlastRendered) {eng->sleep(eng->config->delayExplosion / 2);}
 
   for(
     pos.y = max(1, center.y - RADIUS);
@@ -350,14 +350,14 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {eng->sleep(DURATION / 2);}
+  if(isAnyBlastRendered) {eng->sleep(eng->config->delayExplosion / 2);}
   drawMapAndInterface();
 
   tracer << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
 }
 
-void Renderer::drawBlastAnimationAtPositions(const vector<Pos>& positions,
-    const SDL_Color& color, const int DURATION) {
+void Renderer::drawBlastAnimationAtPositions(
+  const vector<Pos>& positions, const SDL_Color& color) {
   tracer << "Renderer::drawBlastAnimationAtPositions()..." << endl;
 
   drawMapAndInterface();
@@ -367,14 +367,14 @@ void Renderer::drawBlastAnimationAtPositions(const vector<Pos>& positions,
     drawTile(tile_blastAnimation1, panel_map, pos, color, clrBlack);
   }
   updateScreen();
-  eng->sleep(DURATION / 2);
+  eng->sleep(eng->config->delayExplosion / 2);
 
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
     drawTile(tile_blastAnimation2, panel_map, pos, color, clrBlack);
   }
   updateScreen();
-  eng->sleep(DURATION / 2);
+  eng->sleep(eng->config->delayExplosion / 2);
   drawMapAndInterface();
 
   tracer << "Renderer::drawBlastAnimationAtPositions() [DONE]" << endl;
@@ -394,8 +394,7 @@ void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
   }
 
   if(eng->config->isTilesMode) {
-    eng->renderer->drawBlastAnimationAtPositions(
-      positionsWithVision, clr, DELAY);
+    eng->renderer->drawBlastAnimationAtPositions(positionsWithVision, clr);
   } else {
     //TODO
   }

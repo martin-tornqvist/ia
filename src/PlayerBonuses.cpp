@@ -95,7 +95,8 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   descr  = "You have less chance to be spotted by monsters";
   addBon(playerBon_stealthy, "Stealthy", playerBonType_skill, descr);
 
-  descr  = "Casting chance of memorized spells increases over time";
+  descr  = "When casting a spell from an identified manuscript, you gain ";
+  descr += "the ability to cast this spell intrinsically";
   addBon(playerBon_occultist, "Occultist", playerBonType_skill, descr);
 
 //  addBon(playerBon_wakeful, "Wakeful", "Cannot faint");
@@ -111,7 +112,7 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   descr  = "Can heal disease";
   addBon(playerBon_curer, "Curer", playerBonType_skill, descr);
 
-  descr  = "Double hit point regeneration rate";
+  descr  = "Increased hit point regeneration rate";
   addBon(playerBon_rapidRecoverer, "Rapid recoverer",
          playerBonType_skill, descr);
 

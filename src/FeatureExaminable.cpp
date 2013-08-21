@@ -716,6 +716,16 @@ void Chest::triggerTrap() {
   }
 }
 
+//--------------------------------------------------------- FOUNTAIN
+Fountain::Fountain(Feature_t id, Pos pos, Engine* engine) :
+  FeatureExaminable(id, pos, engine) {
+
+}
+
+void Fountain::featureSpecific_examine() {
+
+}
+
 //--------------------------------------------------------- CABINET
 Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {

@@ -102,11 +102,14 @@ void CharacterDescr::makeLines() {
                       "% damage against all bizarre, " +
                       "alien, mystical and shocking creatures",
                       clrText));
-    const int CASTING_BON = eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
-    lines.push_back(StringAndClr(
-                      offset + "-" + intToString(CASTING_BON) +
-                      " spirit required to cast spells",
-                      clrText));
+    const int CASTING_BON =
+      eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+    if(CASTING_BON > 0) {
+      lines.push_back(StringAndClr(
+                        offset + "-" + intToString(CASTING_BON) +
+                        " spirit required to cast spells",
+                        clrText));
+    }
   }
   lines.push_back(StringAndClr(" ", clrText));
 

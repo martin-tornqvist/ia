@@ -19,7 +19,6 @@
 using namespace std;
 
 Actor::~Actor() {
-  tracer << "Actor destructor" << endl;
   delete statusHandler_;
   delete inventory_;
 }

@@ -101,6 +101,7 @@ enum Tile_t {
   tile_doorClosed,
   tile_doorOpen,
   tile_doorBroken,
+  tile_fountain,
   tile_tree,
   tile_bush,
   tile_churchBench,

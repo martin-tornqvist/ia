@@ -37,8 +37,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       dynamic_cast<Monster*>(currentDefender)->playerAwarenessCounter > 0;
   } else {
     isDefenderAware =
-      eng->player->checkIfSeeActor(*attacker, NULL) &&
-      eng->playerBonHandler->isBonPicked(playerBon_vigilant) == false;
+      eng->player->checkIfSeeActor(*attacker, NULL) ||
+      eng->playerBonHandler->isBonPicked(playerBon_vigilant);
   }
 
   isDefenderDodging = false;

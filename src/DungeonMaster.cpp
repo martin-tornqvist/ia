@@ -9,7 +9,80 @@
 #include "CharacterLines.h"
 #include "Log.h"
 
+void DungeonMaster::initXpArray() {
+  xpForLvl[0] = 0;
+  xpForLvl[1] = 0;
+  for(int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++) {
+    xpForLvl[lvl] = xpForLvl[lvl - 1] + (100 * lvl);
+  }
+}
+
+int DungeonMaster::getMonsterXpWorth(const ActorDef& d) const {
+  const double HP         = d.hp;
+  const double SPEED      = d.speed;
+  const double SHOCK      = d.monsterShockLevel;
+  const double UNIQUE_MOD = d.isUnique ? 2.0 : 1.0;
+  return HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6)) * UNIQUE_MOD;
+}
+
+void DungeonMaster::playerGainLvl() {
+  clvl++;
+
+  eng->log->addMessage(
+    "--- Welcome to level " + intToString(clvl) + "! ---", clrGreen);
+
+  eng->player->restoreHp(999, false);
+  eng->player->changeMaxHp(1, true);
+
+  const int BON_EVERY_N_LVL = 3;
+  if(clvl % BON_EVERY_N_LVL == 0) {
+    eng->player->changeMaxSpi(1, true);
+    eng->player->incrMth(2);
+    eng->log->addMessage("I feel more knowledgeable!");
+  }
+}
+
+void DungeonMaster::playerGainXp(const int XP_GAINED) {
+  for(int i = 0; i < XP_GAINED; i++) {
+    xp++;
+    if(xp >= xpForLvl[clvl + 1]) {
+      playerGainLvl();
+    }
+  }
+
+//  while(true) {
+//    if(clvl == PLAYER_MAX_CLVL) {
+//      xp = min(xp + xpGained, xpForLvl[PLAYER_MAX_CLVL]);
+//      return;
+//    }
+//
+//    const int XP_FOR_NXT_LVL = getXpToNextLvl();
+//
+//    if(xp + xpGained < XP_FOR_NXT_LVL) {
+//      xp += xpGained;
+//      return;
+//    } else {
+//      playerGainLvl();
+//      xp        += XP_FOR_NXT_LVL;
+//      xpGained  -= XP_FOR_NXT_LVL;
+//    }
+//  }
+}
+
+int DungeonMaster::getXpToNextLvl() const {
+  if(clvl == PLAYER_MAX_CLVL) {
+    return -1;
+  }
+  return xpForLvl[clvl + 1] - xp;
+}
+
+void DungeonMaster::playerLoseXpPercent(const int PERCENT) {
+  xp = (xp * (100 - PERCENT)) / 100;
+}
+
 void DungeonMaster::addSaveLines(vector<string>& lines) const {
+  lines.push_back(intToString(clvl));
+  lines.push_back(intToString(xp));
   lines.push_back(intToString(timeStarted.year_));
   lines.push_back(intToString(timeStarted.month_));
   lines.push_back(intToString(timeStarted.day_));
@@ -19,6 +92,10 @@ void DungeonMaster::addSaveLines(vector<string>& lines) const {
 }
 
 void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
+  clvl = stringToInt(lines.front());
+  lines.erase(lines.begin());
+  xp = stringToInt(lines.front());
+  lines.erase(lines.begin());
   timeStarted.year_ = stringToInt(lines.front());
   lines.erase(lines.begin());
   timeStarted.month_ = stringToInt(lines.front());
@@ -80,20 +157,19 @@ void DungeonMaster::winGame() {
 
 void DungeonMaster::monsterKilled(Actor* monster) {
   ActorDef* const d = monster->getDef();
+
   d->nrOfKills += 1;
 
   if(d->hp >= 3) {
-    if(eng->player->insanityObsessions[insanityObsession_sadism] == true) {
+    if(eng->player->insanityObsessions[insanityObsession_sadism]) {
       eng->player->shock_ = max(0.0, eng->player->shock_ - 3.0);
     }
   }
+
+  playerGainXp(getMonsterXpWorth(*d));
 }
 
 void DungeonMaster::setTimeStartedToNow() {
   timeStarted = eng->basicUtils->getCurrentTime();
 }
-
-
-
-
 

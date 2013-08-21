@@ -8,7 +8,7 @@ const int MAP_Y_CELLS       = 26;
 const int MAP_X_CELLS_HALF  = MAP_X_CELLS / 2;
 const int MAP_Y_CELLS_HALF  = MAP_Y_CELLS / 2;
 
-const int PLAYER_CLVL_MAX = 30;
+const int PLAYER_MAX_CLVL = 30;
 
 const int DELAY_PLAYER_WAITING        = 2;
 const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
@@ -19,7 +19,7 @@ const int FIRST_CAVERN_LEVEL  = 20;
 const int LAST_CAVERN_LEVEL   = 29;
 const int LAST_ROOM_AND_CORRIDOR_LEVEL = FIRST_CAVERN_LEVEL - 2;
 
-const int MIN_DLVL_NASTY_TRAPS = 7;
+const int MIN_DLVL_NASTY_TRAPS = 6;
 
 const int FOV_STANDARD_RADI_INT     = 8;
 const int FOV_STANDARD_WIDTH_INT    = 2 * FOV_STANDARD_RADI_INT + 1;

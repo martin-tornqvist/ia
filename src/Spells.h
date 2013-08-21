@@ -94,7 +94,7 @@ public:
   Spells_t getId()              const {return spell_identify;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 17;}
 };
 
 class SpellAzathothsBlast: public Spell {
@@ -108,7 +108,7 @@ public:
   Spells_t getId()              const {return spell_azathothsBlast;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 };
 
 class SpellMayhem: public Spell {
@@ -126,7 +126,7 @@ public:
   Spells_t getId()              const {return spell_mayhem;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 17;}
 };
 
 class SpellPestilence: public Spell {
@@ -144,7 +144,7 @@ public:
   Spells_t getId()              const {return spell_pestilence;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 10;}
 };
 
 class SpellDescent: public Spell {
@@ -162,7 +162,7 @@ public:
   Spells_t getId()              const {return spell_descent;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 21;}
 };
 
 class SpellDetectItems: public Spell {
@@ -180,7 +180,7 @@ public:
   Spells_t getId()              const {return spell_detectItems;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 10;}
 };
 
 class SpellDetectTraps: public Spell {
@@ -198,7 +198,7 @@ public:
   Spells_t getId()              const {return spell_detectTraps;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 10;}
 };
 
 class SpellClairvoyance: public Spell {
@@ -216,7 +216,7 @@ public:
   Spells_t getId()              const {return spell_clairvoyance;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 15;}
 };
 
 class SpellOpening: public Spell {
@@ -234,7 +234,7 @@ public:
   Spells_t getId()              const {return spell_opening;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 15;}
 };
 
 enum MthPowerAction_t {
@@ -262,7 +262,7 @@ public:
   Spells_t getId()              const {return spell_mthPower;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 10;}
 
   void getPossibleActions(
     vector<MthPowerAction_t>& possibleActions, Engine* const eng) const;
@@ -281,7 +281,7 @@ public:
   Spells_t getId()              const {return spell_bless;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 17;}
 };
 
 class SpellKnockBack: public Spell {
@@ -295,7 +295,7 @@ public:
   Spells_t getId()              const {return spell_knockBack;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 };
 
 class SpellTeleport: public Spell {
@@ -307,7 +307,7 @@ public:
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Teleport";}
   Spells_t getId()              const {return spell_teleport;}
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
 };
@@ -323,7 +323,7 @@ public:
   Spells_t getId()              const {return spell_enfeeble;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 
   StatusEffect* getStatusEffect(Engine* const eng) const;
 };
@@ -339,7 +339,7 @@ public:
   Spells_t getId()              const {return spell_disease;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 };
 
 class SpellSummonRandom: public Spell {
@@ -353,7 +353,7 @@ public:
   Spells_t getId()              const {return spell_summonRandom;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 };
 
 class SpellHealSelf: public Spell {
@@ -367,7 +367,7 @@ public:
   Spells_t getId()              const {return spell_healSelf;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
-  int getSpecificSpiCost()      const {return 4;}
+  int getSpecificSpiCost()      const {return 8;}
 };
 
 #endif

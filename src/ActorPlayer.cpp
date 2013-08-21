@@ -825,7 +825,7 @@ void Player::act() {
 
   if(activeMedicalBag == NULL) {
     const int REGEN_N_TURN =
-      eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer) ? 7 : 12;
+      eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer) ? 6 : 10;
 
     if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
       if(getHp() < getHpMax(true)) {

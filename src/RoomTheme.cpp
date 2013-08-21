@@ -35,10 +35,10 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
 }
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
-  if(room.roomTheme != roomTheme_plain) {
+//  if(room.roomTheme != roomTheme_plain) {
     placeThemeFeatures(room);
     makeThemeSpecificRoomModifications(room);
-  }
+//  }
 
   switch(room.roomTheme) {
     case roomTheme_plain: {} break;
@@ -64,8 +64,9 @@ bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
   return false;
 }
 
-bool RoomThemeMaker::isThemeAllowed(const Room* const room, const RoomTheme_t theme,
-                                    const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool RoomThemeMaker::isThemeAllowed(
+  const Room* const room, const RoomTheme_t theme,
+  const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   (void)blockers;
 
@@ -79,10 +80,12 @@ bool RoomThemeMaker::isThemeAllowed(const Room* const room, const RoomTheme_t th
       return true;
     } break;
     case roomTheme_human: {
-      return MAX_DIM >= 5 && MIN_DIM >= 4 && isThemeExistInMap(roomTheme_human) == false;
+      return MAX_DIM >= 5 && MIN_DIM >= 4 &&
+             isThemeExistInMap(roomTheme_human) == false;
     } break;
     case roomTheme_ritual: {
-      return MAX_DIM >= 4 && MIN_DIM >= 3 && isThemeExistInMap(roomTheme_ritual) == false;
+      return MAX_DIM >= 4 && MIN_DIM >= 3 &&
+             isThemeExistInMap(roomTheme_ritual) == false;
     } break;
     case roomTheme_spider: {
       return MAX_DIM >= 4 && MIN_DIM >= 3;
@@ -121,8 +124,12 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 
 //  if(room.roomTheme == roomTheme_dungeon) {}
 
-  if(room.roomTheme == roomTheme_flooded || room.roomTheme == roomTheme_muddy) {
-    const Feature_t featureId = room.roomTheme == roomTheme_flooded ? feature_shallowWater : feature_shallowMud;
+  if(
+    room.roomTheme == roomTheme_flooded ||
+    room.roomTheme == roomTheme_muddy) {
+    const Feature_t featureId =
+      room.roomTheme == roomTheme_flooded ? feature_shallowWater :
+      feature_shallowMud;
     for(int y = room.getY0(); y <= room.getY1(); y++) {
       for(int x = room.getX0(); x <= room.getX1(); x++) {
         if(blockers[x][y] == false) {
@@ -186,11 +193,15 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       }
       if(originCandidates.empty() == false) {
         if(origin.x == -1) {
-          origin = originCandidates.at(eng->dice.getInRange(0, originCandidates.size() - 1));
+          const int ELEMENT =
+            eng->dice.getInRange(0, originCandidates.size() - 1);
+          origin = originCandidates.at(ELEMENT);
         }
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
-            if((dx == 0 && dy == 0) || (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
+            if(
+              (dx == 0 && dy == 0) ||
+              (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
               const Pos pos = origin + Pos(dx, dy);
               if(blockers[pos.x][pos.y] == false) {
                 eng->gore->makeGore(pos);
@@ -210,7 +221,8 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
   featureDefsBelongingToTheme.resize(0);
 
   for(unsigned int i = 0; i < endOfFeatures; i++) {
-    const FeatureDef* const d = eng->featureData->getFeatureDef(static_cast<Feature_t>(i));
+    const FeatureDef* const d =
+      eng->featureData->getFeatureDef(static_cast<Feature_t>(i));
     if(d->themedFeatureSpawnRules.isBelongingToTheme(room.roomTheme)) {
       featureDefsBelongingToTheme.push_back(d);
     }
@@ -218,7 +230,8 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
 
   vector<Pos> nextToWalls;
   vector<Pos> awayFromWalls;
-  eng->mapPatterns->setPositionsInArea(room.getDims(), nextToWalls, awayFromWalls);
+  eng->mapPatterns->setPositionsInArea(
+    room.getDims(), nextToWalls, awayFromWalls);
 
   vector<int> featuresSpawnCount(featureDefsBelongingToTheme.size(), 0);
 
@@ -227,7 +240,8 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
     const FeatureDef* d = NULL;
     Pos pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
-      trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureDefsBelongingToTheme);
+      trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls,
+                           featureDefsBelongingToTheme);
 
     if(d == NULL) {
       tracer << "RoomThemeMaker: Could not find any more spots to place feature, returning" << endl;
@@ -238,9 +252,13 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
       // Check if more of this feature can be spawned, if not, delete it from feature candidates
-      if(featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >= d->themedFeatureSpawnRules.getMaxNrInRoom()) {
-        featuresSpawnCount.erase(featuresSpawnCount.begin() + FEATURE_CANDIDATE_ELEMENT);
-        featureDefsBelongingToTheme.erase(featureDefsBelongingToTheme.begin() + FEATURE_CANDIDATE_ELEMENT);
+      if(
+        featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >=
+        d->themedFeatureSpawnRules.getMaxNrInRoom()) {
+        featuresSpawnCount.erase(
+          featuresSpawnCount.begin() + FEATURE_CANDIDATE_ELEMENT);
+        featureDefsBelongingToTheme.erase(
+          featureDefsBelongingToTheme.begin() + FEATURE_CANDIDATE_ELEMENT);
 
         // Are there any more features left to place at all?
         if(featureDefsBelongingToTheme.empty()) {return;}
@@ -289,8 +307,10 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   }
 }
 
-int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, Pos& pos, vector<Pos>& nextToWalls,
-    vector<Pos>& awayFromWalls, vector<const FeatureDef*> featureDefsBelongingToTheme) {
+int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, Pos& pos,
+    vector<Pos>& nextToWalls,
+    vector<Pos>& awayFromWalls,
+    vector<const FeatureDef*> featureDefsBelongingToTheme) {
   tracer << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
 
   if(featureDefsBelongingToTheme.empty()) {
@@ -308,38 +328,50 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, Pos& pos, vecto
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
   for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; i++) {
-    const int FEATURE_DEF_ELEMENT = eng->dice.getInRange(0, featureDefsBelongingToTheme.size() - 1);
-    const FeatureDef* const dTemp = featureDefsBelongingToTheme.at(FEATURE_DEF_ELEMENT);
+    const int FEATURE_DEF_ELEMENT =
+      eng->dice.getInRange(0, featureDefsBelongingToTheme.size() - 1);
+    const FeatureDef* const dTemp =
+      featureDefsBelongingToTheme.at(FEATURE_DEF_ELEMENT);
 
-    if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_nextToWalls) {
+    if(
+      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      placementRule_nextToWalls) {
       if(IS_NEXT_TO_WALL_AVAIL) {
-        const int POS_ELEMENT = eng->dice.getInRange(0, nextToWalls.size() - 1);
+        const int POS_ELEMENT =
+          eng->dice.getInRange(0, nextToWalls.size() - 1);
         pos = nextToWalls.at(POS_ELEMENT);
         *def = dTemp;
         return FEATURE_DEF_ELEMENT;
       }
     }
 
-    if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_awayFromWalls) {
+    if(
+      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      placementRule_awayFromWalls) {
       if(IS_AWAY_FROM_WALLS_AVAIL) {
-        const int POS_ELEMENT = eng->dice.getInRange(0, awayFromWalls.size() - 1);
+        const int POS_ELEMENT =
+          eng->dice.getInRange(0, awayFromWalls.size() - 1);
         pos = awayFromWalls.at(POS_ELEMENT);
         *def = dTemp;
         return FEATURE_DEF_ELEMENT;
       }
     }
 
-    if(dTemp->themedFeatureSpawnRules.getPlacementRule() == placementRule_nextToWallsOrAwayFromWalls) {
+    if(
+      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      placementRule_nextToWallsOrAwayFromWalls) {
       if(eng->dice.coinToss()) {
         if(IS_NEXT_TO_WALL_AVAIL) {
-          const int POS_ELEMENT = eng->dice.getInRange(0, nextToWalls.size() - 1);
+          const int POS_ELEMENT =
+            eng->dice.getInRange(0, nextToWalls.size() - 1);
           pos = nextToWalls.at(POS_ELEMENT);
           *def = dTemp;
           return FEATURE_DEF_ELEMENT;
         }
       } else {
         if(IS_AWAY_FROM_WALLS_AVAIL) {
-          const int POS_ELEMENT = eng->dice.getInRange(0, awayFromWalls.size() - 1);
+          const int POS_ELEMENT =
+            eng->dice.getInRange(0, awayFromWalls.size() - 1);
           pos = awayFromWalls.at(POS_ELEMENT);
           *def = dTemp;
           return FEATURE_DEF_ELEMENT;
@@ -350,7 +382,8 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureDef** def, Pos& pos, vecto
   return -1;
 }
 
-void RoomThemeMaker::eraseAdjacentCellsFromVectors(const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
+void RoomThemeMaker::eraseAdjacentCellsFromVectors(
+  const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
   tracer << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
     if(eng->mapTests->isCellsNeighbours(pos, nextToWalls.at(i), true)) {
@@ -408,7 +441,8 @@ void RoomThemeMaker::assignRoomThemes() {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
       const int ELEMENT = eng->dice.getInRange(0, NR_ROOMS - 1);
       if(isAssigned.at(ELEMENT) == false) {
-        const RoomTheme_t theme = static_cast<RoomTheme_t>(eng->dice.getInRange(1, endOfRoomThemes - 1));
+        const RoomTheme_t theme =
+          (RoomTheme_t)(eng->dice.getInRange(1, endOfRoomThemes - 1));
         Room* const room = roomList.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blockers)) {

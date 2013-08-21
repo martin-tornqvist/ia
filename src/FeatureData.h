@@ -40,6 +40,7 @@ enum Feature_t {
   feature_cocoon,
   feature_chest,
   feature_cabinet,
+  feature_fountain,
 //  feature_barrel,
   feature_pillar,
   feature_pillarBroken,

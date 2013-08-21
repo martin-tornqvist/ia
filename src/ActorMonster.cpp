@@ -33,13 +33,6 @@ Monster::Monster() :
   waiting_(false), shockCausedCurrent(0.0) {}
 
 Monster::~Monster() {
-  tracer << "Monster destructor" << endl;
-
-  asdf;
-  if(deadState == actorDeadState_alive && def_->nrLeftAllowedToSpawn == 0) {
-    def_->nrLeftAllowedToSpawn = 1;
-  }
-
   for(unsigned int i = 0; i < spellsKnown.size(); i++) {
     delete spellsKnown.at(i);
   }

@@ -13,6 +13,7 @@
 #include "ItemData.h"
 #include "Spells.h"
 #include "ActorPlayer.h"
+#include "DungeonMaster.h"
 
 struct IsHigherSpawnMinLvl {
 public:
@@ -59,8 +60,6 @@ void DebugModeStatPrinter::run() {
 
   vector<int> monstersPerMinDLVL(actorDefsSorted.back()->spawnMinDLVL + 1, 0);
   for(unsigned int i = 0; i < actorDefsSorted.size(); i++) {
-//    tracer << actorDefsSorted.at(i)->name_a << endl;
-//    tracer << actorDefsSorted.at(i)->spawnMinDLVL << endl;
     monstersPerMinDLVL.at(actorDefsSorted.at(i)->spawnMinDLVL)++;
   }
   for(unsigned int i = 0; i < monstersPerMinDLVL.size(); i++) {
@@ -94,8 +93,14 @@ void DebugModeStatPrinter::run() {
 
     const string uniqueStr = d.isUnique ? " (U)" : "";
     printLine(indent1 + actor->getNameA() + uniqueStr);
+
+    const string xpStr =
+      "XP:" + intToString(eng->dungeonMaster->getMonsterXpWorth(d));
+    printLine(indent2 + xpStr);
+
     string hpStr = "HP:" + intToString(d.hp);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
+
     const int attackSkill = d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
     const string attackSkillStr = "Attack skill:" + intToString(attackSkill) + "%";
     printLine(indent2 + hpStr + attackSkillStr);
