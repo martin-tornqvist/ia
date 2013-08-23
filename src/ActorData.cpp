@@ -23,10 +23,8 @@ void ActorDef::reset() {
   spi = 12;
   speed = actorSpeed_normal;
   moveType = moveType_walk;
+  for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
-//  isResPhys = isResFire = isResCold = isResAcid = isResElectric = isResSpirit = false;
-//  isImmunePhys = isImmuneFire = isImmuneCold = isImmuneAcid = isImmuneElectric = isImmuneSpirit = false;
-//  isResLight = isImmuneLight = true;
   abilityVals.reset();
   aiBehavior.reset();
   nrTurnsAwarePlayer = 0;
@@ -143,8 +141,6 @@ void ActorData::defineAllActors() {
   d.hp = 10;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_group;
@@ -185,8 +181,6 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 9;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_accuracyRanged, 0);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_group;
@@ -228,8 +222,6 @@ void ActorData::defineAllActors() {
   d.dmgRanged = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
@@ -269,8 +261,6 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -310,8 +300,6 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.isAutoSpawnAllowed = false;
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
@@ -353,8 +341,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_accuracyRanged, 34);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
@@ -393,8 +379,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
@@ -433,8 +417,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_few;
@@ -472,8 +454,6 @@ void ActorData::defineAllActors() {
   d.spi = 40;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.nrLeftAllowedToSpawn = 1;
   d.isUnique = true;
   d.canSeeInDarkness = true;
@@ -512,8 +492,6 @@ void ActorData::defineAllActors() {
   d.hp = 15;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
@@ -684,8 +662,6 @@ void ActorData::defineAllActors() {
   d.hp = 6;
   d.spi = 20;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_alone;
@@ -722,8 +698,6 @@ void ActorData::defineAllActors() {
   d.hp = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -757,8 +731,6 @@ void ActorData::defineAllActors() {
   d.hp = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -792,8 +764,6 @@ void ActorData::defineAllActors() {
   d.hp = 3;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -827,8 +797,6 @@ void ActorData::defineAllActors() {
   d.hp = 8;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_stealth, 90);
   d.spawnMinDLVL = 6;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
@@ -865,8 +833,6 @@ void ActorData::defineAllActors() {
 //  d.dmgRanged = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
 //  d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 10;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
@@ -902,8 +868,6 @@ void ActorData::defineAllActors() {
   d.dmgRanged = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_dodgeAttack, 35);
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
@@ -941,8 +905,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -981,8 +943,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1022,8 +982,6 @@ void ActorData::defineAllActors() {
   d.spi = 20;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 12;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -1062,8 +1020,6 @@ void ActorData::defineAllActors() {
   d.spi = 1;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1101,8 +1057,6 @@ void ActorData::defineAllActors() {
   d.spi = 4;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1141,8 +1095,6 @@ void ActorData::defineAllActors() {
   d.spi = 2;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
@@ -1179,8 +1131,6 @@ void ActorData::defineAllActors() {
   d.spi = 6;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_dodgeAttack, 75);
   d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
@@ -1218,8 +1168,6 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
@@ -1256,8 +1204,6 @@ void ActorData::defineAllActors() {
   d.spi = 20;
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.abilityVals.setVal(ability_stealth, 20);
   d.spawnMinDLVL = 8;
@@ -1293,8 +1239,6 @@ void ActorData::defineAllActors() {
   d.spi = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL;
   d.canSeeInDarkness = true;
@@ -1332,8 +1276,6 @@ void ActorData::defineAllActors() {
   d.dmgRanged = 5;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -1371,8 +1313,6 @@ void ActorData::defineAllActors() {
   d.spi = 20;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -1410,8 +1350,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_stealth, 90);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
@@ -1454,8 +1392,6 @@ void ActorData::defineAllActors() {
   d.spi = 30;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 7;
   d.groupSize = monsterGroupSize_group;
   d.actorSize = actorSize_humanoid;
@@ -1495,8 +1431,6 @@ void ActorData::defineAllActors() {
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = FIRST_CAVERN_LEVEL - 1;
   d.isAutoSpawnAllowed = false;
   d.groupSize = monsterGroupSize_alone;
@@ -1537,8 +1471,6 @@ void ActorData::defineAllActors() {
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 11;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1577,8 +1509,6 @@ void ActorData::defineAllActors() {
   d.dmgRanged = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_horde;
   d.actorSize = actorSize_humanoid;
@@ -1614,8 +1544,6 @@ void ActorData::defineAllActors() {
   d.spi = 1;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 14);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1651,8 +1579,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 8;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = monsterGroupSize_few;
@@ -1691,8 +1617,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 13;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;
@@ -1730,8 +1654,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1776,8 +1698,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.abilityVals.setVal(ability_stealth, 90);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
@@ -1823,8 +1743,6 @@ void ActorData::defineAllActors() {
   d.spi = 12;
   d.dmgMelee = 15;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1870,8 +1788,6 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = 9;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1916,8 +1832,6 @@ void ActorData::defineAllActors() {
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 100);
-  d.abilityVals.setVal(ability_resistStatusMind, 100);
   d.spawnMinDLVL = 14;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
@@ -1959,8 +1873,6 @@ void ActorData::defineAllActors() {
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_resistStatusBody, 0);
-  d.abilityVals.setVal(ability_resistStatusMind, 0);
   d.spawnMinDLVL = LAST_CAVERN_LEVEL - 1;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;

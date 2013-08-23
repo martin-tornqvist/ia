@@ -301,6 +301,8 @@
 		<Unit filename="../src/Popup.h" />
 		<Unit filename="../src/Postmortem.cpp" />
 		<Unit filename="../src/Postmortem.h" />
+		<Unit filename="../src/Properties.cpp" />
+		<Unit filename="../src/Properties.h" />
 		<Unit filename="../src/Query.cpp" />
 		<Unit filename="../src/Query.h" />
 		<Unit filename="../src/Reload.cpp" />
@@ -318,8 +320,6 @@
 		<Unit filename="../src/SpawnCounter.h" />
 		<Unit filename="../src/Spells.cpp" />
 		<Unit filename="../src/Spells.h" />
-		<Unit filename="../src/StatusEffects.cpp" />
-		<Unit filename="../src/StatusEffects.h" />
 		<Unit filename="../src/TextFormatting.cpp" />
 		<Unit filename="../src/TextFormatting.h" />
 		<Unit filename="../src/Thrower.cpp" />

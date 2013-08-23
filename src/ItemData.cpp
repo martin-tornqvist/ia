@@ -1167,13 +1167,13 @@ void ItemData::makeList() {
 //  resetDef(d, itemDef_potion);
 //  itemDefs[d->id] = d;
 
-  d = new ItemDef(item_potionOfFortitude);
-  resetDef(d, itemDef_potion);
-  itemDefs[d->id] = d;
+//  d = new ItemDef(item_potionOfFortitude);
+//  resetDef(d, itemDef_potion);
+//  itemDefs[d->id] = d;
 
-  d = new ItemDef(item_potionOfToughness);
-  resetDef(d, itemDef_potion);
-  itemDefs[d->id] = d;
+//  d = new ItemDef(item_potionOfToughness);
+//  resetDef(d, itemDef_potion);
+//  itemDefs[d->id] = d;
 
   d = new ItemDef(item_potionOfParalyzation);
   resetDef(d, itemDef_potion);

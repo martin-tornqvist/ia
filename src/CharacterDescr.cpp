@@ -71,20 +71,6 @@ void CharacterDescr::makeLines() {
   lines.push_back(StringAndClr(" ", clrText));
 
 
-  lines.push_back(StringAndClr("Resistance to status effects", clrHeader));
-  const int STATUS_RES_PHYSICAL =
-    min(100, abilities.getVal(ability_resistStatusBody, true, *(eng->player)));
-  const int STATUS_RES_MENTAL =
-    min(100, abilities.getVal(ability_resistStatusMind, true, *(eng->player)));
-  lines.push_back(StringAndClr(
-                    offset + "Physical        : " +
-                    intToString(STATUS_RES_PHYSICAL) + "%", clrText));
-  lines.push_back(StringAndClr(
-                    offset + "Mental          : " +
-                    intToString(STATUS_RES_MENTAL) + "%", clrText));
-  lines.push_back(StringAndClr(" ", clrText));
-
-
   const int SHOCK_RESISTANCE = eng->player->getShockResistance();
   lines.push_back(StringAndClr(
                     "Shock resistance : " +

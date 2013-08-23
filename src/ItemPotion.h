@@ -177,31 +177,31 @@ private:
 //  }
 //};
 
-class PotionOfFortitude: public Potion {
-public:
-  PotionOfFortitude(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
-  ~PotionOfFortitude() {}
-  void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-  void specificCollide(const Pos& pos, Actor* const actor,
-                       Engine* const engine);
-  const string getRealTypeName() {
-    return "Fortitude";
-  }
-};
+//class PotionOfFortitude: public Potion {
+//public:
+//  PotionOfFortitude(ItemDef* const itemDefinition) :
+//    Potion(itemDefinition) {}
+//  ~PotionOfFortitude() {}
+//  void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//  void specificCollide(const Pos& pos, Actor* const actor,
+//                       Engine* const engine);
+//  const string getRealTypeName() {
+//    return "Fortitude";
+//  }
+//};
 
-class PotionOfToughness: public Potion {
-public:
-  PotionOfToughness(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
-  ~PotionOfToughness() {}
-  void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-  void specificCollide(const Pos& pos, Actor* const actor,
-                       Engine* const engine);
-  const string getRealTypeName() {return "Toughness";}
-};
+//class PotionOfToughness: public Potion {
+//public:
+//  PotionOfToughness(ItemDef* const itemDefinition) :
+//    Potion(itemDefinition) {}
+//  ~PotionOfToughness() {}
+//  void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//  void specificCollide(const Pos& pos, Actor* const actor,
+//                       Engine* const engine);
+//  const string getRealTypeName() {return "Toughness";}
+//};
 
 class PotionOfPoison: public Potion {
 public:

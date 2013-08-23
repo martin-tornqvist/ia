@@ -17,8 +17,6 @@ enum Abilities_t {
   ability_accuracyMelee,
   ability_dodgeTrap,
   ability_dodgeAttack,
-  ability_resistStatusBody,
-  ability_resistStatusMind,
   ability_stealth,
   endOfAbilities
 };
@@ -26,9 +24,7 @@ enum Abilities_t {
 //Each actor has an instance of this class
 class AbilityValues {
 public:
-  AbilityValues() : eng(NULL) {
-    reset();
-  }
+  AbilityValues() : eng(NULL) {reset();}
 
   AbilityValues& operator=(const AbilityValues& other) {
     for(unsigned int i = 0; i < endOfAbilities; i++) {

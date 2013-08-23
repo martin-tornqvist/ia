@@ -308,8 +308,6 @@ SpellCastRetData SpellDetectItems::specificCast(
 
   vector<Pos> itemsRevealedPositions;
 
-  int nrItemsRevealed = 0;
-
   for(int y = Y0; y < Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       Item* item = eng->map->items[x][y];
@@ -558,9 +556,9 @@ void SpellMthPower::getPossibleActions(
     }
   }
 
-  if(eng->player->getStatusHandler()->hasAnyBadEffect()) {
-    possibleActions.push_back(mthPowerAction_purgeEffects);
-  }
+//  if(eng->player->getStatusHandler()->hasAnyBadEffect()) {
+//    possibleActions.push_back(mthPowerAction_purgeEffects);
+//  }
 }
 
 void SpellMthPower::doAction(const MthPowerAction_t action,
@@ -652,18 +650,16 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
       weapon->meleeDmgPlus++;
     } break;
 
-    case mthPowerAction_purgeEffects: {
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(eng->player->pos,
-                                            visionBlockers, 9999);
-
-      StatusHandler* const statusHandler =
-        eng->player->getStatusHandler();
-      statusHandler->endEffectsOfAbility(
-        ability_resistStatusBody, visionBlockers);
-      statusHandler->endEffectsOfAbility(
-        ability_resistStatusMind, visionBlockers);
-    } break;
+//    case mthPowerAction_purgeEffects: {
+//      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+//      eng->mapTests->makeVisionBlockerArray(eng->player->pos,
+//                                            visionBlockers, 9999);
+//
+//      StatusHandler* const statusHandler =
+//        eng->player->getStatusHandler();
+//      statusHandler->endEffectsOfAbility(
+//        ability_resistStatusMind, visionBlockers);
+//    } break;
   }
 }
 

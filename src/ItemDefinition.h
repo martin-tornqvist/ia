@@ -149,8 +149,8 @@ enum ItemId_t {
 //  item_potionOfCorruption,
   item_potionOfTheCobra,
 //  item_potionOfStealth,
-  item_potionOfFortitude,
-  item_potionOfToughness,
+//  item_potionOfFortitude, //TODO Reimplement in some way?
+//  item_potionOfToughness, //TODO Reimplement in some way?
   item_potionOfParalyzation,
   item_potionOfConfusion,
 //  item_potionOfSorcery,

@@ -168,77 +168,66 @@ void PotionOfTheCobra::specificCollide(const Pos& pos, Actor* const actor, Engin
   }
 }
 
-//void PotionOfStealth::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getStatusHandler()->tryAddEffect(new StatusPerfectStealth(100 + engine->dice(8, 8)));
-//  for(unsigned int i = 0; i < engine->gameTime->getLoopSize(); i++) {
-//    Actor* otherActor = engine->gameTime->getActorAt(i);
-//    if(otherActor != engine->player) {
-//      dynamic_cast<Monster*>(otherActor)->playerAwarenessCounter = 0;
+//void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
+//  actor->getStatusHandler()->tryAddEffect(new StatusPerfectFortitude(engine));
+//
+//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+//  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
+//
+//  bool isPhobiasCured = false;
+//  for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
+//    if(engine->player->insanityPhobias[i]) {
+//      engine->player->insanityPhobias[i] = false;
+//      isPhobiasCured = true;
 //    }
 //  }
+//  if(isPhobiasCured) {
+//    engine->log->addMessage("All my phobias are cured!");
+//  }
+//
+//  bool isObsessionsCured = false;
+//  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+//    if(engine->player->insanityObsessions[i]) {
+//      engine->player->insanityObsessions[i] = false;
+//      isObsessionsCured = true;
+//    }
+//  }
+//  if(isObsessionsCured) {
+//    engine->log->addMessage("All my obsessions are cured!");
+//  }
+//
+//  engine->player->restoreShock(999, false);
+//  engine->log->addMessage("I feel more at ease.");
+//
 //  identify(false, engine);
 //}
+//
+//void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
+//  (void)pos;
+//  if(actor != NULL) {
+//    specificQuaff(actor, engine);
+//  }
+//}
 
-void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusHandler()->tryAddEffect(new StatusPerfectFortitude(engine));
-
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
-
-  bool isPhobiasCured = false;
-  for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-    if(engine->player->insanityPhobias[i]) {
-      engine->player->insanityPhobias[i] = false;
-      isPhobiasCured = true;
-    }
-  }
-  if(isPhobiasCured) {
-    engine->log->addMessage("All my phobias are cured!");
-  }
-
-  bool isObsessionsCured = false;
-  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-    if(engine->player->insanityObsessions[i]) {
-      engine->player->insanityObsessions[i] = false;
-      isObsessionsCured = true;
-    }
-  }
-  if(isObsessionsCured) {
-    engine->log->addMessage("All my obsessions are cured!");
-  }
-
-  engine->player->restoreShock(999, false);
-  engine->log->addMessage("I feel more at ease.");
-
-  identify(false, engine);
-}
-
-void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
-  (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor, engine);
-  }
-}
-
-void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
-  actor->getStatusHandler()->tryAddEffect(new StatusPerfectToughness(engine));
-
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
-
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
-  }
-}
-
-void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
-  (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor, engine);
-  }
-}
+//void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
+//  actor->getStatusHandler()->tryAddEffect(new StatusPerfectToughness(engine));
+//
+//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
+//  actor->getStatusHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
+//
+//  if(engine->player->checkIfSeeActor(*actor, NULL)) {
+//    identify(false, engine);
+//  }
+//}
+//
+//void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
+//  (void)pos;
+//  if(actor != NULL) {
+//    specificQuaff(actor, engine);
+//  }
+//}
 
 void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
   actor->getStatusHandler()->tryAddEffect(new StatusPoisoned(engine));

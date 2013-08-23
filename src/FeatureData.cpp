@@ -11,7 +11,7 @@ void FeatureData::resetDef(FeatureDef& d) {
   d.tile = tile_empty;
   d.color = clrYellow;
   d.colorBg = clrBlack;
-  for(unsigned int i = 0; i < endOfMoveType; i++) {
+  for(unsigned int i = 0; i < endOfMoveTypes; i++) {
     d.isMovePassable[i] = true;
   }
   d.isShootPassable = true;

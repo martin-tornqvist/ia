@@ -243,8 +243,8 @@ enum MthPowerAction_t {
   mthPowerAction_findStairs,
 //  mthPowerAction_sorcery,
   mthPowerAction_mendArmor,
-  mthPowerAction_improveWeapon,
-  mthPowerAction_purgeEffects
+  mthPowerAction_improveWeapon
+//  mthPowerAction_purgeEffects //TODO Reimplement
 };
 
 class SpellMthPower: public Spell {

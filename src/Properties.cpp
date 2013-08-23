@@ -139,11 +139,10 @@ Pos StatusNailed::changeMovePos(const Pos& actorPos, const Pos& movePos,
     owningActor->hit(engine->dice(1, 3), dmgType_physical);
 
     if(owningActor->deadState == actorDeadState_alive) {
-      const AbilityValues& ownerAbilities = owningActor->getDef()->abilityVals;
-      const int ACTOR_TOUGHNESS =
-        ownerAbilities.getVal(ability_resistStatusBody, true, *(owningActor));
-      if(engine->abilityRoll->roll(
-            ACTOR_TOUGHNESS + getSaveAbilityModifier()) >= successSmall) {
+
+      //TODO reimplement something affecting chance of success?
+
+      if(engine->dice.fraction(1, 4)) {
         nrOfSpikes--;
         if(nrOfSpikes > 0) {
           if(owningActor == player) {
@@ -361,8 +360,8 @@ StatusEffect* StatusHandler::makeEffectFromId(
     case statusPerfectReflexes:   return new StatusPerfectReflexes(TURNS_LEFT);       break;
     case statusPerfectAim:        return new StatusPerfectAim(TURNS_LEFT);            break;
 //    case statusPerfectStealth:    return new StatusPerfectStealth(TURNS_LEFT);        break;
-    case statusPerfectFortitude:  return new StatusPerfectFortitude(TURNS_LEFT);      break;
-    case statusPerfectToughness:  return new StatusPerfectToughness(TURNS_LEFT);      break;
+//    case statusPerfectFortitude:  return new StatusPerfectFortitude(TURNS_LEFT);      break;
+//    case statusPerfectToughness:  return new StatusPerfectToughness(TURNS_LEFT);      break;
     case statusStill:             return new StatusStill(TURNS_LEFT);                 break;
     case statusDisabledAttack:    return new StatusDisabledAttack(TURNS_LEFT);        break;
     case statusDisabledMelee:     return new StatusDisabledAttackMelee(TURNS_LEFT);   break;
@@ -389,9 +388,9 @@ bool StatusHandler::allowSee() {
 }
 
 void StatusHandler::tryAddEffect(StatusEffect* const effect,
-                                        const bool FORCE_EFFECT,
-                                        const bool NO_MESSAGES,
-                                        const bool DISABLE_REDRAW) {
+                                 const bool FORCE_EFFECT,
+                                 const bool NO_MESSAGES,
+                                 const bool DISABLE_REDRAW) {
   const bool OWNER_IS_PLAYER = owningActor == eng->player;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];

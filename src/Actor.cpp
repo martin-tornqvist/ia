@@ -45,12 +45,17 @@ bool Actor::checkIfSeeActor(
     }
 
     if(this == eng->player) {
-      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isStealth;
-      return eng->map->playerVision[other.pos.x][other.pos.y] && IS_MONSTER_SNEAKING == false;
+      const bool IS_MONSTER_SNEAKING =
+        dynamic_cast<const Monster*>(&other)->isStealth;
+      return eng->map->playerVision[other.pos.x][other.pos.y] &&
+             IS_MONSTER_SNEAKING == false;
     }
 
-    if(dynamic_cast<const Monster*>(this)->leader == eng->player && &other != eng->player) {
-      const bool IS_MONSTER_SNEAKING = dynamic_cast<const Monster*>(&other)->isStealth;
+    if(
+      dynamic_cast<const Monster*>(this)->leader ==
+      eng->player && &other != eng->player) {
+      const bool IS_MONSTER_SNEAKING =
+        dynamic_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
     }
 
@@ -65,7 +70,8 @@ bool Actor::checkIfSeeActor(
 
     if(visionBlockingCells != NULL) {
       const bool IS_BLOCKED_BY_DARKNESS = def_->canSeeInDarkness == false;
-      return eng->fov->checkOneCell(visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
+      return eng->fov->checkOneCell(
+               visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
   }
   return false;
@@ -95,16 +101,17 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
         }
       } else {
         const bool IS_OTHER_PLAYER = actor == eng->player;
-        const bool IS_SELF_HOSTILE_TO_PLAYER =
+        const bool IS_HOSTILE_TO_PLAYER =
           dynamic_cast<Monster*>(this)->leader != eng->player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
-          IS_OTHER_PLAYER ? false : dynamic_cast<Monster*>(actor)->leader != eng->player;
+          IS_OTHER_PLAYER ? false :
+          dynamic_cast<Monster*>(actor)->leader != eng->player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if the other IS the player,
-        //so there is no need to check if IS_SELF_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
+        //so there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
-          (IS_SELF_HOSTILE_TO_PLAYER == true && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
-          (IS_SELF_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER == true)) {
+          (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
+          (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
           if(checkIfSeeActor(*actor, visionBlockers)) {
             vectorToFill.push_back(actor);
           }
@@ -378,7 +385,8 @@ void Actor::hitSpi(const int DMG) {
   spi_ = max(0, spi_ - DMG);
   if(spi_ <= 0) {
     if(this == eng->player) {
-      eng->log->addMessage("All my spirit is depleted, I am devoid of life!");
+      eng->log->addMessage(
+        "All my spirit is depleted, I am devoid of life!");
     } else {
       if(eng->player->checkIfSeeActor(*this, NULL)) {
         eng->log->addMessage(getNameThe() + " has no spirit left!");
@@ -432,7 +440,8 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   }
 
-  //If mangled because of damage, or if a monster died on a visible trap, gib the corpse.
+  //If mangled because of damage, or if a monster died on a visible trap,
+  //gib the corpse.
   deadState =
     (IS_MANGLED || (diedOnVisibleTrap && this != eng->player)) ?
     actorDeadState_mangled : actorDeadState_corpse;

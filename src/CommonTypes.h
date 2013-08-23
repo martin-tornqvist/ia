@@ -12,12 +12,20 @@ using namespace std;
 enum Font_t {font_interface, font_big};
 
 enum MoveType_t {
-  moveType_walk, moveType_fly, moveType_ethereal, moveType_ooze, endOfMoveType
+  moveType_walk, moveType_fly, moveType_ethereal, moveType_ooze,
+  endOfMoveTypes
+};
+
+enum Res_t {
+  res_phys, res_fire, res_cold, res_acid, res_electric, res_spirit,
+  res_light, res_sleep, res_confusion, res_disease, res_fear,
+  endOfRes
 };
 
 enum DmgTypes_t {
-  dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid, dmgType_electric,
-  dmgType_spirit, dmgType_light, dmgType_pure, endOfDmgTypes
+  dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid,
+  dmgType_electric, dmgType_spirit, dmgType_light, dmgType_pure,
+  endOfDmgTypes
 };
 
 enum ShockValues_t {

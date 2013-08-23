@@ -7,7 +7,6 @@
 #include "CommonData.h"
 
 #include "ActorData.h"
-#include "StatusEffects.h"
 #include "Sound.h"
 #include "Config.h"
 #include "MapTests.h"
@@ -17,6 +16,8 @@ using namespace std;
 
 class Engine;
 
+class StatusHandler;
+class ResHandler;
 class TimedEntity;
 class Inventory;
 
@@ -25,9 +26,7 @@ public:
   Actor() {}
   virtual ~Actor();
 
-  inline StatusHandler* getStatusHandler() {
-    return statusHandler_;
-  }
+  inline StatusHandler* getStatusHandler() {return statusHandler_;}
 
   inline ActorDef* getDef() {return def_;}
 
@@ -59,7 +58,8 @@ public:
   virtual void updateColor();
 
   //Function taking into account FOV, invisibility, status, etc
-  //This is the final word on wether an actor can visually percieve another actor.
+  //This is the final word on wether an actor can visually percieve
+  //another actor.
   bool checkIfSeeActor(
     const Actor& other,
     const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
@@ -120,9 +120,10 @@ protected:
 
   Pos lairCell_;
 
-  StatusHandler* statusHandler_;
-  ActorDef* def_;
-  Inventory* inventory_;
+  ResHandler*     resHandler_;
+  StatusHandler*  statusHandler_;
+  ActorDef*       def_;
+  Inventory*      inventory_;
 };
 
 #endif

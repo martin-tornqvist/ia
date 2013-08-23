@@ -232,35 +232,18 @@ int Player::getShockResistance() const {
 void Player::incrShock(const int VAL) {
   const double SHOCK_RES_DB = double(getShockResistance());
   const double VAL_DB = double(VAL);
-  const double VAL_AFTER_SHOCK_RES = (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
+  const double VAL_AFTER_SHOCK_RES =
+    (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
   shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
 }
 
 void Player::incrShock(const ShockValues_t shockValue) {
-  const int PLAYER_FORTITUDE = def_->abilityVals.getVal(
-                                 ability_resistStatusMind, true, *this);
-
-  if(PLAYER_FORTITUDE < 99) {
-    switch(shockValue) {
-      case shockValue_none: {
-        incrShock(0);
-      }
-      break;
-      case shockValue_mild: {
-        incrShock(2);
-      }
-      break;
-      case shockValue_some: {
-        incrShock(4);
-      }
-      break;
-      case shockValue_heavy: {
-        incrShock(8);
-      }
-      break;
-      default:
-      {} break;
-    }
+  switch(shockValue) {
+    case shockValue_none:   {incrShock(0);} break;
+    case shockValue_mild:   {incrShock(2);} break;
+    case shockValue_some:   {incrShock(4);} break;
+    case shockValue_heavy:  {incrShock(8);} break;
+    default: {} break;
   }
 }
 

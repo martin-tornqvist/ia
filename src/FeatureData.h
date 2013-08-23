@@ -139,7 +139,7 @@ struct FeatureDef {
   SDL_Color color;
   SDL_Color colorBg;
   Tile_t tile;
-  bool isMovePassable[endOfMoveType];
+  bool isMovePassable[endOfMoveTypes];
   bool isShootPassable;
   bool isVisionPassable;
   bool isSmokePassable;

@@ -36,8 +36,8 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
 //  if(room.roomTheme != roomTheme_plain) {
-    placeThemeFeatures(room);
-    makeThemeSpecificRoomModifications(room);
+  placeThemeFeatures(room);
+  makeThemeSpecificRoomModifications(room);
 //  }
 
   switch(room.roomTheme) {

@@ -692,9 +692,9 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
 
     tracer << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
 
-    const int ABILITY_VALUE = max(30, actor->getDef()->abilityVals.getVal(ability_resistStatusBody, true, *actor));
+    //TODO reimplement something affecting chance of success?
 
-    if(eng->abilityRoll->roll(ABILITY_VALUE) >= successSmall) {
+    if(eng->dice.fraction(1, 4)) {
       tracer << "TrapSpiderWeb: Actor succeeded to break free" << endl;
 
       isHoldingActor = false;

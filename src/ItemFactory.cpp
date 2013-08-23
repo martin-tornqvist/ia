@@ -122,8 +122,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfBlindness:        item = new PotionOfBlindness(d);        break;
 //    case item_potionOfCorruption:       item = new PotionOfCorruption(d);       break;
     case item_potionOfTheCobra:         item = new PotionOfTheCobra(d);         break;
-    case item_potionOfFortitude:        item = new PotionOfFortitude(d);        break;
-    case item_potionOfToughness:        item = new PotionOfToughness(d);        break;
+//    case item_potionOfFortitude:        item = new PotionOfFortitude(d);        break;
+//    case item_potionOfToughness:        item = new PotionOfToughness(d);        break;
     case item_potionOfParalyzation:     item = new PotionOfParalyzation(d);     break;
     case item_potionOfConfusion:        item = new PotionOfConfusion(d);        break;
 //    case item_potionOfSorcery:          item = new PotionOfSorcery(d);          break;

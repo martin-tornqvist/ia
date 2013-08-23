@@ -8,6 +8,7 @@
 #include "AbilityValues.h"
 #include "RoomTheme.h"
 #include "CommonData.h"
+#include "Properties.h"
 
 enum ActorId_t {
   actor_empty,
@@ -102,15 +103,13 @@ public:
   Tile_t tile;
   char glyph;
   SDL_Color color;
-//  int monsterLvl;
-  AbilityValues abilityVals;
   MonsterGroupSize_t groupSize;
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed_t speed;
   MoveType_t moveType;
+  AbilityValues abilityVals;
+  bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-//  bool isResPhys, isResFire, isResCold, isResAcid, isResElectric, isResSpirit, isResLight;
-//  bool isImmunePhys, isImmuneFire, isImmuneCold, isImmuneAcid, isImmuneElectric, isImmuneSpirit, isImmuneLight;
   AiBehavior aiBehavior;
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;

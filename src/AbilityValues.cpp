@@ -46,18 +46,6 @@ int AbilityValues::getVal(const Abilities_t ability,
           val += 25;
       } break;
 
-      case ability_resistStatusBody: {
-        val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_tough))
-          val += 20;
-      } break;
-
-      case ability_resistStatusMind: {
-        val += 25;
-        if(eng->playerBonHandler->isBonPicked(playerBon_unyielding))
-          val += 20;
-      } break;
-
       case ability_stealth: {
         val += 5;
         if(eng->playerBonHandler->isBonPicked(playerBon_stealthy))
@@ -113,7 +101,6 @@ AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
   91 -  98: Big       Fail
   99 - 100: Critical  Fail */
 }
-
 
 void AbilityValues::reset() {
   for(unsigned int i = 0; i < endOfAbilities; i++) {
