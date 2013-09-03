@@ -33,7 +33,12 @@ struct InventorySlot {
     allowRing(false),
     item(NULL) {
   }
-  bool allowWieldedWeapon, allowMissile, allowArmor, allowCloak, allowAmulet, allowRing;
+  bool allowWieldedWeapon;
+  bool allowMissile;
+  bool allowArmor;
+  bool allowCloak;
+  bool allowAmulet;
+  bool allowRing;
   string interfaceName;
   SlotTypes_t id;
   Item* item;
@@ -56,11 +61,14 @@ public:
       delete intrinsics_.at(i);
   }
 
-  void dropAllNonIntrinsic(const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
+  void dropAllNonIntrinsic(
+    const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
 
   bool hasItemInSlot(SlotTypes_t slotName) const;
 
-  void putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true, bool putInGeneral_ifSlotNotFound = true);
+  void putItemInSlot(
+    SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true,
+    bool putInGeneral_ifSlotNotFound = true);
 
   void putItemInGeneral(Item* item);
 
@@ -70,12 +78,16 @@ public:
 
   bool moveItemToGeneral(InventorySlot* inventorySlot);
 
-  void moveItemFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT);
+  void moveItemFromGeneralToIntrinsics(
+    const unsigned int GENERAL_INV_ELEMENT);
 
-  void moveItemToSlot(InventorySlot* inventoryslot, const unsigned int GENERAL_INV_ELEMENT);
+  void moveItemToSlot(
+    InventorySlot* inventoryslot,
+    const unsigned int GENERAL_INV_ELEMENT);
 
-  void equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT,
-                                          const SlotTypes_t slotToEquip, Engine* const engine);
+  void equipGeneralItemAndPossiblyEndTurn(
+    const unsigned int GENERAL_INV_ELEMENT,
+    const SlotTypes_t slotToEquip, Engine* const engine);
 
 //  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine);
 
@@ -97,7 +109,8 @@ public:
   void decreaseItemTypeInGeneral(const ItemId_t itemId);
 
   void deleteItemInGeneralWithElement(const unsigned ELEMENT);
-  void removetemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
+  void removetemInGeneralWithPointer(
+    Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {
     return intrinsics_.size();
@@ -131,8 +144,11 @@ public:
 
   int getTotalItemWeight() const;
 
+  void getAllItems(vector<Item*>& itemList) const;
+
   void addSaveLines(vector<string>& lines) const;
-  void setParametersFromSaveLines(vector<string>& lines, Engine* const engine);
+  void setParametersFromSaveLines(
+    vector<string>& lines, Engine* const engine);
 
 private:
   vector<InventorySlot> slots_;

@@ -5,7 +5,7 @@
 void AutoDescribeActor::addAutoDescriptionLines(
   Actor* const actor, string& line) const {
 
-  const ActorDef* const def = actor->getDef();
+  const ActorData* const def = actor->getData();
 
   if(def->isUnique) {
     if(def->spawnMinDLVL < LAST_CAVERN_LEVEL) {
@@ -20,7 +20,7 @@ void AutoDescribeActor::addAutoDescriptionLines(
   }
 }
 
-string AutoDescribeActor::getNormalGroupSizeStr(const ActorDef& def) const {
+string AutoDescribeActor::getNormalGroupSizeStr(const ActorData& def) const {
   const MonsterGroupSize_t s = def.groupSize;
 
   return
@@ -31,7 +31,7 @@ string AutoDescribeActor::getNormalGroupSizeStr(const ActorDef& def) const {
     "in swarms";
 }
 
-string AutoDescribeActor::getSpeedStr(const ActorDef& def) const {
+string AutoDescribeActor::getSpeedStr(const ActorData& def) const {
   switch(def.speed) {
     case actorSpeed_sluggish:   {return "at sluggish speed";} break;
     case actorSpeed_slow:       {return "slowly";}            break;
@@ -42,11 +42,11 @@ string AutoDescribeActor::getSpeedStr(const ActorDef& def) const {
   return "";
 }
 
-string AutoDescribeActor::getDwellingLevelStr(const ActorDef& def) const {
+string AutoDescribeActor::getDwellingLevelStr(const ActorData& def) const {
   return intToString(max(1, def.spawnMinDLVL));
 }
 
-string AutoDescribeActor::getNrOfKillsStr(const ActorDef& def) const {
+string AutoDescribeActor::getNrOfKillsStr(const ActorData& def) const {
   const int KILLS = def.nrOfKills;
   return KILLS == 0 ?
          "I do not recall having dispatched any of these before" :

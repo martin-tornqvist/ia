@@ -10,82 +10,92 @@
 #include "Map.h"
 
 //---------------------------------------------------- BASE CLASS
-bool Device::activateDefault(Actor* const actor, Engine* const engine) {
+Device::Device(ItemData* const itemData, Engine* engine) :
+  Item(itemData, engine), isActivated_(false), nrTurnsToNextGoodEffect_(-1),
+  nrTurnsToNextBadEffect_(-1) {}
+
+bool Device::activateDefault(Actor* const actor) {
   (void)actor;
 
-  if(def_->isIdentified) {
-    bool isDestroyed = toggle(engine);
-    engine->gameTime->endTurnOfCurrentActor();
+  if(data_->isIdentified) {
+    bool isDestroyed = toggle();
+    eng->gameTime->endTurnOfCurrentActor();
     return isDestroyed;
   } else {
-    engine->log->addMessage("I cannot yet use this.");
+    eng->log->addMessage("I cannot yet use this.");
     return false;
   }
 }
 
-bool Device::toggle(Engine* const engine) {
-  printToggleMessage(engine);
+bool Device::toggle() {
+  printToggleMessage();
 
   if(isActivated_) {
     isActivated_ = false;
     nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
-    specificToggle(engine);
+    specificToggle();
   } else {
     isActivated_ = true;
-    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
-    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
+    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
+    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
     const string message = getSpecificActivateMessage();
     if(message != "") {
-      engine->log->addMessage(message);
+      eng->log->addMessage(message);
     }
-    specificToggle(engine);
-//    runBadEffect(engine);
+    specificToggle();
+//    runBadEffect();
   }
   return false;
 }
 
-void Device::printToggleMessage(Engine* const engine) {
-  const string name_a = engine->itemData->getItemRef(*this, itemRef_a, true);
-  engine->log->addMessage((isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
+void Device::printToggleMessage() {
+  const string name_a =
+    eng->itemDataHandler->getItemRef(*this, itemRef_a, true);
+  eng->log->addMessage(
+    (isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
 }
 
-int Device::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
-  return engine->dice.getInRange(6, 9);
+int Device::getRandomNrTurnsToNextGoodEffect() const {
+  return eng->dice.range(6, 9);
 }
 
-int Device::getRandomNrTurnsToNextBadEffect(Engine* const engine) const {
-  return engine->dice.getInRange(12, 16);
+int Device::getRandomNrTurnsToNextBadEffect() const {
+  return eng->dice.range(12, 16);
 }
 
-void Device::newTurnInInventory(Engine* const engine) {
+void Device::newTurnInInventory() {
   if(isActivated_) {
 
-    specificnewTurnInInventory(engine);
+    specificnewTurnInInventory();
 
     if(--nrTurnsToNextGoodEffect_ <= 0) {
-      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect(engine);
-      runGoodEffect(engine);
+      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
+      runGoodEffect();
     }
     if(--nrTurnsToNextBadEffect_ <= 0) {
-      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect(engine);
-      runBadEffect(engine);
+      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
+      runBadEffect();
     }
   }
 }
 
-void Device::runBadEffect(Engine* const engine) {
-  const string name = engine->itemData->getItemRef(*this, itemRef_plain, true);
+void Device::runBadEffect() {
+  const string name =
+    eng->itemDataHandler->getItemRef(*this, itemRef_plain, true);
 
-  const int RND = engine->dice.percentile();
+  const int RND = eng->dice.percentile();
   if(RND < 2) {
-    engine->log->addMessage("The " + name + " breaks!");
-    engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
+    eng->log->addMessage("The " + name + " breaks!");
+    eng->player->getInventory()->removetemInGeneralWithPointer(this, false);
   } else if(RND < 40) {
-    engine->log->addMessage("I am hit with a jolt of electricity from the " + name + ".", clrMessageBad, messageInterrupt_force);
-    engine->player->getStatusHandler()->tryAddEffect(new StatusParalyzed(2));
-    engine->player->hit(engine->dice.getInRange(1, 2), dmgType_electric);
+    eng->log->addMessage(
+      "I am hit with a jolt of electricity from the " + name +
+      ".", clrMessageBad, messageInterrupt_force);
+    eng->player->getPropHandler()->tryApplyProp(
+      new PropParalyzed(eng, propTurnsSpecified, 2));
+    eng->player->hit(eng->dice.range(1, 2), dmgType_electric);
   } else {
-    engine->log->addMessage("The " + name + " hums ominously.");
+    eng->log->addMessage("The " + name + " hums ominously.");
   }
 }
 
@@ -100,12 +110,11 @@ void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
   deviceSpecificSetParametersFromSaveLines(lines);
 }
 
-void Device::identify(const bool IS_SILENT_IDENTIFY,
-                      Engine* const engine) {
-  (void)engine;
+void Device::identify(const bool IS_SILENT_IDENTIFY) {
+  (void)eng;
   (void)IS_SILENT_IDENTIFY;
 
-  def_->isIdentified = true;
+  data_->isIdentified = true;
 }
 
 //---------------------------------------------------- SENTRY
@@ -113,20 +122,20 @@ string DeviceSentry::getSpecificActivateMessage() {
   return "It seems to peruse area.";
 }
 
-void DeviceSentry::runGoodEffect(Engine* const engine) {
-  const int DMG = engine->dice(1, 6) + 2;
+void DeviceSentry::runGoodEffect() {
+  const int DMG = eng->dice(1, 6) + 2;
 
   vector<Actor*> targetCandidates;
-  engine->player->getSpotedEnemies(targetCandidates);
+  eng->player->getSpotedEnemies(targetCandidates);
   const unsigned int NR_CANDIDATES = targetCandidates.size();
   if(NR_CANDIDATES > 0) {
-    const int ELEMENT = engine->dice.getInRange(0, NR_CANDIDATES - 1);
+    const int ELEMENT = eng->dice.range(0, NR_CANDIDATES - 1);
     Actor* const actor = targetCandidates.at(ELEMENT);
     const Pos& pos = actor->pos;
-    engine->log->addMessage(
+    eng->log->addMessage(
       actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood,
       messageInterrupt_force);
-    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+    eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
       vector<Pos>(1, pos), clrYellow);
     actor->hit(DMG, dmgType_electric);
   }
@@ -137,22 +146,22 @@ string DeviceRepeller::getSpecificActivateMessage() {
   return "I feel a certain tension in the air around me.";
 }
 
-void DeviceRepeller::runGoodEffect(Engine* const engine) {
-  const Pos& playerPos = engine->player->pos;
-  const unsigned int NR_ACTORS = engine->gameTime->getLoopSize();
+void DeviceRepeller::runGoodEffect() {
+  const Pos& playerPos = eng->player->pos;
+  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = engine->gameTime->getActorAt(i);
-    if(actor != engine->player) {
+    Actor* const actor = eng->gameTime->getActorAt(i);
+    if(actor != eng->player) {
       const Pos& otherPos = actor->pos;
-      if(engine->mapTests->isCellsNeighbours(playerPos, otherPos, false)) {
-        engine->knockBack->tryKnockBack(actor, playerPos, false, true);
+      if(eng->mapTests->isCellsNeighbours(playerPos, otherPos, false)) {
+        eng->knockBack->tryKnockBack(actor, playerPos, false, true);
       }
     }
   }
 }
 
-int DeviceRepeller::getRandomNrTurnsToNextGoodEffect(Engine* const engine) const {
-  return engine->dice.getInRange(2, 4);
+int DeviceRepeller::getRandomNrTurnsToNextGoodEffect() const {
+  return eng->dice.range(2, 4);
 }
 
 //---------------------------------------------------- REJUVENATOR
@@ -160,10 +169,10 @@ string DeviceRejuvenator::getSpecificActivateMessage() {
   return "It seems to attempt repairing my flesh.";
 }
 
-void DeviceRejuvenator::runGoodEffect(Engine* const engine) {
-//  const string name = engine->itemData->getItemRef(this, itemRef_plain, true);
-//  engine->log->addMessage(name + " repairs my wounds.");
-  engine->player->restoreHp(1, false);
+void DeviceRejuvenator::runGoodEffect() {
+//  const string name = eng->itemData->getItemRef(this, itemRef_plain, true);
+//  eng->log->addMessage(name + " repairs my wounds.");
+  eng->player->restoreHp(1, false);
 }
 
 //---------------------------------------------------- TRANSLOCATOR
@@ -171,77 +180,77 @@ string DeviceTranslocator::getSpecificActivateMessage() {
   return "";
 }
 
-void DeviceTranslocator::runGoodEffect(Engine* const engine) {
-  Player* const player = engine->player;
+void DeviceTranslocator::runGoodEffect() {
+  Player* const player = eng->player;
   vector<Actor*> spotedEnemies;
   player->getSpotedEnemies(spotedEnemies);
   if(
     player->getHp() <= player->getHpMax(true) / 4 &&
     spotedEnemies.empty() == false) {
-    const string name = engine->itemData->getItemRef(
+    const string name = eng->itemDataHandler->getItemRef(
                           *this, itemRef_plain, true);
-    engine->log->addMessage("The " + name + " makes a droning noise...");
+    eng->log->addMessage("The " + name + " makes a droning noise...");
     player->teleport(true);
   }
 }
 
 //---------------------------------------------------- SPELL REFLECTOR
-//void DeviceSpellReflector::runGoodEffect(Engine* const engine) {
+//void DeviceSpellReflector::runGoodEffect() {
 //
 //}
 
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceElectricLantern::specificnewTurnInInventory(Engine* const engine) {
+void DeviceElectricLantern::specificnewTurnInInventory() {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
-      engine->gameTime->updateLightMap();
-      engine->player->updateFov();
-      engine->renderer->drawMapAndInterface();
+      eng->gameTime->updateLightMap();
+      eng->player->updateFov();
+      eng->renderer->drawMapAndInterface();
     }
   }
 }
 
-void DeviceElectricLantern::printToggleMessage(Engine* const engine) {
+void DeviceElectricLantern::printToggleMessage() {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
-  engine->log->addMessage(toggleStr + " an Electric Lantern.");
+  eng->log->addMessage(toggleStr + " an Electric Lantern.");
 }
 
-void DeviceElectricLantern::specificToggle(Engine* const engine) {
-  engine->gameTime->updateLightMap();
-  engine->player->updateFov();
-  engine->renderer->drawMapAndInterface();
+void DeviceElectricLantern::specificToggle() {
+  eng->gameTime->updateLightMap();
+  eng->player->updateFov();
+  eng->renderer->drawMapAndInterface();
 }
 
 bool DeviceElectricLantern::isGivingLight() const {
   return isActivated_ && malfunctCooldown_ <= 0;
 }
 
-void DeviceElectricLantern::runBadEffect(Engine* const engine) {
+void DeviceElectricLantern::runBadEffect() {
   if(malfunctCooldown_ <= 0) {
     bool isVisionUpdateNeeded = false;
     bool isItemDestroyed = false;
 
-    const int RND = engine->dice.percentile();
+    const int RND = eng->dice.percentile();
     if(RND < 4) {
-      engine->log->addMessage("My Electric Lantern breaks!");
-      engine->player->getInventory()->removetemInGeneralWithPointer(this, false);
+      eng->log->addMessage("My Electric Lantern breaks!");
+      eng->player->getInventory()->removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;
       isItemDestroyed = true;
     } else if(RND < 20) {
-      engine->log->addMessage("My Electric Lantern malfunctions.");
-      malfunctCooldown_ = engine->dice.getInRange(3, 4);
+      eng->log->addMessage("My Electric Lantern malfunctions.");
+      malfunctCooldown_ = eng->dice.range(3, 4);
       isVisionUpdateNeeded = true;
     } else if(RND < 50) {
-      engine->log->addMessage("My Electric Lantern flickers.");
+      eng->log->addMessage("My Electric Lantern flickers.");
       malfunctCooldown_ = 2;
       isVisionUpdateNeeded = true;
     }
 
     if(isVisionUpdateNeeded) {
-      engine->gameTime->updateLightMap();
-      engine->player->updateFov();
-      engine->renderer->drawMapAndInterface();
+      eng->gameTime->updateLightMap();
+      eng->player->updateFov();
+      eng->renderer->drawMapAndInterface();
     }
     if(isItemDestroyed) {
       delete this;

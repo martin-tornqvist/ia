@@ -6,6 +6,7 @@
 #include "ActorPlayer.h"
 #include "PlayerBonuses.h"
 #include "BasicUtils.h"
+#include "Properties.h"
 
 int AbilityValues::getVal(const Abilities_t ability,
                           const bool IS_AFFECTED_BY_STATUS_EFFECTS,
@@ -13,7 +14,7 @@ int AbilityValues::getVal(const Abilities_t ability,
   int val = abilityList[ability];
 
   if(IS_AFFECTED_BY_STATUS_EFFECTS) {
-    val += actor.getStatusHandler()->getAbilityModifier(ability);
+    val += actor.getPropHandler()->getAbilityMod(ability);
   }
 
   if(&actor == eng->player) {

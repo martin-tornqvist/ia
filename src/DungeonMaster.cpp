@@ -17,7 +17,7 @@ void DungeonMaster::initXpArray() {
   }
 }
 
-int DungeonMaster::getMonsterXpWorth(const ActorDef& d) const {
+int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
   const double HP         = d.hp;
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
@@ -156,7 +156,7 @@ void DungeonMaster::winGame() {
 }
 
 void DungeonMaster::monsterKilled(Actor* monster) {
-  ActorDef* const d = monster->getDef();
+  ActorData* const d = monster->getData();
 
   d->nrOfKills += 1;
 

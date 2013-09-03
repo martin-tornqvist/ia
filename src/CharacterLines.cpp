@@ -18,7 +18,7 @@
 using namespace std;
 
 void CharacterLines::drawLocationInfo() {
-  if(eng->player->getStatusHandler()->allowSee()) {
+  if(eng->player->getPropHandler()->allowSee()) {
     string str = "";
 
     const Pos& playerPos = eng->player->pos;
@@ -128,7 +128,7 @@ void CharacterLines::drawInfoLines() {
     eng->renderer->drawText(
       "Unarmed", panel_character, pos, clrGenMed);
   } else {
-    str = eng->itemData->getItemInterfaceRef(*itemWielded, false);
+    str = eng->itemDataHandler->getItemInterfaceRef(*itemWielded, false);
     eng->renderer->drawText(str, panel_character, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
@@ -188,7 +188,7 @@ void CharacterLines::drawInfoLines() {
   if(itemMissiles == NULL) {
     eng->renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
   } else {
-    str = eng->itemData->getItemInterfaceRef(*itemMissiles, false);
+    str = eng->itemDataHandler->getItemInterfaceRef(*itemMissiles, false);
     eng->renderer->drawText(str, panel_character, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
@@ -196,24 +196,27 @@ void CharacterLines::drawInfoLines() {
   pos.y += 1;
   pos.x = CHARACTER_LINE_X0;
 
-  const bool IS_SELF_AWARE = eng->playerBonHandler->isBonPicked(playerBon_selfAware);
-  const vector<StatusEffect*>& effects = eng->player->getStatusHandler()->effects;
-  for(unsigned int i = 0; i < effects.size(); i++) {
-    StatusEffect* const effect = effects.at(i);
+  const bool IS_SELF_AWARE =
+    eng->playerBonHandler->isBonPicked(playerBon_selfAware);
+  //TODO This should be collected from intrinsics, items and applied, by the Property handler
+  const vector<Prop*>& appliedProps =
+    eng->player->getPropHandler()->appliedProps_;
+  for(unsigned int i = 0; i < appliedProps.size(); i++) {
+    Prop* const prop = appliedProps.at(i);
+    const PropAlignment_t alignment = prop->getAlignment();
     const SDL_Color statusColor =
-      effect->isConsideredBeneficial() ? clrMessageGood : clrMessageBad;
-    string statusText = effect->getInterfaceName();
-    if(IS_SELF_AWARE) {
-      if(effect->allowDisplayTurnsInInterface()) {
-        // +1 to offset that the turn is also active on turn 0
-        statusText += "(" + intToString(effect->turnsLeft + 1) + ")";
-      }
+      alignment == propAlignmentGood ? clrMessageGood :
+      alignment == propAlignmentBad  ? clrMessageBad  : clrWhite;
+    string propText = prop->getNameShort();
+    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
+      // +1 to offset that the turn is also active on turn 0
+      propText += "(" + intToString(prop->turnsLeft_ + 1) + ")";
     }
-    eng->renderer->drawText(statusText, panel_character, pos, statusColor);
-    pos.x += statusText.length() + 1;
+    eng->renderer->drawText(propText, panel_character, pos, statusColor);
+    pos.x += propText.length() + 1;
   }
 
-  // Turn number
+// Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());
   pos.x = MAP_X_CELLS - str.length() - 1;
   eng->renderer->drawText(str, panel_character, pos, clrGenMed);

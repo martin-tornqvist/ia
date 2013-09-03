@@ -7,7 +7,7 @@
 
 class Armor: public Item {
 public:
-  Armor(ItemDef* const itemDefinition, Engine* engine);
+  Armor(ItemData* const itemData, Engine* engine);
 
   ~Armor() {}
 
@@ -15,8 +15,7 @@ public:
 
   string getArmorDataLine(const bool WITH_BRACKETS) const;
 
-  int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE,
-      const DmgTypes_t dmgType);
+  int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
 
   void itemSpecificAddSaveLines(vector<string>& lines) {
     lines.push_back(intToString(dur_));
@@ -27,19 +26,29 @@ public:
     lines.erase(lines.begin());
   }
 
-  bool isDestroyed() {
-    return getAbsorptionPoints(dmgType_physical) <= 0;
-  }
+  inline bool isDestroyed() {return getAbsorptionPoints() <= 0;}
 
   SDL_Color getInterfaceClr() const {return clrGray;}
 
   void setMaxDurability() {dur_ = 100;}
 
-private:
-  int getAbsorptionPoints(const DmgTypes_t dmgType) const;
+  virtual void onWear() {}
+  virtual void onTakeOff() {}
 
-  Engine* eng;
+protected:
+  int getAbsorptionPoints() const;
+
   int dur_;
+};
+
+class ArmorAsbestosSuit: public Armor {
+public:
+  ArmorAsbestosSuit(ItemData* const itemData, Engine* engine) :
+    Armor(itemData, engine) {}
+  ~ArmorAsbestosSuit() {}
+
+  void onWear();
+  void onTakeOff();
 };
 
 #endif

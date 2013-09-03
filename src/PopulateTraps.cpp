@@ -6,9 +6,13 @@
 #include "FeatureTrap.h"
 #include "FeatureFactory.h"
 
-void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS], const vector<Room*>& rooms) const {
+void PopulateTraps::populateRoomAndCorridorLevel(
+  RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS],
+  const vector<Room*>& rooms) const {
+
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(
+    moveType_walk, blockers);
 
   //Put traps in non-plain rooms
   for(unsigned int i = 0; i < rooms.size(); i++) {
@@ -33,7 +37,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         case endOfRoomThemes:                                break;
       }
 
-      if(eng->dice.getInRange(1, 100) < chanceForTrappedRoom) {
+      if(eng->dice.range(1, 100) < chanceForTrappedRoom) {
 
         vector<Pos> trapPositionCandidates;
 
@@ -49,19 +53,27 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
           }
         }
 
-        const int NR_TRAP_POSITION_CANDIDATES = int(trapPositionCandidates.size());
-        if(NR_TRAP_POSITION_CANDIDATES > 0) {
-          const int MIN_NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES / 4, theme == roomTheme_spider ? 4 : 1);
-          const int MAX_NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES / 2, theme == roomTheme_spider ? 8 : 2);
-          const int NR_TRAPS = eng->dice.getInRange(MIN_NR_TRAPS, MAX_NR_TRAPS);
+        const int NR_POS_CAND =
+          int(trapPositionCandidates.size());
+        if(NR_POS_CAND > 0) {
+          const int MIN_NR_TRAPS =
+            min(NR_POS_CAND / 4, theme == roomTheme_spider ? 4 : 1);
+          const int MAX_NR_TRAPS =
+            min(NR_POS_CAND / 2, theme == roomTheme_spider ? 8 : 2);
+          const int NR_TRAPS = eng->dice.range(MIN_NR_TRAPS, MAX_NR_TRAPS);
           for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {
-            const unsigned int CANDIDATE_ELEMENT = eng->dice.getInRange(0, trapPositionCandidates.size() - 1);
+            const unsigned int CANDIDATE_ELEMENT =
+              eng->dice.range(0, trapPositionCandidates.size() - 1);
             const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
-            const Trap_t trapType = theme == roomTheme_spider ? trap_spiderWeb : trap_any;
+            const Trap_t trapType =
+              theme == roomTheme_spider ? trap_spiderWeb : trap_any;
             FeatureStatic* const f = eng->map->featuresStatic[pos.x][pos.y];
-            const FeatureDef* const defAtTrap = eng->featureData->getFeatureDef(f->getId());
-            eng->featureFactory->spawnFeatureAt(feature_trap, pos, new TrapSpawnData(defAtTrap, trapType));
-            trapPositionCandidates.erase(trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
+            const FeatureData* const dataAtTrap =
+              eng->featureDataHandler->getData(f->getId());
+            eng->featureFactory->spawnFeatureAt(
+              feature_trap, pos, new TrapSpawnData(dataAtTrap, trapType));
+            trapPositionCandidates.erase(
+              trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
             blockers[pos.x][pos.y] = true;
           }
         }
@@ -69,7 +81,8 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
     }
   }
 
-  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (eng->map->getDLVL() * 5));
+  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
+    min(85, 30 + (eng->map->getDLVL() * 5));
   if(eng->dice.percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     vector<Pos> trapPositionCandidates;
     for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
@@ -79,16 +92,20 @@ void PopulateTraps::populateRoomAndCorridorLevel(RoomTheme_t themeMap[MAP_X_CELL
         }
       }
     }
-    const int NR_TRAP_POSITION_CANDIDATES = int(trapPositionCandidates.size());
-    if(NR_TRAP_POSITION_CANDIDATES > 0) {
-      const int NR_TRAPS = min(NR_TRAP_POSITION_CANDIDATES, eng->dice.getInRange(5, 9));
+    const int NR_POS_CAND = int(trapPositionCandidates.size());
+    if(NR_POS_CAND > 0) {
+      const int NR_TRAPS = min(NR_POS_CAND, eng->dice.range(5, 9));
       for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {
-        const unsigned int CANDIDATE_ELEMENT = eng->dice.getInRange(0, trapPositionCandidates.size() - 1);
+        const unsigned int CANDIDATE_ELEMENT =
+          eng->dice.range(0, trapPositionCandidates.size() - 1);
         const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
         FeatureStatic* const f = eng->map->featuresStatic[pos.x][pos.y];
-        const FeatureDef* const defAtTrap = eng->featureData->getFeatureDef(f->getId());
-        eng->featureFactory->spawnFeatureAt(feature_trap, pos, new TrapSpawnData(defAtTrap, trap_any));
-        trapPositionCandidates.erase(trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
+        const FeatureData* const dataAtTrap =
+          eng->featureDataHandler->getData(f->getId());
+        eng->featureFactory->spawnFeatureAt(
+          feature_trap, pos, new TrapSpawnData(dataAtTrap, trap_any));
+        trapPositionCandidates.erase(
+          trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
       }
     }
   }

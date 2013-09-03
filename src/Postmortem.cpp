@@ -95,7 +95,7 @@ void Postmortem::makeInfoLines() {
   vector< pair<string, int> > killList;
   int nrOfTotalKills = 0;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorDef& d = eng->actorData->actorDefs[i];
+    const ActorData& d = eng->actorDataHandler->dataList[i];
     if(d.nrOfKills > 0) {
 
       nrOfTotalKills += d.nrOfKills;
@@ -167,12 +167,13 @@ void Postmortem::makeInfoLines() {
       if(Pos(x, y) == eng->player->pos) {
         currentRow.push_back('@');
       } else {
-        if(eng->renderer->renderArrayAscii[x][y].glyph == ' ' &&
-            (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
+        if(
+          eng->renderer->renderArrayAscii[x][y].glyph == ' ' &&
+          (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
           currentRow.push_back('*');
         } else {
           if(eng->renderer->renderArrayAscii[x][y].glyph ==
-              eng->featureData->getFeatureDef(feature_stoneWall)->glyph) {
+              eng->featureDataHandler->getData(feature_stoneWall)->glyph) {
             currentRow.push_back('#');
           } else {
             currentRow.push_back(eng->renderer->renderArrayAscii[x][y].glyph);
@@ -200,9 +201,9 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     panel_character, Pos(3, 1), clrWhite);
   int x = 0;
   int y = 0;
-  const int NR_LINES = int(postmortemLines.size());
+  const int NR = int(postmortemLines.size());
 
-  for(int i = TOP_ELEMENT; i < NR_LINES && (i - TOP_ELEMENT) <= MAP_Y_CELLS; i++) {
+  for(int i = TOP_ELEMENT; i < NR && (i - TOP_ELEMENT) <= MAP_Y_CELLS; i++) {
     eng->renderer->drawText(
       postmortemLines.at(i).str, panel_map, Pos(x, y),
       postmortemLines.at(i).clr);
@@ -336,7 +337,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   }
 
   pos.set(45, 18);
-  const string NAME_STR = eng->player->getDef()->name_a;
+  const string NAME_STR = eng->player->getData()->name_a;
   eng->renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;

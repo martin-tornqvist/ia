@@ -39,7 +39,7 @@ public:
              Actor& actor) const;
 
 private:
-  friend class ActorData;
+  friend class ActorDataHandler;
   void setVal(const Abilities_t ability, const int VAL);
   int abilityList[endOfAbilities];
   Engine* eng;

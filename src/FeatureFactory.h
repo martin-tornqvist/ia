@@ -12,7 +12,7 @@
 using namespace std;
 
 class Engine;
-class FeatureDef;
+class FeatureData;
 
 enum FeatureSpawnData_t {
   featureSpawnData_dynamite,
@@ -65,21 +65,21 @@ public:
 
 class TrapSpawnData: public FeatureSpawnData {
 public:
-  TrapSpawnData(const FeatureDef* const mimicFeature, Trap_t trapType) :
+  TrapSpawnData(const FeatureData* const mimicFeature, Trap_t trapType) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trapType) {}
-  TrapSpawnData(const FeatureDef* const mimicFeature) :
+  TrapSpawnData(const FeatureData* const mimicFeature) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trap_any) {}
-  const FeatureDef* const mimicFeature_;
+  const FeatureData* const mimicFeature_;
   const Trap_t trapType_;
 };
 
 class DoorSpawnData: public FeatureSpawnData {
 public:
-  DoorSpawnData(const FeatureDef* const mimicFeature) :
+  DoorSpawnData(const FeatureData* const mimicFeature) :
     FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {}
-  const FeatureDef* const mimicFeature_;
+  const FeatureData* const mimicFeature_;
 };
 
 class LeverSpawnData: public FeatureSpawnData {

@@ -15,7 +15,7 @@ public:
 
             while(spellCandidates.empty() == false) {
               const unsigned int ELEMENT =
-                engine->dice.getInRange(0, spellCandidates.size() - 1);
+                engine->dice.range(0, spellCandidates.size() - 1);
 
               Spell* const spell = spellCandidates.at(ELEMENT);
 

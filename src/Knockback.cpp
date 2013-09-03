@@ -11,17 +11,17 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
                              const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
   if(defender != eng->player || eng->config->isBotPlaying == false) {
-    if(defender->getDef()->actorSize <= actorSize_giant) {
+    if(defender->getData()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
 
-      const MoveType_t defenderMoveType = defender->getDef()->moveType;
+      const MoveType_t defenderMoveType = defender->getData()->moveType;
       const bool WALKTYPE_CAN_BE_KNOCKED_BACK =
         defenderMoveType != moveType_ethereal &&
         defenderMoveType != moveType_ooze;
 
       const Pos delta = (defender->pos - attackedFromPos).getSigns();
       const int KNOCK_BACK_RANGE =
-        IS_SPIKE_GUN ? eng->dice.getInRange(2, 3) : eng->dice(1, 2);
+        IS_SPIKE_GUN ? eng->dice.range(2, 3) : eng->dice(1, 2);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
@@ -45,10 +45,12 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                 eng->log->addMessage("I am knocked back!");
               }
             }
-            defender->getStatusHandler()->tryAddEffect(
-              new StatusParalyzed(1), false, false);
-            defender->getStatusHandler()->tryAddEffect(
-              new StatusConfused(5), false, false);
+            defender->getPropHandler()->tryApplyProp(
+              new PropParalyzed(eng, propTurnsSpecified, 1),
+              false, false);
+            defender->getPropHandler()->tryApplyProp(
+              new PropConfused(eng, propTurnsSpecified, 5),
+              false, false);
           }
 
           defender->pos = c;
@@ -60,7 +62,8 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {
               eng->log->addMessage(
-                defender->getNameThe() + " plummets down the depths.", clrMessageGood);
+                defender->getNameThe() + " plummets down the depths.",
+                clrMessageGood);
             } else {
               eng->log->addMessage(
                 "I plummet down the depths!", clrMessageBad);
@@ -83,17 +86,20 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
             return;
           }
 
-          eng->map->featuresStatic[defender->pos.x][defender->pos.y]->bump(defender);
+          FeatureStatic* const f =
+            eng->map->featuresStatic[defender->pos.x][defender->pos.y];
+          f->bump(defender);
 
           if(defender->deadState != actorDeadState_alive) {
             return;
           }
-
         } else {
           // Defender nailed to a wall from a  spike gun?
           if(IS_SPIKE_GUN) {
-            if(eng->map->featuresStatic[c.x][c.y]->isVisionPassable() == false) {
-              defender->getStatusHandler()->tryAddEffect(new StatusNailed(eng));
+            FeatureStatic* const f = eng->map->featuresStatic[c.x][c.y];
+            if(f->isVisionPassable() == false) {
+              defender->getPropHandler()->tryApplyProp(
+                new PropNailed(eng, propTurnsIndefinite));
             }
           }
 

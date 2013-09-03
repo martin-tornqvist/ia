@@ -25,15 +25,16 @@ void ItemPickup::tryPick() {
   if(item != NULL) {
     Inventory* const playerInventory = eng->player->getInventory();
 
-    const string ITEM_NAME = eng->itemData->getItemInterfaceRef(*item, true);
+    const string ITEM_NAME =
+      eng->itemDataHandler->getItemInterfaceRef(*item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
-    if(item->getDef().isMissileWeapon) {
+    if(item->getData().isMissileWeapon) {
       Item* const carriedMissile = playerInventory->getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
-        if(item->getDef().id == carriedMissile->getDef().id) {
+        if(item->getData().id == carriedMissile->getData().id) {
           eng->log->addMessage("I add " + ITEM_NAME + " to my missile stack.");
-          carriedMissile->numberOfItems += item->numberOfItems;
+          carriedMissile->nrItems += item->nrItems;
           delete item;
           eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
           eng->gameTime->endTurnOfCurrentActor();
@@ -77,26 +78,27 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
   Item* item = eng->map->items[eng->player->pos.x][eng->player->pos.y];
 
   if(item != NULL) {
-    if(item->getDef().isRangedWeapon) {
+    if(item->getData().isRangedWeapon) {
       Weapon* const weapon = dynamic_cast<Weapon*>(item);
       const int ammoLoaded = weapon->ammoLoaded;
 
-      if(ammoLoaded > 0 && weapon->getDef().rangedHasInfiniteAmmo == false) {
+      if(ammoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
         Inventory* const playerInventory = eng->player->getInventory();
-        const ItemId_t ammoType = weapon->getDef().rangedAmmoTypeUsed;
+        const ItemId_t ammoType = weapon->getData().rangedAmmoTypeUsed;
 
-        ItemDef* const ammoDef = eng->itemData->itemDefs[ammoType];
+        ItemData* const ammoData = eng->itemDataHandler->dataList[ammoType];
 
         Item* spawnedAmmo = eng->itemFactory->spawnItem(ammoType);
 
-        if(ammoDef->isAmmoClip == true) {
+        if(ammoData->isAmmoClip == true) {
           //Unload a clip
           dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = ammoLoaded;
         } else {
           //Unload loose ammo
-          spawnedAmmo->numberOfItems = ammoLoaded;
+          spawnedAmmo->nrItems = ammoLoaded;
         }
-        const string WEAPON_REF_A = eng->itemData->getItemRef(*weapon, itemRef_a);
+        const string WEAPON_REF_A =
+          eng->itemDataHandler->getItemRef(*weapon, itemRef_a);
         eng->log->addMessage("I unload " + WEAPON_REF_A);
 
         if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
@@ -114,7 +116,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         return;
       }
     } else {
-      if(item->getDef().isAmmo) {
+      if(item->getData().isAmmo) {
         tryPick();
         return;
       }

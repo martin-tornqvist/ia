@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void ActorDef::reset() {
+void ActorData::reset() {
   id = actor_empty;
   name_a = "";
   name_the = "";
@@ -52,13 +52,13 @@ void ActorDef::reset() {
   aggroTextMonsterHidden = "";
 }
 
-void ActorData::finalizeDefinition(ActorDef& d) {
-  actorDefs[d.id] = d;
+void ActorDataHandler::addData(ActorData& d) {
+  dataList[d.id] = d;
   d.description.resize(0);
 }
 
-//void ActorData::setStrengthsFromFormula(
-//  ActorDef& d, const EntityStrength_t hpStrength) const {
+//void ActorDataHandler::setStrengthsFromFormula(
+//  ActorData& d, const EntityStrength_t hpStrength) const {
 //  //----------------------------------------------- HP
 //  const double HP_BASE_DB = 3.0;
 //  const double HP_INCR_DB = 1.75;
@@ -101,10 +101,10 @@ void ActorData::finalizeDefinition(ActorDef& d) {
 //  d.abilityVals.setVal(ability_resistStatusMind, STATUS_RES);
 //}
 
-void ActorData::defineAllActors() {
-  ActorDef d;
+void ActorDataHandler::initDataList() {
+  ActorData d;
   d.reset();
-  finalizeDefinition(d);
+  addData(d);
 
   d.name_a = "Player";
   d.name_the = "Player";
@@ -119,7 +119,7 @@ void ActorData::defineAllActors() {
   d.isAutoSpawnAllowed = false;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
@@ -158,7 +158,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
@@ -198,7 +198,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Bloated Corpse";
@@ -238,7 +238,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Major Clapham-Lee";
@@ -277,7 +277,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Dean Halsey";
@@ -317,7 +317,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Cultist";
@@ -355,7 +355,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Cultist";
@@ -393,7 +393,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Cultist";
@@ -431,7 +431,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Keziah Mason";
@@ -470,7 +470,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_ritual);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Brown Jenkin";
@@ -496,7 +496,7 @@ void ActorData::defineAllActors() {
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
   d.canSeeInDarkness = true;
-  d.spawnMinDLVL = actorDefs[actor_keziahMason].spawnMinDLVL;
+  d.spawnMinDLVL = dataList[actor_keziahMason].spawnMinDLVL;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
   d.description = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
@@ -506,7 +506,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isRat = true;
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
 //  d.name_a = "The Lord of Pestilence";
@@ -539,7 +539,7 @@ void ActorData::defineAllActors() {
 //  d.erraticMovement = actorErratic_rare;
 //  d.monsterShockLevel = monsterShockLevel_scary;
 //  setStrengthsFromFormula(d, weak);
-//  finalizeDefinition(d);
+//  addData(d);
 //  d.reset();
 
 //  d.name_a = "The Lord of Shadows";
@@ -573,7 +573,7 @@ void ActorData::defineAllActors() {
 //  d.monsterShockLevel = monsterShockLevel_scary;
 //  setStrengthsFromFormula(d, weak);
 //  d.abilityVals.setVal(ability_stealth, 90);
-//  finalizeDefinition(d);
+//  addData(d);
 //  d.reset();
 
 //  d.name_a = "The Lord of Spiders";
@@ -606,7 +606,7 @@ void ActorData::defineAllActors() {
 //  d.erraticMovement = actorErratic_rare;
 //  d.monsterShockLevel = monsterShockLevel_scary;
 //  setStrengthsFromFormula(d, weak);
-//  finalizeDefinition(d);
+//  addData(d);
 //  d.reset();
 
 //  d.name_a = "The Lord of Spirits";
@@ -639,7 +639,7 @@ void ActorData::defineAllActors() {
 //  d.erraticMovement = actorErratic_rare;
 //  d.monsterShockLevel = monsterShockLevel_scary;
 //  setStrengthsFromFormula(d, weak);
-//  finalizeDefinition(d);
+//  addData(d);
 //  d.reset();
 
   d.name_a = "A Cultist Priest";
@@ -676,7 +676,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_ritual);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Green Spider";
@@ -709,7 +709,7 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A White Spider";
@@ -742,7 +742,7 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Red Spider";
@@ -775,7 +775,7 @@ void ActorData::defineAllActors() {
   d.isSpider = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Shadow Spider";
@@ -798,6 +798,7 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_stealth, 90);
+  d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 6;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.canSeeInDarkness = true;
@@ -809,7 +810,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Leng Spider";
@@ -844,7 +845,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Fire hound";
@@ -882,7 +883,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Ghost";
@@ -920,7 +921,7 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Phantasm";
@@ -958,7 +959,7 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Wraith";
@@ -997,7 +998,7 @@ void ActorData::defineAllActors() {
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Rat";
@@ -1034,7 +1035,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Rat-thing";
@@ -1072,7 +1073,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_human);
   d.nativeRooms.push_back(roomTheme_crypt);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Wolf";
@@ -1109,7 +1110,7 @@ void ActorData::defineAllActors() {
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Giant Bat";
@@ -1145,7 +1146,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Byakhee";
@@ -1182,7 +1183,7 @@ void ActorData::defineAllActors() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Giant Mantis";
@@ -1217,7 +1218,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Giant Locust";
@@ -1251,7 +1252,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Fungi from Yuggoth";
@@ -1290,7 +1291,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Ghoul";
@@ -1327,7 +1328,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Shadow";
@@ -1351,6 +1352,7 @@ void ActorData::defineAllActors() {
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
   d.abilityVals.setVal(ability_stealth, 90);
+  d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1368,7 +1370,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Mummy";
@@ -1405,7 +1407,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Khephren";
@@ -1445,7 +1447,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "Nitokris";
@@ -1484,7 +1486,7 @@ void ActorData::defineAllActors() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Deep One";
@@ -1521,7 +1523,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_scary;
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Mass of Worms";
@@ -1556,7 +1558,7 @@ void ActorData::defineAllActors() {
   d.canBleed = false;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Dust Vortex";
@@ -1594,7 +1596,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Fire Vortex";
@@ -1631,7 +1633,7 @@ void ActorData::defineAllActors() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Black Ooze";
@@ -1675,7 +1677,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Clear Ooze";
@@ -1720,7 +1722,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Putrid Ooze";
@@ -1764,7 +1766,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Poison Ooze";
@@ -1809,7 +1811,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Colour out of space";
@@ -1850,7 +1852,7 @@ void ActorData::defineAllActors() {
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 
   d.name_a = "A Hunting Horror";
@@ -1888,7 +1890,7 @@ void ActorData::defineAllActors() {
   d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.erraticMovement = actorErratic_somewhat;
 //  d.nativeRooms.push_back(roomTheme_chasm);
-  finalizeDefinition(d);
+  addData(d);
   d.reset();
 }
 

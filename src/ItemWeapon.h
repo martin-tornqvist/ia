@@ -8,14 +8,7 @@ class Engine;
 
 class Weapon: public Item {
 public:
-  Weapon(ItemDef* const itemDefinition, ItemDef* const ammoDef) :
-    Item(itemDefinition), ammoDef_(ammoDef) {
-    ammoLoaded = 0;
-    ammoCapacity = 0;
-    effectiveRangeLimit = 3;
-    clip = false;
-    meleeDmgPlus = 0;
-  }
+  Weapon(ItemData* const itemData, ItemData* const ammoData, Engine* engine);
   virtual ~Weapon() {}
 
   int ammoLoaded;
@@ -25,7 +18,7 @@ public:
 
   int meleeDmgPlus;
 
-  void setRandomMeleePlus(Engine* const engine);
+  void setRandomMeleePlus();
 
   virtual vector<string> itemSpecificWriteToFile() {
     vector<string> lines;
@@ -38,15 +31,14 @@ public:
   }
 
   //actorHit may be NULL
-  virtual void weaponSpecific_projectileObstructed(int originX, int originY, Actor* actor, Engine* engine) {
-    (void) originX;
-    (void) originY;
+  virtual void weaponSpecific_projectileObstructed(
+    const Pos& pos, Actor* actor) {
+    (void) pos;
     (void) actor;
-    (void) engine;
   }
 
-  const ItemDef& getAmmoDef() {
-    return *ammoDef_;
+  const ItemData& getAmmoData() {
+    return *ammoData_;
   }
 
   void itemSpecificAddSaveLines(vector<string>& lines) {
@@ -62,14 +54,14 @@ public:
   }
 
   SDL_Color getColor() const {
-    if(def_->isRangedWeapon && def_->rangedHasInfiniteAmmo == false) {
+    if(data_->isRangedWeapon && data_->rangedHasInfiniteAmmo == false) {
       if(ammoLoaded == 0) {
-        SDL_Color ret = def_->color;
+        SDL_Color ret = data_->color;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
         return ret;
       }
     }
-    return def_->color;
+    return data_->color;
   }
 
   SDL_Color getInterfaceClr() const {return clrGray;}
@@ -81,121 +73,121 @@ protected:
     return *this;
   }
 
-  ItemDef* const ammoDef_;
+  ItemData* const ammoData_;
 };
 
 class SawedOff: public Weapon {
 public:
-  SawedOff(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
+  SawedOff(ItemData* const itemData, ItemData* const ammoData,
+           Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
     ammoCapacity = 2;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
   }
-  ~SawedOff() {
-  }
+  ~SawedOff() {}
 
 private:
 };
 
 class PumpShotgun: public Weapon {
 public:
-  PumpShotgun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
+  PumpShotgun(ItemData* const itemData, ItemData* const ammoData,
+              Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
     ammoCapacity = 8;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
   }
-  ~PumpShotgun() {
-  }
+  ~PumpShotgun() {}
 
 private:
 };
 
 class Pistol: public Weapon {
 public:
-  Pistol(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
+  Pistol(ItemData* const itemData, ItemData* const ammoData,
+         Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
     ammoCapacity = 7;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 6;
   }
-  ~Pistol() {
-  }
+  ~Pistol() {}
 
 private:
 };
 
 class FlareGun: public Weapon {
 public:
-  FlareGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
+  FlareGun(ItemData* const itemData, ItemData* const ammoData,
+           Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
     ammoLoaded = 1;
     ammoCapacity = 1;
     effectiveRangeLimit = 6;
   }
-  ~FlareGun() {
-  }
+  ~FlareGun() {}
 
 private:
 };
 
 class MachineGun: public Weapon {
 public:
-  MachineGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
-    ammoCapacity = ammoDef_->ammoContainedInClip;
+  MachineGun(ItemData* const itemData, ItemData* const ammoData,
+             Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
+    ammoCapacity = ammoData->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;
   }
-  ~MachineGun() {
-  }
+  ~MachineGun() {}
 
 private:
 };
 
 class Incinerator: public Weapon {
 public:
-  Incinerator(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
-    ammoCapacity = ammoDef_->ammoContainedInClip;
+  Incinerator(ItemData* const itemData, ItemData* const ammoData,
+              Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
+    ammoCapacity = ammoData->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = false;
   }
 
-  void weaponSpecific_projectileObstructed(int originX, int originY, Actor* actorHit, Engine* engine);
-  ~Incinerator() {
-  }
+  void weaponSpecific_projectileObstructed(const Pos& pos, Actor* actorHit);
+  ~Incinerator() {}
 private:
 };
 
 class TeslaCanon: public Weapon {
 public:
-  TeslaCanon(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
-    ammoCapacity = ammoDef_->ammoContainedInClip;
+  TeslaCanon(ItemData* const itemData, ItemData* const ammoData,
+             Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
+    ammoCapacity = ammoData->ammoContainedInClip;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;
   }
-  ~TeslaCanon() {
-  }
+  ~TeslaCanon() {}
 private:
 };
 
 class SpikeGun: public Weapon {
 public:
-  SpikeGun(ItemDef* const itemDefinition, ItemDef* const ammoDefinition) :
-    Weapon(itemDefinition, ammoDefinition) {
+  SpikeGun(ItemData* const itemData, ItemData* const ammoData,
+           Engine* const engine) :
+    Weapon(itemData, ammoData, engine) {
     ammoCapacity = 12;
     ammoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
     clip = true;
   }
-  ~SpikeGun() {
-  }
+  ~SpikeGun() {}
 private:
 };
 

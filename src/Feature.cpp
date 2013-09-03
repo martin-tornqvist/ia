@@ -6,25 +6,27 @@
 #include "Log.h"
 #include "Render.h"
 
-Feature::Feature(Feature_t id, Pos pos, Engine* engine, FeatureSpawnData* spawnData) :
-	pos_(pos), eng(engine), def_(eng->featureData->getFeatureDef(id)), hasBlood_(false) {
-	(void)spawnData;
+Feature::Feature(Feature_t id, Pos pos, Engine* engine,
+                 FeatureSpawnData* spawnData) :
+  pos_(pos), eng(engine), data_(eng->featureDataHandler->getData(id)),
+  hasBlood_(false) {
+  (void)spawnData;
 }
 
 void Feature::bump(Actor* actorBumping) {
-	if(isMovePassable(actorBumping) == false) {
-		if(actorBumping == eng->player) {
-			if(eng->player->getStatusHandler()->allowSee()) {
-				eng->log->addMessage(def_->messageOnPlayerBlocked);
-			} else {
-				eng->log->addMessage(def_->messageOnPlayerBlockedBlind);
-			}
-		}
-	}
+  if(isMovePassable(actorBumping) == false) {
+    if(actorBumping == eng->player) {
+      if(eng->player->getPropHandler()->allowSee()) {
+        eng->log->addMessage(data_->messageOnPlayerBlocked);
+      } else {
+        eng->log->addMessage(data_->messageOnPlayerBlockedBlind);
+      }
+    }
+  }
 }
 
 void Feature::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-   (void)light;
+  (void)light;
 }
 
 void Feature::newTurn() {
@@ -32,166 +34,166 @@ void Feature::newTurn() {
 }
 
 bool Feature::isMovePassable(Actor* const actorMoving) const {
-	return def_->isMovePassable[actorMoving->getMoveType()];
+  return data_->isMovePassable[actorMoving->getMoveType()];
 }
 
 bool Feature::isMoveTypePassable(const MoveType_t moveType) const {
-	return def_->isMovePassable[moveType];
+  return data_->isMovePassable[moveType];
 }
 
 bool Feature::isVisionPassable() const {
-	return def_->isVisionPassable;
+  return data_->isVisionPassable;
 }
 
 bool Feature::isShootPassable() const {
-	return def_->isShootPassable;
+  return data_->isShootPassable;
 }
 
 bool Feature::isSmokePassable() const {
-	return def_->isSmokePassable;
+  return data_->isSmokePassable;
 }
 
 bool Feature::isBottomless() const {
-	return def_->isBottomless;
+  return data_->isBottomless;
 }
 
 string Feature::getDescription(const bool DEFINITE_ARTICLE) const {
-	return DEFINITE_ARTICLE ? def_->name_the : def_->name_a;
+  return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
 }
 
 void Feature::hit(const int DMG, const DmgTypes_t dmgType) {
-	(void)DMG;
-	(void)dmgType;
+  (void)DMG;
+  (void)dmgType;
 }
 
 SDL_Color Feature::getColor() const {
-	return def_->color;
+  return data_->color;
 }
 
 SDL_Color Feature::getColorBg() const {
-	return def_->colorBg;
+  return data_->colorBg;
 }
 
 char Feature::getGlyph() const {
-	return def_->glyph;
+  return data_->glyph;
 }
 
 Tile_t Feature::getTile() const {
-	return def_->tile;
+  return data_->tile;
 }
 
 bool Feature::canHaveCorpse() const {
-	return def_->canHaveCorpse;
+  return data_->canHaveCorpse;
 }
 
 bool Feature::canHaveStaticFeature() const {
-	return def_->canHaveStaticFeature;
+  return data_->canHaveStaticFeature;
 }
 
 bool Feature::canHaveBlood() const {
-	return def_->canHaveBlood;
+  return data_->canHaveBlood;
 }
 
 bool Feature::canHaveGore() const {
-	return def_->canHaveGore;
+  return data_->canHaveGore;
 }
 
 bool Feature::canHaveItem() const {
-	return def_->canHaveItem;
+  return data_->canHaveItem;
 }
 
 bool Feature::hasBlood() {
-	return hasBlood_;
+  return hasBlood_;
 }
 
 void Feature::setHasBlood(const bool HAS_BLOOD) {
-	hasBlood_ = HAS_BLOOD;
+  hasBlood_ = HAS_BLOOD;
 }
 
 Feature_t Feature::getId() const {
-	return def_->id;
+  return data_->id;
 }
 
 int Feature::getDodgeModifier() const {
-	return def_->dodgeModifier;
+  return data_->dodgeModifier;
 }
 
 int Feature::getShockWhenAdjacent() const {
-    return def_->shockWhenAdjacent;
+  return data_->shockWhenAdjacent;
 }
 
 MaterialType_t Feature::getMaterialType() const {
-   return def_->materialType;
+  return data_->materialType;
 }
 
 void Feature::examine() {
-   eng->log->addMessage("I find nothing specific there to examine or use.");
+  eng->log->addMessage("I find nothing specific there to examine or use.");
 }
 
 void FeatureStatic::setGoreIfPossible() {
-	if(def_->canHaveGore) {
-		const int ROLL_GLYPH = eng->dice(1, 4);
-		switch(ROLL_GLYPH) {
-		case 1: {
-			goreGlyph_ = ',';
-		}
-		break;
-		case 2: {
-			goreGlyph_ = '`';
-		}
-		break;
-		case 3: {
-			goreGlyph_ = 39;
-		}
-		break;
-		case 4: {
-			goreGlyph_ = ';';
-		}
-		break;
-		}
+  if(data_->canHaveGore) {
+    const int ROLL_GLYPH = eng->dice(1, 4);
+    switch(ROLL_GLYPH) {
+      case 1: {
+        goreGlyph_ = ',';
+      }
+      break;
+      case 2: {
+        goreGlyph_ = '`';
+      }
+      break;
+      case 3: {
+        goreGlyph_ = 39;
+      }
+      break;
+      case 4: {
+        goreGlyph_ = ';';
+      }
+      break;
+    }
 
-		const int ROLL_TILE = eng->dice(1, 8);
-		switch(ROLL_TILE) {
-		case 1: {
-			goreTile_ = tile_gore1;
-		}
-		break;
-		case 2: {
-			goreTile_ = tile_gore2;
-		}
-		break;
-		case 3: {
-			goreTile_ = tile_gore3;
-		}
-		break;
-		case 4: {
-			goreTile_ = tile_gore4;
-		}
-		break;
-		case 5: {
-			goreTile_ = tile_gore5;
-		}
-		break;
-		case 6: {
-			goreTile_ = tile_gore6;
-		}
-		break;
-		case 7: {
-			goreTile_ = tile_gore7;
-		}
-		break;
-		case 8: {
-			goreTile_ = tile_gore8;
-		}
-		break;
-		}
-	}
+    const int ROLL_TILE = eng->dice(1, 8);
+    switch(ROLL_TILE) {
+      case 1: {
+        goreTile_ = tile_gore1;
+      }
+      break;
+      case 2: {
+        goreTile_ = tile_gore2;
+      }
+      break;
+      case 3: {
+        goreTile_ = tile_gore3;
+      }
+      break;
+      case 4: {
+        goreTile_ = tile_gore4;
+      }
+      break;
+      case 5: {
+        goreTile_ = tile_gore5;
+      }
+      break;
+      case 6: {
+        goreTile_ = tile_gore6;
+      }
+      break;
+      case 7: {
+        goreTile_ = tile_gore7;
+      }
+      break;
+      case 8: {
+        goreTile_ = tile_gore8;
+      }
+      break;
+    }
+  }
 }
 
 string FeatureStatic::getDescription(const bool DEFINITE_ARTICLE) const {
-	if(goreGlyph_ == ' ') {
-		return DEFINITE_ARTICLE ? def_->name_the : def_->name_a;
-	} else {
-		return DEFINITE_ARTICLE ? "the blood and gore" : "blood and gore";
-	}
+  if(goreGlyph_ == ' ') {
+    return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
+  } else {
+    return DEFINITE_ARTICLE ? "the blood and gore" : "blood and gore";
+  }
 }

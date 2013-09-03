@@ -34,8 +34,8 @@ void MapBuildBSP::run() {
     }
   }
 
-  const int SPLIT_X1 = MAP_X_CELLS / 3 + eng->dice.getInRange(-1, 1);
-  const int SPLIT_X2 = 2 * (MAP_X_CELLS / 3) + eng->dice.getInRange(-1, 1);
+  const int SPLIT_X1 = MAP_X_CELLS / 3 + eng->dice.range(-1, 1);
+  const int SPLIT_X2 = 2 * (MAP_X_CELLS / 3) + eng->dice.range(-1, 1);
   const int SPLIT_Y1 = MAP_Y_CELLS / 3;
   const int SPLIT_Y2 = 2 * (MAP_Y_CELLS / 3);
 
@@ -58,7 +58,7 @@ void MapBuildBSP::run() {
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
-        Pos c(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 2));
+        Pos c(eng->dice.range(0, 2), eng->dice.range(0, 2));
         if(regions[c.x][c.y] == NULL && regionsToBuildCave[c.x][c.y] == false) {
           regionsToBuildCave[c.x][c.y] = true;
           nrTriesToMark = 0;
@@ -187,7 +187,7 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
 //      }
 //    }
 //  }
-//  Door* const doorToLink = doorCandidates.at(eng->dice.getInRange(0, doorCandidates.size() - 1));
+//  Door* const doorToLink = doorCandidates.at(eng->dice.range(0, doorCandidates.size() - 1));
 //
 //  tracer << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -215,7 +215,7 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
 //  }
 //
 //  if(leverPosCandidates.size() > 0) {
-//    const int ELEMENT = eng->dice.getInRange(0, leverPosCandidates.size() - 1);
+//    const int ELEMENT = eng->dice.range(0, leverPosCandidates.size() - 1);
 //    const Pos leverPos(leverPosCandidates.at(ELEMENT));
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
@@ -337,7 +337,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
 }
 
 void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2, const int SPLIT_Y1, const int SPLIT_Y2) {
-  const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng->dice.getInRange(0, 2);
+  const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng->dice.range(0, 2);
 
   for(int attemptCount = 0; attemptCount < NR_OF_MERGED_REGIONS_TO_ATTEMPT; attemptCount++) {
 
@@ -352,7 +352,7 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
         return;
       }
 
-      regionIndex1 = Pos(eng->dice.getInRange(0, 2), eng->dice.getInRange(0, 1));
+      regionIndex1 = Pos(eng->dice.range(0, 2), eng->dice.range(0, 1));
       regionIndex2 = Pos(regionIndex1 + Pos(0, 1));
       isGoodRegionsFound = regions[regionIndex1.x][regionIndex1.y] == NULL && regions[regionIndex2.x][regionIndex2.y] == NULL;
     }
@@ -382,10 +382,10 @@ void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SP
     regions[regionIndex1.x][regionIndex1.y] = region1;
     regions[regionIndex2.x][regionIndex2.y] = region2;
 
-    const int OFFSET_X0 = eng->dice.getInRange(1, 4);
-    const int OFFSET_Y0 = eng->dice.getInRange(1, 4);
-    const int OFFSET_X1 = eng->dice.getInRange(1, 4);
-    const int OFFSET_Y1 = eng->dice.getInRange(1, 4);
+    const int OFFSET_X0 = eng->dice.range(1, 4);
+    const int OFFSET_Y0 = eng->dice.range(1, 4);
+    const int OFFSET_X1 = eng->dice.range(1, 4);
+    const int OFFSET_Y1 = eng->dice.range(1, 4);
     Rect roomPoss(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0), area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomPoss);
     rooms_.push_back(room);
@@ -427,11 +427,11 @@ void MapBuildBSP::buildRoomsInRooms() {
         for(int nrRoomsCount = 0; nrRoomsCount < MAX_NR_INNER_ROOMS; nrRoomsCount++) {
           for(int tryCount = 0; tryCount < NR_OF_TRIES; tryCount++) {
 
-            const int W = eng->dice.getInRange(MIN_DIM_W, MAX_DIM_W);
-            const int H = eng->dice.getInRange(MIN_DIM_H, MAX_DIM_H);
+            const int W = eng->dice.range(MIN_DIM_W, MAX_DIM_W);
+            const int H = eng->dice.range(MIN_DIM_H, MAX_DIM_H);
 
-            const int X0 = eng->dice.getInRange(roomX0Y0.x - 1, roomX1Y1.x - W + 2);
-            const int Y0 = eng->dice.getInRange(roomX0Y0.y - 1, roomX1Y1.y - H + 2);
+            const int X0 = eng->dice.range(roomX0Y0.x - 1, roomX1Y1.x - W + 2);
+            const int Y0 = eng->dice.range(roomX0Y0.y - 1, roomX1Y1.y - H + 2);
             const int X1 = X0 + W - 1;
             const int Y1 = Y0 + H - 1;
 
@@ -476,7 +476,7 @@ void MapBuildBSP::buildRoomsInRooms() {
                 }
               }
               if(eng->dice.coinToss() || doorCandidates.size() <= 2) {
-                const int DOOR_POS_ELEMENT = eng->dice.getInRange(0, doorCandidates.size() - 1);
+                const int DOOR_POS_ELEMENT = eng->dice.range(0, doorCandidates.size() - 1);
                 const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 //                if(eng->dice.coinToss()) {
 //                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
@@ -487,9 +487,9 @@ void MapBuildBSP::buildRoomsInRooms() {
 //                }
               } else {
                 vector<Pos> positionsWithDoor;
-                const int NR_TRIES = eng->dice.getInRange(1, 10);
+                const int NR_TRIES = eng->dice.range(1, 10);
                 for(int j = 0; j < NR_TRIES; j++) {
-                  const int DOOR_POS_ELEMENT = eng->dice.getInRange(0, doorCandidates.size() - 1);
+                  const int DOOR_POS_ELEMENT = eng->dice.range(0, doorCandidates.size() - 1);
                   const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 
                   bool positionOk = true;
@@ -578,14 +578,14 @@ void MapBuildBSP::postProcessFillDeadEnds() {
 //void MapBuildBSP::makeRiver(Region* regions[3][3]) {
 //  (void)regions;
 //
-//  const int WIDTH = eng->dice.getInRange(4, 12);
+//  const int WIDTH = eng->dice.range(4, 12);
 //  const int START_X_OFFSET_MAX = 5;
-//  const int X_POS_START = MAP_X_CELLS/2 + eng->dice.getInRange(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
+//  const int X_POS_START = MAP_X_CELLS/2 + eng->dice.range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
 //
 //  Pos leftPos(X_POS_START, 0);
 //  while(eng->mapTests->isCellInsideMap(leftPos) && eng->mapTests->isCellInsideMap(leftPos + Pos(WIDTH,0))) {
 //    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(WIDTH, 0)), feature_deepWater);
-//    leftPos += Pos(eng->dice.getInRange(-1,1), 1);
+//    leftPos += Pos(eng->dice.range(-1,1), 1);
 //  }
 //}
 
@@ -750,7 +750,7 @@ void MapBuildBSP::connectRegions(Region* regions[3][3]) {
     Pos delta(0, 0);
     bool deltaOk = false;
     while(deltaOk == false) {
-      delta.set(eng->dice.getInRange(-1, 1), eng->dice.getInRange(-1, 1));
+      delta.set(eng->dice.range(-1, 1), eng->dice.range(-1, 1));
       Pos c2(c1 + delta);
       const bool IS_INSIDE_BOUNDS = c2.x >= 0 && c2.y >= 0 && c2.x <= 2 && c2.y <= 2;
       const bool IS_ZERO = delta.x == 0 && delta.y == 0;
@@ -1003,8 +1003,10 @@ void MapBuildBSP::placeDoorAtPosIfSuitable(const Pos pos) {
   }
 
   if(goodHorizontal || goodVertical) {
-    const FeatureDef* const mimicFeature = eng->featureData->getFeatureDef(feature_stoneWall);
-    eng->featureFactory->spawnFeatureAt(feature_door, pos, new DoorSpawnData(mimicFeature));
+    const FeatureData* const mimicFeatData =
+      eng->featureDataHandler->getData(feature_stoneWall);
+    eng->featureFactory->spawnFeatureAt(
+      feature_door, pos, new DoorSpawnData(mimicFeatData));
   }
 }
 
@@ -1195,7 +1197,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
 
       const int CHANCE_TO_BUILD_AUX_ROOMS = 40;
 
-      if(eng->dice.getInRange(1, 100) < CHANCE_TO_BUILD_AUX_ROOMS) {
+      if(eng->dice.range(1, 100) < CHANCE_TO_BUILD_AUX_ROOMS) {
         const Region* const region = regions[regionX][regionY];
         const Room* const mainRoom = region->mainRoom;
 
@@ -1210,11 +1212,11 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           //Right
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX1() + 1;
-            connectY = eng->dice.getInRange(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng->dice.getInRange(3, 7);
-            auxRoomH = eng->dice.getInRange(3, 7);
+            connectY = eng->dice.range(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
+            auxRoomW = eng->dice.range(3, 7);
+            auxRoomH = eng->dice.range(3, 7);
             auxRoomX = connectX + 1;
-            auxRoomY = eng->dice.getInRange(connectY - auxRoomH + 1, connectY);
+            auxRoomY = eng->dice.range(connectY - auxRoomH + 1, connectY);
             if(cellsWithFloor[connectX - 1][connectY]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
@@ -1226,11 +1228,11 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
 
           //Up
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
-            connectX = eng->dice.getInRange(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
+            connectX = eng->dice.range(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY0() - 1;
-            auxRoomW = eng->dice.getInRange(3, 7);
-            auxRoomH = eng->dice.getInRange(3, 7);
-            auxRoomX = eng->dice.getInRange(connectX - auxRoomW + 1, connectX);
+            auxRoomW = eng->dice.range(3, 7);
+            auxRoomH = eng->dice.range(3, 7);
+            auxRoomX = eng->dice.range(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY - auxRoomH;
             if(cellsWithFloor[connectX][connectY + 1]) {
               Pos c(connectX, connectY);
@@ -1244,11 +1246,11 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
           //Left
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX0() - 1;
-            connectY = eng->dice.getInRange(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng->dice.getInRange(3, 7);
-            auxRoomH = eng->dice.getInRange(3, 7);
+            connectY = eng->dice.range(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
+            auxRoomW = eng->dice.range(3, 7);
+            auxRoomH = eng->dice.range(3, 7);
             auxRoomX = connectX - auxRoomW;
-            auxRoomY = eng->dice.getInRange(connectY - auxRoomH + 1, connectY);
+            auxRoomY = eng->dice.range(connectY - auxRoomH + 1, connectY);
             if(cellsWithFloor[connectX + 1][connectY]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
@@ -1260,11 +1262,11 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
 
           //Down
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
-            connectX = eng->dice.getInRange(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
+            connectX = eng->dice.range(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY1() + 1;
-            auxRoomW = eng->dice.getInRange(3, 7);
-            auxRoomH = eng->dice.getInRange(3, 7);
-            auxRoomX = eng->dice.getInRange(connectX - auxRoomW + 1, connectX);
+            auxRoomW = eng->dice.range(3, 7);
+            auxRoomH = eng->dice.range(3, 7);
+            auxRoomX = eng->dice.range(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY + 1;
             if(cellsWithFloor[connectX][connectY - 1]) {
               Pos c(connectX, connectY);
@@ -1289,8 +1291,8 @@ bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const
   auxAreaWithWalls.x0y0.set(auxArea.x0y0 - Pos(1, 1));
   auxAreaWithWalls.x1y1.set(auxArea.x1y1 + Pos(1, 1));
   if(
-     isAreaFree(auxAreaWithWalls, blockers) &&
-     eng->mapTests->isAreaInsideMap(auxAreaWithWalls)) {
+    isAreaFree(auxAreaWithWalls, blockers) &&
+    eng->mapTests->isAreaInsideMap(auxAreaWithWalls)) {
     Room* room = buildRoom(auxArea);
     rooms_.push_back(room);
     for(int y = auxArea.x0y0.y; y <= auxArea.x1y1.y; y++) {
@@ -1301,7 +1303,7 @@ bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const
 
     const int CHANCE_FOR_CRUMLE_ROOM = 20;
 
-    if(eng->dice.getInRange(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
+    if(eng->dice.range(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
       makeCrumbleRoom(auxAreaWithWalls, doorPos);
       // If we're making a "crumble room" we don't want to keep it for applying a theme and such
       deleteAndRemoveRoomFromList(room);
@@ -1393,14 +1395,14 @@ Rect Region::getRandomPossForRoom(Engine* eng) const {
   const Pos minDim(TINY_ALLOWED_HOR ? 2 : 4, TINY_ALLOWED_HOR ? 4 : 2);
   const Pos maxDim = x1y1_ - x0y0_ - Pos(2, 2);
 
-  const int H = eng->dice.getInRange(minDim.y, maxDim.y);
+  const int H = eng->dice.range(minDim.y, maxDim.y);
   const bool ALLOW_BIG_W = H > (maxDim.y * 5) / 6;
-  const int W = eng->dice.getInRange(minDim.x, ALLOW_BIG_W ? maxDim.x : minDim.x + (maxDim.x - minDim.x) / 5);
+  const int W = eng->dice.range(minDim.x, ALLOW_BIG_W ? maxDim.x : minDim.x + (maxDim.x - minDim.x) / 5);
 
   const Pos dim(W, H);
 
-  const int X0 = x0y0_.x + 1 + eng->dice.getInRange(0, maxDim.x - dim.x);
-  const int Y0 = x0y0_.y + 1 + eng->dice.getInRange(0, maxDim.y - dim.y);
+  const int X0 = x0y0_.x + 1 + eng->dice.range(0, maxDim.x - dim.x);
+  const int Y0 = x0y0_.y + 1 + eng->dice.range(0, maxDim.y - dim.y);
   const int X1 = X0 + dim.x - 1;
   const int Y1 = Y0 + dim.y - 1;
 

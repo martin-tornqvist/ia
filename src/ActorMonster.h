@@ -47,7 +47,7 @@ public:
   Monster();
   virtual ~Monster();
 
-  void moveToCell(const Pos& targetCell);
+  void moveToCell(Pos targetCell);
 
   AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
@@ -84,10 +84,10 @@ public:
   bool waiting_;
 
   virtual string getAggroPhraseMonsterSeen() const {
-    return def_->aggroTextMonsterSeen;
+    return data_->aggroTextMonsterSeen;
   }
   virtual string getAggroPhraseMonsterHidden() const {
-    return def_->aggroTextMonsterHidden;
+    return data_->aggroTextMonsterHidden;
   }
 
   double shockCausedCurrent;

@@ -72,7 +72,7 @@ void ProxEventWallCrumble::playerIsNear() {
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
     ActorId_t monsterType = actor_zombie;
-    const int RND = eng->dice.getInRange(0, 4);
+    const int RND = eng->dice.range(0, 4);
     switch(RND) {
       case 0: {monsterType = actor_zombie; nrMonsterLimitExceptAdjToEntry = 4;} break;
       case 1: {monsterType = actor_zombieAxe; nrMonsterLimitExceptAdjToEntry = 3;} break;
@@ -86,14 +86,14 @@ void ProxEventWallCrumble::playerIsNear() {
 
       eng->featureFactory->spawnFeatureAt(feature_stoneFloor, innerCells_.at(i));
 
-      if(eng->dice.getInRange(1, 100) < 20) {
+      if(eng->dice.range(1, 100) < 20) {
         eng->gore->makeGore(innerCells_.at(i));
         eng->gore->makeBlood(innerCells_.at(i));
       }
 
       if(nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry || eng->mapTests->isCellsNeighbours(innerCells_.at(i), pos_, false)) {
         Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(monsterType, innerCells_.at(i)));
-        monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+        monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
         nrMonstersSpawned++;
       }
     }

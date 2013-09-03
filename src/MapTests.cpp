@@ -35,7 +35,8 @@ void MapTests::getActorsPositions(const vector<Actor*>& actors,
   }
 }
 
-Actor* MapTests::getClosestActor(const Pos c, const vector<Actor*>& actors) const {
+Actor* MapTests::getClosestActor(const Pos c,
+                                 const vector<Actor*>& actors) const {
   if(actors.size() == 0) return NULL;
 
   int distToNearest = 99999;
@@ -51,11 +52,14 @@ Actor* MapTests::getClosestActor(const Pos c, const vector<Actor*>& actors) cons
   return actors.at(closestElement);
 }
 
-void MapTests::makeVisionBlockerArray(const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS], const int MAX_VISION_RANMGE) {
-  const int X0 = max(0, origin.x - MAX_VISION_RANMGE - 1);
-  const int Y0 = max(0, origin.y - MAX_VISION_RANMGE - 1);
-  const int X1 = min(MAP_X_CELLS - 1, origin.x + MAX_VISION_RANMGE + 1);
-  const int Y1 = min(MAP_Y_CELLS - 1, origin.y + MAX_VISION_RANMGE + 1);
+void MapTests::makeVisionBlockerArray(
+  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
+  const int MAX_VISION_RANGE) {
+
+  const int X0 = max(0, origin.x - MAX_VISION_RANGE - 1);
+  const int Y0 = max(0, origin.y - MAX_VISION_RANGE - 1);
+  const int X1 = min(MAP_X_CELLS - 1, origin.x + MAX_VISION_RANGE + 1);
+  const int Y1 = min(MAP_Y_CELLS - 1, origin.y + MAX_VISION_RANGE + 1);
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
@@ -77,19 +81,30 @@ void MapTests::makeVisionBlockerArray(const Pos& origin, bool arrayToFill[MAP_X_
   }
 }
 
-void MapTests::makeMoveBlockerArray(const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeMoveBlockerArray(
+  const Actor* const actorMoving,
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   makeMoveBlockerArrayForMoveType(actorMoving->getMoveType(), arrayToFill);
 }
 
-void MapTests::makeMoveBlockerArrayFeaturesOnly(const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeMoveBlockerArrayFeaturesOnly(
+  const Actor* const actorMoving,
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   makeMoveBlockerArrayForMoveTypeFeaturesOnly(actorMoving->getMoveType(), arrayToFill);
 }
 
-void MapTests::makeWalkBlockingArrayFeaturesOnly(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeWalkBlockingArrayFeaturesOnly(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, arrayToFill);
 }
 
-void MapTests::makeMoveBlockerArrayForMoveTypeFeaturesOnly(const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeMoveBlockerArrayForMoveTypeFeaturesOnly(
+  const MoveType_t moveType,
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       arrayToFill[x][y] = !(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType));
@@ -105,7 +120,9 @@ void MapTests::makeMoveBlockerArrayForMoveTypeFeaturesOnly(const MoveType_t move
   }
 }
 
-void MapTests::makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeShootBlockerFeaturesArray(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isShootPassable() == false;
@@ -121,7 +138,9 @@ void MapTests::makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y
   }
 }
 
-void MapTests::addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::addItemsToBlockerArray(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(eng->map->items[x][y] != NULL) {
@@ -131,7 +150,10 @@ void MapTests::addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]
   }
 }
 
-void MapTests::makeMoveBlockerArrayForMoveType(const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeMoveBlockerArrayForMoveType(
+  const MoveType_t moveType,
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       arrayToFill[x][y] = !(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType));
@@ -148,7 +170,9 @@ void MapTests::makeMoveBlockerArrayForMoveType(const MoveType_t moveType, bool a
   addLivingActorsToBlockerArray(arrayToFill);
 }
 
-void MapTests::makeItemBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::makeItemBlockerArray(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
     for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
       arrayToFill[x][y] = !eng->map->featuresStatic[x][y]->canHaveItem();
@@ -165,7 +189,9 @@ void MapTests::makeItemBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) 
   //addActorsToBlockerArray(arrayToFill); //Why?
 }
 
-void MapTests::addLivingActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::addLivingActorsToBlockerArray(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -178,7 +204,9 @@ void MapTests::addLivingActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y
   }
 }
 
-void MapTests::addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::addAllActorsToBlockerArray(
+  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -191,6 +219,7 @@ void MapTests::addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CE
 
 void MapTests::addAdjacentLivingActorsToBlockerArray(
   const Pos origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -205,8 +234,10 @@ void MapTests::addAdjacentLivingActorsToBlockerArray(
   }
 }
 
-bool MapTests::isCellNextToPlayer(const Pos& pos,
-                                  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+bool MapTests::isCellNextToPlayer(
+  const Pos& pos,
+  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+
   return isCellsNeighbours(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
 }
 
@@ -304,8 +335,10 @@ void MapTests::floodFill(
   }
 }
 
-bool MapTests::isCellsNeighbours(const Pos& pos1, const Pos& pos2,
-                                 const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+bool MapTests::isCellsNeighbours(
+  const Pos& pos1, const Pos& pos2,
+  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+
   if(pos1.x == pos2.x && pos1.y == pos2.y) {
     return COUNT_SAME_CELL_AS_NEIGHBOUR;
   }
@@ -373,7 +406,8 @@ vector<Pos> MapTests::getLine(const Pos& origin, const Pos& target,
       return line;
     }
     const int DISTANCE_TRAVELED =
-      eng->basicUtils->chebyshevDistance(origin.x, origin.y, curPos.x, curPos.y);
+      eng->basicUtils->chebyshevDistance(
+        origin.x, origin.y, curPos.x, curPos.y);
     if(DISTANCE_TRAVELED >= chebTravelLimit) {
       return line;
     }

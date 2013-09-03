@@ -82,8 +82,8 @@ protected:
   friend class FeatureLever;
   Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData);
 
-  const FeatureDef* const mimicFeature_;
-  int nrOfSpikes_;
+  const FeatureData* const mimicFeature_;
+  int nrSpikes_;
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isClued_, isOpenedAndClosedExternally_;
 

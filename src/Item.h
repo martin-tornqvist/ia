@@ -6,30 +6,31 @@
 #include "ItemData.h"
 #include "Art.h"
 
+class Property;
+
 enum ItemActivateReturn_t {
   itemActivate_keep, itemActivate_destroyed
 };
 
 class Item {
 public:
-  Item(ItemDef* itemDefinition) :
-    numberOfItems(1), def_(itemDefinition) {}
+  Item(ItemData* itemData, Engine* engine) :
+    nrItems(1), data_(itemData), eng(engine) {}
 
-  virtual ~Item();
+  virtual ~Item() {}
 
-  virtual void reset();
+  virtual void reset() {nrItems = 1;}
 
-  const ItemDef& getDef() const  {return *def_;}
-  virtual SDL_Color getColor() const    {return def_->color;}
-  char getGlyph() const                 {return def_->glyph;}
-  Tile_t getTile() const                {return def_->tile;}
+  const ItemData& getData() const       {return *data_;}
+  virtual SDL_Color getColor() const    {return data_->color;}
+  char getGlyph() const                 {return data_->glyph;}
+  Tile_t getTile() const                {return data_->tile;}
 
   virtual ItemActivateReturn_t defaultActivation(Actor*, Engine*) {
     return itemActivate_keep;
   }
 
-  virtual void identify(const bool IS_SILENT_IDENTIFY, Engine* const engine) {
-    (void)engine;
+  virtual void identify(const bool IS_SILENT_IDENTIFY) {
     (void)IS_SILENT_IDENTIFY;
   }
 
@@ -40,7 +41,7 @@ public:
     (void)lines;
   }
 
-  int getWeight() const {return def_->itemWeight * numberOfItems;}
+  int getWeight() const {return data_->itemWeight * nrItems;}
 
   string getWeightLabel() const {
     const int WEIGHT = getWeight();
@@ -54,8 +55,7 @@ public:
   }
 
   virtual bool activateDefault(Actor* const actor, Engine* const engine) {
-    (void)actor;
-    (void)engine;
+    (void)actor; (void)engine;
     return false;
   }
   virtual string getDefaultActivationLabel() const  {return "";}
@@ -63,15 +63,29 @@ public:
 
   virtual void newTurnInInventory(Engine* const engine) {(void)engine;}
 
-  int numberOfItems;
+  int nrItems;
+
+  virtual void onWear() {}
+  virtual void onTakeOff() {}
+
+  //Properties to apply e.g. when wearing a ring of fire resistance
+  vector<Prop*> propsEnabledOnCarrier;
 
 protected:
-  ItemDef* def_;
+  void clearPropsEnabledOnCarrier() {
+    for(unsigned int i = 0; i < propsEnabledOnCarrier.size(); i++) {
+      delete propsEnabledOnCarrier.at(i);
+    }
+    propsEnabledOnCarrier.resize(0);
+  }
+
+  ItemData* data_;
+
+  Engine* eng;
 
   //Called by the ItemDrop class to make noise etc
   friend class ItemDrop;
-  virtual void appplyDropEffects() {
-  }
+  virtual void appplyDropEffects() {}
 };
 
 #endif

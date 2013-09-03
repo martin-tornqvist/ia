@@ -16,8 +16,7 @@ using namespace std;
 
 class Engine;
 
-class StatusHandler;
-class ResHandler;
+class PropHandler;
 class TimedEntity;
 class Inventory;
 
@@ -26,16 +25,16 @@ public:
   Actor() {}
   virtual ~Actor();
 
-  inline StatusHandler* getStatusHandler() {return statusHandler_;}
+  inline PropHandler* getPropHandler() {return propHandler_;}
 
-  inline ActorDef* getDef() {return def_;}
+  inline ActorData* getData() {return data_;}
 
   Pos pos;
   ActorDeadState_t deadState;
 
   Inventory* getInventory() {return inventory_;}
 
-  void place(const Pos& pos_, ActorDef* const actorDefinition,
+  void place(const Pos& pos_, ActorData* const actorDefinition,
              Engine* engine);
 
   bool hit(int dmg, const DmgTypes_t dmgType);
@@ -66,7 +65,7 @@ public:
 
   void getSpotedEnemies(vector<Actor*>& vectorToFill);
 
-  inline ActorId_t getId()  const {return def_->id;}
+  inline ActorId_t getId()  const {return data_->id;}
   inline int getHp()        const {return hp_;}
   inline int getSpi()       const {return spi_;}
   virtual int getHpMax(const bool WITH_MODIFIERS) const {
@@ -75,13 +74,13 @@ public:
   }
   inline int getSpiMax()    const {return spiMax_;}
 
-  inline string getNameThe() const {return def_->name_the;}
-  inline string getNameA() const {return def_->name_a;}
-  inline bool isHumanoid() const {return def_->isHumanoid;}
+  inline string getNameThe() const {return data_->name_the;}
+  inline string getNameA() const {return data_->name_a;}
+  inline bool isHumanoid() const {return data_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getColor() {return clr_;}
   inline const Tile_t& getTile() const {return tile_;}
-  inline MoveType_t getMoveType() const {return def_->moveType;}
+  inline MoveType_t getMoveType() const {return data_->moveType;}
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
@@ -103,7 +102,7 @@ protected:
   friend class Dynamite;
   friend class Molotov;
   friend class Flare;
-  friend class StatusDiseased;
+  friend class PropDiseased;
 
   virtual void actorSpecificDie() {}
   virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
@@ -120,10 +119,9 @@ protected:
 
   Pos lairCell_;
 
-  ResHandler*     resHandler_;
-  StatusHandler*  statusHandler_;
-  ActorDef*       def_;
-  Inventory*      inventory_;
+  PropHandler*  propHandler_;
+  ActorData*    data_;
+  Inventory*    inventory_;
 };
 
 #endif

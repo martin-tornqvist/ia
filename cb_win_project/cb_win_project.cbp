@@ -222,9 +222,10 @@
 		<Unit filename="../src/ItemAmmo.h" />
 		<Unit filename="../src/ItemArmor.cpp" />
 		<Unit filename="../src/ItemArmor.h" />
+		<Unit filename="../src/ItemArtifact.cpp" />
+		<Unit filename="../src/ItemArtifact.h" />
 		<Unit filename="../src/ItemData.cpp" />
 		<Unit filename="../src/ItemData.h" />
-		<Unit filename="../src/ItemDefinition.h" />
 		<Unit filename="../src/ItemDevice.cpp" />
 		<Unit filename="../src/ItemDevice.h" />
 		<Unit filename="../src/ItemDrop.cpp" />

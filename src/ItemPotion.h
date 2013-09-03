@@ -8,7 +8,8 @@ class Engine;
 
 class Potion: public Item {
 public:
-  Potion(ItemDef* const itemDefinition) : Item(itemDefinition) {}
+  Potion(ItemData* const itemData, Engine* engine) :
+    Item(itemData, engine) {}
 
   virtual ~Potion() {}
 
@@ -22,8 +23,7 @@ public:
 
   void quaff(Actor* const actor, Engine* const engine);
 
-  void collide(const Pos& pos, Actor* actor, const ItemDef& itemDef,
-               Engine* const engine);
+  void collide(const Pos& pos, Actor* actor, Engine* const engine);
 
   void identify(const bool IS_SILENT_IDENTIFY, Engine* const engine);
 
@@ -44,8 +44,8 @@ protected:
 
 class PotionOfHealing: public Potion {
 public:
-  PotionOfHealing(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfHealing(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfHealing() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -56,8 +56,8 @@ private:
 
 class PotionOfSpirit: public Potion {
 public:
-  PotionOfSpirit(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfSpirit(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfSpirit() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -68,8 +68,8 @@ private:
 
 //class PotionOfSorcery: public Potion {
 //public:
-//  PotionOfSorcery(ItemDef* const itemDefinition) :
-//    Potion(itemDefinition) {}
+//  PotionOfSorcery(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {}
 //  ~PotionOfSorcery() {}
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
@@ -84,8 +84,8 @@ private:
 
 class PotionOfBlindness: public Potion {
 public:
-  PotionOfBlindness(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfBlindness(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfBlindness() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -96,8 +96,8 @@ private:
 
 class PotionOfParalyzation: public Potion {
 public:
-  PotionOfParalyzation(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfParalyzation(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfParalyzation() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -108,8 +108,8 @@ private:
 
 class PotionOfDisease: public Potion {
 public:
-  PotionOfDisease(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfDisease(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfDisease() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -124,8 +124,8 @@ private:
 
 class PotionOfConfusion: public Potion {
 public:
-  PotionOfConfusion(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfConfusion(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfConfusion() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -136,7 +136,7 @@ private:
 
 //class PotionOfCorruption: public Potion {
 //public:
-//  PotionOfCorruption(ItemDef* const itemDefinition) : Potion(itemDefinition) {}
+//  PotionOfCorruption(ItemData* const itemData, Engine* engine) : Potion(itemData, engine) {}
 //  ~PotionOfCorruption() {}
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
@@ -144,24 +144,22 @@ private:
 //  const string getRealTypeName() {return "Corruption";}
 //};
 
-class PotionOfTheCobra: public Potion {
-public:
-  PotionOfTheCobra(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
-  ~PotionOfTheCobra() {}
-  void specificQuaff(Actor* const actor, Engine* const engine);
-private:
-  void specificCollide(const Pos& pos, Actor* const actor,
-                       Engine* const engine);
-  const string getRealTypeName() {return "the Cobra";}
-};
-
-
+//class PotionOfTheCobra: public Potion {
+//public:
+//  PotionOfTheCobra(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {}
+//  ~PotionOfTheCobra() {}
+//  void specificQuaff(Actor* const actor, Engine* const engine);
+//private:
+//  void specificCollide(const Pos& pos, Actor* const actor,
+//                       Engine* const engine);
+//  const string getRealTypeName() {return "the Cobra";}
+//};
 
 //class PotionOfStealth: public Potion {
 //public:
-//  PotionOfStealth(ItemDef* const itemDefinition) :
-//    Potion(itemDefinition) {
+//  PotionOfStealth(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {
 //  }
 //  ~PotionOfStealth() {
 //  }
@@ -179,8 +177,8 @@ private:
 
 //class PotionOfFortitude: public Potion {
 //public:
-//  PotionOfFortitude(ItemDef* const itemDefinition) :
-//    Potion(itemDefinition) {}
+//  PotionOfFortitude(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {}
 //  ~PotionOfFortitude() {}
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
@@ -193,8 +191,8 @@ private:
 
 //class PotionOfToughness: public Potion {
 //public:
-//  PotionOfToughness(ItemDef* const itemDefinition) :
-//    Potion(itemDefinition) {}
+//  PotionOfToughness(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {}
 //  ~PotionOfToughness() {}
 //  void specificQuaff(Actor* const actor, Engine* const engine);
 //private:
@@ -205,8 +203,8 @@ private:
 
 class PotionOfPoison: public Potion {
 public:
-  PotionOfPoison(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfPoison(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfPoison() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -217,8 +215,8 @@ private:
 
 class PotionOfKnowledge: public Potion {
 public:
-  PotionOfKnowledge(ItemDef* const itemDefinition) :
-    Potion(itemDefinition) {}
+  PotionOfKnowledge(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
   ~PotionOfKnowledge() {}
   void specificQuaff(Actor* const actor, Engine* const engine);
 private:
@@ -262,7 +260,7 @@ public:
 
   ~PotionNameHandler() {m_falseNames.resize(0);}
 
-  void setColorAndFalseName(ItemDef* d);
+  void setColorAndFalseName(ItemData* d);
 
   void addSaveLines(vector<string>& lines) const;
   void setParametersFromSaveLines(vector<string>& lines);

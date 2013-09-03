@@ -132,7 +132,7 @@ private:
   vector<RoomTheme_t> themesBelongingTo_;
 };
 
-struct FeatureDef {
+struct FeatureData {
   Feature_t id;
   FeatureSpawnType_t spawnType;
   char glyph;
@@ -160,22 +160,25 @@ struct FeatureDef {
   vector<Feature_t> featuresOnDestroyed;
 };
 
-class FeatureData {
+class FeatureDataHandler {
 public:
-  FeatureData(Engine* engine) :
-    eng(engine) {
-    makeList();
+  FeatureDataHandler(Engine* engine) : eng(engine) {initDataList();}
+
+  ~FeatureDataHandler() {}
+
+  inline const FeatureData* getData(const Feature_t id) const {
+    return &(dataList[id]);
   }
-  ~FeatureData() {
-  }
-  const FeatureDef* getFeatureDef(const Feature_t id) const {
-    return &(featureDefs[id]);
-  }
-  void makeList();
+
+  void initDataList();
+
 private:
-  void addToListAndReset(FeatureDef& d);
-  FeatureDef featureDefs[endOfFeatures];
-  void resetDef(FeatureDef& d);
+  void addToListAndReset(FeatureData& d);
+
+  FeatureData dataList[endOfFeatures];
+
+  void resetData(FeatureData& d);
+
   Engine* eng;
 };
 

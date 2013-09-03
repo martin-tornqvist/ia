@@ -20,17 +20,17 @@ using namespace std;
 
 Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos& pos,
                                         FeatureSpawnData* spawnData) {
-  const FeatureDef* const def = eng->featureData->getFeatureDef(id);
+  const FeatureData* const data = eng->featureDataHandler->getData(id);
 
   //General (simple) features
-  if(def->spawnType == featureSpawnType_static) {
+  if(data->spawnType == featureSpawnType_static) {
     assert(spawnData == NULL);
     FeatureStatic* feature = new FeatureStatic(id, pos, eng);
     replaceStaticFeatureAt(feature, pos);
     assert(eng->map->featuresStatic[pos.x][pos.y]->getId() == id);
     return feature;
   }
-  if(def->spawnType == featureSpawnType_mob) {
+  if(data->spawnType == featureSpawnType_mob) {
     assert(spawnData == NULL);
     FeatureMob* feature = new FeatureMob(id, pos, eng);
     eng->gameTime->addFeatureMob(feature);

@@ -92,7 +92,8 @@ void Look::describeBriefFeatureMob(const Feature& feature) const {
 }
 
 void Look::describeBriefItem(const Item& item) const {
-  eng->log->addMessage(eng->itemData->getItemInterfaceRef(item, true) + ".");
+  eng->log->addMessage(
+    eng->itemDataHandler->getItemInterfaceRef(item, true) + ".");
 }
 
 void Look::describeBriefFeatureStatic(const Feature& feature) const {
@@ -104,10 +105,10 @@ void Look::printExtraActorDescription(const Pos& pos) const {
   if(actor != NULL) {
     if(actor != eng->player) {
       //Add written description.
-      string description = actor->getDef()->description;
+      string description = actor->getData()->description;
 
       //Add auto-description.
-      if(actor->getDef()->isAutoDescriptionAllowed) {
+      if(actor->getData()->isAutoDescriptionAllowed) {
         eng->autoDescribeActor->addAutoDescriptionLines(actor, description);
       }
 

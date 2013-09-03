@@ -18,7 +18,7 @@
 struct IsHigherSpawnMinLvl {
 public:
   IsHigherSpawnMinLvl() {}
-  bool operator()(const ActorDef* const d1, const ActorDef* const d2) {
+  bool operator()(const ActorData* const d1, const ActorData* const d2) {
     return d1->spawnMinDLVL < d2->spawnMinDLVL;
   }
 };
@@ -46,21 +46,21 @@ void DebugModeStatPrinter::run() {
   }
   printLine("\n");
 
-  vector<ActorDef*> actorDefsSorted;
+  vector<ActorData*> actorDataSorted;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    actorDefsSorted.push_back(&(eng->actorData->actorDefs[i]));
+    actorDataSorted.push_back(&(eng->actorDataHandler->dataList[i]));
   }
   IsHigherSpawnMinLvl isHigherSpawnMinLvl;
-  std::sort(actorDefsSorted.begin(), actorDefsSorted.end(), isHigherSpawnMinLvl);
+  std::sort(actorDataSorted.begin(), actorDataSorted.end(), isHigherSpawnMinLvl);
 
   printLine("MONSTERS PER MIN DLVL");
   printLine(separator);
   printLine(indent1 + "LVL   NR");
   printLine(indent1 + "---------");
 
-  vector<int> monstersPerMinDLVL(actorDefsSorted.back()->spawnMinDLVL + 1, 0);
-  for(unsigned int i = 0; i < actorDefsSorted.size(); i++) {
-    monstersPerMinDLVL.at(actorDefsSorted.at(i)->spawnMinDLVL)++;
+  vector<int> monstersPerMinDLVL(actorDataSorted.back()->spawnMinDLVL + 1, 0);
+  for(unsigned int i = 0; i < actorDataSorted.size(); i++) {
+    monstersPerMinDLVL.at(actorDataSorted.at(i)->spawnMinDLVL)++;
   }
   for(unsigned int i = 0; i < monstersPerMinDLVL.size(); i++) {
     const int LVL = i;
@@ -74,7 +74,7 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + lvlStr + nrStr);
   }
   printLine("\n" + indent1 + "Total number of monsters: " +
-            intToString(actorDefsSorted.size()));
+            intToString(actorDataSorted.size()));
   printLine("\n");
 
   printLine("STATS FOR EACH MONSTER");
@@ -85,8 +85,8 @@ void DebugModeStatPrinter::run() {
   printLine(indent1 + "(R) = Ranged weapon");
   printLine("");
 
-  for(unsigned int i = 0; i < actorDefsSorted.size(); i++) {
-    ActorDef& d = *(actorDefsSorted.at(i));
+  for(unsigned int i = 0; i < actorDataSorted.size(); i++) {
+    ActorData& d = *(actorDataSorted.at(i));
 
     Actor* const actor = eng->actorFactory->makeActorFromId(d.id);
     actor->place(Pos(-1, -1), &d, eng);
@@ -109,11 +109,14 @@ void DebugModeStatPrinter::run() {
     const unsigned int NR_INTRINSIC_ATTACKS = inv->getIntrinsicsSize();
     for(unsigned int i_intr = 0; i_intr < NR_INTRINSIC_ATTACKS; i_intr++) {
       const Item* const item = inv->getIntrinsicInElement(i_intr);
-      const ItemDef& itemDef = item->getDef();
-      const string meleeOrRangedStr = itemDef.isRangedWeapon ? "(R)" : "(M)";
+      const ItemData& itemData = item->getData();
+      const string meleeOrRangedStr = itemData.isRangedWeapon ? "(R)" : "(M)";
       const string attackNrStr = "Attack " + intToString(i_intr + 1);
-      const string dmgStr = intToString(itemDef.meleeDmg.first) + "d" + intToString(itemDef.meleeDmg.second);
-      printLine(indent2 + attackNrStr + " " + meleeOrRangedStr + ": " + dmgStr);
+      const string dmgStr =
+        intToString(itemData.meleeDmg.first) + "d" +
+        intToString(itemData.meleeDmg.second);
+      printLine(
+        indent2 + attackNrStr + " " + meleeOrRangedStr + ": " + dmgStr);
     }
 
     printLine("");

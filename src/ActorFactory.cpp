@@ -76,10 +76,10 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
 Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
-  actor->place(pos, &(eng->actorData->actorDefs[id]), eng);
+  actor->place(pos, &(eng->actorDataHandler->dataList[id]), eng);
 
-  if(actor->getDef()->nrLeftAllowedToSpawn != -1) {
-    actor->getDef()->nrLeftAllowedToSpawn--;
+  if(actor->getData()->nrLeftAllowedToSpawn != -1) {
+    actor->getData()->nrLeftAllowedToSpawn--;
   }
 
   eng->gameTime->insertActorInLoop(actor);
@@ -94,7 +94,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
 //  const unsigned int NR_ACTORS_DEFINED =
 //    static_cast<unsigned int>(endOfActorIds);
 //  for(unsigned int i = 1; i < NR_ACTORS_DEFINED; i++) {
-//    const ActorDef& def = eng->actorData->actorDefs[i];
+//    const ActorData& def = eng->actorData->actorDefs[i];
 //
 //    const bool IS_LVL_OK =
 //      DLVL + SPAWN_LVL_OFFSET >= def.spawnMinDLVL &&
@@ -118,7 +118,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
 //  }
 //
 //  if(monsterCandidates.empty() == false) {
-//    const int ELEMENT = eng->dice.getInRange(0, monsterCandidates.size() - 1);
+//    const int ELEMENT = eng->dice.range(0, monsterCandidates.size() - 1);
 //    const ActorId_t monsterType = monsterCandidates.at(ELEMENT);
 //    return spawnActor(monsterType, pos);
 //  }

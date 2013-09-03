@@ -197,7 +197,7 @@ void PlayerEnterName::run(const Pos& pos) {
     }
   }
 
-  ActorDef& iDef = *(eng->player->getDef());
+  ActorData& iDef = *(eng->player->getData());
   iDef.name_a = iDef.name_the = name;
 }
 

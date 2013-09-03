@@ -17,11 +17,11 @@ class TimedEntity;
 class Weapon;
 
 //enum StatusEffects_t {
-//  statusWound, statusBlind, statusBurning, statusFlared, statusParalyzed,
-//  statusTerrified, statusConfused, statusWaiting, statusSlowed,
+//  propWound, propBlind, statusBurning, propFlared, statusParalyzed,
+//  statusTerrified, propConfused, statusWaiting, propSlowed ,
 //  statusInfected, statusDiseased, statusPoisoned, statusFainted,
-//  statusWeak, statusPerfectReflexes, statusPerfectAim,
-//  statusCursed, statusBlessed, statusClairvoyant, statusNailed,
+//  propWeakened, statusPerfectReflexes, statusPerfectAim,
+//  propCursed, propBlessed, statusClairvoyant, statusNailed,
 //
 //  //Status for the steady aimer ability
 //  statusStill,
@@ -37,10 +37,11 @@ enum PropId_t {
   propRElectric,
   propRAcid,
   propRSleep,
-  propRParalysis,
+  propFreeAction,
   propRFear,
   propRConfusion,
   propLightSensitive,
+  propBlind,
   propFainted,
   propBurning,
   propFrozen,
@@ -56,68 +57,190 @@ enum PropId_t {
   propDiseased,
   propWeakened,
   propJuggernaut,
-  propHeroic,
+//  propHeroic,
   propClairvoyant,
   propBlessed,
   propCursed,
   propStill,
+  propWound,
 
-  //The following are mostly used for AI controll
-  propDisabledAttack, propDisabledMelee, propDisabledRanged
+  //The following are used for AI control
+  propWaiting,
+  propDisabledAttack,
+  propDisabledMelee,
+  propDisabledRanged,
 
   endOfPropIds
 };
 
-class StatusEffect {
+enum PropTurns_t {
+  propTurnsSpecified,
+  propTurnsIndefinite,
+  propTurnsStandard
+};
+
+enum PropMsg_t {
+  propMsgOnStartPlayer,
+  propMsgOnStartMonster,
+  propMsgOnEndPlayer,
+  propMsgOnEndMonster,
+  propMsgOnMorePlayer,
+  propMsgOnMoreMonster,
+  propMsgOnResistPlayer,
+  propMsgOnResistMonster,
+  endOfPropMsg
+};
+
+enum PropAlignment_t {
+  propAlignmentGood,
+  propAlignmentBad,
+  propAlignmentNeutral
+};
+
+enum PropSrc_t {
+  propSrcApplied,
+  propSrcInv,
+  propSrcAppliedAndInv
+};
+
+struct PropData {
+  PropId_t id;
+  Range stdRndTurns;
+  string name;
+  string nameShort;
+  string msg[endOfPropMsg];
+  bool isMakingMonsterAware;
+  bool allowDisplayTurns;
+  bool allowApplyMoreWhileActive;
+  bool updatePlayerVisualWhenStartOrEnd;
+  PropAlignment_t alignment;
+};
+
+class PropDataHandler {
 public:
-  StatusEffect(const int TURNS, const StatusEffects_t effectId) :
-    turnsLeft(TURNS), owningActor(NULL), effectId_(effectId) {}
+  PropDataHandler(Engine* engine) : eng(engine) {initDataList();}
 
-  StatusEffect(const StatusEffects_t effectId) : effectId_(effectId) {}
+  PropData dataList[endOfPropIds];
 
-  StatusEffect(const StatusEffect& other) : turnsLeft(other.turnsLeft) {}
+private:
+  void initDataList();
+  void addPropData(PropData& d);
+  Engine* eng;
+};
 
-  virtual ~StatusEffect();
+class Prop;
 
-  StatusEffects_t getEffectId() {return effectId_;}
+// Each actor has an instance of this
+class PropHandler {
+public:
+  PropHandler(Actor* owningActor, Engine* engine);
 
-  virtual bool isFinnished() {return turnsLeft <= 0;}
+  ~PropHandler();
 
-  int turnsLeft;
+  void tryApplyProp(Prop* const prop, const bool FORCE_EFFECT = false,
+                    const bool NO_MESSAGES = false,
+                    const bool DISABLE_REDRAW = false);
 
-  virtual StatusEffect* copy() = 0;
+  void tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE);
 
-  //Questions for the status to answer. This is how the status ends,
-  //how it damages the actor, how it affects ability values, etc.
-  virtual bool isConsideredBeneficial() = 0;
-  virtual bool allowDisplayTurnsInInterface() = 0;
-  virtual bool isMakingOwnerAwareOfPlayer() = 0;
-  virtual string getInterfaceName() = 0;
-  virtual string msgOnStartPlayer() = 0;
-  virtual string msgOnStartMonster() = 0;
-  virtual string msgOnEndPlayer() = 0;
-  virtual string msgOnEndMonster() = 0;
-  virtual string msgOnSavePlayer() = 0;
-  virtual string msgOnSaveMonster() = 0;
-  virtual string msgOnMorePlayer() = 0;
-  virtual string msgOnMoreMonster() = 0;
-  virtual void newTurn(Engine* const engine) = 0;
-  virtual void start(Engine* const engine) = 0;
-  virtual void end(Engine* const engine) = 0;
+  void changeMovePos(const Pos& actorPos, Pos& movePos);
+  bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowSee();
+  bool allowMove();
+  bool allowAct();
+  void onHit();
+  int getAbilityMod(const Abilities_t ability);
 
-  virtual bool canBeAppliedWhileSameEffectOngoing() {return true;}
+  bool hasProp(const PropId_t id) const;
 
-  virtual bool isPlayerVisualUpdateNeededWhenStartOrEnd() {return false;}
+  Prop* getAppliedProp(const PropId_t id) const;
 
-  virtual void more() {}
+//  bool hasAnyBadEffect() const {
+//    for(unsigned int i = 0; i < effects.size(); i++) {
+//      if(effects.at(i)->isConsideredBeneficial() == false) {
+//        return true;
+//      }
+//    }
+//    return false;
+//  }
 
-  virtual bool allowSee() {return true;}
-  virtual bool allowMove() {return true;}
-  virtual bool allowAct() {return true;}
-  virtual bool isSlowed() {return false;}
-  virtual void isHit() {}
+  void endAppliedProp(const PropId_t id,
+                      const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
+                      const bool RUN_PROP_END_EFFECTS = true);
 
-  virtual SDL_Color getColorOwningActor() {return clrBlack;}
+  bool changeActorClr(SDL_Color& clr);
+
+  vector<Prop*> appliedProps_;
+
+  void newTurnAllProps(
+    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+
+private:
+  friend class Player;
+  friend class ExplosionMaker;
+  Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
+                       const int NR_TURNS = -1);
+
+  void getPropsFromSource(vector<Prop*>& propList,
+                          const PropSrc_t source) const;
+
+  bool hasProp(const PropId_t id,
+               const vector<Prop*> propList) const;
+
+  Actor* owningActor_;
+  Engine* eng;
+};
+
+class Prop {
+public:
+  Prop(PropId_t id, Engine* engine, PropTurns_t turnsInit, int turns);
+
+  virtual ~Prop() {}
+
+  PropId_t getId() {return id_;}
+
+  virtual bool isFinnished() {
+    return turnsLeft_ == 0;
+  }
+  virtual PropAlignment_t getAlignment() {
+    return data_->alignment;
+  }
+  virtual bool allowDisplayTurns() {
+    return data_->allowDisplayTurns;
+  }
+  virtual bool isMakingMonsterAware() {
+    return data_->isMakingMonsterAware;
+  }
+  virtual string getName() {
+    return data_->name;
+  }
+  virtual string getNameShort() {
+    return data_->nameShort;
+  }
+  virtual void getMsg(const PropMsg_t msgType, string& msgRef) {
+    msgRef = data_->msg[msgType];
+  }
+  virtual bool allowApplyMoreWhileActive() {
+    return data_->allowApplyMoreWhileActive;
+  }
+  virtual bool updatePlayerVisualWhenStartOrEnd() {
+    return data_->updatePlayerVisualWhenStartOrEnd;
+  }
+  virtual bool allowSee()   {return true;}
+  virtual bool allowMove()  {return true;}
+  virtual bool allowAct()   {return true;}
+  virtual void onHit()      {}
+  virtual void onNewTurn()  {}
+  virtual void onStart()    {}
+  virtual void onEnd()      {}
+  virtual void onMore()     {}
+
+  virtual bool changeActorClr(SDL_Color& clr) {
+    (void)clr;
+    return false;
+  }
 
   virtual bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -127,354 +250,170 @@ public:
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return true;
   }
-
-  virtual int getAbilityModifier(const Abilities_t ability) {
+  virtual int getAbilityMod(const Abilities_t ability) {
     (void)ability;
     return 0;
   }
-
-  virtual Pos changeMovePos(const Pos& actorPos, const Pos& movePos,
-                            Engine* const engine) {
+  virtual void changeMovePos(const Pos& actorPos, Pos& movePos) {
     (void)actorPos;
-    (void)engine;
-    return movePos;
+    (void)movePos;
+  }
+  virtual bool tryResistOherProp(const PropId_t otherId) {
+    (void)otherId;
+    return false;
   }
 
-  virtual bool isEthereal() {return false;}
+  int turnsLeft_;
 
-  Actor* owningActor;
+  Actor* owningActor_;
+
+//  void setTurnsFromRandomStandard();
 
 protected:
-  virtual DiceParam getRandomStandardNrTurns() = 0;
-  void setTurnsFromRandomStandard(Engine* const engine);
+//  virtual DiceParam getRandomStandardNrTurns() = 0;
 
-  StatusEffects_t effectId_;
+  const PropId_t id_;
+  Engine* const eng;
+  const PropData* const data_;
 };
 
-class StatusWound: public StatusEffect {
+class PropWound: public Prop {
 public:
-  StatusWound(Engine* const engine) :
-    StatusEffect(statusWound), nrWounds(1) {(void)engine;}
+  PropWound(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propWound, engine, turnsInit, turns), nrWounds_(1) {}
 
-  StatusWound(const int TURNS) :
-    StatusEffect(TURNS, statusWound), nrWounds(TURNS) {}
+  ~PropWound() {}
 
-  ~StatusWound() {}
+  string getNameShort() {return "Wound(" + intToString(nrWounds_) + ")";}
 
-  StatusWound* copy() {
-    StatusWound* cpy = new StatusWound(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return false;}
-
-  string getInterfaceName()       {return "Wound(" + intToString(nrWounds) + ")";}
-  string msgOnStartPlayer()       {return "I am wounded!";}
-  string msgOnStartMonster()  {return "";}
-  string msgOnMorePlayer()        {return "I am more wounded!";}
-  string msgOnMoreMonster()   {return "";}
-  string msgOnEndPlayer()         {return "My wound is healed.";}
-  string msgOnSavePlayer()       {return "I resist wounding!";}
-  string msgOnSaveMonster()  {return "";}
-  string msgOnEndMonster()    {return "";}
-
-  int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_accuracyMelee)  return nrWounds * -10;
-    if(ability == ability_accuracyRanged) return nrWounds * -10;
-    if(ability == ability_dodgeAttack)    return nrWounds * -10;
-    if(ability == ability_dodgeTrap)      return nrWounds * -10;
+  int getAbilityMod(const Abilities_t ability) {
+    if(ability == ability_accuracyMelee)  return nrWounds_ * -10;
+    if(ability == ability_accuracyRanged) return nrWounds_ * -10;
+    if(ability == ability_dodgeAttack)    return nrWounds_ * -10;
+    if(ability == ability_dodgeTrap)      return nrWounds_ * -10;
     return 0;
   }
 
-  void more();
+  void onMore();
 
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
-  void newTurn(Engine* const engine) {(void)engine;}
-
-  void healOneWound(Engine* const engine);
+  void healOneWound();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 1, 0);}
-  int nrWounds;
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 1, 0);}
+  int nrWounds_;
 };
 
-class StatusTerrified: public StatusEffect {
+class PropTerrified: public Prop {
 public:
-  StatusTerrified(Engine* const engine) : StatusEffect(statusTerrified) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusTerrified(const int TURNS) : StatusEffect(TURNS, statusTerrified) {}
-  ~StatusTerrified() {}
+  PropTerrified(Engine* engine, PropTurns_t turnsInit,
+                int turns = -1) :
+    Prop(propTerrified, engine, turnsInit, turns) {}
 
-  StatusTerrified* copy() {
-    StatusTerrified* cpy = new StatusTerrified(turnsLeft);
-    return cpy;
-  }
+  ~PropTerrified() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  string getInterfaceName()       {return "Terrified";}
-  string msgOnStartPlayer()       {return "I am terrified!";}
-  string msgOnStartMonster()  {return "looks terrified.";}
-  string msgOnMorePlayer()        {return "I am more terrified.";}
-  string msgOnMoreMonster()   {return "looks more terrified.";}
-  string msgOnEndPlayer()         {return "I am no longer terrified!";}
-  string msgOnSavePlayer()       {return "I resist fear.";}
-  string msgOnSaveMonster()  {return "resists fear.";}
-  string msgOnEndMonster()    {return "is no longer terrified.";}
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_dodgeAttack)      return 20;
     if(ability == ability_accuracyRanged)   return -20;
     return 0;
   }
 
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 4);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 4);}
 };
 
-class StatusWeak: public StatusEffect {
+class PropWeakened: public Prop {
 public:
-  StatusWeak(Engine* const engine) : StatusEffect(statusWeak) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusWeak(const int TURNS) : StatusEffect(TURNS, statusWeak) {}
-  ~StatusWeak() {}
+  PropWeakened(Engine* engine, PropTurns_t turnsInit,
+               int turns = -1) :
+    Prop(propWeakened, engine, turnsInit, turns) {}
 
-  StatusWeak* copy() {
-    StatusWeak* cpy = new StatusWeak(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  string getInterfaceName()       {return "Weak";}
-  string msgOnStartPlayer()       {return "I feel weaker!";}
-  string msgOnStartMonster()  {return "looks weaker.";}
-  string msgOnMorePlayer()        {return "I feel weaker.";}
-  string msgOnMoreMonster()   {return "looks weaker!";}
-  string msgOnEndPlayer()         {return "I feel stronger!";}
-  string msgOnSavePlayer()       {return "I resist weakness.";}
-  string msgOnSaveMonster()  {return "resists weakness.";}
-  string msgOnEndMonster()    {return "looks stronger.";}
-
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
+  ~PropWeakened() {}
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 100);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 100);}
 };
 
-class StatusInfected: public StatusEffect {
+class PropInfected: public Prop {
 public:
-  StatusInfected(Engine* const engine) : StatusEffect(statusInfected) {
-    setTurnsFromRandomStandard(engine);
-  }
-  ~StatusInfected() {}
+  PropInfected(Engine* engine, PropTurns_t turnsInit,
+               int turns = -1) :
+    Prop(propInfected, engine, turnsInit, turns) {}
 
-  StatusInfected* copy() {
-    StatusInfected* cpy = new StatusInfected(turnsLeft);
-    return cpy;
-  }
+  ~PropInfected() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return false;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  string getInterfaceName()       {return "Infected";}
-  string msgOnStartPlayer()       {return "I am infected!";}
-  string msgOnStartMonster()  {return "is infected.";}
-  string msgOnMorePlayer()        {return "I am more infected.";}
-  string msgOnMoreMonster()   {return "is more infected.";}
-  string msgOnEndPlayer()         {return "My infection is cured!";}
-  string msgOnSavePlayer()       {return "I resist infection.";}
-  string msgOnSaveMonster()  {return "resists infection.";}
-  string msgOnEndMonster()    {return "is no longer infected.";}
-
-  void start(Engine* const engine)  {(void)engine;}
-  void end(Engine* const engine)    {(void)engine;}
-
-  void newTurn(Engine* const engine);
+  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 20, 100);}
-  friend class StatusHandler;
-  StatusInfected(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 20, 100);}
 };
 
-class StatusDiseased: public StatusEffect {
+class PropDiseased: public Prop {
 public:
-  StatusDiseased(Engine* const engine) : StatusEffect(statusDiseased) {
-    setTurnsFromRandomStandard(engine);
-  }
-  ~StatusDiseased() {}
+  PropDiseased(Engine* engine, PropTurns_t turnsInit,
+               int turns = -1) :
+    Prop(propDiseased, engine, turnsInit, turns) {}
 
-  StatusDiseased* copy() {
-    StatusDiseased* cpy = new StatusDiseased(turnsLeft);
-    return cpy;
-  }
+  ~PropDiseased() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return false;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
+  void onStart();
 
-  string getInterfaceName()       {return "Diseased";}
-  string msgOnStartPlayer()       {return "I am diseased!";}
-  string msgOnStartMonster()  {return "is diseased.";}
-  string msgOnMorePlayer()        {return "I am more diseased.";}
-  string msgOnMoreMonster()   {return "is more diseased.";}
-  string msgOnEndPlayer()         {return "My disease is cured!";}
-  string msgOnSavePlayer()       {return "I resist disease.";}
-  string msgOnSaveMonster()  {return "resists disease.";}
-  string msgOnEndMonster()    {return "is no longer diseased.";}
-
-  void start(Engine* const engine);
-
-  void end(Engine* const engine) {(void)engine;}
-
-  void newTurn(Engine* const engine);
+//  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 1450);}
-  friend class StatusHandler;
-  StatusDiseased(const int TURNS) : StatusEffect(TURNS, statusDiseased) {}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 1450);}
 };
 
-class StatusPoisoned: public StatusEffect {
+class PropPoisoned: public Prop {
 public:
-  StatusPoisoned(Engine* const engine) : StatusEffect(statusPoisoned) {setTurnsFromRandomStandard(engine);}
-  ~StatusPoisoned() {}
+  PropPoisoned(Engine* engine, PropTurns_t turnsInit,
+               int turns = -1) :
+    Prop(propPoisoned, engine, turnsInit, turns) {}
 
-  StatusPoisoned* copy() {
-    StatusPoisoned* cpy = new StatusPoisoned(turnsLeft);
-    return cpy;
-  }
+  ~PropPoisoned() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  string getInterfaceName()       {return "Poisoned";}
-  string msgOnStartPlayer()       {return "I am poisoned!";}
-  string msgOnStartMonster()  {return "is poisoned.";}
-  string msgOnMorePlayer()        {return "I am more poisoned.";}
-  string msgOnMoreMonster()   {return "is more poisoned.";}
-  string msgOnEndPlayer()         {return "My body is cleansed from poisoning!";}
-  string msgOnSavePlayer()       {return "I resist poisoning.";}
-  string msgOnSaveMonster()  {return "resists poisoning.";}
-  string msgOnEndMonster()    {return "is cleansed from poisoning.";}
-
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
-  void newTurn(Engine* const engine);
+  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
-  friend class StatusHandler;
-  StatusPoisoned(const int TURNS) : StatusEffect(TURNS, statusPoisoned) {}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
 };
 
-class StatusStill: public StatusEffect {
+class PropStill: public Prop {
 public:
-  StatusStill(Engine* const engine) : StatusEffect(statusStill) {setTurnsFromRandomStandard(engine);}
-  StatusStill(const int TURNS) : StatusEffect(TURNS, statusStill) {}
-  ~StatusStill() {}
+  PropStill(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propStill, engine, turnsInit, turns) {}
 
-  StatusStill* copy() {
-    StatusStill* cpy = new StatusStill(turnsLeft);
-    return cpy;
-  }
+  ~PropStill() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return false;}
-  bool isConsideredBeneficial()       {return true;}
-  bool allowDisplayTurnsInInterface() {return false;}
-
-  string getInterfaceName()       {return "Still";}
-  string msgOnStartPlayer()       {return "";}
-  string msgOnMorePlayer()        {return "";}
-  string msgOnMoreMonster()   {return "";}
-  string msgOnEndPlayer()         {return "";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnStartMonster()  {return "";}
-  string msgOnEndMonster()    {return "";}
-  string msgOnSaveMonster()  {return "";}
-
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_accuracyRanged) return 10;
     return 0;
   }
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
-class StatusBlind: public StatusEffect {
+class PropBlind: public Prop {
 public:
-  StatusBlind(Engine* const engine) : StatusEffect(statusBlind) {setTurnsFromRandomStandard(engine);}
-  StatusBlind(const int TURNS) : StatusEffect(TURNS, statusBlind) {}
-  ~StatusBlind() {}
+  PropBlind(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propBlind, engine, turnsInit, turns) {}
 
-  StatusBlind* copy() {
-    StatusBlind* cpy = new StatusBlind(turnsLeft);
-    return cpy;
-  }
+  ~PropBlind() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
+  bool updatePlayerVisualWhenStartOrEnd();
 
-  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
-
-  string getInterfaceName()       {return "Blind";}
-  string msgOnStartPlayer()       {return "I am blind!";}
-  string msgOnMorePlayer()        {return "I am more blind.";}
-  string msgOnMoreMonster()   {return "is more blind.";}
-  string msgOnEndPlayer()         {return "I can see again!";}
-  string msgOnSavePlayer()       {return "I resist blindness.";}
-  string msgOnStartMonster()  {return "is blinded.";}
-  string msgOnEndMonster()    {return "can see again.";}
-  string msgOnSaveMonster()  {return "resists blindness.";}
-
-  void start(Engine* const engine);
-  void end(Engine* const engine);
+  void onStart();
 
   bool allowSee() {return false;}
 
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_searching)      return -9999;
     if(ability == ability_dodgeTrap ||
         ability == ability_dodgeAttack)   return -50;
@@ -483,378 +422,148 @@ public:
     return 0;
   }
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 8);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 8);}
 };
 
-class StatusBlessed: public StatusEffect {
+class PropBlessed: public Prop {
 public:
-  StatusBlessed(Engine* const engine) : StatusEffect(statusBlessed) {setTurnsFromRandomStandard(engine);}
-  StatusBlessed(const int TURNS) : StatusEffect(TURNS, statusBlessed) {}
-  ~StatusBlessed() {}
+  PropBlessed(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propBlessed, engine, turnsInit, turns) {}
 
-  StatusBlessed* copy() {
-    StatusBlessed* cpy = new StatusBlessed(turnsLeft);
-    return cpy;
-  }
+  ~PropBlessed() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return false;}
-  bool isConsideredBeneficial()       {return true;}
-  bool allowDisplayTurnsInInterface() {return true;}
+  void onStart();
 
-  string getInterfaceName()       {return "Blessed";}
-  string msgOnStartPlayer()       {return "I feel luckier.";}
-  string msgOnMorePlayer()        {return "I feel luckier.";}
-  string msgOnMoreMonster()   {return "is luckier.";}
-  string msgOnEndPlayer()         {return "My good luck ends.";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnStartMonster()  {return "is more lucky.";}
-  string msgOnEndMonster()    {return "has normal luck.";}
-  string msgOnSaveMonster()  {return "";}
-
-  void start(Engine* const engine);
-  void end(Engine* const engine) {(void)engine;}
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_searching)  return 0;
     return 10;
   }
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
 };
 
-class StatusCursed: public StatusEffect {
+class PropCursed: public Prop {
 public:
-  StatusCursed(Engine* const engine) : StatusEffect(statusCursed) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusCursed(const int TURNS) : StatusEffect(TURNS, statusCursed) {}
-  ~StatusCursed() {}
+  PropCursed(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propCursed, engine, turnsInit, turns) {}
 
-  StatusCursed* copy() {
-    StatusCursed* cpy = new StatusCursed(turnsLeft);
-    return cpy;
-  }
+  ~PropCursed() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return false;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
+  void onStart();
 
-  string getInterfaceName()       {return "Cursed";}
-  string msgOnStartPlayer()       {return "I feel misfortunate.";}
-  string msgOnMorePlayer()        {return "I feel more misfortunate.";}
-  string msgOnMoreMonster()   {return "is misfortunate.";}
-  string msgOnEndPlayer()         {return "My misfortune ends.";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnStartMonster()  {return "is more misfortunate.";}
-  string msgOnEndMonster()    {return "has normal fortune.";}
-  string msgOnSaveMonster()  {return "";}
-
-  void start(Engine* const engine);
-
-  void end(Engine* const engine) {(void)engine;}
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     (void)ability;
     return -10;
   }
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 500, 500);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 500, 500);}
 };
 
-class StatusClairvoyant: public StatusEffect {
+class PropClairvoyant: public Prop {
 public:
-  StatusClairvoyant(Engine* const engine) : StatusEffect(statusClairvoyant) {setTurnsFromRandomStandard(engine);}
-  StatusClairvoyant(const int TURNS) : StatusEffect(TURNS, statusClairvoyant) {}
-  ~StatusClairvoyant() {}
+  PropClairvoyant(Engine* engine, PropTurns_t turnsInit,
+                  int turns = -1) :
+    Prop(propClairvoyant, engine, turnsInit, turns) {}
 
-  StatusClairvoyant* copy() {
-    StatusClairvoyant* cpy = new StatusClairvoyant(turnsLeft);
-    return cpy;
-  }
+  ~PropClairvoyant() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return true;}
-  bool allowDisplayTurnsInInterface() {return true;}
+  bool updatePlayerVisualWhenStartOrEnd();
 
-  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
+  void onStart();
 
-  string getInterfaceName()       {return "Clairvoyant";}
-  string msgOnStartPlayer()       {return "I see far and beyond!";}
-  string msgOnMorePlayer()        {return "I see far and beyond!";}
-  string msgOnMoreMonster()   {return "";}
-  string msgOnEndPlayer()         {return "My sight is limited.";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnStartMonster()  {return "";}
-  string msgOnEndMonster()    {return "";}
-  string msgOnSaveMonster()  {return "";}
-
-  void start(Engine* const engine);
-  void end(Engine* const engine);
-
-  int getAbilityModifier(const Abilities_t ability) {
-    (void)ability;
-    return 0;
-  }
-
-  void newTurn(Engine* const engine);
+//  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
 };
 
-class StatusBurning: public StatusEffect {
+class PropBurning: public Prop {
 public:
-  StatusBurning(Engine* const engine) : StatusEffect(statusBurning) {setTurnsFromRandomStandard(engine);}
-  ~StatusBurning() {}
+  PropBurning(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propBurning, engine, turnsInit, turns) {}
 
-  StatusBurning* copy() {
-    StatusBurning* cpy = new StatusBurning(turnsLeft);
-    return cpy;
+  ~PropBurning() {}
+
+  bool changeActorClr(SDL_Color& clr) {
+    clr = clrRedLgt;
+    return true;
   }
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
-
-  string getInterfaceName()       {return "Burning";}
-  string msgOnStartPlayer()       {return "I am Burning!";}
-  string msgOnMorePlayer()        {return "I am further engulfed by flames!";}
-  string msgOnMoreMonster()   {return "is burning more.";}
-  string msgOnEndPlayer()         {return "The flames are put out.";}
-  string msgOnSavePlayer()       {return "I resist burning.";}
-  string msgOnStartMonster()  {return "is burning.";}
-  string msgOnEndMonster()    {return "is no longer burning.";}
-  string msgOnSaveMonster()  {return "resists burning.";}
-
-  SDL_Color getColorOwningActor() {return clrRedLgt;}
-
-  void start(Engine* const engine);
-  void end(Engine* const engine);
-  void newTurn(Engine* const engine);
+  void onStart();
+  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 6, 3);}
-  friend class StatusHandler;
-  StatusBurning(const int TURNS) : StatusEffect(TURNS, statusBurning) {}
-  void doDamage(Engine* const engine);
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 6, 3);}
 };
 
-class StatusFlared: public StatusEffect {
+class PropFlared: public Prop {
 public:
-  StatusFlared(Engine* const engine) : StatusEffect(statusFlared) {setTurnsFromRandomStandard(engine);}
-  ~StatusFlared() {}
+  PropFlared(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propFlared, engine, turnsInit, turns) {}
 
-  StatusFlared* copy() {
-    StatusFlared* cpy = new StatusFlared(turnsLeft);
-    return cpy;
-  }
+  ~PropFlared() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return false;}
-
-  string getInterfaceName()       {return "";}
-  string msgOnStartPlayer()       {return "";}
-  string msgOnMorePlayer()        {return ".";}
-  string msgOnMoreMonster()   {return "is perforated by another flare.";}
-  string msgOnEndPlayer()         {return "";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnStartMonster()  {return "is perforated by a flare.";}
-  string msgOnEndMonster()    {return "recovers from a flare.";}
-  string msgOnSaveMonster()  {return "resists a flare.";}
-
-  void start(Engine* const engine);
-  void end(Engine* const engine);
-  void newTurn(Engine* const engine);
+  void onNewTurn();
 
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 2, 2);}
-  friend class StatusHandler;
-  StatusFlared(const int TURNS) : StatusEffect(TURNS, statusFlared) {}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 2, 2);}
 };
 
-class StatusConfused: public StatusEffect {
+class PropConfused: public Prop {
 public:
-  StatusConfused(Engine* const engine) : StatusEffect(statusConfused) {setTurnsFromRandomStandard(engine);}
-  StatusConfused(const int TURNS) : StatusEffect(TURNS, statusConfused) {}
-  ~StatusConfused() {}
+  PropConfused(Engine* engine, PropTurns_t turnsInit,
+               int turns = -1) :
+    Prop(propConfused, engine, turnsInit, turns) {}
 
-  StatusConfused* copy() {
-    StatusConfused* cpy = new StatusConfused(turnsLeft);
-    return cpy;
-  }
+  ~PropConfused() {}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return true;}
-
-  string getInterfaceName()       {return "Confused";}
-  string msgOnStartPlayer()       {return "I am confused!";}
-  string msgOnStartMonster()  {return "is confused.";}
-  string msgOnMorePlayer()        {return "I am more confused.";}
-  string msgOnMoreMonster()   {return "is more confused.";}
-  string msgOnEndPlayer()         {return "I am no longer confused";}
-  string msgOnEndMonster()    {return "is no longer confused.";}
-  string msgOnSavePlayer()       {return "I resist confusion.";}
-  string msgOnSaveMonster()  {return "resists confusion.";}
-
-  Pos changeMovePos(const Pos& actorPos, const Pos& movePos, Engine* const engine);
+  void changeMovePos(const Pos& actorPos, Pos& movePos);
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 30);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 30);}
 };
 
-class StatusNailed: public StatusEffect {
+class PropNailed: public Prop {
 public:
-  StatusNailed(Engine* const engine) :
-    StatusEffect(statusNailed), nrOfSpikes(1) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusNailed(const int TURNS) :
-    StatusEffect(TURNS, statusNailed), nrOfSpikes(1) {}
-  ~StatusNailed() {}
+  PropNailed(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propNailed, engine, turnsInit, turns), nrSpikes_(1) {}
+  ~PropNailed() {}
 
-  StatusNailed* copy() {
-    StatusNailed* cpy = new StatusNailed(turnsLeft);
-    cpy->nrOfSpikes = nrOfSpikes;
-    return cpy;
-  }
+  string getNameShort() {return "Nailed(" + intToString(nrSpikes_) + ")";}
 
-  bool isMakingOwnerAwareOfPlayer()   {return true;}
-  bool isConsideredBeneficial()       {return false;}
-  bool allowDisplayTurnsInInterface() {return false;}
+  void changeMovePos(const Pos& actorPos, Pos& movePos);
 
-  string getInterfaceName()       {return "Nailed(" + intToString(nrOfSpikes) + ")";}
-  string msgOnStartPlayer()       {return "I am fastened by a spike!";}
-  string msgOnStartMonster()  {return "is fastened by a spike.";}
-  string msgOnMorePlayer()        {return "I am fastened by another spike.";}
-  string msgOnMoreMonster()   {return "is fastened by another spike.";}
-  string msgOnEndPlayer()         {return "I tear free!";}
-  string msgOnEndMonster()    {return "tears free!";}
-  string msgOnSavePlayer()       {return "";}
-  string msgOnSaveMonster()  {return "";}
+  void more() {nrSpikes_++;}
 
-  Pos changeMovePos(const Pos& actorPos , const Pos& movePos,
-                    Engine* const engine);
-
-  void more() {nrOfSpikes++;}
-
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
-  void newTurn(Engine* const engine) {(void)engine;}
-
-  bool isFinnished() {return nrOfSpikes <= 0;}
+  bool isFinnished() {return nrSpikes_ <= 0;}
 
 private:
-  int nrOfSpikes;
-  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 999);}
+  int nrSpikes_;
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 999);}
 };
 
 
-class StatusWaiting: public StatusEffect {
+class PropWaiting: public Prop {
 public:
-  StatusWaiting(Engine* const engine) :
-    StatusEffect(statusWaiting) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusWaiting(const int TURNS) :
-    StatusEffect(TURNS, statusWaiting) {
-  }
-  ~StatusWaiting() {
-  }
+  PropWaiting(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propWaiting, engine, turnsInit, turns) {}
 
-  StatusWaiting* copy() {
-    StatusWaiting* cpy = new StatusWaiting(turnsLeft);
-    return cpy;
-  }
+  ~PropWaiting() {}
 
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return false;
-  }
-
-  string getInterfaceName() {
-    return "";
-  }
-  string msgOnStartPlayer() {
-    return "";
-  }
-  string msgOnMorePlayer() {
-    return "";
-  }
-  string msgOnMoreMonster() {
-    return "";
-  }
-  string msgOnEndPlayer() {
-    return "";
-  }
-  string msgOnSavePlayer() {
-    return "";
-  }
-  string msgOnStartMonster() {
-    return "";
-  }
-  string msgOnEndMonster() {
-    return "";
-  }
-  string msgOnSaveMonster() {
-    return "";
-  }
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  bool allowMove() {
-    return false;
-  }
-  bool allowAct() {
-    return false;
-  }
+  bool allowMove()  {return false;}
+  bool allowAct()   {return false;}
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
@@ -863,47 +572,17 @@ public:
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
-
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 1);
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
-class StatusDisabledAttack: public StatusEffect {
+class PropDisabledAttack: public Prop {
 public:
-  StatusDisabledAttack(Engine* const engine) :
-    StatusEffect(statusDisabledAttack) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusDisabledAttack(const int TURNS) :
-    StatusEffect(TURNS, statusDisabledAttack) {
-  }
-  ~StatusDisabledAttack() {}
+  PropDisabledAttack(Engine* engine, PropTurns_t turnsInit,
+                     int turns = -1) :
+    Prop(propDisabledAttack, engine, turnsInit, turns) {}
 
-  StatusDisabledAttack* copy() {
-    StatusDisabledAttack* cpy = new StatusDisabledAttack(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {return false;}
-
-  bool isConsideredBeneficial() {return false;}
-
-  bool allowDisplayTurnsInInterface() {return false;}
-
-  string getInterfaceName() {return "";}
-  string msgOnStartPlayer() {return "";}
-  string msgOnMorePlayer() {return "";}
-  string msgOnMoreMonster() {return "";}
-  string msgOnEndPlayer() {return "";}
-  string msgOnSavePlayer() {return "";}
-  string msgOnStartMonster() {return "";}
-  string msgOnEndMonster() {return "";}
-  string msgOnSaveMonster() {return "";}
-  void newTurn(Engine* const engine) {(void)engine; turnsLeft--;}
-  void start(Engine* const engine) {(void)engine;}
-  void end(Engine* const engine) {(void)engine;}
+  ~PropDisabledAttack() {}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -914,232 +593,112 @@ public:
     return false;
   }
 private:
-  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
-class StatusDisabledAttackMelee: public StatusEffect {
+class PropDisabledMelee: public Prop {
 public:
-  StatusDisabledAttackMelee(Engine* const engine) :
-    StatusEffect(statusDisabledMelee) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusDisabledAttackMelee(const int TURNS) :
-    StatusEffect(TURNS, statusDisabledMelee) {
-  }
-  ~StatusDisabledAttackMelee() {
-  }
+  PropDisabledMelee(Engine* engine, PropTurns_t turnsInit,
+                    int turns = -1) :
+    Prop(propDisabledMelee, engine, turnsInit, turns) {}
 
-  StatusDisabledAttackMelee* copy() {
-    StatusDisabledAttackMelee* cpy = new StatusDisabledAttackMelee(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return false;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return false;
-  }
-
-  string getInterfaceName() {
-    return "";
-  }
-  string msgOnStartPlayer() {
-    return "";
-  }
-  string msgOnMorePlayer() {
-    return "";
-  }
-  string msgOnMoreMonster() {
-    return "";
-  }
-  string msgOnEndPlayer() {
-    return "";
-  }
-  string msgOnSavePlayer() {
-    return "";
-  }
-  string msgOnStartMonster() {
-    return "";
-  }
-  string msgOnEndMonster() {
-    return "";
-  }
-  string msgOnSaveMonster() {
-    return "";
-  }
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-  void end(Engine* const engine) {
-    (void)engine;
-  }
+  ~PropDisabledMelee() {}
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 1);
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
-class StatusDisabledAttackRanged: public StatusEffect {
+class PropDisabledRanged: public Prop {
 public:
-  StatusDisabledAttackRanged(Engine* const engine) :
-    StatusEffect(statusDisabledRanged) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusDisabledAttackRanged(const int TURNS) :
-    StatusEffect(TURNS, statusDisabledRanged) {
-  }
-  ~StatusDisabledAttackRanged() {
-  }
+  PropDisabledRanged(Engine* engine, PropTurns_t turnsInit,
+                     int turns = -1) :
+    Prop(propDisabledRanged, engine, turnsInit, turns) {}
 
-  StatusDisabledAttackRanged* copy() {
-    StatusDisabledAttackRanged* cpy = new StatusDisabledAttackRanged(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return false;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return false;
-  }
-
-  string getInterfaceName() {
-    return "";
-  }
-  string msgOnStartPlayer() {
-    return "";
-  }
-  string msgOnMorePlayer() {
-    return "";
-  }
-  string msgOnMoreMonster() {
-    return "";
-  }
-  string msgOnEndPlayer() {
-    return "";
-  }
-  string msgOnSavePlayer() {
-    return "";
-  }
-  string msgOnStartMonster() {
-    return "";
-  }
-  string msgOnEndMonster() {
-    return "";
-  }
-  string msgOnSaveMonster() {
-    return "";
-  }
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-  void end(Engine* const engine) {
-    (void)engine;
-  }
+  ~PropDisabledRanged() {}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
   }
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(0, 0, 1);
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
-class StatusParalyzed: public StatusEffect {
+class PropParalyzed: public Prop {
 public:
-  StatusParalyzed(Engine* const engine) :
-    StatusEffect(statusParalyzed) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusParalyzed(const int TURNS) :
-    StatusEffect(TURNS, statusParalyzed) {
-  }
-  ~StatusParalyzed() {
-  }
+  PropParalyzed(Engine* engine, PropTurns_t turnsInit,
+                int turns = -1) :
+    Prop(propParalysed, engine, turnsInit, turns) {}
 
-  StatusParalyzed* copy() {
-    StatusParalyzed* cpy = new StatusParalyzed(turnsLeft);
-    return cpy;
-  }
+  ~PropParalyzed() {}
 
-  bool isMakingOwnerAwareOfPlayer() {
-    return true;
-  }
+  void onStart();
 
-  bool isConsideredBeneficial() {
-    return false;
-  }
+  bool allowAct() {return false;}
 
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Paralyzed";
-  }
-  string msgOnStartPlayer() {
-    return "I am paralyzed!";
-  }
-  string msgOnMorePlayer() {
-    return "";
-  }
-  string msgOnMoreMonster() {
-    return "";
-  }
-  string msgOnEndPlayer() {
-    return "I can move again!";
-  }
-  string msgOnSavePlayer() {
-    return "I resist paralyzation.";
-  }
-  string msgOnStartMonster() {
-    return "is paralyzed.";
-  }
-  string msgOnEndMonster() {
-    return "can move again.";
-  }
-  string msgOnSaveMonster() {
-    return "resists paralyzation.";
-  }
-
-  void start(Engine* const engine);
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  bool allowAct() {
-    return false;
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
+      return -999;
+    return 0;
+  }
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    return false;
+  }
+  bool allowAttackMleee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    return false;
+  }
+
+private:
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 3, 6);}
+};
+
+class PropFrozen: public Prop {
+public:
+  PropFrozen(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propFrozen, engine, turnsInit, turns) {}
+  ~PropFrozen() {}
+private:
+};
+
+class PropFreeAction: public Prop {
+public:
+  PropFreeAction(Engine* engine, PropTurns_t turnsInit,
+                 int turns = -1) :
+    Prop(propFreeAction, engine, turnsInit, turns) {}
+  ~PropFreeAction() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropFainted: public Prop {
+public:
+  PropFainted(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propFainted, engine, turnsInit, turns) {}
+
+  ~PropFainted() {}
+
+  bool updatePlayerVisualWhenStartOrEnd();
+
+  void onStart();
+
+  bool allowAct() {return false;}
+
+  bool allowSee() {return false;}
+
+  int getAbilityMod(const Abilities_t ability) {
+    if(
+      ability == ability_dodgeTrap ||
+      ability == ability_dodgeAttack)
       return -999;
     return 0;
   }
@@ -1153,619 +712,159 @@ public:
     return false;
   }
 
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-  bool canBeAppliedWhileSameEffectOngoing() {
-    return false;
-  }
+  void onHit() {turnsLeft_ = 0;}
 
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 3, 6);
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 50, 50);}
 };
 
-class StatusFainted: public StatusEffect {
+class PropSlowed: public Prop {
 public:
-  StatusFainted(Engine* const engine) :
-    StatusEffect(statusFainted) {
-    setTurnsFromRandomStandard(engine);
-  }
-  ~StatusFainted() {
-  }
+  PropSlowed(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propSlowed, engine, turnsInit, turns) {}
 
-  StatusFainted* copy() {
-    StatusFainted* cpy = new StatusFainted(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return true;
-  }
-
-  bool isConsideredBeneficial() {
-    return false;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  bool isPlayerVisualUpdateNeededWhenStartOrEnd();
-
-  string getInterfaceName() {
-    return "Fainted";
-  }
-  string msgOnStartPlayer() {
-    return "I faint!";
-  }
-  string msgOnMorePlayer() {
-    return "I faint deeper.";
-  }
-  string msgOnMoreMonster() {
-    return "faints deeper.";
-  }
-  string msgOnEndPlayer() {
-    return "I am awake.";
-  }
-  string msgOnSavePlayer() {
-    return "I resist fainting.";
-  }
-  string msgOnStartMonster() {
-    return "faints.";
-  }
-  string msgOnEndMonster() {
-    return "wakes up.";
-  }
-  string msgOnSaveMonster() {
-    return "resists fainting.";
-  }
-
-  void start(Engine* const engine);
-
-  void end(Engine* const engine);
-
-  bool allowAct() {
-    return false;
-  }
-
-  bool allowSee() {
-    return false;
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
-      return -999;
-    return 0;
-  }
-
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
-    return false;
-  }
-  bool allowAttackMleee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
-    return false;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-  void isHit() {
-    turnsLeft = 0;
-  }
+  ~PropSlowed() {}
 
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(1, 50, 50);
-  }
-
-  friend class StatusHandler;
-  StatusFainted(const int TURNS) :
-    StatusEffect(TURNS, statusFainted) {
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 6);}
 };
 
-class StatusSlowed: public StatusEffect {
+class PropJuggernaut: public Prop {
 public:
-  StatusSlowed(Engine* const engine) :
-    StatusEffect(statusSlowed) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusSlowed(const int TURNS) :
-    StatusEffect(TURNS, statusSlowed) {
-  }
-  ~StatusSlowed() {
-  }
+  PropJuggernaut(Engine* engine, PropTurns_t turnsInit,
+                 int turns = -1) :
+    Prop(propJuggernaut, engine, turnsInit, turns) {}
 
-  StatusSlowed* copy() {
-    StatusSlowed* cpy = new StatusSlowed(turnsLeft);
-    return cpy;
-  }
+  ~PropJuggernaut() {}
 
-  bool isMakingOwnerAwareOfPlayer() {
-    return true;
-  }
-
-  bool isConsideredBeneficial() {
-    return false;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Slowed";
-  }
-  string msgOnStartPlayer() {
-    return "Everything around me seems to speed up.";
-  }
-  string msgOnMorePlayer() {
-    return "I am more slowed.";
-  }
-  string msgOnMoreMonster() {
-    return "slows down more.";
-  }
-  string msgOnEndPlayer() {
-    return "Everything around me seems to slow down.";
-  }
-  string msgOnSavePlayer() {
-    return "I resist slowness.";
-  }
-  string msgOnStartMonster() {
-    return "slows down.";
-  }
-  string msgOnEndMonster() {
-    return "speeds up.";
-  }
-  string msgOnSaveMonster() {
-    return "resists slowness.";
-  }
-
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  bool isSlowed() {
-    return true;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(3, 6, 6);
-  }
-};
-
-class StatusPerfectReflexes: public StatusEffect {
-public:
-  StatusPerfectReflexes(Engine* const engine) :
-    StatusEffect(statusPerfectReflexes) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusPerfectReflexes(const int TURNS) :
-    StatusEffect(TURNS, statusPerfectReflexes) {
-  }
-  ~StatusPerfectReflexes() {
-  }
-
-  StatusPerfectReflexes* copy() {
-    StatusPerfectReflexes* cpy = new StatusPerfectReflexes(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return true;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Reflexes";
-  }
-  string msgOnStartPlayer() {
-    return "I have mighty reflexes!";
-  }
-  string msgOnMorePlayer() {
-    return "I have mighty reflexes!";
-  }
-  string msgOnMoreMonster() {
-    return "has mighty reflexes.";
-  }
-  string msgOnEndPlayer() {
-    return "My reflexes are normal.";
-  }
-  string msgOnSavePlayer() {
-    return "";
-  }
-  string msgOnStartMonster() {
-    return "has mighty reflexes.";
-  }
-  string msgOnEndMonster() {
-    return "has normal reflexes.";
-  }
-  string msgOnSaveMonster() {
-    return "";
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
-    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
-      return 999;
-    return 0;
-  }
-
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
-private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(3, 8, 24);
-  }
-};
-
-class StatusPerfectAim: public StatusEffect {
-public:
-  StatusPerfectAim(Engine* const engine) :
-    StatusEffect(statusPerfectAim) {
-    setTurnsFromRandomStandard(engine);
-  }
-  StatusPerfectAim(const int TURNS) :
-    StatusEffect(TURNS, statusPerfectAim) {
-  }
-  ~StatusPerfectAim() {
-  }
-
-  StatusPerfectAim* copy() {
-    StatusPerfectAim* cpy = new StatusPerfectAim(turnsLeft);
-    return cpy;
-  }
-
-  bool isMakingOwnerAwareOfPlayer() {
-    return false;
-  }
-
-  bool isConsideredBeneficial() {
-    return true;
-  }
-
-  bool allowDisplayTurnsInInterface() {
-    return true;
-  }
-
-  string getInterfaceName() {
-    return "Aiming";
-  }
-  string msgOnStartPlayer() {
-    return "I have excellent aiming!";
-  }
-  string msgOnMorePlayer() {
-    return "I have excellent aiming!";
-  }
-  string msgOnMoreMonster() {
-    return "has excellent aiming.";
-  }
-  string msgOnEndPlayer() {
-    return "My aiming is normal.";
-  }
-  string msgOnSavePlayer() {
-    return "";
-  }
-  string msgOnStartMonster() {
-    return "has excellent aiming.";
-  }
-  string msgOnEndMonster() {
-    return "has normal aiming.";
-  }
-  string msgOnSaveMonster() {
-    return "";
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
+  int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_accuracyMelee)
       return 999;
     if(ability == ability_accuracyRanged)
       return 999;
+    if(ability == ability_dodgeTrap)
+      return 999;
+    if(ability == ability_dodgeAttack)
+      return 999;
     return 0;
   }
-
-  void start(Engine* const engine) {
-    (void)engine;
-  }
-
-  void end(Engine* const engine) {
-    (void)engine;
-  }
-
-  void newTurn(Engine* const engine) {
-    (void)engine;
-    turnsLeft--;
-  }
-
 private:
-  DiceParam getRandomStandardNrTurns() {
-    return DiceParam(3, 8, 24);
-  }
+//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 8, 24);}
 };
 
-//class StatusPerfectStealth: public StatusEffect {
-//public:
-//  StatusPerfectStealth(Engine* const engine) :
-//    StatusEffect(statusPerfectStealth) {
-//    setTurnsFromRandomStandard(engine);
-//  }
-//  StatusPerfectStealth(const int TURNS) :
-//    StatusEffect(TURNS, statusPerfectStealth) {
-//  }
-//  ~StatusPerfectStealth() {
-//  }
-//
-//  StatusPerfectStealth* copy() {
-//    StatusPerfectStealth* cpy = new StatusPerfectStealth(turnsLeft);
-//    return cpy;
-//  }
-//
-//  bool isMakingOwnerAwareOfPlayer() {
-//    return false;
-//  }
-//
-//  bool isConsideredBeneficial() {
-//    return true;
-//  }
-//
-//  bool allowDisplayTurnsInInterface() {
-//    return true;
-//  }
-//
-//  string getInterfaceName() {
-//    return "Stealth";
-//  }
-//  string msgOnStartPlayer() {
-//    return "I move silent like a ghost!";
-//  }
-//  string msgOnMorePlayer() {
-//    return "I move silent like a ghost!";
-//  }
-//  string msgOnMoreMonster() {
-//    return "";
-//  }
-//  string msgOnEndPlayer() {
-//    return "My movements make noises again.";
-//  }
-//  string msgOnSavePlayer() {
-//    return "";
-//  }
-//  string msgOnStartMonster() {
-//    return "";
-//  }
-//  string msgOnEndMonster() {
-//    return "";
-//  }
-//  string msgOnSaveMonster() {
-//    return "";
-//  }
-//
-//  int getAbilityModifier(const Abilities_t ability) {
-//    if(ability == ability_stealth)
-//      return 999;
-//    return 0;
-//  }
-//
-//  void start(Engine* const engine) {
-//    (void)engine;
-//  }
-//
-//  void end(Engine* const engine) {
-//    (void)engine;
-//  }
-//
-//  void newTurn(Engine* const engine) {
-//    (void)engine;
-//    turnsLeft--;
-//  }
-//
-//private:
-//  DiceParam getRandomStandardNrTurns() {
-//    return DiceParam(8, 8, 100);
-//  }
-//};
-
-class StatusHandler {
+class PropRAcid: public Prop {
 public:
-  StatusHandler(Actor* const owningActor_, Engine* const engine) :
-    owningActor(owningActor_), eng(engine) {
-    effects.resize(0);
-  }
-  ~StatusHandler() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      delete effects.at(i);
-    }
-    effects.resize(0);
-  }
+  PropRAcid(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propRAcid, engine, turnsInit, turns) {}
+  ~PropRAcid() {}
 
-  void tryAddEffect(StatusEffect* const effect, const bool FORCE_EFFECT = false,
-                    const bool NO_MESSAGES = false,
-                    const bool DISABLE_REDRAW = false);
-
-  void tryAddEffectsFromWeapon(const Weapon& wpn, const bool IS_MELEE);
-
-  Pos changeMovePos(const Pos& actorPos, const Pos& movePos) {
-    Pos ret = movePos;
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      ret = effects.at(i)->changeMovePos(actorPos, movePos, eng);
-    }
-    return ret;
-  }
-
-  bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(
-        effects.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
-        effects.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
-
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
-
-  bool isSlowed() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->isSlowed() == true) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  bool allowSee();
-
-  bool allowMove() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->allowMove() == false) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  void isHit() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      effects.at(i)->isHit();
-    }
-  }
-
-  bool allowAct() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->allowAct() == false) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  int getAbilityModifier(const Abilities_t ability) {
-    int modifier = 0;
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      modifier += effects.at(i)->getAbilityModifier(ability);
-    }
-    return modifier;
-  }
-
-  bool isEthereal() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->isEthereal() == true) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  bool hasEffect(const StatusEffects_t effect) const {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->getEffectId() == effect) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  StatusEffect* getEffect(const StatusEffects_t effect) const {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->getEffectId() == effect) {
-        return effects.at(i);
-      }
-    }
-    return NULL;
-  }
-
-  bool hasAnyBadEffect() const {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->isConsideredBeneficial() == false) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  void endEffect(const StatusEffects_t effect,
-                 const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
-                 const bool RUN_STATUS_END_EFFECTS = true) {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      if(effects.at(i)->getEffectId() == effect) {
-        if(RUN_STATUS_END_EFFECTS) {
-          runEffectEndAndRemoveFromList(i, visionBlockingArray);
-        } else {
-          delete effects.at(i);
-          effects.erase(effects.begin() + i);
-        }
-        return;
-      }
-    }
-  }
-
-  SDL_Color getColor() {
-    for(unsigned int i = 0; i < effects.size(); i++) {
-      const SDL_Color& clr = effects.at(i)->getColorOwningActor();
-      if(clr.r != 0 || clr.g != 0 || clr.b != 0) {
-        return effects.at(i)->getColorOwningActor();
-      }
-    }
-    return clrBlack;
-  }
-
-  vector<StatusEffect*> effects;
+  bool tryResistOherProp(const PropId_t otherId);
 
 private:
-  //This function was created so that the id can be saved to file when saving
-  //the game, and then have the effect recreated from this.
-  //In other cases, a status effect should be created by simply using "new"
-  friend class Player;
-  StatusEffect* makeEffectFromId(
-    const StatusEffects_t id, const int TURNS_LEFT);
+};
 
-  Actor* owningActor;
-  Engine* eng;
+class PropRCold: public Prop {
+public:
+  PropRCold(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propRCold, engine, turnsInit, turns) {}
+  ~PropRCold() {}
 
-  void runEffectEndAndRemoveFromList(
-    const unsigned int index,
-    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+  bool tryResistOherProp(const PropId_t otherId);
 
-  friend class GameTime;
-  void newTurnAllEffects(
-    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+private:
+};
+
+class PropRConfusion: public Prop {
+public:
+  PropRConfusion(Engine* engine, PropTurns_t turnsInit,
+                 int turns = -1) :
+    Prop(propRConfusion, engine, turnsInit, turns) {}
+  ~PropRConfusion() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropStunned: public Prop {
+public:
+  PropStunned(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propStunned, engine, turnsInit, turns) {}
+  ~PropStunned() {}
+private:
+};
+
+class PropRElectric: public Prop {
+public:
+  PropRElectric(Engine* engine, PropTurns_t turnsInit,
+                int turns = -1) :
+    Prop(propRElectric, engine, turnsInit, turns) {}
+  ~PropRElectric() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropRFear: public Prop {
+public:
+  PropRFear(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propRFear, engine, turnsInit, turns) {}
+  ~PropRFear() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropRFire: public Prop {
+public:
+  PropRFire(Engine* engine, PropTurns_t turnsInit,
+            int turns = -1) :
+    Prop(propRFire, engine, turnsInit, turns) {}
+  ~PropRFire() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropRPoison: public Prop {
+public:
+  PropRPoison(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propRPoison, engine, turnsInit, turns) {}
+  ~PropRPoison() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropRSleep: public Prop {
+public:
+  PropRSleep(Engine* engine, PropTurns_t turnsInit,
+             int turns = -1) :
+    Prop(propRSleep, engine, turnsInit, turns) {}
+  ~PropRSleep() {}
+
+  bool tryResistOherProp(const PropId_t otherId);
+
+private:
+};
+
+class PropLightSensitive: public Prop {
+public:
+  PropLightSensitive(Engine* engine, PropTurns_t turnsInit,
+                     int turns = -1) :
+    Prop(propLightSensitive, engine, turnsInit, turns) {}
+  ~PropLightSensitive() {}
+private:
 };
 
 #endif

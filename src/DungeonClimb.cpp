@@ -43,8 +43,8 @@ void DungeonClimb::makeLevel() {
       //eng->mapBuild->buildDungeonLevel();
       tracer << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
       eng->mapBuildBSP->run();
-//			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
-//			eng->populateMonsters->populate();
+//      tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//      eng->populateMonsters->populate();
       levelBuilt = true;
     }
   }
@@ -53,8 +53,8 @@ void DungeonClimb::makeLevel() {
     if(DLVL >= FIRST_CAVERN_LEVEL) {
       tracer << "DungeonClimb: Calling MapBuild::buildCavern()" << endl;
       eng->mapBuild->buildCavern();
-//			tracer << "DungeonClimb: Calling Populate::populate()" << endl;
-//			eng->populate->populate();
+//      tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//      eng->populate->populate();
     }
   }
   if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {
@@ -88,7 +88,10 @@ void DungeonClimb::tryUseDownStairs() {
   const int DLVL = eng->map->getDLVL();
   const Pos& playerPos = eng->player->pos;
 
-  if(eng->map->featuresStatic[playerPos.x][playerPos.y]->getId() == feature_stairsDown) {
+  const Feature_t featureIdAtPlayer =
+    eng->map->featuresStatic[playerPos.x][playerPos.y]->getId();
+
+  if(featureIdAtPlayer == feature_stairsDown) {
     tracer << "DungeonClimb: Player is on stairs" << endl;
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
       eng->log->addMessage("I climb downwards.");
@@ -97,10 +100,11 @@ void DungeonClimb::tryUseDownStairs() {
     }
 //    eng->renderer->updateScreen();
     travelDown();
-    if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown &&
-        eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
+
+    if(eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
       eng->log->addMessage("I am plagued by my phobia of deep places!");
-      eng->player->getStatusHandler()->tryAddEffect(new StatusTerrified(eng));
+      eng->player->getPropHandler()->tryApplyProp(
+        new PropTerrified(eng, propTurnsStandard));
       return;
     }
   } else {

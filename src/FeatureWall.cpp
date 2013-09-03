@@ -60,7 +60,7 @@ SDL_Color Wall::getColor() const {
     return clrBrownGray;
   }
 
-  return def_->color; // clrGray;
+  return data_->color; // clrGray;
 }
 
 char Wall::getGlyph() const {
@@ -112,7 +112,7 @@ Tile_t Wall::getTopWallTile() const {
 }
 
 void Wall::setRandomNormalWall() {
-  const int RND = eng->dice.getInRange(1, 6);
+  const int RND = eng->dice.range(1, 6);
   switch(RND) {
   case 1:
     wallType = wall_alt1;
@@ -125,7 +125,7 @@ void Wall::setRandomNormalWall() {
 }
 
 void Wall::setRandomIsMossGrown() {
-  isMossGrown = eng->dice.getInRange(1, 40) == 1;
+  isMossGrown = eng->dice.range(1, 40) == 1;
 }
 
 

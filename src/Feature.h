@@ -21,8 +21,8 @@ class FeatureSpawnData;
 
 class Feature {
 public:
-  virtual ~Feature() {
-  }
+  virtual ~Feature() {}
+
   virtual void bump(Actor* actorBumping);
   virtual void newTurn();
   virtual bool isMovePassable(Actor* const actorMoving) const;
@@ -52,18 +52,16 @@ public:
   virtual MaterialType_t getMaterialType() const;
 protected:
   friend class Map;
-  Feature(Feature_t id, Pos pos, Engine* engine, FeatureSpawnData* spawnData = NULL);
+  Feature(Feature_t id, Pos pos, Engine* engine,
+          FeatureSpawnData* spawnData = NULL);
 
-  Feature() :
-    eng(NULL), def_(NULL) {
-  }
-  Feature(const Feature& other) :
-    eng(NULL), def_(NULL) {
+  Feature() : eng(NULL), data_(NULL) {}
+  Feature(const Feature& other) : eng(NULL), data_(NULL) {
     (void)other;
   }
   Pos pos_;
   Engine* const eng;
-  const FeatureDef* const def_;
+  const FeatureData* const data_;
   bool hasBlood_;
 };
 

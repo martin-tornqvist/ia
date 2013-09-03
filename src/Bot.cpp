@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "Engine.h"
-#include "StatusEffects.h"
+#include "Properties.h"
 #include "Actor.h"
 #include "Feature.h"
 #include "Input.h"
@@ -35,9 +35,9 @@ void Bot::init() {
 void Bot::runFunctionTests() {
   //TEST HIT CHANCE
   Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
-  const Abilities_t weaponAbilityUsed = weaponUsed->getDef().meleeAbilityUsed;
-  const int HIT_CHANCE_WEAPON = weaponUsed->getDef().meleeHitChanceMod;
-  const int HIT_CHANCE_SKILL = eng->player->getDef()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
+  const Abilities_t weaponAbilityUsed = weaponUsed->getData().meleeAbilityUsed;
+  const int HIT_CHANCE_WEAPON = weaponUsed->getData().meleeHitChanceMod;
+  const int HIT_CHANCE_SKILL = eng->player->getData()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
   const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
   const int NUMBER_OF_ATTACKS = 100;
   double hitChanceReal = 0;
@@ -121,7 +121,7 @@ void Bot::act() {
   }
 
   tracer << "Bot: Checking if terrified (to ignore stairs-path)" << endl;
-  if(eng->player->getStatusHandler()->hasEffect(statusTerrified)) {
+  if(eng->player->getPropHandler()->hasProp(propTerrified)) {
     tracer << "Bot: Is terrified, walking to current pos or randomly" << endl;
     if(walkToAdjacentCell(playerPos)) {
       return;
@@ -182,7 +182,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
   const int CHANCE_FOR_RANDOM_DIRECTION = 50;
   if(eng->dice(1, 100) < CHANCE_FOR_RANDOM_DIRECTION) {
-    key = '0' + eng->dice.getInRange(1, 9);
+    key = '0' + eng->dice.range(1, 9);
   }
 
   assert(key >= '1' && key <= '9');

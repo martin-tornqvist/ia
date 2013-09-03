@@ -1,7 +1,7 @@
 #include "ItemMedicalBag.h"
 
 #include "Engine.h"
-#include "StatusEffects.h"
+#include "Properties.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Render.h"
@@ -9,27 +9,26 @@
 #include "PlayerBonuses.h"
 #include "Popup.h"
 
-bool MedicalBag::activateDefault(Actor* const actor,
-                                 Engine* const engine) {
+bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
-  curAction_ = playerChooseAction(engine);
+  curAction_ = playerChooseAction();
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    const StatusHandler* const status =
-      engine->player->getStatusHandler();
+    const PropHandler* const prop =
+      eng->player->getPropHandler();
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
-        if(status->hasEffect(statusInfected) == false) {
-          engine->log->addMessage("I have no infections to sanitize.");
+        if(prop->hasProp(propInfected) == false) {
+          eng->log->addMessage("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_treatWound: {
-        if(status->hasEffect(statusWound) == false) {
-          engine->log->addMessage("I have no wounds to treat.");
+        if(prop->hasProp(propWound) == false) {
+          eng->log->addMessage("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
@@ -38,24 +37,24 @@ bool MedicalBag::activateDefault(Actor* const actor,
     }
 
     if(curAction_ != endOfMedicalBagActions) {
-      if(getNrSuppliesNeededForAction(curAction_, engine) > nrSupplies_) {
-        engine->log->addMessage("I do not have enough supplies for that.");
+      if(getNrSuppliesNeededForAction(curAction_) > nrSupplies_) {
+        eng->log->addMessage("I do not have enough supplies for that.");
         curAction_ = endOfMedicalBagActions;
       }
     }
 
     if(curAction_ != endOfMedicalBagActions) {
       //Action can be done
-      nrTurnsLeft_ = getTotTurnsForAction(curAction_, engine);
-      engine->player->activeMedicalBag = this;
-      engine->gameTime->endTurnOfCurrentActor();
+      nrTurnsLeft_ = getTotTurnsForAction(curAction_);
+      eng->player->activeMedicalBag = this;
+      eng->gameTime->endTurnOfCurrentActor();
     }
   }
 
   return false;
 }
 
-MedicalBagAction_t MedicalBag::playerChooseAction(Engine* const engine) const {
+MedicalBagAction_t MedicalBag::playerChooseAction() const {
   vector<string> choiceLabels;
   for(int actionNr = 0; actionNr < endOfMedicalBagActions; actionNr++) {
     string label = "";
@@ -70,9 +69,9 @@ MedicalBagAction_t MedicalBag::playerChooseAction(Engine* const engine) const {
     }
 
     const int NR_TURNS_NEEDED =
-      getTotTurnsForAction(MedicalBagAction_t(actionNr), engine);
+      getTotTurnsForAction(MedicalBagAction_t(actionNr));
     const int NR_SUPPL_NEEDED =
-      getNrSuppliesNeededForAction(MedicalBagAction_t(actionNr), engine);
+      getNrSuppliesNeededForAction(MedicalBagAction_t(actionNr));
     label += " (" + intToString(NR_SUPPL_NEEDED) + " suppl";
     label += "/"  + intToString(NR_TURNS_NEEDED) + " turns)";
     choiceLabels.push_back(label);
@@ -82,56 +81,55 @@ MedicalBagAction_t MedicalBag::playerChooseAction(Engine* const engine) const {
   const string nrSuppliesMsg =
     intToString(nrSupplies_) + " medical supplies available.";
 
-  return MedicalBagAction_t(engine->popup->showMultiChoiceMessage(
+  return MedicalBagAction_t(eng->popup->showMultiChoiceMessage(
                               nrSuppliesMsg, true, choiceLabels,
                               "Use medical bag"));
 }
 
-void MedicalBag::continueAction(Engine* const engine) {
+void MedicalBag::continueAction() {
   nrTurnsLeft_--;
   if(nrTurnsLeft_ <= 0) {
-    finishCurAction(engine);
+    finishCurAction();
   } else {
-    engine->gameTime->endTurnOfCurrentActor();
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 
-void MedicalBag::finishCurAction(Engine* const engine) {
-  engine->player->activeMedicalBag = NULL;
+void MedicalBag::finishCurAction() {
+  eng->player->activeMedicalBag = NULL;
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
     } break;
 
     case medicalBagAction_treatWound: {
-      StatusEffect* effect =
-        engine->player->getStatusHandler()->getEffect(statusWound);
-      if(effect == NULL) {
-        tracer << "[WARNING] No wound status effect found, ";
+      Prop* prop =
+        eng->player->getPropHandler()->getAppliedProp(propWound);
+      if(prop == NULL) {
+        tracer << "[WARNING] No wound prop found, ";
         tracer << "in MedicalBag::finishCurAction()" << endl;
       } else {
-        StatusWound* wound = dynamic_cast<StatusWound*>(effect);
-        wound->healOneWound(engine);
+        dynamic_cast<PropWound*>(prop)->healOneWound();
       }
-//        engine->log->clearLog();
-//        engine->log->addMessage("I finish applying first aid.");
-//        engine->renderer->drawMapAndInterface();
+//        eng->log->clearLog();
+//        eng->log->addMessage("I finish applying first aid.");
+//        eng->renderer->drawMapAndInterface();
     } break;
 
     case endOfMedicalBagActions: {} break;
   }
 
-  nrSupplies_ -= getNrSuppliesNeededForAction(curAction_, engine);
+  nrSupplies_ -= getNrSuppliesNeededForAction(curAction_);
 
   curAction_ = endOfMedicalBagActions;
 
   if(nrSupplies_ <= 0) {
-    Inventory* const inv = engine->player->getInventory();
+    Inventory* const inv = eng->player->getInventory();
     inv->removetemInGeneralWithPointer(this, true);
   }
 }
 
-void MedicalBag::interrupted(Engine* const engine) {
+void MedicalBag::interrupted() {
 //  switch(curAction_) {
 //    case medicalBagAction_sanitizeInfection: {
 //    } break;
@@ -140,17 +138,16 @@ void MedicalBag::interrupted(Engine* const engine) {
 //    } break;
 //  }
 //
-//  engine->log->addMessage("My applying of first aid is disrupted.", clrWhite,
+//  eng->log->addMessage("My applying of first aid is disrupted.", clrWhite,
 //                          messageInterrupt_never);
 //  nrTurnsLeft_ = -1;
 //
-//  engine->player->activeMedicalBag = NULL;
+//  eng->player->activeMedicalBag = NULL;
 }
 
-int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action,
-                                     Engine* const engine) const {
+int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
   const bool IS_WOUND_TREATER =
-    engine->playerBonHandler->isBonPicked(playerBon_skillfulWoundTreater);
+    eng->playerBonHandler->isBonPicked(playerBon_skillfulWoundTreater);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
@@ -170,8 +167,8 @@ int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action,
   return -1;
 }
 
-int MedicalBag::getNrSuppliesNeededForAction(const MedicalBagAction_t action,
-    Engine* const engine) const {
+int MedicalBag::getNrSuppliesNeededForAction(
+  const MedicalBagAction_t action) const {
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
       return 1;
@@ -189,8 +186,8 @@ int MedicalBag::getNrSuppliesNeededForAction(const MedicalBagAction_t action,
 }
 
 // (Interrupted)
-//const bool IS_FAINTED = statusEffectsHandler_->hasEffect(statusFainted);
-//const bool IS_PARALYSED = statusEffectsHandler_->hasEffect(statusParalyzed);
+//const bool IS_FAINTED = statusEffectsHandler_->hasProp(statusFainted);
+//const bool IS_PARALYSED = statusEffectsHandler_->hasProp(statusParalyzed);
 //const bool IS_DEAD = deadState != actorDeadState_alive;
 //getSpotedEnemies();
 //const int TOTAL_TURNS = getHealingTimeTotal();
@@ -229,12 +226,12 @@ int MedicalBag::getNrSuppliesNeededForAction(const MedicalBagAction_t action,
 // (Request healing)
 //    clearLogMessages();
 //    if(eng->player->deadState == actorDeadState_alive) {
-//      if(eng->player->getStatusHandler()->hasEffect(statusPoisoned)) {
+//      if(eng->player->getPropHandler()->hasProp(statusPoisoned)) {
 //        eng->log->addMessage("Not while poisoned.");
 //        eng->renderer->drawMapAndInterface();
 //      } else {
 //        bool allowHeal = false;
-//        const bool IS_DISEASED = eng->player->getStatusHandler()->hasEffect(statusDiseased);
+//        const bool IS_DISEASED = eng->player->getPropHandler()->hasProp(statusDiseased);
 //
 //        if(eng->player->getHp() < eng->player->getHpMax(true)) {
 //          allowHeal = true;

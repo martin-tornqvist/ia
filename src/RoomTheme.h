@@ -9,7 +9,7 @@
 using namespace std;
 
 class Engine;
-class FeatureDef;
+class FeatureData;
 
 enum RoomTheme_t {
   roomTheme_plain,
@@ -49,9 +49,9 @@ private:
   void makeRoomDarkWithChance(const Room& room);
 
   int trySetFeatureToPlace(
-    const FeatureDef** def, Pos& pos, vector<Pos>& nextToWalls,
+    const FeatureData** data, Pos& pos, vector<Pos>& nextToWalls,
     vector<Pos>& awayFromWalls,
-    vector<const FeatureDef*> featureDefsBelongingToTheme);
+    vector<const FeatureData*> featureDataBelongingToTheme);
 
   void eraseAdjacentCellsFromVectors(
     const Pos& pos,  vector<Pos>& nextToWalls,

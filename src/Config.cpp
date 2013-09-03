@@ -69,7 +69,7 @@ void Config::runOptionsMenu() {
       case menuAction_canceled: {
         //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
-        eng->featureData->makeList();
+        eng->featureDataHandler->initDataList();
         return;
       } break;
 
@@ -81,8 +81,7 @@ void Config::runOptionsMenu() {
         draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
       } break;
 
-      default:
-      {} break;
+      default: {} break;
     }
   }
 }
@@ -473,7 +472,7 @@ void Config::parseFontNameAndSetCellDims() {
 void Config::setDefaultVariables() {
   tracer << "Config::setDefaultVariables()..." << endl;
   isTilesMode = true;
-  fontBig = "images/16x24_clean_v1.png";
+  fontBig = "images/16x24_clean_v2.png";
   fontScale = 1;
   parseFontNameAndSetCellDims();
   isFullscreen = false;

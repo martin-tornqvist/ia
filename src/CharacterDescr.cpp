@@ -20,7 +20,7 @@ void CharacterDescr::makeLines() {
   const SDL_Color clrText = clrWhite;
   const SDL_Color clrTextDark = clrGray;
 
-  const AbilityValues& abilities = eng->player->getDef()->abilityVals;
+  const AbilityValues& abilities = eng->player->getData()->abilityVals;
 
   lines.push_back(StringAndClr("Combat skills", clrHeader));
   const int BASE_MELEE =
@@ -31,8 +31,8 @@ void CharacterDescr::makeLines() {
     min(100, abilities.getVal(ability_dodgeAttack, true, *(eng->player)));
   Weapon* kick =
     dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
-  string kickStr =
-    eng->itemData->getItemInterfaceRef(*kick, false, primaryAttackMode_melee);
+  string kickStr = eng->itemDataHandler->getItemInterfaceRef(
+                     *kick, false, primaryAttackMode_melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
     if(kickStr.at(0) == ' ') {
@@ -43,8 +43,8 @@ void CharacterDescr::makeLines() {
   }
   Weapon* punch =
     dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
-  string punchStr =
-    eng->itemData->getItemInterfaceRef(*punch, false, primaryAttackMode_melee);
+  string punchStr = eng->itemDataHandler->getItemInterfaceRef(
+                      *punch, false, primaryAttackMode_melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
     if(punchStr.at(0) == ' ') {
@@ -152,12 +152,12 @@ void CharacterDescr::makeLines() {
   vector<StringAndClr> potionList;
   vector<StringAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    const ItemDef* const d = eng->itemData->itemDefs[i];
+    const ItemData* const d = eng->itemDataHandler->dataList[i];
     if(d->isQuaffable && (d->isTried || d->isIdentified)) {
       Item* item = eng->itemFactory->spawnItem(d->id);
       potionList.push_back(
         StringAndClr(
-          offset + eng->itemData->getItemRef(*item, itemRef_plain),
+          offset + eng->itemDataHandler->getItemRef(*item, itemRef_plain),
           d->color));
       delete item;
     } else {
@@ -165,7 +165,7 @@ void CharacterDescr::makeLines() {
         Item* item = eng->itemFactory->spawnItem(d->id);
         manuscriptList.push_back(
           StringAndClr(
-            offset + eng->itemData->getItemRef(*item, itemRef_plain),
+            offset + eng->itemDataHandler->getItemRef(*item, itemRef_plain),
             item->getInterfaceClr()));
         delete item;
       }

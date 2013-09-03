@@ -36,18 +36,23 @@ Map::~Map() {
 void Map::switchToDestroyedFeatAt(const Pos pos) {
   if(eng->mapTests->isCellInsideMap(pos)) {
 
-    const Feature_t OLD_FEATURE_ID = eng->map->featuresStatic[pos.x][pos.y]->getId();
+    const Feature_t OLD_FEATURE_ID =
+      eng->map->featuresStatic[pos.x][pos.y]->getId();
 
-    const vector<Feature_t> convertionCandidates = eng->featureData->getFeatureDef(OLD_FEATURE_ID)->featuresOnDestroyed;
+    const vector<Feature_t> convertionCandidates =
+      eng->featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
     const int SIZE = convertionCandidates.size();
     if(SIZE > 0) {
-      const Feature_t NEW_FEATURE_ID = convertionCandidates.at(eng->dice(1, SIZE) - 1);
+      const Feature_t NEW_ID =
+        convertionCandidates.at(eng->dice(1, SIZE) - 1);
 
-      eng->featureFactory->spawnFeatureAt(NEW_FEATURE_ID, pos);
+      eng->featureFactory->spawnFeatureAt(NEW_ID, pos);
 
       //Destroy adjacent doors?
-      if((NEW_FEATURE_ID == feature_rubbleHigh || NEW_FEATURE_ID == feature_rubbleLow) && NEW_FEATURE_ID != OLD_FEATURE_ID) {
+      if(
+        (NEW_ID == feature_rubbleHigh || NEW_ID == feature_rubbleLow) &&
+        NEW_ID != OLD_FEATURE_ID) {
         for(int x = pos.x - 1; x <= pos.x + 1; x++) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
@@ -59,7 +64,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
         }
       }
 
-      if(NEW_FEATURE_ID == feature_rubbleLow && NEW_FEATURE_ID != OLD_FEATURE_ID) {
+      if(NEW_ID == feature_rubbleLow && NEW_ID != OLD_FEATURE_ID) {
         if(eng->dice.percentile() < 50) {
           eng->itemFactory->spawnItemOnMap(item_rock, pos);
         }

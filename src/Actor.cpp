@@ -19,12 +19,12 @@
 using namespace std;
 
 Actor::~Actor() {
-  delete statusHandler_;
+  delete propHandler_;
   delete inventory_;
 }
 
 void Actor::newTurn() {
-  if(statusHandler_->allowAct()) {
+  if(propHandler_->allowAct()) {
     updateColor();
     act();
   } else {
@@ -59,7 +59,7 @@ bool Actor::checkIfSeeActor(
       if(IS_MONSTER_SNEAKING) return false;
     }
 
-    if(statusHandler_->allowSee() == false) {
+    if(propHandler_->allowSee() == false) {
       return false;
     }
 
@@ -69,7 +69,7 @@ bool Actor::checkIfSeeActor(
     if(pos.y - other.pos.y > FOV_STANDARD_RADI_INT) return false;
 
     if(visionBlockingCells != NULL) {
-      const bool IS_BLOCKED_BY_DARKNESS = def_->canSeeInDarkness == false;
+      const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
       return eng->fov->checkOneCell(
                visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
@@ -121,19 +121,19 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
   }
 }
 
-void Actor::place(const Pos& pos_, ActorDef* const actorDefinition,
+void Actor::place(const Pos& pos_, ActorData* const actorDefinition,
                   Engine* engine) {
   eng             = engine;
   pos             = pos_;
-  def_            = actorDefinition;
-  inventory_      = new Inventory(def_->isHumanoid);
-  statusHandler_  = new StatusHandler(this, eng);
+  data_           = actorDefinition;
+  inventory_      = new Inventory(data_->isHumanoid);
+  propHandler_    = new PropHandler(this, eng);
   deadState       = actorDeadState_alive;
-  clr_            = def_->color;
-  glyph_          = def_->glyph;
-  tile_           = def_->tile;
-  hp_             = hpMax_  = def_->hp;
-  spi_            = spiMax_ = def_->spi;
+  clr_            = data_->color;
+  glyph_          = data_->glyph;
+  tile_           = data_->tile;
+  hp_             = hpMax_  = data_->hp;
+  spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
   if(this != eng->player) {
@@ -166,7 +166,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMessage("I suddenly find myself in a different location!");
-    statusHandler_->tryAddEffect(new StatusConfused(eng));
+    propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStandard));
   }
 }
 
@@ -176,16 +176,11 @@ void Actor::updateColor() {
     return;
   }
 
-  const SDL_Color clrFromStatusEffect = statusHandler_->getColor();
-  if(
-    clrFromStatusEffect.r != 0 ||
-    clrFromStatusEffect.g != 0 ||
-    clrFromStatusEffect.b != 0) {
-    clr_ = clrFromStatusEffect;
+  if(propHandler_->changeActorClr(clr_)) {
     return;
   }
 
-  clr_ = def_->color;
+  clr_ = data_->color;
 }
 
 bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
@@ -215,7 +210,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
         eng->log->addMessage("I feel healthier!", clrMessageGood);
       } else {
         if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMessage(def_->name_the + " looks healthier.");
+          eng->log->addMessage(data_->name_the + " looks healthier.");
         }
       }
       eng->renderer->drawMapAndInterface();
@@ -250,7 +245,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MESSAGES) {
         eng->log->addMessage("I feel more spirited!", clrMessageGood);
       } else {
         if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMessage(def_->name_the + " looks more spirited.");
+          eng->log->addMessage(data_->name_the + " looks more spirited.");
         }
       }
       eng->renderer->drawMapAndInterface();
@@ -314,6 +309,12 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   tracer << "Actor::hit()..." << endl;
   tracer << "Actor: Damage from parameter: " << dmg << endl;
 
+  if(
+    dmgType == dmgType_light &&
+    propHandler_->hasProp(propLightSensitive) == false) {
+    return false;
+  }
+
   monsterHit(dmg);
   tracer << "Actor: Damage after monsterHit(): " << dmg << endl;
 
@@ -326,12 +327,14 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     if(armor != NULL) {
       tracer << "Actor: Has armor, running hit on armor" << endl;
 
-      dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg, dmgType);
+      if(dmgType == dmgType_physical) {
+        dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
+      }
 
       if(armor->isDestroyed()) {
         tracer << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + eng->itemData->getItemRef(
+          eng->log->addMessage("My " + eng->itemDataHandler->getItemRef(
                                  *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
@@ -341,10 +344,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     }
   }
 
-  // Filter damage through intrinsic armor
-  // TODO Stuff goes here
-
-  statusHandler_->isHit();
+  propHandler_->onHit();
 
   actorSpecific_hit(dmg);
 
@@ -371,7 +371,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     IS_ON_BOTTOMLESS == true ? true :
     (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
-    die(IS_MANGLED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
+    die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
     actorSpecificDie();
     tracer << "Actor::hit() [DONE]" << endl;
     return true;
@@ -431,7 +431,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   if(this != eng->player) {
     //Only print if visible
     if(eng->player->checkIfSeeActor(*this, NULL)) {
-      const string deathMessageOverride = def_->deathMessageOverride;
+      const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride != "") {
         eng->log->addMessage(deathMessageOverride);
       } else {
@@ -494,7 +494,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 }
 
 void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
-  if(statusHandler_->hasEffect(statusBurning)) {
+  if(propHandler_->hasProp(propBurning)) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         light[pos.x + dx][pos.y + dy] = true;

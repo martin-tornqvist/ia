@@ -760,7 +760,7 @@ void Renderer::drawAscii() {
     yPos = actor->pos.y;
     if(
       actor->deadState == actorDeadState_corpse &&
-      actor->getDef()->glyph != ' ' &&
+      actor->getData()->glyph != ' ' &&
       eng->map->playerVision[xPos][yPos]) {
       currentDrw = &renderArrayAscii[xPos][yPos];
       currentDrw->color = clrRed;
@@ -1111,7 +1111,7 @@ void Renderer::drawTiles() {
   bool isWieldingRangedWeapon = false;
   Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
   if(item != NULL) {
-    isWieldingRangedWeapon = item->getDef().isRangedWeapon;
+    isWieldingRangedWeapon = item->getData().isRangedWeapon;
   }
   drawTile(isWieldingRangedWeapon ? tile_playerFirearm : tile_playerMelee,
            panel_map, eng->player->pos, eng->player->getColor(), clrBlack);

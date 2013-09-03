@@ -11,8 +11,9 @@ RenderInventory::RenderInventory(Engine* engine) :
   eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 60) {
 }
 
-void RenderInventory::drawDots(const int X_PREV, const int W_PREV, const int X_NEW,
-                               const int Y, const SDL_Color& clr) {
+void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
+                               const int X_NEW, const int Y,
+                               const SDL_Color& clr) {
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
@@ -58,7 +59,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       const SDL_Color itemInterfClr =
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
-      const ItemDef& d = item->getDef();
+      const ItemData& d = item->getData();
       PrimaryAttackMode_t attackMode = primaryAttackMode_none;
       if(slot->id == slot_wielded || slot->id == slot_wieldedAlt) {
         attackMode =
@@ -69,7 +70,8 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
         attackMode = primaryAttackMode_missile;
       }
 
-      str += eng->itemData->getItemInterfaceRef(*item, false, attackMode);
+      str += eng->itemDataHandler->getItemInterfaceRef(
+               *item, false, attackMode);
       eng->renderer->drawText(str, panel_screen, pos, itemInterfClr);
       drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
       eng->renderer->drawText(
@@ -126,7 +128,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 2;
 
-    str = eng->itemData->getItemInterfaceRef(*item, false);
+    str = eng->itemDataHandler->getItemInterfaceRef(*item, false);
     eng->renderer->drawText(str, panel_screen, pos, itemInterfClr);
     drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
     eng->renderer->drawText(
@@ -193,7 +195,7 @@ void RenderInventory::drawEquipMode(
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
-    const ItemDef& d = item->getDef();
+    const ItemData& d = item->getData();
     PrimaryAttackMode_t attackMode = primaryAttackMode_none;
     if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
       attackMode =
@@ -204,7 +206,7 @@ void RenderInventory::drawEquipMode(
       attackMode = primaryAttackMode_missile;
     }
 
-    str = eng->itemData->getItemInterfaceRef(*item, false, attackMode);
+    str = eng->itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
     eng->renderer->drawText(str, panel_screen, pos, itemInterfClr);
     drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
     eng->renderer->drawText(
@@ -268,9 +270,9 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 2;
 
-    str = eng->itemData->getItemRef(*item, itemRef_plain, false);
-    if(item->numberOfItems > 1 && item->getDef().isStackable) {
-      str += " (" + intToString(item->numberOfItems) + ")";
+    str = eng->itemDataHandler->getItemRef(*item, itemRef_plain, false);
+    if(item->nrItems > 1 && item->getData().isStackable) {
+      str += " (" + intToString(item->nrItems) + ")";
     }
 
     eng->renderer->drawText(str, panel_screen, pos, itemInterfClr);

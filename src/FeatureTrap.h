@@ -67,7 +67,7 @@ protected:
 
   void setSpecificTrapFromId(const Trap_t id);
 
-  const FeatureDef* const mimicFeature_;
+  const FeatureData* const mimicFeature_;
   bool isHidden_;
   SpecificTrapBase* specificTrap_;
 

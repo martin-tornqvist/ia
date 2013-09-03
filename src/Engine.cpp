@@ -80,7 +80,7 @@
 #include "SaveHandler.h"
 #include "Sound.h"
 #include "Spells.h"
-#include "StatusEffects.h"
+#include "Properties.h"
 #include "TextFormatting.h"
 #include "Thrower.h"
 #include "MenuInputHandler.h"
@@ -128,10 +128,11 @@ void Engine::initGame() {
   tracer << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
   basicUtils = new BasicUtils(this);
-  actorData = new ActorData(this);
+  propDataHandler = new PropDataHandler(this);
+  actorDataHandler = new ActorDataHandler(this);
   scrollNameHandler = new ScrollNameHandler(this);
   potionNameHandler = new PotionNameHandler(this);
-  itemData = new ItemData(this);
+  itemDataHandler = new ItemDataHandler(this);
   abilityRoll = new AbilityRoll(this);
   itemFactory = new ItemFactory(this);
   inventoryHandler = new InventoryHandler(this);
@@ -140,7 +141,7 @@ void Engine::initGame() {
   player = new Player;
   player->place(
     Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
-    &(actorData->actorDefs[actor_player]), this);
+    &(actorDataHandler->dataList[actor_player]), this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   marker = new Marker(this);
@@ -151,7 +152,7 @@ void Engine::initGame() {
   mapBuildBSP = new MapBuildBSP(this);
   mapPatterns = new MapPatterns(this);
   soundEmitter = new SoundEmitter(this);
-  featureData = new FeatureData(this);
+  featureDataHandler = new FeatureDataHandler(this);
   dungeonMaster = new DungeonMaster(this);
   input = new Input(this, quitToMainMenu_);
   dungeonClimb = new DungeonClimb(this);
@@ -214,7 +215,7 @@ void Engine::cleanupGame() {
 
   delete playerBonHandler;
   delete playerVisualMemory;
-  delete itemData;
+  delete itemDataHandler;
   delete map;
   delete log;
   delete pathfinder;
@@ -223,7 +224,7 @@ void Engine::cleanupGame() {
   delete mapBuildBSP;
   delete mapPatterns;
   delete soundEmitter;
-  delete featureData;
+  delete featureDataHandler;
   delete dungeonMaster;
   delete input;
   delete dungeonClimb;
@@ -255,7 +256,7 @@ void Engine::cleanupGame() {
   delete renderInventory;
   delete inventoryIndexes;
   delete query;
-  delete actorData;
+  delete actorDataHandler;
   delete scrollNameHandler;
   delete potionNameHandler;
   delete bash;
@@ -280,6 +281,7 @@ void Engine::cleanupGame() {
   delete disarm;
   delete gods;
   delete credits;
+  delete propDataHandler;
 
   delete marker;
 

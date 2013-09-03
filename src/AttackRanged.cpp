@@ -19,7 +19,7 @@ using namespace std;
 void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   vector<Projectile*> projectiles;
 
-  const bool IS_MACHINE_GUN = wpn.getDef().isMachineGun;
+  const bool IS_MACHINE_GUN = wpn.getData().isMachineGun;
 
   const unsigned int NR_PROJECTILES = IS_MACHINE_GUN ?
                                       NR_MACHINEGUN_PROJECTILES : 1;
@@ -37,7 +37,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
-//  const Audio_t rangedAudio = weapon->getDef().rangedAudio;
+//  const Audio_t rangedAudio = weapon->getData().rangedAudio;
 //  if(rangedAudio != audio_none) {
 //    eng->audio->playSound(rangedAudio);
 //  }
@@ -50,8 +50,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const vector<Pos> projectilePath =
     eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim);
 
-  const SDL_Color projectileColor = wpn.getDef().rangedMissileColor;
-  char projectileGlyph = wpn.getDef().rangedMissileGlyph;
+  const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
+  char projectileGlyph = wpn.getData().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;
     if(projectilePath.at(i).y == origin.y)
@@ -67,7 +67,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         (projectilePath.at(i).x < origin.x && projectilePath.at(i).y < origin.y))
       projectileGlyph = '\\';
   }
-  Tile_t projectileTile = wpn.getDef().rangedMissileTile;
+  Tile_t projectileTile = wpn.getData().rangedMissileTile;
   if(projectileTile == tile_projectileStandardFrontSlash) {
     if(projectileGlyph == '-') {
       projectileTile = tile_projectileStandardDash;
@@ -81,7 +81,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   }
 
   //TODO Reimplement projectile trail functionality
-//  const bool LEAVE_TRAIL = weapon->getDef().rangedMissileLeavesTrail;
+//  const bool LEAVE_TRAIL = weapon->getData().rangedMissileLeavesTrail;
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE =
     projectilePath.size() + (NR_PROJECTILES - 1) *
@@ -156,18 +156,18 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
               const bool DIED = curProj->attackData->currentDefender->hit(
                                   curProj->attackData->dmg,
-                                  wpn.getDef().rangedDmgType);
+                                  wpn.getData().rangedDmgType);
               if(DIED == false) {
-                // Aply weapon hit status effects
-                StatusHandler* const defenderStatusHandler =
-                  curProj->attackData->currentDefender->getStatusHandler();
-                defenderStatusHandler->tryAddEffectsFromWeapon(wpn, false);
+                // Aply weapon hit properties
+                PropHandler* const defenderPropHandler =
+                  curProj->attackData->currentDefender->getPropHandler();
+                defenderPropHandler->tryApplyPropFromWpn(wpn, false);
 
                 // Knock-back?
-                if(wpn.getDef().rangedCausesKnockBack) {
+                if(wpn.getData().rangedCausesKnockBack) {
                   const AttackData* const curData = curProj->attackData;
                   if(curData->attackResult >= successSmall) {
-                    const bool IS_SPIKE_GUN = wpn.getDef().id == item_spikeGun;
+                    const bool IS_SPIKE_GUN = wpn.getData().id == item_spikeGun;
                     eng->knockBack->tryKnockBack(curData->currentDefender,
                                                  curData->attacker->pos, IS_SPIKE_GUN);
                   }
@@ -281,12 +281,12 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const Projectile* const projectile = projectiles.at(0);
   if(projectile->isObstructed == false) {
     wpn.weaponSpecific_projectileObstructed(
-      aimPos.x, aimPos.y, projectile->actorHit, eng);
+      aimPos, projectile->actorHit);
   } else {
     const int element = projectile->obstructedInElement;
     const Pos& pos = projectilePath.at(element);
     wpn.weaponSpecific_projectileObstructed(
-      pos.x, pos.y, projectile->actorHit, eng);
+      pos, projectile->actorHit);
   }
   //Cleanup
   for(unsigned int i = 0; i < projectiles.size(); i++) {
@@ -300,16 +300,16 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   bool didAttack = false;
 
   const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
-  const bool WPN_HAS_INF_AMMO   = wpn.getDef().rangedHasInfiniteAmmo;
+  const bool WPN_HAS_INF_AMMO   = wpn.getData().rangedHasInfiniteAmmo;
 
-  if(wpn.getDef().isShotgun) {
+  if(wpn.getData().isShotgun) {
     if(wpn.ammoLoaded != 0 || WPN_HAS_INF_AMMO) {
       shotgun(attacker, wpn, aimPos);
 
       const string soundMessage = IS_ATTACKER_PLAYER ? "" :
-                                  wpn.getDef().rangedSoundMessage;
+                                  wpn.getData().rangedSoundMessage;
       if(IS_ATTACKER_PLAYER || soundMessage != "") {
-        const bool IS_LOUD = wpn.getDef().rangedSoundIsLoud;
+        const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
         eng->soundEmitter->emitSound(
           Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
       }
@@ -322,7 +322,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   } else {
     int nrOfProjectiles = 1;
 
-    if(wpn.getDef().isMachineGun) {
+    if(wpn.getData().isMachineGun) {
       nrOfProjectiles = NR_MACHINEGUN_PROJECTILES;
     }
 
@@ -331,9 +331,9 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
       if(eng->player->deadState == actorDeadState_alive) {
         const string soundMessage = IS_ATTACKER_PLAYER ? "" :
-                                    wpn.getDef().rangedSoundMessage;
+                                    wpn.getData().rangedSoundMessage;
         if(IS_ATTACKER_PLAYER || soundMessage != "") {
-          const bool IS_LOUD = wpn.getDef().rangedSoundIsLoud;
+          const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
           eng->soundEmitter->emitSound(
             Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
         }

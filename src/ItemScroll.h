@@ -9,30 +9,29 @@ class Actor;
 
 class Scroll: public Item {
 public:
-  Scroll(ItemDef* const itemDefinition) : Item(itemDefinition) {}
+  Scroll(ItemData* const itemData, Engine* engine) : Item(itemData, engine) {}
 
   ~Scroll() {}
 
-  bool activateDefault(Actor* const actor, Engine* const engine) {
+  bool activateDefault(Actor* const actor) {
     (void)actor;
-    return read(engine);
+    return read();
   }
   string getDefaultActivationLabel() const {return "Read";}
 
   SDL_Color getInterfaceClr() const {return clrMagenta;}
 
-  bool read(Engine* const engine);
+  bool read();
 
   const string getRealTypeName();
 
-  void identify(const bool IS_SILENT_IDENTIFY, Engine* const engine);
+  void identify(const bool IS_SILENT_IDENTIFY);
 
-  Spell* getSpell(Engine* const engine);
+  Spell* getSpell();
 protected:
-  void tryLearn(Engine* const engine);
+  void tryLearn();
 
-  void failedToLearnRealName(Engine* const engine,
-                             const string overrideFailString = "");
+  void failedToLearnRealName(const string overrideFailString = "");
 };
 
 class ScrollNameHandler {
@@ -40,7 +39,7 @@ public:
   ScrollNameHandler(Engine* engine);
   ~ScrollNameHandler() {m_falseNames.resize(0);}
 
-  void setFalseScrollName(ItemDef* d);
+  void setFalseScrollName(ItemData* d);
 
   void addSaveLines(vector<string>& lines) const;
   void setParametersFromSaveLines(vector<string>& lines);

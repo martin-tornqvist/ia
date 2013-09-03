@@ -68,18 +68,18 @@ void Monster::act() {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng->player) {
           dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
-            leader->getDef()->nrTurnsAwarePlayer;
+            leader->getData()->nrTurnsAwarePlayer;
         }
       }
     }
   }
 
-  const bool HAS_SNEAK_SKILL = def_->abilityVals.getVal(
+  const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
                                  ability_stealth, true, *this) > 0;
   isStealth = eng->player->checkIfSeeActor(*this, NULL) == false &&
               HAS_SNEAK_SKILL;
 
-  const AiBehavior& ai = def_->aiBehavior;
+  const AiBehavior& ai = data_->aiBehavior;
 
   //------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
@@ -131,7 +131,7 @@ void Monster::act() {
     }
   }
 
-  if(eng->dice.percentile() < def_->erraticMovement) {
+  if(eng->dice.percentile() < data_->erraticMovement) {
     if(AI_moveToRandomAdjacentCell::action(this, eng)) {
       return;
     }
@@ -188,23 +188,25 @@ void Monster::act() {
 }
 
 void Monster::monsterHit(int& dmg) {
-  playerAwarenessCounter = def_->nrTurnsAwarePlayer;
+  playerAwarenessCounter = data_->nrTurnsAwarePlayer;
 
-  if(getDef()->monsterShockLevel != monsterShockLevel_none) {
+  if(data_->monsterShockLevel != monsterShockLevel_none) {
     dmg = (dmg * (100 + eng->player->getMth())) / 100;
   }
 }
 
-void Monster::moveToCell(const Pos& targetCell) {
-  Pos dest = getStatusHandler()->changeMovePos(pos, targetCell);
+void Monster::moveToCell(Pos targetCell) {
+  getPropHandler()->changeMovePos(pos, targetCell);
 
   //Trap affects leaving?
-  if(dest != pos) {
+  if(targetCell != pos) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
-      tracer << "Monster: Standing on trap, check if trap affects leaving the cell" << endl;
-      dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
-      if(dest == pos) {
+      tracer << "Monster: Standing on trap, ";
+      tracer << "check if trap affects leaving the cell" << endl;
+      targetCell =
+        dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, targetCell);
+      if(targetCell == pos) {
         tracer << "Monster: Trap prevented leaving" << endl;
         eng->gameTime->endTurnOfCurrentActor();
         return;
@@ -213,9 +215,9 @@ void Monster::moveToCell(const Pos& targetCell) {
   }
 
   // Movement direction is stored for AI purposes
-  lastDirectionTraveled = dest - pos;
+  lastDirectionTraveled = targetCell - pos;
 
-  pos = dest;
+  pos = targetCell;
 
   // Bump features in target cell (i.e. to trigger traps)
   vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(pos);
@@ -244,7 +246,7 @@ void Monster::speakPhrase() {
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
     const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
-    playerAwarenessCounter = def_->nrTurnsAwarePlayer;
+    playerAwarenessCounter = data_->nrTurnsAwarePlayer;
     if(PLAYER_AWARENESS_BEFORE <= 0) {
       speakPhrase();
     }
@@ -264,12 +266,12 @@ bool Monster::tryAttack(Actor& defender) {
 
         if(attack.weapon != NULL) {
           if(attack.isMelee) {
-            if(attack.weapon->getDef().isMeleeWeapon) {
+            if(attack.weapon->getData().isMeleeWeapon) {
               eng->attack->melee(*this, *attack.weapon, defender);
               return true;
             }
           } else {
-            if(attack.weapon->getDef().isRangedWeapon) {
+            if(attack.weapon->getData().isRangedWeapon) {
               if(opport.isTimeToReload) {
                 eng->reload->reloadWeapon(this);
                 return true;
@@ -294,10 +296,11 @@ bool Monster::tryAttack(Actor& defender) {
 
                 if(isBlockedByFriend == false) {
                   const int NR_TURNS_DISABLED_RANGED =
-                    def_->rangedCooldownTurns;
-                  StatusDisabledAttackRanged* status =
-                    new StatusDisabledAttackRanged(NR_TURNS_DISABLED_RANGED);
-                  statusHandler_->tryAddEffect(status);
+                    data_->rangedCooldownTurns;
+                  PropDisabledRanged* status =
+                    new PropDisabledRanged(
+                    eng, propTurnsSpecified, NR_TURNS_DISABLED_RANGED);
+                  propHandler_->tryApplyProp(status);
                   eng->attack->ranged(*this, *attack.weapon, defender.pos);
                   return true;
                 } else {
@@ -315,20 +318,20 @@ bool Monster::tryAttack(Actor& defender) {
 
 AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
-  if(statusHandler_->allowAttack(false)) {
+  if(propHandler_->allowAttack(false)) {
     opport.isMelee =
       eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
     if(opport.isMelee) {
-      if(statusHandler_->allowAttackMelee(false)) {
+      if(propHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
         if(weapon != NULL) {
-          if(weapon->getDef().isMeleeWeapon) {
+          if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
         }
@@ -336,27 +339,27 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Intrinsic melee attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
           weapon = dynamic_cast<Weapon*>(inventory_->getIntrinsicInElement(i));
-          if(weapon->getDef().isMeleeWeapon) {
+          if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
         }
       }
     } else {
       if(
-        statusHandler_->allowAttackRanged(false) &&
-        statusHandler_->hasEffect(statusBurning) == false) {
+        propHandler_->allowAttackRanged(false) &&
+        propHandler_->hasProp(propBurning) == false) {
         //Ranged weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
 
         if(weapon != NULL) {
-          if(weapon->getDef().isRangedWeapon == true) {
+          if(weapon->getData().isRangedWeapon == true) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
             if(
               weapon->ammoLoaded == 0 &&
-              weapon->getDef().rangedHasInfiniteAmmo == false) {
+              weapon->getData().rangedHasInfiniteAmmo == false) {
               if(inventory_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;
               }
@@ -367,7 +370,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Intrinsic ranged attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
           weapon = dynamic_cast<Weapon*>(inventory_->getIntrinsicInElement(i));
-          if(weapon->getDef().isRangedWeapon) {
+          if(weapon->getData().isRangedWeapon) {
             opport.weapons.push_back(weapon);
           }
         }
@@ -391,7 +394,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   if(nrOfWeapons > 0) {
     attack.weapon = attackOpport.weapons.at(0);
 
-    const ItemDef* def = &(attack.weapon->getDef());
+    const ItemData* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
     if(nrOfWeapons > 1) {
@@ -399,14 +402,14 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Found new weapon in element i.
         newWeapon = attackOpport.weapons.at(i);
-        const ItemDef* newDef = &(newWeapon->getDef());
+        const ItemData* newData = &(newWeapon->getData());
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(eng->itemData->isWeaponStronger(*def, *newDef, attack.isMelee)) {
+        if(eng->itemDataHandler->isWeaponStronger(*data, *newData, attack.isMelee)) {
           // - use new weapon instead.
           attack.weapon = newWeapon;
-          def = newDef;
+          data = newData;
         }
       }
     }

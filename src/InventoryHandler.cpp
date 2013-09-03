@@ -34,29 +34,29 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slo
 
   for(unsigned int i = 0; i < general->size(); i++) {
     const Item* const item = general->at(i);
-    const ItemDef& def = item->getDef();
+    const ItemData& data = item->getData();
 
     switch(slotToEquip) {
       case slot_armorBody: {
-        if(def.isArmor) {
+        if(data.isArmor) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
       case slot_wielded: {
-        if(def.isMeleeWeapon || def.isRangedWeapon) {
+        if(data.isMeleeWeapon || data.isRangedWeapon) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
       case slot_wieldedAlt: {
-        if(def.isMeleeWeapon || def.isRangedWeapon) {
+        if(data.isMeleeWeapon || data.isRangedWeapon) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
       case slot_missiles: {
-        if(def.isMissileWeapon) {
+        if(data.isMissileWeapon) {
           generalItemsToShow.push_back(i);
         }
       }
@@ -145,7 +145,8 @@ void InventoryHandler::runSlotsScreen() {
           browserPosToSetAfterDrop = browser.getPos().y;
           return;
         }
-        eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
+        eng->renderInventory->drawBrowseSlotsMode(
+          browser, equipmentSlotButtons);
       }
       break;
       case menuAction_selected: {
@@ -157,11 +158,13 @@ void InventoryHandler::runSlotsScreen() {
               eng->renderer->drawMapAndInterface();
               return;
             } else {
-              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
+              eng->renderInventory->drawBrowseSlotsMode(
+                browser, equipmentSlotButtons);
             }
           } else {
             const bool IS_ARMOR = slot->id == slot_armorBody;
-            const string itemName = eng->itemData->getItemRef(*slot->item, itemRef_plain);
+            const string itemName =
+              eng->itemDataHandler->getItemRef(*slot->item, itemRef_plain);
             inv->moveItemToGeneral(slot);
             if(IS_ARMOR) {
               screenToOpenAfterDrop = inventoryScreen_slots;
@@ -173,7 +176,8 @@ void InventoryHandler::runSlotsScreen() {
               eng->gameTime->endTurnOfCurrentActor();
               return;
             } else {
-              eng->renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
+              eng->renderInventory->drawBrowseSlotsMode(
+                browser, equipmentSlotButtons);
             }
           }
         } else {
@@ -240,20 +244,20 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   tracer << "InventoryHandler::runDropScreen()" << endl;
   Inventory* const inv = eng->player->getInventory();
   Item* const item = inv->getItemInElement(GLOBAL_ELEMENT_NR);
-  const ItemDef& def = item->getDef();
+  const ItemData& data = item->getData();
 
   eng->log->clearLog();
-  if(def.isStackable && item->numberOfItems > 1) {
+  if(data.isStackable && item->nrItems > 1) {
     tracer << "InventoryHandler: item is stackable and more than one" << endl;
     eng->renderer->drawMapAndInterface(false);
-    const string nrStr = "1-" + intToString(item->numberOfItems);
+    const string nrStr = "1-" + intToString(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "| enter to drop | space/esc to cancel";
     eng->renderer->drawText(dropStr, panel_screen, Pos(1, 1), clrWhiteHigh);
     eng->renderer->updateScreen();
     const int NR_TO_DROP = eng->query->number(
                              Pos(20 + nrStr.size(), 1),
-                             clrWhiteHigh, 0, 3, item->numberOfItems, false);
+                             clrWhiteHigh, 0, 3, item->nrItems, false);
     if(NR_TO_DROP <= 0) {
       tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;

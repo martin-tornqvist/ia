@@ -51,16 +51,16 @@ void PopulateItems::spawnItems() {
 void PopulateItems::buildCandidateList() {
   candidates.resize(0);
 
-  ItemDef** defs = eng->itemData->itemDefs;
+  ItemData** dataList = eng->itemDataHandler->dataList;
 
   const unsigned int NUMBER_DEFINED = static_cast<unsigned int>(endOfItemIds);
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
     if(
-      eng->map->getDLVL() >= defs[i]->spawnStandardMinDLVL &&
-      eng->map->getDLVL() <= defs[i]->spawnStandardMaxDLVL &&
-      defs[i]->isIntrinsic == false) {
-      if(eng->dice.percentile() < defs[i]->chanceToIncludeInSpawnList) {
+      eng->map->getDLVL() >= dataList[i]->spawnStandardMinDLVL &&
+      eng->map->getDLVL() <= dataList[i]->spawnStandardMaxDLVL &&
+      dataList[i]->isIntrinsic == false) {
+      if(eng->dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));
       }
     }

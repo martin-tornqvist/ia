@@ -35,7 +35,7 @@ public:
 
   void playerLoseXpPercent(const int PERCENT);
 
-  int getMonsterXpWorth(const ActorDef& d) const;
+  int getMonsterXpWorth(const ActorData& d) const;
 
   inline int getCLvl()  const {return clvl;}
   inline int getXp()    const {return xp;}

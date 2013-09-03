@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "CommonTypes.h"
-#include "StatusEffects.h"
+#include "Properties.h"
 
 using namespace std;
 
@@ -325,7 +325,7 @@ private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificSpiCost()      const {return 8;}
 
-  StatusEffect* getStatusEffect(Engine* const eng) const;
+  Prop* getProp(Engine* const eng) const;
 };
 
 class SpellDisease: public Spell {

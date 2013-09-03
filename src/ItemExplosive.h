@@ -1,14 +1,15 @@
 #ifndef ITEM_EXPLOSIVE_H
 #define ITEM_EXPLOSIVE_H
 
-#include "StatusEffects.h"
+#include "Properties.h"
 #include "Item.h"
 
 class Engine;
 
 class Explosive : public Item {
 public:
-  Explosive(ItemDef* const itemDefinition) : Item(itemDefinition) {}
+  Explosive(ItemData* const itemData, Engine* engine) :
+    Item(itemData, engine) {}
   virtual ~Explosive();
 
   virtual bool activateDefault(Actor* const actor, Engine* const engine) {
@@ -29,37 +30,28 @@ protected:
 
 class Dynamite: public Explosive {
 public:
-  Dynamite(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
-  }
-  ~Dynamite() {
-  }
-
+  Dynamite(ItemData* const itemData, Engine* engine) :
+    Explosive(itemData, engine) {}
+  ~Dynamite() {}
   void setPlayerExplosive(Engine* const engine) const;
-
 private:
 };
 
 class Molotov: public Explosive {
 public:
-  Molotov(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
-  }
-  ~Molotov() {
-  }
-
+  Molotov(ItemData* const itemData, Engine* engine) :
+    Explosive(itemData, engine) {}
+  ~Molotov() {}
   void setPlayerExplosive(Engine* const engine) const;
-
 private:
 };
 
 class Flare: public Explosive {
 public:
-  Flare(ItemDef* const itemDefinition) : Explosive(itemDefinition) {
-  }
-  ~Flare() {
-  }
-
+  Flare(ItemData* const itemData, Engine* engine) :
+    Explosive(itemData, engine) {}
+  ~Flare() {}
   void setPlayerExplosive(Engine* const engine) const;
-
 private:
 };
 

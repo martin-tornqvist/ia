@@ -32,7 +32,7 @@ void Close::playerCloseFeature(Feature* const feature) const {
 	}
 
 	if(closeAbleObjectFound == false) {
-		const bool PLAYER_CAN_SEE = eng->player->getStatusHandler()->allowSee();
+		const bool PLAYER_CAN_SEE = eng->player->getPropHandler()->allowSee();
 		if(PLAYER_CAN_SEE) {
 			eng->log->addMessage("I see nothing there to close.");
 		} else {

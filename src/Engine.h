@@ -13,7 +13,7 @@
 
 class PlayerVisualMemory;
 class Renderer;
-class ItemData;
+class ItemDataHandler;
 class Map;
 class Log;
 class Phrases;
@@ -23,7 +23,7 @@ class MapBuild;
 class MapBuildBSP;
 class MapPatterns;
 class SoundEmitter;
-class FeatureData;
+class FeatureDataHandler;
 class DungeonMaster;
 class Input;
 class DungeonClimb;
@@ -56,7 +56,7 @@ class PopulateTraps;
 class RenderInventory;
 class InventoryIndexes;
 class Query;
-class ActorData;
+class ActorDataHandler;
 class ScrollNameHandler;
 class PotionNameHandler;
 class Bash;
@@ -86,6 +86,7 @@ class DebugModeStatPrinter;
 class Disarm;
 class Gods;
 class Credits;
+class PropDataHandler;
 
 class Player;
 
@@ -110,7 +111,7 @@ public:
 
   PlayerVisualMemory* playerVisualMemory;
   Renderer* renderer;
-  ItemData* itemData;
+  ItemDataHandler* itemDataHandler;
   Map* map;
   Log* log;
   Phrases* phrases;
@@ -120,7 +121,7 @@ public:
   MapBuildBSP* mapBuildBSP;
   MapPatterns* mapPatterns;
   SoundEmitter* soundEmitter;
-  FeatureData* featureData;
+  FeatureDataHandler* featureDataHandler;
   DungeonMaster* dungeonMaster;
   Input* input;
   DungeonClimb* dungeonClimb;
@@ -154,7 +155,7 @@ public:
   RenderInventory* renderInventory;
   InventoryIndexes* inventoryIndexes;
   Query* query;
-  ActorData* actorData;
+  ActorDataHandler* actorDataHandler;
   ScrollNameHandler* scrollNameHandler;
   PotionNameHandler* potionNameHandler;
   Bash* bash;
@@ -183,6 +184,7 @@ public:
   Disarm* disarm;
   Gods* gods;
   Credits* credits;
+  PropDataHandler* propDataHandler;
 
   Player* player;
 

@@ -4,7 +4,7 @@
 
 void Gods::setRandomGod() {
   const int NR_GODS = int(godList.size());
-  currentGodElem_ = eng->dice.getInRange(0, NR_GODS - 1);
+  currentGodElem_ = eng->dice.range(0, NR_GODS - 1);
 }
 
 void Gods::setNoGod() {

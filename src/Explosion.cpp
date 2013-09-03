@@ -77,7 +77,7 @@ void ExplosionMaker::renderExplosionWithColorOverride(
 }
 
 void ExplosionMaker::runExplosion(
-  const Pos& origin, const bool DO_EXPLOSION_DMG, StatusEffect* const effect,
+  const Pos& origin, const bool DO_EXPLOSION_DMG, Prop* const prop,
   const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
   BasicData data(origin, width, height);
 
@@ -98,7 +98,7 @@ void ExplosionMaker::runExplosion(
   //Assuming all explosions alerts monsters to player.
   if(DO_EXPLOSION_DMG) {
     eng->soundEmitter->emitSound(Sound("I hear an explosion!", true, origin, true, true));
-    eng->audio->playSound(audio_explosion);
+//    eng->audio->playSound(audio_explosion);
   }
 
   //Render
@@ -149,11 +149,12 @@ void ExplosionMaker::runExplosion(
       }
 
       if(reach[x][y] == true) {
-        const int CHEBY_DIST = eng->basicUtils->chebyshevDistance(origin.x, origin.y, x, y);
+        const int CHEBY_DIST =
+          eng->basicUtils->chebyshevDistance(origin.x, origin.y, x, y);
         const int EXPLOSION_DMG_AT_DIST =
           eng->dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
 
-        //Damage actor, or apply effect?
+        //Damage actor, or apply property?
         const unsigned int SIZE_OF_ACTOR_LOOP = eng->gameTime->getLoopSize();
         for(unsigned int i = 0; i < SIZE_OF_ACTOR_LOOP; i++) {
           currentActor = eng->gameTime->getActorAt(i);
@@ -161,26 +162,29 @@ void ExplosionMaker::runExplosion(
 
             if(DO_EXPLOSION_DMG) {
               if(currentActor == eng->player) {
-                eng->log->addMessage("I am hit by an explosion!", clrMessageBad);
+                eng->log->addMessage("I am hit by an explosion!",
+                                     clrMessageBad);
               }
               currentActor->hit(EXPLOSION_DMG_AT_DIST, dmgType_physical);
             }
 
-            if(effect != NULL) {
-              if(currentActor->deadState == actorDeadState_alive) {
-                //Making a copy of the effect, because the handler may destroy the parameter effect.
-                StatusEffect* effectCpy = effect->copy();
-                currentActor->getStatusHandler()->tryAddEffect(effectCpy);
-              }
+            if(
+              prop != NULL &&
+              currentActor->deadState == actorDeadState_alive) {
+              PropHandler* const propHandler = currentActor->getPropHandler();
+              Prop* propCpy = propHandler->makePropFromId(
+                                prop->getId(), propTurnsSpecified,
+                                prop->turnsLeft_);
+              propHandler->tryApplyProp(propCpy);
             }
-
           }
         }
 
         if(DO_EXPLOSION_DMG == true) {
           if(eng->dice.percentile() < 55) {
             eng->featureFactory->spawnFeatureAt(
-              feature_smoke, Pos(x, y), new SmokeSpawnData(1 + eng->dice(1, 3)));
+              feature_smoke, Pos(x, y),
+              new SmokeSpawnData(1 + eng->dice(1, 3)));
           }
         }
       }
@@ -191,12 +195,13 @@ void ExplosionMaker::runExplosion(
   eng->player->updateFov();
   eng->renderer->drawMapAndInterface();
 
-  if(effect != NULL) {
-    delete effect;
+  if(prop != NULL) {
+    delete prop;
   }
 }
 
-void ExplosionMaker::runSmokeExplosion(const Pos& origin, const bool SMALL_RADIUS) {
+void ExplosionMaker::runSmokeExplosion(const Pos& origin,
+                                       const bool SMALL_RADIUS) {
   const int RADIUS = SMALL_RADIUS == true ? 3 : width;
   BasicData data(origin, RADIUS, RADIUS);
 

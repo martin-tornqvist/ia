@@ -90,9 +90,9 @@ public:
   bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
 };
 
-struct ActorDef {
+struct ActorData {
 public:
-  ActorDef() {reset();}
+  ActorData() {reset();}
 
   void reset();
 
@@ -136,39 +136,36 @@ public:
   string aggroTextMonsterHidden;
 };
 
-class ActorData {
+class ActorDataHandler {
 public:
-  ActorData(Engine* engine) : eng(engine) {
+  ActorDataHandler(Engine* engine) : eng(engine) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      actorDefs[i].abilityVals.eng = engine;
+      dataList[i].abilityVals.eng = engine;
     }
-    defineAllActors();
+    initDataList();
   }
 
-  void defineAllActors();
-
-  ActorDef actorDefs[endOfActorIds];
+  ActorData dataList[endOfActorIds];
 
   void addSaveLines(vector<string>& lines) const {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      lines.push_back(intToString(actorDefs[i].nrLeftAllowedToSpawn));
-      lines.push_back(intToString(actorDefs[i].nrOfKills));
+      lines.push_back(intToString(dataList[i].nrLeftAllowedToSpawn));
+      lines.push_back(intToString(dataList[i].nrOfKills));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      actorDefs[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
+      dataList[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
       lines.erase(lines.begin());
-      actorDefs[i].nrOfKills = stringToInt(lines.front());
+      dataList[i].nrOfKills = stringToInt(lines.front());
       lines.erase(lines.begin());
     }
   }
 
 private:
-//  void setStrengthsFromFormula(ActorDef& d, const EntityStrength_t hpStrength) const;
-
-  void finalizeDefinition(ActorDef& d);
+  void initDataList();
+  void addData(ActorData& d);
 
   Engine* eng;
 };

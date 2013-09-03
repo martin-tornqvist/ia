@@ -21,7 +21,6 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
     case playerBon_selfAware: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
-      eng->player->getStatusHandler()->endEffect(statusConfused, visionBlockers);
     } break;
 
     default: {} break;

@@ -4,7 +4,7 @@
 #include "Engine.h"
 #include "Colors.h"
 
-void FeatureData::resetDef(FeatureDef& d) {
+void FeatureDataHandler::resetData(FeatureData& d) {
   d.id = feature_empty;
   d.spawnType = featureSpawnType_static;
   d.glyph = ' ';
@@ -34,14 +34,14 @@ void FeatureData::resetDef(FeatureDef& d) {
   d.featuresOnDestroyed.resize(0);
 }
 
-void FeatureData::addToListAndReset(FeatureDef& d) {
-  featureDefs[d.id] = d;
-  resetDef(d);
+void FeatureDataHandler::addToListAndReset(FeatureData& d) {
+  dataList[d.id] = d;
+  resetData(d);
 }
 
-void FeatureData::makeList() {
-  FeatureDef d;
-  resetDef(d);
+void FeatureDataHandler::initDataList() {
+  FeatureData d;
+  resetData(d);
   addToListAndReset(d);
 
   /*---------------------------------------------*/
@@ -407,7 +407,7 @@ void FeatureData::makeList() {
   d.name_a = "a big pile of debris";
   d.name_the = "the big pile of debris";
   d.glyph = 8;
-  d.color = featureDefs[feature_stoneWall].color;
+  d.color = dataList[feature_stoneWall].color;
   d.tile = tile_rubbleHigh;
   d.isMovePassable[moveType_walk] = false;
   d.isMovePassable[moveType_ethereal] = true;
@@ -428,7 +428,7 @@ void FeatureData::makeList() {
   d.name_a = "rubble";
   d.name_the = "the rubble";
   d.glyph = ',';
-  d.color = featureDefs[feature_stoneWall].color;
+  d.color = dataList[feature_stoneWall].color;
   d.tile = tile_rubbleLow;
   d.isShootPassable = true;
   d.isVisionPassable = true;

@@ -21,8 +21,8 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
   Inventory* inventory = actorDropping->getInventory();
   Item* itemToDrop = inventory->getItemInElement(ELEMENT);
 
-  const bool IS_STACKABLE = itemToDrop->getDef().isStackable;
-  const int NR_ITEMS_BEFORE_DROP = itemToDrop->numberOfItems;
+  const bool IS_STACKABLE = itemToDrop->getData().isStackable;
+  const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
   const bool IS_WHOLE_STACK_DROPPED =
     IS_STACKABLE == false ||
     NR_ITEMS_TO_DROP == -1 ||
@@ -32,15 +32,15 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
 
   if(itemToDrop != NULL) {
     if(IS_WHOLE_STACK_DROPPED) {
-      itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
+      itemRef = eng->itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
       eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng->itemFactory->copyItem(itemToKeep);
-      itemToDrop->numberOfItems = NR_ITEMS_TO_DROP;
-      itemRef = eng->itemData->getItemRef(*itemToDrop, itemRef_plural);
-      itemToKeep->numberOfItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
+      itemToDrop->nrItems = NR_ITEMS_TO_DROP;
+      itemRef = eng->itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
+      itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
     }
 
@@ -48,7 +48,8 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     const Actor* const curActor = eng->gameTime->getCurrentActor();
     if(curActor == eng->player) {
       eng->log->clearLog();
-      eng->log->addMessage("I drop " + itemRef + ".", clrWhite, messageInterrupt_never, true);
+      eng->log->addMessage(
+        "I drop " + itemRef + ".", clrWhite, messageInterrupt_never, true);
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -86,7 +87,7 @@ Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
   int curX, curY, stackX, stackY;
-  const bool ITEM_STACKS = item.getDef().isStackable;
+  const bool ITEM_STACKS = item.getData().isStackable;
   int ii = 0;
   const unsigned int vectorSize = freeCells.size();
   for(unsigned int i = 0; i < vectorSize; i++) {
@@ -99,8 +100,8 @@ Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
         stackY = freeCells.at(ii).y;
         Item* itemFoundOnFloor = eng->map->items[stackX][stackY];
         if(itemFoundOnFloor != NULL) {
-          if(itemFoundOnFloor->getDef().id == item.getDef().id) {
-            item.numberOfItems += itemFoundOnFloor->numberOfItems;
+          if(itemFoundOnFloor->getData().id == item.getData().id) {
+            item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
             eng->map->items[stackX][stackY] = &item;
             return &item;

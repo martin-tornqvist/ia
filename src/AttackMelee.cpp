@@ -20,25 +20,26 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
 
   if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
     const bool IS_DEFENDER_KILLED =
-      data.currentDefender->hit(data.dmg, wpn.getDef().meleeDmgType);
+      data.currentDefender->hit(data.dmg, wpn.getData().meleeDmgType);
 
     if(IS_DEFENDER_KILLED == false) {
-      data.currentDefender->getStatusHandler()->tryAddEffectsFromWeapon(wpn, true);
+      data.currentDefender->getPropHandler()->tryApplyPropFromWpn(wpn, true);
     }
     if(data.attackResult >= successNormal) {
-      if(data.currentDefender->getDef()->canBleed == true) {
+      if(data.currentDefender->getData()->canBleed == true) {
         eng->gore->makeBlood(data.currentDefender->pos);
       }
     }
     if(IS_DEFENDER_KILLED == false) {
-      if(wpn.getDef().meleeCausesKnockBack) {
+      if(wpn.getData().meleeCausesKnockBack) {
         if(data.attackResult > successSmall) {
-          eng->knockBack->tryKnockBack(data.currentDefender, data.attacker->pos, false);
+          eng->knockBack->tryKnockBack(
+            data.currentDefender, data.attacker->pos, false);
         }
       }
     }
-    const ItemDef& itemDef = wpn.getDef();
-    if(itemDef.itemWeight > itemWeight_light && itemDef.isIntrinsic == false) {
+    const ItemData& itemData = wpn.getData();
+    if(itemData.itemWeight > itemWeight_light && itemData.isIntrinsic == false) {
       eng->soundEmitter->emitSound(Sound("", true, data.currentDefender->pos,
                                          false, true));
     }
@@ -51,7 +52,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     }
   } else {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
-    monster->playerAwarenessCounter = monster->getDef()->nrTurnsAwarePlayer;
+    monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
   }
   eng->gameTime->endTurnOfCurrentActor();
 //  const bool IS_SWIFT_ATTACK = data.attacker == eng->player && data.currentDefender->deadState != actorDeadState_alive && has swift assailant;
@@ -146,7 +147,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
       }
 
       if(data.attacker == eng->player) {
-        const string wpnVerb = wpn.getDef().meleeAttackMessages.player;
+        const string wpnVerb = wpn.getData().meleeAttackMessages.player;
 
         if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
           otherName = data.currentDefender->getNameThe();
@@ -164,14 +165,14 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
             data.isWeakAttack  ? "feebly "    :
             data.isBackstab    ? "covertly "  : "";
           const SDL_Color clr = data.isBackstab ? clrBlueLgt : clrMessageGood;
-          const string wpnName_a = eng->itemData->getItemRef(wpn, itemRef_a, true);
+          const string wpnName_a = eng->itemDataHandler->getItemRef(wpn, itemRef_a, true);
           eng->log->addMessage(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " +
             wpnName_a + dmgPunctuation,
             clr);
         }
       } else {
-        const string wpnVerb = wpn.getDef().meleeAttackMessages.other;
+        const string wpnVerb = wpn.getData().meleeAttackMessages.other;
 
         if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();

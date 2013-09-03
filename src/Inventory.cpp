@@ -70,8 +70,8 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     if(item == NULL) {
       lines.push_back("0");
     } else {
-      lines.push_back(intToString(item->getDef().id));
-      lines.push_back(intToString(item->numberOfItems));
+      lines.push_back(intToString(item->getData().id));
+      lines.push_back(intToString(item->nrItems));
       item->itemSpecificAddSaveLines(lines);
     }
   }
@@ -79,8 +79,8 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   lines.push_back(intToString(general_.size()));
   for(unsigned int i = 0; i < general_.size(); i++) {
     Item* const item = general_.at(i);
-    lines.push_back(intToString(item->getDef().id));
-    lines.push_back(intToString(item->numberOfItems));
+    lines.push_back(intToString(item->getData().id));
+    lines.push_back(intToString(item->nrItems));
     item->itemSpecificAddSaveLines(lines);
   }
 }
@@ -98,7 +98,7 @@ void Inventory::setParametersFromSaveLines(vector<string>& lines, Engine* const 
     lines.erase(lines.begin());
     if(id != item_empty) {
       item = engine->itemFactory->spawnItem(id);
-      item->numberOfItems = stringToInt(lines.front());
+      item->nrItems = stringToInt(lines.front());
       lines.erase(lines.begin());
       item->itemSpecificSetParametersFromSaveLines(lines);
 
@@ -116,7 +116,7 @@ void Inventory::setParametersFromSaveLines(vector<string>& lines, Engine* const 
     const ItemId_t id = static_cast<ItemId_t>(stringToInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = engine->itemFactory->spawnItem(id);
-    item->numberOfItems = stringToInt(lines.front());
+    item->nrItems = stringToInt(lines.front());
     lines.erase(lines.begin());
     item->itemSpecificSetParametersFromSaveLines(lines);
     general_.push_back(item);
@@ -129,7 +129,7 @@ bool Inventory::hasDynamiteInGeneral() const {
 
 bool Inventory::hasItemInGeneral(const ItemId_t id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getDef().id == id)
+    if(general_.at(i)->getData().id == id)
       return true;
   }
 
@@ -138,11 +138,11 @@ bool Inventory::hasItemInGeneral(const ItemId_t id) const {
 
 int Inventory::getItemStackSizeInGeneral(const ItemId_t id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getDef().id == id) {
-      if(general_.at(i)->getDef().isStackable == false) {
+    if(general_.at(i)->getData().id == id) {
+      if(general_.at(i)->getData().isStackable == false) {
         return 1;
       } else {
-        return general_.at(i)->numberOfItems;
+        return general_.at(i)->nrItems;
       }
     }
   }
@@ -152,7 +152,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemId_t id) const {
 
 void Inventory::decreaseDynamiteInGeneral() {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getDef().id == item_dynamite) {
+    if(general_.at(i)->getData().id == item_dynamite) {
       decreaseItemInGeneral(i);
       break;
     }
@@ -185,7 +185,7 @@ void Inventory::putItemInGeneral(Item* item) {
   bool stackedItem = false;
 
   //If item stacks, see if there is other items of same type
-  if(item->getDef().isStackable == true) {
+  if(item->getData().isStackable == true) {
 
     const int stackIndex = getElementToStackItem(item);
 
@@ -194,7 +194,7 @@ void Inventory::putItemInGeneral(Item* item) {
 
       //Keeping picked up item and destroying the one in the inventory,
       //to keep the parameter pointer valid.
-      item->numberOfItems += compareItem->numberOfItems;
+      item->nrItems += compareItem->nrItems;
       delete compareItem;
       general_.at(stackIndex) = item;
       stackedItem = true;
@@ -207,11 +207,11 @@ void Inventory::putItemInGeneral(Item* item) {
 }
 
 int Inventory::getElementToStackItem(Item* item) const {
-  if(item->getDef().isStackable == true) {
+  if(item->getData().isStackable == true) {
     for(unsigned int i = 0; i < general_.size(); i++) {
       Item* compare = general_.at(i);
 
-      if(compare->getDef().id == item->getDef().id) {
+      if(compare->getData().id == item->getData().id) {
         return i;
       }
     }
@@ -244,7 +244,7 @@ void Inventory::dropAllNonIntrinsic(const Pos pos, const bool ROLL_FOR_DESTRUCTI
     item = general_.at(i);
     if(item != NULL) {
       if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
-         CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
+          CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
         engine->itemDrop->dropItemOnMap(pos, *item);
@@ -263,20 +263,20 @@ bool Inventory::hasAmmoForFirearmInInventory() {
   if(weapon != NULL) {
 
     //If weapon has infinite ammo, return true but with a warning
-    if(weapon->getDef().rangedHasInfiniteAmmo) {
+    if(weapon->getData().rangedHasInfiniteAmmo) {
       tracer << "[WARNING] Inventory::hasAmmoForFirearm...() ran on weapon with infinite ammo" << endl;
       return true;
     }
 
     //If weapon is a firearm
-    if(weapon->getDef().isRangedWeapon == true) {
+    if(weapon->getData().isRangedWeapon == true) {
 
       //Get weapon ammo type
-      const ItemId_t ammoId = weapon->getDef().rangedAmmoTypeUsed;
+      const ItemId_t ammoId = weapon->getData().rangedAmmoTypeUsed;
 
       //Look for that ammo type in inventory
       for(unsigned int i = 0; i < general_.size(); i++) {
-        if(general_.at(i)->getDef().id == ammoId) {
+        if(general_.at(i)->getData().id == ammoId) {
           return true;
         }
       }
@@ -287,13 +287,13 @@ bool Inventory::hasAmmoForFirearmInInventory() {
 
 void Inventory::decreaseItemInSlot(SlotTypes_t slotName) {
   Item* item = getItemInSlot(slotName);
-  bool stack = item->getDef().isStackable;
+  bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
   if(stack == true) {
-    item->numberOfItems -= 1;
+    item->nrItems -= 1;
 
-    if(item->numberOfItems > 0) {
+    if(item->nrItems > 0) {
       deleteItem = false;
     }
   }
@@ -327,13 +327,13 @@ void Inventory::removetemInGeneralWithPointer(Item* const item, const bool DELET
 
 void Inventory::decreaseItemInGeneral(unsigned element) {
   Item* item = general_.at(element);
-  bool stack = item->getDef().isStackable;
+  bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
   if(stack == true) {
-    item->numberOfItems -= 1;
+    item->nrItems -= 1;
 
-    if(item->numberOfItems > 0) {
+    if(item->nrItems > 0) {
       deleteItem = false;
     }
   }
@@ -347,7 +347,7 @@ void Inventory::decreaseItemInGeneral(unsigned element) {
 
 void Inventory::decreaseItemTypeInGeneral(const ItemId_t id) {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getDef().id == id) {
+    if(general_.at(i)->getData().id == id) {
       decreaseItemInGeneral(i);
       return;
     }
@@ -382,7 +382,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
   bool isFreeTurn = false;
 
   Item* item = general_.at(GENERAL_INV_ELEMENT);
-  const ItemDef& d = item->getDef();
+  const ItemData& d = item->getData();
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
@@ -397,12 +397,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
         engine->log->addMessage(
           "I was wielding " + nameBefore + ".");
       }
       const string nameAfter =
-        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
       engine->log->addMessage(
         "I am now wielding " + nameAfter + ".");
     }
@@ -415,12 +415,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
         engine->log->addMessage(
           "I was wielding " + nameBefore + " as a prepared weapon.");
       }
       const string nameAfter =
-        engine->itemData->getItemRef(*itemAfter, itemRef_a);
+        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
       engine->log->addMessage(
         "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
@@ -433,12 +433,17 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemData->getItemRef(*itemBefore, itemRef_a);
+          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
         engine->log->addMessage("I wore " + nameBefore + ".");
       }
-      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
+      const string nameAfter =
+        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
       engine->log->addMessage("I am now wearing " + nameAfter + ".");
     }
+    if(itemBefore != NULL) {
+      itemBefore->onTakeOff();
+    }
+    itemAfter->onWear();
     isFreeTurn = false;
   }
 
@@ -449,11 +454,14 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemData->getItemRef(*itemBefore, itemRef_plural);
-        engine->log->addMessage("I was using " + nameBefore + " as missile weapon.");
+          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_plural);
+        engine->log->addMessage(
+          "I was using " + nameBefore + " as missile weapon.");
       }
-      const string nameAfter = engine->itemData->getItemRef(*itemAfter, itemRef_plural);
-      engine->log->addMessage("I am now using " + nameAfter + " as missile weapon.");
+      const string nameAfter =
+        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
+      engine->log->addMessage(
+        "I am now using " + nameAfter + " as missile weapon.");
     }
   }
   if(isFreeTurn == false) {
@@ -549,7 +557,7 @@ void Inventory::removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEM
 
 int Inventory::getElementWithItemType(const ItemId_t id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getDef().id == id) {
+    if(general_.at(i)->getData().id == id) {
       return i;
     }
   }
@@ -589,7 +597,7 @@ Item* Inventory::getIntrinsicInElement(int element) const {
 }
 
 void Inventory::putItemInIntrinsics(Item* item) {
-  if(item->getDef().isIntrinsic) {
+  if(item->getData().isIntrinsic) {
     intrinsics_.push_back(item);
   } else {
     tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
@@ -653,8 +661,10 @@ public:
   LexicograhicalCompareItems(Engine* const engine) : eng(engine) {
   }
   bool operator()(Item* const item1, Item* const item2) {
-    const string& itemName1 = eng->itemData->getItemRef(*item1, itemRef_plain, true);
-    const string& itemName2 = eng->itemData->getItemRef(*item2, itemRef_plain, true);
+    const string& itemName1 =
+      eng->itemDataHandler->getItemRef(*item1, itemRef_plain, true);
+    const string& itemName2 =
+      eng->itemDataHandler->getItemRef(*item2, itemRef_plain, true);
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }
@@ -699,5 +709,18 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
   }
 }
 
-
+void Inventory::getAllItems(vector<Item*>& itemList) const {
+  itemList.resize(0);
+  const int NR_SLOTS = slots_.size();
+  for(int i = 0; i < NR_SLOTS; i++) {
+    Item* const item = slots_.at(i).item;
+    if(item != NULL) {
+      itemList.push_back(item);
+    }
+  }
+  const int NR_GEN = general_.size();
+  for(int i = 0; i < NR_GEN; i++) {
+    itemList.push_back(general_.at(i));
+  }
+}
 

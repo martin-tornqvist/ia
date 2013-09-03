@@ -13,7 +13,8 @@
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData) :
-  FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_), nrOfSpikes_(0) {
+  FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
+  nrSpikes_(0) {
 
   isOpenedAndClosedExternally_ = false;
 
@@ -140,7 +141,7 @@ Tile_t Door::getTile() const {
 }
 
 MaterialType_t Door::getMaterialType() const {
-  return isSecret_ ? mimicFeature_->materialType : def_->materialType;
+  return isSecret_ ? mimicFeature_->materialType : data_->materialType;
 }
 
 void Door::bump(Actor* actorBumping) {
@@ -208,7 +209,7 @@ void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(eng->mapTests->isCellsNeighbours(Pos(pos_.x, pos_.y), eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
+      const int PLAYER_SKILL = eng->player->getData()->abilityVals.getVal(abilityUsed, true, *(eng->player));
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
       }
@@ -219,7 +220,7 @@ void Door::playerTrySpotHidden() {
 void Door::playerTryClueHidden() {
   if(isSecret_ && isClued_ == false) {
     const Abilities_t abilityUsed = ability_searching;
-    const int PLAYER_SKILL = eng->player->getDef()->abilityVals.getVal(abilityUsed, true, *(eng->player));
+    const int PLAYER_SKILL = eng->player->getData()->abilityVals.getVal(abilityUsed, true, *(eng->player));
     const int BONUS = 10;
     if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
       clue();
@@ -229,14 +230,14 @@ void Door::playerTryClueHidden() {
 
 bool Door::trySpike(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
 
   if(isSecret_ || isOpen_) {
     return false;
   }
 
   //Door is in correct state for spiking (known, closed)
-  nrOfSpikes_++;
+  nrSpikes_++;
   isStuck_ = true;
 
   if(IS_PLAYER) {
@@ -255,7 +256,7 @@ bool Door::trySpike(Actor* actorTrying) {
 void Door::tryBash(Actor* actorTrying) {
   tracer << "Door::tryBash()..." << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -298,13 +299,13 @@ void Door::tryBash(Actor* actorTrying) {
 
     //Various things that can happen...
     int skillValueBash = 0;
-    bool isBasherWeak = actorTrying->getStatusHandler()->hasEffect(statusWeak);
+    bool isBasherWeak = actorTrying->getPropHandler()->hasProp(propWeakened);
     if(isBasherWeak == false) {
       if(actorTrying == eng->player) {
         const int BON = eng->playerBonHandler->isBonPicked(playerBon_tough) ? 20 : 0;
-        skillValueBash = 60 + BON - min(58, nrOfSpikes_ * 20);
+        skillValueBash = 60 + BON - min(58, nrSpikes_ * 20);
       } else {
-        skillValueBash = 10 - min(9, nrOfSpikes_ * 3);
+        skillValueBash = 10 - min(9, nrSpikes_ * 3);
       }
     }
     const bool DOOR_SMASHED = (material_ == doorMaterial_metal || isBasherWeak) ? false : eng->abilityRoll->roll(skillValueBash) >= successSmall;
@@ -335,7 +336,8 @@ void Door::tryBash(Actor* actorTrying) {
           eng->log->addMessage(actorTrying->getNameThe() + " is off-balance.");
         }
 
-        actorTrying->getStatusHandler()->tryAddEffect(new StatusParalyzed(2));
+        actorTrying->getPropHandler()->tryApplyProp(
+          new PropParalyzed(eng, propTurnsSpecified, 2));
       }
 
       if(IS_PLAYER && (material_ == doorMaterial_metal || isBasherWeak)) {
@@ -377,7 +379,7 @@ void Door::tryBash(Actor* actorTrying) {
 
 void Door::tryClose(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
@@ -471,7 +473,7 @@ void Door::tryClose(Actor* actorTrying) {
 void Door::tryOpen(Actor* actorTrying) {
   tracer << "Door::tryOpen()" << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getStatusHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);

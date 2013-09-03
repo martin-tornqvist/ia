@@ -106,12 +106,19 @@ public:
   bool coinToss() {return roll(1, 2) == 2;}
 
   inline bool fraction(const int NUMERATOR, const int DENOMINATOR) {
-    return roll(1, DENOMINATOR) >= NUMERATOR;
+    return roll(1, DENOMINATOR) <= NUMERATOR;
   }
 
-  int getInRange(const int MIN, const int MAX) {
-    const int ROLL = roll(1, MAX - MIN + 1);
-    return MIN + ROLL - 1;
+  inline bool oneIn(const int N) {
+    return fraction(1, N);
+  }
+
+  inline int range(const int MIN, const int MAX) {
+    return MIN + roll(1, MAX - MIN + 1) - 1;
+  }
+
+  inline int range(const Range& rng) {
+    return range(rng.lower, rng.upper);
   }
 
   inline int percentile() {return roll(1, 100);}

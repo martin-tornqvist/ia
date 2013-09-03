@@ -20,7 +20,7 @@ AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
   attacker(&attacker_), currentDefender(NULL), attackResult(failSmall),
   dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
   isIntrinsicAttack(false), eng(engine) {
-  isIntrinsicAttack = itemAttackedWith_.getDef().isIntrinsic;
+  isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
@@ -42,9 +42,9 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 
   isDefenderDodging = false;
-  if(currentDefender->getDef()->canDodge) {
+  if(currentDefender->getData()->canDodge) {
     const int DEFENDER_DODGE_SKILL =
-      currentDefender->getDef()->abilityVals.getVal(
+      currentDefender->getData()->abilityVals.getVal(
         ability_dodgeAttack, true, *currentDefender);
 
     const int DODGE_MOD_AT_FEATURE =
@@ -63,9 +63,9 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     //--------------------------------------- DETERMINE ATTACK RESULT
     isBackstab = false;
 
-    const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
                                       ability_accuracyMelee, true, *attacker);
-    const int WPN_HIT_CHANCE_MOD  = wpn_.getDef().meleeHitChanceMod;
+    const int WPN_HIT_CHANCE_MOD  = wpn_.getData().meleeHitChanceMod;
 
     int hitChanceTot              = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
 
@@ -90,21 +90,21 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       }
     }
     if(isAttackerAware) {
-      StatusHandler* const defenderStatusHandler =
-        currentDefender->getStatusHandler();
+      PropHandler* const defenderPropHandler =
+        currentDefender->getPropHandler();
       if(
         (isDefenderAware == false ||
          isDefenderHeldByWeb ||
-         defenderStatusHandler->hasEffect(statusParalyzed)  ||
-         defenderStatusHandler->hasEffect(statusNailed)     ||
-         defenderStatusHandler->hasEffect(statusFainted))) {
+         defenderPropHandler->hasProp(propParalysed)  ||
+         defenderPropHandler->hasProp(propNailed)     ||
+         defenderPropHandler->hasProp(propFainted))) {
         hitChanceTot += 50;
       }
       if(
-        defenderStatusHandler->allowSee() == false        ||
-        defenderStatusHandler->hasEffect(statusConfused)  ||
-        defenderStatusHandler->hasEffect(statusSlowed)    ||
-        defenderStatusHandler->hasEffect(statusBurning)) {
+        defenderPropHandler->allowSee() == false    ||
+        defenderPropHandler->hasProp(propConfused)  ||
+        defenderPropHandler->hasProp(propSlowed)    ||
+        defenderPropHandler->hasProp(propBurning)) {
         hitChanceTot += 20;
       }
     }
@@ -112,12 +112,12 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     attackResult = eng->abilityRoll->roll(hitChanceTot);
 
     //--------------------------------------- DETERMINE DAMAGE
-    dmgRolls  = wpn_.getDef().meleeDmg.first;
-    dmgSides  = wpn_.getDef().meleeDmg.second;
+    dmgRolls  = wpn_.getData().meleeDmg.first;
+    dmgSides  = wpn_.getData().meleeDmg.second;
     dmgPlus   = wpn_.meleeDmgPlus;
 
     isWeakAttack = false;
-    if(attacker->getStatusHandler()->hasEffect(statusWeak)) {
+    if(attacker->getPropHandler()->hasProp(propWeakened)) {
       //Weak attack (min damage)
       dmgRoll = dmgRolls;
       dmg = dmgRoll + dmgPlus;
@@ -146,15 +146,15 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
 
-  verbPlayerAttacks = wpn_.getDef().rangedAttackMessages.player;
-  verbOtherAttacks  = wpn_.getDef().rangedAttackMessages.other;
+  verbPlayerAttacks = wpn_.getData().rangedAttackMessages.player;
+  verbOtherAttacks  = wpn_.getData().rangedAttackMessages.other;
 
   Actor* const actorAimedAt = eng->mapTests->getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
     if(actorAimedAt != NULL) {
-      intendedAimLevel = actorAimedAt->getDef()->actorSize;
+      intendedAimLevel = actorAimedAt->getData()->actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeShootBlockerFeaturesArray(blockers);
@@ -169,21 +169,21 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
 
   if(currentDefender != NULL) {
     tracer << "RangedAttackData: Defender found" << endl;
-    const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
-    const int WPN_HIT_MOD         = wpn_.getDef().rangedHitChanceMod;
+    const int WPN_HIT_MOD         = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
     const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
-    const ActorSpeed_t defSpeed   = currentDefender->getDef()->speed;
+    const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
     const int SPEED_HIT_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :
       defSpeed == actorSpeed_normal   ?   0 :
       defSpeed == actorSpeed_fast     ? -10 : -30;
-    currentDefenderSize           = currentDefender->getDef()->actorSize;
+    currentDefenderSize           = currentDefender->getData()->actorSize;
     const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -10 : 0;
     hitChanceTot = max(5,
                        ATTACKER_SKILL +
@@ -196,9 +196,9 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
 
     if(attackResult >= successSmall) {
       tracer << "RangedAttackData: Attack roll succeeded" << endl;
-      dmgRolls  = wpn_.getDef().rangedDmg.rolls;
-      dmgSides  = wpn_.getDef().rangedDmg.sides;
-      dmgPlus   = wpn_.getDef().rangedDmg.plus;
+      dmgRolls  = wpn_.getData().rangedDmg.rolls;
+      dmgSides  = wpn_.getData().rangedDmg.sides;
+      dmgPlus   = wpn_.getData().rangedDmg.plus;
       dmgRoll   = eng->dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
@@ -216,7 +216,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
     if(actorAimedAt != NULL) {
-      intendedAimLevel = actorAimedAt->getDef()->actorSize;
+      intendedAimLevel = actorAimedAt->getData()->actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeShootBlockerFeaturesArray(blockers);
@@ -231,21 +231,21 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
 
   if(currentDefender != NULL) {
     tracer << "MissileAttackData: Defender found" << endl;
-    const int ATTACKER_SKILL      = attacker->getDef()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
-    const int WPN_HIT_MOD         = item_.getDef().missileHitChanceMod;
+    const int WPN_HIT_MOD         = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
     const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
-    const ActorSpeed_t defSpeed   = currentDefender->getDef()->speed;
+    const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
     const int SPEED_HIT_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :
       defSpeed == actorSpeed_normal   ?   0 :
       defSpeed == actorSpeed_fast     ? -15 : -35;
-    currentDefenderSize           = currentDefender->getDef()->actorSize;
+    currentDefenderSize           = currentDefender->getData()->actorSize;
     const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -15 : 0;
     hitChanceTot = max(5,
                        ATTACKER_SKILL +
@@ -258,9 +258,9 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
 
     if(attackResult >= successSmall) {
       tracer << "MissileAttackData: Attack roll succeeded" << endl;
-      dmgRolls  = item_.getDef().missileDmg.rolls;
-      dmgSides  = item_.getDef().missileDmg.sides;
-      dmgPlus   = item_.getDef().missileDmg.plus;
+      dmgRolls  = item_.getData().missileDmg.rolls;
+      dmgSides  = item_.getData().missileDmg.sides;
+      dmgPlus   = item_.getData().missileDmg.plus;
       dmgRoll   = eng->dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }

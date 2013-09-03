@@ -33,7 +33,7 @@ void FeatureExaminable::examine() {
 
 EventRegularity_t FeatureExaminable::getEventRegularity() {
   const int TOT = eventRegularity_common + eventRegularity_rare + eventRegularity_veryRare;
-  const int RND = eng->dice.getInRange(1, TOT);
+  const int RND = eng->dice.range(1, TOT);
   if(RND <= eventRegularity_common) {
     return eventRegularity_common;
   } else if(RND <= eventRegularity_rare) {
@@ -52,8 +52,9 @@ ExaminableItemContainer::~ExaminableItemContainer() {
   }
 }
 
-void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId,
-    const int NR_ITEMS_TO_ATTEMPT, Engine* const engine) {
+void ExaminableItemContainer::setRandomItemsForFeature(
+  const Feature_t featureId,
+  const int NR_ITEMS_TO_ATTEMPT, Engine* const engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     delete items_.at(i);
   }
@@ -63,12 +64,18 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
     while(items_.empty()) {
       vector<ItemId_t> itemCandidates;
       for(unsigned int i = 1; i < endOfItemIds; i++) {
-        ItemDef* const currentDef = engine->itemData->itemDefs[i];
-        for(unsigned int ii = 0; ii < currentDef->featuresCanBeFoundIn.size(); ii++) {
-          pair<Feature_t, int> featuresFoundIn = currentDef->featuresCanBeFoundIn.at(ii);
+        ItemData* const curData = engine->itemDataHandler->dataList[i];
+        for(
+          unsigned int ii = 0;
+          ii < curData->featuresCanBeFoundIn.size();
+          ii++) {
+          pair<Feature_t, int> featuresFoundIn =
+            curData->featuresCanBeFoundIn.at(ii);
           if(featuresFoundIn.first == featureId) {
             if(engine->dice.percentile() < featuresFoundIn.second) {
-              if(engine->dice.percentile() < currentDef->chanceToIncludeInSpawnList) {
+              if(
+                engine->dice.percentile() <
+                curData->chanceToIncludeInSpawnList) {
                 itemCandidates.push_back(static_cast<ItemId_t>(i));
                 break;
               }
@@ -80,7 +87,7 @@ void ExaminableItemContainer::setRandomItemsForFeature(const Feature_t featureId
       const int NR_CANDIDATES = int(itemCandidates.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
-          const unsigned int ELEMENT = engine->dice.getInRange(0, NR_CANDIDATES - 1);
+          const unsigned int ELEMENT = engine->dice.range(0, NR_CANDIDATES - 1);
           Item* item = engine->itemFactory->spawnItem(itemCandidates.at(ELEMENT));
           engine->itemFactory->setItemRandomizedProperties(item);
           items_.push_back(item);
@@ -102,7 +109,7 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
 
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
-    const ItemDef& d = item->getDef();
+    const ItemData& d = item->getData();
     if(d.isQuaffable || d.id == item_molotov) {
       delete item;
       items_.erase(items_.begin() + i);
@@ -125,16 +132,16 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
     NR_ITEMS_MIN + (bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
-    feature_tomb, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_tomb, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   //Exterior appearance
   if(engine->dice.percentile() < 20) {
     tracer << "Tomb: Setting random appearance" << endl;
-    appearance_ = static_cast<TombAppearance_t>(engine->dice.getInRange(0, endOfTombAppearance - 1));
+    appearance_ = static_cast<TombAppearance_t>(engine->dice.range(0, endOfTombAppearance - 1));
   } else {
     tracer << "Tomb: Setting appearance according to items contained (common if zero items)" << endl;
     for(unsigned int i = 0; i < itemContainer_.items_.size(); i++) {
-      const ItemValue_t itemValue = itemContainer_.items_.at(i)->getDef().itemValue;
+      const ItemValue_t itemValue = itemContainer_.items_.at(i)->getData().itemValue;
       if(itemValue == itemValue_majorTreasure) {
         tracer << "Tomb: Contains major treasure" << endl;
         appearance_ = tombAppearance_marvelous;
@@ -148,7 +155,7 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
 
   const bool IS_CONTAINING_ITEMS = itemContainer_.items_.empty() == false;
 
-  chanceToPushLid_ = IS_CONTAINING_ITEMS ? engine->dice.getInRange(0, 75) : 90;
+  chanceToPushLid_ = IS_CONTAINING_ITEMS ? engine->dice.range(0, 75) : 90;
 
   if(IS_CONTAINING_ITEMS) {
     const int RND = engine->dice.percentile();
@@ -184,15 +191,15 @@ void Tomb::featureSpecific_examine() {
 }
 
 void Tomb::doAction(const TombAction_t action) {
-  StatusHandler* const statusHandler = eng->player->getStatusHandler();
+  PropHandler* const propHandler = eng->player->getPropHandler();
   PlayerBonHandler* const bonusHandler = eng->playerBonHandler;
 
-  const bool IS_TOUGH    = bonusHandler->isBonPicked(playerBon_tough);
+  const bool IS_TOUGH     = bonusHandler->isBonPicked(playerBon_tough);
   const bool IS_OBSERVANT = bonusHandler->isBonPicked(playerBon_observant);
-  const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
-  const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
-  const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
-  const bool IS_BLESSED   = statusHandler->hasEffect(statusBlessed);
+  const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
+  const bool IS_WEAK      = propHandler->hasProp(propWeakened);
+  const bool IS_CURSED    = propHandler->hasProp(propCursed);
+  const bool IS_BLESSED   = propHandler->hasProp(propBlessed);
 
   switch(action) {
     case tombAction_carveCurseWard: {
@@ -201,9 +208,10 @@ void Tomb::doAction(const TombAction_t action) {
         eng->log->addMessage("The curse is cleared.");
       } else {
         eng->log->addMessage("I make a misstake, the curse is doubled!");
-        StatusCursed* const curse = new StatusCursed(eng);
-        curse->turnsLeft *= 2;
-        statusHandler->tryAddEffect(curse, true);
+        PropCursed* const curse =
+          new PropCursed(eng, propTurnsStandard);
+        curse->turnsLeft_ *= 2;
+        propHandler->tryApplyProp(curse, true);
       }
       trait_ = endOfTombTraits;
     } break;
@@ -229,7 +237,8 @@ void Tomb::doAction(const TombAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_PARALYZE) {
         eng->log->addMessage("I am off-balance.");
-        statusHandler->tryAddEffect(new StatusParalyzed(2));
+        propHandler->tryApplyProp(
+          new PropParalyzed(eng, propTurnsSpecified, 2));
       }
 
       if(IS_WEAK) {
@@ -295,7 +304,7 @@ void Tomb::triggerTrap() {
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
       for(unsigned int i = 1; i < endOfActorIds; i++) {
-        const ActorDef& d = eng->actorData->actorDefs[i];
+        const ActorData& d = eng->actorDataHandler->dataList[i];
         if(d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false) {
           actorCandidates.push_back(static_cast<ActorId_t>(i));
         }
@@ -304,30 +313,34 @@ void Tomb::triggerTrap() {
     } break;
 
     case tombTrait_forebodingCarvedSigns: {
-      eng->player->getStatusHandler()->tryAddEffect(new StatusCursed(eng));
+      eng->player->getPropHandler()->tryApplyProp(
+        new PropCursed(eng, propTurnsStandard));
     } break;
 
     case tombTrait_stench: {
       if(eng->dice.coinToss()) {
         eng->log->addMessage("Fumes burst out from the tomb!");
-        StatusEffect* effect = NULL;
+        Prop* prop = NULL;
         SDL_Color fumeClr = clrMagenta;
         const int RND = eng->dice.percentile();
         if(RND < 20) {
-          effect = new StatusPoisoned(eng);
+          prop = new PropPoisoned(eng, propTurnsStandard);
           fumeClr = clrGreenLgt;
         } else if(RND < 40) {
-          effect = new StatusDiseased(eng);
+          prop = new PropDiseased(eng, propTurnsStandard);
           fumeClr = clrGreen;
         } else {
-          effect = new StatusParalyzed(eng);
-          effect->turnsLeft *= 2;
+          prop = new PropParalyzed(eng, propTurnsStandard);
+          prop->turnsLeft_ *= 2;
         }
-        eng->explosionMaker->runExplosion(pos_, false, effect, true, fumeClr);
+        eng->explosionMaker->runExplosion(pos_, false, prop, true, fumeClr);
       } else {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
-          const ActorDef& d = eng->actorData->actorDefs[i];
-          if(d.moveType == moveType_ooze && d.isAutoSpawnAllowed && d.isUnique == false) {
+          const ActorData& d = eng->actorDataHandler->dataList[i];
+          if(
+            d.moveType == moveType_ooze &&
+            d.isAutoSpawnAllowed &&
+            d.isUnique == false) {
             actorCandidates.push_back(static_cast<ActorId_t>(i));
           }
         }
@@ -340,7 +353,7 @@ void Tomb::triggerTrap() {
   }
 
   if(actorCandidates.size() > 0) {
-    const unsigned int ELEM = eng->dice.getInRange(0, actorCandidates.size() - 1);
+    const unsigned int ELEM = eng->dice.range(0, actorCandidates.size() - 1);
     Actor* const actor = eng->actorFactory->spawnActor(actorCandidates.at(ELEM), pos_);
     dynamic_cast<Monster*>(actor)->becomeAware();
   }
@@ -366,11 +379,11 @@ void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
   bool hasSledgehammer = false;
   Item* item = inv->getItemInSlot(slot_wielded);
   if(item != NULL) {
-    hasSledgehammer = item->getDef().id == item_sledgeHammer;
+    hasSledgehammer = item->getData().id == item_sledgeHammer;
   }
   if(hasSledgehammer == false) {
     item = inv->getItemInSlot(slot_wieldedAlt);
-    hasSledgehammer = item->getDef().id == item_sledgeHammer;
+    hasSledgehammer = item->getData().id == item_sledgeHammer;
   }
   if(hasSledgehammer == false) {
     hasSledgehammer = inv->hasItemInGeneral(item_sledgeHammer);
@@ -446,7 +459,7 @@ void Tomb::getDescr(string& descr) const {
     descr += " " + traitDescr;
   }
 
-  const bool IS_WEAK = eng->player->getStatusHandler()->hasEffect(statusWeak);
+  const bool IS_WEAK = eng->player->getPropHandler()->hasProp(propWeakened);
 
   if(chanceToPushLid_ < 10 || IS_WEAK) {
     descr += " The lid seems very heavy.";
@@ -467,7 +480,7 @@ Chest::Chest(Feature_t id, Pos pos, Engine* engine) :
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
   const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 4 : 3;
   itemContainer_.setRandomItemsForFeature(
-    feature_chest, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_chest, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   if(itemContainer_.items_.empty() == false) {
     const int CHANCE_FOR_LOCKED = 80;
@@ -499,16 +512,16 @@ void Chest::featureSpecific_examine() {
 }
 
 void Chest::doAction(const ChestAction_t action) {
-  StatusHandler* const statusHandler = eng->player->getStatusHandler();
-  PlayerBonHandler* const bonHandler      = eng->playerBonHandler;
+  PropHandler* const propHandler      = eng->player->getPropHandler();
+  PlayerBonHandler* const bonHandler  = eng->playerBonHandler;
 
   const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
-  const bool IS_TOUGH    = bonHandler->isBonPicked(playerBon_tough);
+  const bool IS_TOUGH     = bonHandler->isBonPicked(playerBon_tough);
 //  const bool IS_NIMBLE    = bonHandler->isBonPicked(playerBon_nimbleHanded);
-  const bool IS_CONFUSED  = statusHandler->hasEffect(statusConfused);
-  const bool IS_WEAK      = statusHandler->hasEffect(statusWeak);
-  const bool IS_CURSED    = statusHandler->hasEffect(statusCursed);
-  const bool IS_BLESSED   = statusHandler->hasEffect(statusBlessed);
+  const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
+  const bool IS_WEAK      = propHandler->hasProp(propWeakened);
+  const bool IS_CURSED    = propHandler->hasProp(propCursed);
+  const bool IS_BLESSED   = propHandler->hasProp(propBlessed);
 
   switch(action) {
     case chestAction_open: {
@@ -554,7 +567,7 @@ void Chest::doAction(const ChestAction_t action) {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 
         if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
-          const string wpnName = eng->itemData->getItemRef(
+          const string wpnName = eng->itemDataHandler->getItemRef(
                                    *wpn, itemRef_plain, true);
           eng->log->addMessage("My " + wpnName + " is damaged!");
           dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
@@ -698,20 +711,20 @@ void Chest::triggerTrap() {
       }
     } else {
       eng->log->addMessage("Fumes burst out from the chest!");
-      StatusEffect* effect = NULL;
+      Prop* prop = NULL;
       SDL_Color fumeClr = clrMagenta;
       const int RND = eng->dice.percentile();
       if(RND < 20) {
-        effect = new StatusPoisoned(eng);
+        prop = new PropPoisoned(eng, propTurnsStandard);
         fumeClr = clrGreenLgt;
       } else if(RND < 40) {
-        effect = new StatusDiseased(eng);
+        prop = new PropDiseased(eng, propTurnsStandard);
         fumeClr = clrGreen;
       } else {
-        effect = new StatusParalyzed(eng);
-        effect->turnsLeft *= 2;
+        prop = new PropParalyzed(eng, propTurnsStandard);
+        prop->turnsLeft_ *= 2;
       }
-      eng->explosionMaker->runExplosion(pos_, false, effect, true, fumeClr);
+      eng->explosionMaker->runExplosion(pos_, false, prop, true, fumeClr);
     }
   }
 }
@@ -735,7 +748,7 @@ Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
   const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
   const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
-    feature_cabinet, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_cabinet, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
 
 void Cabinet::featureSpecific_examine() {
@@ -825,7 +838,7 @@ Cocoon::Cocoon(Feature_t id, Pos pos, Engine* engine) :
   const int NR_ITEMS_MAX = NR_ITEMS_MIN +
                            bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0;
   itemContainer_.setRandomItemsForFeature(
-    feature_cocoon, eng->dice.getInRange(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_cocoon, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
 
 void Cocoon::featureSpecific_examine() {
@@ -857,7 +870,7 @@ void Cocoon::triggerTrap() {
     tracer << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId_t> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
-      const ActorDef& d = eng->actorData->actorDefs[i];
+      const ActorData& d = eng->actorDataHandler->dataList[i];
       if(d.isSpider && d.actorSize == actorSize_floor &&
           d.isAutoSpawnAllowed && d.isUnique == false) {
         spawnCandidates.push_back(d.id);
@@ -872,14 +885,14 @@ void Cocoon::triggerTrap() {
       vector<Pos> freeCells;
       eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
 
-      const int NR_SPIDERS_MAX = min(eng->dice.getInRange(2, 4),
+      const int NR_SPIDERS_MAX = min(eng->dice.range(2, 4),
                                      int(freeCells.size()));
 
       if(NR_SPIDERS_MAX > 0) {
         tracer << "Cocoon: Found positions, spawning spiders" << endl;
         eng->log->addMessage("There are spiders inside!");
         const ActorId_t id = spawnCandidates.at(
-                               eng->dice.getInRange(0, NR_CANDIDATES - 1));
+                               eng->dice.range(0, NR_CANDIDATES - 1));
         for(int i = 0; i < NR_SPIDERS_MAX; i++) {
           Actor* const actor = eng->actorFactory->spawnActor(id, freeCells.front());
           dynamic_cast<Monster*>(actor)->becomeAware();

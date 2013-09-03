@@ -10,7 +10,7 @@
 #include "PlayerSpellsHandler.h"
 
 const string Scroll::getRealTypeName() {
-  switch(def_->spellCastFromScroll) {
+  switch(data_->spellCastFromScroll) {
     case spell_azathothsBlast:  return "Azathoths Blast";         break;
     case spell_enfeeble:        return "Enfeeblement";            break;
     case spell_teleport:        return "Teleportation";           break;
@@ -35,68 +35,67 @@ const string Scroll::getRealTypeName() {
   return "";
 }
 
-Spell* Scroll::getSpell(Engine* const engine) {
-  return engine->spellHandler->getSpellFromId(def_->spellCastFromScroll);
+Spell* Scroll::getSpell() {
+  return eng->spellHandler->getSpellFromId(data_->spellCastFromScroll);
 }
 
-void Scroll::identify(const bool IS_SILENT_IDENTIFY,
-                      Engine* const engine) {
-  if(def_->isIdentified == false) {
+void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
+  if(data_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
     const string REAL_NAME = "Manuscript of " + REAL_TYPE_NAME;
     const string REAL_NAME_PLURAL = "Manuscripts of " + REAL_TYPE_NAME;
     const string REAL_NAME_A = "a Manuscript of " + REAL_TYPE_NAME;
 
-    def_->name.name = REAL_NAME;
-    def_->name.name_plural = REAL_NAME_PLURAL;
-    def_->name.name_a = REAL_NAME_A;
+    data_->name.name = REAL_NAME;
+    data_->name.name_plural = REAL_NAME_PLURAL;
+    data_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->log->addMessage("It was " + def_->name.name_a + ".");
-      engine->renderer->drawMapAndInterface();
+      eng->log->addMessage("It was " + data_->name.name_a + ".");
+      eng->renderer->drawMapAndInterface();
     }
 
-    def_->isIdentified = true;
+    data_->isIdentified = true;
   }
 }
 
-void Scroll::tryLearn(Engine* const engine) {
-  if(engine->playerBonHandler->isBonPicked(playerBon_occultist)) {
-    Spell* const spell = getSpell(engine);
+void Scroll::tryLearn() {
+  if(eng->playerBonHandler->isBonPicked(playerBon_occultist)) {
+    Spell* const spell = getSpell();
     if(
       spell->isLearnableForPlayer() &&
-      engine->playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
-      engine->log->addMessage("I learn to cast this incantation by heart!");
-      engine->playerSpellsHandler->learnSpellIfNotKnown(spell);
+      eng->playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
+      eng->log->addMessage("I learn to cast this incantation by heart!");
+      eng->playerSpellsHandler->learnSpellIfNotKnown(spell);
     } else {
       delete spell;
     }
   }
 }
 
-bool Scroll::read(Engine* const engine) {
-  engine->renderer->drawMapAndInterface();
+bool Scroll::read() {
+  eng->renderer->drawMapAndInterface();
 
-  if(engine->player->getStatusHandler()->allowSee() == false) {
-    engine->log->addMessage("I cannot read while blind.");
+  if(eng->player->getPropHandler()->allowSee() == false) {
+    eng->log->addMessage("I cannot read while blind.");
     return false;
   }
 
-  Spell* const spell = getSpell(engine);
+  Spell* const spell = getSpell();
 
-  if(def_->isIdentified) {
-    engine->log->addMessage(
+  if(data_->isIdentified) {
+    eng->log->addMessage(
       "I read a scroll of " + getRealTypeName() + "...");
-    spell->cast(engine->player, false, engine);
-    tryLearn(engine);
+    spell->cast(eng->player, false, eng);
+    tryLearn();
   } else {
-    engine->log->addMessage("I recite forbidden incantations...");
-    def_->isTried = true;
-    if(spell->cast(engine->player, false, engine).IS_CAST_IDENTIFYING) {
-      identify(false, engine);
+    eng->log->addMessage("I recite forbidden incantations...");
+    data_->isTried = true;
+    if(spell->cast(eng->player, false, eng).IS_CAST_IDENTIFYING) {
+      identify(false);
     } else {
-      failedToLearnRealName(engine);
+      failedToLearnRealName();
     }
   }
   delete spell;
@@ -104,23 +103,22 @@ bool Scroll::read(Engine* const engine) {
   return true;
 }
 
-void Scroll::failedToLearnRealName(Engine* const engine,
-                                   const string overrideFailString) {
-  if(def_->isIdentified == false) {
+void Scroll::failedToLearnRealName(const string overrideFailString) {
+  if(data_->isIdentified == false) {
     if(overrideFailString != "") {
-      engine->log->addMessage(overrideFailString);
+      eng->log->addMessage(overrideFailString);
     } else {
-      engine->log->addMessage("Was that supposed to do something?");
+      eng->log->addMessage("Was that supposed to do something?");
     }
   }
 }
 
 //SpellCastRetData ScrollOfEnfeebleEnemies::specificRead(
 //  Engine* const engine) {
-//  return SpellEnfeeble().cast(engine->player, engine);
+//  return SpellEnfeeble().cast(eng->player, engine);
 //
-////  engine->player->getSpotedEnemies();
-////  const vector<Actor*>& actors = engine->player->spotedEnemies;
+////  eng->player->getSpotedEnemies();
+////  const vector<Actor*>& actors = eng->player->spotedEnemies;
 ////
 ////  if(actors.empty() == false) {
 ////    vector<Pos> actorPositions;
@@ -129,13 +127,13 @@ void Scroll::failedToLearnRealName(Engine* const engine,
 ////      actorPositions.push_back(actors.at(i)->pos);
 ////    }
 ////
-////    engine->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+////    eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
 ////      actorPositions, clrMagenta, BLAST_ANIMATION_DELAY_FACTOR);
 ////
 ////    StatusEffect* const effect = getStatusEffect(engine);
 ////
 ////    for(unsigned int i = 0; i < actors.size(); i++) {
-////      actors.at(i)->getStatusHandler()->tryAddEffect(effect->copy());
+////      actors.at(i)->getPropHandler()->tryApplyProp(effect->copy());
 ////    }
 ////
 ////    delete effect;
@@ -149,26 +147,26 @@ void Scroll::failedToLearnRealName(Engine* const engine,
 
 ////void ScrollOfVoidChain::specificRead(Engine* const engine) {
 ////  setRealDefinitionNames(engine, false);
-////  if(engine->player->getStatusHandler()->allowAct()) {
-////    engine->marker->place(markerTask_spellVoidChain);
+////  if(eng->player->getPropHandler()->allowAct()) {
+////    eng->marker->place(markerTask_spellVoidChain);
 ////  } else {
-////    engine->log->addMessage("My spell is disrupted.");
+////    eng->log->addMessage("My spell is disrupted.");
 ////  }
 ////}
 //
 ////void ScrollOfVoidChain::castAt(const Pos& pos, Engine* const engine) {
-////  const Pos playerPos = engine->player->pos;
+////  const Pos playerPos = eng->player->pos;
 ////  const vector<Pos> projectilePath =
-////    engine->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
+////    eng->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
 ////                              true, FOV_STANDARD_RADI_INT);
 ////}
 //
 ////void ScrollOfIbnGhazisPowder::specificRead(Engine* const engine) {
 ////  setRealDefinitionNames(engine, false);
-////  if(engine->player->getStatusHandler()->allowAct()) {
-////    engine->query->direction();
+////  if(eng->player->getPropHandler()->allowAct()) {
+////    eng->query->direction();
 ////  } else {
-////    engine->log->addMessage("My spell is disrupted.");
+////    eng->log->addMessage("My spell is disrupted.");
 ////  }
 ////}
 
@@ -236,7 +234,7 @@ ScrollNameHandler::ScrollNameHandler(Engine* engine) :
   }
 }
 
-void ScrollNameHandler::setFalseScrollName(ItemDef* d) {
+void ScrollNameHandler::setFalseScrollName(ItemData* d) {
   const unsigned int NR_NAMES = m_falseNames.size();
 
   const unsigned int ELEMENT = (unsigned int)(eng->dice(1, NR_NAMES) - 1);
@@ -252,22 +250,22 @@ void ScrollNameHandler::setFalseScrollName(ItemDef* d) {
 
 void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(eng->itemData->itemDefs[i]->isReadable == true) {
-      lines.push_back(eng->itemData->itemDefs[i]->name.name);
-      lines.push_back(eng->itemData->itemDefs[i]->name.name_plural);
-      lines.push_back(eng->itemData->itemDefs[i]->name.name_a);
+    if(eng->itemDataHandler->dataList[i]->isReadable) {
+      lines.push_back(eng->itemDataHandler->dataList[i]->name.name);
+      lines.push_back(eng->itemDataHandler->dataList[i]->name.name_plural);
+      lines.push_back(eng->itemDataHandler->dataList[i]->name.name_a);
     }
   }
 }
 
 void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(eng->itemData->itemDefs[i]->isReadable == true) {
-      eng->itemData->itemDefs[i]->name.name = lines.front();
+    if(eng->itemDataHandler->dataList[i]->isReadable) {
+      eng->itemDataHandler->dataList[i]->name.name = lines.front();
       lines.erase(lines.begin());
-      eng->itemData->itemDefs[i]->name.name_plural = lines.front();
+      eng->itemDataHandler->dataList[i]->name.name_plural = lines.front();
       lines.erase(lines.begin());
-      eng->itemData->itemDefs[i]->name.name_a = lines.front();
+      eng->itemDataHandler->dataList[i]->name.name_a = lines.front();
       lines.erase(lines.begin());
     }
   }

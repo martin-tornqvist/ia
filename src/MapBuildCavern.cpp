@@ -34,12 +34,12 @@ void MapBuild::buildCavern() {
   const bool IS_TUNNEL_CAVE = eng->dice.coinToss();
 
   //Make some more at random places, connect them to each other.
-  const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng->dice.getInRange(6, 8) : 4;
+  const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng->dice.range(6, 8) : 4;
   for(int i = 0; i < NR_OPEN_PLACES; i++) {
     const Pos curCenter(10 + eng->dice(1, MAP_X_CELLS - 1 - 10) - 1, 2 + eng->dice(1, MAP_Y_CELLS - 1 - 2) - 1);
     length = IS_TUNNEL_CAVE ? 30 + eng->dice(1, 50) : 650;
     makePathByRandomWalk(curCenter.x, curCenter.y, length, feature_caveFloor, true);
-    const Pos prevCenter = previousCenters.at(eng->dice.getInRange(0, previousCenters.size() - 1));
+    const Pos prevCenter = previousCenters.at(eng->dice.range(0, previousCenters.size() - 1));
     makeStraightPathByPathfinder(prevCenter, curCenter, feature_caveFloor, false, true);
     previousCenters.push_back(curCenter);
   }
@@ -60,7 +60,7 @@ void MapBuild::buildCavern() {
   }
   PosAndVal_compareForVal floodFillSorter;
   std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
-  const unsigned int STAIR_ELEMENT = eng->dice.getInRange((floodFillVector.size() * 4) / 5, floodFillVector.size() - 1);
+  const unsigned int STAIR_ELEMENT = eng->dice.range((floodFillVector.size() * 4) / 5, floodFillVector.size() - 1);
   eng->featureFactory->spawnFeatureAt(feature_stairsDown, floodFillVector.at(STAIR_ELEMENT).pos);
   eng->populateMonsters->populateCaveLevel();
 }

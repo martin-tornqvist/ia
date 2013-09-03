@@ -23,14 +23,14 @@ public:
         Door* const door = dynamic_cast<Door*>(f);
         if(door->isMovePassable(monster) == false) {
           if(door->isStuck() == false) {
-            if(monster->getDef()->canOpenDoors) {
+            if(monster->getData()->canOpenDoors) {
               door->tryOpen(monster);
               return true;
-            } else if(monster->getDef()->canBashDoors) {
+            } else if(monster->getData()->canBashDoors) {
               door->tryBash(monster);
               return true;
             }
-          } else if(monster->getDef()->canBashDoors) {
+          } else if(monster->getData()->canBashDoors) {
             door->tryBash(monster);
             return true;
           }

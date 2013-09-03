@@ -12,9 +12,10 @@ FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, Pos pos, Engine* engine
 }
 
 void FeatureLiquidShallow::bump(Actor* actorBumping) {
-  if(actorBumping->getDef()->moveType == moveType_walk) {
+  if(actorBumping->getData()->moveType == moveType_walk) {
 
-    actorBumping->getStatusHandler()->tryAddEffect(new StatusWaiting(eng));
+    actorBumping->getPropHandler()->tryApplyProp(
+      new PropWaiting(eng, propTurnsStandard));
 
 //    const bool IS_PLAYER = actorBumping == eng->player;
 //    if(IS_PLAYER) {

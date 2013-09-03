@@ -11,16 +11,16 @@ enum MedicalBagAction_t {
 
 class MedicalBag: public Item {
 public:
-  MedicalBag(ItemDef* const itemDefinition) :
-    Item(itemDefinition), nrSupplies_(30), nrTurnsLeft_(-1) {}
+  MedicalBag(ItemData* const itemData, Engine* engine) :
+    Item(itemData, engine), nrSupplies_(30), nrTurnsLeft_(-1) {}
 
   virtual ~MedicalBag() {}
 
-  bool activateDefault(Actor* const actor, Engine* const engine);
+  bool activateDefault(Actor* const actor);
 
-  void continueAction(Engine* const engine);
-  void interrupted(Engine* const engine);
-  void finishCurAction(Engine* const engine);
+  void continueAction();
+  void interrupted();
+  void finishCurAction();
 
   virtual string getDefaultActivationLabel() const {return "Apply";}
 
@@ -37,17 +37,15 @@ public:
   inline int getNrSupplies() const {return nrSupplies_;}
 
 protected:
-  MedicalBagAction_t playerChooseAction(Engine* const engine) const;
+  MedicalBagAction_t playerChooseAction() const;
 
   int nrSupplies_;
   int nrTurnsLeft_;
   MedicalBagAction_t curAction_;
 
-  int getTotTurnsForAction(const MedicalBagAction_t action,
-                           Engine* const engine) const;
+  int getTotTurnsForAction(const MedicalBagAction_t action) const;
 
-  int getNrSuppliesNeededForAction(const MedicalBagAction_t action,
-                                   Engine* const engine) const;
+  int getNrSuppliesNeededForAction(const MedicalBagAction_t action) const;
 };
 
 #endif

@@ -31,7 +31,7 @@ public:
 
   void makeVisionBlockerArray(
     const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
-    const int MAX_VISION_RANMGE = FOV_MAX_RADI_INT);
+    const int MAX_VISION_RANGE = FOV_MAX_RADI_INT);
 
   void makeMoveBlockerArray(
     const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);

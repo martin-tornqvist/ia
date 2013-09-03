@@ -125,7 +125,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       clearLogMessages();
       eng->player->moveDirection(Pos(0, 0));
       if(eng->playerBonHandler->isBonPicked(playerBon_marksman)) {
-        eng->player->getStatusHandler()->tryAddEffect(new StatusStill(1));
+        eng->player->getPropHandler()->tryApplyProp(
+          new PropStill(eng, propTurnsSpecified, 1));
       }
     }
     clearEvents();
@@ -146,7 +147,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'a') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusHandler()->allowSee()) {
+      if(eng->player->getPropHandler()->allowSee()) {
         eng->examine->playerExamine();
         eng->renderer->drawMapAndInterface();
       } else {
@@ -200,7 +201,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 //  else if(d.key_ == 'd') {
 //    clearLogMessages();
 //    if(eng->player->deadState == actorDeadState_alive) {
-//      if(eng->player->getStatusHandler()->allowSee()) {
+//      if(eng->player->getPropHandler()->allowSee()) {
 //        eng->disarm->playerDisarm();
 //        eng->renderer->drawMapAndInterface();
 //      } else {
@@ -223,16 +224,16 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      if(eng->player->getStatusHandler()->allowAttackRanged(true)) {
+      if(eng->player->getPropHandler()->allowAttackRanged(true)) {
 
         Weapon* firearm = NULL;
 
         firearm = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
 
         if(firearm != NULL) {
-          if(firearm->getDef().isRangedWeapon) {
-            if(firearm->ammoLoaded >= 1 || firearm->getDef().rangedHasInfiniteAmmo) {
-              if(firearm->getDef().isMachineGun && firearm->ammoLoaded < 5) {
+          if(firearm->getData().isRangedWeapon) {
+            if(firearm->ammoLoaded >= 1 || firearm->getData().rangedHasInfiniteAmmo) {
+              if(firearm->getData().isMachineGun && firearm->ammoLoaded < 5) {
                 eng->log->addMessage("Need to load more ammo.");
               } else {
                 eng->marker->run(markerTask_aimRangedWeapon, NULL);
@@ -258,7 +259,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       Item* const itemAtPlayer = eng->map->items[eng->player->pos.x][eng->player->pos.y];
       if(itemAtPlayer != NULL) {
-        if(itemAtPlayer->getDef().id == item_trapezohedron) {
+        if(itemAtPlayer->getData().id == item_trapezohedron) {
           eng->dungeonMaster->winGame();
           *quitToMainMenu_ = true;
         }
@@ -317,10 +318,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       Item* const itemAlt = eng->player->getInventory()->getItemInSlot(slot_wieldedAlt);
       const string ITEM_WIELDED_NAME =
         itemWielded == NULL ? "" :
-        eng->itemData->getItemRef(*itemWielded, itemRef_a);
+        eng->itemDataHandler->getItemRef(*itemWielded, itemRef_a);
       const string ITEM_ALT_NAME =
         itemAlt == NULL ? "" :
-        eng->itemData->getItemRef(*itemAlt, itemRef_a);
+        eng->itemDataHandler->getItemRef(*itemAlt, itemRef_a);
       if(itemWielded == NULL && itemAlt == NULL) {
         eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
       } else {
@@ -367,7 +368,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      if(eng->player->getStatusHandler()->allowAttackRanged(true)) {
+      if(eng->player->getPropHandler()->allowAttackRanged(true)) {
         Inventory* const playerInv = eng->player->getInventory();
         Item* itemStack = playerInv->getItemInSlot(slot_missiles);
 
@@ -376,7 +377,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             "I have no missiles chosen for throwing (press 'v').");
         } else {
           Item* itemToThrow = eng->itemFactory->copyItem(itemStack);
-          itemToThrow->numberOfItems = 1;
+          itemToThrow->nrItems = 1;
 
           const MarkerReturnData markerReturnData =
             eng->marker->run(markerTask_aimThrownWeapon, itemToThrow);
@@ -396,7 +397,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'l') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->player->getStatusHandler()->allowSee()) {
+      if(eng->player->getPropHandler()->allowSee()) {
         eng->marker->run(markerTask_look, NULL);
       } else {
         eng->log->addMessage("I am blind.");
@@ -539,9 +540,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_F7) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
-        const ItemDef* const def = eng->itemData->itemDefs[i];
-        if(def->isIntrinsic == false && (def->isQuaffable || def->isReadable)) {
-          eng->itemFactory->spawnItemOnMap(static_cast<ItemId_t>(i), eng->player->pos);
+        const ItemData* const data = eng->itemDataHandler->dataList[i];
+        if(
+          data->isIntrinsic == false &&
+          (data->isQuaffable || data->isReadable)) {
+          eng->itemFactory->spawnItemOnMap((ItemId_t)(i), eng->player->pos);
         }
       }
       clearEvents();

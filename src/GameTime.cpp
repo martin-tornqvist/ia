@@ -53,7 +53,7 @@ void GameTime::eraseElement(const unsigned int i) {
 }
 
 void GameTime::insertActorInLoop(Actor* actor) {
-  //actors_.insert(actors_.begin() + eng->dice.getInRange(0, actors_.size()), actor);
+  //actors_.insert(actors_.begin() + eng->dice.range(0, actors_.size()), actor);
   actors_.push_back(actor);
 }
 
@@ -95,27 +95,39 @@ void GameTime::endTurnOfCurrentActor() {
         currentTurnTypePos_ = 0;
       }
 
-      if(currentTurnType != turnType_fast && currentTurnType != turnType_fastest) {
+      if(
+        currentTurnType != turnType_fast &&
+        currentTurnType != turnType_fastest) {
         runNewStandardTurnEvents();
       }
     }
 
     currentActor = getCurrentActor();
 
-    const bool IS_SLOWED = currentActor->getStatusHandler()->hasEffect(statusSlowed);
-    const ActorSpeed_t defSpeed = currentActor->getDef()->speed;
-    const ActorSpeed_t realSpeed = IS_SLOWED == false || defSpeed == actorSpeed_sluggish ? defSpeed : static_cast<ActorSpeed_t>(defSpeed - 1);
+    const bool IS_SLOWED =
+      currentActor->getPropHandler()->hasProp(propSlowed);
+    const ActorSpeed_t defSpeed = currentActor->getData()->speed;
+    const ActorSpeed_t realSpeed =
+      IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
+      defSpeed : ActorSpeed_t(defSpeed - 1);
     switch(realSpeed) {
       case actorSpeed_sluggish: {
-        actorWhoCanActThisTurnFound = (currentTurnType == turnType_slow || currentTurnType == turnType_normal_2) && eng->dice.percentile() < 65;
+        actorWhoCanActThisTurnFound =
+          (currentTurnType == turnType_slow ||
+           currentTurnType == turnType_normal_2)
+          && eng->dice.fraction(2, 3);
       }
       break;
       case actorSpeed_slow: {
-        actorWhoCanActThisTurnFound = currentTurnType == turnType_slow || currentTurnType == turnType_normal_2;
+        actorWhoCanActThisTurnFound =
+          currentTurnType == turnType_slow ||
+          currentTurnType == turnType_normal_2;
       }
       break;
       case actorSpeed_normal: {
-        actorWhoCanActThisTurnFound = currentTurnType != turnType_fast && currentTurnType != turnType_fastest;
+        actorWhoCanActThisTurnFound =
+          currentTurnType != turnType_fast &&
+          currentTurnType != turnType_fastest;
       }
       break;
       case actorSpeed_fast: {
@@ -186,9 +198,14 @@ void GameTime::runNewStandardTurnEvents() {
 
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
-    //Update status effects on all actors, this also makes the monster
-    //player-aware if it has any active status effect.
-    actor->getStatusHandler()->newTurnAllEffects(visionBlockingArray);
+
+    actor->getPropHandler()->newTurnAllProps(visionBlockingArray);
+
+    //Do light damage if actor in lit cell
+    const Pos& pos = actor->pos;
+    if(eng->map->light[pos.x][pos.y]) {
+      actor->hit(1, dmgType_light);
+    }
 
     if(actor->deadState == actorDeadState_alive) {
       if(IS_SPI_REGEN_THIS_TURN) {

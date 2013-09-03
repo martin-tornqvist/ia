@@ -37,12 +37,12 @@ void MainMenu::draw(const MenuBrowser& browser) {
   tracer << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
   const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
-  const int BG_BRIGHTNESS = eng->dice.getInRange(20, 25);
+  const int BG_BRIGHTNESS = eng->dice.range(14, 17);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
       if(eng->dice.coinToss()) {
-        cha = 'a' + eng->dice.getInRange(0, 25);
+        cha = 'a' + eng->dice.range(0, 25);
       }
       SDL_Color bgClr = clrBlack;
       //bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
@@ -54,7 +54,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   }
 
   tracer << "MainMenu: Drawing HPL quote" << endl;
-  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 17;
+  const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
   SDL_Color quoteClr = clrBlack;
   //quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   quoteClr.r = QUOTE_BRIGHTNESS / 2;
@@ -79,7 +79,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
           SDL_Color clr = clrRed;
-          clr.r += eng->dice.getInRange(-60, 100);
+          clr.r += eng->dice.range(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
                                        pos, clr);
@@ -279,5 +279,5 @@ string MainMenu::getHplQuote() {
   quotes.push_back("It was just a colour out of space - a frightful messenger from unformed realms of infinity beyond all Nature as we know it; from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes.");
   quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness. The Thing cannot be described - there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
   quotes.push_back("I could tell I was at the gateway of a region half-bewitched through the piling-up of unbroken time-accumulations; a region where old, strange things have had a chance to grow and linger because they have never been stirred up.");
-  return "\"" + quotes.at(eng->dice.getInRange(0, quotes.size() - 1)) + "\"";
+  return "\"" + quotes.at(eng->dice.range(0, quotes.size() - 1)) + "\"";
 }

@@ -41,7 +41,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   //Render
   if(path.size() > 1) {
-    const char glyph = eng->itemData->itemDefs[item_dynamite]->glyph;
+    const char glyph = eng->itemDataHandler->dataList[item_dynamite]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       eng->renderer->drawMapAndInterface(false);
@@ -61,7 +61,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     eng->log->addMessage("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       eng->featureFactory->spawnFeatureAt(
-        feature_litDynamite, path.back(), new DynamiteSpawnData(DYNAMITE_FUSE));
+        feature_litDynamite, path.back(),
+        new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
     eng->log->addMessage("I throw a lit flare.");
@@ -77,7 +78,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
 //      eng->audio->playSound(audio_molotovExplosion);
       eng->explosionMaker->runExplosion(
-        path.back(), false, new StatusBurning(eng));
+        path.back(), false,
+        new PropBurning(eng, propTurnsStandard));
     }
   }
 
@@ -95,10 +97,10 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                        actorThrowing.pos, targetCell,
                        false, THROWING_RANGE_LIMIT);
 
-  const ItemDef& itemThrownDef = itemThrown.getDef();
+  const ItemData& itemThrownData = itemThrown.getData();
 
   const string itemName_a =
-    eng->itemData->getItemRef(itemThrown, itemRef_a, true);
+    eng->itemDataHandler->getItemRef(itemThrown, itemRef_a, true);
   if(&actorThrowing == eng->player) {
     eng->log->clearLog();
     eng->log->addMessage("I throw " + itemName_a + ".");
@@ -128,7 +130,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||
-        actorHere->getDef()->actorSize >= actorSize_humanoid) {
+        actorHere->getData()->actorSize >= actorSize_humanoid) {
 
         delete data;
         data = new MissileAttackData(actorThrowing, itemThrown, targetCell,
@@ -137,7 +139,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         if(data->attackResult >= successSmall) {
           if(eng->map->playerVision[curPos.x][curPos.y]) {
             eng->renderer->drawGlyph('*', panel_map,
-                                         curPos, clrRedLgt);
+                                     curPos, clrRedLgt);
             eng->renderer->updateScreen();
             eng->sleep(eng->config->delayProjectileDraw * 4);
           }
@@ -148,9 +150,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           actorHere->hit(data->dmg, dmgType_physical);
 
           //If the thing that hit an actor is a potion, let it make stuff happen...
-          if(itemThrownDef.isQuaffable) {
+          if(itemThrownData.isQuaffable) {
             dynamic_cast<Potion*>(&itemThrown)->collide(
-              curPos, actorHere, itemThrownDef, eng);
+              curPos, actorHere, eng);
             delete &itemThrown;
             delete data;
             eng->gameTime->endTurnOfCurrentActor();
@@ -177,16 +179,16 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
     if(featureHere->isShootPassable() == false) {
-      blockedInElement = itemThrownDef.isQuaffable ? i : i - 1;
+      blockedInElement = itemThrownData.isQuaffable ? i : i - 1;
       break;
     }
   }
 
   //If potion, collide it on the landscape
-  if(itemThrownDef.isQuaffable) {
+  if(itemThrownData.isQuaffable) {
     if(blockedInElement >= 0) {
       dynamic_cast<Potion*>(&itemThrown)->collide(
-        path.at(blockedInElement), NULL, itemThrownDef, eng);
+        path.at(blockedInElement), NULL, eng);
       delete &itemThrown;
       delete data;
       eng->gameTime->endTurnOfCurrentActor();
@@ -204,7 +206,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
-      Sound sound(itemThrownDef.landOnHardSurfaceSoundMessage,
+      Sound sound(itemThrownData.landOnHardSurfaceSoundMessage,
                   true, dropPos, false, IS_ALERTING_MONSTERS);
       eng->soundEmitter->emitSound(sound);
     }

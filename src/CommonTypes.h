@@ -196,14 +196,14 @@ public:
   }
 };
 
-class DiceParam {
+struct DiceParam {
 public:
-  DiceParam() :
-    rolls(1), sides(100), plus(0) {
-  }
+  DiceParam() : rolls(1), sides(100), plus(0) {}
+
   DiceParam(const int ROLLS, const int SIDES, const int PLUS = 0) :
     rolls(ROLLS), sides(SIDES), plus(PLUS) {
   }
+
   DiceParam(const DiceParam& other) :
     rolls(other.rolls), sides(other.sides), plus(other.plus) {
   }
@@ -211,26 +211,31 @@ public:
   int rolls, sides, plus;
 };
 
-class ItemName {
+struct Range {
+  Range() : lower(-1), upper(-1) {}
+
+  Range(const int LOWER, const int UPPER) :
+    lower(LOWER), upper(UPPER) {}
+
+  int lower, upper;
+};
+
+struct ItemName {
 public:
-  ItemName() :
-    name(""), name_plural(""), name_a("") {
-  }
+  ItemName() : name(""), name_plural(""), name_a("") {}
+
   ItemName(const string& NAME, const string& NAME_PL, const string& NAME_A) :
-    name(NAME), name_plural(NAME_PL), name_a(NAME_A) {
-  }
+    name(NAME), name_plural(NAME_PL), name_a(NAME_A) {}
 
   string name, name_plural, name_a;
 };
 
-class ItemAttackMessages {
+struct ItemAttackMessages {
 public:
-  ItemAttackMessages() :
-    player(""), other("") {
-  }
+  ItemAttackMessages() : player(""), other("") {}
+
   ItemAttackMessages(const string& PLAYER, const string& OTHER) :
-    player(PLAYER), other(OTHER) {
-  }
+    player(PLAYER), other(OTHER) {}
 
   string player, other;
 };

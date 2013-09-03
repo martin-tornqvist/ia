@@ -3,20 +3,16 @@
 #include "Engine.h"
 #include "Log.h"
 
-Armor::Armor(ItemDef* const itemDefinition, Engine* engine) :
-  Item(itemDefinition), eng(engine), dur_(eng->dice.getInRange(60, 100)) {
-}
+Armor::Armor(ItemData* const itemData, Engine* engine) :
+  Item(itemData, engine), dur_(engine->dice.range(60, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
-  const string apLabelOverRide = def_->armorData.overRideAbsorptionPointLabel;
-  const int AP = getAbsorptionPoints(dmgType_physical);
 
-  if(apLabelOverRide == "" && AP <= 0) {
-    return "";
-  }
+  const int AP = getAbsorptionPoints();
 
-  const string absorptionPointsStr =
-    apLabelOverRide == "" ? intToString(AP) : apLabelOverRide;
+  if(AP <= 0) {return "";} //Should not happen
+
+  const string absorptionPointsStr = intToString(AP);
 
   if(WITH_BRACKETS) {
     return "[" + absorptionPointsStr + "]";
@@ -25,46 +21,43 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
   }
 }
 
-int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE,
-    const DmgTypes_t dmgType) {
+int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   tracer << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
   //Absorption points (AP) = damage soaked up instead of hitting the player
   //DDF = Damage (to) Durability Factor
   //(how much damage the durability takes per attack damage point)
 
-  const int DMG_TYPE_AP = getAbsorptionPoints(dmgType);
+  const int AP_BEFORE = getAbsorptionPoints();
 
-  const int PHYSICAL_AP_BEFORE = getAbsorptionPoints(dmgType_physical);
-
-  const double DDF_INTRINSIC = def_->armorData.damageToDurabilityFactors[dmgType];
-  const double DDF_RANDOM = double(eng->dice.percentile()) / 100.0;
-  const double DDF_ADJUST = 3.0;
+  const double DDF_BASE     = data_->armorData.damageToDurabilityFactor;
+  const double RND_FRACTION = double(eng->dice.percentile()) / 100.0;
+  const double DDF_ADJUST   = 3.0;
 
   const double DMG_BEFORE_DB = double(DMG_BEFORE);
-  dur_ -= int(
-            DMG_BEFORE_DB * DDF_INTRINSIC * DDF_RANDOM * DDF_ADJUST);
+  dur_ -= int(DMG_BEFORE_DB * DDF_BASE * RND_FRACTION * DDF_ADJUST);
 
   dur_ = max(0, dur_);
 
-  const int PHYSICAL_AP_AFTER = getAbsorptionPoints(dmgType_physical);
+  const int AP_AFTER = getAbsorptionPoints();
 
-  if(PHYSICAL_AP_AFTER < PHYSICAL_AP_BEFORE && PHYSICAL_AP_AFTER != 0) {
-    const string armorName = eng->itemData->getItemRef(*this, itemRef_plain, true);
+  if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
+    const string armorName =
+      eng->itemDataHandler->getItemRef(*this, itemRef_plain, true);
     eng->log->addMessage("My " + armorName + " is damaged!");
   }
 
   tracer << "Armor: Damage before: " + intToString(DMG_BEFORE) << endl;
 
-  const int DAMAGE_REDUCTION = max(1, DMG_BEFORE - DMG_TYPE_AP);
+  const int DMG_AFTER = max(1, DMG_BEFORE - AP_BEFORE);
 
-  tracer << "Armor: Damage reduction: " + intToString(DAMAGE_REDUCTION) << endl;
+  tracer << "Armor: Damage after: " + intToString(DMG_AFTER) << endl;
 
   tracer << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
-  return DAMAGE_REDUCTION;
+  return DMG_AFTER;
 }
 
-int Armor::getAbsorptionPoints(const DmgTypes_t dmgType) const {
-  const int AP_MAX = def_->armorData.absorptionPoints[dmgType];
+int Armor::getAbsorptionPoints() const {
+  const int AP_MAX = data_->armorData.absorptionPoints;
 
   if(dur_ > 60) {return AP_MAX;}
   if(dur_ > 40) {return max(0, AP_MAX - 1);}
@@ -73,3 +66,15 @@ int Armor::getAbsorptionPoints(const DmgTypes_t dmgType) const {
 
   return 0;
 }
+
+void ArmorAsbestosSuit::onWear() {
+  propsEnabledOnCarrier.push_back(new PropRFire(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRElectric(eng, propTurnsIndefinite));
+}
+
+void ArmorAsbestosSuit::onTakeOff() {
+  clearPropsEnabledOnCarrier();
+}
+
+
