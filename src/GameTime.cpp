@@ -268,7 +268,7 @@ void GameTime::runNewStandardTurnEvents() {
 }
 
 void GameTime::runNewAtomicTurnEvents() {
-  updateLightMap();
+//  updateLightMap();
 }
 
 void GameTime::updateLightMap() {

@@ -1051,7 +1051,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1378031527 source:c:\dev\ia\src\gametime.cpp
+1378236646 source:c:\dev\ia\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -1174,7 +1174,7 @@
 
 1350576993 source:c:\dev\ia\src\itemammoclip.cpp
 
-1378199596 source:c:\dev\ia\src\itemarmor.cpp
+1378236621 source:c:\dev\ia\src\itemarmor.cpp
 	"ItemArmor.h"
 	"Engine.h"
 	"Log.h"
@@ -1730,7 +1730,7 @@
 	"PlayerSpellsHandler.h"
 	"ItemScroll.h"
 
-1374682343 source:c:\dev\ia\src\main.cpp
+1378236493 source:c:\dev\ia\src\main.cpp
 	<cassert>
 	"Engine.h"
 	"MainMenu.h"
@@ -10875,14 +10875,14 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1378061497 c:\dev\ia\src\properties.h
+1378233102 c:\dev\ia\src\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
 	"Converters.h"
 	"CommonTypes.h"
 
-1378201369 source:c:\dev\ia\src\properties.cpp
+1378236149 source:c:\dev\ia\src\properties.cpp
 	"Properties.h"
 	"Engine.h"
 	"ItemArmor.h"

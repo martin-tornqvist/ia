@@ -755,7 +755,9 @@ void PropHandler::getPropsFromSource(vector<Prop*>& propList,
       Item* const item = items.at(i);
       const int NR_PROPS_FROM_ITEM = item->propsEnabledOnCarrier.size();
       for(unsigned int ii = 0; ii < NR_PROPS_FROM_ITEM; ii++) {
-        propList.push_back(item->propsEnabledOnCarrier.at(ii));
+        Prop* const prop = item->propsEnabledOnCarrier.at(ii);
+        prop->owningActor_ = owningActor_;
+        propList.push_back(prop);
       }
     }
   }
