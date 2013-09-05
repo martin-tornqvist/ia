@@ -10,7 +10,7 @@ SHELL=/bin/sh
 # OSXLIBSDL = 1
 
 # clang
-# C ?= cc
+# CC ?= cc
 # CXX ?= c++
 
 # gcc
