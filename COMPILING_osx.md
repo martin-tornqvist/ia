@@ -8,7 +8,7 @@ This worked for me, your mileage may vary.
 
 ## SDL
 
-SDL can be installed as frameworks or as shared libraries.
+SDL and SDL\_image can be installed as frameworks or as shared libraries.
 
 ### Frameworks
 
@@ -21,16 +21,10 @@ http://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.dmg
 Copy `SDL.framework` and `SDL_image.framework` to `/Library/Frameworks`
 or `/Users/name/Library/Frameworks`.
 
-### Shared libraries
-
-Using a package manager:  
-[Fink](http://fink.thetis.ig42.org), [Homebrew](http://mxcl.github.io/homebrew/),
-[MacPorts](http://www.macports.org), or [pkgsrc](http://www.pkgsrc.org/).
-
+Alternately, shared libraries (libsdl, libsdl\_image) can be used
+instead of frameworks. Install with a package manager (Fink, MacPorts,
+Homebrew, pkgsrc) or build and install from source.
 Install `libsdl` and `libsdl_image`. `sdl-config` should be in your `$PATH`.
-
-Without a package manager, building from source isn't too difficult;
-follow instructions in the source archives.
 
 ## Build
 
@@ -46,8 +40,6 @@ You can export these to avoid typing them in for every `make` command:
 
     $ export TARGETOS=macosx RELEASE=1 OSXLIBSDL=1
     $ make
-
-Additional compiler flags can be set via `CXXFLAGS='...'`.
 
 ## Run
 
