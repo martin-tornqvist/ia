@@ -18,10 +18,12 @@
 using namespace std;
 
 void CharacterLines::drawLocationInfo() {
-  if(eng->player->getPropHandler()->allowSee()) {
+  Player* const player = eng->player;
+
+  if(player->getPropHandler()->allowSee()) {
     string str = "";
 
-    const Pos& playerPos = eng->player->pos;
+    const Pos& playerPos = player->pos;
 
     const int DLVL = eng->map->getDLVL();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
@@ -54,6 +56,8 @@ void CharacterLines::drawLocationInfo() {
 }
 
 void CharacterLines::drawInfoLines() {
+  Player* const player = eng->player;
+
   eng->renderer->coverPanel(panel_character);
 
   const int CHARACTER_LINE_X0 = 1;
@@ -67,13 +71,13 @@ void CharacterLines::drawInfoLines() {
   const SDL_Color clrGenMed = clrNosferatuTeal;
 
   //Name
-//  str = eng->player->getNameA();
+//  str = player->getNameA();
 //  eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
 //  pos.x += str.length() + 1;
 
   //Health
-  const string hp = intToString(eng->player->getHp());
-  const string hpMax = intToString(eng->player->getHpMax(true));
+  const string hp = intToString(player->getHp());
+  const string hpMax = intToString(player->getHpMax(true));
   eng->renderer->drawText("HP:", panel_character, pos, clrGenDrk);
   pos.x += 3;
   str = hp + "/" + hpMax;
@@ -81,8 +85,8 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Spirit
-  const string spi    = intToString(eng->player->getSpi());
-  const string spiMax = intToString(eng->player->getSpiMax());
+  const string spi    = intToString(player->getSpi());
+  const string spiMax = intToString(player->getSpiMax());
   eng->renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
@@ -90,8 +94,8 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Wounds
-//  const string wnd = "0"; //intToString(eng->player->getNrWounds());
-//  const string wndMax = "5"; //intToString(eng->player->getWndMax());
+//  const string wnd = "0"; //intToString(player->getNrWounds());
+//  const string wndMax = "5"; //intToString(player->getWndMax());
 //  eng->renderer->drawText("WND:", panel_character, pos, clrGenDrk);
 //  pos.x += 4;
 //  str = wnd + "/" + wndMax;
@@ -99,11 +103,13 @@ void CharacterLines::drawInfoLines() {
 //  pos.x += str.length() + 1;
 
   //Sanity
-  const int SHOCK = eng->player->getShockTotal();
-  const int INS = eng->player->getInsanity();
+  const int SHOCK = player->getShockTotal();
+  const int INS = player->getInsanity();
   eng->renderer->drawText("INS:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  const SDL_Color shortSanClr = SHOCK < 50 ? clrGreenLgt : SHOCK < 75 ? clrYellow : clrMagenta;
+  const SDL_Color shortSanClr =
+    SHOCK < 50 ? clrGreenLgt :
+    SHOCK < 75 ? clrYellow : clrMagenta;
   str = intToString(SHOCK) + "%/";
   eng->renderer->drawText(str, panel_character, pos, shortSanClr);
   pos.x += str.length();
@@ -111,7 +117,7 @@ void CharacterLines::drawInfoLines() {
   eng->renderer->drawText(str, panel_character, pos, clrMagenta);
   pos.x += str.length() + 1;
 
-  const int MTH = eng->player->getMth();
+  const int MTH = player->getMth();
   eng->renderer->drawText("MTH:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = intToString(MTH) + "%";
@@ -123,7 +129,7 @@ void CharacterLines::drawInfoLines() {
   //Store x position, because missile wpn info will be directly beaneath wielded wpn info
   const int X_POS_MISSILE = pos.x;
 
-  Item* itemWielded = eng->player->getInventory()->getItemInSlot(slot_wielded);
+  Item* itemWielded = player->getInventory()->getItemInSlot(slot_wielded);
   if(itemWielded == NULL) {
     eng->renderer->drawText(
       "Unarmed", panel_character, pos, clrGenMed);
@@ -161,7 +167,7 @@ void CharacterLines::drawInfoLines() {
   //Armor
   eng->renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  const Item* const armor = eng->player->getInventory()->getItemInSlot(slot_armorBody);
+  const Item* const armor = player->getInventory()->getItemInSlot(slot_armorBody);
   if(armor == NULL) {
     eng->renderer->drawText("N/A", panel_character, pos, clrGenLgt);
     pos.x += 4;
@@ -174,8 +180,8 @@ void CharacterLines::drawInfoLines() {
   //Encumbrance
   eng->renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  const int TOTAL_W = eng->player->getInventory()->getTotalItemWeight();
-  const int MAX_W = eng->player->getCarryWeightLimit();
+  const int TOTAL_W = player->getInventory()->getTotalItemWeight();
+  const int MAX_W = player->getCarryWeightLimit();
   const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = intToString(ENC) + "%";
   eng->renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
@@ -184,7 +190,7 @@ void CharacterLines::drawInfoLines() {
   //Missile weapon
   pos.x = X_POS_MISSILE;
 
-  Item* const itemMissiles = eng->player->getInventory()->getItemInSlot(slot_missiles);
+  Item* const itemMissiles = player->getInventory()->getItemInSlot(slot_missiles);
   if(itemMissiles == NULL) {
     eng->renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
   } else {
@@ -196,25 +202,35 @@ void CharacterLines::drawInfoLines() {
   pos.y += 1;
   pos.x = CHARACTER_LINE_X0;
 
-  const bool IS_SELF_AWARE =
-    eng->playerBonHandler->isBonPicked(playerBon_selfAware);
-  //TODO This should be collected from intrinsics, items and applied, by the Property handler
-  const vector<Prop*>& appliedProps =
-    eng->player->getPropHandler()->appliedProps_;
-  for(unsigned int i = 0; i < appliedProps.size(); i++) {
-    Prop* const prop = appliedProps.at(i);
-    const PropAlignment_t alignment = prop->getAlignment();
-    const SDL_Color statusColor =
-      alignment == propAlignmentGood ? clrMessageGood :
-      alignment == propAlignmentBad  ? clrMessageBad  : clrWhite;
-    string propText = prop->getNameShort();
-    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
-      // +1 to offset that the turn is also active on turn 0
-      propText += "(" + intToString(prop->turnsLeft_ + 1) + ")";
-    }
-    eng->renderer->drawText(propText, panel_character, pos, statusColor);
-    pos.x += propText.length() + 1;
+  vector<StringAndClr> propsLine;
+  player->getPropHandler()->getPropsInterfaceLine(propsLine);
+  const int NR_PROPS = propsLine.size();
+  for(int i = 0; i < NR_PROPS; i++) {
+    const StringAndClr& curPropLabel = propsLine.at(i);
+    eng->renderer->drawText(
+      curPropLabel.str, panel_character, pos, curPropLabel.clr);
+    pos.x += curPropLabel.str.length() + 1;
   }
+
+//  const bool IS_SELF_AWARE =
+//    playerBonHandler->isBonPicked(playerBon_selfAware);
+//  //TODO This should be collected from applied and inventory by the Property handler
+//  const vector<Prop*>& appliedProps =
+//    player->getPropHandler()->appliedProps_;
+//  for(unsigned int i = 0; i < appliedProps.size(); i++) {
+//    Prop* const prop = appliedProps.at(i);
+//    const PropAlignment_t alignment = prop->getAlignment();
+//    const SDL_Color statusColor =
+//      alignment == propAlignmentGood ? clrMessageGood :
+//      alignment == propAlignmentBad  ? clrMessageBad  : clrWhite;
+//    string propText = prop->getNameShort();
+//    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
+//      // +1 to offset that the turn is also active on turn 0
+//      propText += "(" + intToString(prop->turnsLeft_ + 1) + ")";
+//    }
+//    eng->renderer->drawText(propText, panel_character, pos, statusColor);
+//    pos.x += propText.length() + 1;
+//  }
 
 // Turn number
   str = "TRN:" + intToString(eng->gameTime->getTurn());

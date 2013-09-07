@@ -14,7 +14,7 @@ Weapon::Weapon(ItemData* const itemData, ItemData* const ammoData,
 }
 
 void Weapon::setRandomMeleePlus() {
-  int meleeDmgPlus = 0;
+  meleeDmgPlus = 0;
 
   int chance = 45;
   while(eng->dice.percentile() < chance && meleeDmgPlus < 3) {

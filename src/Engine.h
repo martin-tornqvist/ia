@@ -3,10 +3,16 @@
 
 #include "DebugMode.h"
 
+//If set to 1, the trace output in debug mode will be more verbose
+//(This does not affect release mode, which has no trace output)
+#define VERBOSE_TRACE 0
+
 #ifdef DEBUG
-#define tracer if (0) ; else cerr
+#define trace if (0) ; else cerr
+#define traceHi if (VERBOSE_TRACE == 0) ; else cerr
 #else
-#define tracer if (1) ; else cerr
+#define trace if (1) ; else cerr
+#define traceHi if (1) ; else cerr
 #endif
 
 #include "BasicUtils.h"

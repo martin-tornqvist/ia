@@ -98,7 +98,7 @@ void ProxEventWallCrumble::playerIsNear() {
       }
     }
 
-    eng->log->addMessage("The walls suddenly crumbles!");
+    eng->log->addMsg("The walls suddenly crumbles!");
     eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
     eng->gameTime->eraseFeatureMob(this, true);

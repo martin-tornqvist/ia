@@ -202,12 +202,12 @@ void Monster::moveToCell(Pos targetCell) {
   if(targetCell != pos) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
-      tracer << "Monster: Standing on trap, ";
-      tracer << "check if trap affects leaving the cell" << endl;
+      trace << "Monster: Standing on trap, ";
+      trace << "check if trap affects leaving the cell" << endl;
       targetCell =
         dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, targetCell);
       if(targetCell == pos) {
-        tracer << "Monster: Trap prevented leaving" << endl;
+        trace << "Monster: Trap prevented leaving" << endl;
         eng->gameTime->endTurnOfCurrentActor();
         return;
       }

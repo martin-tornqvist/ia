@@ -168,7 +168,7 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
   currentDefender = eng->mapTests->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
-    tracer << "RangedAttackData: Defender found" << endl;
+    trace << "RangedAttackData: Defender found" << endl;
     const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = wpn_.getData().rangedHitChanceMod;
@@ -195,7 +195,7 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
     attackResult = eng->abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      tracer << "RangedAttackData: Attack roll succeeded" << endl;
+      trace << "RangedAttackData: Attack roll succeeded" << endl;
       dmgRolls  = wpn_.getData().rangedDmg.rolls;
       dmgSides  = wpn_.getData().rangedDmg.sides;
       dmgPlus   = wpn_.getData().rangedDmg.plus;
@@ -230,7 +230,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
   currentDefender = eng->mapTests->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
-    tracer << "MissileAttackData: Defender found" << endl;
+    trace << "MissileAttackData: Defender found" << endl;
     const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = item_.getData().missileHitChanceMod;
@@ -257,7 +257,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
     attackResult = eng->abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      tracer << "MissileAttackData: Attack roll succeeded" << endl;
+      trace << "MissileAttackData: Attack roll succeeded" << endl;
       dmgRolls  = item_.getData().missileDmg.rolls;
       dmgSides  = item_.getData().missileDmg.sides;
       dmgPlus   = item_.getData().missileDmg.plus;

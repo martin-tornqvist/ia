@@ -40,21 +40,21 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon,
   switch(result) {
     case reloadResult_weaponNotUsingAmmo: {
       if(isPlayer == true) {
-        eng->log->addMessage("Weapon does not use ammo.");
+        eng->log->addMsg("Weapon does not use ammo.");
       }
     }
     break;
 
     case reloadResult_alreadyFull: {
       if(isPlayer == true) {
-        eng->log->addMessage("Weapon already loaded.");
+        eng->log->addMsg("Weapon already loaded.");
       }
     }
     break;
 
     case reloadResult_noAmmo: {
       if(isPlayer == true) {
-        eng->log->addMessage("I carry no ammunition for this weapon.");
+        eng->log->addMsg("I carry no ammunition for this weapon.");
       }
     }
     break;
@@ -63,15 +63,15 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon,
       const string swiftStr = isSwift ? " swiftly" : "";
       if(isPlayer) {
         if(isClip) {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "I" + swiftStr + " reload the " + weaponName + ".");
         } else {
-          eng->log->addMessage("I" + swiftStr + " load " + ammoName + ".");
+          eng->log->addMsg("I" + swiftStr + " load " + ammoName + ".");
         }
         eng->renderer->drawMapAndInterface();
       } else {
         if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
-          eng->log->addMessage(actorName + swiftStr + " reloads.");
+          eng->log->addMsg(actorName + swiftStr + " reloads.");
         }
       }
     }
@@ -79,10 +79,10 @@ void Reload::printReloadMessages(Actor* actorReloading, Weapon* weapon,
 
     case reloadResult_fumble: {
       if(isPlayer) {
-        eng->log->addMessage("I fumble with the " + ammoName + ".");
+        eng->log->addMsg("I fumble with the " + ammoName + ".");
       } else {
         if(eng->player->checkIfSeeActor(*actorReloading, NULL)) {
-          eng->log->addMessage(actorName + " fumbles with " + ammoName + ".");
+          eng->log->addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }
     }

@@ -23,11 +23,11 @@ void FeatureLever::examine() {
 }
 
 void FeatureLever::pull() {
-  tracer << "FeatureLever::pull()..." << endl;
+  trace << "FeatureLever::pull()..." << endl;
   isPositionLeft_ = !isPositionLeft_;
 
   if(doorLinkedTo_->isBroken_ == false) {
-    tracer << "FeatureLever: Door linked to is not broken" << endl;
+    trace << "FeatureLever: Door linked to is not broken" << endl;
     if(doorLinkedTo_->isOpen_ == false) {
       doorLinkedTo_->reveal(true);
     }
@@ -36,6 +36,6 @@ void FeatureLever::pull() {
   }
   eng->player->updateFov();
   eng->renderer->drawMapAndInterface();
-  tracer << "FeatureLever::pull() [DONE]" << endl;
+  trace << "FeatureLever::pull() [DONE]" << endl;
 }
 

@@ -88,18 +88,18 @@
 using namespace std;
 
 void Engine::initSdl() {
-  tracer << "Engine::initSdl()..." << endl;
+  trace << "Engine::initSdl()..." << endl;
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_EnableUNICODE(1);
   IMG_Init(IMG_INIT_PNG);
-  tracer << "Engine::initSdl() [DONE]" << endl;
+  trace << "Engine::initSdl() [DONE]" << endl;
 }
 
 void Engine::initConfigAndRenderer() {
-  tracer << "Engine::initConfigAndRenderer()..." << endl;
+  trace << "Engine::initConfigAndRenderer()..." << endl;
   config = new Config(this);
   renderer = new Renderer(this);
-  tracer << "Engine::initConfigAndRenderer() [DONE]" << endl;
+  trace << "Engine::initConfigAndRenderer() [DONE]" << endl;
 }
 
 void Engine::cleanupSdl() {
@@ -108,12 +108,12 @@ void Engine::cleanupSdl() {
 }
 
 void Engine::cleanupConfigAndRenderer() {
-  tracer << "Engine::cleanupConfigAndRenderer()..." << endl;
+  trace << "Engine::cleanupConfigAndRenderer()..." << endl;
 //  SDL_Quit();
 
   delete renderer;
   delete config;
-  tracer << "Engine::cleanupConfigAndRenderer() [DONE]" << endl;
+  trace << "Engine::cleanupConfigAndRenderer() [DONE]" << endl;
 }
 
 void Engine::initAudio() {
@@ -125,7 +125,7 @@ void Engine::cleanupAudio() {
 }
 
 void Engine::initGame() {
-  tracer << "Engine::initGame()..." << endl;
+  trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
   basicUtils = new BasicUtils(this);
   propDataHandler = new PropDataHandler(this);
@@ -205,11 +205,11 @@ void Engine::initGame() {
   gods = new Gods(this);
   credits = new Credits(this);
 
-  tracer << "Engine::initGame() [DONE]" << endl;
+  trace << "Engine::initGame() [DONE]" << endl;
 }
 
 void Engine::cleanupGame() {
-  tracer << "Engine::cleanupGame()..." << endl;
+  trace << "Engine::cleanupGame()..." << endl;
 
   map->clearDungeon();
 
@@ -285,7 +285,7 @@ void Engine::cleanupGame() {
 
   delete marker;
 
-  tracer << "Engine::cleanupGame() [DONE]" << endl;
+  trace << "Engine::cleanupGame() [DONE]" << endl;
 }
 
 void Engine::sleep(const Uint32 DURATION) const {

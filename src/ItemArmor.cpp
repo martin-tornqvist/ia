@@ -22,7 +22,7 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 }
 
 int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
-  tracer << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
+  trace << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
   //Absorption points (AP) = damage soaked up instead of hitting the player
   //DDF = Damage (to) Durability Factor
   //(how much damage the durability takes per attack damage point)
@@ -43,16 +43,16 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
     const string armorName =
       eng->itemDataHandler->getItemRef(*this, itemRef_plain, true);
-    eng->log->addMessage("My " + armorName + " is damaged!");
+    eng->log->addMsg("My " + armorName + " is damaged!");
   }
 
-  tracer << "Armor: Damage before: " + intToString(DMG_BEFORE) << endl;
+  trace << "Armor: Damage before: " + intToString(DMG_BEFORE) << endl;
 
   const int DMG_AFTER = max(1, DMG_BEFORE - AP_BEFORE);
 
-  tracer << "Armor: Damage after: " + intToString(DMG_AFTER) << endl;
+  trace << "Armor: Damage after: " + intToString(DMG_AFTER) << endl;
 
-  tracer << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
+  trace << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
   return DMG_AFTER;
 }
 
@@ -69,8 +69,8 @@ int Armor::getAbsorptionPoints() const {
 
 void ArmorAsbestosSuit::onWear() {
   propsEnabledOnCarrier.push_back(new PropRFire(eng, propTurnsIndefinite));
-//  propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
-//  propsEnabledOnCarrier.push_back(new PropRElectric(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRElectric(eng, propTurnsIndefinite));
 }
 
 void ArmorAsbestosSuit::onTakeOff() {

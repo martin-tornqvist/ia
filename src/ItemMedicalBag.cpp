@@ -21,14 +21,14 @@ bool MedicalBag::activateDefault(Actor* const actor) {
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
         if(prop->hasProp(propInfected) == false) {
-          eng->log->addMessage("I have no infections to sanitize.");
+          eng->log->addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_treatWound: {
         if(prop->hasProp(propWound) == false) {
-          eng->log->addMessage("I have no wounds to treat.");
+          eng->log->addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
@@ -38,7 +38,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
     if(curAction_ != endOfMedicalBagActions) {
       if(getNrSuppliesNeededForAction(curAction_) > nrSupplies_) {
-        eng->log->addMessage("I do not have enough supplies for that.");
+        eng->log->addMsg("I do not have enough supplies for that.");
         curAction_ = endOfMedicalBagActions;
       }
     }
@@ -106,13 +106,13 @@ void MedicalBag::finishCurAction() {
       Prop* prop =
         eng->player->getPropHandler()->getAppliedProp(propWound);
       if(prop == NULL) {
-        tracer << "[WARNING] No wound prop found, ";
-        tracer << "in MedicalBag::finishCurAction()" << endl;
+        trace << "[WARNING] No wound prop found, ";
+        trace << "in MedicalBag::finishCurAction()" << endl;
       } else {
         dynamic_cast<PropWound*>(prop)->healOneWound();
       }
 //        eng->log->clearLog();
-//        eng->log->addMessage("I finish applying first aid.");
+//        eng->log->addMsg("I finish applying first aid.");
 //        eng->renderer->drawMapAndInterface();
     } break;
 
@@ -138,7 +138,7 @@ void MedicalBag::interrupted() {
 //    } break;
 //  }
 //
-//  eng->log->addMessage("My applying of first aid is disrupted.", clrWhite,
+//  eng->log->addMsg("My applying of first aid is disrupted.", clrWhite,
 //                          messageInterrupt_never);
 //  nrTurnsLeft_ = -1;
 //
@@ -200,14 +200,14 @@ int MedicalBag::getNrSuppliesNeededForAction(
 //if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD || PROMPT_FOR_ABORT == false) {
 //  firstAidTurnsLeft = -1;
 //  isAborted = true;
-//  eng->log->addMessage("I stop tending to my wounds.", clrWhite);
+//  eng->log->addMsg("I stop tending to my wounds.", clrWhite);
 //  eng->renderer->drawMapAndInterface();
 //} else {
 //  const string TURNS_STR = intToString(firstAidTurnsLeft);
 //  const string ABORTED_HP_STR = intToString(HP_HEALED_IF_ABORTED);
 //  string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
 //  abortStr += ABORTED_HP_STR + " HP restored if canceled.";
-//  eng->log->addMessage(abortStr , clrWhiteHigh);
+//  eng->log->addMsg(abortStr , clrWhiteHigh);
 //  eng->renderer->drawMapAndInterface();
 //
 //  if(eng->query->yesOrNo() == false) {
@@ -227,7 +227,7 @@ int MedicalBag::getNrSuppliesNeededForAction(
 //    clearLogMessages();
 //    if(eng->player->deadState == actorDeadState_alive) {
 //      if(eng->player->getPropHandler()->hasProp(statusPoisoned)) {
-//        eng->log->addMessage("Not while poisoned.");
+//        eng->log->addMsg("Not while poisoned.");
 //        eng->renderer->drawMapAndInterface();
 //      } else {
 //        bool allowHeal = false;
@@ -244,18 +244,18 @@ int MedicalBag::getNrSuppliesNeededForAction(
 //          if(eng->player->spotedEnemies.size() == 0) {
 //            const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
 //            const string TURNS_STR = intToString(TURNS_TO_HEAL);
-//            eng->log->addMessage("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
+//            eng->log->addMsg("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
 //            eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
 //            eng->gameTime->endTurnOfCurrentActor();
 //          } else {
-//            eng->log->addMessage("Not while an enemy is near.");
+//            eng->log->addMsg("Not while an enemy is near.");
 //            eng->renderer->drawMapAndInterface();
 //          }
 //        } else {
 //          if(IS_DISEASED) {
-//            eng->log->addMessage("I cannot heal this disease.");
+//            eng->log->addMsg("I cannot heal this disease.");
 //          } else {
-//            eng->log->addMessage("I am already at good health.");
+//            eng->log->addMsg("I am already at good health.");
 //          }
 //          eng->renderer->drawMapAndInterface();
 //        }

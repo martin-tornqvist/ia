@@ -40,9 +40,9 @@ Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu
 }
 
 void Input::setKeyRepeatDelays() {
-  tracer << "Input::setKeyRepeatDelays()..." << endl;
+  trace << "Input::setKeyRepeatDelays()..." << endl;
   SDL_EnableKeyRepeat(eng->config->keyRepeatDelay, eng->config->keyRepeatInterval);
-  tracer << "Input::setKeyRepeatDelays() [DONE]" << endl;
+  trace << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
 void Input::handleMapModeInputUntilFound() {
@@ -134,10 +134,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
   //----------------------------------------DESCEND
   else if(d.key_ == '>') {
-    tracer << "Input: User pressed '>'" << endl;
+    trace << "Input: User pressed '>'" << endl;
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      tracer << "Input: Calling DungeonClimb::tryUseDownStairs()" << endl;
+      trace << "Input: Calling DungeonClimb::tryUseDownStairs()" << endl;
       eng->dungeonClimb->tryUseDownStairs();
     }
     clearEvents();
@@ -151,7 +151,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->examine->playerExamine();
         eng->renderer->drawMapAndInterface();
       } else {
-        eng->log->addMessage("Not while blind.");
+        eng->log->addMsg("Not while blind.");
         eng->renderer->drawMapAndInterface();
       }
     }
@@ -234,7 +234,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
           if(firearm->getData().isRangedWeapon) {
             if(firearm->ammoLoaded >= 1 || firearm->getData().rangedHasInfiniteAmmo) {
               if(firearm->getData().isMachineGun && firearm->ammoLoaded < 5) {
-                eng->log->addMessage("Need to load more ammo.");
+                eng->log->addMsg("Need to load more ammo.");
               } else {
                 eng->marker->run(markerTask_aimRangedWeapon, NULL);
               }
@@ -246,7 +246,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         }
 
         if(firearm == NULL) {
-          eng->log->addMessage("I am not wielding a firearm.");
+          eng->log->addMsg("I am not wielding a firearm.");
         }
       }
     }
@@ -323,17 +323,17 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         itemAlt == NULL ? "" :
         eng->itemDataHandler->getItemRef(*itemAlt, itemRef_a);
       if(itemWielded == NULL && itemAlt == NULL) {
-        eng->log->addMessage("I have neither a wielded nor a prepared weapon.");
+        eng->log->addMsg("I have neither a wielded nor a prepared weapon.");
       } else {
         if(itemWielded == NULL) {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
         } else {
           if(itemAlt == NULL) {
-            eng->log->addMessage(
+            eng->log->addMsg(
               "I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
           } else {
-            eng->log->addMessage(
+            eng->log->addMsg(
               "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
           }
         }
@@ -352,11 +352,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(spotedEnemies.empty()) {
         const int TURNS_TO_APPLY = 10;
         const string TURNS_STR = intToString(TURNS_TO_APPLY);
-        eng->log->addMessage("I pause for a while (" + TURNS_STR + " turns).");
+        eng->log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
         eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         eng->gameTime->endTurnOfCurrentActor();
       } else {
-        eng->log->addMessage("Not while an enemy is near.");
+        eng->log->addMsg("Not while an enemy is near.");
         eng->renderer->drawMapAndInterface();
       }
     }
@@ -373,7 +373,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         Item* itemStack = playerInv->getItemInSlot(slot_missiles);
 
         if(itemStack == NULL) {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "I have no missiles chosen for throwing (press 'v').");
         } else {
           Item* itemToThrow = eng->itemFactory->copyItem(itemStack);
@@ -400,7 +400,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng->player->getPropHandler()->allowSee()) {
         eng->marker->run(markerTask_look, NULL);
       } else {
-        eng->log->addMessage("I am blind.");
+        eng->log->addMsg("I am blind.");
       }
     }
     clearEvents();
@@ -447,7 +447,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_ESCAPE || d.key_ == 'Q') {
     if(eng->player->deadState == actorDeadState_alive) {
       eng->log->clearLog();
-      eng->log->addMessage(
+      eng->log->addMsg(
         "Quit the current game (y/n)? Save and highscore are not kept.",
         clrWhiteHigh);
       eng->renderer->drawMapAndInterface();
@@ -468,7 +468,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
         eng->log->clearLog();
-        eng->log->addMessage("Save and quit (y/n)?", clrWhiteHigh);
+        eng->log->addMsg("Save and quit (y/n)?", clrWhiteHigh);
         eng->renderer->drawMapAndInterface();
         if(eng->query->yesOrNo()) {
           eng->saveHandler->save();
@@ -482,7 +482,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng->renderer->drawMapAndInterface();
       }
     } else {
-      eng->log->addMessage("Saving can only be done on stairs.");
+      eng->log->addMsg("Saving can only be done on stairs.");
       eng->renderer->drawMapAndInterface();
     }
     clearEvents();
@@ -557,7 +557,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     string cmdTried = " ";
     cmdTried.at(0) = d.key_;
     eng->log->clearLog();
-    eng->log->addMessage("Unknown command '" + cmdTried + "'. Press '?' for commands.");
+    eng->log->addMsg("Unknown command '" + cmdTried + "'. Press '?' for commands.");
     clearEvents();
     return;
   }

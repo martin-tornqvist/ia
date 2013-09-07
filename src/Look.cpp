@@ -30,7 +30,7 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
 
   eng->log->clearLog();
   if(IS_VISION) {
-    eng->log->addMessage("I see here:");
+    eng->log->addMsg("I see here:");
 
     entityDescribed = getEntityToDescribe(pos);
 
@@ -53,15 +53,15 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
   if(pos != eng->player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
       if(IS_VISION) {
-        eng->log->addMessage("| f to fire");
+        eng->log->addMsg("| f to fire");
       } else {
-        eng->log->addMessage("f to fire");
+        eng->log->addMsg("f to fire");
       }
     } else   if(markerTask == markerTask_aimThrownWeapon) {
       if(IS_VISION) {
-        eng->log->addMessage("| t to throw");
+        eng->log->addMsg("| t to throw");
       } else {
-        eng->log->addMessage("t to throw");
+        eng->log->addMsg("t to throw");
       }
     }
   }
@@ -70,34 +70,34 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
 void Look::describeBriefActor(const Actor& actor,
                               const MarkerTask_t markerTask,
                               const Item* const itemThrown) const {
-  eng->log->addMessage(actor.getNameA() + ".");
+  eng->log->addMsg(actor.getNameA() + ".");
 
   if(markerTask == markerTask_look) {
-    eng->log->addMessage("| l for description");
+    eng->log->addMsg("| l for description");
   } else if(actor.pos != eng->player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
       Item* const item = eng->player->getInventory()->getItemInSlot(slot_wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng->player, *wpn, actor.pos, actor.pos, eng);
-      eng->log->addMessage("| " + intToString(data.hitChanceTot) + "% hit chance");
+      eng->log->addMsg("| " + intToString(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == markerTask_aimThrownWeapon) {
       MissileAttackData data(*eng->player, *itemThrown, actor.pos, actor.pos, eng);
-      eng->log->addMessage("| " + intToString(data.hitChanceTot) + "% hit chance");
+      eng->log->addMsg("| " + intToString(data.hitChanceTot) + "% hit chance");
     }
   }
 }
 
 void Look::describeBriefFeatureMob(const Feature& feature) const {
-  eng->log->addMessage(feature.getDescription(false) + ".");
+  eng->log->addMsg(feature.getDescription(false) + ".");
 }
 
 void Look::describeBriefItem(const Item& item) const {
-  eng->log->addMessage(
+  eng->log->addMsg(
     eng->itemDataHandler->getItemInterfaceRef(item, true) + ".");
 }
 
 void Look::describeBriefFeatureStatic(const Feature& feature) const {
-  eng->log->addMessage(feature.getDescription(false) + ".");
+  eng->log->addMsg(feature.getDescription(false) + ".");
 }
 
 void Look::printExtraActorDescription(const Pos& pos) const {

@@ -23,7 +23,7 @@ public:
     clearLog();
   }
 
-  void addMessage(const string& text, const SDL_Color = clrWhite,
+  void addMsg(const string& text, const SDL_Color = clrWhite,
                   MessageInterrupt_t interrupt = messageInterrupt_never,
                   const bool FORCE_MORE_PROMPT = false);
 

@@ -26,10 +26,6 @@ public:
   char getGlyph() const                 {return data_->glyph;}
   Tile_t getTile() const                {return data_->tile;}
 
-  virtual ItemActivateReturn_t defaultActivation(Actor*, Engine*) {
-    return itemActivate_keep;
-  }
-
   virtual void identify(const bool IS_SILENT_IDENTIFY) {
     (void)IS_SILENT_IDENTIFY;
   }
@@ -54,14 +50,14 @@ public:
     return "Heavy";
   }
 
-  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
-    (void)actor; (void)engine;
+  virtual bool activateDefault(Actor* const actor) {
+    (void)actor;
     return false;
   }
   virtual string getDefaultActivationLabel() const  {return "";}
   virtual SDL_Color getInterfaceClr() const         {return clrBrown;}
 
-  virtual void newTurnInInventory(Engine* const engine) {(void)engine;}
+  virtual void newTurnInInventory() {}
 
   int nrItems;
 

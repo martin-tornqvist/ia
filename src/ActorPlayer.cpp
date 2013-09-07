@@ -327,7 +327,7 @@ void Player::incrInsanity() {
           eng->popup->showMessage(popupMessage, true, "Babbling!");
           for(int i = eng->dice.range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase(eng);
-            eng->log->addMessage(getNameThe() + ": " + phrase);
+            eng->log->addMsg(getNameThe() + ": " + phrase);
           }
           eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
           return;
@@ -575,7 +575,7 @@ void Player::testPhobias() {
       if(
         monsterData->isCanine &&
         insanityPhobias[insanityPhobia_dog]) {
-        eng->log->addMessage("I am plagued by my canine phobia!");
+        eng->log->addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -583,7 +583,7 @@ void Player::testPhobias() {
       if(
         monsterData->isRat &&
         insanityPhobias[insanityPhobia_rat]) {
-        eng->log->addMessage("I am plagued by my rat phobia!");
+        eng->log->addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -591,7 +591,7 @@ void Player::testPhobias() {
       if(
         monsterData->isUndead &&
         insanityPhobias[insanityPhobia_undead]) {
-        eng->log->addMessage("I am plagued by my phobia of the dead!");
+        eng->log->addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -599,7 +599,7 @@ void Player::testPhobias() {
       if(
         monsterData->isSpider &&
         insanityPhobias[insanityPhobia_spider]) {
-        eng->log->addMessage("I am plagued by my spider phobia!");
+        eng->log->addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -609,7 +609,7 @@ void Player::testPhobias() {
   if(ROLL < 5) {
     if(insanityPhobias[insanityPhobia_openPlace]) {
       if(isStandingInOpenSpace()) {
-        eng->log->addMessage("I am plagued by my phobia of open places!");
+        eng->log->addMsg("I am plagued by my phobia of open places!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -618,7 +618,7 @@ void Player::testPhobias() {
 
     if(insanityPhobias[insanityPhobia_closedPlace]) {
       if(isStandingInCrampedSpace()) {
-        eng->log->addMessage("I am plagued by my phobia of closed places!");
+        eng->log->addMsg("I am plagued by my phobia of closed places!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecified, eng->dice(1, 6)));
         return;
@@ -670,11 +670,11 @@ void Player::act() {
         fuseMessage += "Z";
       }
       fuseMessage += "***";
-      eng->log->addMessage(fuseMessage, clrYellow);
+      eng->log->addMsg(fuseMessage, clrYellow);
     }
   }
   if(dynamiteFuseTurns == 0) {
-    eng->log->addMessage("The dynamite explodes in my hands!");
+    eng->log->addMsg("The dynamite explodes in my hands!");
     eng->explosionMaker->runExplosion(pos);
     updateColor();
     dynamiteFuseTurns = -1;
@@ -685,7 +685,7 @@ void Player::act() {
     molotovFuseTurns--;
   }
   if(molotovFuseTurns == 0) {
-    eng->log->addMessage("The Molotov Cocktail explodes in my hands!");
+    eng->log->addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
     eng->explosionMaker->runExplosion(
@@ -697,7 +697,7 @@ void Player::act() {
     flareFuseTurns--;
   }
   if(flareFuseTurns == 0) {
-    eng->log->addMessage("The flare is extinguished.");
+    eng->log->addMsg("The flare is extinguished.");
     updateColor();
     flareFuseTurns = -1;
   }
@@ -790,7 +790,7 @@ void Player::act() {
         if(IS_MONSTER_SEEN) {
           if(monster->messageMonsterInViewPrinted == false) {
             if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
-              eng->log->addMessage(actor->getNameA() + " comes into my view.",
+              eng->log->addMsg(actor->getNameA() + " comes into my view.",
                                    clrWhite, messageInterrupt_force);
             }
             monster->messageMonsterInViewPrinted = true;
@@ -806,12 +806,12 @@ void Player::act() {
               const AbilityRollResult_t rollResult =
                 eng->abilityRoll->roll(PLAYER_SEARCH_SKILL);
               if(rollResult == successSmall) {
-                eng->log->addMessage("I see something moving in the shadows.");
+                eng->log->addMsg("I see something moving in the shadows.");
               } else if(rollResult > successSmall) {
                 monster->isStealth = false;
                 updateFov();
                 eng->renderer->drawMapAndInterface();
-                eng->log->addMessage("I spot " + monster->getNameA() + "!");
+                eng->log->addMsg("I spot " + monster->getNameA() + "!");
               }
             }
           }
@@ -904,7 +904,7 @@ void Player::act() {
 //          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);
 //          if(SKILL > (100 - def.identifySkillFactor)) {
 //            item->setRealDefinitionNames(eng, false);
-//            eng->log->addMessage("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
+//            eng->log->addMsg("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
 //          }
 //        }
 //      }
@@ -921,7 +921,7 @@ void Player::interruptActions(const bool PROMPT_FOR_ABORT) {
 
   //Abort searching
   if(waitTurnsLeft > 0) {
-    eng->log->addMessage("I stop waiting.", clrWhite);
+    eng->log->addMsg("I stop waiting.", clrWhite);
     eng->renderer->drawMapAndInterface();
   }
   waitTurnsLeft = -1;
@@ -942,7 +942,7 @@ void Player::explosiveThrown() {
 void Player::hearSound(const Sound& sound) {
   const string message = sound.getMessage();
   if(message != "") {
-    eng->log->addMessage(message);
+    eng->log->addMsg(message);
   }
 }
 
@@ -956,7 +956,7 @@ void Player::moveDirection(const Pos& dir) {
     if(dest != pos) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
-        tracer << "Player: Standing on trap, check if affects move" << endl;
+        trace << "Player: Standing on trap, check if affects move" << endl;
         dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
       }
     }
@@ -978,7 +978,7 @@ void Player::moveDirection(const Pos& dir) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
                     eng->itemDataHandler->getItemRef(*weapon, itemRef_a);
-                  eng->log->addMessage(
+                  eng->log->addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng->renderer->drawMapAndInterface();
@@ -1021,7 +1021,7 @@ void Player::moveDirection(const Pos& dir) {
       if(featuresAllowMove) {
         // Encumbered?
         if(inventory_->getTotalItemWeight() >= getCarryWeightLimit()) {
-          eng->log->addMessage("I am too encumbered to move!");
+          eng->log->addMsg("I am too encumbered to move!");
           eng->renderer->drawMapAndInterface();
           return;
         }
@@ -1047,7 +1047,7 @@ void Player::moveDirection(const Pos& dir) {
           string message = propHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
           message += eng->itemDataHandler->getItemInterfaceRef(*item, true);
-          eng->log->addMessage(message + ".");
+          eng->log->addMsg(message + ".");
         }
       }
 

@@ -10,11 +10,11 @@ class Explosive : public Item {
 public:
   Explosive(ItemData* const itemData, Engine* engine) :
     Item(itemData, engine) {}
-  virtual ~Explosive();
+  virtual ~Explosive() {}
 
-  virtual bool activateDefault(Actor* const actor, Engine* const engine) {
+  virtual bool activateDefault(Actor* const actor) {
     (void)actor;
-    setPlayerExplosive(engine);
+    setPlayerExplosive();
     return true;
   }
   virtual string getDefaultActivationLabel() const {
@@ -23,7 +23,7 @@ public:
 
   virtual SDL_Color getInterfaceClr() const {return clrRedLgt;}
 
-  virtual void setPlayerExplosive(Engine* const engine) const;
+  virtual void setPlayerExplosive() const {}
 
 protected:
 };
@@ -33,7 +33,7 @@ public:
   Dynamite(ItemData* const itemData, Engine* engine) :
     Explosive(itemData, engine) {}
   ~Dynamite() {}
-  void setPlayerExplosive(Engine* const engine) const;
+  void setPlayerExplosive() const;
 private:
 };
 
@@ -42,7 +42,7 @@ public:
   Molotov(ItemData* const itemData, Engine* engine) :
     Explosive(itemData, engine) {}
   ~Molotov() {}
-  void setPlayerExplosive(Engine* const engine) const;
+  void setPlayerExplosive() const;
 private:
 };
 
@@ -51,7 +51,7 @@ public:
   Flare(ItemData* const itemData, Engine* engine) :
     Explosive(itemData, engine) {}
   ~Flare() {}
-  void setPlayerExplosive(Engine* const engine) const;
+  void setPlayerExplosive() const;
 private:
 };
 

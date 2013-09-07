@@ -96,7 +96,7 @@ void SaveHandler::readFile(vector<string>& lines) {
     writeFile(emptyLines);
   }
   else {
-    tracer << "[WARNING] Could not open save file, in SaveHandler::readFile()" << endl;
+    trace << "[WARNING] Could not open save file, in SaveHandler::readFile()" << endl;
   }
 }
 

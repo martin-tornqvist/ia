@@ -12,7 +12,7 @@
 
 void Close::playerClose() const {
   eng->log->clearLog();
-	eng->log->addMessage("Which direction? | space/esc to cancel", clrWhiteHigh);
+	eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
 	eng->renderer->drawMapAndInterface();
 	Pos closeInPos(eng->player->pos + eng->query->direction());
 	eng->log->clearLog();
@@ -34,9 +34,9 @@ void Close::playerCloseFeature(Feature* const feature) const {
 	if(closeAbleObjectFound == false) {
 		const bool PLAYER_CAN_SEE = eng->player->getPropHandler()->allowSee();
 		if(PLAYER_CAN_SEE) {
-			eng->log->addMessage("I see nothing there to close.");
+			eng->log->addMsg("I see nothing there to close.");
 		} else {
-			eng->log->addMessage("I find nothing there to close.");
+			eng->log->addMsg("I find nothing there to close.");
 		}
 	}
 }

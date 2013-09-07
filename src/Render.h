@@ -67,7 +67,7 @@ public:
   void drawLineVertical(const Pos& pixelPos, const int H,
                         const SDL_Color& clr);
 
-  void drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE = -1);
+  void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
 
   void drawBlastAnimationAtField(
     const Pos& center, const int RADIUS,

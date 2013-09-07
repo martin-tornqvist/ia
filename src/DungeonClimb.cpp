@@ -11,7 +11,7 @@
 #include "Item.h"
 
 void DungeonClimb::makeLevel() {
-  tracer << "DungeonClimb::makeLevel()..." << endl;
+  trace << "DungeonClimb::makeLevel()..." << endl;
 
   eng->map->clearDungeon();
 
@@ -22,7 +22,7 @@ void DungeonClimb::makeLevel() {
     //------------------------------------- TRAPEZOHEDRON LEVEL
     if(levelBuilt == false) {
       if(DLVL > LAST_CAVERN_LEVEL) {
-        tracer << "DungeonClimb: Calling MapBuild::buildTrapezohedronLevel()" << endl;
+        trace << "DungeonClimb: Calling MapBuild::buildTrapezohedronLevel()" << endl;
         eng->mapBuild->buildTrapezohedronLevel();
         levelBuilt = true;
       }
@@ -31,7 +31,7 @@ void DungeonClimb::makeLevel() {
     //------------------------------------- KINGS TOMB
     if(levelBuilt == false) {
       if(DLVL == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
-        tracer << "DungeonClimb: Calling MapBuild::buildKingsTomb()" << endl;
+        trace << "DungeonClimb: Calling MapBuild::buildKingsTomb()" << endl;
         eng->mapBuild->buildKingsTomb();
         levelBuilt = true;
       }
@@ -41,9 +41,9 @@ void DungeonClimb::makeLevel() {
   if(levelBuilt == false) {
     if(DLVL < FIRST_CAVERN_LEVEL || eng->config->isBotPlaying) {
       //eng->mapBuild->buildDungeonLevel();
-      tracer << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
+      trace << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
       eng->mapBuildBSP->run();
-//      tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//      trace << "DungeonClimb: Calling Populate::populate()" << endl;
 //      eng->populateMonsters->populate();
       levelBuilt = true;
     }
@@ -51,21 +51,21 @@ void DungeonClimb::makeLevel() {
   //------------------------------------- CAVERN LEVELS
   if(levelBuilt == false) {
     if(DLVL >= FIRST_CAVERN_LEVEL) {
-      tracer << "DungeonClimb: Calling MapBuild::buildCavern()" << endl;
+      trace << "DungeonClimb: Calling MapBuild::buildCavern()" << endl;
       eng->mapBuild->buildCavern();
-//      tracer << "DungeonClimb: Calling Populate::populate()" << endl;
+//      trace << "DungeonClimb: Calling Populate::populate()" << endl;
 //      eng->populate->populate();
     }
   }
   if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {
-    tracer << "DungeonClimb: Calling PopulateItems::spawnItems()" << endl;
+    trace << "DungeonClimb: Calling PopulateItems::spawnItems()" << endl;
     eng->populateItems->spawnItems();
   }
-  tracer << "DungeonClimb::makeLevel() [DONE]" << endl;
+  trace << "DungeonClimb::makeLevel() [DONE]" << endl;
 }
 
 void DungeonClimb::travelDown(const int levels) {
-  tracer << "DungeonClimb::travelDown()..." << endl;
+  trace << "DungeonClimb::travelDown()..." << endl;
 
   eng->player->restoreShock(999, true);
 
@@ -77,11 +77,11 @@ void DungeonClimb::travelDown(const int levels) {
   eng->player->updateFov();
   eng->player->updateColor();
   eng->renderer->drawMapAndInterface();
-  tracer << "DungeonClimb::travelDown() [DONE]" << endl;
+  trace << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 
 void DungeonClimb::tryUseDownStairs() {
-  tracer << "DungeonClimb::tryUseDownStairs()..." << endl;
+  trace << "DungeonClimb::tryUseDownStairs()..." << endl;
 
   eng->log->clearLog();
 
@@ -92,29 +92,29 @@ void DungeonClimb::tryUseDownStairs() {
     eng->map->featuresStatic[playerPos.x][playerPos.y]->getId();
 
   if(featureIdAtPlayer == feature_stairsDown) {
-    tracer << "DungeonClimb: Player is on stairs" << endl;
+    trace << "DungeonClimb: Player is on stairs" << endl;
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-      eng->log->addMessage("I climb downwards.");
+      eng->log->addMsg("I climb downwards.");
     } else {
-      eng->log->addMessage("I descend the stairs.");
+      eng->log->addMsg("I descend the stairs.");
     }
 //    eng->renderer->updateScreen();
     travelDown();
 
     if(eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
-      eng->log->addMessage("I am plagued by my phobia of deep places!");
+      eng->log->addMsg("I am plagued by my phobia of deep places!");
       eng->player->getPropHandler()->tryApplyProp(
         new PropTerrified(eng, propTurnsStandard));
       return;
     }
   } else {
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-      eng->log->addMessage("I see no path leading downwards here.");
+      eng->log->addMsg("I see no path leading downwards here.");
     } else {
-      eng->log->addMessage("I see no stairs leading downwards here.");
+      eng->log->addMsg("I see no stairs leading downwards here.");
     }
 //    eng->renderer->updateScreen();
   }
-  tracer << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
+  trace << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }
 

@@ -31,7 +31,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::freeAssets() {
-  tracer << "Renderer::freeAssets()..." << endl;
+  trace << "Renderer::freeAssets()..." << endl;
 
   if(screenSurface_ != NULL) {
     SDL_FreeSurface(screenSurface_);
@@ -43,14 +43,14 @@ void Renderer::freeAssets() {
     mainMenuLogoSurface_ = NULL;
   }
 
-  tracer << "Renderer::freeAssets() [DONE]" << endl;
+  trace << "Renderer::freeAssets() [DONE]" << endl;
 }
 
 void Renderer::initAndClearPrev() {
-  tracer << "Renderer::initAndClearPrev()..." << endl;
+  trace << "Renderer::initAndClearPrev()..." << endl;
   freeAssets();
 
-  tracer << "Renderer: Setting up rendering window" << endl;
+  trace << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + eng->config->GAME_VERSION;
   SDL_WM_SetCaption(title.data(), NULL);
 
@@ -69,8 +69,8 @@ void Renderer::initAndClearPrev() {
   }
 
   if(screenSurface_ == NULL) {
-    tracer << "[WARNING] Failed to create screen surface, ";
-    tracer << "in Renderer::initAndClearPrev()" << endl;
+    trace << "[WARNING] Failed to create screen surface, ";
+    trace << "in Renderer::initAndClearPrev()" << endl;
   }
 
   loadFont();
@@ -80,11 +80,11 @@ void Renderer::initAndClearPrev() {
     loadMainMenuLogo();
   }
 
-  tracer << "Renderer::initAndClearPrev() [DONE]" << endl;
+  trace << "Renderer::initAndClearPrev() [DONE]" << endl;
 }
 
 void Renderer::loadFont() {
-  tracer << "Renderer::loadFont()..." << endl;
+  trace << "Renderer::loadFont()..." << endl;
 
   SDL_Surface* fontSurfaceTmp = IMG_Load(eng->config->fontBig.data());
 //    IMG_LoadPNG_RW(SDL_RWFromFile(, "r"));
@@ -101,11 +101,11 @@ void Renderer::loadFont() {
 
   SDL_FreeSurface(fontSurfaceTmp);
 
-  tracer << "Renderer::loadFont() [DONE]" << endl;
+  trace << "Renderer::loadFont() [DONE]" << endl;
 }
 
 void Renderer::loadTiles() {
-  tracer << "Renderer::loadTiles()..." << endl;
+  trace << "Renderer::loadTiles()..." << endl;
 
   SDL_Surface* tileSurfaceTmp =
     IMG_Load(eng->config->TILES_IMAGE_NAME.data());
@@ -119,11 +119,11 @@ void Renderer::loadTiles() {
 
   SDL_FreeSurface(tileSurfaceTmp);
 
-  tracer << "Renderer::loadTiles() [DONE]" << endl;
+  trace << "Renderer::loadTiles() [DONE]" << endl;
 }
 
 void Renderer::loadMainMenuLogo() {
-  tracer << "Renderer::loadMainMenuLogo()..." << endl;
+  trace << "Renderer::loadMainMenuLogo()..." << endl;
 
   SDL_Surface* mainMenuLogoSurfaceTmp =
     IMG_Load(eng->config->MAIN_MENU_LOGO_IMAGE_NAME.data());
@@ -132,7 +132,7 @@ void Renderer::loadMainMenuLogo() {
 
   SDL_FreeSurface(mainMenuLogoSurfaceTmp);
 
-  tracer << "Renderer::loadMainMenuLogo() [DONE]" << endl;
+  trace << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
 
 
@@ -254,24 +254,24 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
   applySurface(pos, mainMenuLogoSurface_);
 }
 
-void Renderer::drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE) {
-  if(trace.size() > 2) {
-    for(unsigned int i = 1; i < trace.size() - 1; i++) {
-      coverCellInMap(trace.at(i));
+void Renderer::drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
+  if(trail.size() > 2) {
+    for(unsigned int i = 1; i < trail.size() - 1; i++) {
+      coverCellInMap(trail.at(i));
 
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
         const int CHEB_DIST =
-          eng->basicUtils->chebyshevDistance(trace.at(0), trace.at(i));
+          eng->basicUtils->chebyshevDistance(trail.at(0), trail.at(i));
         if(CHEB_DIST > EFFECTIVE_RANGE) {
           clr = clrYellow;
         }
       }
       if(eng->config->isTilesMode) {
-        drawTile(tile_aimMarkerTrail, panel_map, trace.at(i), clr);
+        drawTile(tile_aimMarkerTrail, panel_map, trail.at(i), clr);
       } else {
-        drawGlyph('*', panel_map, trace.at(i), clr);
+        drawGlyph('*', panel_map, trail.at(i), clr);
       }
     }
   }
@@ -280,9 +280,9 @@ void Renderer::drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE) {
 
   SDL_Color clr = clrGreenLgt;
 
-  if(trace.size() > 2) {
+  if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trace.at(0), headPos);
+      const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -301,7 +301,7 @@ void Renderer::drawMarker(const vector<Pos>& trace, const int EFFECTIVE_RANGE) {
 void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS], const SDL_Color& colorInner,
     const SDL_Color& colorOuter) {
-  tracer << "Renderer::drawBlastAnimationAtField()..." << endl;
+  trace << "Renderer::drawBlastAnimationAtField()..." << endl;
 
   drawMapAndInterface();
 
@@ -353,12 +353,12 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
   if(isAnyBlastRendered) {eng->sleep(eng->config->delayExplosion / 2);}
   drawMapAndInterface();
 
-  tracer << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
+  trace << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
 }
 
 void Renderer::drawBlastAnimationAtPositions(
   const vector<Pos>& positions, const SDL_Color& color) {
-  tracer << "Renderer::drawBlastAnimationAtPositions()..." << endl;
+  trace << "Renderer::drawBlastAnimationAtPositions()..." << endl;
 
   drawMapAndInterface();
 
@@ -377,7 +377,7 @@ void Renderer::drawBlastAnimationAtPositions(
   eng->sleep(eng->config->delayExplosion / 2);
   drawMapAndInterface();
 
-  tracer << "Renderer::drawBlastAnimationAtPositions() [DONE]" << endl;
+  trace << "Renderer::drawBlastAnimationAtPositions() [DONE]" << endl;
 }
 
 void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(

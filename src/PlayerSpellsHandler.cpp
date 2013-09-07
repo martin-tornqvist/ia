@@ -18,7 +18,7 @@ PlayerSpellsHandler::~PlayerSpellsHandler() {
 
 void PlayerSpellsHandler::run() {
   if(learnedSpells.empty()) {
-    eng->log->addMessage("I do not know any spells to invoke.");
+    eng->log->addMsg("I do not know any spells to invoke.");
   } else {
     MenuBrowser browser(learnedSpells.size(), 0);
 

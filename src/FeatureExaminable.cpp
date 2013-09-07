@@ -23,12 +23,12 @@ FeatureExaminable::FeatureExaminable(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
 
 void FeatureExaminable::examine() {
-  tracer << "FeatureExaminable::examine()..." << endl;
+  trace << "FeatureExaminable::examine()..." << endl;
 
   featureSpecific_examine();
   eng->gameTime->endTurnOfCurrentActor();
 
-  tracer << "FeatureExaminable::examine() [DONE]" << endl;
+  trace << "FeatureExaminable::examine() [DONE]" << endl;
 }
 
 EventRegularity_t FeatureExaminable::getEventRegularity() {
@@ -113,7 +113,7 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
     if(d.isQuaffable || d.id == item_molotov) {
       delete item;
       items_.erase(items_.begin() + i);
-      engine->log->addMessage("I hear a muffled shatter.");
+      engine->log->addMsg("I hear a muffled shatter.");
     }
   }
 }
@@ -136,18 +136,18 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
 
   //Exterior appearance
   if(engine->dice.percentile() < 20) {
-    tracer << "Tomb: Setting random appearance" << endl;
+    trace << "Tomb: Setting random appearance" << endl;
     appearance_ = static_cast<TombAppearance_t>(engine->dice.range(0, endOfTombAppearance - 1));
   } else {
-    tracer << "Tomb: Setting appearance according to items contained (common if zero items)" << endl;
+    trace << "Tomb: Setting appearance according to items contained (common if zero items)" << endl;
     for(unsigned int i = 0; i < itemContainer_.items_.size(); i++) {
       const ItemValue_t itemValue = itemContainer_.items_.at(i)->getData().itemValue;
       if(itemValue == itemValue_majorTreasure) {
-        tracer << "Tomb: Contains major treasure" << endl;
+        trace << "Tomb: Contains major treasure" << endl;
         appearance_ = tombAppearance_marvelous;
         break;
       } else if(itemValue == itemValue_minorTreasure) {
-        tracer << "Tomb: Contains minor treasure" << endl;
+        trace << "Tomb: Contains minor treasure" << endl;
         appearance_ = tombAppearance_impressive;
       }
     }
@@ -167,13 +167,13 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
     } else if(RND < 75) {
       trait_ = tombTrait_auraOfUnrest;
     }
-    tracer << "Tomb: Set trait (" << trait_ << ")" << endl;
+    trace << "Tomb: Set trait (" << trait_ << ")" << endl;
   }
 }
 
 void Tomb::featureSpecific_examine() {
   if(itemContainer_.items_.empty() && isContentKnown_) {
-    eng->log->addMessage("The tomb is empty.");
+    eng->log->addMsg("The tomb is empty.");
   } else {
     vector<TombAction_t> possibleActions;
     getPossibleActions(possibleActions);
@@ -205,9 +205,9 @@ void Tomb::doAction(const TombAction_t action) {
     case tombAction_carveCurseWard: {
       const int CHANCE_TO_CARVE = 80;
       if(IS_CURSED == false && (IS_BLESSED || eng->dice.percentile() < CHANCE_TO_CARVE)) {
-        eng->log->addMessage("The curse is cleared.");
+        eng->log->addMsg("The curse is cleared.");
       } else {
-        eng->log->addMessage("I make a misstake, the curse is doubled!");
+        eng->log->addMsg("I make a misstake, the curse is doubled!");
         PropCursed* const curse =
           new PropCursed(eng, propTurnsStandard);
         curse->turnsLeft_ *= 2;
@@ -217,17 +217,17 @@ void Tomb::doAction(const TombAction_t action) {
     } break;
 
     case tombAction_leave: {
-      eng->log->addMessage("I leave the tomb for now.");
+      eng->log->addMsg("I leave the tomb for now.");
     } break;
 
     case tombAction_pushLid: {
-      eng->log->addMessage("I attempt to push the lid.");
+      eng->log->addMsg("I attempt to push the lid.");
 
       const int CHANCE_TO_SPRAIN    = 15;
       const int CHANCE_TO_PARALYZE  = 30;
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
-        eng->log->addMessage("I sprain myself.", clrMessageBad);
+        eng->log->addMsg("I sprain myself.", clrMessageBad);
         eng->player->hit(1, dmgType_pure);
       }
 
@@ -236,21 +236,21 @@ void Tomb::doAction(const TombAction_t action) {
       }
 
       if(eng->dice.percentile() < CHANCE_TO_PARALYZE) {
-        eng->log->addMessage("I am off-balance.");
+        eng->log->addMsg("I am off-balance.");
         propHandler->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
       }
 
       if(IS_WEAK) {
-        eng->log->addMessage("It seems futile.");
+        eng->log->addMsg("It seems futile.");
         return;
       }
       const int BON = IS_TOUGH ? 20 : 0;
       if(eng->dice.percentile() < chanceToPushLid_ + BON) {
-        eng->log->addMessage("The lid comes off!");
+        eng->log->addMsg("The lid comes off!");
         openFeature();
       } else {
-        eng->log->addMessage("The lid resists.");
+        eng->log->addMsg("The lid resists.");
       }
     } break;
 
@@ -260,37 +260,37 @@ void Tomb::doAction(const TombAction_t action) {
       if(IS_ROLL_SUCCESS && trait_ != endOfTombTraits) {
         string traitDescr = "";
         getTraitDescr(traitDescr);
-        eng->log->addMessage(traitDescr);
+        eng->log->addMsg(traitDescr);
         isTraitKnown_ = true;
       } else {
-        eng->log->addMessage("I find nothing significant.");
+        eng->log->addMsg("I find nothing significant.");
       }
     } break;
 
     case tombAction_smashLidWithSledgehammer: {
-      eng->log->addMessage("I strike at the lid with a Sledgehammer.");
+      eng->log->addMsg("I strike at the lid with a Sledgehammer.");
       const int CHANCE_TO_BREAK = IS_WEAK ? 10 : 90;
       if(eng->dice.percentile() < CHANCE_TO_BREAK) {
-        eng->log->addMessage("The lid cracks open!");
+        eng->log->addMsg("The lid cracks open!");
         if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
           itemContainer_.destroySingleFragile(eng);
         }
         openFeature();
       } else {
-        eng->log->addMessage("The lid resists.");
+        eng->log->addMsg("The lid resists.");
       }
     } break;
   }
 }
 
 bool Tomb::openFeature() {
-  eng->log->addMessage("The tomb opens.");
+  eng->log->addMsg("The tomb opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items inside.");
+    eng->log->addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("There is nothing of value inside.");
+    eng->log->addMsg("There is nothing of value inside.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = isTraitKnown_ = true;
@@ -309,7 +309,7 @@ void Tomb::triggerTrap() {
           actorCandidates.push_back(static_cast<ActorId_t>(i));
         }
       }
-      eng->log->addMessage("Something rises from the tomb!");
+      eng->log->addMsg("Something rises from the tomb!");
     } break;
 
     case tombTrait_forebodingCarvedSigns: {
@@ -319,7 +319,7 @@ void Tomb::triggerTrap() {
 
     case tombTrait_stench: {
       if(eng->dice.coinToss()) {
-        eng->log->addMessage("Fumes burst out from the tomb!");
+        eng->log->addMsg("Fumes burst out from the tomb!");
         Prop* prop = NULL;
         SDL_Color fumeClr = clrMagenta;
         const int RND = eng->dice.percentile();
@@ -344,7 +344,7 @@ void Tomb::triggerTrap() {
             actorCandidates.push_back(static_cast<ActorId_t>(i));
           }
         }
-        eng->log->addMessage("Something creeps up from the tomb!");
+        eng->log->addMsg("Something creeps up from the tomb!");
       }
 
     } break;
@@ -493,7 +493,7 @@ Chest::Chest(Feature_t id, Pos pos, Engine* engine) :
 
 void Chest::featureSpecific_examine() {
   if(itemContainer_.items_.empty() && isContentKnown_) {
-    eng->log->addMessage("The chest is empty.");
+    eng->log->addMsg("The chest is empty.");
   } else {
     vector<ChestAction_t> possibleActions;
     getPossibleActions(possibleActions);
@@ -532,27 +532,27 @@ void Chest::doAction(const ChestAction_t action) {
       const int CHANCE_TO_FIND = 20 + IS_OBSERVANT * 40 - IS_CONFUSED * 10;
       const bool IS_ROLL_SUCCESS = eng->dice.percentile() < CHANCE_TO_FIND;
       if(IS_ROLL_SUCCESS && isTrapped_) {
-        eng->log->addMessage("The chest has a hidden trap mechanism!");
+        eng->log->addMsg("The chest has a hidden trap mechanism!");
         isTrapStatusKnown_ = true;
       } else {
-        eng->log->addMessage("I find no indication that the chest is trapped.");
+        eng->log->addMsg("I find no indication that the chest is trapped.");
       }
     }
     break;
     case chestAction_disarmTrap: {
-      eng->log->addMessage("I attempt to disarm the trap.");
+      eng->log->addMsg("I attempt to disarm the trap.");
 
       const int CHANCE_TO_TRIGGER = 20;
       if(eng->dice.percentile() < CHANCE_TO_TRIGGER) {
-        eng->log->addMessage("I accidentally trigger it!");
+        eng->log->addMsg("I accidentally trigger it!");
         openFeature();
       } else {
         const int CHANCE_TO_DISARM = 50;
         if(eng->dice.percentile() < CHANCE_TO_DISARM) {
-          eng->log->addMessage("I successfully disarm it!");
+          eng->log->addMsg("I successfully disarm it!");
           isTrapped_ = false;
         } else {
-          eng->log->addMessage("I failed to disarm it.");
+          eng->log->addMsg("I failed to disarm it.");
         }
       }
     }
@@ -561,7 +561,7 @@ void Chest::doAction(const ChestAction_t action) {
       Item* const wpn = eng->player->getInventory()->getItemInSlot(slot_wielded);
 
       if(wpn == NULL) {
-        eng->log->addMessage("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
+        eng->log->addMsg("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
         eng->player->hit(1, dmgType_pure);
       } else {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
@@ -569,19 +569,19 @@ void Chest::doAction(const ChestAction_t action) {
         if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
           const string wpnName = eng->itemDataHandler->getItemRef(
                                    *wpn, itemRef_plain, true);
-          eng->log->addMessage("My " + wpnName + " is damaged!");
+          eng->log->addMsg("My " + wpnName + " is damaged!");
           dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
         }
 
         if(IS_WEAK) {
-          eng->log->addMessage("It seems futile.");
+          eng->log->addMsg("It seems futile.");
         } else {
           const int CHANCE_TO_OPEN = 40;
           if(eng->dice.percentile() < CHANCE_TO_OPEN) {
-            eng->log->addMessage("I force the lock open!");
+            eng->log->addMsg("I force the lock open!");
             openFeature();
           } else {
-            eng->log->addMessage("The lock resists.");
+            eng->log->addMsg("The lock resists.");
           }
         }
       }
@@ -591,13 +591,13 @@ void Chest::doAction(const ChestAction_t action) {
       const int CHANCE_TO_SPRAIN    = 20;
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
-        eng->log->addMessage("I sprain myself.", clrMessageBad);
+        eng->log->addMsg("I sprain myself.", clrMessageBad);
         eng->player->hit(1, dmgType_pure);
       }
 
       if(eng->player->deadState == actorDeadState_alive) {
         if(IS_WEAK) {
-          eng->log->addMessage("It seems futile.");
+          eng->log->addMsg("It seems futile.");
           return;
         }
 
@@ -606,31 +606,31 @@ void Chest::doAction(const ChestAction_t action) {
         }
         const int CHANCE_TO_OPEN = 20 + (IS_TOUGH ? 20 : 0);
         if(eng->dice.percentile() < CHANCE_TO_OPEN) {
-          eng->log->addMessage("I kick the lid open!");
+          eng->log->addMsg("I kick the lid open!");
           openFeature();
         } else {
-          eng->log->addMessage("The lock resists.");
+          eng->log->addMsg("The lock resists.");
         }
       }
     }
     break;
     case chestAction_leave: {
-      eng->log->addMessage("I leave the chest for now.");
+      eng->log->addMsg("I leave the chest for now.");
     }
     break;
   }
 }
 
 bool Chest::openFeature() {
-  eng->log->addMessage("The chest opens.");
+  eng->log->addMsg("The chest opens.");
   if(isTrapped_) {
     triggerTrap();
   }
   if(eng->player->deadState == actorDeadState_alive) {
     if(itemContainer_.items_.empty()) {
-      eng->log->addMessage("There is nothing of value inside.");
+      eng->log->addMsg("There is nothing of value inside.");
     } else {
-      eng->log->addMessage("There are some items inside.");
+      eng->log->addMsg("There are some items inside.");
       itemContainer_.dropItems(pos_, eng);
       eng->renderer->drawMapAndInterface(true);
     }
@@ -704,13 +704,13 @@ void Chest::triggerTrap() {
     if(
       eng->map->getDLVL() >= MIN_DLVL_NASTY_TRAPS &&
       eng->dice.percentile() < CHANCE_FOR_EXPLODING) {
-      eng->log->addMessage("The trap explodes!");
+      eng->log->addMsg("The trap explodes!");
       eng->explosionMaker->runExplosion(pos_, true);
       if(eng->player->deadState == actorDeadState_alive) {
         eng->featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
     } else {
-      eng->log->addMessage("Fumes burst out from the chest!");
+      eng->log->addMsg("Fumes burst out from the chest!");
       Prop* prop = NULL;
       SDL_Color fumeClr = clrMagenta;
       const int RND = eng->dice.percentile();
@@ -753,7 +753,7 @@ Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
 
 void Cabinet::featureSpecific_examine() {
   if(itemContainer_.items_.empty() && isContentKnown_) {
-    eng->log->addMessage("The cabinet is empty.");
+    eng->log->addMsg("The cabinet is empty.");
   } else {
     vector<CabinetAction_t> possibleActions;
     getPossibleActions(possibleActions);
@@ -775,13 +775,13 @@ void Cabinet::triggerTrap() {
 }
 
 bool Cabinet::openFeature() {
-  eng->log->addMessage("The cabinet opens.");
+  eng->log->addMsg("The cabinet opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items inside.");
+    eng->log->addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("There is nothing of value inside.");
+    eng->log->addMsg("There is nothing of value inside.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = true;
@@ -819,7 +819,7 @@ void Cabinet::doAction(const CabinetAction_t action) {
     } break;
 
     case cabinetAction_leave: {
-      eng->log->addMessage("I leave the cabinet for now.");
+      eng->log->addMsg("I leave the cabinet for now.");
     } break;
   }
 }
@@ -843,7 +843,7 @@ Cocoon::Cocoon(Feature_t id, Pos pos, Engine* engine) :
 
 void Cocoon::featureSpecific_examine() {
   if(itemContainer_.items_.empty() && isContentKnown_) {
-    eng->log->addMessage("The cocoon is empty.");
+    eng->log->addMsg("The cocoon is empty.");
   } else {
     vector<CocoonAction_t> possibleActions;
     getPossibleActions(possibleActions);
@@ -864,10 +864,10 @@ void Cocoon::triggerTrap() {
   const int RND = eng->dice.percentile();
 
   if(RND < 15) {
-    eng->log->addMessage("There is a half-dissolved human body inside!");
+    eng->log->addMsg("There is a half-dissolved human body inside!");
     eng->player->incrShock(shockValue_heavy);
   } else if(RND < 50) {
-    tracer << "Cocoon: Attempting to spawn spiders" << endl;
+    trace << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId_t> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
       const ActorData& d = eng->actorDataHandler->dataList[i];
@@ -879,7 +879,7 @@ void Cocoon::triggerTrap() {
 
     const int NR_CANDIDATES = spawnCandidates.size();
     if(NR_CANDIDATES != 0) {
-      tracer << "Cocoon: Spawn candidates found, attempting to place" << endl;
+      trace << "Cocoon: Spawn candidates found, attempting to place" << endl;
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
       vector<Pos> freeCells;
@@ -889,8 +889,8 @@ void Cocoon::triggerTrap() {
                                      int(freeCells.size()));
 
       if(NR_SPIDERS_MAX > 0) {
-        tracer << "Cocoon: Found positions, spawning spiders" << endl;
-        eng->log->addMessage("There are spiders inside!");
+        trace << "Cocoon: Found positions, spawning spiders" << endl;
+        eng->log->addMsg("There are spiders inside!");
         const ActorId_t id = spawnCandidates.at(
                                eng->dice.range(0, NR_CANDIDATES - 1));
         for(int i = 0; i < NR_SPIDERS_MAX; i++) {
@@ -904,13 +904,13 @@ void Cocoon::triggerTrap() {
 }
 
 bool Cocoon::openFeature() {
-  eng->log->addMessage("The cocoon opens.");
+  eng->log->addMsg("The cocoon opens.");
   triggerTrap();
   if(itemContainer_.items_.size() > 0) {
-    eng->log->addMessage("There are some items inside.");
+    eng->log->addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
   } else {
-    eng->log->addMessage("There is nothing of value inside.");
+    eng->log->addMsg("There is nothing of value inside.");
   }
   eng->renderer->drawMapAndInterface(true);
   isContentKnown_ = true;
@@ -948,7 +948,7 @@ void Cocoon::doAction(const CocoonAction_t action) {
     } break;
 
     case cocoonAction_leave: {
-      eng->log->addMessage("I leave the cocoon for now.");
+      eng->log->addMsg("I leave the cocoon for now.");
     } break;
   }
 }

@@ -22,7 +22,7 @@ bool Device::activateDefault(Actor* const actor) {
     eng->gameTime->endTurnOfCurrentActor();
     return isDestroyed;
   } else {
-    eng->log->addMessage("I cannot yet use this.");
+    eng->log->addMsg("I cannot yet use this.");
     return false;
   }
 }
@@ -40,7 +40,7 @@ bool Device::toggle() {
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
     const string message = getSpecificActivateMessage();
     if(message != "") {
-      eng->log->addMessage(message);
+      eng->log->addMsg(message);
     }
     specificToggle();
 //    runBadEffect();
@@ -51,7 +51,7 @@ bool Device::toggle() {
 void Device::printToggleMessage() {
   const string name_a =
     eng->itemDataHandler->getItemRef(*this, itemRef_a, true);
-  eng->log->addMessage(
+  eng->log->addMsg(
     (isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
 }
 
@@ -85,17 +85,17 @@ void Device::runBadEffect() {
 
   const int RND = eng->dice.percentile();
   if(RND < 2) {
-    eng->log->addMessage("The " + name + " breaks!");
+    eng->log->addMsg("The " + name + " breaks!");
     eng->player->getInventory()->removetemInGeneralWithPointer(this, false);
   } else if(RND < 40) {
-    eng->log->addMessage(
+    eng->log->addMsg(
       "I am hit with a jolt of electricity from the " + name +
       ".", clrMessageBad, messageInterrupt_force);
     eng->player->getPropHandler()->tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 2));
     eng->player->hit(eng->dice.range(1, 2), dmgType_electric);
   } else {
-    eng->log->addMessage("The " + name + " hums ominously.");
+    eng->log->addMsg("The " + name + " hums ominously.");
   }
 }
 
@@ -132,7 +132,7 @@ void DeviceSentry::runGoodEffect() {
     const int ELEMENT = eng->dice.range(0, NR_CANDIDATES - 1);
     Actor* const actor = targetCandidates.at(ELEMENT);
     const Pos& pos = actor->pos;
-    eng->log->addMessage(
+    eng->log->addMsg(
       actor->getNameThe() + " is hit by a bolt of lightning!", clrMessageGood,
       messageInterrupt_force);
     eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
@@ -171,7 +171,7 @@ string DeviceRejuvenator::getSpecificActivateMessage() {
 
 void DeviceRejuvenator::runGoodEffect() {
 //  const string name = eng->itemData->getItemRef(this, itemRef_plain, true);
-//  eng->log->addMessage(name + " repairs my wounds.");
+//  eng->log->addMsg(name + " repairs my wounds.");
   eng->player->restoreHp(1, false);
 }
 
@@ -189,7 +189,7 @@ void DeviceTranslocator::runGoodEffect() {
     spotedEnemies.empty() == false) {
     const string name = eng->itemDataHandler->getItemRef(
                           *this, itemRef_plain, true);
-    eng->log->addMessage("The " + name + " makes a droning noise...");
+    eng->log->addMsg("The " + name + " makes a droning noise...");
     player->teleport(true);
   }
 }
@@ -213,7 +213,7 @@ void DeviceElectricLantern::specificnewTurnInInventory() {
 
 void DeviceElectricLantern::printToggleMessage() {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
-  eng->log->addMessage(toggleStr + " an Electric Lantern.");
+  eng->log->addMsg(toggleStr + " an Electric Lantern.");
 }
 
 void DeviceElectricLantern::specificToggle() {
@@ -233,16 +233,16 @@ void DeviceElectricLantern::runBadEffect() {
 
     const int RND = eng->dice.percentile();
     if(RND < 4) {
-      eng->log->addMessage("My Electric Lantern breaks!");
+      eng->log->addMsg("My Electric Lantern breaks!");
       eng->player->getInventory()->removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;
       isItemDestroyed = true;
     } else if(RND < 20) {
-      eng->log->addMessage("My Electric Lantern malfunctions.");
+      eng->log->addMsg("My Electric Lantern malfunctions.");
       malfunctCooldown_ = eng->dice.range(3, 4);
       isVisionUpdateNeeded = true;
     } else if(RND < 50) {
-      eng->log->addMessage("My Electric Lantern flickers.");
+      eng->log->addMsg("My Electric Lantern flickers.");
       malfunctCooldown_ = 2;
       isVisionUpdateNeeded = true;
     }

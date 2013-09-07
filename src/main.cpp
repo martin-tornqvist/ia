@@ -23,7 +23,7 @@
 
 #undef main
 int main(int argc, char* argv[]) {
-  tracer << "main()..." << endl;
+  trace << "main()..." << endl;
 
   bool quitToMainMenu = false;
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         }
         engine->dungeonMaster->setTimeStartedToNow();
         const TimeData& t = engine->dungeonMaster->getTimeStarted();
-        tracer << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
+        trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
       engine->player->updateFov();
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
         if(engine->player->deadState != actorDeadState_alive) {
           dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
 //          engine->log->clearLog();
-          engine->log->addMessage("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
+          engine->log->addMsg("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
           engine->renderer->drawMapAndInterface();
           engine->query->waitForKeyPress();
           engine->highScore->gameOver(false);
@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
   engine->cleanupAudio();
   engine->cleanupSdl();
   delete engine;
-  tracer << "main() [DONE]" << endl;
+  trace << "main() [DONE]" << endl;
   return 0;
 }
 

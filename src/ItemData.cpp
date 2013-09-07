@@ -816,7 +816,7 @@ void ItemDataHandler::initDataList() {
     *d, eng->actorDataHandler->dataList[actor_lengSpider]);
   dataList[d->id] = d;
 
-  d = new ItemData(item_hellHoundFireBreath);
+  d = new ItemData(item_fireHoundBreath);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
   d->rangedSoundMessage = "I hear a burst of flames.";
@@ -829,7 +829,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmgType = dmgType_fire;
   dataList[d->id] = d;
 
-  d = new ItemData(item_hellHoundBite);
+  d = new ItemData(item_fireHoundBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_fireHound]);
@@ -1354,6 +1354,12 @@ string ItemDataHandler::getItemRef(
     return ret + " {" + intToString(medicalBag->getNrSupplies()) + "}";
   }
 
+//  if(d.isArmor) {
+//    const Armor* armor = dynamic_cast<const Armor*>(&item);
+//    const string armorDataLine = armor->getArmorDataLine(true);
+//    return armorDataLine == "" ? ret : ret + " " + armorDataLine;
+//  }
+
   if(SKIP_EXTRA_INFO == false) {
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
@@ -1365,13 +1371,8 @@ string ItemDataHandler::getItemRef(
       return ret + ammoLoadedStr;
     }
 
-    if(d.isArmor) {
-      const Armor* armor = dynamic_cast<const Armor*>(&item);
-      const string armorDataLine = armor->getArmorDataLine(true);
-      return armorDataLine == "" ? ret : ret + " " + armorDataLine;
-    }
-
-    if((d.isScroll || d.isQuaffable) && d.isTried && d.isIdentified == false) {
+    if((d.isScroll || d.isQuaffable) &&
+        d.isTried && d.isIdentified == false) {
       return ret + " {tried}";
     }
   }

@@ -148,8 +148,8 @@ void CultistPriest::actorSpecific_spawnStartItems() {
 }
 
 void FireHound::actorSpecific_spawnStartItems() {
-  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_hellHoundFireBreath));
-  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_hellHoundBite));
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_fireHoundBreath));
+  inventory_->putItemInIntrinsics(eng->itemFactory->spawnItem(item_fireHoundBite));
 }
 
 bool Vortex::actorSpecificAct() {
@@ -159,14 +159,14 @@ bool Vortex::actorSpecificAct() {
 
   if(pullCooldown <= 0) {
     if(playerAwarenessCounter > 0) {
-      tracer << "Vortex: pullCooldown: " << pullCooldown << endl;
-      tracer << "Vortex: Is player aware" << endl;
+      trace << "Vortex: pullCooldown: " << pullCooldown << endl;
+      trace << "Vortex: Is player aware" << endl;
       const Pos& playerPos = eng->player->pos;
       if(eng->mapTests->isCellsNeighbours(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
         if(eng->dice.percentile() < CHANCE_TO_KNOCK) {
-          tracer << "Vortex: Passed random chance to pull" << endl;
+          trace << "Vortex: Passed random chance to pull" << endl;
 
           const Pos playerDelta = playerPos - pos;
           Pos knockBackFromPos = playerPos;
@@ -184,20 +184,20 @@ bool Vortex::actorSpecificAct() {
           }
 
           if(knockBackFromPos != playerPos) {
-            tracer << "Vortex: Good pos found to pull (knockback) player from (";
-            tracer << knockBackFromPos.x << "," << knockBackFromPos.y << ")" << endl;
-            tracer << "Vortex: Player position: ";
-            tracer << playerPos.x << "," << playerPos.y << ")" << endl;
+            trace << "Vortex: Good pos found to pull (knockback) player from (";
+            trace << knockBackFromPos.x << "," << knockBackFromPos.y << ")" << endl;
+            trace << "Vortex: Player position: ";
+            trace << playerPos.x << "," << playerPos.y << ")" << endl;
             bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
             eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
             if(checkIfSeeActor(*(eng->player), visionBlockers)) {
-              tracer << "Vortex: I am seeing the player" << endl;
+              trace << "Vortex: I am seeing the player" << endl;
               if(eng->player->checkIfSeeActor(*this, NULL)) {
-                eng->log->addMessage("The Vortex attempts to pull me in!");
+                eng->log->addMsg("The Vortex attempts to pull me in!");
               } else {
-                eng->log->addMessage("A powerful wind is pulling me!");
+                eng->log->addMsg("A powerful wind is pulling me!");
               }
-              tracer << "Vortex: Attempt pull (knockback)" << endl;
+              trace << "Vortex: Attempt pull (knockback)" << endl;
               eng->knockBack->tryKnockBack(
                 eng->player, knockBackFromPos, false, false);
               pullCooldown = 5;
@@ -246,13 +246,13 @@ bool Ghost::actorSpecificAct() {
           const bool PLAYER_SEES_ME =
             eng->player->checkIfSeeActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
-          eng->log->addMessage(refer + " reaches for me... ");
+          eng->log->addMsg(refer + " reaches for me... ");
           const AbilityRollResult_t rollResult = eng->abilityRoll->roll(
               eng->player->getData()->abilityVals.getVal(
                 ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
-            eng->log->addMessage("I dodge!", clrMessageGood);
+            eng->log->addMsg("I dodge!", clrMessageGood);
           } else {
             if(eng->dice.coinToss()) {
               eng->player->getPropHandler()->tryApplyProp(
@@ -360,7 +360,7 @@ bool Khephren::actorSpecificAct() {
 
           const unsigned int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
-            eng->log->addMessage("Khephren calls a plague of Locusts!");
+            eng->log->addMsg("Khephren calls a plague of Locusts!");
             eng->player->incrShock(shockValue_heavy);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_giantLocust, freeCells.at(0)));
@@ -423,7 +423,7 @@ bool KeziahMason::actorSpecificAct() {
             const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
               //TODO Make a generalized summoning funtionality
-              eng->log->addMessage("Keziah summons Brown Jenkin!");
+              eng->log->addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor =
                 eng->actorFactory->spawnActor(actor_brownJenkin, c);
               Monster* jenkin = dynamic_cast<Monster*>(actor);
@@ -610,7 +610,7 @@ bool LordOfSpiders::actorSpecificAct() {
       const Pos playerPos = eng->player->pos;
 
       if(eng->player->checkIfSeeActor(*this, NULL)) {
-        eng->log->addMessage(data_->spellCastMessage);
+        eng->log->addMsg(data_->spellCastMessage);
       }
 
       for(int dy = -1; dy <= 1; dy++) {
@@ -690,7 +690,7 @@ bool MajorClaphamLee::actorSpecificAct() {
 
           const unsigned int NR_OF_SPAWNS = 5;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
-            eng->log->addMessage("Major Clapham Lee calls forth his Tomb-Legions!");
+            eng->log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
             eng->player->incrShock(shockValue_heavy);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               if(i == 0) {
@@ -741,7 +741,9 @@ bool Zombie::tryResurrect() {
           hasResurrected = true;
           data_->nrOfKills--;
           if(eng->map->playerVision[pos.x][pos.y] == true) {
-            eng->log->addMessage(getNameThe() + " rises again!!", clrWhite, messageInterrupt_force);
+            eng->log->addMsg(
+              getNameThe() + " rises again!!", clrWhite,
+              messageInterrupt_force);
             eng->player->incrShock(shockValue_some);
           }
 

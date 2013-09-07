@@ -17,9 +17,9 @@ void Feature::bump(Actor* actorBumping) {
   if(isMovePassable(actorBumping) == false) {
     if(actorBumping == eng->player) {
       if(eng->player->getPropHandler()->allowSee()) {
-        eng->log->addMessage(data_->messageOnPlayerBlocked);
+        eng->log->addMsg(data_->messageOnPlayerBlocked);
       } else {
-        eng->log->addMessage(data_->messageOnPlayerBlockedBlind);
+        eng->log->addMsg(data_->messageOnPlayerBlockedBlind);
       }
     }
   }
@@ -127,7 +127,7 @@ MaterialType_t Feature::getMaterialType() const {
 }
 
 void Feature::examine() {
-  eng->log->addMessage("I find nothing specific there to examine or use.");
+  eng->log->addMsg("I find nothing specific there to examine or use.");
 }
 
 void FeatureStatic::setGoreIfPossible() {

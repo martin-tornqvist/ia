@@ -5,39 +5,31 @@
 #include "Log.h"
 #include "Render.h"
 
-Explosive::~Explosive() {
+void Dynamite::setPlayerExplosive() const {
+	eng->player->dynamiteFuseTurns = 6;
 
+	eng->player->clr_ = clrYellow;
+	eng->log->addMsg("I light a dynamite stick.");
+	eng->renderer->drawMapAndInterface();
+	eng->gameTime->endTurnOfCurrentActor();
 }
 
-void Explosive::setPlayerExplosive(Engine* const engine) const {
-  (void)engine;
+void Molotov::setPlayerExplosive() const {
+	eng->player->molotovFuseTurns = 12;
+
+	eng->player->clr_ = clrYellow;
+	eng->log->addMsg("I light a Molotov Cocktail.");
+	eng->renderer->drawMapAndInterface();
+	eng->gameTime->endTurnOfCurrentActor();
 }
 
-void Dynamite::setPlayerExplosive(Engine* const engine) const {
-	engine->player->dynamiteFuseTurns = 6;
+void Flare::setPlayerExplosive() const {
+	eng->player->flareFuseTurns = 200;
 
-	engine->player->clr_ = clrYellow;
-	engine->log->addMessage("I light a dynamite stick.");
-	engine->renderer->drawMapAndInterface();
-	engine->gameTime->endTurnOfCurrentActor();
-}
-
-void Molotov::setPlayerExplosive(Engine* const engine) const {
-	engine->player->molotovFuseTurns = 12;
-
-	engine->player->clr_ = clrYellow;
-	engine->log->addMessage("I light a Molotov Cocktail.");
-	engine->renderer->drawMapAndInterface();
-	engine->gameTime->endTurnOfCurrentActor();
-}
-
-void Flare::setPlayerExplosive(Engine* const engine) const {
-	engine->player->flareFuseTurns = 200;
-
-	engine->player->clr_ = clrYellow;
-	engine->log->addMessage("I light a Flare.");
-  engine->gameTime->updateLightMap();
-  engine->player->updateFov();
-	engine->renderer->drawMapAndInterface();
-	engine->gameTime->endTurnOfCurrentActor();
+	eng->player->clr_ = clrYellow;
+	eng->log->addMsg("I light a Flare.");
+  eng->gameTime->updateLightMap();
+  eng->player->updateFov();
+	eng->renderer->drawMapAndInterface();
+	eng->gameTime->endTurnOfCurrentActor();
 }

@@ -23,7 +23,7 @@ void Postmortem::run(bool* const quitGame) {
 }
 
 void Postmortem::makeInfoLines() {
-  tracer << "Postmortem::makeInfoLines()..." << endl;
+  trace << "Postmortem::makeInfoLines()..." << endl;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
   const SDL_Color clrInfo     = clrWhite;
@@ -73,7 +73,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StringAndClr(" ", clrInfo));
 
 
-  tracer << "Postmortem: Listing abilities gained" << endl;
+  trace << "Postmortem: Listing abilities gained" << endl;
   postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
   eng->playerBonHandler->getAllPickedBonTitlesLine(abilitiesLine);
@@ -89,7 +89,7 @@ void Postmortem::makeInfoLines() {
   }
   postmortemLines.push_back(StringAndClr(" ", clrInfo));
 
-  tracer << "Postmortem: Listing monster kills" << endl;
+  trace << "Postmortem: Listing monster kills" << endl;
   // TODO Add name_plural_a, and name_plural_the to actor defs?
   postmortemLines.push_back(StringAndClr(" Monsters killed:", clrHeading));
   vector< pair<string, int> > killList;
@@ -145,7 +145,7 @@ void Postmortem::makeInfoLines() {
   }
   postmortemLines.push_back(StringAndClr(" ", clrInfo));
 
-  tracer << "Postmortem: Drawing the final map" << endl;
+  trace << "Postmortem: Drawing the final map" << endl;
   postmortemLines.push_back(StringAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -185,7 +185,7 @@ void Postmortem::makeInfoLines() {
     currentRow.clear();
   }
 
-  tracer << "Postmortem::makeInfoLines() [DONE]" << endl;
+  trace << "Postmortem::makeInfoLines() [DONE]" << endl;
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
@@ -321,8 +321,8 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
       }
     }
   } else {
-    tracer << "[WARNING] Could not open ascii graveyard file, ";
-    tracer << "in Postmortem::renderMenu()" << endl;
+    trace << "[WARNING] Could not open ascii graveyard file, ";
+    trace << "in Postmortem::renderMenu()" << endl;
   }
 
   file.close();

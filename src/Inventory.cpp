@@ -85,7 +85,9 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Inventory::setParametersFromSaveLines(vector<string>& lines, Engine* const engine) {
+void Inventory::setParametersFromSaveLines(
+  vector<string>& lines, Engine* const engine) {
+
   for(unsigned int i = 0; i < slots_.size(); i++) {
     //Previous item is destroyed
     Item* item = slots_.at(i).item;
@@ -220,7 +222,9 @@ int Inventory::getElementToStackItem(Item* item) const {
   return -1;
 }
 
-void Inventory::dropAllNonIntrinsic(const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine) {
+void Inventory::dropAllNonIntrinsic(
+  const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine) {
+
   Item* item;
 
   //Drop from slots
@@ -264,7 +268,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
 
     //If weapon has infinite ammo, return true but with a warning
     if(weapon->getData().rangedHasInfiniteAmmo) {
-      tracer << "[WARNING] Inventory::hasAmmoForFirearm...() ran on weapon with infinite ammo" << endl;
+      trace << "[WARNING] Inventory::hasAmmoForFirearm...() ran on weapon with infinite ammo" << endl;
       return true;
     }
 
@@ -311,7 +315,9 @@ void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
   }
 }
 
-void Inventory::removetemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM) {
+void Inventory::removetemInGeneralWithPointer(
+                                              Item* const item, const bool DELETE_ITEM) {
+
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i) == item) {
       if(DELETE_ITEM) {
@@ -321,7 +327,7 @@ void Inventory::removetemInGeneralWithPointer(Item* const item, const bool DELET
       return;
     }
   }
-  tracer << "[WARNING] Could not find parameter item in general inventory, in Inventory::deleteItemInGeneralWithPointer()" << endl;
+  trace << "[WARNING] Could not find parameter item in general inventory, in Inventory::deleteItemInGeneralWithPointer()" << endl;
 }
 
 
@@ -354,7 +360,10 @@ void Inventory::decreaseItemTypeInGeneral(const ItemId_t id) {
   }
 }
 
-void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int GENERAL_INV_ELEMENT) {
+void Inventory::moveItemToSlot(
+  InventorySlot* inventorySlot,
+  const unsigned int GENERAL_INV_ELEMENT) {
+
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
   Item* item = NULL;
   Item* slotItem = inventorySlot->item;
@@ -375,8 +384,10 @@ void Inventory::moveItemToSlot(InventorySlot* inventorySlot, const unsigned int 
   }
 }
 
-void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT,
-    const SlotTypes_t slotToEquip, Engine* const engine) {
+void Inventory::equipGeneralItemAndPossiblyEndTurn(
+  const unsigned int GENERAL_INV_ELEMENT,
+  const SlotTypes_t slotToEquip, Engine* const engine) {
+
   const bool IS_PLAYER = this == engine->player->getInventory();
 
   bool isFreeTurn = false;
@@ -398,12 +409,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
       if(itemBefore != NULL) {
         const string nameBefore =
           engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMessage(
+        engine->log->addMsg(
           "I was wielding " + nameBefore + ".");
       }
       const string nameAfter =
         engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
-      engine->log->addMessage(
+      engine->log->addMsg(
         "I am now wielding " + nameAfter + ".");
     }
   }
@@ -416,12 +427,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
       if(itemBefore != NULL) {
         const string nameBefore =
           engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMessage(
+        engine->log->addMsg(
           "I was wielding " + nameBefore + " as a prepared weapon.");
       }
       const string nameAfter =
         engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
-      engine->log->addMessage(
+      engine->log->addMsg(
         "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
   }
@@ -434,16 +445,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
       if(itemBefore != NULL) {
         const string nameBefore =
           engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMessage("I wore " + nameBefore + ".");
+        engine->log->addMsg("I wore " + nameBefore + ".");
       }
       const string nameAfter =
         engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
-      engine->log->addMessage("I am now wearing " + nameAfter + ".");
+      engine->log->addMsg("I am now wearing " + nameAfter + ".");
     }
-    if(itemBefore != NULL) {
-      itemBefore->onTakeOff();
-    }
-    itemAfter->onWear();
     isFreeTurn = false;
   }
 
@@ -455,12 +462,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
       if(itemBefore != NULL) {
         const string nameBefore =
           engine->itemDataHandler->getItemRef(*itemBefore, itemRef_plural);
-        engine->log->addMessage(
+        engine->log->addMsg(
           "I was using " + nameBefore + " as missile weapon.");
       }
       const string nameAfter =
         engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
-      engine->log->addMessage(
+      engine->log->addMsg(
         "I am now using " + nameAfter + " as missile weapon.");
     }
   }
@@ -479,9 +486,9 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(const unsigned int GENERAL_IN
 //  engine->renderer->drawMapAndInterface();
 //
 //  if(itemBefore != NULL) {
-//    engine->log->addMessage("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
+//    engine->log->addMsg("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
 //  }
-//  engine->log->addMessage("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
+//  engine->log->addMsg("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
 //
 //  engine->renderer->drawMapAndInterface();
 //
@@ -600,7 +607,7 @@ void Inventory::putItemInIntrinsics(Item* item) {
   if(item->getData().isIntrinsic) {
     intrinsics_.push_back(item);
   } else {
-    tracer << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
+    trace << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
   }
 }
 

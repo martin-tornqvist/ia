@@ -39,10 +39,10 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
           if(i == 0) {
             if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
               if(DEFENDER_IS_MONSTER) {
-                eng->log->addMessage(
+                eng->log->addMsg(
                   defender->getNameThe() + " is knocked back!");
               } else {
-                eng->log->addMessage("I am knocked back!");
+                eng->log->addMsg("I am knocked back!");
               }
             }
             defender->getPropHandler()->tryApplyProp(
@@ -61,11 +61,11 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {
-              eng->log->addMessage(
+              eng->log->addMsg(
                 defender->getNameThe() + " plummets down the depths.",
                 clrMessageGood);
             } else {
-              eng->log->addMessage(
+              eng->log->addMsg(
                 "I plummet down the depths!", clrMessageBad);
             }
             defender->die(true, false, false);

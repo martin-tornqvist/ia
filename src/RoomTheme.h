@@ -44,6 +44,8 @@ private:
 
   void placeThemeFeatures(Room& room);
 
+  int getRandomNrFeaturesForTheme(const RoomTheme_t theme) const;
+
   void makeThemeSpecificRoomModifications(Room& room);
 
   void makeRoomDarkWithChance(const Room& room);

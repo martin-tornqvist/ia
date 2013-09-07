@@ -66,7 +66,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
 //    break;
 
     default: {
-      tracer << "[WARNING] Bad actor ID given in ActorFactory::makeActorFromId()" << endl;
+      trace << "[WARNING] Bad actor ID given in ActorFactory::makeActorFromId()" << endl;
       return NULL;
     }
     break;

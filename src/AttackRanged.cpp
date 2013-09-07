@@ -360,12 +360,12 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
 void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
   if(data.attacker == eng->player)
-    eng->log->addMessage("I " + data.verbPlayerAttacks + ".");
+    eng->log->addMsg("I " + data.verbPlayerAttacks + ".");
   else {
     if(eng->map->playerVision[data.attacker->pos.x][data.attacker->pos.y] == true) {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
-      eng->log->addMessage(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
+      eng->log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
     }
   }
 
@@ -382,7 +382,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
 //      if(data.currentDefender == eng->player) {
 //        //Perhaps no text is needed here?
 //      } else {
-//        eng->log->addMessage("Projectile hits nothing but void.");
+//        eng->log->addMsg("Projectile hits nothing but void.");
 //      }
 //    } else {
     //Punctuation or exclamation marks depending on attack strength
@@ -399,11 +399,11 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
       }
 
       if(data.currentDefender == eng->player) {
-        eng->log->addMessage("I am hit" + dmgPunctuation, clrMessageBad,
+        eng->log->addMsg("I am hit" + dmgPunctuation, clrMessageBad,
                              messageInterrupt_force);
 
 //          if(data.attackResult == successCritical) {
-//            eng->log->addMessage("It was a great hit!", clrMessageBad, messageInterrupt_force);
+//            eng->log->addMsg("It was a great hit!", clrMessageBad, messageInterrupt_force);
 //          }
       } else {
         string otherName = "It";
@@ -411,10 +411,10 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
         if(eng->map->playerVision[defX][defY] == true)
           otherName = data.currentDefender->getNameThe();
 
-        eng->log->addMessage(otherName + " is hit" + dmgPunctuation, clrMessageGood);
+        eng->log->addMsg(otherName + " is hit" + dmgPunctuation, clrMessageGood);
 
 //          if(data.attackResult == successCritical) {
-//            eng->log->addMessage("It was a great hit!", clrMessageGood);
+//            eng->log->addMsg("It was a great hit!", clrMessageGood);
 //          }
       }
     }

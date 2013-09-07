@@ -86,8 +86,8 @@ enum PropMsg_t {
   propMsgOnEndMonster,
   propMsgOnMorePlayer,
   propMsgOnMoreMonster,
-  propMsgOnResistPlayer,
-  propMsgOnResistMonster,
+  propMsgOnResPlayer,
+  propMsgOnResMonster,
   endOfPropMsg
 };
 
@@ -177,6 +177,8 @@ public:
   void newTurnAllProps(
     const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
 
+  void getPropsInterfaceLine(vector<StringAndClr>& line);
+
 private:
   friend class Player;
   friend class ExplosionMaker;
@@ -188,6 +190,9 @@ private:
 
   bool hasProp(const PropId_t id,
                const vector<Prop*> propList) const;
+
+  bool tryResistProp(const PropId_t id,
+                     const vector<Prop*>& propList);
 
   Actor* owningActor_;
   Engine* eng;
@@ -258,8 +263,8 @@ public:
     (void)actorPos;
     (void)movePos;
   }
-  virtual bool tryResistOherProp(const PropId_t otherId) {
-    (void)otherId;
+  virtual bool tryResistOtherProp(const PropId_t id) {
+    (void)id;
     return false;
   }
 
@@ -674,7 +679,7 @@ public:
     Prop(propFreeAction, engine, turnsInit, turns) {}
   ~PropFreeAction() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -760,7 +765,7 @@ public:
     Prop(propRAcid, engine, turnsInit, turns) {}
   ~PropRAcid() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -772,7 +777,7 @@ public:
     Prop(propRCold, engine, turnsInit, turns) {}
   ~PropRCold() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -784,7 +789,7 @@ public:
     Prop(propRConfusion, engine, turnsInit, turns) {}
   ~PropRConfusion() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -805,7 +810,7 @@ public:
     Prop(propRElectric, engine, turnsInit, turns) {}
   ~PropRElectric() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -817,7 +822,7 @@ public:
     Prop(propRFear, engine, turnsInit, turns) {}
   ~PropRFear() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -829,7 +834,7 @@ public:
     Prop(propRFire, engine, turnsInit, turns) {}
   ~PropRFire() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -841,7 +846,7 @@ public:
     Prop(propRPoison, engine, turnsInit, turns) {}
   ~PropRPoison() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -853,7 +858,7 @@ public:
     Prop(propRSleep, engine, turnsInit, turns) {}
   ~PropRSleep() {}
 
-  bool tryResistOherProp(const PropId_t otherId);
+  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };

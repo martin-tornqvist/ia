@@ -66,7 +66,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
 
 //  if(data.isTargetEthereal == true) {
 //    if(data.isPlayerAttacking == true) {
-//      eng->log->addMessage("I hit nothing but void.");
+//      eng->log->addMsg("I hit nothing but void.");
 //    } else {
 //      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
 //        otherName = data.attacker->getNameThe();
@@ -74,20 +74,20 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
 //        otherName = "its";
 //      }
 //
-//      eng->log->addMessage("I am unaffected by " + otherName + " attack.", clrWhite, messageInterrupt_force);
+//      eng->log->addMsg("I am unaffected by " + otherName + " attack.", clrWhite, messageInterrupt_force);
 //    }
 //  } else {
   //----- ATTACK FUMBLE -----
 //    if(data.attackResult == failCritical) {
 //      if(data.isPlayerAttacking) {
-//        eng->log->addMessage("I fumble!");
+//        eng->log->addMsg("I fumble!");
 //      } else {
 //        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
 //          otherName = data.attacker->getNameThe();
 //        } else {
 //          otherName = "It";
 //        }
-//        eng->log->addMessage(otherName + " fumbles.", clrWhite, messageInterrupt_force);
+//        eng->log->addMsg(otherName + " fumbles.", clrWhite, messageInterrupt_force);
 //      }
 //    }
 
@@ -95,11 +95,11 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
   if(/*data.attackResult > failCritical &&*/ data.attackResult <= failSmall) {
     if(data.attacker == eng->player) {
       if(data.attackResult == failSmall) {
-        eng->log->addMessage("I barely miss!");
+        eng->log->addMsg("I barely miss!");
       } else if(data.attackResult == failNormal) {
-        eng->log->addMessage("I miss.");
+        eng->log->addMsg("I miss.");
       } else if(data.attackResult == failBig) {
-        eng->log->addMessage("I miss completely.");
+        eng->log->addMsg("I miss completely.");
       }
     } else {
       if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
@@ -108,11 +108,11 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
         otherName = "It";
       }
       if(data.attackResult == failSmall) {
-        eng->log->addMessage(otherName + " barely misses me!", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " barely misses me!", clrWhite, messageInterrupt_force);
       } else if(data.attackResult == failNormal) {
-        eng->log->addMessage(otherName + " misses me.", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " misses me.", clrWhite, messageInterrupt_force);
       } else if(data.attackResult == failBig) {
-        eng->log->addMessage(otherName + " misses me completely.", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " misses me completely.", clrWhite, messageInterrupt_force);
       }
     }
   }
@@ -126,14 +126,14 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
         } else {
           otherName = "It ";
         }
-        eng->log->addMessage(otherName + " dodges my attack.");
+        eng->log->addMsg(otherName + " dodges my attack.");
       } else {
         if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
         }
-        eng->log->addMessage("I dodge an attack from " + otherName + ".", clrMessageGood);
+        eng->log->addMsg("I dodge an attack from " + otherName + ".", clrMessageGood);
       }
     } else {
       //Punctuation or exclamation marks depending on attack strength
@@ -157,7 +157,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
 
         if(data.isIntrinsicAttack) {
           const string ATTACK_MOD_TEXT = data.isWeakAttack ? " feebly" : "";
-          eng->log->addMessage(
+          eng->log->addMsg(
             "I " + wpnVerb + " " + otherName + ATTACK_MOD_TEXT + dmgPunctuation,
             clrMessageGood);
         } else {
@@ -166,7 +166,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
             data.isBackstab    ? "covertly "  : "";
           const SDL_Color clr = data.isBackstab ? clrBlueLgt : clrMessageGood;
           const string wpnName_a = eng->itemDataHandler->getItemRef(wpn, itemRef_a, true);
-          eng->log->addMessage(
+          eng->log->addMsg(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_TEXT + "with " +
             wpnName_a + dmgPunctuation,
             clr);
@@ -180,7 +180,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
           otherName = "It";
         }
 
-        eng->log->addMessage(otherName + " " + wpnVerb + dmgPunctuation,
+        eng->log->addMsg(otherName + " " + wpnVerb + dmgPunctuation,
                              clrMessageBad, messageInterrupt_force);
       }
     }

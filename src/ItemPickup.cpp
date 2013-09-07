@@ -33,7 +33,7 @@ void ItemPickup::tryPick() {
       Item* const carriedMissile = playerInventory->getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
         if(item->getData().id == carriedMissile->getData().id) {
-          eng->log->addMessage("I add " + ITEM_NAME + " to my missile stack.");
+          eng->log->addMsg("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->nrItems += item->nrItems;
           delete item;
           eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
@@ -45,7 +45,7 @@ void ItemPickup::tryPick() {
 
     if(isInventoryFull(playerInventory, item) == false) {
       eng->log->clearLog();
-      eng->log->addMessage("I pick up " + ITEM_NAME + ".");
+      eng->log->addMsg("I pick up " + ITEM_NAME + ".");
 
       playerInventory->putItemInGeneral(item);
 
@@ -54,11 +54,11 @@ void ItemPickup::tryPick() {
       eng->gameTime->endTurnOfCurrentActor();
     } else {
       eng->log->clearLog();
-      eng->log->addMessage("I cannot carry more.");
+      eng->log->addMsg("I cannot carry more.");
     }
   } else {
     eng->log->clearLog();
-    eng->log->addMessage("I see nothing to pick up here.");
+    eng->log->addMsg("I see nothing to pick up here.");
   }
 }
 
@@ -99,14 +99,14 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         }
         const string WEAPON_REF_A =
           eng->itemDataHandler->getItemRef(*weapon, itemRef_a);
-        eng->log->addMessage("I unload " + WEAPON_REF_A);
+        eng->log->addMsg("I unload " + WEAPON_REF_A);
 
         if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
           playerInventory->putItemInGeneral(spawnedAmmo);
         } else {
           eng->itemDrop->dropItemOnMap(eng->player->pos, *spawnedAmmo);
           string str =  "I have no room to keep the unloaded ammunition.";
-          eng->log->addMessage(str);
+          eng->log->addMsg(str);
         }
 
         dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
@@ -123,6 +123,6 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
     }
   }
 
-  eng->log->addMessage("I see no ammo to unload or pick up here.");
+  eng->log->addMsg("I see no ammo to unload or pick up here.");
 }
 

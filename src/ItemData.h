@@ -101,8 +101,8 @@ enum ItemId_t {
   item_byakheeClaw,
   item_giantMantisClaw,
   item_giantLocustBite,
-  item_hellHoundFireBreath,
-  item_hellHoundBite,
+  item_fireHoundBreath, //TODO This would make more sense as a spell
+  item_fireHoundBite,
   item_giantBatBite,
   item_zombieAxe,
   item_zombieClaw,

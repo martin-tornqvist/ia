@@ -435,7 +435,7 @@ void Config::setCellDimDependentVariables() {
 }
 
 void Config::parseFontNameAndSetCellDims() {
-  tracer << "Config::parseFontNameAndSetCellDims()..." << endl;
+  trace << "Config::parseFontNameAndSetCellDims()..." << endl;
   string fontName = fontBig;
 
   char ch = 'a';
@@ -461,16 +461,16 @@ void Config::parseFontNameAndSetCellDims() {
     ch = fontName.at(0);
   }
 
-  tracer << "Config: Parsed font image name, found dims: ";
-  tracer << widthStr << "x" << heightStr << endl;
+  trace << "Config: Parsed font image name, found dims: ";
+  trace << widthStr << "x" << heightStr << endl;
 
   cellW = stringToInt(widthStr)  * fontScale;
   cellH = stringToInt(heightStr) * fontScale;
-  tracer << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
+  trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
 void Config::setDefaultVariables() {
-  tracer << "Config::setDefaultVariables()..." << endl;
+  trace << "Config::setDefaultVariables()..." << endl;
   isTilesMode = true;
   fontBig = "images/16x24_clean_v2.png";
   fontScale = 1;
@@ -484,11 +484,11 @@ void Config::setDefaultVariables() {
   delayProjectileDraw = 45;
   delayShotgun = 120;
   delayExplosion = 350;
-  tracer << "Config::setDefaultVariables() [DONE]" << endl;
+  trace << "Config::setDefaultVariables() [DONE]" << endl;
 }
 
 void Config::collectLinesFromVariables(vector<string>& lines) {
-  tracer << "Config::collectLinesFromVariables()..." << endl;
+  trace << "Config::collectLinesFromVariables()..." << endl;
   lines.resize(0);
   lines.push_back(isTilesMode == false ? "0" : "1");
   lines.push_back(intToString(fontScale));
@@ -502,7 +502,7 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(intToString(delayProjectileDraw));
   lines.push_back(intToString(delayShotgun));
   lines.push_back(intToString(delayExplosion));
-  tracer << "Config::collectLinesFromVariables() [DONE]" << endl;
+  trace << "Config::collectLinesFromVariables() [DONE]" << endl;
 }
 
 void Config::toggleFullscreen() {
@@ -522,7 +522,7 @@ void Config::toggleFullscreen() {
 }
 
 void Config::setAllVariablesFromLines(vector<string>& lines) {
-  tracer << "Config::setAllVariablesFromLines()..." << endl;
+  trace << "Config::setAllVariablesFromLines()..." << endl;
   string curLine = "";
 
   curLine = lines.front();
@@ -581,7 +581,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   curLine = lines.front();
   delayExplosion = stringToInt(curLine);
   lines.erase(lines.begin());
-  tracer << "Config::setAllVariablesFromLines() [DONE]" << endl;
+  trace << "Config::setAllVariablesFromLines() [DONE]" << endl;
 }
 
 void Config::writeLinesToFile(vector<string>& lines) {

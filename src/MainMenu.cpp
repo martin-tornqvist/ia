@@ -16,7 +16,7 @@
 using namespace std;
 
 void MainMenu::draw(const MenuBrowser& browser) {
-  tracer << "MainMenu::draw()..." << endl;
+  trace << "MainMenu::draw()..." << endl;
 
   vector<string> logo;
 
@@ -31,10 +31,10 @@ void MainMenu::draw(const MenuBrowser& browser) {
   Pos pos(MAP_X_CELLS / 2, 3);
 //  const int X_POS_LEFT = pos.x - 11;
 
-  tracer << "MainMenu: Calling clearWindow()" << endl;
+  trace << "MainMenu: Calling clearWindow()" << endl;
   eng->renderer->clearScreen();
 
-  tracer << "MainMenu: Drawing random background letters" << endl;
+  trace << "MainMenu: Drawing random background letters" << endl;
   const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
   const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
   const int BG_BRIGHTNESS = eng->dice.range(14, 17);
@@ -53,7 +53,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
     }
   }
 
-  tracer << "MainMenu: Drawing HPL quote" << endl;
+  trace << "MainMenu: Drawing HPL quote" << endl;
   const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
   SDL_Color quoteClr = clrBlack;
   //quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
@@ -69,7 +69,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   }
 
   if(eng->config->isTilesMode) {
-    tracer << "MainMenu: Calling drawMainMenuLogo()" << endl;
+    trace << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng->renderer->drawMainMenuLogo(4);
     pos.y += 10;
   } else {
@@ -152,11 +152,11 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->updateScreen();
 
-  tracer << "MainMenu::draw() [DONE]" << endl;
+  trace << "MainMenu::draw() [DONE]" << endl;
 }
 
 GameEntry_t MainMenu::run(bool& quit) {
-  tracer << "MainMenu::run()" << endl;
+  trace << "MainMenu::run()" << endl;
 
   MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 

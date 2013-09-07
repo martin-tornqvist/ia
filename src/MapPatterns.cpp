@@ -4,7 +4,7 @@
 #include "Map.h"
 
 void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
-  tracer << "MapPatterns::setPositionsInArea()..." << endl;
+  trace << "MapPatterns::setPositionsInArea()..." << endl;
   vector<Pos> positionCandidates;
   positionCandidates.resize(0);
 
@@ -59,7 +59,7 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
 
   }
 
-  tracer << "MapPatterns::setPositionsInArea() [DONE]" << endl;
+  trace << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
 int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos pos) {

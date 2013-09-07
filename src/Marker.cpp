@@ -71,10 +71,10 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
         Weapon* const weapon = dynamic_cast<Weapon*>(
                                  eng->player->getInventory()->getItemInSlot(slot_wielded));
         if(eng->attack->ranged(*eng->player, *weapon, pos_) == false) {
-          eng->log->addMessage("No ammunition loaded.");
+          eng->log->addMsg("No ammunition loaded.");
         }
       } else {
-        eng->log->addMessage("I think I can persevere a little longer.");
+        eng->log->addMsg("I think I can persevere a little longer.");
       }
       done();
     }
@@ -90,7 +90,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
     if(markerTask == markerTask_aimThrownWeapon) {
       if(pos_ == eng->player->pos) {
-        eng->log->addMessage("I should throw this somewhere else.");
+        eng->log->addMsg("I should throw this somewhere else.");
       } else {
         eng->renderer->drawMapAndInterface();
         const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
@@ -128,16 +128,16 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
 }
 
 void Marker::draw(const MarkerTask_t markerTask) const {
-  vector<Pos> trace;
-  trace.resize(0);
+  vector<Pos> trail;
+  trail.resize(0);
 
   int effectiveRange = -1;
 
 //  if(markerTask == markerTask_spellAzathothsBlast) {
-//    trace.push_back(Pos(pos_.x, pos_.y));
+//    trail.push_back(Pos(pos_.x, pos_.y));
 //  } else {
   const Pos playerPos = eng->player->pos;
-  trace = eng->mapTests->getLine(playerPos, pos_, true, 99999);
+  trail = eng->mapTests->getLine(playerPos, pos_, true, 99999);
 //  }
 
   if(markerTask == markerTask_aimRangedWeapon) {
@@ -145,7 +145,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
     effectiveRange = weapon->effectiveRangeLimit;
   }
 
-  eng->renderer->drawMarker(trace, effectiveRange);
+  eng->renderer->drawMarker(trail, effectiveRange);
 }
 
 MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {

@@ -16,19 +16,25 @@
 #include "Query.h"
 #include "ItemFactory.h"
 
-InventoryHandler::InventoryHandler(Engine* engine) : screenToOpenAfterDrop(endOfInventoryScreens), equipSlotToOpenAfterDrop(NULL), eng(engine) {
+InventoryHandler::InventoryHandler(Engine* engine) :
+  screenToOpenAfterDrop(endOfInventoryScreens),
+  equipSlotToOpenAfterDrop(NULL), eng(engine) {
 
 }
 
-void InventoryHandler::activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT) {
+void InventoryHandler::activateDefault(
+  const unsigned int GENERAL_ITEMS_ELEMENT) {
+
   Inventory* const playerInv = eng->player->getInventory();
   Item* item = playerInv->getGeneral()->at(GENERAL_ITEMS_ELEMENT);
-  if(item->activateDefault(eng->player, eng)) {
+  if(item->activateDefault(eng->player)) {
     playerInv->decreaseItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
 }
 
-void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip) {
+void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
+  const SlotTypes_t slotToEquip) {
+
   vector<Item*>* general = eng->player->getInventory()->getGeneral();
   generalItemsToShow.resize(0);
 
@@ -76,7 +82,9 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
     if(label != "") {
       bool isExistingGroupFound = false;
       for(unsigned int ii = 0; ii < groups.size(); ii++) {
-        if(label == general->at(groups.at(ii).front())->getDefaultActivationLabel()) {
+        if(
+          label ==
+          general->at(groups.at(ii).front())->getDefaultActivationLabel()) {
           groups.at(ii).push_back(i);
           isExistingGroupFound = true;
           break;
@@ -162,16 +170,21 @@ void InventoryHandler::runSlotsScreen() {
                 browser, equipmentSlotButtons);
             }
           } else {
-            const bool IS_ARMOR = slot->id == slot_armorBody;
+            Item* const item = slot->item;
+
             const string itemName =
-              eng->itemDataHandler->getItemRef(*slot->item, itemRef_plain);
+              eng->itemDataHandler->getItemRef(*item, itemRef_plain);
+
             inv->moveItemToGeneral(slot);
-            if(IS_ARMOR) {
+
+            if(slot->id == slot_armorBody) {
               screenToOpenAfterDrop = inventoryScreen_slots;
               browserPosToSetAfterDrop = browser.getPos().y;
-              eng->log->addMessage(
+
+              eng->log->addMsg(
                 "I take off my " + itemName + ".", clrWhite,
                 messageInterrupt_never, true);
+              item->onTakeOff();
               eng->renderer->drawMapAndInterface();
               eng->gameTime->endTurnOfCurrentActor();
               return;
@@ -179,6 +192,7 @@ void InventoryHandler::runSlotsScreen() {
               eng->renderInventory->drawBrowseSlotsMode(
                 browser, equipmentSlotButtons);
             }
+
           }
         } else {
           runBrowseInventoryMode();
@@ -241,14 +255,14 @@ bool InventoryHandler::runUseScreen() {
 }
 
 bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
-  tracer << "InventoryHandler::runDropScreen()" << endl;
+  trace << "InventoryHandler::runDropScreen()" << endl;
   Inventory* const inv = eng->player->getInventory();
   Item* const item = inv->getItemInElement(GLOBAL_ELEMENT_NR);
   const ItemData& data = item->getData();
 
   eng->log->clearLog();
   if(data.isStackable && item->nrItems > 1) {
-    tracer << "InventoryHandler: item is stackable and more than one" << endl;
+    trace << "InventoryHandler: item is stackable and more than one" << endl;
     eng->renderer->drawMapAndInterface(false);
     const string nrStr = "1-" + intToString(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
@@ -259,7 +273,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
                              Pos(20 + nrStr.size(), 1),
                              clrWhiteHigh, 0, 3, item->nrItems, false);
     if(NR_TO_DROP <= 0) {
-      tracer << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
+      trace << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
       eng->itemDrop->dropItemFromInventory(
@@ -267,7 +281,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
       return true;
     }
   } else {
-    tracer << "InventoryHandler: item not stackable, or only one item" << endl;
+    trace << "InventoryHandler: item not stackable, or only one item" << endl;
     eng->itemDrop->dropItemFromInventory(eng->player, GLOBAL_ELEMENT_NR);
     return true;
   }
@@ -301,6 +315,9 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         eng->player->getInventory()->equipGeneralItemAndPossiblyEndTurn(
           INV_ELEM, slotToEquip->id, eng);
+        if(slotToEquip->id == slot_armorBody) {
+          slotToEquip->item->onWear();
+        }
         return true;
       }
       break;

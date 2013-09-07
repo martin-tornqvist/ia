@@ -19,12 +19,12 @@
 
 //======================================================================== MAPBUILD-BSP
 void MapBuildBSP::run() {
-  tracer << "MapBuildBSP::run()..." << endl;
+  trace << "MapBuildBSP::run()..." << endl;
 
-//  tracer << "MapBuildBSP: Calling map->clearDungeon()" << endl;
+//  trace << "MapBuildBSP: Calling map->clearDungeon()" << endl;
 //  eng->map->clearDungeon();
 
-  tracer << "MapBuildBSP: Resetting helper arrays" << endl;
+  trace << "MapBuildBSP: Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       roomCells[x][y] = false;
@@ -68,7 +68,7 @@ void MapBuildBSP::run() {
     }
   }
 
-  tracer << "MapBuildBSP: Making rooms" << endl;
+  trace << "MapBuildBSP: Making rooms" << endl;
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
       if(regions[x][y] == NULL) {
@@ -100,7 +100,7 @@ void MapBuildBSP::run() {
 
   postProcessFillDeadEnds();
 
-  tracer << "MapBuildBSP: Placing doors" << endl;
+  trace << "MapBuildBSP: Placing doors" << endl;
   const int CHANCE_TO_PLACE_DOOR = 70;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -112,7 +112,7 @@ void MapBuildBSP::run() {
     }
   }
 
-  tracer << "MapBuildBSP: Moving player to nearest floor cell" << endl;
+  trace << "MapBuildBSP: Moving player to nearest floor cell" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
@@ -121,10 +121,10 @@ void MapBuildBSP::run() {
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();
 
-  tracer << "MapBuildBSP: Calling RoomThemeMaker::run()" << endl;
+  trace << "MapBuildBSP: Calling RoomThemeMaker::run()" << endl;
   eng->roomThemeMaker->run(rooms_);
 
-  tracer << "MapBuildBSP: Moving player to nearest floor cell again after room theme maker" << endl;
+  trace << "MapBuildBSP: Moving player to nearest floor cell again after room theme maker" << endl;
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
@@ -150,11 +150,11 @@ void MapBuildBSP::run() {
     }
   }
 
-  tracer << "MapBuildBSP::run() [DONE]" << endl;
+  trace << "MapBuildBSP::run() [DONE]" << endl;
 }
 
 void MapBuildBSP::clearRooms() {
-  tracer << "MapBuildBSP: Deleting rooms" << endl;
+  trace << "MapBuildBSP: Deleting rooms" << endl;
   for(unsigned int i = 0; i < rooms_.size(); i++) {
     delete rooms_.at(i);
   }
@@ -170,13 +170,13 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
       return;
     }
   }
-  tracer << "[WARNING] Tried to remove room that is not in list, in MapBuildBSP::deleteAndRemoveRoomFromList()" << endl;
+  trace << "[WARNING] Tried to remove room that is not in list, in MapBuildBSP::deleteAndRemoveRoomFromList()" << endl;
 }
 
 //void MapBuildBSP::makeLevers() {
-//  tracer << "MapBuildBSP::makeLeverPuzzle()..." << endl;
+//  trace << "MapBuildBSP::makeLeverPuzzle()..." << endl;
 //
-//  tracer << "MapBuildBSP: Picking a random door" << endl;
+//  trace << "MapBuildBSP: Picking a random door" << endl;
 //  vector<Door*> doorCandidates;
 //  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
 //    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
@@ -189,7 +189,7 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
 //  }
 //  Door* const doorToLink = doorCandidates.at(eng->dice.range(0, doorCandidates.size() - 1));
 //
-//  tracer << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
+//  trace << "MapBuildBSP: Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 //  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
 //  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
@@ -219,16 +219,16 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
 //    const Pos leverPos(leverPosCandidates.at(ELEMENT));
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
-//    tracer << "[WARNING] Could not find position to place lever, in MapBuildBSP::makeLeverPuzzle()" << endl;
+//    trace << "[WARNING] Could not find position to place lever, in MapBuildBSP::makeLeverPuzzle()" << endl;
 //  }
-//  tracer << "MapBuildBSP::makeLeverPuzzle() [DONE]" << endl;
+//  trace << "MapBuildBSP::makeLeverPuzzle() [DONE]" << endl;
 //}
 
 //void MapBuildBSP::spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door) {
-//  tracer << "MapBuildBSP: Spawning lever and linking it to the door" << endl;
+//  trace << "MapBuildBSP: Spawning lever and linking it to the door" << endl;
 //  eng->featureFactory->spawnFeatureAt(feature_lever, leverPos, new LeverSpawnData(&door));
 //
-//  tracer << "MapBuildBSP: Changing door properties" << endl;
+//  trace << "MapBuildBSP: Changing door properties" << endl;
 //  door.material_ = doorMaterial_metal;
 //  door.isOpen_ = false;
 //  door.isStuck_ = false;
@@ -236,7 +236,7 @@ void MapBuildBSP::deleteAndRemoveRoomFromList(Room* const room) {
 //}
 
 void MapBuildBSP::buildCaves(Region* regions[3][3]) {
-  tracer << "MapBuildBSP::buildCaves()..." << endl;
+  trace << "MapBuildBSP::buildCaves()..." << endl;
   for(int regY = 0; regY <= 2; regY++) {
     for(int regX = 0; regX <= 2; regX++) {
 
@@ -333,7 +333,7 @@ void MapBuildBSP::buildCaves(Region* regions[3][3]) {
       }
     }
   }
-  tracer << "MapBuildBSP::buildCaves()[DONE]" << endl;
+  trace << "MapBuildBSP::buildCaves()[DONE]" << endl;
 }
 
 void MapBuildBSP::buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2, const int SPLIT_Y1, const int SPLIT_Y2) {
@@ -590,11 +590,11 @@ void MapBuildBSP::postProcessFillDeadEnds() {
 //}
 
 Pos MapBuildBSP::placeStairs() {
-  tracer << "MapBuildBSP::placeStairs()..." << endl;
+  trace << "MapBuildBSP::placeStairs()..." << endl;
   bool forbiddenStairCells[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(forbiddenStairCells, true);
 
-  tracer << "MapBuildBSP: Setting local forbiddenStairCells from global" << endl;
+  trace << "MapBuildBSP: Setting local forbiddenStairCells from global" << endl;
   for(unsigned int i = 0; i < rooms_.size(); i++) {
     const Room* const room = rooms_.at(i);
     for(int y = room->getY0(); y <= room->getY1(); y++) {
@@ -608,10 +608,10 @@ Pos MapBuildBSP::placeStairs() {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
-  tracer << "MapBuildBSP: Calling MapTests::makeMoveBlockerArrayFeaturesOnly()" << endl;
+  trace << "MapBuildBSP: Calling MapTests::makeMoveBlockerArrayFeaturesOnly()" << endl;
   eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
 
-  tracer << "MapBuildBSP: Setting all door cells to non-blocking" << endl;
+  trace << "MapBuildBSP: Setting all door cells to non-blocking" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
@@ -621,7 +621,7 @@ Pos MapBuildBSP::placeStairs() {
   }
 
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  tracer << "MapBuildBSP: Calling MapTests::floodFill()" << endl;
+  trace << "MapBuildBSP: Calling MapTests::floodFill()" << endl;
   eng->mapTests->floodFill(eng->player->pos, blockers, floodFill, 99999, Pos(-1, -1));
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -636,7 +636,7 @@ Pos MapBuildBSP::placeStairs() {
   vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 
-  tracer << "MapBuildBSP: Sorting the free cells vector (size:" << freeCells.size() << "), and removing the furthest cells" << endl;
+  trace << "MapBuildBSP: Sorting the free cells vector (size:" << freeCells.size() << "), and removing the furthest cells" << endl;
   const unsigned int FREE_STAIR_CELLS_DIV = 4;
   if(freeCells.size() > FREE_STAIR_CELLS_DIV) {
     IsCloserToOrigin isCloserToOrigin(eng->player->pos, eng);
@@ -645,20 +645,20 @@ Pos MapBuildBSP::placeStairs() {
     freeCells.resize(freeCells.size() / FREE_STAIR_CELLS_DIV);
   }
 
-  tracer << "MapBuildBSP: Picking the furthest cell from the remaining(size:" << freeCells.size() <<  ")" << endl;
+  trace << "MapBuildBSP: Picking the furthest cell from the remaining(size:" << freeCells.size() <<  ")" << endl;
   const int STAIR_Pos_INDEX = eng->dice(1, freeCells.size()) - 1;
   const Pos stairsPos(freeCells.at(STAIR_Pos_INDEX));
 
-  tracer << "MapBuildBSP: Spawning down stairs at chosen Pos" << endl;
+  trace << "MapBuildBSP: Spawning down stairs at chosen Pos" << endl;
   Feature* f = eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
   f->setHasBlood(false);
 
-  tracer << "MapBuildBSP::placeStairs()[DONE]" << endl;
+  trace << "MapBuildBSP::placeStairs()[DONE]" << endl;
   return stairsPos;
 }
 
 void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
-  tracer << "MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs()..." << endl;
+  trace << "MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs()..." << endl;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
@@ -674,7 +674,7 @@ void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
 
   vector<Pos> path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
 
-  tracer << "MapBuildBSP: Travelling along Pos vector of size " << path.size() << " and revealing all doors" << endl;
+  trace << "MapBuildBSP: Travelling along Pos vector of size " << path.size() << " and revealing all doors" << endl;
   const unsigned int PATH_SIZE = path.size();
   for(unsigned int i = 0; i < PATH_SIZE; i++) {
     if(eng->map->featuresStatic[path.at(i).x][path.at(i).y]->getId() == feature_door) {
@@ -682,7 +682,7 @@ void MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
     }
   }
 
-  tracer << "MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs()[DONE]" << endl;
+  trace << "MapBuildBSP::revealAllDoorsBetweenPlayerAndStairs()[DONE]" << endl;
 }
 
 void MapBuildBSP::decorate() {
@@ -736,7 +736,7 @@ void MapBuildBSP::decorate() {
 }
 
 void MapBuildBSP::connectRegions(Region* regions[3][3]) {
-  tracer << "MapBuildBSP::connectRegions()..." << endl;
+  trace << "MapBuildBSP::connectRegions()..." << endl;
 
   bool isAllConnected = false;
   while(isAllConnected == false) {
@@ -770,7 +770,7 @@ void MapBuildBSP::connectRegions(Region* regions[3][3]) {
 //      break;
 //    }
   }
-  tracer << "MapBuildBSP::connectRegions()[DONE]" << endl;
+  trace << "MapBuildBSP::connectRegions()[DONE]" << endl;
 }
 
 bool MapBuildBSP::isAllRoomsConnected() {
@@ -1189,7 +1189,7 @@ bool MapBuildBSP::isAreaFree(const int X0, const int Y0, const int X1, const int
 }
 
 void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
-  tracer << "MapBuildBSP::buildAuxRooms()..." << endl;
+  trace << "MapBuildBSP::buildAuxRooms()..." << endl;
   const int NR_TRIES_PER_SIDE = 10;
 
   for(int regionY = 0; regionY < 3; regionY++) {
@@ -1220,7 +1220,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
             if(cellsWithFloor[connectX - 1][connectY]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
-                tracer << "MapBuildBSP: Aux room placed right" << endl;
+                trace << "MapBuildBSP: Aux room placed right" << endl;
                 i = 99999;
               }
             }
@@ -1237,7 +1237,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
             if(cellsWithFloor[connectX][connectY + 1]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
-                tracer << "MapBuildBSP: Aux room placed up" << endl;
+                trace << "MapBuildBSP: Aux room placed up" << endl;
                 i = 99999;
               }
             }
@@ -1254,7 +1254,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
             if(cellsWithFloor[connectX + 1][connectY]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
-                tracer << "MapBuildBSP: Aux room placed left" << endl;
+                trace << "MapBuildBSP: Aux room placed left" << endl;
                 i = 99999;
               }
             }
@@ -1271,7 +1271,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
             if(cellsWithFloor[connectX][connectY - 1]) {
               Pos c(connectX, connectY);
               if(tryPlaceAuxRoom(auxRoomX, auxRoomY, auxRoomW, auxRoomH, cellsWithFloor, c)) {
-                tracer << "MapBuildBSP: Aux room placed down" << endl;
+                trace << "MapBuildBSP: Aux room placed down" << endl;
                 i = 99999;
               }
             }
@@ -1280,7 +1280,7 @@ void MapBuildBSP::buildAuxRooms(Region* regions[3][3]) {
       }
     }
   }
-  tracer << "MapBuildBSP::buildAuxRooms() [DONE]" << endl;
+  trace << "MapBuildBSP::buildAuxRooms() [DONE]" << endl;
 }
 
 bool MapBuildBSP::tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,

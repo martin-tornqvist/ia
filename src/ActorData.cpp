@@ -868,8 +868,9 @@ void ActorDataHandler::initDataList() {
   d.dmgMelee = 4;
   d.dmgRanged = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_accuracyRanged, 60);
   d.abilityVals.setVal(ability_dodgeAttack, 35);
+  d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_few;
@@ -1619,6 +1620,7 @@ void ActorDataHandler::initDataList() {
   d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 13;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;

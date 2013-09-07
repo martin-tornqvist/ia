@@ -30,8 +30,8 @@ const string Scroll::getRealTypeName() {
     case spell_knockBack:       return "";                        break;
     case endOfSpells: {} break;
   }
-  tracer << "[WARNING] No spell found for scroll, ";
-  tracer << "in Scroll::getRealTypeName()" << endl;
+  trace << "[WARNING] No spell found for scroll, ";
+  trace << "in Scroll::getRealTypeName()" << endl;
   return "";
 }
 
@@ -52,7 +52,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     data_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      eng->log->addMessage("It was " + data_->name.name_a + ".");
+      eng->log->addMsg("It was " + data_->name.name_a + ".");
       eng->renderer->drawMapAndInterface();
     }
 
@@ -66,7 +66,7 @@ void Scroll::tryLearn() {
     if(
       spell->isLearnableForPlayer() &&
       eng->playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
-      eng->log->addMessage("I learn to cast this incantation by heart!");
+      eng->log->addMsg("I learn to cast this incantation by heart!");
       eng->playerSpellsHandler->learnSpellIfNotKnown(spell);
     } else {
       delete spell;
@@ -78,19 +78,19 @@ bool Scroll::read() {
   eng->renderer->drawMapAndInterface();
 
   if(eng->player->getPropHandler()->allowSee() == false) {
-    eng->log->addMessage("I cannot read while blind.");
+    eng->log->addMsg("I cannot read while blind.");
     return false;
   }
 
   Spell* const spell = getSpell();
 
   if(data_->isIdentified) {
-    eng->log->addMessage(
+    eng->log->addMsg(
       "I read a scroll of " + getRealTypeName() + "...");
     spell->cast(eng->player, false, eng);
     tryLearn();
   } else {
-    eng->log->addMessage("I recite forbidden incantations...");
+    eng->log->addMsg("I recite forbidden incantations...");
     data_->isTried = true;
     if(spell->cast(eng->player, false, eng).IS_CAST_IDENTIFYING) {
       identify(false);
@@ -106,9 +106,9 @@ bool Scroll::read() {
 void Scroll::failedToLearnRealName(const string overrideFailString) {
   if(data_->isIdentified == false) {
     if(overrideFailString != "") {
-      eng->log->addMessage(overrideFailString);
+      eng->log->addMsg(overrideFailString);
     } else {
-      eng->log->addMessage("Was that supposed to do something?");
+      eng->log->addMsg("Was that supposed to do something?");
     }
   }
 }
@@ -150,7 +150,7 @@ void Scroll::failedToLearnRealName(const string overrideFailString) {
 ////  if(eng->player->getPropHandler()->allowAct()) {
 ////    eng->marker->place(markerTask_spellVoidChain);
 ////  } else {
-////    eng->log->addMessage("My spell is disrupted.");
+////    eng->log->addMsg("My spell is disrupted.");
 ////  }
 ////}
 //
@@ -166,7 +166,7 @@ void Scroll::failedToLearnRealName(const string overrideFailString) {
 ////  if(eng->player->getPropHandler()->allowAct()) {
 ////    eng->query->direction();
 ////  } else {
-////    eng->log->addMessage("My spell is disrupted.");
+////    eng->log->addMsg("My spell is disrupted.");
 ////  }
 ////}
 

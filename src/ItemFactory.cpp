@@ -79,8 +79,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_redSpiderBite:            item = new Weapon(d, ammoD, eng); break;
     case item_shadowSpiderBite:         item = new Weapon(d, ammoD, eng); break;
     case item_lengSpiderBite:           item = new Weapon(d, ammoD, eng); break;
-    case item_hellHoundFireBreath:      item = new Weapon(d, ammoD, eng); break;
-    case item_hellHoundBite:            item = new Weapon(d, ammoD, eng); break;
+    case item_fireHoundBreath:          item = new Weapon(d, ammoD, eng); break;
+    case item_fireHoundBite:            item = new Weapon(d, ammoD, eng); break;
     case item_giantBatBite:             item = new Weapon(d, ammoD, eng); break;
     case item_wolfBite:                 item = new Weapon(d, ammoD, eng); break;
     case item_ghostClaw:                item = new Weapon(d, ammoD, eng); break;
@@ -143,8 +143,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   }
 
   if(item->getData().isStackable == false && NR_ITEMS != 1) {
-    tracer << "[WARNING] Specified " + intToString(NR_ITEMS) + " nr items";
-    tracer << " for non-stackable item, in ItemFactory::spawnItem()" << endl;
+    trace << "[WARNING] Specified " + intToString(NR_ITEMS) + " nr items";
+    trace << " for non-stackable item, in ItemFactory::spawnItem()" << endl;
   } else {
     item->nrItems = NR_ITEMS;
   }

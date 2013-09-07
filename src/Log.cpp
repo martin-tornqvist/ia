@@ -156,7 +156,7 @@ int Log::findCurXpos(const vector<Message>& afterLine,
   return xPos;
 }
 
-void Log::addMessage(const string& text, const SDL_Color color,
+void Log::addMsg(const string& text, const SDL_Color color,
                      MessageInterrupt_t interrupt,
                      const bool FORCE_MORE_PROMPT) {
   bool repeated = false;

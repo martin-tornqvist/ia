@@ -64,17 +64,21 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * status effects, update timed features, spawn more monsters etc.
  */
 void GameTime::endTurnOfCurrentActor() {
+  traceHi << "GameTime::endTurnOfCurrentActor().." << endl;
+
   runNewAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
 
   if(currentActor == eng->player) {
+    traceHi << "Ending turn of player" << endl;
     eng->player->shockTemp_ = 0;
     eng->playerVisualMemory->updateVisualMemory();
     eng->player->updateFov();
     eng->player->setTempShockFromFeatures();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
+    traceHi << "Ending turn of \"" << monster->getNameA() << "\"" << endl;
     if(monster->playerAwarenessCounter > 0) {
       monster->playerAwarenessCounter -= 1;
     }
@@ -84,11 +88,11 @@ void GameTime::endTurnOfCurrentActor() {
 
   bool actorWhoCanActThisTurnFound = false;
   while(actorWhoCanActThisTurnFound == false) {
-    currentTurnType = static_cast<TurnType_t>(currentTurnTypePos_);
+    currentTurnType = (TurnType_t)(currentTurnTypePos_);
 
     currentActorVectorPos_++;
 
-    if(static_cast<unsigned int>(currentActorVectorPos_) >= actors_.size()) {
+    if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
       currentActorVectorPos_ = 0;
       currentTurnTypePos_++;
       if(currentTurnTypePos_ == endOfTurnType) {
@@ -141,8 +145,9 @@ void GameTime::endTurnOfCurrentActor() {
     }
   }
 
-  // Player turn begins
   if(currentActor == eng->player) {
+    traceHi << "Player turn begins" << endl;
+
     eng->input->clearEvents();
     eng->player->newTurn();
 
@@ -179,10 +184,15 @@ void GameTime::endTurnOfCurrentActor() {
       eng->inventoryHandler->browserPosToSetAfterDrop = 0;
     }
   }
+  traceHi << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
 }
 
 void GameTime::runNewStandardTurnEvents() {
+  traceHi << "GameTime::runNewStandardTurnEvents()..." << endl;
+
   turn_++;
+
+  traceHi << "GameTime: Current turn: " << turn_ << endl;
 
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
@@ -254,21 +264,23 @@ void GameTime::runNewStandardTurnEvents() {
   Inventory* playerInv = eng->player->getInventory();
   vector<Item*>* playerBackpack = playerInv->getGeneral();
   for(unsigned int i = 0; i < playerBackpack->size(); i++) {
-    playerBackpack->at(i)->newTurnInInventory(eng);
+    playerBackpack->at(i)->newTurnInInventory();
   }
   vector<InventorySlot>* playerSlots = playerInv->getSlots();
   for(unsigned int i = 0; i < playerSlots->size(); i++) {
     Item* const item = playerSlots->at(i).item;
     if(item != NULL) {
-      item->newTurnInInventory(eng);
+      item->newTurnInInventory();
     }
   }
 
   eng->soundEmitter->resetNrSoundsHeardByPlayerCurTurn();
+
+  traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
 }
 
 void GameTime::runNewAtomicTurnEvents() {
-//  updateLightMap();
+  updateLightMap();
 }
 
 void GameTime::updateLightMap() {
@@ -292,6 +304,5 @@ void GameTime::updateLightMap() {
 }
 
 Actor* GameTime::getCurrentActor() {
-  //   const int VECTOR_SIZE = actors_.size();
   return actors_.at(currentActorVectorPos_);
 }

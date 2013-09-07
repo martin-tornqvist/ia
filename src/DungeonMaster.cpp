@@ -28,7 +28,7 @@ int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
 void DungeonMaster::playerGainLvl() {
   clvl++;
 
-  eng->log->addMessage(
+  eng->log->addMsg(
     "--- Welcome to level " + intToString(clvl) + "! ---", clrGreen);
 
   eng->player->restoreHp(999, false);
@@ -38,7 +38,7 @@ void DungeonMaster::playerGainLvl() {
   if(clvl % BON_EVERY_N_LVL == 0) {
     eng->player->changeMaxSpi(1, true);
     eng->player->incrMth(2);
-    eng->log->addMessage("I feel more knowledgeable!");
+    eng->log->addMsg("I feel more knowledgeable!");
   }
 }
 

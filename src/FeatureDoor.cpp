@@ -148,11 +148,11 @@ void Door::bump(Actor* actorBumping) {
   if(actorBumping == eng->player) {
     if(isSecret_) {
       if(eng->map->playerVision[pos_.x][pos_.y]) {
-        tracer << "Door: Player bumped into secret door, with vision in cell" << endl;
-        eng->log->addMessage("That way is blocked.");
+        trace << "Door: Player bumped into secret door, with vision in cell" << endl;
+        eng->log->addMsg("That way is blocked.");
       } else {
-        tracer << "Door: Player bumped into secret door, without vision in cell" << endl;
-        eng->log->addMessage("I bump into something.");
+        trace << "Door: Player bumped into secret door, without vision in cell" << endl;
+        eng->log->addMsg("I bump into something.");
       }
       return;
     }
@@ -188,7 +188,7 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
     if(eng->map->playerVision[pos_.x][pos_.y]) {
       eng->renderer->drawMapAndInterface();
       if(ALLOW_MESSAGE) {
-        eng->log->addMessage("A secret is revealed.");
+        eng->log->addMsg("A secret is revealed.");
         eng->renderer->drawMapAndInterface();
       }
     }
@@ -198,9 +198,9 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
 void Door::clue() {
   isClued_ = true;
   if(eng->dice.coinToss()) {
-    eng->log->addMessage("Something seems odd about the wall here...");
+    eng->log->addMsg("Something seems odd about the wall here...");
   } else {
-    eng->log->addMessage("I sense a draft here...");
+    eng->log->addMsg("I sense a draft here...");
   }
   eng->renderer->drawMapAndInterface();
 }
@@ -242,9 +242,9 @@ bool Door::trySpike(Actor* actorTrying) {
 
   if(IS_PLAYER) {
     if(TRYER_IS_BLIND == false) {
-      eng->log->addMessage("I jam the door with a spike.");
+      eng->log->addMsg("I jam the door with a spike.");
     } else {
-      eng->log->addMessage("I jam a door with a spike.");
+      eng->log->addMsg("I jam a door with a spike.");
     }
     eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
   }
@@ -254,7 +254,7 @@ bool Door::trySpike(Actor* actorTrying) {
 }
 
 void Door::tryBash(Actor* actorTrying) {
-  tracer << "Door::tryBash()..." << endl;
+  trace << "Door::tryBash()..." << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
   const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
@@ -266,31 +266,31 @@ void Door::tryBash(Actor* actorTrying) {
   bool bashable = true;
 
   if(isOpen_ || (isSecret_ && IS_PLAYER) || (material_ == doorMaterial_metal && IS_PLAYER == false)) {
-    tracer << "Door: Not in bashable state (is open, or player trying and is secret)" << endl;
+    trace << "Door: Not in bashable state (is open, or player trying and is secret)" << endl;
     bashable = false;
     if(IS_PLAYER) {
       if(TRYER_IS_BLIND == false) {
-        eng->log->addMessage("I see nothing there to bash.");
+        eng->log->addMsg("I see nothing there to bash.");
       } else {
-        eng->log->addMessage("I find nothing there to bash.");
+        eng->log->addMsg("I find nothing there to bash.");
       }
     }
   }
 
   if(bashable) {
-    tracer << "Door: Is in bashable state" << endl;
+    trace << "Door: Is in bashable state" << endl;
 
     if(IS_PLAYER) {
-      tracer << "Door: Basher is player" << endl;
+      trace << "Door: Basher is player" << endl;
       if(TRYER_IS_BLIND) {
-        eng->log->addMessage("I smash into a door!");
+        eng->log->addMsg("I smash into a door!");
       } else {
-        eng->log->addMessage("I smash into the door!");
+        eng->log->addMsg("I smash into the door!");
       }
       eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
     } else {
       if(PLAYER_SEE_TRYER) {
-        eng->log->addMessage(actorTrying->getNameThe() + " bashes at a door!");
+        eng->log->addMsg(actorTrying->getNameThe() + " bashes at a door!");
       }
       // (The sound emits from the actor instead of the door, because the sound should be heard even
       // if the door is seen, and the parameter for muting messages from seen sounds should be off)
@@ -319,10 +319,10 @@ void Door::tryBash(Actor* actorTrying) {
 
       if(TRYER_SPRAINED) {
         if(IS_PLAYER) {
-          eng->log->addMessage("I sprain myself.", clrMessageBad);
+          eng->log->addMsg("I sprain myself.", clrMessageBad);
         } else {
           if(PLAYER_SEE_TRYER) {
-            eng->log->addMessage(actorTrying->getNameThe() + " is hurt.");
+            eng->log->addMsg(actorTrying->getNameThe() + " is hurt.");
           }
         }
         const int SPRAIN_DMG = 1;
@@ -331,9 +331,9 @@ void Door::tryBash(Actor* actorTrying) {
 
       if(TRYER_OFF_BALANCE) {
         if(IS_PLAYER) {
-          eng->log->addMessage("I am off-balance.");
+          eng->log->addMsg("I am off-balance.");
         } else if(PLAYER_SEE_TRYER) {
-          eng->log->addMessage(actorTrying->getNameThe() + " is off-balance.");
+          eng->log->addMsg(actorTrying->getNameThe() + " is off-balance.");
         }
 
         actorTrying->getPropHandler()->tryApplyProp(
@@ -341,29 +341,29 @@ void Door::tryBash(Actor* actorTrying) {
       }
 
       if(IS_PLAYER && (material_ == doorMaterial_metal || isBasherWeak)) {
-        eng->log->addMessage("It seems futile.");
+        eng->log->addMsg("It seems futile.");
       }
     }
 
     if(DOOR_SMASHED) {
-      tracer << "Door: Bash successful" << endl;
+      trace << "Door: Bash successful" << endl;
       isBroken_ = true;
       isStuck_ = false;
       isSecret_ = false;
       isOpen_ = true;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
-          eng->log->addMessage("The door crashes open!");
+          eng->log->addMsg("The door crashes open!");
         } else {
-          eng->log->addMessage("I feel the door crashing open!");
+          eng->log->addMsg("I feel the door crashing open!");
         }
         eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
         if(PLAYER_SEE_TRYER) {
-          eng->log->addMessage(actorTrying->getNameThe() + " smashes into a door.");
-          eng->log->addMessage("The door crashes open!");
+          eng->log->addMsg(actorTrying->getNameThe() + " smashes into a door.");
+          eng->log->addMsg("The door crashes open!");
         } else if(PLAYER_SEE_DOOR) {
-          eng->log->addMessage("A door crashes open!");
+          eng->log->addMsg("A door crashes open!");
         }
         eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       }
@@ -371,10 +371,10 @@ void Door::tryBash(Actor* actorTrying) {
 
     eng->renderer->drawMapAndInterface();
 
-    tracer << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
+    trace << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
     eng->gameTime->endTurnOfCurrentActor();
   }
-  tracer << "Door::tryBash() [DONE]" << endl;
+  trace << "Door::tryBash() [DONE]" << endl;
 }
 
 void Door::tryClose(Actor* actorTrying) {
@@ -390,7 +390,7 @@ void Door::tryClose(Actor* actorTrying) {
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng->log->addMessage("This door refuses to be closed, perhaps it is handled elsewhere?");
+      eng->log->addMsg("This door refuses to be closed, perhaps it is handled elsewhere?");
       eng->renderer->drawMapAndInterface();
     }
     return;
@@ -401,7 +401,7 @@ void Door::tryClose(Actor* actorTrying) {
     closable = false;
     if(IS_PLAYER) {
       if(IS_PLAYER)
-        eng->log->addMessage("The door appears to be broken.");
+        eng->log->addMsg("The door appears to be broken.");
     }
   }
 
@@ -411,8 +411,8 @@ void Door::tryClose(Actor* actorTrying) {
       closable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false)
-          eng->log->addMessage("I see nothing there to close.");
-        else eng->log->addMessage("I find nothing there to close.");
+          eng->log->addMsg("I see nothing there to close.");
+        else eng->log->addMsg("I find nothing there to close.");
       }
     }
   }
@@ -426,9 +426,9 @@ void Door::tryClose(Actor* actorTrying) {
       closable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
-          eng->log->addMessage("The door is blocked.");
+          eng->log->addMsg("The door is blocked.");
         } else {
-          eng->log->addMessage("Something is blocking the door.");
+          eng->log->addMsg("Something is blocking the door.");
         }
       }
     }
@@ -442,24 +442,24 @@ void Door::tryClose(Actor* actorTrying) {
     if(TRYER_IS_BLIND == false) {
       isOpen_ = false;
       if(IS_PLAYER)
-        eng->log->addMessage("I close the door.");
+        eng->log->addMsg("I close the door.");
       else if(PLAYER_SEE_TRYER)
-        eng->log->addMessage(actorTrying->getNameThe() + " closes a door.");
+        eng->log->addMsg(actorTrying->getNameThe() + " closes a door.");
     } else {
       if(eng->dice.percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
-          eng->log->addMessage("I fumble with a door and succeed to close it.");
+          eng->log->addMsg("I fumble with a door and succeed to close it.");
         } else {
           if(PLAYER_SEE_TRYER)
-            eng->log->addMessage(actorTrying->getNameThe() + "fumbles about and succeeds to close a door.");
+            eng->log->addMsg(actorTrying->getNameThe() + "fumbles about and succeeds to close a door.");
         }
       } else {
         if(IS_PLAYER) {
-          eng->log->addMessage("I fumble blindly with a door and fail to close it.");
+          eng->log->addMsg("I fumble blindly with a door and fail to close it.");
         } else {
           if(PLAYER_SEE_TRYER)
-            eng->log->addMessage(actorTrying->getNameThe() + " fumbles blindly and fails to close a door.");
+            eng->log->addMsg(actorTrying->getNameThe() + " fumbles blindly and fails to close a door.");
         }
       }
     }
@@ -471,7 +471,7 @@ void Door::tryClose(Actor* actorTrying) {
 }
 
 void Door::tryOpen(Actor* actorTrying) {
-  tracer << "Door::tryOpen()" << endl;
+  trace << "Door::tryOpen()" << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
   const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
@@ -482,58 +482,58 @@ void Door::tryOpen(Actor* actorTrying) {
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng->log->addMessage("I see no way to open this door, perhaps it is opened elsewhere?");
+      eng->log->addMsg("I see no way to open this door, perhaps it is opened elsewhere?");
       eng->renderer->drawMapAndInterface();
     }
     return;
   }
 
   if(isStuck_) {
-    tracer << "Door: Is stuck" << endl;
+    trace << "Door: Is stuck" << endl;
 
     if(IS_PLAYER) {
-      eng->log->addMessage("The door seems to be stuck.");
+      eng->log->addMsg("The door seems to be stuck.");
     }
 
   } else {
-    tracer << "Door: Is not stuck" << endl;
+    trace << "Door: Is not stuck" << endl;
     if(TRYER_IS_BLIND == false) {
-      tracer << "Door: Tryer can see, opening" << endl;
+      trace << "Door: Tryer can see, opening" << endl;
       isOpen_ = true;
       if(IS_PLAYER) {
-        eng->log->addMessage("I open the door.");
+        eng->log->addMsg("I open the door.");
         eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
         if(PLAYER_SEE_TRYER) {
-          eng->log->addMessage(actorTrying->getNameThe() + " opens a door.");
+          eng->log->addMsg(actorTrying->getNameThe() + " opens a door.");
         } else if(PLAYER_SEE_DOOR) {
-          eng->log->addMessage("I see a door opening.");
+          eng->log->addMsg("I see a door opening.");
         }
         eng->soundEmitter->emitSound(Sound("I hear a door open.", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       }
     } else {
       if(eng->dice.percentile() < 50) {
-        tracer << "Door: Tryer is blind, but open succeeded anyway" << endl;
+        trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {
-          eng->log->addMessage("I fumble with a door and succeed to open it.");
+          eng->log->addMsg("I fumble with a door and succeed to open it.");
           eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
         } else {
           if(PLAYER_SEE_TRYER) {
-            eng->log->addMessage(actorTrying->getNameThe() + "fumbles about and succeeds to open a door.");
+            eng->log->addMsg(actorTrying->getNameThe() + "fumbles about and succeeds to open a door.");
           } else if(PLAYER_SEE_DOOR) {
-            eng->log->addMessage("I see a door open clumsily.");
+            eng->log->addMsg("I see a door open clumsily.");
           }
           eng->soundEmitter->emitSound(Sound("I hear something open a door clumsily.", true, pos_, false, IS_PLAYER));
         }
       } else {
-        tracer << "Door: Tryer is blind, and open failed" << endl;
+        trace << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
-          eng->log->addMessage("I fumble blindly with a door and fail to open it.");
+          eng->log->addMsg("I fumble blindly with a door and fail to open it.");
           eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
         } else {
           if(PLAYER_SEE_TRYER) {
-            eng->log->addMessage(actorTrying->getNameThe() + " fumbles blindly and fails to open a door.");
+            eng->log->addMsg(actorTrying->getNameThe() + " fumbles blindly and fails to open a door.");
           }
           //(emitting the sound from the actor instead of the door here, beacause the sound should
           //be heard even if the door is seen, and the parameter for muting messages from seen sounds
@@ -545,12 +545,12 @@ void Door::tryOpen(Actor* actorTrying) {
   }
 
   if(isOpen_) {
-    tracer << "Door: Open was successful" << endl;
+    trace << "Door: Open was successful" << endl;
     if(isSecret_) {
-      tracer << "Door: Was secret, now revealing" << endl;
+      trace << "Door: Was secret, now revealing" << endl;
       reveal(true);
     }
-    tracer << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
+    trace << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
     eng->gameTime->endTurnOfCurrentActor();
   }
 }

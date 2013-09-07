@@ -12,7 +12,7 @@
 #include "Gods.h"
 
 void RoomThemeMaker::run(const vector<Room*>& rooms) {
-  tracer << "RoomThemeMaker::run()..." << endl;
+  trace << "RoomThemeMaker::run()..." << endl;
 
   roomList = rooms;
 
@@ -25,34 +25,50 @@ void RoomThemeMaker::run(const vector<Room*>& rooms) {
     makeRoomDarkWithChance(*(rooms.at(i)));
   }
 
-  tracer << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
+  trace << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
   eng->populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
 
-  tracer << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
+  trace << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
   eng->populateTraps->populateRoomAndCorridorLevel(themeMap, rooms);
 
-  tracer << "RoomThemeMaker::run() [DONE]" << endl;
+  trace << "RoomThemeMaker::run() [DONE]" << endl;
 }
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
-//  if(room.roomTheme != roomTheme_plain) {
   placeThemeFeatures(room);
   makeThemeSpecificRoomModifications(room);
-//  }
 
   switch(room.roomTheme) {
-    case roomTheme_plain: {} break;
-    case roomTheme_human:   {room.roomDescr = "Human quarters.";}   break;
-    case roomTheme_ritual:  {room.roomDescr = "A ritual chamber.";} break;
-    case roomTheme_spider:  {room.roomDescr = "A spider lair.";}    break;
-//    case roomTheme_dungeon: {room.roomDescr = "A dungeon.";}        break;
-    case roomTheme_crypt:   {room.roomDescr = "A crypt.";}          break;
-    case roomTheme_monster: {room.roomDescr = "A gruesome room.";}  break;
-    case roomTheme_flooded: {room.roomDescr = "A flooded room.";}   break;
-    case roomTheme_muddy:   {room.roomDescr = "A muddy room.";}     break;
+    case roomTheme_plain:   {room.roomDescr = "";}                          break;
+    case roomTheme_human:   {room.roomDescr = ""; /*"Human quarters."*/}    break;
+    case roomTheme_ritual:  {room.roomDescr = ""; /*"A ritual chamber."*/}  break;
+    case roomTheme_spider:  {room.roomDescr = ""; /*"A spider lair."*/}     break;
+    case roomTheme_crypt:   {room.roomDescr = ""; /*"A crypt."*/}           break;
+    case roomTheme_monster: {room.roomDescr = ""; /*"A gruesome room."*/}   break;
+    case roomTheme_flooded: {room.roomDescr = ""; /*"A flooded room."*/}    break;
+    case roomTheme_muddy:   {room.roomDescr = ""; /*"A muddy room."*/}      break;
+      //    case roomTheme_dungeon: {room.roomDescr = "A dungeon.";}        break;
 //    case roomTheme_chasm:   {room.roomDescr = "A chasm.";}          break;
-    default: {} break;
+    case endOfRoomThemes: {} break;
   }
+}
+
+int RoomThemeMaker::getRandomNrFeaturesForTheme(
+  const RoomTheme_t theme) const {
+
+  switch(theme) {
+    case roomTheme_plain:     return eng->dice.oneIn(14) ? 2 :
+                                       eng->dice.oneIn(5) ? 1 : 0;
+    case roomTheme_human:     return eng->dice.oneIn(7) ? 2 : 1;
+    case roomTheme_ritual:    return eng->dice.range(1, 3);
+    case roomTheme_spider:    return eng->dice.range(0, 2);
+    case roomTheme_crypt:     return eng->dice.oneIn(7) ? 2 : 1;
+    case roomTheme_monster:   return eng->dice.range(0, 6);
+    case roomTheme_flooded:   return 0;
+    case roomTheme_muddy:     return 0;
+    case endOfRoomThemes: {} break;
+  }
+  return -1;
 }
 
 bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
@@ -76,29 +92,34 @@ bool RoomThemeMaker::isThemeAllowed(
   const int MAX_DIM = max(ROOM_W, ROOM_H);
 
   switch(theme) {
-    case roomTheme_plain: {
-      return true;
-    } break;
+    case roomTheme_plain: {return true;} break;
+
     case roomTheme_human: {
       return MAX_DIM >= 5 && MIN_DIM >= 4 &&
              isThemeExistInMap(roomTheme_human) == false;
     } break;
+
     case roomTheme_ritual: {
       return MAX_DIM >= 4 && MIN_DIM >= 3 &&
              isThemeExistInMap(roomTheme_ritual) == false;
     } break;
+
     case roomTheme_spider: {
       return MAX_DIM >= 4 && MIN_DIM >= 3;
     } break;
-//    case roomTheme_dungeon: {
-//      return false;
-//    } break;
+
     case roomTheme_crypt: {
       return MAX_DIM >= 5 && MIN_DIM >= 4;
     } break;
+
     case roomTheme_monster: {
       return MAX_DIM >= 5 && MIN_DIM >= 4;
     } break;
+
+//    case roomTheme_dungeon: {
+//      return false;
+//    } break;
+
 //    case roomTheme_chasm: {
 //      if(MIN_DIM >= 5) {
 //        for(int y = room->getY0(); y <= room->getY1(); y++) {
@@ -123,21 +144,20 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
 
 //  if(room.roomTheme == roomTheme_dungeon) {}
-
-  if(
-    room.roomTheme == roomTheme_flooded ||
-    room.roomTheme == roomTheme_muddy) {
-    const Feature_t featureId =
-      room.roomTheme == roomTheme_flooded ? feature_shallowWater :
-      feature_shallowMud;
-    for(int y = room.getY0(); y <= room.getY1(); y++) {
-      for(int x = room.getX0(); x <= room.getX1(); x++) {
-        if(blockers[x][y] == false) {
-          eng->featureFactory->spawnFeatureAt(featureId, Pos(x, y));
+  switch(room.roomTheme) {
+    case roomTheme_flooded:
+    case roomTheme_muddy: {
+      const Feature_t featureId =
+        room.roomTheme == roomTheme_flooded ? feature_shallowWater :
+        feature_shallowMud;
+      for(int y = room.getY0(); y <= room.getY1(); y++) {
+        for(int x = room.getX0(); x <= room.getX1(); x++) {
+          if(blockers[x][y] == false) {
+            eng->featureFactory->spawnFeatureAt(featureId, Pos(x, y));
+          }
         }
       }
-    }
-  }
+    } break;
 
 //  if(room.roomTheme == roomTheme_chasm) {
 //    for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
@@ -147,76 +167,83 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 //    }
 //  }
 
-  if(room.roomTheme == roomTheme_monster) {
-    bool done = false;
-    int nrBloodPut = 0;
-    while(done == false) {
-      for(int y = room.getY0(); y <= room.getY1(); y++) {
-        for(int x = room.getX0(); x <= room.getX1(); x++) {
-          if(blockers[x][y] == false) {
-            const int CHANCE_TO_PUT_BLOOD = 40;
-            if(eng->dice.percentile() < CHANCE_TO_PUT_BLOOD) {
-              eng->gore->makeGore(Pos(x, y));
-              eng->gore->makeBlood(Pos(x, y));
-              nrBloodPut++;
-            }
-          }
-        }
-      }
-      done = nrBloodPut > 0;
-    }
-  }
-
-  //Ritual chamber, set a random god for this level, sometimes make gore at altar
-  //(or at random pos if no altar)
-  if(room.roomTheme == roomTheme_ritual) {
-
-    eng->gods->setRandomGod();
-
-    const int CHANCE_FOR_BLOODY_CHAMBER = 60;
-    if(eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
-
-      Pos origin(-1, -1);
-      vector<Pos> originCandidates;
-      for(int y = room.getY0(); y <= room.getY1(); y++) {
-        for(int x = room.getX0(); x <= room.getX1(); x++) {
-          if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
-            origin = Pos(x, y);
-            y = 999;
-            x = 999;
-          } else {
+    case roomTheme_monster: {
+      bool done = false;
+      int nrBloodPut = 0;
+      while(done == false) {
+        for(int y = room.getY0(); y <= room.getY1(); y++) {
+          for(int x = room.getX0(); x <= room.getX1(); x++) {
             if(blockers[x][y] == false) {
-              originCandidates.push_back(Pos(x, y));
+              const int CHANCE_TO_PUT_BLOOD = 40;
+              if(eng->dice.percentile() < CHANCE_TO_PUT_BLOOD) {
+                eng->gore->makeGore(Pos(x, y));
+                eng->gore->makeBlood(Pos(x, y));
+                nrBloodPut++;
+              }
             }
           }
         }
+        done = nrBloodPut > 0;
       }
-      if(originCandidates.empty() == false) {
-        if(origin.x == -1) {
-          const int ELEMENT =
-            eng->dice.range(0, originCandidates.size() - 1);
-          origin = originCandidates.at(ELEMENT);
+    } break;
+
+    //Ritual chamber, set a random god for this level, sometimes make gore
+    //at altar (or at random pos if no altar)
+    case roomTheme_ritual: {
+
+      eng->gods->setRandomGod();
+
+      const int CHANCE_FOR_BLOODY_CHAMBER = 60;
+      if(eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
+
+        Pos origin(-1, -1);
+        vector<Pos> originCandidates;
+        for(int y = room.getY0(); y <= room.getY1(); y++) {
+          for(int x = room.getX0(); x <= room.getX1(); x++) {
+            if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
+              origin = Pos(x, y);
+              y = 999;
+              x = 999;
+            } else {
+              if(blockers[x][y] == false) {
+                originCandidates.push_back(Pos(x, y));
+              }
+            }
+          }
         }
-        for(int dy = -1; dy <= 1; dy++) {
-          for(int dx = -1; dx <= 1; dx++) {
-            if(
-              (dx == 0 && dy == 0) ||
-              (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
-              const Pos pos = origin + Pos(dx, dy);
-              if(blockers[pos.x][pos.y] == false) {
-                eng->gore->makeGore(pos);
-                eng->gore->makeBlood(pos);
+        if(originCandidates.empty() == false) {
+          if(origin.x == -1) {
+            const int ELEMENT =
+              eng->dice.range(0, originCandidates.size() - 1);
+            origin = originCandidates.at(ELEMENT);
+          }
+          for(int dy = -1; dy <= 1; dy++) {
+            for(int dx = -1; dx <= 1; dx++) {
+              if(
+                (dx == 0 && dy == 0) ||
+                (eng->dice.percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
+                const Pos pos = origin + Pos(dx, dy);
+                if(blockers[pos.x][pos.y] == false) {
+                  eng->gore->makeGore(pos);
+                  eng->gore->makeBlood(pos);
+                }
               }
             }
           }
         }
       }
-    }
+    } break;
+
+    case roomTheme_plain: {} break;
+    case roomTheme_human: {} break;
+    case roomTheme_spider: {} break;
+    case roomTheme_crypt: {} break;
+    case endOfRoomThemes: {} break;
   }
 }
 
 void RoomThemeMaker::placeThemeFeatures(Room& room) {
-  tracer << "RoomThemeMaker::placeThemeFeatures()" << endl;
+  trace << "RoomThemeMaker::placeThemeFeatures()" << endl;
   vector<const FeatureData*> featureDataBelongingToTheme;
   featureDataBelongingToTheme.resize(0);
 
@@ -235,8 +262,14 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
 
   vector<int> featuresSpawnCount(featureDataBelongingToTheme.size(), 0);
 
-  int featuresLeftToPlace = eng->dice.range(3, 8);
+  int featuresLeftToPlace = getRandomNrFeaturesForTheme(room.roomTheme);
+
   while(true) {
+    if(featuresLeftToPlace == 0) {
+      trace << "RoomThemeMaker: Placed enough features, returning" << endl;
+      return;
+    }
+
     const FeatureData* d = NULL;
     Pos pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
@@ -244,10 +277,10 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
                            featureDataBelongingToTheme);
 
     if(d == NULL) {
-      tracer << "RoomThemeMaker: Could not find any more spots to place feature, returning" << endl;
+      trace << "RoomThemeMaker: Could not find any more spots to place feature, returning" << endl;
       return;
     } else {
-      tracer << "RoomThemeMaker: Placing " << d->name_a << endl;
+      trace << "RoomThemeMaker: Placing " << d->name_a << endl;
       eng->featureFactory->spawnFeatureAt(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
@@ -267,10 +300,6 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
       eraseAdjacentCellsFromVectors(pos, nextToWalls, awayFromWalls);
 
       featuresLeftToPlace--;
-      if(featuresLeftToPlace == 0) {
-        tracer << "RoomThemeMaker: Placer enough features, returning" << endl;
-        return;
-      }
     }
   }
 }
@@ -286,11 +315,11 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       case roomTheme_human:     chanceToMakeDark = 10;  break;
       case roomTheme_ritual:    chanceToMakeDark = 15;  break;
       case roomTheme_spider:    chanceToMakeDark = 33;  break;
-//      case roomTheme_dungeon:   chanceToMakeDark = 50;  break;
       case roomTheme_crypt:     chanceToMakeDark = 75;  break;
       case roomTheme_monster:   chanceToMakeDark = 75;  break;
       case roomTheme_flooded:   chanceToMakeDark = 50;  break;
       case roomTheme_muddy:     chanceToMakeDark = 50;  break;
+//      case roomTheme_dungeon:   chanceToMakeDark = 50;  break;
 //      case roomTheme_chasm:     chanceToMakeDark = 50;  break;
       default: break;
     }
@@ -311,7 +340,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
     vector<Pos>& nextToWalls,
     vector<Pos>& awayFromWalls,
     vector<const FeatureData*> featureDataBelongingToTheme) {
-  tracer << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
+  trace << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
 
   if(featureDataBelongingToTheme.empty()) {
     return -1;
@@ -321,7 +350,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
   if(IS_NEXT_TO_WALL_AVAIL == false && IS_AWAY_FROM_WALLS_AVAIL == false) {
-    tracer << "RoomThemeMaker: Neither cells next to walls or away from walls found, returning" << endl;
+    trace << "RoomThemeMaker: Neither cells next to walls or away from walls found, returning" << endl;
     def = NULL;
     return -1;
   }
@@ -384,7 +413,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
 
 void RoomThemeMaker::eraseAdjacentCellsFromVectors(
   const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
-  tracer << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
+  trace << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
     if(eng->mapTests->isCellsNeighbours(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
@@ -397,11 +426,11 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(
       i--;
     }
   }
-  tracer << "RoomThemeMaker::eraseAdjacentCellsFromVectors() [DONE]" << endl;
+  trace << "RoomThemeMaker::eraseAdjacentCellsFromVectors() [DONE]" << endl;
 }
 
 void RoomThemeMaker::assignRoomThemes() {
-  tracer << "RoomThemeMaker::assignRoomThemes()..." << endl;
+  trace << "RoomThemeMaker::assignRoomThemes()..." << endl;
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -417,7 +446,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   vector<bool> isAssigned(roomList.size(), false);
 
-  tracer << "RoomThemeMaker: Assigning plain theme to rooms with wrong dimensions" << endl;
+  trace << "RoomThemeMaker: Assigning plain theme to rooms with wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     Room* const r = roomList.at(i);
 
@@ -433,7 +462,7 @@ void RoomThemeMaker::assignRoomThemes() {
     }
   }
 
-  tracer << "RoomThemeMaker: Attempting to assign non-plain themes to some rooms" << endl;
+  trace << "RoomThemeMaker: Attempting to assign non-plain themes to some rooms" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   const int NR_TRIES_TO_ASSIGN = 100;
@@ -447,7 +476,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
         if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
-          tracer << "RoomThemeMaker: Assigned non-plain theme (" << theme << ") to room" << endl;
+          trace << "RoomThemeMaker: Assigned non-plain theme (" << theme << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
           for(int y = room->getY0(); y < room->getY1(); y++) {
             for(int x = room->getX0(); x < room->getX1(); x++) {
@@ -460,7 +489,7 @@ void RoomThemeMaker::assignRoomThemes() {
     }
   }
 
-  tracer << "RoomThemeMaker: Assigning plain theme to remaining rooms" << endl;
+  trace << "RoomThemeMaker: Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     if(isAssigned.at(i) == false) {
       roomList.at(i)->roomTheme = roomTheme_plain;
@@ -468,6 +497,6 @@ void RoomThemeMaker::assignRoomThemes() {
     }
   }
 
-  tracer << "RoomThemeMaker::assignRoomThemes() [DONE]" << endl;
+  trace << "RoomThemeMaker::assignRoomThemes() [DONE]" << endl;
 }
 

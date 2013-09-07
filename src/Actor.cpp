@@ -165,7 +165,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
-    eng->log->addMessage("I suddenly find myself in a different location!");
+    eng->log->addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStandard));
   }
 }
@@ -207,10 +207,10 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
   if(ALLOW_MESSAGES) {
     if(isHpGained) {
       if(this == eng->player) {
-        eng->log->addMessage("I feel healthier!", clrMessageGood);
+        eng->log->addMsg("I feel healthier!", clrMessageGood);
       } else {
         if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMessage(data_->name_the + " looks healthier.");
+          eng->log->addMsg(data_->name_the + " looks healthier.");
         }
       }
       eng->renderer->drawMapAndInterface();
@@ -242,10 +242,10 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MESSAGES) {
   if(ALLOW_MESSAGES) {
     if(isSpiGained) {
       if(this == eng->player) {
-        eng->log->addMessage("I feel more spirited!", clrMessageGood);
+        eng->log->addMsg("I feel more spirited!", clrMessageGood);
       } else {
         if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMessage(data_->name_the + " looks more spirited.");
+          eng->log->addMsg(data_->name_the + " looks more spirited.");
         }
       }
       eng->renderer->drawMapAndInterface();
@@ -262,18 +262,18 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES) {
   if(ALLOW_MESSAGES) {
     if(this == eng->player) {
       if(CHANGE > 0) {
-        eng->log->addMessage("I feel more vigorous!");
+        eng->log->addMsg("I feel more vigorous!");
       }
       if(CHANGE < 0) {
-        eng->log->addMessage("I feel frailer!");
+        eng->log->addMsg("I feel frailer!");
       }
     } else {
       if(eng->player->checkIfSeeActor(*this, NULL)) {
         if(CHANGE > 0) {
-          eng->log->addMessage(getNameThe() + " looks more vigorous.");
+          eng->log->addMsg(getNameThe() + " looks more vigorous.");
         }
         if(CHANGE < 0) {
-          eng->log->addMessage(getNameThe() + " looks frailer.");
+          eng->log->addMsg(getNameThe() + " looks frailer.");
         }
       }
     }
@@ -287,18 +287,18 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   if(ALLOW_MESSAGES) {
     if(this == eng->player) {
       if(CHANGE > 0) {
-        eng->log->addMessage("My spirit is stronger!");
+        eng->log->addMsg("My spirit is stronger!");
       }
       if(CHANGE < 0) {
-        eng->log->addMessage("My spirit is weaker!");
+        eng->log->addMsg("My spirit is weaker!");
       }
     } else {
       if(eng->player->checkIfSeeActor(*this, NULL)) {
         if(CHANGE > 0) {
-          eng->log->addMessage(getNameThe() + " appears to grow in spirit.");
+          eng->log->addMsg(getNameThe() + " appears to grow in spirit.");
         }
         if(CHANGE < 0) {
-          eng->log->addMessage(getNameThe() + " appears to shrink in spirit.");
+          eng->log->addMsg(getNameThe() + " appears to shrink in spirit.");
         }
       }
     }
@@ -306,8 +306,8 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
 }
 
 bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
-  tracer << "Actor::hit()..." << endl;
-  tracer << "Actor: Damage from parameter: " << dmg << endl;
+  trace << "Actor::hit()..." << endl;
+  trace << "Actor: Damage from parameter: " << dmg << endl;
 
   if(
     dmgType == dmgType_light &&
@@ -316,7 +316,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   }
 
   monsterHit(dmg);
-  tracer << "Actor: Damage after monsterHit(): " << dmg << endl;
+  trace << "Actor: Damage after monsterHit(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -325,16 +325,16 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     Armor* armor =
       dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
-      tracer << "Actor: Has armor, running hit on armor" << endl;
+      trace << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == dmgType_physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
       }
 
       if(armor->isDestroyed()) {
-        tracer << "Actor: Armor was destroyed" << endl;
+        trace << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
-          eng->log->addMessage("My " + eng->itemDataHandler->getItemRef(
+          eng->log->addMsg("My " + eng->itemDataHandler->getItemRef(
                                  *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
@@ -357,7 +357,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
         eng->gore->makeGore(pos);
       }
     }
-    tracer << "Actor::hit() [DONE]" << endl;
+    trace << "Actor::hit() [DONE]" << endl;
     return false;
   }
 
@@ -373,10 +373,10 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   if(getHp() <= 0) {
     die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
     actorSpecificDie();
-    tracer << "Actor::hit() [DONE]" << endl;
+    trace << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
-    tracer << "Actor::hit() [DONE]" << endl;
+    trace << "Actor::hit() [DONE]" << endl;
     return false;
   }
 }
@@ -385,11 +385,11 @@ void Actor::hitSpi(const int DMG) {
   spi_ = max(0, spi_ - DMG);
   if(spi_ <= 0) {
     if(this == eng->player) {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "All my spirit is depleted, I am devoid of life!");
     } else {
       if(eng->player->checkIfSeeActor(*this, NULL)) {
-        eng->log->addMessage(getNameThe() + " has no spirit left!");
+        eng->log->addMsg(getNameThe() + " has no spirit left!");
       }
     }
     die(false, false, true);
@@ -433,9 +433,9 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     if(eng->player->checkIfSeeActor(*this, NULL)) {
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride != "") {
-        eng->log->addMessage(deathMessageOverride);
+        eng->log->addMsg(deathMessageOverride);
       } else {
-        eng->log->addMessage(getNameThe() + " dies.");
+        eng->log->addMsg(getNameThe() + " dies.");
       }
     }
   }

@@ -53,7 +53,7 @@ void PopulateMonsters::spawnGroupOfRandomAt(
 }
 
 void PopulateMonsters::trySpawnDueToTimePassed() const {
-  tracer << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
+  trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
@@ -95,7 +95,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
                            getRandomOutOfDepth(), true);
     }
   }
-  tracer << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
+  trace << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
 void PopulateMonsters::populateCaveLevel() const {
@@ -280,7 +280,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
   const bool IS_ROAMING_ALLOWED) const {
 
-  tracer << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
+  trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId_t> idCandidates;
   makeListOfMonstersEligibleForAutoSpawning(
@@ -305,8 +305,8 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
   }
 
   if(idCandidates.empty()) {
-    tracer << "PopulateMonsters: Found no valid monsters to spawn ";
-    tracer << "at room theme (" + intToString(roomTheme) + ")" << endl;
+    trace << "PopulateMonsters: Found no valid monsters to spawn ";
+    trace << "at room theme (" + intToString(roomTheme) + ")" << endl;
     return false;
   } else {
     const int ELEMENT = eng->dice.range(0, idCandidates.size() - 1);
@@ -394,7 +394,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //bool PopulateMonsters::spawnGroupOfMonstersAtFreeCells(vector<Pos>& freeCells, const bool ALLOW_ROAM /*,
 //    const SpecialRoom_t belongingToSpecialRoomType */) const {
 //  if(freeCells.size() > 0) {
-//    tracer << "PopulateMonsters::spawnGroupOfMonstersAtFreeCells()" << endl;
+//    trace << "PopulateMonsters::spawnGroupOfMonstersAtFreeCells()" << endl;
 //
 //    const int FREE_CELLS_ELEMENT = eng->dice(1, freeCells.size()) - 1;
 //    const Pos pos(freeCells.at(FREE_CELLS_ELEMENT));
@@ -405,7 +405,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    originActor = eng->actorFactory->spawnRandomActor(pos, OUT_OF_DEPTH_OFFSET);
 //
 //    if(originActor != NULL) {
-//      tracer << "PopulateMonsters: Valid actor found, spawning group of monsters" << endl;
+//      trace << "PopulateMonsters: Valid actor found, spawning group of monsters" << endl;
 //
 //      dynamic_cast<Monster*>(originActor)->isRoamingAllowed = ALLOW_ROAM;
 //
@@ -446,12 +446,12 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //      return true;
 //    }
 //  }
-//  tracer << "PopulateMonsters: Spawning group of monster failed (probably no monster met criteria)" << endl;
+//  trace << "PopulateMonsters: Spawning group of monster failed (probably no monster met criteria)" << endl;
 //  return false;
 //}
 
 //void PopulateMonsters::populate() const {
-//  tracer << "PopulateMonsters::PopulateMonsters()..." << endl;
+//  trace << "PopulateMonsters::PopulateMonsters()..." << endl;
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 //  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
 //  eng->basicUtils->reverseBoolArray(blockers);
@@ -501,20 +501,20 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //
 //  const int CELLS_PER_MONSTER_GROUP = eng->map->getDLVL() == 0 ? 500 : 110;
 //
-//  tracer << "PopulateMonsters: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
+//  trace << "PopulateMonsters: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 //
 //  int nrMonsterGroupsOnMap = freeCells.size() / CELLS_PER_MONSTER_GROUP;
 //
 //  nrMonsterGroupsOnMap = max(1, nrMonsterGroupsOnMap);
 //  nrMonsterGroupsOnMap += eng->dice.range(0, nrMonsterGroupsOnMap / 4);
 //
-//  tracer << "PopulateMonsters: Number of monster groups on map: " << nrMonsterGroupsOnMap << endl;
+//  trace << "PopulateMonsters: Number of monster groups on map: " << nrMonsterGroupsOnMap << endl;
 //
 //  //Spawn monsters randomly from the Pos-vector
 //  for(int ii = 0; ii < nrMonsterGroupsOnMap; ii++) {
 //    ii -= spawnGroupOfMonstersAtFreeCells(freeCells, true) == false ? 1 : 0;
 //  }
-//  tracer << "PopulateMonsters::PopulateMonsters() [DONE]" << endl;
+//  trace << "PopulateMonsters::PopulateMonsters() [DONE]" << endl;
 //}
 
 //void PopulateMonsters::spawnOneMonster() const {

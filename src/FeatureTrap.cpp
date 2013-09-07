@@ -68,11 +68,11 @@ void Trap::triggerOnPurpose(Actor* actorTriggering) {
 }
 
 void Trap::bump(Actor* actorBumping) {
-  tracer << "Trap::bump()..." << endl;
+  trace << "Trap::bump()..." << endl;
 
   const ActorData* const d = actorBumping->getData();
 
-  tracer << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
+  trace << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
 
   if(d->moveType == moveType_walk) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
@@ -83,14 +83,14 @@ void Trap::bump(Actor* actorBumping) {
     const string trapName = specificTrap_->getTrapSpecificTitle();
 
     if(IS_PLAYER) {
-      tracer << "Trap: Player bumping" << endl;
+      trace << "Trap: Player bumping" << endl;
       const int CHANCE_TO_AVOID = isHidden_ == true ? 10 : (BASE_CHANCE_TO_AVOID + DODGE_SKILL_VALUE);
       const AbilityRollResult_t result = actorBumping->eng->abilityRoll->roll(CHANCE_TO_AVOID);
 
       if(result >= successSmall) {
         if(isHidden_ == false) {
           if(ACTOR_CAN_SEE) {
-            actorBumping->eng->log->addMessage("I avoid a " + trapName + ".", clrMessageGood);
+            actorBumping->eng->log->addMsg("I avoid a " + trapName + ".", clrMessageGood);
           }
         }
       } else {
@@ -98,10 +98,10 @@ void Trap::bump(Actor* actorBumping) {
       }
     } else {
       if(d->actorSize == actorSize_humanoid && d->isSpider == false) {
-        tracer << "Trap: Humanoid monster bumping" << endl;
+        trace << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(actorBumping);
         if(monster->playerAwarenessCounter > 0 && monster->isStealth == false) {
-          tracer << "Trap: Monster eligible for triggering trap" << endl;
+          trace << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER = actorBumping->eng->player->checkIfSeeActor(*actorBumping, NULL);
 
@@ -111,7 +111,7 @@ void Trap::bump(Actor* actorBumping) {
           if(result >= successSmall) {
             if(isHidden_ == false && IS_ACTOR_SEEN_BY_PLAYER) {
               const string actorName = actorBumping->getNameThe();
-              actorBumping->eng->log->addMessage(actorName + " avoids a " + trapName + ".");
+              actorBumping->eng->log->addMsg(actorName + " avoids a " + trapName + ".");
             }
           } else {
             trigger(actorBumping);
@@ -120,11 +120,11 @@ void Trap::bump(Actor* actorBumping) {
       }
     }
   }
-  tracer << "Trap::bump() [DONE]" << endl;
+  trace << "Trap::bump() [DONE]" << endl;
 }
 
 void Trap::trigger(Actor* const actor) {
-  tracer << "Trap::trigger()..." << endl;
+  trace << "Trap::trigger()..." << endl;
 
   const ActorData* const d = actor->getData();
   const int DODGE_SKILL_VALUE =  actor->getData()->abilityVals.getVal(ability_dodgeTrap, true, *actor);
@@ -143,7 +143,7 @@ void Trap::trigger(Actor* const actor) {
     specificTrap_->trapSpecificTrigger(actor, dodgeResult);
   }
 
-  tracer << "Trap::trigger() [DONE]" << endl;
+  trace << "Trap::trigger() [DONE]" << endl;
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
@@ -161,7 +161,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTrapSpecificTitle();
-      eng->log->addMessage("I spot a " + name + ".");
+      eng->log->addMsg("I spot a " + name + ".");
     }
   }
 }
@@ -205,7 +205,7 @@ bool Trap::canHaveGore() const {return isHidden_;}
 bool Trap::canHaveItem() const {return isHidden_;}
 
 Pos Trap::actorTryLeave(Actor* const actor, const Pos& pos, const Pos& dest) {
-  tracer << "Trap::actorTryLeave()" << endl;
+  trace << "Trap::actorTryLeave()" << endl;
   assert(specificTrap_ != NULL);
   return specificTrap_->specificTrapActorTryLeave(actor, pos, dest);
 }
@@ -232,15 +232,15 @@ void TrapDart::trapSpecificTrigger(Actor* const actor,
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage("I dodge a dart!", clrMessageGood);
+        eng->log->addMsg("I dodge a dart!", clrMessageGood);
       } else {
-        eng->log->addMessage(
+        eng->log->addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
           clrMessageGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(actorName +  " dodges a dart!");
+        eng->log->addMsg(actorName +  " dodges a dart!");
       }
     }
   } else {
@@ -249,34 +249,34 @@ void TrapDart::trapSpecificTrigger(Actor* const actor,
     if(eng->dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng->log->addMessage("A dart barely misses me!", clrMessageGood);
+          eng->log->addMsg("A dart barely misses me!", clrMessageGood);
         } else {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "A mechanism triggers, I hear something barely missing me!",
             clrMessageGood);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage("A dart barely misses " + actorName + "!");
+        eng->log->addMsg("A dart barely misses " + actorName + "!");
       }
     } else {
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng->log->addMessage("I am hit by a dart!", clrMessageBad);
+          eng->log->addMsg("I am hit by a dart!", clrMessageBad);
         } else {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "A mechanism triggers, I feel a needle piercing my skin!",
             clrMessageBad);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(actorName + " is hit by a dart!", clrMessageGood);
+        eng->log->addMsg(actorName + " is hit by a dart!", clrMessageGood);
       }
 
       const int DMG = eng->dice(1, 8);
       actor->hit(DMG, dmgType_physical);
       if(actor->deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
-          eng->log->addMessage("It was poisoned!");
+          eng->log->addMsg("It was poisoned!");
         }
         actor->getPropHandler()->tryApplyProp(
           new PropPoisoned(eng, propTurnsStandard));
@@ -302,15 +302,15 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor,
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage("I dodge a spear!", clrMessageGood);
+        eng->log->addMsg("I dodge a spear!", clrMessageGood);
       } else {
-        eng->log->addMessage(
+        eng->log->addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
           clrMessageGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(actorName +  " dodges a spear!");
+        eng->log->addMsg(actorName +  " dodges a spear!");
       }
     }
   } else {
@@ -319,30 +319,30 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor,
     if(eng->dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng->log->addMessage("A spear barely misses me!", clrMessageGood);
+          eng->log->addMsg("A spear barely misses me!", clrMessageGood);
         } else {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "A mechanism triggers, I hear a *swoosh*!",
             clrMessageGood);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
-          eng->log->addMessage("A spear barely misses " + actorName + "!");
+          eng->log->addMsg("A spear barely misses " + actorName + "!");
         }
       }
     } else {
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng->log->addMessage("I am hit by a spear!", clrMessageBad);
+          eng->log->addMsg("I am hit by a spear!", clrMessageBad);
         } else {
-          eng->log->addMessage(
+          eng->log->addMsg(
             "A mechanism triggers, something sharp pierces my skin!",
             clrMessageBad);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
-          eng->log->addMessage(
+          eng->log->addMsg(
             actorName + " is hit by a spear!", clrMessageGood);
         }
       }
@@ -351,7 +351,7 @@ void TrapSpear::trapSpecificTrigger(Actor* const actor,
       actor->hit(DMG, dmgType_physical);
       if(actor->deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
-          eng->log->addMessage("It was poisoned!");
+          eng->log->addMsg("It was poisoned!");
         }
         actor->getPropHandler()->tryApplyProp(
           new PropPoisoned(eng, propTurnsStandard));
@@ -371,14 +371,14 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor,
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng->log->addMessage("I am hit by a burst of gas!");
+      eng->log->addMsg("I am hit by a burst of gas!");
     } else {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(actorName + " is hit by a burst of gas!");
+      eng->log->addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
@@ -398,14 +398,14 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor,
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng->log->addMessage("I am hit by a burst of gas!");
+      eng->log->addMsg("I am hit by a burst of gas!");
     } else {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(actorName + " is hit by a burst of gas!");
+      eng->log->addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
@@ -425,14 +425,14 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor,
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng->log->addMessage("I am hit by a burst of gas!");
+      eng->log->addMsg("I am hit by a burst of gas!");
     } else {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(actorName + " is hit by a burst of gas!");
+      eng->log->addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
@@ -453,31 +453,31 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor* const actor,
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage(
+        eng->log->addMsg(
           "I cover my eyes just in time to avoid an intense flash!",
           clrMessageGood);
       } else {
-        eng->log->addMessage("I feel a mechanism trigger!", clrMessageGood);
+        eng->log->addMsg("I feel a mechanism trigger!", clrMessageGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(actorName + " covers from a blinding flash!");
+        eng->log->addMsg(actorName + " covers from a blinding flash!");
       }
     }
   } else {
     //Dodge failed
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng->log->addMessage(
+        eng->log->addMsg(
           "A sharp flash of light pierces my eyes!", clrWhite);
         actor->getPropHandler()->tryApplyProp(
           new PropBlind(eng, propTurnsStandard));
       } else {
-        eng->log->addMessage("I feel a mechanism trigger!", clrWhite);
+        eng->log->addMsg("I feel a mechanism trigger!", clrWhite);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng->log->addMessage(
+        eng->log->addMsg(
           actorName + " is hit by a flash of blinding light!");
         actor->getPropHandler()->tryApplyProp(
           new PropBlind(eng, propTurnsStandard));
@@ -505,7 +505,7 @@ void TrapTeleport::trapSpecificTrigger(Actor* const actor,
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A curious shape on the floor starts go glow under "
         + actorName + ".");
     }
@@ -526,13 +526,13 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor,
   if(IS_PLAYER) {
     eng->player->updateFov();
     if(CAN_SEE) {
-      eng->log->addMessage("A curious shape on the floor starts to glow!");
+      eng->log->addMsg("A curious shape on the floor starts to glow!");
     } else {
-      eng->log->addMessage("I feel a peculiar energy around me!");
+      eng->log->addMsg("I feel a peculiar energy around me!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A curious shape on the floor starts go glow under "
         + actorName + ".");
     }
@@ -581,7 +581,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor,
                              actorSummoned, curPos));
       monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
       if(eng->map->playerVision[curPos.x][curPos.y]) {
-        eng->log->addMessage(monster->getNameA() + " appears.");
+        eng->log->addMsg(monster->getNameA() + " appears.");
       }
       break;
     }
@@ -599,14 +599,14 @@ void TrapSmoke::trapSpecificTrigger(Actor* const actor,
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng->log->addMessage("Suddenly the air is thick with smoke!");
+      eng->log->addMsg("Suddenly the air is thick with smoke!");
     } else {
-      eng->log->addMessage(
+      eng->log->addMsg(
         "A mechanism triggers, the air is thick with smoke!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("Suddenly the air around " + actorName +
+      eng->log->addMsg("Suddenly the air around " + actorName +
                            " is thick with smoke!");
     }
   }
@@ -623,10 +623,10 @@ void TrapAlarm::trapSpecificTrigger(Actor* const actor,
   const string actorName = actor->getNameThe();
 
   if(IS_PLAYER) {
-    eng->log->addMessage("An alarm sounds!");
+    eng->log->addMsg("An alarm sounds!");
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage("Suddenly the air around " + actorName +
+      eng->log->addMsg("Suddenly the air around " + actorName +
                            " is thick with smoke!");
     } else {
     }
@@ -650,7 +650,7 @@ void TrapSpiderWeb::trapSpecificTrigger(
   const string actorName = actor->getNameThe();
 
   if(IS_PLAYER) {
-    tracer << "TrapSpiderWeb: Checking if player has machete" << endl;
+    trace << "TrapSpiderWeb: Checking if player has machete" << endl;
     Inventory* const playerInv = eng->player->getInventory();
     Item* itemWielded = playerInv->getItemInSlot(slot_wielded);
     bool hasMachete = false;
@@ -670,20 +670,20 @@ void TrapSpiderWeb::trapSpecificTrigger(
     if(hasMachete) {
       eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       if(CAN_SEE) {
-        eng->log->addMessage("I cut down a spider web with my machete.");
+        eng->log->addMsg("I cut down a spider web with my machete.");
       } else {
-        eng->log->addMessage("I cut down a sticky mass of threads with my machete.");
+        eng->log->addMsg("I cut down a sticky mass of threads with my machete.");
       }
     } else {
       if(CAN_SEE) {
-        eng->log->addMessage("I am entangled in a spider web!");
+        eng->log->addMsg("I am entangled in a spider web!");
       } else {
-        eng->log->addMessage("I am entangled by a sticky mass of threads!");
+        eng->log->addMsg("I am entangled by a sticky mass of threads!");
       }
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng->log->addMessage(actorName + " is entangled in a huge spider web!");
+      eng->log->addMsg(actorName + " is entangled in a huge spider web!");
     }
   }
 }
@@ -691,38 +691,38 @@ void TrapSpiderWeb::trapSpecificTrigger(
 Pos TrapSpiderWeb::specificTrapActorTryLeave(
   Actor* const actor, const Pos& pos, const Pos& dest) {
 
-  tracer << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
+  trace << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 
   if(isHoldingActor) {
-    tracer << "TrapSpiderWeb: Is holding actor" << endl;
+    trace << "TrapSpiderWeb: Is holding actor" << endl;
 
     const bool IS_PLAYER = actor == eng->player;
     const bool PLAYER_CAN_SEE = eng->player->getPropHandler()->allowSee();
     const bool PLAYER_CAN_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
     const string actorName = actor->getNameThe();
 
-    tracer << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
+    trace << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
 
     //TODO reimplement something affecting chance of success?
 
     if(eng->dice.fraction(1, 4)) {
-      tracer << "TrapSpiderWeb: Actor succeeded to break free" << endl;
+      trace << "TrapSpiderWeb: Actor succeeded to break free" << endl;
 
       isHoldingActor = false;
 
       if(IS_PLAYER) {
-        eng->log->addMessage("I break free.");
+        eng->log->addMsg("I break free.");
       } else {
         if(PLAYER_CAN_SEE_ACTOR) {
-          eng->log->addMessage(actorName + " breaks free from a spiderweb.");
+          eng->log->addMsg(actorName + " breaks free from a spiderweb.");
         }
       }
 
       if(eng->dice.percentile() < 50) {
-        tracer << "TrapSpiderWeb: Web is destroyed" << endl;
+        trace << "TrapSpiderWeb: Web is destroyed" << endl;
 
         if((IS_PLAYER && PLAYER_CAN_SEE) || (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
-          eng->log->addMessage("The web is destroyed.");
+          eng->log->addMsg("The web is destroyed.");
         }
 
         eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
@@ -730,16 +730,16 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
       return pos;
     } else {
       if(IS_PLAYER) {
-        eng->log->addMessage("I struggle to break free.");
+        eng->log->addMsg("I struggle to break free.");
       } else {
         if(PLAYER_CAN_SEE_ACTOR) {
-          eng->log->addMessage(actorName + " struggles to break free.");
+          eng->log->addMsg(actorName + " struggles to break free.");
         }
       }
       return pos;
     }
   } else {
-    tracer << "TrapSpiderWeb: Not holding actor" << endl;
+    trace << "TrapSpiderWeb: Not holding actor" << endl;
   }
   return dest;
 }

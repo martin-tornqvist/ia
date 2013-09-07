@@ -22,33 +22,18 @@ enum RoomReshape_t {
 
 struct Room {
 public:
-  Room(Rect dims) : roomTheme(roomTheme_plain), dims_(dims) {
-  }
+  Room(Rect dims) : roomTheme(roomTheme_plain), dims_(dims) {}
 
-  Room() : roomTheme(roomTheme_plain), roomDescr(""), dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {
-  }
+  Room() : roomTheme(roomTheme_plain), roomDescr(""),
+    dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {}
 
-  Rect getDims() const {
-    return dims_;
-  }
-  int getX0() const {
-    return dims_.x0y0.x;
-  }
-  int getY0() const {
-    return dims_.x0y0.y;
-  }
-  int getX1() const {
-    return dims_.x1y1.x;
-  }
-  int getY1() const {
-    return dims_.x1y1.y;
-  }
-  Pos getX0Y0() const {
-    return dims_.x0y0;
-  }
-  Pos getX1Y1() const {
-    return dims_.x1y1;
-  }
+  inline Rect getDims()   const {return dims_;}
+  inline int getX0()      const {return dims_.x0y0.x;}
+  inline int getY0()      const {return dims_.x0y0.y;}
+  inline int getX1()      const {return dims_.x1y1.x;}
+  inline int getY1()      const {return dims_.x1y1.y;}
+  inline Pos getX0Y0()    const {return dims_.x0y0;}
+  inline Pos getX1Y1()    const {return dims_.x1y1;}
 
   RoomTheme_t roomTheme;
 
@@ -91,9 +76,13 @@ private:
 
   void connectRegions(Region* regions[3][3]);
   void buildAuxRooms(Region* regions[3][3]);
-  bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H, bool blockers[MAP_X_CELLS][MAP_Y_CELLS], const Pos doorPos);
+  bool tryPlaceAuxRoom(
+    const int X0, const int Y0, const int W, const int H,
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS], const Pos doorPos);
 
-  void buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2, const int SPLIT_Y1, const int SPLIT_Y2);
+  void buildMergedRegionsAndRooms(
+    Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
+    const int SPLIT_Y1, const int SPLIT_Y2);
 
   void buildCaves(Region* regions[3][3]);
 
@@ -110,11 +99,16 @@ private:
 
 //  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToFill);
 
-  bool isRegionFoundInCardinalDirection(const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  bool isRegionFoundInCardinalDirection(
+    const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  bool isAreaFree(const Rect& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
-  bool isAreaAndBorderFree(const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
-  bool isAreaFree(const int X0, const int Y0, const int X1, const int Y1, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+  bool isAreaFree(
+    const Rect& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+  bool isAreaAndBorderFree(
+    const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+  bool isAreaFree(
+    const int X0, const int Y0, const int X1, const int Y1,
+    bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void decorate();
 
@@ -125,8 +119,8 @@ private:
 
   void revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos);
 
-//	void buildNaturalArea(Region* regions[3][3]);
-//	void makeRiver(Region* regions[3][3]);
+//  void buildNaturalArea(Region* regions[3][3]);
+//  void makeRiver(Region* regions[3][3]);
 
   vector<Room*> rooms_;
   void deleteAndRemoveRoomFromList(Room* const room);
@@ -139,10 +133,8 @@ private:
 struct ConnectionPointsAndDistance {
 public:
   ConnectionPointsAndDistance(Pos c1_, Pos c2_, int dist_) :
-    c1(c1_), c2(c2_), dist(dist_) {
-  }
-  ConnectionPointsAndDistance() {
-  }
+    c1(c1_), c2(c2_), dist(dist_) {}
+  ConnectionPointsAndDistance() {}
 
   Pos c1;
   Pos c2;
@@ -162,15 +154,9 @@ public:
 
   bool isRegionNeighbour(const Region& other, Engine* const engine);
 
-  Pos getCenterPos() const {
-    return (x1y1_ + x0y0_) / 2;
-  }
-  Pos getX0Y0() const {
-    return x0y0_;
-  }
-  Pos getX1Y1() const {
-    return x1y1_;
-  }
+  inline Pos getCenterPos() const {return (x1y1_ + x0y0_) / 2;}
+  inline Pos getX0Y0()      const {return x0y0_;}
+  inline Pos getX1Y1()      const {return x1y1_;}
 
   int getNrOfConnections();
 

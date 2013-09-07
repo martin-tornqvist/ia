@@ -52,8 +52,8 @@ Spell* SpellHandler::getSpellFromId(const Spells_t spellId) const {
 
     case endOfSpells: {} break;
   }
-  tracer << "[WARNING] Found no spell for ID: " << spellId;
-  tracer << ", in SpellHandler::getSpellFromId()" << endl;
+  trace << "[WARNING] Found no spell for ID: " << spellId;
+  trace << ", in SpellHandler::getSpellFromId()" << endl;
   return NULL;
 }
 
@@ -90,16 +90,16 @@ int Spell::getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine* const eng) {
-  tracer << "Spell::cast()..." << endl;
+  trace << "Spell::cast()..." << endl;
   if(caster == eng->player) {
-    tracer << "Spell: Player casting spell" << endl;
+    trace << "Spell: Player casting spell" << endl;
     eng->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
   } else {
-    tracer << "Spell: Monster casting spell" << endl;
+    trace << "Spell: Monster casting spell" << endl;
     Monster* const monster = dynamic_cast<Monster*>(caster);
     if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
       const string spellStr = monster->getData()->spellCastMessage;
-      eng->log->addMessage(spellStr);
+      eng->log->addMsg(spellStr);
     }
     monster->spellCoolDownCurrent = monster->getData()->spellCooldownTurns;
   }
@@ -111,7 +111,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
   }
 
   eng->gameTime->endTurnOfCurrentActor();
-  tracer << "Spell::cast() [DONE]" << endl;
+  trace << "Spell::cast() [DONE]" << endl;
   return ret;
 }
 
@@ -135,7 +135,7 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
 
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
         const string monsterName = spotedEnemies.at(i)->getNameThe();
-        eng->log->addMessage(
+        eng->log->addMsg(
           monsterName + " is struck by a roaring blast!", clrMessageGood);
         spotedEnemies.at(i)->getPropHandler()->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 1));
@@ -149,7 +149,7 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
       return SpellCastRetData(false);
     }
   } else {
-    eng->log->addMessage("I am struck by a roaring blast!", clrMessageBad);
+    eng->log->addMsg("I am struck by a roaring blast!", clrMessageBad);
     eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
       vector<Pos>(1, eng->player->pos), clrRedLgt);
     eng->player->getPropHandler()->tryApplyProp(
@@ -172,7 +172,7 @@ SpellCastRetData SpellMayhem::specificCast(
   Actor* const caster, Engine* const eng) {
   (void)caster;
 
-  eng->log->addMessage("Destruction rages around me!");
+  eng->log->addMsg("Destruction rages around me!");
 
   const Pos& playerPos = eng->player->pos;
 
@@ -276,7 +276,7 @@ SpellCastRetData SpellPestilence::specificCast(
     eng->actorFactory->spawnActor(monsterId, positions.at(i));
   }
 
-  eng->log->addMessage("Disgusting critters appear around me!");
+  eng->log->addMsg("Disgusting critters appear around me!");
   return SpellCastRetData(true);
 }
 
@@ -286,9 +286,9 @@ SpellCastRetData SpellDescent::specificCast(
   (void)caster;
   if(eng->map->getDLVL() < FIRST_CAVERN_LEVEL - 1) {
     eng->dungeonClimb->travelDown(1);
-    eng->log->addMessage("I sink downwards!");
+    eng->log->addMsg("I sink downwards!");
   } else {
-    eng->log->addMessage("I feel a faint sinking sensation.");
+    eng->log->addMsg("I feel a faint sinking sensation.");
   }
   return SpellCastRetData(true);
 }
@@ -326,10 +326,10 @@ SpellCastRetData SpellDetectItems::specificCast(
     eng->renderer->drawMapAndInterface();
 
     if(itemsRevealedPositions.size() == 1) {
-      eng->log->addMessage("An item is revealed to me.");
+      eng->log->addMsg("An item is revealed to me.");
     }
     if(itemsRevealedPositions.size() > 1) {
-      eng->log->addMessage("Some items are revealed to me.");
+      eng->log->addMsg("Some items are revealed to me.");
     }
     return SpellCastRetData(true);
   }
@@ -364,10 +364,10 @@ SpellCastRetData SpellDetectTraps::specificCast(
       trapsRevealedPositions, clrWhite);
     eng->renderer->drawMapAndInterface();
     if(trapsRevealedPositions.size() == 1) {
-      eng->log->addMessage("A hidden trap is revealed to me.");
+      eng->log->addMsg("A hidden trap is revealed to me.");
     }
     if(trapsRevealedPositions.size() > 1) {
-      eng->log->addMessage("Some hidden traps are revealed to me.");
+      eng->log->addMsg("Some hidden traps are revealed to me.");
     }
     return SpellCastRetData(true);
   }
@@ -420,8 +420,8 @@ SpellCastRetData SpellIdentify::specificCast(
     const string itemNameAfter =
       eng->itemDataHandler->getItemRef(*item, itemRef_a, true);
 
-    eng->log->addMessage("I gain intuitions about " + itemNameBefore + "...");
-    eng->log->addMessage("It is identified as " + itemNameAfter + "!");
+    eng->log->addMsg("I gain intuitions about " + itemNameBefore + "...");
+    eng->log->addMsg("It is identified as " + itemNameAfter + "!");
 
     return SpellCastRetData(true);
   }
@@ -461,10 +461,10 @@ SpellCastRetData SpellOpening::specificCast(
       featuresOpenedPositions, clrWhite);
     eng->renderer->drawMapAndInterface();
     if(featuresOpenedPositions.size() == 1) {
-      eng->log->addMessage("An object was opened.");
+      eng->log->addMsg("An object was opened.");
     }
     if(featuresOpenedPositions.size() > 1) {
-      eng->log->addMessage("Some objects were opened.");
+      eng->log->addMsg("Some objects were opened.");
     }
     return SpellCastRetData(true);
   } else {
@@ -481,7 +481,7 @@ SpellCastRetData SpellMthPower::specificCast(
   getPossibleActions(possibleActions, eng);
 
   if(possibleActions.empty()) {
-    eng->log->addMessage("I fail to channel the spell for any purpose.");
+    eng->log->addMsg("I fail to channel the spell for any purpose.");
   } else {
     const int ELEMENT = eng->dice.range(0, possibleActions.size() - 1);
     doAction(possibleActions.at(ELEMENT), eng);
@@ -578,7 +578,7 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
 
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
         const string monsterName = spotedEnemies.at(i)->getNameThe();
-        eng->log->addMessage(
+        eng->log->addMsg(
           monsterName + " is crushed by an unseen force!", clrMessageGood);
         spotedEnemies.at(i)->hit(25, dmgType_physical);
       }
@@ -596,7 +596,7 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
     } break;
 
     case mthPowerAction_findStairs: {
-      tracer << "ThaumaturgicAlteration: Find stairs" << endl;
+      trace << "ThaumaturgicAlteration: Find stairs" << endl;
       for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
         for(int x = 1; x < MAP_X_CELLS - 1; x++) {
           const FeatureStatic* const f = eng->map->featuresStatic[x][y];
@@ -610,14 +610,14 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
           }
         }
       }
-      eng->log->addMessage("The way forward is revealed!");
+      eng->log->addMsg("The way forward is revealed!");
       eng->renderer->drawMapAndInterface(true);
       eng->player->updateFov();
       eng->renderer->drawMapAndInterface(true);
     } break;
 
 //    case mthPowerAction_sorcery: {
-//      eng->log->addMessage("My magic is restored!");
+//      eng->log->addMsg("My magic is restored!");
 //      const unsigned int NR_OF_SCROLLS =
 //        eng->playerPowersHandler->getNrOfSpells();
 //      for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
@@ -634,7 +634,7 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
 //    } break;
 
     case mthPowerAction_mendArmor: {
-      eng->log->addMessage("My armor is whole!");
+      eng->log->addMsg("My armor is whole!");
       Item* const item =
         eng->player->getInventory()->getItemInSlot(slot_armorBody);
       Armor* const armor = dynamic_cast<Armor*>(item);
@@ -643,7 +643,7 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
     } break;
 
     case mthPowerAction_improveWeapon: {
-      eng->log->addMessage("My weapon is deadlier!");
+      eng->log->addMsg("My weapon is deadlier!");
       Item* const item =
         eng->player->getInventory()->getItemInSlot(slot_wielded);
       Weapon* const weapon = dynamic_cast<Weapon*>(item);
@@ -685,7 +685,7 @@ SpellCastRetData SpellTeleport::specificCast(
 
   if(caster != eng->player) {
     if(eng->player->checkIfSeeActor(*caster, NULL)) {
-      eng->log->addMessage(
+      eng->log->addMsg(
         caster->getNameThe() + " dissapears in a blast of smoke!");
     }
   }
@@ -709,7 +709,7 @@ SpellCastRetData SpellKnockBack::specificCast(
   if(caster == eng->player) {
 
   } else {
-    eng->log->addMessage("A force pushes me!", clrMessageBad);
+    eng->log->addMsg("A force pushes me!", clrMessageBad);
     eng->knockBack->tryKnockBack(eng->player, caster->pos, false);
   }
   return SpellCastRetData(false);
@@ -760,7 +760,7 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 //  if(actor != NULL) {
 //
 //    if(actor == eng->player) {
-//      eng->log->addMessage("My mind is reeling!");
+//      eng->log->addMsg("My mind is reeling!");
 //    }
 //
 //    actor->getPropHandler()->tryApplyProp(new StatusConfused(eng));
@@ -789,7 +789,7 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 //  if(actor != NULL) {
 //
 //    if(actor == eng->player) {
-//      eng->log->addMessage("Something is draining me physically!");
+//      eng->log->addMsg("Something is draining me physically!");
 //    }
 //
 //    actor->getPropHandler()->tryApplyProp(new StatusWeak(eng));
@@ -818,7 +818,7 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 //  if(actor != NULL) {
 //
 //    if(actor == eng->player) {
-//      eng->log->addMessage("Scales starts to grow over my eyes!");
+//      eng->log->addMsg("Scales starts to grow over my eyes!");
 //    }
 //
 //    actor->getPropHandler()->tryApplyProp(new PropBlind(eng->dice(3, 6)));
@@ -847,7 +847,7 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 //  if(actor != NULL) {
 //
 //    if(actor == eng->player) {
-//      eng->log->addMessage("My mind is besieged by terror.");
+//      eng->log->addMsg("My mind is besieged by terror.");
 //    }
 //
 //    actor->getPropHandler()->tryApplyProp(new PropTerrified(eng->dice(3, 6)));
@@ -873,7 +873,7 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 //  if(actor != NULL) {
 //
 //    if(actor == eng->player) {
-//      eng->log->addMessage("I start to feel bogged down.");
+//      eng->log->addMsg("I start to feel bogged down.");
 //    }
 //
 //    actor->getPropHandler()->tryApplyProp(new StatusSlowed(eng->dice(3, 6)));
@@ -898,7 +898,7 @@ SpellCastRetData SpellDisease::specificCast(
   if(caster == eng->player) {
 
   } else {
-    eng->log->addMessage(
+    eng->log->addMsg(
       "A disease is starting to afflict my body!", clrMessageBad);
     eng->player->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
@@ -973,7 +973,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
   Monster* monster = dynamic_cast<Monster*>(actor);
   monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
   if(eng->map->playerVision[summonPos.x][summonPos.y]) {
-    eng->log->addMessage(monster->getNameA() + " appears.");
+    eng->log->addMsg(monster->getNameA() + " appears.");
   }
   return SpellCastRetData(false);
 }

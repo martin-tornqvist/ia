@@ -73,7 +73,7 @@ void Bot::runFunctionTests() {
 }
 
 void Bot::act() {
-  tracer << "Bot::act()" << endl;
+  trace << "Bot::act()" << endl;
 
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
   const int NR_OF_RUNS = 100;
@@ -84,16 +84,16 @@ void Bot::act() {
   assert(eng->player->pos.x < MAP_X_CELLS - 1);
   assert(eng->player->pos.y < MAP_Y_CELLS - 1);
 
-  tracer << "Bot: Checking if can use stairs here" << endl;
+  trace << "Bot: Checking if can use stairs here" << endl;
   if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
     if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
-      tracer << "Bot: Run " << runCount << " finished" << endl;
+      trace << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
       if(runCount >= NR_OF_RUNS) {
-        tracer << "Bot: All runs finished, stopping" << endl;
+        trace << "Bot: All runs finished, stopping" << endl;
         eng->config->isBotPlaying = false;
       } else {
-        tracer << "Bot: Starting new run on first dungeon level" << endl;
+        trace << "Bot: Starting new run on first dungeon level" << endl;
         eng->map->dlvl_ = 0;
       }
     }
@@ -101,18 +101,18 @@ void Bot::act() {
     return;
   }
 
-  tracer << "Bot: Looking for adjacent doors" << endl;
+  trace << "Bot: Looking for adjacent doors" << endl;
   const Pos& playerPos = eng->player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f =
         eng->map->featuresStatic[playerPos.x + dx][playerPos.y + dy];
       if(f->getId() == feature_door) {
-        tracer << "Bot: Adjacent door found, revealing" << endl;
+        trace << "Bot: Adjacent door found, revealing" << endl;
         dynamic_cast<Door*>(f)->reveal(false);
         //If adjacent door is stuck, bash at it
         if(dynamic_cast<Door*>(f)->isStuck()) {
-          tracer << "Bot: Door is stuck, attempting bash" << endl;
+          trace << "Bot: Door is stuck, attempting bash" << endl;
           dynamic_cast<Door*>(f)->tryBash(eng->player);
           return;
         }
@@ -120,9 +120,9 @@ void Bot::act() {
     }
   }
 
-  tracer << "Bot: Checking if terrified (to ignore stairs-path)" << endl;
+  trace << "Bot: Checking if terrified (to ignore stairs-path)" << endl;
   if(eng->player->getPropHandler()->hasProp(propTerrified)) {
-    tracer << "Bot: Is terrified, walking to current pos or randomly" << endl;
+    trace << "Bot: Is terrified, walking to current pos or randomly" << endl;
     if(walkToAdjacentCell(playerPos)) {
       return;
     }
@@ -136,7 +136,7 @@ void Bot::act() {
 }
 
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
-  tracer << "Bot::walkToAdjacentCell()..." << endl;
+  trace << "Bot::walkToAdjacentCell()..." << endl;
 
   Pos playerCell(eng->player->pos);
 
@@ -187,30 +187,30 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
   assert(key >= '1' && key <= '9');
 
-  tracer << "Bot: Sending walk keypress" << endl;
+  trace << "Bot: Sending walk keypress" << endl;
   eng->input->handleKeyPress(KeyboardReadReturnData(key));
 
-  tracer << "Bot::walkToAdjacentCell() [DONE]" << endl;
+  trace << "Bot::walkToAdjacentCell() [DONE]" << endl;
   return playerCell == cellToGoTo;
 }
 
 Pos Bot::findNextStairs() {
-  tracer << "Bot::findNextStairs()..." << endl;
+  trace << "Bot::findNextStairs()..." << endl;
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       FeatureStatic* f = eng->map->featuresStatic[x][y];
       if(f->getId() == feature_stairsDown) {
-        tracer << "Bot::findNextStairs() [DONE]" << endl;
+        trace << "Bot::findNextStairs() [DONE]" << endl;
         return Pos(x, y);
       }
     }
   }
-  tracer << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()" << endl;
+  trace << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()" << endl;
   return Pos(-1, -1);
 }
 
 void Bot::findPathToNextStairs() {
-  tracer << "Bot::findPathToNextStairs()..." << endl;
+  trace << "Bot::findPathToNextStairs()..." << endl;
   currentPath_.resize(0);
 
   const Pos stairPos = findNextStairs();
@@ -231,6 +231,6 @@ void Bot::findPathToNextStairs() {
   }
   currentPath_ = eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
   assert(currentPath_.size() > 0);
-  tracer << "Bot::findPathToNextStairs() [DONE]" << endl;
+  trace << "Bot::findPathToNextStairs() [DONE]" << endl;
 }
 

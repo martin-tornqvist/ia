@@ -25,7 +25,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   vector<Pos> path =
     eng->mapTests->getLine(eng->player->pos, aimCell, true, THROWING_RANGE_LIMIT);
 
-  tracer << path.size() << endl;
+  trace << path.size() << endl;
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -37,7 +37,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  tracer << path.size() << endl;
+  trace << path.size() << endl;
 
   //Render
   if(path.size() > 1) {
@@ -58,14 +58,14 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
-    eng->log->addMessage("I throw a lit dynamite stick.");
+    eng->log->addMsg("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       eng->featureFactory->spawnFeatureAt(
         feature_litDynamite, path.back(),
         new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
-    eng->log->addMessage("I throw a lit flare.");
+    eng->log->addMsg("I throw a lit flare.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       eng->featureFactory->spawnFeatureAt(
         feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
@@ -74,7 +74,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     eng->player->updateFov();
     eng->renderer->drawMapAndInterface();
   } else {
-    eng->log->addMessage("I throw a lit Molotov Cocktail.");
+    eng->log->addMsg("I throw a lit Molotov Cocktail.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
 //      eng->audio->playSound(audio_molotovExplosion);
       eng->explosionMaker->runExplosion(
@@ -103,10 +103,10 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     eng->itemDataHandler->getItemRef(itemThrown, itemRef_a, true);
   if(&actorThrowing == eng->player) {
     eng->log->clearLog();
-    eng->log->addMessage("I throw " + itemName_a + ".");
+    eng->log->addMsg("I throw " + itemName_a + ".");
   } else {
     if(eng->map->playerVision[path.front().x][path.front().y] == true) {
-      eng->log->addMessage(
+      eng->log->addMsg(
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
   }
@@ -145,7 +145,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           }
           const SDL_Color hitMessageClr =
             actorHere == eng->player ? clrMessageBad : clrMessageGood;
-          eng->log->addMessage(
+          eng->log->addMsg(
             actorHere->getNameThe() + " is hit.", hitMessageClr);
           actorHere->hit(data->dmg, dmgType_physical);
 

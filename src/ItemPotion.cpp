@@ -77,7 +77,7 @@ void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor,
 //  }
 //
 //  if(isAnySpellRestored) {
-//    engine->log->addMessage("My magic is restored!");
+//    engine->log->addMsg("My magic is restored!");
 //    identify(false, engine);
 //  }
 //}
@@ -194,7 +194,7 @@ void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor,
 //    }
 //  }
 //  if(isPhobiasCured) {
-//    engine->log->addMessage("All my phobias are cured!");
+//    engine->log->addMsg("All my phobias are cured!");
 //  }
 //
 //  bool isObsessionsCured = false;
@@ -205,11 +205,11 @@ void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor,
 //    }
 //  }
 //  if(isObsessionsCured) {
-//    engine->log->addMessage("All my obsessions are cured!");
+//    engine->log->addMsg("All my obsessions are cured!");
 //  }
 //
 //  engine->player->restoreShock(999, false);
-//  engine->log->addMessage("I feel more at ease.");
+//  engine->log->addMsg("I feel more at ease.");
 //
 //  identify(false, engine);
 //}
@@ -259,7 +259,7 @@ void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor,
 
 void PotionOfKnowledge::specificQuaff(Actor* const actor, Engine* const engine) {
   (void)actor;
-  engine->log->addMessage("I feel more insightful about the mystic powers!");
+  engine->log->addMsg("I feel more insightful about the mystic powers!");
   engine->player->incrMth(4);
   identify(false, engine);
 }
@@ -328,7 +328,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY,
     data_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->log->addMessage("It was a " + REAL_NAME + ".");
+      engine->log->addMsg("It was a " + REAL_NAME + ".");
       engine->player->incrShock(shockValue_heavy);
     }
 
@@ -351,13 +351,13 @@ void Potion::collide(const Pos& pos, Actor* const actor,
 
       if(actor != NULL) {
         if(actor->deadState == actorDeadState_alive) {
-          engine->log->addMessage(
+          engine->log->addMsg(
             "The potion shatters on " +
             actor->getNameThe() + ".");
         }
       } else {
         Feature* const f = engine->map->featuresStatic[pos.x][pos.y];
-        engine->log->addMessage(
+        engine->log->addMsg(
           "The potion shatters on " + f->getDescription(true) + ".");
       }
     }
@@ -368,7 +368,7 @@ void Potion::collide(const Pos& pos, Actor* const actor,
         if(
           actor->deadState == actorDeadState_alive &&
           data_->isIdentified == false && PLAYER_SEE_CELL) {
-          engine->log->addMessage("It had no apparent effect...");
+          engine->log->addMsg("It had no apparent effect...");
         }
       }
     }
@@ -382,9 +382,9 @@ void Potion::quaff(Actor* const actor, Engine* const engine) {
     engine->player->incrShock(shockValue_heavy);
 
     if(data_->isIdentified) {
-      engine->log->addMessage("I drink " + data_->name.name_a + "...");
+      engine->log->addMsg("I drink " + data_->name.name_a + "...");
     } else {
-      engine->log->addMessage("I drink an unknown " + data_->name.name + "...");
+      engine->log->addMsg("I drink an unknown " + data_->name.name + "...");
     }
   }
 
@@ -399,9 +399,9 @@ void Potion::failedToLearnRealName(Engine* const engine,
                                    const string overrideFailString) {
   if(data_->isIdentified == false) {
     if(overrideFailString != "") {
-      engine->log->addMessage(overrideFailString);
+      engine->log->addMsg(overrideFailString);
     } else {
-      engine->log->addMessage("It doesn't seem to affect me.");
+      engine->log->addMsg("It doesn't seem to affect me.");
     }
   }
 }

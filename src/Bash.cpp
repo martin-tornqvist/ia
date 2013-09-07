@@ -10,10 +10,10 @@
 #include "Query.h"
 
 void Bash::playerBash() const {
-  tracer << "Bash::playerBash()" << endl;
+  trace << "Bash::playerBash()" << endl;
 
   eng->log->clearLog();
-  eng->log->addMessage("Which direction? | space/esc cancel", clrWhiteHigh);
+  eng->log->addMsg("Which direction? | space/esc cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
   Pos bashInPos(eng->player->pos + eng->query->direction());
   eng->log->clearLog();
@@ -22,17 +22,17 @@ void Bash::playerBash() const {
     Actor* actor = eng->mapTests->getActorAtPos(bashInPos);
 
     if(actor == NULL) {
-      tracer << "Bash: No actor at bash pos, attempting to bash feature instead" << endl;
+      trace << "Bash: No actor at bash pos, attempting to bash feature instead" << endl;
       playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
     }  else {
-      tracer << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
+      trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(eng->player->getPropHandler()->allowAttackMelee(true)) {
-        tracer << "Bash: Player is allowed to do melee attack" << endl;
+        trace << "Bash: Player is allowed to do melee attack" << endl;
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
         if(eng->player->checkIfSeeActor(*actor, blockers)) {
-          tracer << "Bash: Player can see actor" << endl;
+          trace << "Bash: Player can see actor" << endl;
           eng->player->kick(*actor);
           return;
         }
@@ -53,9 +53,9 @@ void Bash::playerBashFeature(Feature* const feature) const {
   if(bashableObjectFound == false) {
     const bool PLAYER_IS_BLIND = eng->player->getPropHandler()->allowSee();
     if(PLAYER_IS_BLIND == false) {
-      eng->log->addMessage("I see nothing there to bash.");
+      eng->log->addMsg("I see nothing there to bash.");
     } else {
-      eng->log->addMessage("I find nothing there to bash.");
+      eng->log->addMsg("I find nothing there to bash.");
     }
   }
 }
