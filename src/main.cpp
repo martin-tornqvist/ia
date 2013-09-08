@@ -21,7 +21,9 @@
 #include "DungeonMaster.h"
 #include "DebugModeStatPrinter.h"
 
+#if !(defined MACOSX)
 #undef main
+#endif
 int main(int argc, char* argv[]) {
   trace << "main()..." << endl;
 

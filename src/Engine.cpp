@@ -2,8 +2,13 @@
 
 #include <iostream>
 
+#if (defined OSX_SDL_FW)
+#include "SDL.h"
+#include "SDL_image/SDL_image.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#endif
 
 #include "Converters.h"
 

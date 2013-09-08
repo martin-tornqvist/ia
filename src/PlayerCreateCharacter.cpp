@@ -240,7 +240,11 @@ void PlayerEnterName::readKeys(string& currentString, bool& done,
   }
 
   if(currentString.size() > 0) {
+#if (defined MACOSX)
+    if(d.sdlKey_ == SDLK_BACKSPACE || d.sdlKey_ == SDLK_DELETE) {
+#else
     if(d.sdlKey_ == SDLK_BACKSPACE) {
+#endif
       currentString.erase(currentString.end() - 1);
       draw(currentString, pos);
     }

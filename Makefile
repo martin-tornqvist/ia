@@ -1,65 +1,112 @@
-CC=g++
+SHELL=/bin/sh
 
-# Directiories
-SRC_DIR=src
-DEBUG_MODE_INC_DIR=$(SRC_DIR)/debugModeIncl
-RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
-TARGET_DIR=target
-ASSETS_DIR=assets
+# optimized build; default is debug build
+# RELEASE = 1
 
-# Includes
-INCLUDES=
+# build for macosx
+# TARGETOS = macosx
 
-# Target specific include files
-_INCLUDES=
-_CFLAGS=
-debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
-debug : _CFLAGS=-O0 -g
-release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
-release : _CFLAGS=-O2
+# use -lSDL -lSDL_image for macosx; default uses frameworks
+# OSXLIBSDL = 1
 
-#Flags
-CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-LDFLAGS=$(shell sdl-config --libs) -lSDL_image
+# clang
+# CC ?= cc
+# CXX ?= c++
+
+# gcc
+# CC ?= gcc
+# CXX ?= g++
+
+# Directories
+SRCDIR = ./src
+OBJDIR = ./obj
+DEBUGDIR = $(SRCDIR)/debugModeIncl
+RELEASEDIR = $(SRCDIR)/releaseModeIncl
+ASSETSDIR = ./assets
+OSXDIR = ./osx
+BINDIR = ./build
 
 # Output and sources
-EXECUTABLE=ia
-SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
-OBJECTS=$(SOURCES:.cpp=.o)
-OBJECTS_STAMP_FILE=obj_stamp
+PROG = ia
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
-# Various bash commands
-RM=rm -rf
-MV=mv -f
-MKDIR=mkdir -p
-CP=cp -r
+# Flags
+WARNINGS = -Wall -Wextra
+OPTFLAGS = -O0 -g -pipe
+INCLUDES = $(shell sdl-config --cflags)
+BUILDINC = -I$(DEBUGDIR)
+LIBS = $(shell sdl-config --libs) -lSDL -lSDL_image
 
-# Dependencies 
-debug: $(SOURCES) $(EXECUTABLE)
-release: $(SOURCES) $(EXECUTABLE)
+# optimized build
+ifdef RELEASE
+  OPTFLAGS = -O2 -pipe
+  BUILDINC = -I$(RELEASEDIR)
+endif
 
-# Make targets
-.DEFAULT_GOAL=default_target
-.PHONY: default_target
-default_target:
-	@echo "Use \"make debug\" or \"make release\""
+# supress clang warnings
+ifeq ($(CXX),c++)
+  WARNINGS += -Wno-mismatched-tags
+endif
 
-.PHONY: $(EXECUTABLE)
-$(EXECUTABLE): $(OBJECTS_STAMP_FILE)
-	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
-	$(RM) $(TARGET_DIR)
-	$(MKDIR) $(TARGET_DIR)
-	$(MV) $(EXECUTABLE) $(TARGET_DIR)
-	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
+# OSX
+ifeq ($(TARGETOS),macosx)
+  OSXMIN ?= 10.6
+  DEFS = -DMACOSX
+  OPTFLAGS += -mmacosx-version-min=$(OSXMIN)
+  OBJECTS += $(OBJDIR)/SDLMain.o
+  ifdef OSXLIBSDL
+    DEFS += -DOSX_SDL_LIBS
+    # handle #include "SDL/SDL.h" and "SDL.h", etc.
+    INCLUDES += -I$(shell dirname $(shell sdl-config --cflags | sed 's/-I\(.[^ ]*\) .*/\1/'))
+  else
+    OSXFW = 1
+    DEFS += -DOSX_SDL_FW
+    INCLUDES = -F/Library/Frameworks \
+	       -F$(HOME)/Library/Frameworks \
+	       -I/Library/Frameworks/SDL.framework/Headers \
+	       -I$(HOME)/Library/Frameworks/SDL.framework/Headers \
+	       -I/Library/Frameworks/SDL_image.framework/Headers \
+	       -I$(HOME)/Library/Frameworks/SDL_image.framework/Headers
+    LIBS = -F/Library/Frameworks \
+	   -F$(HOME)/Library/Frameworks \
+	   -framework SDL -framework SDL_image -framework Cocoa
+  endif
+endif
 
-.PHONY: $(OBJECTS_STAMP_FILE)
-$(OBJECTS_STAMP_FILE): $(SOURCES)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
-	$(MV) *.o ./$(SRC_DIR)/
+# check for sdl-config in PATH
+ifndef OSXFW
+  SDLCFG := $(shell sdl-config --prefix 2>/dev/null 1>&2; echo $$?)
+  ifneq ($(SDLCFG),0)
+    $(error sdl-config not in PATH) 
+  endif
+endif
 
-.PHONY: clean
+CFLAGS_EXTRA = $(WARNINGS) $(OPTFLAGS) $(INCLUDES) $(BUILDINC) $(DEFS)
+
+all: $(OBJDIR)/$(PROG)
+
+$(OBJDIR)/$(PROG): $(OBJDIR) $(OBJECTS)
+	$(CXX) -o $@ $(DEFS) $(OBJECTS) $(LIBS) $(LDFLAGS)
+	rm -rf $(BINDIR)
+	mkdir -p $(BINDIR)
+	cp -R $(ASSETSDIR)/ $(BINDIR)
+	cp $(OBJDIR)/$(PROG) $(BINDIR)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CFLAGS_EXTRA) $(CXXFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: $(OSXDIR)/%.m
+	$(CC) $(CFLAGS_EXTRA) $(CFLAGS) -c $< -o $@
+
 clean:
-	find . -type f -name '*~' | xargs $(RM)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(RM) $(TARGET_DIR)
+	rm -rf $(OBJDIR)
+	rm -f $(PROG)
+
+uninstall:
+	rm -rf $(BINDIR)
+
+.PHONY: all clean uninstall
