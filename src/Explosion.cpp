@@ -90,14 +90,16 @@ void ExplosionMaker::runExplosion(
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       reach[x][y] = eng->fov->checkOneCell(
-                      blockers, Pos(x, y), origin, false) && !blockers[x][y];
+                      blockers, Pos(x, y), origin, false) &&
+                    !blockers[x][y];
     }
   }
   reach[origin.x][origin.y] = true;
 
   //Assuming all explosions alerts monsters to player.
   if(DO_EXPLOSION_DMG) {
-    eng->soundEmitter->emitSound(Sound("I hear an explosion!", true, origin, true, true));
+    eng->soundEmitter->emitSound(
+      Sound("I hear an explosion!", true, origin, true, true));
 //    eng->audio->playSound(audio_explosion);
   }
 
@@ -163,7 +165,7 @@ void ExplosionMaker::runExplosion(
             if(DO_EXPLOSION_DMG) {
               if(currentActor == eng->player) {
                 eng->log->addMsg("I am hit by an explosion!",
-                                     clrMessageBad);
+                                 clrMessageBad);
               }
               currentActor->hit(EXPLOSION_DMG_AT_DIST, dmgType_physical);
             }

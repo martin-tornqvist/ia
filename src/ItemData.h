@@ -128,6 +128,7 @@ enum ItemId_t {
   item_armorIronSuit,
   item_armorFlackJacket,
   item_armorAsbestosSuit,
+  item_armorHeavyCoat,
 
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
@@ -148,9 +149,9 @@ enum ItemId_t {
   item_potionOfSpirit,
   item_potionOfBlindness,
 //  item_potionOfCorruption,
-//  item_potionOfTheCobra,
+  item_potionOfBerserk,
 //  item_potionOfStealth,
-//  item_potionOfFortitude, //TODO Reimplement in some way?
+  item_potionOfFortitude,
 //  item_potionOfToughness, //TODO Reimplement in some way?
   item_potionOfParalyzation,
   item_potionOfConfusion,
@@ -158,6 +159,11 @@ enum ItemId_t {
   item_potionOfPoison,
   item_potionOfKnowledge,
 //  item_potionOfForgetfulness,
+  item_potionOfRFire,
+  item_potionOfRCold,
+  item_potionOfAntidote,
+  item_potionOfRElec,
+  item_potionOfRAcid,
 
   item_deviceSentry,
   item_deviceRepeller,

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos& pos,
+Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
                                         FeatureSpawnData* spawnData) {
   const FeatureData* const data = eng->featureDataHandler->getData(id);
 
@@ -193,10 +193,11 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos& pos,
   return NULL;
 }
 
-void FeatureFactory::replaceStaticFeatureAt(FeatureStatic* const newFeature,
-    const Pos& pos) {
+void FeatureFactory::replaceStaticFeatureAt(
+  FeatureStatic* const newFeature, const Pos& pos) {
+
   if((eng->map->featuresStatic[pos.x][pos.y]) != NULL) {
-    delete(eng->map->featuresStatic[pos.x][pos.y]);
+    delete eng->map->featuresStatic[pos.x][pos.y];
   }
   eng->map->featuresStatic[pos.x][pos.y] = newFeature;
 }

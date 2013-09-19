@@ -29,7 +29,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   isWeakAttack(false) {
   currentDefender = &defender_;
 
-  const Pos& defenderPos = currentDefender->pos;
+  const Pos& defPos = currentDefender->pos;
 
   bool isDefenderAware = true;
   if(attacker == eng->player) {
@@ -42,20 +42,19 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 
   isDefenderDodging = false;
-  if(currentDefender->getData()->canDodge) {
+  if(isDefenderAware && currentDefender->getData()->canDodge) {
     const int DEFENDER_DODGE_SKILL =
       currentDefender->getData()->abilityVals.getVal(
         ability_dodgeAttack, true, *currentDefender);
 
     const int DODGE_MOD_AT_FEATURE =
-      eng->map->featuresStatic[defenderPos.x][defenderPos.y]->getDodgeModifier();
+      eng->map->featuresStatic[defPos.x][defPos.y]->getDodgeModifier();
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
     if(DODGE_CHANCE_TOT > 0) {
-      if(isDefenderAware) {
-        isDefenderDodging = eng->abilityRoll->roll(DODGE_CHANCE_TOT) >= successSmall;
-      }
+      isDefenderDodging =
+        eng->abilityRoll->roll(DODGE_CHANCE_TOT) >= successSmall;
     }
   }
 
@@ -78,7 +77,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     bool isDefenderHeldByWeb = false;
     const FeatureStatic* const f =
-      eng->map->featuresStatic[defenderPos.x][defenderPos.y];
+      eng->map->featuresStatic[defPos.x][defPos.y];
     if(f->getId() == feature_trap) {
       const Trap* const t = dynamic_cast<const Trap*>(f);
       if(t->getTrapType() == trap_spiderWeb) {

@@ -12,60 +12,62 @@ const int NR_SKILLS = 2;
 
 void PlayerCreateCharacter::run() {
   //------------------------------------------------------ TRAITS AND SKILLS
-  vector<PlayerBon_t> bonsTraits;
-  vector<PlayerBon_t> bonsSkills;
+  if(eng->config->isBotPlaying == false) {
+    vector<PlayerBon_t> bonsTraits;
+    vector<PlayerBon_t> bonsSkills;
 
-  for(int i = 0; i < endOfPlayerBons; i++) {
-    PlayerBon_t bon = PlayerBon_t(i);
-    if(eng->playerBonHandler->getBonType(bon) == playerBonType_trait) {
-      bonsTraits.push_back(bon);
-    } else {
-      bonsSkills.push_back(bon);
-    }
-  }
-
-  int nrTraitsPicked = 0;
-  int nrSkillsPicked = 0;
-
-  CharGenStep_t step = CharGenStep_traits;
-
-  MenuBrowser browser(bonsTraits.size(), 0);
-  draw(bonsTraits, bonsSkills, browser, step);
-  while(step != CharGenStep_name) {
-    const MenuAction_t action = eng->menuInputHandler->getAction(browser);
-    switch(action) {
-      case menuAction_browsed: {
-        draw(bonsTraits, bonsSkills, browser, step);
-      } break;
-
-      case menuAction_canceled: {} break;
-
-      case menuAction_selected: {
-        if(step == CharGenStep_traits) {
-          const PlayerBon_t bon = bonsTraits.at(browser.getPos().y);
-          if(eng->playerBonHandler->isBonPicked(bon) == false) {
-            eng->playerBonHandler->pickBon(bon);
-            nrTraitsPicked++;
-          }
-          if(nrTraitsPicked == NR_TRAITS) {
-            step = CharGenStep_skills;
-            browser = MenuBrowser(bonsSkills.size(), 0);
-          }
-        } else {
-          const PlayerBon_t bon = bonsSkills.at(browser.getPos().y);
-          if(eng->playerBonHandler->isBonPicked(bon) == false) {
-            eng->playerBonHandler->pickBon(bon);
-            nrSkillsPicked++;
-          }
-          if(nrSkillsPicked == NR_SKILLS) {
-            step = CharGenStep_name;
-          }
-        }
-        draw(bonsTraits, bonsSkills, browser, step);
+    for(int i = 0; i < endOfPlayerBons; i++) {
+      PlayerBon_t bon = PlayerBon_t(i);
+      if(eng->playerBonHandler->getBonType(bon) == playerBonType_trait) {
+        bonsTraits.push_back(bon);
+      } else {
+        bonsSkills.push_back(bon);
       }
-      break;
+    }
 
-      case menuAction_selectedWithShift: {} break;
+    int nrTraitsPicked = 0;
+    int nrSkillsPicked = 0;
+
+    CharGenStep_t step = CharGenStep_traits;
+
+    MenuBrowser browser(bonsTraits.size(), 0);
+    draw(bonsTraits, bonsSkills, browser, step);
+    while(step != CharGenStep_name) {
+      const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+      switch(action) {
+        case menuAction_browsed: {
+          draw(bonsTraits, bonsSkills, browser, step);
+        } break;
+
+        case menuAction_canceled: {} break;
+
+        case menuAction_selected: {
+          if(step == CharGenStep_traits) {
+            const PlayerBon_t bon = bonsTraits.at(browser.getPos().y);
+            if(eng->playerBonHandler->isBonPicked(bon) == false) {
+              eng->playerBonHandler->pickBon(bon);
+              nrTraitsPicked++;
+            }
+            if(nrTraitsPicked == NR_TRAITS) {
+              step = CharGenStep_skills;
+              browser = MenuBrowser(bonsSkills.size(), 0);
+            }
+          } else {
+            const PlayerBon_t bon = bonsSkills.at(browser.getPos().y);
+            if(eng->playerBonHandler->isBonPicked(bon) == false) {
+              eng->playerBonHandler->pickBon(bon);
+              nrSkillsPicked++;
+            }
+            if(nrSkillsPicked == NR_SKILLS) {
+              step = CharGenStep_name;
+            }
+          }
+          draw(bonsTraits, bonsSkills, browser, step);
+        }
+        break;
+
+        case menuAction_selectedWithShift: {} break;
+      }
     }
   }
 
@@ -197,8 +199,8 @@ void PlayerEnterName::run(const Pos& pos) {
     }
   }
 
-  ActorData& iDef = *(eng->player->getData());
-  iDef.name_a = iDef.name_the = name;
+  ActorData& def = *(eng->player->getData());
+  def.name_a = def.name_the = name;
 }
 
 void PlayerEnterName::draw(const string& currentString, const Pos& pos) {

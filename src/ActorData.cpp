@@ -1095,7 +1095,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_wolf;
   d.hp = 4;
   d.spi = 2;
-  d.dmgMelee = 2;
+  d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 24);
   d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.canSeeInDarkness = true;
@@ -1545,8 +1545,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_massOfWorms;
   d.hp = 2;
   d.spi = 1;
-  d.dmgMelee = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 14);
+  d.dmgMelee = 2;
+  d.abilityVals.setVal(ability_accuracyMelee, 20);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;

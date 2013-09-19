@@ -607,7 +607,7 @@ void TrapSmoke::trapSpecificTrigger(Actor* const actor,
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       eng->log->addMsg("Suddenly the air around " + actorName +
-                           " is thick with smoke!");
+                       " is thick with smoke!");
     }
   }
 
@@ -627,7 +627,7 @@ void TrapAlarm::trapSpecificTrigger(Actor* const actor,
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       eng->log->addMsg("Suddenly the air around " + actorName +
-                           " is thick with smoke!");
+                       " is thick with smoke!");
     } else {
     }
   }
@@ -698,14 +698,15 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
 
     const bool IS_PLAYER = actor == eng->player;
     const bool PLAYER_CAN_SEE = eng->player->getPropHandler()->allowSee();
-    const bool PLAYER_CAN_SEE_ACTOR = eng->player->checkIfSeeActor(*actor, NULL);
+    const bool PLAYER_CAN_SEE_ACTOR =
+      eng->player->checkIfSeeActor(*actor, NULL);
     const string actorName = actor->getNameThe();
 
     trace << "TrapSpiderWeb: Name of actor held: \"" << actorName << "\"" << endl;
 
     //TODO reimplement something affecting chance of success?
 
-    if(eng->dice.fraction(1, 4)) {
+    if(eng->dice.oneIn(4)) {
       trace << "TrapSpiderWeb: Actor succeeded to break free" << endl;
 
       isHoldingActor = false;
@@ -718,10 +719,12 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
         }
       }
 
-      if(eng->dice.percentile() < 50) {
+      if(eng->dice.oneIn(2)) {
         trace << "TrapSpiderWeb: Web is destroyed" << endl;
 
-        if((IS_PLAYER && PLAYER_CAN_SEE) || (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
+        if(
+          (IS_PLAYER && PLAYER_CAN_SEE) ||
+          (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
           eng->log->addMsg("The web is destroyed.");
         }
 
@@ -731,10 +734,8 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
     } else {
       if(IS_PLAYER) {
         eng->log->addMsg("I struggle to break free.");
-      } else {
-        if(PLAYER_CAN_SEE_ACTOR) {
-          eng->log->addMsg(actorName + " struggles to break free.");
-        }
+      } else if(PLAYER_CAN_SEE_ACTOR) {
+        eng->log->addMsg(actorName + " struggles to break free.");
       }
       return pos;
     }

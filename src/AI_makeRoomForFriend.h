@@ -81,8 +81,10 @@ public:
 private:
   static bool checkIfBlockingMonster(const Pos& pos, Monster* other,
                                      Engine* engine) {
-    const vector<Pos> line = engine->mapTests->getLine(
-                                 other->pos, engine->player->pos, true, 99999);
+
+    vector<Pos> line;
+    engine->mapTests->getLine(
+      other->pos, engine->player->pos, true, 9999, line);
     for(unsigned int i = 0; i < line.size(); i++) {
       if(line.at(i) == pos) {
         return true;

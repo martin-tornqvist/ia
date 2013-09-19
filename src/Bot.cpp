@@ -37,16 +37,19 @@ void Bot::runFunctionTests() {
   Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
   const Abilities_t weaponAbilityUsed = weaponUsed->getData().meleeAbilityUsed;
   const int HIT_CHANCE_WEAPON = weaponUsed->getData().meleeHitChanceMod;
-  const int HIT_CHANCE_SKILL = eng->player->getData()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
+  const int HIT_CHANCE_SKILL =
+    eng->player->getData()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
   const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
   const int NUMBER_OF_ATTACKS = 100;
   double hitChanceReal = 0;
 
   //Make sure an actor can be spawned next to the player
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, eng->player->pos + Pos(1, 0));
+  eng->featureFactory->spawnFeatureAt(
+    feature_stoneFloor, eng->player->pos + Pos(1, 0));
 
   for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
-    Actor* actor = eng->actorFactory->spawnActor(actor_rat, eng->player->pos + Pos(1, 0));
+    Actor* actor = eng->actorFactory->spawnActor(
+                     actor_rat, eng->player->pos + Pos(1, 0));
     dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
     eng->attack->melee(*eng->player, *dynamic_cast<Weapon*>(weaponUsed), *actor);
 
@@ -84,8 +87,29 @@ void Bot::act() {
   assert(eng->player->pos.x < MAP_X_CELLS - 1);
   assert(eng->player->pos.y < MAP_Y_CELLS - 1);
 
+  //Occasionally apply a random property for a few turns
+  if(eng->dice.oneIn(5)) {
+    vector<PropId_t> propCandidates;
+    propCandidates.resize(0);
+    for(unsigned int i = 0; i < endOfPropIds; i++) {
+      PropData& d = eng->propDataHandler->dataList[i];
+      if(d.allowTestingOnBot) {
+        propCandidates.push_back(PropId_t(i));
+      }
+    }
+    PropId_t propId =
+      propCandidates.at(eng->dice.range(0, propCandidates.size() - 1));
+
+    PropHandler* const propHandler = eng->player->getPropHandler();
+    Prop* const prop =
+      propHandler->makePropFromId(propId, propTurnsSpecified, 5);
+
+    propHandler->tryApplyProp(prop, true);
+  }
+
   trace << "Bot: Checking if can use stairs here" << endl;
-  if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
+  const Pos& pos = eng->player->pos;
+  if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown) {
     if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
       trace << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
@@ -143,8 +167,10 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   assert(eng->mapTests->isCellsNeighbours(playerCell, cellToGoTo, true));
 
   //Get relative positions
-  const int xRel = cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
-  const int yRel = cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
+  const int xRel =
+    cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
+  const int yRel =
+    cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
   if(cellToGoTo != playerCell) {
     assert(xRel != 0 || yRel != 0);
@@ -180,8 +206,8 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     key = '3';
   }
 
-  const int CHANCE_FOR_RANDOM_DIRECTION = 50;
-  if(eng->dice(1, 100) < CHANCE_FOR_RANDOM_DIRECTION) {
+  //Occasionally randomize movement
+  if(eng->dice.oneIn(2)) {
     key = '0' + eng->dice.range(1, 9);
   }
 
@@ -218,7 +244,8 @@ void Bot::findPathToNextStairs() {
   assert(stairPos != Pos(-1, -1));
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
+  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(
+    moveType_walk, blockers);
 
   //Consider all doors passable
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -229,7 +256,8 @@ void Bot::findPathToNextStairs() {
       }
     }
   }
-  currentPath_ = eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
+  currentPath_ =
+    eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
   assert(currentPath_.size() > 0);
   trace << "Bot::findPathToNextStairs() [DONE]" << endl;
 }

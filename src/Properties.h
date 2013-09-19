@@ -56,7 +56,7 @@ enum PropId_t {
   propInfected,
   propDiseased,
   propWeakened,
-  propJuggernaut,
+  propBerserk,
 //  propHeroic,
   propClairvoyant,
   propBlessed,
@@ -104,6 +104,25 @@ enum PropSrc_t {
 };
 
 struct PropData {
+  PropData() {
+    reset();
+  }
+  inline void reset() {
+    id = endOfPropIds;
+    stdRndTurns = Range(10, 10);
+    name = "";
+    nameShort = "";
+    for(int i = 0; i < endOfPropMsg; i++) {
+      msg[i] = "";
+    }
+    isMakingMonsterAware = false;
+    allowDisplayTurns = true;
+    allowApplyMoreWhileActive = true;
+    updatePlayerVisualWhenStartOrEnd = false;
+    isEndedByMagicHealing = true;
+    allowTestingOnBot = false;
+    alignment = propAlignmentBad;
+  }
   PropId_t id;
   Range stdRndTurns;
   string name;
@@ -113,6 +132,8 @@ struct PropData {
   bool allowDisplayTurns;
   bool allowApplyMoreWhileActive;
   bool updatePlayerVisualWhenStartOrEnd;
+  bool isEndedByMagicHealing;
+  bool allowTestingOnBot;
   PropAlignment_t alignment;
 };
 
@@ -150,6 +171,8 @@ public:
   bool allowSee();
   bool allowMove();
   bool allowAct();
+  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE);
   void onHit();
   int getAbilityMod(const Abilities_t ability);
 
@@ -166,22 +189,25 @@ public:
 //    return false;
 //  }
 
-  void endAppliedProp(const PropId_t id,
-                      const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
+  bool endAppliedProp(const PropId_t id,
+                      const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS],
                       const bool RUN_PROP_END_EFFECTS = true);
+
+  void endAppliedPropsByMagicHealing();
 
   bool changeActorClr(SDL_Color& clr);
 
   vector<Prop*> appliedProps_;
 
   void newTurnAllProps(
-    const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]);
+    const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void getPropsInterfaceLine(vector<StringAndClr>& line);
 
 private:
   friend class Player;
   friend class ExplosionMaker;
+  friend class Bot;
   Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
                        const int NR_TURNS = -1);
 
@@ -233,14 +259,17 @@ public:
   virtual bool updatePlayerVisualWhenStartOrEnd() {
     return data_->updatePlayerVisualWhenStartOrEnd;
   }
-  virtual bool allowSee()   {return true;}
-  virtual bool allowMove()  {return true;}
-  virtual bool allowAct()   {return true;}
-  virtual void onHit()      {}
-  virtual void onNewTurn()  {}
-  virtual void onStart()    {}
-  virtual void onEnd()      {}
-  virtual void onMore()     {}
+  virtual bool isEndedByMagicHealing() {
+    return data_->isEndedByMagicHealing;
+  }
+  virtual bool allowSee()         {return true;}
+  virtual bool allowMove()        {return true;}
+  virtual bool allowAct()         {return true;}
+  virtual void onHit()            {}
+  virtual void onNewTurn()        {}
+  virtual void onStart()          {}
+  virtual void onEnd()            {}
+  virtual void onMore()           {}
 
   virtual bool changeActorClr(SDL_Color& clr) {
     (void)clr;
@@ -252,6 +281,14 @@ public:
     return true;
   }
   virtual bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    return true;
+  }
+  virtual bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    return true;
+  }
+  virtual bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return true;
   }
@@ -299,6 +336,8 @@ public:
     if(ability == ability_dodgeTrap)      return nrWounds_ * -10;
     return 0;
   }
+
+  void getMsg(const PropMsg_t msgType, string& msgRef);
 
   void onMore();
 
@@ -494,6 +533,8 @@ public:
     Prop(propBurning, engine, turnsInit, turns) {}
 
   ~PropBurning() {}
+
+  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
   bool changeActorClr(SDL_Color& clr) {
     clr = clrRedLgt;
@@ -735,22 +776,25 @@ private:
 //  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 6);}
 };
 
-class PropJuggernaut: public Prop {
+class PropBerserk: public Prop {
 public:
-  PropJuggernaut(Engine* engine, PropTurns_t turnsInit,
-                 int turns = -1) :
-    Prop(propJuggernaut, engine, turnsInit, turns) {}
+  PropBerserk(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propBerserk, engine, turnsInit, turns) {}
 
-  ~PropJuggernaut() {}
+  ~PropBerserk() {}
+
+  void onEnd();
+
+  void changeMovePos(const Pos& actorPos, Pos& movePos);
+
+  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE);
+  bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE);
+
+  bool tryResistOtherProp(const PropId_t id);
 
   int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_accuracyMelee)
-      return 999;
-    if(ability == ability_accuracyRanged)
-      return 999;
-    if(ability == ability_dodgeTrap)
-      return 999;
-    if(ability == ability_dodgeAttack)
       return 999;
     return 0;
   }

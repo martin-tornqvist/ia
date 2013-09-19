@@ -32,7 +32,7 @@ private:
   int getRandomOutOfDepth() const;
 
   void spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector, bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
-                            const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, const bool IS_ROAMING_ALLOWED) const;
+                            const int NR_LVLS_OUT_OF_DEPTH, const bool IS_ROAMING_ALLOWED) const;
 
   void makeListOfMonstersEligibleForAutoSpawning(const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, vector<ActorId_t>& listToFill) const;
 

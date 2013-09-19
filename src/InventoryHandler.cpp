@@ -182,8 +182,7 @@ void InventoryHandler::runSlotsScreen() {
               browserPosToSetAfterDrop = browser.getPos().y;
 
               eng->log->addMsg(
-                "I take off my " + itemName + ".", clrWhite,
-                messageInterrupt_never, true);
+                "I take off my " + itemName + ".", clrWhite, true, true);
               item->onTakeOff();
               eng->renderer->drawMapAndInterface();
               eng->gameTime->endTurnOfCurrentActor();

@@ -14,21 +14,22 @@
 using namespace std;
 
 void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
-  const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-  vector<ActorId_t>& listToFill) const {
+  const int NR_LVLS_OUT_OF_DEPTH, vector<ActorId_t>& listToFill) const {
 
   listToFill.resize(0);
 
   const int DLVL = eng->map->getDLVL();
+  const int EFFECTIVE_DLVL =
+    max(1, min(LAST_CAVERN_LEVEL, DLVL + NR_LVLS_OUT_OF_DEPTH));
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
     const ActorData& d = eng->actorDataHandler->dataList[i];
     if(
       d.isAutoSpawnAllowed &&
       d.nrLeftAllowedToSpawn != 0 &&
-      DLVL >= (d.spawnMinDLVL - NR_LVLS_OUT_OF_DEPTH_ALLOWED) &&
-      DLVL <= d.spawnMaxDLVL) {
-      listToFill.push_back(static_cast<ActorId_t>(i));
+      EFFECTIVE_DLVL >= d.spawnMinDLVL &&
+      EFFECTIVE_DLVL <= d.spawnMaxDLVL) {
+      listToFill.push_back((ActorId_t)(i));
     }
   }
 }
@@ -379,12 +380,12 @@ int PopulateMonsters::getRandomOutOfDepth() const {
     return 0;
   }
 
-  const int RND = eng->dice(1, 100);
+  const int RND = eng->dice.range(1, 100);
 
-  if(RND <= 3 && DLVL > 1) {
+  if(RND <= 8 && DLVL > 1) {
     return 6;
   }
-  if(RND <= 20) {
+  if(RND <= 25) {
     return 3;
   }
 

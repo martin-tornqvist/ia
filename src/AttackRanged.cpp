@@ -26,7 +26,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   for(unsigned int i = 0; i < NR_PROJECTILES; i++) {
     Projectile* const p = new Projectile;
-    p->setAttackData(new RangedAttackData(attacker, wpn, aimPos, attacker.pos, eng));
+    p->setAttackData(new RangedAttackData(
+                       attacker, wpn, aimPos, attacker.pos, eng));
     projectiles.push_back(p);
   }
 
@@ -47,8 +48,9 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   //Get projectile path
   const Pos origin = attacker.pos;
-  const vector<Pos> projectilePath =
-    eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim);
+  vector<Pos> projectilePath;
+  eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim,
+                         projectilePath);
 
   const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
   char projectileGlyph = wpn.getData().rangedMissileGlyph;
@@ -59,12 +61,16 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     if(projectilePath.at(i).x == origin.x)
       projectileGlyph = '|';
     if(
-      (projectilePath.at(i).x > origin.x && projectilePath.at(i).y < origin.y) ||
-      (projectilePath.at(i).x < origin.x && projectilePath.at(i).y > origin.y))
+      (projectilePath.at(i).x > origin.x &&
+       projectilePath.at(i).y < origin.y) ||
+      (projectilePath.at(i).x < origin.x &&
+       projectilePath.at(i).y > origin.y))
       projectileGlyph = '/';
-    if((
-          projectilePath.at(i).x > origin.x && projectilePath.at(i).y > origin.y) ||
-        (projectilePath.at(i).x < origin.x && projectilePath.at(i).y < origin.y))
+    if(
+      (projectilePath.at(i).x > origin.x &&
+       projectilePath.at(i).y > origin.y) ||
+      (projectilePath.at(i).x < origin.x &&
+       projectilePath.at(i).y < origin.y))
       projectileGlyph = '\\';
   }
   Tile_t projectileTile = wpn.getData().rangedMissileTile;
@@ -362,10 +368,10 @@ void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
   if(data.attacker == eng->player)
     eng->log->addMsg("I " + data.verbPlayerAttacks + ".");
   else {
-    if(eng->map->playerVision[data.attacker->pos.x][data.attacker->pos.y] == true) {
+    if(eng->map->playerVision[data.attacker->pos.x][data.attacker->pos.y]) {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
-      eng->log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, messageInterrupt_force);
+      eng->log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
     }
   }
 
@@ -399,8 +405,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
       }
 
       if(data.currentDefender == eng->player) {
-        eng->log->addMsg("I am hit" + dmgPunctuation, clrMessageBad,
-                             messageInterrupt_force);
+        eng->log->addMsg("I am hit" + dmgPunctuation, clrMessageBad, true);
 
 //          if(data.attackResult == successCritical) {
 //            eng->log->addMsg("It was a great hit!", clrMessageBad, messageInterrupt_force);

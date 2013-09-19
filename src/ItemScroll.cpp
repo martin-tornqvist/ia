@@ -35,6 +35,14 @@ const string Scroll::getRealTypeName() {
   return "";
 }
 
+bool Scroll::activateDefault(Actor* const actor) {
+  PropHandler* const propHandler = actor->getPropHandler();
+  if(propHandler->allowRead(true)) {
+    return read();
+  }
+  return false;
+}
+
 Spell* Scroll::getSpell() {
   return eng->spellHandler->getSpellFromId(data_->spellCastFromScroll);
 }

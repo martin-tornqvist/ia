@@ -22,8 +22,9 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   eng->player->explosiveThrown();
 
-  vector<Pos> path =
-    eng->mapTests->getLine(eng->player->pos, aimCell, true, THROWING_RANGE_LIMIT);
+  vector<Pos> path;
+  eng->mapTests->getLine(eng->player->pos, aimCell, true,
+                         THROWING_RANGE_LIMIT, path);
 
   trace << path.size() << endl;
 
@@ -93,9 +94,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
   const ActorSizes_t aimLevel = data->intendedAimLevel;
 
-  vector<Pos> path = eng->mapTests->getLine(
-                       actorThrowing.pos, targetCell,
-                       false, THROWING_RANGE_LIMIT);
+  vector<Pos> path;
+  eng->mapTests->getLine(actorThrowing.pos, targetCell, false,
+                         THROWING_RANGE_LIMIT, path);
 
   const ItemData& itemThrownData = itemThrown.getData();
 
@@ -152,7 +153,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           //If the thing that hit an actor is a potion, let it make stuff happen...
           if(itemThrownData.isQuaffable) {
             dynamic_cast<Potion*>(&itemThrown)->collide(
-              curPos, actorHere, eng);
+              curPos, actorHere);
             delete &itemThrown;
             delete data;
             eng->gameTime->endTurnOfCurrentActor();
@@ -188,7 +189,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   if(itemThrownData.isQuaffable) {
     if(blockedInElement >= 0) {
       dynamic_cast<Potion*>(&itemThrown)->collide(
-        path.at(blockedInElement), NULL, eng);
+        path.at(blockedInElement), NULL);
       delete &itemThrown;
       delete data;
       eng->gameTime->endTurnOfCurrentActor();

@@ -53,8 +53,8 @@ public:
 class MissileAttackData: public AttackData {
 public:
   MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                   const Pos& curPos_, Engine* engine,
-                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+                    const Pos& curPos_, Engine* engine,
+                    ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
   ActorSizes_t  currentDefenderSize;

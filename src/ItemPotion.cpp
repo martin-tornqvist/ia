@@ -9,61 +9,55 @@
 #include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
 
-void PotionOfHealing::specificQuaff(Actor* const actor,
-                                    Engine* const engine) {
-  //End disease
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  engine->mapTests->makeVisionBlockerArray(
-    engine->player->pos, visionBlockers);
-  actor->getPropHandler()->endAppliedProp(propDiseased, visionBlockers);
+void PotionOfHealing::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->endAppliedPropsByMagicHealing();
+
+  //TODO What about wounds?
 
   //Attempt to heal the actor. If no hp was healed (already at full hp),
   //boost the hp instead.
-  if(actor->restoreHp(engine->dice(2, 6) + 12, true) == false) {
+  if(actor->restoreHp(999, true) == false) {
     actor->changeMaxHp(1, true);
   }
 
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor,
-                                      Engine* const engine) {
+void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {
-    specificQuaff(actor, engine);
+    specificQuaff(actor);
   }
 }
 
-void PotionOfSpirit::specificQuaff(Actor* const actor,
-                                   Engine* const engine) {
+void PotionOfSpirit::specificQuaff(Actor* const actor) {
   //Attempt to restore spirit. If no hp was healed (already at full hp),
   //boost the hp instead.
-  if(actor->restoreSpi(engine->dice(2, 6) + 12, true) == false) {
+  if(actor->restoreSpi(eng->dice(2, 6) + 12, true) == false) {
     actor->changeMaxSpi(1, true);
   }
 
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor,
-                                     Engine* const engine) {
+void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {
-    specificQuaff(actor, engine);
+    specificQuaff(actor);
   }
 }
 
-//void PotionOfSorcery::specificQuaff(Actor* const actor, Engine* const engine) {
+//void PotionOfSorcery::specificQuaff(Actor* const actor, eng* const eng) {
 //  (void)actor;
 //  bool isAnySpellRestored = false;
 //
-//  const unsigned int NR_OF_SCROLLS = engine->playerPowersHandler->getNrOfSpells();
+//  const unsigned int NR_OF_SCROLLS = eng->playerPowersHandler->getNrOfSpells();
 //  for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
-//    Scroll* const scroll =  engine->playerPowersHandler->getScrollAt(i);
+//    Scroll* const scroll =  eng->playerPowersHandler->getScrollAt(i);
 //    const ItemDef& d = scroll->getData();
 //    if(
 //      d.isScrollLearnable &&
@@ -77,191 +71,270 @@ void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor,
 //  }
 //
 //  if(isAnySpellRestored) {
-//    engine->log->addMsg("My magic is restored!");
-//    identify(false, engine);
+//    eng->log->addMsg("My magic is restored!");
+//    identify(false);
 //  }
 //}
 
-void PotionOfBlindness::specificQuaff(Actor* const actor,
-                                      Engine* const engine) {
+void PotionOfBlindness::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropBlind(engine, propTurnsStandard));
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+    new PropBlind(eng, propTurnsStandard));
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor,
-                                        Engine* const engine) {
+void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {specificQuaff(actor, engine);}
+  if(actor != NULL) {specificQuaff(actor);}
 }
 
-void PotionOfParalyzation::specificQuaff(Actor* const actor,
-    Engine* const engine) {
+void PotionOfParalyzation::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropParalyzed(engine, propTurnsStandard));
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+    new PropParalyzed(eng, propTurnsStandard));
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfParalyzation::specificCollide(const Pos& pos, Actor* const actor,
-    Engine* const engine) {
+void PotionOfParalyzation::specificCollide(
+  const Pos& pos, Actor* const actor) {
+
   (void)pos;
   if(actor != NULL) {
-    specificQuaff(actor, engine);
+    specificQuaff(actor);
   }
 }
 
-void PotionOfDisease::specificQuaff(Actor* const actor,
-                                    Engine* const engine) {
+void PotionOfDisease::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropDiseased(engine, propTurnsStandard));
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+    new PropDiseased(eng, propTurnsStandard));
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfConfusion::specificQuaff(Actor* const actor,
-                                      Engine* const engine) {
+void PotionOfConfusion::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropConfused(engine, propTurnsStandard));
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+    new PropConfused(eng, propTurnsStandard));
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfConfusion::specificCollide(const Pos& pos, Actor* const actor,
-                                        Engine* const engine) {
+void PotionOfConfusion::specificCollide(
+  const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {
-    specificQuaff(actor, engine);
+    specificQuaff(actor);
   }
 }
 
-//void PotionOfCorruption::specificQuaff(Actor* const actor, Engine* const engine) {
-//  const int CHANGE = -(engine->dice(1, 2));
+//void PotionOfCorruption::specificQuaff(Actor* const actor, eng* const eng) {
+//  const int CHANGE = -(eng->dice(1, 2));
 //
 //  actor->changeMaxHP(CHANGE, true);
 //
-//  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false, engine);
+//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+//    identify(false);
 //  }
 //}
 //
-//void PotionOfCorruption::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
+//void PotionOfCorruption::specificCollide(const Pos& pos, Actor* const actor, eng* const eng) {
 //  if(actor != NULL) {
-//    specificQuaff(actor, engine);
+//    specificQuaff(actor);
 //  } else {
-//    engine->map->switchToDestroyedFeatAt(pos);
+//    eng->map->switchToDestroyedFeatAt(pos);
 //
-//    if(engine->map->playerVision[pos.x][pos.y]) {
-//      identify(false, engine);
+//    if(eng->map->playerVision[pos.x][pos.y]) {
+//      identify(false);
 //    }
 //  }
 //}
 
-//void PotionOfTheCobra::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getPropHandler()->tryApplyProp(
-//    new StatusPerfectAim(engine, propTurnsStandard));
-//  actor->getPropHandler()->tryApplyProp(
-//    new StatusPerfectReflexes(engine, propTurnsStandard));
-//  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false, engine);
-//  }
-//}
-
-//void PotionOfTheCobra::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
-//  (void)pos;
-//  if(actor != NULL) {
-//    specificQuaff(actor, engine);
-//  }
-//}
-
-//void PotionOfFortitude::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getPropHandler()->tryApplyProp(new StatusPerfectFortitude(engine));
-//
-//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-//  actor->getPropHandler()->endEffectsOfAbility(ability_resistStatusMind, visionBlockers);
-//
-//  bool isPhobiasCured = false;
-//  for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-//    if(engine->player->insanityPhobias[i]) {
-//      engine->player->insanityPhobias[i] = false;
-//      isPhobiasCured = true;
-//    }
-//  }
-//  if(isPhobiasCured) {
-//    engine->log->addMsg("All my phobias are cured!");
-//  }
-//
-//  bool isObsessionsCured = false;
-//  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-//    if(engine->player->insanityObsessions[i]) {
-//      engine->player->insanityObsessions[i] = false;
-//      isObsessionsCured = true;
-//    }
-//  }
-//  if(isObsessionsCured) {
-//    engine->log->addMsg("All my obsessions are cured!");
-//  }
-//
-//  engine->player->restoreShock(999, false);
-//  engine->log->addMsg("I feel more at ease.");
-//
-//  identify(false, engine);
-//}
-//
-//void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
-//  (void)pos;
-//  if(actor != NULL) {
-//    specificQuaff(actor, engine);
-//  }
-//}
-
-//void PotionOfToughness::specificQuaff(Actor* const actor, Engine* const engine) {
-//  actor->getPropHandler()->tryApplyProp(new StatusPerfectToughness(engine));
-//
-//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  engine->mapTests->makeVisionBlockerArray(engine->player->pos, visionBlockers);
-//  actor->getPropHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
-//
-//  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false, engine);
-//  }
-//}
-//
-//void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, Engine* const engine) {
-//  (void)pos;
-//  if(actor != NULL) {
-//    specificQuaff(actor, engine);
-//  }
-//}
-
-void PotionOfPoison::specificQuaff(Actor* const actor, Engine* const engine) {
+void PotionOfBerserk::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropPoisoned(engine, propTurnsStandard));
-
-  if(engine->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false, engine);
+    new PropBerserk(eng, propTurnsStandard));
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
   }
 }
 
-void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor,
-                                     Engine* const engine) {
+void PotionOfBerserk::specificCollide(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {
-    specificQuaff(actor, engine);
+    specificQuaff(actor);
   }
 }
 
-void PotionOfKnowledge::specificQuaff(Actor* const actor, Engine* const engine) {
+void PotionOfFortitude::specificQuaff(Actor* const actor) {
+  PropHandler* const propHandler = actor->getPropHandler();
+
+  propHandler->tryApplyProp(new PropRFear(eng, propTurnsStandard));
+  propHandler->tryApplyProp(new PropRConfusion(eng, propTurnsStandard));
+  propHandler->tryApplyProp(new PropRSleep(eng, propTurnsStandard));
+
+  if(actor == eng->player) {
+    bool isPhobiasCured = false;
+    for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
+      if(eng->player->insanityPhobias[i]) {
+        eng->player->insanityPhobias[i] = false;
+        isPhobiasCured = true;
+      }
+    }
+    if(isPhobiasCured) {
+      eng->log->addMsg("All my phobias are cured!");
+    }
+
+    bool isObsessionsCured = false;
+    for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+      if(eng->player->insanityObsessions[i]) {
+        eng->player->insanityObsessions[i] = false;
+        isObsessionsCured = true;
+      }
+    }
+    if(isObsessionsCured) {
+      eng->log->addMsg("All my obsessions are cured!");
+    }
+
+    eng->player->restoreShock(999, false);
+    eng->log->addMsg("I feel more at ease.");
+  }
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+//void PotionOfToughness::specificQuaff(Actor* const actor, eng* const eng) {
+//  actor->getPropHandler()->tryApplyProp(new StatusPerfectToughness(eng));
+//
+//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+//  actor->getPropHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
+//
+//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+//    identify(false);
+//  }
+//}
+//
+//void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, eng* const eng) {
+//  (void)pos;
+//  if(actor != NULL) {
+//    specificQuaff(actor);
+//  }
+//}
+
+void PotionOfPoison::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->tryApplyProp(
+    new PropPoisoned(eng, propTurnsStandard));
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfRFire::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->tryApplyProp(
+    new PropRFire(eng, propTurnsStandard));
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfRCold::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->tryApplyProp(
+    new PropRCold(eng, propTurnsStandard));
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfRCold::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfAntidote::specificQuaff(Actor* const actor) {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(actor->pos, visionBlockers, 999);
+  const bool IS_POISON_ENDED =
+    actor->getPropHandler()->endAppliedProp(propPoisoned, visionBlockers);
+
+  if(IS_POISON_ENDED && eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfAntidote::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfRElec::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->tryApplyProp(
+    new PropRElectric(eng, propTurnsStandard));
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfRElec::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfRAcid::specificQuaff(Actor* const actor) {
+  actor->getPropHandler()->tryApplyProp(
+    new PropRAcid(eng, propTurnsStandard));
+
+  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+    identify(false);
+  }
+}
+
+void PotionOfRAcid::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
+}
+
+void PotionOfKnowledge::specificQuaff(Actor* const actor) {
   (void)actor;
-  engine->log->addMsg("I feel more insightful about the mystic powers!");
-  engine->player->incrMth(4);
-  identify(false, engine);
+  eng->log->addMsg("I feel more insightful about the mystic powers!");
+  eng->player->incrMth(4);
+  identify(false);
 }
 
 void PotionNameHandler::setColorAndFalseName(ItemData* d) {
@@ -314,8 +387,7 @@ void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Potion::identify(const bool IS_SILENT_IDENTIFY,
-                      Engine* const engine) {
+void Potion::identify(const bool IS_SILENT_IDENTIFY) {
   if(data_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
@@ -328,80 +400,78 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY,
     data_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      engine->log->addMsg("It was a " + REAL_NAME + ".");
-      engine->player->incrShock(shockValue_heavy);
+      eng->log->addMsg("It was a " + REAL_NAME + ".");
+      eng->player->incrShock(shockValue_heavy);
     }
 
     data_->isIdentified = true;
   }
 }
 
-void Potion::collide(const Pos& pos, Actor* const actor,
-                     Engine* const engine) {
-  if(engine->map->featuresStatic[pos.x][pos.y]->isBottomless() == false ||
+void Potion::collide(const Pos& pos, Actor* const actor) {
+  if(eng->map->featuresStatic[pos.x][pos.y]->isBottomless() == false ||
       actor != NULL) {
 //    ItemData* const potData =
-//      engine->itemDataHandler->dataList[d.id];
+//      eng->itemDataHandler->dataList[d.id];
 
-    const bool PLAYER_SEE_CELL = engine->map->playerVision[pos.x][pos.y];
+    const bool PLAYER_SEE_CELL = eng->map->playerVision[pos.x][pos.y];
 
     if(PLAYER_SEE_CELL) {
       // TODO Use standard animation
-      engine->renderer->drawGlyph('*', panel_map, pos, data_->color);
+      eng->renderer->drawGlyph('*', panel_map, pos, data_->color);
 
       if(actor != NULL) {
         if(actor->deadState == actorDeadState_alive) {
-          engine->log->addMsg(
+          eng->log->addMsg(
             "The potion shatters on " +
             actor->getNameThe() + ".");
         }
       } else {
-        Feature* const f = engine->map->featuresStatic[pos.x][pos.y];
-        engine->log->addMsg(
+        Feature* const f = eng->map->featuresStatic[pos.x][pos.y];
+        eng->log->addMsg(
           "The potion shatters on " + f->getDescription(true) + ".");
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
     if(actor != NULL) {
       if(actor->deadState == actorDeadState_alive) {
-        specificCollide(pos, actor, engine);
+        specificCollide(pos, actor);
         if(
           actor->deadState == actorDeadState_alive &&
           data_->isIdentified == false && PLAYER_SEE_CELL) {
-          engine->log->addMsg("It had no apparent effect...");
+          eng->log->addMsg("It had no apparent effect...");
         }
       }
     }
   }
 }
 
-void Potion::quaff(Actor* const actor, Engine* const engine) {
-  if(actor == engine->player) {
+void Potion::quaff(Actor* const actor) {
+  if(actor == eng->player) {
     data_->isTried = true;
 
-    engine->player->incrShock(shockValue_heavy);
+    eng->player->incrShock(shockValue_heavy);
 
     if(data_->isIdentified) {
-      engine->log->addMsg("I drink " + data_->name.name_a + "...");
+      eng->log->addMsg("I drink " + data_->name.name_a + "...");
     } else {
-      engine->log->addMsg("I drink an unknown " + data_->name.name + "...");
+      eng->log->addMsg("I drink an unknown " + data_->name.name + "...");
     }
   }
 
-  specificQuaff(actor, engine);
+  specificQuaff(actor);
 
-  if(engine->player->deadState == actorDeadState_alive) {
-    engine->gameTime->endTurnOfCurrentActor();
+  if(eng->player->deadState == actorDeadState_alive) {
+    eng->gameTime->endTurnOfCurrentActor();
   }
 }
 
-void Potion::failedToLearnRealName(Engine* const engine,
-                                   const string overrideFailString) {
+void Potion::failedToLearnRealName(const string overrideFailString) {
   if(data_->isIdentified == false) {
     if(overrideFailString != "") {
-      engine->log->addMsg(overrideFailString);
+      eng->log->addMsg(overrideFailString);
     } else {
-      engine->log->addMsg("It doesn't seem to affect me.");
+      eng->log->addMsg("It doesn't seem to affect me.");
     }
   }
 }

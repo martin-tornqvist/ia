@@ -49,7 +49,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     if(curActor == eng->player) {
       eng->log->clearLog();
       eng->log->addMsg(
-        "I drop " + itemRef + ".", clrWhite, messageInterrupt_never, true);
+        "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);

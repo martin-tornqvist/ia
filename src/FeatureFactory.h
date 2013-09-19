@@ -93,7 +93,9 @@ class FeatureFactory {
 public:
   FeatureFactory(Engine* engine) : eng(engine) {}
 
-  Feature* spawnFeatureAt(const Feature_t id, const Pos& pos,
+  //Note: Position parameter should NOT be a reference here, because the
+  //calling object (e.g. a spider web) might get destroyed.
+  Feature* spawnFeatureAt(const Feature_t id, const Pos pos,
                           FeatureSpawnData* spawnData = NULL);
 
 private:

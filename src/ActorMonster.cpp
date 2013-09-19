@@ -279,8 +279,8 @@ bool Monster::tryAttack(Actor& defender) {
                 //Check if friend is in the way (with a small chance to ignore this)
                 bool isBlockedByFriend = false;
                 if(eng->dice.percentile() < 80) {
-                  vector<Pos> line =
-                    eng->mapTests->getLine(pos, defender.pos, true, 9999);
+                  vector<Pos> line;
+                  eng->mapTests->getLine(pos, defender.pos, true, 9999, line);
                   for(unsigned int i = 0; i < line.size(); i++) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {

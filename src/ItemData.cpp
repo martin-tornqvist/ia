@@ -1041,21 +1041,17 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_armorAsbestosSuit);
-//  resetData(d, itemData_armor);
-//  d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
-//  d->color = clrRedLgt;
-//  d->spawnStandardMinDLVL = 3;
-//  d->armorData.absorptionPoints[dmgType_acid] = 999;
-//  d->armorData.damageToDurabilityFactors[dmgType_acid] = 0.1;
-//  d->armorData.absorptionPoints[dmgType_electricity] = 999;
-//  d->armorData.damageToDurabilityFactors[dmgType_electricity] = 0.0;
-//  d->armorData.absorptionPoints[dmgType_fire] = 999;
-//  d->armorData.damageToDurabilityFactors[dmgType_fire] = 0.1;
-//  d->armorData.absorptionPoints[dmgType_physical] = 0;
-//  d->armorData.damageToDurabilityFactors[dmgType_physical] = 2.0;
-//  d->armorData.chanceToDeflectTouchAttacks = 95;
-//  dataList[d->id] = d;
+  d = new ItemData(item_armorHeavyCoat);
+  resetData(d, itemData_armor);
+  d->name = ItemName("Heavy Coat", "", "a Heavy Coat");
+  d->itemWeight = itemWeight_medium;
+  d->color = clrBlueLgt;
+  d->spawnStandardMinDLVL = 3;
+  d->armorData.absorptionPoints = 1;
+  d->armorData.damageToDurabilityFactor = 1.0;
+  d->landOnHardSurfaceSoundMessage = "";
+  addFeatureFoundIn(d, feature_cabinet);
+  dataList[d->id] = d;
 
   d = new ItemData(item_scrollOfMayhem);
   resetData(d, itemData_scroll);
@@ -1148,17 +1144,17 @@ void ItemDataHandler::initDataList() {
 //  resetData(d, itemData_potion);
 //  dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfTheCobra);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
+  d = new ItemData(item_potionOfBerserk);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
 
 //  d = new ItemData(item_potionOfStealth);
 //  resetData(d, itemData_potion);
 //  dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfFortitude);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
+  d = new ItemData(item_potionOfFortitude);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
 
 //  d = new ItemData(item_potionOfToughness);
 //  resetData(d, itemData_potion);
@@ -1181,6 +1177,26 @@ void ItemDataHandler::initDataList() {
   dataList[d->id] = d;
 
   d = new ItemData(item_potionOfKnowledge);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfRFire);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfRCold);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfAntidote);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfRElec);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfRAcid);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 

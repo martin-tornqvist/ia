@@ -157,8 +157,8 @@ int Log::findCurXpos(const vector<Message>& afterLine,
 }
 
 void Log::addMsg(const string& text, const SDL_Color color,
-                     MessageInterrupt_t interrupt,
-                     const bool FORCE_MORE_PROMPT) {
+                 const bool INTERRUPT_PLAYER_ACTIONS,
+                 const bool FORCE_MORE_PROMPT) {
   bool repeated = false;
 
   //New message equal to previous?
@@ -205,8 +205,8 @@ void Log::addMsg(const string& text, const SDL_Color color,
   }
 
   //Messages may stop long actions like first aid and auto travel.
-  if(interrupt != messageInterrupt_never) {
-    eng->player->interruptActions(interrupt == messageInterrupt_query);
+  if(INTERRUPT_PLAYER_ACTIONS) {
+    eng->player->interruptActions();
   }
 }
 

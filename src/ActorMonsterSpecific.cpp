@@ -416,8 +416,9 @@ bool KeziahMason::actorSpecificAct() {
 
           eng->mapTests->makeMoveBlockerArray(this, blockers);
 
-          vector<Pos> line = eng->mapTests->getLine(pos, eng->player->pos,
-                             true, 9999);
+          vector<Pos> line;
+          eng->mapTests->getLine(pos, eng->player->pos,
+                                 true, 9999, line);
 
           for(unsigned int i = 0; i < line.size(); i++) {
             const Pos c = line.at(i);
@@ -742,8 +743,7 @@ bool Zombie::tryResurrect() {
           data_->nrOfKills--;
           if(eng->map->playerVision[pos.x][pos.y] == true) {
             eng->log->addMsg(
-              getNameThe() + " rises again!!", clrWhite,
-              messageInterrupt_force);
+              getNameThe() + " rises again!!", clrWhite, true);
             eng->player->incrShock(shockValue_some);
           }
 

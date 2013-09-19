@@ -22,7 +22,7 @@ int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
   const double UNIQUE_MOD = d.isUnique ? 2.0 : 1.0;
-  return HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6)) * UNIQUE_MOD;
+  return HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD;
 }
 
 void DungeonMaster::playerGainLvl() {
@@ -33,10 +33,16 @@ void DungeonMaster::playerGainLvl() {
 
   eng->player->restoreHp(999, false);
   eng->player->changeMaxHp(1, true);
+  ActorData& d = eng->actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;
   if(clvl % BON_EVERY_N_LVL == 0) {
+    d.abilityVals.changeVal(ability_accuracyMelee,  5);
+    d.abilityVals.changeVal(ability_accuracyRanged, 5);
+    eng->log->addMsg("I am more proficient in combat!");
+
     eng->player->changeMaxSpi(1, true);
+
     eng->player->incrMth(2);
     eng->log->addMsg("I feel more knowledgeable!");
   }

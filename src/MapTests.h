@@ -34,24 +34,28 @@ public:
     const int MAX_VISION_RANGE = FOV_MAX_RADI_INT);
 
   void makeMoveBlockerArray(
-    const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+    const Actor* const actorMoving,
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeMoveBlockerArrayForMoveType(
     const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void makeShootBlockerFeaturesArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeShootBlockerFeaturesArray(
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeItemBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeMoveBlockerArrayFeaturesOnly(
-    const Actor* const actorMoving, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+    const Actor* const actorMoving,
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeMoveBlockerArrayForMoveTypeFeaturesOnly(
     const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void addLivingActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void addLivingActorsToBlockerArray(
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
@@ -70,32 +74,18 @@ public:
     bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
 
   inline bool isCellInsideMap(const Pos& pos) const {
-    if(pos.x < 0) {
-      return false;
-    }
-    if(pos.y < 0) {
-      return false;
-    }
-    if(pos.x >= MAP_X_CELLS) {
-      return false;
-    }
-    if(pos.y >= MAP_Y_CELLS) {
+    if(
+      pos.x < 0 || pos.y < 0 ||
+      pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
       return false;
     }
     return true;
   }
 
-  bool isAreaInsideMap(const Rect& area) {
-    if(area.x0y0.x < 0) {
-      return false;
-    }
-    if(area.x0y0.y < 0) {
-      return false;
-    }
-    if(area.x1y1.x >= MAP_X_CELLS) {
-      return false;
-    }
-    if(area.x1y1.y >= MAP_Y_CELLS) {
+  inline bool isAreaInsideMap(const Rect& area) {
+    if(
+      area.x0y0.x < 0 || area.x0y0.y < 0 ||
+      area.x1y1.x >= MAP_X_CELLS || area.x1y1.y >= MAP_Y_CELLS) {
       return false;
     }
     return true;
@@ -135,8 +125,9 @@ public:
   Pos getClosestPos(const Pos c, const vector<Pos>& positions) const;
   Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 
-  vector<Pos> getLine(const Pos& origin, const Pos& target,
-                      bool stopAtTarget, int chebTravelLimit);
+  void getLine(const Pos& origin, const Pos& target,
+                      bool stopAtTarget, int chebTravelLimit,
+                      vector<Pos>& posList);
 
   Actor* getActorAtPos(const Pos pos) const;
 

@@ -108,11 +108,11 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
         otherName = "It";
       }
       if(data.attackResult == failSmall) {
-        eng->log->addMsg(otherName + " barely misses me!", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " barely misses me!", clrWhite, true);
       } else if(data.attackResult == failNormal) {
-        eng->log->addMsg(otherName + " misses me.", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " misses me.", clrWhite, true);
       } else if(data.attackResult == failBig) {
-        eng->log->addMsg(otherName + " misses me completely.", clrWhite, messageInterrupt_force);
+        eng->log->addMsg(otherName + " misses me completely.", clrWhite, true);
       }
     }
   }
@@ -181,7 +181,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn) 
         }
 
         eng->log->addMsg(otherName + " " + wpnVerb + dmgPunctuation,
-                             clrMessageBad, messageInterrupt_force);
+                         clrMessageBad, true);
       }
     }
   }

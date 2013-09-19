@@ -13,10 +13,8 @@ public:
 
   ~Scroll() {}
 
-  bool activateDefault(Actor* const actor) {
-    (void)actor;
-    return read();
-  }
+  bool activateDefault(Actor* const actor);
+
   string getDefaultActivationLabel() const {return "Read";}
 
   SDL_Color getInterfaceClr() const {return clrMagenta;}

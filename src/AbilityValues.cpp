@@ -52,8 +52,8 @@ int AbilityValues::getVal(const Abilities_t ability,
         if(eng->playerBonHandler->isBonPicked(playerBon_stealthy))
           val += 40;
       } break;
-      default: {
-      } break;
+
+      default: {} break;
     }
 
     //Searching must be at least 1
@@ -111,6 +111,10 @@ void AbilityValues::reset() {
 
 void AbilityValues::setVal(const Abilities_t ability, const int VAL) {
   abilityList[ability] = VAL;
+}
+
+void AbilityValues::changeVal(const Abilities_t ability, const int CHANGE) {
+  abilityList[ability] += CHANGE;
 }
 
 

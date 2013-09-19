@@ -129,7 +129,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
 
 void Marker::draw(const MarkerTask_t markerTask) const {
   vector<Pos> trail;
-  trail.resize(0);
+//  trail.resize(0);
 
   int effectiveRange = -1;
 
@@ -137,7 +137,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 //    trail.push_back(Pos(pos_.x, pos_.y));
 //  } else {
   const Pos playerPos = eng->player->pos;
-  trail = eng->mapTests->getLine(playerPos, pos_, true, 99999);
+  eng->mapTests->getLine(playerPos, pos_, true, 9999, trail);
 //  }
 
   if(markerTask == markerTask_aimRangedWeapon) {

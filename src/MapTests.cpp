@@ -63,7 +63,8 @@ void MapTests::makeVisionBlockerArray(
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isVisionPassable() == false;
+      arrayToFill[x][y] =
+        eng->map->featuresStatic[x][y]->isVisionPassable() == false;
     }
   }
 
@@ -92,7 +93,8 @@ void MapTests::makeMoveBlockerArrayFeaturesOnly(
   const Actor* const actorMoving,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
-  makeMoveBlockerArrayForMoveTypeFeaturesOnly(actorMoving->getMoveType(), arrayToFill);
+  makeMoveBlockerArrayForMoveTypeFeaturesOnly(
+    actorMoving->getMoveType(), arrayToFill);
 }
 
 void MapTests::makeWalkBlockingArrayFeaturesOnly(
@@ -357,15 +359,14 @@ bool MapTests::isCellsNeighbours(
   return true;
 }
 
-vector<Pos> MapTests::getLine(const Pos& origin, const Pos& target,
-                              bool stopAtTarget, int chebTravelLimit) {
-
-  vector<Pos> line;
-  line.resize(0);
+void MapTests::getLine(const Pos& origin, const Pos& target,
+                       bool stopAtTarget, int chebTravelLimit,
+                       vector<Pos>& posList) {
+  posList.resize(0);
 
   if(target == origin) {
-    line.push_back(origin);
-    return line;
+    posList.push_back(origin);
+    return;
   }
 
   double deltaX = (double(target.x) - double(origin.x));
@@ -388,32 +389,30 @@ vector<Pos> MapTests::getLine(const Pos& origin, const Pos& target,
     curPos.set(int(curX_prec), int(curY_prec));
 
     if(eng->mapTests->isCellInsideMap(curPos) == false) {
-      return line;
+      return;
     }
 
     bool isPosOkToAdd = false;
-    if(line.size() == 0) {
+    if(posList.size() == 0) {
       isPosOkToAdd = true;
     } else {
-      isPosOkToAdd = line.back() != curPos;
+      isPosOkToAdd = posList.back() != curPos;
     }
     if(isPosOkToAdd) {
-      line.push_back(curPos);
+      posList.push_back(curPos);
     }
 
     //Check distance limits
     if(stopAtTarget && (curPos == target)) {
-      return line;
+      return;
     }
     const int DISTANCE_TRAVELED =
       eng->basicUtils->chebyshevDistance(
         origin.x, origin.y, curPos.x, curPos.y);
     if(DISTANCE_TRAVELED >= chebTravelLimit) {
-      return line;
+      return;
     }
   }
-
-  return line;
 }
 
 Actor* MapTests::getActorAtPos(const Pos pos) const {

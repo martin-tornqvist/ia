@@ -6,10 +6,9 @@
 #include "Render.h"
 #include "PlayerBonuses.h"
 
-FeatureLiquidShallow::FeatureLiquidShallow(Feature_t id, Pos pos, Engine* engine) :
-  FeatureStatic(id, pos, engine) {
-
-}
+FeatureLiquidShallow::FeatureLiquidShallow(
+  Feature_t id, Pos pos, Engine* engine) :
+  FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor* actorBumping) {
   if(actorBumping->getData()->moveType == moveType_walk) {
@@ -26,9 +25,7 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
 }
 
 FeatureLiquidDeep::FeatureLiquidDeep(Feature_t id, Pos pos, Engine* engine) :
-  FeatureStatic(id, pos, engine) {
-
-}
+  FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidDeep::bump(Actor* actorBumping) {
   (void)actorBumping;

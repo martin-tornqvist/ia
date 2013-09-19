@@ -51,4 +51,14 @@ public:
   void onTakeOff();
 };
 
+class ArmorHeavyCoat: public Armor {
+public:
+  ArmorHeavyCoat(ItemData* const itemData, Engine* engine) :
+    Armor(itemData, engine) {}
+  ~ArmorHeavyCoat() {}
+
+  void onWear();
+  void onTakeOff();
+};
+
 #endif

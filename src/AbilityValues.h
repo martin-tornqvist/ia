@@ -34,15 +34,22 @@ public:
   }
 
   void reset();
+
   int getVal(const Abilities_t ability,
              const bool IS_AFFECTED_BY_STATUS_EFFECTS,
              Actor& actor) const;
 
-private:
-  friend class ActorDataHandler;
+  inline int getRawVal(const Abilities_t ability) {
+    return abilityList[ability];
+  }
+
   void setVal(const Abilities_t ability, const int VAL);
-  int abilityList[endOfAbilities];
+
+  void changeVal(const Abilities_t ability, const int CHANGE);
+
   Engine* eng;
+private:
+  int abilityList[endOfAbilities];
 };
 
 enum AbilityRollResult_t {

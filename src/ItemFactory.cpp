@@ -64,6 +64,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_armorLeatherJacket:       item = new Armor(d, eng); break;
     case item_armorIronSuit:            item = new Armor(d, eng); break;
     case item_armorAsbestosSuit:        item = new ArmorAsbestosSuit(d, eng); break;
+    case item_armorHeavyCoat:           item = new ArmorHeavyCoat(d, eng); break;
 
     case item_zombieAxe:                item = new Weapon(d, ammoD, eng); break;
     case item_zombieClaw:               item = new Weapon(d, ammoD, eng); break;
@@ -122,14 +123,19 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfSpirit:           item = new PotionOfSpirit(d, eng); break;
     case item_potionOfBlindness:        item = new PotionOfBlindness(d, eng); break;
 //    case item_potionOfCorruption:       item = new PotionOfCorruption(d, eng); break;
-//    case item_potionOfTheCobra:         item = new PotionOfTheCobra(d, eng); break;
-//    case item_potionOfFortitude:        item = new PotionOfFortitude(d, eng); break;
+    case item_potionOfBerserk:          item = new PotionOfBerserk(d, eng); break;
+    case item_potionOfFortitude:        item = new PotionOfFortitude(d, eng); break;
 //    case item_potionOfToughness:        item = new PotionOfToughness(d, eng); break;
     case item_potionOfParalyzation:     item = new PotionOfParalyzation(d, eng); break;
     case item_potionOfConfusion:        item = new PotionOfConfusion(d, eng); break;
 //    case item_potionOfSorcery:          item = new PotionOfSorcery(d, eng); break;
     case item_potionOfPoison:           item = new PotionOfPoison(d, eng); break;
     case item_potionOfKnowledge:        item = new PotionOfKnowledge(d, eng); break;
+    case item_potionOfRFire:            item = new PotionOfRFire(d, eng); break;
+    case item_potionOfRCold:            item = new PotionOfRCold(d, eng); break;
+    case item_potionOfAntidote:         item = new PotionOfAntidote(d, eng); break;
+    case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
+    case item_potionOfRAcid:            item = new PotionOfRAcid(d, eng); break;
 
     case item_deviceSentry:             item = new DeviceSentry(d, eng); break;
     case item_deviceRepeller:           item = new DeviceRepeller(d, eng); break;

@@ -1,5 +1,7 @@
 #include "Properties.h"
 
+#include <algorithm>
+
 #include "Engine.h"
 #include "ItemArmor.h"
 #include "ActorPlayer.h"
@@ -18,6 +20,7 @@ using namespace std;
 
 void PropDataHandler::initDataList() {
   PropData d;
+  d.reset();
 
   d.id = propRFire;
   d.stdRndTurns = Range(40, 60);
@@ -35,6 +38,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -53,6 +57,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -71,6 +76,8 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -89,6 +96,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -107,6 +115,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -125,6 +134,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -143,6 +153,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -161,6 +172,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -179,6 +191,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -214,6 +227,8 @@ void PropDataHandler::initDataList() {
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -231,6 +246,7 @@ void PropDataHandler::initDataList() {
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -249,6 +265,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -267,6 +284,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -285,6 +303,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -303,6 +322,8 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = false;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -321,6 +342,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -339,6 +361,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -357,6 +380,8 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -375,6 +400,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -428,6 +454,8 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -446,6 +474,8 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -464,25 +494,28 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propJuggernaut;
-  d.name = "Juggernaut";
-  d.nameShort = "Juggernaut";
-  d.msg[propMsgOnStartPlayer] = "[Juggernaut Player start]";
-  d.msg[propMsgOnStartMonster] = "[Juggernaut Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[Juggernaut Player end]";
-  d.msg[propMsgOnEndMonster] = "[Juggernaut Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[Juggernaut Player more]";
-  d.msg[propMsgOnMoreMonster] = "[Juggernaut Monster more]";
-  d.msg[propMsgOnResPlayer] = "[Juggernaut Player resist]";
-  d.msg[propMsgOnResMonster] = "[Juggernaut Monster resist]";
+  d.id = propBerserk;
+  d.name = "Berserk";
+  d.nameShort = "Berserk";
+  d.msg[propMsgOnStartPlayer] = "[Berserk Player start]";
+  d.msg[propMsgOnStartMonster] = "[Berserk Monster start]";
+  d.msg[propMsgOnEndPlayer] = "[Berserk Player end]";
+  d.msg[propMsgOnEndMonster] = "[Berserk Monster end]";
+  d.msg[propMsgOnMorePlayer] = "[Berserk Player more]";
+  d.msg[propMsgOnMoreMonster] = "[Berserk Monster more]";
+  d.msg[propMsgOnResPlayer] = "[Berserk Player resist]";
+  d.msg[propMsgOnResMonster] = "[Berserk Monster resist]";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.alignment = propAlignmentGood;
+  d.allowTestingOnBot = true;
+  d.alignment = propAlignmentNeutral;
   addPropData(d);
 
 //  d.id = propHeroic;
@@ -517,6 +550,7 @@ void PropDataHandler::initDataList() {
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -535,6 +569,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -553,10 +588,12 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
   d.id = propStill;
+  d.stdRndTurns = Range(1, 1);
   d.name = "Still";
   d.nameShort = "Still";
   d.msg[propMsgOnStartPlayer] = "";
@@ -578,7 +615,7 @@ void PropDataHandler::initDataList() {
   d.name = "Wound";
   d.msg[propMsgOnStartPlayer] = "I am wounded!";
   d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "My wound is healed.";
+  d.msg[propMsgOnEndPlayer] = "";
   d.msg[propMsgOnEndMonster] = "";
   d.msg[propMsgOnMorePlayer] = "I am more wounded!";
   d.msg[propMsgOnMoreMonster] = "";
@@ -588,10 +625,12 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
   d.id = propWaiting;
+  d.stdRndTurns = Range(1, 1);
   d.name = "";
   d.nameShort = "";
   d.msg[propMsgOnStartPlayer] = "";
@@ -610,6 +649,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propDisabledAttack;
+  d.stdRndTurns = Range(1, 1);
   d.name = "";
   d.nameShort = "";
   d.msg[propMsgOnStartPlayer] = "";
@@ -628,6 +668,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propDisabledMelee;
+  d.stdRndTurns = Range(1, 1);
   d.name = "";
   d.nameShort = "";
   d.msg[propMsgOnStartPlayer] = "";
@@ -646,6 +687,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propDisabledRanged;
+  d.stdRndTurns = Range(1, 1);
   d.name = "";
   d.nameShort = "";
   d.msg[propMsgOnStartPlayer] = "";
@@ -666,6 +708,7 @@ void PropDataHandler::initDataList() {
 
 void PropDataHandler::addPropData(PropData& d) {
   dataList[d.id] = d;
+  d.reset();
 }
 
 PropHandler::PropHandler(Actor* owningActor, Engine* engine) :
@@ -703,7 +746,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propDiseased:          return new PropDiseased(eng, turnsInit, NR_TURNS);
     case propPoisoned:          return new PropPoisoned(eng, turnsInit, NR_TURNS);
     case propFainted:           return new PropFainted(eng, turnsInit, NR_TURNS);
-    case propJuggernaut:        return new PropJuggernaut(eng, turnsInit, NR_TURNS);
+    case propBerserk:           return new PropBerserk(eng, turnsInit, NR_TURNS);
 //    case propPerfectStealth:    return new PropPerfectStealth(eng, turnsInit, NR_TURNS);
 //    case propPerfectFortitude:  return new PropPerfectFortitude(eng, turnsInit, NR_TURNS);
 //    case propPerfectToughness:  return new PropPerfectToughness(eng, turnsInit, NR_TURNS);
@@ -824,8 +867,6 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   }
 
   if(FORCE_EFFECT == false) {
-    //TODO Check for existing properties blocking the applied property
-
     vector<Prop*> allProps;
     getPropsFromSource(allProps, propSrcAppliedAndInv);
     if(tryResistProp(prop->getId(), allProps)) {
@@ -833,14 +874,17 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnResPlayer, msg);
-          eng->log->addMsg(msg, clrWhite, messageInterrupt_force);
+          if(msg != "") {
+            eng->log->addMsg(msg, clrWhite, true);
+          }
         } else {
           if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
-            const string monsterName = owningActor_->getNameThe();
-            eng->log->addMsg(monsterName + " " + msg, clrWhite,
-                             messageInterrupt_force);
+            if(msg != "") {
+              const string monsterName = owningActor_->getNameThe();
+              eng->log->addMsg(monsterName + " " + msg, clrWhite, true);
+            }
           }
         }
       }
@@ -868,7 +912,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
           string msg = "";
           prop->getMsg(propMsgOnMorePlayer, msg);
           if(msg != "") {
-            eng->log->addMsg(msg);
+            eng->log->addMsg(msg, clrWhite, true);
           }
         } else {
           if(playerSeeOwner) {
@@ -906,7 +950,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
       string msg = "";
       prop->getMsg(propMsgOnStartPlayer, msg);
       if(msg != "") {
-        eng->log->addMsg(msg);
+        eng->log->addMsg(msg, clrWhite, true);
       }
     } else {
       if(playerSeeOwner) {
@@ -934,9 +978,9 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
   }
 }
 
-void PropHandler::endAppliedProp(
+bool PropHandler::endAppliedProp(
   const PropId_t id,
-  const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS],
+  const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS],
   const bool RUN_PROP_END_EFFECTS) {
 
   int index   = -1;
@@ -950,14 +994,12 @@ void PropHandler::endAppliedProp(
     }
   }
   if(index == -1) {
-    return;
+    return false;
   }
 
   appliedProps_.erase(appliedProps_.begin() + index);
 
   if(RUN_PROP_END_EFFECTS) {
-    prop->onEnd();
-
     const bool IS_VISUAL_UPDATE_NEEDED =
       prop->updatePlayerVisualWhenStartOrEnd();
 
@@ -972,7 +1014,7 @@ void PropHandler::endAppliedProp(
       prop->getMsg(propMsgOnEndPlayer, msg);
       eng->log->addMsg(msg, clrWhite);
     } else {
-      if(eng->player->checkIfSeeActor(*owningActor_, visionBlockingArray)) {
+      if(eng->player->checkIfSeeActor(*owningActor_, visionBlockers)) {
         string msg = "";
         prop->getMsg(propMsgOnEndMonster, msg);
         if(msg != "") {
@@ -980,13 +1022,15 @@ void PropHandler::endAppliedProp(
         }
       }
     }
+    prop->onEnd();
   }
 
   delete prop;
+  return true;
 }
 
 void PropHandler::newTurnAllProps(
-  const bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS]) {
+  const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]) {
   traceHi << "PropHandler::newTurnAllProps()..." << endl;
   traceHi << "PropHandler: Owner: " << owningActor_->getNameA() << endl;
 
@@ -1002,7 +1046,7 @@ void PropHandler::newTurnAllProps(
     }
 
     if(prop->isFinnished()) {
-      endAppliedProp(prop->getId(), visionBlockingArray);
+      endAppliedProp(prop->getId(), visionBlockers);
     } else {
       if(prop->turnsLeft_ > 0) {
         prop->turnsLeft_--;
@@ -1147,6 +1191,33 @@ bool PropHandler::allowAct() {
   return true;
 }
 
+bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  traceHi << "PropHandler::allowRead()..." << endl;
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  const unsigned int NR_PROPS = propList.size();
+  for(unsigned int i = 0; i < NR_PROPS; i++) {
+    if(propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+      traceHi << "PropHandler::allowRead() [DONE] - return false" << endl;
+      return false;
+    }
+  }
+  traceHi << "PropHandler::allowRead() [DONE] - return true" << endl;
+  return true;
+}
+
+bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  const unsigned int NR_PROPS = propList.size();
+  for(unsigned int i = 0; i < NR_PROPS; i++) {
+    if(propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+      return false;
+    }
+  }
+  return true;
+}
+
 void PropHandler::onHit() {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -1187,6 +1258,20 @@ bool PropHandler::changeActorClr(SDL_Color& clr) {
     }
   }
   return false;
+}
+
+void PropHandler::endAppliedPropsByMagicHealing() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(owningActor_->pos, visionBlockers);
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  for(unsigned int i = 0; i < propList.size(); i++) {
+    if(propList.at(i)->isEndedByMagicHealing()) {
+      endAppliedProp(appliedProps_.at(i)->getId(), visionBlockers);
+      propList.erase(propList.begin() + i);
+      i--;
+    }
+  }
 }
 
 Prop::Prop(PropId_t id, Engine* engine, PropTurns_t turnsInit, int turns) :
@@ -1239,8 +1324,7 @@ void PropPoisoned::onNewTurn() {
 
     if(owningActor_ == eng->player) {
       eng->log->addMsg(
-        "I am suffering from the poison!",
-        clrMessageBad, messageInterrupt_force);
+        "I am suffering from the poison!", clrMessageBad, true);
     } else {
       if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
         eng->log->addMsg(
@@ -1253,11 +1337,9 @@ void PropPoisoned::onNewTurn() {
 }
 
 bool PropTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
-  if(ALLOW_MESSAGE_WHEN_FALSE) {
-    if(owningActor_ == eng->player) {
-      eng->log->addMsg(
-        "I am too terrified to engage in close combat!");
-    }
+  if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng->log->addMsg(
+      "I am too terrified to engage in close combat!");
   }
   return false;
 }
@@ -1267,15 +1349,41 @@ bool PropTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
+void PropWound::getMsg(const PropMsg_t msgType, string& msgRef) {
+  switch(msgType) {
+    case propMsgOnStartPlayer:
+      msgRef = data_->msg[propMsgOnStartPlayer];
+      break;
+
+    case propMsgOnStartMonster:
+      msgRef = ""; break;
+
+    case propMsgOnEndPlayer:
+      msgRef = nrWounds_ > 1 ?
+               "All my wounds are healed!" :
+               "A wound is healed!";
+      break;
+
+    case propMsgOnEndMonster: msgRef = ""; break;
+
+    case propMsgOnMorePlayer: msgRef = data_->msg[propMsgOnMorePlayer]; break;
+
+    case propMsgOnMoreMonster: msgRef = ""; break;
+
+    case propMsgOnResPlayer: msgRef = data_->msg[propMsgOnResPlayer]; break;
+
+    case propMsgOnResMonster: msgRef = ""; break;
+    case endOfPropMsg: msgRef = ""; break;
+  }
+}
+
 void PropWound::healOneWound() {
   trace << "StatusWound: Nr wounds before healing one: " << nrWounds_ << endl;
   if(--nrWounds_ > 0) {
-    eng->log->addMsg("A wound is healed!", clrMessageGood);
+    eng->log->addMsg("A wound is healed!");
   } else {
-    eng->log->addMsg("All my wounds are healed!", clrMessageGood);
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeVisionBlockerArray(
-      eng->player->pos, visionBlockers);
+    eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
     owningActor_->getPropHandler()->endAppliedProp(
       propWound, visionBlockers);
   }
@@ -1348,16 +1456,16 @@ bool PropConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
 }
 
 void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
-
   if(actorPos != movePos) {
-    const int CHANCE_TO_MOVE_WRONG = 40;
-    if(eng->dice.percentile() < CHANCE_TO_MOVE_WRONG) {
+
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
+
+    if(eng->dice.oneIn(4)) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y
-        const Pos delta(eng->dice(1, 3) - 2, eng->dice(1, 3) - 2);
+        const Pos delta(eng->dice.range(-1, 1), eng->dice.range(-1, 1));
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
           if(blockers[c.x][c.y] == false) {
@@ -1370,6 +1478,68 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
   }
 }
 
+void PropBerserk::changeMovePos(const Pos& actorPos, Pos& movePos) {
+  if(actorPos != movePos) {
+
+    vector<Actor*> spotedEnemies;
+    owningActor_->getSpotedEnemies(spotedEnemies);
+
+    if(spotedEnemies.empty()) {
+      return;
+    }
+
+    vector<Pos> spotedEnemiesPositions;
+    spotedEnemiesPositions.resize(0);
+    for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
+      spotedEnemiesPositions.push_back(spotedEnemies.at(i)->pos);
+    }
+    sort(spotedEnemiesPositions.begin(), spotedEnemiesPositions.end(),
+         IsCloserToOrigin(actorPos, eng));
+
+    const Pos& closestEnemyPos = spotedEnemiesPositions.at(0);
+
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    eng->mapTests->makeMoveBlockerArrayFeaturesOnly(owningActor_, blockers);
+
+    vector<Pos> line;
+    eng->mapTests->getLine(actorPos, closestEnemyPos, true, 999, line);
+
+    if(line.size() > 1) {
+      for(unsigned int i = 0; i < line.size(); i++) {
+        const Pos& pos = line.at(i);
+        if(blockers[pos.x][pos.y]) {
+          return;
+        }
+      }
+      movePos = line.at(1); //First step towards nearest enemy
+    }
+  }
+}
+
+bool PropBerserk::tryResistOtherProp(const PropId_t id) {
+  return id == propConfused || id == propFainted || id == propTerrified ||
+         id == propWeakened;
+}
+
+void PropBerserk::onEnd() {
+  owningActor_->getPropHandler()->tryApplyProp(
+    new PropWeakened(eng, propTurnsStandard));
+}
+
+bool PropBerserk::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng->log->addMsg("I'm too enraged to concentrate!");
+  }
+  return false;
+}
+
+bool PropBerserk::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng->log->addMsg("I'm too enraged to concentrate!");
+  }
+  return false;
+}
+
 void PropBurning::onStart() {
   owningActor_->addLight(eng->map->light);
 }
@@ -1379,6 +1549,13 @@ void PropBurning::onNewTurn() {
     eng->log->addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
   owningActor_->hit(eng->dice(1, 2), dmgType_fire);
+}
+
+bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng->log->addMsg("I cannot read while I'm burning.");
+  }
+  return false;
 }
 
 void PropBlind::onStart() {
@@ -1486,7 +1663,7 @@ bool PropRCold::tryResistOtherProp(const PropId_t id) {
 }
 
 bool PropRConfusion::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
+  return id == propConfused;
   return false;
 }
 
@@ -1496,8 +1673,7 @@ bool PropRElectric::tryResistOtherProp(const PropId_t id) {
 }
 
 bool PropRFear::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
-  return false;
+  return id == propTerrified;
 }
 
 bool PropRFire::tryResistOtherProp(const PropId_t id) {
@@ -1505,11 +1681,11 @@ bool PropRFire::tryResistOtherProp(const PropId_t id) {
 }
 
 bool PropRPoison::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
+  return id == propPoisoned;
   return false;
 }
 
 bool PropRSleep::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
+  return id == propFainted;
   return false;
 }

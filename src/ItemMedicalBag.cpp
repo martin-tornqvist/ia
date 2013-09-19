@@ -47,6 +47,19 @@ bool MedicalBag::activateDefault(Actor* const actor) {
       //Action can be done
       nrTurnsLeft_ = getTotTurnsForAction(curAction_);
       eng->player->activeMedicalBag = this;
+
+      switch(curAction_) {
+        case medicalBagAction_sanitizeInfection: {
+          eng->log->addMsg("I start to sanitize an infection.");
+        } break;
+
+        case medicalBagAction_treatWound: {
+          eng->log->addMsg("I start to treat a wound.");
+        } break;
+
+        case endOfMedicalBagActions: {} break;
+      }
+
       eng->gameTime->endTurnOfCurrentActor();
     }
   }
@@ -130,34 +143,24 @@ void MedicalBag::finishCurAction() {
 }
 
 void MedicalBag::interrupted() {
-//  switch(curAction_) {
-//    case medicalBagAction_sanitizeInfection: {
-//    } break;
-//
-//    case medicalBagAction_treatWound: {
-//    } break;
-//  }
-//
-//  eng->log->addMsg("My applying of first aid is disrupted.", clrWhite,
-//                          messageInterrupt_never);
-//  nrTurnsLeft_ = -1;
-//
-//  eng->player->activeMedicalBag = NULL;
+  eng->log->addMsg("My healing is disrupted.", clrWhite, false);
+
+  nrTurnsLeft_ = -1;
+
+  eng->player->activeMedicalBag = NULL;
 }
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
-  const bool IS_WOUND_TREATER =
-    eng->playerBonHandler->isBonPicked(playerBon_skillfulWoundTreater);
+  const bool IS_HEALER =
+    eng->playerBonHandler->isBonPicked(playerBon_healer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
-      const int TURNS_BEFORE_BON = 20;
-      return IS_WOUND_TREATER ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
+      return 20 / (IS_HEALER ? 2 : 1);
     } break;
 
     case medicalBagAction_treatWound: {
-      const int TURNS_BEFORE_BON = 70;
-      return IS_WOUND_TREATER ? TURNS_BEFORE_BON / 2 : TURNS_BEFORE_BON;
+      return 70 / (IS_HEALER ? 2 : 1);
     } break;
 
     case endOfMedicalBagActions: {
@@ -169,13 +172,17 @@ int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
 
 int MedicalBag::getNrSuppliesNeededForAction(
   const MedicalBagAction_t action) const {
+
+  const bool IS_HEALER =
+    eng->playerBonHandler->isBonPicked(playerBon_healer);
+
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
-      return 1;
+      return 2 / (IS_HEALER ? 2 : 1);
     } break;
 
     case medicalBagAction_treatWound: {
-      return 5;
+      return 10 / (IS_HEALER ? 2 : 1);
     } break;
 
     case endOfMedicalBagActions: {

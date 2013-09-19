@@ -12,7 +12,7 @@ enum MedicalBagAction_t {
 class MedicalBag: public Item {
 public:
   MedicalBag(ItemData* const itemData, Engine* engine) :
-    Item(itemData, engine), nrSupplies_(30), nrTurnsLeft_(-1) {}
+    Item(itemData, engine), nrSupplies_(60), nrTurnsLeft_(-1) {}
 
   virtual ~MedicalBag() {}
 

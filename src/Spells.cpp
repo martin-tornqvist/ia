@@ -91,28 +91,32 @@ int Spell::getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine* const eng) {
   trace << "Spell::cast()..." << endl;
-  if(caster == eng->player) {
-    trace << "Spell: Player casting spell" << endl;
-    eng->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
-  } else {
-    trace << "Spell: Monster casting spell" << endl;
-    Monster* const monster = dynamic_cast<Monster*>(caster);
-    if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
-      const string spellStr = monster->getData()->spellCastMessage;
-      eng->log->addMsg(spellStr);
+  if(caster->getPropHandler()->allowCastSpells(true)) {
+    if(caster == eng->player) {
+      trace << "Spell: Player casting spell" << endl;
+      eng->player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
+    } else {
+      trace << "Spell: Monster casting spell" << endl;
+      Monster* const monster = dynamic_cast<Monster*>(caster);
+      if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
+        const string spellStr = monster->getData()->spellCastMessage;
+        eng->log->addMsg(spellStr);
+      }
+      monster->spellCoolDownCurrent = monster->getData()->spellCooldownTurns;
     }
-    monster->spellCoolDownCurrent = monster->getData()->spellCooldownTurns;
+
+    SpellCastRetData ret = specificCast(caster, eng);
+
+    if(IS_INTRINSIC) {
+      caster->hitSpi(eng->dice(1, getMaxSpiCost(false, caster, eng)));
+    }
+
+    eng->gameTime->endTurnOfCurrentActor();
+    trace << "Spell::cast() [DONE]" << endl;
+    return ret;
   }
-
-  SpellCastRetData ret = specificCast(caster, eng);
-
-  if(IS_INTRINSIC) {
-    caster->hitSpi(eng->dice(1, getMaxSpiCost(false, caster, eng)));
-  }
-
-  eng->gameTime->endTurnOfCurrentActor();
   trace << "Spell::cast() [DONE]" << endl;
-  return ret;
+  return SpellCastRetData(false);
 }
 
 //------------------------------------------------------------ AZATHOTHS BLAST

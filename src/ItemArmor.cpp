@@ -77,3 +77,11 @@ void ArmorAsbestosSuit::onTakeOff() {
   clearPropsEnabledOnCarrier();
 }
 
+void ArmorHeavyCoat::onWear() {
+  propsEnabledOnCarrier.push_back(new PropRCold(eng, propTurnsIndefinite));
+}
+
+void ArmorHeavyCoat::onTakeOff() {
+  clearPropsEnabledOnCarrier();
+}
+
