@@ -151,7 +151,7 @@ void MapBuild::buildForestTrees(const Pos& stairsPos) {
     buildFromTemplate(churchPos, mapTemplate_church);
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, blockers);
 
     path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
 
@@ -190,7 +190,7 @@ void MapBuild::buildForestTrees(const Pos& stairsPos) {
 //  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
 //  if(NR_HIGHSCORES > 0) {
 //    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockers);
+//    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, blockers);
 //
 //    bool vision[MAP_X_CELLS][MAP_Y_CELLS];
 //

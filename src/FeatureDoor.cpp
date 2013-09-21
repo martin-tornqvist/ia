@@ -88,23 +88,13 @@ bool Door::isMovePassable(Actor* const actorMoving) const {
   return isOpen_;
 }
 
-bool Door::isMoveTypePassable(const MoveType_t moveType) const {
-  switch(moveType) {
-    case moveType_walk:
-      return isOpen_;
-      break;
-    case moveType_ethereal:
-      return true;
-      break;
-    case moveType_ooze:
-      return true;
-      break;
-    case moveType_fly:
-      return isOpen_;
-      break;
-    default:
-      return isOpen_;
-      break;
+bool Door::isBodyTypePassable(const ActorBodyType_t bodyType) const {
+  switch(bodyType) {
+    case actorBodyType_normal:    return isOpen_;   break;
+    case actorBodyType_ethereal:  return true;      break;
+    case actorBodyType_ooze:      return true;      break;
+    case actorBodyType_flying:    return isOpen_;   break;
+    default:                      return isOpen_;   break;
   }
   return false;
 }
@@ -419,7 +409,8 @@ void Door::tryClose(Actor* actorTrying) {
 
   //Blocked?
   if(closable) {
-    eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+    eng->mapTests->makeMoveBlockerArrayForBodyType(
+      actorBodyType_normal, blockers);
     eng->mapTests->addItemsToBlockerArray(blockers);
     const bool BLOCKED = blockers[pos_.x][pos_.y];
     if(BLOCKED) {

@@ -137,7 +137,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         data = new MissileAttackData(actorThrowing, itemThrown, targetCell,
                                      curPos, eng, aimLevel);
 
-        if(data->attackResult >= successSmall) {
+        if(
+          data->attackResult >= successSmall &&
+          data->isEtherealDefenderMissed == false) {
           if(eng->map->playerVision[curPos.x][curPos.y]) {
             eng->renderer->drawGlyph('*', panel_map,
                                      curPos, clrRedLgt);

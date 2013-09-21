@@ -104,7 +104,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
 //      def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
 //
 //    const bool IS_FEATURE_PASSABLE =
-//      eng->map->featuresStatic[pos.x][pos.y]->isMoveTypePassable(def.moveType);
+//      eng->map->featuresStatic[pos.x][pos.y]->isBodyTypePassable(def.moveType);
 //
 //    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
 //

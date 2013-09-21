@@ -29,7 +29,7 @@ public:
 
   void bump(Actor* actorBumping);
   bool isMovePassable(Actor* const actorMoving) const;
-  bool isMoveTypePassable(const MoveType_t moveType) const;
+  bool isBodyTypePassable(const ActorBodyType_t bodyType) const;
   bool isVisionPassable() const;
   bool isShootPassable() const;
   bool isSmokePassable() const;

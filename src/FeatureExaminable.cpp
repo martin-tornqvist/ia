@@ -338,7 +338,7 @@ void Tomb::triggerTrap() {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng->actorDataHandler->dataList[i];
           if(
-            d.moveType == moveType_ooze &&
+            d.bodyType == actorBodyType_ooze &&
             d.isAutoSpawnAllowed &&
             d.isUnique == false) {
             actorCandidates.push_back(static_cast<ActorId_t>(i));
@@ -881,7 +881,8 @@ void Cocoon::triggerTrap() {
     if(NR_CANDIDATES != 0) {
       trace << "Cocoon: Spawn candidates found, attempting to place" << endl;
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+      eng->mapTests->makeMoveBlockerArrayForBodyType(
+        actorBodyType_normal, blockers);
       vector<Pos> freeCells;
       eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
 

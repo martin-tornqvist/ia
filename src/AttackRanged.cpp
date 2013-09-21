@@ -125,7 +125,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         //HIT ACTOR?
         if(
           curProj->attackData->currentDefender != NULL &&
-          curProj->isObstructed == false) {
+          curProj->isObstructed == false &&
+          curProj->attackData->isEtherealDefenderMissed == false) {
 
           const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
@@ -277,11 +278,6 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   } //End path-loop
 
-  /*const bool LEAVE_SMOKE = weapon->getInstanceDefinition().rangedMissileLeavesSmoke;
-   if(LEAVE_SMOKE == true) {
-   eng->explosionMaker->runSmokeExplosion(projectiles.at(0)->pos, true);
-   }*/
-
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
   const Projectile* const projectile = projectiles.at(0);
@@ -384,16 +380,8 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
   const int defX = data.currentDefender->pos.x;
   const int defY = data.currentDefender->pos.y;
   if(eng->map->playerVision[defX][defY]) {
-//    if(data.isTargetEthereal == true) {
-//      if(data.currentDefender == eng->player) {
-//        //Perhaps no text is needed here?
-//      } else {
-//        eng->log->addMsg("Projectile hits nothing but void.");
-//      }
-//    } else {
+
     //Punctuation or exclamation marks depending on attack strength
-
-
     if(IS_HIT) {
       string dmgPunctuation = ".";
       const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
@@ -406,24 +394,16 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
 
       if(data.currentDefender == eng->player) {
         eng->log->addMsg("I am hit" + dmgPunctuation, clrMessageBad, true);
-
-//          if(data.attackResult == successCritical) {
-//            eng->log->addMsg("It was a great hit!", clrMessageBad, messageInterrupt_force);
-//          }
       } else {
         string otherName = "It";
 
         if(eng->map->playerVision[defX][defY] == true)
           otherName = data.currentDefender->getNameThe();
 
-        eng->log->addMsg(otherName + " is hit" + dmgPunctuation, clrMessageGood);
-
-//          if(data.attackResult == successCritical) {
-//            eng->log->addMsg("It was a great hit!", clrMessageGood);
-//          }
+        eng->log->addMsg(
+          otherName + " is hit" + dmgPunctuation, clrMessageGood);
       }
     }
-//    }
   }
 }
 

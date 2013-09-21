@@ -36,7 +36,7 @@ protected:
 
   void failedToLearnRealName(const string overrideFailString = "");
 
-  virtual const string getRealTypeName() {return "[ERROR]";}
+  virtual const string getRealTypeName() {return "[WARNING]";}
 };
 
 class PotionOfHealing: public Potion {

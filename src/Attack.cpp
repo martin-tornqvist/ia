@@ -19,14 +19,15 @@ AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
                        Engine* engine) :
   attacker(&attacker_), currentDefender(NULL), attackResult(failSmall),
   dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
-  isIntrinsicAttack(false), eng(engine) {
+  isIntrinsicAttack(false), isEtherealDefenderMissed(false), eng(engine) {
   isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
                                  Actor& defender_, Engine* engine) :
-  AttackData(attacker_, wpn_, engine), isDefenderDodging(false), isBackstab(false),
-  isWeakAttack(false) {
+  AttackData(attacker_, wpn_, engine), isDefenderDodging(false),
+  isBackstab(false), isWeakAttack(false) {
+
   currentDefender = &defender_;
 
   const Pos& defPos = currentDefender->pos;
@@ -72,7 +73,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     if(attacker == eng->player) {
       isAttackerAware = eng->player->checkIfSeeActor(*currentDefender, NULL);
     } else {
-      isAttackerAware = dynamic_cast<Monster*>(attacker)->playerAwarenessCounter > 0;
+      Monster* const monster = dynamic_cast<Monster*>(attacker);
+      isAttackerAware = monster->playerAwarenessCounter > 0;
     }
 
     bool isDefenderHeldByWeb = false;
@@ -110,6 +112,13 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     attackResult = eng->abilityRoll->roll(hitChanceTot);
 
+    //Ethereal target missed?
+    if(currentDefender->getBodyType() == actorBodyType_ethereal) {
+      if(eng->dice.fraction(2, 3)) {
+        isEtherealDefenderMissed = true;
+      }
+    }
+
     //--------------------------------------- DETERMINE DAMAGE
     dmgRolls  = wpn_.getData().meleeDmg.first;
     dmgSides  = wpn_.getData().meleeDmg.second;
@@ -138,9 +147,9 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 }
 
-RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
-                                   const Pos& aimPos_, const Pos& curPos_,
-                                   Engine* engine, ActorSizes_t intendedAimLevel_) :
+RangedAttackData::RangedAttackData(
+  Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
+  const Pos& curPos_, Engine* engine, ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, wpn_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
@@ -195,6 +204,13 @@ RangedAttackData::RangedAttackData(Actor& attacker_, const Weapon& wpn_,
 
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
+
+      if(currentDefender->getBodyType() == actorBodyType_ethereal) {
+        if(eng->dice.fraction(2, 3)) {
+          isEtherealDefenderMissed = true;
+        }
+      }
+
       dmgRolls  = wpn_.getData().rangedDmg.rolls;
       dmgSides  = wpn_.getData().rangedDmg.sides;
       dmgPlus   = wpn_.getData().rangedDmg.plus;

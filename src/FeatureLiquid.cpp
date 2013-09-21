@@ -11,7 +11,7 @@ FeatureLiquidShallow::FeatureLiquidShallow(
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor* actorBumping) {
-  if(actorBumping->getData()->moveType == moveType_walk) {
+  if(actorBumping->getData()->bodyType == actorBodyType_normal) {
 
     actorBumping->getPropHandler()->tryApplyProp(
       new PropWaiting(eng, propTurnsStandard));

@@ -11,8 +11,8 @@ void PopulateTraps::populateRoomAndCorridorLevel(
   const vector<Room*>& rooms) const {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(
-    moveType_walk, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    actorBodyType_normal, blockers);
 
   //Put traps in non-plain rooms
   for(unsigned int i = 0; i < rooms.size(); i++) {

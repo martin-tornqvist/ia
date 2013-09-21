@@ -97,7 +97,7 @@ public:
   void reset();
 
   ActorId_t id;
-
+  ActorBodyType_t bodyType;
   string name_a;
   string name_the;
   Tile_t tile;
@@ -106,7 +106,6 @@ public:
   MonsterGroupSize_t groupSize;
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed_t speed;
-  MoveType_t moveType;
   AbilityValues abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;

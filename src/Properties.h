@@ -57,7 +57,6 @@ enum PropId_t {
   propDiseased,
   propWeakened,
   propBerserk,
-//  propHeroic,
   propClairvoyant,
   propBlessed,
   propCursed,

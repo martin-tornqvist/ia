@@ -37,8 +37,9 @@ public:
     const Actor* const actorMoving,
     bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void makeMoveBlockerArrayForMoveType(
-    const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeMoveBlockerArrayForBodyType(
+    const ActorBodyType_t actorBodyType,
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeShootBlockerFeaturesArray(
     bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
@@ -49,8 +50,9 @@ public:
     const Actor* const actorMoving,
     bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void makeMoveBlockerArrayForMoveTypeFeaturesOnly(
-    const MoveType_t moveType, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    const ActorBodyType_t actorBodyType,
+    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
@@ -126,8 +128,8 @@ public:
   Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 
   void getLine(const Pos& origin, const Pos& target,
-                      bool stopAtTarget, int chebTravelLimit,
-                      vector<Pos>& posList);
+               bool stopAtTarget, int chebTravelLimit,
+               vector<Pos>& posList);
 
   Actor* getActorAtPos(const Pos pos) const;
 

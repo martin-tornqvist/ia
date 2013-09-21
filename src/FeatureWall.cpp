@@ -44,7 +44,7 @@ string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
 
   }
   }
-  return "[ERROR]";
+  return "[WARNING]";
 }
 
 SDL_Color Wall::getColor() const {

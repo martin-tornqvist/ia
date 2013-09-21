@@ -11,7 +11,7 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       FeatureStatic* const f = eng->map->featuresStatic[x][y];
-      if(f->isMoveTypePassable(moveType_walk) && f->canHaveStaticFeature()) {
+      if(f->isBodyTypePassable(actorBodyType_normal) && f->canHaveStaticFeature()) {
         positionCandidates.push_back(Pos(x, y));
       }
     }
@@ -67,7 +67,7 @@ int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos po
   switch(dir) {
   case direction_right: {
     for(int dy = -1; dy <= 1; dy++) {
-      if(eng->map->featuresStatic[pos.x + 1][pos.y + dy]->isMoveTypePassable(moveType_walk) == false) {
+      if(eng->map->featuresStatic[pos.x + 1][pos.y + dy]->isBodyTypePassable(actorBodyType_normal) == false) {
         nrBlockers += 1;
       }
     }
@@ -75,7 +75,7 @@ int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos po
   break;
   case direction_down: {
     for(int dx = -1; dx <= 1; dx++) {
-      if(eng->map->featuresStatic[pos.x + dx][pos.y + 1]->isMoveTypePassable(moveType_walk) == false) {
+      if(eng->map->featuresStatic[pos.x + dx][pos.y + 1]->isBodyTypePassable(actorBodyType_normal) == false) {
         nrBlockers += 1;
       }
     }
@@ -83,7 +83,7 @@ int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos po
   break;
   case direction_left: {
     for(int dy = -1; dy <= 1; dy++) {
-      if(eng->map->featuresStatic[pos.x - 1][pos.y + dy]->isMoveTypePassable(moveType_walk) == false) {
+      if(eng->map->featuresStatic[pos.x - 1][pos.y + dy]->isBodyTypePassable(actorBodyType_normal) == false) {
         nrBlockers += 1;
       }
     }
@@ -91,7 +91,7 @@ int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos po
   break;
   case direction_up: {
     for(int dx = -1; dx <= 1; dx++) {
-      if(eng->map->featuresStatic[pos.x + dx][pos.y - 1]->isMoveTypePassable(moveType_walk) == false) {
+      if(eng->map->featuresStatic[pos.x + dx][pos.y - 1]->isBodyTypePassable(actorBodyType_normal) == false) {
         nrBlockers += 1;
       }
     }

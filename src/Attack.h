@@ -23,6 +23,7 @@ public:
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
   bool isIntrinsicAttack;
+  bool isEtherealDefenderMissed;
 
 protected:
   AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine* engine);
@@ -36,6 +37,7 @@ public:
   bool isDefenderDodging;
   bool isBackstab;
   bool isWeakAttack;
+
 };
 
 class RangedAttackData: public AttackData {
@@ -61,9 +63,10 @@ public:
 };
 
 struct Projectile {
-  Projectile() : pos(Pos(-1, -1)), isObstructed(false), isVisibleToPlayer(true),
-    actorHit(NULL), obstructedInElement(-1), isDoneRendering(false),
-    glyph(-1), tile(tile_empty), clr(clrWhite), attackData(NULL) {}
+  Projectile() : pos(Pos(-1, -1)), isObstructed(false),
+    isVisibleToPlayer(true), actorHit(NULL), obstructedInElement(-1),
+    isDoneRendering(false), glyph(-1), tile(tile_empty), clr(clrWhite),
+    attackData(NULL) {}
 
   ~Projectile() {
     if(attackData != NULL) {

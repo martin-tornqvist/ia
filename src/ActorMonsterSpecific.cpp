@@ -254,14 +254,8 @@ bool Ghost::actorSpecificAct() {
           if(PLAYER_DODGES) {
             eng->log->addMsg("I dodge!", clrMessageGood);
           } else {
-            if(eng->dice.coinToss()) {
-              eng->player->getPropHandler()->tryApplyProp(
-                new PropSlowed(eng, propTurnsStandard));
-            } else {
-              eng->player->getPropHandler()->tryApplyProp(
-                new PropCursed(eng, propTurnsStandard));
-            }
-            restoreHp(999, true);
+            eng->player->getPropHandler()->tryApplyProp(
+              new PropSlowed(eng, propTurnsStandard));
           }
           eng->gameTime->endTurnOfCurrentActor();
           return true;
@@ -344,9 +338,11 @@ bool Khephren::actorSpecificAct() {
         eng->mapTests->makeVisionBlockerArray(pos, blockers);
 
         if(checkIfSeeActor(*(eng->player), blockers)) {
-          eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_fly, blockers);
+          eng->mapTests->makeMoveBlockerArrayForBodyType(
+            actorBodyType_flying, blockers);
 
-          const int SPAWN_AFTER_X = eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;
+          const int SPAWN_AFTER_X =
+            eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;
           for(int y = 0; y  < MAP_Y_CELLS; y++) {
             for(int x = 0; x <= SPAWN_AFTER_X; x++) {
               blockers[x][y] = true;
@@ -363,7 +359,10 @@ bool Khephren::actorSpecificAct() {
             eng->log->addMsg("Khephren calls a plague of Locusts!");
             eng->player->incrShock(shockValue_heavy);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
-              Monster* monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(actor_giantLocust, freeCells.at(0)));
+              Actor* const actor =
+                eng->actorFactory->spawnActor(actor_giantLocust,
+                                              freeCells.at(0));
+              Monster* const monster = dynamic_cast<Monster*>(actor);
               monster->playerAwarenessCounter = 999;
               monster->leader = this;
               freeCells.erase(freeCells.begin());

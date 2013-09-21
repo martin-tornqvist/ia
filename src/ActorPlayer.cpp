@@ -492,7 +492,8 @@ void Player::incrInsanity() {
             eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
 
             bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-            eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+            eng->mapTests->makeMoveBlockerArrayForBodyType(
+              actorBodyType_normal, blockers);
 
             vector<Pos> spawnPosCandidates;
 
@@ -1224,7 +1225,8 @@ void Player::updateFov() {
     const int Y1 = min(MAP_Y_CELLS - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_fly, blockers);
+    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+      actorBodyType_flying, blockers);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {

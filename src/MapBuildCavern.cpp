@@ -46,7 +46,8 @@ void MapBuild::buildCavern() {
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(
+    actorBodyType_normal, blockers);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->floodFill(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;

@@ -34,11 +34,11 @@ void Feature::newTurn() {
 }
 
 bool Feature::isMovePassable(Actor* const actorMoving) const {
-  return data_->isMovePassable[actorMoving->getMoveType()];
+  return data_->isBodyTypePassable[actorMoving->getBodyType()];
 }
 
-bool Feature::isMoveTypePassable(const MoveType_t moveType) const {
-  return data_->isMovePassable[moveType];
+bool Feature::isBodyTypePassable(const ActorBodyType_t bodyType) const {
+  return data_->isBodyTypePassable[bodyType];
 }
 
 bool Feature::isVisionPassable() const {

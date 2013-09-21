@@ -86,38 +86,40 @@ void MapTests::makeMoveBlockerArray(
   const Actor* const actorMoving,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
-  makeMoveBlockerArrayForMoveType(actorMoving->getMoveType(), arrayToFill);
+  makeMoveBlockerArrayForBodyType(actorMoving->getBodyType(), arrayToFill);
 }
 
 void MapTests::makeMoveBlockerArrayFeaturesOnly(
   const Actor* const actorMoving,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
-  makeMoveBlockerArrayForMoveTypeFeaturesOnly(
-    actorMoving->getMoveType(), arrayToFill);
+  makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    actorMoving->getBodyType(), arrayToFill);
 }
 
 void MapTests::makeWalkBlockingArrayFeaturesOnly(
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
-  makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, arrayToFill);
+  makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, arrayToFill);
 }
 
-void MapTests::makeMoveBlockerArrayForMoveTypeFeaturesOnly(
-  const MoveType_t moveType,
+void MapTests::makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+  const ActorBodyType_t bodyType,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      arrayToFill[x][y] = !(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType));
+      arrayToFill[x][y] =
+        eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
     }
   }
   FeatureMob* f = NULL;
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
   for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
     f = eng->gameTime->getFeatureMobAt(i);
-    if(arrayToFill[f->getX()][f->getY()] == false) {
-      arrayToFill[f->getX()][f->getY()] = !(f->isMoveTypePassable(moveType));
+    const Pos& pos = f->getPos();
+    if(arrayToFill[pos.x][pos.y] == false) {
+      arrayToFill[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
     }
   }
 }
@@ -152,21 +154,23 @@ void MapTests::addItemsToBlockerArray(
   }
 }
 
-void MapTests::makeMoveBlockerArrayForMoveType(
-  const MoveType_t moveType,
+void MapTests::makeMoveBlockerArrayForBodyType(
+  const ActorBodyType_t bodyType,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      arrayToFill[x][y] = !(eng->map->featuresStatic[x][y]->isMoveTypePassable(moveType));
+      arrayToFill[x][y] =
+        eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
     }
   }
   FeatureMob* f = NULL;
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
   for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
     f = eng->gameTime->getFeatureMobAt(i);
-    if(arrayToFill[f->getX()][f->getY()] == false) {
-      arrayToFill[f->getX()][f->getY()] = !(f->isMoveTypePassable(moveType));
+    const Pos& pos = f->getPos();
+    if(arrayToFill[pos.x][pos.y] == false) {
+      arrayToFill[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
     }
   }
   addLivingActorsToBlockerArray(arrayToFill);

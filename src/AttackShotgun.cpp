@@ -11,6 +11,7 @@
 #include "Postmortem.h"
 
 void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
+
   RangedAttackData* data = new RangedAttackData(
     attacker, wpn, aimPos, attacker.pos, eng);
 
@@ -66,47 +67,49 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         delete data;
         data = new RangedAttackData(
           attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
-        if(
+        const bool IS_WITHIN_RANGE_LMT =
           eng->basicUtils->chebyshevDistance(origin, curPos) <=
-          wpn.effectiveRangeLimit) {
-          if(data->attackResult >= successSmall) {
-            if(eng->map->playerVision[curPos.x][curPos.y]) {
-              eng->renderer->drawMapAndInterface(false);
-              eng->renderer->coverCellInMap(curPos);
-              if(eng->config->isTilesMode) {
-                eng->renderer->drawTile(
-                  tile_blastAnimation2, panel_map, curPos, clrRedLgt);
-              } else {
-                eng->renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
-              }
-              eng->renderer->updateScreen();
-              eng->sleep(eng->config->delayShotgun);
+          wpn.effectiveRangeLimit;
+        if(
+          IS_WITHIN_RANGE_LMT &&
+          data->attackResult >= successSmall &&
+          data->isEtherealDefenderMissed == false) {
+          if(eng->map->playerVision[curPos.x][curPos.y]) {
+            eng->renderer->drawMapAndInterface(false);
+            eng->renderer->coverCellInMap(curPos);
+            if(eng->config->isTilesMode) {
+              eng->renderer->drawTile(
+                tile_blastAnimation2, panel_map, curPos, clrRedLgt);
+            } else {
+              eng->renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
             }
+            eng->renderer->updateScreen();
+            eng->sleep(eng->config->delayShotgun);
+          }
 
-            //Messages
-            printProjectileAtActorMessages(*data, true);
+          //Messages
+          printProjectileAtActorMessages(*data, true);
 
-            //Damage
-            data->currentDefender->hit(data->dmg, wpn.getData().rangedDmgType);
+          //Damage
+          data->currentDefender->hit(data->dmg, wpn.getData().rangedDmgType);
 
-            nrActorsHit++;
+          nrActorsHit++;
 
-            eng->renderer->drawMapAndInterface();
+          eng->renderer->drawMapAndInterface();
 
-            //Special shotgun behavior:
-            //If current defender was killed, and player aimed at humanoid level, or at floor level
-            //but beyond the current position, the shot will continue one cell.
-            const bool IS_TARGET_KILLED =
-              data->currentDefender->deadState != actorDeadState_alive;
-            if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
-              monsterKilledInElement = i;
-            }
-            if(
-              (nrActorsHit >= 2) ||
-              (IS_TARGET_KILLED == false) ||
-              (intendedAimLevel == actorSize_floor && curPos == aimPos)) {
-              break;
-            }
+          //Special shotgun behavior:
+          //If current defender was killed, and player aimed at humanoid level, or at floor level
+          //but beyond the current position, the shot will continue one cell.
+          const bool IS_TARGET_KILLED =
+            data->currentDefender->deadState != actorDeadState_alive;
+          if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
+            monsterKilledInElement = i;
+          }
+          if(
+            (nrActorsHit >= 2) ||
+            (IS_TARGET_KILLED == false) ||
+            (intendedAimLevel == actorSize_floor && curPos == aimPos)) {
+            break;
           }
         }
       }

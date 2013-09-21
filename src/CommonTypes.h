@@ -11,15 +11,12 @@ using namespace std;
 
 enum Font_t {font_interface, font_big};
 
-enum MoveType_t {
-  moveType_walk, moveType_fly, moveType_ethereal, moveType_ooze,
-  endOfMoveTypes
-};
-
-enum Res_t {
-  res_phys, res_fire, res_cold, res_acid, res_electric, res_spirit,
-  res_light, res_sleep, res_confusion, res_disease, res_fear,
-  endOfRes
+enum ActorBodyType_t {
+  actorBodyType_normal,
+  actorBodyType_flying,
+  actorBodyType_ethereal,
+  actorBodyType_ooze,
+  endOfActorBodyTypes
 };
 
 enum DmgTypes_t {
@@ -37,7 +34,10 @@ enum MarkerTask_t {
   markerTask_aimThrownWeapon, markerTask_aimLitExplosive
 };
 
-enum GameEntry_t {gameEntry_new, gameEntry_load};
+enum GameEntry_t {
+  gameEntry_new,
+  gameEntry_load
+};
 
 struct CellRenderDataAscii {
   CellRenderDataAscii() :
@@ -278,11 +278,16 @@ struct DirectionNames {
 //};
 
 enum Directions_t {
-  direction_down = 2, direction_left = 4, direction_right = 6, direction_up = 8
+  direction_down  = 2,
+  direction_left  = 4,
+  direction_right = 6,
+  direction_up    = 8
 };
 
 enum ActorDeadState_t {
-  actorDeadState_alive = 0, actorDeadState_corpse = 1, actorDeadState_mangled = 2
+  actorDeadState_alive,
+  actorDeadState_corpse,
+  actorDeadState_mangled
 };
 
 #endif

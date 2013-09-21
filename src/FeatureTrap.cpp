@@ -74,10 +74,12 @@ void Trap::bump(Actor* actorBumping) {
 
   trace << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
 
-  if(d->moveType == moveType_walk) {
+  if(d->bodyType == actorBodyType_normal) {
     const bool IS_PLAYER = actorBumping == actorBumping->eng->player;
     const bool ACTOR_CAN_SEE = actorBumping->getPropHandler()->allowSee();
-    const int DODGE_SKILL_VALUE = actorBumping->getData()->abilityVals.getVal(ability_dodgeTrap, true, *actorBumping);
+    AbilityValues& abilities = actorBumping->getData()->abilityVals;
+    const int DODGE_SKILL_VALUE =
+      abilities.getVal(ability_dodgeTrap, true, *actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
     const string trapName = specificTrap_->getTrapSpecificTitle();
@@ -539,7 +541,8 @@ void TrapSummonMonster::trapSpecificTrigger(Actor* const actor,
   }
 
   bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveTypeFeaturesOnly(moveType_walk, blockingFeatures);
+  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    actorBodyType_normal, blockingFeatures);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;

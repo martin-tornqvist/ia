@@ -57,7 +57,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, blockers);
 
   const int MIN_DIST_TO_PLAYER = FOV_STANDARD_RADI_INT + 3;
 
@@ -105,7 +105,7 @@ void PopulateMonsters::populateCaveLevel() const {
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 2;
-  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
   const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
@@ -143,7 +143,7 @@ void PopulateMonsters::populateIntroLevel() {
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 3;
-  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
   const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
@@ -183,7 +183,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
   bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 2;
-  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, forbiddenCells);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, forbiddenCells);
   const Pos& playerPos = eng->player->pos;
 
   const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
@@ -454,7 +454,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //void PopulateMonsters::populate() const {
 //  trace << "PopulateMonsters::PopulateMonsters()..." << endl;
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+//  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, blockers);
 //  eng->basicUtils->reverseBoolArray(blockers);
 //  vector<Pos> freeCells;
 //  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
@@ -520,7 +520,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 
 //void PopulateMonsters::spawnOneMonster() const {
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  eng->mapTests->makeMoveBlockerArrayForMoveType(moveType_walk, blockers);
+//  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, blockers);
 //  eng->basicUtils->reverseBoolArray(blockers);
 //  vector<Pos> freeCells;
 //  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
