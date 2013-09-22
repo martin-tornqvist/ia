@@ -731,12 +731,95 @@ void Chest::triggerTrap() {
 
 //--------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(Feature_t id, Pos pos, Engine* engine) :
-  FeatureExaminable(id, pos, engine) {
+  FeatureExaminable(id, pos, engine), fountainType(fountainTypeTepid) {
 
+  fountainType = FountainType_t(eng->dice.range(1, endOfFountainTypes));
 }
 
 void Fountain::featureSpecific_examine() {
+  if(fountainType == fountainTypeDry) {
+    eng->log->addMsg("The fountain is dried out.");
+  } else {
+    vector<string> actionLabels;
+    actionLabels.push_back("Drink from it");
+    actionLabels.push_back("Leave it");
+    string descr = "";
+    const int CHOICE_NR = eng->popup->showMultiChoiceMessage(
+                            descr, true, actionLabels, "A fountain");
+    switch(CHOICE_NR) {
+      case 0: {
+        drink();
+      } break;
 
+      case 1: {
+        eng->log->addMsg("I leave the fountain for now.");
+      } break;
+    }
+  }
+}
+
+void Fountain::drink() {
+  PropHandler* const propHandler = eng->player->getPropHandler();
+
+  eng->log->addMsg("I drink from the fountain.");
+
+  switch(fountainType) {
+    case fountainTypeDry: {} break;
+
+    case fountainTypeTepid: {
+      eng->log->addMsg("The water is tepid.");
+    } break;
+
+    case fountainTypeRefreshing: {
+      eng->log->addMsg("It's very refreshing.");
+      eng->player->restoreHp(1, false);
+      eng->player->restoreSpi(1, false);
+      eng->player->restoreShock(5, false);
+    } break;
+
+    case fountainTypeBlessed: {
+      propHandler->tryApplyProp(
+        new PropBlessed(eng, propTurnsStandard));
+    } break;
+
+    case fountainTypeCursed: {
+      propHandler->tryApplyProp(
+        new PropCursed(eng, propTurnsStandard));
+    } break;
+
+    case fountainTypeSpirited: {
+      eng->player->restoreSpi(2, true, true);
+    } break;
+
+    case fountainTypeVitality: {
+      eng->player->restoreHp(2, true, true);
+    } break;
+
+    case fountainTypeDiseased: {
+      propHandler->tryApplyProp(
+        new PropDiseased(eng, propTurnsStandard));
+    } break;
+
+    case fountainTypePoisoned: {
+      propHandler->tryApplyProp(
+        new PropPoisoned(eng, propTurnsStandard));
+    } break;
+
+    case fountainTypeBerserk: {
+      propHandler->tryApplyProp(
+        new PropBerserk(eng, propTurnsStandard));
+    } break;
+
+//    case fountainTypeVisions: {
+//    } break;
+
+    case endOfFountainTypes: {} break;
+  }
+
+  if(eng->dice.oneIn(3)) {
+    eng->log->addMsg("The fountain dries out.");
+    fountainType = fountainTypeDry;
+  }
 }
 
 //--------------------------------------------------------- CABINET
@@ -766,7 +849,7 @@ void Cabinet::featureSpecific_examine() {
 
     const int CHOICE_NR = eng->popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A cabinet");
-    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)(CHOICE_NR)));
   }
 }
 

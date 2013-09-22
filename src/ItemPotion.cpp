@@ -170,9 +170,15 @@ void PotionOfBerserk::specificCollide(const Pos& pos, Actor* const actor) {
 void PotionOfFortitude::specificQuaff(Actor* const actor) {
   PropHandler* const propHandler = actor->getPropHandler();
 
-  propHandler->tryApplyProp(new PropRFear(eng, propTurnsStandard));
-  propHandler->tryApplyProp(new PropRConfusion(eng, propTurnsStandard));
-  propHandler->tryApplyProp(new PropRSleep(eng, propTurnsStandard));
+  PropRFear*      const rFear   = new PropRFear(eng, propTurnsStandard);
+  PropRConfusion* const rConf   = new PropRConfusion(
+    eng, propTurnsSpecified, rFear->turnsLeft_);
+  PropRSleep*     const rSleep  = new PropRSleep(
+    eng, propTurnsSpecified, rFear->turnsLeft_);
+
+  propHandler->tryApplyProp(rFear);
+  propHandler->tryApplyProp(rConf);
+  propHandler->tryApplyProp(rSleep);
 
   if(actor == eng->player) {
     bool isPhobiasCured = false;
@@ -264,21 +270,21 @@ void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
   }
 }
 
-void PotionOfRCold::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
-    new PropRCold(eng, propTurnsStandard));
-
-  if(eng->player->checkIfSeeActor(*actor, NULL)) {
-    identify(false);
-  }
-}
-
-void PotionOfRCold::specificCollide(const Pos& pos, Actor* const actor) {
-  (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
-}
+//void PotionOfRCold::specificQuaff(Actor* const actor) {
+//  actor->getPropHandler()->tryApplyProp(
+//    new PropRCold(eng, propTurnsStandard));
+//
+//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
+//    identify(false);
+//  }
+//}
+//
+//void PotionOfRCold::specificCollide(const Pos& pos, Actor* const actor) {
+//  (void)pos;
+//  if(actor != NULL) {
+//    specificQuaff(actor);
+//  }
+//}
 
 void PotionOfAntidote::specificQuaff(Actor* const actor) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];

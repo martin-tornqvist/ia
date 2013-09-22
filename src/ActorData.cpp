@@ -490,7 +490,7 @@ void ActorDataHandler::initDataList() {
   d.color = clrBrownDark;
   d.tile = tile_ratThing;
   d.hp = 15;
-  d.dmgMelee = 2;
+  d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;

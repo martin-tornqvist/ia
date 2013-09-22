@@ -784,7 +784,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng->actorDataHandler->dataList[actor_greenSpider]);
-  d->propAppliedOnMelee = new PropBlind(eng, propTurnsStandard, 4);
+  d->propAppliedOnMelee = new PropBlind(eng, propTurnsSpecified, 4);
   dataList[d->id] = d;
 
   d = new ItemData(item_whiteSpiderBite);
@@ -856,6 +856,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_ghost]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
   d = new ItemData(item_phantasmSickle);
@@ -863,6 +864,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_phantasm]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
   d = new ItemData(item_wraithClaw);
@@ -870,6 +872,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_wraith]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
   d = new ItemData(item_giantBatBite);
@@ -999,7 +1002,7 @@ void ItemDataHandler::initDataList() {
   d->color = clrBrown;
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints = 1;
-  d->armorData.damageToDurabilityFactor = 1.0;
+  d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMessage = "";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
@@ -1011,7 +1014,7 @@ void ItemDataHandler::initDataList() {
   d->color = clrWhite;
   d->spawnStandardMinDLVL = 2;
   d->armorData.absorptionPoints = 4;
-  d->armorData.damageToDurabilityFactor = 0.5;
+  d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
@@ -1023,7 +1026,7 @@ void ItemDataHandler::initDataList() {
   d->color = clrGreen;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 3;
-  d->armorData.damageToDurabilityFactor = 0.5;
+  d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
@@ -1035,7 +1038,7 @@ void ItemDataHandler::initDataList() {
   d->color = clrRedLgt;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
-  d->armorData.damageToDurabilityFactor = 1.0;
+  d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMessage = "";
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_chest);
@@ -1048,7 +1051,7 @@ void ItemDataHandler::initDataList() {
   d->color = clrBlueLgt;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
-  d->armorData.damageToDurabilityFactor = 1.0;
+  d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMessage = "";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
@@ -1184,9 +1187,9 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfRCold);
-  resetData(d, itemData_potion);
-  dataList[d->id] = d;
+//  d = new ItemData(item_potionOfRCold);
+//  resetData(d, itemData_potion);
+//  dataList[d->id] = d;
 
   d = new ItemData(item_potionOfAntidote);
   resetData(d, itemData_potion);

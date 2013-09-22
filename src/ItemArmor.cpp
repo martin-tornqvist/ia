@@ -29,7 +29,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   const int AP_BEFORE = getAbsorptionPoints();
 
-  const double DDF_BASE     = data_->armorData.damageToDurabilityFactor;
+  const double DDF_BASE     = data_->armorData.dmgToDurabilityFactor;
   const double RND_FRACTION = double(eng->dice.percentile()) / 100.0;
   const double DDF_ADJUST   = 3.0;
 

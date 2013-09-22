@@ -132,7 +132,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfPoison:           item = new PotionOfPoison(d, eng); break;
     case item_potionOfKnowledge:        item = new PotionOfKnowledge(d, eng); break;
     case item_potionOfRFire:            item = new PotionOfRFire(d, eng); break;
-    case item_potionOfRCold:            item = new PotionOfRCold(d, eng); break;
+//    case item_potionOfRCold:            item = new PotionOfRCold(d, eng); break;
     case item_potionOfAntidote:         item = new PotionOfAntidote(d, eng); break;
     case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
     case item_potionOfRAcid:            item = new PotionOfRAcid(d, eng); break;

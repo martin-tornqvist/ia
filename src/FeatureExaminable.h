@@ -152,9 +152,20 @@ private:
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
 };
 
-enum Fountain_t {
-  fountain_tepid,
-  fountain_refreshing
+enum FountainType_t {
+  fountainTypeDry, //This must be kept as first position!
+  fountainTypeTepid,
+  fountainTypeRefreshing,
+  fountainTypeBlessed,
+  fountainTypeCursed,
+  fountainTypeSpirited,
+  fountainTypeVitality,
+//  fountainTypeTainted,
+  fountainTypeDiseased,
+  fountainTypePoisoned,
+  fountainTypeBerserk,
+//  fountainTypeVisions,
+  endOfFountainTypes
 };
 
 class Fountain: public FeatureExaminable {
@@ -162,25 +173,13 @@ public:
   ~Fountain() {}
   void featureSpecific_examine();
 
-//  string getDescr(const bool DEFINITE_ARTICLE) const;
-
-//  SDL_Color getColor() const;
-
 private:
   friend class FeatureFactory;
   Fountain(Feature_t id, Pos pos, Engine* engine);
 
-//  void triggerTrap();
-//  bool openFeature();
-//  void getChoiceLabels(const vector<ChestAction_t>& possibleActions,
-//                       vector<string>& actionLabels) const;
-//  void getPossibleActions(vector<ChestAction_t>& possibleActions) const;
-//  void doAction(const ChestAction_t action);
-//  void getDescr(string& descr) const;
-//  ExaminableItemContainer itemContainer_;
+  void drink();
 
-//  bool isContentKnown_;
-//  bool isLocked_, isTrapped_, isTrapStatusKnown_;
+  FountainType_t fountainType;
 };
 
 enum CocoonAction_t {

@@ -44,7 +44,7 @@ enum PropId_t {
   propBlind,
   propFainted,
   propBurning,
-  propFrozen,
+//  propFrozen,
   propPoisoned,
   propParalysed,
   propTerrified,
@@ -159,7 +159,8 @@ public:
 
   void tryApplyProp(Prop* const prop, const bool FORCE_EFFECT = false,
                     const bool NO_MESSAGES = false,
-                    const bool DISABLE_REDRAW = false);
+                    const bool DISABLE_REDRAW = false,
+                    const bool DISABLE_PROP_START_EFFECTS = false);
 
   void tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE);
 
@@ -366,7 +367,6 @@ public:
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 4);}
 };
 
 class PropWeakened: public Prop {
@@ -378,7 +378,6 @@ public:
   ~PropWeakened() {}
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 100);}
 };
 
 class PropInfected: public Prop {
@@ -392,7 +391,6 @@ public:
   void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 20, 100);}
 };
 
 class PropDiseased: public Prop {
@@ -408,7 +406,6 @@ public:
 //  void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 1450);}
 };
 
 class PropPoisoned: public Prop {
@@ -422,7 +419,6 @@ public:
   void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 25, 50);}
 };
 
 class PropStill: public Prop {
@@ -439,7 +435,6 @@ public:
   }
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 1);}
 };
 
 class PropBlind: public Prop {
@@ -466,7 +461,6 @@ public:
   }
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 8, 8);}
 };
 
 class PropBlessed: public Prop {
@@ -485,7 +479,6 @@ public:
   }
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
 };
 
 class PropCursed: public Prop {
@@ -522,7 +515,6 @@ public:
 //  void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 100, 450);}
 };
 
 class PropBurning: public Prop {
@@ -544,7 +536,6 @@ public:
   void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 6, 3);}
 };
 
 class PropFlared: public Prop {
@@ -558,7 +549,6 @@ public:
   void onNewTurn();
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 2, 2);}
 };
 
 class PropConfused: public Prop {
@@ -575,7 +565,15 @@ public:
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 30);}
+};
+
+class PropStunned: public Prop {
+public:
+  PropStunned(Engine* engine, PropTurns_t turnsInit,
+              int turns = -1) :
+    Prop(propStunned, engine, turnsInit, turns) {}
+  ~PropStunned() {}
+private:
 };
 
 class PropNailed: public Prop {
@@ -595,9 +593,7 @@ public:
 
 private:
   int nrSpikes_;
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(0, 0, 999);}
 };
-
 
 class PropWaiting: public Prop {
 public:
@@ -700,17 +696,16 @@ public:
   }
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 3, 6);}
 };
 
-class PropFrozen: public Prop {
-public:
-  PropFrozen(Engine* engine, PropTurns_t turnsInit,
-             int turns = -1) :
-    Prop(propFrozen, engine, turnsInit, turns) {}
-  ~PropFrozen() {}
-private:
-};
+//class PropFrozen: public Prop {
+//public:
+//  PropFrozen(Engine* engine, PropTurns_t turnsInit,
+//             int turns = -1) :
+//    Prop(propFrozen, engine, turnsInit, turns) {}
+//  ~PropFrozen() {}
+//private:
+//};
 
 class PropFreeAction: public Prop {
 public:
@@ -760,7 +755,6 @@ public:
   void onHit() {turnsLeft_ = 0;}
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(1, 50, 50);}
 };
 
 class PropSlowed: public Prop {
@@ -772,7 +766,6 @@ public:
   ~PropSlowed() {}
 
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 6, 6);}
 };
 
 class PropBerserk: public Prop {
@@ -783,6 +776,7 @@ public:
 
   ~PropBerserk() {}
 
+  void onStart();
   void onEnd();
 
   void changeMovePos(const Pos& actorPos, Pos& movePos);
@@ -798,7 +792,6 @@ public:
     return 0;
   }
 private:
-//  DiceParam getRandomStandardNrTurns() {return DiceParam(3, 8, 24);}
 };
 
 class PropRAcid: public Prop {
@@ -807,8 +800,6 @@ public:
             int turns = -1) :
     Prop(propRAcid, engine, turnsInit, turns) {}
   ~PropRAcid() {}
-
-  bool tryResistOtherProp(const PropId_t id);
 
 private:
 };
@@ -832,17 +823,10 @@ public:
     Prop(propRConfusion, engine, turnsInit, turns) {}
   ~PropRConfusion() {}
 
+  void onStart();
+
   bool tryResistOtherProp(const PropId_t id);
 
-private:
-};
-
-class PropStunned: public Prop {
-public:
-  PropStunned(Engine* engine, PropTurns_t turnsInit,
-              int turns = -1) :
-    Prop(propStunned, engine, turnsInit, turns) {}
-  ~PropStunned() {}
 private:
 };
 
@@ -853,8 +837,6 @@ public:
     Prop(propRElectric, engine, turnsInit, turns) {}
   ~PropRElectric() {}
 
-  bool tryResistOtherProp(const PropId_t id);
-
 private:
 };
 
@@ -864,6 +846,8 @@ public:
             int turns = -1) :
     Prop(propRFear, engine, turnsInit, turns) {}
   ~PropRFear() {}
+
+  void onStart();
 
   bool tryResistOtherProp(const PropId_t id);
 
@@ -877,6 +861,8 @@ public:
     Prop(propRFire, engine, turnsInit, turns) {}
   ~PropRFire() {}
 
+  void onStart();
+
   bool tryResistOtherProp(const PropId_t id);
 
 private:
@@ -889,6 +875,8 @@ public:
     Prop(propRPoison, engine, turnsInit, turns) {}
   ~PropRPoison() {}
 
+  void onStart();
+
   bool tryResistOtherProp(const PropId_t id);
 
 private:
@@ -900,6 +888,8 @@ public:
              int turns = -1) :
     Prop(propRSleep, engine, turnsInit, turns) {}
   ~PropRSleep() {}
+
+  void onStart();
 
   bool tryResistOtherProp(const PropId_t id);
 

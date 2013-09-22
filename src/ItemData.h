@@ -160,7 +160,7 @@ enum ItemId_t {
   item_potionOfKnowledge,
 //  item_potionOfForgetfulness,
   item_potionOfRFire,
-  item_potionOfRCold,
+//  item_potionOfRCold,
   item_potionOfAntidote,
   item_potionOfRElec,
   item_potionOfRAcid,
@@ -178,11 +178,11 @@ enum ItemId_t {
 };
 
 struct ArmorData {
-  ArmorData() : absorptionPoints(0), damageToDurabilityFactor(0.0) {}
+  ArmorData() : absorptionPoints(0), dmgToDurabilityFactor(0.0) {}
 
 //  string overRideAbsorptionPointLabel;
   int absorptionPoints;
-  double damageToDurabilityFactor;
+  double dmgToDurabilityFactor;
 };
 
 class ItemData {

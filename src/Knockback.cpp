@@ -20,18 +20,20 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
         defenderBodyType != actorBodyType_ooze;
 
       const Pos delta = (defender->pos - attackedFromPos).getSigns();
-      const int KNOCK_BACK_RANGE =
-        IS_SPIKE_GUN ? eng->dice.range(2, 3) : eng->dice(1, 2);
+
+      const int KNOCK_BACK_RANGE = 2;
+
+      const bool IS_NAILED = defender->getPropHandler()->hasProp(propNailed);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
-        const Pos c = defender->pos + delta;
+        const Pos newPos = defender->pos + delta;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(defender, blockers);
-        const bool CELL_BLOCKED = blockers[c.x][c.y];
+        const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
-          eng->map->featuresStatic[c.x][c.y]->isBottomless();
+          eng->map->featuresStatic[newPos.x][newPos.y]->isBottomless();
 
         if(
           (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
@@ -53,7 +55,7 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
               false, false);
           }
 
-          defender->pos = c;
+          defender->pos = newPos;
 
           eng->renderer->drawMapAndInterface();
 
@@ -96,7 +98,8 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
         } else {
           // Defender nailed to a wall from a  spike gun?
           if(IS_SPIKE_GUN) {
-            FeatureStatic* const f = eng->map->featuresStatic[c.x][c.y];
+            FeatureStatic* const f =
+              eng->map->featuresStatic[newPos.x][newPos.y];
             if(f->isVisionPassable() == false) {
               defender->getPropHandler()->tryApplyProp(
                 new PropNailed(eng, propTurnsIndefinite));

@@ -35,7 +35,7 @@
 
 1376940822 c:\dev\ia\src\art.h
 
-1379747554 c:\dev\ia\src\actor.h
+1379850701 c:\dev\ia\src\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -92,7 +92,7 @@
 	"ItemData.h"
 	"CommonTypes.h"
 
-1379527866 c:\dev\ia\src\itemdata.h
+1379841774 c:\dev\ia\src\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -144,7 +144,7 @@
 	"Engine.h"
 	<math.h>
 
-1378307787 source:c:\dev\ia\src\actor.cpp
+1379851249 source:c:\dev\ia\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"ItemArmor.h"
@@ -550,7 +550,7 @@
 1372793453 c:\dev\ia\src\knockback.h
 	"CommonTypes.h"
 
-1379754688 source:c:\dev\ia\src\attackranged.cpp
+1379757533 source:c:\dev\ia\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -865,7 +865,7 @@
 1355677713 c:\dev\ia\src\itempickup.h
 	"Inventory.h"
 
-1379746475 c:\dev\ia\src\itempotion.h
+1379841795 c:\dev\ia\src\itempotion.h
 	"Item.h"
 	"CommonData.h"
 
@@ -1174,12 +1174,12 @@
 
 1350576993 source:c:\dev\ia\src\itemammoclip.cpp
 
-1379450712 source:c:\dev\ia\src\itemarmor.cpp
+1379758852 source:c:\dev\ia\src\itemarmor.cpp
 	"ItemArmor.h"
 	"Engine.h"
 	"Log.h"
 
-1379528027 source:c:\dev\ia\src\itemdata.cpp
+1379842662 source:c:\dev\ia\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -1211,7 +1211,7 @@
 	"ItemFactory.h"
 	<algorithm>
 
-1379528356 source:c:\dev\ia\src\itemfactory.cpp
+1379841881 source:c:\dev\ia\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -1269,7 +1269,7 @@
 	"Query.h"
 	"Inventory.h"
 
-1379748639 source:c:\dev\ia\src\knockback.cpp
+1379854115 source:c:\dev\ia\src\knockback.cpp
 	"Knockback.h"
 	"Engine.h"
 	"Attack.h"
@@ -1649,7 +1649,7 @@
 	"MapBuild.h"
 	"ActorPlayer.h"
 
-1379748669 source:c:\dev\ia\src\spells.cpp
+1379854179 source:c:\dev\ia\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -1719,7 +1719,7 @@
 	"Log.h"
 	"Render.h"
 
-1379528447 source:c:\dev\ia\src\itempotion.cpp
+1379842272 source:c:\dev\ia\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"Properties.h"
@@ -10339,7 +10339,7 @@
 	<string>
 	<vector>
 
-1379748335 source:c:\dev\ia\src\featureexaminable.cpp
+1379854595 source:c:\dev\ia\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -10359,7 +10359,7 @@
 	"Map.h"
 	"FeatureFactory.h"
 
-1377029578 c:\dev\ia\src\featureexaminable.h
+1379854459 c:\dev\ia\src\featureexaminable.h
 	"Feature.h"
 	"FeatureDoor.h"
 
@@ -10875,14 +10875,14 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1379747211 c:\dev\ia\src\properties.h
+1379843601 c:\dev\ia\src\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
 	"Converters.h"
 	"CommonTypes.h"
 
-1379747170 source:c:\dev\ia\src\properties.cpp
+1379843726 source:c:\dev\ia\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"

@@ -43,6 +43,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRCold;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Cold resistance";
   d.nameShort = "RCold";
   d.msg[propMsgOnStartPlayer] = "[RCold Player start]";
@@ -62,6 +63,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRPoison;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Poison resistance";
   d.nameShort = "RPoison";
   d.msg[propMsgOnStartPlayer] = "[RPoison Player start]";
@@ -82,6 +84,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRElectric;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Electric resistance";
   d.nameShort = "RElec";
   d.msg[propMsgOnStartPlayer] = "[RElec Player start]";
@@ -101,6 +104,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRAcid;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Acid resistance";
   d.nameShort = "RAcid";
   d.msg[propMsgOnStartPlayer] = "[RAcid Player start]";
@@ -120,6 +124,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRSleep;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Sleep resistance";
   d.nameShort = "RSleep";
   d.msg[propMsgOnStartPlayer] = "[RSleep Player start]";
@@ -139,6 +144,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propFreeAction;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Free action";
   d.nameShort = "FreeAction";
   d.msg[propMsgOnStartPlayer] = "[FreeAction Player start]";
@@ -158,6 +164,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRFear;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Fear resistance";
   d.nameShort = "RFear";
   d.msg[propMsgOnStartPlayer] = "[RFear Player start]";
@@ -177,6 +184,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRConfusion;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Confusion resistance";
   d.nameShort = "RConfusion";
   d.msg[propMsgOnStartPlayer] = "[RConfusion Player start]";
@@ -196,6 +204,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propLightSensitive;
+  d.stdRndTurns = Range(40, 60);
   d.name = "Light sensitive";
   d.nameShort = "LgtSensitive";
   d.msg[propMsgOnStartPlayer] = "[LgtSensitive Player start]";
@@ -214,6 +223,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propBlind;
+  d.stdRndTurns = Range(20, 30);
   d.name = "Blind";
   d.nameShort = "Blind";
   d.msg[propMsgOnStartPlayer] = "I am blind!";
@@ -233,6 +243,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propFainted;
+  d.stdRndTurns = Range(50, 75);
   d.name = "Fainted";
   d.nameShort = "Fainted";
   d.msg[propMsgOnStartPlayer] = "I faint!";
@@ -251,6 +262,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propBurning;
+  d.stdRndTurns = Range(4, 9);
   d.name = "Burning";
   d.nameShort = "Burning";
   d.msg[propMsgOnStartPlayer] = "I am Burning!";
@@ -269,26 +281,27 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propFrozen;
-  d.name = "Frozen";
-  d.nameShort = "Frozen";
-  d.msg[propMsgOnStartPlayer] = "[Frozen Player start]";
-  d.msg[propMsgOnStartMonster] = "[Frozen Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[Frozen Player end]";
-  d.msg[propMsgOnEndMonster] = "[Frozen Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[Frozen Player more]";
-  d.msg[propMsgOnMoreMonster] = "[Frozen Monster more]";
-  d.msg[propMsgOnResPlayer] = "[Frozen Player resist]";
-  d.msg[propMsgOnResMonster] = "[Frozen Monster resist]";
-  d.isMakingMonsterAware = true;
-  d.allowDisplayTurns = true;
-  d.allowApplyMoreWhileActive = true;
-  d.updatePlayerVisualWhenStartOrEnd = true;
-  d.allowTestingOnBot = true;
-  d.alignment = propAlignmentBad;
-  addPropData(d);
+//  d.id = propFrozen;
+//  d.name = "Frozen";
+//  d.nameShort = "Frozen";
+//  d.msg[propMsgOnStartPlayer] = "[Frozen Player start]";
+//  d.msg[propMsgOnStartMonster] = "[Frozen Monster start]";
+//  d.msg[propMsgOnEndPlayer] = "[Frozen Player end]";
+//  d.msg[propMsgOnEndMonster] = "[Frozen Monster end]";
+//  d.msg[propMsgOnMorePlayer] = "[Frozen Player more]";
+//  d.msg[propMsgOnMoreMonster] = "[Frozen Monster more]";
+//  d.msg[propMsgOnResPlayer] = "[Frozen Player resist]";
+//  d.msg[propMsgOnResMonster] = "[Frozen Monster resist]";
+//  d.isMakingMonsterAware = true;
+//  d.allowDisplayTurns = true;
+//  d.allowApplyMoreWhileActive = true;
+//  d.updatePlayerVisualWhenStartOrEnd = true;
+//  d.allowTestingOnBot = true;
+//  d.alignment = propAlignmentBad;
+//  addPropData(d);
 
   d.id = propPoisoned;
+  d.stdRndTurns = Range(30, 60);
   d.name = "Poisoned";
   d.nameShort = "Poisoned";
   d.msg[propMsgOnStartPlayer] = "I am poisoned!";
@@ -308,6 +321,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propParalysed;
+  d.stdRndTurns = Range(7, 9);
   d.name = "Paralyzed";
   d.nameShort = "Paralyzed";
   d.msg[propMsgOnStartPlayer] = "I am paralyzed!";
@@ -328,6 +342,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propTerrified;
+  d.stdRndTurns = Range(5, 12);
   d.name = "Terrified";
   d.nameShort = "Terrified";
   d.msg[propMsgOnStartPlayer] = "I am terrified!";
@@ -347,6 +362,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propConfused;
+  d.stdRndTurns = Range(100, 200);
   d.name = "Confused";
   d.nameShort = "Confused";
   d.msg[propMsgOnStartPlayer] = "I am confused!";
@@ -366,6 +382,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propStunned;
+  d.stdRndTurns = Range(5, 9);
   d.name = "Stunned";
   d.nameShort = "Stunned";
   d.msg[propMsgOnStartPlayer] = "[Stunned Player start]";
@@ -386,6 +403,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propSlowed;
+  d.stdRndTurns = Range(9, 12);
   d.name = "Slowed";
   d.nameShort = "Slowed";
   d.msg[propMsgOnStartPlayer] = "Everything around me seems to speed up.";
@@ -405,6 +423,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propFlared;
+  d.stdRndTurns = Range(3, 4);
   d.name = "";
   d.nameShort = "";
   d.msg[propMsgOnStartPlayer] = "";
@@ -440,6 +459,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propInfected;
+  d.stdRndTurns = Range(300, 400);
   d.name = "Infected";
   d.nameShort = "Infected";
   d.msg[propMsgOnStartPlayer] = "I am infected!";
@@ -460,6 +480,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propDiseased;
+  d.stdRndTurns = Range(2000, 3000);
   d.name = "Diseased";
   d.nameShort = "Diseased";
   d.msg[propMsgOnStartPlayer] = "I am diseased!";
@@ -480,6 +501,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propWeakened;
+  d.stdRndTurns = Range(100, 200);
   d.name = "Weakened";
   d.nameShort = "Weakened";
   d.msg[propMsgOnStartPlayer] = "I feel weaker.";
@@ -500,6 +522,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propBerserk;
+  d.stdRndTurns = Range(30, 60);
   d.name = "Berserk";
   d.nameShort = "Berserk";
   d.msg[propMsgOnStartPlayer] = "[Berserk Player start]";
@@ -518,25 +541,8 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-//  d.id = propHeroic;
-//  d.name = "Heroic";
-//  d.nameShort = "Heroic";
-//  d.msg[propMsgOnStartPlayer] = "[RConfusion Player start]";
-//  d.msg[propMsgOnStartMonster] = "[RConfusion Monster start]";
-//  d.msg[propMsgOnEndPlayer] = "[RConfusion Player end]";
-//  d.msg[propMsgOnEndMonster] = "[RConfusion Monster end]";
-//  d.msg[propMsgOnMorePlayer] = "[RConfusion Player more]";
-//  d.msg[propMsgOnMoreMonster] = "[RConfusion Monster more]";
-//  d.msg[propMsgOnResPlayer] = "[RConfusion Player resist]";
-//  d.msg[propMsgOnResMonster] = "[RConfusion Monster resist]";
-//  d.isMakingMonsterAware              =
-//  d.allowDisplayTurns                 =
-//  d.allowApplyMoreWhileActive         =
-//  d.updatePlayerVisualWhenStartOrEnd  =
-//  d.alignment                         =
-//  addPropData(d);
-
   d.id = propClairvoyant;
+  d.stdRndTurns = Range(500, 600);
   d.name = "Clairvoyant";
   d.nameShort = "Clairvoyant";
   d.msg[propMsgOnStartPlayer] = "I see far and beyond!";
@@ -555,6 +561,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propBlessed;
+  d.stdRndTurns = Range(400, 600);
   d.name = "Blessed";
   d.nameShort = "Blessed";
   d.msg[propMsgOnStartPlayer] = "I feel luckier.";
@@ -574,6 +581,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propCursed;
+  d.stdRndTurns = Range(400, 600);
   d.name = "Cursed";
   d.nameShort = "Cursed";
   d.msg[propMsgOnStartPlayer] = "I feel misfortunate.";
@@ -720,7 +728,7 @@ PropHandler::PropHandler(Actor* owningActor, Engine* engine) :
   for(unsigned int i = 0; i < endOfPropIds; i++) {
     if(actorData->intrProps[i]) {
       Prop* const prop = makePropFromId(PropId_t(i), propTurnsIndefinite);
-      tryApplyProp(prop, true, true, true);
+      tryApplyProp(prop, true, true, true, true);
     }
   }
 }
@@ -734,7 +742,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propBurning:           return new PropBurning(eng, turnsInit, NR_TURNS);
     case propFlared:            return new PropFlared(eng, turnsInit, NR_TURNS);
     case propParalysed:         return new PropParalyzed(eng, turnsInit, NR_TURNS);
-    case propFrozen:            return new PropFrozen(eng, turnsInit, NR_TURNS);
+//    case propFrozen:            return new PropFrozen(eng, turnsInit, NR_TURNS);
     case propFreeAction:        return new PropFreeAction(eng, turnsInit, NR_TURNS);
     case propTerrified:         return new PropTerrified(eng, turnsInit, NR_TURNS);
     case propWeakened:          return new PropWeakened(eng, turnsInit, NR_TURNS);
@@ -853,7 +861,8 @@ bool PropHandler::allowSee() {
 
 void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool NO_MESSAGES,
-                               const bool DISABLE_REDRAW) {
+                               const bool DISABLE_REDRAW,
+                               const bool DISABLE_PROP_START_EFFECTS) {
   prop->owningActor_ = owningActor_;
 
   const bool IS_PLAYER = owningActor_ == eng->player;
@@ -935,7 +944,9 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   //This part reached means the applied property is new.
   appliedProps_.push_back(prop);
-  prop->onStart();
+  if(DISABLE_PROP_START_EFFECTS == false) {
+    prop->onStart();
+  }
 
   if(DISABLE_REDRAW == false) {
     if(prop->updatePlayerVisualWhenStartOrEnd()) {
@@ -1521,6 +1532,15 @@ bool PropBerserk::tryResistOtherProp(const PropId_t id) {
          id == propWeakened;
 }
 
+void PropBerserk::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propBurning, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propConfused, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propTerrified, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propWeakened, visionBlockers);
+}
+
 void PropBerserk::onEnd() {
   owningActor_->getPropHandler()->tryApplyProp(
     new PropWeakened(eng, propTurnsStandard));
@@ -1652,11 +1672,6 @@ void PropFlared::onNewTurn() {
   }
 }
 
-bool PropRAcid::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
-  return false;
-}
-
 bool PropRCold::tryResistOtherProp(const PropId_t id) {
   //TODO Add resistance checks for this property
   return false;
@@ -1667,17 +1682,30 @@ bool PropRConfusion::tryResistOtherProp(const PropId_t id) {
   return false;
 }
 
-bool PropRElectric::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
-  return false;
+void PropRConfusion::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propConfused, visionBlockers);
 }
 
 bool PropRFear::tryResistOtherProp(const PropId_t id) {
   return id == propTerrified;
 }
 
+void PropRFear::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propTerrified, visionBlockers);
+}
+
 bool PropRFire::tryResistOtherProp(const PropId_t id) {
   return id == propBurning;
+}
+
+void PropRFire::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propBurning, visionBlockers);
 }
 
 bool PropRPoison::tryResistOtherProp(const PropId_t id) {
@@ -1685,7 +1713,20 @@ bool PropRPoison::tryResistOtherProp(const PropId_t id) {
   return false;
 }
 
+void PropRPoison::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propPoisoned, visionBlockers);
+}
+
 bool PropRSleep::tryResistOtherProp(const PropId_t id) {
   return id == propFainted;
   return false;
 }
+
+void PropRSleep::onStart() {
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+  owningActor_->getPropHandler()->endAppliedProp(propFainted, visionBlockers);
+}
+

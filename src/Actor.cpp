@@ -183,21 +183,30 @@ void Actor::updateColor() {
   clr_ = data_->color;
 }
 
-bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
-  bool isHpGained = false;
+bool Actor::restoreHp(const int HP_RESTORED,
+                      const bool ALLOW_MESSAGES,
+                      const bool IS_ALLOWED_ABOVE_MAX) {
+  bool isHpGained = IS_ALLOWED_ABOVE_MAX;
 
   const int DIF_FROM_MAX = getHpMax(true) - HP_RESTORED;
 
   //If hp is below limit, but restored hp will push it over the limit,
   //hp is set to max.
-  if(getHp() > DIF_FROM_MAX && getHp() < getHpMax(true)) {
+  if(
+    IS_ALLOWED_ABOVE_MAX == false &&
+    getHp() > DIF_FROM_MAX &&
+    getHp() < getHpMax(true)) {
+
     hp_ = getHpMax(true);
     isHpGained = true;
   }
 
   //If hp is below limit, and restored hp will NOT push it
   //over the limit - restored hp is added to current.
-  if(getHp() <= DIF_FROM_MAX) {
+  if(
+    IS_ALLOWED_ABOVE_MAX ||
+    getHp() <= DIF_FROM_MAX) {
+
     hp_ += HP_RESTORED;
     isHpGained = true;
   }
@@ -220,21 +229,30 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MESSAGES) {
   return isHpGained;
 }
 
-bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MESSAGES) {
-  bool isSpiGained = false;
+bool Actor::restoreSpi(const int SPI_RESTORED,
+                       const bool ALLOW_MESSAGES,
+                       const bool IS_ALLOWED_ABOVE_MAX) {
+  bool isSpiGained = IS_ALLOWED_ABOVE_MAX;
 
   const int DIF_FROM_MAX = getSpiMax() - SPI_RESTORED;
 
   //If spi is below limit, but restored spi will push it over the limit,
   //spi is set to max.
-  if(getSpi() > DIF_FROM_MAX && getSpi() < getSpiMax()) {
+  if(
+    IS_ALLOWED_ABOVE_MAX == false &&
+    getSpi() > DIF_FROM_MAX &&
+    getSpi() < getSpiMax()) {
+
     spi_ = getSpiMax();
     isSpiGained = true;
   }
 
   //If spi is below limit, and restored spi will NOT push it
   //over the limit - restored spi is added to current.
-  if(getSpi() <= DIF_FROM_MAX) {
+  if(
+    IS_ALLOWED_ABOVE_MAX ||
+    getSpi() <= DIF_FROM_MAX) {
+
     spi_ += SPI_RESTORED;
     isSpiGained = true;
   }
@@ -320,6 +338,10 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
 
   dmg = max(1, dmg);
 
+  if(dmgType == dmgType_spirit) {
+    return hitSpi(dmg);
+  }
+
   //Filter damage through worn armor
   if(isHumanoid()) {
     Armor* armor =
@@ -335,7 +357,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
         trace << "Actor: Armor was destroyed" << endl;
         if(this == eng->player) {
           eng->log->addMsg("My " + eng->itemDataHandler->getItemRef(
-                                 *armor, itemRef_plain) + " is torn apart!");
+                             *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
         armor = NULL;
@@ -381,7 +403,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   }
 }
 
-void Actor::hitSpi(const int DMG) {
+bool Actor::hitSpi(const int DMG) {
   spi_ = max(0, spi_ - DMG);
   if(spi_ <= 0) {
     if(this == eng->player) {
@@ -393,7 +415,9 @@ void Actor::hitSpi(const int DMG) {
       }
     }
     die(false, false, true);
+    return true;
   }
+  return false;
 }
 
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,

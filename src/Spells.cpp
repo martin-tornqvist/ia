@@ -464,12 +464,12 @@ SpellCastRetData SpellOpening::specificCast(
     eng->renderer->drawBlastAnimationAtPositions(
       featuresOpenedPositions, clrWhite);
     eng->renderer->drawMapAndInterface();
-    if(featuresOpenedPositions.size() == 1) {
-      eng->log->addMsg("An object was opened.");
-    }
-    if(featuresOpenedPositions.size() > 1) {
-      eng->log->addMsg("Some objects were opened.");
-    }
+//    if(featuresOpenedPositions.size() == 1) {
+//      eng->log->addMsg("An object was opened.");
+//    }
+//    if(featuresOpenedPositions.size() > 1) {
+//      eng->log->addMsg("Some objects were opened.");
+//    }
     return SpellCastRetData(true);
   } else {
     return SpellCastRetData(false);

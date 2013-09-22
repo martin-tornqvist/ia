@@ -225,16 +225,16 @@ private:
   const string getRealTypeName() {return "Fire Resistance";}
 };
 
-class PotionOfRCold: public Potion {
-public:
-  PotionOfRCold(ItemData* const itemData, Engine* engine) :
-    Potion(itemData, engine) {}
-  ~PotionOfRCold() {}
-  void specificQuaff(Actor* const actor);
-private:
-  void specificCollide(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Cold Resistance";}
-};
+//class PotionOfRCold: public Potion {
+//public:
+//  PotionOfRCold(ItemData* const itemData, Engine* engine) :
+//    Potion(itemData, engine) {}
+//  ~PotionOfRCold() {}
+//  void specificQuaff(Actor* const actor);
+//private:
+//  void specificCollide(const Pos& pos, Actor* const actor);
+//  const string getRealTypeName() {return "Cold Resistance";}
+//};
 
 class PotionOfAntidote: public Potion {
 public:
