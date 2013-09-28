@@ -274,7 +274,7 @@ void GameTime::runNewStandardTurnEvents() {
     }
   }
 
-  eng->soundEmitter->resetNrSoundsHeardByPlayerCurTurn();
+  eng->soundEmitter->resetNrSoundMsgPrintedCurTurn();
 
   traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
 }

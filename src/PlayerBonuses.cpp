@@ -7,6 +7,9 @@
 #include "TextFormatting.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
+#include "ItemScroll.h"
+#include "ItemFactory.h"
+#include "Inventory.h"
 
 using namespace std;
 
@@ -18,6 +21,10 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
       eng->player->changeMaxHp(3, false);
     } break;
 
+    case playerBon_spirited: {
+      eng->player->changeMaxSpi(3, false);
+    } break;
+
     case playerBon_selfAware: {
       eng->player->getPropHandler()->tryApplyProp(
         new PropRConfusion(eng, propTurnsIndefinite), true, true, true);
@@ -26,6 +33,32 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
     case playerBon_fearless: {
       eng->player->getPropHandler()->tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true);
+    } break;
+
+    case playerBon_occultist: {
+      for(int i = 0; i < 2; i++) {
+        Item* const item =
+          eng->itemFactory->spawnRandomScrollOrPotion(true, false);
+
+        Spells_t spellId = item->getData().spellCastFromScroll;
+        Spell* const spell = eng->spellHandler->getSpellFromId(spellId);
+        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
+        delete spell;
+
+        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
+          Scroll* const scroll = dynamic_cast<Scroll*>(item);
+          scroll->identify(true);
+          eng->player->getInventory()->putItemInGeneral(scroll);
+
+          if(item->nrItems == 2) {
+            item->nrItems = 1;
+            i--;
+          }
+        } else {
+          delete item;
+          i--;
+        }
+      }
     } break;
 
     default: {} break;
@@ -63,6 +96,9 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   descr += "(such as bashing doors, or moving the lid from a stone coffin)";
   addBon(playerBon_tough, "Tough", playerBonType_trait, descr);
 
+  descr  = "+3 spirit points";
+  addBon(playerBon_spirited, "Spirited", playerBonType_trait, descr);
+
 //  addBon(playerBon_swiftRetaliator, "Swift retaliator", "Dodging causes retaliation attacks if melee weapon is wielded");
 
 //  addBon(playerBon_elusive, "Elusive", "+30% chance to evade attacks while moving", playerBon_dexterous);
@@ -98,8 +134,9 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   descr  = "You are more likely to avoid detection";
   addBon(playerBon_stealthy, "Stealthy", playerBonType_skill, descr);
 
-  descr  = "When casting a spell from an identified manuscript, you gain ";
-  descr += "the ability to cast this spell intrinsically";
+  descr  = "Casting spells from identified manuscripts gives you ";
+  descr += "the ability to cast this spell intrinsically,";
+  descr += "you start with two identified manuscripts";
   addBon(playerBon_occultist, "Occultist", playerBonType_skill, descr);
 
   descr  = "Healing takes half the normal time and resources, you can treat diseases";

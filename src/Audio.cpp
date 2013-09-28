@@ -1,54 +1,55 @@
 #include "Audio.h"
 
+#include "SDL/SDL_mixer.h"
+
 #include "Engine.h"
 
-void Audio::updateSystem()
-{
-	//system->update();
+Audio::Audio(Engine* engine) : eng(engine) {
+  for(int i = 0; i < endOfSfx; i++) {
+    audioChunks[i] = NULL;
+  }
+
+  loadAllAudio();
 }
 
-void Audio::init()
-{
-	/*
-	FMOD::System_Create(&system);
-	system->init(32, FMOD_INIT_NORMAL, 0);
-	channel = NULL;
-
-	createSound(audio_shotgunPump_fire, "shotgunPump_fire.wav");
-	createSound(audio_shotgun_load_shell, "shotgun_load_shell.wav");
-	createSound(audio_pistol_fire, "pistol_fire.wav");
-	createSound(audio_pistol_reload, "pistol_reload.wav");
-	createSound(audio_explosion, "explosion.wav");
-	createSound(audio_molotovExplosion, "molotovExplosion.wav");
-	createSound(audio_tommygun_fire, "tommygun_fire.wav");
-	*/
+Audio::~Audio() {
+  freeAssets();
 }
 
-void Audio::createSound(const Audio_t audio, const string file)
-{
-	(void)audio;
-	(void)file;
-	/*
-	system->createSound(("sound/" + file).data(), FMOD_HARDWARE, 0, &soundList[audio]);
-	soundList[audio]->setMode(FMOD_LOOP_OFF);
-	*/
+void Audio::play(const Sfx_t sfx) {
+  Mix_PlayChannel(-1, audioChunks[sfx], 0);
 }
 
-void Audio::cleanup()
-{
-	/*
-	for(unsigned int i = 1; i < end_of_audio_t; i++) {
-		soundList[i]->release();
-	}
+void Audio::loadAllAudio() {
+  freeAssets();
 
-	system->close();
-	system->release();
-	*/
+  loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
+  loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
+  loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
+
+  loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
+
+  loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
+  loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
+  loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
+  loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
 }
 
+void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
+  audioChunks[sfx] = Mix_LoadWAV(("audio/" + filename).data());
 
-void Audio::playSound(const Audio_t audio)
-{
-	(void)audio;
-	//system->playSound(FMOD_CHANNEL_FREE, soundList[audio], false, &channel);
+  if(audioChunks[sfx] == NULL) {
+    trace << "[WARNING] Problem loading audio file with name " + filename;
+    trace << ", in Audio::loadAudio()" << endl;
+    trace << "SDL_mixer: " << Mix_GetError() << endl;
+  }
+}
+
+void Audio::freeAssets() {
+  for(int i = 0; i < endOfSfx; i++) {
+    if(audioChunks[i] != NULL) {
+      Mix_FreeChunk(audioChunks[i]);
+      audioChunks[i] = NULL;
+    }
+  }
 }

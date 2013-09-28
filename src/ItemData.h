@@ -8,6 +8,7 @@
 #include "AbilityValues.h"
 #include "Spells.h"
 #include "FeatureData.h"
+#include "Audio.h"
 
 enum ItemWeight_t {
   itemWeight_none       = 0,
@@ -228,7 +229,6 @@ public:
   int missileHitChanceMod;
   pair<int, int> meleeDmg;
   int meleeHitChanceMod;
-  Abilities_t meleeAbilityUsed;
   ItemAttackMessages meleeAttackMessages;
   Prop* propAppliedOnMelee; //TODO This requires deep copy of items
   DmgTypes_t meleeDmgType;
@@ -237,7 +237,6 @@ public:
   DiceParam rangedDmg;
   string rangedDmgLabelOverRide;
   int rangedHitChanceMod;
-  Abilities_t rangedAbilityUsed;
   ItemId_t rangedAmmoTypeUsed;
   DmgTypes_t rangedDmgType;
   bool rangedHasInfiniteAmmo;
@@ -249,10 +248,10 @@ public:
   ItemAttackMessages rangedAttackMessages;
   string rangedSoundMessage;
   bool rangedSoundIsLoud;
-  string landOnHardSurfaceSoundMessage;
-//  Audio_t rangedAudio;
-//  Audio_t meleeAudio;
-//  Audio_t reloadAudio;
+  string landOnHardSurfaceSoundMsg;
+  Sfx_t rangedAttackSfx;
+  Sfx_t meleeAttackSfx;
+  Sfx_t reloadSfx;
   Prop* propAppliedOnRanged;
   vector<RoomTheme_t> nativeRooms;
   vector< pair<Feature_t, int> > featuresCanBeFoundIn;

@@ -13,10 +13,14 @@
 #include "Knockback.h"
 #include "Input.h"
 #include "Log.h"
+#include "Audio.h"
 
 using namespace std;
 
 void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
+
+  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
+
   vector<Projectile*> projectiles;
 
   const bool IS_MACHINE_GUN = wpn.getData().isMachineGun;
@@ -37,11 +41,6 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const int DELAY = eng->config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
-
-//  const Audio_t rangedAudio = weapon->getData().rangedAudio;
-//  if(rangedAudio != audio_none) {
-//    eng->audio->playSound(rangedAudio);
-//  }
 
   const bool stopAtTarget = aimLevel == actorSize_floor;
   const int chebTrvlLim = 30;
@@ -96,10 +95,23 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
 
     for(unsigned int p = 0; p < NR_PROJECTILES; p++) {
+
       //Current projectile's place in the path is the current global place (i)
       //minus a certain number of elements
       int projectilePathElement =
         i - (p * NR_CELL_JUMPS_BETWEEN_MACHINEGUN_PROJECTILES);
+
+      //Emit sound
+      if(projectilePathElement == 1) {
+        string sndMsg = wpn.getData().rangedSoundMessage;
+        const Sfx_t sfx = wpn.getData().rangedAttackSfx;
+        if(sndMsg != "") {
+          sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
+          const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
+          eng->soundEmitter->emitSound(
+            Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
+        }
+      }
 
       Projectile* const curProj = projectiles.at(p);
 
@@ -185,14 +197,19 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         }
 
         //PROJECTILE HIT FEATURE?
-        vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(curProj->pos);
+        vector<FeatureMob*> featureMobs =
+          eng->gameTime->getFeatureMobsAtPos(curProj->pos);
         Feature* featureBlockingShot = NULL;
-        for(unsigned int featMobIndex = 0; featMobIndex < featureMobs.size(); featMobIndex++) {
+        for(
+          unsigned int featMobIndex = 0;
+          featMobIndex < featureMobs.size();
+          featMobIndex++) {
           if(featureMobs.at(featMobIndex)->isShootPassable() == false) {
             featureBlockingShot = featureMobs.at(featMobIndex);
           }
         }
-        FeatureStatic* featureStatic = eng->map->featuresStatic[curProj->pos.x][curProj->pos.y];
+        FeatureStatic* featureStatic =
+          eng->map->featuresStatic[curProj->pos.x][curProj->pos.y];
         if(featureStatic->isShootPassable() == false) {
           featureBlockingShot = featureStatic;
         }
@@ -200,6 +217,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         if(featureBlockingShot != NULL && curProj->isObstructed == false) {
           curProj->obstructedInElement = projectilePathElement - 1;
           curProj->isObstructed = true;
+
+          Sound snd("I hear a ricochet.",
+                    sfxRicochet, true, curProj->pos, false, true);
+          eng->soundEmitter->emitSound(snd);
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
@@ -225,6 +246,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->isObstructed == false) {
           curProj->isObstructed = true;
           curProj->obstructedInElement = projectilePathElement;
+
+          Sound snd("I hear a ricochet.",
+                    sfxRicochet, true, curProj->pos, false, true);
+          eng->soundEmitter->emitSound(snd);
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
@@ -301,20 +326,12 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   bool didAttack = false;
 
-  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
-  const bool WPN_HAS_INF_AMMO   = wpn.getData().rangedHasInfiniteAmmo;
+  const bool WPN_HAS_INF_AMMO = wpn.getData().rangedHasInfiniteAmmo;
 
   if(wpn.getData().isShotgun) {
     if(wpn.ammoLoaded != 0 || WPN_HAS_INF_AMMO) {
-      shotgun(attacker, wpn, aimPos);
 
-      const string soundMessage = IS_ATTACKER_PLAYER ? "" :
-                                  wpn.getData().rangedSoundMessage;
-      if(IS_ATTACKER_PLAYER || soundMessage != "") {
-        const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
-        eng->soundEmitter->emitSound(
-          Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
-      }
+      shotgun(attacker, wpn, aimPos);
 
       didAttack = true;
       if(WPN_HAS_INF_AMMO == false) {
@@ -332,13 +349,6 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       projectileFire(attacker, wpn, aimPos);
 
       if(eng->player->deadState == actorDeadState_alive) {
-        const string soundMessage = IS_ATTACKER_PLAYER ? "" :
-                                    wpn.getData().rangedSoundMessage;
-        if(IS_ATTACKER_PLAYER || soundMessage != "") {
-          const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
-          eng->soundEmitter->emitSound(
-            Sound(soundMessage, true, attacker.pos, IS_LOUD, true));
-        }
 
         didAttack = true;
 

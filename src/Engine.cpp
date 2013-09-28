@@ -4,6 +4,7 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#include "SDL/SDL_mixer.h"
 
 #include "Converters.h"
 
@@ -89,9 +90,27 @@ using namespace std;
 
 void Engine::initSdl() {
   trace << "Engine::initSdl()..." << endl;
-  SDL_Init(SDL_INIT_EVERYTHING);
+
+  if(SDL_Init(SDL_INIT_EVERYTHING) == -1) {
+    trace << "[WARNING] Problem to init SDL, in Engine::initSdl()" << endl;
+  }
+
   SDL_EnableUNICODE(1);
-  IMG_Init(IMG_INIT_PNG);
+
+  if(IMG_Init(IMG_INIT_PNG) == -1) {
+    trace << "[WARNING] Problem to init SDL_image, in Engine::initSdl()" << endl;
+  }
+
+  const int     FREQ      = 44100;
+  const Uint16  FORMAT    = MIX_DEFAULT_FORMAT;
+  const int     CHANNELS  = 2;
+  const int     BUFFERS   = 1024; //4096;
+  if(Mix_OpenAudio(FREQ, FORMAT, CHANNELS, BUFFERS) == -1) {
+    trace << "[WARNING] Problem to init SDL_mixer, in Engine::initSdl()" << endl;
+  }
+
+  Mix_AllocateChannels(16);
+
   trace << "Engine::initSdl() [DONE]" << endl;
 }
 
@@ -104,6 +123,8 @@ void Engine::initConfigAndRenderer() {
 
 void Engine::cleanupSdl() {
   IMG_Quit();
+  Mix_AllocateChannels(0);
+  Mix_CloseAudio();
   SDL_Quit();
 }
 

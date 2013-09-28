@@ -335,7 +335,7 @@ void Player::incrInsanity() {
               popupMessage += "I scream in terror.";
             }
             eng->popup->showMessage(popupMessage, true, "Screaming!");
-            eng->soundEmitter->emitSound(Sound("", true, pos, true, true));
+            eng->soundEmitter->emitSound(Sound("", endOfSfx, true, pos, true, true));
             return;
           }
         } break;
@@ -348,7 +348,7 @@ void Player::incrInsanity() {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng->log->addMsg(playerName + ": " + phrase);
           }
-          eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
+          eng->soundEmitter->emitSound(Sound("", endOfSfx, true, pos, false, true));
           return;
         } break;
 
@@ -363,7 +363,8 @@ void Player::incrInsanity() {
         case 4: {
           popupMessage += "I laugh nervously.";
           eng->popup->showMessage(popupMessage, true, "HAHAHA!");
-          eng->soundEmitter->emitSound(Sound("", true, pos, false, true));
+          eng->soundEmitter->emitSound(
+            Sound("", endOfSfx, true, pos, false, true));
           return;
         } break;
 
@@ -976,10 +977,25 @@ void Player::explosiveThrown() {
   eng->renderer->drawMapAndInterface();
 }
 
-void Player::hearSound(const Sound& sound) {
-  const string message = sound.getMessage();
-  if(message != "") {
-    eng->log->addMsg(message);
+void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER) {
+  const Sfx_t sfx = snd.getSfx();
+
+  //If origin is hidden, play audio before printing message
+  if(IS_ORIGIN_SEEN_BY_PLAYER == false && sfx != endOfSfx) {
+    eng->audio->play(sfx);
+  }
+
+  const string msg = snd.getMsg();
+  if(msg != "") {
+    eng->log->addMsg(msg);
+  }
+
+  //If origin is seen, play audio after printing message
+  //I.e.:
+  //(1) "The cultist fires a pistol!" (possibly with a [MORE] prompt)
+  //(2) Audio + animation
+  if(IS_ORIGIN_SEEN_BY_PLAYER && sfx != endOfSfx) {
+    eng->audio->play(sfx);
   }
 }
 

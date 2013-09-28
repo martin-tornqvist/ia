@@ -22,7 +22,7 @@ public:
               if(spell->isGoodForMonsterToCastNow(monsterActing, engine)) {
                 const int CUR_SPI = monsterActing->getSpi();
                 const int SPELL_MAX_SPI =
-                  spell->getMaxSpiCost(false, monsterActing, engine);
+                  spell->getSpiCost(false, monsterActing, engine).upper;
 
                 // Cast spell if max spirit cost is lower than current spirit,
                 if(SPELL_MAX_SPI < CUR_SPI) {

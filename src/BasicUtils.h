@@ -117,8 +117,8 @@ public:
     return MIN + roll(1, MAX - MIN + 1) - 1;
   }
 
-  inline int range(const Range& rng) {
-    return range(rng.lower, rng.upper);
+  inline int range(const Range& valueRange) {
+    return range(valueRange.lower, valueRange.upper);
   }
 
   inline int percentile() {return roll(1, 100);}

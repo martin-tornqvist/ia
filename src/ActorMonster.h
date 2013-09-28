@@ -55,7 +55,7 @@ public:
 
   virtual void actorSpecific_spawnStartItems() = 0;
 
-  void hearSound(const Sound& sound);
+  void hearSound(const Sound& snd);
 
   void becomeAware();
 

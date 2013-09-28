@@ -43,8 +43,8 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       if(
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
-        Sound sound("", true, data.currentDefender->pos, false, true);
-        eng->soundEmitter->emitSound(sound);
+        Sound snd("", endOfSfx, true, data.currentDefender->pos, false, true);
+        eng->soundEmitter->emitSound(snd);
       }
     }
   }

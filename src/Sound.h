@@ -15,9 +15,10 @@ class Actor;
 class Sound {
 public:
   Sound(
-    const string& message, const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG,
-    const Pos& origin, const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
-    message_(message),
+    const string& msg, const Sfx_t sfx,
+    const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG, const Pos& origin,
+    const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
+    msg_(msg), sfx_(sfx),
     isMsgIgnoredIfPlayerSeeOrig_(IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG),
     origin_(origin), isLoud_(IS_LOUD),
     isAlertingMonsters_(IS_ALERTING_MONSTER) {}
@@ -25,36 +26,25 @@ public:
   Sound() {}
   ~Sound() {}
 
-  const string& getMessage() const {
-    return message_;
-  }
+  inline const string& getMsg() const {return msg_;}
+  inline Sfx_t getSfx() const {return sfx_;}
+  inline void clearMsg() {msg_ = "";}
 
-  void clearMessage() {
-    message_ = "";
-  }
-
-  bool getIsMessageIgnoredIfPlayerSeeOrigin() const {
+  inline bool getIsMsgIgnoredIfPlayerSeeOrigin() const {
     return isMsgIgnoredIfPlayerSeeOrig_;
   }
 
-  Pos getOrigin() const {
-    return origin_;
-  }
-
-  int isLoud() const {
-    return isLoud_;
-  }
-
-  bool getIsAlertingMonsters() const {
-    return isAlertingMonsters_;
-  }
+  inline Pos getOrigin() const {return origin_;}
+  inline int isLoud() const {return isLoud_; }
+  inline bool getIsAlertingMonsters() const {return isAlertingMonsters_;}
 
   void addString(const string str) {
-    message_ += str;
+    msg_ += str;
   }
 
 private:
-  string message_;
+  string msg_;
+  Sfx_t sfx_;
   bool isMsgIgnoredIfPlayerSeeOrig_;
   Pos origin_;
   bool isLoud_;
@@ -66,20 +56,20 @@ public:
   SoundEmitter(Engine* engine) :
     eng(engine) {}
 
-  void emitSound(Sound sound);
+  void emitSound(Sound snd);
 
-  void resetNrSoundsHeardByPlayerCurTurn() {
-    nrSoundsHeardByPlayerCurTurn_ = 0;
+  void resetNrSoundMsgPrintedCurTurn() {
+    nrSoundMsgPrintedCurTurn_ = 0;
   }
 
 private:
-  int nrSoundsHeardByPlayerCurTurn_;
+  int nrSoundMsgPrintedCurTurn_;
 
   string getPlayerToOriginDirectionString(
     const int FLOOD_VALUE_AT_PLAYER,
     const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  bool isSoundHeardAtRange(const int RANGE, const Sound& sound) const;
+  bool isSoundHeardAtRange(const int RANGE, const Sound& snd) const;
 
   DirectionNames directionNames;
 

@@ -46,6 +46,17 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   int monsterKilledInElement = -1;
 
+  //Emit sound
+  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
+  string sndMsg = wpn.getData().rangedSoundMessage;
+  if(sndMsg != "") {
+    sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
+    const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
+    const Sfx_t sfx = wpn.getData().rangedAttackSfx;
+    eng->soundEmitter->emitSound(
+      Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
+  }
+
   for(unsigned int i = 1; i < path.size(); i++) {
     //If travelled further than two steps after a killed monster, stop projectile.
     if(monsterKilledInElement != -1) {
@@ -117,6 +128,10 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
+      Sound snd("I hear a ricochet.",
+                sfxRicochet, true, curPos, false, true);
+      eng->soundEmitter->emitSound(snd);
+
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
@@ -135,6 +150,10 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
+      Sound snd("I hear a ricochet.",
+                sfxRicochet, true, curPos, false, true);
+      eng->soundEmitter->emitSound(snd);
+
       if(eng->map->playerVision[curPos.x][curPos.y]) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);

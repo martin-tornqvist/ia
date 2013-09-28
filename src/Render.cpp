@@ -21,7 +21,7 @@
 using namespace std;
 
 Renderer::Renderer(Engine* engine) : eng(engine), screenSurface_(NULL),
-/*fontSurface_(NULL), tileSurface_(NULL),*/ mainMenuLogoSurface_(NULL) {
+  mainMenuLogoSurface_(NULL) {
 
   initAndClearPrev();
 }

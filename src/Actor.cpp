@@ -166,7 +166,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     eng->renderer->drawMapAndInterface();
     eng->playerVisualMemory->updateVisualMemory();
     eng->log->addMsg("I suddenly find myself in a different location!");
-    propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStandard));
+    propHandler_->tryApplyProp(new PropConfused(eng, propTurnsSpecified, 8));
   }
 }
 
@@ -436,7 +436,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   if(this != eng->player) {
     if(isHumanoid() == true) {
       eng->soundEmitter->emitSound(
-        Sound("I hear agonised screaming.", true, pos, false, false));
+        Sound("I hear agonised screaming.", endOfSfx,true, pos, false, false));
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
   }

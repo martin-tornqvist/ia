@@ -41,6 +41,10 @@
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_image.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libpng15-15.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -81,6 +85,10 @@
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_image.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libpng15-15.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -90,7 +98,7 @@
 			<Add directory="../API/SDL/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32 -lSDLmain -lSDL -lSDL_image" />
+			<Add option="-lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer" />
 			<Add directory="../API/SDL/lib" />
 		</Linker>
 		<Unit filename="../icon/resource.rc">

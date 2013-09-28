@@ -44,14 +44,12 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->spellCastFromScroll = endOfSpells;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
-      d->meleeAbilityUsed = ability_accuracyMelee;
       d->propAppliedOnMelee = NULL;
       d->meleeCausesKnockBack = false;
       d->rangedCausesKnockBack = false;
       d->meleeDmgType = dmgType_physical;
       d->rangedHitChanceMod = 0;
       d->rangedDmgLabelOverRide = "";
-      d->rangedAbilityUsed = ability_accuracyRanged;
       d->rangedAmmoTypeUsed = item_empty;
       d->rangedDmgType = dmgType_physical;
       d->rangedHasInfiniteAmmo = false;
@@ -62,7 +60,10 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedMissileLeavesSmoke = false;
       d->rangedSoundMessage = "";
       d->rangedSoundIsLoud = false;
-      d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
+      d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
+      d->rangedAttackSfx = endOfSfx;
+      d->meleeAttackSfx = endOfSfx;
+      d->reloadSfx = endOfSfx;
       d->propAppliedOnRanged = NULL;
       d->isExplosive = false;
       d->armorData = ArmorData();
@@ -153,7 +154,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isReadable = true;
       d->isScroll = true;
       d->maxStackSizeAtSpawn = 1;
-      d->landOnHardSurfaceSoundMessage = "";
+      d->landOnHardSurfaceSoundMsg = "";
       addFeatureFoundIn(d, feature_chest);
       addFeatureFoundIn(d, feature_tomb);
       addFeatureFoundIn(d, feature_cabinet, 25);
@@ -174,7 +175,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->missileHitChanceMod = -5;
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 1;
-      d->landOnHardSurfaceSoundMessage = "";
+      d->landOnHardSurfaceSoundMsg = "";
       addFeatureFoundIn(d, feature_chest);
       addFeatureFoundIn(d, feature_tomb);
       addFeatureFoundIn(d, feature_cabinet, 25);
@@ -193,7 +194,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isStackable = false;
       d->spawnStandardMinDLVL = 4;
       d->spawnStandardMaxDLVL = 999;
-      d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+      d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
     } break;
 
     case itemData_armor: {
@@ -211,7 +212,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isExplosive = true;
       d->glyph = '-';
       d->maxStackSizeAtSpawn = 2;
-      d->landOnHardSurfaceSoundMessage = "";
+      d->landOnHardSurfaceSoundMsg = "";
     } break;
 
     default: {} break;
@@ -258,9 +259,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
-//  d->rangedAbilityUsed = ability_accuracyRanged;
-//  d->meleeAbilityUsed = ability_accuracyMelee;
-//  d->reloadAudio = audio_shotgun_load_shell;
+  d->rangedAttackSfx = sfxShotgunSawedOffFire;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -277,10 +276,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
-//  d->rangedAudio = audio_shotgunPump_fire;
-//  d->reloadAudio = audio_shotgun_load_shell;
+  d->rangedAttackSfx = sfxShotgunPumpFire;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -302,8 +298,6 @@ void ItemDataHandler::initDataList() {
   d->tile = tile_incinerator;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an Incinerator");
   d->rangedDmg = DiceParam(1, 3);
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAmmoTypeUsed = item_napalmCartridge;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSoundMessage = "I hear the blast of a launched missile.";
@@ -337,8 +331,6 @@ void ItemDataHandler::initDataList() {
   d->isMachineGun = true;
   d->rangedDmg = DiceParam(2, 2, 2);
   d->rangedHitChanceMod = -10;
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedAmmoTypeUsed = item_drumOfBullets;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
@@ -364,13 +356,10 @@ void ItemDataHandler::initDataList() {
   d->tile = tile_pistol;
   d->rangedDmg = DiceParam(1, 8, 4);
   d->rangedAmmoTypeUsed = item_pistolClip;
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
   d->rangedSoundMessage = "I hear a pistol being fired.";
-//  d->rangedAudio = audio_pistol_fire;
-//  d->reloadAudio = audio_pistol_reload;
+  d->rangedAttackSfx = sfxPistolFire;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -384,8 +373,6 @@ void ItemDataHandler::initDataList() {
   d->rangedDmg = DiceParam(1, 3, 0);
   d->rangedDmgLabelOverRide = "?";
   d->rangedAmmoTypeUsed = item_flare;
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a flare gun");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
   d->rangedSoundMessage = "I hear a flare gun being fired.";
@@ -412,8 +399,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tesla Cannon");
   d->isMachineGun = true;
   d->rangedHitChanceMod = -15;
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(2, 3, 3);
   d->rangedDmgType = dmgType_electric;
   d->rangedAmmoTypeUsed = item_teslaCanister;
@@ -446,8 +431,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
   d->rangedHitChanceMod = 0;
-  d->rangedAbilityUsed = ability_accuracyRanged;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->rangedDmg = DiceParam(1, 7, 0);
   d->rangedDmgType = dmgType_physical;
   d->rangedCausesKnockBack = true;
@@ -506,7 +489,7 @@ void ItemDataHandler::initDataList() {
   d->missileHitChanceMod = 0;
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 8;
-  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -536,7 +519,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeHitChanceMod = 20;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -551,7 +533,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hatchet");
   d->meleeDmg = pair<int, int>(1, 5);
   d->meleeHitChanceMod = 15;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = true;
@@ -571,7 +552,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeHitChanceMod = 10;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   dataList[d->id] = d;
 
   d = new ItemData(item_hammer);
@@ -582,7 +562,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hammer");
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeHitChanceMod = 5;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -595,7 +574,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeHitChanceMod = 0;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -608,7 +586,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeHitChanceMod = -5;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
@@ -622,7 +599,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Pitchfork");
   d->meleeDmg = pair<int, int>(3, 4);
   d->meleeHitChanceMod = -5;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -636,7 +612,6 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Sledgehammer");
   d->meleeDmg = pair<int, int>(3, 5);
   d->meleeHitChanceMod = -10;
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeCausesKnockBack = true;
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
@@ -653,7 +628,7 @@ void ItemDataHandler::initDataList() {
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
-  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -668,7 +643,7 @@ void ItemDataHandler::initDataList() {
 //  d->isStackable = false;
 //  d->color = clrGray;
 //  d->glyph = '~';
-//  d->landOnHardSurfaceSoundMessage = "I hear a clanking sound.";
+//  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
 //  addFeatureFoundIn(d, feature_cabinet);
 //  dataList[d->id] = d;
 //
@@ -681,14 +656,13 @@ void ItemDataHandler::initDataList() {
 //  d->maxStackSizeAtSpawn = 1;
 //  d->color = clrWhite;
 //  d->glyph = '~';
-//  d->landOnHardSurfaceSoundMessage = "I clinking sound.";
+//  d->landOnHardSurfaceSoundMsg = "I clinking sound.";
 //  addFeatureFoundIn(d, feature_cabinet);
 //  dataList[d->id] = d;
 
   d = new ItemData(item_playerKick);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
@@ -697,7 +671,6 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_playerStomp);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
@@ -706,7 +679,6 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_playerPunch);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("punch", "");
-  d->meleeAbilityUsed = ability_accuracyMelee;
   d->meleeHitChanceMod = 25;
   d->meleeDmg = pair<int, int>(1, 2);
   dataList[d->id] = d;
@@ -1003,7 +975,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMessage = "";
+  d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
 
@@ -1015,7 +987,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = 2;
   d->armorData.absorptionPoints = 4;
   d->armorData.dmgToDurabilityFactor = 0.5;
-  d->landOnHardSurfaceSoundMessage = "I hear a crashing sound.";
+  d->landOnHardSurfaceSoundMsg = "I hear a crashing sound.";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
 
@@ -1027,7 +999,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 3;
   d->armorData.dmgToDurabilityFactor = 0.5;
-  d->landOnHardSurfaceSoundMessage = "I hear a thudding sound.";
+  d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
 
@@ -1039,7 +1011,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMessage = "";
+  d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_chest);
   dataList[d->id] = d;
@@ -1052,7 +1024,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMessage = "";
+  d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
 

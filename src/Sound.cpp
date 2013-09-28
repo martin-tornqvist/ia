@@ -6,13 +6,14 @@
 #include "Feature.h"
 #include "Map.h"
 #include "ActorPlayer.h"
+#include "ActorMonster.h"
 
 bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
-                                       const Sound& sound) const {
-  return sound.isLoud() ? RANGE <= 25 : RANGE <= 10;
+                                       const Sound& snd) const {
+  return snd.isLoud() ? RANGE <= 25 : RANGE <= 10;
 }
 
-void SoundEmitter::emitSound(Sound sound) {
+void SoundEmitter::emitSound(Sound snd) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   FeatureStatic* f = NULL;
   for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
@@ -24,8 +25,9 @@ void SoundEmitter::emitSound(Sound sound) {
     }
   }
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  const Pos& origin = sound.getOrigin();
+  const Pos& origin = snd.getOrigin();
   eng->mapTests->floodFill(origin, blockers, floodFill, 999, Pos(-1, -1));
+  floodFill[origin.x][origin.y] = 0;
 
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
@@ -34,29 +36,35 @@ void SoundEmitter::emitSound(Sound sound) {
 
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
-    if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, sound)) {
+    const bool IS_ORIGIN_SEEN_BY_PLAYER =
+      eng->map->playerVision[origin.x][origin.y];
+
+    if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
       if(actor == eng->player) {
+
+        //Various may clear the sound message
         if(
-          eng->map->playerVision[origin.x][origin.y] == false ||
-          sound.getIsMessageIgnoredIfPlayerSeeOrigin() == false) {
-          //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(sound.getMessage() != "") {
-            if(nrSoundsHeardByPlayerCurTurn_ >= 1) {
-              sound.clearMessage();
-            } else {
-              const string DIR_STR =
-                getPlayerToOriginDirectionString(
-                  FLOOD_VALUE_AT_ACTOR, origin, floodFill);
-              if(DIR_STR != "") {
-                sound.addString("(" + DIR_STR + ")");
-              }
-              nrSoundsHeardByPlayerCurTurn_++;
-              actor->hearSound(sound);
-            }
-          }
+          nrSoundMsgPrintedCurTurn_ >= 1 ||
+          (IS_ORIGIN_SEEN_BY_PLAYER && snd.getIsMsgIgnoredIfPlayerSeeOrigin())
+        ) {
+          snd.clearMsg();
         }
+
+        if(snd.getMsg() != "") {
+          //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
+          const string DIR_STR =
+            getPlayerToOriginDirectionString(
+              FLOOD_VALUE_AT_ACTOR, origin, floodFill);
+          if(DIR_STR != "") {
+            snd.addString("(" + DIR_STR + ")");
+          }
+          nrSoundMsgPrintedCurTurn_++;
+        }
+
+        eng->player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER);
       } else {
-        actor->hearSound(sound);
+        Monster* const monster = dynamic_cast<Monster*>(actor);
+        monster->hearSound(snd);
       }
     }
   }

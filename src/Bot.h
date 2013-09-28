@@ -25,8 +25,6 @@ private:
 	Pos findNextStairs();
 	bool walkToAdjacentCell(const Pos& cellToGoTo);
 
-	void runFunctionTests();
-
 	vector<Pos> currentPath_;
 	Engine* eng;
 };

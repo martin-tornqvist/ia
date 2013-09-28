@@ -107,8 +107,7 @@ public:
   Engine(bool* quitToMainMenu) : isCheatVisionEnabled(false),
     quitToMainMenu_(quitToMainMenu) {
   }
-  ~Engine() {
-  }
+  ~Engine() {}
 
   void initSdl();
   void initConfigAndRenderer();

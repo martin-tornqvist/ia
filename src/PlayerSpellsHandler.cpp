@@ -89,10 +89,11 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
       fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
     const int x = 28;
 
-    const int SPI_COST_MAX = spell->getMaxSpiCost(false, eng->player, eng);
+    const Range spiCost = spell->getSpiCost(false, eng->player, eng);
 
     str = "SPI:";
-    str += SPI_COST_MAX == 1 ? "1" : ("1-" + intToString(SPI_COST_MAX));
+    str += spiCost.upper == 1 ? "1" :
+           (intToString(spiCost.lower) +  "-" + intToString(spiCost.upper));
     eng->renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
     currentListPos++;
   }

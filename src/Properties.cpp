@@ -262,7 +262,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propBurning;
-  d.stdRndTurns = Range(4, 9);
+  d.stdRndTurns = Range(5, 10);
   d.name = "Burning";
   d.nameShort = "Burning";
   d.msg[propMsgOnStartPlayer] = "I am Burning!";
@@ -1472,7 +1472,7 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
 
-    if(eng->dice.oneIn(4)) {
+    if(eng->dice.oneIn(6)) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y

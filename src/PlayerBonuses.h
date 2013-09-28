@@ -39,6 +39,7 @@ enum PlayerBon_t {
 //  playerBon_rugged,
   playerBon_selfAware,
 //  playerBon_sharpshooter,
+  playerBon_spirited,
 //  playerBon_steadyAimer,
   playerBon_stealthy,
   playerBon_strongBacked,

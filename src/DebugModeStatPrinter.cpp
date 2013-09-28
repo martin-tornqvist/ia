@@ -40,9 +40,10 @@ void DebugModeStatPrinter::run() {
     Spell* const spell = eng->spellHandler->getSpellFromId(Spells_t(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');
-    const string cost =
-      intToString(spell->getMaxSpiCost(true, eng->player, eng));
-    printLine(indent1 + name + cost);
+    Range cost = spell->getSpiCost(true, eng->player, eng);
+    const string costStr =
+      intToString(cost.lower) + "-" + intToString(cost.upper);
+    printLine(indent1 + name + costStr);
   }
   printLine("\n");
 

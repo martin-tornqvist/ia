@@ -209,9 +209,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
-      Sound sound(itemThrownData.landOnHardSurfaceSoundMessage,
-                  true, dropPos, false, IS_ALERTING_MONSTERS);
-      eng->soundEmitter->emitSound(sound);
+      Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
+                endOfSfx, true, dropPos, false, IS_ALERTING_MONSTERS);
+      eng->soundEmitter->emitSound(snd);
     }
     eng->itemDrop->dropItemOnMap(dropPos, itemThrown);
   }

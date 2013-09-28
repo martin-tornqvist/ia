@@ -229,9 +229,9 @@ void Monster::moveToCell(Pos targetCell) {
   eng->gameTime->endTurnOfCurrentActor();
 }
 
-void Monster::hearSound(const Sound& sound) {
+void Monster::hearSound(const Sound& snd) {
   if(deadState == actorDeadState_alive) {
-    if(sound.getIsAlertingMonsters()) {
+    if(snd.getIsAlertingMonsters()) {
       becomeAware();
     }
   }
@@ -239,8 +239,11 @@ void Monster::hearSound(const Sound& sound) {
 
 void Monster::speakPhrase() {
   const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
-  const string msg = IS_SEEN_BY_PLAYER ? getAggroPhraseMonsterSeen() : getAggroPhraseMonsterHidden();
-  eng->soundEmitter->emitSound(Sound(msg, false, pos, false, true));
+  const string msg =
+    IS_SEEN_BY_PLAYER ?
+    getAggroPhraseMonsterSeen() :
+    getAggroPhraseMonsterHidden();
+  eng->soundEmitter->emitSound(Sound(msg, endOfSfx, false, pos, false, true));
 }
 
 void Monster::becomeAware() {

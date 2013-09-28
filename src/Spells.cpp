@@ -57,16 +57,16 @@ Spell* SpellHandler::getSpellFromId(const Spells_t spellId) const {
   return NULL;
 }
 
-int Spell::getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
-                         Engine* const eng) const {
-  int cost = getSpecificSpiCost();
+Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
+                        Engine* const eng) const {
+  int costMax = getSpecificMaxSpiCost();
 
   if(IS_BASE_COST_ONLY == false) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         const Pos pos(caster->pos + Pos(dx, dy));
         if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_altar) {
-          cost -= 1;
+          costMax -= 1;
           dy = 999;
           dx = 999;
         }
@@ -75,16 +75,19 @@ int Spell::getMaxSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
     PropHandler* propHandeler = caster->getPropHandler();
 
-    if(propHandeler->hasProp(propBlessed))  {cost -= 1;}
-    if(propHandeler->allowSee() == false)   {cost -= 1;}
-    if(propHandeler->hasProp(propCursed))   {cost += 3;}
+    if(propHandeler->hasProp(propBlessed))  {costMax -= 1;}
+    if(propHandeler->allowSee() == false)   {costMax -= 1;}
+    if(propHandeler->hasProp(propCursed))   {costMax += 3;}
 
     if(caster == eng->player) {
-      cost -= eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+      costMax -= eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
     }
   }
 
-  return max(1, cost);
+  costMax             = max(1, costMax);
+  const int COST_MIN  = max(1, costMax / 2);
+
+  return Range(COST_MIN, costMax);
 }
 
 
@@ -108,7 +111,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     SpellCastRetData ret = specificCast(caster, eng);
 
     if(IS_INTRINSIC) {
-      caster->hitSpi(eng->dice(1, getMaxSpiCost(false, caster, eng)));
+      const Range cost = getSpiCost(false, caster, eng);
+      caster->hitSpi(eng->dice.range(cost));
     }
 
     eng->gameTime->endTurnOfCurrentActor();
@@ -127,7 +131,9 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
     vector<Actor*> spotedEnemies;
     eng->player->getSpotedEnemies(spotedEnemies);
 
-    if(spotedEnemies.empty() == false) {
+    if(spotedEnemies.empty()) {
+      return SpellCastRetData(false);
+    } else {
       vector<Pos> actorPositions;
 
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
@@ -144,13 +150,11 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
         spotedEnemies.at(i)->getPropHandler()->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 1));
         spotedEnemies.at(i)->hit(eng->dice(1, 8), dmgType_physical);
-        eng->soundEmitter->emitSound(
-          Sound("I hear a roaring blast", true, spotedEnemies.at(i)->pos,
-                true, true));
+        Sound snd("I hear a roaring blast",
+                  endOfSfx, true, spotedEnemies.at(i)->pos, true, true);
+        eng->soundEmitter->emitSound(snd);
       }
       return SpellCastRetData(true);
-    } else {
-      return SpellCastRetData(false);
     }
   } else {
     eng->log->addMsg("I am struck by a roaring blast!", clrMessageBad);
@@ -159,8 +163,9 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
     eng->player->getPropHandler()->tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
     eng->player->hit(eng->dice(1, 8), dmgType_physical);
-    eng->soundEmitter->emitSound(
-      Sound("", true, eng->player->pos, true, true));
+    Sound snd("", endOfSfx, true, eng->player->pos, true, true);
+    eng->soundEmitter->emitSound(snd);
+    return SpellCastRetData(false);
   }
 }
 
@@ -233,8 +238,8 @@ SpellCastRetData SpellMayhem::specificCast(
     }
   }
 
-  eng->soundEmitter->emitSound(
-    Sound("", true, eng->player->pos, true, true));
+  Sound snd("", endOfSfx, true, eng->player->pos, true, true);
+  eng->soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
 }
@@ -729,12 +734,44 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ ENFEEBLE
 SpellCastRetData SpellEnfeeble::specificCast(
   Actor * const caster, Engine * const eng) {
-  Prop* const prop = getProp(eng);
+
+  const PropId_t propId = getPropId(eng);
 
   if(caster == eng->player) {
-//    eng->player->
-  } else {
+    vector<Actor*> spotedEnemies;
+    eng->player->getSpotedEnemies(spotedEnemies);
 
+    if(spotedEnemies.empty()) {
+      return SpellCastRetData(false);
+    } else {
+      vector<Pos> actorPositions;
+      actorPositions.resize(0);
+
+      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
+        actorPositions.push_back(spotedEnemies.at(i)->pos);
+      }
+
+      eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+        actorPositions, clrMagenta);
+
+      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
+        PropHandler* const propHandler = spotedEnemies.at(i)->getPropHandler();
+        Prop* const prop = propHandler->makePropFromId(
+                             propId, propTurnsStandard);
+        propHandler->tryApplyProp(prop);
+      }
+      return SpellCastRetData(true);
+    }
+  } else {
+    eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      vector<Pos>(1, eng->player->pos), clrMagenta);
+
+    PropHandler* const propHandler = eng->player->getPropHandler();
+    Prop* const prop = propHandler->makePropFromId(
+                         propId, propTurnsStandard);
+    eng->player->getPropHandler()->tryApplyProp(prop);
+
+    return SpellCastRetData(false);
   }
 }
 
@@ -745,16 +782,16 @@ bool SpellEnfeeble::isGoodForMonsterToCastNow(
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
-Prop* SpellEnfeeble::getProp(Engine * const eng) const {
+PropId_t SpellEnfeeble::getPropId(Engine * const eng) const {
   const int RND = eng->dice.range(1, 5);
   switch(RND) {
-    case 1: {return new PropConfused(eng, propTurnsStandard);}
-    case 2: {return new PropParalyzed(eng, propTurnsStandard);}
-    case 3: {return new PropSlowed(eng, propTurnsStandard);}
-    case 4: {return new PropBlind(eng, propTurnsStandard);}
-    case 5: {return new PropTerrified(eng, propTurnsStandard);}
+    case 1: {return propConfused;}
+    case 2: {return propParalysed;}
+    case 3: {return propSlowed;}
+    case 4: {return propBlind;}
+    case 5: {return propTerrified;}
   }
-  return NULL;
+  return endOfPropIds;
 }
 
 //------------------------------------------------------------ CONFUSE
@@ -900,12 +937,13 @@ Prop* SpellEnfeeble::getProp(Engine * const eng) const {
 SpellCastRetData SpellDisease::specificCast(
   Actor * const caster, Engine * const eng) {
   if(caster == eng->player) {
-
+    return SpellCastRetData(true);
   } else {
     eng->log->addMsg(
       "A disease is starting to afflict my body!", clrMessageBad);
     eng->player->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
+    return SpellCastRetData(false);
   }
 }
 
@@ -995,11 +1033,14 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ HEAL SELF
 SpellCastRetData SpellHealSelf::specificCast(
   Actor * const caster, Engine * const eng) {
+
+  (void)eng;
   return SpellCastRetData(caster->restoreHp(999, true));
 }
 
 bool SpellHealSelf::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const engine) {
-  (void)engine;
+  Monster * const monster, Engine * const eng) {
+
+  (void)eng;
   return monster->getHp() < monster->getHpMax(true);
 }

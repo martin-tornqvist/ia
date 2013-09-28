@@ -232,7 +232,7 @@ void DeviceElectricLantern::runBadEffect() {
     bool isItemDestroyed = false;
 
     const int RND = eng->dice.percentile();
-    if(RND < 4) {
+    if(RND < 6) {
       eng->log->addMsg("My Electric Lantern breaks!");
       eng->player->getInventory()->removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;

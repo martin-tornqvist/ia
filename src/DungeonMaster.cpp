@@ -18,11 +18,12 @@ void DungeonMaster::initXpArray() {
 }
 
 int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
+  const double K          = 0.8; //Regulates player XP rate
   const double HP         = d.hp;
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
   const double UNIQUE_MOD = d.isUnique ? 2.0 : 1.0;
-  return HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD;
+  return K * HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD;
 }
 
 void DungeonMaster::playerGainLvl() {

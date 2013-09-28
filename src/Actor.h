@@ -56,8 +56,6 @@ public:
 
   virtual void act() = 0;
 
-  virtual void hearSound(const Sound& sound) = 0;
-
   virtual void updateColor();
 
   //Function taking into account FOV, invisibility, status, etc

@@ -99,7 +99,7 @@ void ExplosionMaker::runExplosion(
   //Assuming all explosions alerts monsters to player.
   if(DO_EXPLOSION_DMG) {
     eng->soundEmitter->emitSound(
-      Sound("I hear an explosion!", true, origin, true, true));
+      Sound("I hear an explosion!", endOfSfx, true, origin, true, true));
 //    eng->audio->playSound(audio_explosion);
   }
 

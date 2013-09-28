@@ -127,7 +127,15 @@ char Door::getGlyph() const {
 }
 
 Tile_t Door::getTile() const {
-  return isSecret_ ? mimicFeature_->tile : (isOpen_ ? (isBroken_ ? tile_doorBroken : tile_doorOpen) : tile_doorClosed);
+  if(isSecret_) {
+    return mimicFeature_->tile;
+  } else {
+    if(isOpen_) {
+      return isBroken_ ? tile_doorBroken : tile_doorOpen;
+    } else {
+      return tile_doorClosed;
+    }
+  }
 }
 
 MaterialType_t Door::getMaterialType() const {
@@ -162,7 +170,10 @@ string Door::getDescription(const bool DEFINITE_ARTICLE) const {
   }
   if(isSecret_) {
     const string cluedStr = isClued_ ? " {strange}" : "";
-    return (DEFINITE_ARTICLE ? mimicFeature_->name_the : mimicFeature_->name_a) + cluedStr;
+    return (DEFINITE_ARTICLE ?
+            mimicFeature_->name_the :
+            mimicFeature_->name_a) +
+           cluedStr;
   }
   if(isOpen_ == false) {
     return DEFINITE_ARTICLE ? "the closed door" : "a closed door";
@@ -197,9 +208,12 @@ void Door::clue() {
 
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
-    if(eng->mapTests->isCellsNeighbours(Pos(pos_.x, pos_.y), eng->player->pos, false)) {
-      const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL = eng->player->getData()->abilityVals.getVal(abilityUsed, true, *(eng->player));
+    if(
+      eng->mapTests->isCellsNeighbours(
+        Pos(pos_.x, pos_.y), eng->player->pos, false)) {
+      const int PLAYER_SKILL =
+        eng->player->getData()->abilityVals.getVal(
+          ability_searching, true, *(eng->player));
       if(eng->abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
       }
@@ -209,8 +223,9 @@ void Door::playerTrySpotHidden() {
 
 void Door::playerTryClueHidden() {
   if(isSecret_ && isClued_ == false) {
-    const Abilities_t abilityUsed = ability_searching;
-    const int PLAYER_SKILL = eng->player->getData()->abilityVals.getVal(abilityUsed, true, *(eng->player));
+    const int PLAYER_SKILL =
+      eng->player->getData()->abilityVals.getVal(
+        ability_searching, true, *(eng->player));
     const int BONUS = 10;
     if(eng->abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
       clue();
@@ -220,7 +235,8 @@ void Door::playerTryClueHidden() {
 
 bool Door::trySpike(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND =
+    actorTrying->getPropHandler()->allowSee() == false;
 
   if(isSecret_ || isOpen_) {
     return false;
@@ -236,7 +252,8 @@ bool Door::trySpike(Actor* actorTrying) {
     } else {
       eng->log->addMsg("I jam a door with a spike.");
     }
-    eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
+    eng->soundEmitter->emitSound(
+      Sound("", endOfSfx, true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
   }
   eng->gameTime->endTurnOfCurrentActor();
   return true;
@@ -246,16 +263,21 @@ bool Door::trySpike(Actor* actorTrying) {
 void Door::tryBash(Actor* actorTrying) {
   trace << "Door::tryBash()..." << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND =
+    actorTrying->getPropHandler()->allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
-  const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
+  const bool PLAYER_SEE_TRYER =
+    IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
 
   bool bashable = true;
 
-  if(isOpen_ || (isSecret_ && IS_PLAYER) || (material_ == doorMaterial_metal && IS_PLAYER == false)) {
+  if(
+    isOpen_ ||
+    (isSecret_ && IS_PLAYER) ||
+    (material_ == doorMaterial_metal && IS_PLAYER == false)) {
     trace << "Door: Not in bashable state (is open, or player trying and is secret)" << endl;
     bashable = false;
     if(IS_PLAYER) {
@@ -277,14 +299,17 @@ void Door::tryBash(Actor* actorTrying) {
       } else {
         eng->log->addMsg("I smash into the door!");
       }
-      eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
+      Sound snd("", sfxDoorBang, true, pos_, false, IS_PLAYER);
+      eng->soundEmitter->emitSound(snd);
     } else {
       if(PLAYER_SEE_TRYER) {
         eng->log->addMsg(actorTrying->getNameThe() + " bashes at a door!");
       }
       // (The sound emits from the actor instead of the door, because the sound should be heard even
       // if the door is seen, and the parameter for muting messages from seen sounds should be off)
-      eng->soundEmitter->emitSound(Sound("I hear a loud *THUD* at a door.", true, actorTrying->pos, false, IS_PLAYER));
+      Sound snd("I hear a loud banging on a door.",
+                sfxDoorBang, true, actorTrying->pos, false, IS_PLAYER);
+      eng->soundEmitter->emitSound(snd);
     }
 
     //Various things that can happen...
@@ -298,7 +323,10 @@ void Door::tryBash(Actor* actorTrying) {
         skillValueBash = 10 - min(9, nrSpikes_ * 3);
       }
     }
-    const bool DOOR_SMASHED = (material_ == doorMaterial_metal || isBasherWeak) ? false : eng->abilityRoll->roll(skillValueBash) >= successSmall;
+    const bool DOOR_SMASHED =
+      (material_ == doorMaterial_metal || isBasherWeak) ?
+      false :
+      eng->abilityRoll->roll(skillValueBash) >= successSmall;
 
     if(IS_PLAYER) {
       const int SKILL_VALUE_UNHURT = 75;
@@ -342,12 +370,13 @@ void Door::tryBash(Actor* actorTrying) {
       isSecret_ = false;
       isOpen_ = true;
       if(IS_PLAYER) {
+        Sound snd("", sfxDoorBreak, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
         if(TRYER_IS_BLIND == false) {
           eng->log->addMsg("The door crashes open!");
         } else {
           eng->log->addMsg("I feel the door crashing open!");
         }
-        eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
         if(PLAYER_SEE_TRYER) {
           eng->log->addMsg(actorTrying->getNameThe() + " smashes into a door.");
@@ -355,7 +384,9 @@ void Door::tryBash(Actor* actorTrying) {
         } else if(PLAYER_SEE_DOOR) {
           eng->log->addMsg("A door crashes open!");
         }
-        eng->soundEmitter->emitSound(Sound("I hear a door crashing open!", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
+        Sound snd("I hear a door crashing open!",
+                  sfxDoorBreak, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
       }
     }
 
@@ -369,12 +400,15 @@ void Door::tryBash(Actor* actorTrying) {
 
 void Door::tryClose(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
+  const bool TRYER_IS_BLIND =
+    actorTrying->getPropHandler()->allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
 
-  const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
+  const bool PLAYER_SEE_TRYER =
+    IS_PLAYER ? true :
+    eng->player->checkIfSeeActor(*actorTrying, blockers);
 
   bool closable = true;
 
@@ -428,29 +462,45 @@ void Door::tryClose(Actor* actorTrying) {
   if(closable) {
     //Door is in correct state for closing (open, working, not blocked)
 
-    // TODO need sound
-
     if(TRYER_IS_BLIND == false) {
       isOpen_ = false;
-      if(IS_PLAYER)
+      if(IS_PLAYER) {
+        Sound snd("", sfxDoorClose, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
         eng->log->addMsg("I close the door.");
-      else if(PLAYER_SEE_TRYER)
-        eng->log->addMsg(actorTrying->getNameThe() + " closes a door.");
+      } else {
+        Sound snd("I hear a door closing.",
+                  sfxDoorClose, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
+        if(PLAYER_SEE_TRYER) {
+          eng->log->addMsg(actorTrying->getNameThe() + " closes a door.");
+        }
+      }
     } else {
       if(eng->dice.percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
+          Sound snd("", sfxDoorClose, true, pos_, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
           eng->log->addMsg("I fumble with a door and succeed to close it.");
         } else {
-          if(PLAYER_SEE_TRYER)
-            eng->log->addMsg(actorTrying->getNameThe() + "fumbles about and succeeds to close a door.");
+          Sound snd("I hear a door closing.",
+                    sfxDoorClose, true, pos_, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
+          if(PLAYER_SEE_TRYER) {
+            eng->log->addMsg(actorTrying->getNameThe() +
+                             "fumbles about and succeeds to close a door.");
+          }
         }
       } else {
         if(IS_PLAYER) {
-          eng->log->addMsg("I fumble blindly with a door and fail to close it.");
+          eng->log->addMsg(
+            "I fumble blindly with a door and fail to close it.");
         } else {
-          if(PLAYER_SEE_TRYER)
-            eng->log->addMsg(actorTrying->getNameThe() + " fumbles blindly and fails to close a door.");
+          if(PLAYER_SEE_TRYER) {
+            eng->log->addMsg(actorTrying->getNameThe() +
+                             " fumbles blindly and fails to close a door.");
+          }
         }
       }
     }
@@ -492,44 +542,55 @@ void Door::tryOpen(Actor* actorTrying) {
       trace << "Door: Tryer can see, opening" << endl;
       isOpen_ = true;
       if(IS_PLAYER) {
+        Sound snd("", sfxDoorOpen, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
         eng->log->addMsg("I open the door.");
-        eng->soundEmitter->emitSound(Sound("", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       } else {
+        Sound snd("I hear a door open.",
+                  sfxDoorOpen, true, pos_, false, IS_PLAYER);
+        eng->soundEmitter->emitSound(snd);
         if(PLAYER_SEE_TRYER) {
           eng->log->addMsg(actorTrying->getNameThe() + " opens a door.");
         } else if(PLAYER_SEE_DOOR) {
           eng->log->addMsg("I see a door opening.");
         }
-        eng->soundEmitter->emitSound(Sound("I hear a door open.", true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
       }
     } else {
       if(eng->dice.percentile() < 50) {
         trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {
+          Sound snd("", sfxDoorOpen, true, pos_, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
           eng->log->addMsg("I fumble with a door and succeed to open it.");
-          eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
         } else {
+          Sound snd("I hear something open a door clumsily.",
+                    sfxDoorOpen, true, pos_, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
           if(PLAYER_SEE_TRYER) {
-            eng->log->addMsg(actorTrying->getNameThe() + "fumbles about and succeeds to open a door.");
+            eng->log->addMsg(actorTrying->getNameThe() +
+                             "fumbles about and succeeds to open a door.");
           } else if(PLAYER_SEE_DOOR) {
             eng->log->addMsg("I see a door open clumsily.");
           }
-          eng->soundEmitter->emitSound(Sound("I hear something open a door clumsily.", true, pos_, false, IS_PLAYER));
         }
       } else {
         trace << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
+          Sound snd("", endOfSfx, true, pos_, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
           eng->log->addMsg("I fumble blindly with a door and fail to open it.");
-          eng->soundEmitter->emitSound(Sound("", true, pos_, false, IS_PLAYER));
         } else {
-          if(PLAYER_SEE_TRYER) {
-            eng->log->addMsg(actorTrying->getNameThe() + " fumbles blindly and fails to open a door.");
-          }
           //(emitting the sound from the actor instead of the door here, beacause the sound should
           //be heard even if the door is seen, and the parameter for muting messages from seen sounds
           //should be off)
-          eng->soundEmitter->emitSound(Sound("I hear something attempting to open a door.", true, actorTrying->pos, false, IS_PLAYER));
+          Sound snd("I hear something attempting to open a door.",
+                    endOfSfx, true, actorTrying->pos, false, IS_PLAYER);
+          eng->soundEmitter->emitSound(snd);
+          if(PLAYER_SEE_TRYER) {
+            eng->log->addMsg(actorTrying->getNameThe() +
+                             " fumbles blindly and fails to open a door.");
+          }
         }
       }
     }

@@ -635,9 +635,9 @@ void TrapAlarm::trapSpecificTrigger(Actor* const actor,
     }
   }
 
-  eng->soundEmitter->emitSound(Sound("I hear an alarm sounding!",
-                                     IS_PLAYER || CAN_PLAYER_SEE_ACTOR,
-                                     pos_, true, true));
+  Sound snd("I hear an alarm sounding!",
+            endOfSfx, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true);
+  eng->soundEmitter->emitSound(snd);
 }
 
 void TrapSpiderWeb::trapSpecificTrigger(

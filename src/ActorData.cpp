@@ -111,7 +111,7 @@ void ActorDataHandler::initDataList() {
   d.bodyType = actorBodyType_normal;
   d.id = actor_player;
   d.hp = 16;
-  d.spi = 12;
+  d.spi = 6;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
@@ -1096,7 +1096,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 4;
   d.spi = 2;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 24);
+  d.abilityVals.setVal(ability_accuracyMelee, 35);
   d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
@@ -1276,8 +1276,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 6;
   d.spi = 20;
   d.dmgRanged = 5;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(ability_accuracyRanged, 50);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;

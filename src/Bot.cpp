@@ -20,59 +20,6 @@
 
 void Bot::init() {
   currentPath_.resize(0);
-
-  if(eng->config->isBotPlaying == true) {
-    //Switch to melee weapon
-    //    eng->input->handleKeyPress('z', false, false);
-    //Make sure it's my turn
-    //    while(eng->gameTime->getCurrentActor() != eng->player) {
-    //      eng->gameTime->endTurnOfCurrentActor();
-    //    }
-    //    runFunctionTests();
-  }
-}
-
-void Bot::runFunctionTests() {
-  //TEST HIT CHANCE
-  Item* weaponUsed = eng->player->getInventory()->getItemInSlot(slot_wielded);
-  const Abilities_t weaponAbilityUsed = weaponUsed->getData().meleeAbilityUsed;
-  const int HIT_CHANCE_WEAPON = weaponUsed->getData().meleeHitChanceMod;
-  const int HIT_CHANCE_SKILL =
-    eng->player->getData()->abilityVals.getVal(weaponAbilityUsed, true, *(eng->player));
-  const int HIT_CHANCE_TOTAL = HIT_CHANCE_SKILL + HIT_CHANCE_WEAPON;
-  const int NUMBER_OF_ATTACKS = 100;
-  double hitChanceReal = 0;
-
-  //Make sure an actor can be spawned next to the player
-  eng->featureFactory->spawnFeatureAt(
-    feature_stoneFloor, eng->player->pos + Pos(1, 0));
-
-  for(int i = 0; i < NUMBER_OF_ATTACKS; i++) {
-    Actor* actor = eng->actorFactory->spawnActor(
-                     actor_rat, eng->player->pos + Pos(1, 0));
-    dynamic_cast<Monster*>(actor)->playerAwarenessCounter = 999;
-    eng->attack->melee(*eng->player, *dynamic_cast<Weapon*>(weaponUsed), *actor);
-
-    if(actor->getHp() < actor->getHpMax(true)) {
-      hitChanceReal += 1.0;
-    }
-    for(unsigned int ii = 0; ii < eng->gameTime->getLoopSize(); ii++) {
-      if(eng->gameTime->getActorAt(ii) == actor) {
-        eng->gameTime->eraseElement(ii);
-        break;
-      }
-    }
-    delete actor;
-
-    while(eng->gameTime->getCurrentActor() != eng->player) {
-      eng->gameTime->endTurnOfCurrentActor();
-    }
-  }
-  hitChanceReal /= double(NUMBER_OF_ATTACKS);
-  hitChanceReal *= 100;
-  const double RATIO = double(HIT_CHANCE_TOTAL) / hitChanceReal;
-
-  assert(RATIO > 0.80 && RATIO < 1.20);
 }
 
 void Bot::act() {

@@ -204,12 +204,10 @@ public:
 
   void getPropsInterfaceLine(vector<StringAndClr>& line);
 
-private:
-  friend class Player;
-  friend class ExplosionMaker;
-  friend class Bot;
   Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
                        const int NR_TURNS = -1);
+
+private:
 
   void getPropsFromSource(vector<Prop*>& propList,
                           const PropSrc_t source) const;
