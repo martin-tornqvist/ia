@@ -77,8 +77,10 @@ void ExplosionMaker::renderExplosionWithColorOverride(
 }
 
 void ExplosionMaker::runExplosion(
-  const Pos& origin, const bool DO_EXPLOSION_DMG, Prop* const prop,
-  const bool OVERRIDE_EXPLOSION_RENDERING, const SDL_Color colorOverride) {
+  const Pos& origin, const Sfx_t sfx, const bool DO_EXPLOSION_DMG,
+  Prop* const prop, const bool OVERRIDE_EXPLOSION_RENDERING,
+  const SDL_Color colorOverride) {
+
   BasicData data(origin, width, height);
 
   //Set up explosion reach array
@@ -96,12 +98,12 @@ void ExplosionMaker::runExplosion(
   }
   reach[origin.x][origin.y] = true;
 
-  //Assuming all explosions alerts monsters to player.
-  if(DO_EXPLOSION_DMG) {
-    eng->soundEmitter->emitSound(
-      Sound("I hear an explosion!", endOfSfx, true, origin, true, true));
+  //TODO Explosion sound msg should be parameterized with an enumerated type
+//  if(DO_EXPLOSION_DMG) {
+  Sound snd("I hear an explosion!", sfx, true, origin, true, true);
+  eng->soundEmitter->emitSound(snd);
 //    eng->audio->playSound(audio_explosion);
-  }
+//  }
 
   //Render
   if(eng->config->isTilesMode) {

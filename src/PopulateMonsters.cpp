@@ -307,7 +307,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
 
   if(idCandidates.empty()) {
     trace << "PopulateMonsters: Found no valid monsters to spawn ";
-    trace << "at room theme (" + intToString(roomTheme) + ")" << endl;
+    trace << "at room theme (" + toString(roomTheme) + ")" << endl;
     return false;
   } else {
     const int ELEMENT = eng->dice.range(0, idCandidates.size() - 1);

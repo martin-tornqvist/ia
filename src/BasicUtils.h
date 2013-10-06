@@ -13,7 +13,12 @@ using namespace std;
 class Engine;
 
 enum Time_t {
-  time_year, time_month, time_day, time_hour, time_minute, time_second
+  time_year,
+  time_month,
+  time_day,
+  time_hour,
+  time_minute,
+  time_second
 };
 
 struct TimeData {
@@ -22,8 +27,8 @@ struct TimeData {
   }
 
   TimeData(int year, int month, int day, int hour, int minute, int second) :
-    year_(year), month_(month), day_(day), hour_(hour), minute_(minute), second_(second) {
-  }
+    year_(year), month_(month), day_(day), hour_(hour), minute_(minute),
+    second_(second) {}
 
   string getTimeStr(const Time_t lowest, const bool ADD_SEPARATORS) const;
 
@@ -78,11 +83,13 @@ public:
     return chebyshevDistance(c1.x, c1.y, c2.x, c2.y);
   }
 
-  inline int manhattanDistance(const int X0, const int Y0, const int X1, const int Y1) const {
+  inline int manhattanDistance(const int X0, const int Y0,
+                               const int X1, const int Y1) const {
     return abs(X1 - X0) + abs(Y1 - Y0);
   }
 
-  inline double pointDistance(const int x1, const int y1, const int x2, const int y2) const {
+  inline double pointDistance(const int x1, const int y1,
+                              const int x2, const int y2) const {
     if(x1 == x2 && y1 == y2)
       return 0.0;
 
@@ -102,8 +109,14 @@ public:
   int operator()(const int ROLLS, const int SIDES) {
     return roll(ROLLS, SIDES);
   }
-  int operator()(const DiceParam& p) {return roll(p.rolls, p.sides);}
-  bool coinToss() {return roll(1, 2) == 2;}
+
+  int operator()(const DiceParam& p) {
+    return roll(p.rolls, p.sides);
+  }
+
+  bool coinToss() {
+    return roll(1, 2) == 2;
+  }
 
   inline bool fraction(const int NUMERATOR, const int DENOMINATOR) {
     return roll(1, DENOMINATOR) <= NUMERATOR;
@@ -136,6 +149,78 @@ private:
   }
 
   MTRand m_MTRand;
+};
+
+class DirectionConverter {
+public:
+  DirectionConverter(Engine* const engine) : eng(engine) {
+    compassDirectonNames[0][0] = "NW";
+    compassDirectonNames[0][1] = "W";
+    compassDirectonNames[0][2] = "SW";
+    compassDirectonNames[1][0] = "N";
+    compassDirectonNames[1][1] = "";
+    compassDirectonNames[1][2] = "S";
+    compassDirectonNames[2][0] = "NE";
+    compassDirectonNames[2][1] = "E";
+    compassDirectonNames[2][2] = "SE";
+  }
+
+  ~DirectionConverter() {}
+
+  Direction_t getDirection(const Pos& offset) const {
+    if(offset.y == -1) {
+      return offset.x == -1 ? directionUpLeft :
+             offset.x == 0 ? directionUp :
+             offset.x == 1 ? directionUpRight :
+             endOfDirections;
+    }
+
+    if(offset.y == 0) {
+      return offset.x == -1 ? directionLeft :
+             offset.x == 0 ? directionCenter :
+             offset.x == 1 ? directionRight :
+             endOfDirections;
+    }
+    if(offset.y == 1) {
+      return offset.x == -1 ? directionDownLeft :
+             offset.x == 0 ? directionDown :
+             offset.x == 1 ? directionDownRight :
+             endOfDirections;
+    }
+    return endOfDirections;
+  }
+
+  Pos getOffset(const Direction_t direction) const {
+    switch(direction) {
+      case directionDownLeft:   return Pos(-1, 1);
+      case directionDown:       return Pos(0, 1);
+      case directionDownRight:  return Pos(1, 1);
+      case directionLeft:       return Pos(-1, 0);
+      case directionCenter:     return Pos(0, 0);
+      case directionRight:      return Pos(1, 0);
+      case directionUpLeft:     return Pos(-1, -1);
+      case directionUp:         return Pos(0, -1);
+      case directionUpRight:    return Pos(1, -1);
+      case endOfDirections:     return Pos(999, 999);
+    }
+    return Pos(999, 999);
+  }
+
+  string getCompassDirectionName(const Direction_t direction) const {
+    const Pos& offset = getOffset(direction);
+    return compassDirectonNames[offset.x + 1][offset.y + 1];
+  }
+
+  string getCompassDirectionName(const Pos& offset) const {
+    return compassDirectonNames[offset.x + 1][offset.y + 1];
+  }
+
+private:
+  DirectionConverter() : eng(NULL) {}
+
+  Engine* const eng;
+
+  string compassDirectonNames[3][3];
 };
 
 #endif

@@ -44,7 +44,7 @@ private:
     void addRepeat() {
       repeats++;
       strRepeats = "(x";
-      strRepeats += intToString(repeats);
+      strRepeats += toString(repeats);
       strRepeats += ")";
     }
 

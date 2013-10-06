@@ -114,7 +114,8 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
 //  addBon(playerBon_aggressive, "Aggressive", "+X melee dmg when attacking in same direction as previous move");
 
   descr  = "+15% hit chance with firearms and thrown weapons, ";
-  descr += "standing still for a turn gives another 10% hit chance";
+  descr += "standing still for a turn gives another 10% hit chance, ";
+  descr += "you occasionally reload instantly";
   addBon(playerBon_marksman, "Marksman", playerBonType_skill, descr);
 
 //  addBon(playerBon_steadyAimer, "Steady aimer", playerBonType_skill,

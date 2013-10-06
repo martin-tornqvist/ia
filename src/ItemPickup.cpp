@@ -80,9 +80,9 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
   if(item != NULL) {
     if(item->getData().isRangedWeapon) {
       Weapon* const weapon = dynamic_cast<Weapon*>(item);
-      const int ammoLoaded = weapon->ammoLoaded;
+      const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
-      if(ammoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
+      if(nrAmmoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
         Inventory* const playerInventory = eng->player->getInventory();
         const ItemId_t ammoType = weapon->getData().rangedAmmoTypeUsed;
 
@@ -92,10 +92,10 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
 
         if(ammoData->isAmmoClip == true) {
           //Unload a clip
-          dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = ammoLoaded;
+          dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
         } else {
           //Unload loose ammo
-          spawnedAmmo->nrItems = ammoLoaded;
+          spawnedAmmo->nrItems = nrAmmoLoaded;
         }
         const string WEAPON_REF_A =
           eng->itemDataHandler->getItemRef(*weapon, itemRef_a);
@@ -109,7 +109,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           eng->log->addMsg(str);
         }
 
-        dynamic_cast<Weapon*>(item)->ammoLoaded = 0;
+        dynamic_cast<Weapon*>(item)->nrAmmoLoaded = 0;
 //        dynamic_cast<Weapon*>(item)->setColorForAmmoStatus();
 
         eng->gameTime->endTurnOfCurrentActor();

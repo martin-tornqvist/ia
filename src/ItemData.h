@@ -163,8 +163,8 @@ enum ItemId_t {
   item_potionOfRFire,
 //  item_potionOfRCold,
   item_potionOfAntidote,
-  item_potionOfRElec,
-  item_potionOfRAcid,
+//  item_potionOfRElec,
+//  item_potionOfRAcid,
 
   item_deviceSentry,
   item_deviceRepeller,

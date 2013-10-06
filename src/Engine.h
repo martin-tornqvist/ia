@@ -99,6 +99,7 @@ class Disarm;
 class Gods;
 class Credits;
 class PropDataHandler;
+class DirectionConverter;
 
 class Player;
 
@@ -155,6 +156,7 @@ public:
   Reload* reload;
   BasicUtils* basicUtils;
   Dice dice;
+  DirectionConverter* directionConverter;
   MapTests* mapTests;
   Gore* gore;
   Manual* manual;

@@ -141,7 +141,9 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 //  }
 
   if(markerTask == markerTask_aimRangedWeapon) {
-    Weapon* const weapon = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
+    Item* const item =
+      eng->player->getInventory()->getItemInSlot(slot_wielded);
+    Weapon* const weapon = dynamic_cast<Weapon*>(item);
     effectiveRange = weapon->effectiveRangeLimit;
   }
 

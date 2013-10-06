@@ -30,9 +30,9 @@ bool MenuBrowser::isPosAtKey(const char KEY) const {
   return positionAtKey == pos_;
 }
 
-void MenuBrowser::navigate(const Directions_t direction) {
+void MenuBrowser::navigate(const Direction_t direction) {
   switch(direction) {
-    case direction_up: {
+    case directionUp: {
       pos_.y--;
       if(pos_.y < 0) {
         if(pos_.x == 0) {
@@ -43,7 +43,7 @@ void MenuBrowser::navigate(const Directions_t direction) {
       }
     } break;
 
-    case direction_down: {
+    case directionDown: {
       pos_.y++;
       if(pos_.x == 0) {
         if(pos_.y > btmLeft_.y) {
@@ -56,8 +56,8 @@ void MenuBrowser::navigate(const Directions_t direction) {
       }
     } break;
 
-    case direction_left:
-    case direction_right: {
+    case directionLeft:
+    case directionRight: {
       pos_.x = pos_.x == 0 ? 1 : 0;
 
       pos_.x = min(pos_.x, upRight_.x);

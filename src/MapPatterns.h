@@ -22,10 +22,11 @@ public:
     eng(engine) {
   }
 
-  void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls);
+  void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
+                          vector<Pos>& awayFromWalls);
 
 private:
-  int getWalkBlockersInDirection(const Directions_t dir, const Pos pos);
+  int getWalkBlockersInDirection(const Direction_t dir, const Pos pos);
 
   Engine* eng;
 

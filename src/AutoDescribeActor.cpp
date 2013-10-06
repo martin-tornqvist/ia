@@ -43,13 +43,13 @@ string AutoDescribeActor::getSpeedStr(const ActorData& def) const {
 }
 
 string AutoDescribeActor::getDwellingLevelStr(const ActorData& def) const {
-  return intToString(max(1, def.spawnMinDLVL));
+  return toString(max(1, def.spawnMinDLVL));
 }
 
 string AutoDescribeActor::getNrOfKillsStr(const ActorData& def) const {
   const int KILLS = def.nrOfKills;
   return KILLS == 0 ?
          "I do not recall having dispatched any of these before" :
-         "I have killed " + intToString(KILLS) + " of these before";
+         "I have killed " + toString(KILLS) + " of these before";
 }
 

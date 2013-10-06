@@ -15,11 +15,11 @@
 #include "PlayerBonuses.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
-  lines.push_back(intToString(turn_));
+  lines.push_back(toString(turn_));
 }
 
 void GameTime::setParametersFromSaveLines(vector<string>& lines) {
-  turn_ = stringToInt(lines.front());
+  turn_ = toInt(lines.front());
   lines.erase(lines.begin());
 }
 

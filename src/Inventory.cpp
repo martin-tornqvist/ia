@@ -70,17 +70,17 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     if(item == NULL) {
       lines.push_back("0");
     } else {
-      lines.push_back(intToString(item->getData().id));
-      lines.push_back(intToString(item->nrItems));
+      lines.push_back(toString(item->getData().id));
+      lines.push_back(toString(item->nrItems));
       item->itemSpecificAddSaveLines(lines);
     }
   }
 
-  lines.push_back(intToString(general_.size()));
+  lines.push_back(toString(general_.size()));
   for(unsigned int i = 0; i < general_.size(); i++) {
     Item* const item = general_.at(i);
-    lines.push_back(intToString(item->getData().id));
-    lines.push_back(intToString(item->nrItems));
+    lines.push_back(toString(item->getData().id));
+    lines.push_back(toString(item->nrItems));
     item->itemSpecificAddSaveLines(lines);
   }
 }
@@ -96,11 +96,11 @@ void Inventory::setParametersFromSaveLines(
       slots_.at(i).item = NULL;
     }
 
-    const ItemId_t id = static_cast<ItemId_t>(stringToInt(lines.front()));
+    const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
     lines.erase(lines.begin());
     if(id != item_empty) {
       item = engine->itemFactory->spawnItem(id);
-      item->nrItems = stringToInt(lines.front());
+      item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
       item->itemSpecificSetParametersFromSaveLines(lines);
 
@@ -112,13 +112,13 @@ void Inventory::setParametersFromSaveLines(
     deleteItemInGeneralWithElement(0);
   }
 
-  const unsigned int NR_OF_GENERAL = stringToInt(lines.front());
+  const unsigned int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
-    const ItemId_t id = static_cast<ItemId_t>(stringToInt(lines.front()));
+    const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = engine->itemFactory->spawnItem(id);
-    item->nrItems = stringToInt(lines.front());
+    item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
     item->itemSpecificSetParametersFromSaveLines(lines);
     general_.push_back(item);

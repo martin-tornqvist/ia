@@ -50,6 +50,8 @@ void ActorData::reset() {
   description = "";
   aggroTextMonsterSeen = "";
   aggroTextMonsterHidden = "";
+  aggroSfxMonsterSeen = endOfSfx;
+  aggroSfxMonsterHidden = endOfSfx;
 }
 
 void ActorDataHandler::addData(ActorData& d) {
@@ -152,6 +154,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
+  d.aggroSfxMonsterSeen = sfxZombieGrowl;
+  d.aggroSfxMonsterHidden = sfxZombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
@@ -192,6 +196,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
+  d.aggroSfxMonsterSeen = sfxZombieGrowl;
+  d.aggroSfxMonsterHidden = sfxZombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
@@ -217,7 +223,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'Z';
   d.color = clrWhiteHigh;
   d.tile = tile_zombieBloated;
-  d.hp = 13;
+  d.hp = 14;
   d.dmgMelee = 4;
   d.dmgRanged = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -489,9 +495,9 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'r';
   d.color = clrBrownDark;
   d.tile = tile_ratThing;
-  d.hp = 15;
-  d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.hp = 10;
+  d.dmgMelee = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
@@ -878,6 +884,10 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description = "This extremely aggressive canine seems to be part corporeal and part fire. It breathes searing flames.";
+  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterHidden = "I hear a snarl.";
+  d.aggroSfxMonsterSeen = sfxDogSnarl;
+  d.aggroSfxMonsterHidden = sfxDogSnarl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isCanine = true;
@@ -1106,7 +1116,9 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "A large wolf with eyes full of cunning.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
-  d.aggroTextMonsterHidden = "I hear a wolf howl.";
+  d.aggroTextMonsterHidden = "I hear a chilling howl.";
+  d.aggroSfxMonsterSeen = sfxDogSnarl;
+  d.aggroSfxMonsterHidden = sfxWolfHowl;
   d.erraticMovement = actorErratic_somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
@@ -1165,9 +1177,9 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'B';
   d.color = clrBrownDark;
   d.tile = tile_byakhee;
-  d.hp = 11;
+  d.hp = 14;
   d.spi = 20;
-  d.dmgMelee = 3;
+  d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
   d.abilityVals.setVal(ability_dodgeAttack, 40);
@@ -1311,10 +1323,10 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'M';
   d.color = clrGreen;
   d.tile = tile_ghoul;
-  d.hp = 10;
+  d.hp = 21;
   d.spi = 20;
-  d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.dmgMelee = 4;
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_group;
@@ -1323,8 +1335,10 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
-  d.aggroTextMonsterSeen = d.name_the + " howls at me.";
+  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
+  d.aggroSfxMonsterSeen = sfxGhoulGrowl;
+  d.aggroSfxMonsterHidden = sfxWolfHowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1743,10 +1757,10 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGreen;
   d.tile = tile_ooze;
-  d.hp = 16;
+  d.hp = 19;
   d.spi = 12;
-  d.dmgMelee = 15;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.dmgMelee = 5;
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;

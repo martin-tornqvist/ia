@@ -162,7 +162,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'r') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->reload->reloadWeapon(eng->player);
+      eng->reload->reloadWieldedWpn(*(eng->player));
     }
     clearEvents();
     return;
@@ -226,27 +226,33 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       if(eng->player->getPropHandler()->allowAttackRanged(true)) {
 
+        Item* const firearmItem =
+          eng->player->getInventory()->getItemInSlot(slot_wielded);
+
         Weapon* firearm = NULL;
 
-        firearm = dynamic_cast<Weapon*>(eng->player->getInventory()->getItemInSlot(slot_wielded));
-
-        if(firearm != NULL) {
-          if(firearm->getData().isRangedWeapon) {
-            if(firearm->ammoLoaded >= 1 || firearm->getData().rangedHasInfiniteAmmo) {
-              if(firearm->getData().isMachineGun && firearm->ammoLoaded < 5) {
-                eng->log->addMsg("Need to load more ammo.");
-              } else {
-                eng->marker->run(markerTask_aimRangedWeapon, NULL);
-              }
-            } else {
-              //If no ammo loaded, try a reload instead
-              eng->reload->reloadWeapon(eng->player);
-            }
-          } else firearm = NULL;
+        if(firearmItem != NULL) {
+          if(firearmItem->getData().isRangedWeapon) {
+            firearm = dynamic_cast<Weapon*>(firearmItem);
+          }
         }
 
         if(firearm == NULL) {
           eng->log->addMsg("I am not wielding a firearm.");
+        } else {
+          if(
+            firearm->nrAmmoLoaded >= 1 ||
+            firearm->getData().rangedHasInfiniteAmmo) {
+
+            if(firearm->getData().isMachineGun && firearm->nrAmmoLoaded < 5) {
+              eng->log->addMsg("Need to load more ammo.");
+            } else {
+              eng->marker->run(markerTask_aimRangedWeapon, NULL);
+            }
+          } else {
+            //If no ammo loaded, try a reload instead
+            eng->reload->reloadWieldedWpn(*(eng->player));
+          }
         }
       }
     }
@@ -351,7 +357,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       eng->player->getSpotedEnemies(spotedEnemies);
       if(spotedEnemies.empty()) {
         const int TURNS_TO_APPLY = 10;
-        const string TURNS_STR = intToString(TURNS_TO_APPLY);
+        const string TURNS_STR = toString(TURNS_TO_APPLY);
         eng->log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
         eng->player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         eng->gameTime->endTurnOfCurrentActor();

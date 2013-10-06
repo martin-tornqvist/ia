@@ -89,6 +89,12 @@ public:
   virtual string getAggroPhraseMonsterHidden() const {
     return data_->aggroTextMonsterHidden;
   }
+  virtual Sfx_t getAggroSfxMonsterSeen() const {
+    return data_->aggroSfxMonsterSeen;
+  }
+  virtual Sfx_t getAggroSfxMonsterHidden() const {
+    return data_->aggroSfxMonsterHidden;
+  }
 
   double shockCausedCurrent;
 

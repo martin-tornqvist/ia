@@ -98,18 +98,22 @@ void Engine::initSdl() {
   SDL_EnableUNICODE(1);
 
   if(IMG_Init(IMG_INIT_PNG) == -1) {
-    trace << "[WARNING] Problem to init SDL_image, in Engine::initSdl()" << endl;
+    trace << "[WARNING] Problem to init SDL_image";
+    trace << ", in Engine::initSdl()" << endl;
   }
 
-  const int     FREQ      = 44100;
-  const Uint16  FORMAT    = MIX_DEFAULT_FORMAT;
-  const int     CHANNELS  = 2;
-  const int     BUFFERS   = 1024; //4096;
-  if(Mix_OpenAudio(FREQ, FORMAT, CHANNELS, BUFFERS) == -1) {
-    trace << "[WARNING] Problem to init SDL_mixer, in Engine::initSdl()" << endl;
+  const int     AUDIO_FREQ      = 44100;
+  const Uint16  AUDIO_FORMAT    = MIX_DEFAULT_FORMAT;
+  const int     AUDIO_CHANNELS  = 2;
+  const int     AUDIO_BUFFERS   = 1024;
+
+  if(Mix_OpenAudio(
+        AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1) {
+    trace << "[WARNING] Problem to init SDL_mixer";
+    trace << ", in Engine::initSdl()" << endl;
   }
 
-  Mix_AllocateChannels(16);
+  Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
 
   trace << "Engine::initSdl() [DONE]" << endl;
 }
@@ -225,6 +229,7 @@ void Engine::initGame() {
   disarm = new Disarm(this);
   gods = new Gods(this);
   credits = new Credits(this);
+  directionConverter = new DirectionConverter(this);
 
   trace << "Engine::initGame() [DONE]" << endl;
 }
@@ -303,6 +308,7 @@ void Engine::cleanupGame() {
   delete gods;
   delete credits;
   delete propDataHandler;
+  delete directionConverter;
 
   delete marker;
 

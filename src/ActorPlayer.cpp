@@ -116,29 +116,29 @@ void Player::actorSpecific_spawnStartItems() {
 
 void Player::addSaveLines(vector<string>& lines) const {
   const int NR_STATUS_EFFECTS = propHandler_->appliedProps_.size();
-  lines.push_back(intToString(NR_STATUS_EFFECTS));
+  lines.push_back(toString(NR_STATUS_EFFECTS));
   for(int i = 0; i < NR_STATUS_EFFECTS; i++) {
     lines.push_back(
-      intToString(propHandler_->appliedProps_.at(i)->getId()));
+      toString(propHandler_->appliedProps_.at(i)->getId()));
     lines.push_back(
-      intToString(propHandler_->appliedProps_.at(i)->getId()));
+      toString(propHandler_->appliedProps_.at(i)->getId()));
   }
 
-  lines.push_back(intToString(insanity_));
-  lines.push_back(intToString(int(shock_)));
-  lines.push_back(intToString(mth));
-  lines.push_back(intToString(hp_));
-  lines.push_back(intToString(hpMax_));
-  lines.push_back(intToString(spi_));
-  lines.push_back(intToString(spiMax_));
-  lines.push_back(intToString(pos.x));
-  lines.push_back(intToString(pos.y));
-  lines.push_back(intToString(dynamiteFuseTurns));
-  lines.push_back(intToString(molotovFuseTurns));
-  lines.push_back(intToString(flareFuseTurns));
+  lines.push_back(toString(insanity_));
+  lines.push_back(toString(int(shock_)));
+  lines.push_back(toString(mth));
+  lines.push_back(toString(hp_));
+  lines.push_back(toString(hpMax_));
+  lines.push_back(toString(spi_));
+  lines.push_back(toString(spiMax_));
+  lines.push_back(toString(pos.x));
+  lines.push_back(toString(pos.y));
+  lines.push_back(toString(dynamiteFuseTurns));
+  lines.push_back(toString(molotovFuseTurns));
+  lines.push_back(toString(flareFuseTurns));
 
   for(int i = 0; i < endOfAbilities; i++) {
-    lines.push_back(intToString(data_->abilityVals.getRawVal(Abilities_t(i))));
+    lines.push_back(toString(data_->abilityVals.getRawVal(Abilities_t(i))));
   }
 
   for(int i = 0; i < endOfInsanityPhobias; i++) {
@@ -150,45 +150,45 @@ void Player::addSaveLines(vector<string>& lines) const {
 }
 
 void Player::setParametersFromSaveLines(vector<string>& lines) {
-  const int NR_STATUS_EFFECTS = stringToInt(lines.front());
+  const int NR_STATUS_EFFECTS = toInt(lines.front());
   lines.erase(lines.begin());
   for(int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    const PropId_t id = (PropId_t)(stringToInt(lines.front()));
+    const PropId_t id = (PropId_t)(toInt(lines.front()));
     lines.erase(lines.begin());
-    const int TURNS = stringToInt(lines.front());
+    const int TURNS = toInt(lines.front());
     lines.erase(lines.begin());
     Prop* const prop =
       propHandler_->makePropFromId(id, propTurnsSpecified, TURNS);
     propHandler_->tryApplyProp(prop, true, true, true);
   }
 
-  insanity_ = stringToInt(lines.front());
+  insanity_ = toInt(lines.front());
   lines.erase(lines.begin());
-  shock_ = double(stringToInt(lines.front()));
+  shock_ = double(toInt(lines.front()));
   lines.erase(lines.begin());
-  mth = stringToInt(lines.front());
+  mth = toInt(lines.front());
   lines.erase(lines.begin());
-  hp_ = stringToInt(lines.front());
+  hp_ = toInt(lines.front());
   lines.erase(lines.begin());
-  hpMax_ = stringToInt(lines.front());
+  hpMax_ = toInt(lines.front());
   lines.erase(lines.begin());
-  spi_ = stringToInt(lines.front());
+  spi_ = toInt(lines.front());
   lines.erase(lines.begin());
-  spiMax_ = stringToInt(lines.front());
+  spiMax_ = toInt(lines.front());
   lines.erase(lines.begin());
-  pos.x = stringToInt(lines.front());
+  pos.x = toInt(lines.front());
   lines.erase(lines.begin());
-  pos.y = stringToInt(lines.front());
+  pos.y = toInt(lines.front());
   lines.erase(lines.begin());
-  dynamiteFuseTurns = stringToInt(lines.front());
+  dynamiteFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
-  molotovFuseTurns = stringToInt(lines.front());
+  molotovFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
-  flareFuseTurns = stringToInt(lines.front());
+  flareFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
 
   for(int i = 0; i < endOfAbilities; i++) {
-    data_->abilityVals.setVal(Abilities_t(i), stringToInt(lines.front()));
+    data_->abilityVals.setVal(Abilities_t(i), toInt(lines.front()));
     lines.erase(lines.begin());
   }
 
@@ -468,7 +468,7 @@ void Player::incrInsanity() {
                 case insanityObsession_masochism: {
                   popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
                   popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-                  popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  popupMessage += "(shock cannot go below " + toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
                   insanityObsessions[insanityObsession_masochism] = true;
                   return;
@@ -476,7 +476,7 @@ void Player::incrInsanity() {
                 case insanityObsession_sadism: {
                   popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
                   popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-                  popupMessage += "(shock cannot go below " + intToString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  popupMessage += "(shock cannot go below " + toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
                   insanityObsessions[insanityObsession_sadism] = true;
                   return;
@@ -726,7 +726,8 @@ void Player::act() {
     molotovFuseTurns = -1;
     updateColor();
     eng->explosionMaker->runExplosion(
-      pos, false, new PropBurning(eng, propTurnsStandard));
+      pos, sfxExplosionMolotov, false,
+      new PropBurning(eng, propTurnsStandard));
   }
 
   //Flare
@@ -977,25 +978,22 @@ void Player::explosiveThrown() {
   eng->renderer->drawMapAndInterface();
 }
 
-void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER) {
+void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+                       const Direction_t directionToOrigin,
+                       const int PERCENT_AUDIBLE_DISTANCE) {
   const Sfx_t sfx = snd.getSfx();
 
-  //If origin is hidden, play audio before printing message
-  if(IS_ORIGIN_SEEN_BY_PLAYER == false && sfx != endOfSfx) {
-    eng->audio->play(sfx);
-  }
+  const string& msg = snd.getMsg();
+  const bool IS_MSG_EMPTY = msg.empty();
 
-  const string msg = snd.getMsg();
-  if(msg != "") {
+  if(IS_MSG_EMPTY == false) {
     eng->log->addMsg(msg);
   }
 
-  //If origin is seen, play audio after printing message
-  //I.e.:
-  //(1) "The cultist fires a pistol!" (possibly with a [MORE] prompt)
-  //(2) Audio + animation
-  if(IS_ORIGIN_SEEN_BY_PLAYER && sfx != endOfSfx) {
-    eng->audio->play(sfx);
+  //Play audio after message to ensure synch between audio and animation
+  //If origin is hidden, we only play the sound if there is a message
+  if(IS_MSG_EMPTY == false || IS_ORIGIN_SEEN_BY_PLAYER) {
+    eng->audio->play(sfx, directionToOrigin, PERCENT_AUDIBLE_DISTANCE);
   }
 }
 

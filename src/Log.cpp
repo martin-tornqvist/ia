@@ -124,9 +124,9 @@ void Log::drawHistoryInterface(const int topLine, const int bottomLine) const {
                             Pos(3, 1), clrWhite);
   } else {
     eng ->renderer->drawText(
-      " Displaying messages " + intToString(topLine) + "-" +
-      intToString(bottomLine) + " of " +
-      intToString(history.size()) + " ", panel_screen, Pos(3, 1), clrWhite);
+      " Displaying messages " + toString(topLine) + "-" +
+      toString(bottomLine) + " of " +
+      toString(history.size()) + " ", panel_screen, Pos(3, 1), clrWhite);
   }
 
   eng->renderer->drawText(

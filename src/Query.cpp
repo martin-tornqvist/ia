@@ -33,7 +33,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
                   const bool CANCEL_RETURNS_DEFAULT) const {
   int retNum = max(MIN, DEFAULT);
   eng->renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-  const string str = (retNum == 0 ? "" : intToString(retNum)) + "_";
+  const string str = (retNum == 0 ? "" : toString(retNum)) + "_";
   eng->renderer->drawText(str, panel_screen, pos, clr);
   eng->renderer->updateScreen();
 
@@ -53,13 +53,13 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       return CANCEL_RETURNS_DEFAULT ? DEFAULT : -1;
     }
 
-    const string retNumStr = intToString(retNum);
+    const string retNumStr = toString(retNum);
     const int CUR_NUM_DIGITS = retNumStr.size();
 
     if(d.sdlKey_ == SDLK_BACKSPACE) {
       retNum = retNum / 10;
       eng->renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_",
+      eng->renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
                               panel_screen, pos, clr);
       eng->renderer->updateScreen();
       continue;
@@ -69,7 +69,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       int curDigit = d.key_ - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
       eng->renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      eng->renderer->drawText((retNum == 0 ? "" : intToString(retNum)) + "_",
+      eng->renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
                               panel_screen, pos, clr);
       eng->renderer->updateScreen();
     }

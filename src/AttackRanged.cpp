@@ -329,13 +329,13 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const bool WPN_HAS_INF_AMMO = wpn.getData().rangedHasInfiniteAmmo;
 
   if(wpn.getData().isShotgun) {
-    if(wpn.ammoLoaded != 0 || WPN_HAS_INF_AMMO) {
+    if(wpn.nrAmmoLoaded != 0 || WPN_HAS_INF_AMMO) {
 
       shotgun(attacker, wpn, aimPos);
 
       didAttack = true;
       if(WPN_HAS_INF_AMMO == false) {
-        wpn.ammoLoaded -= 1;
+        wpn.nrAmmoLoaded -= 1;
       }
     }
   } else {
@@ -345,7 +345,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       nrOfProjectiles = NR_MACHINEGUN_PROJECTILES;
     }
 
-    if(wpn.ammoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
+    if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
       projectileFire(attacker, wpn, aimPos);
 
       if(eng->player->deadState == actorDeadState_alive) {
@@ -353,7 +353,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         didAttack = true;
 
         if(WPN_HAS_INF_AMMO == false) {
-          wpn.ammoLoaded -= nrOfProjectiles;
+          wpn.nrAmmoLoaded -= nrOfProjectiles;
         }
       } else {
         return true;

@@ -263,7 +263,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   if(data.isStackable && item->nrItems > 1) {
     trace << "InventoryHandler: item is stackable and more than one" << endl;
     eng->renderer->drawMapAndInterface(false);
-    const string nrStr = "1-" + intToString(item->nrItems);
+    const string nrStr = "1-" + toString(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "| enter to drop | space/esc to cancel";
     eng->renderer->drawText(dropStr, panel_screen, Pos(1, 1), clrWhiteHigh);

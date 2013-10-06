@@ -239,18 +239,20 @@ void Monster::hearSound(const Sound& snd) {
 
 void Monster::speakPhrase() {
   const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
-  const string msg =
-    IS_SEEN_BY_PLAYER ?
-    getAggroPhraseMonsterSeen() :
-    getAggroPhraseMonsterHidden();
-  eng->soundEmitter->emitSound(Sound(msg, endOfSfx, false, pos, false, true));
+  const string msg = IS_SEEN_BY_PLAYER ?
+                     getAggroPhraseMonsterSeen() :
+                     getAggroPhraseMonsterHidden();
+  const Sfx_t sfx = IS_SEEN_BY_PLAYER ?
+                    getAggroSfxMonsterSeen() :
+                    getAggroSfxMonsterHidden();
+  eng->soundEmitter->emitSound(Sound(msg, sfx, false, pos, false, true));
 }
 
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
     const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
     playerAwarenessCounter = data_->nrTurnsAwarePlayer;
-    if(PLAYER_AWARENESS_BEFORE <= 0) {
+    if(PLAYER_AWARENESS_BEFORE <= 0 && eng->dice.coinToss()) {
       speakPhrase();
     }
   }
@@ -276,7 +278,7 @@ bool Monster::tryAttack(Actor& defender) {
           } else {
             if(attack.weapon->getData().isRangedWeapon) {
               if(opport.isTimeToReload) {
-                eng->reload->reloadWeapon(this);
+                eng->reload->reloadWieldedWpn(*this);
                 return true;
               } else {
                 //Check if friend is in the way (with a small chance to ignore this)
@@ -361,7 +363,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
             //Check if reload time instead
             if(
-              weapon->ammoLoaded == 0 &&
+              weapon->nrAmmoLoaded == 0 &&
               weapon->getData().rangedHasInfiniteAmmo == false) {
               if(inventory_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;

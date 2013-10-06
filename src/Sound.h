@@ -54,7 +54,7 @@ private:
 class SoundEmitter {
 public:
   SoundEmitter(Engine* engine) :
-    eng(engine) {}
+    NR_STEPS_HEARD_NORMAL(10), NR_STEPS_HEARD_LOUD(25), eng(engine) {}
 
   void emitSound(Sound snd);
 
@@ -65,13 +65,14 @@ public:
 private:
   int nrSoundMsgPrintedCurTurn_;
 
-  string getPlayerToOriginDirectionString(
+  Direction_t getPlayerToOriginDirection(
     const int FLOOD_VALUE_AT_PLAYER,
     const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   bool isSoundHeardAtRange(const int RANGE, const Sound& snd) const;
 
-  DirectionNames directionNames;
+  const int NR_STEPS_HEARD_NORMAL;
+  const int NR_STEPS_HEARD_LOUD;
 
   Engine* eng;
 };

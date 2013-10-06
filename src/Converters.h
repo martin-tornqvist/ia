@@ -4,15 +4,8 @@
 #include <string>
 
 
-std::string intToString(int in);
+std::string toString(int in);
 
-int stringToInt(std::string in);
-
-//int charArrayToInt(char* array);
-
-//char* stringToCharStar(std::string in);
-
-//Uint16 charToUint16(char in);
-
+int toInt(std::string in);
 
 #endif

@@ -93,7 +93,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
     str = "SPI:";
     str += spiCost.upper == 1 ? "1" :
-           (intToString(spiCost.lower) +  "-" + intToString(spiCost.upper));
+           (toString(spiCost.lower) +  "-" + toString(spiCost.upper));
     eng->renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
     currentListPos++;
   }

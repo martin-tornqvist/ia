@@ -7,6 +7,7 @@
 #include "Properties.h"
 #include "Config.h"
 #include "Colors.h"
+#include "Audio.h"
 
 using namespace std;
 
@@ -25,7 +26,9 @@ public:
   }
 
   void runExplosion(
-    const Pos& origin, const bool DO_EXPLOSION_DMG = true,
+    const Pos& origin,
+    const Sfx_t sfx = sfxExplosion,
+    const bool DO_EXPLOSION_DMG = true,
     Prop* const prop = NULL,
     const bool OVERRIDE_EXPLOSION_RENDERING = false,
     const SDL_Color colorOverride = clrWhite);

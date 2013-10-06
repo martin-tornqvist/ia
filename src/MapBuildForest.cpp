@@ -251,7 +251,7 @@ void MapBuild::buildForestTrees(const Pos& stairsPos) {
 //      HighScoreEntry curHighscore = highscoreEntries.at(i);
 //      const string name = curHighscore.getName();
 //      const string date = eng->textFormatting->getSpaceSeparatedList(curHighscore.getDateAndTime()).at(0);
-//      const string score = intToString(curHighscore.getScore());
+//      const string score = toString(curHighscore.getScore());
 //      grave->setInscription("RIP " + name + " " + date + " Score: " + score);
 //    }
 //  }

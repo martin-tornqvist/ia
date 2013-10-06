@@ -30,7 +30,7 @@ void DungeonMaster::playerGainLvl() {
   clvl++;
 
   eng->log->addMsg(
-    "--- Welcome to level " + intToString(clvl) + "! ---", clrGreen);
+    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
   eng->player->restoreHp(999, false);
   eng->player->changeMaxHp(1, true);
@@ -88,32 +88,32 @@ void DungeonMaster::playerLoseXpPercent(const int PERCENT) {
 }
 
 void DungeonMaster::addSaveLines(vector<string>& lines) const {
-  lines.push_back(intToString(clvl));
-  lines.push_back(intToString(xp));
-  lines.push_back(intToString(timeStarted.year_));
-  lines.push_back(intToString(timeStarted.month_));
-  lines.push_back(intToString(timeStarted.day_));
-  lines.push_back(intToString(timeStarted.hour_));
-  lines.push_back(intToString(timeStarted.minute_));
-  lines.push_back(intToString(timeStarted.second_));
+  lines.push_back(toString(clvl));
+  lines.push_back(toString(xp));
+  lines.push_back(toString(timeStarted.year_));
+  lines.push_back(toString(timeStarted.month_));
+  lines.push_back(toString(timeStarted.day_));
+  lines.push_back(toString(timeStarted.hour_));
+  lines.push_back(toString(timeStarted.minute_));
+  lines.push_back(toString(timeStarted.second_));
 }
 
 void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
-  clvl = stringToInt(lines.front());
+  clvl = toInt(lines.front());
   lines.erase(lines.begin());
-  xp = stringToInt(lines.front());
+  xp = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.year_ = stringToInt(lines.front());
+  timeStarted.year_ = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.month_ = stringToInt(lines.front());
+  timeStarted.month_ = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.day_ = stringToInt(lines.front());
+  timeStarted.day_ = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.hour_ = stringToInt(lines.front());
+  timeStarted.hour_ = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.minute_ = stringToInt(lines.front());
+  timeStarted.minute_ = toInt(lines.front());
   lines.erase(lines.begin());
-  timeStarted.second_ = stringToInt(lines.front());
+  timeStarted.second_ = toInt(lines.front());
   lines.erase(lines.begin());
 }
 

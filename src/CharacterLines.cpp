@@ -76,8 +76,8 @@ void CharacterLines::drawInfoLines() {
 //  pos.x += str.length() + 1;
 
   //Health
-  const string hp = intToString(player->getHp());
-  const string hpMax = intToString(player->getHpMax(true));
+  const string hp = toString(player->getHp());
+  const string hpMax = toString(player->getHpMax(true));
   eng->renderer->drawText("HP:", panel_character, pos, clrGenDrk);
   pos.x += 3;
   str = hp + "/" + hpMax;
@@ -85,8 +85,8 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Spirit
-  const string spi    = intToString(player->getSpi());
-  const string spiMax = intToString(player->getSpiMax());
+  const string spi    = toString(player->getSpi());
+  const string spiMax = toString(player->getSpiMax());
   eng->renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
@@ -94,8 +94,8 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Wounds
-//  const string wnd = "0"; //intToString(player->getNrWounds());
-//  const string wndMax = "5"; //intToString(player->getWndMax());
+//  const string wnd = "0"; //toString(player->getNrWounds());
+//  const string wndMax = "5"; //toString(player->getWndMax());
 //  eng->renderer->drawText("WND:", panel_character, pos, clrGenDrk);
 //  pos.x += 4;
 //  str = wnd + "/" + wndMax;
@@ -110,17 +110,17 @@ void CharacterLines::drawInfoLines() {
   const SDL_Color shortSanClr =
     SHOCK < 50 ? clrGreenLgt :
     SHOCK < 75 ? clrYellow : clrMagenta;
-  str = intToString(SHOCK) + "%/";
+  str = toString(SHOCK) + "%/";
   eng->renderer->drawText(str, panel_character, pos, shortSanClr);
   pos.x += str.length();
-  str = intToString(INS) + "%";
+  str = toString(INS) + "%";
   eng->renderer->drawText(str, panel_character, pos, clrMagenta);
   pos.x += str.length() + 1;
 
   const int MTH = player->getMth();
   eng->renderer->drawText("MTH:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  str = intToString(MTH) + "%";
+  str = toString(MTH) + "%";
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -146,13 +146,13 @@ void CharacterLines::drawInfoLines() {
   DungeonMaster* const dm = eng->dungeonMaster;
   eng->renderer->drawText("LVL:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  str = intToString(dm->getCLvl());
+  str = toString(dm->getCLvl());
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
   eng->renderer->drawText("NXT:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" :
-        intToString(dm->getXpToNextLvl());
+        toString(dm->getXpToNextLvl());
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -160,7 +160,7 @@ void CharacterLines::drawInfoLines() {
   eng->renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
   pos.x += 5;
   const int DLVL = eng->map->getDLVL();
-  str = DLVL >= 0 ? intToString(DLVL) : "?";
+  str = DLVL >= 0 ? toString(DLVL) : "?";
   eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -183,7 +183,7 @@ void CharacterLines::drawInfoLines() {
   const int TOTAL_W = player->getInventory()->getTotalItemWeight();
   const int MAX_W = player->getCarryWeightLimit();
   const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
-  str = intToString(ENC) + "%";
+  str = toString(ENC) + "%";
   eng->renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -226,14 +226,14 @@ void CharacterLines::drawInfoLines() {
 //    string propText = prop->getNameShort();
 //    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
 //      // +1 to offset that the turn is also active on turn 0
-//      propText += "(" + intToString(prop->turnsLeft_ + 1) + ")";
+//      propText += "(" + toString(prop->turnsLeft_ + 1) + ")";
 //    }
 //    eng->renderer->drawText(propText, panel_character, pos, statusColor);
 //    pos.x += propText.length() + 1;
 //  }
 
 // Turn number
-  str = "TRN:" + intToString(eng->gameTime->getTurn());
+  str = "TRN:" + toString(eng->gameTime->getTurn());
   pos.x = MAP_X_CELLS - str.length() - 1;
   eng->renderer->drawText(str, panel_character, pos, clrGenMed);
 }

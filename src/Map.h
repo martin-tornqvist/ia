@@ -49,11 +49,11 @@ public:
   void switchToDestroyedFeatAt(const Pos pos);
 
   void addSaveLines(vector<string>& lines) const {
-    lines.push_back(intToString(dlvl_));
+    lines.push_back(toString(dlvl_));
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
-    dlvl_ = stringToInt(lines.front());
+    dlvl_ = toInt(lines.front());
     lines.erase(lines.begin());
   }
 

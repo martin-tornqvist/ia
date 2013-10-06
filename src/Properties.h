@@ -325,7 +325,7 @@ public:
 
   ~PropWound() {}
 
-  string getNameShort() {return "Wound(" + intToString(nrWounds_) + ")";}
+  string getNameShort() {return "Wound(" + toString(nrWounds_) + ")";}
 
   int getAbilityMod(const Abilities_t ability) {
     if(ability == ability_accuracyMelee)  return nrWounds_ * -10;
@@ -581,7 +581,7 @@ public:
     Prop(propNailed, engine, turnsInit, turns), nrSpikes_(1) {}
   ~PropNailed() {}
 
-  string getNameShort() {return "Nailed(" + intToString(nrSpikes_) + ")";}
+  string getNameShort() {return "Nailed(" + toString(nrSpikes_) + ")";}
 
   void changeMovePos(const Pos& actorPos, Pos& movePos);
 

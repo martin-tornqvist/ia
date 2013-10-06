@@ -352,7 +352,7 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(intToString(keyRepeatDelay), panel_screen,
+  eng->renderer->drawText(toString(keyRepeatDelay), panel_screen,
                           Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -365,7 +365,7 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(intToString(keyRepeatInterval), panel_screen,
+  eng->renderer->drawText(toString(keyRepeatInterval), panel_screen,
                           Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -378,7 +378,7 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(intToString(delayProjectileDraw), panel_screen,
+  eng->renderer->drawText(toString(delayProjectileDraw), panel_screen,
                           Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -391,7 +391,7 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(intToString(delayShotgun), panel_screen,
+  eng->renderer->drawText(toString(delayShotgun), panel_screen,
                           Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -404,7 +404,7 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  eng->renderer->drawText(intToString(delayExplosion), panel_screen,
+  eng->renderer->drawText(toString(delayExplosion), panel_screen,
                           Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -464,8 +464,8 @@ void Config::parseFontNameAndSetCellDims() {
   trace << "Config: Parsed font image name, found dims: ";
   trace << widthStr << "x" << heightStr << endl;
 
-  cellW = stringToInt(widthStr)  * fontScale;
-  cellH = stringToInt(heightStr) * fontScale;
+  cellW = toInt(widthStr)  * fontScale;
+  cellH = toInt(heightStr) * fontScale;
   trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
@@ -491,17 +491,17 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   trace << "Config::collectLinesFromVariables()..." << endl;
   lines.resize(0);
   lines.push_back(isTilesMode == false ? "0" : "1");
-  lines.push_back(intToString(fontScale));
+  lines.push_back(toString(fontScale));
   lines.push_back(fontBig);
   lines.push_back(isFullscreen == false ? "0" : "1");
   lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
   lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
   lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
-  lines.push_back(intToString(keyRepeatDelay));
-  lines.push_back(intToString(keyRepeatInterval));
-  lines.push_back(intToString(delayProjectileDraw));
-  lines.push_back(intToString(delayShotgun));
-  lines.push_back(intToString(delayExplosion));
+  lines.push_back(toString(keyRepeatDelay));
+  lines.push_back(toString(keyRepeatInterval));
+  lines.push_back(toString(delayProjectileDraw));
+  lines.push_back(toString(delayShotgun));
+  lines.push_back(toString(delayExplosion));
   trace << "Config::collectLinesFromVariables() [DONE]" << endl;
 }
 
@@ -538,7 +538,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  fontScale = stringToInt(curLine);
+  fontScale = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -563,23 +563,23 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  keyRepeatDelay = stringToInt(curLine);
+  keyRepeatDelay = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  keyRepeatInterval = stringToInt(curLine);
+  keyRepeatInterval = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  delayProjectileDraw = stringToInt(curLine);
+  delayProjectileDraw = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  delayShotgun = stringToInt(curLine);
+  delayShotgun = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  delayExplosion = stringToInt(curLine);
+  delayExplosion = toInt(curLine);
   lines.erase(lines.begin());
   trace << "Config::setAllVariablesFromLines() [DONE]" << endl;
 }

@@ -245,20 +245,17 @@ enum SpawnRate_t {
   spawnRare, spawnCommon, spawnVeryCommon
 };
 
-struct DirectionNames {
-  DirectionNames() {
-    directions[0][0] = "NW";
-    directions[0][1] = "W";
-    directions[0][2] = "SW";
-    directions[1][0] = "N";
-    directions[1][1] = "";
-    directions[1][2] = "S";
-    directions[2][0] = "NE";
-    directions[2][1] = "E";
-    directions[2][2] = "SE";
-  }
-
-  string directions[3][3];
+enum Direction_t {
+  directionDownLeft   = 1,
+  directionDown       = 2,
+  directionDownRight  = 3,
+  directionLeft       = 4,
+  directionCenter     = 5,
+  directionRight      = 6,
+  directionUpLeft     = 7,
+  directionUp         = 8,
+  directionUpRight    = 9,
+  endOfDirections
 };
 
 //enum EntityStrength_t {
@@ -276,13 +273,6 @@ struct DirectionNames {
 //protected:
 //  EntityStrength() {}
 //};
-
-enum Directions_t {
-  direction_down  = 2,
-  direction_left  = 4,
-  direction_right = 6,
-  direction_up    = 8
-};
 
 enum ActorDeadState_t {
   actorDeadState_alive,

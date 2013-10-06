@@ -134,8 +134,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfRFire:            item = new PotionOfRFire(d, eng); break;
 //    case item_potionOfRCold:            item = new PotionOfRCold(d, eng); break;
     case item_potionOfAntidote:         item = new PotionOfAntidote(d, eng); break;
-    case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
-    case item_potionOfRAcid:            item = new PotionOfRAcid(d, eng); break;
+//    case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
+//    case item_potionOfRAcid:            item = new PotionOfRAcid(d, eng); break;
 
     case item_deviceSentry:             item = new DeviceSentry(d, eng); break;
     case item_deviceRepeller:           item = new DeviceRepeller(d, eng); break;
@@ -149,7 +149,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   }
 
   if(item->getData().isStackable == false && NR_ITEMS != 1) {
-    trace << "[WARNING] Specified " + intToString(NR_ITEMS) + " nr items";
+    trace << "[WARNING] Specified " + toString(NR_ITEMS) + " nr items";
     trace << " for non-stackable item, in ItemFactory::spawnItem()" << endl;
   } else {
     item->nrItems = NR_ITEMS;
@@ -170,18 +170,18 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   if(d.isRangedWeapon && d.rangedHasInfiniteAmmo == false) {
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     if(weapon->ammoCapacity == 1) {
-      weapon->ammoLoaded = eng->dice.coinToss() ? 1 : 0;
+      weapon->nrAmmoLoaded = eng->dice.coinToss() ? 1 : 0;
     } else {
       if(d.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
         const int CAP_SCALED = CAP / NR_MACHINEGUN_PROJECTILES;
         const int MIN_SCALED = MIN / NR_MACHINEGUN_PROJECTILES;
-        weapon->ammoLoaded =
+        weapon->nrAmmoLoaded =
           eng->dice.range(MIN_SCALED, CAP_SCALED) *
           NR_MACHINEGUN_PROJECTILES;
       } else {
-        weapon->ammoLoaded =
+        weapon->nrAmmoLoaded =
           eng->dice.range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
       }
     }

@@ -366,9 +366,9 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
       lines.push_back(d->name.name);
       lines.push_back(d->name.name_plural);
       lines.push_back(d->name.name_a);
-      lines.push_back(intToString(d->color.r));
-      lines.push_back(intToString(d->color.g));
-      lines.push_back(intToString(d->color.b));
+      lines.push_back(toString(d->color.r));
+      lines.push_back(toString(d->color.g));
+      lines.push_back(toString(d->color.b));
     }
   }
 }
@@ -383,11 +383,11 @@ void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
       lines.erase(lines.begin());
       d->name.name_a = lines.front();
       lines.erase(lines.begin());
-      d->color.r = stringToInt(lines.front());
+      d->color.r = toInt(lines.front());
       lines.erase(lines.begin());
-      d->color.g = stringToInt(lines.front());
+      d->color.g = toInt(lines.front());
       lines.erase(lines.begin());
-      d->color.b = stringToInt(lines.front());
+      d->color.b = toInt(lines.front());
       lines.erase(lines.begin());
     }
   }

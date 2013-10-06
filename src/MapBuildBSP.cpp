@@ -1102,8 +1102,10 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
     for(unsigned int i = 0; i < reshapesToPerform.size(); i++) {
       switch(reshapesToPerform.at(i)) {
         case roomReshape_trimCorners: {
-          const int W_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
-          const int H_DIV = 3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
+          const int W_DIV =
+            3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
+          const int H_DIV =
+            3 + (eng->dice.coinToss() ? eng->dice(1, 2) - 1 : 0);
 
           const int W = max(1, ROOM_W / W_DIV);
           const int H = max(1, ROOM_H / H_DIV);
@@ -1112,22 +1114,26 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
 
           if(TRIM_ALL || eng->dice.coinToss()) {
             const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
-            MapBuildBSP::coverAreaWithFeature(Rect(room.getX0Y0(), upLeft), feature_stoneWall);
+            Rect rect(room.getX0Y0(), upLeft);
+            MapBuildBSP::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
           if(TRIM_ALL || eng->dice.coinToss()) {
             const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
-            MapBuildBSP::coverAreaWithFeature(Rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight), feature_stoneWall);
+            Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
+            MapBuildBSP::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
           if(TRIM_ALL || eng->dice.coinToss()) {
             const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
-            MapBuildBSP::coverAreaWithFeature(Rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft), feature_stoneWall);
+            Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
+            MapBuildBSP::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
           if(TRIM_ALL || eng->dice.coinToss()) {
             const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
-            MapBuildBSP::coverAreaWithFeature(Rect(room.getX1Y1(), downRight), feature_stoneWall);
+            Rect rect(room.getX1Y1(), downRight);
+            MapBuildBSP::coverAreaWithFeature(rect, feature_stoneWall);
           }
         }
         break;
@@ -1139,14 +1145,16 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
               bool isNextToWall = false;
               for(int dxCheck = -1; dxCheck <= 1; dxCheck++) {
                 for(int dyCheck = -1; dyCheck <= 1; dyCheck++) {
-                  if(eng->map->featuresStatic[c.x + dxCheck][c.y + dyCheck]->getId() == feature_stoneWall) {
+                  const FeatureStatic* const f =
+                    eng->map->featuresStatic[c.x + dxCheck][c.y + dyCheck];
+                  if(f->getId() == feature_stoneWall) {
                     isNextToWall = true;
                   }
                 }
               }
               if(isNextToWall == false) {
                 if(eng->dice.percentile() < 20) {
-                  eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(c.x, c.y));
+                  eng->featureFactory->spawnFeatureAt(feature_stoneWall, c);
                 }
               }
             }
@@ -1158,7 +1166,9 @@ void MapBuildBSP::reshapeRoom(const Room& room) {
   }
 }
 
-int MapBuildBSP::getNrStepsInDirectionUntilWallFound(Pos c, const Directions_t dir) const {
+int MapBuildBSP::getNrStepsInDirectionUntilWallFound(
+  Pos c, const Direction_t dir) const {
+
   int stepsTaken = 0;
   bool done = false;
   while(done == false) {
@@ -1168,7 +1178,12 @@ int MapBuildBSP::getNrStepsInDirectionUntilWallFound(Pos c, const Directions_t d
     if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneWall) {
       return stepsTaken;
     }
-    c += dir == direction_right ? Pos(1, 0) : dir == direction_up ? Pos(0, -1) : dir == direction_left ? Pos(-1, 0) : Pos(0, 1);
+    c +=
+      dir == directionRight ? Pos(1, 0) :
+      dir == directionUp    ? Pos(0, -1) :
+      dir == directionLeft  ? Pos(-1, 0) :
+      dir == directionDown  ? Pos(0, 1) :
+      Pos(0, 0);
     stepsTaken++;
   }
   return -1;

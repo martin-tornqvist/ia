@@ -360,6 +360,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
   d->rangedSoundMessage = "I hear a pistol being fired.";
   d->rangedAttackSfx = sfxPistolFire;
+  d->reloadSfx = sfxPistolReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -1167,13 +1168,13 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfRElec);
-  resetData(d, itemData_potion);
-  dataList[d->id] = d;
+//  d = new ItemData(item_potionOfRElec);
+//  resetData(d, itemData_potion);
+//  dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfRAcid);
-  resetData(d, itemData_potion);
-  dataList[d->id] = d;
+//  d = new ItemData(item_potionOfRAcid);
+//  resetData(d, itemData_potion);
+//  dataList[d->id] = d;
 
   d = new ItemData(item_deviceSentry);
   resetData(d, itemData_device);
@@ -1327,7 +1328,7 @@ string ItemDataHandler::getItemRef(
   }
 
   if(d.isStackable && item.nrItems > 1 && itemRefForm == itemRef_plural) {
-    ret = intToString(item.nrItems) + " ";
+    ret = toString(item.nrItems) + " ";
     ret += d.name.name_plural;
   } else {
     ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
@@ -1336,13 +1337,13 @@ string ItemDataHandler::getItemRef(
   if(d.isAmmoClip) {
     const ItemAmmoClip* const ammoItem =
       dynamic_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + intToString(ammoItem->ammo) + "}";
+    return ret + " {" + toString(ammoItem->ammo) + "}";
   }
 
   if(d.isMedicalBag) {
     const MedicalBag* const medicalBag =
       dynamic_cast<const MedicalBag*>(&item);
-    return ret + " {" + intToString(medicalBag->getNrSupplies()) + "}";
+    return ret + " {" + toString(medicalBag->getNrSupplies()) + "}";
   }
 
 //  if(d.isArmor) {
@@ -1356,8 +1357,8 @@ string ItemDataHandler::getItemRef(
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
         const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-        ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" +
-                        intToString(w->ammoCapacity);
+        ammoLoadedStr = " " + toString(w->nrAmmoLoaded) + "/" +
+                        toString(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
@@ -1383,7 +1384,7 @@ string ItemDataHandler::getItemInterfaceRef(
   string ret = "";
 
   if(d.isStackable && item.nrItems > 1) {
-    ret = intToString(item.nrItems) + " " + d.name.name_plural;
+    ret = toString(item.nrItems) + " " + d.name.name_plural;
   } else {
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
@@ -1396,17 +1397,17 @@ string ItemDataHandler::getItemInterfaceRef(
     (attackMode == primaryAttackMode_none &&
      d.primaryAttackMode == primaryAttackMode_melee) ||
     (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
-    const string rollsStr = intToString(d.meleeDmg.first);
-    const string sidesStr = intToString(d.meleeDmg.second);
+    const string rollsStr = toString(d.meleeDmg.first);
+    const string sidesStr = toString(d.meleeDmg.second);
     const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           intToString(PLUS));
+                           toString(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL =
       eng->player->getData()->abilityVals.getVal(
         ability_accuracyMelee, true, *(eng->player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
-    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    const string skillStr = toString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
@@ -1416,19 +1417,19 @@ string ItemDataHandler::getItemInterfaceRef(
     (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
     const int MULTIPL = d.isMachineGun == true ?
                         NR_MACHINEGUN_PROJECTILES : 1;
-    const string rollsStr = intToString(d.rangedDmg.rolls * MULTIPL);
-    const string sidesStr = intToString(d.rangedDmg.sides);
+    const string rollsStr = toString(d.rangedDmg.rolls * MULTIPL);
+    const string sidesStr = toString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           intToString(PLUS));
+                           toString(PLUS));
     const int ITEM_SKILL = d.rangedHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    const string skillStr = toString(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(d.rangedHasInfiniteAmmo == false) {
       const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-      ammoLoadedStr = " " + intToString(w->ammoLoaded) + "/" +
-                      intToString(w->ammoCapacity);
+      ammoLoadedStr = " " + toString(w->nrAmmoLoaded) + "/" +
+                      toString(w->ammoCapacity);
     }
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr +
            ammoLoadedStr;
@@ -1438,25 +1439,25 @@ string ItemDataHandler::getItemInterfaceRef(
     (attackMode == primaryAttackMode_none &&
      d.primaryAttackMode == primaryAttackMode_missile) ||
     (attackMode == primaryAttackMode_missile && d.isMissileWeapon)) {
-    const string rollsStr = intToString(d.missileDmg.rolls);
-    const string sidesStr = intToString(d.missileDmg.sides);
+    const string rollsStr = toString(d.missileDmg.rolls);
+    const string sidesStr = toString(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           intToString(PLUS));
+                           toString(PLUS));
     const int ITEM_SKILL = d.missileHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr = intToString(TOTAL_SKILL) + "%";
+    const string skillStr = toString(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(d.isMedicalBag) {
     const MedicalBag* const medicalBag = dynamic_cast<const MedicalBag*>(&item);
-    return ret + " {" + intToString(medicalBag->getNrSupplies()) + "}";
+    return ret + " {" + toString(medicalBag->getNrSupplies()) + "}";
   }
 
   if(d.isAmmoClip) {
     const ItemAmmoClip* const clip = dynamic_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + intToString(clip->ammo) + "}";
+    return ret + " {" + toString(clip->ammo) + "}";
   }
 
   if(d.isArmor) {

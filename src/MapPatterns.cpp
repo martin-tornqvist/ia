@@ -23,12 +23,15 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   for(unsigned int i = 0; i < positionCandidates.size(); i++) {
     const Pos pos = positionCandidates.at(i);
 
-    const int BLOCKERS_RIGHT = getWalkBlockersInDirection(direction_right, pos);
-    const int BLOCKERS_DOWN = getWalkBlockersInDirection(direction_down, pos);
-    const int BLOCKERS_LEFT = getWalkBlockersInDirection(direction_left, pos);
-    const int BLOCKERS_UP = getWalkBlockersInDirection(direction_up, pos);
+    const int BLOCKERS_RIGHT = getWalkBlockersInDirection(directionRight, pos);
+    const int BLOCKERS_DOWN  = getWalkBlockersInDirection(directionDown, pos);
+    const int BLOCKERS_LEFT  = getWalkBlockersInDirection(directionLeft, pos);
+    const int BLOCKERS_UP    = getWalkBlockersInDirection(directionUp, pos);
 
-    const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 && BLOCKERS_DOWN == 0 && BLOCKERS_LEFT == 0 && BLOCKERS_UP == 0;
+    const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 &&
+                                      BLOCKERS_DOWN == 0 &&
+                                      BLOCKERS_LEFT == 0 &&
+                                      BLOCKERS_UP == 0;
 
     if(IS_ALL_BLOCKERS_ZERO) {
       awayFromWalls.push_back(pos);
@@ -62,41 +65,57 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   trace << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
-int MapPatterns::getWalkBlockersInDirection(const Directions_t dir, const Pos pos) {
+int MapPatterns::getWalkBlockersInDirection(
+  const Direction_t dir, const Pos pos) {
+
   int nrBlockers = 0;
   switch(dir) {
-  case direction_right: {
-    for(int dy = -1; dy <= 1; dy++) {
-      if(eng->map->featuresStatic[pos.x + 1][pos.y + dy]->isBodyTypePassable(actorBodyType_normal) == false) {
-        nrBlockers += 1;
+    case directionRight: {
+      for(int dy = -1; dy <= 1; dy++) {
+        const FeatureStatic* const f =
+          eng->map->featuresStatic[pos.x + 1][pos.y + dy];
+        if(f->isBodyTypePassable(actorBodyType_normal) == false) {
+          nrBlockers += 1;
+        }
       }
-    }
-  }
-  break;
-  case direction_down: {
-    for(int dx = -1; dx <= 1; dx++) {
-      if(eng->map->featuresStatic[pos.x + dx][pos.y + 1]->isBodyTypePassable(actorBodyType_normal) == false) {
-        nrBlockers += 1;
+    } break;
+
+    case directionDown: {
+      for(int dx = -1; dx <= 1; dx++) {
+        const FeatureStatic* const f =
+          eng->map->featuresStatic[pos.x + dx][pos.y + 1];
+        if(f->isBodyTypePassable(actorBodyType_normal) == false) {
+          nrBlockers += 1;
+        }
       }
-    }
-  }
-  break;
-  case direction_left: {
-    for(int dy = -1; dy <= 1; dy++) {
-      if(eng->map->featuresStatic[pos.x - 1][pos.y + dy]->isBodyTypePassable(actorBodyType_normal) == false) {
-        nrBlockers += 1;
+    } break;
+
+    case directionLeft: {
+      for(int dy = -1; dy <= 1; dy++) {
+        const FeatureStatic* const f =
+          eng->map->featuresStatic[pos.x - 1][pos.y + dy];
+        if(f->isBodyTypePassable(actorBodyType_normal) == false) {
+          nrBlockers += 1;
+        }
       }
-    }
-  }
-  break;
-  case direction_up: {
-    for(int dx = -1; dx <= 1; dx++) {
-      if(eng->map->featuresStatic[pos.x + dx][pos.y - 1]->isBodyTypePassable(actorBodyType_normal) == false) {
-        nrBlockers += 1;
+    } break;
+
+    case directionUp: {
+      for(int dx = -1; dx <= 1; dx++) {
+        const FeatureStatic* const f =
+          eng->map->featuresStatic[pos.x + dx][pos.y - 1];
+        if(f->isBodyTypePassable(actorBodyType_normal) == false) {
+          nrBlockers += 1;
+        }
       }
-    }
-  }
-  break;
+    } break;
+
+    case directionDownLeft:
+    case directionDownRight:
+    case directionUpLeft:
+    case directionUpRight:
+    case directionCenter:
+    case endOfDirections: {} break;
   }
   return nrBlockers;
 }

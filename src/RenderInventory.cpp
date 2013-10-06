@@ -272,7 +272,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 
     str = eng->itemDataHandler->getItemRef(*item, itemRef_plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {
-      str += " (" + intToString(item->nrItems) + ")";
+      str += " (" + toString(item->nrItems) + ")";
     }
 
     eng->renderer->drawText(str, panel_screen, pos, itemInterfClr);

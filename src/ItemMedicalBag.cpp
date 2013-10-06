@@ -85,14 +85,14 @@ MedicalBagAction_t MedicalBag::playerChooseAction() const {
       getTotTurnsForAction(MedicalBagAction_t(actionNr));
     const int NR_SUPPL_NEEDED =
       getNrSuppliesNeededForAction(MedicalBagAction_t(actionNr));
-    label += " (" + intToString(NR_SUPPL_NEEDED) + " suppl";
-    label += "/"  + intToString(NR_TURNS_NEEDED) + " turns)";
+    label += " (" + toString(NR_SUPPL_NEEDED) + " suppl";
+    label += "/"  + toString(NR_TURNS_NEEDED) + " turns)";
     choiceLabels.push_back(label);
   }
   choiceLabels.push_back("Cancel");
 
   const string nrSuppliesMsg =
-    intToString(nrSupplies_) + " medical supplies available.";
+    toString(nrSupplies_) + " medical supplies available.";
 
   return MedicalBagAction_t(eng->popup->showMultiChoiceMessage(
                               nrSuppliesMsg, true, choiceLabels,
@@ -210,8 +210,8 @@ int MedicalBag::getNrSuppliesNeededForAction(
 //  eng->log->addMsg("I stop tending to my wounds.", clrWhite);
 //  eng->renderer->drawMapAndInterface();
 //} else {
-//  const string TURNS_STR = intToString(firstAidTurnsLeft);
-//  const string ABORTED_HP_STR = intToString(HP_HEALED_IF_ABORTED);
+//  const string TURNS_STR = toString(firstAidTurnsLeft);
+//  const string ABORTED_HP_STR = toString(HP_HEALED_IF_ABORTED);
 //  string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
 //  abortStr += ABORTED_HP_STR + " HP restored if canceled.";
 //  eng->log->addMsg(abortStr , clrWhiteHigh);
@@ -250,7 +250,7 @@ int MedicalBag::getNrSuppliesNeededForAction(
 //          eng->player->getSpotedEnemies();
 //          if(eng->player->spotedEnemies.size() == 0) {
 //            const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
-//            const string TURNS_STR = intToString(TURNS_TO_HEAL);
+//            const string TURNS_STR = toString(TURNS_TO_HEAL);
 //            eng->log->addMsg("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
 //            eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
 //            eng->gameTime->endTurnOfCurrentActor();

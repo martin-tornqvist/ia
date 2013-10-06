@@ -385,7 +385,7 @@ void TrapGasConfusion::trapSpecificTrigger(Actor* const actor,
   }
 
   eng->explosionMaker->runExplosion(
-    pos_, false, new PropConfused(eng, propTurnsStandard), true,
+    pos_, endOfSfx, false, new PropConfused(eng, propTurnsStandard), true,
     getTrapSpecificColor());
 }
 
@@ -412,7 +412,7 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor* const actor,
   }
 
   eng->explosionMaker-> runExplosion(
-    pos_, false, new PropParalyzed(eng, propTurnsStandard),
+    pos_, endOfSfx, false, new PropParalyzed(eng, propTurnsStandard),
     true, getTrapSpecificColor());
 }
 
@@ -439,7 +439,7 @@ void TrapGasFear::trapSpecificTrigger(Actor* const actor,
   }
 
   eng->explosionMaker-> runExplosion(
-    pos_, false, new PropTerrified(eng, propTurnsStandard),
+    pos_, endOfSfx, false, new PropTerrified(eng, propTurnsStandard),
     true, getTrapSpecificColor());
 }
 

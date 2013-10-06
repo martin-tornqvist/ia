@@ -26,8 +26,6 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   eng->mapTests->getLine(eng->player->pos, aimCell, true,
                          THROWING_RANGE_LIMIT, path);
 
-  trace << path.size() << endl;
-
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
@@ -37,8 +35,6 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
       break;
     }
   }
-
-  trace << path.size() << endl;
 
   //Render
   if(path.size() > 1) {
@@ -77,9 +73,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   } else {
     eng->log->addMsg("I throw a lit Molotov Cocktail.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-//      eng->audio->playSound(audio_molotovExplosion);
       eng->explosionMaker->runExplosion(
-        path.back(), false,
+        path.back(), sfxExplosionMolotov, false,
         new PropBurning(eng, propTurnsStandard));
     }
   }

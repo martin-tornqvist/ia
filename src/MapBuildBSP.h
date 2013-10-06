@@ -60,7 +60,7 @@ public:
 
   void coverAreaWithFeature(const Rect& area, const Feature_t feature);
 
-  int getNrStepsInDirectionUntilWallFound(Pos c, const Directions_t dir) const;
+  int getNrStepsInDirectionUntilWallFound(Pos c, const Direction_t dir) const;
 
   void clearRooms();
 
@@ -72,7 +72,8 @@ private:
   bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for helping to build the map
   bool regionsToBuildCave[3][3];
 
-  void makeCrumbleRoom(const Rect roomAreaIncludingWalls, const Pos proxEventPos);
+  void makeCrumbleRoom(const Rect roomAreaIncludingWalls,
+                       const Pos proxEventPos);
 
   void connectRegions(Region* regions[3][3]);
   void buildAuxRooms(Region* regions[3][3]);

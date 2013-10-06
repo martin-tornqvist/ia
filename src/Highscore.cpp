@@ -100,9 +100,9 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       i++) {
       const string dateAndTime = entries.at(i).getDateAndTime();
       const string name = entries.at(i).getName();
-      const string SCORE = intToString(entries.at(i).getScore());
-      const string DLVL = intToString(entries.at(i).getDlvl());
-      const string INSANITY = intToString(entries.at(i).getInsanity());
+      const string SCORE = toString(entries.at(i).getScore());
+      const string DLVL = toString(entries.at(i).getDlvl());
+      const string INSANITY = toString(entries.at(i).getInsanity());
 
       const SDL_Color clr = clrNosferatuTeal;
       eng->renderer->drawText(
@@ -195,9 +195,9 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       getline(file, line);
       const string name = line;
       getline(file, line);
-      const int DLVL = stringToInt(line);
+      const int DLVL = toInt(line);
       getline(file, line);
-      const int INSANITY = stringToInt(line);
+      const int INSANITY = toInt(line);
       entries.push_back(
         HighScoreEntry(dateAndTime, name, DLVL, INSANITY, isVictory));
     }

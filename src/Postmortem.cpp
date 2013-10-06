@@ -33,10 +33,10 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(
     StringAndClr("   * Explored to the depth of dungeon level " +
-                 intToString(eng->map->getDLVL()), clrInfo));
+                 toString(eng->map->getDLVL()), clrInfo));
   postmortemLines.push_back(
     StringAndClr("   * Was " +
-                 intToString(min(100, eng->player->getInsanity())) +
+                 toString(min(100, eng->player->getInsanity())) +
                  "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored,
@@ -120,13 +120,13 @@ void Postmortem::makeInfoLines() {
   if(killList.empty()) {
     postmortemLines.push_back(StringAndClr("   * None", clrInfo));
   } else {
-    postmortemLines.back().str += " (" + intToString(nrOfTotalKills) + " total)";
+    postmortemLines.back().str += " (" + toString(nrOfTotalKills) + " total)";
 
     for(unsigned int i = 0; i < killList.size(); i++) {
       const string name = killList.at(i).first;
       const int nrOfKills = killList.at(i).second;
       const string nrOfKillsStr =
-        nrOfKills == -1 ? "" : (": " + intToString(nrOfKills));
+        nrOfKills == -1 ? "" : (": " + toString(nrOfKills));
       postmortemLines.push_back(
         StringAndClr("   * " + name + nrOfKillsStr, clrInfo));
     }
@@ -341,7 +341,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   eng->renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
-//  const string LVL_STR = "LVL " + intToString(eng->dungeonMaster->getLevel());
+//  const string LVL_STR = "LVL " + toString(eng->dungeonMaster->getLevel());
 //  eng->renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
 
   //Draw command labels

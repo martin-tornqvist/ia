@@ -45,7 +45,9 @@ public:
 
   void act();
 
-  void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER);
+  void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+                 const Direction_t directionToOrigin,
+                 const int PERCENT_AUDIBLE_DISTANCE);
 
   void explosiveThrown();
 

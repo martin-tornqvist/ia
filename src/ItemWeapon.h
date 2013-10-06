@@ -11,7 +11,7 @@ public:
   Weapon(ItemData* const itemData, ItemData* const ammoData, Engine* engine);
   virtual ~Weapon() {}
 
-  int ammoLoaded;
+  int nrAmmoLoaded;
   int effectiveRangeLimit;
   int ammoCapacity;
   bool clip;
@@ -22,12 +22,12 @@ public:
 
   virtual vector<string> itemSpecificWriteToFile() {
     vector<string> lines;
-    lines.push_back(intToString(ammoLoaded));
+    lines.push_back(toString(nrAmmoLoaded));
     return lines;
   }
 
   virtual void itemSpecificReadFromFile(vector<string> lines) {
-    ammoLoaded = stringToInt(lines.at(0));
+    nrAmmoLoaded = toInt(lines.at(0));
   }
 
   //actorHit may be NULL
@@ -42,20 +42,20 @@ public:
   }
 
   void itemSpecificAddSaveLines(vector<string>& lines) {
-    lines.push_back(intToString(meleeDmgPlus));
-    lines.push_back(intToString(ammoLoaded));
+    lines.push_back(toString(meleeDmgPlus));
+    lines.push_back(toString(nrAmmoLoaded));
   }
 
   void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-    meleeDmgPlus = stringToInt(lines.front());
+    meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
-    ammoLoaded = stringToInt(lines.front());
+    nrAmmoLoaded = toInt(lines.front());
     lines.erase(lines.begin());
   }
 
   SDL_Color getColor() const {
     if(data_->isRangedWeapon && data_->rangedHasInfiniteAmmo == false) {
-      if(ammoLoaded == 0) {
+      if(nrAmmoLoaded == 0) {
         SDL_Color ret = data_->color;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
         return ret;
@@ -82,7 +82,7 @@ public:
            Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 2;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
   }
   ~SawedOff() {}
@@ -96,7 +96,7 @@ public:
               Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 8;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
   }
   ~PumpShotgun() {}
@@ -110,7 +110,7 @@ public:
          Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 7;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 6;
   }
   ~Pistol() {}
@@ -123,7 +123,7 @@ public:
   FlareGun(ItemData* const itemData, ItemData* const ammoData,
            Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
-    ammoLoaded = 1;
+    nrAmmoLoaded = 1;
     ammoCapacity = 1;
     effectiveRangeLimit = 6;
   }
@@ -138,7 +138,7 @@ public:
              Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;
   }
@@ -153,7 +153,7 @@ public:
               Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = false;
   }
@@ -169,7 +169,7 @@ public:
              Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;
   }
@@ -183,7 +183,7 @@ public:
            Engine* const engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 12;
-    ammoLoaded = ammoCapacity;
+    nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
     clip = true;
   }

@@ -9,6 +9,7 @@
 #include "RoomTheme.h"
 #include "CommonData.h"
 #include "Properties.h"
+#include "Audio.h"
 
 enum ActorId_t {
   actor_empty,
@@ -133,6 +134,8 @@ public:
   string description;
   string aggroTextMonsterSeen;
   string aggroTextMonsterHidden;
+  Sfx_t aggroSfxMonsterSeen;
+  Sfx_t aggroSfxMonsterHidden;
 };
 
 class ActorDataHandler {
@@ -148,16 +151,16 @@ public:
 
   void addSaveLines(vector<string>& lines) const {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      lines.push_back(intToString(dataList[i].nrLeftAllowedToSpawn));
-      lines.push_back(intToString(dataList[i].nrOfKills));
+      lines.push_back(toString(dataList[i].nrLeftAllowedToSpawn));
+      lines.push_back(toString(dataList[i].nrOfKills));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
-      dataList[i].nrLeftAllowedToSpawn = stringToInt(lines.front());
+      dataList[i].nrLeftAllowedToSpawn = toInt(lines.front());
       lines.erase(lines.begin());
-      dataList[i].nrOfKills = stringToInt(lines.front());
+      dataList[i].nrOfKills = toInt(lines.front());
       lines.erase(lines.begin());
     }
   }

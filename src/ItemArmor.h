@@ -18,11 +18,11 @@ public:
   int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
 
   void itemSpecificAddSaveLines(vector<string>& lines) {
-    lines.push_back(intToString(dur_));
+    lines.push_back(toString(dur_));
   }
 
   void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
-    dur_ = stringToInt(lines.front());
+    dur_ = toInt(lines.front());
     lines.erase(lines.begin());
   }
 

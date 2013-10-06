@@ -214,7 +214,7 @@ bool Vortex::actorSpecificAct() {
 
 void DustVortex::monsterDeath() {
   eng->explosionMaker->runExplosion(
-    pos, false, new PropBlind(eng, propTurnsStandard),
+    pos, endOfSfx, false, new PropBlind(eng, propTurnsStandard),
     true, clrGray);
 }
 
@@ -225,7 +225,7 @@ void DustVortex::actorSpecific_spawnStartItems() {
 
 void FireVortex::monsterDeath() {
   eng->explosionMaker->runExplosion(
-    pos, false, new PropBurning(eng, propTurnsStandard),
+    pos, endOfSfx, false, new PropBurning(eng, propTurnsStandard),
     true, clrRedLgt);
 }
 

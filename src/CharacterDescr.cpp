@@ -55,13 +55,13 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StringAndClr(
                     offset + "Melee           : " +
-                    intToString(BASE_MELEE) + "%", clrText));
+                    toString(BASE_MELEE) + "%", clrText));
   lines.push_back(StringAndClr(
                     offset + "Ranged          : " +
-                    intToString(BASE_RANGED) + "%", clrText));
+                    toString(BASE_RANGED) + "%", clrText));
   lines.push_back(StringAndClr(
                     offset + "Dodging         : " +
-                    intToString(BASE_DODGE_ATTACKS) + "%", clrText));
+                    toString(BASE_DODGE_ATTACKS) + "%", clrText));
   lines.push_back(StringAndClr(
                     offset + "Kicking         : " +
                     kickStr, clrText));
@@ -74,7 +74,7 @@ void CharacterDescr::makeLines() {
   const int SHOCK_RESISTANCE = eng->player->getShockResistance();
   lines.push_back(StringAndClr(
                     "Shock resistance : " +
-                    intToString(SHOCK_RESISTANCE) + "%", clrHeader));
+                    toString(SHOCK_RESISTANCE) + "%", clrHeader));
   lines.push_back(StringAndClr(" ", clrText));
 
 
@@ -84,7 +84,7 @@ void CharacterDescr::makeLines() {
     lines.push_back(StringAndClr(offset + "No effects", clrText));
   } else {
     lines.push_back(StringAndClr(
-                      offset + "+" + intToString(MTH) +
+                      offset + "+" + toString(MTH) +
                       "% damage against all bizarre, " +
                       "alien, mystical and shocking creatures",
                       clrText));
@@ -92,7 +92,7 @@ void CharacterDescr::makeLines() {
       eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
     if(CASTING_BON > 0) {
       lines.push_back(StringAndClr(
-                        offset + "-" + intToString(CASTING_BON) +
+                        offset + "-" + toString(CASTING_BON) +
                         " spirit required to cast spells",
                         clrText));
     }

@@ -43,7 +43,7 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
       if(SPIKES_LEFT == 0) {
         eng->log->addMsg("I have no iron spikes left.");
       } else {
-        eng->log->addMsg("I have " + intToString(SPIKES_LEFT) + " iron spikes left.");
+        eng->log->addMsg("I have " + toString(SPIKES_LEFT) + " iron spikes left.");
       }
     }
   }

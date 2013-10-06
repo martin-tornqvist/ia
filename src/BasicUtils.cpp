@@ -15,23 +15,28 @@ public:
   LexicograhicalCompareStringAndClr() {
   }
   bool operator()(const StringAndClr& entry1, const StringAndClr& entry2) {
-    return std::lexicographical_compare(entry1.str.begin(), entry1.str.end(), entry2.str.begin(), entry2.str.end());
+    return std::lexicographical_compare(
+             entry1.str.begin(), entry1.str.end(),
+             entry2.str.begin(), entry2.str.end());
   }
 };
 
-void BasicUtils::lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect) {
+void BasicUtils::lexicographicalSortStringAndClrVector(
+  vector<StringAndClr>& vect) {
+
   LexicograhicalCompareStringAndClr cmp;
   std::sort(vect.begin(), vect.end(), cmp);
 }
 
-string TimeData::getTimeStr(const Time_t lowest, const bool ADD_SEPARATORS) const {
-  string ret = intToString(year_);
+string TimeData::getTimeStr(const Time_t lowest,
+                            const bool ADD_SEPARATORS) const {
+  string ret = toString(year_);
 
-  string monthStr   = (month_   < 10 ? "0" : "") + intToString(month_);
-  string dayStr     = (day_     < 10 ? "0" : "") + intToString(day_);
-  string hourStr    = (hour_    < 10 ? "0" : "") + intToString(hour_);
-  string minuteStr  = (minute_  < 10 ? "0" : "") + intToString(minute_);
-  string secondStr  = (second_  < 10 ? "0" : "") + intToString(second_);
+  string monthStr   = (month_   < 10 ? "0" : "") + toString(month_);
+  string dayStr     = (day_     < 10 ? "0" : "") + toString(day_);
+  string hourStr    = (hour_    < 10 ? "0" : "") + toString(hour_);
+  string minuteStr  = (minute_  < 10 ? "0" : "") + toString(minute_);
+  string secondStr  = (second_  < 10 ? "0" : "") + toString(second_);
 
   if(lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "") + monthStr;
   if(lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "") + dayStr;

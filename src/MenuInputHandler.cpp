@@ -8,19 +8,19 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
     KeyboardReadReturnData d = eng->input->readKeysUntilFound();
 
     if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
-      browser.navigate(direction_right);
+      browser.navigate(directionRight);
       return menuAction_browsed;
     }
     else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
-      browser.navigate(direction_left);
+      browser.navigate(directionLeft);
       return menuAction_browsed;
     }
     else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
-      browser.navigate(direction_up);
+      browser.navigate(directionUp);
       return menuAction_browsed;
     }
     else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
-      browser.navigate(direction_down);
+      browser.navigate(directionDown);
       return menuAction_browsed;
     }
     else if(d.sdlKey_ == SDLK_RETURN) {

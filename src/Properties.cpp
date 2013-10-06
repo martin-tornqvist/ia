@@ -1472,7 +1472,7 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
 
-    if(eng->dice.oneIn(6)) {
+    if(eng->dice.oneIn(7)) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y
@@ -1627,7 +1627,8 @@ void PropParalyzed::onStart() {
       player->updateColor();
       eng->log->addMsg("The lit Molotov Cocktail falls from my hands!");
       eng->explosionMaker->runExplosion(
-        player->pos, false, new PropBurning(eng, propTurnsStandard));
+        player->pos, sfxExplosionMolotov, false,
+        new PropBurning(eng, propTurnsStandard));
     }
   }
 }

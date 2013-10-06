@@ -19,7 +19,7 @@ public:
 //    return *this;
 //  }
 
-  void navigate(const Directions_t direction);
+  void navigate(const Direction_t direction);
   void navigate(const char KEY);
 
   char enter() const;

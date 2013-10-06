@@ -42,7 +42,7 @@ void DebugModeStatPrinter::run() {
     name.insert(name.end(), 24 - name.size(), ' ');
     Range cost = spell->getSpiCost(true, eng->player, eng);
     const string costStr =
-      intToString(cost.lower) + "-" + intToString(cost.upper);
+      toString(cost.lower) + "-" + toString(cost.upper);
     printLine(indent1 + name + costStr);
   }
   printLine("\n");
@@ -65,9 +65,9 @@ void DebugModeStatPrinter::run() {
   }
   for(unsigned int i = 0; i < monstersPerMinDLVL.size(); i++) {
     const int LVL = i;
-    string lvlStr = intToString(LVL);
+    string lvlStr = toString(LVL);
     lvlStr.insert(lvlStr.end(), 6 - lvlStr.size(), ' ');
-    string nrStr = intToString(monstersPerMinDLVL.at(i));
+    string nrStr = toString(monstersPerMinDLVL.at(i));
     nrStr.insert(nrStr.end(), 3, ' ');
     if(monstersPerMinDLVL.at(i) > 0) {
       nrStr.insert(nrStr.end(), monstersPerMinDLVL.at(i), '*');
@@ -75,7 +75,7 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + lvlStr + nrStr);
   }
   printLine("\n" + indent1 + "Total number of monsters: " +
-            intToString(actorDataSorted.size()));
+            toString(actorDataSorted.size()));
   printLine("\n");
 
   printLine("STATS FOR EACH MONSTER");
@@ -96,14 +96,14 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + actor->getNameA() + uniqueStr);
 
     const string xpStr =
-      "XP:" + intToString(eng->dungeonMaster->getMonsterXpWorth(d));
+      "XP:" + toString(eng->dungeonMaster->getMonsterXpWorth(d));
     printLine(indent2 + xpStr);
 
-    string hpStr = "HP:" + intToString(d.hp);
+    string hpStr = "HP:" + toString(d.hp);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
 
     const int attackSkill = d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
-    const string attackSkillStr = "Attack skill:" + intToString(attackSkill) + "%";
+    const string attackSkillStr = "Attack skill:" + toString(attackSkill) + "%";
     printLine(indent2 + hpStr + attackSkillStr);
 
     const Inventory* const inv = actor->getInventory();
@@ -112,10 +112,10 @@ void DebugModeStatPrinter::run() {
       const Item* const item = inv->getIntrinsicInElement(i_intr);
       const ItemData& itemData = item->getData();
       const string meleeOrRangedStr = itemData.isRangedWeapon ? "(R)" : "(M)";
-      const string attackNrStr = "Attack " + intToString(i_intr + 1);
+      const string attackNrStr = "Attack " + toString(i_intr + 1);
       const string dmgStr =
-        intToString(itemData.meleeDmg.first) + "d" +
-        intToString(itemData.meleeDmg.second);
+        toString(itemData.meleeDmg.first) + "d" +
+        toString(itemData.meleeDmg.second);
       printLine(
         indent2 + attackNrStr + " " + meleeOrRangedStr + ": " + dmgStr);
     }

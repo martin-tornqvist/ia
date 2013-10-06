@@ -79,10 +79,10 @@ void Look::describeBriefActor(const Actor& actor,
       Item* const item = eng->player->getInventory()->getItemInSlot(slot_wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng->player, *wpn, actor.pos, actor.pos, eng);
-      eng->log->addMsg("| " + intToString(data.hitChanceTot) + "% hit chance");
+      eng->log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == markerTask_aimThrownWeapon) {
       MissileAttackData data(*eng->player, *itemThrown, actor.pos, actor.pos, eng);
-      eng->log->addMsg("| " + intToString(data.hitChanceTot) + "% hit chance");
+      eng->log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
     }
   }
 }

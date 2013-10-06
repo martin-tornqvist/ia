@@ -75,13 +75,13 @@ public:
 
   void addSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      lines.push_back(bons_[i].isPicked_ ? intToString(1) : intToString(0));
+      lines.push_back(bons_[i].isPicked_ ? toString(1) : toString(0));
     }
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-      bons_[i].isPicked_ = lines.front() == intToString(0) ? false : true;
+      bons_[i].isPicked_ = lines.front() == toString(0) ? false : true;
       lines.erase(lines.begin());
     }
   }
