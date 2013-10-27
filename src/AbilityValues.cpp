@@ -117,4 +117,3 @@ void AbilityValues::changeVal(const Abilities_t ability, const int CHANGE) {
   abilityList[ability] += CHANGE;
 }
 
-
