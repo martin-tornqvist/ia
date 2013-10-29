@@ -12,7 +12,7 @@ class Engine;
 class Actor;
 class Monster;
 
-enum Spells_t {
+enum Spell_t {
   //Player and monster available spells
   spell_azathothsBlast,
   spell_enfeeble,
@@ -45,7 +45,7 @@ class SpellHandler {
 public:
   SpellHandler(Engine* const engine) : eng(engine) {}
   Spell* getRandomSpellForMonster();
-  Spell* getSpellFromId(const Spells_t spellId) const;
+  Spell* getSpellFromId(const Spell_t spellId) const;
 private:
   Engine* eng;
 };
@@ -68,7 +68,7 @@ public:
   virtual bool isLearnableForMonsters() const = 0;
   virtual bool isLearnableForPlayer() const = 0;
   virtual string getName() const = 0;
-  virtual Spells_t getId() const = 0;
+  virtual Spell_t getId() const = 0;
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                    Engine* const eng) const;
@@ -91,7 +91,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Identify";}
-  Spells_t getId()              const {return spell_identify;}
+  Spell_t getId()              const {return spell_identify;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 17;}
@@ -105,7 +105,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Azathoths Blast";}
-  Spells_t getId()              const {return spell_azathothsBlast;}
+  Spell_t getId()              const {return spell_azathothsBlast;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}
@@ -123,7 +123,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Mayhem";}
-  Spells_t getId()              const {return spell_mayhem;}
+  Spell_t getId()              const {return spell_mayhem;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 17;}
@@ -141,7 +141,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Pestilence";}
-  Spells_t getId()              const {return spell_pestilence;}
+  Spell_t getId()              const {return spell_pestilence;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 10;}
@@ -159,7 +159,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Descent";}
-  Spells_t getId()              const {return spell_descent;}
+  Spell_t getId()              const {return spell_descent;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 21;}
@@ -177,7 +177,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Detect Items";}
-  Spells_t getId()              const {return spell_detectItems;}
+  Spell_t getId()              const {return spell_detectItems;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 10;}
@@ -195,7 +195,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Detect Traps";}
-  Spells_t getId()              const {return spell_detectTraps;}
+  Spell_t getId()              const {return spell_detectTraps;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 10;}
@@ -213,7 +213,7 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Clairvoyance";}
-  Spells_t getId()              const {return spell_clairvoyance;}
+  Spell_t getId()              const {return spell_clairvoyance;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 15;}
@@ -231,20 +231,10 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Opening";}
-  Spells_t getId()              const {return spell_opening;}
+  Spell_t getId()              const {return spell_opening;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 15;}
-};
-
-enum MthPowerAction_t {
-  mthPowerAction_slayMonsters,
-  mthPowerAction_heal,
-  mthPowerAction_findStairs,
-//  mthPowerAction_sorcery,
-  mthPowerAction_mendArmor,
-  mthPowerAction_improveWeapon
-//  mthPowerAction_purgeEffects //TODO Reimplement
 };
 
 class SpellMthPower: public Spell {
@@ -259,15 +249,13 @@ public:
   bool isLearnableForMonsters() const {return false;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Thaumaturgic Alteration";}
-  Spells_t getId()              const {return spell_mthPower;}
+  Spell_t getId()              const {return spell_mthPower;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 10;}
 
-  void getPossibleActions(
-    vector<MthPowerAction_t>& possibleActions, Engine* const eng) const;
-
-  void doAction(const MthPowerAction_t action, Engine* const eng) const;
+  bool doSpecialAction(Engine* const eng) const;
+  void castRandomOtherSpell(Engine* const eng) const;
 };
 
 class SpellBless: public Spell {
@@ -278,7 +266,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Bless";}
-  Spells_t getId()              const {return spell_bless;}
+  Spell_t getId()              const {return spell_bless;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 17;}
@@ -292,7 +280,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return false;}
   string getName()              const {return "Knockback";}
-  Spells_t getId()              const {return spell_knockBack;}
+  Spell_t getId()              const {return spell_knockBack;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}
@@ -306,7 +294,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Teleport";}
-  Spells_t getId()              const {return spell_teleport;}
+  Spell_t getId()              const {return spell_teleport;}
   int getSpecificMaxSpiCost()      const {return 8;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
@@ -320,7 +308,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return true;}
   string getName()              const {return "Enfeeble";}
-  Spells_t getId()              const {return spell_enfeeble;}
+  Spell_t getId()              const {return spell_enfeeble;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}
@@ -336,7 +324,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return false;}
   string getName()              const {return "Disease";}
-  Spells_t getId()              const {return spell_disease;}
+  Spell_t getId()              const {return spell_disease;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}
@@ -350,7 +338,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return false;}
   string getName()              const {return "Summon monster";}
-  Spells_t getId()              const {return spell_summonRandom;}
+  Spell_t getId()              const {return spell_summonRandom;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}
@@ -364,7 +352,7 @@ public:
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return false;}
   string getName()              const {return "Healing";}
-  Spells_t getId()              const {return spell_healSelf;}
+  Spell_t getId()              const {return spell_healSelf;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()      const {return 8;}

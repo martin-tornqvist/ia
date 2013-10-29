@@ -18,11 +18,11 @@
 #include "ItemArmor.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
-  vector<Spells_t> candidates;
+  vector<Spell_t> candidates;
   for(int i = 0; i < endOfSpells; i++) {
-    Spell* const spell = getSpellFromId(Spells_t(i));
+    Spell* const spell = getSpellFromId(Spell_t(i));
     if(spell->isLearnableForMonsters()) {
-      candidates.push_back(Spells_t(i));
+      candidates.push_back(Spell_t(i));
     }
     delete spell;
   }
@@ -30,7 +30,7 @@ Spell* SpellHandler::getRandomSpellForMonster() {
   return getSpellFromId(candidates.at(ELEMENT));
 }
 
-Spell* SpellHandler::getSpellFromId(const Spells_t spellId) const {
+Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
   switch(spellId) {
     case spell_enfeeble:        return new SpellEnfeeble;       break;
     case spell_disease:         return new SpellDisease;        break;
@@ -385,7 +385,7 @@ SpellCastRetData SpellDetectTraps::specificCast(
 
 //------------------------------------------------------------ IDENTIFY
 SpellCastRetData SpellIdentify::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
   (void)caster;
 
   Inventory* const inv = eng->player->getInventory();
@@ -438,7 +438,7 @@ SpellCastRetData SpellIdentify::specificCast(
 
 //------------------------------------------------------------ CLAIRVOYANCE
 SpellCastRetData SpellClairvoyance::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
   (void)caster;
   eng->player->getPropHandler()->tryApplyProp(
     new PropClairvoyant(eng, propTurnsStandard), true, false);
@@ -447,7 +447,7 @@ SpellCastRetData SpellClairvoyance::specificCast(
 
 //------------------------------------------------------------ OPENING
 SpellCastRetData SpellOpening::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   (void)caster;
 
@@ -483,100 +483,30 @@ SpellCastRetData SpellOpening::specificCast(
 
 //------------------------------------------------------------ MTH POWER
 SpellCastRetData SpellMthPower::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
   (void)caster;
 
-  vector<MthPowerAction_t> possibleActions;
-  getPossibleActions(possibleActions, eng);
+  eng->log->addMsg("I summon chaotic forces...");
 
-  if(possibleActions.empty()) {
-    eng->log->addMsg("I fail to channel the spell for any purpose.");
-  } else {
-    const int ELEMENT = eng->dice.range(0, possibleActions.size() - 1);
-    doAction(possibleActions.at(ELEMENT), eng);
-  }
+  if(doSpecialAction(eng) == false) {
+    castRandomOtherSpell(eng);
+  };
+
   return SpellCastRetData(true);
 }
 
-void SpellMthPower::getPossibleActions(
-  vector<MthPowerAction_t>& possibleActions, Engine * const eng) const {
+bool SpellMthPower::doSpecialAction(Engine* const eng) const {
+  trace << "SpellMthPower::doSpecialAction()" << endl;
 
-  possibleActions.resize(0);
+  if(eng->dice.coinToss()) {
 
-  vector<Actor*> spotedEnemies;
-  eng->player->getSpotedEnemies(spotedEnemies);
+    vector<Actor*> spotedEnemies;
+    eng->player->getSpotedEnemies(spotedEnemies);
 
-  const int MTH = eng->player->getMth();
+    const int MTH = eng->player->getMth();
 
-  if(MTH >= 35) {
-    if(spotedEnemies.empty() == false) {
-      possibleActions.push_back(mthPowerAction_slayMonsters);
-    }
-  }
-
-  for(int y = 1; y < MAP_Y_CELLS; y++) {
-    for(int x = 1; x < MAP_X_CELLS; x++) {
-      if(eng->map->featuresStatic[x][y]->getId() == feature_stairsDown) {
-        if(eng->map->explored[x][y] == false) {
-          possibleActions.push_back(mthPowerAction_findStairs);
-        }
-      }
-    }
-  }
-
-//  bool canAnySpellBeRestored = false;
-//  const unsigned int NR_OF_SPELLS =
-//    eng->playerPowersHandler->getNrOfSpells();
-//  for(unsigned int i = 0; i < NR_OF_SPELLS; i++) {
-//    Scroll* const scroll =  eng->playerPowersHandler->getScrollAt(i);
-//    const ItemDef& d = scroll->getData();
-//    if(
-//      d.isScrollLearnable &&
-//      d.isScrollLearned &&
-//      d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM &&
-//      d.id != item_thaumaturgicAlteration) {
-//      canAnySpellBeRestored = true;
-//    }
-//  }
-//  if(canAnySpellBeRestored) {
-//    possibleActions.push_back(mthPowerAction_sorcery);
-//  }
-
-  if(eng->player->getHp() < eng->player->getHpMax(true)) {
-    possibleActions.push_back(mthPowerAction_heal);
-  }
-
-  Item* item = eng->player->getInventory()->getItemInSlot(slot_wielded);
-  if(item != NULL) {
-    const ItemData& d = item->getData();
-    if(d.isMeleeWeapon && d.isRangedWeapon == false) {
-      Weapon* const weapon = dynamic_cast<Weapon*>(item);
-      if(weapon->meleeDmgPlus < 3) {
-        possibleActions.push_back(mthPowerAction_improveWeapon);
-      }
-    }
-  }
-
-  item = eng->player->getInventory()->getItemInSlot(slot_armorBody);
-  if(item != NULL) {
-    Armor* const armor = dynamic_cast<Armor*>(item);
-    if(armor->getDurability() < 100) {
-      possibleActions.push_back(mthPowerAction_mendArmor);
-    }
-  }
-
-//  if(eng->player->getPropHandler()->hasAnyBadEffect()) {
-//    possibleActions.push_back(mthPowerAction_purgeEffects);
-//  }
-}
-
-void SpellMthPower::doAction(const MthPowerAction_t action,
-                             Engine * const eng) const {
-  switch(action) {
-    case mthPowerAction_slayMonsters: {
-      vector<Actor*> spotedEnemies;
-      eng->player->getSpotedEnemies(spotedEnemies);
-
+    //Slay enemies
+    if(eng->dice.oneIn(2) && MTH >= 35 && spotedEnemies.empty() == false) {
       vector<Pos> actorPositions;
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
         actorPositions.push_back(spotedEnemies.at(i)->pos);
@@ -593,88 +523,89 @@ void SpellMthPower::doAction(const MthPowerAction_t action,
       }
 
       eng->renderer->drawMapAndInterface(true);
-    } break;
+      return true;
+    }
 
-    case mthPowerAction_heal: {
+    //Heal
+    if(
+      eng->dice.oneIn(3) &&
+      eng->player->getHp() < eng->player->getHpMax(true)) {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(
         eng->player->pos, visionBlockers);
       eng->player->getPropHandler()->endAppliedProp(
         propDiseased, visionBlockers);
       eng->player->restoreHp(999, true);
-    } break;
+      return true;
+    }
 
-    case mthPowerAction_findStairs: {
-      trace << "ThaumaturgicAlteration: Find stairs" << endl;
-      for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-        for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-          const FeatureStatic* const f = eng->map->featuresStatic[x][y];
-          if(f->getId() == feature_stairsDown) {
-            for(int dy = -1; dy <= 1; dy++) {
-              for(int dx = -1; dx <= 1; dx++) {
-                eng->map->playerVision[x + dx][y + dy] = true;
-                eng->map->explored[x + dx][y + dy] = true;
-              }
+    //Find stairs
+    for(int y = 1; y < MAP_Y_CELLS; y++) {
+      for(int x = 1; x < MAP_X_CELLS; x++) {
+        if(
+          eng->map->featuresStatic[x][y]->getId() == feature_stairsDown &&
+          eng->map->explored[x][y] == false) {
+
+          trace << "SpellMthPower: Find stairs" << endl;
+          for(int dy = -1; dy <= 1; dy++) {
+            for(int dx = -1; dx <= 1; dx++) {
+              eng->map->playerVision[x + dx][y + dy] = true;
+              eng->map->explored[x + dx][y + dy] = true;
             }
           }
+          eng->log->addMsg("The way forward is revealed!");
+          eng->renderer->drawMapAndInterface(true);
+          eng->player->updateFov();
+          eng->renderer->drawMapAndInterface(true);
+          return true;
         }
       }
-      eng->log->addMsg("The way forward is revealed!");
-      eng->renderer->drawMapAndInterface(true);
-      eng->player->updateFov();
-      eng->renderer->drawMapAndInterface(true);
-    } break;
+    }
 
-//    case mthPowerAction_sorcery: {
-//      eng->log->addMsg("My magic is restored!");
-//      const unsigned int NR_OF_SCROLLS =
-//        eng->playerPowersHandler->getNrOfSpells();
-//      for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
-//        Scroll* const scroll = eng->playerPowersHandler->getScrollAt(i);
-//        const ItemDef& d = scroll->getData();
-//        if(
-//          d.isScrollLearnable &&
-//          d.isScrollLearned   &&
-//          d.id != item_thaumaturgicAlteration) {
-//          scroll->setCastFromMemoryCurrentBaseChance(
-//            CAST_FROM_MEMORY_CHANCE_LIM);
-//        }
-//      }
-//    } break;
-
-    case mthPowerAction_mendArmor: {
-      eng->log->addMsg("My armor is whole!");
-      Item* const item =
-        eng->player->getInventory()->getItemInSlot(slot_armorBody);
-      Armor* const armor = dynamic_cast<Armor*>(item);
-      armor->setMaxDurability();
-      eng->renderer->drawMapAndInterface(true);
-    } break;
-
-    case mthPowerAction_improveWeapon: {
-      eng->log->addMsg("My weapon is deadlier!");
-      Item* const item =
-        eng->player->getInventory()->getItemInSlot(slot_wielded);
-      Weapon* const weapon = dynamic_cast<Weapon*>(item);
-      weapon->meleeDmgPlus++;
-    } break;
-
-//    case mthPowerAction_purgeEffects: {
-//      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-//      eng->mapTests->makeVisionBlockerArray(eng->player->pos,
-//                                            visionBlockers, 9999);
-//
-//      StatusHandler* const statusHandler =
-//        eng->player->getPropHandler();
-//      statusHandler->endEffectsOfAbility(
-//        ability_resistStatusMind, visionBlockers);
-//    } break;
+    //Improve weapon
+    Item* const item =
+      eng->player->getInventory()->getItemInSlot(slot_wielded);
+    if(item != NULL) {
+      const ItemData& d = item->getData();
+      if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+        Weapon* const weapon = dynamic_cast<Weapon*>(item);
+        if(weapon->meleeDmgPlus == 0) {
+          eng->log->addMsg("My weapon is deadlier!");
+          weapon->meleeDmgPlus++;
+          return true;
+        }
+      }
+    }
   }
+  trace << "SpellMthPower: No special action taken" << endl;
+  return false;
+}
+
+void SpellMthPower::castRandomOtherSpell(Engine* const eng) const {
+  trace << "SpellMthPower::castRandomOtherSpell()..." << endl;
+  vector<Spell*> spellCandidates;
+  for(int i = 0; i < endOfSpells; i++) {
+    if(i != spell_descent && i != spell_mthPower) {
+      Spell* const spell = eng->spellHandler->getSpellFromId(Spell_t(i));
+      if(spell->isLearnableForPlayer()) {
+        spellCandidates.push_back(spell);
+      } else {
+        delete spell;
+      }
+    }
+  }
+
+  Spell* spellToCast = NULL;
+  const int ELEMENT = eng->dice.range(0, spellCandidates.size() - 1);
+  spellToCast = spellCandidates.at(ELEMENT);
+
+  spellToCast->cast(eng->player, false, eng);
+  trace << "SpellMthPower::castRandomOtherSpell() [DONE]" << endl;
 }
 
 //------------------------------------------------------------ BLESS
 SpellCastRetData SpellBless::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   caster->getPropHandler()->tryApplyProp(
     new PropBlessed(eng, propTurnsStandard));
@@ -683,14 +614,14 @@ SpellCastRetData SpellBless::specificCast(
 }
 
 bool SpellBless::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
   (void)eng;
   return monster->getPropHandler()->hasProp(propBlessed) == false;
 }
 
 //------------------------------------------------------------ TELEPORT
 SpellCastRetData SpellTeleport::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   if(caster != eng->player) {
     if(eng->player->checkIfSeeActor(*caster, NULL)) {
@@ -704,7 +635,7 @@ SpellCastRetData SpellTeleport::specificCast(
 }
 
 bool SpellTeleport::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers)  &&
@@ -714,7 +645,7 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ KNOCKBACK
 SpellCastRetData SpellKnockBack::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
   if(caster == eng->player) {
 
   } else {
@@ -725,7 +656,7 @@ SpellCastRetData SpellKnockBack::specificCast(
 }
 
 bool SpellKnockBack::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
@@ -733,7 +664,7 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ ENFEEBLE
 SpellCastRetData SpellEnfeeble::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   const PropId_t propId = getPropId(eng);
 
@@ -776,13 +707,13 @@ SpellCastRetData SpellEnfeeble::specificCast(
 }
 
 bool SpellEnfeeble::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
-PropId_t SpellEnfeeble::getPropId(Engine * const eng) const {
+PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
   const int RND = eng->dice.range(1, 5);
   switch(RND) {
     case 1: {return propConfused;}
@@ -935,7 +866,7 @@ PropId_t SpellEnfeeble::getPropId(Engine * const eng) const {
 
 //------------------------------------------------------------ DISEASE
 SpellCastRetData SpellDisease::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
   if(caster == eng->player) {
     return SpellCastRetData(true);
   } else {
@@ -948,7 +879,7 @@ SpellCastRetData SpellDisease::specificCast(
 }
 
 bool SpellDisease::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
@@ -956,7 +887,7 @@ bool SpellDisease::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ SUMMON RANDOM
 SpellCastRetData SpellSummonRandom::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   Pos summonPos(caster->pos);
 
@@ -1021,7 +952,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
 }
 
 bool SpellSummonRandom::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
@@ -1032,14 +963,14 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ HEAL SELF
 SpellCastRetData SpellHealSelf::specificCast(
-  Actor * const caster, Engine * const eng) {
+  Actor* const caster, Engine* const eng) {
 
   (void)eng;
   return SpellCastRetData(caster->restoreHp(999, true));
 }
 
 bool SpellHealSelf::isGoodForMonsterToCastNow(
-  Monster * const monster, Engine * const eng) {
+  Monster* const monster, Engine* const eng) {
 
   (void)eng;
   return monster->getHp() < monster->getHpMax(true);

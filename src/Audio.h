@@ -32,6 +32,9 @@ enum Sfx_t {
   sfxExplosion,
   sfxExplosionMolotov,
 
+  startOfAmbSfx,
+  endOfAmbSfx,
+
   endOfSfx
 };
 
@@ -45,7 +48,13 @@ public:
   void play(const Sfx_t sfx, const Direction_t direction,
             const int DISTANCE_PERCENT);
 
+  void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY);
+
 private:
+  void play(const Sfx_t, const int VOL_PERCENT);
+
+  Sfx_t getAmbSfxSuitableForDlvl() const;
+
   void loadAllAudio();
 
   void loadAudioFile(const Sfx_t sfx, const string& filename);
@@ -55,6 +64,8 @@ private:
   int curChannel;
 
   Mix_Chunk* audioChunks[endOfSfx];
+
+  int timeAtLastAmb;
 
   Engine* eng;
 };

@@ -678,47 +678,34 @@ bool MajorClaphamLee::actorSpecificAct() {
     if(playerAwarenessCounter > 0) {
       if(hasSummonedTombLegions == false) {
 
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeVisionBlockerArray(pos, blockers);
+        bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+        eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
 
-        if(checkIfSeeActor(*(eng->player), blockers)) {
-          eng->mapTests->makeMoveBlockerArray(this, blockers);
-          eng->basicUtils->reverseBoolArray(blockers);
-          vector<Pos> freeCells;
-          eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
-          sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
+        if(checkIfSeeActor(*(eng->player), visionBlockers)) {
+          eng->log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
+          vector<ActorId_t> monsterIds;
+          monsterIds.resize(0);
 
-          const unsigned int NR_OF_SPAWNS = 5;
-          if(freeCells.size() >= NR_OF_SPAWNS + 1) {
-            eng->log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
-            eng->player->incrShock(shockValue_heavy);
-            for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
-              if(i == 0) {
-                Monster* monster = dynamic_cast<Monster*>(
-                                     eng->actorFactory->spawnActor(actor_deanHalsey, freeCells.at(0)));
-                monster->playerAwarenessCounter = 999;
-                monster->leader = this;
-                freeCells.erase(freeCells.begin());
-              } else {
-                const int ZOMBIE_TYPE = eng->dice.range(0, 2);
-                ActorId_t id = actor_zombie;
-                switch(ZOMBIE_TYPE) {
-                  case 0: id = actor_zombie;        break;
-                  case 1: id = actor_zombieAxe;     break;
-                  case 2: id = actor_bloatedZombie; break;
-                }
-                Monster* monster = dynamic_cast<Monster*>(
-                                     eng->actorFactory->spawnActor(id, freeCells.at(0)));
-                monster->playerAwarenessCounter = 999;
-                monster->leader = this;
-                freeCells.erase(freeCells.begin());
-              }
+          monsterIds.push_back(actor_deanHalsey);
+
+          const int NR_OF_EXTRA_SPAWNS = 4;
+
+          for(int i = 0; i < NR_OF_EXTRA_SPAWNS; i++) {
+            const int ZOMBIE_TYPE = eng->dice.range(1, 3);
+            ActorId_t id = actor_zombie;
+            switch(ZOMBIE_TYPE) {
+              case 1: id = actor_zombie;        break;
+              case 2: id = actor_zombieAxe;     break;
+              case 3: id = actor_bloatedZombie; break;
             }
-            eng->renderer->drawMapAndInterface();
-            hasSummonedTombLegions = true;
-            eng->gameTime->endTurnOfCurrentActor();
-            return true;
+            monsterIds.push_back(id);
           }
+          eng->actorFactory->summonMonsters(pos, monsterIds, true, this);
+          eng->renderer->drawMapAndInterface();
+          hasSummonedTombLegions = true;
+          eng->player->incrShock(shockValue_heavy);
+          eng->gameTime->endTurnOfCurrentActor();
+          return true;
         }
       }
     }

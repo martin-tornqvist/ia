@@ -101,7 +101,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   eng->renderer->updateScreen();
 }
 
-bool PlayerSpellsHandler::isSpellLearned(const Spells_t id) {
+bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
   for(unsigned int i = 0; i < learnedSpells.size(); i++) {
     if(learnedSpells.at(i)->getId() == id) {
       return true;
@@ -110,7 +110,7 @@ bool PlayerSpellsHandler::isSpellLearned(const Spells_t id) {
   return false;
 }
 
-void PlayerSpellsHandler::learnSpellIfNotKnown(const Spells_t id) {
+void PlayerSpellsHandler::learnSpellIfNotKnown(const Spell_t id) {
   learnSpellIfNotKnown(eng->spellHandler->getSpellFromId(id));
 }
 

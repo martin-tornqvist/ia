@@ -32,9 +32,9 @@ public:
   }
 
   void learnSpellIfNotKnown(Spell* const spell);
-  void learnSpellIfNotKnown(const Spells_t id);
+  void learnSpellIfNotKnown(const Spell_t id);
 
-  bool isSpellLearned(const Spells_t id);
+  bool isSpellLearned(const Spell_t id);
 private:
   void draw(MenuBrowser& browser);
 

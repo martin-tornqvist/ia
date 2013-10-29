@@ -33,7 +33,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   switch(result) {
     case reloadResult_notCarryingWpn: {
       if(IS_PLAYER) {
-        eng->log->addMsg("I am not wielding a firearm.");
+        eng->log->addMsg("I am not wielding a weapon.");
       }
     } break;
 

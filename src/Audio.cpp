@@ -1,10 +1,15 @@
 #include "Audio.h"
 
+#include <time.h>
+
 #include "SDL/SDL_mixer.h"
 
 #include "Engine.h"
+#include "Map.h"
 
-Audio::Audio(Engine* engine) : curChannel(0), eng(engine) {
+Audio::Audio(Engine* engine) :
+  curChannel(0), timeAtLastAmb(-1), eng(engine) {
+
   for(int i = 0; i < endOfSfx; i++) {
     audioChunks[i] = NULL;
   }
@@ -14,6 +19,48 @@ Audio::Audio(Engine* engine) : curChannel(0), eng(engine) {
 
 Audio::~Audio() {
   freeAssets();
+}
+
+void Audio::loadAllAudio() {
+  freeAssets();
+
+  loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
+  loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
+  loadAudioFile(sfxZombieGrowl,             "sfx_zombieGrowl.ogg");
+  loadAudioFile(sfxGhoulGrowl,              "sfx_ghoulGrowl.ogg");
+
+  loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
+  loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
+  loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
+  loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
+
+  loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
+
+  loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
+  loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
+  loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
+  loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
+
+  loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
+
+  int a = 1;
+  for(int i = startOfAmbSfx + 1; i < endOfAmbSfx; i++) {
+    const string indexStr = toString(a);
+    const string indexStrPadded =
+      a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
+    loadAudioFile(Sfx_t(i), indexStrPadded);
+    a++;
+  }
+}
+
+void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
+  audioChunks[sfx] = Mix_LoadWAV(("audio/" + filename).data());
+
+  if(audioChunks[sfx] == NULL) {
+    trace << "[WARNING] Problem loading audio file with name " + filename;
+    trace << ", in Audio::loadAudio()" << endl;
+    trace << "SDL_mixer: " << Mix_GetError() << endl;
+  }
 }
 
 void Audio::play(const Sfx_t sfx) {
@@ -56,37 +103,36 @@ void Audio::play(const Sfx_t sfx, const Direction_t direction,
   }
 }
 
-void Audio::loadAllAudio() {
-  freeAssets();
+void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
+  if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
-  loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
-  loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
-  loadAudioFile(sfxZombieGrowl,             "sfx_zombieGrowl.ogg");
-  loadAudioFile(sfxGhoulGrowl,              "sfx_ghoulGrowl.ogg");
+    const int TIME_NOW = time(0);
+    const int TIME_REQ_BETWEEN_AMB_SFX = 30;
 
-  loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
-  loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
-  loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
-  loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
+    if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
 
-  loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
-
-  loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
-  loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
-  loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
-  loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
-
-  loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
+      timeAtLastAmb = TIME_NOW;
+    }
+  }
 }
 
-void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
-  audioChunks[sfx] = Mix_LoadWAV(("audio/" + filename).data());
+Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
+  vector<Sfx_t> sfxCandidates;
+  sfxCandidates.resize(0);
 
-  if(audioChunks[sfx] == NULL) {
-    trace << "[WARNING] Problem loading audio file with name " + filename;
-    trace << ", in Audio::loadAudio()" << endl;
-    trace << "SDL_mixer: " << Mix_GetError() << endl;
+  const int DLVL = eng->map->getDLVL();
+  if(DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
+    //TODO Add sfx... again ;C
+  } else if(DLVL > FIRST_CAVERN_LEVEL) {
+    //TODO Add sfx... again ;C
   }
+
+  if(sfxCandidates.empty()) {
+    return endOfSfx;
+  }
+
+  const int ELEMENT = eng->dice.range(0, sfxCandidates.size() - 1);
+  return sfxCandidates.at(ELEMENT);
 }
 
 void Audio::freeAssets() {

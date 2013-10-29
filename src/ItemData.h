@@ -222,7 +222,7 @@ public:
   bool isQuaffable, isDevice, isEatable, isArmor, isCloak, isRing, isAmulet;
   bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
   bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
-  Spells_t spellCastFromScroll;
+  Spell_t spellCastFromScroll;
   ArmorData armorData;
   int ammoContainedInClip;
   DiceParam missileDmg;

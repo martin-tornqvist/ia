@@ -1024,7 +1024,7 @@ void Player::moveDirection(const Pos& dir) {
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
-              if(eng->config->useRangedWpnMleeePrompt &&
+              if(eng->config->useRangedWpnMeleeePrompt &&
                   checkIfSeeActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =

@@ -40,7 +40,7 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
         Item* const item =
           eng->itemFactory->spawnRandomScrollOrPotion(true, false);
 
-        Spells_t spellId = item->getData().spellCastFromScroll;
+        Spell_t spellId = item->getData().spellCastFromScroll;
         Spell* const spell = eng->spellHandler->getSpellFromId(spellId);
         const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
         delete spell;

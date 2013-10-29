@@ -68,6 +68,13 @@ void MenuBrowser::navigate(const Direction_t direction) {
         pos_.y = min(pos_.y, btmRight_.y);
       }
     } break;
+
+    case directionUpRight:
+    case directionUpLeft:
+    case directionDownLeft:
+    case directionDownRight:
+    case directionCenter:
+    case endOfDirections: {} break;
   }
 }
 

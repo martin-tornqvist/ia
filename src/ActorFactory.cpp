@@ -1,12 +1,13 @@
 #include "ActorFactory.h"
 
+#include <algorithm>
+
 #include "Engine.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 
-
-Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
+Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
   switch(id) {
     case actor_zombie:              return new ZombieClaw;            break;
     case actor_zombieAxe:           return new ZombieAxe;             break;
@@ -66,14 +67,15 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) {
 //    break;
 
     default: {
-      trace << "[WARNING] Bad actor ID given in ActorFactory::makeActorFromId()" << endl;
+      trace << "[WARNING] Bad actor ID given, ";
+      trace << "in ActorFactory::makeActorFromId()" << endl;
       return NULL;
     }
     break;
   }
 }
 
-Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
+Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
   Actor* const actor = makeActorFromId(id);
 
   actor->place(pos, &(eng->actorDataHandler->dataList[id]), eng);
@@ -87,46 +89,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) {
   return actor;
 }
 
-//Actor* ActorFactory::spawnRandomActor(const Pos& pos,
-//                                      const int SPAWN_LVL_OFFSET) {
-//  const int DLVL = eng->map->getDLVL();
-//  vector<ActorId_t> monsterCandidates;
-//  const unsigned int NR_ACTORS_DEFINED =
-//    static_cast<unsigned int>(endOfActorIds);
-//  for(unsigned int i = 1; i < NR_ACTORS_DEFINED; i++) {
-//    const ActorData& def = eng->actorData->actorDefs[i];
-//
-//    const bool IS_LVL_OK =
-//      DLVL + SPAWN_LVL_OFFSET >= def.spawnMinDLVL &&
-//      DLVL <= def.spawnMaxDLVL;
-//
-//    const bool IS_ALLOWED_TO_SPAWN =
-//      def.isAutoSpawnAllowed && def.nrLeftAllowedToSpawn != 0;
-//
-//    const bool IS_FEATURE_PASSABLE =
-//      eng->map->featuresStatic[pos.x][pos.y]->isBodyTypePassable(def.moveType);
-//
-//    bool IS_NO_ACTOR_AT_POS = eng->mapTests->getActorAtPos(pos) == NULL;
-//
-//    if(
-//      IS_LVL_OK &&
-//      IS_ALLOWED_TO_SPAWN &&
-//      IS_FEATURE_PASSABLE &&
-//      IS_NO_ACTOR_AT_POS) {
-//      monsterCandidates.push_back(static_cast<ActorId_t>(i));
-//    }
-//  }
-//
-//  if(monsterCandidates.empty() == false) {
-//    const int ELEMENT = eng->dice.range(0, monsterCandidates.size() - 1);
-//    const ActorId_t monsterType = monsterCandidates.at(ELEMENT);
-//    return spawnActor(monsterType, pos);
-//  }
-//
-//  return NULL;
-//}
-
-void ActorFactory::deleteAllMonsters() {
+void ActorFactory::deleteAllMonsters() const {
   for(int i = 0; i < int(eng->gameTime->getLoopSize()); i++) {
     if(eng->gameTime->getActorAt(i) != eng->player) {
       eng->gameTime->eraseElement(i);
@@ -136,4 +99,55 @@ void ActorFactory::deleteAllMonsters() {
 
   eng->player->target = NULL;
 }
+
+void ActorFactory::summonMonsters(
+  const Pos& origin, const vector<ActorId_t>& monsterIds,
+  const bool MAKE_MONSTERS_AWARE,
+  Actor* const actorToSetAsLeader,
+  vector<Monster*>* monstersRet) const {
+
+  if(monstersRet != NULL) {
+    monstersRet->resize(0);
+  }
+
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayForBodyType(
+    actorBodyType_normal, blockers);
+  eng->basicUtils->reverseBoolArray(blockers);
+  vector<Pos> freeCells;
+  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));
+
+  const int NR_FREE_CELLS   = freeCells.size();
+  const int NR_MONSTER_IDS  = monsterIds.size();
+  const int NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
+
+  vector<Pos> positionsToAnimate;
+  positionsToAnimate.resize(0);
+  for(int i = 0; i < NR_TO_SPAWN; i++) {
+    const Pos& pos = freeCells.at(i);
+    positionsToAnimate.push_back(pos);
+  }
+  eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+    positionsToAnimate, clrMagenta);
+
+  for(int i = 0; i < NR_TO_SPAWN; i++) {
+    const Pos&      pos = freeCells.at(i);
+    const ActorId_t id  = monsterIds.at(i);
+
+    Actor*   const actor    = spawnActor(id, pos);
+    Monster* const monster  = dynamic_cast<Monster*>(actor);
+
+    if(monstersRet != NULL) {
+      monstersRet->push_back(monster);
+    }
+    if(actorToSetAsLeader != NULL) {
+      monster->leader = actorToSetAsLeader;
+    }
+    if(MAKE_MONSTERS_AWARE) {
+      monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
+    }
+  }
+}
+
 

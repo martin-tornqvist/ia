@@ -18,7 +18,6 @@ Config::Config(Engine* engine) :
   TILES_IMAGE_NAME("images/gfx_16x24.png"),
   MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.png"),
   fontBig(""),
-//  fontInterface(""),
   LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
   LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
   CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
@@ -38,10 +37,11 @@ Config::Config(Engine* engine) :
   fontImageNames.push_back("images/16x24_clean_v2.png");
   fontImageNames.push_back("images/16x24_typewriter.png");
 
+  setDefaultVariables();
+
   vector<string> lines;
   readFile(lines);
   if(lines.empty()) {
-    setDefaultVariables();
     collectLinesFromVariables(lines);
     writeLinesToFile(lines);
   } else {
@@ -51,7 +51,7 @@ Config::Config(Engine* engine) :
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(13, 0);
+  MenuBrowser browser(14, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -171,15 +171,13 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
     } break;
 
-    case 5: {
-      isIntroLevelSkipped = !isIntroLevelSkipped;
-    } break;
+    case 5: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
 
-    case 6: {
-      useRangedWpnMleeePrompt = !useRangedWpnMleeePrompt;
-    } break;
+    case 6: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
 
-    case 7: {
+    case 7: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
+
+    case 8: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -190,7 +188,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 8: {
+    case 9: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -201,7 +199,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 9: {
+    case 10: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -211,7 +209,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 10: {
+    case 11: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -221,7 +219,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 11: {
+    case 12: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -231,7 +229,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 12: {
+    case 13: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -339,7 +337,20 @@ void Config::draw(const MenuBrowser* const browser,
   eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
-  str = useRangedWpnMleeePrompt ? "Yes" : "No";
+  str = useRangedWpnMeleeePrompt ? "Yes" : "No";
+  eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  optionNr++;
+
+  str = "Ranged weapon auto reload";
+  eng->renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  str = useRangedWpnAutoReload ? "Yes" : "No";
   eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
                           clrActive : clrInactive);
@@ -478,7 +489,8 @@ void Config::setDefaultVariables() {
   isFullscreen = false;
   isAsciiWallSymbolFullSquare = true;
   isIntroLevelSkipped = false;
-  useRangedWpnMleeePrompt = true;
+  useRangedWpnMeleeePrompt = true;
+  useRangedWpnAutoReload = false;
   keyRepeatDelay = 130;
   keyRepeatInterval = 60;
   delayProjectileDraw = 45;
@@ -496,7 +508,8 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isFullscreen == false ? "0" : "1");
   lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
   lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
-  lines.push_back(useRangedWpnMleeePrompt == false ? "0" : "1");
+  lines.push_back(useRangedWpnMeleeePrompt == false ? "0" : "1");
+  lines.push_back(useRangedWpnAutoReload == false ? "0" : "1");
   lines.push_back(toString(keyRepeatDelay));
   lines.push_back(toString(keyRepeatInterval));
   lines.push_back(toString(delayProjectileDraw));
@@ -559,7 +572,11 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  useRangedWpnMleeePrompt = curLine == "0" ? false : true;
+  useRangedWpnMeleeePrompt = curLine == "0" ? false : true;
+  lines.erase(lines.begin());
+
+  curLine = lines.front();
+  useRangedWpnAutoReload = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();

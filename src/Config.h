@@ -20,7 +20,6 @@ public:
 
   const string  TILES_IMAGE_NAME;
   const string  MAIN_MENU_LOGO_IMAGE_NAME;
-//  string        fontInterface;
   string        fontBig;
 
   bool          isFullscreen;
@@ -29,9 +28,9 @@ public:
   const int     LOG_Y_CELLS_OFFSET;
   const int     LOG_X_CELLS;
   bool          isAsciiWallSymbolFullSquare;
-  bool          useRangedWpnMleeePrompt;
+  bool          useRangedWpnMeleeePrompt;
+  bool          useRangedWpnAutoReload;
   bool          isIntroLevelSkipped;
-  bool          isGunsAutoReloaded;
   int           mainscreenHeight;
   int           logHeight;
   const int     CHARACTER_LINES_Y_CELLS_OFFSET;

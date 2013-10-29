@@ -37,7 +37,7 @@ void DebugModeStatPrinter::run() {
   printLine("SPELL MAX SPI COSTS");
   printLine(separator);
   for(int i = 0; i < endOfSpells; i++) {
-    Spell* const spell = eng->spellHandler->getSpellFromId(Spells_t(i));
+    Spell* const spell = eng->spellHandler->getSpellFromId(Spell_t(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');
     Range cost = spell->getSpiCost(true, eng->player, eng);

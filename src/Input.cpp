@@ -226,32 +226,24 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       if(eng->player->getPropHandler()->allowAttackRanged(true)) {
 
-        Item* const firearmItem =
+        Item* const item =
           eng->player->getInventory()->getItemInSlot(slot_wielded);
 
-        Weapon* firearm = NULL;
+        Weapon* wpn = NULL;
 
-        if(firearmItem != NULL) {
-          if(firearmItem->getData().isRangedWeapon) {
-            firearm = dynamic_cast<Weapon*>(firearmItem);
-          }
-        }
-
-        if(firearm == NULL) {
-          eng->log->addMsg("I am not wielding a firearm.");
+        if(item == NULL) {
+          eng->log->addMsg("I am not wielding a weapon.");
         } else {
+          wpn = dynamic_cast<Weapon*>(item);
           if(
-            firearm->nrAmmoLoaded >= 1 ||
-            firearm->getData().rangedHasInfiniteAmmo) {
-
-            if(firearm->getData().isMachineGun && firearm->nrAmmoLoaded < 5) {
-              eng->log->addMsg("Need to load more ammo.");
-            } else {
-              eng->marker->run(markerTask_aimRangedWeapon, NULL);
-            }
-          } else {
-            //If no ammo loaded, try a reload instead
+            wpn->nrAmmoLoaded >= 1 ||
+            wpn->getData().rangedHasInfiniteAmmo
+          ) {
+            eng->marker->run(markerTask_aimRangedWeapon, NULL);
+          } else if(eng->config->useRangedWpnAutoReload) {
             eng->reload->reloadWieldedWpn(*(eng->player));
+          } else {
+            eng->log->addMsg("There is no ammo loaded.");
           }
         }
       }
