@@ -23,6 +23,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
     case actor_shadowSpider:        return new ShadowSpider;          break;
     case actor_lengSpider:          return new LengSpider;            break;
     case actor_fireHound:           return new FireHound;             break;
+    case actor_frostHound:          return new FrostHound;            break;
     case actor_ghost:               return new Ghost;                 break;
     case actor_wraith:              return new Wraith;                break;
     case actor_phantasm:            return new Phantasm;              break;
@@ -46,6 +47,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
     case actor_wormMass:            return new WormMass;              break;
     case actor_dustVortex:          return new DustVortex;            break;
     case actor_fireVortex:          return new FireVortex;            break;
+    case actor_frostVortex:         return new FrostVortex;           break;
     case actor_oozeBlack:           return new OozeBlack;             break;
     case actor_colourOutOfSpace:    return new ColourOutOfSpace;      break;
     case actor_oozeClear:           return new OozeClear;             break;
@@ -66,13 +68,11 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
 //    return new LordOfSpirits;
 //    break;
 
-    default: {
-      trace << "[WARNING] Bad actor ID given, ";
-      trace << "in ActorFactory::makeActorFromId()" << endl;
-      return NULL;
-    }
-    break;
+    case actor_empty:
+    case actor_player:
+    case endOfActorIds: {} break;
   }
+  return NULL;
 }
 
 Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {

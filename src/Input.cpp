@@ -541,7 +541,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         const ItemData* const data = eng->itemDataHandler->dataList[i];
         if(
           data->isIntrinsic == false &&
-          (data->isQuaffable || data->isReadable)) {
+          (data->isPotion || data->isScroll)) {
           eng->itemFactory->spawnItemOnMap((ItemId_t)(i), eng->player->pos);
         }
       }

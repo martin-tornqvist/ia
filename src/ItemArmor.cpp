@@ -70,7 +70,7 @@ int Armor::getAbsorptionPoints() const {
 void ArmorAsbestosSuit::onWear() {
   propsEnabledOnCarrier.push_back(new PropRFire(eng, propTurnsIndefinite));
   propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
-  propsEnabledOnCarrier.push_back(new PropRElectric(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRElec(eng, propTurnsIndefinite));
 }
 
 void ArmorAsbestosSuit::onTakeOff() {

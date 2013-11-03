@@ -53,7 +53,6 @@ void GameTime::eraseElement(const unsigned int i) {
 }
 
 void GameTime::insertActorInLoop(Actor* actor) {
-  //actors_.insert(actors_.begin() + eng->dice.range(0, actors_.size()), actor);
   actors_.push_back(actor);
 }
 
@@ -201,10 +200,9 @@ void GameTime::runNewStandardTurnEvents() {
   eng->mapTests->makeVisionBlockerArray(
     eng->player->pos, visionBlockingArray);
 
-  //Check if time to regen spirit on all actors
-  const int REGEN_SPI_N_TURNS = 10;
-  const bool IS_SPI_REGEN_THIS_TURN =
-    turn_ == (turn_ / REGEN_SPI_N_TURNS) * REGEN_SPI_N_TURNS;
+  int regenSpiEveryNTurns = 10;
+  bool isSpiRegenThisTurn =
+    turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
 
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
@@ -218,7 +216,16 @@ void GameTime::runNewStandardTurnEvents() {
     }
 
     if(actor->deadState == actorDeadState_alive) {
-      if(IS_SPI_REGEN_THIS_TURN) {
+      //Regen Spi
+      if(actor == eng->player) {
+        if(eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer)) {
+          regenSpiEveryNTurns = 6;
+          isSpiRegenThisTurn =
+            turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
+        }
+      }
+
+      if(isSpiRegenThisTurn) {
         actor->restoreSpi(1, false);
       }
 

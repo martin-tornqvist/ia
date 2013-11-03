@@ -134,15 +134,15 @@ private:
 //  const string getRealTypeName() {return "Corruption";}
 //};
 
-class PotionOfBerserk: public Potion {
+class PotionOfFrenzy: public Potion {
 public:
-  PotionOfBerserk(ItemData* const itemData, Engine* engine) :
+  PotionOfFrenzy(ItemData* const itemData, Engine* engine) :
     Potion(itemData, engine) {}
-  ~PotionOfBerserk() {}
+  ~PotionOfFrenzy() {}
   void specificQuaff(Actor* const actor);
 private:
   void specificCollide(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Berserk";}
+  const string getRealTypeName() {return "Frenzy";}
 };
 
 //class PotionOfStealth: public Potion {

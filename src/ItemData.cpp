@@ -36,7 +36,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->color = clrWhite;
       d->tile = tile_empty;
       d->primaryAttackMode = primaryAttackMode_none;
-      d->isReadable = d->isScroll = d->isQuaffable = d->isEatable = false;
+      d->isScroll = d->isPotion = d->isEatable = false;
       d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
       d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
@@ -151,7 +151,6 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->glyph = '?';
       d->color = clrWhite;
       d->tile = tile_scroll;
-      d->isReadable = true;
       d->isScroll = true;
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMsg = "";
@@ -170,7 +169,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIdentified = false;
       d->glyph = '!';
       d->tile = tile_potion;
-      d->isQuaffable = true;
+      d->isPotion = true;
       d->isMissileWeapon = true;
       d->missileHitChanceMod = -5;
       d->missileDmg = DiceParam(1, 3, 0);
@@ -713,8 +712,9 @@ void ItemDataHandler::initDataList() {
 
   d = new ItemData(item_bloatedZombieSpit);
   resetData(d, itemData_rangedWpnIntr);
-  d->rangedAttackMessages = ItemAttackMessages("", "spits pus at me");
-  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_zombieAxe]);
+  d->rangedAttackMessages = ItemAttackMessages("", "spits acid pus at me");
+  setDmgFromMonsterData(
+    *d, eng->actorDataHandler->dataList[actor_bloatedZombie]);
   d->rangedSoundMessage = "I hear spitting.";
   d->rangedMissileColor = clrGreenLgt;
   d->rangedDmgType = dmgType_acid;
@@ -805,7 +805,27 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_fireHoundBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_fireHound]);
+  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_frostHound]);
+  d->meleeDmgType = dmgType_fire;
+  dataList[d->id] = d;
+
+  d = new ItemData(item_frostHoundBreath);
+  resetData(d, itemData_rangedWpnIntr);
+  d->rangedAttackMessages = ItemAttackMessages("", "breaths frost at me");
+  d->rangedSoundMessage = "I hear a chilling sound.";
+  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_frostHound]);
+  d->rangedMissileColor = clrBlueLgt;
+  d->rangedMissileGlyph = '*';
+  d->rangedMissileLeavesTrail = true;
+  d->rangedMissileLeavesSmoke = true;
+  d->rangedDmgType = dmgType_cold;
+  dataList[d->id] = d;
+
+  d = new ItemData(item_frostHoundBite);
+  resetData(d, itemData_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "bites me");
+  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_frostHound]);
+  d->meleeDmgType = dmgType_cold;
   dataList[d->id] = d;
 
   d = new ItemData(item_dustVortexEngulf);
@@ -822,6 +842,13 @@ void ItemDataHandler::initDataList() {
   setDmgFromMonsterData(
     *d, eng->actorDataHandler->dataList[actor_fireVortex]);
   d->propAppliedOnMelee = new PropBurning(eng, propTurnsStandard);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_frostVortexEngulf);
+  resetData(d, itemData_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
+  setDmgFromMonsterData(
+    *d, eng->actorDataHandler->dataList[actor_frostVortex]);
   dataList[d->id] = d;
 
   d = new ItemData(item_ghostClaw);
@@ -1120,7 +1147,7 @@ void ItemDataHandler::initDataList() {
 //  resetData(d, itemData_potion);
 //  dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfBerserk);
+  d = new ItemData(item_potionOfFrenzy);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
@@ -1137,6 +1164,10 @@ void ItemDataHandler::initDataList() {
 //  dataList[d->id] = d;
 
   d = new ItemData(item_potionOfParalyzation);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfRElec);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
@@ -1363,7 +1394,7 @@ string ItemDataHandler::getItemRef(
       return ret + ammoLoadedStr;
     }
 
-    if((d.isScroll || d.isQuaffable) &&
+    if((d.isScroll || d.isPotion) &&
         d.isTried && d.isIdentified == false) {
       return ret + " {tried}";
     }
@@ -1466,7 +1497,7 @@ string ItemDataHandler::getItemInterfaceRef(
     return armorDataLine == "" ? ret : ret + " " + armorDataLine;
   }
 
-  if((d.isScroll || d.isQuaffable) && d.isTried && d.isIdentified == false) {
+  if((d.isScroll || d.isPotion) && d.isTried && d.isIdentified == false) {
     return ret + " {tried}";
   }
 

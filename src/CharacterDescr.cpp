@@ -153,7 +153,7 @@ void CharacterDescr::makeLines() {
   vector<StringAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemData* const d = eng->itemDataHandler->dataList[i];
-    if(d->isQuaffable && (d->isTried || d->isIdentified)) {
+    if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = eng->itemFactory->spawnItem(d->id);
       potionList.push_back(
         StringAndClr(
@@ -161,7 +161,7 @@ void CharacterDescr::makeLines() {
           d->color));
       delete item;
     } else {
-      if(d->isReadable && (d->isTried || d->isIdentified)) {
+      if(d->isScroll && (d->isTried || d->isIdentified)) {
         Item* item = eng->itemFactory->spawnItem(d->id);
         manuscriptList.push_back(
           StringAndClr(

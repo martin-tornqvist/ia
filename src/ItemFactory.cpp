@@ -81,7 +81,9 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_shadowSpiderBite:         item = new Weapon(d, ammoD, eng); break;
     case item_lengSpiderBite:           item = new Weapon(d, ammoD, eng); break;
     case item_fireHoundBreath:          item = new Weapon(d, ammoD, eng); break;
+    case item_frostHoundBreath:         item = new Weapon(d, ammoD, eng); break;
     case item_fireHoundBite:            item = new Weapon(d, ammoD, eng); break;
+    case item_frostHoundBite:           item = new Weapon(d, ammoD, eng); break;
     case item_giantBatBite:             item = new Weapon(d, ammoD, eng); break;
     case item_wolfBite:                 item = new Weapon(d, ammoD, eng); break;
     case item_ghostClaw:                item = new Weapon(d, ammoD, eng); break;
@@ -104,6 +106,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_huntingHorrorBite:        item = new Weapon(d, ammoD, eng); break;
     case item_dustVortexEngulf:         item = new Weapon(d, ammoD, eng); break;
     case item_fireVortexEngulf:         item = new Weapon(d, ammoD, eng); break;
+    case item_frostVortexEngulf:        item = new Weapon(d, ammoD, eng); break;
 
     case item_scrollOfMayhem:           item = new Scroll(d, eng); break;
     case item_scrollOfTeleportation:    item = new Scroll(d, eng); break;
@@ -123,10 +126,11 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfSpirit:           item = new PotionOfSpirit(d, eng); break;
     case item_potionOfBlindness:        item = new PotionOfBlindness(d, eng); break;
 //    case item_potionOfCorruption:       item = new PotionOfCorruption(d, eng); break;
-    case item_potionOfBerserk:          item = new PotionOfBerserk(d, eng); break;
+    case item_potionOfFrenzy:           item = new PotionOfFrenzy(d, eng); break;
     case item_potionOfFortitude:        item = new PotionOfFortitude(d, eng); break;
 //    case item_potionOfToughness:        item = new PotionOfToughness(d, eng); break;
     case item_potionOfParalyzation:     item = new PotionOfParalyzation(d, eng); break;
+    case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
     case item_potionOfConfusion:        item = new PotionOfConfusion(d, eng); break;
 //    case item_potionOfSorcery:          item = new PotionOfSorcery(d, eng); break;
     case item_potionOfPoison:           item = new PotionOfPoison(d, eng); break;
@@ -134,7 +138,6 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfRFire:            item = new PotionOfRFire(d, eng); break;
 //    case item_potionOfRCold:            item = new PotionOfRCold(d, eng); break;
     case item_potionOfAntidote:         item = new PotionOfAntidote(d, eng); break;
-//    case item_potionOfRElec:            item = new PotionOfRElec(d, eng); break;
 //    case item_potionOfRAcid:            item = new PotionOfRAcid(d, eng); break;
 
     case item_deviceSentry:             item = new DeviceSentry(d, eng); break;
@@ -145,7 +148,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
 
     case item_medicalBag:               item = new MedicalBag(d, eng); break;
 
-    default: item = new Item(d, eng); break;
+    case item_empty:
+    case endOfItemIds: {} break;
   }
 
   if(item->getData().isStackable == false && NR_ITEMS != 1) {
@@ -213,8 +217,8 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
     const ItemData* const d = eng->itemDataHandler->dataList[i];
     if(
       d->isIntrinsic == false &&
-      ((d->isReadable && ALLOW_SCROLLS) ||
-       (d->isQuaffable && ALLOW_POTIONS))) {
+      ((d->isScroll && ALLOW_SCROLLS) ||
+       (d->isPotion && ALLOW_POTIONS))) {
       itemCandidates.push_back(static_cast<ItemId_t>(i));
     }
   }

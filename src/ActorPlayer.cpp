@@ -938,7 +938,7 @@ void Player::act() {
 //    const ItemDef& def = item->getInstanceDefinition();
 //
 //    //It must not be a readable item (those must be actively identified)
-//    if(def.isReadable == false) {
+//    if(def.isScroll == false) {
 //      if(def.isIdentified == false) {
 //        if(def.abilityToIdentify != ability_empty) {
 //          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);

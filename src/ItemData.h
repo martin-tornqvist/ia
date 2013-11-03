@@ -102,8 +102,8 @@ enum ItemId_t {
   item_byakheeClaw,
   item_giantMantisClaw,
   item_giantLocustBite,
-  item_fireHoundBreath, //TODO This would make more sense as a spell
-  item_fireHoundBite,
+  item_fireHoundBreath, item_frostHoundBreath, //TODO Make them spells instead?
+  item_fireHoundBite, item_frostHoundBite,
   item_giantBatBite,
   item_zombieAxe,
   item_zombieClaw,
@@ -122,8 +122,7 @@ enum ItemId_t {
   item_oozeClearSpewPus,
   item_colourOutOfSpaceTouch,
   item_huntingHorrorBite,
-  item_dustVortexEngulf,
-  item_fireVortexEngulf,
+  item_dustVortexEngulf, item_fireVortexEngulf, item_frostVortexEngulf,
 
   item_armorLeatherJacket,
   item_armorIronSuit,
@@ -150,11 +149,12 @@ enum ItemId_t {
   item_potionOfSpirit,
   item_potionOfBlindness,
 //  item_potionOfCorruption,
-  item_potionOfBerserk,
+  item_potionOfFrenzy,
 //  item_potionOfStealth,
   item_potionOfFortitude,
 //  item_potionOfToughness, //TODO Reimplement in some way?
   item_potionOfParalyzation,
+  item_potionOfRElec,
   item_potionOfConfusion,
 //  item_potionOfSorcery,
   item_potionOfPoison,
@@ -163,7 +163,6 @@ enum ItemId_t {
   item_potionOfRFire,
 //  item_potionOfRCold,
   item_potionOfAntidote,
-//  item_potionOfRElec,
 //  item_potionOfRAcid,
 
   item_deviceSentry,
@@ -218,8 +217,8 @@ public:
   SDL_Color color;
   Tile_t tile;
   PrimaryAttackMode_t primaryAttackMode;
-  bool isExplosive, isReadable, isScroll;
-  bool isQuaffable, isDevice, isEatable, isArmor, isCloak, isRing, isAmulet;
+  bool isExplosive, isScroll, isPotion, isDevice, isEatable;
+  bool isArmor, isCloak, isRing, isAmulet;
   bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
   bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
   Spell_t spellCastFromScroll;

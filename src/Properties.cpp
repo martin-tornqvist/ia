@@ -26,12 +26,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Fire resistance";
   d.nameShort = "RFire";
-  d.msg[propMsgOnStartPlayer] = "[RFire Player start]";
-  d.msg[propMsgOnStartMonster] = "[RFire Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RFire Player end]";
-  d.msg[propMsgOnEndMonster] = "[RFire Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RFire Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RFire Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to fire.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to fire.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fire.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to fire.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to fire.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to fire.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -46,12 +46,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Cold resistance";
   d.nameShort = "RCold";
-  d.msg[propMsgOnStartPlayer] = "[RCold Player start]";
-  d.msg[propMsgOnStartMonster] = "[RCold Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RCold Player end]";
-  d.msg[propMsgOnEndMonster] = "[RCold Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RCold Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RCold Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to cold.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to cold.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to cold.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to cold.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to cold.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to cold.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -66,12 +66,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Poison resistance";
   d.nameShort = "RPoison";
-  d.msg[propMsgOnStartPlayer] = "[RPoison Player start]";
-  d.msg[propMsgOnStartMonster] = "[RPoison Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RPoison Player end]";
-  d.msg[propMsgOnEndMonster] = "[RPoison Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RPoison Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RPoison Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to poison.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to poison.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to poison.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to poison.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to poison.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to poison.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -83,16 +83,16 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRElectric;
+  d.id = propRElec;
   d.stdRndTurns = Range(40, 60);
   d.name = "Electric resistance";
   d.nameShort = "RElec";
-  d.msg[propMsgOnStartPlayer] = "[RElec Player start]";
-  d.msg[propMsgOnStartMonster] = "[RElec Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RElec Player end]";
-  d.msg[propMsgOnEndMonster] = "[RElec Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RElec Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RElec Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to electricity.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to electricity.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to electricity.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to electricity.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to electricity.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to electricity.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -107,12 +107,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Acid resistance";
   d.nameShort = "RAcid";
-  d.msg[propMsgOnStartPlayer] = "[RAcid Player start]";
-  d.msg[propMsgOnStartMonster] = "[RAcid Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RAcid Player end]";
-  d.msg[propMsgOnEndMonster] = "[RAcid Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RAcid Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RAcid Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to acid.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to acid.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to acid.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to acid.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to acid.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to acid.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -127,12 +127,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Sleep resistance";
   d.nameShort = "RSleep";
-  d.msg[propMsgOnStartPlayer] = "[RSleep Player start]";
-  d.msg[propMsgOnStartMonster] = "[RSleep Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RSleep Player end]";
-  d.msg[propMsgOnEndMonster] = "[RSleep Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RSleep Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RSleep Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to sleep.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to sleep.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to sleep.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to sleep.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to sleep.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to sleep.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -143,36 +143,36 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propFreeAction;
-  d.stdRndTurns = Range(40, 60);
-  d.name = "Free action";
-  d.nameShort = "FreeAction";
-  d.msg[propMsgOnStartPlayer] = "[FreeAction Player start]";
-  d.msg[propMsgOnStartMonster] = "[FreeAction Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[FreeAction Player end]";
-  d.msg[propMsgOnEndMonster] = "[FreeAction Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[FreeAction Player more]";
-  d.msg[propMsgOnMoreMonster] = "[FreeAction Monster more]";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
-  d.isMakingMonsterAware = false;
-  d.allowDisplayTurns = true;
-  d.allowApplyMoreWhileActive = true;
-  d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
-  d.alignment = propAlignmentGood;
-  addPropData(d);
+//  d.id = propFreeAction;
+//  d.stdRndTurns = Range(40, 60);
+//  d.name = "Free action";
+//  d.nameShort = "FreeAction";
+//  d.msg[propMsgOnStartPlayer] = "[FreeAction Player start]";
+//  d.msg[propMsgOnStartMonster] = "[FreeAction Monster start]";
+//  d.msg[propMsgOnEndPlayer] = "[FreeAction Player end]";
+//  d.msg[propMsgOnEndMonster] = "[FreeAction Monster end]";
+//  d.msg[propMsgOnMorePlayer] = "[FreeAction Player more]";
+//  d.msg[propMsgOnMoreMonster] = "[FreeAction Monster more]";
+//  d.msg[propMsgOnResPlayer] = "";
+//  d.msg[propMsgOnResMonster] = "";
+//  d.isMakingMonsterAware = false;
+//  d.allowDisplayTurns = true;
+//  d.allowApplyMoreWhileActive = true;
+//  d.updatePlayerVisualWhenStartOrEnd = false;
+//  d.allowTestingOnBot = true;
+//  d.alignment = propAlignmentGood;
+//  addPropData(d);
 
   d.id = propRFear;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fear resistance";
   d.nameShort = "RFear";
-  d.msg[propMsgOnStartPlayer] = "[RFear Player start]";
-  d.msg[propMsgOnStartMonster] = "[RFear Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RFear Player end]";
-  d.msg[propMsgOnEndMonster] = "[RFear Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RFear Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RFear Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to fear.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to fear.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fear.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to fear.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to fear.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to fear.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -187,12 +187,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Confusion resistance";
   d.nameShort = "RConfusion";
-  d.msg[propMsgOnStartPlayer] = "[RConfusion Player start]";
-  d.msg[propMsgOnStartMonster] = "[RConfusion Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[RConfusion Player end]";
-  d.msg[propMsgOnEndMonster] = "[RConfusion Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[RConfusion Player more]";
-  d.msg[propMsgOnMoreMonster] = "[RConfusion Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to confusion.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to confusion.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to confusion.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to confusion.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to confusion.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to confusion.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -207,12 +207,12 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(40, 60);
   d.name = "Light sensitive";
   d.nameShort = "LgtSensitive";
-  d.msg[propMsgOnStartPlayer] = "[LgtSensitive Player start]";
-  d.msg[propMsgOnStartMonster] = "[LgtSensitive Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[LgtSensitive Player end]";
-  d.msg[propMsgOnEndMonster] = "[LgtSensitive Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[LgtSensitive Player more]";
-  d.msg[propMsgOnMoreMonster] = "[LgtSensitive Monster more]";
+  d.msg[propMsgOnStartPlayer] = "I feel vulnerable to light!";
+  d.msg[propMsgOnStartMonster] = "looks vulnerable to light.";
+  d.msg[propMsgOnEndPlayer] = "I no longer feel vulnerable to light.";
+  d.msg[propMsgOnEndMonster] = "no longer looks vulnerable to light.";
+  d.msg[propMsgOnMorePlayer] = "I feel more vulnerable to light.";
+  d.msg[propMsgOnMoreMonster] = "looks more vulnerable to light.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
@@ -280,25 +280,6 @@ void PropDataHandler::initDataList() {
   d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
-
-//  d.id = propFrozen;
-//  d.name = "Frozen";
-//  d.nameShort = "Frozen";
-//  d.msg[propMsgOnStartPlayer] = "[Frozen Player start]";
-//  d.msg[propMsgOnStartMonster] = "[Frozen Monster start]";
-//  d.msg[propMsgOnEndPlayer] = "[Frozen Player end]";
-//  d.msg[propMsgOnEndMonster] = "[Frozen Monster end]";
-//  d.msg[propMsgOnMorePlayer] = "[Frozen Player more]";
-//  d.msg[propMsgOnMoreMonster] = "[Frozen Monster more]";
-//  d.msg[propMsgOnResPlayer] = "[Frozen Player resist]";
-//  d.msg[propMsgOnResMonster] = "[Frozen Monster resist]";
-//  d.isMakingMonsterAware = true;
-//  d.allowDisplayTurns = true;
-//  d.allowApplyMoreWhileActive = true;
-//  d.updatePlayerVisualWhenStartOrEnd = true;
-//  d.allowTestingOnBot = true;
-//  d.alignment = propAlignmentBad;
-//  addPropData(d);
 
   d.id = propPoisoned;
   d.stdRndTurns = Range(30, 60);
@@ -385,14 +366,14 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(5, 9);
   d.name = "Stunned";
   d.nameShort = "Stunned";
-  d.msg[propMsgOnStartPlayer] = "[Stunned Player start]";
-  d.msg[propMsgOnStartMonster] = "[Stunned Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[Stunned Player end]";
-  d.msg[propMsgOnEndMonster] = "[Stunned Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[Stunned Player more]";
-  d.msg[propMsgOnMoreMonster] = "[Stunned Monster more]";
-  d.msg[propMsgOnResPlayer] = "[Stunned Player resist]";
-  d.msg[propMsgOnResMonster] = "[Stunned Monster resist]";
+  d.msg[propMsgOnStartPlayer] = "I am stunned!";
+  d.msg[propMsgOnStartMonster] = "is stunned.";
+  d.msg[propMsgOnEndPlayer] = "I am no longer stunned.";
+  d.msg[propMsgOnEndMonster] = "is no longer stunned.";
+  d.msg[propMsgOnMorePlayer] = "I am more stunned.";
+  d.msg[propMsgOnMoreMonster] = "is more stunned.";
+  d.msg[propMsgOnResPlayer] = "I resist stunning.";
+  d.msg[propMsgOnResMonster] = "resists stunning.";
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -521,18 +502,18 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propBerserk;
+  d.id = propFrenzied;
   d.stdRndTurns = Range(30, 60);
-  d.name = "Berserk";
-  d.nameShort = "Berserk";
-  d.msg[propMsgOnStartPlayer] = "[Berserk Player start]";
-  d.msg[propMsgOnStartMonster] = "[Berserk Monster start]";
-  d.msg[propMsgOnEndPlayer] = "[Berserk Player end]";
-  d.msg[propMsgOnEndMonster] = "[Berserk Monster end]";
-  d.msg[propMsgOnMorePlayer] = "[Berserk Player more]";
-  d.msg[propMsgOnMoreMonster] = "[Berserk Monster more]";
-  d.msg[propMsgOnResPlayer] = "[Berserk Player resist]";
-  d.msg[propMsgOnResMonster] = "[Berserk Monster resist]";
+  d.name = "Frenzied";
+  d.nameShort = "Frenzied";
+  d.msg[propMsgOnStartPlayer] = "I feel ferocious!";
+  d.msg[propMsgOnStartMonster] = "Looks ferocious!";
+  d.msg[propMsgOnEndPlayer] = "I feel calmer.";
+  d.msg[propMsgOnEndMonster] = "Looks calmer.";
+  d.msg[propMsgOnMorePlayer] = "I feel more ferocious.";
+  d.msg[propMsgOnMoreMonster] = "Looks more ferocious.";
+  d.msg[propMsgOnResPlayer] = "I resist frenzying.";
+  d.msg[propMsgOnResMonster] = "resists frenzying.";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -743,7 +724,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propFlared:            return new PropFlared(eng, turnsInit, NR_TURNS);
     case propParalysed:         return new PropParalyzed(eng, turnsInit, NR_TURNS);
 //    case propFrozen:            return new PropFrozen(eng, turnsInit, NR_TURNS);
-    case propFreeAction:        return new PropFreeAction(eng, turnsInit, NR_TURNS);
+//    case propFreeAction:        return new PropFreeAction(eng, turnsInit, NR_TURNS);
     case propTerrified:         return new PropTerrified(eng, turnsInit, NR_TURNS);
     case propWeakened:          return new PropWeakened(eng, turnsInit, NR_TURNS);
     case propConfused:          return new PropConfused(eng, turnsInit, NR_TURNS);
@@ -754,7 +735,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propDiseased:          return new PropDiseased(eng, turnsInit, NR_TURNS);
     case propPoisoned:          return new PropPoisoned(eng, turnsInit, NR_TURNS);
     case propFainted:           return new PropFainted(eng, turnsInit, NR_TURNS);
-    case propBerserk:           return new PropBerserk(eng, turnsInit, NR_TURNS);
+    case propFrenzied:          return new PropFrenzied(eng, turnsInit, NR_TURNS);
 //    case propPerfectStealth:    return new PropPerfectStealth(eng, turnsInit, NR_TURNS);
 //    case propPerfectFortitude:  return new PropPerfectFortitude(eng, turnsInit, NR_TURNS);
 //    case propPerfectToughness:  return new PropPerfectToughness(eng, turnsInit, NR_TURNS);
@@ -768,7 +749,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propRAcid:             return new PropRAcid(eng, turnsInit, NR_TURNS);
     case propRCold:             return new PropRCold(eng, turnsInit, NR_TURNS);
     case propRConfusion:        return new PropRConfusion(eng, turnsInit, NR_TURNS);
-    case propRElectric:         return new PropRElectric(eng, turnsInit, NR_TURNS);
+    case propRElec:             return new PropRElec(eng, turnsInit, NR_TURNS);
     case propRFear:             return new PropRFear(eng, turnsInit, NR_TURNS);
     case propRFire:             return new PropRFire(eng, turnsInit, NR_TURNS);
     case propRPoison:           return new PropRPoison(eng, turnsInit, NR_TURNS);
@@ -822,6 +803,7 @@ bool PropHandler::hasProp(const PropId_t id) const {
 
 bool PropHandler::hasProp(const PropId_t id,
                           const vector<Prop*> propList) const {
+
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
     if(propList.at(i)->getId() == id) {
@@ -831,12 +813,27 @@ bool PropHandler::hasProp(const PropId_t id,
   return false;
 }
 
-bool PropHandler::tryResistProp(const PropId_t id,
-                                const vector<Prop*>& propList) {
+bool PropHandler::tryResistProp(
+  const PropId_t id, const vector<Prop*>& propList) {
+
   const int NR_PROPS = propList.size();
   for(int i = 0; i < NR_PROPS; i++) {
     Prop* const prop = propList.at(i);
     if(prop->tryResistOtherProp(id)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool PropHandler::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  const int NR_PROPS = propList.size();
+  for(int i = 0; i < NR_PROPS; i++) {
+    if(propList.at(i)->tryResistDmg(dmgType, ALLOW_MESSAGE_WHEN_TRUE)) {
       return true;
     }
   }
@@ -1489,7 +1486,7 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
   }
 }
 
-void PropBerserk::changeMovePos(const Pos& actorPos, Pos& movePos) {
+void PropFrenzied::changeMovePos(const Pos& actorPos, Pos& movePos) {
   if(actorPos != movePos) {
 
     vector<Actor*> spotedEnemies;
@@ -1527,12 +1524,12 @@ void PropBerserk::changeMovePos(const Pos& actorPos, Pos& movePos) {
   }
 }
 
-bool PropBerserk::tryResistOtherProp(const PropId_t id) {
+bool PropFrenzied::tryResistOtherProp(const PropId_t id) {
   return id == propConfused || id == propFainted || id == propTerrified ||
          id == propWeakened;
 }
 
-void PropBerserk::onStart() {
+void PropFrenzied::onStart() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
   owningActor_->getPropHandler()->endAppliedProp(propBurning, visionBlockers);
@@ -1541,19 +1538,19 @@ void PropBerserk::onStart() {
   owningActor_->getPropHandler()->endAppliedProp(propWeakened, visionBlockers);
 }
 
-void PropBerserk::onEnd() {
+void PropFrenzied::onEnd() {
   owningActor_->getPropHandler()->tryApplyProp(
     new PropWeakened(eng, propTurnsStandard));
 }
 
-bool PropBerserk::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng->log->addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
-bool PropBerserk::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng->log->addMsg("I'm too enraged to concentrate!");
   }
@@ -1633,10 +1630,10 @@ void PropParalyzed::onStart() {
   }
 }
 
-bool PropFreeAction::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
-  return false;
-}
+//bool PropFreeAction::tryResistOtherProp(const PropId_t id) {
+//  //TODO Add resistance checks for this property
+//  return false;
+//}
 
 void PropFainted::onStart() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -1673,8 +1670,48 @@ void PropFlared::onNewTurn() {
   }
 }
 
-bool PropRCold::tryResistOtherProp(const PropId_t id) {
-  //TODO Add resistance checks for this property
+bool PropRAcid::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  if(dmgType == dmgType_acid) {
+    if(ALLOW_MESSAGE_WHEN_TRUE) {
+      if(owningActor_ == eng->player) {
+        eng->log->addMsg("I feel a faint burning sensation.");
+      } else if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
+        eng->log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+bool PropRCold::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  if(dmgType == dmgType_cold) {
+    if(ALLOW_MESSAGE_WHEN_TRUE) {
+      if(owningActor_ == eng->player) {
+        eng->log->addMsg("I feel chilly.");
+      } else if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
+        eng->log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+bool PropRElec::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  if(dmgType == dmgType_electric) {
+    if(ALLOW_MESSAGE_WHEN_TRUE) {
+      if(owningActor_ == eng->player) {
+        eng->log->addMsg("I feel a faint tingle.");
+      } else if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
+        eng->log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
+      }
+    }
+    return true;
+  }
   return false;
 }
 
@@ -1707,6 +1744,21 @@ void PropRFire::onStart() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
   owningActor_->getPropHandler()->endAppliedProp(propBurning, visionBlockers);
+}
+
+bool PropRFire::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  if(dmgType == dmgType_fire) {
+    if(ALLOW_MESSAGE_WHEN_TRUE) {
+      if(owningActor_ == eng->player) {
+        eng->log->addMsg("I feel hot.");
+      } else if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
+        eng->log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
+      }
+    }
+    return true;
+  }
+  return false;
 }
 
 bool PropRPoison::tryResistOtherProp(const PropId_t id) {

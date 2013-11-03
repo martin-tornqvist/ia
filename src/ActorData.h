@@ -21,7 +21,7 @@ enum ActorId_t {
   actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider, actor_lengSpider,
   actor_miGo,
   actor_ghoul, actor_shadow,
-  actor_fireHound, actor_wolf,
+  actor_wolf, actor_fireHound, actor_frostHound,
   actor_ghost, actor_phantasm, actor_wraith,
   actor_giantBat, actor_byakhee,
   actor_giantMantis, actor_giantLocust,
@@ -31,7 +31,7 @@ enum ActorId_t {
 //  actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
-  actor_dustVortex, actor_fireVortex,
+  actor_dustVortex, actor_fireVortex, actor_frostVortex,
   actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison, actor_colourOutOfSpace,
   actor_huntingHorror,
 

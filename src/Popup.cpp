@@ -48,7 +48,7 @@ void Popup::showMessage(const string& message,
   if(title != "") {
     eng->renderer->drawTextCentered(
       title, panel_map, Pos(MAP_X_CELLS_HALF, TITLE_Y_POS),
-      clrNosferatuTealLgt, clrBlack, true);
+      clrNosferatuSepiaLgt, clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -69,7 +69,7 @@ void Popup::showMessage(const string& message,
 
   eng->renderer->drawTextCentered(
     "space/esc to close", panel_map, Pos(MAP_X_CELLS_HALF, yPos),
-    clrNosferatuTeal);
+    clrNosferatuSepia);
 
   eng->renderer->updateScreen();
 
@@ -161,8 +161,8 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines,
 
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
-    SDL_Color clr = i == currentChoice ? clrNosferatuTealLgt :
-                    clrNosferatuTealDrk;
+    SDL_Color clr = i == currentChoice ? clrNosferatuSepiaLgt :
+                    clrNosferatuSepiaDrk;
     eng->renderer->drawTextCentered(
       choices.at(i), panel_map, Pos(MAP_X_CELLS_HALF, yPos),
       clr, clrBlack, true);

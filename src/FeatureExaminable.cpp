@@ -110,7 +110,7 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
     const ItemData& d = item->getData();
-    if(d.isQuaffable || d.id == item_molotov) {
+    if(d.isPotion || d.id == item_molotov) {
       delete item;
       items_.erase(items_.begin() + i);
       engine->log->addMsg("I hear a muffled shatter.");
@@ -807,9 +807,9 @@ void Fountain::drink() {
         new PropPoisoned(eng, propTurnsStandard));
     } break;
 
-    case fountainTypeBerserk: {
+    case fountainTypeFrenzy: {
       propHandler->tryApplyProp(
-        new PropBerserk(eng, propTurnsStandard));
+        new PropFrenzied(eng, propTurnsStandard));
     } break;
 
 //    case fountainTypeVisions: {

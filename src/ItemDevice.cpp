@@ -38,12 +38,11 @@ bool Device::toggle() {
     isActivated_ = true;
     nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
+    specificToggle();
     const string message = getSpecificActivateMessage();
     if(message != "") {
       eng->log->addMsg(message);
     }
-    specificToggle();
-//    runBadEffect();
   }
   return false;
 }
@@ -194,11 +193,6 @@ void DeviceTranslocator::runGoodEffect() {
   }
 }
 
-//---------------------------------------------------- SPELL REFLECTOR
-//void DeviceSpellReflector::runGoodEffect() {
-//
-//}
-
 //---------------------------------------------------- ELECTRIC LANTERN
 void DeviceElectricLantern::specificnewTurnInInventory() {
   if(isActivated_ && malfunctCooldown_ > 0) {
@@ -217,6 +211,7 @@ void DeviceElectricLantern::printToggleMessage() {
 }
 
 void DeviceElectricLantern::specificToggle() {
+  eng->audio->play(sfxElectricLantern);
   eng->gameTime->updateLightMap();
   eng->player->updateFov();
   eng->renderer->drawMapAndInterface();

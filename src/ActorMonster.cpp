@@ -187,7 +187,7 @@ void Monster::act() {
   eng->gameTime->endTurnOfCurrentActor();
 }
 
-void Monster::monsterHit(int& dmg) {
+void Monster::onMonsterHit(int& dmg) {
   playerAwarenessCounter = data_->nrTurnsAwarePlayer;
 
   if(data_->monsterShockLevel != monsterShockLevel_none) {

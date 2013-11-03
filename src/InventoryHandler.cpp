@@ -218,6 +218,9 @@ bool InventoryHandler::runUseScreen() {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
+
+  eng->audio->play(sfxBackpack);
+
   eng->renderInventory->drawUseMode(browser, generalItemsToShow);
 
   while(true) {
@@ -299,6 +302,9 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
+
+  eng->audio->play(sfxBackpack);
+
   eng->renderInventory->drawEquipMode(
     browser, slotToEquip->id, generalItemsToShow);
 
@@ -349,6 +355,9 @@ void InventoryHandler::runBrowseInventoryMode() {
   MenuBrowser browser(generalItemsToShow.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
+
+  eng->audio->play(sfxBackpack);
+
   eng->renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
 
   while(true) {

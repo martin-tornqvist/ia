@@ -258,7 +258,7 @@ void ScrollNameHandler::setFalseScrollName(ItemData* d) {
 
 void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(eng->itemDataHandler->dataList[i]->isReadable) {
+    if(eng->itemDataHandler->dataList[i]->isScroll) {
       lines.push_back(eng->itemDataHandler->dataList[i]->name.name);
       lines.push_back(eng->itemDataHandler->dataList[i]->name.name_plural);
       lines.push_back(eng->itemDataHandler->dataList[i]->name.name_a);
@@ -268,7 +268,7 @@ void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
 
 void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    if(eng->itemDataHandler->dataList[i]->isReadable) {
+    if(eng->itemDataHandler->dataList[i]->isScroll) {
       eng->itemDataHandler->dataList[i]->name.name = lines.front();
       lines.erase(lines.begin());
       eng->itemDataHandler->dataList[i]->name.name_plural = lines.front();

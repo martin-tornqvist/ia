@@ -110,8 +110,8 @@ protected:
   virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
   virtual void actorSpecific_spawnStartItems() = 0;
 
-  virtual void monsterHit(int& dmg) {(void)dmg;}
-  virtual void monsterDeath() {}
+  virtual void onMonsterHit(int& dmg) {(void)dmg;}
+  virtual void onMonsterDeath() {}
 
   SDL_Color clr_;
   char glyph_;

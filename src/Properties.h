@@ -16,35 +16,20 @@ class Actor;
 class TimedEntity;
 class Weapon;
 
-//enum StatusEffects_t {
-//  propWound, propBlind, statusBurning, propFlared, statusParalyzed,
-//  statusTerrified, propConfused, statusWaiting, propSlowed ,
-//  statusInfected, statusDiseased, statusPoisoned, statusFainted,
-//  propWeakened, statusPerfectReflexes, statusPerfectAim,
-//  propCursed, propBlessed, statusClairvoyant, statusNailed,
-//
-//  //Status for the steady aimer ability
-//  statusStill,
-//
-//  //The following are mostly used for AI controll
-//  statusDisabledAttack, statusDisabledMelee, statusDisabledRanged
-//};
-
 enum PropId_t {
   propRFire,
   propRCold,
   propRPoison,
-  propRElectric,
+  propRElec,
   propRAcid,
   propRSleep,
-  propFreeAction,
+//  propFreeAction,
   propRFear,
   propRConfusion,
   propLightSensitive,
   propBlind,
   propFainted,
   propBurning,
-//  propFrozen,
   propPoisoned,
   propParalysed,
   propTerrified,
@@ -56,7 +41,7 @@ enum PropId_t {
   propInfected,
   propDiseased,
   propWeakened,
-  propBerserk,
+  propFrenzied,
   propClairvoyant,
   propBlessed,
   propCursed,
@@ -180,15 +165,6 @@ public:
 
   Prop* getAppliedProp(const PropId_t id) const;
 
-//  bool hasAnyBadEffect() const {
-//    for(unsigned int i = 0; i < effects.size(); i++) {
-//      if(effects.at(i)->isConsideredBeneficial() == false) {
-//        return true;
-//      }
-//    }
-//    return false;
-//  }
-
   bool endAppliedProp(const PropId_t id,
                       const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS],
                       const bool RUN_PROP_END_EFFECTS = true);
@@ -207,8 +183,10 @@ public:
   Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
                        const int NR_TURNS = -1);
 
-private:
+  bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE);
 
+private:
   void getPropsFromSource(vector<Prop*>& propList,
                           const PropSrc_t source) const;
 
@@ -302,16 +280,18 @@ public:
     (void)id;
     return false;
   }
+  virtual bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+    (void)dmgType;
+    (void)ALLOW_MESSAGE_WHEN_TRUE;
+    return false;
+  }
 
   int turnsLeft_;
 
   Actor* owningActor_;
 
-//  void setTurnsFromRandomStandard();
-
 protected:
-//  virtual DiceParam getRandomStandardNrTurns() = 0;
-
   const PropId_t id_;
   Engine* const eng;
   const PropData* const data_;
@@ -696,26 +676,17 @@ public:
 private:
 };
 
-//class PropFrozen: public Prop {
+//class PropFreeAction: public Prop {
 //public:
-//  PropFrozen(Engine* engine, PropTurns_t turnsInit,
-//             int turns = -1) :
-//    Prop(propFrozen, engine, turnsInit, turns) {}
-//  ~PropFrozen() {}
+//  PropFreeAction(Engine* engine, PropTurns_t turnsInit,
+//                 int turns = -1) :
+//    Prop(propFreeAction, engine, turnsInit, turns) {}
+//  ~PropFreeAction() {}
+//
+//  bool tryResistOtherProp(const PropId_t id);
+//
 //private:
 //};
-
-class PropFreeAction: public Prop {
-public:
-  PropFreeAction(Engine* engine, PropTurns_t turnsInit,
-                 int turns = -1) :
-    Prop(propFreeAction, engine, turnsInit, turns) {}
-  ~PropFreeAction() {}
-
-  bool tryResistOtherProp(const PropId_t id);
-
-private:
-};
 
 class PropFainted: public Prop {
 public:
@@ -766,13 +737,13 @@ public:
 private:
 };
 
-class PropBerserk: public Prop {
+class PropFrenzied: public Prop {
 public:
-  PropBerserk(Engine* engine, PropTurns_t turnsInit,
+  PropFrenzied(Engine* engine, PropTurns_t turnsInit,
               int turns = -1) :
-    Prop(propBerserk, engine, turnsInit, turns) {}
+    Prop(propFrenzied, engine, turnsInit, turns) {}
 
-  ~PropBerserk() {}
+  ~PropFrenzied() {}
 
   void onStart();
   void onEnd();
@@ -794,10 +765,12 @@ private:
 
 class PropRAcid: public Prop {
 public:
-  PropRAcid(Engine* engine, PropTurns_t turnsInit,
-            int turns = -1) :
+  PropRAcid(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRAcid, engine, turnsInit, turns) {}
   ~PropRAcid() {}
+
+  bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE);
 
 private:
 };
@@ -809,7 +782,8 @@ public:
     Prop(propRCold, engine, turnsInit, turns) {}
   ~PropRCold() {}
 
-  bool tryResistOtherProp(const PropId_t id);
+  bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE);
 
 private:
 };
@@ -828,12 +802,15 @@ public:
 private:
 };
 
-class PropRElectric: public Prop {
+class PropRElec: public Prop {
 public:
-  PropRElectric(Engine* engine, PropTurns_t turnsInit,
+  PropRElec(Engine* engine, PropTurns_t turnsInit,
                 int turns = -1) :
-    Prop(propRElectric, engine, turnsInit, turns) {}
-  ~PropRElectric() {}
+    Prop(propRElec, engine, turnsInit, turns) {}
+  ~PropRElec() {}
+
+  bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE);
 
 private:
 };
@@ -862,6 +839,9 @@ public:
   void onStart();
 
   bool tryResistOtherProp(const PropId_t id);
+
+  bool tryResistDmg(
+    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE);
 
 private:
 };

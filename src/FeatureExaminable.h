@@ -163,7 +163,7 @@ enum FountainType_t {
 //  fountainTypeTainted,
   fountainTypeDiseased,
   fountainTypePoisoned,
-  fountainTypeBerserk,
+  fountainTypeFrenzy,
 //  fountainTypeVisions,
   endOfFountainTypes
 };

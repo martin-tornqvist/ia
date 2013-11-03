@@ -90,7 +90,7 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
   eng->renderer->drawTextCentered(
-    "Describe yourself", panel_screen,
+    "Create character", panel_screen,
     Pos(MAP_X_CELLS_HALF, Y0_TITLE), clrWhite, clrBlack, true);
 
   const int browserY = browser.getPos().y;
@@ -111,8 +111,8 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
     const bool IS_MARKED  = browserY == int(i) &&
                             step == CharGenStep_traits;
     const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
-    const SDL_Color clr   = IS_MARKED ? clrNosferatuTealLgt :
-                            clrNosferatuTealDrk;
+    const SDL_Color clr   = IS_MARKED ? clrNosferatuSepiaLgt :
+                            clrNosferatuSepiaDrk;
     eng->renderer->drawText(name, panel_screen, Pos(X_TRAITS, yPos), clr);
     if(IS_PICKED) {
       if(eng->config->isTilesMode) {
@@ -145,8 +145,8 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
       const bool IS_MARKED  = browserY == int(i) &&
                               step == CharGenStep_skills;
       const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
-      const SDL_Color clr   = IS_MARKED ? clrNosferatuTealLgt :
-                              clrNosferatuTealDrk;
+      const SDL_Color clr   = IS_MARKED ? clrNosferatuSepiaLgt :
+                              clrNosferatuSepiaDrk;
       eng->renderer->drawText(name, panel_screen, Pos(X_SKILLS, yPos), clr);
       if(IS_PICKED) {
         if(eng->config->isTilesMode) {
@@ -172,7 +172,7 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
       step == CharGenStep_traits ? bonsTraits.at(browserY) :
       bonsSkills.at(browserY);
     string effectDescr =
-      "Effect(s): " + eng->playerBonHandler->getBonEffectDescr(markedBon);
+      "Effects: " + eng->playerBonHandler->getBonEffectDescr(markedBon);
     const int MAX_WIDTH_DESCR = 60;
     vector<string> descrLines =
       eng->textFormatting->lineToLines(effectDescr, MAX_WIDTH_DESCR);
@@ -211,7 +211,7 @@ void PlayerEnterName::draw(const string& currentString, const Pos& pos) {
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
   eng->renderer->drawText(
-    NAME_STR, panel_screen, pos + Pos(0, 1), clrNosferatuTealLgt);
+    NAME_STR, panel_screen, pos + Pos(0, 1), clrNosferatuSepiaLgt);
   eng->renderer->updateScreen();
 }
 

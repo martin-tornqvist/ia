@@ -148,7 +148,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           actorHere->hit(data->dmg, dmgType_physical);
 
           //If the thing that hit an actor is a potion, let it make stuff happen...
-          if(itemThrownData.isQuaffable) {
+          if(itemThrownData.isPotion) {
             dynamic_cast<Potion*>(&itemThrown)->collide(
               curPos, actorHere);
             delete &itemThrown;
@@ -177,13 +177,13 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
     if(featureHere->isShootPassable() == false) {
-      blockedInElement = itemThrownData.isQuaffable ? i : i - 1;
+      blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
     }
   }
 
   //If potion, collide it on the landscape
-  if(itemThrownData.isQuaffable) {
+  if(itemThrownData.isPotion) {
     if(blockedInElement >= 0) {
       dynamic_cast<Potion*>(&itemThrown)->collide(
         path.at(blockedInElement), NULL);

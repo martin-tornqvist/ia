@@ -152,15 +152,15 @@ void PotionOfConfusion::specificCollide(
 //  }
 //}
 
-void PotionOfBerserk::specificQuaff(Actor* const actor) {
+void PotionOfFrenzy::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropBerserk(eng, propTurnsStandard));
+    new PropFrenzied(eng, propTurnsStandard));
   if(eng->player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
 }
 
-void PotionOfBerserk::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfFrenzy::specificCollide(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {
     specificQuaff(actor);
@@ -306,7 +306,7 @@ void PotionOfAntidote::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfRElec::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
-    new PropRElectric(eng, propTurnsStandard));
+    new PropRElec(eng, propTurnsStandard));
 
   if(eng->player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -362,7 +362,7 @@ void PotionNameHandler::setColorAndFalseName(ItemData* d) {
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemData* const d = eng->itemDataHandler->dataList[i];
-    if(d->isQuaffable) {
+    if(d->isPotion) {
       lines.push_back(d->name.name);
       lines.push_back(d->name.name_plural);
       lines.push_back(d->name.name_a);
@@ -376,7 +376,7 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
 void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemData* const d = eng->itemDataHandler->dataList[i];
-    if(d->isQuaffable) {
+    if(d->isPotion) {
       d->name.name = lines.front();
       lines.erase(lines.begin());
       d->name.name_plural = lines.front();
@@ -456,13 +456,16 @@ void Potion::quaff(Actor* const actor) {
   if(actor == eng->player) {
     data_->isTried = true;
 
-    eng->player->incrShock(shockValue_heavy);
+    eng->audio->play(sfxPotionQuaff);
 
     if(data_->isIdentified) {
       eng->log->addMsg("I drink " + data_->name.name_a + "...");
     } else {
       eng->log->addMsg("I drink an unknown " + data_->name.name + "...");
     }
+
+    eng->player->incrShock(shockValue_heavy);
+
   }
 
   specificQuaff(actor);

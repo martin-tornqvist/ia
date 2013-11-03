@@ -101,7 +101,7 @@ public:
   void speakPhrase();
 
 protected:
-  void monsterHit(int& dmg);
+  void onMonsterHit(int& dmg);
 };
 
 class Rat: public Monster {
@@ -311,6 +311,13 @@ public:
   void actorSpecific_spawnStartItems();
 };
 
+class FrostHound: public Monster {
+public:
+  FrostHound() : Monster() {}
+  ~FrostHound() {}
+  void actorSpecific_spawnStartItems();
+};
+
 class Ghost: public Monster {
 public:
   Ghost() : Monster() {}
@@ -449,7 +456,7 @@ public:
   bool actorSpecificAct();
 
   virtual void actorSpecific_spawnStartItems() = 0;
-  virtual void monsterDeath() = 0;
+  virtual void onMonsterDeath() = 0;
 private:
   int pullCooldown;
 };
@@ -459,7 +466,7 @@ public:
   DustVortex() : Vortex() {}
   ~DustVortex() {}
   void actorSpecific_spawnStartItems();
-  void monsterDeath();
+  void onMonsterDeath();
 };
 
 class FireVortex: public Vortex {
@@ -467,7 +474,15 @@ public:
   FireVortex() : Vortex() {}
   ~FireVortex() {}
   void actorSpecific_spawnStartItems();
-  void monsterDeath();
+  void onMonsterDeath();
+};
+
+class FrostVortex: public Vortex {
+public:
+  FrostVortex() : Vortex() {}
+  ~FrostVortex() {}
+  void actorSpecific_spawnStartItems();
+  void onMonsterDeath();
 };
 
 class Ooze: public Monster {

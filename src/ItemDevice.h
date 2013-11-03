@@ -100,17 +100,6 @@ private:
   string getSpecificActivateMessage();
 };
 
-//class DeviceSpellReflector: public Device {
-//public:
-//  DeviceSpellReflector(ItemDef* const itemDefinition) :
-//    Device(itemDefinition) {}
-//
-//  ~DeviceSpellReflector() {}
-//
-//private:
-//  void runGoodEffect(Engine* const engine);
-//};
-
 class DeviceElectricLantern: public Device {
 public:
   DeviceElectricLantern(ItemData* const itemData, Engine* engine) :

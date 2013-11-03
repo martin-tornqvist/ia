@@ -333,13 +333,19 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     return false;
   }
 
-  monsterHit(dmg);
-  trace << "Actor: Damage after monsterHit(): " << dmg << endl;
+  onMonsterHit(dmg);
+  trace << "Actor: Damage after onMonsterHit(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
   if(dmgType == dmgType_spirit) {
     return hitSpi(dmg);
+  }
+
+  //Property resists?
+  const bool ALLOW_DMG_RES_MSG = deadState == actorDeadState_alive;
+  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
+    return false;
   }
 
   //Filter damage through worn armor
@@ -507,7 +513,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 
   clr_ = clrRedLgt;
 
-  monsterDeath();
+  onMonsterDeath();
 
   //Give exp if monster, and count up nr of kills.
   if(this != eng->player) {

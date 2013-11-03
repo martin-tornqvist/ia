@@ -29,7 +29,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
   }
 
   Pos pos(MAP_X_CELLS / 2, 3);
-//  const int X_POS_LEFT = pos.x - 11;
 
   trace << "MainMenu: Calling clearWindow()" << endl;
   eng->renderer->clearScreen();
@@ -45,7 +44,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
         cha = 'a' + eng->dice.range(0, 25);
       }
       SDL_Color bgClr = clrBlack;
-      //bgClr.r = bgClr.g = bgClr.b = BG_BRIGHTNESS;
       bgClr.r = BG_BRIGHTNESS / 2;
       bgClr.g = BG_BRIGHTNESS / 2;
       bgClr.b = BG_BRIGHTNESS;
@@ -56,7 +54,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
   trace << "MainMenu: Drawing HPL quote" << endl;
   const int QUOTE_BRIGHTNESS = BG_BRIGHTNESS + 7;
   SDL_Color quoteClr = clrBlack;
-  //quoteClr.r = quoteClr.g = quoteClr.b = QUOTE_BRIGHTNESS;
   quoteClr.r = QUOTE_BRIGHTNESS / 2;
   quoteClr.g = QUOTE_BRIGHTNESS / 2;
   quoteClr.b = QUOTE_BRIGHTNESS;
@@ -82,7 +79,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
           clr.r += eng->dice.range(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng->renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
-                                       pos, clr);
+                                   pos, clr);
         }
         pos.x++;
       }
@@ -91,15 +88,15 @@ void MainMenu::draw(const MenuBrowser& browser) {
     pos.y += 3;
   }
 
-  pos.x = 48; //MAP_X_CELLS / 2;
+  pos.x = 48;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1), clrYellow);
+    eng->renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1),
+                            clrYellow);
   }
 
-
-  SDL_Color clrActive   = clrNosferatuTealLgt;
-  SDL_Color clrInactive = clrNosferatuTealDrk;
+  SDL_Color clrActive   = clrNosferatuSepiaLgt;
+  SDL_Color clrInactive = clrNosferatuSepiaDrk;
 
   eng->renderer->drawText("New journey", panel_screen, pos,
                           browser.isPosAtKey('a') ? clrActive : clrInactive);
@@ -146,7 +143,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   eng->renderer->drawTextCentered(
     eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist",
-    panel_character, Pos(pos.x, 1), clrGray);
+    panel_character, Pos(pos.x, 1), clrWhite);
 
 //  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
 

@@ -24,24 +24,33 @@ Audio::~Audio() {
 void Audio::loadAllAudio() {
   freeAssets();
 
+  //Monster sounds
   loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
   loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
   loadAudioFile(sfxZombieGrowl,             "sfx_zombieGrowl.ogg");
   loadAudioFile(sfxGhoulGrowl,              "sfx_ghoulGrowl.ogg");
+  loadAudioFile(sfxOozeGurgle,              "sfx_oozeGurgle.ogg");
 
+  //Weapon and attack sounds
   loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
   loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
   loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
   loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
 
+  //Environment sounds
   loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
-
+  loadAudioFile(sfxExplosion,               "sfx_explosion.ogg");
+  loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
   loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
   loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
   loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
   loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
 
-  loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
+  //User interface sounds
+  loadAudioFile(sfxBackpack,                "sfx_backpack.ogg");
+  loadAudioFile(sfxPickup,                  "sfx_pickup.ogg");
+  loadAudioFile(sfxElectricLantern,         "sfx_electricLantern.ogg");
+  loadAudioFile(sfxPotionQuaff,             "sfx_potionQuaff.ogg");
 
   int a = 1;
   for(int i = startOfAmbSfx + 1; i < endOfAmbSfx; i++) {

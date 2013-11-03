@@ -8,6 +8,7 @@
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
 #include "ItemScroll.h"
+#include "ItemPotion.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
 
@@ -36,7 +37,8 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
     } break;
 
     case playerBon_occultist: {
-      for(int i = 0; i < 2; i++) {
+      const int NR_SCROLLS_TO_START_WITH = 2;
+      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
         Item* const item =
           eng->itemFactory->spawnRandomScrollOrPotion(true, false);
 
@@ -58,6 +60,23 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
           delete item;
           i--;
         }
+      }
+    } break;
+
+    case playerBon_alchemist: {
+      for(int i = 1; i < endOfItemIds; i++) {
+        ItemData* const d = eng->itemDataHandler->dataList[i];
+        if(d->isPotion) {
+          Item* const item      = eng->itemFactory->spawnItem(d->id);
+          Potion* const potion  = dynamic_cast<Potion*>(item);
+          potion->identify(true);
+          delete potion;
+        }
+      }
+      const int NR_POTIONS_TO_START_WITH = 3;
+      for(int i = 0; i < NR_POTIONS_TO_START_WITH; i++) {
+        eng->player->getInventory()->putItemInGeneral(
+          eng->itemFactory->spawnRandomScrollOrPotion(false, true));
       }
     } break;
 
@@ -129,7 +148,7 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   addBon(playerBon_treasureHunter, "Treasure hunter",
          playerBonType_skill, descr);
 
-  descr  = "All potions are identified, you start with three random potions";
+  descr  = "All potions are identified, you start with three potions";
   addBon(playerBon_alchemist, "Alchemist", playerBonType_skill, descr);
 
   descr  = "You are more likely to avoid detection";
@@ -144,10 +163,7 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   addBon(playerBon_healer, "Healer",
          playerBonType_skill, descr);
 
-//  descr  = "Can heal disease";
-//  addBon(playerBon_curer, "Curer", playerBonType_skill, descr);
-
-  descr  = "Greatly increased hit point regeneration rate";
+  descr  = "Greatly increased hit point and spirit point regeneration rate";
   addBon(playerBon_rapidRecoverer, "Rapid recoverer",
          playerBonType_skill, descr);
 
