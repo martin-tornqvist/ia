@@ -6,24 +6,22 @@ namespace UnitTest {
 
 class Test;
 
-class TestList
-{
+class TestList {
 public:
-    TestList();
-    void Add (Test* test);
+  TestList();
+  void Add(Test* test);
 
-    Test* GetHead() const;
+  Test* GetHead() const;
 
 private:
-    Test* m_head;
-    Test* m_tail;
+  Test* m_head;
+  Test* m_tail;
 };
 
 
-class ListAdder
-{
+class ListAdder {
 public:
-    ListAdder(TestList& list, Test* test);
+  ListAdder(TestList& list, Test* test);
 };
 
 }

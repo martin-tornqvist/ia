@@ -3,10 +3,9 @@
 
 namespace UnitTestSuite {
 
-    inline char const* GetSuiteName ()
-    {
-        return "DefaultSuite";
-    }
+inline char const* GetSuiteName() {
+  return "DefaultSuite";
+}
 
 }
 
