@@ -3,10 +3,12 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="cb_win_ut_project" />
+		<Option platforms="Windows;" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="debug">
+				<Option platforms="Windows;" />
 				<Option output="../bin/test" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../obj/" />
 				<Option type="1" />
