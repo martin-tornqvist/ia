@@ -72,33 +72,12 @@ void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
   }
 }
 
-void Audio::play(const Sfx_t sfx) {
-  play(sfx, directionCenter, 0);
-}
-
-void Audio::play(const Sfx_t sfx, const Direction_t direction,
-                 const int DISTANCE_PERCENT) {
-  if(sfx != endOfSfx && direction != endOfDirections) {
-    //The distance value is scaled down to avoid too much volume degradation
-    const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
-    const int VOL_TOT         = (255 * VOL_PERCENT_TOT) / 100;
-
-    int volPercentOfTotL = 0;
-    switch(direction) {
-      case directionLeft:       volPercentOfTotL = 85;  break;
-      case directionUpLeft:     volPercentOfTotL = 75;  break;
-      case directionDownLeft:   volPercentOfTotL = 75;  break;
-      case directionUp:         volPercentOfTotL = 50;  break;
-      case directionCenter:     volPercentOfTotL = 50;  break;
-      case directionDown:       volPercentOfTotL = 50;  break;
-      case directionUpRight:    volPercentOfTotL = 25;  break;
-      case directionDownRight:  volPercentOfTotL = 25;  break;
-      case directionRight:      volPercentOfTotL = 15;  break;
-      case endOfDirections:     volPercentOfTotL = 50;  break;
-    }
-
-    const int VOL_L = (volPercentOfTotL * VOL_TOT) / 100;
-    const int VOL_R = VOL_TOT - VOL_L;
+void Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
+                 const int VOL_PERCENT_L) {
+  if(sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx) {
+    const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
+    const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
+    const int VOL_R   = VOL_TOT - VOL_L;
 
     Mix_SetPanning(curChannel, VOL_L, VOL_R);
 
@@ -112,6 +91,29 @@ void Audio::play(const Sfx_t sfx, const Direction_t direction,
   }
 }
 
+void Audio::playFromDirection(const Sfx_t sfx, const Direction_t direction,
+                              const int DISTANCE_PERCENT) {
+  if(direction != endOfDirections) {
+    //The distance value is scaled down to avoid too much volume degradation
+    const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
+
+    int volPercentL = 0;
+    switch(direction) {
+      case directionLeft:       volPercentL = 85;  break;
+      case directionUpLeft:     volPercentL = 75;  break;
+      case directionDownLeft:   volPercentL = 75;  break;
+      case directionUp:         volPercentL = 50;  break;
+      case directionCenter:     volPercentL = 50;  break;
+      case directionDown:       volPercentL = 50;  break;
+      case directionUpRight:    volPercentL = 25;  break;
+      case directionDownRight:  volPercentL = 25;  break;
+      case directionRight:      volPercentL = 15;  break;
+      case endOfDirections:     volPercentL = 50;  break;
+    }
+    play(sfx, VOL_PERCENT_TOT, volPercentL);
+  }
+}
+
 void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
   if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
@@ -119,8 +121,11 @@ void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
     const int TIME_REQ_BETWEEN_AMB_SFX = 30;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
-
       timeAtLastAmb = TIME_NOW;
+      const int VOL_PERCENT = eng->dice.oneIn(4) ?
+                              eng->dice.range(51, 100) :
+                              eng->dice.range(1, 50);
+      play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);
     }
   }
 }

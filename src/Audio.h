@@ -52,16 +52,15 @@ public:
   Audio(Engine* engine);
   ~Audio();
 
-  void play(const Sfx_t sfx);
+  void play(const Sfx_t sfx, const int VOL_PERCENT_TOT = 100,
+            const int VOL_PERCENT_L = 50);
 
-  void play(const Sfx_t sfx, const Direction_t direction,
-            const int DISTANCE_PERCENT);
+  void playFromDirection(const Sfx_t sfx, const Direction_t direction,
+                         const int DISTANCE_PERCENT);
 
   void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY);
 
 private:
-  void play(const Sfx_t, const int VOL_PERCENT);
-
   Sfx_t getAmbSfxSuitableForDlvl() const;
 
   void loadAllAudio();

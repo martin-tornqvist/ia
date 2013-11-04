@@ -993,7 +993,8 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
   if(IS_MSG_EMPTY == false || IS_ORIGIN_SEEN_BY_PLAYER) {
-    eng->audio->play(sfx, directionToOrigin, PERCENT_AUDIBLE_DISTANCE);
+    eng->audio->playFromDirection(
+      sfx, directionToOrigin, PERCENT_AUDIBLE_DISTANCE);
   }
 }
 
