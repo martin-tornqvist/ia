@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Map.h"
 #include "ActorPlayer.h"
+#include "GameTime.h"
 
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
   const int chebDist1 = eng->basicUtils->chebyshevDistance(c_.x, c_.y, c1.x, c1.y);

@@ -11,6 +11,8 @@
 #include "Query.h"
 #include "ItemDrop.h"
 #include "ItemFactory.h"
+#include "GameTime.h"
+#include "Audio.h"
 
 //--------------ITEM PICKUP EFFECTS--------------
 void ItemPickup::pickupEffects(Actor* actor, Item* item) {

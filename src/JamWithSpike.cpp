@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Query.h"
 #include "Inventory.h"
+#include "Renderer.h"
 
 void JamWithSpike::playerJam() const {
   eng->log->clearLog();

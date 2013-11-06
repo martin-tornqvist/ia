@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
+#include "Renderer.h"
 
 void Bash::playerBash() const {
   trace << "Bash::playerBash()" << endl;

@@ -4,7 +4,7 @@
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Render.h"
+#include "Renderer.h"
 
 Feature::Feature(Feature_t id, Pos pos, Engine* engine,
                  FeatureSpawnData* spawnData) :

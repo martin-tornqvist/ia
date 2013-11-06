@@ -6,6 +6,8 @@
 #include "Map.h"
 #include "Log.h"
 #include "Config.h"
+#include "GameTime.h"
+#include "Renderer.h"
 
 void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,

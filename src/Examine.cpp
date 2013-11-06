@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
+#include "Renderer.h"
 
 void Examine::playerExamine() const {
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);

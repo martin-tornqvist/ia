@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="cb_win_workspace">
-		<Project filename="cb_win_project.cbp">
-			<Depends filename="../test/cb_win_ut_project/cb_win_ut_project.cbp" />
-		</Project>
-		<Project filename="../test/cb_win_ut_project/cb_win_ut_project.cbp" />
+		<Project filename="cb_win_project.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

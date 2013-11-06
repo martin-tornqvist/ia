@@ -2,12 +2,13 @@
 
 #include "Engine.h"
 #include "ActorPlayer.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "GameTime.h"
 #include "Log.h"
 #include "Knockback.h"
 #include "Inventory.h"
 #include "Map.h"
+#include "Audio.h"
 
 //---------------------------------------------------- BASE CLASS
 Device::Device(ItemData* const itemData, Engine* engine) :

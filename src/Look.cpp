@@ -14,6 +14,8 @@
 #include "Marker.h"
 #include "Inventory.h"
 #include "Attack.h"
+#include "GameTime.h"
+#include "Renderer.h"
 
 Entity::Entity(FeatureMob* feature_) :
   feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureMob) {

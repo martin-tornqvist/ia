@@ -2,10 +2,6 @@
 
 #include <iostream>
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_mixer.h"
-
 #include "Converters.h"
 
 #include "Config.h"
@@ -75,7 +71,7 @@
 #include "Postmortem.h"
 #include "Query.h"
 #include "Reload.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "RenderInventory.h"
 #include "RoomTheme.h"
 #include "SaveHandler.h"
@@ -85,60 +81,44 @@
 #include "TextFormatting.h"
 #include "Thrower.h"
 #include "MenuInputHandler.h"
+#include "SdlWrapper.h"
 
 using namespace std;
 
-void Engine::initSdl() {
-  trace << "Engine::initSdl()..." << endl;
-
-  if(SDL_Init(SDL_INIT_EVERYTHING) == -1) {
-    trace << "[WARNING] Problem to init SDL, in Engine::initSdl()" << endl;
-  }
-
-  SDL_EnableUNICODE(1);
-
-  if(IMG_Init(IMG_INIT_PNG) == -1) {
-    trace << "[WARNING] Problem to init SDL_image";
-    trace << ", in Engine::initSdl()" << endl;
-  }
-
-  const int     AUDIO_FREQ      = 44100;
-  const Uint16  AUDIO_FORMAT    = MIX_DEFAULT_FORMAT;
-  const int     AUDIO_CHANNELS  = 2;
-  const int     AUDIO_BUFFERS   = 1024;
-
-  if(Mix_OpenAudio(
-        AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1) {
-    trace << "[WARNING] Problem to init SDL_mixer";
-    trace << ", in Engine::initSdl()" << endl;
-  }
-
-  Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
-
-  trace << "Engine::initSdl() [DONE]" << endl;
+void Engine::sleep(const Uint32 DURATION) const {
+  sdlWrapper->sleep(DURATION);
 }
 
-void Engine::initConfigAndRenderer() {
-  trace << "Engine::initConfigAndRenderer()..." << endl;
-  config = new Config(this);
-  renderer = new Renderer(this);
-  trace << "Engine::initConfigAndRenderer() [DONE]" << endl;
+void Engine::initSdl() {
+  sdlWrapper = new SdlWrapper;
 }
 
 void Engine::cleanupSdl() {
-  IMG_Quit();
-  Mix_AllocateChannels(0);
-  Mix_CloseAudio();
-  SDL_Quit();
+  delete sdlWrapper;
 }
 
-void Engine::cleanupConfigAndRenderer() {
-  trace << "Engine::cleanupConfigAndRenderer()..." << endl;
-//  SDL_Quit();
+void Engine::initConfig() {
+  trace << "Engine::initConfig()..." << endl;
+  config = new Config(this);
+  trace << "Engine::initConfig() [DONE]" << endl;
+}
 
-  delete renderer;
+void Engine::cleanupConfig() {
+  trace << "Engine::cleanupConfig()..." << endl;
   delete config;
-  trace << "Engine::cleanupConfigAndRenderer() [DONE]" << endl;
+  trace << "Engine::cleanupConfig() [DONE]" << endl;
+}
+
+void Engine::initRenderer() {
+  trace << "Engine::initRenderer()..." << endl;
+  renderer = new Renderer(this);
+  trace << "Engine::initRenderer() [DONE]" << endl;
+}
+
+void Engine::cleanupRenderer() {
+  trace << "Engine::cleanupRenderer()..." << endl;
+  delete renderer;
+  trace << "Engine::cleanupRenderer() [DONE]" << endl;
 }
 
 void Engine::initAudio() {
@@ -314,9 +294,4 @@ void Engine::cleanupGame() {
 
   trace << "Engine::cleanupGame() [DONE]" << endl;
 }
-
-void Engine::sleep(const Uint32 DURATION) const {
-  SDL_Delay(DURATION);
-}
-
 

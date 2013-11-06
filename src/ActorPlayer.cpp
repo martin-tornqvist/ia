@@ -2,6 +2,8 @@
 
 #include "Engine.h"
 
+#include "Renderer.h"
+#include "Audio.h"
 #include "ItemWeapon.h"
 #include "FeatureTrap.h"
 #include "PlayerCreateCharacter.h"

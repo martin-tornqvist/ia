@@ -8,6 +8,9 @@
 #include "ActorMonster.h"
 #include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
+#include "GameTime.h"
+#include "Audio.h"
+#include "Renderer.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->endAppliedPropsByMagicHealing();

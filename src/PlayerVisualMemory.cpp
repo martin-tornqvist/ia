@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Map.h"
+#include "Renderer.h"
 
 void PlayerVisualMemory::updateVisualMemory() {
   if(eng->config->isTilesMode) {

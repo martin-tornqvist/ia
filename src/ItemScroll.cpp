@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
+#include "Renderer.h"
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {

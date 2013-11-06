@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 #include "MainMenu.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "InventoryHandler.h"
 #include "PlayerBonuses.h"
 #include "PlayerCreateCharacter.h"
@@ -29,7 +29,8 @@ int main(int argc, char* argv[]) {
 
   Engine* const engine = new Engine(&quitToMainMenu);
   engine->initSdl();
-  engine->initConfigAndRenderer();
+  engine->initConfig();
+  engine->initRenderer();
   engine->initAudio();
 
   bool quitGame = false;
@@ -128,10 +129,13 @@ int main(int argc, char* argv[]) {
     }
     engine->cleanupGame();
   }
-  engine->cleanupConfigAndRenderer();
   engine->cleanupAudio();
+  engine->cleanupRenderer();
+  engine->cleanupConfig();
   engine->cleanupSdl();
+
   delete engine;
+
   trace << "main() [DONE]" << endl;
   return 0;
 }

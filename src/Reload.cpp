@@ -13,6 +13,9 @@
 #include "ItemFactory.h"
 #include "DungeonMaster.h"
 #include "PlayerBonuses.h"
+#include "GameTime.h"
+#include "Audio.h"
+#include "Renderer.h"
 
 void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
                                 Item* const ammo, const ReloadResult_t result,

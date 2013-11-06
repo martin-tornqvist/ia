@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "Engine.h"
+
+#include "Renderer.h"
 #include "Input.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"

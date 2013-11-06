@@ -8,6 +8,8 @@
 #include "ActorFactory.h"
 #include "ItemFactory.h"
 #include "MapBuildBSP.h"
+#include "GameTime.h"
+#include "Renderer.h"
 
 using namespace std;
 

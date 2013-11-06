@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
+#include "Renderer.h"
 
 void Close::playerClose() const {
   eng->log->clearLog();

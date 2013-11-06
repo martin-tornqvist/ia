@@ -6,6 +6,7 @@
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Map.h"
+#include "Renderer.h"
 
 Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
   switch(id) {

@@ -7,7 +7,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Postmortem.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ItemWeapon.h"
 #include "ActorMonster.h"
 #include "Inventory.h"

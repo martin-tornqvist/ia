@@ -18,6 +18,7 @@
 #include "Inventory.h"
 #include "Sound.h"
 #include "ActorFactory.h"
+#include "Renderer.h"
 
 Trap::Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),

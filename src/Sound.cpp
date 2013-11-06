@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
+#include "GameTime.h"
 
 bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
                                        const Sound& snd) const {

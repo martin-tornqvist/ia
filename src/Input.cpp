@@ -8,7 +8,7 @@
 #include "Input.h"
 #include "Reload.h"
 #include "Bash.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Close.h"
 #include "JamWithSpike.h"
 #include "ItemPickup.h"
@@ -28,6 +28,7 @@
 #include "Examine.h"
 #include "PlayerCreateCharacter.h"
 #include "Disarm.h"
+#include "SdlWrapper.h"
 
 void Input::clearLogMessages() {
   if(eng->player->deadState == actorDeadState_alive) {
@@ -35,13 +36,15 @@ void Input::clearLogMessages() {
   }
 }
 
-Input::Input(Engine* engine, bool* quitToMainMenu) : eng(engine), quitToMainMenu_(quitToMainMenu)  {
+Input::Input(Engine* engine, bool* quitToMainMenu) :
+  eng(engine), quitToMainMenu_(quitToMainMenu)  {
   setKeyRepeatDelays();
 }
 
 void Input::setKeyRepeatDelays() {
   trace << "Input::setKeyRepeatDelays()..." << endl;
-  SDL_EnableKeyRepeat(eng->config->keyRepeatDelay, eng->config->keyRepeatInterval);
+  SDL_EnableKeyRepeat(
+    eng->config->keyRepeatDelay, eng->config->keyRepeatInterval);
   trace << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
@@ -562,9 +565,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 }
 
 void Input::clearEvents() {
-//  sf::Event event;
-  while(SDL_PollEvent(&event_)) {
-  }
+  while(SDL_PollEvent(&event_)) {}
 }
 
 KeyboardReadReturnData Input::readKeysUntilFound() {

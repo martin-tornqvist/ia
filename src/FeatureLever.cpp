@@ -3,7 +3,7 @@
 #include "FeatureDoor.h"
 #include "FeatureFactory.h"
 #include "Engine.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ActorPlayer.h"
 
 FeatureLever::FeatureLever(Feature_t id, Pos pos, Engine* engine, LeverSpawnData* spawnData) :

@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "Engine.h"
+
 #include "Properties.h"
 #include "Actor.h"
 #include "Feature.h"

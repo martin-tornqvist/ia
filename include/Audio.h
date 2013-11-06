@@ -1,51 +1,14 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <string>
-
 #include "SDL/SDL_Mixer.h"
 
 #include "CommonTypes.h"
+#include "AudioIds.h"
 
 class Engine;
 
 using namespace std;
-
-enum Sfx_t {
-  //Monster sounds
-  sfxDogSnarl,
-  sfxWolfHowl,
-  sfxZombieGrowl,
-  sfxGhoulGrowl,
-  sfxOozeGurgle,
-
-  //Weapon and attack sounds
-  sfxPistolFire,
-  sfxPistolReload,
-  sfxShotgunSawedOffFire,
-  sfxShotgunPumpFire,
-
-  //Environment sounds
-  sfxRicochet,
-  sfxExplosion,
-  sfxExplosionMolotov,
-  sfxDoorOpen,
-  sfxDoorClose,
-  sfxDoorBang,
-  sfxDoorBreak,
-
-  //User interface sounds
-  sfxBackpack,
-  sfxPickup,
-  sfxElectricLantern,
-  sfxPotionQuaff,
-
-  //Ambient sounds
-  startOfAmbSfx,
-  endOfAmbSfx,
-
-  endOfSfx
-};
 
 class Audio {
 public:

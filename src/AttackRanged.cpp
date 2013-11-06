@@ -2,10 +2,11 @@
 
 #include "Engine.h"
 
+#include "GameTime.h"
 #include "CommonTypes.h"
 #include "Item.h"
 #include "ItemWeapon.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"

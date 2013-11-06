@@ -5,7 +5,7 @@
 #include "ActorPlayer.h"
 #include "InventoryIndexes.h"
 #include "Log.h"
-#include "Render.h"
+#include "Renderer.h"
 
 RenderInventory::RenderInventory(Engine* engine) :
   eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 60) {

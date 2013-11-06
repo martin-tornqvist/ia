@@ -5,7 +5,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "MenuInputHandler.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"

@@ -10,7 +10,7 @@
 #include "Log.h"
 #include "Look.h"
 #include "Thrower.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ItemScroll.h"
 #include "Map.h"
 #include "ItemFactory.h"

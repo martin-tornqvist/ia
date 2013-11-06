@@ -3,6 +3,8 @@
 #include <algorithm>
 
 #include "Engine.h"
+
+#include "Renderer.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Log.h"

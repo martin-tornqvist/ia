@@ -9,6 +9,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Item.h"
+#include "Renderer.h"
 
 void DungeonClimb::makeLevel() {
   trace << "DungeonClimb::makeLevel()..." << endl;

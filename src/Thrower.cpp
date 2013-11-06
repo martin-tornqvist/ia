@@ -6,7 +6,7 @@
 #include "ItemPotion.h"
 #include "ActorData.h"
 #include "ActorPlayer.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Map.h"
 #include "Log.h"
 #include "FeatureFactory.h"

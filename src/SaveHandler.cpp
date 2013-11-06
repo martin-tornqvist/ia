@@ -5,7 +5,7 @@
 
 #include "Engine.h"
 #include "Log.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
 #include "ItemScroll.h"
@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "DungeonClimb.h"
 #include "Inventory.h"
+#include "GameTime.h"
 
 void SaveHandler::save() {
   vector<string> lines;
@@ -94,8 +95,7 @@ void SaveHandler::readFile(vector<string>& lines) {
     vector<string> emptyLines;
     emptyLines.resize(0);
     writeFile(emptyLines);
-  }
-  else {
+  } else {
     trace << "[WARNING] Could not open save file, in SaveHandler::readFile()" << endl;
   }
 }

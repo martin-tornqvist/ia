@@ -1,8 +1,10 @@
 #include "Attack.h"
 
 #include "Engine.h"
+
+#include "GameTime.h"
 #include "ItemWeapon.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Postmortem.h"

@@ -3,11 +3,11 @@
 #include "Engine.h"
 
 #include "CommonTypes.h"
-
+#include "GameTime.h"
 #include "Colors.h"
 #include "ItemWeapon.h"
 #include "ItemArmor.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "DungeonMaster.h"

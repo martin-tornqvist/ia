@@ -1,8 +1,10 @@
 #include "Disarm.h"
 
 #include "Engine.h"
+
+#include "GameTime.h"
 #include "Log.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ActorPlayer.h"
 #include "Query.h"
 #include "Map.h"

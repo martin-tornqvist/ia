@@ -1,6 +1,8 @@
 #include "Actor.h"
 
 #include "Engine.h"
+
+#include "Renderer.h"
 #include "ItemArmor.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"

@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 
+#include "Renderer.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "GameTime.h"

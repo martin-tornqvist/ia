@@ -10,7 +10,6 @@
 #include "ItemData.h"
 #include "Feature.h"
 #include "Config.h"
-#include "Render.h"
 
 using namespace std;
 

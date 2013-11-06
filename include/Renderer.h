@@ -1,5 +1,5 @@
-#ifndef DRAW_MAINSCREEN_H
-#define DRAW_MAINSCREEN_H
+#ifndef RENDERER_H
+#define RENDERER_H
 
 #include <vector>
 #include <iostream>
@@ -137,8 +137,6 @@ private:
 
   SDL_Surface* screenSurface_;
   SDL_Surface* mainMenuLogoSurface_;
-
-
 };
 
 #endif

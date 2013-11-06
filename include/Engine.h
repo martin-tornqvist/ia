@@ -3,7 +3,6 @@
 
 #include "DebugMode.h"
 
-
 //-------------------------------------------------------------------
 // OPTIONS
 //-------------------------------------------------------------------
@@ -11,7 +10,6 @@
 //(This does not affect release mode, which has no trace output)
 #define VERBOSE_TRACE 0
 //-------------------------------------------------------------------
-
 
 #ifdef DEBUG
 #define trace if (0) ; else cerr
@@ -100,24 +98,27 @@ class Gods;
 class Credits;
 class PropDataHandler;
 class DirectionConverter;
+class SdlWrapper;
 
 class Player;
 
 class Engine {
 public:
-  Engine(bool* quitToMainMenu) : isCheatVisionEnabled(false),
+  Engine(bool* quitToMainMenu = NULL) : isCheatVisionEnabled(false),
     quitToMainMenu_(quitToMainMenu) {
   }
   ~Engine() {}
 
   void initSdl();
-  void initConfigAndRenderer();
+  void cleanupSdl();
+  void initConfig();
+  void cleanupConfig();
+  void initRenderer();
+  void cleanupRenderer();
   void initGame();
+  void cleanupGame();
   void initAudio();
   void cleanupAudio();
-  void cleanupGame();
-  void cleanupConfigAndRenderer();
-  void cleanupSdl();
 
   void sleep(const Uint32 DURATION) const;
 
@@ -198,6 +199,7 @@ public:
   Gods* gods;
   Credits* credits;
   PropDataHandler* propDataHandler;
+  SdlWrapper* sdlWrapper;
 
   Player* player;
 

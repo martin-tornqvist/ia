@@ -9,7 +9,7 @@
 #include "RoomTheme.h"
 #include "CommonData.h"
 #include "Properties.h"
-#include "Audio.h"
+#include "AudioIds.h"
 
 enum ActorId_t {
   actor_empty,

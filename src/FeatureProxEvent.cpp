@@ -8,6 +8,7 @@
 #include "ActorFactory.h"
 #include "MapTests.h"
 #include "Log.h"
+#include "Renderer.h"
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::newTurn() {

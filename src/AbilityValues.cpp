@@ -53,7 +53,8 @@ int AbilityValues::getVal(const Abilities_t ability,
           val += 40;
       } break;
 
-      default: {} break;
+      case ability_empty:
+      case endOfAbilities: {} break;
     }
 
     //Searching must be at least 1

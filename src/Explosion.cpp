@@ -4,7 +4,7 @@
 
 #include "FeatureData.h"
 #include "FeatureSmoke.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Map.h"
 #include "Fov.h"
 #include "ActorPlayer.h"

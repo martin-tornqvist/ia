@@ -8,7 +8,7 @@
 #include "AbilityValues.h"
 #include "Spells.h"
 #include "FeatureData.h"
-#include "Audio.h"
+#include "AudioIds.h"
 
 enum ItemWeight_t {
   itemWeight_none       = 0,

@@ -4,10 +4,11 @@
 #include "Properties.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Inventory.h"
 #include "PlayerBonuses.h"
 #include "Popup.h"
+#include "GameTime.h"
 
 bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;

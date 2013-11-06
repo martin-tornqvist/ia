@@ -3,12 +3,15 @@
 #include <fstream>
 #include <iostream>
 
-#include "Converters.h"
+#include "SDL/SDL_image.h"
+
 #include "Engine.h"
+
+#include "Converters.h"
 #include "MenuInputHandler.h"
 #include "MenuBrowser.h"
 #include "Query.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "Input.h"
 
 using namespace std;
@@ -43,7 +46,6 @@ Config::Config(Engine* engine) :
   readFile(lines);
   if(lines.empty()) {
     collectLinesFromVariables(lines);
-    writeLinesToFile(lines);
   } else {
     setAllVariablesFromLines(lines);
   }
@@ -519,14 +521,14 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
 }
 
 void Config::toggleFullscreen() {
-  SDL_Surface* screenCpy = SDL_DisplayFormat(eng->renderer->screenSurface_);
+//  SDL_Surface* screenCpy = SDL_DisplayFormat(eng->renderer->screenSurface_);
 
   isFullscreen = !isFullscreen;
   parseFontNameAndSetCellDims();
   setCellDimDependentVariables();
   eng->renderer->initAndClearPrev();
 
-  eng->renderer->applySurface(Pos(0, 0), screenCpy, NULL);
+//  eng->renderer->applySurface(Pos(0, 0), screenCpy, NULL);
   eng->renderer->updateScreen();
 
   vector<string> lines;

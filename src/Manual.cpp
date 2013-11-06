@@ -6,7 +6,7 @@
 #include "Input.h"
 #include "Engine.h"
 #include "TextFormatting.h"
-#include "Render.h"
+#include "Renderer.h"
 
 void Manual::readFile() {
   string curLine;

@@ -11,10 +11,12 @@
 #include "Log.h"
 #include "RenderInventory.h"
 #include "MenuInputHandler.h"
-#include "Render.h"
+#include "Renderer.h"
 #include "ItemDrop.h"
 #include "Query.h"
 #include "ItemFactory.h"
+#include "GameTime.h"
+#include "Audio.h"
 
 InventoryHandler::InventoryHandler(Engine* engine) :
   screenToOpenAfterDrop(endOfInventoryScreens),

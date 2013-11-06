@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "Popup.h"
 #include "Input.h"
+#include "Renderer.h"
 
 const int X_POS_DATE = 1;
 const int X_POS_NAME = X_POS_DATE + 19;

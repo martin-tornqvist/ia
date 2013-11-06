@@ -10,6 +10,7 @@
 #include "Log.h"
 #include "Postmortem.h"
 #include "PlayerBonuses.h"
+#include "Renderer.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData) :
@@ -94,7 +95,7 @@ bool Door::isBodyTypePassable(const ActorBodyType_t bodyType) const {
     case actorBodyType_ethereal:  return true;      break;
     case actorBodyType_ooze:      return true;      break;
     case actorBodyType_flying:    return isOpen_;   break;
-    default:                      return isOpen_;   break;
+    case endOfActorBodyTypes:     return isOpen_;   break;
   }
   return false;
 }
