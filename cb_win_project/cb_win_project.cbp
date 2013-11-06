@@ -15,6 +15,7 @@
 				<Option object_output="../obj/debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../include/debugModeIncl" />
@@ -40,6 +41,7 @@
 				<Option object_output="../test/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../test/UnitTest++/src" />
