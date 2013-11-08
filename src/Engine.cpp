@@ -55,8 +55,6 @@
 #include "Manual.h"
 #include "MapPatterns.h"
 #include "MapTests.h"
-#include "MapBuild.h"
-#include "MapBuildBSP.h"
 #include "PopulateItems.h"
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
@@ -143,6 +141,8 @@ void Engine::initGame() {
   inventoryHandler = new InventoryHandler(this);
   playerBonHandler = new PlayerBonHandler(this);
   playerCreateCharacter = new PlayerCreateCharacter(this);
+  mapPatterns = new MapPatterns(this);
+  roomThemeMaker = new RoomThemeMaker(this);
   player = new Player;
   player->place(
     Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
@@ -153,9 +153,6 @@ void Engine::initGame() {
   log = new Log(this);
   pathfinder = new Pathfinder(this);
   fov = new Fov(this);
-  mapBuild = new MapBuild(this);
-  mapBuildBSP = new MapBuildBSP(this);
-  mapPatterns = new MapPatterns(this);
   soundEmitter = new SoundEmitter(this);
   featureDataHandler = new FeatureDataHandler(this);
   dungeonMaster = new DungeonMaster(this);
@@ -204,7 +201,6 @@ void Engine::initGame() {
   knockBack = new KnockBack(this);
   examine = new Examine(this);
   characterDescr = new CharacterDescr(this);
-  roomThemeMaker = new RoomThemeMaker(this);
   debugModeStatPrinter = new DebugModeStatPrinter(this);
   disarm = new Disarm(this);
   gods = new Gods(this);
@@ -217,7 +213,7 @@ void Engine::initGame() {
 void Engine::cleanupGame() {
   trace << "Engine::cleanupGame()..." << endl;
 
-  map->clearDungeon();
+  map->clearMap();
 
   delete playerBonHandler;
   delete playerVisualMemory;
@@ -226,8 +222,6 @@ void Engine::cleanupGame() {
   delete log;
   delete pathfinder;
   delete fov;
-  delete mapBuild;
-  delete mapBuildBSP;
   delete mapPatterns;
   delete soundEmitter;
   delete featureDataHandler;

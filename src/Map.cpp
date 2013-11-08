@@ -7,7 +7,6 @@
 #include "FeatureFactory.h"
 #include "ActorFactory.h"
 #include "ItemFactory.h"
-#include "MapBuildBSP.h"
 #include "GameTime.h"
 #include "Renderer.h"
 
@@ -18,11 +17,15 @@ Map::Map(Engine* engine) :
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      featuresStatic[x][y] = new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
+      featuresStatic[x][y] =
+        new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
       assert(featuresStatic[x][y]->getId() == feature_stoneWall);
     }
   }
 
+  rooms_.resize(0);
+  //TODO Why does RoomThemeMaker have a list of rooms?? Why is it cleared here?
+  eng->roomThemeMaker->roomList.resize(0);
   clearGrids(false);
 }
 
@@ -59,7 +62,8 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
               if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
-                eng->featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
+                eng->featureFactory->spawnFeatureAt(
+                  feature_rubbleLow, Pos(x, y));
               }
             }
           }
@@ -75,10 +79,14 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
   }
 }
 
-void Map::clearDungeon() {
+void Map::clearMap() {
   eng->actorFactory->deleteAllMonsters();
 
-  eng->mapBuildBSP->clearRooms();
+  for(unsigned int i = 0; i < rooms_.size(); i++) {
+    delete rooms_.at(i);
+  }
+  rooms_.resize(0);
+  eng->roomThemeMaker->roomList.resize(0);
 
   clearGrids(true);
   eng->gameTime->eraseAllFeatureMobs();

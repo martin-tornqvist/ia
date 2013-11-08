@@ -12,21 +12,21 @@ class Engine;
 
 class Bot {
 public:
-	Bot(Engine* engine) :
-		eng(engine) {
-	}
+  Bot(Engine* engine) :
+    eng(engine) {
+  }
 
-	void init();
+  void init();
 
-	void act();
+  void act();
 
 private:
-	void findPathToNextStairs();
-	Pos findNextStairs();
-	bool walkToAdjacentCell(const Pos& cellToGoTo);
+  void findPathToNextStairs();
+  Pos findNextStairs();
+  bool walkToAdjacentCell(const Pos& cellToGoTo);
 
-	vector<Pos> currentPath_;
-	Engine* eng;
+  vector<Pos> currentPath_;
+  Engine* eng;
 };
 
 #endif

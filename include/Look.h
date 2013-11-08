@@ -46,7 +46,7 @@ public:
   }
 
   void markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
-                     const Item* const itemThrown);
+                   const Item* const itemThrown);
   void printExtraActorDescription(const Pos& pos) const;
 
 private:

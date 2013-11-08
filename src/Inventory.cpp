@@ -316,7 +316,7 @@ void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
 }
 
 void Inventory::removetemInGeneralWithPointer(
-                                              Item* const item, const bool DELETE_ITEM) {
+  Item* const item, const bool DELETE_ITEM) {
 
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i) == item) {

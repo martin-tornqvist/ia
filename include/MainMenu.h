@@ -8,10 +8,9 @@ class Engine;
 
 class MainMenu {
 public:
-  MainMenu(Engine* engine) {
-    eng = engine;
-  }
-  GameEntry_t run(bool& quit);
+  MainMenu(Engine* engine) : eng(engine) {}
+
+  GameEntry_t run(bool& quit, int& introMusChannel);
 
 private:
   Engine* eng;

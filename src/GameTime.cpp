@@ -13,6 +13,7 @@
 #include "Inventory.h"
 #include "InventoryHandler.h"
 #include "PlayerBonuses.h"
+#include "Audio.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(turn_));
@@ -282,6 +283,8 @@ void GameTime::runNewStandardTurnEvents() {
   }
 
   eng->soundEmitter->resetNrSoundMsgPrintedCurTurn();
+
+  eng->audio->tryPlayAmb(100);
 
   traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
 }

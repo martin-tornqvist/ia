@@ -8,8 +8,7 @@ class LeverSpawnData;
 
 class FeatureLever: public FeatureStatic {
 public:
-  ~FeatureLever() {
-  }
+  ~FeatureLever() {}
   SDL_Color getColor() const;
   Tile_t getTile() const;
 
@@ -17,7 +16,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  friend class MapBuildBSP;
+  friend class MapGenBsp;
   FeatureLever(Feature_t id, Pos pos, Engine* engine, LeverSpawnData* spawnData);
 
   void pull();

@@ -8,19 +8,18 @@ using namespace std;
 class Engine;
 class SaveHandler;
 
-class DungeonClimb
-{
+class DungeonClimb {
 public:
-	DungeonClimb(Engine* engine) {eng = engine;}
+  DungeonClimb(Engine* engine) {eng = engine;}
 
-	void tryUseDownStairs();
+  void tryUseDownStairs();
 
-	void travelDown(const int levels = 1);
+  void travelDown(const int levels = 1);
 
 private:
-	Engine* eng;
+  Engine* eng;
 
-	void makeLevel();
+  void makeLevel();
 };
 
 #endif

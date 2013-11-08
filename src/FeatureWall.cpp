@@ -27,22 +27,22 @@ bool Wall::isTileAnyWallTop(const Tile_t tile) {
 
 string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
   switch(wallType) {
-  case wall_common:
-  case wall_alt1: {
-    const string modStr = isMossGrown ? "moss-grown " : "";
-    return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
-  }
-  break;
-  case wall_cave: {
-    const string modStr = isMossGrown ? "moss-grown " : "";
-    return DEFINITE_ARTICLE ? "the " + modStr + "cavern wall" : "a " + modStr + "cavern wall";
+    case wall_common:
+    case wall_alt1: {
+      const string modStr = isMossGrown ? "moss-grown " : "";
+      return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
+    }
+    break;
+    case wall_cave: {
+      const string modStr = isMossGrown ? "moss-grown " : "";
+      return DEFINITE_ARTICLE ? "the " + modStr + "cavern wall" : "a " + modStr + "cavern wall";
 
-  }
-  case wall_egypt: {
-    const string modStr = isMossGrown ? "moss-grown " : "";
-    return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
+    }
+    case wall_egypt: {
+      const string modStr = isMossGrown ? "moss-grown " : "";
+      return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
 
-  }
+    }
   }
   return "[WARNING]";
 }
@@ -73,54 +73,54 @@ char Wall::getGlyph() const {
 
 Tile_t Wall::getFrontWallTile() const {
   switch(wallType) {
-  case wall_common:
-    return tile_wallFront;
-    break;
-  case wall_alt1:
-    return tile_wallFrontAlt1;
-    break;
-  case wall_cave:
-    return tile_caveWallFront;
-    break;
-  case wall_egypt:
-    return tile_egyptWallFront;
-    break;
-  default:
-    return tile_wallFront;
-    break;
+    case wall_common:
+      return tile_wallFront;
+      break;
+    case wall_alt1:
+      return tile_wallFrontAlt1;
+      break;
+    case wall_cave:
+      return tile_caveWallFront;
+      break;
+    case wall_egypt:
+      return tile_egyptWallFront;
+      break;
+    default:
+      return tile_wallFront;
+      break;
   }
 }
 
 Tile_t Wall::getTopWallTile() const {
   switch(wallType) {
-  case wall_common:
-    return tile_wallTop;
-    break;
-  case wall_alt1:
-    return tile_wallTop;
-    break;
-  case wall_cave:
-    return tile_caveWallTop;
-    break;
-  case wall_egypt:
-    return tile_egyptWallTop;
-    break;
-  default:
-    return tile_wallTop;
-    break;
+    case wall_common:
+      return tile_wallTop;
+      break;
+    case wall_alt1:
+      return tile_wallTop;
+      break;
+    case wall_cave:
+      return tile_caveWallTop;
+      break;
+    case wall_egypt:
+      return tile_egyptWallTop;
+      break;
+    default:
+      return tile_wallTop;
+      break;
   }
 }
 
 void Wall::setRandomNormalWall() {
   const int RND = eng->dice.range(1, 6);
   switch(RND) {
-  case 1:
-    wallType = wall_alt1;
-    break;
+    case 1:
+      wallType = wall_alt1;
+      break;
 //  case 2: wallType = wall_alt2; break;
-  default:
-    wallType = wall_common;
-    break;
+    default:
+      wallType = wall_common;
+      break;
   }
 }
 

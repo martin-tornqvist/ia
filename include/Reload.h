@@ -16,8 +16,7 @@ enum ReloadResult_t {
   reloadResult_fumble
 };
 
-class Reload
-{
+class Reload {
 public:
   Reload(Engine* engine) : eng(engine) {}
 

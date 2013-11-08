@@ -17,19 +17,18 @@ class Engine;
 
 using namespace std;
 
-class TextFormatting
-{
-   public:
-      TextFormatting() {}
-      ~TextFormatting() {}
+class TextFormatting {
+public:
+  TextFormatting() {}
+  ~TextFormatting() {}
 
-      vector<string> lineToLines(string line, const int MAX_WIDTH) const;
+  vector<string> lineToLines(string line, const int MAX_WIDTH) const;
 
-      vector<string> getSpaceSeparatedList(string line) const;
+  vector<string> getSpaceSeparatedList(string line) const;
 
-   private:
-      string readNextWord(string& line) const;
-      bool isWordFit(string& currentString, const string& newWord, const unsigned int MAX_WIDTH) const;
+private:
+  string readNextWord(string& line) const;
+  bool isWordFit(string& currentString, const string& newWord, const unsigned int MAX_WIDTH) const;
 };
 
 #endif

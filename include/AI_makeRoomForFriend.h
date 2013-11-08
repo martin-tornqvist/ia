@@ -113,8 +113,8 @@ private:
         if(x != OLD_X || y != OLD_Y) {
           const int NEW_X = OLD_X + x;
           const int NEW_Y = OLD_Y + y;
-          const int DIST_CUR = engine->basicUtils->chebyshevDistance(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
-          const int DIST_NEW = engine->basicUtils->chebyshevDistance(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
+          const int DIST_CUR = engine->basicUtils->chebyshevDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
+          const int DIST_NEW = engine->basicUtils->chebyshevDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
           if(DIST_NEW <= DIST_CUR) {
             if(blockers[NEW_X][NEW_Y] == false) {

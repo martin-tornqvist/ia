@@ -3,8 +3,7 @@
 #include "Engine.h"
 
 
-void MapTemplateHandler::initTemplates()
-{
+void MapTemplateHandler::initTemplates() {
   string templateString;
   vector<CharToIdTranslation> translationVector;
 

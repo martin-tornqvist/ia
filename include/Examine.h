@@ -10,17 +10,17 @@ class Engine;
 
 class Examine {
 public:
-	Examine(Engine* engine) : eng(engine) {
-	}
+  Examine(Engine* engine) : eng(engine) {
+  }
 
-	~Examine() {
-	}
+  ~Examine() {
+  }
 
-	void playerExamine() const;
+  void playerExamine() const;
 
 private:
 
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

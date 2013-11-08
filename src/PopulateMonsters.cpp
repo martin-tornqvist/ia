@@ -9,7 +9,7 @@
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "FeatureFactory.h"
-#include "MapBuildBSP.h"
+#include "MapGen.h"
 
 using namespace std;
 
@@ -465,7 +465,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  bool increaseIndex = true;
 //  while(i != freeCells.size()) {
 //    increaseIndex = true;
-//    if(eng->basicUtils->chebyshevDistance(freeCells.at(i), eng->player->pos) < MIN_DIST_FROM_PLAYER) {
+//    if(eng->basicUtils->chebyshevDist(freeCells.at(i), eng->player->pos) < MIN_DIST_FROM_PLAYER) {
 //      freeCells.erase(freeCells.begin() + i);
 //      increaseIndex = false;
 //    }

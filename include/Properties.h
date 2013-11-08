@@ -740,7 +740,7 @@ private:
 class PropFrenzied: public Prop {
 public:
   PropFrenzied(Engine* engine, PropTurns_t turnsInit,
-              int turns = -1) :
+               int turns = -1) :
     Prop(propFrenzied, engine, turnsInit, turns) {}
 
   ~PropFrenzied() {}
@@ -805,7 +805,7 @@ private:
 class PropRElec: public Prop {
 public:
   PropRElec(Engine* engine, PropTurns_t turnsInit,
-                int turns = -1) :
+            int turns = -1) :
     Prop(propRElec, engine, turnsInit, turns) {}
   ~PropRElec() {}
 

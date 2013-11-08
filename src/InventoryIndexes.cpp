@@ -4,7 +4,7 @@
 #include "Engine.h"
 
 void InventoryIndexes::setIndexes(const bool IS_SLOTS_INCLUDED, const unsigned int nrOfSlots,
-				  const vector<unsigned int>& generalSlotsShown) {
+                                  const vector<unsigned int>& generalSlotsShown) {
   char charIndex = 'a';
   if(IS_SLOTS_INCLUDED) {
     charIndex += static_cast<char>(nrOfSlots);

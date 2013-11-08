@@ -16,8 +16,7 @@ using namespace std;
 class Engine;
 class Actor;
 
-class AutoDescribeActor
-{
+class AutoDescribeActor {
 public:
   AutoDescribeActor(Engine* engine) : eng(engine) {}
   ~AutoDescribeActor() {}

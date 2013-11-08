@@ -10,26 +10,21 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
     if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
       browser.navigate(directionRight);
       return menuAction_browsed;
-    }
-    else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
+    } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
       browser.navigate(directionLeft);
       return menuAction_browsed;
-    }
-    else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       browser.navigate(directionUp);
       return menuAction_browsed;
-    }
-    else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+    } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       browser.navigate(directionDown);
       return menuAction_browsed;
-    }
-    else if(d.sdlKey_ == SDLK_RETURN) {
+    } else if(d.sdlKey_ == SDLK_RETURN) {
       d.key_ = browser.enter();
       if(d.isShiftHeld_) {
         d.key_ = d.key_ - 'a' + 'A';
       }
-    }
-    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       return menuAction_canceled;
     }
 

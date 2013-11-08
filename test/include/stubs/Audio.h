@@ -11,7 +11,7 @@ public:
   Audio(Engine* engine) {(void)engine;}
   ~Audio() {}
 
-  void play(const Sfx_t, const int = 100, const int = 50) {}
+  int play(const Sfx_t, const int = 100, const int = 50) {return -1;}
 
   void playFromDirection(const Sfx_t, const Direction_t, const int) {}
 

@@ -3,16 +3,15 @@
 
 class Engine;
 
-class PlayerVisualMemory
-{
-    public:
-        PlayerVisualMemory(Engine* engine) {eng = engine;}
+class PlayerVisualMemory {
+public:
+  PlayerVisualMemory(Engine* engine) {eng = engine;}
 
-        //Makes a copy of the renderers current array
-        void updateVisualMemory();
+  //Makes a copy of the renderers current array
+  void updateVisualMemory();
 
-    private:
-        Engine* eng;
+private:
+  Engine* eng;
 };
 
 

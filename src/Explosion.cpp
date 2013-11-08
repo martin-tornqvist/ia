@@ -154,7 +154,7 @@ void ExplosionMaker::runExplosion(
 
       if(reach[x][y] == true) {
         const int CHEBY_DIST =
-          eng->basicUtils->chebyshevDistance(origin.x, origin.y, x, y);
+          eng->basicUtils->chebyshevDist(origin.x, origin.y, x, y);
         const int EXPLOSION_DMG_AT_DIST =
           eng->dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
 

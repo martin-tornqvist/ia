@@ -7,7 +7,7 @@
 #include "PlayerBonuses.h"
 #include "PlayerCreateCharacter.h"
 #include "ActorPlayer.h"
-#include "MapBuild.h"
+#include "MapGen.h"
 #include "PopulateMonsters.h"
 #include "DungeonClimb.h"
 #include "Bot.h"
@@ -20,6 +20,7 @@
 #include "Postmortem.h"
 #include "DungeonMaster.h"
 #include "DebugModeStatPrinter.h"
+#include "Audio.h"
 
 #undef main
 int main(int argc, char* argv[]) {
@@ -31,6 +32,13 @@ int main(int argc, char* argv[]) {
   engine->initSdl();
   engine->initConfig();
   engine->initRenderer();
+
+  engine->renderer->clearScreen();
+  engine->renderer->drawTextCentered(
+    "Loading...", panel_screen, Pos(MAP_X_CELLS_HALF, 12),
+    clrNosferatuSepiaDrk);
+  engine->renderer->updateScreen();
+
   engine->initAudio();
 
   bool quitGame = false;
@@ -48,12 +56,14 @@ int main(int argc, char* argv[]) {
       engine->debugModeStatPrinter->run();
     }
 
-    const GameEntry_t ENTRY_TYPE = engine->mainMenu->run(quitGame);
+    int introMusChannel = -1;
+    const GameEntry_t gameEntryType = engine->mainMenu->run(
+                                        quitGame, introMusChannel);
 
     if(quitGame == false) {
       quitToMainMenu = false;
 
-      if(ENTRY_TYPE == gameEntry_new) {
+      if(gameEntryType == gameEntry_new) {
         if(engine->config->isBotPlaying) {
           engine->playerBonHandler->setAllBonsToPicked();
           engine->bot->init();
@@ -67,7 +77,7 @@ int main(int argc, char* argv[]) {
           //If intro level is used, build forest.
           engine->renderer->coverPanel(panel_screen);
           engine->renderer->updateScreen();
-          engine->mapBuild->buildForest();
+          MapGenIntroForest(engine).run();
         } else {
           //Else build first dungeon level
           engine->dungeonClimb->travelDown();
@@ -77,10 +87,12 @@ int main(int argc, char* argv[]) {
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
+      engine->audio->fadeOutChannel(introMusChannel);
+
       engine->player->updateFov();
       engine->renderer->drawMapAndInterface();
 
-      if(ENTRY_TYPE == gameEntry_new) {
+      if(gameEntryType == gameEntry_new) {
         if(engine->config->isIntroLevelSkipped == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";

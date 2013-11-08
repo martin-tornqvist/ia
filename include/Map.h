@@ -43,7 +43,7 @@ public:
   inline void incrDLVL(const int levels = 1) {dlvl_ += levels;}
   inline void decrDLVL(const int levels = 1) {dlvl_ -= levels;}
 
-  void clearDungeon();
+  void clearMap();
 
   void switchToDestroyedFeatAt(const Pos pos);
 
@@ -58,6 +58,8 @@ public:
 
 private:
   void clearGrids(const bool DELETE_INSTANCES);
+
+  vector<Room*> rooms_;
 
   Engine* eng;
 

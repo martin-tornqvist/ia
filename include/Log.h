@@ -18,8 +18,8 @@ public:
     eng(engine) {clearLog();}
 
   void addMsg(const string& text, const SDL_Color = clrWhite,
-                  const bool INTERRUPT_PLAYER_ACTIONS = false,
-                  const bool FORCE_MORE_PROMPT = false);
+              const bool INTERRUPT_PLAYER_ACTIONS = false,
+              const bool FORCE_MORE_PROMPT = false);
 
   void drawLog() const;
 

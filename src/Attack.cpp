@@ -182,7 +182,7 @@ RangedAttackData::RangedAttackData(
     const int WPN_HIT_MOD         = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
-    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
+    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
     const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
@@ -251,7 +251,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
     const int WPN_HIT_MOD         = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
-    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDistance(
+    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
     const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;

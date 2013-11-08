@@ -71,32 +71,32 @@ public:
     }
   }
 
-  inline int chebyshevDistance(const int X0, const int Y0,
-                               const int X1, const int Y1) const {
+  inline int chebyshevDist(const int X0, const int Y0,
+                           const int X1, const int Y1) const {
     if(X0 == X1 && Y0 == Y1) {
       return 0;
     }
     return max(abs(X1 - X0), abs(Y1 - Y0));
   }
 
-  inline int chebyshevDistance(const Pos& c1, const Pos& c2) const {
-    return chebyshevDistance(c1.x, c1.y, c2.x, c2.y);
+  inline int chebyshevDist(const Pos& c1, const Pos& c2) const {
+    return chebyshevDist(c1.x, c1.y, c2.x, c2.y);
   }
 
-  inline int manhattanDistance(const int X0, const int Y0,
-                               const int X1, const int Y1) const {
-    return abs(X1 - X0) + abs(Y1 - Y0);
-  }
+//  inline int manhattanDist(const int X0, const int Y0,
+//                               const int X1, const int Y1) const {
+//    return abs(X1 - X0) + abs(Y1 - Y0);
+//  }
 
-  inline double pointDistance(const int x1, const int y1,
-                              const int x2, const int y2) const {
-    if(x1 == x2 && y1 == y2)
-      return 0.0;
-
-    const double xSqr = double((x2 - x1) * (x2 - x1));
-    const double ySqr = double((y2 - y1) * (y2 - y1));
-    return sqrt(xSqr + ySqr);
-  }
+//  inline double pointDist(const int x1, const int y1,
+//                              const int x2, const int y2) const {
+//    if(x1 == x2 && y1 == y2)
+//      return 0.0;
+//
+//    const double xSqr = double((x2 - x1) * (x2 - x1));
+//    const double ySqr = double((y2 - y1) * (y2 - y1));
+//    return sqrt(xSqr + ySqr);
+//  }
 
   TimeData getCurrentTime() const;
 
@@ -112,6 +112,14 @@ public:
 
   int operator()(const DiceParam& p) {
     return roll(p.rolls, p.sides);
+  }
+
+  //Note: If MTRand is not provided any parameters to the constructor,
+  //it will instead seed with current time. So seeding it manually is
+  //not necessary for normal gameplay purposes - only if seed should be
+  //controlled for testing purposes, or recreating a certain level, etc.
+  void seed(const unsigned long val) {
+    mtRand_ = MTRand(val);
   }
 
   bool coinToss() {
@@ -143,12 +151,12 @@ private:
 
     int result = 0;
     for(int i = 0; i < ROLLS; i++) {
-      result += m_MTRand.randInt(SIDES - 1) + 1;
+      result += mtRand_.randInt(SIDES - 1) + 1;
     }
     return result;
   }
 
-  MTRand m_MTRand;
+  MTRand mtRand_;
 };
 
 class DirectionConverter {

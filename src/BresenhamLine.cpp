@@ -4,7 +4,7 @@
 
 /*void BresenhamLine::getLine(vector<Pos>& lineVector, int x1, int y1, int x2, int y2)
 {
-	lineVector.resize(0);
+  lineVector.resize(0);
 
     // if x1 == x2 or y1 == y2, then it does not matter what we set here
     int delta_x(x2 - x1);
@@ -15,7 +15,7 @@
     signed char iy((delta_y > 0) - (delta_y < 0));
     delta_y = abs(delta_y) << 1;
 
-	lineVector.push_back(Pos(x1, y1));
+  lineVector.push_back(Pos(x1, y1));
 
     if (delta_x >= delta_y)
     {

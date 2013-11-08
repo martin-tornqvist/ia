@@ -13,8 +13,7 @@
 
 class Engine;
 
-class DungeonMaster
-{
+class DungeonMaster {
 public:
   DungeonMaster(Engine* engine) : clvl(1), xp(0), eng(engine) {
     initXpArray();

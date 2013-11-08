@@ -29,8 +29,6 @@ class Log;
 class Phrases;
 class Pathfinder;
 class Fov;
-class MapBuild;
-class MapBuildBSP;
 class MapPatterns;
 class SoundEmitter;
 class FeatureDataHandler;
@@ -130,8 +128,6 @@ public:
   Phrases* phrases;
   Pathfinder* pathfinder;
   Fov* fov;
-  MapBuild* mapBuild;
-  MapBuildBSP* mapBuildBSP;
   MapPatterns* mapPatterns;
   SoundEmitter* soundEmitter;
   FeatureDataHandler* featureDataHandler;

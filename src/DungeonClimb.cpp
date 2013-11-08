@@ -2,19 +2,19 @@
 
 #include "Engine.h"
 #include "Map.h"
-#include "MapBuildBSP.h"
-#include "MapBuild.h"
+#include "MapGen.h"
 #include "PopulateMonsters.h"
 #include "PopulateItems.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Item.h"
 #include "Renderer.h"
+#include "Audio.h"
 
 void DungeonClimb::makeLevel() {
   trace << "DungeonClimb::makeLevel()..." << endl;
 
-  eng->map->clearDungeon();
+  eng->map->clearMap();
 
   const int DLVL = eng->map->getDLVL();
 
@@ -23,8 +23,7 @@ void DungeonClimb::makeLevel() {
     //------------------------------------- TRAPEZOHEDRON LEVEL
     if(levelBuilt == false) {
       if(DLVL > LAST_CAVERN_LEVEL) {
-        trace << "DungeonClimb: Calling MapBuild::buildTrapezohedronLevel()" << endl;
-        eng->mapBuild->buildTrapezohedronLevel();
+        MapGenTrapezohedronLvl(eng).run();
         levelBuilt = true;
       }
     }
@@ -32,8 +31,7 @@ void DungeonClimb::makeLevel() {
     //------------------------------------- KINGS TOMB
     if(levelBuilt == false) {
       if(DLVL == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
-        trace << "DungeonClimb: Calling MapBuild::buildKingsTomb()" << endl;
-        eng->mapBuild->buildKingsTomb();
+        MapGenEgyptTomb(eng).run();
         levelBuilt = true;
       }
     }
@@ -41,21 +39,14 @@ void DungeonClimb::makeLevel() {
   //------------------------------------- DUNGEON LEVELS
   if(levelBuilt == false) {
     if(DLVL < FIRST_CAVERN_LEVEL || eng->config->isBotPlaying) {
-      //eng->mapBuild->buildDungeonLevel();
-      trace << "DungeonClimb: Calling MapBuildBSP::run()" << endl;
-      eng->mapBuildBSP->run();
-//      trace << "DungeonClimb: Calling Populate::populate()" << endl;
-//      eng->populateMonsters->populate();
+      MapGenBsp(eng).run();
       levelBuilt = true;
     }
   }
   //------------------------------------- CAVERN LEVELS
   if(levelBuilt == false) {
     if(DLVL >= FIRST_CAVERN_LEVEL) {
-      trace << "DungeonClimb: Calling MapBuild::buildCavern()" << endl;
-      eng->mapBuild->buildCavern();
-//      trace << "DungeonClimb: Calling Populate::populate()" << endl;
-//      eng->populate->populate();
+      MapGenCaveLvl(eng).run();
     }
   }
   if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {
@@ -78,6 +69,7 @@ void DungeonClimb::travelDown(const int levels) {
   eng->player->updateFov();
   eng->player->updateColor();
   eng->renderer->drawMapAndInterface();
+  eng->audio->tryPlayAmb(1);
   trace << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 

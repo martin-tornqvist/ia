@@ -198,11 +198,11 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
 Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to retrieve */
-  Uint8* p = (Uint8 *)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
+  Uint8* p = (Uint8*)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
 
   switch(bpp) {
     case 1:   return *p;            break;
-    case 2:   return *(Uint16 *)p;  break;
+    case 2:   return *(Uint16*)p;  break;
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         return p[0] << 16 | p[1] << 8 | p[2];
@@ -210,7 +210,7 @@ Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
         return p[0] | p[1] << 8 | p[2] << 16;
       }
     } break;
-    case 4:   return *(Uint32 *)p;  break;
+    case 4:   return *(Uint32*)p;  break;
     default:  return -1;            break;
   }
   return -1;
@@ -219,11 +219,11 @@ Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
 void Renderer::putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to set */
-  Uint8* p = (Uint8 *)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
+  Uint8* p = (Uint8*)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
 
   switch(bpp) {
     case 1:   *p = pixel;             break;
-    case 2:   *(Uint16 *)p = pixel;   break;
+    case 2:   *(Uint16*)p = pixel;   break;
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         p[0] = (pixel >> 16) & 0xff;
@@ -235,7 +235,7 @@ void Renderer::putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel
         p[2] = (pixel >> 16) & 0xff;
       }
     } break;
-    case 4:   *(Uint32 *)p = pixel;   break;
+    case 4:   *(Uint32*)p = pixel;   break;
     default:  {}                      break;
   }
 }
@@ -263,7 +263,7 @@ void Renderer::drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
       if(EFFECTIVE_RANGE != -1) {
         const int CHEB_DIST =
-          eng->basicUtils->chebyshevDistance(trail.at(0), trail.at(i));
+          eng->basicUtils->chebyshevDist(trail.at(0), trail.at(i));
         if(CHEB_DIST > EFFECTIVE_RANGE) {
           clr = clrYellow;
         }
@@ -282,7 +282,7 @@ void Renderer::drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = eng->basicUtils->chebyshevDistance(trail.at(0), headPos);
+      const int CHEB_DIST = eng->basicUtils->chebyshevDist(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -845,7 +845,7 @@ void Renderer::drawAscii() {
         tempDrw = renderArrayAscii[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER =
-            eng->basicUtils->chebyshevDistance(eng->player->pos, Pos(x, y));
+            eng->basicUtils->chebyshevDist(eng->player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
             const double DIST_FADE_DIV =
               min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -1020,7 +1020,7 @@ void Renderer::drawTiles() {
         tempDrw = renderArrayTiles[x][y];
         if(tempDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER =
-            eng->basicUtils->chebyshevDistance(eng->player->pos, Pos(x, y));
+            eng->basicUtils->chebyshevDist(eng->player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
             const double DIST_FADE_DIV =
               min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));

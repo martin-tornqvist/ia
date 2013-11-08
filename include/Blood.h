@@ -7,15 +7,15 @@ class Engine;
 
 class Gore {
 public:
-	Gore(Engine* engine) :
-		eng(engine) {
-	}
+  Gore(Engine* engine) :
+    eng(engine) {
+  }
 
-	void makeBlood(const Pos& origin);
-	void makeGore(const Pos& origin);
+  void makeBlood(const Pos& origin);
+  void makeGore(const Pos& origin);
 
 private:
-	Engine* eng;
+  Engine* eng;
 };
 
 #endif

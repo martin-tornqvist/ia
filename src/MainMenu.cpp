@@ -12,6 +12,7 @@
 #include "Popup.h"
 #include "TextFormatting.h"
 #include "Credits.h"
+#include "Audio.h"
 
 using namespace std;
 
@@ -152,12 +153,14 @@ void MainMenu::draw(const MenuBrowser& browser) {
   trace << "MainMenu::draw() [DONE]" << endl;
 }
 
-GameEntry_t MainMenu::run(bool& quit) {
+GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
   trace << "MainMenu::run()" << endl;
 
   MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
   const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();
+
+  introMusChannel = eng->audio->play(musCthulhiana_Madness);
 
   draw(browser);
 

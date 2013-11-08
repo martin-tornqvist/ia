@@ -78,7 +78,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  friend class MapBuildBSP;
+  friend class MapGenBsp;
   friend class FeatureLever;
   Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData);
 

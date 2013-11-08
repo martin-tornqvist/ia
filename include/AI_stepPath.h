@@ -3,8 +3,7 @@
 
 #include "Engine.h"
 
-class AI_stepPath
-{
+class AI_stepPath {
 public:
   static bool action(Monster* monster, vector<Pos>* path) {
     if(monster->deadState == actorDeadState_alive) {

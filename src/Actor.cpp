@@ -444,7 +444,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   if(this != eng->player) {
     if(isHumanoid() == true) {
       eng->soundEmitter->emitSound(
-        Sound("I hear agonised screaming.", endOfSfx,true, pos, false, false));
+        Sound("I hear agonised screaming.", endOfSfx, true, pos, false, false));
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
   }

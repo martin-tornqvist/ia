@@ -11,7 +11,7 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "DungeonMaster.h"
-#include "MapBuildBSP.h"
+#include "MapGen.h"
 #include "PlayerBonuses.h"
 #include "Inventory.h"
 

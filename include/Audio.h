@@ -15,13 +15,16 @@ public:
   Audio(Engine* engine);
   ~Audio();
 
-  void play(const Sfx_t sfx, const int VOL_PERCENT_TOT = 100,
-            const int VOL_PERCENT_L = 50);
+  //Returns channel playing on
+  int play(const Sfx_t sfx, const int VOL_PERCENT_TOT = 100,
+           const int VOL_PERCENT_L = 50);
 
   void playFromDirection(const Sfx_t sfx, const Direction_t direction,
                          const int DISTANCE_PERCENT);
 
   void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY);
+
+  void fadeOutChannel(const int CHANNEL_NR);
 
 private:
   Sfx_t getAmbSfxSuitableForDlvl() const;

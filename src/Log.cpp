@@ -90,8 +90,7 @@ void Log::displayHistory() {
         yCell++;
       }
       eng->renderer->updateScreen();
-    }
-    else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
+    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = min(topElement - LINE_JUMP,
                        int(history.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
@@ -105,8 +104,7 @@ void Log::displayHistory() {
         yCell++;
       }
       eng->renderer->updateScreen();
-    }
-    else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }

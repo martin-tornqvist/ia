@@ -8,8 +8,8 @@
 #include "GameTime.h"
 
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = eng->basicUtils->chebyshevDistance(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = eng->basicUtils->chebyshevDistance(c_.x, c_.y, c2.x, c2.y);
+  const int chebDist1 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
+  const int chebDist2 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 
@@ -17,7 +17,7 @@ Pos MapTests::getClosestPos(const Pos c, const vector<Pos>& positions) const {
   int distToNearest = 99999;
   int closestElement = 0;
   for(unsigned int i = 0; i < positions.size(); i++) {
-    const int CUR_DIST = eng->basicUtils->chebyshevDistance(c, positions.at(i));
+    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, positions.at(i));
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;
@@ -43,7 +43,7 @@ Actor* MapTests::getClosestActor(const Pos c,
   int distToNearest = 99999;
   int closestElement = 0;
   for(unsigned int i = 0; i < actors.size(); i++) {
-    const int CUR_DIST = eng->basicUtils->chebyshevDistance(c, actors.at(i)->pos);
+    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, actors.at(i)->pos);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;
@@ -412,7 +412,7 @@ void MapTests::getLine(const Pos& origin, const Pos& target,
       return;
     }
     const int DISTANCE_TRAVELED =
-      eng->basicUtils->chebyshevDistance(
+      eng->basicUtils->chebyshevDist(
         origin.x, origin.y, curPos.x, curPos.y);
     if(DISTANCE_TRAVELED >= chebTravelLimit) {
       return;

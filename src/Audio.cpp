@@ -60,6 +60,9 @@ void Audio::loadAllAudio() {
     loadAudioFile(Sfx_t(i), indexStrPadded);
     a++;
   }
+
+  loadAudioFile(musCthulhiana_Madness,
+                "Musica_Cthulhiana-Fragment-Madness.ogg");
 }
 
 void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
@@ -72,8 +75,9 @@ void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
   }
 }
 
-void Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
-                 const int VOL_PERCENT_L) {
+int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
+                const int VOL_PERCENT_L) {
+  int ret = -1;
   if(sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx) {
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
@@ -83,12 +87,16 @@ void Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
 
     Mix_PlayChannel(curChannel, audioChunks[sfx], 0);
 
+    ret = curChannel;
+
     curChannel++;
 
     if(curChannel >= AUDIO_ALLOCATED_CHANNELS) {
       curChannel = 0;
     }
   }
+
+  return ret;
 }
 
 void Audio::playFromDirection(const Sfx_t sfx, const Direction_t direction,
@@ -118,7 +126,7 @@ void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
   if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
-    const int TIME_REQ_BETWEEN_AMB_SFX = 30;
+    const int TIME_REQ_BETWEEN_AMB_SFX = 20;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
@@ -136,9 +144,52 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
 
   const int DLVL = eng->map->getDLVL();
   if(DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
-    //TODO Add sfx... again ;C
+    sfxCandidates.push_back(amb002);
+    sfxCandidates.push_back(amb003);
+    sfxCandidates.push_back(amb004);
+    sfxCandidates.push_back(amb005);
+    sfxCandidates.push_back(amb006);
+    sfxCandidates.push_back(amb007);
+    sfxCandidates.push_back(amb008);
+    sfxCandidates.push_back(amb009);
+    sfxCandidates.push_back(amb010);
+    sfxCandidates.push_back(amb011);
+    sfxCandidates.push_back(amb012);
+    sfxCandidates.push_back(amb013);
+    sfxCandidates.push_back(amb014);
+    sfxCandidates.push_back(amb015);
+    sfxCandidates.push_back(amb017);
+    sfxCandidates.push_back(amb018);
+    sfxCandidates.push_back(amb019);
+    sfxCandidates.push_back(amb021);
+    sfxCandidates.push_back(amb022);
+    sfxCandidates.push_back(amb023);
+    sfxCandidates.push_back(amb024);
+    sfxCandidates.push_back(amb026);
+    sfxCandidates.push_back(amb027);
+    sfxCandidates.push_back(amb028);
   } else if(DLVL > FIRST_CAVERN_LEVEL) {
-    //TODO Add sfx... again ;C
+    sfxCandidates.push_back(amb001);
+    sfxCandidates.push_back(amb002);
+    sfxCandidates.push_back(amb003);
+    sfxCandidates.push_back(amb004);
+    sfxCandidates.push_back(amb005);
+    sfxCandidates.push_back(amb006);
+    sfxCandidates.push_back(amb007);
+    sfxCandidates.push_back(amb010);
+    sfxCandidates.push_back(amb011);
+    sfxCandidates.push_back(amb012);
+    sfxCandidates.push_back(amb013);
+    sfxCandidates.push_back(amb016);
+    sfxCandidates.push_back(amb017);
+    sfxCandidates.push_back(amb019);
+    sfxCandidates.push_back(amb020);
+    sfxCandidates.push_back(amb024);
+    sfxCandidates.push_back(amb025);
+    sfxCandidates.push_back(amb026);
+    sfxCandidates.push_back(amb028);
+    sfxCandidates.push_back(amb029);
+    sfxCandidates.push_back(amb030);
   }
 
   if(sfxCandidates.empty()) {
@@ -147,6 +198,10 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
 
   const int ELEMENT = eng->dice.range(0, sfxCandidates.size() - 1);
   return sfxCandidates.at(ELEMENT);
+}
+
+void Audio::fadeOutChannel(const int CHANNEL_NR) {
+  Mix_FadeOutChannel(CHANNEL_NR, 5000);
 }
 
 void Audio::freeAssets() {

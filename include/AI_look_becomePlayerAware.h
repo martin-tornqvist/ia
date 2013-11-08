@@ -37,7 +37,7 @@ public:
               ability_stealth, true, *(engine->player));
 
           const int DIST_TO_PLAYER =
-            engine->basicUtils->chebyshevDistance(monster->pos, playerPos);
+            engine->basicUtils->chebyshevDist(monster->pos, playerPos);
           const int DIST_BON = max(0, (DIST_TO_PLAYER - 1) * 10);
 
           const int PLAYER_SNEAK =

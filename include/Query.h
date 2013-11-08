@@ -5,8 +5,7 @@
 
 class Engine;
 
-class Query
-{
+class Query {
 public:
   Query(Engine* engine) : eng(engine) {}
   void waitForKeyPress() const;

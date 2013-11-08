@@ -8,8 +8,7 @@ class Actor;
 
 #include "Inventory.h"
 
-class ItemPickup
-{
+class ItemPickup {
 public:
   ItemPickup(Engine* engine) {eng = engine;}
 

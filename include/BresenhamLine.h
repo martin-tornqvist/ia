@@ -9,15 +9,14 @@ using namespace std;
 
 class Engine;
 
-class BresenhamLine
-{
+class BresenhamLine {
 public:
-	BresenhamLine(Engine* engine) : eng(engine) {}
+  BresenhamLine(Engine* engine) : eng(engine) {}
 
-	//void getLine(vector<Pos>& lineVector, int x1, int y1, int x2, int y2);
+  //void getLine(vector<Pos>& lineVector, int x1, int y1, int x2, int y2);
 
 private:
-	Engine* eng;
+  Engine* eng;
 };
 
 

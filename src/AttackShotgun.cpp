@@ -80,7 +80,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         data = new RangedAttackData(
           attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
         const bool IS_WITHIN_RANGE_LMT =
-          eng->basicUtils->chebyshevDistance(origin, curPos) <=
+          eng->basicUtils->chebyshevDist(origin, curPos) <=
           wpn.effectiveRangeLimit;
         if(
           IS_WITHIN_RANGE_LMT &&

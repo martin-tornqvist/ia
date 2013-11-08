@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 #include "Map.h"
-#include "MapBuildBSP.h"
+#include "MapGen.h"
 #include "FeatureTrap.h"
 #include "FeatureFactory.h"
 
