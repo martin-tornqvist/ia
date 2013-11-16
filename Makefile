@@ -2,13 +2,14 @@ CC=g++
 
 # Directiories
 SRC_DIR=src
-DEBUG_MODE_INC_DIR=$(SRC_DIR)/debugModeIncl
-RELEASE_MODE_INC_DIR=$(SRC_DIR)/releaseModeIncl
+INC_DIR=include
+DEBUG_MODE_INC_DIR=$(INC_DIR)/debugModeIncl
+RELEASE_MODE_INC_DIR=$(INC_DIR)/releaseModeIncl
 TARGET_DIR=target
 ASSETS_DIR=assets
 
 # Includes
-INCLUDES=
+INCLUDES=-I $(INC_DIR)
 
 # Target specific include files
 _INCLUDES=
@@ -20,7 +21,7 @@ release : _CFLAGS=-O2
 
 #Flags
 CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
-LDFLAGS=$(shell sdl-config --libs) -lSDL_image
+LDFLAGS=$(shell sdl-config --libs) -lSDL_image -lSDL_mixer
 
 # Output and sources
 EXECUTABLE=ia
