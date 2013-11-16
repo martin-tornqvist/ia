@@ -8,7 +8,7 @@ public:
   ~FeatureLiquidShallow() {
   }
 
-  void bump(Actor* actorBumping);
+  void bump(Actor& actorBumping);
 
 protected:
   friend class FeatureFactory;
@@ -20,7 +20,7 @@ public:
   ~FeatureLiquidDeep() {
   }
 
-  void bump(Actor* actorBumping);
+  void bump(Actor& actorBumping);
 
 protected:
   friend class FeatureFactory;

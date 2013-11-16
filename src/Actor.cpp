@@ -325,9 +325,9 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
-  trace << "Actor::hit()..." << endl;
-  trace << "Actor: Damage from parameter: " << dmg << endl;
+bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
+  traceHi << "Actor::hit()..." << endl;
+  traceHi << "Actor: Damage from parameter: " << dmg << endl;
 
   if(
     dmgType == dmgType_light &&
@@ -336,7 +336,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   }
 
   onMonsterHit(dmg);
-  trace << "Actor: Damage after onMonsterHit(): " << dmg << endl;
+  traceHi << "Actor: Damage after onMonsterHit(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -355,7 +355,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
     Armor* armor =
       dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
-      trace << "Actor: Has armor, running hit on armor" << endl;
+      traceHi << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == dmgType_physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
@@ -376,7 +376,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
 
   propHandler_->onHit();
 
-  actorSpecific_hit(dmg);
+  actorSpecific_hit(dmg, ALLOW_WOUNDS);
 
   //Damage to corpses
   if(deadState != actorDeadState_alive) {
@@ -387,7 +387,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
         eng->gore->makeGore(pos);
       }
     }
-    trace << "Actor::hit() [DONE]" << endl;
+    traceHi << "Actor::hit() [DONE]" << endl;
     return false;
   }
 
@@ -403,17 +403,19 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType) {
   if(getHp() <= 0) {
     die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
     actorSpecificDie();
-    trace << "Actor::hit() [DONE]" << endl;
+    traceHi << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
-    trace << "Actor::hit() [DONE]" << endl;
+    traceHi << "Actor::hit() [DONE]" << endl;
     return false;
   }
 }
 
 bool Actor::hitSpi(const int DMG) {
-  spi_ = max(0, spi_ - DMG);
-  if(spi_ <= 0) {
+  if(this != eng->player || eng->config->isBotPlaying == false) {
+    spi_ = max(0, spi_ - DMG);
+  }
+  if(getSpi() <= 0) {
     if(this == eng->player) {
       eng->log->addMsg(
         "All my spirit is depleted, I am devoid of life!");

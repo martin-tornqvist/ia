@@ -4,8 +4,9 @@
 #include "Item.h"
 
 enum MedicalBagAction_t {
-  medicalBagAction_treatWound,
   medicalBagAction_sanitizeInfection,
+  medicalBagAction_takeMorphine,
+  medicalBagAction_treatWound,
   endOfMedicalBagActions
 };
 

@@ -12,23 +12,23 @@
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
-    case spell_azathothsBlast:  return "Azathoths Blast";         break;
-    case spell_enfeeble:        return "Enfeeblement";            break;
-    case spell_teleport:        return "Teleportation";           break;
-    case spell_bless:           return "Blessing";                break;
-    case spell_mayhem:          return "Mayhem";                  break;
-    case spell_pestilence:      return "Pestilence";              break;
-    case spell_descent:         return "Descent";                 break;
-    case spell_detectItems:     return "Detect Items";            break;
-    case spell_detectTraps:     return "Detect Traps";            break;
-    case spell_identify:        return "Identify";                break;
-    case spell_clairvoyance:    return "Clairvoyance";            break;
-    case spell_opening:         return "Opening";                 break;
-    case spell_mthPower:        return "Thaumaturgic Alteration"; break;
-    case spell_disease:         return "";                        break;
-    case spell_summonRandom:    return "";                        break;
-    case spell_healSelf:        return "";                        break;
-    case spell_knockBack:       return "";                        break;
+    case spell_azathothsBlast:      return "Azathoths Blast";         break;
+    case spell_enfeeble:            return "Enfeeblement";            break;
+    case spell_teleport:            return "Teleportation";           break;
+    case spell_bless:               return "Blessing";                break;
+    case spell_mayhem:              return "Mayhem";                  break;
+    case spell_pestilence:          return "Pestilence";              break;
+    case spell_detectItems:         return "Detect Items";            break;
+    case spell_detectTraps:         return "Detect Traps";            break;
+    case spell_clairvoyance:        return "Clairvoyance";            break;
+    case spell_opening:             return "Opening";                 break;
+    case spell_mthPower:            return "Thaumaturgic Alteration"; break;
+    case spell_sacrificeLife:       return "Sacrifice Life Force";    break;
+    case spell_sacrificeSpirit:     return "Sacrifice Spirit";        break;
+    case spell_disease:             return "";                        break;
+    case spell_summonRandom:        return "";                        break;
+    case spell_healSelf:            return "";                        break;
+    case spell_knockBack:           return "";                        break;
     case endOfSpells: {} break;
   }
   trace << "[WARNING] No spell found for scroll, ";
@@ -101,7 +101,7 @@ bool Scroll::read() {
   } else {
     eng->log->addMsg("I recite forbidden incantations...");
     data_->isTried = true;
-    if(spell->cast(eng->player, false, eng).IS_CAST_IDENTIFYING) {
+    if(spell->cast(eng->player, false, eng).isCastIdenifying) {
       identify(false);
     } else {
       failedToLearnRealName();
@@ -121,63 +121,6 @@ void Scroll::failedToLearnRealName(const string overrideFailString) {
     }
   }
 }
-
-//SpellCastRetData ScrollOfEnfeebleEnemies::specificRead(
-//  Engine* const engine) {
-//  return SpellEnfeeble().cast(eng->player, engine);
-//
-////  eng->player->getSpotedEnemies();
-////  const vector<Actor*>& actors = eng->player->spotedEnemies;
-////
-////  if(actors.empty() == false) {
-////    vector<Pos> actorPositions;
-////
-////    for(unsigned int i = 0; i < actors.size(); i++) {
-////      actorPositions.push_back(actors.at(i)->pos);
-////    }
-////
-////    eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-////      actorPositions, clrMagenta, BLAST_ANIMATION_DELAY_FACTOR);
-////
-////    StatusEffect* const effect = getStatusEffect(engine);
-////
-////    for(unsigned int i = 0; i < actors.size(); i++) {
-////      actors.at(i)->getPropHandler()->tryApplyProp(effect->copy());
-////    }
-////
-////    delete effect;
-////
-////    setRealDefinitionNames(engine, false);
-////
-////  } else {
-////    failedToLearnRealName(engine);
-////  }
-//}
-
-////void ScrollOfVoidChain::specificRead(Engine* const engine) {
-////  setRealDefinitionNames(engine, false);
-////  if(eng->player->getPropHandler()->allowAct()) {
-////    eng->marker->place(markerTask_spellVoidChain);
-////  } else {
-////    eng->log->addMsg("My spell is disrupted.");
-////  }
-////}
-//
-////void ScrollOfVoidChain::castAt(const Pos& pos, Engine* const engine) {
-////  const Pos playerPos = eng->player->pos;
-////  const vector<Pos> projectilePath =
-////    eng->mapTests->getLine(playerPos.x, playerPos.y, pos.x, pos.y,
-////                              true, FOV_STANDARD_RADI_INT);
-////}
-//
-////void ScrollOfIbnGhazisPowder::specificRead(Engine* const engine) {
-////  setRealDefinitionNames(engine, false);
-////  if(eng->player->getPropHandler()->allowAct()) {
-////    eng->query->direction();
-////  } else {
-////    eng->log->addMsg("My spell is disrupted.");
-////  }
-////}
 
 ScrollNameHandler::ScrollNameHandler(Engine* engine) :
   eng(engine) {

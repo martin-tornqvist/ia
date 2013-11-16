@@ -17,18 +17,25 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    const PropHandler* const prop =
+    const PropHandler* const propHandler =
       eng->player->getPropHandler();
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
-        if(prop->hasProp(propInfected) == false) {
+        if(propHandler->hasProp(propInfected) == false) {
           eng->log->addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
+      case medicalBagAction_takeMorphine: {
+        if(eng->player->getHp() >= eng->player->getHpMax(true)) {
+          eng->log->addMsg("I am not in pain.");
+          curAction_ = endOfMedicalBagActions;
+        }
+      } break;
+
       case medicalBagAction_treatWound: {
-        if(prop->hasProp(propWound) == false) {
+        if(propHandler->hasProp(propWound) == false) {
           eng->log->addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -54,6 +61,10 @@ bool MedicalBag::activateDefault(Actor* const actor) {
           eng->log->addMsg("I start to sanitize an infection.");
         } break;
 
+        case medicalBagAction_takeMorphine: {
+          eng->log->addMsg("I start to take Morphine.");
+        } break;
+
         case medicalBagAction_treatWound: {
           eng->log->addMsg("I start to treat a wound.");
         } break;
@@ -72,14 +83,20 @@ MedicalBagAction_t MedicalBag::playerChooseAction() const {
   vector<string> choiceLabels;
   for(int actionNr = 0; actionNr < endOfMedicalBagActions; actionNr++) {
     string label = "";
-    switch(actionNr) {
+    switch(MedicalBagAction_t(actionNr)) {
       case medicalBagAction_sanitizeInfection: {
         label = "Sanitize infection";
+      } break;
+
+      case medicalBagAction_takeMorphine: {
+        label = "Take morphine";
       } break;
 
       case medicalBagAction_treatWound: {
         label = "Treat wound";
       } break;
+
+      case endOfMedicalBagActions: {} break;
     }
 
     const int NR_TURNS_NEEDED =
@@ -114,6 +131,10 @@ void MedicalBag::finishCurAction() {
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+      eng->player->getPropHandler()->endAppliedProp(
+        propInfected, visionBlockers);
     } break;
 
     case medicalBagAction_treatWound: {
@@ -125,9 +146,12 @@ void MedicalBag::finishCurAction() {
       } else {
         dynamic_cast<PropWound*>(prop)->healOneWound();
       }
-//        eng->log->clearLog();
-//        eng->log->addMsg("I finish applying first aid.");
-//        eng->renderer->drawMapAndInterface();
+    } break;
+
+    case medicalBagAction_takeMorphine: {
+      eng->player->restoreHp(999);
+      eng->log->addMsg("The morphine takes its toll on my mind.");
+      eng->player->incrShock(shockValue_heavy);
     } break;
 
     case endOfMedicalBagActions: {} break;
@@ -164,9 +188,11 @@ int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
       return 70 / (IS_HEALER ? 2 : 1);
     } break;
 
-    case endOfMedicalBagActions: {
-      //Should not happen
+    case medicalBagAction_takeMorphine: {
+      return 8 / (IS_HEALER ? 2 : 1);
     } break;
+
+    case endOfMedicalBagActions: {} break;
   }
   return -1;
 }
@@ -179,95 +205,18 @@ int MedicalBag::getNrSuppliesNeededForAction(
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
-      return 2 / (IS_HEALER ? 2 : 1);
+      return 4 / (IS_HEALER ? 2 : 1);
     } break;
 
     case medicalBagAction_treatWound: {
       return 10 / (IS_HEALER ? 2 : 1);
     } break;
 
-    case endOfMedicalBagActions: {
-      //Should not happen
+    case medicalBagAction_takeMorphine: {
+      return 4 / (IS_HEALER ? 2 : 1);
     } break;
+
+    case endOfMedicalBagActions: {} break;
   }
   return -1;
 }
-
-// (Interrupted)
-//const bool IS_FAINTED = statusEffectsHandler_->hasProp(statusFainted);
-//const bool IS_PARALYSED = statusEffectsHandler_->hasProp(statusParalyzed);
-//const bool IS_DEAD = deadState != actorDeadState_alive;
-//getSpotedEnemies();
-//const int TOTAL_TURNS = getHealingTimeTotal();
-//const bool IS_ENOUGH_TIME_PASSED = firstAidTurnsLeft < TOTAL_TURNS - 10;
-//const int MISSING_HP = getHpMax(true) - getHp();
-//const int HP_HEALED_IF_ABORTED =
-//  IS_ENOUGH_TIME_PASSED ? (MISSING_HP * (TOTAL_TURNS - firstAidTurnsLeft)) / TOTAL_TURNS  : 0;
-//
-//bool isAborted = false;
-//if(spotedEnemies.size() > 0 || IS_FAINTED || IS_PARALYSED || IS_DEAD || PROMPT_FOR_ABORT == false) {
-//  firstAidTurnsLeft = -1;
-//  isAborted = true;
-//  eng->log->addMsg("I stop tending to my wounds.", clrWhite);
-//  eng->renderer->drawMapAndInterface();
-//} else {
-//  const string TURNS_STR = toString(firstAidTurnsLeft);
-//  const string ABORTED_HP_STR = toString(HP_HEALED_IF_ABORTED);
-//  string abortStr = "Continue healing (" + TURNS_STR + " turns)? (y/n), ";
-//  abortStr += ABORTED_HP_STR + " HP restored if canceled.";
-//  eng->log->addMsg(abortStr , clrWhiteHigh);
-//  eng->renderer->drawMapAndInterface();
-//
-//  if(eng->query->yesOrNo() == false) {
-//    firstAidTurnsLeft = -1;
-//    isAborted = true;
-//  }
-//
-//  eng->log->clearLog();
-//  eng->renderer->drawMapAndInterface();
-//}
-//if(isAborted && IS_ENOUGH_TIME_PASSED) {
-//  restoreHP(HP_HEALED_IF_ABORTED);
-//}
-
-
-// (Request healing)
-//    clearLogMessages();
-//    if(eng->player->deadState == actorDeadState_alive) {
-//      if(eng->player->getPropHandler()->hasProp(statusPoisoned)) {
-//        eng->log->addMsg("Not while poisoned.");
-//        eng->renderer->drawMapAndInterface();
-//      } else {
-//        bool allowHeal = false;
-//        const bool IS_DISEASED = eng->player->getPropHandler()->hasProp(statusDiseased);
-//
-//        if(eng->player->getHp() < eng->player->getHpMax(true)) {
-//          allowHeal = true;
-//        } else if(IS_DISEASED && eng->playerBonHandler->isBonPicked(playerBon_curer)) {
-//          allowHeal = true;
-//        }
-//
-//        if(allowHeal) {
-//          eng->player->getSpotedEnemies();
-//          if(eng->player->spotedEnemies.size() == 0) {
-//            const int TURNS_TO_HEAL = eng->player->getHealingTimeTotal();
-//            const string TURNS_STR = toString(TURNS_TO_HEAL);
-//            eng->log->addMsg("I rest here and attend my wounds (" + TURNS_STR + " turns)...");
-//            eng->player->firstAidTurnsLeft = TURNS_TO_HEAL - 1;
-//            eng->gameTime->endTurnOfCurrentActor();
-//          } else {
-//            eng->log->addMsg("Not while an enemy is near.");
-//            eng->renderer->drawMapAndInterface();
-//          }
-//        } else {
-//          if(IS_DISEASED) {
-//            eng->log->addMsg("I cannot heal this disease.");
-//          } else {
-//            eng->log->addMsg("I am already at good health.");
-//          }
-//          eng->renderer->drawMapAndInterface();
-//        }
-//      }
-//    }
-//    clearEvents();
-//    return;

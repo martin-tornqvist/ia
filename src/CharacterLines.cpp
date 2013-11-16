@@ -27,9 +27,9 @@ void CharacterLines::drawLocationInfo() {
 
     const int DLVL = eng->map->getDLVL();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
-      const vector<Room*>& roomList = eng->roomThemeMaker->roomList;
-      for(unsigned int i = 0; i < roomList.size(); i++) {
-        const Room* const room = roomList.at(i);
+      const vector<Room*>& rooms = eng->map->rooms;
+      for(unsigned int i = 0; i < rooms.size(); i++) {
+        const Room* const room = rooms.at(i);
         const Pos& x0y0 = room->getX0Y0();
         const Pos& x1y1 = room->getX1Y1();
         if(eng->mapTests->isCellInside(playerPos, Rect(x0y0, x1y1))) {

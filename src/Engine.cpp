@@ -84,7 +84,9 @@
 using namespace std;
 
 void Engine::sleep(const Uint32 DURATION) const {
-  sdlWrapper->sleep(DURATION);
+  if(config->isBotPlaying == false) {
+    sdlWrapper->sleep(DURATION);
+  }
 }
 
 void Engine::initSdl() {

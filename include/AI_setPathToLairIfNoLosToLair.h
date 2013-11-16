@@ -5,21 +5,22 @@
 
 class AI_setPathToLairIfNoLosToLair {
 public:
-  static void learn(Monster* monster, vector<Pos>* path, const Pos& lairCell, Engine* engine) {
+  static void learn(Monster& monster, vector<Pos>* path,
+                    const Pos& lairCell, Engine* engine) {
 
-    if(monster->deadState == actorDeadState_alive) {
+    if(monster.deadState == actorDeadState_alive) {
 
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+      engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
 
-      if(engine->fov->checkOneCell(blockers, lairCell, monster->pos, true)) {
+      if(engine->fov->checkOneCell(blockers, lairCell, monster.pos, true)) {
         path->resize(0);
         return;
       }
 
-      engine->mapTests->makeMoveBlockerArrayFeaturesOnly(monster, blockers);
-      engine->mapTests->addAdjacentLivingActorsToBlockerArray(monster->pos, blockers);
-      *path = engine->pathfinder->findPath(monster->pos, blockers, lairCell);
+      engine->mapTests->makeMoveBlockerArrayFeaturesOnly(&monster, blockers);
+      engine->mapTests->addAdjLivingActorsToBlockerArray(monster.pos, blockers);
+      *path = engine->pathfinder->findPath(monster.pos, blockers, lairCell);
       return;
     }
 

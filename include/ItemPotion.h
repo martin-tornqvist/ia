@@ -61,22 +61,6 @@ private:
   const string getRealTypeName() {return "Spirit";}
 };
 
-//class PotionOfSorcery: public Potion {
-//public:
-//  PotionOfSorcery(ItemData* const itemData, Engine* engine) :
-//    Potion(itemData, engine) {}
-//  ~PotionOfSorcery() {}
-//  void specificQuaff(Actor* const actor);
-//private:
-//  void specificCollide(const Pos& pos, Actor* const actor,
-//                       Engine* const engine) {
-//    (void)pos;
-//    (void)actor;
-//    (void)engine;
-//  }
-//  const string getRealTypeName() {return "Sorcery";}
-//};
-
 class PotionOfBlindness: public Potion {
 public:
   PotionOfBlindness(ItemData* const itemData, Engine* engine) :
@@ -124,16 +108,6 @@ private:
   const string getRealTypeName() {return "Confusion";}
 };
 
-//class PotionOfCorruption: public Potion {
-//public:
-//  PotionOfCorruption(ItemData* const itemData, Engine* engine) : Potion(itemData, engine) {}
-//  ~PotionOfCorruption() {}
-//  void specificQuaff(Actor* const actor);
-//private:
-//  void specificCollide(const Pos& pos, Actor* const actor);
-//  const string getRealTypeName() {return "Corruption";}
-//};
-
 class PotionOfFrenzy: public Potion {
 public:
   PotionOfFrenzy(ItemData* const itemData, Engine* engine) :
@@ -144,25 +118,6 @@ private:
   void specificCollide(const Pos& pos, Actor* const actor);
   const string getRealTypeName() {return "Frenzy";}
 };
-
-//class PotionOfStealth: public Potion {
-//public:
-//  PotionOfStealth(ItemData* const itemData, Engine* engine) :
-//    Potion(itemData, engine) {
-//  }
-//  ~PotionOfStealth() {
-//  }
-//  void specificQuaff(Actor* const actor);
-//private:
-//  void specificCollide(const Pos& pos, Actor* const actor) {
-//    (void)pos;
-//    (void)actor;
-//    (void)engine;
-//  }
-//  const string getRealTypeName() {
-//    return "Ghostly Stealth";
-//  }
-//};
 
 class PotionOfFortitude: public Potion {
 public:
@@ -177,18 +132,6 @@ private:
   }
 };
 
-//class PotionOfToughness: public Potion {
-//public:
-//  PotionOfToughness(ItemData* const itemData, Engine* engine) :
-//    Potion(itemData, engine) {}
-//  ~PotionOfToughness() {}
-//  void specificQuaff(Actor* const actor);
-//private:
-//  void specificCollide(const Pos& pos, Actor* const actor,
-//                       Engine* const engine);
-//  const string getRealTypeName() {return "Toughness";}
-//};
-
 class PotionOfPoison: public Potion {
 public:
   PotionOfPoison(ItemData* const itemData, Engine* engine) :
@@ -200,18 +143,18 @@ private:
   const string getRealTypeName() {return "Poison";}
 };
 
-class PotionOfKnowledge: public Potion {
+class PotionOfInsight: public Potion {
 public:
-  PotionOfKnowledge(ItemData* const itemData, Engine* engine) :
+  PotionOfInsight(ItemData* const itemData, Engine* engine) :
     Potion(itemData, engine) {}
-  ~PotionOfKnowledge() {}
+  ~PotionOfInsight() {}
   void specificQuaff(Actor* const actor);
 private:
   void specificCollide(const Pos& pos, Actor* const actor) {
     (void)pos;
     (void)actor;
   }
-  const string getRealTypeName() {return "Arcane Knowledge";}
+  const string getRealTypeName() {return "Insight";}
 };
 
 class PotionOfRFire: public Potion {
@@ -224,17 +167,6 @@ private:
   void specificCollide(const Pos& pos, Actor* const actor);
   const string getRealTypeName() {return "Fire Resistance";}
 };
-
-//class PotionOfRCold: public Potion {
-//public:
-//  PotionOfRCold(ItemData* const itemData, Engine* engine) :
-//    Potion(itemData, engine) {}
-//  ~PotionOfRCold() {}
-//  void specificQuaff(Actor* const actor);
-//private:
-//  void specificCollide(const Pos& pos, Actor* const actor);
-//  const string getRealTypeName() {return "Cold Resistance";}
-//};
 
 class PotionOfAntidote: public Potion {
 public:
@@ -267,6 +199,17 @@ public:
 private:
   void specificCollide(const Pos& pos, Actor* const actor);
   const string getRealTypeName() {return "Acid Resistance";}
+};
+
+class PotionOfDescent: public Potion {
+public:
+  PotionOfDescent(ItemData* const itemData, Engine* engine) :
+    Potion(itemData, engine) {}
+  ~PotionOfDescent() {}
+  void specificQuaff(Actor* const actor);
+private:
+  void specificCollide(const Pos& pos, Actor* const actor);
+  const string getRealTypeName() {return "Descent";}
 };
 
 class PotionNameHandler {

@@ -133,7 +133,8 @@ void DungeonMaster::winGame() {
   winMessage += "I now harness the shadows that stride from world to world to sow death and madness. ";
   winMessage += "The destinies of all things on earth, living and dead, are mine. ";
 
-  const vector<string> winMessageLines = eng->textFormatting->lineToLines(winMessage, 68);
+  vector<string> winMessageLines;
+  eng->textFormatting->lineToLines(winMessage, 68, winMessageLines);
 
   eng->renderer->coverPanel(panel_screen);
   eng->renderer->updateScreen();

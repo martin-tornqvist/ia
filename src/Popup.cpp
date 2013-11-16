@@ -9,8 +9,8 @@
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
 
-const int TEXT_AREA_WIDTH = 38;
-const int TEXT_AREA_X0 = MAP_X_CELLS_HALF - (TEXT_AREA_WIDTH) / 2;
+const int TEXT_AREA_WIDTH = 39;
+const int TEXT_AREA_X0 = MAP_X_CELLS_HALF - ((TEXT_AREA_WIDTH) / 2);
 
 int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
   const int BOX_WIDTH = TEXT_AREA_WIDTH + 2;
@@ -37,8 +37,8 @@ void Popup::showMessage(const string& message,
     eng->renderer->drawMapAndInterface(false);
   }
 
-  vector<string> lines = eng->textFormatting->lineToLines(
-                           message, TEXT_AREA_WIDTH);
+  vector<string> lines;
+  eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH, lines);
   const int TEXT_AREA_HEIGHT =  int(lines.size()) + 3;
 
   const int TITLE_Y_POS = printBoxAndReturnTitleYPos(TEXT_AREA_HEIGHT);
@@ -85,8 +85,8 @@ int Popup::showMultiChoiceMessage(const string& message,
                                   const vector<string>& choices,
                                   const string title) const {
 
-  vector<string> lines = eng->textFormatting->lineToLines(
-                           message, TEXT_AREA_WIDTH);
+  vector<string> lines;
+  eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH, lines);
   const int TEXT_HEIGHT = int(lines.size());
   const int NR_CHOICES = int(choices.size());
 

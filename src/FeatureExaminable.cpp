@@ -735,7 +735,7 @@ void Chest::triggerTrap() {
 Fountain::Fountain(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), fountainType(fountainTypeTepid) {
 
-  fountainType = FountainType_t(eng->dice.range(1, endOfFountainTypes));
+  fountainType = FountainType_t(eng->dice.range(1, endOfFountainTypes - 1));
 }
 
 void Fountain::featureSpecific_examine() {
@@ -811,9 +811,6 @@ void Fountain::drink() {
       propHandler->tryApplyProp(
         new PropFrenzied(eng, propTurnsStandard));
     } break;
-
-//    case fountainTypeVisions: {
-//    } break;
 
     case endOfFountainTypes: {} break;
   }

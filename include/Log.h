@@ -63,7 +63,8 @@ private:
 
   //Returns the x cell position that a message should start on.
   //May be one higher than highest message index.
-  int findCurXpos(const vector<Message>& line, const unsigned int messageNr) const;
+  int findCurXpos(const vector<Message>& line,
+                  const unsigned int messageNr) const;
 
   const Engine* eng;
 

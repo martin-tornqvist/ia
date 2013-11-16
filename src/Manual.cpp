@@ -28,8 +28,7 @@ void Manual::readFile() {
           }
         }
         if(shouldFormatLine) {
-          formated.resize(0);
-          formated = eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
+          eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2, formated);
           for(unsigned int i = 0; i < formated.size(); i++) {
             lines.push_back(formated.at(i));
           }

@@ -23,7 +23,7 @@ class Feature {
 public:
   virtual ~Feature() {}
 
-  virtual void bump(Actor* actorBumping);
+  virtual void bump(Actor& actorBumping);
   virtual void newTurn();
   virtual bool isMovePassable(Actor* const actorMoving) const;
   virtual bool isBodyTypePassable(const ActorBodyType_t bodyType) const;
@@ -67,24 +67,17 @@ protected:
 
 class FeatureMob: public Feature {
 public:
-  Pos getPos() const {
-    return pos_;
-  }
-  int getX() const {
-    return pos_.x;
-  }
-  int getY() const {
-    return pos_.y;
-  }
+  Pos getPos()  const {return pos_;}
+  int getX()    const {return pos_.x;}
+  int getY()    const {return pos_.y;}
 
   //For smoke etc
-  bool shouldBeDeleted() {
-    return shouldBeDeleted_;
-  }
+  bool shouldBeDeleted() {return shouldBeDeleted_;}
 
 protected:
   friend class FeatureFactory;
-  FeatureMob(Feature_t id, Pos pos, Engine* engine, FeatureSpawnData* spawnData = NULL) :
+  FeatureMob(Feature_t id, Pos pos, Engine* engine,
+             FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), shouldBeDeleted_(false) {
     (void)spawnData;
   }
@@ -98,13 +91,9 @@ public:
 
   void setGoreIfPossible();
 
-  inline Tile_t getGoreTile() {
-    return goreTile_;
-  }
+  inline Tile_t getGoreTile() {return goreTile_;}
 
-  inline char getGoreGlyph() {
-    return goreGlyph_;
-  }
+  inline char getGoreGlyph()  {return goreGlyph_;}
 
   inline void clearGore() {
     goreTile_ = tile_empty;
@@ -117,7 +106,8 @@ public:
 protected:
   friend class FeatureFactory;
   friend class Map;
-  FeatureStatic(Feature_t id, Pos pos, Engine* engine, FeatureSpawnData* spawnData = NULL) :
+  FeatureStatic(Feature_t id, Pos pos, Engine* engine,
+                FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), goreTile_(tile_empty), goreGlyph_(' ') {
     (void)spawnData;
   }

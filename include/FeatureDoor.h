@@ -27,7 +27,7 @@ public:
   ~Door() {
   }
 
-  void bump(Actor* actorBumping);
+  void bump(Actor& actorBumping);
   bool isMovePassable(Actor* const actorMoving) const;
   bool isBodyTypePassable(const ActorBodyType_t bodyType) const;
   bool isVisionPassable() const;

@@ -10,10 +10,10 @@ FeatureLiquidShallow::FeatureLiquidShallow(
   Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
 
-void FeatureLiquidShallow::bump(Actor* actorBumping) {
-  if(actorBumping->getData()->bodyType == actorBodyType_normal) {
+void FeatureLiquidShallow::bump(Actor& actorBumping) {
+  if(actorBumping.getData()->bodyType == actorBodyType_normal) {
 
-    actorBumping->getPropHandler()->tryApplyProp(
+    actorBumping.getPropHandler()->tryApplyProp(
       new PropWaiting(eng, propTurnsStandard));
 
 //    const bool IS_PLAYER = actorBumping == eng->player;
@@ -27,6 +27,6 @@ void FeatureLiquidShallow::bump(Actor* actorBumping) {
 FeatureLiquidDeep::FeatureLiquidDeep(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
 
-void FeatureLiquidDeep::bump(Actor* actorBumping) {
+void FeatureLiquidDeep::bump(Actor& actorBumping) {
   (void)actorBumping;
 }

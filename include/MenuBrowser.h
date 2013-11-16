@@ -14,25 +14,14 @@ public:
     nrItemsB_(nrItemsB),
     pos_(upLeft_) {}
 
-//  MenuBrowser& operator=(const MenuBrowser& other) {
-//    (void)other;
-//    return *this;
-//  }
-
   void navigate(const Direction_t direction);
   void navigate(const char KEY);
 
   char enter() const;
 
-  int getNrOfItemsInFirstList() const {
-    return nrItemsA_;
-  }
-  int getNrOfItemsInSecondList() const {
-    return nrItemsB_;
-  }
-  Pos getPos() const {
-    return pos_;
-  }
+  int getNrOfItemsInFirstList()   const {return nrItemsA_;}
+  int getNrOfItemsInSecondList()  const {return nrItemsB_;}
+  Pos getPos()                    const {return pos_;}
 
   bool isPosAtKey(const char KEY) const;
 

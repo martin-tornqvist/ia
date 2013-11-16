@@ -32,9 +32,7 @@ class RoomThemeMaker {
 public:
   RoomThemeMaker(Engine* engine) : eng(engine) {}
 
-  void run(const vector<Room*>& rooms);
-
-  vector<Room*> roomList;
+  void run();
 
 private:
   //This array supports placing items, monsters and traps

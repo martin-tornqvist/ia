@@ -13,9 +13,9 @@ Feature::Feature(Feature_t id, Pos pos, Engine* engine,
   (void)spawnData;
 }
 
-void Feature::bump(Actor* actorBumping) {
-  if(isMovePassable(actorBumping) == false) {
-    if(actorBumping == eng->player) {
+void Feature::bump(Actor& actorBumping) {
+  if(isMovePassable(&actorBumping) == false) {
+    if(&actorBumping == eng->player) {
       if(eng->player->getPropHandler()->allowSee()) {
         eng->log->addMsg(data_->messageOnPlayerBlocked);
       } else {

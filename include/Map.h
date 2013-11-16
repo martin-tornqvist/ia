@@ -56,10 +56,10 @@ public:
     lines.erase(lines.begin());
   }
 
+  vector<Room*> rooms;
+
 private:
   void clearGrids(const bool DELETE_INSTANCES);
-
-  vector<Room*> rooms_;
 
   Engine* eng;
 

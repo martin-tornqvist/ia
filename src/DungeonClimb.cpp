@@ -14,8 +14,6 @@
 void DungeonClimb::makeLevel() {
   trace << "DungeonClimb::makeLevel()..." << endl;
 
-  eng->map->clearMap();
-
   const int DLVL = eng->map->getDLVL();
 
   bool levelBuilt = false;

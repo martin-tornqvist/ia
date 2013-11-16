@@ -178,7 +178,8 @@ void Log::addMsg(const string& text, const SDL_Color color,
 
     if(IS_MSG_FIT == false) {
       eng->renderer->drawMapAndInterface(false);
-      eng->renderer->drawText("[MORE]", panel_log, Pos(CUR_X_POS, 0), clrCyanLgt);
+      eng->renderer->drawText(
+        "[MORE]", panel_log, Pos(CUR_X_POS, 0), clrCyanLgt);
       eng->renderer->updateScreen();
       eng->query->waitForKeyPress();
       clearLog();

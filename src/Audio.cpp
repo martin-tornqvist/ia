@@ -38,6 +38,7 @@ void Audio::loadAllAudio() {
   loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
 
   //Environment sounds
+  loadAudioFile(sfxMetalClank,              "sfx_metalClank.ogg");
   loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
   loadAudioFile(sfxExplosion,               "sfx_explosion.ogg");
   loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
@@ -57,7 +58,7 @@ void Audio::loadAllAudio() {
     const string indexStr = toString(a);
     const string indexStrPadded =
       a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
-    loadAudioFile(Sfx_t(i), indexStrPadded);
+    loadAudioFile(Sfx_t(i), "amb_" + indexStrPadded + ".ogg");
     a++;
   }
 
@@ -78,7 +79,10 @@ void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
 int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
-  if(sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx) {
+  if(
+    sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
+    eng->config->isBotPlaying == false) {
+
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
     const int VOL_R   = VOL_TOT - VOL_L;
@@ -143,7 +147,7 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
   sfxCandidates.resize(0);
 
   const int DLVL = eng->map->getDLVL();
-  if(DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
+  if(DLVL >= 1 && DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
     sfxCandidates.push_back(amb002);
     sfxCandidates.push_back(amb003);
     sfxCandidates.push_back(amb004);

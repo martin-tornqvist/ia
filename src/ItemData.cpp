@@ -194,6 +194,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->spawnStandardMinDLVL = 4;
       d->spawnStandardMaxDLVL = 999;
       d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
+      d->landOnHardSurfaceSfx = sfxMetalClank;
     } break;
 
     case itemData_armor: {
@@ -490,6 +491,7 @@ void ItemDataHandler::initDataList() {
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 8;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
+  d->landOnHardSurfaceSfx = sfxMetalClank;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -629,36 +631,11 @@ void ItemDataHandler::initDataList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
+  d->landOnHardSurfaceSfx = sfxMetalClank;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
-
-//  d = new ItemData(item_crowbar);
-//  resetData(d, itemData_general);
-//  d->name = ItemName("Crowbar", "Crowbars", "a Crowbar");
-//  d->chanceToIncludeInSpawnList = 70;
-//  d->itemWeight = itemWeight_light;
-//  d->tile = tile_crowbar;
-//  d->isStackable = false;
-//  d->color = clrGray;
-//  d->glyph = '~';
-//  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-//  addFeatureFoundIn(d, feature_cabinet);
-//  dataList[d->id] = d;
-//
-//  d = new ItemData(item_lockpick);
-//  resetData(d, itemData_general);
-//  d->name = ItemName("Lockpick", "Lockpicks", "a Lockpick");
-//  d->itemWeight = itemWeight_extraLight;
-//  d->tile = tile_lockpick;
-//  d->isStackable = true;
-//  d->maxStackSizeAtSpawn = 1;
-//  d->color = clrWhite;
-//  d->glyph = '~';
-//  d->landOnHardSurfaceSoundMsg = "I clinking sound.";
-//  addFeatureFoundIn(d, feature_cabinet);
-//  dataList[d->id] = d;
 
   d = new ItemData(item_playerKick);
   resetData(d, itemData_meleeWpnIntr);
@@ -693,7 +670,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_zombie]);
-  d->propAppliedOnMelee = new PropDiseased(eng, propTurnsStandard);
+  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStandard);
   dataList[d->id] = d;
 
   d = new ItemData(item_zombieAxe);
@@ -731,7 +708,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_rat]);
-  d->propAppliedOnMelee = new PropDiseased(eng, propTurnsStandard);
+  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStandard);
   dataList[d->id] = d;
 
   d = new ItemData(item_ratThingBite);
@@ -898,7 +875,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_ghoul]);
-  d->propAppliedOnMelee = new PropDiseased(eng, propTurnsStandard);
+  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStandard);
   dataList[d->id] = d;
 
   d = new ItemData(item_shadowClaw);
@@ -969,7 +946,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on me");
   setDmgFromMonsterData(
     *d, eng->actorDataHandler->dataList[actor_oozePutrid]);
-  d->propAppliedOnMelee = new PropDiseased(eng, propTurnsStandard);
+  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStandard);
   dataList[d->id] = d;
 
   d = new ItemData(item_oozePoisonSpewPus);
@@ -1066,12 +1043,6 @@ void ItemDataHandler::initDataList() {
   d->spellCastFromScroll = spell_teleport;
   dataList[d->id] = d;
 
-  d = new ItemData(item_scrollOfDescent);
-  resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_descent;
-  d->spawnStandardMinDLVL = 6;
-  dataList[d->id] = d;
-
   d = new ItemData(item_scrollOfPestilence);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_pestilence;
@@ -1090,11 +1061,6 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_scrollOfDetectTraps);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_detectTraps;
-  dataList[d->id] = d;
-
-  d = new ItemData(item_scrollOfIdentify);
-  resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_identify;
   dataList[d->id] = d;
 
   d = new ItemData(item_scrollOfBlessing);
@@ -1117,19 +1083,21 @@ void ItemDataHandler::initDataList() {
   d->spellCastFromScroll = spell_opening;
   dataList[d->id] = d;
 
+  d = new ItemData(item_scrollOfSacrificeLife);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = spell_sacrificeLife;
+  dataList[d->id] = d;
+
+  d = new ItemData(item_scrollOfSacrificeSpirit);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = spell_sacrificeSpirit;
+  dataList[d->id] = d;
+
   d = new ItemData(item_thaumaturgicAlteration);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_mthPower;
   d->isIntrinsic = true;
   dataList[d->id] = d;
-
-//  d = new ItemData(item_scrollOfVoidChain);
-//  resetData(d, itemData_scroll);
-//  dataList[d->id] = d;
-
-//  d = new ItemData(item_scrollOfIbnGhazisPowder);
-//  resetData(d, itemData_scroll);
-//  dataList[d->id] = d;
 
   d = new ItemData(item_potionOfHealing);
   resetData(d, itemData_potion);
@@ -1143,25 +1111,13 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfCorruption);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
-
   d = new ItemData(item_potionOfFrenzy);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfStealth);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
-
   d = new ItemData(item_potionOfFortitude);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
-
-//  d = new ItemData(item_potionOfToughness);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
 
   d = new ItemData(item_potionOfParalyzation);
   resetData(d, itemData_potion);
@@ -1175,15 +1131,11 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfSorcery);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
-
   d = new ItemData(item_potionOfPoison);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfKnowledge);
+  d = new ItemData(item_potionOfInsight);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
@@ -1191,21 +1143,13 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfRCold);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
-
   d = new ItemData(item_potionOfAntidote);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 
-//  d = new ItemData(item_potionOfRElec);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
-
-//  d = new ItemData(item_potionOfRAcid);
-//  resetData(d, itemData_potion);
-//  dataList[d->id] = d;
+  d = new ItemData(item_potionOfDescent);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
 
   d = new ItemData(item_deviceSentry);
   resetData(d, itemData_device);

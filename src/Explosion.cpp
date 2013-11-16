@@ -143,7 +143,7 @@ void ExplosionMaker::runExplosion(
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
 
       if(DO_EXPLOSION_DMG) {
-        if(eng->mapTests->isCellsNeighbours(Pos(x, y), origin, false)) {
+        if(eng->mapTests->isCellsAdj(Pos(x, y), origin, false)) {
           eng->map->switchToDestroyedFeatAt(Pos(x, y));
 
           if(eng->map->featuresStatic[x][y]->getId() == feature_door) {

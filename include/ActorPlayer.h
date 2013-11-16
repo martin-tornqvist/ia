@@ -100,7 +100,7 @@ private:
   void incrInsanity();
 //  void tryIdentifyItems();
   void testPhobias();
-  void actorSpecific_hit(const int DMG);
+  void actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS);
   void FOVhack();
   void interruptActions();
   bool isStandingInOpenSpace() const;

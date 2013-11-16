@@ -12,12 +12,11 @@
 #include "Knockback.h"
 #include "Map.h"
 #include "ActorFactory.h"
-#include "DungeonClimb.h"
 #include "FeatureTrap.h"
-#include "Inventory.h"
 #include "PlayerSpellsHandler.h"
 #include "ItemScroll.h"
 #include "ItemArmor.h"
+#include "Inventory.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<Spell_t> candidates;
@@ -34,23 +33,23 @@ Spell* SpellHandler::getRandomSpellForMonster() {
 
 Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
   switch(spellId) {
-    case spell_enfeeble:        return new SpellEnfeeble;       break;
-    case spell_disease:         return new SpellDisease;        break;
-    case spell_azathothsBlast:  return new SpellAzathothsBlast; break;
-    case spell_summonRandom:    return new SpellSummonRandom;   break;
-    case spell_healSelf:        return new SpellHealSelf;       break;
-    case spell_knockBack:       return new SpellKnockBack;      break;
-    case spell_teleport:        return new SpellTeleport;       break;
-    case spell_mayhem:          return new SpellMayhem;         break;
-    case spell_pestilence:      return new SpellPestilence;     break;
-    case spell_descent:         return new SpellDescent;        break;
-    case spell_detectItems:     return new SpellDetectItems;    break;
-    case spell_detectTraps:     return new SpellDetectTraps;    break;
-    case spell_identify:        return new SpellIdentify;       break;
-    case spell_clairvoyance:    return new SpellClairvoyance;   break;
-    case spell_opening:         return new SpellOpening;        break;
-    case spell_mthPower:        return new SpellMthPower;       break;
-    case spell_bless:           return new SpellBless;          break;
+    case spell_enfeeble:            return new SpellEnfeeble;           break;
+    case spell_disease:             return new SpellDisease;            break;
+    case spell_azathothsBlast:      return new SpellAzathothsBlast;     break;
+    case spell_summonRandom:        return new SpellSummonRandom;       break;
+    case spell_healSelf:            return new SpellHealSelf;           break;
+    case spell_knockBack:           return new SpellKnockBack;          break;
+    case spell_teleport:            return new SpellTeleport;           break;
+    case spell_mayhem:              return new SpellMayhem;             break;
+    case spell_pestilence:          return new SpellPestilence;         break;
+    case spell_detectItems:         return new SpellDetectItems;        break;
+    case spell_detectTraps:         return new SpellDetectTraps;        break;
+    case spell_clairvoyance:        return new SpellClairvoyance;       break;
+    case spell_opening:             return new SpellOpening;            break;
+    case spell_sacrificeLife:       return new SpellSacrificeLife;      break;
+    case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;    break;
+    case spell_mthPower:            return new SpellMthPower;           break;
+    case spell_bless:               return new SpellBless;              break;
 
     case endOfSpells: {} break;
   }
@@ -110,11 +109,13 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
       monster->spellCoolDownCurrent = monster->getData()->spellCooldownTurns;
     }
 
-    SpellCastRetData ret = specificCast(caster, eng);
-
     if(IS_INTRINSIC) {
       const Range cost = getSpiCost(false, caster, eng);
       caster->hitSpi(eng->dice.range(cost));
+    }
+    SpellCastRetData ret(false);
+    if(caster->deadState == actorDeadState_alive) {
+      ret = specificCast(caster, eng);
     }
 
     eng->gameTime->endTurnOfCurrentActor();
@@ -291,19 +292,6 @@ SpellCastRetData SpellPestilence::specificCast(
   return SpellCastRetData(true);
 }
 
-//------------------------------------------------------------ DESCENT
-SpellCastRetData SpellDescent::specificCast(
-  Actor* const caster, Engine* const eng) {
-  (void)caster;
-  if(eng->map->getDLVL() < FIRST_CAVERN_LEVEL - 1) {
-    eng->dungeonClimb->travelDown(1);
-    eng->log->addMsg("I sink downwards!");
-  } else {
-    eng->log->addMsg("I feel a faint sinking sensation.");
-  }
-  return SpellCastRetData(true);
-}
-
 //------------------------------------------------------------ DETECT ITEMS
 SpellCastRetData SpellDetectItems::specificCast(
   Actor* const caster, Engine* const eng) {
@@ -385,59 +373,6 @@ SpellCastRetData SpellDetectTraps::specificCast(
   return SpellCastRetData(false);
 }
 
-//------------------------------------------------------------ IDENTIFY
-SpellCastRetData SpellIdentify::specificCast(
-  Actor* const caster, Engine* const eng) {
-  (void)caster;
-
-  Inventory* const inv = eng->player->getInventory();
-
-  vector<Item*> itemIdentifyCandidates;
-
-  vector<InventorySlot>* slots = inv->getSlots();
-  for(unsigned int i = 0; i < slots->size(); i++) {
-    Item* const item = slots->at(i).item;
-    if(item != NULL) {
-      const ItemData& d = item->getData();
-      if(d.isIdentified == false) {
-        itemIdentifyCandidates.push_back(item);
-      }
-    }
-  }
-  vector<Item*>* backpack = inv->getGeneral();
-  for(unsigned int i = 0; i < backpack->size(); i++) {
-    Item* const item = backpack->at(i);
-    if(item->getData().id != item_scrollOfIdentify) {
-      const ItemData& d = item->getData();
-      if(d.isIdentified == false) {
-        itemIdentifyCandidates.push_back(item);
-      }
-    }
-  }
-
-  const unsigned int NR_ELEMENTS = itemIdentifyCandidates.size();
-  if(NR_ELEMENTS == 0) {
-    return SpellCastRetData(false);
-  } else {
-    Item* const item =
-      itemIdentifyCandidates.at(
-        eng->dice.range(0, NR_ELEMENTS - 1));
-
-    const string itemNameBefore =
-      eng->itemDataHandler->getItemRef(*item, itemRef_a, true);
-
-    item->identify(true);
-
-    const string itemNameAfter =
-      eng->itemDataHandler->getItemRef(*item, itemRef_a, true);
-
-    eng->log->addMsg("I gain intuitions about " + itemNameBefore + "...");
-    eng->log->addMsg("It is identified as " + itemNameAfter + "!");
-
-    return SpellCastRetData(true);
-  }
-}
-
 //------------------------------------------------------------ CLAIRVOYANCE
 SpellCastRetData SpellClairvoyance::specificCast(
   Actor* const caster, Engine* const eng) {
@@ -481,6 +416,42 @@ SpellCastRetData SpellOpening::specificCast(
   } else {
     return SpellCastRetData(false);
   }
+}
+
+//------------------------------------------------------------ SACRIFICE LIFE
+SpellCastRetData SpellSacrificeLife::specificCast(
+  Actor* const caster, Engine* const eng) {
+  (void)caster;
+
+  //Convert every 2 HP to 1 SPI
+
+  const int PLAYER_HP_CUR = eng->player->getHp();
+
+  if(PLAYER_HP_CUR > 2) {
+    const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
+    eng->player->hit(HP_DRAINED, dmgType_pure, false);
+    eng->player->restoreSpi(HP_DRAINED, true, true);
+    return SpellCastRetData(true);
+  }
+  return SpellCastRetData(false);
+}
+
+//------------------------------------------------------------ SACRIFICE SPIRIT
+SpellCastRetData SpellSacrificeSpirit::specificCast(
+  Actor* const caster, Engine* const eng) {
+  (void)caster;
+
+  //Convert every SPI to HP
+
+  const int PLAYER_SPI_CUR = eng->player->getSpi();
+
+  if(PLAYER_SPI_CUR > 0) {
+    const int HP_DRAINED = PLAYER_SPI_CUR - 1;
+    eng->player->hitSpi(HP_DRAINED);
+    eng->player->restoreHp(HP_DRAINED, true, true);
+    return SpellCastRetData(true);
+  }
+  return SpellCastRetData(false);
 }
 
 //------------------------------------------------------------ MTH POWER
@@ -587,7 +558,7 @@ void SpellMthPower::castRandomOtherSpell(Engine* const eng) const {
   trace << "SpellMthPower::castRandomOtherSpell()..." << endl;
   vector<Spell*> spellCandidates;
   for(int i = 0; i < endOfSpells; i++) {
-    if(i != spell_descent && i != spell_mthPower) {
+    if(i != spell_mthPower) {
       Spell* const spell = eng->spellHandler->getSpellFromId(Spell_t(i));
       if(spell->isLearnableForPlayer()) {
         spellCandidates.push_back(spell);

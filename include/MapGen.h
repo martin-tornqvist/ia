@@ -77,11 +77,7 @@ protected:
 class MapGenBsp : public MapGen {
 public:
   MapGenBsp(Engine* engine) : MapGen(engine) {}
-  ~MapGenBsp() {
-    for(unsigned int i = 0; i < rooms_.size(); i++) {
-      delete rooms_.at(i);
-    }
-  }
+  virtual ~MapGenBsp() {}
 
 private:
   void specificRun();
@@ -148,12 +144,10 @@ private:
 //  void buildNaturalArea(Region* regions[3][3]);
 //  void makeRiver(Region* regions[3][3]);
 
-  vector<Room*> rooms_;
+//  vector<Room*> rooms_;
   void deleteAndRemoveRoomFromList(Room* const room);
 
   bool forbiddenStairCellsGlobal[MAP_X_CELLS][MAP_Y_CELLS];
-
-  Engine* eng;
 };
 
 struct ConnectionPointsAndDistance {

@@ -375,7 +375,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
         if(itemStack == NULL) {
           eng->log->addMsg(
-            "I have no missiles chosen for throwing (press 'v').");
+            "I have no missiles chosen for throwing (press 'w').");
         } else {
           Item* itemToThrow = eng->itemFactory->copyItem(itemStack);
           itemToThrow->nrItems = 1;
@@ -552,13 +552,23 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     return;
   }
+  //----------------------------------------INFECTED
+  else if(d.sdlKey_ == SDLK_F8) {
+    if(IS_DEBUG_MODE) {
+      eng->player->getPropHandler()->tryApplyProp(
+        new PropInfected(eng, propTurnsStandard));
+      clearEvents();
+    }
+    return;
+  }
 
   //----------------------------------------UNDEFINED COMMANDS
   else if(d.key_ != -1) {
     string cmdTried = " ";
     cmdTried.at(0) = d.key_;
     eng->log->clearLog();
-    eng->log->addMsg("Unknown command '" + cmdTried + "'. Press '?' for commands.");
+    eng->log->addMsg(
+      "Unknown command '" + cmdTried + "'. Press '?' for commands.");
     clearEvents();
     return;
   }

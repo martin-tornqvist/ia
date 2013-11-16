@@ -24,19 +24,39 @@ void Bot::init() {
 }
 
 void Bot::act() {
-  trace << "Bot::act()" << endl;
-
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
   const int NR_OF_RUNS = 100;
   int runCount = 1;
 
-  assert(eng->player->pos.x > 0);
-  assert(eng->player->pos.y > 0);
-  assert(eng->player->pos.x < MAP_X_CELLS - 1);
-  assert(eng->player->pos.y < MAP_Y_CELLS - 1);
+  //=======================================================================
+  // TESTS
+  //=======================================================================
+  const int NR_ACTORS = eng->gameTime->getLoopSize();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    const Actor* const actor = eng->gameTime->getActorAt(i);
+    if(eng->mapTests->isCellInsideMap(actor->pos) == false) {
+      trace << "[WARNING] Actor outside map, in Bot::act()" << endl;
+    }
+  }
+  //=======================================================================
 
-  //Occasionally apply a random property for a few turns
-  if(eng->dice.oneIn(5)) {
+  PropHandler* const propHandler = eng->player->getPropHandler();
+
+  //Occasionally apply RFear
+  //(Helps avoiding getting stuck on fear-causing monsters too long)
+  if(eng->dice.oneIn(7)) {
+    propHandler->tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
+  }
+
+  //Ocassionally send a TAB command to attack nearby monsters
+  //(Helps avoiding getting stuck around monsters too long)
+  if(eng->dice.coinToss()) {
+    eng->input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
+    return;
+  }
+
+  //Occasionally apply a random property to exercise the prop code
+  if(eng->dice.oneIn(10)) {
     vector<PropId_t> propCandidates;
     propCandidates.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
@@ -48,14 +68,15 @@ void Bot::act() {
     PropId_t propId =
       propCandidates.at(eng->dice.range(0, propCandidates.size() - 1));
 
-    PropHandler* const propHandler = eng->player->getPropHandler();
     Prop* const prop =
       propHandler->makePropFromId(propId, propTurnsSpecified, 5);
 
     propHandler->tryApplyProp(prop, true);
   }
 
-  trace << "Bot: Checking if can use stairs here" << endl;
+  //If we are on the stairs,
+  //check if we are finished with the current run or finished with all runs,
+  //otherwise descend the stairs
   const Pos& pos = eng->player->pos;
   if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown) {
     if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
@@ -73,18 +94,15 @@ void Bot::act() {
     return;
   }
 
-  trace << "Bot: Looking for adjacent doors" << endl;
+  //Handle blocking door
   const Pos& playerPos = eng->player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f =
         eng->map->featuresStatic[playerPos.x + dx][playerPos.y + dy];
       if(f->getId() == feature_door) {
-        trace << "Bot: Adjacent door found, revealing" << endl;
         dynamic_cast<Door*>(f)->reveal(false);
-        //If adjacent door is stuck, bash at it
         if(dynamic_cast<Door*>(f)->isStuck()) {
-          trace << "Bot: Door is stuck, attempting bash" << endl;
           dynamic_cast<Door*>(f)->tryBash(eng->player);
           return;
         }
@@ -92,9 +110,8 @@ void Bot::act() {
     }
   }
 
-  trace << "Bot: Checking if terrified (to ignore stairs-path)" << endl;
+  //If we are terrified, wait in place
   if(eng->player->getPropHandler()->hasProp(propTerrified)) {
-    trace << "Bot: Is terrified, walking to current pos or randomly" << endl;
     if(walkToAdjacentCell(playerPos)) {
       return;
     }
@@ -108,11 +125,9 @@ void Bot::act() {
 }
 
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
-  trace << "Bot::walkToAdjacentCell()..." << endl;
-
   Pos playerCell(eng->player->pos);
 
-  assert(eng->mapTests->isCellsNeighbours(playerCell, cellToGoTo, true));
+  assert(eng->mapTests->isCellsAdj(playerCell, cellToGoTo, true));
 
   //Get relative positions
   const int xRel =
@@ -126,33 +141,15 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
   char key = ' ';
 
-  if(xRel == 0 && yRel == 0) {
-    key = '5';
-  }
-  if(xRel == 1 && yRel == 0) {
-    key = '6';
-  }
-  if(xRel == 1 && yRel == -1) {
-    key = '9';
-  }
-  if(xRel == 0 && yRel == -1) {
-    key = '8';
-  }
-  if(xRel == -1 && yRel == -1) {
-    key = '7';
-  }
-  if(xRel == -1 && yRel == 0) {
-    key = '4';
-  }
-  if(xRel == -1 && yRel == 1) {
-    key = '1';
-  }
-  if(xRel == 0 && yRel == 1) {
-    key = '2';
-  }
-  if(xRel == 1 && yRel == 1) {
-    key = '3';
-  }
+  if(xRel == 0 && yRel == 0) {key = '5';}
+  if(xRel == 1 && yRel == 0) {key = '6';}
+  if(xRel == 1 && yRel == -1) {key = '9';}
+  if(xRel == 0 && yRel == -1) {key = '8';}
+  if(xRel == -1 && yRel == -1) {key = '7';}
+  if(xRel == -1 && yRel == 0) {key = '4';}
+  if(xRel == -1 && yRel == 1) {key = '1';}
+  if(xRel == 0 && yRel == 1) {key = '2';}
+  if(xRel == 1 && yRel == 1) {key = '3';}
 
   //Occasionally randomize movement
   if(eng->dice.oneIn(2)) {
@@ -161,30 +158,26 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
   assert(key >= '1' && key <= '9');
 
-  trace << "Bot: Sending walk keypress" << endl;
   eng->input->handleKeyPress(KeyboardReadReturnData(key));
 
-  trace << "Bot::walkToAdjacentCell() [DONE]" << endl;
   return playerCell == cellToGoTo;
 }
 
 Pos Bot::findNextStairs() {
-  trace << "Bot::findNextStairs()..." << endl;
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       FeatureStatic* f = eng->map->featuresStatic[x][y];
       if(f->getId() == feature_stairsDown) {
-        trace << "Bot::findNextStairs() [DONE]" << endl;
         return Pos(x, y);
       }
     }
   }
-  trace << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()" << endl;
+  trace << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()";
+  trace << endl;
   return Pos(-1, -1);
 }
 
 void Bot::findPathToNextStairs() {
-  trace << "Bot::findPathToNextStairs()..." << endl;
   currentPath_.resize(0);
 
   const Pos stairPos = findNextStairs();
@@ -207,6 +200,5 @@ void Bot::findPathToNextStairs() {
   currentPath_ =
     eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
   assert(currentPath_.size() > 0);
-  trace << "Bot::findPathToNextStairs() [DONE]" << endl;
 }
 

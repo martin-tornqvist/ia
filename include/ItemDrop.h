@@ -21,7 +21,7 @@ public:
   //This function places the item as close to the origin as possible, but not
   //on top of other items, unless they can be stacked, in which case the
   //parameter item is destroyed.
-  Item* dropItemOnMap(const Pos& pos, Item& item);
+  Item* dropItemOnMap(const Pos& intendedPos, Item& item);
 
   void dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
                              const int NR_ITEMS_TO_DROP = -1);

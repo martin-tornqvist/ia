@@ -16,6 +16,7 @@ enum Sfx_t {
   sfxShotgunPumpFire,
 
   //Environment sounds
+  sfxMetalClank,
   sfxRicochet,
   sfxExplosion,
   sfxExplosionMolotov,

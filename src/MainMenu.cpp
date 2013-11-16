@@ -58,8 +58,9 @@ void MainMenu::draw(const MenuBrowser& browser) {
   quoteClr.r = QUOTE_BRIGHTNESS / 2;
   quoteClr.g = QUOTE_BRIGHTNESS / 2;
   quoteClr.b = QUOTE_BRIGHTNESS;
-  vector<string> quoteLines =
-    eng->textFormatting->lineToLines(getHplQuote(), 45);
+
+  vector<string> quoteLines;
+  eng->textFormatting->lineToLines(getHplQuote(), 45, quoteLines);
   const int Y0_LOGO = eng->config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng->renderer->drawText(quoteLines.at(i), panel_screen,

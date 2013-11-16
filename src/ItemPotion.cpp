@@ -11,6 +11,8 @@
 #include "GameTime.h"
 #include "Audio.h"
 #include "Renderer.h"
+#include "Inventory.h"
+#include "DungeonClimb.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->endAppliedPropsByMagicHealing();
@@ -53,31 +55,6 @@ void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor) {
     specificQuaff(actor);
   }
 }
-
-//void PotionOfSorcery::specificQuaff(Actor* const actor, eng* const eng) {
-//  (void)actor;
-//  bool isAnySpellRestored = false;
-//
-//  const unsigned int NR_OF_SCROLLS = eng->playerPowersHandler->getNrOfSpells();
-//  for(unsigned int i = 0; i < NR_OF_SCROLLS; i++) {
-//    Scroll* const scroll =  eng->playerPowersHandler->getScrollAt(i);
-//    const ItemDef& d = scroll->getData();
-//    if(
-//      d.isScrollLearnable &&
-//      d.isScrollLearned   &&
-//      d.id != item_thaumaturgicAlteration) {
-//      if(d.castFromMemoryCurrentBaseChance < CAST_FROM_MEMORY_CHANCE_LIM) {
-//        scroll->setCastFromMemoryCurrentBaseChance(CAST_FROM_MEMORY_CHANCE_LIM);
-//        isAnySpellRestored = true;
-//      }
-//    }
-//  }
-//
-//  if(isAnySpellRestored) {
-//    eng->log->addMsg("My magic is restored!");
-//    identify(false);
-//  }
-//}
 
 void PotionOfBlindness::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
@@ -132,28 +109,6 @@ void PotionOfConfusion::specificCollide(
     specificQuaff(actor);
   }
 }
-
-//void PotionOfCorruption::specificQuaff(Actor* const actor, eng* const eng) {
-//  const int CHANGE = -(eng->dice(1, 2));
-//
-//  actor->changeMaxHP(CHANGE, true);
-//
-//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false);
-//  }
-//}
-//
-//void PotionOfCorruption::specificCollide(const Pos& pos, Actor* const actor, eng* const eng) {
-//  if(actor != NULL) {
-//    specificQuaff(actor);
-//  } else {
-//    eng->map->switchToDestroyedFeatAt(pos);
-//
-//    if(eng->map->playerVision[pos.x][pos.y]) {
-//      identify(false);
-//    }
-//  }
-//}
 
 void PotionOfFrenzy::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
@@ -222,25 +177,6 @@ void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor) {
   }
 }
 
-//void PotionOfToughness::specificQuaff(Actor* const actor, eng* const eng) {
-//  actor->getPropHandler()->tryApplyProp(new StatusPerfectToughness(eng));
-//
-//  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
-//  actor->getPropHandler()->endEffectsOfAbility(ability_resistStatusBody, visionBlockers);
-//
-//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false);
-//  }
-//}
-//
-//void PotionOfToughness::specificCollide(const Pos& pos, Actor* const actor, eng* const eng) {
-//  (void)pos;
-//  if(actor != NULL) {
-//    specificQuaff(actor);
-//  }
-//}
-
 void PotionOfPoison::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->tryApplyProp(
     new PropPoisoned(eng, propTurnsStandard));
@@ -272,22 +208,6 @@ void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
     specificQuaff(actor);
   }
 }
-
-//void PotionOfRCold::specificQuaff(Actor* const actor) {
-//  actor->getPropHandler()->tryApplyProp(
-//    new PropRCold(eng, propTurnsStandard));
-//
-//  if(eng->player->checkIfSeeActor(*actor, NULL)) {
-//    identify(false);
-//  }
-//}
-//
-//void PotionOfRCold::specificCollide(const Pos& pos, Actor* const actor) {
-//  (void)pos;
-//  if(actor != NULL) {
-//    specificQuaff(actor);
-//  }
-//}
 
 void PotionOfAntidote::specificQuaff(Actor* const actor) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -339,11 +259,74 @@ void PotionOfRAcid::specificCollide(const Pos& pos, Actor* const actor) {
   }
 }
 
-void PotionOfKnowledge::specificQuaff(Actor* const actor) {
+void PotionOfInsight::specificQuaff(Actor* const actor) {
   (void)actor;
-  eng->log->addMsg("I feel more insightful about the mystic powers!");
+
+  Inventory* const inv = eng->player->getInventory();
+
+  vector<Item*> itemIdentifyCandidates;
+
+  vector<InventorySlot>* slots = inv->getSlots();
+  for(unsigned int i = 0; i < slots->size(); i++) {
+    Item* const item = slots->at(i).item;
+    if(item != NULL) {
+      const ItemData& d = item->getData();
+      if(d.isIdentified == false) {
+        itemIdentifyCandidates.push_back(item);
+      }
+    }
+  }
+  vector<Item*>* backpack = inv->getGeneral();
+  for(unsigned int i = 0; i < backpack->size(); i++) {
+    Item* const item = backpack->at(i);
+    if(item->getData().id != item_potionOfInsight) {
+      const ItemData& d = item->getData();
+      if(d.isIdentified == false) {
+        itemIdentifyCandidates.push_back(item);
+      }
+    }
+  }
+
+  const unsigned int NR_ELEMENTS = itemIdentifyCandidates.size();
+  if(NR_ELEMENTS > 0) {
+    Item* const item =
+      itemIdentifyCandidates.at(
+        eng->dice.range(0, NR_ELEMENTS - 1));
+
+    const string itemNameBefore =
+      eng->itemDataHandler->getItemRef(*item, itemRef_a, true);
+
+    item->identify(true);
+
+    const string itemNameAfter =
+      eng->itemDataHandler->getItemRef(*item, itemRef_a, true);
+
+    eng->log->addMsg("I gain intuitions about " + itemNameBefore + "...");
+    eng->log->addMsg("It is identified as " + itemNameAfter + "!");
+  }
+
+  eng->log->addMsg("I feel more insightful about mystic powers!");
   eng->player->incrMth(4);
   identify(false);
+}
+
+void PotionOfDescent::specificQuaff(Actor* const actor) {
+  (void)actor;
+  if(eng->map->getDLVL() < LAST_CAVERN_LEVEL) {
+    eng->dungeonClimb->travelDown(1);
+    eng->log->addMsg("I sink downwards!");
+  } else {
+    eng->log->addMsg("I feel a faint sinking sensation.");
+  }
+
+  identify(false);
+}
+
+void PotionOfDescent::specificCollide(const Pos& pos, Actor* const actor) {
+  (void)pos;
+  if(actor != NULL) {
+    specificQuaff(actor);
+  }
 }
 
 void PotionNameHandler::setColorAndFalseName(ItemData* d) {

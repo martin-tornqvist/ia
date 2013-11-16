@@ -54,7 +54,8 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
       if(eng->player->checkIfSeeActor(*curActor, blockers)) {
-        eng->log->addMsg("I see " + curActor->getNameThe() + " drop " + itemRef + ".");
+        eng->log->addMsg(
+                         "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
     }
 
@@ -64,9 +65,9 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
   }
 }
 
-Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
+Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
-  if(eng->map->featuresStatic[pos.x][pos.y]->isBottomless()) {
+  if(eng->map->featuresStatic[intendedPos.x][intendedPos.y]->isBottomless()) {
     delete &item;
     return NULL;
   }
@@ -83,10 +84,11 @@ Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
   eng->mapTests->makeBoolVectorFromMapArray(freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
-  IsCloserToOrigin isCloserToOrigin(pos, eng);
+  IsCloserToOrigin isCloserToOrigin(intendedPos, eng);
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
-  int curX, curY, stackX, stackY;
+  Pos curPos;
+  Pos stackPos;
   const bool ITEM_STACKS = item.getData().isStackable;
   int ii = 0;
   const unsigned int vectorSize = freeCells.size();
@@ -96,14 +98,13 @@ Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
     if(ITEM_STACKS) {
       //While ii cell is not further away than i cell
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
-        stackX = freeCells.at(ii).x;
-        stackY = freeCells.at(ii).y;
-        Item* itemFoundOnFloor = eng->map->items[stackX][stackY];
+        stackPos = freeCells.at(ii);
+        Item* itemFoundOnFloor = eng->map->items[stackPos.x][stackPos.y];
         if(itemFoundOnFloor != NULL) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
             item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
-            eng->map->items[stackX][stackY] = &item;
+            eng->map->items[stackPos.x][stackPos.y] = &item;
             return &item;
           }
         }
@@ -113,23 +114,18 @@ Item* ItemDrop::dropItemOnMap(const Pos& pos, Item& item) {
       item.appplyDropEffects();
     }
 
-    if(&item == NULL) {
-      break;
-    }
+    if(&item == NULL) {break;}
 
-    curX = freeCells.at(i).x;
-    curY = freeCells.at(i).y;
-    if(eng->map->items[curX][curY] == NULL) {
+    curPos = freeCells.at(i);
+    if(eng->map->items[curPos.x][curPos.y] == NULL) {
 
-      eng->map->items[curX][curY] = &item;
+      eng->map->items[curPos.x][curPos.y] = &item;
 
-      if(eng->player->pos == Pos(curX, curY)) {
-        if(curX != pos.x || curY != pos.y) {
-          eng->log->addMsg("I feel something by my feet.");
-        }
+      if(eng->player->pos == curPos && curPos != intendedPos) {
+        eng->log->addMsg("I feel something by my feet.");
       }
 
-      i = 999999;
+      i = 99999;
     }
 
     if(i == vectorSize - 1) {

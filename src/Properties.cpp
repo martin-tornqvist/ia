@@ -440,7 +440,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propInfected;
-  d.stdRndTurns = Range(300, 400);
+  d.stdRndTurns = Range(400, 700);
   d.name = "Infected";
   d.nameShort = "Infected";
   d.msg[propMsgOnStartPlayer] = "I am infected!";
@@ -1307,14 +1307,9 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(eng->dice.percentile() <= 4) {
+  if(eng->dice.oneIn(2)) {
     owningActor_->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
-    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-
-    eng->mapTests->makeVisionBlockerArray(owningActor_->pos, visionBlockers);
-    owningActor_->getPropHandler()->endAppliedProp(
-      propInfected, visionBlockers);
   }
 }
 
@@ -1469,7 +1464,7 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
 
-    if(eng->dice.oneIn(7)) {
+    if(eng->dice.oneIn(8)) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y
@@ -1630,11 +1625,6 @@ void PropParalyzed::onStart() {
   }
 }
 
-//bool PropFreeAction::tryResistOtherProp(const PropId_t id) {
-//  //TODO Add resistance checks for this property
-//  return false;
-//}
-
 void PropFainted::onStart() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
@@ -1717,7 +1707,6 @@ bool PropRElec::tryResistDmg(
 
 bool PropRConfusion::tryResistOtherProp(const PropId_t id) {
   return id == propConfused;
-  return false;
 }
 
 void PropRConfusion::onStart() {

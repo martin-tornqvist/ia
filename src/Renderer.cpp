@@ -632,7 +632,10 @@ void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
       drawTile(tile_popupVerticalBar,
                panel, Pos(border.x1y1.x, y), clr, clrBlack);
     } else {
-
+      drawGlyph('|',
+                panel, Pos(border.x0y0.x, y), clr, true, clrBlack);
+      drawGlyph('|',
+                panel, Pos(border.x1y1.x, y), clr, true, clrBlack);
     }
   }
 
@@ -646,7 +649,8 @@ void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
       drawTile(tile_popupHorizontalBar,
                panel, Pos(x, border.x1y1.y), clr, clrBlack);
     } else {
-
+      drawGlyph('-', panel, Pos(x, border.x0y0.y), clr, true, clrBlack);
+      drawGlyph('-', panel, Pos(x, border.x1y1.y), clr, true, clrBlack);
     }
   }
 
@@ -661,7 +665,14 @@ void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
     drawTile(tile_popupCornerBottomRight,
              panel, Pos(border.x1y1.x, border.x1y1.y), clr, clrBlack);
   } else {
-
+    drawGlyph(
+      '+', panel, Pos(border.x0y0.x, border.x0y0.y), clr, true, clrBlack);
+    drawGlyph(
+      '+', panel, Pos(border.x1y1.x, border.x0y0.y), clr, true, clrBlack);
+    drawGlyph(
+      '+', panel, Pos(border.x0y0.x, border.x1y1.y), clr, true, clrBlack);
+    drawGlyph(
+      '+', panel, Pos(border.x1y1.x, border.x1y1.y), clr, true, clrBlack);
   }
 }
 

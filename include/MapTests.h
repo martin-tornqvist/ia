@@ -61,8 +61,8 @@ public:
 
   void addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void addAdjacentLivingActorsToBlockerArray(
-    const Pos origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
+  void addAdjLivingActorsToBlockerArray(
+    const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void makeWalkBlockingArrayFeaturesOnly(
     bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
@@ -77,8 +77,7 @@ public:
 
   inline bool isCellInsideMap(const Pos& pos) const {
     if(
-      pos.x < 0 || pos.y < 0 ||
-      pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
+      pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
       return false;
     }
     return true;
@@ -121,8 +120,8 @@ public:
   bool isCellNextToPlayer(const Pos& pos,
                           const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
-  bool isCellsNeighbours(const Pos& pos1, const Pos& pos2,
-                         const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
+  bool isCellsAdj(const Pos& pos1, const Pos& pos2,
+                  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
   Pos getClosestPos(const Pos c, const vector<Pos>& positions) const;
   Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;

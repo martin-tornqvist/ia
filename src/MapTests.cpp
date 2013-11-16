@@ -62,10 +62,12 @@ void MapTests::makeVisionBlockerArray(
   const int X1 = min(MAP_X_CELLS - 1, origin.x + MAX_VISION_RANGE + 1);
   const int Y1 = min(MAP_Y_CELLS - 1, origin.y + MAX_VISION_RANGE + 1);
 
+  const Map* const map = eng->map;
+
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       arrayToFill[x][y] =
-        eng->map->featuresStatic[x][y]->isVisionPassable() == false;
+        map->featuresStatic[x][y]->isVisionPassable() == false;
     }
   }
 
@@ -101,23 +103,27 @@ void MapTests::makeMoveBlockerArrayFeaturesOnly(
 void MapTests::makeWalkBlockingArrayFeaturesOnly(
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
-  makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, arrayToFill);
+  makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    actorBodyType_normal, arrayToFill);
 }
 
 void MapTests::makeMoveBlockerArrayForBodyTypeFeaturesOnly(
   const ActorBodyType_t bodyType,
   bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
+  const Map* const map = eng->map;
+
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       arrayToFill[x][y] =
-        eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
+        map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
     }
   }
+  GameTime* const gameTime = eng->gameTime;
   FeatureMob* f = NULL;
   const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
   for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
-    f = eng->gameTime->getFeatureMobAt(i);
+    f = gameTime->getFeatureMobAt(i);
     const Pos& pos = f->getPos();
     if(arrayToFill[pos.x][pos.y] == false) {
       arrayToFill[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
@@ -224,8 +230,8 @@ void MapTests::addAllActorsToBlockerArray(
   }
 }
 
-void MapTests::addAdjacentLivingActorsToBlockerArray(
-  const Pos origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+void MapTests::addAdjLivingActorsToBlockerArray(
+  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
 
   Actor* a = NULL;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
@@ -233,7 +239,7 @@ void MapTests::addAdjacentLivingActorsToBlockerArray(
     a = eng->gameTime->getActorAt(i);
     if(a->deadState == actorDeadState_alive) {
       if(arrayToFill[a->pos.x][a->pos.y] == false && a->pos != origin) {
-        if(isCellsNeighbours(origin, a->pos, false)) {
+        if(isCellsAdj(origin, a->pos, false)) {
           arrayToFill[a->pos.x][a->pos.y] = true;
         }
       }
@@ -245,7 +251,7 @@ bool MapTests::isCellNextToPlayer(
   const Pos& pos,
   const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
 
-  return isCellsNeighbours(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
+  return isCellsAdj(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
 }
 
 void MapTests::makeBoolVectorFromMapArray(
@@ -268,6 +274,8 @@ void MapTests::floodFill(
   eng->basicUtils->resetArray(values);
 
   vector<Pos> positions;
+  positions.resize(0);
+  unsigned int nrElementsToSkip = 0;
   Pos c;
 
   int currentX = origin.x;
@@ -315,13 +323,13 @@ void MapTests::floodFill(
     }
 
     if(isStoppingAtTarget) {
-      if(positions.size() == 0) {
+      if(positions.size() == nrElementsToSkip) {
         pathExists = false;
       }
       if(isAtTarget || pathExists == false) {
         done = true;
       }
-    } else if(positions.size() == 0) {
+    } else if(positions.size() == nrElementsToSkip) {
       done = true;
     }
 
@@ -330,19 +338,20 @@ void MapTests::floodFill(
     }
 
     if(isStoppingAtTarget == false || isAtTarget == false) {
-      if(positions.size() == 0) {
+      if(positions.size() == nrElementsToSkip) {
         pathExists = false;
       } else {
-        c = positions.front();
+        c = positions.at(nrElementsToSkip);
         currentX = c.x;
         currentY = c.y;
-        positions.erase(positions.begin());
+        //positions.erase(positions.begin()); //Slow!
+        nrElementsToSkip++;
       }
     }
   }
 }
 
-bool MapTests::isCellsNeighbours(
+bool MapTests::isCellsAdj(
   const Pos& pos1, const Pos& pos2,
   const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
 

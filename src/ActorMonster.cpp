@@ -102,7 +102,7 @@ void Monster::act() {
 
   if(ai.makesRoomForFriend) {
     if(leader != eng->player) {
-      if(AI_makeRoomForFriend::action(this, eng)) {
+      if(AI_makeRoomForFriend::action(*this, eng)) {
         return;
       }
     }
@@ -132,13 +132,13 @@ void Monster::act() {
   }
 
   if(eng->dice.percentile() < data_->erraticMovement) {
-    if(AI_moveToRandomAdjacentCell::action(this, eng)) {
+    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
       return;
     }
   }
 
   if(ai.movesTowardTargetWhenVision) {
-    if(AI_moveTowardsTargetSimple::action(this, eng)) {
+    if(AI_moveTowardsTargetSimple::action(*this, eng)) {
       return;
     }
   }
@@ -147,7 +147,7 @@ void Monster::act() {
 
   if(ai.pathsToTargetWhenAware) {
     if(leader != eng->player) {
-      AI_setPathToPlayerIfAware::learn(this, &path, eng);
+      AI_setPathToPlayerIfAware::learn(*this, &path, eng);
     }
   }
 
@@ -157,30 +157,30 @@ void Monster::act() {
     }
   }
 
-  if(AI_stepPath::action(this, &path)) {
+  if(AI_stepPath::action(*this, &path)) {
     return;
   }
 
   if(ai.movesTowardLeader) {
-    AI_setPathToLeaderIfNoLosToleader::learn(this, &path, eng);
-    if(AI_stepPath::action(this, &path)) {
+    AI_setPathToLeaderIfNoLosToleader::learn(*this, &path, eng);
+    if(AI_stepPath::action(*this, &path)) {
       return;
     }
   }
 
   if(ai.movesTowardLair) {
     if(leader != eng->player) {
-      if(AI_stepToLairIfHasLosToLair::action(this, lairCell_, eng)) {
+      if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;
       }
-      AI_setPathToLairIfNoLosToLair::learn(this, &path, lairCell_, eng);
-      if(AI_stepPath::action(this, &path)) {
+      AI_setPathToLairIfNoLosToLair::learn(*this, &path, lairCell_, eng);
+      if(AI_stepPath::action(*this, &path)) {
         return;
       }
     }
   }
 
-  if(AI_moveToRandomAdjacentCell::action(this, eng)) {
+  if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
     return;
   }
 
@@ -202,12 +202,10 @@ void Monster::moveToCell(Pos targetCell) {
   if(targetCell != pos) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
-      trace << "Monster: Standing on trap, ";
-      trace << "check if trap affects leaving the cell" << endl;
       targetCell =
-        dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, targetCell);
+        dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, targetCell);
       if(targetCell == pos) {
-        trace << "Monster: Trap prevented leaving" << endl;
+        traceHi << "Monster: Move prevented by trap" << endl;
         eng->gameTime->endTurnOfCurrentActor();
         return;
       }
@@ -222,9 +220,9 @@ void Monster::moveToCell(Pos targetCell) {
   // Bump features in target cell (i.e. to trigger traps)
   vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(pos);
   for(unsigned int i = 0; i < featureMobs.size(); i++) {
-    featureMobs.at(i)->bump(this);
+    featureMobs.at(i)->bump(*this);
   }
-  eng->map->featuresStatic[pos.x][pos.y]->bump(this);
+  eng->map->featuresStatic[pos.x][pos.y]->bump(*this);
 
   eng->gameTime->endTurnOfCurrentActor();
 }
@@ -325,7 +323,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
     opport.isMelee =
-      eng->mapTests->isCellsNeighbours(pos, defender.pos, false);
+      eng->mapTests->isCellsAdj(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();

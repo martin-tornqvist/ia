@@ -21,9 +21,8 @@ void Credits::readFile() {
       if(curLine.empty()) {
         lines.push_back(curLine);
       } else {
-        formatedLines.resize(0);
-        formatedLines =
-          eng->textFormatting->lineToLines(curLine, MAP_X_CELLS - 2);
+        eng->textFormatting->lineToLines(
+          curLine, MAP_X_CELLS - 2, formatedLines);
 
         for(unsigned int i = 0; i < formatedLines.size(); i++) {
           lines.push_back(formatedLines.at(i));

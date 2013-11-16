@@ -1,6 +1,6 @@
 #include "MapGen.h"
 
-#include "algorithm"
+#include <algorithm>
 #include <stdlib.h>
 #include <cassert>
 
@@ -21,8 +21,7 @@
 void MapGenBsp::specificRun() {
   trace << "MapGenBsp::specificRun()..." << endl;
 
-//  trace << "MapGenBsp: Calling map->clearDungeon()" << endl;
-//  eng->map->clearDungeon();
+  eng->map->clearMap();
 
   trace << "MapGenBsp: Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -80,8 +79,8 @@ void MapGenBsp::specificRun() {
         regions[x][y] = region;
         const Rect roomPoss = region->getRandomPossForRoom(eng);
 
-        rooms_.push_back(buildRoom(roomPoss));
-        regions[x][y]->mainRoom = rooms_.back();
+        eng->map->rooms.push_back(buildRoom(roomPoss));
+        regions[x][y]->mainRoom = eng->map->rooms.back();
 
         if(eng->dice.percentile() < 30) {
           reshapeRoom(*(regions[x][y]->mainRoom));
@@ -118,17 +117,20 @@ void MapGenBsp::specificRun() {
   eng->basicUtils->reverseBoolArray(blockers);
   vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
-  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(eng->player->pos, eng));
+  sort(freeCells.begin(), freeCells.end(),
+       IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();
 
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
-  eng->roomThemeMaker->run(rooms_);
+  eng->roomThemeMaker->run();
 
-  trace << "MapGenBsp: Moving player to nearest floor cell again after room theme maker" << endl;
+  trace << "MapGenBsp: Moving player to nearest floor cell again ";
+  trace << "after room theme maker" << endl;
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
-  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(eng->player->pos, eng));
+  sort(freeCells.begin(), freeCells.end(),
+       IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();
 
   const Pos stairsPos = placeStairs();
@@ -140,7 +142,7 @@ void MapGenBsp::specificRun() {
 
 //  makeLevers();
 
-  // Note: This must be run last, everything else depends on all walls being common stone walls
+  //This must be run last, everything depends on all walls being stone walls
   decorate();
 
   for(int y = 0; y < 3; y++) {
@@ -153,15 +155,18 @@ void MapGenBsp::specificRun() {
   trace << "MapGenBsp::specificRun() [DONE]" << endl;
 }
 
+//TODO Should be in Map
 void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
-  for(unsigned int i = 0; i < rooms_.size(); i++) {
-    if(rooms_.at(i) == room) {
+  vector<Room*>& rooms = eng->map->rooms;
+  for(unsigned int i = 0; i < rooms.size(); i++) {
+    if(rooms.at(i) == room) {
       delete room;
-      rooms_.erase(rooms_.begin() + i);
+      rooms.erase(rooms.begin() + i);
       return;
     }
   }
-  trace << "[WARNING] Tried to remove room that is not in list, in MapGenBsp::deleteAndRemoveRoomFromList()" << endl;
+  trace << "[WARNING] Tried to remove room that is not in list, ";
+  trace << "in MapGenBsp::deleteAndRemoveRoomFromList()" << endl;
 }
 
 //void MapGenBsp::makeLevers() {
@@ -310,12 +315,16 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             }
           }
 
-          eng->mapTests->floodFill(origin, blockers, floodFillResult, FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1));
+          eng->mapTests->floodFill(
+            origin, blockers, floodFillResult, FLOOD_FILL_TRAVEL_LIMIT / 2,
+            Pos(-1, -1));
 
           for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
             for(int x = 1; x < MAP_X_CELLS - 1; x++) {
               const Pos c(x, y);
-              if(blockers[x][y] == false && (c == origin || floodFillResult[x][y] > 0)) {
+              if(
+                blockers[x][y] == false &&
+                (c == origin || floodFillResult[x][y] > 0)) {
                 eng->featureFactory->spawnFeatureAt(feature_chasm, c);
               }
             }
@@ -327,10 +336,16 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
   trace << "MapGenBsp::buildCaves()[DONE]" << endl;
 }
 
-void MapGenBsp::buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2, const int SPLIT_Y1, const int SPLIT_Y2) {
+void MapGenBsp::buildMergedRegionsAndRooms(
+  Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
+  const int SPLIT_Y1, const int SPLIT_Y2) {
+
   const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng->dice.range(0, 2);
 
-  for(int attemptCount = 0; attemptCount < NR_OF_MERGED_REGIONS_TO_ATTEMPT; attemptCount++) {
+  for(
+    int attemptCount = 0;
+    attemptCount < NR_OF_MERGED_REGIONS_TO_ATTEMPT;
+    attemptCount++) {
 
     Pos regionIndex1, regionIndex2;
 
@@ -379,7 +394,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(Region* regions[3][3], const int SPLI
     const int OFFSET_Y1 = eng->dice.range(1, 4);
     Rect roomPoss(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0), area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomPoss);
-    rooms_.push_back(room);
+    eng->map->rooms.push_back(room);
 
     region1->mainRoom = region2->mainRoom = room;
 
@@ -397,12 +412,14 @@ void MapGenBsp::buildRoomsInRooms() {
   const int NR_OF_TRIES = 40;
   const int MAX_NR_INNER_ROOMS = 7;
   const int MIN_DIM_W = 4;
+
   const int MIN_DIM_H = 4;
 
-  for(unsigned int i = 0; i < rooms_.size(); i++) {
+  vector<Room*>& rooms = eng->map->rooms;
+  for(unsigned int i = 0; i < rooms.size(); i++) {
 
-    const Pos roomX0Y0 = rooms_.at(i)->getX0Y0();
-    const Pos roomX1Y1 = rooms_.at(i)->getX1Y1();
+    const Pos roomX0Y0 = rooms.at(i)->getX0Y0();
+    const Pos roomX1Y1 = rooms.at(i)->getX1Y1();
 
     const int ROOM_WI = roomX1Y1.x - roomX0Y0.x + 1;
     const int ROOM_HE = roomX1Y1.y - roomX0Y0.y + 1;
@@ -415,7 +432,10 @@ void MapGenBsp::buildRoomsInRooms() {
 
       if(MAX_DIM_W >= MIN_DIM_W && MAX_DIM_H >= MIN_DIM_H) {
 
-        for(int nrRoomsCount = 0; nrRoomsCount < MAX_NR_INNER_ROOMS; nrRoomsCount++) {
+        for(
+          int nrRoomsCount = 0;
+          nrRoomsCount < MAX_NR_INNER_ROOMS;
+          nrRoomsCount++) {
           for(int tryCount = 0; tryCount < NR_OF_TRIES; tryCount++) {
 
             const int W = eng->dice.range(MIN_DIM_W, MAX_DIM_W);
@@ -430,13 +450,24 @@ void MapGenBsp::buildRoomsInRooms() {
 
             for(int y = Y0 - 1; y <= Y1 + 1; y++) {
               for(int x = X0 - 1; x <= X1 + 1; x++) {
-                if(eng->mapTests->isCellInside(Pos(x, y), Rect(roomX0Y0 - Pos(1, 1), roomX1Y1 + Pos(1, 1)))) {
-                  if(x == roomX0Y0.x - 1 || x == roomX1Y1.x + 1 || y == roomX0Y0.y - 1 || y == roomX1Y1.y + 1) {
-                    if(eng->map->featuresStatic[x][y]->getId() != feature_stoneWall) {
+                if(
+                  eng->mapTests->isCellInside(
+                    Pos(x, y), Rect(roomX0Y0 - Pos(1, 1),
+                                    roomX1Y1 + Pos(1, 1)))) {
+                  if(
+                    x == roomX0Y0.x - 1 ||
+                    x == roomX1Y1.x + 1 ||
+                    y == roomX0Y0.y - 1 ||
+                    y == roomX1Y1.y + 1) {
+                    if(
+                      eng->map->featuresStatic[x][y]->getId() !=
+                      feature_stoneWall) {
                       isSpaceFree = false;
                     }
                   } else {
-                    if(eng->map->featuresStatic[x][y]->getId() != feature_stoneFloor) {
+                    if(
+                      eng->map->featuresStatic[x][y]->getId() !=
+                      feature_stoneFloor) {
                       isSpaceFree = false;
                     }
                   }
@@ -444,21 +475,27 @@ void MapGenBsp::buildRoomsInRooms() {
               }
             }
 
-            if((X0 == roomX0Y0.x && X1 == roomX1Y1.x) || (Y0 == roomX0Y0.y && Y1 == roomX1Y1.y)) {
+            if(
+              (X0 == roomX0Y0.x && X1 == roomX1Y1.x) ||
+              (Y0 == roomX0Y0.y && Y1 == roomX1Y1.y)) {
               isSpaceFree = false;
             }
 
             if(isSpaceFree) {
               vector<Pos> doorCandidates;
-              rooms_.push_back(new Room(Rect(Pos(X0 + 1, Y0 + 1), Pos(X1 - 1, Y1 - 1))));
+              rooms.push_back(
+                new Room(Rect(Pos(X0 + 1, Y0 + 1), Pos(X1 - 1, Y1 - 1))));
               for(int y = Y0; y <= Y1; y++) {
                 for(int x = X0; x <= X1; x++) {
                   if(x == X0 || x == X1 || y == Y0 || y == Y1) {
 
                     eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
 
-                    if(x != roomX0Y0.x - 1 && x != roomX0Y0.x && x != roomX1Y1.x && x != roomX1Y1.x + 1 &&
-                        y != roomX0Y0.y - 1 && y != roomX0Y0.y && y != roomX1Y1.y && y != roomX1Y1.y + 1) {
+                    if(
+                      x != roomX0Y0.x - 1 && x != roomX0Y0.x &&
+                      x != roomX1Y1.x && x != roomX1Y1.x + 1 &&
+                      y != roomX0Y0.y - 1 && y != roomX0Y0.y &&
+                      y != roomX1Y1.y && y != roomX1Y1.y + 1) {
                       if((x != X0 && x != X1) || (y != Y0 && y != Y1)) {
                         doorCandidates.push_back(Pos(x, y));
                       }
@@ -467,7 +504,8 @@ void MapGenBsp::buildRoomsInRooms() {
                 }
               }
               if(eng->dice.coinToss() || doorCandidates.size() <= 2) {
-                const int DOOR_POS_ELEMENT = eng->dice.range(0, doorCandidates.size() - 1);
+                const int DOOR_POS_ELEMENT =
+                  eng->dice.range(0, doorCandidates.size() - 1);
                 const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 //                if(eng->dice.coinToss()) {
 //                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
@@ -480,12 +518,14 @@ void MapGenBsp::buildRoomsInRooms() {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = eng->dice.range(1, 10);
                 for(int j = 0; j < NR_TRIES; j++) {
-                  const int DOOR_POS_ELEMENT = eng->dice.range(0, doorCandidates.size() - 1);
+                  const int DOOR_POS_ELEMENT =
+                    eng->dice.range(0, doorCandidates.size() - 1);
                   const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 
                   bool positionOk = true;
                   for(unsigned int n = 0; n < positionsWithDoor.size(); n++) {
-                    if(eng->mapTests->isCellsNeighbours(doorPos, positionsWithDoor.at(n), false)) {
+                    if(eng->mapTests->isCellsAdj(
+                          doorPos, positionsWithDoor.at(n), false)) {
                       positionOk = false;
                     }
                   }
@@ -589,8 +629,9 @@ Pos MapGenBsp::placeStairs() {
   eng->basicUtils->resetBoolArray(forbiddenStairCells, true);
 
   trace << "MapGenBsp: Setting local forbiddenStairCells from global" << endl;
-  for(unsigned int i = 0; i < rooms_.size(); i++) {
-    const Room* const room = rooms_.at(i);
+  vector<Room*>& rooms = eng->map->rooms;
+  for(unsigned int i = 0; i < rooms.size(); i++) {
+    const Room* const room = rooms.at(i);
     for(int y = room->getY0(); y <= room->getY1(); y++) {
       for(int x = room->getX0(); x <= room->getX1(); x++) {
         if(forbiddenStairCellsGlobal[x][y] == false) {
@@ -602,7 +643,8 @@ Pos MapGenBsp::placeStairs() {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
-  trace << "MapGenBsp: Calling MapTests::makeMoveBlockerArrayFeaturesOnly()" << endl;
+  trace << "MapGenBsp: Calling ";
+  trace << "MapTests::makeMoveBlockerArrayFeaturesOnly()" << endl;
   eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
 
   trace << "MapGenBsp: Setting all door cells to non-blocking" << endl;
@@ -616,7 +658,8 @@ Pos MapGenBsp::placeStairs() {
 
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   trace << "MapGenBsp: Calling MapTests::floodFill()" << endl;
-  eng->mapTests->floodFill(eng->player->pos, blockers, floodFill, 99999, Pos(-1, -1));
+  eng->mapTests->floodFill(
+    eng->player->pos, blockers, floodFill, 99999, Pos(-1, -1));
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -630,7 +673,8 @@ Pos MapGenBsp::placeStairs() {
   vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 
-  trace << "MapGenBsp: Sorting the free cells vector (size:" << freeCells.size() << "), and removing the furthest cells" << endl;
+  trace << "MapGenBsp: Sorting the free cells vector (size:";
+  trace << freeCells.size() << "), and removing the furthest cells" << endl;
   const unsigned int FREE_STAIR_CELLS_DIV = 4;
   if(freeCells.size() > FREE_STAIR_CELLS_DIV) {
     IsCloserToOrigin isCloserToOrigin(eng->player->pos, eng);
@@ -639,12 +683,14 @@ Pos MapGenBsp::placeStairs() {
     freeCells.resize(freeCells.size() / FREE_STAIR_CELLS_DIV);
   }
 
-  trace << "MapGenBsp: Picking the furthest cell from the remaining(size:" << freeCells.size() <<  ")" << endl;
+  trace << "MapGenBsp: Picking the furthest cell from the remaining(size:";
+  trace << freeCells.size() <<  ")" << endl;
   const int STAIR_Pos_INDEX = eng->dice(1, freeCells.size()) - 1;
   const Pos stairsPos(freeCells.at(STAIR_Pos_INDEX));
 
   trace << "MapGenBsp: Spawning down stairs at chosen Pos" << endl;
-  Feature* f = eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
+  Feature* f = eng->featureFactory->spawnFeatureAt(
+                 feature_stairsDown, stairsPos);
   f->setHasBlood(false);
 
   trace << "MapGenBsp::placeStairs()[DONE]" << endl;
@@ -656,7 +702,8 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
-  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
+    actorBodyType_normal, blockers);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -668,11 +715,14 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
 
   vector<Pos> path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
 
-  trace << "MapGenBsp: Travelling along Pos vector of size " << path.size() << " and revealing all doors" << endl;
+  trace << "MapGenBsp: Travelling along Pos vector of size " << path.size();
+  trace << " and revealing all doors" << endl;
   const unsigned int PATH_SIZE = path.size();
   for(unsigned int i = 0; i < PATH_SIZE; i++) {
-    if(eng->map->featuresStatic[path.at(i).x][path.at(i).y]->getId() == feature_door) {
-      dynamic_cast<Door*>(eng->map->featuresStatic[path.at(i).x][path.at(i).y])->reveal(false);
+    const Pos& pos = path.at(i);
+    Feature* const feature = eng->map->featuresStatic[pos.x][pos.y];
+    if(feature->getId() == feature_door) {
+      dynamic_cast<Door*>(feature)->reveal(false);
     }
   }
 
@@ -796,7 +846,8 @@ bool MapGenBsp::isAllRoomsConnected() {
 }
 
 
-bool MapGenBsp::isRegionFoundInCardinalDirection(const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const {
+bool MapGenBsp::isRegionFoundInCardinalDirection(
+  const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const {
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
       if(dx == 0 || dy == 0) {
@@ -809,7 +860,8 @@ bool MapGenBsp::isRegionFoundInCardinalDirection(const Pos pos, bool region[MAP_
   return false;
 }
 
-void MapGenBsp::buildCorridorBetweenRooms(const Region& region1, const Region& region2) {
+void MapGenBsp::buildCorridorBetweenRooms(
+  const Region& region1, const Region& region2) {
   //Find all floor in both regions
   vector<Pos> floorInR1Vector;
   bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
@@ -1334,7 +1386,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
     isAreaFree(auxAreaWithWalls, blockers) &&
     eng->mapTests->isAreaInsideMap(auxAreaWithWalls)) {
     Room* room = buildRoom(auxArea);
-    rooms_.push_back(room);
+    eng->map->rooms.push_back(room);
     for(int y = auxArea.x0y0.y; y <= auxArea.x1y1.y; y++) {
       for(int x = auxArea.x0y0.x; x <= auxArea.x1y1.x; x++) {
         blockers[x][y] = true;
@@ -1423,7 +1475,7 @@ bool Region::isRegionNeighbour(const Region& other, Engine* const engine) {
     for(int y = x0y0_.y; y <= x1y1_.y; y++) {
       for(int xx = other.x0y0_.x; xx <= other.x1y1_.x; xx++) {
         for(int yy = other.x0y0_.y; yy <= other.x1y1_.y; yy++) {
-          if(engine->mapTests->isCellsNeighbours(
+          if(engine->mapTests->isCellsAdj(
                 Pos(x, y), Pos(xx, yy), false)) {
             return true;
           }

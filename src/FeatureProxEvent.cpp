@@ -12,7 +12,7 @@
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::newTurn() {
-  if(eng->mapTests->isCellsNeighbours(pos_, eng->player->pos, true)) {
+  if(eng->mapTests->isCellsAdj(pos_, eng->player->pos, true)) {
     playerIsNear();
   }
 }
@@ -59,7 +59,7 @@ void ProxEventWallCrumble::playerIsNear() {
 
       bool isOpeningMade = true;
       for(unsigned int ii = 0; ii < wallCells_.size(); ii++) {
-        if(eng->mapTests->isCellsNeighbours(eng->player->pos, wallCells_.at(ii), true)) {
+        if(eng->mapTests->isCellsAdj(eng->player->pos, wallCells_.at(ii), true)) {
           FeatureStatic* const f =
             eng->map->featuresStatic[wallCells_.at(ii).x][wallCells_.at(ii).y];
           if(f->isBodyTypePassable(actorBodyType_normal) == false) {
@@ -96,7 +96,7 @@ void ProxEventWallCrumble::playerIsNear() {
         eng->gore->makeBlood(innerCells_.at(i));
       }
 
-      if(nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry || eng->mapTests->isCellsNeighbours(innerCells_.at(i), pos_, false)) {
+      if(nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry || eng->mapTests->isCellsAdj(innerCells_.at(i), pos_, false)) {
         Monster* const monster = dynamic_cast<Monster*>(eng->actorFactory->spawnActor(monsterType, innerCells_.at(i)));
         monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
         nrMonstersSpawned++;

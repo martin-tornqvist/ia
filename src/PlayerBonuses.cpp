@@ -73,7 +73,7 @@ void PlayerBonHandler::pickBon(const PlayerBon_t bon) {
           delete potion;
         }
       }
-      const int NR_POTIONS_TO_START_WITH = 3;
+      const int NR_POTIONS_TO_START_WITH = 5;
       for(int i = 0; i < NR_POTIONS_TO_START_WITH; i++) {
         eng->player->getInventory()->putItemInGeneral(
           eng->itemFactory->spawnRandomScrollOrPotion(false, true));
@@ -148,18 +148,18 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
   addBon(playerBon_treasureHunter, "Treasure hunter",
          playerBonType_skill, descr);
 
-  descr  = "All potions are identified, you start with three potions";
+  descr  = "All potions are identified, you start with five potions";
   addBon(playerBon_alchemist, "Alchemist", playerBonType_skill, descr);
 
   descr  = "You are more likely to avoid detection";
   addBon(playerBon_stealthy, "Stealthy", playerBonType_skill, descr);
 
   descr  = "Casting spells from identified manuscripts gives you ";
-  descr += "the ability to cast this spell intrinsically,";
+  descr += "the ability to cast this spell intrinsically, ";
   descr += "you start with two identified manuscripts";
   addBon(playerBon_occultist, "Occultist", playerBonType_skill, descr);
 
-  descr  = "Healing takes half the normal time and resources, you can treat diseases";
+  descr  = "Healing takes half the normal time and resources";
   addBon(playerBon_healer, "Healer",
          playerBonType_skill, descr);
 

@@ -9,12 +9,11 @@
 #include "ItemFactory.h"
 #include "GameTime.h"
 #include "Renderer.h"
+#include "MapGen.h"
 
 using namespace std;
 
-Map::Map(Engine* engine) :
-  eng(engine), dlvl_(0) {
-
+Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       featuresStatic[x][y] =
@@ -23,18 +22,12 @@ Map::Map(Engine* engine) :
     }
   }
 
-  rooms_.resize(0);
-  //TODO Why does RoomThemeMaker have a list of rooms?? Why is it cleared here?
-  eng->roomThemeMaker->roomList.resize(0);
+  rooms.resize(0);
   clearGrids(false);
 }
 
 Map::~Map() {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      delete featuresStatic[x][y];
-    }
-  }
+  clearMap();
 }
 
 //TODO This should probably go in a virtual method in Feature instead
@@ -82,11 +75,10 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
 void Map::clearMap() {
   eng->actorFactory->deleteAllMonsters();
 
-  for(unsigned int i = 0; i < rooms_.size(); i++) {
-    delete rooms_.at(i);
+  for(unsigned int i = 0; i < rooms.size(); i++) {
+    delete rooms.at(i);
   }
-  rooms_.resize(0);
-  eng->roomThemeMaker->roomList.resize(0);
+  rooms.resize(0);
 
   clearGrids(true);
   eng->gameTime->eraseAllFeatureMobs();

@@ -37,7 +37,7 @@ public:
   void place(const Pos& pos_, ActorData* const actorDefinition,
              Engine* engine);
 
-  bool hit(int dmg, const DmgTypes_t dmgType);
+  bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS = false);
   bool hitSpi(const int DMG);
 
   bool restoreHp(const int HP_RESTORED,
@@ -107,7 +107,10 @@ protected:
   friend class PropDiseased;
 
   virtual void actorSpecificDie() {}
-  virtual void actorSpecific_hit(const int DMG) {(void)DMG;}
+  virtual void actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
+    (void)DMG;
+    (void)ALLOW_WOUNDS;
+  }
   virtual void actorSpecific_spawnStartItems() = 0;
 
   virtual void onMonsterHit(int& dmg) {(void)dmg;}

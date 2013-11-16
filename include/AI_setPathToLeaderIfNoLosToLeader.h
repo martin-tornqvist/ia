@@ -5,23 +5,28 @@
 
 class AI_setPathToLeaderIfNoLosToleader {
 public:
-  static void learn(Monster* monster, vector<Pos>* path, Engine* engine) {
+  static void learn(Monster& monster, vector<Pos>* path, Engine* engine) {
 
-    if(monster->deadState == actorDeadState_alive) {
-      Actor* leader = monster->leader;
+    if(monster.deadState == actorDeadState_alive) {
+      Actor* leader = monster.leader;
       if(leader != NULL) {
         if(leader->deadState == actorDeadState_alive) {
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+          engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
 
-          if(engine->fov->checkOneCell(blockers, leader->pos, monster->pos, true)) {
+          if(
+            engine->fov->checkOneCell(
+              blockers, leader->pos, monster.pos, true)) {
             path->resize(0);
             return;
           }
 
-          engine->mapTests->makeMoveBlockerArrayFeaturesOnly(monster, blockers);
-          engine->mapTests->addAdjacentLivingActorsToBlockerArray(monster->pos, blockers);
-          *path = engine->pathfinder->findPath(monster->pos, blockers, leader->pos);
+          engine->mapTests->makeMoveBlockerArrayFeaturesOnly(
+            &monster, blockers);
+          engine->mapTests->addAdjLivingActorsToBlockerArray(
+            monster.pos, blockers);
+          *path = engine->pathfinder->findPath(
+                    monster.pos, blockers, leader->pos);
           return;
         }
       }

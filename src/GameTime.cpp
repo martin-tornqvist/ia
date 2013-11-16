@@ -64,21 +64,21 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * status effects, update timed features, spawn more monsters etc.
  */
 void GameTime::endTurnOfCurrentActor() {
-  traceHi << "GameTime::endTurnOfCurrentActor().." << endl;
+//  traceHi << "GameTime::endTurnOfCurrentActor().." << endl;
 
   runNewAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
 
   if(currentActor == eng->player) {
-    traceHi << "Ending turn of player" << endl;
+//    traceHi << "Ending turn of player" << endl;
     eng->player->shockTemp_ = 0;
     eng->playerVisualMemory->updateVisualMemory();
     eng->player->updateFov();
     eng->player->setTempShockFromFeatures();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
-    traceHi << "Ending turn of \"" << monster->getNameA() << "\"" << endl;
+//    traceHi << "Ending turn of \"" << monster->getNameA() << "\"" << endl;
     if(monster->playerAwarenessCounter > 0) {
       monster->playerAwarenessCounter -= 1;
     }
@@ -146,7 +146,7 @@ void GameTime::endTurnOfCurrentActor() {
   }
 
   if(currentActor == eng->player) {
-    traceHi << "Player turn begins" << endl;
+//    traceHi << "Player turn begins" << endl;
 
     eng->input->clearEvents();
     eng->player->newTurn();
@@ -155,7 +155,7 @@ void GameTime::endTurnOfCurrentActor() {
       eng->player->grantMthPower();
     }
 
-    //If player was dropping an item, check if should go back to inventory screen
+    //If player dropped item, check if should go back to inventory screen
     vector<Actor*> spotedEnemies;
     eng->player->getSpotedEnemies(spotedEnemies);
     if(spotedEnemies.empty()) {
@@ -184,15 +184,15 @@ void GameTime::endTurnOfCurrentActor() {
       eng->inventoryHandler->browserPosToSetAfterDrop = 0;
     }
   }
-  traceHi << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
+//  traceHi << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
 }
 
 void GameTime::runNewStandardTurnEvents() {
-  traceHi << "GameTime::runNewStandardTurnEvents()..." << endl;
+//  traceHi << "GameTime::runNewStandardTurnEvents()..." << endl;
 
   turn_++;
 
-  traceHi << "GameTime: Current turn: " << turn_ << endl;
+//  traceHi << "GameTime: Current turn: " << turn_ << endl;
 
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
@@ -286,7 +286,7 @@ void GameTime::runNewStandardTurnEvents() {
 
   eng->audio->tryPlayAmb(100);
 
-  traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
+//  traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
 }
 
 void GameTime::runNewAtomicTurnEvents() {

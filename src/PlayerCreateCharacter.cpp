@@ -119,7 +119,8 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
         eng->renderer->drawTile(
           tile_elderSign, panel_screen, Pos(X_TRAITS - 2, yPos), clrGray);
       } else {
-
+        eng->renderer->drawGlyph(
+          'X', panel_screen, Pos(X_TRAITS - 2, yPos), clrGray);
       }
     }
     yPos++;
@@ -153,7 +154,8 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
           eng->renderer->drawTile(
             tile_elderSign, panel_screen, Pos(X_SKILLS - 2, yPos), clrGray);
         } else {
-
+          eng->renderer->drawGlyph(
+            'X', panel_screen, Pos(X_SKILLS - 2, yPos), clrGray);
         }
       }
       yPos++;
@@ -174,8 +176,8 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
     string effectDescr =
       "Effects: " + eng->playerBonHandler->getBonEffectDescr(markedBon);
     const int MAX_WIDTH_DESCR = 60;
-    vector<string> descrLines =
-      eng->textFormatting->lineToLines(effectDescr, MAX_WIDTH_DESCR);
+    vector<string> descrLines;
+    eng->textFormatting->lineToLines(effectDescr, MAX_WIDTH_DESCR, descrLines);
     for(unsigned int i = 0; i < descrLines.size(); i++) {
       eng->renderer->drawText(
         descrLines.at(i), panel_screen, Pos(X_TRAITS - 2, yPos), clrGray);

@@ -55,8 +55,6 @@ enum ItemId_t {
   item_throwingKnife,
   item_rock,
   item_ironSpike,
-//  item_crowbar,
-//  item_lockpick,
   item_dagger,
   item_hatchet,
   item_club,
@@ -132,44 +130,37 @@ enum ItemId_t {
 
   item_scrollOfPestilence,
   item_scrollOfTeleportation,
-  item_scrollOfDescent,
   item_scrollOfEnfeebleEnemies,
   item_scrollOfDetectTraps,
   item_scrollOfDetectItems,
-  item_scrollOfIdentify,
   item_scrollOfBlessing,
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
   item_scrollOfAzathothsBlast,
   item_scrollOfOpening,
+  item_scrollOfSacrificeLife,
+  item_scrollOfSacrificeSpirit,
 
   item_thaumaturgicAlteration,
 
   item_potionOfHealing,
   item_potionOfSpirit,
   item_potionOfBlindness,
-//  item_potionOfCorruption,
   item_potionOfFrenzy,
-//  item_potionOfStealth,
   item_potionOfFortitude,
-//  item_potionOfToughness, //TODO Reimplement in some way?
   item_potionOfParalyzation,
   item_potionOfRElec,
   item_potionOfConfusion,
-//  item_potionOfSorcery,
   item_potionOfPoison,
-  item_potionOfKnowledge,
-//  item_potionOfForgetfulness,
+  item_potionOfInsight,
   item_potionOfRFire,
-//  item_potionOfRCold,
   item_potionOfAntidote,
-//  item_potionOfRAcid,
+  item_potionOfDescent,
 
   item_deviceSentry,
   item_deviceRepeller,
   item_deviceRejuvenator,
   item_deviceTranslocator,
-//  item_deviceSpellReflector,
   item_deviceElectricLantern,
 
   item_medicalBag,
@@ -248,6 +239,7 @@ public:
   string rangedSoundMessage;
   bool rangedSoundIsLoud;
   string landOnHardSurfaceSoundMsg;
+  Sfx_t landOnHardSurfaceSfx;
   Sfx_t rangedAttackSfx;
   Sfx_t meleeAttackSfx;
   Sfx_t reloadSfx;

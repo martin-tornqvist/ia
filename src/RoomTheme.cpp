@@ -11,14 +11,14 @@
 #include "Blood.h"
 #include "Gods.h"
 
-void RoomThemeMaker::run(const vector<Room*>& rooms) {
+void RoomThemeMaker::run() {
   trace << "RoomThemeMaker::run()..." << endl;
-
-  roomList = rooms;
 
   eng->gods->setNoGod();
 
   assignRoomThemes();
+
+  vector<Room*>& rooms = eng->map->rooms;
 
   for(unsigned int i = 0; i < rooms.size(); i++) {
     applyThemeToRoom(*(rooms.at(i)));
@@ -72,8 +72,9 @@ int RoomThemeMaker::getRandomNrFeaturesForTheme(
 }
 
 bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
-  for(unsigned int i = 0; i < roomList.size(); i++) {
-    if(roomList.at(i)->roomTheme == theme) {
+  vector<Room*>& rooms = eng->map->rooms;
+  for(unsigned int i = 0; i < rooms.size(); i++) {
+    if(rooms.at(i)->roomTheme == theme) {
       return true;
     }
   }
@@ -415,13 +416,13 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(
   const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
   trace << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
-    if(eng->mapTests->isCellsNeighbours(pos, nextToWalls.at(i), true)) {
+    if(eng->mapTests->isCellsAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
       i--;
     }
   }
   for(unsigned int i = 0; i < awayFromWalls.size(); i++) {
-    if(eng->mapTests->isCellsNeighbours(pos, awayFromWalls.at(i), true)) {
+    if(eng->mapTests->isCellsAdj(pos, awayFromWalls.at(i), true)) {
       awayFromWalls.erase(awayFromWalls.begin() + i);
       i--;
     }
@@ -442,13 +443,14 @@ void RoomThemeMaker::assignRoomThemes() {
   const int MAX_DIM = 12;
   const int NR_NON_PLAIN_THEMED = eng->dice.range(2, 4);
 
-  const int NR_ROOMS = roomList.size();
+  vector<Room*>& rooms = eng->map->rooms;
+  const int NR_ROOMS = rooms.size();
 
-  vector<bool> isAssigned(roomList.size(), false);
+  vector<bool> isAssigned(NR_ROOMS, false);
 
   trace << "RoomThemeMaker: Assigning plain theme to rooms with wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
-    Room* const r = roomList.at(i);
+    Room* const r = rooms.at(i);
 
     // Check dimensions, assign plain if too small or too big
     if(isAssigned.at(i) == false) {
@@ -472,7 +474,7 @@ void RoomThemeMaker::assignRoomThemes() {
       if(isAssigned.at(ELEMENT) == false) {
         const RoomTheme_t theme =
           (RoomTheme_t)(eng->dice.range(1, endOfRoomThemes - 1));
-        Room* const room = roomList.at(ELEMENT);
+        Room* const room = rooms.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
@@ -492,7 +494,7 @@ void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker: Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     if(isAssigned.at(i) == false) {
-      roomList.at(i)->roomTheme = roomTheme_plain;
+      rooms.at(i)->roomTheme = roomTheme_plain;
       isAssigned.at(i) = true;
     }
   }

@@ -46,7 +46,7 @@
 					<Add option="-g" />
 					<Add directory="../test/UnitTest++/src" />
 					<Add directory="../test/include/stubs" />
-					<Add directory="../include/debugModeIncl" />
+					<Add directory="../include/releaseModeIncl" />
 					<Add directory="../include" />
 				</Compiler>
 				<Linker>
@@ -122,7 +122,6 @@
 		<Unit filename="../include/AI_look_becomePlayerAware.h" />
 		<Unit filename="../include/AI_makeRoomForFriend.h" />
 		<Unit filename="../include/AI_moveToRandomAdjacentCell.h" />
-		<Unit filename="../include/AI_moveTowardsInterest.h" />
 		<Unit filename="../include/AI_moveTowardsTargetSimple.h" />
 		<Unit filename="../include/AI_setPathToLairIfNoLosToLair.h" />
 		<Unit filename="../include/AI_setPathToLeaderIfNoLosToLeader.h" />
@@ -317,6 +316,7 @@
 		<Unit filename="../src/MainMenu.cpp" />
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
+		<Unit filename="../src/MapGen.cpp" />
 		<Unit filename="../src/MapGenBsp.cpp" />
 		<Unit filename="../src/MapGenCaveLvl.cpp" />
 		<Unit filename="../src/MapGenEgyptTomb.cpp" />

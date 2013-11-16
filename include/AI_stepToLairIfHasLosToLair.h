@@ -6,24 +6,25 @@
 
 class AI_stepToLairIfHasLosToLair {
 public:
-  static bool action(Monster* monster, const Pos& lairCell, Engine* engine) {
-    if(monster->deadState == actorDeadState_alive) {
+  static bool action(Monster& monster, const Pos& lairCell, Engine* engine) {
+    if(monster.deadState == actorDeadState_alive) {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(monster->pos, blockers);
-      const bool HAS_LOS_TO_LAIR = engine->fov->checkOneCell(blockers, lairCell, monster->pos, true);
+      engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
+      const bool HAS_LOS_TO_LAIR =
+        engine->fov->checkOneCell(blockers, lairCell, monster.pos, true);
 
-      if(HAS_LOS_TO_LAIR == true) {
-        Pos delta = lairCell - monster->pos;
+      if(HAS_LOS_TO_LAIR) {
+        Pos delta = lairCell - monster.pos;
 
         delta.x = delta.x == 0 ? 0 : (delta.x > 0 ? 1 : -1);
         delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
-        const Pos newPos = monster->pos + delta;
+        const Pos newPos = monster.pos + delta;
 
-        engine->mapTests->makeMoveBlockerArray(monster, blockers);
+        engine->mapTests->makeMoveBlockerArray(&monster, blockers);
         if(blockers[newPos.x][newPos.y]) {
           return false;
         } else {
-          monster->moveToCell(monster->pos + delta);
+          monster.moveToCell(newPos);
           return true;
         }
       }

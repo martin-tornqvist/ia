@@ -67,6 +67,7 @@ void Player::actorSpecific_spawnStartItems() {
 
   inventory_->putItemInSlot(
     slot_wielded, eng->itemFactory->spawnItem(weaponId), true, true);
+
   inventory_->putItemInSlot(
     slot_wieldedAlt, eng->itemFactory->spawnItem(item_pistol), true, true);
 
@@ -74,16 +75,29 @@ void Player::actorSpecific_spawnStartItems() {
     inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_pistolClip));
   }
 
+  //TODO Remove:
+  //--------------------------------------------------------------------------
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_machineGun));
+  for(int i = 0; i < 2; i++) {
+    inventory_->putItemInGeneral(
+      eng->itemFactory->spawnItem(item_drumOfBullets));
+  }
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_sawedOff));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_pumpShotgun));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_shotgunShell, 80));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_armorAsbestosSuit));
+  //--------------------------------------------------------------------------
+
+
   inventory_->putItemInGeneral(
     eng->itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
   inventory_->putItemInGeneral(
     eng->itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
-
-//  if(NR_FLARES > 0) {
-//    item = eng->itemFactory->spawnItem(item_flare);
-//    item->nrItems = NR_FLARES;
-//    inventory_->putItemInGeneral(item);
-//  }
 
   if(NR_THROWING_KNIVES > 0) {
     inventory_->putItemInSlot(
@@ -112,8 +126,6 @@ void Player::actorSpecific_spawnStartItems() {
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
 //  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_scrollOfIdentify, 4));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_armorAsbestosSuit));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
@@ -204,7 +216,7 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Player::actorSpecific_hit(const int DMG) {
+void Player::actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
   //Hit aborts first aid
   if(activeMedicalBag != NULL) {
     activeMedicalBag->interrupted();
@@ -219,7 +231,7 @@ void Player::actorSpecific_hit(const int DMG) {
     incrShock(1);
   }
 
-  if(eng->config->isBotPlaying == false) {
+  if(ALLOW_WOUNDS && eng->config->isBotPlaying == false) {
     if(DMG >= 5) {
       Prop* const prop = new PropWound(eng, propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
@@ -264,7 +276,7 @@ void Player::incrShock(const ShockValues_t shockValue) {
     case shockValue_none:   {incrShock(0);} break;
     case shockValue_mild:   {incrShock(2);} break;
     case shockValue_some:   {incrShock(4);} break;
-    case shockValue_heavy:  {incrShock(8);} break;
+    case shockValue_heavy:  {incrShock(12);} break;
     default: {} break;
   }
 }
@@ -557,14 +569,21 @@ void Player::incrInsanity() {
 }
 
 void Player::setTempShockFromFeatures() {
-  if(eng->map->darkness[pos.x][pos.y] && eng->map->light[pos.x][pos.y] == false) {
+  if(
+    eng->map->darkness[pos.x][pos.y] &&
+    eng->map->light[pos.x][pos.y] == false) {
     shockTemp_ += 20;
   }
 
   for(int dy = -1; dy <= 1; dy++) {
+    const int Y = pos.y + dy;
     for(int dx = -1; dx <= 1; dx++) {
-      const Feature* const f = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
-      shockTemp_ += f->getShockWhenAdjacent();
+      const int X = pos.x + dx;
+      if(eng->mapTests->isCellInsideMap(Pos(X, Y))) {
+        const Feature* const f =
+          eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+        shockTemp_ += f->getShockWhenAdjacent();
+      }
     }
   }
   shockTemp_ = min(99.0, shockTemp_);
@@ -860,10 +879,25 @@ void Player::act() {
     }
   }
 
+  if(getHp() > getHpMax(true)) {
+    hp_--;
+  }
+  if(getSpi() > getSpiMax()) {
+    spi_--;
+  }
+
   if(activeMedicalBag == NULL) {
     if(propHandler_->hasProp(propPoisoned) == false) {
-      const int REGEN_N_TURN =
-        eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer) ? 6 : 10;
+      int nrWounds = 0;
+      Prop* const propWnd = propHandler_->getAppliedProp(propWound);
+      if(propWnd != NULL) {
+        nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
+      }
+
+      const bool IS_RAPID_REC =
+        eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer);
+
+      const int REGEN_N_TURN = (IS_RAPID_REC ? 6 : 10) + (nrWounds * 5);
 
       if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
         if(getHp() < getHpMax(true)) {
@@ -1011,7 +1045,7 @@ void Player::moveDirection(const Pos& dir) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
-        dest = dynamic_cast<Trap*>(f)->actorTryLeave(this, pos, dest);
+        dest = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dest);
       }
     }
 
@@ -1107,9 +1141,9 @@ void Player::moveDirection(const Pos& dir) {
 
       //Note: bump() prints block messages.
       for(unsigned int i = 0; i < featureMobs.size(); i++) {
-        featureMobs.at(i)->bump(this);
+        featureMobs.at(i)->bump(*this);
       }
-      eng->map->featuresStatic[dest.x][dest.y]->bump(this);
+      eng->map->featuresStatic[dest.x][dest.y]->bump(*this);
     }
     //If destination reached, then we either moved or were held by something.
     //End turn (unless free turn due to bonus).
@@ -1125,7 +1159,7 @@ void Player::moveDirection(const Pos& dir) {
 
 void Player::autoMelee() {
   if(target != NULL) {
-    if(eng->mapTests->isCellsNeighbours(pos, target->pos, false)) {
+    if(eng->mapTests->isCellsAdj(pos, target->pos, false)) {
       if(checkIfSeeActor(*target, NULL)) {
         moveDirection(target->pos - pos);
         return;

@@ -143,8 +143,8 @@ MaterialType_t Door::getMaterialType() const {
   return isSecret_ ? mimicFeature_->materialType : data_->materialType;
 }
 
-void Door::bump(Actor* actorBumping) {
-  if(actorBumping == eng->player) {
+void Door::bump(Actor& actorBumping) {
+  if(&actorBumping == eng->player) {
     if(isSecret_) {
       if(eng->map->playerVision[pos_.x][pos_.y]) {
         trace << "Door: Player bumped into secret door, with vision in cell" << endl;
@@ -157,7 +157,7 @@ void Door::bump(Actor* actorBumping) {
     }
 
     if(isOpen_ == false) {
-      tryOpen(actorBumping);
+      tryOpen(&actorBumping);
     }
   }
 }
@@ -210,7 +210,7 @@ void Door::clue() {
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(
-      eng->mapTests->isCellsNeighbours(
+      eng->mapTests->isCellsAdj(
         Pos(pos_.x, pos_.y), eng->player->pos, false)) {
       const int PLAYER_SKILL =
         eng->player->getData()->abilityVals.getVal(

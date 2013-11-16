@@ -183,7 +183,7 @@ bool Vortex::actorSpecificAct() {
       trace << "Vortex: pullCooldown: " << pullCooldown << endl;
       trace << "Vortex: Is player aware" << endl;
       const Pos& playerPos = eng->player->pos;
-      if(eng->mapTests->isCellsNeighbours(pos, playerPos, true) == false) {
+      if(eng->mapTests->isCellsAdj(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
         if(eng->dice.percentile() < CHANCE_TO_KNOCK) {
@@ -261,11 +261,11 @@ bool Ghost::actorSpecificAct() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
 
-      if(eng->mapTests->isCellsNeighbours(pos, eng->player->pos, false)) {
+      if(eng->mapTests->isCellsAdj(pos, eng->player->pos, false)) {
         if(eng->dice.percentile() < 30) {
 
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+          eng->mapTests->makeVisionBlockerArray(pos, blockers);
           const bool PLAYER_SEES_ME =
             eng->player->checkIfSeeActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";

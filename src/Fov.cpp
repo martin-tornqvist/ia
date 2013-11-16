@@ -61,9 +61,8 @@ bool Fov::checkOneCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
                        const Pos& origin,
                        const bool IS_AFFECTED_BY_DARKNESS) {
   if(
-    eng->basicUtils->chebyshevDist(
-      origin.x, origin.y,
-      cellToCheck.x, cellToCheck.y) > FOV_STANDARD_RADI_INT) {
+    eng->basicUtils->chebyshevDist(origin, cellToCheck) >
+    FOV_STANDARD_RADI_INT) {
     return false;
   }
 

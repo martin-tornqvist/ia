@@ -83,7 +83,7 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
             unsigned int featureMobIndex = 0;
             featureMobIndex < featureMobs.size();
             featureMobIndex++) {
-            featureMobs.at(featureMobIndex)->bump(defender);
+            featureMobs.at(featureMobIndex)->bump(*defender);
           }
 
           if(defender->deadState != actorDeadState_alive) {
@@ -92,13 +92,13 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
 
           FeatureStatic* const f =
             eng->map->featuresStatic[defender->pos.x][defender->pos.y];
-          f->bump(defender);
+          f->bump(*defender);
 
           if(defender->deadState != actorDeadState_alive) {
             return;
           }
         } else {
-          // Defender nailed to a wall from a  spike gun?
+          // Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN) {
             FeatureStatic* const f =
               eng->map->featuresStatic[newPos.x][newPos.y];
@@ -107,7 +107,6 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
                 new PropNailed(eng, propTurnsIndefinite));
             }
           }
-
           return;
         }
       }

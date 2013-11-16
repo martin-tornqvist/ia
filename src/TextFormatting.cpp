@@ -2,74 +2,84 @@
 
 #include "Engine.h"
 
-vector<string> TextFormatting::lineToLines(string line, const int MAX_WIDTH) const {
-  vector<string> lines;
-  lines.resize(0);
+void TextFormatting::lineToLines(string line, const int MAX_WIDTH,
+                                 vector<string>& linesToMake) const {
+  linesToMake.resize(0);
 
   int curRow = 0;
 
-  string curWord = readNextWord(line);
+  string curWord;
+
+  readAndRemoveNextWord(line, curWord);
 
   while(curWord != "") {
-    if(lines.empty()) {
-      lines.resize(1);
-      lines.front() = "";
+    if(linesToMake.empty()) {
+      linesToMake.resize(1);
+      linesToMake.front() = "";
     }
 
-    if(isWordFit(lines.at(curRow), curWord, MAX_WIDTH) == false) {
+    if(isWordFit(linesToMake.at(curRow), curWord, MAX_WIDTH) == false) {
+      //Current word did not fit on current line, make a new line
       curRow++;
-      lines.resize(curRow + 1);
-      lines.at(curRow) = "";
+      linesToMake.resize(curRow + 1);
+      linesToMake.at(curRow) = "";
     }
 
-    lines.at(curRow) += curWord + " ";
+    //If this is not the first word on the current line,
+    //add a space before the word
+    if(linesToMake.at(curRow).empty() == false) {
+      linesToMake.at(curRow) += " ";
+    }
 
-    curWord = readNextWord(line);
+    linesToMake.at(curRow) += curWord;
+
+    readAndRemoveNextWord(line, curWord);
   }
-
-  return lines;
 }
 
-//Reads and removes the first word of the string. It reads until ' '-char or end of string.
-//The ' '-char is also removed.
-string TextFormatting::readNextWord(string& line) const {
-  string returnWord = "";
+//Reads and removes the first word of the string.
+//It reads until ' ' or end of string. The ' '-char is also removed.
+void TextFormatting::readAndRemoveNextWord(
+  string& line, string& nextWordToMake) const {
+  nextWordToMake = "";
 
-  //Build a word until parameter string is empty, or a a space character is found.
-  for(unsigned int i = 0; i < line.size(); i++) {
+  //Build a word until parameter string is empty,
+  //or a a space character is found.
+  for(int i = 0; i < int(line.size()); i++) {
     const char CURRENT_CHARACTER = line.at(0);
 
     line.erase(line.begin());
 
     if(CURRENT_CHARACTER == ' ') {
-      return returnWord;
+      return;
     } else {
-      returnWord += CURRENT_CHARACTER;
+      nextWordToMake += CURRENT_CHARACTER;
     }
 
     i--;
   }
-
-  return returnWord;
 }
 
-bool TextFormatting::isWordFit(string& currentString, const string& newWord, const unsigned int MAX_WIDTH) const {
-  return currentString.size() + newWord.size() + 1 <= MAX_WIDTH;
+bool TextFormatting::isWordFit(string& currentString, const string& wordToFit,
+                               const unsigned int MAX_WIDTH) const {
+
+  return currentString.size() + wordToFit.size() + 1 <= MAX_WIDTH;
 }
 
-vector<string> TextFormatting::getSpaceSeparatedList(string line) const {
+void TextFormatting::getSpaceSeparatedList(
+  string line, vector<string>& linesToMake) const {
+
   string curLine = "";
-  vector<string> ret;
+
   for(unsigned int i = 0; i < line.size(); i++) {
-    char c = line.at(i);
-    if(c == ' ') {
-      ret.push_back(curLine);
+    char character = line.at(i);
+    if(character == ' ') {
+      linesToMake.push_back(curLine);
       curLine = "";
     } else {
-      curLine += c;
+      curLine += character;
     }
   }
-  return ret;
 }
 
 

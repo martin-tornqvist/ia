@@ -147,7 +147,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             actorHere->getNameThe() + " is hit.", hitMessageClr);
           actorHere->hit(data->dmg, dmgType_physical);
 
-          //If the thing that hit an actor is a potion, let it make stuff happen...
+          //If the thing that hit an actor is a potion,
+          //let it make stuff happen...
           if(itemThrownData.isPotion) {
             dynamic_cast<Potion*>(&itemThrown)->collide(
               curPos, actorHere);
@@ -170,14 +171,14 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       eng->sleep(eng->config->delayProjectileDraw);
     }
 
-    if(curPos == targetCell) {
-      blockedInElement = i;
-      break;
-    }
-
     const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
     if(featureHere->isShootPassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
+      break;
+    }
+
+    if(curPos == targetCell) {
+      blockedInElement = i;
       break;
     }
   }
@@ -205,7 +206,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
       Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
-                endOfSfx, true, dropPos, false, IS_ALERTING_MONSTERS);
+                itemThrownData.landOnHardSurfaceSfx, true, dropPos, false,
+                IS_ALERTING_MONSTERS);
       eng->soundEmitter->emitSound(snd);
     }
     eng->itemDrop->dropItemOnMap(dropPos, itemThrown);

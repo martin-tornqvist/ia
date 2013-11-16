@@ -160,11 +160,9 @@ enum FountainType_t {
   fountainTypeCursed,
   fountainTypeSpirited,
   fountainTypeVitality,
-//  fountainTypeTainted,
   fountainTypeDiseased,
   fountainTypePoisoned,
   fountainTypeFrenzy,
-//  fountainTypeVisions,
   endOfFountainTypes
 };
 

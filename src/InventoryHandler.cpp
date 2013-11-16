@@ -20,9 +20,9 @@
 
 InventoryHandler::InventoryHandler(Engine* engine) :
   screenToOpenAfterDrop(endOfInventoryScreens),
-  equipSlotToOpenAfterDrop(NULL), eng(engine) {
-
-}
+  equipSlotToOpenAfterDrop(NULL),
+  browserPosToSetAfterDrop(0),
+  eng(engine) {}
 
 void InventoryHandler::activateDefault(
   const unsigned int GENERAL_ITEMS_ELEMENT) {

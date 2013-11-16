@@ -24,7 +24,7 @@ void Disarm::playerDisarm() const {
     Trap* const trap = dynamic_cast<Trap*>(f);
     if(trap->isHidden() == false) {
       isDisarmableFound = true;
-      trap->trigger(eng->player);
+      trap->trigger(*(eng->player));
       eng->gameTime->endTurnOfCurrentActor();
     }
   }
