@@ -79,7 +79,7 @@ void MapTests::makeVisionBlockerArray(
     f = eng->gameTime->getFeatureMobAt(i);
     x = f->getX();
     y = f->getY();
-    if(arrayToFill[x][y] == false) {
+    if(map->featuresStatic[x][y]->isVisionPassable()) {
       arrayToFill[x][y] = f->isVisionPassable() == false;
     }
   }
