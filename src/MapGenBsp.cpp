@@ -28,7 +28,7 @@ void MapGenBsp::specificRun() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       roomCells[x][y] = false;
 //      eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
-      globalDoorPositionCandidates[x][y] = false;
+      globalDoorPosCandidates[x][y] = false;
       forbiddenStairCellsGlobal[x][y] = false;
     }
   }
@@ -103,7 +103,7 @@ void MapGenBsp::specificRun() {
   const int CHANCE_TO_PLACE_DOOR = 70;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(globalDoorPositionCandidates[x][y] == true) {
+      if(globalDoorPosCandidates[x][y] == true) {
         if(eng->dice.percentile() < CHANCE_TO_PLACE_DOOR) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
@@ -510,7 +510,7 @@ void MapGenBsp::buildRoomsInRooms() {
 //                if(eng->dice.coinToss()) {
 //                  eng->featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng->featureData->getFeatureDef(feature_stoneWall)));
                 eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-                globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
+                globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
 //                } else {
 //                  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
 //                }
@@ -794,23 +794,29 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
     while(isDeltaOk == false) {
       delta.set(eng->dice.range(-1, 1), eng->dice.range(-1, 1));
       Pos c2(c1 + delta);
-      const bool IS_INSIDE_BOUNDS = c2.x >= 0 && c2.y >= 0 && c2.x <= 2 && c2.y <= 2;
+      const bool IS_INSIDE_BOUNDS =
+        c2.x >= 0 && c2.y >= 0 && c2.x <= 2 && c2.y <= 2;
       const bool IS_ZERO = delta.x == 0 && delta.y == 0;
       const bool IS_DIAGONAL = delta.x != 0 && delta.y != 0;
-      isDeltaOk = IS_ZERO == false && IS_DIAGONAL == false && IS_INSIDE_BOUNDS == true;
+      isDeltaOk = IS_ZERO == false &&
+                  IS_DIAGONAL == false &&
+                  IS_INSIDE_BOUNDS == true;
     }
     Pos c2(c1 + delta);
 
     Region* const r2 = regions[c2.x][c2.y];
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
-      buildCorridorBetweenRooms(r1, r2);
+      const Direction_t regionDir = c2.x > c1.x ? directionRight :
+                                    c2.x < c1.x ? directionLeft :
+                                    c2.y > c1.y ? directionDown :
+                                    directionUp;
+
+      MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
+        *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
     }
-//    if(totalNrConnections >= MAX_NR_CONNECTIONS_LIMIT) {
-//      break;
-//    }
   }
   trace << "MapGenBsp::connectRegions()[DONE]" << endl;
 }
@@ -856,165 +862,6 @@ bool MapGenBsp::isRegionFoundInCardinalDirection(
     }
   }
   return false;
-}
-
-void MapGenBsp::buildCorridorBetweenRooms(
-  const Region* const r1, const Region* r2) {
-  //Find all floor in both regions
-  vector<Pos> floorInR1Vector;
-  floorInR1Vector.resize(0);
-  bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(floorInR1Grid, false);
-
-  for(int y = r1->mainRoom->getY0(); y <= r1->mainRoom->getY1(); y++) {
-    for(int x = r1->mainRoom->getX0(); x <= r1->mainRoom->getX1(); x++) {
-      const Pos c = Pos(x, y);
-      if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
-        floorInR1Vector.push_back(c);
-        floorInR1Grid[x][y] = true;
-      }
-    }
-  }
-
-  const Pos regionDelta = r2->getX0Y0() - r1->getX0Y0();
-  const Pos regionDeltaAbs(abs(regionDelta.x), abs(regionDelta.y));
-  const Pos regionDeltaSign = regionDelta.getSigns();
-
-  vector<Pos> PossInR1closeToR2;
-  PossInR1closeToR2.resize(0);
-  vector<Pos> floorInR2Vector;
-  floorInR2Vector.resize(0);
-  bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(floorInR2Grid, false);
-  for(int y = r2->mainRoom->getY0(); y <= r2->mainRoom->getY1(); y++) {
-    for(int x = r2->mainRoom->getX0(); x <= r2->mainRoom->getX1(); x++) {
-      Pos c = Pos(x, y);
-      if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
-        floorInR2Vector.push_back(c);
-        floorInR2Grid[x][y] = true;
-
-        // Check if the two rooms are close by travelling to the other room in a straight line.
-        bool doneTravelling = false;
-        int nrOfJumps = 0;
-        while(doneTravelling == false) {
-          c += regionDeltaSign * -1;
-          nrOfJumps++;
-          if(floorInR1Grid[c.x][c.y] == true) {
-            //floor -> wall -> (wall) -> floor
-            if(nrOfJumps <= 3) {
-              PossInR1closeToR2.push_back(c);
-            }
-          }
-          if(eng->mapTests->isCellInsideMap(c) == false) {
-            doneTravelling = true;
-          }
-        }
-      }
-    }
-  }
-
-  if(PossInR1closeToR2.size() > 0) {
-    Pos c = PossInR1closeToR2.at(eng->dice(1, PossInR1closeToR2.size()) - 1);
-    while(floorInR2Grid[c.x][c.y] == false) {
-      c += regionDeltaSign;
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-      globalDoorPositionCandidates[c.x][c.y] = true;
-    }
-  } else {
-
-    /*
-    * Description of the following algorithm:
-    * ======================================================================
-    * What has been done so far is to pick one position in each room with floor in it (c1 and c2).
-    * There is also a vector of all floor in in c1 and one of all floor in c2 (floorInR1Vector,
-    * floorInR2Vector), as well as bool arrays (floorInR1Grid, floorInR2Grid).
-    *
-    * First, two points that has only one or two wall cells between them was attempted to be found,
-    * so a short, straight connection could be made. Given that this point was reached, no two such
-    * position were found.
-    *
-    * A constant value is stored that is used heavily for corridor navigation: "regionDeltaSign".
-    * It tells the direction from region 1 to region 2 (e.g. 1,0 means R2 lies to the east of R1).
-    *
-    * (1) One position in each room is picked randomly (c1 and c2).
-    *
-    * (2) While still in the x0y0,x1y1-boundaries of room 1, move straight out from room 1.
-    * "Straight out" means in the direction of regionDeltaSign. When we stand in the first
-    * cell outside room 1, we turn that into floor, and store that as a suggestion for a door.
-    * Then we move yet another step straight away from the room.
-    *
-    * (3) A secondary corridor is tunnelled backwards from where we stood after (2), until floor
-    * is reached in room 1.
-    *
-    * (4) We stand once again in the cell where (2) finished. Now a new constant value is stored
-    * called "deltaCurSign". It tells the direction from the position we stand in at the start
-    * of this phase to the position we are aiming for in room 2 (c2). If regionDeltaSign is
-    * subtracted from deltaCurSign, a position is had which tells the direction 90 degrees from
-    * the tunnel dug in (2). Example: Region 1 lies east of region 2, regionDeltaSign = (1,0).
-    * c2 lies to the east and below the current position, deltaCurSign = (1,1). So
-    * deltaCurSign - regionDeltaSign = (1,1) - (1,0) = (0,1).
-    * We now tunnel in this direction. First make floor, then move, until we hit either the
-    * x- or y-axis of c2 --or-- if we stand on floor in room 2.
-    *
-    * (5) Now we move again in the direction of regionDeltaSign (straight east in the example).
-    * First make floor, then move, until we stand on floor in room 2. Afterwards we move one
-    * step backwards and suggest that for door position.
-    *
-    *
-    * #######
-    * ...33324  ######
-    * ....###4  #.....
-    * ......#4  #.....
-    * ......#45555....
-    * #######   #.....
-    *           ######
-    */
-
-    // (1)
-    const Pos c1 = floorInR1Vector.at(
-                     eng->dice(1, floorInR1Vector.size()) - 1);
-    const Pos c2 = floorInR2Vector.at(
-                     eng->dice(1, floorInR2Vector.size()) - 1);
-
-    Pos c = c1;
-
-    // (2)
-    while(floorInR1Grid[c.x][c.y] == true) {
-      c += regionDeltaSign;
-    }
-    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-    globalDoorPositionCandidates[c.x][c.y] = true;
-    c += regionDeltaSign;
-
-    // (3)
-    Pos cTemp(c - regionDeltaSign);
-    while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
-      cTemp -= regionDeltaSign;
-    }
-
-    const Pos deltaCur(c2 - c);
-    const Pos deltaCurAbs(abs(deltaCur.x), abs(deltaCur.y));
-    const Pos deltaCurSign(
-      deltaCurAbs.x == 0 ? 0 : deltaCur.x / (deltaCurAbs.x),
-      deltaCurAbs.y == 0 ? 0 : deltaCur.y / (deltaCurAbs.y));
-
-    // (4)
-    while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-      c += deltaCurSign - regionDeltaSign;
-    }
-
-    // (5)
-    while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
-      c += regionDeltaSign;
-    }
-    c -= regionDeltaSign;
-    if(floorInR2Vector.size() > 1) {
-      globalDoorPositionCandidates[c.x][c.y] = true;
-    }
-  }
 }
 
 void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
@@ -1404,7 +1251,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
       room = NULL;
     } else {
       eng->featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-      globalDoorPositionCandidates[doorPos.x][doorPos.y] = true;
+      globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
     }
 
     return true;

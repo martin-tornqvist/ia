@@ -316,12 +316,12 @@
 		<Unit filename="../src/MainMenu.cpp" />
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
-		<Unit filename="../src/MapGen.cpp" />
 		<Unit filename="../src/MapGenBsp.cpp" />
 		<Unit filename="../src/MapGenCaveLvl.cpp" />
 		<Unit filename="../src/MapGenEgyptTomb.cpp" />
 		<Unit filename="../src/MapGenForest.cpp" />
 		<Unit filename="../src/MapGenTrapezohedronLvl.cpp" />
+		<Unit filename="../src/MapGenUtils.cpp" />
 		<Unit filename="../src/MapPatterns.cpp" />
 		<Unit filename="../src/MapTemplates.cpp" />
 		<Unit filename="../src/MapTests.cpp" />

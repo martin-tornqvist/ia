@@ -1,5 +1,7 @@
 target/
 obj/
+test/bin
+test/obj
 *.o
 *~
 #*

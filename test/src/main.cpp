@@ -13,6 +13,7 @@
 #include "ActorMonster.h"
 #include "MapGen.h"
 #include "Converters.h"
+#include "CommonTypes.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -199,14 +200,37 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   CHECK_EQUAL(isTestedLooseWebDestroyed, true);
 }
 
-TEST_FIXTURE(BasicFixture, MakeBspMap) {
-  MapGenBsp mapGen(eng);
-  for(int i = 0; i < 1000; i++) {
-    eng->player->pos = Pos(eng->dice.range(1, MAP_X_CELLS - 1),
-                           eng->dice.range(1, MAP_Y_CELLS - 1));
-    mapGen.run();
+TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
+  Rect roomArea1(Pos(1, 1), Pos(10, 10));
+  Rect roomArea2(Pos(15, 4), Pos(23, 14));
+
+  for(int y = roomArea1.x0y0.y; y <= roomArea1.x1y1.y; y++) {
+    for(int x = roomArea1.x0y0.x; x <= roomArea1.x1y1.x; x++) {
+      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+    }
   }
+
+  for(int y = roomArea2.x0y0.y; y <= roomArea2.x1y1.y; y++) {
+    for(int x = roomArea2.x0y0.x; x <= roomArea2.x1y1.x; x++) {
+      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+    }
+  }
+
+  Room room1(roomArea1);
+  Room room2(roomArea2);
+
+  MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
+    room1, room2, directionRight);
 }
+
+//TEST_FIXTURE(BasicFixture, MakeBspMap) {
+//  MapGenBsp mapGen(eng);
+//  for(int i = 0; i < 100; i++) {
+//    eng->player->pos = Pos(eng->dice.range(1, MAP_X_CELLS - 1),
+//                           eng->dice.range(1, MAP_Y_CELLS - 1));
+//    mapGen.run();
+//  }
+//}
 
 int main() {
   return UnitTest::RunAllTests();

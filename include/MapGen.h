@@ -23,7 +23,7 @@ enum RoomReshape_t {
 
 struct Room {
 public:
-Room(Rect dims) : roomTheme(roomTheme_plain), roomDescr(""), dims_(dims) {}
+  Room(Rect dims) : roomTheme(roomTheme_plain), roomDescr(""), dims_(dims) {}
 
   Room() : roomTheme(roomTheme_plain), roomDescr(""),
     dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {}
@@ -42,6 +42,19 @@ Room(Rect dims) : roomTheme(roomTheme_plain), roomDescr(""), dims_(dims) {}
 
 private:
   Rect dims_;
+};
+
+class MapGenUtilCorridorBuilder {
+public:
+  MapGenUtilCorridorBuilder(Engine* engine) : eng(engine) {}
+  ~MapGenUtilCorridorBuilder() {}
+
+  void buildZCorridorBetweenRooms(
+    const Room& room1, const Room& room2, Direction_t cardinalDirToTravel,
+    bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS] = NULL);
+
+private:
+  Engine* const eng;
 };
 
 class MapGen {
@@ -90,7 +103,7 @@ private:
 
   Room* buildRoom(const Rect& roomPoss);
 
-  bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for helping to build the map
+  bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for help building the map
   bool regionsToBuildCave[3][3];
 
   void makeCrumbleRoom(const Rect roomAreaIncludingWalls,
@@ -108,8 +121,6 @@ private:
 
   void buildCaves(Region* regions[3][3]);
 
-  void buildCorridorBetweenRooms(const Region* const r1,
-				 const Region* const r2);
   void placeDoorAtPosIfSuitable(const Pos pos);
 
   void reshapeRoom(const Room& room);
@@ -118,7 +129,7 @@ private:
 
   void postProcessFillDeadEnds();
 
-  bool globalDoorPositionCandidates[MAP_X_CELLS][MAP_Y_CELLS];
+  bool globalDoorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 
 //  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToFill);
 
@@ -149,17 +160,6 @@ private:
   void deleteAndRemoveRoomFromList(Room* const room);
 
   bool forbiddenStairCellsGlobal[MAP_X_CELLS][MAP_Y_CELLS];
-};
-
-struct ConnectionPointsAndDistance {
-public:
-  ConnectionPointsAndDistance(Pos c1_, Pos c2_, int dist_) :
-    c1(c1_), c2(c2_), dist(dist_) {}
-  ConnectionPointsAndDistance() {}
-
-  Pos c1;
-  Pos c2;
-  int dist;
 };
 
 struct Region {

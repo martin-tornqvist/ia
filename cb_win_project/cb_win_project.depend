@@ -11872,7 +11872,7 @@
 	<vector>
 	<string>
 
-1382993576 source:d:\dev\ia.git\src\debugmodestatprinter.cpp
+1384711784 source:d:\dev\ia.git\src\debugmodestatprinter.cpp
 	"DebugModeStatPrinter.h"
 	<vector>
 	<algorithm>
@@ -11958,7 +11958,7 @@
 	<vector>
 	<string>
 
-1384460004 source:d:\dev\ia.git\src\engine.cpp
+1384711784 source:d:\dev\ia.git\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -12637,7 +12637,7 @@
 	"TextFormatting.h"
 	"Renderer.h"
 
-1383986645 source:d:\dev\ia.git\src\map.cpp
+1384711784 source:d:\dev\ia.git\src\map.cpp
 	"Map.h"
 	<cassert>
 	"Engine.h"
@@ -12745,7 +12745,7 @@
 	"MapTemplates.h"
 	"Engine.h"
 
-1384641100 source:d:\dev\ia.git\src\maptests.cpp
+1384683578 source:d:\dev\ia.git\src\maptests.cpp
 	"MapTests.h"
 	<cassert>
 	"Engine.h"
@@ -13029,7 +13029,7 @@
 	"ItemFactory.h"
 	"Attack.h"
 
-1384536167 source:d:\dev\ia.git\test\src\main.cpp
+1384721805 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"Engine.h"
 	"BasicUtils.h"
@@ -13044,6 +13044,7 @@
 	"ActorMonster.h"
 	"MapGen.h"
 	"Converters.h"
+	"CommonTypes.h"
 
 1188366510 d:\dev\ia.git\test\unittest++\src\unittest++.h
 	"Config.h"
@@ -13139,7 +13140,7 @@
 	"Config.h"
 	"Art.h"
 
-1384367036 source:d:\dev\ia.git\src\renderer.cpp
+1384711784 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -13754,7 +13755,7 @@
 	<string>
 	<iostream>
 
-1384639249 d:\dev\ia.git\include\engine.h
+1384711784 d:\dev\ia.git\include\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -14294,8 +14295,8 @@
 	"Config.h"
 	"Art.h"
 
-1383944650 d:\dev\ia.git\include\audio.h
-	"SDL/SDL_Mixer.h"
+1384644052 d:\dev\ia.git\include\audio.h
+	"SDL/SDL_mixer.h"
 	"CommonTypes.h"
 	"AudioIds.h"
 
@@ -14308,13 +14309,13 @@
 	"SDL/SDL_image.h"
 	"SDL/SDL_mixer.h"
 
-1383986368 d:\dev\ia.git\include\mapgen.h
+1384721367 d:\dev\ia.git\include\mapgen.h
 	"CommonTypes.h"
 	"RoomTheme.h"
 	"Feature.h"
 	"MapTemplates.h"
 
-1384554772 source:d:\dev\ia.git\src\mapgenbsp.cpp
+1384721630 source:d:\dev\ia.git\src\mapgenbsp.cpp
 	"MapGen.h"
 	<algorithm>
 	<stdlib.h>
@@ -14390,4 +14391,11 @@
 	"PopulateMonsters.h"
 
 1382910176 d:\dev\ia.git\include\releasemodeincl\debugmode.h
+
+1384721617 source:d:\dev\ia.git\src\mapgenutils.cpp
+	"MapGen.h"
+	"Engine.h"
+	"Map.h"
+	"FeatureFactory.h"
+	"Pathfinding.h"
 
