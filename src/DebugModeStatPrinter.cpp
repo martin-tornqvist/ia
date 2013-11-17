@@ -43,6 +43,7 @@ void DebugModeStatPrinter::run() {
     Range cost = spell->getSpiCost(true, eng->player, eng);
     const string costStr =
       toString(cost.lower) + "-" + toString(cost.upper);
+    delete spell;
     printLine(indent1 + name + costStr);
   }
   printLine("\n");
@@ -119,6 +120,7 @@ void DebugModeStatPrinter::run() {
       printLine(
         indent2 + attackNrStr + " " + meleeOrRangedStr + ": " + dmgStr);
     }
+    delete actor;
 
     printLine("");
   }

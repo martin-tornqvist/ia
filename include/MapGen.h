@@ -23,7 +23,7 @@ enum RoomReshape_t {
 
 struct Room {
 public:
-  Room(Rect dims) : roomTheme(roomTheme_plain), dims_(dims) {}
+Room(Rect dims) : roomTheme(roomTheme_plain), roomDescr(""), dims_(dims) {}
 
   Room() : roomTheme(roomTheme_plain), roomDescr(""),
     dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {}
@@ -108,7 +108,8 @@ private:
 
   void buildCaves(Region* regions[3][3]);
 
-  void buildCorridorBetweenRooms(const Region& region1, const Region& region2);
+  void buildCorridorBetweenRooms(const Region* const r1,
+				 const Region* const r2);
   void placeDoorAtPosIfSuitable(const Pos pos);
 
   void reshapeRoom(const Room& room);

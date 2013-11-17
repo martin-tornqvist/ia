@@ -6,14 +6,16 @@
 //-------------------------------------------------------------------
 // OPTIONS
 //-------------------------------------------------------------------
-//If set to 1, the trace output in debug mode will be more verbose
-//(This does not affect release mode, which has no trace output)
-#define VERBOSE_TRACE 0
+//Level of trace output in debug mode
+// 0 : Disabled
+// 1 : Standard
+// 2 : Verbose
+#define TRACE_LVL 0
 //-------------------------------------------------------------------
 
 #ifdef DEBUG
-#define trace if (0) ; else cerr
-#define traceHi if (VERBOSE_TRACE == 0) ; else cerr
+#define trace if (TRACE_LVL < 1) ; else cerr
+#define traceHi if (TRACE_LVL < 2) ; else cerr
 #else
 #define trace if (1) ; else cerr
 #define traceHi if (1) ; else cerr

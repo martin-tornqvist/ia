@@ -39,7 +39,7 @@ void Renderer::freeAssets() {
   }
 
   if(mainMenuLogoSurface_ != NULL) {
-    delete mainMenuLogoSurface_;
+    SDL_FreeSurface(mainMenuLogoSurface_);
     mainMenuLogoSurface_ = NULL;
   }
 

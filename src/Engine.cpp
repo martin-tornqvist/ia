@@ -217,6 +217,7 @@ void Engine::cleanupGame() {
 
   map->clearMap();
 
+  delete playerCreateCharacter;
   delete playerBonHandler;
   delete playerVisualMemory;
   delete itemDataHandler;
@@ -287,6 +288,8 @@ void Engine::cleanupGame() {
   delete directionConverter;
 
   delete marker;
+
+  delete player;
 
   trace << "Engine::cleanupGame() [DONE]" << endl;
 }

@@ -28,6 +28,11 @@ Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
 
 Map::~Map() {
   clearMap();
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      delete featuresStatic[x][y];
+    }
+  }
 }
 
 //TODO This should probably go in a virtual method in Feature instead
@@ -75,7 +80,8 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
 void Map::clearMap() {
   eng->actorFactory->deleteAllMonsters();
 
-  for(unsigned int i = 0; i < rooms.size(); i++) {
+  const int NR_ROOMS = rooms.size();
+  for(int i = 0; i < NR_ROOMS; i++) {
     delete rooms.at(i);
   }
   rooms.resize(0);

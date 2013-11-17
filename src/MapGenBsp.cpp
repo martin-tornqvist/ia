@@ -786,27 +786,25 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
   while(isAllConnected == false) {
     isAllConnected = isAllRoomsConnected();
 
-    Pos c1(eng->dice(1, 3) - 1, eng->dice(1, 3) - 1);
+    Pos c1(eng->dice.range(0, 2), eng->dice.range(0, 2));
     Region* r1 = regions[c1.x][c1.y];
-    c1.set(eng->dice(1, 3) - 1, eng->dice(1, 3) - 1);
-    r1 = regions[c1.x][c1.y];
 
     Pos delta(0, 0);
-    bool deltaOk = false;
-    while(deltaOk == false) {
+    bool isDeltaOk = false;
+    while(isDeltaOk == false) {
       delta.set(eng->dice.range(-1, 1), eng->dice.range(-1, 1));
       Pos c2(c1 + delta);
       const bool IS_INSIDE_BOUNDS = c2.x >= 0 && c2.y >= 0 && c2.x <= 2 && c2.y <= 2;
       const bool IS_ZERO = delta.x == 0 && delta.y == 0;
       const bool IS_DIAGONAL = delta.x != 0 && delta.y != 0;
-      deltaOk = IS_ZERO == false && IS_DIAGONAL == false && IS_INSIDE_BOUNDS == true;
+      isDeltaOk = IS_ZERO == false && IS_DIAGONAL == false && IS_INSIDE_BOUNDS == true;
     }
     Pos c2(c1 + delta);
 
     Region* const r2 = regions[c2.x][c2.y];
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
-      buildCorridorBetweenRooms(*r1, *r2);
+      buildCorridorBetweenRooms(r1, r2);
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
     }
@@ -861,13 +859,13 @@ bool MapGenBsp::isRegionFoundInCardinalDirection(
 }
 
 void MapGenBsp::buildCorridorBetweenRooms(
-  const Region& region1, const Region& region2) {
+  const Region* const r1, const Region* r2) {
   //Find all floor in both regions
   vector<Pos> floorInR1Vector;
   bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(floorInR1Grid, false);
-  for(int y = region1.mainRoom->getY0(); y <= region1.mainRoom->getY1(); y++) {
-    for(int x = region1.mainRoom->getX0(); x <= region1.mainRoom->getX1(); x++) {
+  for(int y = r1->mainRoom->getY0(); y <= r1->mainRoom->getY1(); y++) {
+    for(int x = r1->mainRoom->getX0(); x <= r1->mainRoom->getX1(); x++) {
       const Pos c = Pos(x, y);
       if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
         floorInR1Vector.push_back(c);
@@ -876,7 +874,7 @@ void MapGenBsp::buildCorridorBetweenRooms(
     }
   }
 
-  const Pos regionDelta = region2.getX0Y0() - region1.getX0Y0();
+  const Pos regionDelta = r2->getX0Y0() - r1->getX0Y0();
   const Pos regionDeltaAbs(abs(regionDelta.x), abs(regionDelta.y));
   const Pos regionDeltaSign = regionDelta.getSigns();
 
@@ -885,8 +883,8 @@ void MapGenBsp::buildCorridorBetweenRooms(
   vector<Pos> floorInR2Vector;
   bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(floorInR2Grid, false);
-  for(int y = region2.mainRoom->getY0(); y <= region2.mainRoom->getY1(); y++) {
-    for(int x = region2.mainRoom->getX0(); x <= region2.mainRoom->getX1(); x++) {
+  for(int y = r2->mainRoom->getY0(); y <= r2->mainRoom->getY1(); y++) {
+    for(int x = r2->mainRoom->getX0(); x <= r2->mainRoom->getX1(); x++) {
       Pos c = Pos(x, y);
       if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
         floorInR2Vector.push_back(c);
