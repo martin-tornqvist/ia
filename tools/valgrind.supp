@@ -1,4 +1,5 @@
 {
+   <insert_a_suppression_name_here>
    Memcheck:Cond
    obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
    obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
@@ -12,6 +13,7 @@
 }
 
 {
+   <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:realloc
    obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
@@ -28,6 +30,7 @@
 }
 
 {
+   <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:malloc
    fun:pa_xmalloc
@@ -44,6 +47,7 @@
 }
 
 {
+   <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:malloc
    fun:strdup
@@ -60,6 +64,7 @@
 }
 
 {
+   <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:malloc
    fun:_XlcDefaultMapModifiers
@@ -72,4 +77,21 @@
    fun:_ZN10SdlWrapperC1Ev
    fun:_ZN6Engine7initSdlEv
    fun:main
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:realloc
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XlcCreateLC
+   fun:_XlcDefaultLoader
+   fun:_XOpenLC
+   fun:_XlcCurrentLC
+   fun:XSetLocaleModifiers
+   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
+   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
+   fun:SDL_VideoInit
 }

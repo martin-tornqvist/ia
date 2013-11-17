@@ -862,8 +862,10 @@ void MapGenBsp::buildCorridorBetweenRooms(
   const Region* const r1, const Region* r2) {
   //Find all floor in both regions
   vector<Pos> floorInR1Vector;
+  floorInR1Vector.resize(0);
   bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(floorInR1Grid, false);
+
   for(int y = r1->mainRoom->getY0(); y <= r1->mainRoom->getY1(); y++) {
     for(int x = r1->mainRoom->getX0(); x <= r1->mainRoom->getX1(); x++) {
       const Pos c = Pos(x, y);
@@ -879,8 +881,9 @@ void MapGenBsp::buildCorridorBetweenRooms(
   const Pos regionDeltaSign = regionDelta.getSigns();
 
   vector<Pos> PossInR1closeToR2;
-
+  PossInR1closeToR2.resize(0);
   vector<Pos> floorInR2Vector;
+  floorInR2Vector.resize(0);
   bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetBoolArray(floorInR2Grid, false);
   for(int y = r2->mainRoom->getY0(); y <= r2->mainRoom->getY1(); y++) {

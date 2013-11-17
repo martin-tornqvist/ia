@@ -289,8 +289,6 @@ void Engine::cleanupGame() {
 
   delete marker;
 
-  delete player;
-
   trace << "Engine::cleanupGame() [DONE]" << endl;
 }
 
