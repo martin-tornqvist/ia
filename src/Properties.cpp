@@ -880,14 +880,14 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnResPlayer, msg);
-          if(msg != "") {
+          if(msg.empty() == false) {
             eng->log->addMsg(msg, clrWhite, true);
           }
         } else {
           if(eng->player->checkIfSeeActor(*owningActor_, NULL)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
-            if(msg != "") {
+            if(msg.empty() == false) {
               const string monsterName = owningActor_->getNameThe();
               eng->log->addMsg(monsterName + " " + msg, clrWhite, true);
             }
@@ -917,14 +917,14 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnMorePlayer, msg);
-          if(msg != "") {
+          if(msg.empty() == false) {
             eng->log->addMsg(msg, clrWhite, true);
           }
         } else {
           if(playerSeeOwner) {
             string msg = "";
             prop->getMsg(propMsgOnMoreMonster, msg);
-            if(msg != "") {
+            if(msg.empty() == false) {
               eng->log->addMsg(owningActor_->getNameThe() + " " + msg);
             }
           }
@@ -957,14 +957,14 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     if(IS_PLAYER) {
       string msg = "";
       prop->getMsg(propMsgOnStartPlayer, msg);
-      if(msg != "") {
+      if(msg.empty() == false) {
         eng->log->addMsg(msg, clrWhite, true);
       }
     } else {
       if(playerSeeOwner) {
         string msg = "";
         prop->getMsg(propMsgOnStartMonster, msg);
-        if(msg != "") {
+        if(msg.empty() == false) {
           eng->log->addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -1025,7 +1025,7 @@ bool PropHandler::endAppliedProp(
       if(eng->player->checkIfSeeActor(*owningActor_, visionBlockers)) {
         string msg = "";
         prop->getMsg(propMsgOnEndMonster, msg);
-        if(msg != "") {
+        if(msg.empty() == false) {
           eng->log->addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -1116,7 +1116,7 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
   for(int i = 0; i < NR_PROPS; i++) {
     Prop* const prop = props.at(i);
     const string propName = prop->getNameShort();
-    if(propName != "") {
+    if(propName.empty() == false) {
       const PropAlignment_t alignment = prop->getAlignment();
 //      const int TURNS = prop->turnsLeft_;
       line.push_back(

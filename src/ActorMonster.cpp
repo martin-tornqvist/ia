@@ -38,7 +38,7 @@ Monster::~Monster() {
   }
 }
 
-void Monster::act() {
+void Monster::onActorTurn() {
   waiting_ = !waiting_;
 
   if(waiting_) {
@@ -84,7 +84,7 @@ void Monster::act() {
   //------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
   if(leader != eng->player) {
-    if(actorSpecificAct()) {
+    if(monsterSpecificOnActorTurn()) {
       return;
     }
   }

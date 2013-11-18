@@ -187,7 +187,7 @@ void PlayerBonHandler::getAllPickedBonTitlesLine(string& str) {
     const PlayerBon& bon = bons_[i];
     if(bon.isPicked_) {
       const string title = "\"" + bon.title_ + "\"";
-      str += str == "" ? title : (", " + title);
+      str += str.empty() ? title : (", " + title);
     }
   }
 }

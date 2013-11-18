@@ -18,12 +18,12 @@
 #include "Renderer.h"
 
 Entity::Entity(FeatureMob* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureMob) {
-}
+  feature(dynamic_cast<Feature*>(feature_)),
+  entityType(entityType_featureMob) {}
 
 Entity::Entity(FeatureStatic* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)), entityType(entityType_featureStatic) {
-}
+  feature(dynamic_cast<Feature*>(feature_)),
+  entityType(entityType_featureStatic) {}
 
 void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                        const Item* const itemThrown) {
@@ -78,12 +78,14 @@ void Look::describeBriefActor(const Actor& actor,
     eng->log->addMsg("| l for description");
   } else if(actor.pos != eng->player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
-      Item* const item = eng->player->getInventory()->getItemInSlot(slot_wielded);
+      Item* const item =
+        eng->player->getInventory()->getItemInSlot(slot_wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng->player, *wpn, actor.pos, actor.pos, eng);
       eng->log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == markerTask_aimThrownWeapon) {
-      MissileAttackData data(*eng->player, *itemThrown, actor.pos, actor.pos, eng);
+      MissileAttackData data(
+        *eng->player, *itemThrown, actor.pos, actor.pos, eng);
       eng->log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
     }
   }

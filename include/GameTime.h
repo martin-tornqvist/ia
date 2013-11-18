@@ -104,9 +104,9 @@ private:
   friend class Dungeon;
   friend class DungeonFeatureFactory;
 
-  void runNewStandardTurnEvents();
+  void runStandardTurnEvents();
 
-  void runNewAtomicTurnEvents();
+  void runAtomicTurnEvents();
 
   vector<ActorSpeed_t> turnTypeVector_;
   int currentTurnTypePos_;

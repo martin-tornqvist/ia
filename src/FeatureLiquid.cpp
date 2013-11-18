@@ -16,11 +16,10 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     actorBumping.getPropHandler()->tryApplyProp(
       new PropWaiting(eng, propTurnsStandard));
 
-//    const bool IS_PLAYER = actorBumping == eng->player;
-//    if(IS_PLAYER) {
-//      eng->log->addMsg("*glop*");
-//      eng->renderer->updateScreen();
-//    }
+    const bool IS_PLAYER = &actorBumping == eng->player;
+    if(IS_PLAYER) {
+      eng->log->addMsg("*glop*");
+    }
   }
 }
 

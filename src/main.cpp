@@ -10,9 +10,7 @@
 #include "MapGen.h"
 #include "PopulateMonsters.h"
 #include "DungeonClimb.h"
-#include "Bot.h"
 #include "Popup.h"
-#include "Input.h"
 #include "CharacterLines.h"
 #include "Log.h"
 #include "Query.h"
@@ -21,6 +19,7 @@
 #include "DungeonMaster.h"
 #include "DebugModeStatPrinter.h"
 #include "Audio.h"
+#include "Bot.h"
 
 #undef main
 int main(int argc, char* argv[]) {
@@ -28,125 +27,121 @@ int main(int argc, char* argv[]) {
 
   bool quitToMainMenu = false;
 
-  Engine* const engine = new Engine(&quitToMainMenu);
-  engine->initSdl();
-  engine->initConfig();
-  engine->initRenderer();
+  Engine* const eng = new Engine(&quitToMainMenu);
+  eng->initSdl();
+  eng->initConfig();
+  eng->initRenderer();
 
-  engine->renderer->clearScreen();
-  engine->renderer->drawTextCentered(
+  eng->renderer->clearScreen();
+  eng->renderer->drawTextCentered(
     "Loading...", panel_screen, Pos(MAP_X_CELLS_HALF, 12),
     clrNosferatuSepiaDrk);
-  engine->renderer->updateScreen();
+  eng->renderer->updateScreen();
 
-  engine->initAudio();
+  eng->initAudio();
 
   bool quitGame = false;
   while(quitGame == false) {
-    engine->initGame();
+    eng->initGame();
 
     if(argc > 1) {
       const string arg1 = argv[1];
       if(arg1 == "-b") {
-        engine->config->isBotPlaying = true;
+        eng->config->isBotPlaying = true;
       }
     }
 
     if(IS_DEBUG_MODE) {
-      engine->debugModeStatPrinter->run();
+      eng->debugModeStatPrinter->run();
     }
 
     int introMusChannel = -1;
-    const GameEntry_t gameEntryType = engine->mainMenu->run(
+    const GameEntry_t gameEntryType = eng->mainMenu->run(
                                         quitGame, introMusChannel);
 
     if(quitGame == false) {
       quitToMainMenu = false;
 
       if(gameEntryType == gameEntry_new) {
-        if(engine->config->isBotPlaying) {
-          engine->playerBonHandler->setAllBonsToPicked();
-          engine->bot->init();
+        if(eng->config->isBotPlaying) {
+          eng->playerBonHandler->setAllBonsToPicked();
+          eng->bot->init();
         }
-        engine->playerCreateCharacter->run();
-        engine->player->actorSpecific_spawnStartItems();
+        eng->playerCreateCharacter->run();
+        eng->player->actorSpecific_spawnStartItems();
 
-        engine->gameTime->insertActorInLoop(engine->player);
+        eng->gameTime->insertActorInLoop(eng->player);
 
-        if(engine->config->isIntroLevelSkipped == false) {
+        if(eng->config->isIntroLevelSkipped == false) {
           //If intro level is used, build forest.
-          engine->renderer->coverPanel(panel_screen);
-          engine->renderer->updateScreen();
-          MapGenIntroForest(engine).run();
+          eng->renderer->coverPanel(panel_screen);
+          eng->renderer->updateScreen();
+          MapGenIntroForest(eng).run();
         } else {
           //Else build first dungeon level
-          engine->dungeonClimb->travelDown();
+          eng->dungeonClimb->travelDown();
         }
-        engine->dungeonMaster->setTimeStartedToNow();
-        const TimeData& t = engine->dungeonMaster->getTimeStarted();
+        eng->dungeonMaster->setTimeStartedToNow();
+        const TimeData& t = eng->dungeonMaster->getTimeStarted();
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
-      engine->audio->fadeOutChannel(introMusChannel);
+      eng->audio->fadeOutChannel(introMusChannel);
 
-      engine->player->updateFov();
-      engine->renderer->drawMapAndInterface();
+      eng->player->updateFov();
+      eng->renderer->drawMapAndInterface();
 
       if(gameEntryType == gameEntry_new) {
-        if(engine->config->isIntroLevelSkipped == 0) {
+        if(eng->config->isIntroLevelSkipped == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
           introMessage += "\"Cult of Starry Wisdom\". ";
           introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
           introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
           introMessage += "- a window to all secrets of the universe.";
-          engine->popup->showMessage(introMessage, true, "The story so far...");
+          eng->popup->showMessage(introMessage, true, "The story so far...");
         }
       }
 
-      /*
-       * ========== M A I N   L O O P ==========
-       */
+      //========== M A I N   L O O P ==========
       while(quitToMainMenu == false) {
-        //------------------------------------------------ ACT
-        if(engine->gameTime->getLoopSize() != 0) {
-          if(engine->gameTime->getCurrentActor() == engine->player) {
+        if(eng->player->deadState == actorDeadState_alive) {
 
-            if(engine->config->isBotPlaying) {
-              engine->bot->act();
-            } else {
-              engine->renderer->drawMapAndInterface();
-              engine->input->handleMapModeInputUntilFound();
-            }
+          Actor* const actor = eng->gameTime->getCurrentActor();
 
-          } else if(engine->player->deadState == actorDeadState_alive) {
-            engine->gameTime->getCurrentActor()->newTurn();
+          actor->updateColor();
+
+          if(actor->getPropHandler()->allowAct()) {
+            actor->onActorTurn();
           } else {
-            engine->gameTime->endTurnOfCurrentActor();
+            if(actor == eng->player) {
+              eng->renderer->drawMapAndInterface();
+              eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+            }
+            eng->gameTime->endTurnOfCurrentActor();
           }
-        }
-
-        //If player has died, run postmortem, then return to main menu
-        if(engine->player->deadState != actorDeadState_alive) {
-          dynamic_cast<Player*>(engine->player)->waitTurnsLeft = -1;
-//          engine->log->clearLog();
-          engine->log->addMsg("=== I AM DEAD === (press any key to view postmortem information)", clrMessageBad);
-          engine->renderer->drawMapAndInterface();
-          engine->query->waitForKeyPress();
-          engine->highScore->gameOver(false);
-          engine->postmortem->run(&quitGame);
+        } else {
+          //Player is dead, run postmortem, then return to main menu
+          dynamic_cast<Player*>(eng->player)->waitTurnsLeft = -1;
+          eng->log->addMsg(
+            "=== I AM DEAD === (press any key to view postmortem information)",
+            clrMessageBad);
+          eng->renderer->drawMapAndInterface();
+          eng->query->waitForKeyPress();
+          eng->highScore->gameOver(false);
+          eng->postmortem->run(&quitGame);
           quitToMainMenu = true;
         }
       }
     }
-    engine->cleanupGame();
+    eng->cleanupGame();
   }
-  engine->cleanupAudio();
-  engine->cleanupRenderer();
-  engine->cleanupConfig();
-  engine->cleanupSdl();
+  eng->cleanupAudio();
+  eng->cleanupRenderer();
+  eng->cleanupConfig();
+  eng->cleanupSdl();
 
-  delete engine;
+  delete eng;
 
   trace << "main() [DONE]" << endl;
   return 0;

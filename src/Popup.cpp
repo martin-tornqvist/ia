@@ -45,7 +45,7 @@ void Popup::showMessage(const string& message,
 
   int yPos = TITLE_Y_POS;
 
-  if(title != "") {
+  if(title.empty() == false) {
     eng->renderer->drawTextCentered(
       title, panel_map, Pos(MAP_X_CELLS_HALF, TITLE_Y_POS),
       clrNosferatuSepiaLgt, clrBlack, true);
@@ -137,7 +137,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines,
 
   int yPos = TITLE_Y_POS;
 
-  if(title != "") {
+  if(title.empty() == false) {
     eng->renderer->drawTextCentered(
       title, panel_map, Pos(MAP_X_CELLS_HALF, TITLE_Y_POS),
       clrCyanLgt, clrBlack, true);

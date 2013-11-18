@@ -34,7 +34,7 @@ void CharacterLines::drawLocationInfo() {
         const Pos& x1y1 = room->getX1Y1();
         if(eng->mapTests->isCellInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
-          if(roomDescr != "") {
+          if(roomDescr.empty() == false) {
             str += room->roomDescr + " ";
           }
         }
@@ -49,7 +49,7 @@ void CharacterLines::drawLocationInfo() {
              "It is dark here. ";
     }
 
-    if(str != "") {
+    if(str.empty() == false) {
       eng->renderer->drawText(str, panel_character, Pos(1, -1), clrWhite);
     }
   }

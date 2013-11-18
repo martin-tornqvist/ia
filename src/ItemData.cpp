@@ -782,7 +782,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_fireHoundBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
-  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_frostHound]);
+  setDmgFromMonsterData(*d, eng->actorDataHandler->dataList[actor_fireHound]);
   d->meleeDmgType = dmgType_fire;
   dataList[d->id] = d;
 
@@ -1324,7 +1324,7 @@ string ItemDataHandler::getItemRef(
 //  if(d.isArmor) {
 //    const Armor* armor = dynamic_cast<const Armor*>(&item);
 //    const string armorDataLine = armor->getArmorDataLine(true);
-//    return armorDataLine == "" ? ret : ret + " " + armorDataLine;
+//    return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
 //  }
 
   if(SKIP_EXTRA_INFO == false) {
@@ -1438,7 +1438,7 @@ string ItemDataHandler::getItemInterfaceRef(
   if(d.isArmor) {
     const string armorDataLine =
       dynamic_cast<const Armor*>(&item)->getArmorDataLine(true);
-    return armorDataLine == "" ? ret : ret + " " + armorDataLine;
+    return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
   }
 
   if((d.isScroll || d.isPotion) && d.isTried && d.isIdentified == false) {

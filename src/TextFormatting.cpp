@@ -12,7 +12,7 @@ void TextFormatting::lineToLines(string line, const int MAX_WIDTH,
 
   readAndRemoveNextWord(line, curWord);
 
-  while(curWord != "") {
+  while(curWord.empty() == false) {
     if(linesToMake.empty()) {
       linesToMake.resize(1);
       linesToMake.front() = "";

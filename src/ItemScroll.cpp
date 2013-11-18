@@ -114,7 +114,7 @@ bool Scroll::read() {
 
 void Scroll::failedToLearnRealName(const string overrideFailString) {
   if(data_->isIdentified == false) {
-    if(overrideFailString != "") {
+    if(overrideFailString.empty() == false) {
       eng->log->addMsg(overrideFailString);
     } else {
       eng->log->addMsg("Was that supposed to do something?");

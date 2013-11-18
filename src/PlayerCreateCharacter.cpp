@@ -223,7 +223,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done,
 
   if(d.sdlKey_ == SDLK_RETURN) {
     done = true;
-    currentString = currentString == "" ? "Rogue" : currentString;
+    currentString = currentString.empty() ? "Rogue" : currentString;
     return;
   }
 

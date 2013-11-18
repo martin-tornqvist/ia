@@ -43,7 +43,9 @@ public:
 
   void actorSpecific_spawnStartItems();
 
-  void act();
+  void onActorTurn();
+
+  void actorSpecificOnStandardTurn();
 
   void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                  const Direction_t directionToOrigin,

@@ -1330,9 +1330,9 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_migo;
   d.hp = 6;
   d.spi = 20;
-  d.dmgRanged = 5;
+  d.dmgRanged = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_accuracyRanged, 50);
+  d.abilityVals.setVal(ability_accuracyRanged, 65);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSize_few;
   d.actorSize = actorSize_humanoid;

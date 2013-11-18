@@ -29,6 +29,8 @@
 #include "InventoryHandler.h"
 #include "ItemMedicalBag.h"
 #include "PlayerSpellsHandler.h"
+#include "Bot.h"
+#include "Input.h"
 
 Player::Player() :
   activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -50,9 +52,7 @@ void Player::actorSpecific_spawnStartItems() {
   int NR_CARTRIDGES        = eng->dice.range(1, 2);
   int NR_DYNAMITE          = eng->dice.range(2, 3);
   int NR_MOLOTOV           = eng->dice.range(2, 3);
-//  int NR_FLARES            = eng->dice.range(1, 6);
   int NR_THROWING_KNIVES   = eng->dice.range(7, 12);
-  int NR_SPIKES            = 0; //eng->dice.coinToss() ? 0 : eng->dice.range(3, 4);
 
   const int WEAPON_CHOICE = eng->dice.range(1, 5);
   ItemId_t weaponId = item_dagger;
@@ -93,7 +93,6 @@ void Player::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_armorAsbestosSuit));
   //--------------------------------------------------------------------------
 
-
   inventory_->putItemInGeneral(
     eng->itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
   inventory_->putItemInGeneral(
@@ -106,11 +105,6 @@ void Player::actorSpecific_spawnStartItems() {
       true, true);
   }
 
-  if(NR_SPIKES > 0) {
-    inventory_->putItemInGeneral(
-      eng->itemFactory->spawnItem(item_ironSpike, NR_SPIKES));
-  }
-
   inventory_->putItemInSlot(
     slot_armorBody,
     eng->itemFactory->spawnItem(item_armorLeatherJacket),
@@ -120,12 +114,6 @@ void Player::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_deviceElectricLantern));
   inventory_->putItemInGeneral(
     eng->itemFactory->spawnItem(item_medicalBag));
-
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceSentry));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRejuvenator));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceRepeller));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_deviceTranslocator));
-//  inventory_->putItemInGeneral(eng->itemFactory->spawnItem(item_scrollOfIdentify, 4));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
@@ -349,7 +337,8 @@ void Player::incrInsanity() {
               popupMessage += "I scream in terror.";
             }
             eng->popup->showMessage(popupMessage, true, "Screaming!");
-            eng->soundEmitter->emitSound(Sound("", endOfSfx, true, pos, true, true));
+            eng->soundEmitter->emitSound(
+              Sound("", endOfSfx, true, pos, true, true));
             return;
           }
         } break;
@@ -718,7 +707,51 @@ void Player::updateColor() {
   clr_ = data_->color;
 }
 
-void Player::act() {
+void Player::onActorTurn() {
+  eng->renderer->drawMapAndInterface();
+
+  if(eng->player->getMth() >= 15) {
+    eng->player->grantMthPower();
+  }
+
+  //If player dropped item, check if should go back to inventory screen
+  vector<Actor*> spotedEnemies;
+  eng->player->getSpotedEnemies(spotedEnemies);
+  if(spotedEnemies.empty()) {
+    switch(eng->inventoryHandler->screenToOpenAfterDrop) {
+      case inventoryScreen_backpack: {
+        eng->inventoryHandler->runBrowseInventoryMode();
+      } break;
+
+      case inventoryScreen_use: {
+        eng->inventoryHandler->runUseScreen();
+      } break;
+
+      case inventoryScreen_equip: {
+        eng->inventoryHandler->runEquipScreen(
+          eng->inventoryHandler->equipSlotToOpenAfterDrop);
+      } break;
+
+      case inventoryScreen_slots: {
+        eng->inventoryHandler->runSlotsScreen();
+      } break;
+
+      case endOfInventoryScreens: {} break;
+    }
+  } else {
+    eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
+    eng->inventoryHandler->browserPosToSetAfterDrop = 0;
+  }
+
+  if(eng->config->isBotPlaying) {
+    eng->bot->act();
+  } else {
+    eng->input->clearEvents();
+    eng->input->handleMapModeInputUntilFound();
+  }
+}
+
+void Player::actorSpecificOnStandardTurn() {
   // Dynamite
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;
@@ -837,8 +870,10 @@ void Player::act() {
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    //If applying first aid etc, messages may be printed for monsters that comes into view.
-    //Only print monster-comes-into-view-messages if player is busy with something (first aid, auto travel etc).
+    //If applying first aid etc, messages may be printed for monsters that
+    //comes into view.
+    //Only print monster-comes-into-view-messages if player is busy with
+    //something (first aid, auto travel etc).
 
     Actor* const actor = eng->gameTime->getActorAt(i);
     if(actor != this) {
@@ -963,30 +998,7 @@ void Player::act() {
     waitTurnsLeft--;
     eng->gameTime->endTurnOfCurrentActor();
   }
-
-  //When this function ends, the system starts reading keys.
 }
-
-//void Player::tryIdentifyItems() {
-//  const vector<Item*>* const general = inventory_->getGeneral();
-//  for(unsigned int i = 0; i < general->size(); i++) {
-//    Item* const item = general->at(i);
-//    const ItemDef& def = item->getInstanceDefinition();
-//
-//    //It must not be a readable item (those must be actively identified)
-//    if(def.isScroll == false) {
-//      if(def.isIdentified == false) {
-//        if(def.abilityToIdentify != ability_empty) {
-//          const int SKILL = m_instanceDefinition.abilityVals.getVal(def.abilityToIdentify, true);
-//          if(SKILL > (100 - def.identifySkillFactor)) {
-//            item->setRealDefinitionNames(eng, false);
-//            eng->log->addMsg("I recognize " + def.name.name_a + " in my inventory.", clrWhite, true);
-//          }
-//        }
-//      }
-//    }
-//  }
-//}
 
 void Player::interruptActions() {
   eng->renderer->drawMapAndInterface();
@@ -1206,7 +1218,8 @@ void Player::punch(Actor& actorToPunch) {
   delete punchWeapon;
 }
 
-void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+void Player::actorSpecific_addLight(
+  bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   bool isUsingLightGivingItem = flareFuseTurns > 0;
 
@@ -1214,7 +1227,8 @@ void Player::actorSpecific_addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const 
     for(unsigned int i = 0; i < inventory_->getGeneral()->size(); i++) {
       Item* const item = inventory_->getGeneral()->at(i);
       if(item->getData().id == item_deviceElectricLantern) {
-        DeviceElectricLantern* const lantern = dynamic_cast<DeviceElectricLantern*>(item);
+        DeviceElectricLantern* const lantern =
+          dynamic_cast<DeviceElectricLantern*>(item);
         isUsingLightGivingItem = lantern->isGivingLight();
         break;
       }

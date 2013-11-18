@@ -66,7 +66,7 @@ void GameTime::insertActorInLoop(Actor* actor) {
 void GameTime::endTurnOfCurrentActor() {
 //  traceHi << "GameTime::endTurnOfCurrentActor().." << endl;
 
-  runNewAtomicTurnEvents();
+  runAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
 
@@ -102,7 +102,7 @@ void GameTime::endTurnOfCurrentActor() {
       if(
         currentTurnType != turnType_fast &&
         currentTurnType != turnType_fastest) {
-        runNewStandardTurnEvents();
+        runStandardTurnEvents();
       }
     }
 
@@ -145,50 +145,11 @@ void GameTime::endTurnOfCurrentActor() {
     }
   }
 
-  if(currentActor == eng->player) {
-//    traceHi << "Player turn begins" << endl;
-
-    eng->input->clearEvents();
-    eng->player->newTurn();
-
-    if(eng->player->getMth() >= 15) {
-      eng->player->grantMthPower();
-    }
-
-    //If player dropped item, check if should go back to inventory screen
-    vector<Actor*> spotedEnemies;
-    eng->player->getSpotedEnemies(spotedEnemies);
-    if(spotedEnemies.empty()) {
-      switch(eng->inventoryHandler->screenToOpenAfterDrop) {
-        case inventoryScreen_backpack: {
-          eng->inventoryHandler->runBrowseInventoryMode();
-        } break;
-
-        case inventoryScreen_use: {
-          eng->inventoryHandler->runUseScreen();
-        } break;
-
-        case inventoryScreen_equip: {
-          eng->inventoryHandler->runEquipScreen(
-            eng->inventoryHandler->equipSlotToOpenAfterDrop);
-        } break;
-
-        case inventoryScreen_slots: {
-          eng->inventoryHandler->runSlotsScreen();
-        } break;
-
-        case endOfInventoryScreens: {} break;
-      }
-    } else {
-      eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
-      eng->inventoryHandler->browserPosToSetAfterDrop = 0;
-    }
-  }
 //  traceHi << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
 }
 
-void GameTime::runNewStandardTurnEvents() {
-//  traceHi << "GameTime::runNewStandardTurnEvents()..." << endl;
+void GameTime::runStandardTurnEvents() {
+//  traceHi << "GameTime::runStandardTurnEvents()..." << endl;
 
   turn_++;
 
@@ -286,10 +247,10 @@ void GameTime::runNewStandardTurnEvents() {
 
   eng->audio->tryPlayAmb(100);
 
-//  traceHi << "GameTime::runNewStandardTurnEvents() [DONE]" << endl;
+//  traceHi << "GameTime::runStandardTurnEvents() [DONE]" << endl;
 }
 
-void GameTime::runNewAtomicTurnEvents() {
+void GameTime::runAtomicTurnEvents() {
   updateLightMap();
 }
 

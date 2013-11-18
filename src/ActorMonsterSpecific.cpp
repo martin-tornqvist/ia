@@ -173,7 +173,7 @@ void FrostHound::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_frostHoundBite));
 }
 
-bool Vortex::actorSpecificAct() {
+bool Vortex::monsterSpecificOnActorTurn() {
   if(pullCooldown > 0) {
     pullCooldown--;
   }
@@ -257,7 +257,7 @@ void FrostVortex::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_frostVortexEngulf));
 }
 
-bool Ghost::actorSpecificAct() {
+bool Ghost::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
 
@@ -358,7 +358,7 @@ void MummyUnique::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 }
 
-bool Khephren::actorSpecificAct() {
+bool Khephren::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
       if(hasSummonedLocusts == false) {
@@ -438,7 +438,7 @@ void HuntingHorror::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_huntingHorrorBite));
 }
 
-bool KeziahMason::actorSpecificAct() {
+bool KeziahMason::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
       if(hasSummonedJenkin == false) {
@@ -532,7 +532,7 @@ void ColourOutOfSpace::actorSpecificOnStandardTurn() {
   }
 }
 
-bool Spider::actorSpecificAct() {
+bool Spider::monsterSpecificOnActorTurn() {
   return false;
 }
 
@@ -566,7 +566,7 @@ void Wolf::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_wolfBite));
 }
 
-bool WormMass::actorSpecificAct() {
+bool WormMass::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
       if(eng->dice.percentile() < chanceToSpawnNew) {
@@ -598,7 +598,7 @@ void WormMass::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_wormMassBite));
 }
 
-bool GiantLocust::actorSpecificAct() {
+bool GiantLocust::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
       if(eng->dice.percentile() < chanceToSpawnNew) {
@@ -630,7 +630,7 @@ void GiantLocust::actorSpecific_spawnStartItems() {
     eng->itemFactory->spawnItem(item_giantLocustBite));
 }
 
-bool LordOfShadows::actorSpecificAct() {
+bool LordOfShadows::monsterSpecificOnActorTurn() {
 
   return false;
 }
@@ -639,7 +639,7 @@ void LordOfShadows::actorSpecific_spawnStartItems() {
 
 }
 
-bool LordOfSpiders::actorSpecificAct() {
+bool LordOfSpiders::monsterSpecificOnActorTurn() {
   if(playerAwarenessCounter > 0) {
 
     if(eng->dice.coinToss()) {
@@ -684,7 +684,7 @@ void LordOfSpiders::actorSpecific_spawnStartItems() {
 
 }
 
-bool LordOfSpirits::actorSpecificAct() {
+bool LordOfSpirits::monsterSpecificOnActorTurn() {
 
   return false;
 }
@@ -693,7 +693,7 @@ void LordOfSpirits::actorSpecific_spawnStartItems() {
 
 }
 
-bool LordOfPestilence::actorSpecificAct() {
+bool LordOfPestilence::monsterSpecificOnActorTurn() {
 
   return false;
 }
@@ -702,11 +702,11 @@ void LordOfPestilence::actorSpecific_spawnStartItems() {
 
 }
 
-bool Zombie::actorSpecificAct() {
+bool Zombie::monsterSpecificOnActorTurn() {
   return tryResurrect();
 }
 
-bool MajorClaphamLee::actorSpecificAct() {
+bool MajorClaphamLee::monsterSpecificOnActorTurn() {
   if(tryResurrect()) {
     return true;
   }

@@ -81,7 +81,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
   for(unsigned int i = 0; i < general->size(); i++) {
     const Item* const item = general->at(i);
     const string& label = item->getDefaultActivationLabel();
-    if(label != "") {
+    if(label.empty() == false) {
       bool isExistingGroupFound = false;
       for(unsigned int ii = 0; ii < groups.size(); ii++) {
         if(

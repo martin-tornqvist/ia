@@ -50,7 +50,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   //Emit sound
   const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
   string sndMsg = wpn.getData().rangedSoundMessage;
-  if(sndMsg != "") {
+  if(sndMsg.empty() == false) {
     sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
     const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
     const Sfx_t sfx = wpn.getData().rangedAttackSfx;

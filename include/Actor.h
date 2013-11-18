@@ -52,9 +52,8 @@ public:
   void die(const bool IS_MANGLED, const bool ALLOW_GORE,
            const bool ALLOW_DROP_ITEMS);
 
-  void newTurn();
-
-  virtual void act() = 0;
+  virtual void onActorTurn() {}
+  virtual void actorSpecificOnStandardTurn() {}
 
   virtual void updateColor();
 
@@ -94,8 +93,6 @@ public:
   Engine* eng;
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
-
-  virtual void actorSpecificOnStandardTurn() {}
 
 protected:
   //TODO Try to get rid of these friend declarations

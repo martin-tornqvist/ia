@@ -10,7 +10,7 @@
 // 0 : Disabled
 // 1 : Standard
 // 2 : Verbose
-#define TRACE_LVL 0
+#define TRACE_LVL 1
 //-------------------------------------------------------------------
 
 #ifdef DEBUG

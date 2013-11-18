@@ -41,7 +41,7 @@ bool Device::toggle() {
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
     specificToggle();
     const string message = getSpecificActivateMessage();
-    if(message != "") {
+    if(message.empty() == false) {
       eng->log->addMsg(message);
     }
   }

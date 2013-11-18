@@ -9,9 +9,7 @@
 #include "Spells.h"
 
 struct BestAttack {
-  BestAttack() :
-    weapon(NULL), isMelee(true) {
-  }
+  BestAttack() : weapon(NULL), isMelee(true) {}
 
   Weapon* weapon;
   bool isMelee;
@@ -59,9 +57,9 @@ public:
 
   void becomeAware();
 
-  void act();
+  void onActorTurn();
 
-  virtual bool actorSpecificAct() {return false;}
+  virtual bool monsterSpecificOnActorTurn() {return false;}
 
   virtual void actorSpecificOnStandardTurn() {}
 
@@ -128,7 +126,7 @@ class Spider: public Monster {
 public:
   Spider() : Monster() {}
   virtual ~Spider() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
 };
 
 class GreenSpider: public Spider {
@@ -173,7 +171,7 @@ public:
     hasResurrected = false;
   }
   virtual ~Zombie() {}
-  virtual bool actorSpecificAct();
+  virtual bool monsterSpecificOnActorTurn();
   void actorSpecificDie();
 protected:
   bool tryResurrect();
@@ -210,7 +208,7 @@ public:
   }
   ~MajorClaphamLee() {}
 
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
 private:
   bool hasSummonedTombLegions;
 };
@@ -227,7 +225,7 @@ public:
     hasSummonedJenkin = false;
   }
   ~KeziahMason() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
 private:
   bool hasSummonedJenkin;
@@ -276,7 +274,7 @@ class LordOfShadows: public Monster {
 public:
   LordOfShadows() : Monster() {}
   ~LordOfShadows() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
 };
 
@@ -284,7 +282,7 @@ class LordOfSpiders: public Monster {
 public:
   LordOfSpiders() : Monster() {}
   ~LordOfSpiders() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
 };
 
@@ -292,7 +290,7 @@ class LordOfSpirits: public Monster {
 public:
   LordOfSpirits() : Monster() {}
   ~LordOfSpirits() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
 };
 
@@ -300,7 +298,7 @@ class LordOfPestilence: public Monster {
 public:
   LordOfPestilence() : Monster() {}
   ~LordOfPestilence() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
 };
 
@@ -322,7 +320,7 @@ class Ghost: public Monster {
 public:
   Ghost() : Monster() {}
   ~Ghost() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
 };
 
@@ -415,7 +413,7 @@ public:
   Khephren() : MummyUnique() {}
   ~Khephren() {}
 
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
 private:
   bool hasSummonedLocusts;
 };
@@ -432,7 +430,7 @@ class WormMass: public Monster {
 public:
   WormMass() : Monster(), chanceToSpawnNew(12) {}
   ~WormMass() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
 private:
   int chanceToSpawnNew;
@@ -442,7 +440,7 @@ class GiantLocust: public Monster {
 public:
   GiantLocust() : Monster(), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
 private:
   int chanceToSpawnNew;
@@ -453,7 +451,7 @@ public:
   Vortex() : Monster(), pullCooldown(0) {}
   virtual ~Vortex() {}
 
-  bool actorSpecificAct();
+  bool monsterSpecificOnActorTurn();
 
   virtual void actorSpecific_spawnStartItems() = 0;
   virtual void onMonsterDeath() = 0;
@@ -525,7 +523,7 @@ class ColourOutOfSpace: public Ooze {
 public:
   ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
-//  bool actorSpecificAct();
+//  bool monsterSpecificOnActorTurn();
   void actorSpecificOnStandardTurn();
   void actorSpecific_spawnStartItems();
   const SDL_Color& getColor();

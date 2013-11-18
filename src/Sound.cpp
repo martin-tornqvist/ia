@@ -57,7 +57,7 @@ void SoundEmitter::emitSound(Sound snd) {
           getPlayerToOriginDirection(
             FLOOD_VALUE_AT_ACTOR, origin, floodFill);
 
-        if(snd.getMsg() != "") {
+        if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
           if(directionToOrigin != endOfDirections) {
             const string dirStr =

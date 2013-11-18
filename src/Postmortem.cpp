@@ -79,7 +79,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
   eng->playerBonHandler->getAllPickedBonTitlesLine(abilitiesLine);
-  if(abilitiesLine == "") {
+  if(abilitiesLine.empty()) {
     postmortemLines.push_back(StringAndClr("   * None", clrInfo));
   } else {
     vector<string> abilitiesLines;

@@ -25,19 +25,6 @@ Actor::~Actor() {
   delete inventory_;
 }
 
-void Actor::newTurn() {
-  if(propHandler_->allowAct()) {
-    updateColor();
-    act();
-  } else {
-    if(this == eng->player) {
-      eng->renderer->drawMapAndInterface();
-      eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
-    }
-    eng->gameTime->endTurnOfCurrentActor();
-  }
-}
-
 bool Actor::checkIfSeeActor(
   const Actor& other,
   const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
@@ -466,7 +453,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     //Only print if visible
     if(eng->player->checkIfSeeActor(*this, NULL)) {
       const string deathMessageOverride = data_->deathMessageOverride;
-      if(deathMessageOverride != "") {
+      if(deathMessageOverride.empty() == false) {
         eng->log->addMsg(deathMessageOverride);
       } else {
         eng->log->addMsg(getNameThe() + " dies.");
