@@ -16,6 +16,10 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     actorBumping.getPropHandler()->tryApplyProp(
       new PropWaiting(eng, propTurnsStandard));
 
+    //TODO For unknown reason, when player is walking in liquid, empty log
+    //lines are created. This "glop" message masks the problem, but it
+    //should be investigated and solved properly. Keep the "glop" message
+    //though ;-)
     const bool IS_PLAYER = &actorBumping == eng->player;
     if(IS_PLAYER) {
       eng->log->addMsg("*glop*");

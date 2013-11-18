@@ -25,7 +25,7 @@ void Bot::init() {
 
 void Bot::act() {
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
-  const int NR_OF_RUNS = 100;
+  const int NR_OF_RUNS = 10;
   int runCount = 1;
 
   //=======================================================================

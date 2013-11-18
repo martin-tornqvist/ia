@@ -19,7 +19,7 @@ void DungeonMaster::initXpArray() {
 
 int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
   const double K          = 1.0;  //K regulates player XP rate
-                                  //Higher -> more XP per monster
+  //Higher -> more XP per monster
   const double HP         = d.hp;
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
@@ -53,28 +53,12 @@ void DungeonMaster::playerGainLvl() {
 void DungeonMaster::playerGainXp(const int XP_GAINED) {
   for(int i = 0; i < XP_GAINED; i++) {
     xp++;
-    if(xp >= xpForLvl[clvl + 1]) {
-      playerGainLvl();
+    if(clvl < PLAYER_MAX_CLVL) {
+      if(xp >= xpForLvl[clvl + 1]) {
+        playerGainLvl();
+      }
     }
   }
-
-//  while(true) {
-//    if(clvl == PLAYER_MAX_CLVL) {
-//      xp = min(xp + xpGained, xpForLvl[PLAYER_MAX_CLVL]);
-//      return;
-//    }
-//
-//    const int XP_FOR_NXT_LVL = getXpToNextLvl();
-//
-//    if(xp + xpGained < XP_FOR_NXT_LVL) {
-//      xp += xpGained;
-//      return;
-//    } else {
-//      playerGainLvl();
-//      xp        += XP_FOR_NXT_LVL;
-//      xpGained  -= XP_FOR_NXT_LVL;
-//    }
-//  }
 }
 
 int DungeonMaster::getXpToNextLvl() const {
