@@ -11345,9 +11345,8 @@
 	<string>
 	"GameTime.h"
 
-1384890472 source:d:\dev\ia.git\src\actormonster.cpp
+1384892717 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
-	<iostream>
 	"Engine.h"
 	"Item.h"
 	"ItemWeapon.h"
@@ -11470,7 +11469,7 @@
 	<string>
 	<vector>
 
-1384887029 source:d:\dev\ia.git\src\actorplayer.cpp
+1384894007 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -14008,17 +14007,17 @@
 	"Engine.h"
 	"ActorPlayer.h"
 
-1384887112 d:\dev\ia.git\include\ai_makeroomforfriend.h
+1384894186 d:\dev\ia.git\include\ai_makeroomforfriend.h
 	<algorithm>
 
-1384887029 d:\dev\ia.git\include\ai_steppath.h
+1384893848 d:\dev\ia.git\include\ai_steppath.h
 	"Engine.h"
 
-1384887029 d:\dev\ia.git\include\ai_movetowardstargetsimple.h
+1384894324 d:\dev\ia.git\include\ai_movetowardstargetsimple.h
 	"Engine.h"
 	"Actor.h"
 
-1384887029 d:\dev\ia.git\include\ai_steptolairifhaslostolair.h
+1384893713 d:\dev\ia.git\include\ai_steptolairifhaslostolair.h
 	"Engine.h"
 	"Fov.h"
 
@@ -14037,7 +14036,7 @@
 1384640916 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
 
-1384892287 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
+1384893565 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
 	"Engine.h"
 	"Actor.h"
 	"CommonData.h"

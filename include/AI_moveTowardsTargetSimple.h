@@ -13,15 +13,14 @@ public:
           monster.playerAwarenessCounter > 0 ||
           monster.leader == engine->player) {
           Pos result;
-          Pos delta = monster.target->pos - monster.pos;
-          delta.x = delta.x == 0 ? 0 : (delta.x > 0 ? 1 : -1);
-          delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
-          const Pos newPos(monster.pos + delta);
+          Pos offset = monster.target->pos - monster.pos;
+          offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);
+          offset.y = offset.y == 0 ? 0 : (offset.y > 0 ? 1 : -1);
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
           engine->mapTests->makeMoveBlockerArray(&monster, blockers);
+          const Pos newPos(monster.pos + offset);
           if(blockers[newPos.x][newPos.y] == false) {
-            monster.moveDir(
-              DirConverter(engine).getDir(newPos));
+            monster.moveDir(DirConverter(engine).getDir(offset));
             return true;
           } else {
             return false;

@@ -1064,7 +1064,7 @@ void Player::moveDir(Dir_t dir) {
 
     const Pos dest(pos + DirConverter(eng).getOffset(dir));
 
-    if(pos != Pos(0, 0)) {
+    if(dir != dirCenter) {
       //Attack?
       Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
       if(actorAtDest != NULL) {

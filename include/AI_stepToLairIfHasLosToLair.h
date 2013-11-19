@@ -25,7 +25,7 @@ public:
           return false;
         } else {
           monster.moveDir(
-            DirConverter(engine).getDir(newPos));
+            DirConverter(engine).getDir(delta));
           return true;
         }
       }

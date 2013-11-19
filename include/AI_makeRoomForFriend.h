@@ -80,8 +80,8 @@ public:
                     }
 
                     if(isGoodCandidateFound) {
-                      monster.moveDir(
-                        DirConverter(engine).getDir(candidates.at(ii)));
+                      const Pos offset = candidates.at(ii) - monster.pos;
+                      monster.moveDir(DirConverter(engine).getDir(offset));
                       return true;
                     }
                   }

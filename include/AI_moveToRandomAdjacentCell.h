@@ -69,7 +69,7 @@ private:
     if(NR_ELEMENTS == 0) {
       return Pos(0, 0);
     } else {
-      return offsetCandidates.at(engine->dice.range(0, NR_ELEMENTS));
+      return offsetCandidates.at(engine->dice.range(0, NR_ELEMENTS - 1));
     }
   }
 };
