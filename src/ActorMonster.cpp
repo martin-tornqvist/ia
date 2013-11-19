@@ -1,7 +1,5 @@
 #include "ActorMonster.h"
 
-#include <iostream>
-
 #include "Engine.h"
 
 #include "Item.h"
@@ -28,7 +26,7 @@
 
 Monster::Monster() :
   playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
-  lastDirectionTraveled(Pos(0, 0)), spellCoolDownCurrent(0),
+  lastDirTraveled(dirCenter), spellCoolDownCurrent(0),
   isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL),
   waiting_(false), shockCausedCurrent(0.0) {}
 
@@ -195,16 +193,19 @@ void Monster::onMonsterHit(int& dmg) {
   }
 }
 
-void Monster::moveToCell(Pos targetCell) {
-  getPropHandler()->changeMovePos(pos, targetCell);
+void Monster::moveDir(Dir_t dir) {
+  if(dir == endOfDirs) {
+    throw logic_error("Bad direction");
+  }
+
+  getPropHandler()->changeMoveDir(pos, dir);
 
   //Trap affects leaving?
-  if(targetCell != pos) {
+  if(dir != dirCenter) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
-      targetCell =
-        dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, targetCell);
-      if(targetCell == pos) {
+      dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dir);
+      if(dir == dirCenter) {
         traceHi << "Monster: Move prevented by trap" << endl;
         eng->gameTime->endTurnOfCurrentActor();
         return;
@@ -213,8 +214,9 @@ void Monster::moveToCell(Pos targetCell) {
   }
 
   // Movement direction is stored for AI purposes
-  lastDirectionTraveled = targetCell - pos;
+  lastDirTraveled = dir;
 
+  const Pos targetCell(pos + DirConverter(eng).getOffset(dir));
   pos = targetCell;
 
   // Bump features in target cell (i.e. to trigger traps)

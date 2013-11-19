@@ -13,7 +13,7 @@
 void Disarm::playerDisarm() const {
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  const Pos disarmInPos(eng->player->pos + eng->query->direction());
+  const Pos disarmInPos(eng->player->pos + eng->query->dir());
   eng->log->clearLog();
 
   bool isDisarmableFound = false;

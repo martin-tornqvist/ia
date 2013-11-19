@@ -17,10 +17,11 @@ public:
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         engine->mapTests->makeMoveBlockerArray(&monster, blockers);
 
-        const Pos result =
-          getRandomAdjacentFreeCell(monster, blockers, engine);
-        if(result != monster.pos) {
-          monster.moveToCell(result);
+        const Pos offset =
+          getOffsetToRandomAdjacentFreeCell(monster, blockers, engine);
+        const Dir_t dir = DirConverter(engine).getDir(offset);
+        if(dir != dirCenter) {
+          monster.moveDir(dir);
           return true;
         }
       }
@@ -29,37 +30,47 @@ public:
   }
 
 private:
-  static Pos getRandomAdjacentFreeCell(
+  static Pos getOffsetToRandomAdjacentFreeCell(
     const Monster& monster, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
     Engine* const engine) {
 
     const Rect areaAllowed(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
     //First, try the same direction as last travelled
-    if(monster.lastDirectionTraveled != Pos(0, 0)) {
-      const Pos result(monster.pos + monster.lastDirectionTraveled);
+    if(monster.lastDirTraveled != dirCenter) {
+      const Pos offset =
+        DirConverter(engine).getOffset(monster.lastDirTraveled);
+      const Pos targetCell(monster.pos + offset);
       if(
-        blockers[result.x][result.y] == false &&
-        engine->mapTests->isCellInside(result, areaAllowed)) {
-        return result;
+        blockers[targetCell.x][targetCell.y] == false &&
+        engine->mapTests->isCellInside(targetCell, areaAllowed)) {
+        return offset;
       }
     }
 
-    //Attempt to find  a random non-blocked adjacent cell
-    for(int i = 0; i < 16; i++) {
-      const int DX = engine->dice.range(-1, 1);
-      const int DY = engine->dice.range(-1, 1);
-      const Pos result(monster.pos + Pos(DX, DY));
-
-      if(
-        blockers[result.x][result.y] == false &&
-        engine->mapTests->isCellInside(result, areaAllowed)) {
-        return result;
+    //Attempt to find a random non-blocked adjacent cell
+    vector<Pos> offsetCandidates;
+    offsetCandidates.resize(0);
+    for(int dy = -1; dy <= 1; dy++) {
+      for(int dx = -1; dx <= 1; dx++) {
+        if(dx != 0 || dy != 0) {
+          const Pos offset(dx, dy);
+          const Pos targetCell(monster.pos + offset);
+          if(
+            blockers[targetCell.x][targetCell.y] == false &&
+            engine->mapTests->isCellInside(targetCell, areaAllowed)) {
+            offsetCandidates.push_back(offset);
+          }
+        }
       }
     }
 
-    //If this point reached, no cell was found
-    return monster.pos;
+    const int NR_ELEMENTS = offsetCandidates.size();
+    if(NR_ELEMENTS == 0) {
+      return Pos(0, 0);
+    } else {
+      return offsetCandidates.at(engine->dice.range(0, NR_ELEMENTS));
+    }
   }
 };
 

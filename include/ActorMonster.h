@@ -45,7 +45,7 @@ public:
   Monster();
   virtual ~Monster();
 
-  void moveToCell(Pos targetCell);
+  void moveDir(Dir_t dir);
 
   AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
@@ -67,7 +67,7 @@ public:
 
   bool messageMonsterInViewPrinted;
 
-  Pos lastDirectionTraveled;
+  Dir_t lastDirTraveled;
 
   vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;

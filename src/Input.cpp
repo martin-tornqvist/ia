@@ -59,11 +59,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
-        eng->player->moveDirection(Pos(1, -1));
+        eng->player->moveDir(dirUpRight);
       } else if(d.isCtrlHeld_) {
-        eng->player->moveDirection(Pos(1, 1));
+        eng->player->moveDir(dirDownRight);
       } else {
-        eng->player->moveDirection(Pos(1, 0));
+        eng->player->moveDir(dirRight);
       }
     }
     clearEvents();
@@ -71,7 +71,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(0, 1));
+      eng->player->moveDir(dirDown);
     }
     clearEvents();
     return;
@@ -79,11 +79,11 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       if(d.isShiftHeld_) {
-        eng->player->moveDirection(Pos(-1, -1));
+        eng->player->moveDir(dirUpLeft);
       } else if(d.isCtrlHeld_) {
-        eng->player->moveDirection(Pos(-1, 1));
+        eng->player->moveDir(dirDownLeft);
       } else {
-        eng->player->moveDirection(Pos(-1, 0));
+        eng->player->moveDir(dirLeft);
       }
     }
     clearEvents();
@@ -91,42 +91,42 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(0, -1));
+      eng->player->moveDir(dirUp);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(1, -1));
+      eng->player->moveDir(dirUpRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(1, 1));
+      eng->player->moveDir(dirDownRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(-1, 1));
+      eng->player->moveDir(dirDownLeft);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(-1, -1));
+      eng->player->moveDir(dirUpLeft);
     }
     clearEvents();
     return;
   } else if(d.key_ == '5' || d.key_ == '.') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
-      eng->player->moveDirection(Pos(0, 0));
+      eng->player->moveDir(dirCenter);
       if(eng->playerBonHandler->isBonPicked(playerBon_marksman)) {
         eng->player->getPropHandler()->tryApplyProp(
           new PropStill(eng, propTurnsSpecified, 1));

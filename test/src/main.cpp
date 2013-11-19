@@ -171,11 +171,11 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     //Move the monster into the trap, and back again
     monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
     monster->pos = posL;
-    monster->moveToCell(posR);
+    monster->moveDir(dirRight);
     CHECK(monster->pos == posR);
-    monster->moveToCell(posL);   //Move left to try to break loose
-    CHECK(monster->pos == posR); //Even if loose, monster is stuck this move
-    monster->moveToCell(posL);   //Move left again to actually move if free
+    monster->moveDir(dirLeft);    //Move left to try to break loose
+    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
+    monster->moveDir(dirLeft);    //Move left again to actually move if free
 
     //Check conditions
     if(monster->pos == posR) {
@@ -220,7 +220,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room2(roomArea2);
 
   MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
-    room1, room2, directionRight);
+    room1, room2, dirRight);
 }
 
 //TEST_FIXTURE(BasicFixture, MakeBspMap) {

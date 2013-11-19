@@ -103,24 +103,24 @@ int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
   return ret;
 }
 
-void Audio::playFromDirection(const Sfx_t sfx, const Direction_t direction,
+void Audio::playFromDir(const Sfx_t sfx, const Dir_t dir,
                               const int DISTANCE_PERCENT) {
-  if(direction != endOfDirections) {
+  if(dir != endOfDirs) {
     //The distance value is scaled down to avoid too much volume degradation
     const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
 
     int volPercentL = 0;
-    switch(direction) {
-      case directionLeft:       volPercentL = 85;  break;
-      case directionUpLeft:     volPercentL = 75;  break;
-      case directionDownLeft:   volPercentL = 75;  break;
-      case directionUp:         volPercentL = 50;  break;
-      case directionCenter:     volPercentL = 50;  break;
-      case directionDown:       volPercentL = 50;  break;
-      case directionUpRight:    volPercentL = 25;  break;
-      case directionDownRight:  volPercentL = 25;  break;
-      case directionRight:      volPercentL = 15;  break;
-      case endOfDirections:     volPercentL = 50;  break;
+    switch(dir) {
+      case dirLeft:       volPercentL = 85;  break;
+      case dirUpLeft:     volPercentL = 75;  break;
+      case dirDownLeft:   volPercentL = 75;  break;
+      case dirUp:         volPercentL = 50;  break;
+      case dirCenter:     volPercentL = 50;  break;
+      case dirDown:       volPercentL = 50;  break;
+      case dirUpRight:    volPercentL = 25;  break;
+      case dirDownRight:  volPercentL = 25;  break;
+      case dirRight:      volPercentL = 15;  break;
+      case endOfDirs:     volPercentL = 50;  break;
     }
     play(sfx, VOL_PERCENT_TOT, volPercentL);
   }

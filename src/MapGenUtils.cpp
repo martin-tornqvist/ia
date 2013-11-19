@@ -6,7 +6,7 @@
 #include "Pathfinding.h"
 
 void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
-  const Room& room1, const Room& room2, Direction_t cardinalDirToTravel,
+  const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
   bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS]) {
 
   //Find all floor in both rooms
@@ -45,7 +45,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 //  const Pos travelStartDir(travelDirCandidates.at(ELEMENT));
 
   const Pos roomDeltaSigns(
-    DirectionConverter(eng).getOffset(cardinalDirToTravel));
+    DirConverter(eng).getOffset(cardinalDirToTravel));
 
   vector<Pos> PossInR1closeToR2;
   PossInR1closeToR2.resize(0);
@@ -245,13 +245,13 @@ void MapGen::makePathByRandomWalk(
 
   vector<Pos> positionsToFill;
 
-  bool directionOk = false;
+  bool dirOk = false;
   while(len > 0) {
-    while(directionOk == false) {
+    while(dirOk == false) {
       dx = eng->dice(1, 3) - 2;
       dy = eng->dice(1, 3) - 2;
       //TODO This is really ugly!
-      directionOk =
+      dirOk =
         !(
           (dx == 0 && dy == 0) || xPos + dx < x0y0Lim.x ||
           yPos + dy < x0y0Lim.y || xPos + dx > x1y1Lim.x ||
@@ -267,7 +267,7 @@ void MapGen::makePathByRandomWalk(
       yPos += dy;
       len--;
     }
-    directionOk = false;
+    dirOk = false;
   }
   for(unsigned int i = 0; i < positionsToFill.size(); i++) {
     eng->featureFactory->spawnFeatureAt(featureToMake, positionsToFill.at(i));

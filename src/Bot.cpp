@@ -1,7 +1,5 @@
 #include "Bot.h"
 
-#include <cassert>
-
 #include "Engine.h"
 
 #include "Properties.h"
@@ -127,7 +125,9 @@ void Bot::act() {
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(eng->player->pos);
 
-  assert(eng->mapTests->isCellsAdj(playerCell, cellToGoTo, true));
+  if(eng->mapTests->isCellsAdj(playerCell, cellToGoTo, true) == false) {
+    throw logic_error("Bad position parameter");
+  }
 
   //Get relative positions
   const int xRel =
@@ -136,7 +136,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
   if(cellToGoTo != playerCell) {
-    assert(xRel != 0 || yRel != 0);
+    if(xRel == 0 && yRel == 0) {throw logic_error("Expected non zero");}
   }
 
   char key = ' ';
@@ -156,7 +156,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     key = '0' + eng->dice.range(1, 9);
   }
 
-  assert(key >= '1' && key <= '9');
+//  assert(key >= '1' && key <= '9');
 
   eng->input->handleKeyPress(KeyboardReadReturnData(key));
 
@@ -182,7 +182,7 @@ void Bot::findPathToNextStairs() {
 
   const Pos stairPos = findNextStairs();
 
-  assert(stairPos != Pos(-1, -1));
+//  assert(stairPos != Pos(-1, -1));
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
@@ -199,6 +199,6 @@ void Bot::findPathToNextStairs() {
   }
   currentPath_ =
     eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
-  assert(currentPath_.size() > 0);
+//  assert(currentPath_.size() > 0);
 }
 

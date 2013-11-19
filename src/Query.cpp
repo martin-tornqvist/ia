@@ -86,7 +86,7 @@ void Query::waitForEscOrSpace() const {
   }
 }
 
-Pos Query::direction() const {
+Pos Query::dir() const {
   KeyboardReadReturnData d = eng->input->readKeysUntilFound();
 
   while(d.sdlKey_ != SDLK_RIGHT && d.sdlKey_ != SDLK_UP &&

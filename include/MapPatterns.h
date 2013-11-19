@@ -26,7 +26,7 @@ public:
                           vector<Pos>& awayFromWalls);
 
 private:
-  int getWalkBlockersInDirection(const Direction_t dir, const Pos pos);
+  int getWalkBlockersInDir(const Dir_t dir, const Pos pos);
 
   Engine* eng;
 

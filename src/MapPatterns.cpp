@@ -23,10 +23,10 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   for(unsigned int i = 0; i < positionCandidates.size(); i++) {
     const Pos pos = positionCandidates.at(i);
 
-    const int BLOCKERS_RIGHT = getWalkBlockersInDirection(directionRight, pos);
-    const int BLOCKERS_DOWN  = getWalkBlockersInDirection(directionDown, pos);
-    const int BLOCKERS_LEFT  = getWalkBlockersInDirection(directionLeft, pos);
-    const int BLOCKERS_UP    = getWalkBlockersInDirection(directionUp, pos);
+    const int BLOCKERS_RIGHT = getWalkBlockersInDir(dirRight, pos);
+    const int BLOCKERS_DOWN  = getWalkBlockersInDir(dirDown, pos);
+    const int BLOCKERS_LEFT  = getWalkBlockersInDir(dirLeft, pos);
+    const int BLOCKERS_UP    = getWalkBlockersInDir(dirUp, pos);
 
     const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 &&
                                       BLOCKERS_DOWN == 0 &&
@@ -65,12 +65,12 @@ void MapPatterns::setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   trace << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
-int MapPatterns::getWalkBlockersInDirection(
-  const Direction_t dir, const Pos pos) {
+int MapPatterns::getWalkBlockersInDir(
+  const Dir_t dir, const Pos pos) {
 
   int nrBlockers = 0;
   switch(dir) {
-    case directionRight: {
+    case dirRight: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
           eng->map->featuresStatic[pos.x + 1][pos.y + dy];
@@ -80,7 +80,7 @@ int MapPatterns::getWalkBlockersInDirection(
       }
     } break;
 
-    case directionDown: {
+    case dirDown: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
           eng->map->featuresStatic[pos.x + dx][pos.y + 1];
@@ -90,7 +90,7 @@ int MapPatterns::getWalkBlockersInDirection(
       }
     } break;
 
-    case directionLeft: {
+    case dirLeft: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
           eng->map->featuresStatic[pos.x - 1][pos.y + dy];
@@ -100,7 +100,7 @@ int MapPatterns::getWalkBlockersInDirection(
       }
     } break;
 
-    case directionUp: {
+    case dirUp: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
           eng->map->featuresStatic[pos.x + dx][pos.y - 1];
@@ -110,12 +110,12 @@ int MapPatterns::getWalkBlockersInDirection(
       }
     } break;
 
-    case directionDownLeft:
-    case directionDownRight:
-    case directionUpLeft:
-    case directionUpRight:
-    case directionCenter:
-    case endOfDirections: {} break;
+    case dirDownLeft:
+    case dirDownRight:
+    case dirUpLeft:
+    case dirUpRight:
+    case dirCenter:
+    case endOfDirs: {} break;
   }
   return nrBlockers;
 }

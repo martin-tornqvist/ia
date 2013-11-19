@@ -1,7 +1,5 @@
 #include "MapTests.h"
 
-#include <cassert>
-
 #include "Engine.h"
 #include "Map.h"
 #include "ActorPlayer.h"

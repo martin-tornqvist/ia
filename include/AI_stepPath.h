@@ -8,7 +8,8 @@ public:
   static bool action(Monster& monster, vector<Pos>* path) {
     if(monster.deadState == actorDeadState_alive) {
       if(path->empty() == false) {
-        monster.moveToCell(path->back());
+        monster.moveDir(
+          DirConverter(monster.eng).getDir(path->back()));
         return true;
       }
     }

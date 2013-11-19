@@ -20,7 +20,8 @@ public:
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
           engine->mapTests->makeMoveBlockerArray(&monster, blockers);
           if(blockers[newPos.x][newPos.y] == false) {
-            monster.moveToCell(newPos);
+            monster.moveDir(
+              DirConverter(engine).getDir(newPos));
             return true;
           } else {
             return false;

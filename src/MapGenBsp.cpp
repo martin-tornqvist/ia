@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <stdlib.h>
-#include <cassert>
 
 #include "Engine.h"
 #include "MapGen.h"
@@ -807,10 +806,10 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
     Region* const r2 = regions[c2.x][c2.y];
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
-      const Direction_t regionDir = c2.x > c1.x ? directionRight :
-                                    c2.x < c1.x ? directionLeft :
-                                    c2.y > c1.y ? directionDown :
-                                    directionUp;
+      const Dir_t regionDir = c2.x > c1.x ? dirRight :
+                                    c2.x < c1.x ? dirLeft :
+                                    c2.y > c1.y ? dirDown :
+                                    dirUp;
 
       MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
         *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
@@ -850,7 +849,7 @@ bool MapGenBsp::isAllRoomsConnected() {
 }
 
 
-bool MapGenBsp::isRegionFoundInCardinalDirection(
+bool MapGenBsp::isRegionFoundInCardinalDir(
   const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const {
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
@@ -1071,8 +1070,8 @@ void MapGenBsp::reshapeRoom(const Room& room) {
   }
 }
 
-int MapGenBsp::getNrStepsInDirectionUntilWallFound(
-  Pos c, const Direction_t dir) const {
+int MapGenBsp::getNrStepsInDirUntilWallFound(
+  Pos c, const Dir_t dir) const {
 
   int stepsTaken = 0;
   bool done = false;
@@ -1084,10 +1083,10 @@ int MapGenBsp::getNrStepsInDirectionUntilWallFound(
       return stepsTaken;
     }
     c +=
-      dir == directionRight ? Pos(1, 0) :
-      dir == directionUp    ? Pos(0, -1) :
-      dir == directionLeft  ? Pos(-1, 0) :
-      dir == directionDown  ? Pos(0, 1) :
+      dir == dirRight ? Pos(1, 0) :
+      dir == dirUp    ? Pos(0, -1) :
+      dir == dirLeft  ? Pos(-1, 0) :
+      dir == dirDown  ? Pos(0, 1) :
       Pos(0, 0);
     stepsTaken++;
   }

@@ -1,6 +1,5 @@
 #include "FeatureTrap.h"
 
-#include <cassert>
 #include <algorithm>
 
 #include "Engine.h"
@@ -24,19 +23,25 @@ Trap::Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
   isHidden_(true) {
 
-  assert(spawnData->trapType_ != endOfTraps);
+  if(spawnData->trapType_ == endOfTraps) {throw logic_error("Bad trap type");}
+  if(mimicFeature_ == NULL) {
+    throw logic_error("Failed to set feature to mimic");
+  }
 
   if(spawnData->trapType_ == trap_any) {
     setSpecificTrapFromId(Trap_t(eng->dice.range(0, endOfTraps - 1)));
   } else {
     setSpecificTrapFromId(spawnData->trapType_);
   }
-  assert(specificTrap_ != NULL);
-  assert(mimicFeature_ != NULL);
+  if(specificTrap_ == NULL) {
+    throw logic_error("Failed to create specific trap");
+  }
 }
 
 Trap::~Trap() {
-  assert(specificTrap_ != NULL);
+  if(specificTrap_ == NULL) {
+    throw logic_error("Expected trap to have specific trap");
+  }
   delete specificTrap_;
 }
 
@@ -206,22 +211,26 @@ void Trap::playerTrySpotHidden() {
 
 string Trap::getDescription(const bool DEFINITE_ARTICLE) const {
   if(isHidden_) {
-    return DEFINITE_ARTICLE == true ? mimicFeature_->name_the : mimicFeature_->name_a;
+    return DEFINITE_ARTICLE == true ? mimicFeature_->name_the :
+           mimicFeature_->name_a;
   } else {
     return "a " + specificTrap_->getTrapSpecificTitle();
   }
 }
 
 SDL_Color Trap::getColor() const {
-  return isHidden_ ? mimicFeature_->color : specificTrap_->getTrapSpecificColor();
+  return isHidden_ ? mimicFeature_->color :
+         specificTrap_->getTrapSpecificColor();
 }
 
 char Trap::getGlyph() const {
-  return isHidden_ ? mimicFeature_->glyph : specificTrap_->getTrapSpecificGlyph();
+  return isHidden_ ? mimicFeature_->glyph :
+         specificTrap_->getTrapSpecificGlyph();
 }
 
 Tile_t Trap::getTile() const {
-  return isHidden_ ? mimicFeature_->tile : specificTrap_->getTrapSpecificTile();
+  return isHidden_ ? mimicFeature_->tile :
+         specificTrap_->getTrapSpecificTile();
 }
 
 bool Trap::canHaveCorpse() const {return isHidden_;}
@@ -229,10 +238,10 @@ bool Trap::canHaveBlood() const {return isHidden_;}
 bool Trap::canHaveGore() const {return isHidden_;}
 bool Trap::canHaveItem() const {return isHidden_;}
 
-Pos Trap::actorTryLeave(Actor& actor, const Pos& pos, const Pos& dest) {
+Dir_t Trap::actorTryLeave(Actor& actor, const Pos& pos,
+                          const Dir_t dir) {
   trace << "Trap::actorTryLeave()" << endl;
-  assert(specificTrap_ != NULL);
-  return specificTrap_->specificTrapActorTryLeave(actor, pos, dest);
+  return specificTrap_->specificTrapActorTryLeave(actor, pos, dir);
 }
 
 MaterialType_t Trap::getMaterialType() const {
@@ -730,8 +739,8 @@ void TrapSpiderWeb::trapSpecificTrigger(
   traceHi << "TrapSpiderWeb::trapSpecificTrigger() [DONE]" << endl;
 }
 
-Pos TrapSpiderWeb::specificTrapActorTryLeave(
-  Actor& actor, const Pos& pos, const Pos& dest) {
+Dir_t TrapSpiderWeb::specificTrapActorTryLeave(
+  Actor& actor, const Pos& pos, const Dir_t dir) {
 
   trace << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 
@@ -771,7 +780,7 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
         }
         eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       }
-      return pos;
+      return dirCenter;
     } else {
       if(IS_PLAYER) {
         eng->log->addMsg("I struggle to break free.");
@@ -779,9 +788,9 @@ Pos TrapSpiderWeb::specificTrapActorTryLeave(
         eng->log->addMsg(actorName + " struggles to break free.");
       }
     }
-    return pos;
+    return dirCenter;
   } else {
     trace << "TrapSpiderWeb: Not holding actor" << endl;
   }
-  return dest;
+  return dir;
 }

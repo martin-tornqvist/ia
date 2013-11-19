@@ -1,6 +1,5 @@
-#include <cassert>
-
 #include "Engine.h"
+
 #include "MainMenu.h"
 #include "Renderer.h"
 #include "InventoryHandler.h"

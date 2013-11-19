@@ -149,7 +149,7 @@ public:
 
   void tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE);
 
-  void changeMovePos(const Pos& actorPos, Pos& movePos);
+  void changeMoveDir(const Pos& actorPos, Dir_t& dir);
   bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
@@ -272,9 +272,9 @@ public:
     (void)ability;
     return 0;
   }
-  virtual void changeMovePos(const Pos& actorPos, Pos& movePos) {
+  virtual void changeMoveDir(const Pos& actorPos, Dir_t& dir) {
     (void)actorPos;
-    (void)movePos;
+    (void)dir;
   }
   virtual bool tryResistOtherProp(const PropId_t id) {
     (void)id;
@@ -525,7 +525,7 @@ public:
 
   ~PropConfused() {}
 
-  void changeMovePos(const Pos& actorPos, Pos& movePos);
+  void changeMoveDir(const Pos& actorPos, Dir_t& dir);
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
@@ -549,7 +549,7 @@ public:
 
   string getNameShort() {return "Nailed(" + toString(nrSpikes_) + ")";}
 
-  void changeMovePos(const Pos& actorPos, Pos& movePos);
+  void changeMoveDir(const Pos& actorPos, Dir_t& dir);
 
   void more() {nrSpikes_++;}
 
@@ -715,7 +715,7 @@ public:
   void onStart();
   void onEnd();
 
-  void changeMovePos(const Pos& actorPos, Pos& movePos);
+  void changeMoveDir(const Pos& actorPos, Dir_t& dir);
 
   bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE);

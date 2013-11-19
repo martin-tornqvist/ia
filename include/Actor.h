@@ -55,6 +55,8 @@ public:
   virtual void onActorTurn() {}
   virtual void actorSpecificOnStandardTurn() {}
 
+  virtual void moveDir(Dir_t dir) = 0;
+
   virtual void updateColor();
 
   //Function taking into account FOV, invisibility, status, etc
@@ -90,9 +92,9 @@ public:
     (void)light;
   }
 
-  Engine* eng;
-
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
+
+  Engine* eng;
 
 protected:
   //TODO Try to get rid of these friend declarations

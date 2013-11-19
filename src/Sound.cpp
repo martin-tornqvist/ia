@@ -53,16 +53,16 @@ void SoundEmitter::emitSound(Sound snd) {
           snd.clearMsg();
         }
 
-        const Direction_t directionToOrigin =
-          getPlayerToOriginDirection(
+        const Dir_t dirToOrigin =
+          getPlayerToOriginDir(
             FLOOD_VALUE_AT_ACTOR, origin, floodFill);
 
         if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(directionToOrigin != endOfDirections) {
+          if(dirToOrigin != endOfDirs) {
             const string dirStr =
-              eng->directionConverter->getCompassDirectionName(
-                directionToOrigin);
+              eng->dirConverter->getCompassDirName(
+                dirToOrigin);
             snd.addString("(" + dirStr + ")");
           }
           nrSoundMsgPrintedCurTurn_++;
@@ -74,7 +74,7 @@ void SoundEmitter::emitSound(Sound snd) {
           (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 
         eng->player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
-                               directionToOrigin, PERCENT_DISTANCE);
+                               dirToOrigin, PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->hearSound(snd);
@@ -83,12 +83,12 @@ void SoundEmitter::emitSound(Sound snd) {
   }
 }
 
-Direction_t SoundEmitter::getPlayerToOriginDirection(
+Dir_t SoundEmitter::getPlayerToOriginDir(
   const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   const Pos& playerPos = eng->player->pos;
-  Direction_t sourceDirection = endOfDirections;
+  Dir_t sourceDir = endOfDirs;
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
@@ -98,23 +98,23 @@ Direction_t SoundEmitter::getPlayerToOriginDirection(
 
       //If player is next to origin, simply return the direction checked in.
       if(checkedPos == origin) {
-        return eng->directionConverter->getDirection(offset);
+        return eng->dirConverter->getDir(offset);
       } else {
         //Origin is further away
         const int currentValue = floodFill[checkedPos.x][checkedPos.y];
         //If current value is less than players,
         //this is the direction of the sound.
         if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
-          sourceDirection = eng->directionConverter->getDirection(offset);
+          sourceDir = eng->dirConverter->getDir(offset);
           //If cardinal direction, stop search
           //(To give priority to cardinal directions)
           if(dx == 0 || dy == 0) {
-            return sourceDirection;
+            return sourceDir;
           }
         }
       }
     }
   }
-  return sourceDirection;
+  return sourceDir;
 }
 

@@ -50,7 +50,7 @@ public:
   ~MapGenUtilCorridorBuilder() {}
 
   void buildZCorridorBetweenRooms(
-    const Room& room1, const Room& room2, Direction_t cardinalDirToTravel,
+    const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
     bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS] = NULL);
 
 private:
@@ -97,7 +97,7 @@ private:
 
   void coverAreaWithFeature(const Rect& area, const Feature_t feature);
 
-  int getNrStepsInDirectionUntilWallFound(Pos c, const Direction_t dir) const;
+  int getNrStepsInDirUntilWallFound(Pos c, const Dir_t dir) const;
 
   bool isAllRoomsConnected();
 
@@ -133,7 +133,7 @@ private:
 
 //  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToFill);
 
-  bool isRegionFoundInCardinalDirection(
+  bool isRegionFoundInCardinalDir(
     const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
   bool isAreaFree(

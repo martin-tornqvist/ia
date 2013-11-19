@@ -37,7 +37,7 @@ public:
 
   void updateFov();
 
-  void moveDirection(const Pos& dir);
+  void moveDir(Dir_t dir);
 
   void actorSpecific_init() {}
 
@@ -48,7 +48,7 @@ public:
   void actorSpecificOnStandardTurn();
 
   void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
-                 const Direction_t directionToOrigin,
+                 const Dir_t dirToOrigin,
                  const int PERCENT_AUDIBLE_DISTANCE);
 
   void explosiveThrown();

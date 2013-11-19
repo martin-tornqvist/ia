@@ -1128,12 +1128,12 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
   }
 }
 
-void PropHandler::changeMovePos(const Pos& actorPos, Pos& movePos) {
+void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
-    propList.at(i)->changeMovePos(actorPos, movePos);
+    propList.at(i)->changeMoveDir(actorPos, dir);
   }
 }
 
@@ -1403,8 +1403,8 @@ void PropWound::onMore() {
   }
 }
 
-void PropNailed::changeMovePos(const Pos& actorPos, Pos& movePos) {
-  if(actorPos != movePos) {
+void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+  if(dir != dirCenter) {
 
     if(owningActor_ == eng->player) {
       eng->log->addMsg(
@@ -1437,7 +1437,7 @@ void PropNailed::changeMovePos(const Pos& actorPos, Pos& movePos) {
       }
     }
 
-    movePos = actorPos;
+    dir = dirCenter;
   }
 }
 
@@ -1458,8 +1458,8 @@ bool PropConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
-  if(actorPos != movePos) {
+void PropConfused::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+  if(dir != dirCenter) {
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArray(owningActor_, blockers);
@@ -1472,7 +1472,7 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
           if(blockers[c.x][c.y] == false) {
-            movePos = actorPos + delta;
+            dir = DirConverter(eng).getDir(delta);
           }
         }
         triesLeft--;
@@ -1481,41 +1481,38 @@ void PropConfused::changeMovePos(const Pos& actorPos, Pos& movePos) {
   }
 }
 
-void PropFrenzied::changeMovePos(const Pos& actorPos, Pos& movePos) {
-  if(actorPos != movePos) {
+void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+  vector<Actor*> spotedEnemies;
+  owningActor_->getSpotedEnemies(spotedEnemies);
 
-    vector<Actor*> spotedEnemies;
-    owningActor_->getSpotedEnemies(spotedEnemies);
+  if(spotedEnemies.empty()) {
+    return;
+  }
 
-    if(spotedEnemies.empty()) {
-      return;
-    }
+  vector<Pos> spotedEnemiesPositions;
+  spotedEnemiesPositions.resize(0);
+  for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
+    spotedEnemiesPositions.push_back(spotedEnemies.at(i)->pos);
+  }
+  sort(spotedEnemiesPositions.begin(), spotedEnemiesPositions.end(),
+       IsCloserToOrigin(actorPos, eng));
 
-    vector<Pos> spotedEnemiesPositions;
-    spotedEnemiesPositions.resize(0);
-    for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      spotedEnemiesPositions.push_back(spotedEnemies.at(i)->pos);
-    }
-    sort(spotedEnemiesPositions.begin(), spotedEnemiesPositions.end(),
-         IsCloserToOrigin(actorPos, eng));
+  const Pos& closestEnemyPos = spotedEnemiesPositions.at(0);
 
-    const Pos& closestEnemyPos = spotedEnemiesPositions.at(0);
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(owningActor_, blockers);
 
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayFeaturesOnly(owningActor_, blockers);
+  vector<Pos> line;
+  eng->mapTests->getLine(actorPos, closestEnemyPos, true, 999, line);
 
-    vector<Pos> line;
-    eng->mapTests->getLine(actorPos, closestEnemyPos, true, 999, line);
-
-    if(line.size() > 1) {
-      for(unsigned int i = 0; i < line.size(); i++) {
-        const Pos& pos = line.at(i);
-        if(blockers[pos.x][pos.y]) {
-          return;
-        }
+  if(line.size() > 1) {
+    for(unsigned int i = 0; i < line.size(); i++) {
+      const Pos& pos = line.at(i);
+      if(blockers[pos.x][pos.y]) {
+        return;
       }
-      movePos = line.at(1); //First step towards nearest enemy
     }
+    dir = DirConverter(eng).getDir(line.at(1) - actorPos);
   }
 }
 

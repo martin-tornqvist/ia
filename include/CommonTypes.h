@@ -245,17 +245,17 @@ enum SpawnRate_t {
   spawnRare, spawnCommon, spawnVeryCommon
 };
 
-enum Direction_t {
-  directionDownLeft   = 1,
-  directionDown       = 2,
-  directionDownRight  = 3,
-  directionLeft       = 4,
-  directionCenter     = 5,
-  directionRight      = 6,
-  directionUpLeft     = 7,
-  directionUp         = 8,
-  directionUpRight    = 9,
-  endOfDirections
+enum Dir_t {
+  dirDownLeft   = 1,
+  dirDown       = 2,
+  dirDownRight  = 3,
+  dirLeft       = 4,
+  dirCenter     = 5,
+  dirRight      = 6,
+  dirUpLeft     = 7,
+  dirUp         = 8,
+  dirUpRight    = 9,
+  endOfDirs
 };
 
 //enum EntityStrength_t {

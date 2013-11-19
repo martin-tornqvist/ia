@@ -207,7 +207,7 @@ void Engine::initGame() {
   disarm = new Disarm(this);
   gods = new Gods(this);
   credits = new Credits(this);
-  directionConverter = new DirectionConverter(this);
+  dirConverter = new DirConverter(this);
 
   trace << "Engine::initGame() [DONE]" << endl;
 }
@@ -285,7 +285,7 @@ void Engine::cleanupGame() {
   delete gods;
   delete credits;
   delete propDataHandler;
-  delete directionConverter;
+  delete dirConverter;
 
   delete marker;
 

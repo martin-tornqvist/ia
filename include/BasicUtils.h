@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <math.h>
+#include <stdexcept>
 
 #include "CommonData.h"
 #include "Actor.h"
@@ -159,76 +160,83 @@ private:
   MTRand mtRand_;
 };
 
-class DirectionConverter {
+class DirConverter {
 public:
-  DirectionConverter(Engine* const engine) : eng(engine) {
-    compassDirectonNames[0][0] = "NW";
-    compassDirectonNames[0][1] = "W";
-    compassDirectonNames[0][2] = "SW";
-    compassDirectonNames[1][0] = "N";
-    compassDirectonNames[1][1] = "";
-    compassDirectonNames[1][2] = "S";
-    compassDirectonNames[2][0] = "NE";
-    compassDirectonNames[2][1] = "E";
-    compassDirectonNames[2][2] = "SE";
+  DirConverter(Engine* const engine) : eng(engine) {
+    compassDirNames[0][0] = "NW";
+    compassDirNames[0][1] = "W";
+    compassDirNames[0][2] = "SW";
+    compassDirNames[1][0] = "N";
+    compassDirNames[1][1] = "";
+    compassDirNames[1][2] = "S";
+    compassDirNames[2][0] = "NE";
+    compassDirNames[2][1] = "E";
+    compassDirNames[2][2] = "SE";
   }
 
-  ~DirectionConverter() {}
+  ~DirConverter() {}
 
-  Direction_t getDirection(const Pos& offset) const {
+  Dir_t getDir(const Pos& offset) const {
+    if(offset.x < -1 || offset.y < -1 || offset.x > 1 || offset.y > 1) {
+      throw logic_error("Expected x & y [-1, 1]");
+    }
+
     if(offset.y == -1) {
-      return offset.x == -1 ? directionUpLeft :
-             offset.x == 0 ? directionUp :
-             offset.x == 1 ? directionUpRight :
-             endOfDirections;
+      return offset.x == -1 ? dirUpLeft :
+             offset.x == 0 ? dirUp :
+             offset.x == 1 ? dirUpRight :
+             endOfDirs;
     }
 
     if(offset.y == 0) {
-      return offset.x == -1 ? directionLeft :
-             offset.x == 0 ? directionCenter :
-             offset.x == 1 ? directionRight :
-             endOfDirections;
+      return offset.x == -1 ? dirLeft :
+             offset.x == 0 ? dirCenter :
+             offset.x == 1 ? dirRight :
+             endOfDirs;
     }
     if(offset.y == 1) {
-      return offset.x == -1 ? directionDownLeft :
-             offset.x == 0 ? directionDown :
-             offset.x == 1 ? directionDownRight :
-             endOfDirections;
+      return offset.x == -1 ? dirDownLeft :
+             offset.x == 0 ? dirDown :
+             offset.x == 1 ? dirDownRight :
+             endOfDirs;
     }
-    return endOfDirections;
+    return endOfDirs;
   }
 
-  Pos getOffset(const Direction_t direction) const {
-    switch(direction) {
-      case directionDownLeft:   return Pos(-1, 1);
-      case directionDown:       return Pos(0, 1);
-      case directionDownRight:  return Pos(1, 1);
-      case directionLeft:       return Pos(-1, 0);
-      case directionCenter:     return Pos(0, 0);
-      case directionRight:      return Pos(1, 0);
-      case directionUpLeft:     return Pos(-1, -1);
-      case directionUp:         return Pos(0, -1);
-      case directionUpRight:    return Pos(1, -1);
-      case endOfDirections:     return Pos(999, 999);
+  Pos getOffset(const Dir_t dir) const {
+    if(dir == endOfDirs) {
+      throw logic_error("Invalid direction");
     }
-    return Pos(999, 999);
+    switch(dir) {
+      case dirDownLeft:   return Pos(-1, 1);
+      case dirDown:       return Pos(0, 1);
+      case dirDownRight:  return Pos(1, 1);
+      case dirLeft:       return Pos(-1, 0);
+      case dirCenter:     return Pos(0, 0);
+      case dirRight:      return Pos(1, 0);
+      case dirUpLeft:     return Pos(-1, -1);
+      case dirUp:         return Pos(0, -1);
+      case dirUpRight:    return Pos(1, -1);
+      case endOfDirs:     return Pos(0, 0);
+    }
+    return Pos(0, 0);
   }
 
-  string getCompassDirectionName(const Direction_t direction) const {
-    const Pos& offset = getOffset(direction);
-    return compassDirectonNames[offset.x + 1][offset.y + 1];
+  string getCompassDirName(const Dir_t dir) const {
+    const Pos& offset = getOffset(dir);
+    return compassDirNames[offset.x + 1][offset.y + 1];
   }
 
-  string getCompassDirectionName(const Pos& offset) const {
-    return compassDirectonNames[offset.x + 1][offset.y + 1];
+  string getCompassDirName(const Pos& offset) const {
+    return compassDirNames[offset.x + 1][offset.y + 1];
   }
 
 private:
-  DirectionConverter() : eng(NULL) {}
+  DirConverter() : eng(NULL) {}
 
   Engine* const eng;
 
-  string compassDirectonNames[3][3];
+  string compassDirNames[3][3];
 };
 
 #endif

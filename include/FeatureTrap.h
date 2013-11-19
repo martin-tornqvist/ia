@@ -52,7 +52,8 @@ public:
 
   MaterialType_t getMaterialType() const;
 
-  Pos actorTryLeave(Actor& actor, const Pos& pos, const Pos& dest);
+  Dir_t actorTryLeave(
+    Actor& actor, const Pos& pos, const Dir_t dir);
 
   Trap_t getTrapType() const;
 
@@ -86,15 +87,16 @@ protected:
   SpecificTrapBase() {}
   virtual ~SpecificTrapBase() {}
 
-  virtual Pos specificTrapActorTryLeave(Actor& actor, const Pos& pos,
-                                        const Pos& dest) {
+
+  virtual Dir_t specificTrapActorTryLeave(
+    Actor& actor, const Pos& pos, const Dir_t dir) {
     (void)actor;
     (void)pos;
-    return dest;
+    return dir;
   }
 
-  virtual void trapSpecificTrigger(Actor& actor,
-                                   const AbilityRollResult_t dodgeResult) = 0;
+  virtual void trapSpecificTrigger(
+    Actor& actor, const AbilityRollResult_t dodgeResult) = 0;
   virtual string getTrapSpecificTitle() const = 0;
   virtual SDL_Color getTrapSpecificColor() const = 0;
   virtual char getTrapSpecificGlyph() const = 0;
@@ -273,8 +275,8 @@ private:
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
-  Pos specificTrapActorTryLeave(Actor& actor, const Pos& pos,
-                                const Pos& dest);
+  Dir_t specificTrapActorTryLeave(
+    Actor& actor, const Pos& pos, const Dir_t dir);
 
   bool isHolding() const {return isHoldingActor;}
 

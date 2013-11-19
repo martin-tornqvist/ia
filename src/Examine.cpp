@@ -12,7 +12,7 @@
 void Examine::playerExamine() const {
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  Pos examineInPos = eng->player->pos + eng->query->direction();
+  Pos examineInPos = eng->player->pos + eng->query->dir();
   eng->log->clearLog();
 
   Feature* const f = eng->map->featuresStatic[examineInPos.x][examineInPos.y];

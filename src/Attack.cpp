@@ -1,7 +1,5 @@
 #include "Attack.h"
 
-#include <cassert>
-
 #include "Engine.h"
 
 #include "Item.h"

@@ -1027,7 +1027,7 @@ void Player::explosiveThrown() {
 }
 
 void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
-                       const Direction_t directionToOrigin,
+                       const Dir_t dirToOrigin,
                        const int PERCENT_AUDIBLE_DISTANCE) {
   const Sfx_t sfx = snd.getSfx();
 
@@ -1041,29 +1041,30 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
   if(IS_MSG_EMPTY == false || IS_ORIGIN_SEEN_BY_PLAYER) {
-    eng->audio->playFromDirection(
-      sfx, directionToOrigin, PERCENT_AUDIBLE_DISTANCE);
+    eng->audio->playFromDir(
+      sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
   }
 }
 
-void Player::moveDirection(const Pos& dir) {
+void Player::moveDir(Dir_t dir) {
   if(deadState == actorDeadState_alive) {
 
-    Pos dest = pos + dir;
-    propHandler_->changeMovePos(pos, dest);
+    propHandler_->changeMoveDir(pos, dir);
 
     //Trap affects leaving?
-    if(dest != pos) {
+    if(dir != dirCenter) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
-        dest = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dest);
+        dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dir);
       }
     }
 
     bool isFreeTurn = false;;
 
-    if(dest != pos) {
+    const Pos dest(pos + DirConverter(eng).getOffset(dir));
+
+    if(pos != Pos(0, 0)) {
       //Attack?
       Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
       if(actorAtDest != NULL) {
@@ -1173,7 +1174,8 @@ void Player::autoMelee() {
   if(target != NULL) {
     if(eng->mapTests->isCellsAdj(pos, target->pos, false)) {
       if(checkIfSeeActor(*target, NULL)) {
-        moveDirection(target->pos - pos);
+        moveDir(
+          DirConverter(eng).getDir(target->pos - pos));
         return;
       }
     }
@@ -1183,11 +1185,13 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
-        const Actor* const actor = eng->mapTests->getActorAtPos(pos + Pos(dx, dy));
+        const Actor* const actor =
+          eng->mapTests->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(checkIfSeeActor(*actor, NULL)) {
             target = actor;
-            moveDirection(Pos(dx, dy));
+            moveDir(
+              DirConverter(eng).getDir(Pos(dx, dy)));
             return;
           }
         }

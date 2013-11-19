@@ -65,7 +65,7 @@ public:
 private:
   int nrSoundMsgPrintedCurTurn_;
 
-  Direction_t getPlayerToOriginDirection(
+  Dir_t getPlayerToOriginDir(
     const int FLOOD_VALUE_AT_PLAYER,
     const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
 

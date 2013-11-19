@@ -1,6 +1,5 @@
 #include "PlayerBonuses.h"
 
-#include <cassert>
 #include <algorithm>
 
 #include "Engine.h"

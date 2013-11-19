@@ -49,8 +49,8 @@ public:
                   isOtherAdjWithoutVision) {
 
                   // Get a list of neighbouring free cells
-                  vector<Pos> candidates =
-                    getMoveCandidates(monster, engine);
+                  vector<Pos> candidates;
+                  getMoveCandidates(monster, candidates, engine);
 
                   // Sort the list by closeness to player
                   IsCloserToOrigin sorter(engine->player->pos, engine);
@@ -80,7 +80,8 @@ public:
                     }
 
                     if(isGoodCandidateFound) {
-                      monster.moveToCell(candidates.at(ii));
+                      monster.moveDir(
+                        DirConverter(engine).getDir(candidates.at(ii)));
                       return true;
                     }
                   }
@@ -111,18 +112,20 @@ private:
     return false;
   }
 
-  //Returns all the position around the acting monster, that
-  //is not occupied by landscape, actors or blocking features.
-  static vector<Pos> getMoveCandidates(Monster& self, Engine* engine) {
-    vector<Pos> ret;
+  //Returns all free positions around the acting monster that is further
+  //from the player than the monster's current position
+  static void getMoveCandidates(Monster& self, vector<Pos>& dirsToMake,
+                                Engine* eng) {
 
-    const int PLAYER_X = engine->player->pos.x;
-    const int PLAYER_Y = engine->player->pos.y;
+    dirsToMake.resize(0);
+
+    const int PLAYER_X = eng->player->pos.x;
+    const int PLAYER_Y = eng->player->pos.y;
     const int OLD_X = self.pos.x;
     const int OLD_Y = self.pos.y;
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    engine->mapTests->makeMoveBlockerArray(&self, blockers);
+    eng->mapTests->makeMoveBlockerArray(&self, blockers);
 
     for(int x = -1; x <= 1; x++) {
       for(int y = -1; y <= 1; y++) {
@@ -130,21 +133,18 @@ private:
           const int NEW_X = OLD_X + x;
           const int NEW_Y = OLD_Y + y;
           const int DIST_CUR =
-            engine->basicUtils->chebyshevDist(
-              OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
+            eng->basicUtils->chebyshevDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
           const int DIST_NEW =
-            engine->basicUtils->chebyshevDist(
-              NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
+            eng->basicUtils->chebyshevDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
           if(DIST_NEW <= DIST_CUR) {
             if(blockers[NEW_X][NEW_Y] == false) {
-              ret.push_back(Pos(NEW_X, NEW_Y));
+              dirsToMake.push_back(Pos(NEW_X, NEW_Y));
             }
           }
         }
       }
     }
-    return ret;
   }
 
   /*

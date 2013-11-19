@@ -97,7 +97,7 @@ class Disarm;
 class Gods;
 class Credits;
 class PropDataHandler;
-class DirectionConverter;
+class DirConverter;
 class SdlWrapper;
 
 class Player;
@@ -155,7 +155,7 @@ public:
   Reload* reload;
   BasicUtils* basicUtils;
   Dice dice;
-  DirectionConverter* directionConverter;
+  DirConverter* dirConverter;
   MapTests* mapTests;
   Gore* gore;
   Manual* manual;

@@ -12,7 +12,7 @@ public:
 
   bool yesOrNo() const;
 
-  Pos direction() const;
+  Pos dir() const;
 
   void waitForEscOrSpace() const;
 

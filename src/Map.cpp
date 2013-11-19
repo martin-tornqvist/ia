@@ -1,7 +1,5 @@
 #include "Map.h"
 
-#include <cassert>
-
 #include "Engine.h"
 #include "Feature.h"
 #include "FeatureFactory.h"
@@ -16,9 +14,10 @@ using namespace std;
 Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
+      //Note: FeatureFactory cannot be used at this point, since the
+      //feature array is not yet initialized
       featuresStatic[x][y] =
         new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
-      assert(featuresStatic[x][y]->getId() == feature_stoneWall);
     }
   }
 

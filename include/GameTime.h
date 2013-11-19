@@ -2,7 +2,6 @@
 #define GAME_TIME_H
 
 #include <vector>
-#include <stdexcept>
 
 #include "Feature.h"
 #include "ActorData.h"

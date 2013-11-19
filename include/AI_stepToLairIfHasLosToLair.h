@@ -24,7 +24,8 @@ public:
         if(blockers[newPos.x][newPos.y]) {
           return false;
         } else {
-          monster.moveToCell(newPos);
+          monster.moveDir(
+            DirConverter(engine).getDir(newPos));
           return true;
         }
       }
