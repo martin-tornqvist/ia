@@ -152,7 +152,7 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
           monsterName + " is struck by a roaring blast!", clrMessageGood);
         spotedEnemies.at(i)->getPropHandler()->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 1));
-        spotedEnemies.at(i)->hit(eng->dice(1, 8), dmgType_physical);
+        spotedEnemies.at(i)->hit(eng->dice(1, 8), dmgType_physical, true);
         Sound snd("I hear a roaring blast",
                   endOfSfx, true, spotedEnemies.at(i)->pos, true, true);
         eng->soundEmitter->emitSound(snd);
@@ -165,7 +165,7 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
       vector<Pos>(1, eng->player->pos), clrRedLgt);
     eng->player->getPropHandler()->tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
-    eng->player->hit(eng->dice(1, 8), dmgType_physical);
+    eng->player->hit(eng->dice(1, 8), dmgType_physical, true);
     Sound snd("", endOfSfx, true, eng->player->pos, true, true);
     eng->soundEmitter->emitSound(snd);
     return SpellCastRetData(false);
@@ -492,7 +492,7 @@ bool SpellMthPower::doSpecialAction(Engine* const eng) const {
         const string monsterName = spotedEnemies.at(i)->getNameThe();
         eng->log->addMsg(
           monsterName + " is crushed by an unseen force!", clrMessageGood);
-        spotedEnemies.at(i)->hit(25, dmgType_physical);
+        spotedEnemies.at(i)->hit(25, dmgType_physical, true);
       }
 
       eng->renderer->drawMapAndInterface(true);

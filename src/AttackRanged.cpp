@@ -116,8 +116,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
       Projectile* const curProj = projectiles.at(p);
 
-      //All the following collision checks etc are only made if the projectiles current path element
-      //corresponds to an element in the real path vector
+      //All the following collision checks etc are only made if the projectiles
+      //current path element corresponds to an element in the real path vector
       if(
         projectilePathElement >= 1 &&
         projectilePathElement < int(projectilePath.size()) &&
@@ -176,7 +176,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
               const bool DIED = curProj->attackData->currentDefender->hit(
                                   curProj->attackData->dmg,
-                                  wpn.getData().rangedDmgType);
+                                  wpn.getData().rangedDmgType, true);
               if(DIED == false) {
                 // Aply weapon hit properties
                 PropHandler* const defenderPropHandler =

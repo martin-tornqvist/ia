@@ -23,7 +23,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   if(data.isEtherealDefenderMissed == false) {
     if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
       const bool IS_DEFENDER_KILLED =
-        data.currentDefender->hit(data.dmg, wpn.getData().meleeDmgType);
+        data.currentDefender->hit(data.dmg, wpn.getData().meleeDmgType, true);
 
       if(IS_DEFENDER_KILLED == false) {
         data.currentDefender->getPropHandler()->tryApplyPropFromWpn(wpn, true);

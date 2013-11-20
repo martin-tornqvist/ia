@@ -122,13 +122,13 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
 
   values[origin.x][origin.y] = true;
 
-  const int checkX_end = origin.x + FOV_STANDARD_RADI_INT;
-  const int checkY_end = origin.y + FOV_STANDARD_RADI_INT;
+  const int checkX_end = min(MAP_X_CELLS - 1, origin.x + FOV_STANDARD_RADI_INT);
+  const int checkY_end = min(MAP_Y_CELLS - 1, origin.y + FOV_STANDARD_RADI_INT);
 
-  checkX = origin.x - FOV_STANDARD_RADI_INT;
+  checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
 
   while(checkX <= checkX_end) {
-    checkY = origin.y - FOV_STANDARD_RADI_INT;
+    checkY = max(0, origin.y - FOV_STANDARD_RADI_INT);
 
     while(checkY <= checkY_end) {
       checkOneCellOfMany(obstructions, Pos(checkX, checkY), origin, values,
@@ -147,13 +147,13 @@ void Fov::runPlayerFov(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
 
   eng->map->playerVision[origin.x][origin.y] = true;
 
-  const int checkX_end = origin.x + FOV_STANDARD_RADI_INT;
-  const int checkY_end = origin.y + FOV_STANDARD_RADI_INT;
+  const int checkX_end = min(MAP_X_CELLS - 1, origin.x + FOV_STANDARD_RADI_INT);
+  const int checkY_end = min(MAP_Y_CELLS - 1, origin.y + FOV_STANDARD_RADI_INT);
 
-  checkX = origin.x - FOV_STANDARD_RADI_INT;
+  checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
 
   while(checkX <= checkX_end) {
-    checkY = origin.y - FOV_STANDARD_RADI_INT;
+    checkY = max(0, origin.y - FOV_STANDARD_RADI_INT);
 
     while(checkY <= checkY_end) {
       checkOneCellOfMany(obstructions, Pos(checkX, checkY), origin,

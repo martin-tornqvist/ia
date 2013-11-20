@@ -45,11 +45,11 @@ TEST(RollDice) {
 }
 
 TEST(ConstrainValInRange) {
-  int val = getValConstrInRange(5, 9, 10);
+  int val = getConstrInRange(5, 9, 10);
   CHECK_EQUAL(val, 9);
-  val = getValConstrInRange(5, 11, 10);
+  val = getConstrInRange(5, 11, 10);
   CHECK_EQUAL(val, 10);
-  val = getValConstrInRange(5, 4, 10);
+  val = getConstrInRange(5, 4, 10);
   CHECK_EQUAL(val, 5);
 
   constrInRange(2, val, 8);
@@ -60,7 +60,7 @@ TEST(ConstrainValInRange) {
   CHECK_EQUAL(val, 18);
 
   //Test faulty paramters
-  val = getValConstrInRange(9, 4, 2); //Min > Max -> return -1
+  val = getConstrInRange(9, 4, 2); //Min > Max -> return -1
   CHECK_EQUAL(val, -1);
   val = 10;
   constrInRange(20, val, 3); //Min > Max -> do nothing

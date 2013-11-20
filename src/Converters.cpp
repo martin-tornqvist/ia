@@ -25,7 +25,7 @@ void constrInRange(const int MIN, int& val, const int MAX) {
   }
 }
 
-int getValConstrInRange(const int MIN, const int VAL, const int MAX) {
+int getConstrInRange(const int MIN, const int VAL, const int MAX) {
   if(MAX < MIN) {
     return -1;
   }

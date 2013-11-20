@@ -381,10 +381,10 @@ void PopulateMonsters::makeSortedFreeCellsVector(
   vectorToFill.resize(0);
 
   const int RADI = 10;
-  const int X0 = getValConstrInRange(1, origin.x - RADI, MAP_X_CELLS - 2);
-  const int Y0 = getValConstrInRange(1, origin.y - RADI, MAP_Y_CELLS - 2);
-  const int X1 = getValConstrInRange(1, origin.x + RADI, MAP_X_CELLS - 2);
-  const int Y1 = getValConstrInRange(1, origin.y + RADI, MAP_Y_CELLS - 2);
+  const int X0 = getConstrInRange(1, origin.x - RADI, MAP_X_CELLS - 2);
+  const int Y0 = getConstrInRange(1, origin.y - RADI, MAP_Y_CELLS - 2);
+  const int X1 = getConstrInRange(1, origin.x + RADI, MAP_X_CELLS - 2);
+  const int Y1 = getConstrInRange(1, origin.y + RADI, MAP_Y_CELLS - 2);
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {

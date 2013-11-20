@@ -37,7 +37,7 @@ public:
   void place(const Pos& pos_, ActorData* const actorDefinition,
              Engine* engine);
 
-  bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS = false);
+  bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);
 
   bool restoreHp(const int HP_RESTORED,

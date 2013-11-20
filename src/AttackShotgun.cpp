@@ -103,7 +103,8 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           printProjectileAtActorMessages(*data, true);
 
           //Damage
-          data->currentDefender->hit(data->dmg, wpn.getData().rangedDmgType);
+          data->currentDefender->hit(
+            data->dmg, wpn.getData().rangedDmgType, true);
 
           nrActorsHit++;
 

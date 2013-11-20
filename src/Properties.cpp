@@ -184,7 +184,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propRConfusion;
-  d.stdRndTurns = Range(40, 60);
+  d.stdRndTurns = Range(40, 50);
   d.name = "Confusion resistance";
   d.nameShort = "RConfusion";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to confusion.";
@@ -1335,7 +1335,7 @@ void PropPoisoned::onNewTurn() {
       }
     }
 
-    owningActor_->hit(1, dmgType_pure);
+    owningActor_->hit(1, dmgType_pure, false);
   }
 }
 
@@ -1418,7 +1418,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
       }
     }
 
-    owningActor_->hit(eng->dice(1, 3), dmgType_physical);
+    owningActor_->hit(eng->dice(1, 3), dmgType_physical, false);
 
     if(owningActor_->deadState == actorDeadState_alive) {
 
@@ -1559,7 +1559,7 @@ void PropBurning::onNewTurn() {
   if(owningActor_ == eng->player) {
     eng->log->addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
-  owningActor_->hit(eng->dice(1, 2), dmgType_fire);
+  owningActor_->hit(eng->dice(1, 2), dmgType_fire, false);
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
@@ -1646,7 +1646,7 @@ void PropClairvoyant::onStart() {
 }
 
 void PropFlared::onNewTurn() {
-  owningActor_->hit(1, dmgType_fire);
+  owningActor_->hit(1, dmgType_fire, false);
 
   if(turnsLeft_ == 0) {
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];

@@ -174,7 +174,7 @@ void GameTime::runStandardTurnEvents() {
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
     if(eng->map->light[pos.x][pos.y]) {
-      actor->hit(1, dmgType_light);
+      actor->hit(1, dmgType_light, false);
     }
 
     if(actor->deadState == actorDeadState_alive) {

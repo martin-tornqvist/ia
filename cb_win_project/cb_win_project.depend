@@ -11321,7 +11321,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1384975747 source:d:\dev\ia.git\src\actordata.cpp
+1384980213 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11345,7 +11345,7 @@
 	<string>
 	"GameTime.h"
 
-1384977419 source:d:\dev\ia.git\src\actormonster.cpp
+1384980223 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
 	"Engine.h"
 	"Item.h"
@@ -11553,7 +11553,7 @@
 	"FeatureTrap.h"
 	"PlayerBonuses.h"
 
-1384968479 source:d:\dev\ia.git\src\attackmelee.cpp
+1384982368 source:d:\dev\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11566,7 +11566,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1384808904 source:d:\dev\ia.git\src\attackranged.cpp
+1384982435 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11679,7 +11679,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1384808904 source:d:\dev\ia.git\src\attackshotgun.cpp
+1384982455 source:d:\dev\ia.git\src\attackshotgun.cpp
 	"Attack.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11852,7 +11852,7 @@
 	<string>
 	"MenuBrowser.h"
 
-1384465795 source:d:\dev\ia.git\src\converters.cpp
+1384982619 source:d:\dev\ia.git\src\converters.cpp
 	"Converters.h"
 	<string>
 	<sstream>
@@ -12110,7 +12110,7 @@
 	"Query.h"
 	"Renderer.h"
 
-1384978772 source:d:\dev\ia.git\src\explosion.cpp
+1384982447 source:d:\dev\ia.git\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -12139,7 +12139,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1384554772 source:d:\dev\ia.git\src\featuredoor.cpp
+1384982848 source:d:\dev\ia.git\src\featuredoor.cpp
 	"FeatureDoor.h"
 	"Engine.h"
 	"Actor.h"
@@ -12152,7 +12152,7 @@
 	"PlayerBonuses.h"
 	"Renderer.h"
 
-1384362818 source:d:\dev\ia.git\src\featureexaminable.cpp
+1384982891 source:d:\dev\ia.git\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -12249,7 +12249,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1384977404 source:d:\dev\ia.git\src\featuretrap.cpp
+1384982894 source:d:\dev\ia.git\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<algorithm>
 	"Engine.h"
@@ -12273,7 +12273,7 @@
 	"Engine.h"
 	"Map.h"
 
-1384979001 source:d:\dev\ia.git\src\fov.cpp
+1384982829 source:d:\dev\ia.git\src\fov.cpp
 	"Fov.h"
 	<math.h>
 	<iostream>
@@ -12285,7 +12285,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1384805742 source:d:\dev\ia.git\src\gametime.cpp
+1384982900 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12430,7 +12430,7 @@
 	"Item.h"
 	"Converters.h"
 
-1384808904 source:d:\dev\ia.git\src\itemdevice.cpp
+1384982914 source:d:\dev\ia.git\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12826,7 +12826,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1384557943 source:d:\dev\ia.git\src\populatemonsters.cpp
+1384982619 source:d:\dev\ia.git\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"
@@ -12873,7 +12873,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1384977471 source:d:\dev\ia.git\src\properties.cpp
+1384982984 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -12982,7 +12982,7 @@
 	"ActorMonster.h"
 	"GameTime.h"
 
-1384372250 source:d:\dev\ia.git\src\spells.cpp
+1384982980 source:d:\dev\ia.git\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -13004,7 +13004,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1384361887 source:d:\dev\ia.git\src\thrower.cpp
+1384982435 source:d:\dev\ia.git\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -13021,7 +13021,7 @@
 	"ItemFactory.h"
 	"Attack.h"
 
-1384887159 source:d:\dev\ia.git\test\src\main.cpp
+1384982619 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"Engine.h"
 	"BasicUtils.h"
@@ -13763,7 +13763,7 @@
 
 1384969081 d:\dev\ia.git\include\commondata.h
 
-1384887029 d:\dev\ia.git\include\actor.h
+1384982479 d:\dev\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13773,7 +13773,7 @@
 	"MapTests.h"
 	"Art.h"
 
-1384975601 d:\dev\ia.git\include\actordata.h
+1384980207 d:\dev\ia.git\include\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -13783,7 +13783,7 @@
 	"Properties.h"
 	"AudioIds.h"
 
-1384464843 d:\dev\ia.git\include\converters.h
+1384982619 d:\dev\ia.git\include\converters.h
 	<string>
 
 1383949644 d:\dev\ia.git\include\roomtheme.h

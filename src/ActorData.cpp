@@ -1253,7 +1253,6 @@ void ActorDataHandler::initDataList() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = true;
-  d.aiBehavior.movesToRandomPos = false;
   d.speed = actorSpeed_fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
@@ -1596,7 +1595,6 @@ void ActorDataHandler::initDataList() {
   d.aiBehavior.movesTowardTargetWhenVision = true;
   d.aiBehavior.movesTowardLair = false;
   d.aiBehavior.movesTowardLeader = false;
-  d.aiBehavior.movesToRandomPos = false;
   d.speed = actorSpeed_slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'w';

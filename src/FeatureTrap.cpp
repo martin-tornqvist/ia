@@ -307,7 +307,7 @@ void TrapDart::trapSpecificTrigger(Actor& actor,
       }
 
       const int DMG = eng->dice(1, 8);
-      actor.hit(DMG, dmgType_physical);
+      actor.hit(DMG, dmgType_physical, true);
       if(actor.deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
           eng->log->addMsg("It was poisoned!");
@@ -385,7 +385,7 @@ void TrapSpear::trapSpecificTrigger(Actor& actor,
       }
 
       const int DMG = eng->dice(2, 6);
-      actor.hit(DMG, dmgType_physical);
+      actor.hit(DMG, dmgType_physical, true);
       if(actor.deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
           eng->log->addMsg("It was poisoned!");

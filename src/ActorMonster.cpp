@@ -132,11 +132,9 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(ai.movesToRandomPos) {
-    if(eng->dice.percentile() < data_->erraticMovement) {
-      if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
-        return;
-      }
+  if(eng->dice.percentile() < data_->erraticMovement) {
+    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
+      return;
     }
   }
 
@@ -183,10 +181,8 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(ai.movesToRandomPos) {
-    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
-      return;
-    }
+  if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
+    return;
   }
 
   eng->gameTime->endTurnOfCurrentActor();

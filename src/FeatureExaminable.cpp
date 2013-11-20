@@ -228,7 +228,7 @@ void Tomb::doAction(const TombAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMsg("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, dmgType_pure);
+        eng->player->hit(1, dmgType_pure, false);
       }
 
       if(eng->player->deadState != actorDeadState_alive) {
@@ -562,8 +562,10 @@ void Chest::doAction(const ChestAction_t action) {
       Item* const wpn = eng->player->getInventory()->getItemInSlot(slot_wielded);
 
       if(wpn == NULL) {
-        eng->log->addMsg("I attempt to punch the lock open, nearly breaking my hand.", clrMessageBad);
-        eng->player->hit(1, dmgType_pure);
+        eng->log->addMsg(
+          "I attempt to punch the lock open, nearly breaking my hand.",
+          clrMessageBad);
+        eng->player->hit(1, dmgType_pure, false);
       } else {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 
@@ -593,7 +595,7 @@ void Chest::doAction(const ChestAction_t action) {
 
       if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
         eng->log->addMsg("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, dmgType_pure);
+        eng->player->hit(1, dmgType_pure, false);
       }
 
       if(eng->player->deadState == actorDeadState_alive) {

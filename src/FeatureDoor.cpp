@@ -345,7 +345,7 @@ void Door::tryBash(Actor* actorTrying) {
           }
         }
         const int SPRAIN_DMG = 1;
-        actorTrying->hit(SPRAIN_DMG, dmgType_pure);
+        actorTrying->hit(SPRAIN_DMG, dmgType_pure, false);
       }
 
       if(TRYER_OFF_BALANCE) {
