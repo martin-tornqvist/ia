@@ -11,7 +11,7 @@ public:
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
       const bool HAS_LOS_TO_LAIR =
-        engine->fov->checkOneCell(blockers, lairCell, monster.pos, true);
+        engine->fov->checkCell(blockers, lairCell, monster.pos, true);
 
       if(HAS_LOS_TO_LAIR) {
         Pos delta = lairCell - monster.pos;

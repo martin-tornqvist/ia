@@ -18,16 +18,25 @@ public:
     calcLineTravelVectors();
   }
 
-  void getLineTravelVector(vector<Pos>& vectorUsed, const Pos& delta, const double MAX_DIST_ABS) const {
-    if(absDistances[delta.x + FOV_MAX_RADI_INT][delta.y +  FOV_MAX_RADI_INT] <= MAX_DIST_ABS) {
-      vectorUsed = lineTravelVectors[delta.x + FOV_MAX_RADI_INT][delta.y + FOV_MAX_RADI_INT];
+  inline const vector<Pos>* getLineTravelVector(
+    const Pos& delta, const double& MAX_DIST_ABS) const {
+    const int X = delta.x + FOV_MAX_RADI_INT;
+    const int Y = delta.y + FOV_MAX_RADI_INT;
+    if(
+      X < FOV_MAX_WIDTH_INT && Y < FOV_MAX_WIDTH_INT &&
+      absDistances[X][Y] <= MAX_DIST_ABS) {
+      return &(lineTravelVectors[X][Y]);
     }
+    return NULL;
   }
 
 private:
-  void getLineAngles(const int deltaX, const int deltaY, pair<double, double>& angles) const {
-    angles.first = vectorAnglesX[deltaX + FOV_MAX_RADI_INT][deltaY + FOV_MAX_RADI_INT];
-    angles.second = vectorAnglesY[deltaX + FOV_MAX_RADI_INT][deltaY + FOV_MAX_RADI_INT];
+  void getLineAngles(const int deltaX, const int deltaY,
+                     pair<double, double>& angles) const {
+    const int X = deltaX + FOV_MAX_RADI_INT;
+    const int Y = deltaY + FOV_MAX_RADI_INT;
+    angles.first  = vectorAnglesX[X][Y];
+    angles.second = vectorAnglesY[X][Y];
   }
 
   void calcLineAnglesAndAbsDistances();

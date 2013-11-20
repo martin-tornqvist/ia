@@ -1,14 +1,14 @@
 #include "FovPreCalc.h"
 
-//#include <math.h>
-
 #include "Engine.h"
 
 void FovPreCalc::calcLineTravelVectors() {
   calcLineAnglesAndAbsDistances();
 
-  int deltaX = -FOV_MAX_RADI_INT;
-  int deltaY = -FOV_MAX_RADI_INT;
+  const int R_INT = FOV_MAX_RADI_INT;
+
+  int deltaX = -R_INT;
+  int deltaY = -R_INT;
 
   double xStep, yStep, incrInX, incrInY;
 
@@ -21,11 +21,11 @@ void FovPreCalc::calcLineTravelVectors() {
 
   pair<double, double> angles;
 
-  while(deltaX <= FOV_MAX_RADI_INT) {
+  while(deltaX <= R_INT) {
 
-    deltaY = -FOV_MAX_RADI_INT;
+    deltaY = -R_INT;
 
-    while(deltaY <= FOV_MAX_RADI_INT) {
+    while(deltaY <= R_INT) {
       currentPath.resize(0);
       incrInX = originX;
       incrInY = originY;
@@ -34,7 +34,8 @@ void FovPreCalc::calcLineTravelVectors() {
       yStep = angles.second * 0.04;
       for(double i = 0.0; i <= FOV_MAX_RADI_DB; i += 0.04) {
         currentDelta.set(int(floor(incrInX)), int(floor(incrInY)));
-        //Add position to current vector if vector is empty, or if pos not equal to previous.
+        //Add position to current vector if vector is empty,
+        //or if pos not equal to previous.
         bool isPositionGoodToAdd = currentPath.empty();
         if(isPositionGoodToAdd == false) {
           isPositionGoodToAdd = currentDelta != currentPath.back();
@@ -43,12 +44,12 @@ void FovPreCalc::calcLineTravelVectors() {
           currentPath.push_back(currentDelta);
         }
         if(currentDelta == Pos(deltaX, deltaY)) {
-          i = 999999;
+          break;
         }
         incrInX += xStep;
         incrInY += yStep;
       }
-      lineTravelVectors[deltaX + FOV_MAX_RADI_INT][deltaY + FOV_MAX_RADI_INT] = currentPath;
+      lineTravelVectors[deltaX + R_INT][deltaY + R_INT] = currentPath;
       deltaY++;
     }
     deltaX++;
@@ -65,8 +66,10 @@ void FovPreCalc::calcLineAnglesAndAbsDistances() {
   // i = 0  corresponds to delta_x = -16
   // i = 32       -||-             =  16
 
-  for(unsigned int x = 0; x <= FOV_MAX_RADI_INT * 2; x++) {
-    for(unsigned int y = 0; y <= FOV_MAX_RADI_INT * 2; y++) {
+  const int R_INT = FOV_MAX_RADI_INT;
+
+  for(unsigned int x = 0; x <= R_INT * 2; x++) {
+    for(unsigned int y = 0; y <= R_INT * 2; y++) {
       deltaX = double(x);
       deltaX -= FOV_MAX_RADI_DB;
       deltaY = double(y);

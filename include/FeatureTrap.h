@@ -52,8 +52,7 @@ public:
 
   MaterialType_t getMaterialType() const;
 
-  Dir_t actorTryLeave(
-    Actor& actor, const Pos& pos, const Dir_t dir);
+  Dir_t actorTryLeave(Actor& actor, const Dir_t dir);
 
   Trap_t getTrapType() const;
 
@@ -88,10 +87,8 @@ protected:
   virtual ~SpecificTrapBase() {}
 
 
-  virtual Dir_t specificTrapActorTryLeave(
-    Actor& actor, const Pos& pos, const Dir_t dir) {
+  virtual Dir_t specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
     (void)actor;
-    (void)pos;
     return dir;
   }
 
@@ -275,8 +272,7 @@ private:
 
 class TrapSpiderWeb: public SpecificTrapBase {
 public:
-  Dir_t specificTrapActorTryLeave(
-    Actor& actor, const Pos& pos, const Dir_t dir);
+  Dir_t specificTrapActorTryLeave(Actor& actor, const Dir_t dir);
 
   bool isHolding() const {return isHoldingActor;}
 

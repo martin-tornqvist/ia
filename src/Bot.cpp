@@ -23,7 +23,7 @@ void Bot::init() {
 
 void Bot::act() {
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
-  const int NR_OF_RUNS = 10;
+  const int NR_OF_RUNS = 20;
   int runCount = 1;
 
   //=======================================================================
@@ -83,6 +83,7 @@ void Bot::act() {
       if(runCount >= NR_OF_RUNS) {
         trace << "Bot: All runs finished, stopping" << endl;
         eng->config->isBotPlaying = false;
+        return;
       } else {
         trace << "Bot: Starting new run on first dungeon level" << endl;
         eng->map->dlvl_ = 0;

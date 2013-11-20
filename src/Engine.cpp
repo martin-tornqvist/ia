@@ -133,6 +133,7 @@ void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
   basicUtils = new BasicUtils(this);
+  fovPreCalc = new FovPreCalc(this);
   propDataHandler = new PropDataHandler(this);
   actorDataHandler = new ActorDataHandler(this);
   scrollNameHandler = new ScrollNameHandler(this);
@@ -179,7 +180,6 @@ void Engine::initGame() {
   playerVisualMemory = new PlayerVisualMemory(this);
   gore = new Gore(this);
   manual = new Manual(this);
-  fovPreCalc = new FovPreCalc(this);
   bresenhamLine = new BresenhamLine(this);
   populateItems = new PopulateItems(this);
   populateMonsters = new PopulateMonsters(this);

@@ -80,15 +80,17 @@ struct AiBehavior {
 public:
   AiBehavior() : looks(false), makesRoomForFriend(false), triesAttack(false),
     pathsToTargetWhenAware(false), movesTowardTargetWhenVision(false),
-    movesTowardLair(false), movesTowardLeader(false) {}
+    movesTowardLair(false), movesTowardLeader(false), movesToRandomPos(false) {}
 
   void reset() {
     looks = makesRoomForFriend = triesAttack = pathsToTargetWhenAware = false;
     movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
+    movesToRandomPos = false;
   }
 
   bool looks, makesRoomForFriend, triesAttack, pathsToTargetWhenAware;
   bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
+  bool movesToRandomPos;
 };
 
 struct ActorData {

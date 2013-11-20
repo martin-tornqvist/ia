@@ -1404,6 +1404,8 @@ void PropWound::onMore() {
 }
 
 void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+  (void)actorPos;
+
   if(dir != dirCenter) {
 
     if(owningActor_ == eng->player) {

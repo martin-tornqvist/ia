@@ -66,8 +66,27 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
                                 const Weapon& wpn) {
   string otherName = "";
 
-  //----- ATTACK MISS -------
-  if(data.attackResult <= failSmall) {
+
+  if(data.isDefenderDodging) {
+    //----- DEFENDER DODGES --------
+    if(data.attacker == eng->player) {
+      if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+        otherName = data.currentDefender->getNameThe();
+      } else {
+        otherName = "It ";
+      }
+      eng->log->addMsg(otherName + " dodges my attack.");
+    } else {
+      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+        otherName = data.attacker->getNameThe();
+      } else {
+        otherName = "It";
+      }
+      eng->log->addMsg(
+        "I dodge an attack from " + otherName + ".", clrMessageGood);
+    }
+  } else if(data.attackResult <= failSmall) {
+    //----- BAD AIMING --------
     if(data.attacker == eng->player) {
       if(data.attackResult == failSmall) {
         eng->log->addMsg("I barely miss!");
@@ -91,16 +110,17 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
       }
     }
   } else {
-    //----- ATTACK CORRECTLY AIMED --------
-    if(data.isDefenderDodging) {
-      //----- DEFENDER DODGES --------
+    //----- AIM IS CORRECT -------
+    if(data.isEtherealDefenderMissed) {
+      //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
       if(data.attacker == eng->player) {
         if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
           otherName = data.currentDefender->getNameThe();
         } else {
           otherName = "It ";
         }
-        eng->log->addMsg(otherName + " dodges my attack.");
+        eng->log->addMsg(
+          "My attack passes right throuth " + otherName + "!");
       } else {
         if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
@@ -108,80 +128,59 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
           otherName = "It";
         }
         eng->log->addMsg(
-          "I dodge an attack from " + otherName + ".", clrMessageGood);
+          "The attack of " + otherName + " passes right through me!",
+          clrMessageGood);
       }
     } else {
-      if(data.isEtherealDefenderMissed) {
-        //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
-        if(data.attacker == eng->player) {
-          if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
-            otherName = data.currentDefender->getNameThe();
-          } else {
-            otherName = "It ";
-          }
-          eng->log->addMsg(
-            "My attack passes right throuth " + otherName + "!");
+      //----- ATTACK CONNECTS WITH DEFENDER --------
+      //Punctuation or exclamation marks depending on attack strength
+      string dmgPunct = ".";
+      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      if(MAX_DMG_ROLL >= 4) {
+        dmgPunct =
+          data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
+          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
+          dmgPunct;
+      }
+
+      if(data.attacker == eng->player) {
+        const string wpnVerb = wpn.getData().meleeAttackMessages.player;
+
+        if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+          otherName = data.currentDefender->getNameThe();
         } else {
-          if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
-            otherName = data.attacker->getNameThe();
-          } else {
-            otherName = "It";
-          }
+          otherName = "it";
+        }
+
+        if(data.isIntrinsicAttack) {
+          const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
           eng->log->addMsg(
-            "The attack of " + otherName + " passes right through me!",
+            "I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
             clrMessageGood);
+        } else {
+          const string ATTACK_MOD_STR =
+            data.isWeakAttack  ? "feebly "    :
+            data.isBackstab    ? "covertly "  : "";
+          const SDL_Color clr =
+            data.isBackstab ? clrBlueLgt : clrMessageGood;
+          const string wpnName_a =
+            eng->itemDataHandler->getItemRef(wpn, itemRef_a, true);
+          eng->log->addMsg(
+            "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
+            "with " + wpnName_a + dmgPunct,
+            clr);
         }
       } else {
-        //----- ATTACK CONNECTS WITH DEFENDER --------
-        //Punctuation or exclamation marks depending on attack strength
-        string dmgPunct = ".";
-        const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
-        if(MAX_DMG_ROLL >= 4) {
-          dmgPunct =
-            data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
-            data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
-            dmgPunct;
-        }
+        const string wpnVerb = wpn.getData().meleeAttackMessages.other;
 
-        if(data.attacker == eng->player) {
-          const string wpnVerb = wpn.getData().meleeAttackMessages.player;
-
-          if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
-            otherName = data.currentDefender->getNameThe();
-          } else {
-            otherName = "it";
-          }
-
-          if(data.isIntrinsicAttack) {
-            const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
-            eng->log->addMsg(
-              "I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
-              clrMessageGood);
-          } else {
-            const string ATTACK_MOD_STR =
-              data.isWeakAttack  ? "feebly "    :
-              data.isBackstab    ? "covertly "  : "";
-            const SDL_Color clr =
-              data.isBackstab ? clrBlueLgt : clrMessageGood;
-            const string wpnName_a =
-              eng->itemDataHandler->getItemRef(wpn, itemRef_a, true);
-            eng->log->addMsg(
-              "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
-              "with " + wpnName_a + dmgPunct,
-              clr);
-          }
+        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+          otherName = data.attacker->getNameThe();
         } else {
-          const string wpnVerb = wpn.getData().meleeAttackMessages.other;
-
-          if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
-            otherName = data.attacker->getNameThe();
-          } else {
-            otherName = "It";
-          }
-
-          eng->log->addMsg(otherName + " " + wpnVerb + dmgPunct,
-                           clrMessageBad, true);
+          otherName = "It";
         }
+
+        eng->log->addMsg(otherName + " " + wpnVerb + dmgPunct,
+                         clrMessageBad, true);
       }
     }
   }

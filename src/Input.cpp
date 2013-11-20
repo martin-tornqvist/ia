@@ -552,8 +552,16 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     return;
   }
-  //----------------------------------------INFECTED
+  //----------------------------------------TELEPORT
   else if(d.sdlKey_ == SDLK_F8) {
+    if(IS_DEBUG_MODE) {
+      eng->player->teleport(false);
+      clearEvents();
+    }
+    return;
+  }
+  //----------------------------------------INFECTED
+  else if(d.sdlKey_ == SDLK_F9) {
     if(IS_DEBUG_MODE) {
       eng->player->getPropHandler()->tryApplyProp(
         new PropInfected(eng, propTurnsStandard));

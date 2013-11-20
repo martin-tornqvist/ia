@@ -91,7 +91,7 @@ void ExplosionMaker::runExplosion(
 
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
-      reach[x][y] = eng->fov->checkOneCell(
+      reach[x][y] = eng->fov->checkCell(
                       blockers, Pos(x, y), origin, false) &&
                     !blockers[x][y];
     }
@@ -221,7 +221,7 @@ void ExplosionMaker::runSmokeExplosion(const Pos& origin,
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       //As opposed to the explosion reach, the smoke explosion must not reach into walls and other solid objects
-      reach[x][y] = blockers[x][y] == false && eng->fov->checkOneCell(
+      reach[x][y] = blockers[x][y] == false && eng->fov->checkCell(
                       blockers, Pos(x, y), origin, false);
     }
   }

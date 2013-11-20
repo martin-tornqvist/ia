@@ -238,10 +238,9 @@ bool Trap::canHaveBlood() const {return isHidden_;}
 bool Trap::canHaveGore() const {return isHidden_;}
 bool Trap::canHaveItem() const {return isHidden_;}
 
-Dir_t Trap::actorTryLeave(Actor& actor, const Pos& pos,
-                          const Dir_t dir) {
+Dir_t Trap::actorTryLeave(Actor& actor, const Dir_t dir) {
   trace << "Trap::actorTryLeave()" << endl;
-  return specificTrap_->specificTrapActorTryLeave(actor, pos, dir);
+  return specificTrap_->specificTrapActorTryLeave(actor, dir);
 }
 
 MaterialType_t Trap::getMaterialType() const {
@@ -717,13 +716,13 @@ void TrapSpiderWeb::trapSpecificTrigger(
     }
 
     if(hasMachete) {
-      eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       if(CAN_SEE) {
         eng->log->addMsg("I cut down a spider web with my machete.");
       } else {
         eng->log->addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
+      eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
     } else {
       if(CAN_SEE) {
         eng->log->addMsg("I am entangled in a spider web!");
@@ -739,8 +738,7 @@ void TrapSpiderWeb::trapSpecificTrigger(
   traceHi << "TrapSpiderWeb::trapSpecificTrigger() [DONE]" << endl;
 }
 
-Dir_t TrapSpiderWeb::specificTrapActorTryLeave(
-  Actor& actor, const Pos& pos, const Dir_t dir) {
+Dir_t TrapSpiderWeb::specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
 
   trace << "TrapSpiderWeb: specificTrapActorTryLeave()" << endl;
 

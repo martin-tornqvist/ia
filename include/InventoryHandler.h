@@ -5,7 +5,7 @@
 
 class Engine;
 
-enum InventotyScreen_t {
+enum InventoryScreen_t {
   inventoryScreen_slots,
   inventoryScreen_equip,
   inventoryScreen_use,
@@ -30,7 +30,7 @@ public:
 
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
 
-  InventotyScreen_t screenToOpenAfterDrop;
+  InventoryScreen_t screenToOpenAfterDrop;
   InventorySlot* equipSlotToOpenAfterDrop;
   int browserPosToSetAfterDrop;
 

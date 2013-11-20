@@ -41,6 +41,7 @@ void DungeonMaster::playerGainLvl() {
   if(clvl % BON_EVERY_N_LVL == 0) {
     d.abilityVals.changeVal(ability_accuracyMelee,  5);
     d.abilityVals.changeVal(ability_accuracyRanged, 5);
+    d.abilityVals.changeVal(ability_dodgeAttack,    5);
     eng->log->addMsg("I am more proficient in combat!");
 
     eng->player->changeMaxSpi(1, true);

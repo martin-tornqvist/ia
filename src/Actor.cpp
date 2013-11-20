@@ -59,7 +59,7 @@ bool Actor::checkIfSeeActor(
 
     if(visionBlockingCells != NULL) {
       const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
-      return eng->fov->checkOneCell(
+      return eng->fov->checkCell(
                visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
   }

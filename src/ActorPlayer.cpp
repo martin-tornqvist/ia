@@ -77,20 +77,20 @@ void Player::actorSpecific_spawnStartItems() {
 
   //TODO Remove:
   //--------------------------------------------------------------------------
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_machineGun));
-  for(int i = 0; i < 2; i++) {
-    inventory_->putItemInGeneral(
-      eng->itemFactory->spawnItem(item_drumOfBullets));
-  }
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_sawedOff));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_pumpShotgun));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_shotgunShell, 80));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_armorAsbestosSuit));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_machineGun));
+//  for(int i = 0; i < 2; i++) {
+//    inventory_->putItemInGeneral(
+//      eng->itemFactory->spawnItem(item_drumOfBullets));
+//  }
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_sawedOff));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_pumpShotgun));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_shotgunShell, 80));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_armorAsbestosSuit));
   //--------------------------------------------------------------------------
 
   inventory_->putItemInGeneral(
@@ -718,25 +718,30 @@ void Player::onActorTurn() {
   vector<Actor*> spotedEnemies;
   eng->player->getSpotedEnemies(spotedEnemies);
   if(spotedEnemies.empty()) {
-    switch(eng->inventoryHandler->screenToOpenAfterDrop) {
-      case inventoryScreen_backpack: {
-        eng->inventoryHandler->runBrowseInventoryMode();
-      } break;
+    const InventoryScreen_t invScreen =
+      eng->inventoryHandler->screenToOpenAfterDrop;
+    if(invScreen != endOfInventoryScreens) {
+      switch(invScreen) {
+        case inventoryScreen_backpack: {
+          eng->inventoryHandler->runBrowseInventoryMode();
+        } break;
 
-      case inventoryScreen_use: {
-        eng->inventoryHandler->runUseScreen();
-      } break;
+        case inventoryScreen_use: {
+          eng->inventoryHandler->runUseScreen();
+        } break;
 
-      case inventoryScreen_equip: {
-        eng->inventoryHandler->runEquipScreen(
-          eng->inventoryHandler->equipSlotToOpenAfterDrop);
-      } break;
+        case inventoryScreen_equip: {
+          eng->inventoryHandler->runEquipScreen(
+            eng->inventoryHandler->equipSlotToOpenAfterDrop);
+        } break;
 
-      case inventoryScreen_slots: {
-        eng->inventoryHandler->runSlotsScreen();
-      } break;
+        case inventoryScreen_slots: {
+          eng->inventoryHandler->runSlotsScreen();
+        } break;
 
-      case endOfInventoryScreens: {} break;
+        case endOfInventoryScreens: {} break;
+      }
+      return;
     }
   } else {
     eng->inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
@@ -988,13 +993,17 @@ void Player::actorSpecificOnStandardTurn() {
 
   if(activeMedicalBag != NULL) {
     eng->renderer->drawMapAndInterface();
-    eng->sleep(DELAY_PLAYER_WAITING);
+    if(DELAY_PLAYER_WAITING > 0) {
+      eng->sleep(DELAY_PLAYER_WAITING);
+    }
     activeMedicalBag->continueAction();
   }
 
   if(waitTurnsLeft > 0) {
     eng->renderer->drawMapAndInterface();
-    eng->sleep(DELAY_PLAYER_WAITING);
+    if(DELAY_PLAYER_WAITING > 0) {
+      eng->sleep(DELAY_PLAYER_WAITING);
+    }
     waitTurnsLeft--;
     eng->gameTime->endTurnOfCurrentActor();
   }
@@ -1056,7 +1065,7 @@ void Player::moveDir(Dir_t dir) {
       Feature* f = eng->map->featuresStatic[pos.x][pos.y];
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
-        dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dir);
+        dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       }
     }
 

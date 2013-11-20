@@ -79,7 +79,8 @@ void Monster::onActorTurn() {
 
   const AiBehavior& ai = data_->aiBehavior;
 
-  //------------------------------ SPECIAL MONSTER ACTIONS (ZOMBIES RISING, WORMS MULTIPLYING...)
+  //------------------------------ SPECIAL MONSTER ACTIONS
+  //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
   if(leader != eng->player) {
     if(monsterSpecificOnActorTurn()) {
@@ -87,9 +88,11 @@ void Monster::onActorTurn() {
     }
   }
 
-  //------------------------------ COMMON ACTIONS (MOVING, ATTACKING, CASTING SPELLS...)
-  // Looking counts as an action if monster not aware before, and became aware from looking.
-  // (This is to give the monsters some reaction time, and not instantly attack)
+  //------------------------------ COMMON ACTIONS
+  //                               (MOVING, ATTACKING, CASTING SPELLS...)
+  //Looking counts as an action if monster not aware before, and became aware
+  //from looking. (This is to give the monsters some reaction time, and not
+  //instantly attack)
   if(ai.looks) {
     if(leader != eng->player) {
       if(AI_look_becomePlayerAware::action(this, eng)) {
@@ -129,9 +132,11 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(eng->dice.percentile() < data_->erraticMovement) {
-    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
-      return;
+  if(ai.movesToRandomPos) {
+    if(eng->dice.percentile() < data_->erraticMovement) {
+      if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
+        return;
+      }
     }
   }
 
@@ -178,8 +183,10 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
-    return;
+  if(ai.movesToRandomPos) {
+    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
+      return;
+    }
   }
 
   eng->gameTime->endTurnOfCurrentActor();
@@ -204,7 +211,7 @@ void Monster::moveDir(Dir_t dir) {
   if(dir != dirCenter) {
     Feature* f = eng->map->featuresStatic[pos.x][pos.y];
     if(f->getId() == feature_trap) {
-      dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, pos, dir);
+      dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == dirCenter) {
         traceHi << "Monster: Move prevented by trap" << endl;
         eng->gameTime->endTurnOfCurrentActor();
@@ -281,9 +288,10 @@ bool Monster::tryAttack(Actor& defender) {
                 eng->reload->reloadWieldedWpn(*this);
                 return true;
               } else {
-                //Check if friend is in the way (with a small chance to ignore this)
+                //Check if friend is in the way
+                //(with a small chance to ignore this)
                 bool isBlockedByFriend = false;
-                if(eng->dice.percentile() < 80) {
+                if(eng->dice.fraction(4, 5)) {
                   vector<Pos> line;
                   eng->mapTests->getLine(pos, defender.pos, true, 9999, line);
                   for(unsigned int i = 0; i < line.size(); i++) {

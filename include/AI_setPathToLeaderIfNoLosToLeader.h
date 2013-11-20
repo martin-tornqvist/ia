@@ -15,7 +15,7 @@ public:
           engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
 
           if(
-            engine->fov->checkOneCell(
+            engine->fov->checkCell(
               blockers, leader->pos, monster.pos, true)) {
             path->resize(0);
             return;

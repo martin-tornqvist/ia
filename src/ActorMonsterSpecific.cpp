@@ -574,14 +574,17 @@ bool WormMass::monsterSpecificOnActorTurn() {
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(this, blockers);
 
+        Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
-            if(blockers[pos.x + dx][pos.y + dy] == false) {
+            spawnPos.set(pos + Pos(dx, dy));
+            if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                eng->actorFactory->spawnActor(data_->id, pos + Pos(dx, dy));
+                eng->actorFactory->spawnActor(data_->id, spawnPos);
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
-              chanceToSpawnNew -= 2;
+              chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
+              worm->playerAwarenessCounter = playerAwarenessCounter;
               eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
@@ -606,14 +609,17 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         eng->mapTests->makeMoveBlockerArray(this, blockers);
 
+        Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
-            if(blockers[pos.x + dx][pos.y + dy] == false) {
+            spawnPos.set(pos + Pos(dx, dy));
+            if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                eng->actorFactory->spawnActor(data_->id, pos + Pos(dx, dy));
+                eng->actorFactory->spawnActor(data_->id, spawnPos);
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
+              locust->playerAwarenessCounter = playerAwarenessCounter;
               eng->gameTime->endTurnOfCurrentActor();
               return true;
             }
