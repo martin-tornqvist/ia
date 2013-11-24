@@ -8,6 +8,7 @@ enum Sfx_t {
   sfxZombieGrowl,
   sfxGhoulGrowl,
   sfxOozeGurgle,
+  sfxFlappingWings,
 
   //Weapon and attack sounds
   sfxPistolFire,
@@ -30,6 +31,7 @@ enum Sfx_t {
   sfxPickup,
   sfxElectricLantern,
   sfxPotionQuaff,
+  sfxInsanityRising,
 
   //Ambient sounds
   startOfAmbSfx,

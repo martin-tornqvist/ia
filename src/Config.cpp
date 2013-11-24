@@ -13,6 +13,7 @@
 #include "Query.h"
 #include "Renderer.h"
 #include "Input.h"
+#include "Audio.h"
 
 using namespace std;
 
@@ -53,7 +54,7 @@ Config::Config(Engine* engine) :
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(14, 0);
+  MenuBrowser browser(15, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -93,6 +94,11 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
                               const int OPTIONS_Y_POS) {
   switch(browser->getPos().y) {
     case 0: {
+      isAudioEnabled = !isAudioEnabled;
+      eng->audio->initAndClearPrev();
+    } break;
+
+    case 1: {
       isTilesMode = !isTilesMode;
       if(isTilesMode) {
         if(cellW == 8 && cellH == 12) {
@@ -107,10 +113,9 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
       eng->renderer->initAndClearPrev();
-    }
-    break;
+    } break;
 
-    case 1: {
+    case 2: {
       if(isTilesMode) {
         fontScale = 1;
       }
@@ -146,10 +151,9 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
 
       setCellDimDependentVariables();
       eng->renderer->initAndClearPrev();
-    }
-    break;
+    } break;
 
-    case 2: {
+    case 3: {
       if(fontScale == 1) {
         if(isTilesMode == false) {
           fontScale = 2;
@@ -164,22 +168,22 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       eng->renderer->initAndClearPrev();
     } break;
 
-    case 3: {
+    case 4: {
       isFullscreen = !isFullscreen;
       eng->renderer->initAndClearPrev();
     } break;
 
-    case 4: {
+    case 5: {
       isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
     } break;
 
-    case 5: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
+    case 6: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
 
-    case 6: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
+    case 7: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
 
-    case 7: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
+    case 8: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
 
-    case 8: {
+    case 9: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -190,7 +194,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 9: {
+    case 10: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -201,7 +205,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 10: {
+    case 11: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -211,7 +215,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 11: {
+    case 12: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -221,7 +225,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 12: {
+    case 13: {
       const int NR = eng->query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -231,7 +235,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 13: {
+    case 14: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -258,6 +262,17 @@ void Config::draw(const MenuBrowser* const browser,
   string str = "";
 
   eng->renderer->drawText("-Options-", panel_screen, Pos(X0, Y0 - 1), clrWhite);
+  eng->renderer->drawText("Play audio", panel_screen, Pos(X0, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  eng->renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  str = isAudioEnabled ? "Yes" : "No";
+  eng->renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
+                          browser->getPos().y == optionNr ?
+                          clrActive : clrInactive);
+  optionNr++;
 
   eng->renderer->drawText("Use tile set", panel_screen, Pos(X0, Y0 + optionNr),
                           browser->getPos().y == optionNr ?
@@ -484,12 +499,13 @@ void Config::parseFontNameAndSetCellDims() {
 
 void Config::setDefaultVariables() {
   trace << "Config::setDefaultVariables()..." << endl;
+  isAudioEnabled = true;
   isTilesMode = true;
   fontBig = "images/16x24_clean_v2.png";
   fontScale = 1;
   parseFontNameAndSetCellDims();
   isFullscreen = false;
-  isAsciiWallSymbolFullSquare = true;
+  isAsciiWallSymbolFullSquare = false;
   isIntroLevelSkipped = false;
   useRangedWpnMeleeePrompt = true;
   useRangedWpnAutoReload = false;
@@ -504,6 +520,7 @@ void Config::setDefaultVariables() {
 void Config::collectLinesFromVariables(vector<string>& lines) {
   trace << "Config::collectLinesFromVariables()..." << endl;
   lines.resize(0);
+  lines.push_back(isAudioEnabled == false ? "0" : "1");
   lines.push_back(isTilesMode == false ? "0" : "1");
   lines.push_back(toString(fontScale));
   lines.push_back(fontBig);
@@ -539,6 +556,10 @@ void Config::toggleFullscreen() {
 void Config::setAllVariablesFromLines(vector<string>& lines) {
   trace << "Config::setAllVariablesFromLines()..." << endl;
   string curLine = "";
+
+  curLine = lines.front();
+  isAudioEnabled = curLine == "0" ? false : true;
+  lines.erase(lines.begin());
 
   curLine = lines.front();
   if(curLine == "0") {

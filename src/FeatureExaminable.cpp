@@ -847,7 +847,7 @@ void Fountain::drink() {
     case endOfFountainTypes: {} break;
   }
 
-  if(eng->dice.oneIn(3)) {
+  if(eng->dice.oneIn(4)) {
     eng->log->addMsg("The fountain dries out.");
     fountainType = fountainTypeDry;
   }

@@ -8,6 +8,7 @@
 #include "CommonTypes.h"
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
+#include "Audio.h"
 
 const int TEXT_AREA_WIDTH = 39;
 const int TEXT_AREA_X0 = MAP_X_CELLS_HALF - ((TEXT_AREA_WIDTH) / 2);
@@ -32,7 +33,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
 
 void Popup::showMessage(const string& message,
                         const bool DRAW_MAP_AND_INTERFACE,
-                        const string title) const {
+                        const string title, const Sfx_t sfx) const {
   if(DRAW_MAP_AND_INTERFACE) {
     eng->renderer->drawMapAndInterface(false);
   }
@@ -44,6 +45,10 @@ void Popup::showMessage(const string& message,
   const int TITLE_Y_POS = printBoxAndReturnTitleYPos(TEXT_AREA_HEIGHT);
 
   int yPos = TITLE_Y_POS;
+
+  if(sfx != endOfSfx) {
+    eng->audio->play(sfx);
+  }
 
   if(title.empty() == false) {
     eng->renderer->drawTextCentered(
@@ -83,7 +88,7 @@ void Popup::showMessage(const string& message,
 int Popup::showMultiChoiceMessage(const string& message,
                                   const bool DRAW_MAP_AND_INTERFACE,
                                   const vector<string>& choices,
-                                  const string title) const {
+                                  const string title, const Sfx_t sfx) const {
 
   vector<string> lines;
   eng->textFormatting->lineToLines(message, TEXT_AREA_WIDTH, lines);
@@ -93,6 +98,10 @@ int Popup::showMultiChoiceMessage(const string& message,
   const int TEXT_AREA_HEIGHT = TEXT_HEIGHT + NR_CHOICES + 3;
 
   MenuBrowser browser(NR_CHOICES, 0);
+
+  if(sfx != endOfSfx) {
+    eng->audio->play(sfx);
+  }
 
   multiChoiceMessageDrawingHelper(
     lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,

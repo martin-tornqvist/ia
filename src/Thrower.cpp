@@ -109,6 +109,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   eng->renderer->drawMapAndInterface(true);
 
   int blockedInElement = -1;
+  bool isActorHit = false;
 
   const char glyph = itemThrown.getGlyph();
   const SDL_Color clr = itemThrown.getColor();
@@ -146,6 +147,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           eng->log->addMsg(
             actorHere->getNameThe() + " is hit.", hitMessageClr);
           actorHere->hit(data->dmg, dmgType_physical, true);
+          isActorHit = true;
 
           //If the thing that hit an actor is a potion,
           //let it make stuff happen...
@@ -205,10 +207,12 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
-      Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
-                itemThrownData.landOnHardSurfaceSfx, true, dropPos, false,
-                IS_ALERTING_MONSTERS);
-      eng->soundEmitter->emitSound(snd);
+      if(isActorHit == false) {
+        Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
+                  itemThrownData.landOnHardSurfaceSfx, true, dropPos, false,
+                  IS_ALERTING_MONSTERS);
+        eng->soundEmitter->emitSound(snd);
+      }
     }
     eng->itemDrop->dropItemOnMap(dropPos, itemThrown);
   }

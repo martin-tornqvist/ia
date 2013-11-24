@@ -6,6 +6,7 @@
 
 #include "Engine.h"
 #include "Map.h"
+#include "Renderer.h"
 
 Audio::Audio(Engine* engine) :
   curChannel(0), timeAtLastAmb(-1), eng(engine) {
@@ -14,60 +15,71 @@ Audio::Audio(Engine* engine) :
     audioChunks[i] = NULL;
   }
 
-  loadAllAudio();
+  initAndClearPrev();
 }
 
 Audio::~Audio() {
   freeAssets();
 }
 
-void Audio::loadAllAudio() {
+void Audio::initAndClearPrev() {
   freeAssets();
 
-  //Monster sounds
-  loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
-  loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
-  loadAudioFile(sfxZombieGrowl,             "sfx_zombieGrowl.ogg");
-  loadAudioFile(sfxGhoulGrowl,              "sfx_ghoulGrowl.ogg");
-  loadAudioFile(sfxOozeGurgle,              "sfx_oozeGurgle.ogg");
+  if(eng->config->isAudioEnabled) {
+    //Monster sounds
+    loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
+    loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
+    loadAudioFile(sfxZombieGrowl,             "sfx_zombieGrowl.ogg");
+    loadAudioFile(sfxGhoulGrowl,              "sfx_ghoulGrowl.ogg");
+    loadAudioFile(sfxOozeGurgle,              "sfx_oozeGurgle.ogg");
+    loadAudioFile(sfxFlappingWings,           "sfx_flappingWings.ogg");
 
-  //Weapon and attack sounds
-  loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
-  loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
-  loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
-  loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
+    //Weapon and attack sounds
+    loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
+    loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
+    loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
+    loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
 
-  //Environment sounds
-  loadAudioFile(sfxMetalClank,              "sfx_metalClank.ogg");
-  loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
-  loadAudioFile(sfxExplosion,               "sfx_explosion.ogg");
-  loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
-  loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
-  loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
-  loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
-  loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
+    //Environment sounds
+    loadAudioFile(sfxMetalClank,              "sfx_metalClank.ogg");
+    loadAudioFile(sfxRicochet,                "sfx_ricochet.ogg");
+    loadAudioFile(sfxExplosion,               "sfx_explosion.ogg");
+    loadAudioFile(sfxExplosionMolotov,        "sfx_explosionMolotov.ogg");
+    loadAudioFile(sfxDoorOpen,                "sfx_doorOpen.ogg");
+    loadAudioFile(sfxDoorClose,               "sfx_doorClose.ogg");
+    loadAudioFile(sfxDoorBang,                "sfx_doorBang.ogg");
+    loadAudioFile(sfxDoorBreak,               "sfx_doorBreak.ogg");
 
-  //User interface sounds
-  loadAudioFile(sfxBackpack,                "sfx_backpack.ogg");
-  loadAudioFile(sfxPickup,                  "sfx_pickup.ogg");
-  loadAudioFile(sfxElectricLantern,         "sfx_electricLantern.ogg");
-  loadAudioFile(sfxPotionQuaff,             "sfx_potionQuaff.ogg");
+    //User interface sounds
+    loadAudioFile(sfxBackpack,                "sfx_backpack.ogg");
+    loadAudioFile(sfxPickup,                  "sfx_pickup.ogg");
+    loadAudioFile(sfxElectricLantern,         "sfx_electricLantern.ogg");
+    loadAudioFile(sfxPotionQuaff,             "sfx_potionQuaff.ogg");
+    loadAudioFile(sfxInsanityRising,          "sfx_insanityRising.ogg");
 
-  int a = 1;
-  for(int i = startOfAmbSfx + 1; i < endOfAmbSfx; i++) {
-    const string indexStr = toString(a);
-    const string indexStrPadded =
-      a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
-    loadAudioFile(Sfx_t(i), "amb_" + indexStrPadded + ".ogg");
-    a++;
+    int a = 1;
+    for(int i = startOfAmbSfx + 1; i < endOfAmbSfx; i++) {
+      const string indexStr = toString(a);
+      const string indexStrPadded =
+        a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
+      loadAudioFile(Sfx_t(i), "amb_" + indexStrPadded + ".ogg");
+      a++;
+    }
+
+    loadAudioFile(musCthulhiana_Madness,
+                  "Musica_Cthulhiana-Fragment-Madness.ogg");
   }
-
-  loadAudioFile(musCthulhiana_Madness,
-                "Musica_Cthulhiana-Fragment-Madness.ogg");
 }
 
 void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
-  audioChunks[sfx] = Mix_LoadWAV(("audio/" + filename).data());
+  const string fileRelPath = "audio/" + filename;
+
+  eng->renderer->clearScreen();
+  eng->renderer->drawText("Loading " + fileRelPath + "...", panel_screen,
+                          Pos(1, 1), clrWhite);
+  eng->renderer->updateScreen();
+
+  audioChunks[sfx] = Mix_LoadWAV((fileRelPath).data());
 
   if(audioChunks[sfx] == NULL) {
     trace << "[WARNING] Problem loading audio file with name " + filename;
@@ -80,6 +92,7 @@ int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
   if(
+    eng->config->isAudioEnabled &&
     sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
     eng->config->isBotPlaying == false) {
 
@@ -104,7 +117,7 @@ int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
 }
 
 void Audio::playFromDir(const Sfx_t sfx, const Dir_t dir,
-                              const int DISTANCE_PERCENT) {
+                        const int DISTANCE_PERCENT) {
   if(dir != endOfDirs) {
     //The distance value is scaled down to avoid too much volume degradation
     const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
@@ -130,11 +143,11 @@ void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
   if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
-    const int TIME_REQ_BETWEEN_AMB_SFX = 20;
+    const int TIME_REQ_BETWEEN_AMB_SFX = 30;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = eng->dice.oneIn(4) ?
+      const int VOL_PERCENT = eng->dice.oneIn(5) ?
                               eng->dice.range(51, 100) :
                               eng->dice.range(1, 50);
       play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);

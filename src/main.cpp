@@ -31,13 +31,6 @@ int main(int argc, char* argv[]) {
     eng->initSdl();
     eng->initConfig();
     eng->initRenderer();
-
-    eng->renderer->clearScreen();
-    eng->renderer->drawTextCentered(
-      "Loading...", panel_screen, Pos(MAP_X_CELLS_HALF, 12),
-      clrNosferatuSepiaDrk);
-    eng->renderer->updateScreen();
-
     eng->initAudio();
 
     bool quitGame = false;

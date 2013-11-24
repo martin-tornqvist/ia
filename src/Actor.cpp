@@ -96,8 +96,8 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
           IS_OTHER_PLAYER ? false :
           dynamic_cast<Monster*>(actor)->leader != eng->player;
 
-        //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if the other IS the player,
-        //so there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
+        //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
+        //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
           (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {

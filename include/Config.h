@@ -46,6 +46,7 @@ public:
   int           delayShotgun;
   int           delayExplosion;
   bool          isBotPlaying;
+  bool          isAudioEnabled;
   bool          isTilesMode;
   int           logOffsetX, logOffsetY;
   const int     MAINSCREEN_Y_CELLS_OFFSET;

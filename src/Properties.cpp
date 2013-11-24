@@ -1049,12 +1049,13 @@ void PropHandler::newTurnAllProps(
       }
     }
 
+    if(prop->turnsLeft_ > 0) {
+      prop->turnsLeft_--;
+    }
+
     if(prop->isFinnished()) {
       endAppliedProp(prop->getId(), visionBlockers);
     } else {
-      if(prop->turnsLeft_ > 0) {
-        prop->turnsLeft_--;
-      }
       prop->onNewTurn();
       i++;
     }
@@ -1078,31 +1079,9 @@ void PropHandler::newTurnAllProps(
 void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
   line.resize(0);
 
-//  vector<Prop*> propsToShowInv;
-//  getPropsFromSource(propsToShowInv, propSrcInv);
-//  const int NR_INV_TO_SHOW  = propsToShowInv.size();
-//
-//  const int NR_APPLIED_TOT  = appliedProps_.size();
-//
-//  vector<Prop*> propsToShowApplied;
-//
-//  for(int i_applied = 0; i_applied < NR_APPLIED_TOT; i_applied++) {
-//    Prop* const appliedProp = appliedProps_.at(i_applied);
-//    bool isInInvList = false;
-//    for(int i_inv = 0; i_inv < NR_INV_TO_SHOW; i_inv++) {
-//      if(appliedProp->getId() == propsToShowInv.at(i_inv)->getId()) {
-//        isInInvList = true;
-//        break;
-//      }
-//    }
-//    if(isInInvList == false) {
-//      propsToShowApplied
-//    }
-//  }
+  const bool IS_SELF_AWARE =
+    eng->playerBonHandler->isBonPicked(playerBon_selfAware);
 
-
-//  const bool IS_SELF_AWARE =
-//    eng->playerBonHandler->isBonPicked(playerBon_selfAware);
   vector<Prop*> props;
   getPropsFromSource(props, propSrcAppliedAndInv);
   const int NR_PROPS = props.size();
@@ -1111,9 +1090,11 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
     const string propName = prop->getNameShort();
     if(propName.empty() == false) {
       const PropAlignment_t alignment = prop->getAlignment();
-//      const int TURNS = prop->turnsLeft_;
+      const int TURNS_LEFT = prop->turnsLeft_;
+      const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
+                              ("(" + toString(TURNS_LEFT) + ")") : "";
       line.push_back(
-        StringAndClr(propName,
+        StringAndClr(propName + turnsStr,
                      alignment == propAlignmentGood ? clrMessageGood :
                      alignment == propAlignmentBad  ? clrMessageBad :
                      clrWhite));

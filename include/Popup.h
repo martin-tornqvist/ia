@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "AudioIds.h"
+
 using namespace std;
 
 class Engine;
@@ -15,12 +17,13 @@ public:
   }
 
   void showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE,
-                   const string title = "") const;
+                   const string title = "", const Sfx_t sfx = endOfSfx) const;
 
   int showMultiChoiceMessage(const string& message,
                              const bool DRAW_MAP_AND_INTERFACE,
                              const vector<string>& choices,
-                             const string title = "") const;
+                             const string title = "",
+                             const Sfx_t sfx = endOfSfx) const;
 private:
   int printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const;
 

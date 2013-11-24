@@ -294,7 +294,7 @@ void Player::incrMth(const int VAL) {
 
 void Player::incrInsanity() {
   trace << "Player: Increasing insanity" << endl;
-  string popupMessage = getInsanity() < 100 ? "Insanity draws nearer... " : "";
+  string msg = getInsanity() < 100 ? "Insanity draws nearer... " : "";
 
   const int INS_INCR = 6;
 
@@ -310,9 +310,10 @@ void Player::incrInsanity() {
   eng->renderer->drawMapAndInterface();
 
   if(getInsanity() >= 100) {
-    popupMessage += "My mind can no longer withstand what it has grasped.";
-    popupMessage += " I am hopelessly lost.";
-    eng->popup->showMessage(popupMessage, true, "Complete insanity!");
+    msg += "My mind can no longer withstand what it has grasped.";
+    msg += " I am hopelessly lost.";
+    eng->popup->showMessage(msg, true, "Complete insanity!",
+                            sfxInsanityRising);
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
@@ -333,11 +334,12 @@ void Player::incrInsanity() {
         case 1: {
           if(playerSeeShockingMonster) {
             if(eng->dice.coinToss()) {
-              popupMessage += "I let out a terrified shriek.";
+              msg += "I let out a terrified shriek.";
             } else {
-              popupMessage += "I scream in terror.";
+              msg += "I scream in terror.";
             }
-            eng->popup->showMessage(popupMessage, true, "Screaming!");
+            eng->popup->showMessage(msg, true, "Screaming!",
+                                    sfxInsanityRising);
             eng->soundEmitter->emitSound(
               Sound("", endOfSfx, true, pos, true, true));
             return;
@@ -345,35 +347,39 @@ void Player::incrInsanity() {
         } break;
 
         case 2: {
-          popupMessage += "I find myself babbling incoherently.";
-          eng->popup->showMessage(popupMessage, true, "Babbling!");
+          msg += "I find myself babbling incoherently.";
+          eng->popup->showMessage(msg, true, "Babbling!",
+                                  sfxInsanityRising);
           const string playerName = getNameThe();
           for(int i = eng->dice.range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng->log->addMsg(playerName + ": " + phrase);
           }
-          eng->soundEmitter->emitSound(Sound("", endOfSfx, true, pos, false, true));
+          eng->soundEmitter->emitSound(
+            Sound("", endOfSfx, true, pos, false, true));
           return;
         } break;
 
         case 3: {
-          popupMessage += "I struggle to not fall into a stupor.";
-          eng->popup->showMessage(popupMessage, true, "Fainting!");
+          msg += "I struggle to not fall into a stupor.";
+          eng->popup->showMessage(msg, true, "Fainting!",
+                                  sfxInsanityRising);
           propHandler_->tryApplyProp(
             new PropFainted(eng, propTurnsStandard));
           return;
         } break;
 
         case 4: {
-          popupMessage += "I laugh nervously.";
-          eng->popup->showMessage(popupMessage, true, "HAHAHA!");
+          msg += "I laugh nervously.";
+          eng->popup->showMessage(msg, true, "HAHAHA!",
+                                  sfxInsanityRising);
           eng->soundEmitter->emitSound(
             Sound("", endOfSfx, true, pos, false, true));
           return;
         } break;
 
         case 5: {
-          if(eng->player->getPropHandler()->hasProp(propRFear) == false) {
+          if(getPropHandler()->hasProp(propRFear) == false) {
 
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
@@ -386,38 +392,47 @@ void Player::incrInsanity() {
               if(phobiasActive < 2) {
                 if(eng->dice.coinToss()) {
                   if(spotedEnemies.size() > 0) {
-                    const int MONSTER_ROLL = eng->dice(1, spotedEnemies.size()) - 1;
+                    const int MONSTER_ROLL =
+                      eng->dice(1, spotedEnemies.size()) - 1;
                     const ActorData* const monsterData =
                       spotedEnemies.at(MONSTER_ROLL)->getData();
                     if(
                       monsterData->isRat &&
                       insanityPhobias[insanityPhobia_rat] == false) {
-                      popupMessage += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
-                      eng->popup->showMessage(popupMessage, true, "Murophobia!");
+                      msg += "I am afflicted by Murophobia. ";
+                      msg += "Rats suddenly seem terrifying.";
+                      eng->popup->showMessage(
+                        msg, true, "Murophobia!", sfxInsanityRising);
                       insanityPhobias[insanityPhobia_rat] = true;
                       return;
                     }
                     if(
                       monsterData->isSpider &&
                       insanityPhobias[insanityPhobia_spider] == false) {
-                      popupMessage += "I am afflicted by Arachnophobia. Spiders suddenly seem terrifying.";
-                      eng->popup->showMessage(popupMessage, true, "Arachnophobia!");
+                      msg += "I am afflicted by Arachnophobia. ";
+                      msg += "Spiders suddenly seem terrifying.";
+                      eng->popup->showMessage(
+                        msg, true, "Arachnophobia!",
+                        sfxInsanityRising);
                       insanityPhobias[insanityPhobia_spider] = true;
                       return;
                     }
                     if(
                       monsterData->isCanine &&
                       insanityPhobias[insanityPhobia_dog] == false) {
-                      popupMessage += "I am afflicted by Cynophobia. Dogs suddenly seem terrifying.";
-                      eng->popup->showMessage(popupMessage, true, "Cynophobia!");
+                      msg += "I am afflicted by Cynophobia. ";
+                      msg += "Dogs suddenly seem terrifying.";
+                      eng->popup->showMessage(
+                        msg, true, "Cynophobia!", sfxInsanityRising);
                       insanityPhobias[insanityPhobia_dog] = true;
                       return;
                     }
                     if(
                       monsterData->isUndead &&
                       insanityPhobias[insanityPhobia_undead] == false) {
-                      popupMessage += "I am afflicted by Necrophobia. The undead suddenly seem much more terrifying.";
-                      eng->popup->showMessage(popupMessage, true, "Necrophobia!");
+                      msg += "I am afflicted by Necrophobia. ";
+                      msg += "The undead suddenly seem much more terrifying.";
+                      eng->popup->showMessage(msg, true, "Necrophobia!");
                       insanityPhobias[insanityPhobia_undead] = true;
                       return;
                     }
@@ -426,16 +441,20 @@ void Player::incrInsanity() {
                   if(eng->dice.coinToss()) {
                     if(isStandingInOpenSpace()) {
                       if(insanityPhobias[insanityPhobia_openPlace] == false) {
-                        popupMessage += "I am afflicted by Agoraphobia. Open places suddenly seem terrifying.";
-                        eng->popup->showMessage(popupMessage, true, "Agoraphobia!");
+                        msg += "I am afflicted by Agoraphobia. ";
+                        msg += "Open places suddenly seem terrifying.";
+                        eng->popup->showMessage(
+                          msg, true, "Agoraphobia!", sfxInsanityRising);
                         insanityPhobias[insanityPhobia_openPlace] = true;
                         return;
                       }
                     }
                     if(isStandingInCrampedSpace()) {
                       if(insanityPhobias[insanityPhobia_closedPlace] == false) {
-                        popupMessage += "I am afflicted by Claustrophobia. Confined places suddenly seem terrifying.";
-                        eng->popup->showMessage(popupMessage, true, "Claustrophobia!");
+                        msg += "I am afflicted by Claustrophobia. ";
+                        msg += "Confined places suddenly seem terrifying.";
+                        eng->popup->showMessage(
+                          msg, true, "Claustrophobia!", sfxInsanityRising);
                         insanityPhobias[insanityPhobia_closedPlace] = true;
                         return;
                       }
@@ -443,8 +462,9 @@ void Player::incrInsanity() {
                   } else {
                     if(eng->map->getDLVL() >= 5) {
                       if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
-                        popupMessage += "I am afflicted by Bathophobia. It suddenly seems terrifying to delve deeper.";
-                        eng->popup->showMessage(popupMessage, true, "Bathophobia!");
+                        msg += "I am afflicted by Bathophobia. ";
+                        msg += "It suddenly seems terrifying to delve deeper.";
+                        eng->popup->showMessage(msg, true, "Bathophobia!");
                         insanityPhobias[insanityPhobia_deepPlaces] = true;
                         return;
                       }
@@ -470,18 +490,24 @@ void Player::incrInsanity() {
                                         0, endOfInsanityObsessions - 1));
               switch(obsession) {
                 case insanityObsession_masochism: {
-                  popupMessage += "To my alarm, I find myself encouraged by the sensation of pain. Every time I am hurt, ";
-                  popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-                  popupMessage += "(shock cannot go below " + toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng->popup->showMessage(popupMessage, true, "Masochistic obsession!");
+                  msg += "To my alarm, I find myself encouraged by the ";
+                  msg += "sensation of pain. Every time I am hurt, I find a ";
+                  msg += "little relief. However, my depraved mind can no ";
+                  msg += "longer find complete peace (shock cannot go below ";
+                  msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  eng->popup->showMessage(
+                    msg, true, "Masochistic obsession!", sfxInsanityRising);
                   insanityObsessions[insanityObsession_masochism] = true;
                   return;
                 } break;
                 case insanityObsession_sadism: {
-                  popupMessage += "To my alarm, I find myself encouraged by the pain I cause in others. For every life I take, ";
-                  popupMessage += "I find a little relief. However, my depraved mind can no longer find complete peace ";
-                  popupMessage += "(shock cannot go below " + toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng->popup->showMessage(popupMessage, true, "Sadistic obsession!");
+                  msg += "To my alarm, I find myself encouraged by the pain ";
+                  msg += "I cause in others. For every life I take, I find a ";
+                  msg += "little relief. However, my depraved mind can no ";
+                  msg += "longer find complete peace (shock cannot go below ";
+                  msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  eng->popup->showMessage(
+                    msg, true, "Sadistic obsession!", sfxInsanityRising);
                   insanityObsessions[insanityObsession_sadism] = true;
                   return;
                 } break;
@@ -493,8 +519,9 @@ void Player::incrInsanity() {
 
         case 7: {
           if(insanity_ > 8) {
-            popupMessage += "The shadows are closing in on me!";
-            eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
+            msg += "The shadows are closing in on me!";
+            eng->popup->showMessage(
+              msg, true, "Haunted by shadows!", sfxInsanityRising);
 
             const int NR_SHADOWS_LOWER = 1;
             const int NR_SHADOWS_UPPER =
@@ -510,10 +537,10 @@ void Player::incrInsanity() {
         } break;
 
         case 8: {
-          popupMessage += "I find myself in a peculiar detached daze, ";
-          popupMessage += "a tranced state of mind. I struggle to recall ";
-          popupMessage += "where I am, or what I'm doing.";
-          eng->popup->showMessage(popupMessage, true, "Confusion!");
+          msg += "I find myself in a peculiar detached daze, ";
+          msg += "a tranced state of mind. I struggle to recall ";
+          msg += "where I am, or what I'm doing.";
+          eng->popup->showMessage(msg, true, "Confusion!", sfxInsanityRising);
 
           propHandler_->tryApplyProp(
             new PropConfused(eng, propTurnsStandard));
@@ -687,13 +714,13 @@ void Player::onActorTurn() {
     return;
   }
 
-  if(eng->player->getMth() >= 15) {
-    eng->player->grantMthPower();
+  if(getMth() >= 15) {
+    grantMthPower();
   }
 
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> spotedEnemies;
-  eng->player->getSpotedEnemies(spotedEnemies);
+  getSpotedEnemies(spotedEnemies);
   if(spotedEnemies.empty()) {
     const InventoryScreen_t invScreen =
       eng->inventoryHandler->screenToOpenAfterDrop;
@@ -1219,8 +1246,10 @@ void Player::actorSpecific_addLight(
       if(item->getData().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern =
           dynamic_cast<DeviceElectricLantern*>(item);
-        isUsingLightGivingItem = lantern->isGivingLight();
-        break;
+        if(isUsingLightGivingItem == false) {
+          isUsingLightGivingItem = lantern->isGivingLight();
+          break;
+        }
       }
     }
   }

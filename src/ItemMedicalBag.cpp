@@ -13,6 +13,13 @@
 bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
+  vector<Actor*> spotedEnemies;
+  eng->player->getSpotedEnemies(spotedEnemies);
+  if(spotedEnemies.empty() == false) {
+    eng->log->addMsg("Not while an enemy is near.");
+    return false;
+  }
+
   curAction_ = playerChooseAction();
 
   if(curAction_ != endOfMedicalBagActions) {

@@ -11185,7 +11185,7 @@
 	"Engine.h"
 	<math.h>
 
-1385102617 source:d:\dev\ia.git\src\actor.cpp
+1385312499 source:d:\dev\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11321,7 +11321,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1384980213 source:d:\dev\ia.git\src\actordata.cpp
+1385310539 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11469,7 +11469,7 @@
 	<string>
 	<vector>
 
-1385290720 source:d:\dev\ia.git\src\actorplayer.cpp
+1385312901 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11691,12 +11691,13 @@
 	"Map.h"
 	"Postmortem.h"
 
-1385102618 source:d:\dev\ia.git\src\audio.cpp
+1385323081 source:d:\dev\ia.git\src\audio.cpp
 	"Audio.h"
 	<time.h>
 	"SDL/SDL_mixer.h"
 	"Engine.h"
 	"Map.h"
+	"Renderer.h"
 
 1382910266 source:d:\dev\ia.git\src\autodescribeactor.cpp
 	"AutoDescribeActor.h"
@@ -11834,7 +11835,7 @@
 1382910266 d:\dev\ia.git\src\close.h
 	"CommonData.h"
 
-1385290761 source:d:\dev\ia.git\src\config.cpp
+1385322432 source:d:\dev\ia.git\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -11846,6 +11847,7 @@
 	"Query.h"
 	"Renderer.h"
 	"Input.h"
+	"Audio.h"
 
 1382910176 d:\dev\ia.git\src\menuinputhandler.h
 	<vector>
@@ -12152,7 +12154,7 @@
 	"PlayerBonuses.h"
 	"Renderer.h"
 
-1385291996 source:d:\dev\ia.git\src\featureexaminable.cpp
+1385312379 source:d:\dev\ia.git\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -12475,7 +12477,7 @@
 	"ItemDevice.h"
 	"ItemMedicalBag.h"
 
-1385102617 source:d:\dev\ia.git\src\itemmedicalbag.cpp
+1385312708 source:d:\dev\ia.git\src\itemmedicalbag.cpp
 	"ItemMedicalBag.h"
 	"Engine.h"
 	"Properties.h"
@@ -12586,7 +12588,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1385102618 source:d:\dev\ia.git\src\main.cpp
+1385322866 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12846,7 +12848,7 @@
 	"FeatureTrap.h"
 	"FeatureFactory.h"
 
-1384808904 source:d:\dev\ia.git\src\popup.cpp
+1385311443 source:d:\dev\ia.git\src\popup.cpp
 	"Popup.h"
 	"Engine.h"
 	"Renderer.h"
@@ -12856,6 +12858,7 @@
 	"CommonTypes.h"
 	"MenuBrowser.h"
 	"MenuInputHandler.h"
+	"Audio.h"
 
 1385245684 source:d:\dev\ia.git\src\postmortem.cpp
 	"Postmortem.h"
@@ -12873,7 +12876,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1385290315 source:d:\dev\ia.git\src\properties.cpp
+1385312154 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -13004,7 +13007,7 @@
 	"TextFormatting.h"
 	"Engine.h"
 
-1384982435 source:d:\dev\ia.git\src\thrower.cpp
+1385313261 source:d:\dev\ia.git\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -13132,7 +13135,7 @@
 	"Config.h"
 	"Art.h"
 
-1385287143 source:d:\dev\ia.git\src\renderer.cpp
+1385321552 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -13732,7 +13735,7 @@
 1383768570 d:\dev\ia.git\test\include\stubs\renderer.h
 	"Panel.h"
 
-1384887029 d:\dev\ia.git\test\include\stubs\audio.h
+1385322087 d:\dev\ia.git\test\include\stubs\audio.h
 	"AudioIds.h"
 	"CommonTypes.h"
 
@@ -13809,7 +13812,7 @@
 	"Converters.h"
 	"CommonTypes.h"
 
-1384291165 d:\dev\ia.git\include\audioids.h
+1385310642 d:\dev\ia.git\include\audioids.h
 
 1384887029 d:\dev\ia.git\include\sound.h
 	<string>
@@ -13845,7 +13848,7 @@
 	"CommonData.h"
 	"CommonTypes.h"
 
-1382992001 d:\dev\ia.git\include\config.h
+1385321863 d:\dev\ia.git\include\config.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -14068,9 +14071,10 @@
 
 1382910266 d:\dev\ia.git\include\characterlines.h
 
-1382910266 d:\dev\ia.git\include\popup.h
+1385310782 d:\dev\ia.git\include\popup.h
 	<vector>
 	<string>
+	"AudioIds.h"
 
 1382910176 d:\dev\ia.git\include\postmortem.h
 	<vector>
@@ -14287,7 +14291,7 @@
 	"Config.h"
 	"Art.h"
 
-1384887029 d:\dev\ia.git\include\audio.h
+1385322050 d:\dev\ia.git\include\audio.h
 	"SDL/SDL_mixer.h"
 	"CommonTypes.h"
 	"AudioIds.h"

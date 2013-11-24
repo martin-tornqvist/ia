@@ -15,6 +15,8 @@ public:
   Audio(Engine* engine);
   ~Audio();
 
+  void initAndClearPrev();
+
   //Returns channel playing on
   int play(const Sfx_t sfx, const int VOL_PERCENT_TOT = 100,
            const int VOL_PERCENT_L = 50);
@@ -28,8 +30,6 @@ public:
 
 private:
   Sfx_t getAmbSfxSuitableForDlvl() const;
-
-  void loadAllAudio();
 
   void loadAudioFile(const Sfx_t sfx, const string& filename);
 

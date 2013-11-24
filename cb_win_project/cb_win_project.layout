@@ -1,274 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug" />
-	<File name="..\src\MapGenUtils.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<ActiveTarget name="Debug+UT" />
+	<File name="..\include\CommonData.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2595" topLine="37" />
+			<Cursor1 position="346" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\MapTests.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Log.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3238" topLine="74" />
+			<Cursor1 position="5428" topLine="159" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_handleInventory.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Renderer.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="567" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\Attack.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="10503" topLine="249" />
-		</Cursor>
-	</File>
-	<File name="..\include\FovPreCalc.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="285" topLine="7" />
-		</Cursor>
-	</File>
-	<File name="..\include\MenuBrowser.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="447" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_makeRoomForFriend.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3670" topLine="59" />
+			<Cursor1 position="9260" topLine="302" />
 		</Cursor>
 	</File>
 	<File name="..\src\FeatureExaminable.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="32315" topLine="976" />
+			<Cursor1 position="27547" topLine="832" />
 		</Cursor>
 	</File>
-	<File name="..\src\Marker.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Config.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7343" topLine="228" />
+			<Cursor1 position="1016" topLine="30" />
 		</Cursor>
 	</File>
-	<File name="..\include\MersenneTwister.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\BasicUtils.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="10437" topLine="282" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_moveTowardsTargetSimple.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="445" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\Input.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="144" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\MenuInputHandler.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="680" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\Inventory.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="17588" topLine="594" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_setPathToLeaderIfNoLosToLeader.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="577" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\FeatureLiquid.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="869" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\CommonTypes.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6285" topLine="246" />
-		</Cursor>
-	</File>
-	<File name="..\include\InventoryHandler.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="651" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\Pathfinding.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="726" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\InventoryIndexes.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1469" topLine="53" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_stepPath.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="325" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\FeatureProxEvent.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1638" topLine="53" />
-		</Cursor>
-	</File>
-	<File name="..\include\Converters.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="213" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\FeatureTrap.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="21135" topLine="601" />
-		</Cursor>
-	</File>
-	<File name="..\src\PlayerCreateCharacter.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="8113" topLine="188" />
-		</Cursor>
-	</File>
-	<File name="..\include\PopulateMonsters.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="428" topLine="2" />
-		</Cursor>
-	</File>
-	<File name="..\src\Fov.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2037" topLine="69" />
-		</Cursor>
-	</File>
-	<File name="..\include\ActorData.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="211" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\PlayerVisualMemory.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="95" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\AttackRanged.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6510" topLine="160" />
-		</Cursor>
-	</File>
-	<File name="..\include\ItemData.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5801" topLine="222" />
-		</Cursor>
-	</File>
-	<File name="..\src\ItemDevice.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4152" topLine="123" />
-		</Cursor>
-	</File>
-	<File name="..\src\GameTime.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1522" topLine="40" />
-		</Cursor>
-	</File>
-	<File name="..\include\Engine.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="895" topLine="2" />
-		</Cursor>
-	</File>
-	<File name="..\include\ActorMonster.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="8799" topLine="416" />
-		</Cursor>
-	</File>
-	<File name="..\src\PopulateMonsters.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="19073" topLine="541" />
-		</Cursor>
-	</File>
-	<File name="..\src\Audio.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2650" topLine="53" />
-		</Cursor>
-	</File>
-	<File name="..\include\ItemDrop.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="196" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\Properties.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="17233" topLine="677" />
-		</Cursor>
-	</File>
-	<File name="..\src\Popup.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4127" topLine="102" />
-		</Cursor>
-	</File>
-	<File name="..\src\Bash.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="687" topLine="14" />
-		</Cursor>
-	</File>
-	<File name="..\src\ItemMedicalBag.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4372" topLine="144" />
-		</Cursor>
-	</File>
-	<File name="..\include\Audio.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="171" topLine="5" />
-		</Cursor>
-	</File>
-	<File name="..\src\Properties.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="38080" topLine="1029" />
-		</Cursor>
-	</File>
-	<File name="..\include\Renderer.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4018" topLine="102" />
-		</Cursor>
-	</File>
-	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13179" topLine="428" />
-		</Cursor>
-	</File>
-	<File name="..\include\FeatureExaminable.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4230" topLine="139" />
-		</Cursor>
-	</File>
-	<File name="..\src\Reload.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="370" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\ItemScroll.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="257" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\BasicUtils.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5321" topLine="174" />
-		</Cursor>
-	</File>
-	<File name="..\src\Renderer.cpp" open="1" top="1" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5723" topLine="181" />
-		</Cursor>
-	</File>
-	<File name="..\src\CharacterLines.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="937" topLine="35" />
-		</Cursor>
-	</File>
-	<File name="..\include\Sound.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1574" topLine="28" />
-		</Cursor>
-	</File>
-	<File name="..\src\Knockback.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3402" topLine="67" />
+			<Cursor1 position="0" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="..\src\SaveHandler.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -276,39 +36,39 @@
 			<Cursor1 position="2727" topLine="82" />
 		</Cursor>
 	</File>
-	<File name="..\include\Log.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Bot.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1276" topLine="2" />
+			<Cursor1 position="909" topLine="14" />
 		</Cursor>
 	</File>
-	<File name="..\src\Config.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\BresenhamLine.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="21406" topLine="569" />
-		</Cursor>
-	</File>
-	<File name="..\include\Spells.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6386" topLine="185" />
-		</Cursor>
-	</File>
-	<File name="..\src\Look.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2376" topLine="10" />
+			<Cursor1 position="337" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\src\Spells.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="19499" topLine="575" />
+			<Cursor1 position="2775" topLine="54" />
 		</Cursor>
 	</File>
-	<File name="..\include\MainMenu.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FeatureLiquid.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="95" topLine="0" />
+			<Cursor1 position="869" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\Credits.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\CharacterDescr.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="360" topLine="0" />
+			<Cursor1 position="2808" topLine="62" />
+		</Cursor>
+	</File>
+	<File name="..\src\Thrower.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6366" topLine="186" />
+		</Cursor>
+	</File>
+	<File name="..\src\FeatureProxEvent.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1638" topLine="53" />
 		</Cursor>
 	</File>
 	<File name="..\src\Manual.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -316,34 +76,24 @@
 			<Cursor1 position="777" topLine="3" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_handleClosedBlockingDoor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\DungeonMaster.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="767" topLine="6" />
+			<Cursor1 position="1017" topLine="19" />
 		</Cursor>
 	</File>
-	<File name="..\src\Thrower.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Close.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4984" topLine="131" />
+			<Cursor1 position="470" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\Disarm.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\test\include\stubs\Audio.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="415" topLine="0" />
+			<Cursor1 position="167" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\Map.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FeatureTrap.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="350" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13495" topLine="449" />
-		</Cursor>
-	</File>
-	<File name="..\include\FeatureLiquid.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="435" topLine="0" />
+			<Cursor1 position="21135" topLine="601" />
 		</Cursor>
 	</File>
 	<File name="..\src\MapGenBsp.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -351,19 +101,19 @@
 			<Cursor1 position="38890" topLine="1052" />
 		</Cursor>
 	</File>
-	<File name="..\test\include\stubs\Audio.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\MapGen.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="257" topLine="0" />
+			<Cursor1 position="1486" topLine="48" />
 		</Cursor>
 	</File>
-	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Converters.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1366" topLine="22" />
+			<Cursor1 position="570" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\ActorFactory.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Fov.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="338" topLine="0" />
+			<Cursor1 position="2037" topLine="69" />
 		</Cursor>
 	</File>
 	<File name="..\src\MapGenEgyptTomb.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -371,24 +121,14 @@
 			<Cursor1 position="1473" topLine="15" />
 		</Cursor>
 	</File>
-	<File name="..\test\include\stubs\Renderer.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Feature.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="498" topLine="3" />
+			<Cursor1 position="385" topLine="10" />
 		</Cursor>
 	</File>
-	<File name="..\src\Examine.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\GameTime.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="406" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\FeatureTrap.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1134" topLine="45" />
-		</Cursor>
-	</File>
-	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="26198" topLine="773" />
+			<Cursor1 position="2192" topLine="61" />
 		</Cursor>
 	</File>
 	<File name="..\src\MapGenTrapezohedronLvl.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -396,19 +136,19 @@
 			<Cursor1 position="939" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\test\src\main.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\FeatureDoor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1430" topLine="47" />
+			<Cursor1 position="484" topLine="29" />
 		</Cursor>
 	</File>
-	<File name="..\src\Feature.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="458" topLine="3" />
+			<Cursor1 position="778" topLine="27" />
 		</Cursor>
 	</File>
-	<File name="..\include\Fov.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\RoomTheme.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="166" topLine="0" />
+			<Cursor1 position="726" topLine="26" />
 		</Cursor>
 	</File>
 	<File name="..\src\MapPatterns.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -416,19 +156,24 @@
 			<Cursor1 position="2212" topLine="64" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_look_becomePlayerAware.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\FeatureFactory.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="769" topLine="33" />
+			<Cursor1 position="632" topLine="9" />
 		</Cursor>
 	</File>
-	<File name="..\src\FeatureDoor.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="18681" topLine="585" />
+			<Cursor1 position="7904" topLine="261" />
 		</Cursor>
 	</File>
-	<File name="..\include\GameTime.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\SdlWrapper.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="650" topLine="15" />
+			<Cursor1 position="1044" topLine="22" />
+		</Cursor>
+	</File>
+	<File name="..\src\Inventory.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="17715" topLine="594" />
 		</Cursor>
 	</File>
 	<File name="..\src\MapTests.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -436,14 +181,24 @@
 			<Cursor1 position="11936" topLine="402" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_moveToRandomAdjacentCell.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\FeatureLever.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1945" topLine="40" />
+			<Cursor1 position="424" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\FeatureFactory.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Explosion.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6822" topLine="153" />
+			<Cursor1 position="5799" topLine="155" />
+		</Cursor>
+	</File>
+	<File name="..\src\InventoryIndexes.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1469" topLine="53" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_handleInventory.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="567" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\src\MenuBrowser.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -451,54 +206,29 @@
 			<Cursor1 position="1826" topLine="36" />
 		</Cursor>
 	</File>
-	<File name="..\src\Input.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4238" topLine="142" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_setPathToLairIfNoLosToLair.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="499" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\src\FeatureLever.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1102" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="..\include\CommonData.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="346" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\Inventory.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3217" topLine="110" />
-		</Cursor>
-	</File>
 	<File name="..\include\PlayerBonuses.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1125" topLine="35" />
 		</Cursor>
 	</File>
-	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\TextFormatting.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9221" topLine="287" />
+			<Cursor1 position="217" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_setPathToPlayerIfAware.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\AI_makeRoomForFriend.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="744" topLine="14" />
+			<Cursor1 position="3670" topLine="59" />
 		</Cursor>
 	</File>
-	<File name="..\include\Config.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\AbilityValues.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1333" topLine="32" />
+			<Cursor1 position="1687" topLine="18" />
 		</Cursor>
 	</File>
-	<File name="..\include\AI_stepToLairIfHasLosToLair.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\AI_moveTowardsTargetSimple.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="776" topLine="3" />
+			<Cursor1 position="445" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\src\PlayerBonuses.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -506,14 +236,19 @@
 			<Cursor1 position="2489" topLine="77" />
 		</Cursor>
 	</File>
-	<File name="..\src\ItemArmor.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1712" topLine="54" />
+			<Cursor1 position="51540" topLine="1368" />
 		</Cursor>
 	</File>
-	<File name="..\include\Actor.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\ItemDevice.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3380" topLine="94" />
+			<Cursor1 position="4152" topLine="93" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_setPathToLeaderIfNoLosToLeader.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="577" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\src\PlayerSpellsHandler.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -521,39 +256,44 @@
 			<Cursor1 position="1215" topLine="31" />
 		</Cursor>
 	</File>
-	<File name="..\src\AttackMelee.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\FovPreCalc.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="780" topLine="9" />
+			<Cursor1 position="285" topLine="7" />
 		</Cursor>
 	</File>
-	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\ActorMonster.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="26691" topLine="703" />
+			<Cursor1 position="1428" topLine="29" />
 		</Cursor>
 	</File>
-	<File name="..\src\FovPreCalc.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\AI_stepPath.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="664" topLine="18" />
+			<Cursor1 position="325" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\DungeonMaster.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\ActorData.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1017" topLine="19" />
+			<Cursor1 position="211" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\AttackShotgun.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2968" topLine="71" />
+			<Cursor1 position="42038" topLine="1229" />
 		</Cursor>
 	</File>
-	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\ItemMedicalBag.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4129" topLine="101" />
+			<Cursor1 position="239" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\ActorPlayer.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\AI_castRandomSpell.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2409" topLine="88" />
+			<Cursor1 position="922" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\ActorMonster.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8799" topLine="416" />
 		</Cursor>
 	</File>
 	<File name="..\src\PopulateTraps.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -566,14 +306,24 @@
 			<Cursor1 position="218" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\ItemDrop.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9852" topLine="152" />
+			<Cursor1 position="196" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\Feature.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Input.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="385" topLine="10" />
+			<Cursor1 position="144" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\Attack.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10503" topLine="249" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemPotion.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13179" topLine="428" />
 		</Cursor>
 	</File>
 	<File name="..\src\Postmortem.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -581,24 +331,19 @@
 			<Cursor1 position="5857" topLine="156" />
 		</Cursor>
 	</File>
-	<File name="..\src\BasicUtils.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\InventoryHandler.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="6" />
+			<Cursor1 position="651" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\ItemMedicalBag.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\AttackRanged.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="143" topLine="0" />
+			<Cursor1 position="6510" topLine="160" />
 		</Cursor>
 	</File>
-	<File name="..\include\FeatureDoor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Audio.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="484" topLine="29" />
-		</Cursor>
-	</File>
-	<File name="..\include\AudioIds.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="450" topLine="0" />
+			<Cursor1 position="749" topLine="8" />
 		</Cursor>
 	</File>
 	<File name="..\src\Query.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -606,39 +351,49 @@
 			<Cursor1 position="2684" topLine="48" />
 		</Cursor>
 	</File>
-	<File name="..\src\Bot.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Feature.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="909" topLine="14" />
+			<Cursor1 position="2483" topLine="89" />
 		</Cursor>
 	</File>
-	<File name="..\include\ItemPotion.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Audio.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3428" topLine="103" />
+			<Cursor1 position="3016" topLine="69" />
 		</Cursor>
 	</File>
-	<File name="..\include\RoomTheme.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Knockback.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="726" topLine="26" />
+			<Cursor1 position="3402" topLine="67" />
 		</Cursor>
 	</File>
-	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FeatureDoor.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1732" topLine="34" />
+			<Cursor1 position="10992" topLine="347" />
 		</Cursor>
 	</File>
-	<File name="..\src\CharacterDescr.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\ItemScroll.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2808" topLine="62" />
+			<Cursor1 position="257" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\include\SdlWrapper.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\CommonTypes.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1044" topLine="22" />
+			<Cursor1 position="6285" topLine="246" />
 		</Cursor>
 	</File>
-	<File name="..\src\JamWithSpike.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Bash.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="695" topLine="0" />
+			<Cursor1 position="687" topLine="14" />
+		</Cursor>
+	</File>
+	<File name="..\src\Look.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2376" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="..\include\BasicUtils.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5321" topLine="174" />
 		</Cursor>
 	</File>
 	<File name="..\src\RoomTheme.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -646,19 +401,19 @@
 			<Cursor1 position="16747" topLine="476" />
 		</Cursor>
 	</File>
-	<File name="..\src\Close.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FeatureFactory.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="470" topLine="0" />
+			<Cursor1 position="6822" topLine="153" />
 		</Cursor>
 	</File>
-	<File name="..\src\Log.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\ItemData.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5428" topLine="159" />
+			<Cursor1 position="5801" topLine="222" />
 		</Cursor>
 	</File>
-	<File name="..\include\BresenhamLine.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Converters.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="337" topLine="0" />
+			<Cursor1 position="213" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\src\Sound.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -666,29 +421,14 @@
 			<Cursor1 position="416" topLine="6" />
 		</Cursor>
 	</File>
-	<File name="..\src\Converters.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FeatureLever.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="570" topLine="0" />
+			<Cursor1 position="1102" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="..\include\TextFormatting.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Log.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="217" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\include\FeatureFactory.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="632" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="..\src\MainMenu.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5170" topLine="157" />
-		</Cursor>
-	</File>
-	<File name="..\include\AI_castRandomSpell.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="341" topLine="0" />
+			<Cursor1 position="1276" topLine="2" />
 		</Cursor>
 	</File>
 	<File name="..\src\TextFormatting.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -696,19 +436,19 @@
 			<Cursor1 position="338" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\AbilityValues.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\MainMenu.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1687" topLine="18" />
+			<Cursor1 position="5170" topLine="157" />
 		</Cursor>
 	</File>
-	<File name="..\include\FeatureLever.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\MainMenu.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="424" topLine="0" />
+			<Cursor1 position="95" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\Map.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\CharacterLines.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="969" topLine="38" />
+			<Cursor1 position="6826" topLine="188" />
 		</Cursor>
 	</File>
 	<File name="..\src\main.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -716,24 +456,24 @@
 			<Cursor1 position="4843" topLine="108" />
 		</Cursor>
 	</File>
-	<File name="..\src\DungeonClimb.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Map.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="778" topLine="27" />
+			<Cursor1 position="969" topLine="38" />
 		</Cursor>
 	</File>
-	<File name="..\include\MapGen.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Map.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1486" topLine="48" />
+			<Cursor1 position="350" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="..\src\ActorData.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\Engine.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="72550" topLine="1962" />
+			<Cursor1 position="326" topLine="2" />
 		</Cursor>
 	</File>
-	<File name="..\src\MapGenCaveLvl.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Config.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2840" topLine="41" />
+			<Cursor1 position="17671" topLine="452" />
 		</Cursor>
 	</File>
 	<File name="..\test\include\stubs\Input.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -741,19 +481,9 @@
 			<Cursor1 position="308" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\Engine.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\MapGenCaveLvl.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7904" topLine="261" />
-		</Cursor>
-	</File>
-	<File name="..\src\ActorMonster.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1231" topLine="22" />
-		</Cursor>
-	</File>
-	<File name="..\src\MapGenForest.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5060" topLine="179" />
+			<Cursor1 position="2840" topLine="41" />
 		</Cursor>
 	</File>
 	<File name="..\include\MapPatterns.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -761,14 +491,294 @@
 			<Cursor1 position="565" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\Explosion.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\Credits.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5799" topLine="155" />
+			<Cursor1 position="360" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\src\ActorPlayer.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\src\FovPreCalc.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="44970" topLine="1294" />
+			<Cursor1 position="664" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="..\src\MapGenForest.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5060" topLine="179" />
+		</Cursor>
+	</File>
+	<File name="..\include\MapTests.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3238" topLine="74" />
+		</Cursor>
+	</File>
+	<File name="..\src\Disarm.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="415" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\MapGenUtils.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2595" topLine="37" />
+		</Cursor>
+	</File>
+	<File name="..\include\MenuBrowser.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="447" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\test\include\stubs\Renderer.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="498" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="..\include\FeatureExaminable.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4230" topLine="139" />
+		</Cursor>
+	</File>
+	<File name="..\src\DungeonMaster.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1366" topLine="22" />
+		</Cursor>
+	</File>
+	<File name="..\src\Input.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="11460" topLine="329" />
+		</Cursor>
+	</File>
+	<File name="..\include\MersenneTwister.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10437" topLine="282" />
+		</Cursor>
+	</File>
+	<File name="..\test\src\main.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1430" topLine="47" />
+		</Cursor>
+	</File>
+	<File name="..\src\Examine.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="406" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\Sound.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1574" topLine="28" />
+		</Cursor>
+	</File>
+	<File name="..\src\InventoryHandler.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="9221" topLine="287" />
+		</Cursor>
+	</File>
+	<File name="..\src\Marker.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7343" topLine="228" />
+		</Cursor>
+	</File>
+	<File name="..\include\FeatureLiquid.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="435" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\Spells.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6386" topLine="185" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_look_becomePlayerAware.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="401" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\MenuInputHandler.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="680" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemArmor.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1712" topLine="54" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_moveToRandomAdjacentCell.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1945" topLine="40" />
+		</Cursor>
+	</File>
+	<File name="..\src\Pathfinding.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="726" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\FeatureTrap.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1134" topLine="45" />
+		</Cursor>
+	</File>
+	<File name="..\src\Actor.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1928" topLine="59" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemData.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="33186" topLine="855" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_setPathToLairIfNoLosToLair.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="499" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_stepToLairIfHasLosToLair.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="776" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="..\src\PlayerCreateCharacter.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8113" topLine="188" />
+		</Cursor>
+	</File>
+	<File name="..\include\PopulateMonsters.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="428" topLine="2" />
+		</Cursor>
+	</File>
+	<File name="..\include\Fov.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="166" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\ActorFactory.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6474" topLine="121" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemDrop.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4129" topLine="101" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_setPathToPlayerIfAware.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="744" topLine="14" />
+		</Cursor>
+	</File>
+	<File name="..\include\Actor.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1784" topLine="50" />
+		</Cursor>
+	</File>
+	<File name="..\src\PlayerVisualMemory.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="95" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\Popup.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="416" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\GameTime.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="650" topLine="15" />
+		</Cursor>
+	</File>
+	<File name="..\src\ActorMonsterSpecific.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="26198" topLine="773" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemFactory.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="9852" topLine="152" />
+		</Cursor>
+	</File>
+	<File name="..\src\PopulateMonsters.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="19073" topLine="541" />
+		</Cursor>
+	</File>
+	<File name="..\include\Properties.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4766" topLine="195" />
+		</Cursor>
+	</File>
+	<File name="..\include\AI_handleClosedBlockingDoor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="767" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="..\include\ActorPlayer.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2471" topLine="85" />
+		</Cursor>
+	</File>
+	<File name="..\src\Popup.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="234" topLine="72" />
+		</Cursor>
+	</File>
+	<File name="..\include\Inventory.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="764" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="..\src\AttackMelee.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="780" topLine="9" />
+		</Cursor>
+	</File>
+	<File name="..\src\ItemScroll.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1732" topLine="34" />
+		</Cursor>
+	</File>
+	<File name="..\src\Properties.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="37862" topLine="1030" />
+		</Cursor>
+	</File>
+	<File name="..\include\Renderer.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4018" topLine="102" />
+		</Cursor>
+	</File>
+	<File name="..\include\ItemMedicalBag.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="143" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\AttackShotgun.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2968" topLine="71" />
+		</Cursor>
+	</File>
+	<File name="..\src\JamWithSpike.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="695" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\include\AudioIds.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="574" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="..\src\Reload.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="370" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\src\FeatureData.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="24145" topLine="713" />
+		</Cursor>
+	</File>
+	<File name="..\include\ItemPotion.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3428" topLine="103" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

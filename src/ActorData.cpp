@@ -1197,6 +1197,8 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
+  d.aggroSfxMonsterSeen = sfxFlappingWings;
+  d.aggroSfxMonsterHidden = sfxFlappingWings;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
@@ -1234,6 +1236,8 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
+  d.aggroSfxMonsterSeen = sfxFlappingWings;
+  d.aggroSfxMonsterHidden = sfxFlappingWings;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
@@ -1990,6 +1994,9 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = false;
   d.canBashDoors = true;
   d.description = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
+  d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
+  d.aggroSfxMonsterSeen = sfxFlappingWings;
+  d.aggroSfxMonsterHidden = sfxFlappingWings;
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monsterShockLevel = monsterShockLevel_mindShattering;
