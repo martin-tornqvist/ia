@@ -37,6 +37,10 @@ Monster::~Monster() {
 }
 
 void Monster::onActorTurn() {
+  if(eng->mapTests->isPosInsideMap(pos) == false) {
+    throw runtime_error("Monster outside map");
+  }
+
   waiting_ = !waiting_;
 
   if(waiting_) {
@@ -198,7 +202,10 @@ void Monster::onMonsterHit(int& dmg) {
 
 void Monster::moveDir(Dir_t dir) {
   if(dir == endOfDirs) {
-    throw logic_error("Bad direction");
+    throw runtime_error("Bad direction");
+  }
+  if(eng->mapTests->isPosInsideMap(pos) == false) {
+    throw runtime_error("Monster outside map");
   }
 
   getPropHandler()->changeMoveDir(pos, dir);
@@ -209,7 +216,7 @@ void Monster::moveDir(Dir_t dir) {
     if(f->getId() == feature_trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == dirCenter) {
-        traceHi << "Monster: Move prevented by trap" << endl;
+        traceVerbose << "Monster: Move prevented by trap" << endl;
         eng->gameTime->endTurnOfCurrentActor();
         return;
       }
@@ -220,6 +227,11 @@ void Monster::moveDir(Dir_t dir) {
   lastDirTraveled = dir;
 
   const Pos targetCell(pos + DirConverter(eng).getOffset(dir));
+
+  if(eng->mapTests->isPosInsideMap(targetCell) == false) {
+    throw runtime_error("Monster move target cell outside map");
+  }
+
   pos = targetCell;
 
   // Bump features in target cell (i.e. to trigger traps)

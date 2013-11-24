@@ -9,6 +9,10 @@
 #include "Renderer.h"
 
 Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
+  if(id < 1 || id >= endOfActorIds) {
+    throw runtime_error("Bad actor id");
+  }
+
   switch(id) {
     case actor_zombie:              return new ZombieClaw;            break;
     case actor_zombieAxe:           return new ZombieAxe;             break;
@@ -125,12 +129,6 @@ void ActorFactory::summonMonsters(
 
   vector<Pos> positionsToAnimate;
   positionsToAnimate.resize(0);
-  for(int i = 0; i < NR_TO_SPAWN; i++) {
-    const Pos& pos = freeCells.at(i);
-    positionsToAnimate.push_back(pos);
-  }
-  eng->renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-    positionsToAnimate, clrMagenta);
 
   for(int i = 0; i < NR_TO_SPAWN; i++) {
     const Pos&      pos = freeCells.at(i);
@@ -148,7 +146,13 @@ void ActorFactory::summonMonsters(
     if(MAKE_MONSTERS_AWARE) {
       monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
     }
+
+    if(eng->player->checkIfSeeActor(*actor, NULL)) {
+      positionsToAnimate.push_back(pos);
+    }
   }
+
+  eng->renderer->drawBlastAnimationAtPositions(positionsToAnimate, clrMagenta);
 }
 
 

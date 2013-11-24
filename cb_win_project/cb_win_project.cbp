@@ -17,10 +17,14 @@
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 					<Add directory="../include/debugModeIncl" />
 					<Add directory="../include" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
@@ -43,6 +47,7 @@
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 					<Add directory="../test/UnitTest++/src" />
 					<Add directory="../test/include/stubs" />
@@ -50,6 +55,7 @@
 					<Add directory="../include" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add library="..\test\UnitTest++\bin\libUnitTest++.a" />
 				</Linker>
 				<ExtraCommands>

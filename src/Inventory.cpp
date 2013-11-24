@@ -607,7 +607,8 @@ void Inventory::putItemInIntrinsics(Item* item) {
   if(item->getData().isIntrinsic) {
     intrinsics_.push_back(item);
   } else {
-    trace << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, in putItemInIntrinsics()" << endl;
+    trace << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, ";
+    trace << "in putItemInIntrinsics()" << endl;
   }
 }
 

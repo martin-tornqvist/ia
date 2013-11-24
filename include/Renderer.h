@@ -118,8 +118,10 @@ private:
   void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
                                  const SDL_Color& clr);
 
-  Uint32 getpixel(SDL_Surface* const surface, const Pos& pos);
-  void putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel);
+  Uint32 getPixel(SDL_Surface* const surface,
+                  const int PIXEL_X, const int PIXEL_Y);
+  void putPixel(SDL_Surface* const surface,
+                const int PIXEL_X, const int PIXEL_Y, Uint32 pixel);
 
   bool tilePixelData_[400][400];
   bool fontPixelData_[400][400];

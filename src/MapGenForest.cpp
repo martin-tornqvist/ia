@@ -98,7 +98,7 @@ void MapGenIntroForest::buildForestTreePatch() {
 
   while(nrTerrainCreated < terrain_size) {
     if(
-      eng->mapTests->isCellInsideMap(curPos) &&
+      eng->mapTests->isPosInsideMap(curPos) &&
       eng->basicUtils->chebyshevDist(curPos, eng->player->pos) > 2) {
       eng->featureFactory->spawnFeatureAt(feature_tree, curPos);
       nrTerrainCreated++;
@@ -121,7 +121,7 @@ void MapGenIntroForest::buildForestTreePatch() {
 
         curPos += Pos(stepX, stepY);
 
-        if(eng->mapTests->isCellInsideMap(curPos) == false) {
+        if(eng->mapTests->isPosInsideMap(curPos) == false) {
           nrTerrainCreated = 99999;
           break;
         }
@@ -177,7 +177,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(path.at(i) + Pos(dx, dy));
-        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isCellInsideMap(c)) {
+        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isPosInsideMap(c)) {
           eng->featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
       }
@@ -259,7 +259,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 //  }
 }
 
-void MapGenIntroForest::specificRun() {
+bool MapGenIntroForest::specificRun() {
   int grass = 0;
   for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(int x = 1; x < MAP_X_CELLS - 1; x++) {
@@ -286,5 +286,7 @@ void MapGenIntroForest::specificRun() {
   buildForestLimit();
 
   eng->populateMonsters->populateIntroLevel();
+
+  return true;
 }
 

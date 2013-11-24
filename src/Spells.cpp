@@ -63,13 +63,17 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
   int costMax = getSpecificMaxSpiCost();
 
   if(IS_BASE_COST_ONLY == false) {
-    for(int dy = -1; dy <= 1; dy++) {
-      for(int dx = -1; dx <= 1; dx++) {
-        const Pos pos(caster->pos + Pos(dx, dy));
-        if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_altar) {
+    const int X0 = max(0, caster->pos.x - 1);
+    const int Y0 = max(0, caster->pos.y - 1);
+    const int X1 = min(MAP_X_CELLS - 1, caster->pos.x + 1);
+    const int Y1 = min(MAP_Y_CELLS - 1, caster->pos.y + 1);
+
+    for(int y = Y0; y <= Y1; y++) {
+      for(int x = X0; x <= X1; x++) {
+        if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
           costMax -= 1;
-          dy = 999;
-          dx = 999;
+          y = 9999;
+          x = 9999;
         }
       }
     }

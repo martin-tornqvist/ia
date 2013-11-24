@@ -331,10 +331,12 @@ void Door::tryBash(Actor* actorTrying) {
 
     if(IS_PLAYER) {
       const int SKILL_VALUE_UNHURT = 75;
-      const bool TRYER_SPRAINED = eng->abilityRoll->roll(SKILL_VALUE_UNHURT) <= failSmall;
+      const bool TRYER_SPRAINED =
+        eng->abilityRoll->roll(SKILL_VALUE_UNHURT) <= failSmall;
 
       const int SKILL_VALUE_BALANCE = 75;
-      const bool TRYER_OFF_BALANCE = eng->abilityRoll->roll(SKILL_VALUE_BALANCE) <= failSmall;
+      const bool TRYER_OFF_BALANCE =
+        eng->abilityRoll->roll(SKILL_VALUE_BALANCE) <= failSmall;
 
       if(TRYER_SPRAINED) {
         if(IS_PLAYER) {
@@ -344,7 +346,7 @@ void Door::tryBash(Actor* actorTrying) {
             eng->log->addMsg(actorTrying->getNameThe() + " is hurt.");
           }
         }
-        const int SPRAIN_DMG = 1;
+        const int SPRAIN_DMG = eng->dice.range(1, 5);
         actorTrying->hit(SPRAIN_DMG, dmgType_pure, false);
       }
 
@@ -380,7 +382,8 @@ void Door::tryBash(Actor* actorTrying) {
         }
       } else {
         if(PLAYER_SEE_TRYER) {
-          eng->log->addMsg(actorTrying->getNameThe() + " smashes into a door.");
+          eng->log->addMsg(
+            actorTrying->getNameThe() + " smashes into a door.");
           eng->log->addMsg("The door crashes open!");
         } else if(PLAYER_SEE_DOOR) {
           eng->log->addMsg("A door crashes open!");

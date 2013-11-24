@@ -23,7 +23,7 @@ void Bot::init() {
 
 void Bot::act() {
   const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
-  const int NR_OF_RUNS = 20;
+  const int NR_OF_RUNS = 500;
   int runCount = 1;
 
   //=======================================================================
@@ -32,8 +32,8 @@ void Bot::act() {
   const int NR_ACTORS = eng->gameTime->getLoopSize();
   for(int i = 0; i < NR_ACTORS; i++) {
     const Actor* const actor = eng->gameTime->getActorAt(i);
-    if(eng->mapTests->isCellInsideMap(actor->pos) == false) {
-      trace << "[WARNING] Actor outside map, in Bot::act()" << endl;
+    if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+      throw runtime_error("Actor outside map");
     }
   }
   //=======================================================================
@@ -127,7 +127,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(eng->player->pos);
 
   if(eng->mapTests->isCellsAdj(playerCell, cellToGoTo, true) == false) {
-    throw logic_error("Bad position parameter");
+    throw runtime_error("Bad position parameter");
   }
 
   //Get relative positions
@@ -137,7 +137,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
   if(cellToGoTo != playerCell) {
-    if(xRel == 0 && yRel == 0) {throw logic_error("Expected non zero");}
+    if(xRel == 0 && yRel == 0) {throw runtime_error("Expected non zero");}
   }
 
   char key = ' ';

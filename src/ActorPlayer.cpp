@@ -293,6 +293,7 @@ void Player::incrMth(const int VAL) {
 }
 
 void Player::incrInsanity() {
+  trace << "Player: Increasing insanity" << endl;
   string popupMessage = getInsanity() < 100 ? "Insanity draws nearer... " : "";
 
   const int INS_INCR = 6;
@@ -495,46 +496,15 @@ void Player::incrInsanity() {
             popupMessage += "The shadows are closing in on me!";
             eng->popup->showMessage(popupMessage, true, "Haunted by shadows!");
 
-            bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-            eng->mapTests->makeMoveBlockerArrayForBodyType(
-              actorBodyType_normal, blockers);
+            const int NR_SHADOWS_LOWER = 1;
+            const int NR_SHADOWS_UPPER =
+              getConstrInRange(2, (eng->map->getDLVL() + 1) / 2, 6);
+            const int NR_SHADOWS =
+              eng->dice.range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
-            vector<Pos> spawnPosCandidates;
+            eng->actorFactory->summonMonsters(
+              pos, vector<ActorId_t>(NR_SHADOWS, actor_shadow), true);
 
-            const int D_MAX = FOV_STANDARD_RADI_INT - 1;
-            for(int dx = -D_MAX; dx <= D_MAX; dx++) {
-              for(int dy = -D_MAX; dy <= D_MAX; dy++) {
-                if(dx <= -2 || dx >= 2 || dy <= -2 || dy >= 2) {
-                  if(blockers[pos.x + dx][pos.y + dy] == false) {
-                    spawnPosCandidates.push_back(pos + Pos(dx, dy));
-                  }
-                }
-              }
-            }
-            const int NR_SPAWN_POS_CANDIDATES = spawnPosCandidates.size();
-            if(NR_SPAWN_POS_CANDIDATES > 0) {
-              const int NR_SHADOWS_LOWER = 2;
-              const int NR_SHADOWS_UPPER =
-                max(2, min(6, (eng->map->getDLVL() + 1) / 2));
-              const int NR_SHADOWS_TO_SPAWN =
-                min(NR_SPAWN_POS_CANDIDATES,
-                    eng->dice.range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER));
-              for(int i = 0; i < NR_SHADOWS_TO_SPAWN; i++) {
-                const unsigned int SPAWN_POS_ELEMENT =
-                  eng->dice.range(0, spawnPosCandidates.size() - 1);
-                const Pos spawnPos = spawnPosCandidates.at(SPAWN_POS_ELEMENT);
-                spawnPosCandidates.erase(
-                  spawnPosCandidates.begin() + SPAWN_POS_ELEMENT);
-                Monster* monster =
-                  dynamic_cast<Monster*>(
-                    eng->actorFactory->spawnActor(actor_shadow, spawnPos));
-                monster->playerAwarenessCounter =
-                  monster->getData()->nrTurnsAwarePlayer;
-                if(eng->dice.coinToss()) {
-                  monster->isStealth = true;
-                }
-              }
-            }
             return;
           }
         } break;
@@ -568,7 +538,7 @@ void Player::setTempShockFromFeatures() {
     const int Y = pos.y + dy;
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
-      if(eng->mapTests->isCellInsideMap(Pos(X, Y))) {
+      if(eng->mapTests->isPosInsideMap(Pos(X, Y))) {
         const Feature* const f =
           eng->map->featuresStatic[pos.x + dx][pos.y + dy];
         shockTemp_ += f->getShockWhenAdjacent();
@@ -708,7 +678,14 @@ void Player::updateColor() {
 }
 
 void Player::onActorTurn() {
+  shockTemp_ = 0;
+  setTempShockFromFeatures();
+
   eng->renderer->drawMapAndInterface();
+
+  if(deadState != actorDeadState_alive) {
+    return;
+  }
 
   if(eng->player->getMth() >= 15) {
     eng->player->grantMthPower();
@@ -1359,7 +1336,7 @@ void Player::FOVhack() {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
-            if(eng->mapTests->isCellInsideMap(adj)) {
+            if(eng->mapTests->isPosInsideMap(adj)) {
               if(
                 eng->map->playerVision[adj.x][adj.y] &&
                 (eng->map->darkness[adj.x][adj.y] == false ||

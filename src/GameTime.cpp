@@ -54,6 +54,11 @@ void GameTime::eraseElement(const unsigned int i) {
 }
 
 void GameTime::insertActorInLoop(Actor* actor) {
+  //Sanity check actor inserted
+  if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+    throw runtime_error("Actor outside map");
+  }
+
   actors_.push_back(actor);
 }
 
@@ -64,21 +69,17 @@ void GameTime::insertActorInLoop(Actor* actor) {
  * status effects, update timed features, spawn more monsters etc.
  */
 void GameTime::endTurnOfCurrentActor() {
-//  traceHi << "GameTime::endTurnOfCurrentActor().." << endl;
+//  traceVerbose << "GameTime::endTurnOfCurrentActor().." << endl;
 
   runAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
 
   if(currentActor == eng->player) {
-//    traceHi << "Ending turn of player" << endl;
-    eng->player->shockTemp_ = 0;
     eng->playerVisualMemory->updateVisualMemory();
     eng->player->updateFov();
-    eng->player->setTempShockFromFeatures();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
-//    traceHi << "Ending turn of \"" << monster->getNameA() << "\"" << endl;
     if(monster->playerAwarenessCounter > 0) {
       monster->playerAwarenessCounter -= 1;
     }
@@ -145,15 +146,15 @@ void GameTime::endTurnOfCurrentActor() {
     }
   }
 
-//  traceHi << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
+//  traceVerbose << "GameTime::endTurnOfCurrentActor() [DONE]" << endl;
 }
 
 void GameTime::runStandardTurnEvents() {
-//  traceHi << "GameTime::runStandardTurnEvents()..." << endl;
+//  traceVerbose << "GameTime::runStandardTurnEvents()..." << endl;
 
   turn_++;
 
-//  traceHi << "GameTime: Current turn: " << turn_ << endl;
+//  traceVerbose << "GameTime: Current turn: " << turn_ << endl;
 
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
@@ -247,7 +248,7 @@ void GameTime::runStandardTurnEvents() {
 
   eng->audio->tryPlayAmb(100);
 
-//  traceHi << "GameTime::runStandardTurnEvents() [DONE]" << endl;
+//  traceVerbose << "GameTime::runStandardTurnEvents() [DONE]" << endl;
 }
 
 void GameTime::runAtomicTurnEvents() {
@@ -275,5 +276,12 @@ void GameTime::updateLightMap() {
 }
 
 Actor* GameTime::getCurrentActor() {
-  return actors_.at(currentActorVectorPos_);
+  Actor* const actor = actors_.at(currentActorVectorPos_);
+
+  //Sanity check actor retrieved
+  if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+    throw runtime_error("Actor outside map");
+  }
+
+  return actor;
 }

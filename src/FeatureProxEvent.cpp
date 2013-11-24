@@ -50,7 +50,7 @@ void ProxEventWallCrumble::playerIsNear() {
     bool done = false;
     while(done == false) {
       for(unsigned int i = 0; i < wallCells_.size(); i++) {
-        if(eng->mapTests->isCellInside(
+        if(eng->mapTests->isPosInside(
               wallCells_.at(i),
               Rect(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
           eng->map->switchToDestroyedFeatAt(wallCells_.at(i));

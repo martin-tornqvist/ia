@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "FeatureWall.h"
 
-void MapGenEgyptTomb::specificRun() {
+bool MapGenEgyptTomb::specificRun() {
   eng->map->clearMap();
 
   buildFromTemplate(Pos(0, 0), mapTemplate_pharaohsChamber);
@@ -47,4 +47,6 @@ void MapGenEgyptTomb::specificRun() {
   dynamic_cast<Monster*>(
     eng->actorFactory->spawnActor(
       actor_cultist, Pos(17, 15)))->isRoamingAllowed = false;
+
+  return true;
 }

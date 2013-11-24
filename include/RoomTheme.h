@@ -40,7 +40,7 @@ private:
 
   void applyThemeToRoom(Room& room);
 
-  void placeThemeFeatures(Room& room);
+  int placeThemeFeatures(Room& room);
 
   int getRandomNrFeaturesForTheme(const RoomTheme_t theme) const;
 

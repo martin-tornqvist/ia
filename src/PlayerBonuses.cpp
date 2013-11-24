@@ -92,12 +92,10 @@ PlayerBonHandler::PlayerBonHandler(Engine* engine) : eng(engine) {
 
   descr  = "You occasionally spot clues about hidden passages, ";
   descr += "your attentiveness is higher when examining objects ";
-  descr += "(for example when searching a chest for traps)";
-  addBon(playerBon_observant, "Observant", playerBonType_trait, descr);
-
-  descr  = "You cannot be backstabbed - hidden monsters gets no ";
+  descr += "(e.g. when searching a chest for traps), ";
+  descr += "and you cannot be backstabbed - hidden monsters gets no ";
   descr += "melee attack bonus against you, and their attacks can be dodged";
-  addBon(playerBon_vigilant, "Vigilant", playerBonType_trait, descr);
+  addBon(playerBon_observant, "Observant", playerBonType_trait, descr);
 
   descr  = "You cannot become terrified, +5% shock resistance";
   addBon(playerBon_fearless, "Fearless", playerBonType_trait, descr);

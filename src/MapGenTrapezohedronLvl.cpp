@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "FeatureWall.h"
 
-void MapGenTrapezohedronLvl::specificRun() {
+bool MapGenTrapezohedronLvl::specificRun() {
   eng->map->clearMap();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -27,4 +27,6 @@ void MapGenTrapezohedronLvl::specificRun() {
 
   eng->itemFactory->spawnItemOnMap(
     item_trapezohedron, Pos(MAP_X_CELLS_HALF, MAP_Y_CELLS_HALF));
+
+  return true;
 }

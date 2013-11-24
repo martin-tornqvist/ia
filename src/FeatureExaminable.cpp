@@ -18,7 +18,7 @@
 #include "Map.h"
 #include "FeatureFactory.h"
 
-//------------------------------------------------------------------ BASE CLASS
+//---------------------------------------------------------BASE CLASS
 FeatureExaminable::FeatureExaminable(Feature_t id, Pos pos, Engine* engine) :
   FeatureStatic(id, pos, engine) {}
 
@@ -32,7 +32,8 @@ void FeatureExaminable::examine() {
 }
 
 EventRegularity_t FeatureExaminable::getEventRegularity() {
-  const int TOT = eventRegularity_common + eventRegularity_rare + eventRegularity_veryRare;
+  const int TOT =
+    eventRegularity_common + eventRegularity_rare + eventRegularity_veryRare;
   const int RND = eng->dice.range(1, TOT);
   if(RND <= eventRegularity_common) {
     return eventRegularity_common;
@@ -43,7 +44,7 @@ EventRegularity_t FeatureExaminable::getEventRegularity() {
   }
 }
 
-//------------------------------------------------------------------ ITEM CONTAINER CLASS
+//---------------------------------------------------------ITEM CONTAINER CLASS
 ExaminableItemContainer::ExaminableItemContainer() {items_.resize(0);}
 
 ExaminableItemContainer::~ExaminableItemContainer() {
@@ -87,8 +88,10 @@ void ExaminableItemContainer::setRandomItemsForFeature(
       const int NR_CANDIDATES = int(itemCandidates.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
-          const unsigned int ELEMENT = engine->dice.range(0, NR_CANDIDATES - 1);
-          Item* item = engine->itemFactory->spawnItem(itemCandidates.at(ELEMENT));
+          const unsigned int ELEMENT =
+            engine->dice.range(0, NR_CANDIDATES - 1);
+          Item* item =
+            engine->itemFactory->spawnItem(itemCandidates.at(ELEMENT));
           engine->itemFactory->setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -105,7 +108,7 @@ void ExaminableItemContainer::dropItems(const Pos& pos, Engine* const engine) {
 }
 
 void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
-  //TODO Generalize this function (perhaps isFragile variable for item defs)
+  //TODO Generalize this function (perhaps isFragile variable in item data)
 
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
@@ -114,20 +117,21 @@ void ExaminableItemContainer::destroySingleFragile(Engine* const engine) {
       delete item;
       items_.erase(items_.begin() + i);
       engine->log->addMsg("I hear a muffled shatter.");
+      break;
     }
   }
 }
 
-//------------------------------------------------------------------ SPECIFIC FEATURES
+//---------------------------------------------------------SPECIFIC FEATURES
 //--------------------------------------------------------- TOMB
 Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false),
-  isTraitKnown_(false), chanceToPushLid_(100), appearance_(tombAppearance_common),
-  trait_(endOfTombTraits) {
+  isTraitKnown_(false), chanceToPushLid_(100),
+  appearance_(tombAppearance_common), trait_(endOfTombTraits) {
 
   //Contained items
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
-  const int NR_ITEMS_MIN = eng->dice.percentile() < 30 ? 0 : 1;
+  const int NR_ITEMS_MIN = eng->dice.oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
     NR_ITEMS_MIN + (bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0);
 
@@ -135,13 +139,16 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
     feature_tomb, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   //Exterior appearance
-  if(engine->dice.percentile() < 20) {
+  if(engine->dice.oneIn(5)) {
     trace << "Tomb: Setting random appearance" << endl;
-    appearance_ = static_cast<TombAppearance_t>(engine->dice.range(0, endOfTombAppearance - 1));
+    appearance_ =
+      TombAppearance_t(engine->dice.range(0, endOfTombAppearance - 1));
   } else {
-    trace << "Tomb: Setting appearance according to items contained (common if zero items)" << endl;
+    trace << "Tomb: Setting appearance according to items contained ";
+    trace << "(common if zero items)" << endl;
     for(unsigned int i = 0; i < itemContainer_.items_.size(); i++) {
-      const ItemValue_t itemValue = itemContainer_.items_.at(i)->getData().itemValue;
+      const ItemValue_t itemValue =
+        itemContainer_.items_.at(i)->getData().itemValue;
       if(itemValue == itemValue_majorTreasure) {
         trace << "Tomb: Contains major treasure" << endl;
         appearance_ = tombAppearance_marvelous;
@@ -203,8 +210,7 @@ void Tomb::doAction(const TombAction_t action) {
 
   switch(action) {
     case tombAction_carveCurseWard: {
-      const int CHANCE_TO_CARVE = 80;
-      if(IS_CURSED == false && (IS_BLESSED || eng->dice.percentile() < CHANCE_TO_CARVE)) {
+      if(IS_CURSED == false && (IS_BLESSED || eng->dice.fraction(4, 5))) {
         eng->log->addMsg("The curse is cleared.");
       } else {
         eng->log->addMsg("I make a misstake, the curse is doubled!");
@@ -223,19 +229,19 @@ void Tomb::doAction(const TombAction_t action) {
     case tombAction_pushLid: {
       eng->log->addMsg("I attempt to push the lid.");
 
-      const int CHANCE_TO_SPRAIN    = 15;
-      const int CHANCE_TO_PARALYZE  = 30;
+      const int SPRAIN_ONE_IN_N   = 5;
+      const int PARALYZE_ONE_IN_N = 3;
 
-      if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
+      if(eng->dice.oneIn(SPRAIN_ONE_IN_N)) {
         eng->log->addMsg("I sprain myself.", clrMessageBad);
-        eng->player->hit(1, dmgType_pure, false);
+        eng->player->hit(eng->dice.range(1, 5), dmgType_pure, false);
       }
 
       if(eng->player->deadState != actorDeadState_alive) {
         return;
       }
 
-      if(eng->dice.percentile() < CHANCE_TO_PARALYZE) {
+      if(eng->dice.oneIn(PARALYZE_ONE_IN_N)) {
         eng->log->addMsg("I am off-balance.");
         propHandler->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
@@ -269,10 +275,10 @@ void Tomb::doAction(const TombAction_t action) {
 
     case tombAction_smashLidWithSledgehammer: {
       eng->log->addMsg("I strike at the lid with a Sledgehammer.");
-      const int CHANCE_TO_BREAK = IS_WEAK ? 10 : 90;
-      if(eng->dice.percentile() < CHANCE_TO_BREAK) {
+      const int BREAK_N_IN_10 = IS_WEAK ? 1 : 8;
+      if(eng->dice.fraction(BREAK_N_IN_10, 10)) {
         eng->log->addMsg("The lid cracks open!");
-        if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
+        if(IS_BLESSED == false && (IS_CURSED || eng->dice.oneIn(3))) {
           itemContainer_.destroySingleFragile(eng);
         }
         openFeature();
@@ -355,7 +361,8 @@ void Tomb::triggerTrap() {
 
   if(actorCandidates.size() > 0) {
     const unsigned int ELEM = eng->dice.range(0, actorCandidates.size() - 1);
-    Actor* const actor = eng->actorFactory->spawnActor(actorCandidates.at(ELEM), pos_);
+    const ActorId_t actorIdToSpawn = actorCandidates.at(ELEM);
+    Actor* const actor = eng->actorFactory->spawnActor(actorIdToSpawn, pos_);
     dynamic_cast<Monster*>(actor)->becomeAware();
   }
 }
@@ -423,7 +430,8 @@ void Tomb::getChoiceLabels(const vector<TombAction_t>& possibleActions,
 }
 
 void Tomb::getTraitDescr(string& descr) const {
-  const bool IS_OCCULTIST = eng->playerBonHandler->isBonPicked(playerBon_occultist);
+  const bool IS_OCCULTIST =
+    eng->playerBonHandler->isBonPicked(playerBon_occultist);
 
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
@@ -477,18 +485,19 @@ Chest::Chest(Feature_t id, Pos pos, Engine* engine) :
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false) {
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
-  const int CHANCE_FOR_EMPTY = 10;
-  const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 4 : 3;
+  const bool IS_TREASURE_HUNTER =
+    bonHandler->isBonPicked(playerBon_treasureHunter);
+  const int NR_ITEMS_MIN = eng->dice.oneIn(10) ? 0 : 1;
+  const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 4 : 3;
   itemContainer_.setRandomItemsForFeature(
     feature_chest, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   if(itemContainer_.items_.empty() == false) {
-    const int CHANCE_FOR_LOCKED = 80;
-    isLocked_ = eng->dice.percentile() < CHANCE_FOR_LOCKED;
+    const int IS_LOCKED_N_IN_10 = 8;
+    isLocked_ = eng->dice.fraction(IS_LOCKED_N_IN_10, 10);
 
-    const int CHANCE_FOR_TRAPPED = 60;
-    isTrapped_ = eng->dice.percentile() < CHANCE_FOR_TRAPPED ? true : false;
+    const int IS_TRAPPED_N_IN_10 = 6;
+    isTrapped_ = eng->dice.fraction(IS_TRAPPED_N_IN_10, 10);
   }
 }
 
@@ -508,7 +517,7 @@ void Chest::featureSpecific_examine() {
     const int CHOICE_NR = eng->popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A chest");
 
-    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)(CHOICE_NR)));
   }
 }
 
@@ -518,7 +527,6 @@ void Chest::doAction(const ChestAction_t action) {
 
   const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
   const bool IS_TOUGH     = bonHandler->isBonPicked(playerBon_tough);
-//  const bool IS_NIMBLE    = bonHandler->isBonPicked(playerBon_nimbleHanded);
   const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
   const bool IS_WEAK      = propHandler->hasProp(propWeakened);
   const bool IS_CURSED    = propHandler->hasProp(propCursed);
@@ -527,8 +535,8 @@ void Chest::doAction(const ChestAction_t action) {
   switch(action) {
     case chestAction_open: {
       openFeature();
-    }
-    break;
+    } break;
+
     case chestAction_searchForTrap: {
       const int CHANCE_TO_FIND = 20 + IS_OBSERVANT * 40 - IS_CONFUSED * 10;
       const bool IS_ROLL_SUCCESS = eng->dice.percentile() < CHANCE_TO_FIND;
@@ -538,8 +546,8 @@ void Chest::doAction(const ChestAction_t action) {
       } else {
         eng->log->addMsg("I find no indication that the chest is trapped.");
       }
-    }
-    break;
+    } break;
+
     case chestAction_disarmTrap: {
       eng->log->addMsg("I attempt to disarm the trap.");
 
@@ -556,12 +564,13 @@ void Chest::doAction(const ChestAction_t action) {
           eng->log->addMsg("I failed to disarm it.");
         }
       }
-    }
-    break;
-    case chestAction_forceLock: {
-      Item* const wpn = eng->player->getInventory()->getItemInSlot(slot_wielded);
+    } break;
 
-      if(wpn == NULL) {
+    case chestAction_forceLock: {
+      Inventory* const inv  = eng->player->getInventory();
+      Item* const item      = inv->getItemInSlot(slot_wielded);
+
+      if(item == NULL) {
         eng->log->addMsg(
           "I attempt to punch the lock open, nearly breaking my hand.",
           clrMessageBad);
@@ -571,9 +580,19 @@ void Chest::doAction(const ChestAction_t action) {
 
         if(eng->dice.percentile() < CHANCE_TO_DMG_WPN) {
           const string wpnName = eng->itemDataHandler->getItemRef(
-                                   *wpn, itemRef_plain, true);
-          eng->log->addMsg("My " + wpnName + " is damaged!");
-          dynamic_cast<Weapon*>(wpn)->meleeDmgPlus--;
+                                   *item, itemRef_plain, true);
+
+          Weapon* const wpn = dynamic_cast<Weapon*>(item);
+
+          if(wpn->meleeDmgPlus == 0) {
+            eng->log->addMsg("My " + wpnName + " breaks!");
+            delete wpn;
+            inv->getSlot(slot_wielded)->item = NULL;
+          } else {
+            eng->log->addMsg("My " + wpnName + " is damaged!");
+            wpn->meleeDmgPlus--;
+          }
+          return;
         }
 
         if(IS_WEAK) {
@@ -588,12 +607,12 @@ void Chest::doAction(const ChestAction_t action) {
           }
         }
       }
-    }
-    break;
-    case chestAction_kick: {
-      const int CHANCE_TO_SPRAIN    = 20;
+    } break;
 
-      if(eng->dice.percentile() < CHANCE_TO_SPRAIN) {
+    case chestAction_kick: {
+      const int SPRAIN_ONE_IN_N = 5;
+
+      if(eng->dice.oneIn(SPRAIN_ONE_IN_N)) {
         eng->log->addMsg("I sprain myself.", clrMessageBad);
         eng->player->hit(1, dmgType_pure, false);
       }
@@ -604,10 +623,10 @@ void Chest::doAction(const ChestAction_t action) {
           return;
         }
 
-        if(IS_BLESSED == false && (IS_CURSED || eng->dice.percentile() < 33)) {
+        if(IS_BLESSED == false && (IS_CURSED || eng->dice.oneIn(3))) {
           itemContainer_.destroySingleFragile(eng);
         }
-        const int CHANCE_TO_OPEN = 20 + (IS_TOUGH ? 20 : 0);
+        const int CHANCE_TO_OPEN = 20 + (IS_TOUGH ? 30 : 0);
         if(eng->dice.percentile() < CHANCE_TO_OPEN) {
           eng->log->addMsg("I kick the lid open!");
           openFeature();
@@ -615,12 +634,11 @@ void Chest::doAction(const ChestAction_t action) {
           eng->log->addMsg("The lock resists.");
         }
       }
-    }
-    break;
+    } break;
+
     case chestAction_leave: {
       eng->log->addMsg("I leave the chest for now.");
-    }
-    break;
+    } break;
   }
 }
 
@@ -652,7 +670,19 @@ void Chest::getPossibleActions(vector<ChestAction_t>& possibleActions) const {
 
   if(isLocked_) {
     possibleActions.push_back(chestAction_kick);
-    possibleActions.push_back(chestAction_forceLock);
+
+    Item* const wpn =
+      eng->player->getInventory()->getItemInSlot(slot_wielded);
+    bool canTryForce = false;
+    if(wpn == NULL) {
+      canTryForce = true;
+    } else {
+      const ItemData d = wpn->getData();
+      canTryForce = d.isRangedWeapon == false;
+    }
+    if(canTryForce) {
+      possibleActions.push_back(chestAction_forceLock);
+    }
   } else {
     possibleActions.push_back(chestAction_open);
   }
@@ -703,10 +733,10 @@ void Chest::triggerTrap() {
 
     isTrapped_ = false;
 
-    const int CHANCE_FOR_EXPLODING = 20;
+    const int EXPLODE_ONE_IN_N = 7;
     if(
       eng->map->getDLVL() >= MIN_DLVL_NASTY_TRAPS &&
-      eng->dice.percentile() < CHANCE_FOR_EXPLODING) {
+      eng->dice.oneIn(EXPLODE_ONE_IN_N)) {
       eng->log->addMsg("The trap explodes!");
       eng->explosionMaker->runExplosion(pos_, sfxExplosion, true);
       if(eng->player->deadState == actorDeadState_alive) {
@@ -828,9 +858,11 @@ Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
-  const int CHANCE_FOR_EMPTY = 50;
-  const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = bonHandler->isBonPicked(playerBon_treasureHunter) ? 2 : 1;
+  const bool IS_TREASURE_HUNTER =
+    bonHandler->isBonPicked(playerBon_treasureHunter);
+  const int IS_EMPTY_N_IN_10 = 5;
+  const int NR_ITEMS_MIN = eng->dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
     feature_cabinet, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
@@ -890,7 +922,8 @@ void Cabinet::getChoiceLabels(const vector<CabinetAction_t>& possibleActions,
   }
 }
 
-void Cabinet::getPossibleActions(vector<CabinetAction_t>& possibleActions) const {
+void Cabinet::getPossibleActions(
+  vector<CabinetAction_t>& possibleActions) const {
   possibleActions.resize(0);
   possibleActions.push_back(cabinetAction_open);
   possibleActions.push_back(cabinetAction_leave);
@@ -917,10 +950,11 @@ Cocoon::Cocoon(Feature_t id, Pos pos, Engine* engine) :
   FeatureExaminable(id, pos, engine), isContentKnown_(false) {
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
-  const int CHANCE_FOR_EMPTY = 60;
-  const int NR_ITEMS_MIN = eng->dice.percentile() < CHANCE_FOR_EMPTY ? 0 : 1;
-  const int NR_ITEMS_MAX = NR_ITEMS_MIN +
-                           bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0;
+  const bool IS_TREASURE_HUNTER =
+    bonHandler->isBonPicked(playerBon_treasureHunter);
+  const int IS_EMPTY_N_IN_10 = 6;
+  const int NR_ITEMS_MIN = eng->dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
   itemContainer_.setRandomItemsForFeature(
     feature_cocoon, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
@@ -962,28 +996,14 @@ void Cocoon::triggerTrap() {
     }
 
     const int NR_CANDIDATES = spawnCandidates.size();
-    if(NR_CANDIDATES != 0) {
+    if(NR_CANDIDATES > 0) {
       trace << "Cocoon: Spawn candidates found, attempting to place" << endl;
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeMoveBlockerArrayForBodyType(
-        actorBodyType_normal, blockers);
-      vector<Pos> freeCells;
-      eng->populateMonsters->makeSortedFreeCellsVector(pos_, blockers, freeCells);
-
-      const int NR_SPIDERS_MAX = min(eng->dice.range(2, 4),
-                                     int(freeCells.size()));
-
-      if(NR_SPIDERS_MAX > 0) {
-        trace << "Cocoon: Found positions, spawning spiders" << endl;
-        eng->log->addMsg("There are spiders inside!");
-        const ActorId_t id = spawnCandidates.at(
-                               eng->dice.range(0, NR_CANDIDATES - 1));
-        for(int i = 0; i < NR_SPIDERS_MAX; i++) {
-          Actor* const actor = eng->actorFactory->spawnActor(id, freeCells.front());
-          dynamic_cast<Monster*>(actor)->becomeAware();
-          freeCells.erase(freeCells.begin());
-        }
-      }
+      eng->log->addMsg("There are spiders inside!");
+      const int NR_SPIDERS = eng->dice.range(2, 5);
+      const int ELEMENT = eng->dice.range(0, NR_CANDIDATES - 1);
+      const ActorId_t actorIdToSummon = spawnCandidates.at(ELEMENT);
+      eng->actorFactory->summonMonsters(
+        pos_, vector<ActorId_t>(NR_SPIDERS, actorIdToSummon), true);
     }
   }
 }
@@ -1020,7 +1040,9 @@ void Cocoon::getChoiceLabels(const vector<CocoonAction_t>& possibleActions,
   }
 }
 
-void Cocoon::getPossibleActions(vector<CocoonAction_t>& possibleActions) const {
+void Cocoon::getPossibleActions(
+  vector<CocoonAction_t>& possibleActions) const {
+
   possibleActions.resize(0);
   possibleActions.push_back(cocoonAction_open);
   possibleActions.push_back(cocoonAction_leave);

@@ -17,34 +17,34 @@ void DungeonClimb::makeLevel() {
   const int DLVL = eng->map->getDLVL();
 
   bool levelBuilt = false;
-  if(eng->config->isBotPlaying == false) {
-    //------------------------------------- TRAPEZOHEDRON LEVEL
-    if(levelBuilt == false) {
-      if(DLVL > LAST_CAVERN_LEVEL) {
-        MapGenTrapezohedronLvl(eng).run();
-        levelBuilt = true;
-      }
-    }
 
-    //------------------------------------- KINGS TOMB
-    if(levelBuilt == false) {
-      if(DLVL == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
-        MapGenEgyptTomb(eng).run();
-        levelBuilt = true;
-      }
+  //------------------------------------- TRAPEZOHEDRON LEVEL
+  if(levelBuilt == false) {
+    if(DLVL > LAST_CAVERN_LEVEL) {
+      while(MapGenTrapezohedronLvl(eng).run() == false) {}
+      levelBuilt = true;
     }
   }
+
+  //------------------------------------- KINGS TOMB
+  if(levelBuilt == false) {
+    if(DLVL == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
+      while(MapGenEgyptTomb(eng).run() == false) {}
+      levelBuilt = true;
+    }
+  }
+
   //------------------------------------- DUNGEON LEVELS
   if(levelBuilt == false) {
-    if(DLVL < FIRST_CAVERN_LEVEL || eng->config->isBotPlaying) {
-      MapGenBsp(eng).run();
+    if(DLVL < FIRST_CAVERN_LEVEL) {
+      while(MapGenBsp(eng).run() == false) {}
       levelBuilt = true;
     }
   }
   //------------------------------------- CAVERN LEVELS
   if(levelBuilt == false) {
     if(DLVL >= FIRST_CAVERN_LEVEL) {
-      MapGenCaveLvl(eng).run();
+      while(MapGenCaveLvl(eng).run() == false) {}
     }
   }
   if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {

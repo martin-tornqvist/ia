@@ -233,7 +233,7 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
                   const Item* itemThrown) {
   bool isMoved = false;
   const Pos newPos = pos_ + Pos(DX, DY);
-  if(eng->mapTests->isCellInsideMap(newPos)) {
+  if(eng->mapTests->isPosInsideMap(newPos)) {
     pos_ = newPos;
     isMoved = true;
   }

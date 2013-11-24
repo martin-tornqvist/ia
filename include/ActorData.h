@@ -12,7 +12,7 @@
 #include "AudioIds.h"
 
 enum ActorId_t {
-  actor_empty,
+  actor_empty, //TODO Is it really necessary to have an "empty"(?) actor?
   actor_player,
   actor_zombie, actor_zombieAxe, actor_bloatedZombie,
   actor_cultist, actor_cultistTeslaCannon, actor_cultistSpikeGun,

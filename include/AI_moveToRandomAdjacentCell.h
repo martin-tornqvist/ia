@@ -43,7 +43,7 @@ private:
       const Pos targetCell(monster.pos + offset);
       if(
         blockers[targetCell.x][targetCell.y] == false &&
-        engine->mapTests->isCellInside(targetCell, areaAllowed)) {
+        engine->mapTests->isPosInside(targetCell, areaAllowed)) {
         return offset;
       }
     }
@@ -58,7 +58,7 @@ private:
           const Pos targetCell(monster.pos + offset);
           if(
             blockers[targetCell.x][targetCell.y] == false &&
-            engine->mapTests->isCellInside(targetCell, areaAllowed)) {
+            engine->mapTests->isPosInside(targetCell, areaAllowed)) {
             offsetCandidates.push_back(offset);
           }
         }

@@ -23,7 +23,8 @@ void Bash::playerBash() const {
     Actor* actor = eng->mapTests->getActorAtPos(bashInPos);
 
     if(actor == NULL) {
-      trace << "Bash: No actor at bash pos, attempting to bash feature instead" << endl;
+      trace << "Bash: No actor at bash pos, ";
+      trace << "attempting to bash feature instead" << endl;
       playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
     }  else {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;

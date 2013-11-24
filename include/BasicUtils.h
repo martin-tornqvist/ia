@@ -178,7 +178,7 @@ public:
 
   Dir_t getDir(const Pos& offset) const {
     if(offset.x < -1 || offset.y < -1 || offset.x > 1 || offset.y > 1) {
-      throw logic_error("Expected x & y [-1, 1]");
+      throw runtime_error("Expected x & y [-1, 1]");
     }
 
     if(offset.y == -1) {
@@ -205,7 +205,7 @@ public:
 
   Pos getOffset(const Dir_t dir) const {
     if(dir == endOfDirs) {
-      throw logic_error("Invalid direction");
+      throw runtime_error("Invalid direction");
     }
     switch(dir) {
       case dirDownLeft:   return Pos(-1, 1);

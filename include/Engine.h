@@ -15,10 +15,10 @@
 
 #ifdef DEBUG
 #define trace if (TRACE_LVL < 1) ; else cerr
-#define traceHi if (TRACE_LVL < 2) ; else cerr
+#define traceVerbose if (TRACE_LVL < 2) ; else cerr
 #else
 #define trace if (1) ; else cerr
-#define traceHi if (1) ; else cerr
+#define traceVerbose if (1) ; else cerr
 #endif
 
 #include "BasicUtils.h"

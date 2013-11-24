@@ -35,20 +35,20 @@ void RoomThemeMaker::run() {
 }
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
-  placeThemeFeatures(room);
+  if(placeThemeFeatures(room) == 0) {
+    return;
+  }
   makeThemeSpecificRoomModifications(room);
 
   switch(room.roomTheme) {
-    case roomTheme_plain:   {room.roomDescr = "";}                          break;
-    case roomTheme_human:   {room.roomDescr = ""; /*"Human quarters."*/}    break;
-    case roomTheme_ritual:  {room.roomDescr = ""; /*"A ritual chamber."*/}  break;
-    case roomTheme_spider:  {room.roomDescr = ""; /*"A spider lair."*/}     break;
-    case roomTheme_crypt:   {room.roomDescr = ""; /*"A crypt."*/}           break;
-    case roomTheme_monster: {room.roomDescr = ""; /*"A gruesome room."*/}   break;
-    case roomTheme_flooded: {room.roomDescr = ""; /*"A flooded room."*/}    break;
-    case roomTheme_muddy:   {room.roomDescr = ""; /*"A muddy room."*/}      break;
-      //    case roomTheme_dungeon: {room.roomDescr = "A dungeon.";}        break;
-//    case roomTheme_chasm:   {room.roomDescr = "A chasm.";}          break;
+    case roomTheme_plain:   {room.roomDescr = "";}  break;
+    case roomTheme_human:   {room.roomDescr = "";}  break;
+    case roomTheme_ritual:  {room.roomDescr = "";}  break;
+    case roomTheme_spider:  {room.roomDescr = "";}  break;
+    case roomTheme_crypt:   {room.roomDescr = "";}  break;
+    case roomTheme_monster: {room.roomDescr = "";}  break;
+    case roomTheme_flooded: {room.roomDescr = "";}  break;
+    case roomTheme_muddy:   {room.roomDescr = "";}  break;
     case endOfRoomThemes: {} break;
   }
 }
@@ -243,7 +243,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   }
 }
 
-void RoomThemeMaker::placeThemeFeatures(Room& room) {
+int RoomThemeMaker::placeThemeFeatures(Room& room) {
   trace << "RoomThemeMaker::placeThemeFeatures()" << endl;
   vector<const FeatureData*> featureDataBelongingToTheme;
   featureDataBelongingToTheme.resize(0);
@@ -263,12 +263,14 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
 
   vector<int> featuresSpawnCount(featureDataBelongingToTheme.size(), 0);
 
-  int featuresLeftToPlace = getRandomNrFeaturesForTheme(room.roomTheme);
+  int nrFeaturesLeftToPlace = getRandomNrFeaturesForTheme(room.roomTheme);
+
+  int nrFeaturesPlaced = 0;
 
   while(true) {
-    if(featuresLeftToPlace == 0) {
+    if(nrFeaturesLeftToPlace == 0) {
       trace << "RoomThemeMaker: Placed enough features, returning" << endl;
-      return;
+      return nrFeaturesPlaced;
     }
 
     const FeatureData* d = NULL;
@@ -278,14 +280,19 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
                            featureDataBelongingToTheme);
 
     if(d == NULL) {
-      trace << "RoomThemeMaker: Could not find any more spots to place feature, returning" << endl;
-      return;
+      trace << "RoomThemeMaker: Could not find any more spots ";
+      trace << "to place feature, returning" << endl;
+      return nrFeaturesPlaced;
     } else {
       trace << "RoomThemeMaker: Placing " << d->name_a << endl;
       eng->featureFactory->spawnFeatureAt(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
-      // Check if more of this feature can be spawned, if not, delete it from feature candidates
+      nrFeaturesLeftToPlace--;
+      nrFeaturesPlaced++;
+
+      //Check if more of this feature can be spawned,
+      //if not, delete it from feature candidates
       if(
         featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >=
         d->themedFeatureSpawnRules.getMaxNrInRoom()) {
@@ -294,13 +301,11 @@ void RoomThemeMaker::placeThemeFeatures(Room& room) {
         featureDataBelongingToTheme.erase(
           featureDataBelongingToTheme.begin() + FEATURE_CANDIDATE_ELEMENT);
 
-        // Are there any more features left to place at all?
-        if(featureDataBelongingToTheme.empty()) {return;}
+        //Are there any more features left to place at all?
+        if(featureDataBelongingToTheme.empty()) {return nrFeaturesPlaced;}
       }
 
       eraseAdjacentCellsFromVectors(pos, nextToWalls, awayFromWalls);
-
-      featuresLeftToPlace--;
     }
   }
 }

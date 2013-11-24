@@ -36,7 +36,7 @@ Map::~Map() {
 
 //TODO This should probably go in a virtual method in Feature instead
 void Map::switchToDestroyedFeatAt(const Pos pos) {
-  if(eng->mapTests->isCellInsideMap(pos)) {
+  if(eng->mapTests->isPosInsideMap(pos)) {
 
     const Feature_t OLD_FEATURE_ID =
       eng->map->featuresStatic[pos.x][pos.y]->getId();

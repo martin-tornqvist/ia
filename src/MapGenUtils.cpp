@@ -72,7 +72,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
               PossInR1closeToR2.push_back(c);
             }
           }
-          if(eng->mapTests->isCellInsideMap(c) == false) {
+          if(eng->mapTests->isPosInsideMap(c) == false) {
             doneTravelling = true;
           }
         }

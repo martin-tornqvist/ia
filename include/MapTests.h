@@ -75,7 +75,7 @@ public:
   void makeBoolVectorFromMapArray(
     bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
 
-  inline bool isCellInsideMap(const Pos& pos) const {
+  inline bool isPosInsideMap(const Pos& pos) const {
     if(
       pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
       return false;
@@ -109,7 +109,7 @@ public:
     }
   }
 
-  inline bool isCellInside(const Pos& pos, const Rect& area) const {
+  inline bool isPosInside(const Pos& pos, const Rect& area) const {
     return
       pos.x >= area.x0y0.x &&
       pos.x <= area.x1y1.x &&

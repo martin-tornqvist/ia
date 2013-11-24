@@ -81,11 +81,9 @@ public:
 protected:
   friend class Trap;
   SpecificTrapBase(Pos pos, Trap_t trapType, Engine* engine) :
-    pos_(pos), trapType_(trapType), eng(engine) {
-  }
+    pos_(pos), trapType_(trapType), eng(engine) {}
   SpecificTrapBase() {}
   virtual ~SpecificTrapBase() {}
-
 
   virtual Dir_t specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
     (void)actor;

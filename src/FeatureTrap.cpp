@@ -23,9 +23,9 @@ Trap::Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
   isHidden_(true) {
 
-  if(spawnData->trapType_ == endOfTraps) {throw logic_error("Bad trap type");}
+  if(spawnData->trapType_ == endOfTraps) {throw runtime_error("Bad trap type");}
   if(mimicFeature_ == NULL) {
-    throw logic_error("Failed to set feature to mimic");
+    throw runtime_error("Failed to set feature to mimic");
   }
 
   if(spawnData->trapType_ == trap_any) {
@@ -34,13 +34,13 @@ Trap::Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData) :
     setSpecificTrapFromId(spawnData->trapType_);
   }
   if(specificTrap_ == NULL) {
-    throw logic_error("Failed to create specific trap");
+    throw runtime_error("Failed to create specific trap");
   }
 }
 
 Trap::~Trap() {
   if(specificTrap_ == NULL) {
-    throw logic_error("Expected trap to have specific trap");
+    throw runtime_error("Expected trap to have specific trap");
   }
   delete specificTrap_;
 }
@@ -144,20 +144,29 @@ void Trap::bump(Actor& actorBumping) {
 void Trap::trigger(Actor& actor) {
   trace << "Trap::trigger()..." << endl;
 
+  trace << "Trap: Specific trap is ";
+  trace << specificTrap_->getTrapSpecificTitle() << endl;
+
   const ActorData* const d = actor.getData();
+
+  trace << "Trap: Actor triggering is ";
+  trace << d->name_a << endl;
 
   const int DODGE_SKILL_VALUE =
     d->abilityVals.getVal(ability_dodgeTrap, true, actor);
 
+  trace << "Trap: Actor dodge skill is ";
+  trace << DODGE_SKILL_VALUE << endl;
+
   if(&actor == eng->player) {
-    traceHi << "Trap: Player triggering trap" << endl;
+    traceVerbose << "Trap: Player triggering trap" << endl;
     const AbilityRollResult_t DODGE_RESULT =
       eng->abilityRoll->roll(DODGE_SKILL_VALUE);
     reveal(false);
-    traceHi << "Trap: Calling trapSpecificTrigger" << endl;
+    traceVerbose << "Trap: Calling trapSpecificTrigger" << endl;
     specificTrap_->trapSpecificTrigger(actor, DODGE_RESULT);
   } else {
-    traceHi << "Trap: Monster triggering trap" << endl;
+    traceVerbose << "Trap: Monster triggering trap" << endl;
     const bool IS_ACTOR_SEEN_BY_PLAYER =
       eng->player->checkIfSeeActor(actor, NULL);
     const AbilityRollResult_t dodgeResult =
@@ -165,7 +174,7 @@ void Trap::trigger(Actor& actor) {
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
     }
-    traceHi << "Trap: Calling trapSpecificTrigger" << endl;
+    traceVerbose << "Trap: Calling trapSpecificTrigger" << endl;
     specificTrap_->trapSpecificTrigger(actor, dodgeResult);
   }
 
@@ -173,7 +182,7 @@ void Trap::trigger(Actor& actor) {
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
-  traceHi << "Trap::reveal()..." << endl;
+  traceVerbose << "Trap::reveal()..." << endl;
   isHidden_ = false;
   clearGore();
 
@@ -191,7 +200,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       eng->log->addMsg("I spot a " + name + ".");
     }
   }
-  traceHi << "Trap::reveal() [DONE]" << endl;
+  traceVerbose << "Trap::reveal() [DONE]" << endl;
 }
 
 void Trap::playerTrySpotHidden() {
@@ -256,7 +265,7 @@ TrapDart::TrapDart(Pos pos, Engine* engine) :
 
 void TrapDart::trapSpecificTrigger(Actor& actor,
                                    const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapDart::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapDart::trapSpecificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng->player;
   const bool CAN_SEE = actor.getPropHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(actor, NULL);
@@ -317,7 +326,7 @@ void TrapDart::trapSpecificTrigger(Actor& actor,
       }
     }
   }
-  traceHi << "TrapDart::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapDart::trapSpecificTrigger() [DONE]" << endl;
 }
 
 TrapSpear::TrapSpear(Pos pos, Engine* engine) :
@@ -328,7 +337,7 @@ TrapSpear::TrapSpear(Pos pos, Engine* engine) :
 
 void TrapSpear::trapSpecificTrigger(Actor& actor,
                                     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapSpear::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapSpear::trapSpecificTrigger()..." << endl;
 
   const bool IS_PLAYER = &actor == eng->player;
   const bool CAN_SEE = actor.getPropHandler()->allowSee();
@@ -395,12 +404,12 @@ void TrapSpear::trapSpecificTrigger(Actor& actor,
       }
     }
   }
-  traceHi << "TrapSpear::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapSpear::trapSpecificTrigger()..." << endl;
 }
 
 void TrapGasConfusion::trapSpecificTrigger(Actor& actor,
     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapGasConfusion::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapGasConfusion::trapSpecificTrigger()..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -424,12 +433,12 @@ void TrapGasConfusion::trapSpecificTrigger(Actor& actor,
   eng->explosionMaker->runExplosion(
     pos_, endOfSfx, false, new PropConfused(eng, propTurnsStandard), true,
     getTrapSpecificColor());
-  traceHi << "TrapGasConfusion::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapGasConfusion::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapGasParalyzation::trapSpecificTrigger(Actor& actor,
     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapGasParalyzation::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapGasParalyzation::trapSpecificTrigger()..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -453,12 +462,12 @@ void TrapGasParalyzation::trapSpecificTrigger(Actor& actor,
   eng->explosionMaker-> runExplosion(
     pos_, endOfSfx, false, new PropParalyzed(eng, propTurnsStandard),
     true, getTrapSpecificColor());
-  traceHi << "TrapGasParalyzation::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapGasParalyzation::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapGasFear::trapSpecificTrigger(Actor& actor,
                                       const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapGasFear::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapGasFear::trapSpecificTrigger()..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -482,12 +491,12 @@ void TrapGasFear::trapSpecificTrigger(Actor& actor,
   eng->explosionMaker-> runExplosion(
     pos_, endOfSfx, false, new PropTerrified(eng, propTurnsStandard),
     true, getTrapSpecificColor());
-  traceHi << "TrapGasFear::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapGasFear::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapBlindingFlash::trapSpecificTrigger(Actor& actor,
     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapBlindingFlash::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapBlindingFlash::trapSpecificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng->player;
   const bool CAN_SEE = actor.getPropHandler()->allowSee();
   const bool CAN_PLAYER_SEE_ACTOR =
@@ -529,12 +538,12 @@ void TrapBlindingFlash::trapSpecificTrigger(Actor& actor,
       }
     }
   }
-  traceHi << "TrapBlindingFlash::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapBlindingFlash::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapTeleport::trapSpecificTrigger(Actor& actor,
                                        const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapTeleport::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapTeleport::trapSpecificTrigger()..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -559,19 +568,27 @@ void TrapTeleport::trapSpecificTrigger(Actor& actor,
   }
 
   actor.teleport(false);
-  traceHi << "TrapTeleport::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapTeleport::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapSummonMonster::trapSpecificTrigger(Actor& actor,
     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapSummonMonster::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapSummonMonster::trapSpecificTrigger()..." << endl;
 
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
+  traceVerbose << "TrapSummonMonster: Is player: " << IS_PLAYER << endl;
+
   const bool CAN_SEE = actor.getPropHandler()->allowSee();
+  traceVerbose << "TrapSummonMonster: Actor can see: " << CAN_SEE << endl;
+
   const bool CAN_PLAYER_SEE_ACTOR = eng->player->checkIfSeeActor(actor, NULL);
+  traceVerbose << "TrapSummonMonster: Player see actor: ";
+  traceVerbose << CAN_PLAYER_SEE_ACTOR << endl;
+
   const string actorName = actor.getNameThe();
+  traceVerbose << "TrapSummonMonster: Actor name: " << actorName << endl;
 
   if(IS_PLAYER) {
     eng->player->updateFov();
@@ -588,61 +605,34 @@ void TrapSummonMonster::trapSpecificTrigger(Actor& actor,
     }
   }
 
-  bool blockingFeatures[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    actorBodyType_normal, blockingFeatures);
-  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->floodFill(pos_, blockingFeatures, floodFill, 999, Pos(-1, -1));
-  vector<PosAndVal> floodFillVector;
-  bool actorArray[MAP_X_CELLS][MAP_Y_CELLS];
-  for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {
-      const int VAL = floodFill[x][y];
-      if(VAL > 0) {
-        floodFillVector.push_back(PosAndVal(Pos(x, y), VAL));
-      }
-      actorArray[x][y] = false;
-    }
-  }
-  PosAndVal_compareForVal floodFillSorter;
-  std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
-
-  for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-    const Pos curPos = eng->gameTime->getActorAt(i)->pos;
-    actorArray[curPos.x][curPos.y] = true;
-  }
-
+  trace << "TrapSummonMonster: Finding summon canidates" << endl;
   vector<ActorId_t> summonCandidates;
-  for(unsigned int i = 1; i < endOfActorIds; i++) {
+  for(int i = 1; i < endOfActorIds; i++) {
     const ActorData& data = eng->actorDataHandler->dataList[i];
-    if(data.canBeSummoned) {
-      if(data.spawnMinDLVL <= eng->map->getDLVL() - 3) {
-        summonCandidates.push_back(static_cast<ActorId_t>(i));
-      }
+    if(data.canBeSummoned && data.spawnMinDLVL <= eng->map->getDLVL() - 3) {
+      summonCandidates.push_back(ActorId_t(i));
     }
   }
-  const ActorId_t actorSummoned =
-    summonCandidates.at(eng->dice(1, summonCandidates.size()) - 1);
+  const int NR_ELEMENTS = summonCandidates.size();
+  trace << "TrapSummonMonster: Nr candidates" << NR_ELEMENTS << endl;
 
-  for(unsigned int i = 0; i < floodFillVector.size(); i++) {
-    const Pos curPos = floodFillVector.at(i).pos;
-    if(actorArray[curPos.x][curPos.y] == false) {
-      Monster* monster = dynamic_cast<Monster*>(
-                           eng->actorFactory->spawnActor(
-                             actorSummoned, curPos));
-      monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
-      if(eng->map->playerVision[curPos.x][curPos.y]) {
-        eng->log->addMsg(monster->getNameA() + " appears.");
-      }
-      break;
-    }
+  if(NR_ELEMENTS == 0) {
+    trace << "TrapSummonMonster: No eligible candidates found" << endl;
+  } else {
+    const int ELEMENT = eng->dice.range(0, NR_ELEMENTS - 1);
+    const ActorId_t actorIdToSummon = summonCandidates.at(ELEMENT);
+    trace << "TrapSummonMonster: Actor id: " << actorIdToSummon << endl;
+
+    eng->actorFactory->summonMonsters(
+      pos_, vector<ActorId_t>(1, actorIdToSummon), true);
+    trace << "TrapSummonMonster: Monster was summoned" << endl;
   }
-  traceHi << "TrapSummonMonster::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapSummonMonster::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapSmoke::trapSpecificTrigger(Actor& actor,
                                     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapSmoke::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapSmoke::trapSpecificTrigger()..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -665,12 +655,12 @@ void TrapSmoke::trapSpecificTrigger(Actor& actor,
   }
 
   eng->explosionMaker->runSmokeExplosion(pos_);
-  traceHi << "TrapSmoke::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapSmoke::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapAlarm::trapSpecificTrigger(Actor& actor,
                                     const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapAlarm::trapSpecificTrigger() ..." << endl;
+  traceVerbose << "TrapAlarm::trapSpecificTrigger() ..." << endl;
   (void)dodgeResult;
 
   const bool IS_PLAYER = &actor == eng->player;
@@ -690,12 +680,12 @@ void TrapAlarm::trapSpecificTrigger(Actor& actor,
   Sound snd("I hear an alarm sounding!",
             endOfSfx, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true);
   eng->soundEmitter->emitSound(snd);
-  traceHi << "TrapAlarm::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapAlarm::trapSpecificTrigger() [DONE]" << endl;
 }
 
 void TrapSpiderWeb::trapSpecificTrigger(
   Actor& actor, const AbilityRollResult_t dodgeResult) {
-  traceHi << "TrapSpiderWeb::trapSpecificTrigger()..." << endl;
+  traceVerbose << "TrapSpiderWeb::trapSpecificTrigger()..." << endl;
 
   (void)dodgeResult;
 
@@ -735,7 +725,7 @@ void TrapSpiderWeb::trapSpecificTrigger(
       eng->log->addMsg(actorName + " is entangled in a huge spider web!");
     }
   }
-  traceHi << "TrapSpiderWeb::trapSpecificTrigger() [DONE]" << endl;
+  traceVerbose << "TrapSpiderWeb::trapSpecificTrigger() [DONE]" << endl;
 }
 
 Dir_t TrapSpiderWeb::specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {

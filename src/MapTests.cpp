@@ -296,7 +296,7 @@ void MapTests::floodFill(
           const Pos newPos(currentX + dx, currentY + dy);
           if(
             blockers[newPos.x][newPos.y] == false           &&
-            isCellInside(Pos(newPos.x, newPos.y), bounds) &&
+            isPosInside(Pos(newPos.x, newPos.y), bounds) &&
             values[newPos.x][newPos.y] == 0) {
             currentValue = values[currentX][currentY];
 
@@ -400,7 +400,7 @@ void MapTests::getLine(const Pos& origin, const Pos& target,
 
     curPos.set(int(curX_prec), int(curY_prec));
 
-    if(eng->mapTests->isCellInsideMap(curPos) == false) {
+    if(eng->mapTests->isPosInsideMap(curPos) == false) {
       return;
     }
 

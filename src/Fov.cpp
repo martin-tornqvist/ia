@@ -66,7 +66,7 @@ bool Fov::checkCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
                     const Pos& origin,
                     const bool IS_AFFECTED_BY_DARKNESS) {
 
-  if(eng->mapTests->isCellInsideMap(cellToCheck) == false) {
+  if(eng->mapTests->isPosInsideMap(cellToCheck) == false) {
     return false;
   }
 

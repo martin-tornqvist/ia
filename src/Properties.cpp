@@ -1039,13 +1039,9 @@ bool PropHandler::endAppliedProp(
 
 void PropHandler::newTurnAllProps(
   const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]) {
-  traceHi << "PropHandler::newTurnAllProps()..." << endl;
-  traceHi << "PropHandler: Owner: " << owningActor_->getNameA() << endl;
 
   for(unsigned int i = 0; i < appliedProps_.size();) {
     Prop* const prop = appliedProps_.at(i);
-    traceHi << "PropHandler: New turn for applied property: ";
-    traceHi << prop->getName() << endl;
     if(owningActor_ != eng->player) {
       if(prop->isMakingMonsterAware()) {
         dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
@@ -1069,8 +1065,6 @@ void PropHandler::newTurnAllProps(
   const unsigned int NR_INV_PROPS = invProps.size();
   for(unsigned int i = 0; i < NR_INV_PROPS; i++) {
     Prop* const prop = invProps.at(i);
-    traceHi << "PropHandler: New turn for inventory property: ";
-    traceHi << prop->getName() << endl;
     if(owningActor_ != eng->player) {
       if(prop->isMakingMonsterAware()) {
         dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
@@ -1079,7 +1073,6 @@ void PropHandler::newTurnAllProps(
     }
     prop->onNewTurn();
   }
-  traceHi << "PropHandler::newTurnAllProps() [DONE]" << endl;
 }
 
 void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
@@ -1200,17 +1193,17 @@ bool PropHandler::allowAct() {
 }
 
 bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
-  traceHi << "PropHandler::allowRead()..." << endl;
+  traceVerbose << "PropHandler::allowRead()..." << endl;
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
     if(propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE) == false) {
-      traceHi << "PropHandler::allowRead() [DONE] - return false" << endl;
+      traceVerbose << "PropHandler::allowRead() [DONE] - return false" << endl;
       return false;
     }
   }
-  traceHi << "PropHandler::allowRead() [DONE] - return true" << endl;
+  traceVerbose << "PropHandler::allowRead() [DONE] - return true" << endl;
   return true;
 }
 
@@ -1307,7 +1300,7 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(eng->dice.oneIn(2)) {
+  if(eng->dice.oneIn(200)) {
     owningActor_->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
   }

@@ -313,8 +313,8 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
 }
 
 bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
-  traceHi << "Actor::hit()..." << endl;
-  traceHi << "Actor: Damage from parameter: " << dmg << endl;
+  traceVerbose << "Actor::hit()..." << endl;
+  traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
   if(
     dmgType == dmgType_light &&
@@ -323,7 +323,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
   }
 
   onMonsterHit(dmg);
-  traceHi << "Actor: Damage after onMonsterHit(): " << dmg << endl;
+  traceVerbose << "Actor: Damage after onMonsterHit(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -342,7 +342,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
     Armor* armor =
       dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
-      traceHi << "Actor: Has armor, running hit on armor" << endl;
+      traceVerbose << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == dmgType_physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
@@ -374,7 +374,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
         eng->gore->makeGore(pos);
       }
     }
-    traceHi << "Actor::hit() [DONE]" << endl;
+    traceVerbose << "Actor::hit() [DONE]" << endl;
     return false;
   }
 
@@ -390,10 +390,10 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
   if(getHp() <= 0) {
     die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
     actorSpecificDie();
-    traceHi << "Actor::hit() [DONE]" << endl;
+    traceVerbose << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
-    traceHi << "Actor::hit() [DONE]" << endl;
+    traceVerbose << "Actor::hit() [DONE]" << endl;
     return false;
   }
 }

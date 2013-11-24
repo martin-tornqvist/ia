@@ -478,7 +478,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.shockWhenAdjacent = 6;
+  d.shockWhenAdjacent = 8;
   d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
                                 roomTheme_plain, roomTheme_crypt);
   addToListAndReset(d);
@@ -656,7 +656,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.shockWhenAdjacent = 3;
+  d.shockWhenAdjacent = 10;
   d.themedFeatureSpawnRules.set(3, placementRule_nextToWalls,
                                 roomTheme_plain, roomTheme_crypt);
   addToListAndReset(d);

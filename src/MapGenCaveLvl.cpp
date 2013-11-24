@@ -12,7 +12,7 @@
 #include "FeatureWall.h"
 #include "PopulateMonsters.h"
 
-void MapGenCaveLvl::specificRun() {
+bool MapGenCaveLvl::specificRun() {
   eng->map->clearMap();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -73,4 +73,6 @@ void MapGenCaveLvl::specificRun() {
   eng->featureFactory->spawnFeatureAt(
     feature_stairsDown, floodFillVector.at(STAIR_ELEMENT).pos);
   eng->populateMonsters->populateCaveLevel();
+
+  return true;
 }

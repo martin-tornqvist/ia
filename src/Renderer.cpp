@@ -95,7 +95,7 @@ void Renderer::loadFont() {
 
   for(int y = 0; y < fontSurfaceTmp->h; y++) {
     for(int x = 0; x < fontSurfaceTmp->w; x++) {
-      fontPixelData_[x][y] = (getpixel(fontSurfaceTmp, Pos(x, y)) == imgClr);
+      fontPixelData_[x][y] = getPixel(fontSurfaceTmp, x, y) == imgClr;
     }
   }
 
@@ -113,7 +113,7 @@ void Renderer::loadTiles() {
   Uint32 imgClr = SDL_MapRGB(tileSurfaceTmp->format, 255, 255, 255);
   for(int y = 0; y < tileSurfaceTmp->h; y++) {
     for(int x = 0; x < tileSurfaceTmp->w; x++) {
-      tilePixelData_[x][y] = (getpixel(tileSurfaceTmp, Pos(x, y)) == imgClr);
+      tilePixelData_[x][y] = getPixel(tileSurfaceTmp, x, y) == imgClr;
     }
   }
 
@@ -142,18 +142,29 @@ void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const Pos& pixelPos,
 
   SDL_LockSurface(screenSurface_);
 
-  const int cellW = eng->config->cellW;
-  const int cellH = eng->config->cellH;
+  const int CELL_W = eng->config->cellW;
+  const int CELL_H = eng->config->cellH;
 
   const Pos sheetPoss = eng->art->getTilePoss(tile);
-  const Pos sheetX0Y0(sheetPoss.x * cellW, sheetPoss.y * cellH);
+  const int SHEET_X0  = sheetPoss.x * CELL_W;
+  const int SHEET_Y0  = sheetPoss.y * CELL_H;
+  const int SHEET_X1  = SHEET_X0 + CELL_W - 1;
+  const int SHEET_Y1  = SHEET_Y0 + CELL_H - 1;
+  const int SCREEN_X0 = pixelPos.x;
+  const int SCREEN_Y0 = pixelPos.y;
 
-  for(int dy = 0; dy < cellH; dy++) {
-    for(int dx = 0; dx < cellW; dx++) {
-      if(tilePixelData_[sheetX0Y0.x + dx][sheetX0Y0.y + dy]) {
-        putpixel(screenSurface_, pixelPos + Pos(dx, dy), CLR_TO);
+  int screenX = SCREEN_X0;
+  int screenY = SCREEN_Y0;
+
+  for(int sheetY = SHEET_Y0; sheetY <= SHEET_Y1; sheetY++) {
+    screenX = SCREEN_X0;
+    for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
+      if(tilePixelData_[sheetX][sheetY]) {
+        putPixel(screenSurface_, screenX, screenY, CLR_TO);
       }
+      screenX++;
     }
+    screenY++;
   }
 
   SDL_UnlockSurface(screenSurface_);
@@ -165,40 +176,48 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
 
   SDL_LockSurface(screenSurface_);
 
-  const int cellW = eng->config->cellW;
-  const int cellH = eng->config->cellH;
+  const int CELL_W = eng->config->cellW;
+  const int CELL_H = eng->config->cellH;
 
   const int SCALE = eng->config->fontScale;
 
-  const int cellW_SHEET = cellW / SCALE;
-  const int cellH_SHEET = cellH / SCALE;
+  const int CELL_W_SHEET = CELL_W / SCALE;
+  const int CELL_H_SHEET = CELL_H / SCALE;
 
   const Pos sheetPoss = eng->art->getGlyphPoss(GLYPH);
-  const int SHEET_X0 = sheetPoss.x * cellW_SHEET;
-  const int SHEET_Y0 = sheetPoss.y * cellH_SHEET;
+  const int SHEET_X0  = sheetPoss.x * CELL_W_SHEET;
+  const int SHEET_Y0  = sheetPoss.y * CELL_H_SHEET;
+  const int SHEET_X1  = SHEET_X0 + CELL_W_SHEET - 1;
+  const int SHEET_Y1  = SHEET_Y0 + CELL_H_SHEET - 1;
+  const int SCREEN_X0 = pixelPos.x;
+  const int SCREEN_Y0 = pixelPos.y;
 
-  for(int dy = 0; dy < cellH_SHEET; dy++) {
-    for(int dx = 0; dx < cellW_SHEET; dx++) {
-      const int DX_SCALED = dx * SCALE;
-      const int DY_SCALED = dy * SCALE;
-      if(fontPixelData_[SHEET_X0 + dx][SHEET_Y0 + dy]) {
-        for(int m = 0; m < SCALE; m++) {
-          for(int n = 0; n < SCALE; n++) {
-            putpixel(screenSurface_,
-                     pixelPos + Pos(DX_SCALED + m, DY_SCALED + n), CLR_TO);
+  int screenX = SCREEN_X0;
+  int screenY = SCREEN_Y0;
+
+  for(int sheetY = SHEET_Y0; sheetY <= SHEET_Y1; sheetY++) {
+    screenX = SCREEN_X0;
+    for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
+      if(fontPixelData_[sheetX][sheetY]) {
+        for(int dy = 0; dy < SCALE; dy++) {
+          for(int dx = 0; dx < SCALE; dx++) {
+            putPixel(screenSurface_, screenX + dx, screenY + dy, CLR_TO);
           }
         }
       }
+      screenX++;
     }
+    screenY++;
   }
 
   SDL_UnlockSurface(screenSurface_);
 }
 
-Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
+Uint32 Renderer::getPixel(SDL_Surface* const surface,
+                          const int PIXEL_X, const int PIXEL_Y) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to retrieve */
-  Uint8* p = (Uint8*)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
+  Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
   switch(bpp) {
     case 1:   return *p;            break;
@@ -216,14 +235,15 @@ Uint32 Renderer::getpixel(SDL_Surface* const surface, const Pos& pos) {
   return -1;
 }
 
-void Renderer::putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel) {
+void Renderer::putPixel(SDL_Surface* const surface,
+                        const int PIXEL_X, const int PIXEL_Y, Uint32 pixel) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to set */
-  Uint8* p = (Uint8*)surface->pixels + pos.y * surface->pitch + pos.x * bpp;
+  Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
   switch(bpp) {
     case 1:   *p = pixel;             break;
-    case 2:   *(Uint16*)p = pixel;   break;
+    case 2:   *(Uint16*)p = pixel;    break;
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         p[0] = (pixel >> 16) & 0xff;
@@ -235,7 +255,7 @@ void Renderer::putpixel(SDL_Surface* const surface, const Pos& pos, Uint32 pixel
         p[2] = (pixel >> 16) & 0xff;
       }
     } break;
-    case 4:   *(Uint32*)p = pixel;   break;
+    case 4:   *(Uint32*)p = pixel;    break;
     default:  {}                      break;
   }
 }

@@ -49,7 +49,7 @@ enum PlayerBon_t {
   playerBon_tough,
   playerBon_treasureHunter,
 //playerBon_tumbler,
-  playerBon_vigilant,
+//  playerBon_vigilant,
 //  playerBon_warlock,
   endOfPlayerBons
 };
