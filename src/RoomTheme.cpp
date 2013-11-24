@@ -356,7 +356,8 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
   if(IS_NEXT_TO_WALL_AVAIL == false && IS_AWAY_FROM_WALLS_AVAIL == false) {
-    trace << "RoomThemeMaker: Neither cells next to walls or away from walls found, returning" << endl;
+    trace << "RoomThemeMaker: Neither cells next to walls or away from ";
+    trace << "walls found, returning" << endl;
     def = NULL;
     return -1;
   }
@@ -453,7 +454,8 @@ void RoomThemeMaker::assignRoomThemes() {
 
   vector<bool> isAssigned(NR_ROOMS, false);
 
-  trace << "RoomThemeMaker: Assigning plain theme to rooms with wrong dimensions" << endl;
+  trace << "RoomThemeMaker: Assigning plain theme to rooms with ";
+  trace << "wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     Room* const r = rooms.at(i);
 
@@ -469,7 +471,8 @@ void RoomThemeMaker::assignRoomThemes() {
     }
   }
 
-  trace << "RoomThemeMaker: Attempting to assign non-plain themes to some rooms" << endl;
+  trace << "RoomThemeMaker: Trying to set non-plain themes ";
+  trace << "for some rooms" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
   const int NR_TRIES_TO_ASSIGN = 100;
@@ -483,7 +486,8 @@ void RoomThemeMaker::assignRoomThemes() {
 
         if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
-          trace << "RoomThemeMaker: Assigned non-plain theme (" << theme << ") to room" << endl;
+          trace << "RoomThemeMaker: Assigned non-plain theme;
+                trace << (" << theme << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
           for(int y = room->getY0(); y < room->getY1(); y++) {
             for(int x = room->getX0(); x < room->getX1(); x++) {

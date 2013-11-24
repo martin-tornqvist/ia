@@ -83,14 +83,12 @@ void Player::actorSpecific_spawnStartItems() {
 //    inventory_->putItemInGeneral(
 //      eng->itemFactory->spawnItem(item_drumOfBullets));
 //  }
-//  inventory_->putItemInGeneral(
-//    eng->itemFactory->spawnItem(item_sawedOff));
-//  inventory_->putItemInGeneral(
-//    eng->itemFactory->spawnItem(item_pumpShotgun));
-//  inventory_->putItemInGeneral(
-//    eng->itemFactory->spawnItem(item_shotgunShell, 80));
-//  inventory_->putItemInGeneral(
-//    eng->itemFactory->spawnItem(item_armorAsbestosSuit));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_sawedOff));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_pumpShotgun));
+  inventory_->putItemInGeneral(
+    eng->itemFactory->spawnItem(item_shotgunShell, 80));
   //--------------------------------------------------------------------------
 
   inventory_->putItemInGeneral(

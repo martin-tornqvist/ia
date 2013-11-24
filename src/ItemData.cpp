@@ -260,6 +260,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunSawedOffFire;
+  d->reloadSfx = sfxShotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -277,6 +278,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunPumpFire;
+  d->reloadSfx = sfxShotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -334,7 +336,8 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_drumOfBullets;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
-//  d->rangedAudio = audio_tommygun_fire;
+  d->rangedAttackSfx = sfxMachineGunFire;
+  d->reloadSfx = sfxMachineGunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);

@@ -15,6 +15,9 @@ enum Sfx_t {
   sfxPistolReload,
   sfxShotgunSawedOffFire,
   sfxShotgunPumpFire,
+  sfxShotgunReload,
+  sfxMachineGunFire,
+  sfxMachineGunReload,
 
   //Environment sounds
   sfxMetalClank,
@@ -32,6 +35,7 @@ enum Sfx_t {
   sfxElectricLantern,
   sfxPotionQuaff,
   sfxInsanityRising,
+  sfxGlop,
 
   //Ambient sounds
   startOfAmbSfx,

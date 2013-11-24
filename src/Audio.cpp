@@ -39,6 +39,9 @@ void Audio::initAndClearPrev() {
     loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
     loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
     loadAudioFile(sfxShotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
+    loadAudioFile(sfxShotgunReload,           "sfx_shotgunReload.ogg");
+    loadAudioFile(sfxMachineGunFire,          "sfx_machineGunFire.ogg");
+    loadAudioFile(sfxMachineGunReload,        "sfx_machineGunReload.ogg");
 
     //Environment sounds
     loadAudioFile(sfxMetalClank,              "sfx_metalClank.ogg");
@@ -56,6 +59,7 @@ void Audio::initAndClearPrev() {
     loadAudioFile(sfxElectricLantern,         "sfx_electricLantern.ogg");
     loadAudioFile(sfxPotionQuaff,             "sfx_potionQuaff.ogg");
     loadAudioFile(sfxInsanityRising,          "sfx_insanityRising.ogg");
+    loadAudioFile(sfxGlop,                    "sfx_glop.ogg");
 
     int a = 1;
     for(int i = startOfAmbSfx + 1; i < endOfAmbSfx; i++) {

@@ -5,6 +5,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "PlayerBonuses.h"
+#include "Audio.h"
 
 FeatureLiquidShallow::FeatureLiquidShallow(
   Feature_t id, Pos pos, Engine* engine) :
@@ -23,6 +24,7 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     const bool IS_PLAYER = &actorBumping == eng->player;
     if(IS_PLAYER) {
       eng->log->addMsg("*glop*");
+      eng->audio->play(sfxGlop);
     }
   }
 }
