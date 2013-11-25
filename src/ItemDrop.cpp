@@ -34,14 +34,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = eng->itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
-      eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
+      dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng->itemFactory->copyItem(itemToKeep);
       itemToDrop->nrItems = NR_ITEMS_TO_DROP;
       itemRef = eng->itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
       itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
-      eng->itemDrop->dropItemOnMap(actorDropping->pos, *itemToDrop);
+      dropItemOnMap(actorDropping->pos, *itemToDrop);
     }
 
     //Messages
@@ -55,7 +55,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
       eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
       if(eng->player->checkIfSeeActor(*curActor, blockers)) {
         eng->log->addMsg(
-                         "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
+          "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
     }
 

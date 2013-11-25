@@ -167,7 +167,8 @@ void CharacterLines::drawInfoLines() {
   //Armor
   eng->renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  const Item* const armor = player->getInventory()->getItemInSlot(slot_armorBody);
+  const Item* const armor =
+    player->getInventory()->getItemInSlot(slot_armorBody);
   if(armor == NULL) {
     eng->renderer->drawText("N/A", panel_character, pos, clrGenLgt);
     pos.x += 4;
@@ -194,7 +195,8 @@ void CharacterLines::drawInfoLines() {
   if(itemMissiles == NULL) {
     eng->renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
   } else {
-    str = eng->itemDataHandler->getItemInterfaceRef(*itemMissiles, false);
+    str = eng->itemDataHandler->getItemInterfaceRef(
+            *itemMissiles, false, primaryAttackMode_missile);
     eng->renderer->drawText(str, panel_character, pos, clrGenMed);
     pos.x += str.length() + 1;
   }

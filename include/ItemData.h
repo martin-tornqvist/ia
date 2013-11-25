@@ -238,6 +238,7 @@ public:
   ItemAttackMessages rangedAttackMessages;
   string rangedSoundMessage;
   bool rangedSoundIsLoud;
+  bool rangedMakesRicochetSound;
   string landOnHardSurfaceSoundMsg;
   Sfx_t landOnHardSurfaceSfx;
   Sfx_t rangedAttackSfx;

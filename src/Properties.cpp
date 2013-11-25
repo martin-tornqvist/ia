@@ -1281,7 +1281,7 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(eng->dice.oneIn(300)) {
+  if(eng->dice.oneIn(250)) {
     owningActor_->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
   }
@@ -1415,6 +1415,13 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
 
     dir = dirCenter;
   }
+}
+
+bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == eng->player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng->log->addMsg("I'm too confused.");
+  }
+  return false;
 }
 
 bool PropConfused::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {

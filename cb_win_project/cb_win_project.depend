@@ -11321,7 +11321,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1385310539 source:d:\dev\ia.git\src\actordata.cpp
+1385413082 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11566,7 +11566,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1385323904 source:d:\dev\ia.git\src\attackranged.cpp
+1385413563 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11797,7 +11797,7 @@
 	"Item.h"
 	"Spells.h"
 
-1385245684 source:d:\dev\ia.git\src\characterlines.cpp
+1385411465 source:d:\dev\ia.git\src\characterlines.cpp
 	"CharacterLines.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -11907,7 +11907,7 @@
 
 1382910176 d:\dev\ia.git\src\disarm.h
 
-1385157804 source:d:\dev\ia.git\src\dungeonclimb.cpp
+1385410725 source:d:\dev\ia.git\src\dungeonclimb.cpp
 	"DungeonClimb.h"
 	"Engine.h"
 	"Map.h"
@@ -12288,7 +12288,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1385290628 source:d:\dev\ia.git\src\gametime.cpp
+1385410731 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12308,7 +12308,7 @@
 	"Gods.h"
 	"Engine.h"
 
-1385407672 source:d:\dev\ia.git\src\highscore.cpp
+1385407830 source:d:\dev\ia.git\src\highscore.cpp
 	"Highscore.h"
 	<algorithm>
 	<iostream>
@@ -12323,7 +12323,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1385102617 source:d:\dev\ia.git\src\input.cpp
+1385412195 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12414,7 +12414,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1385325440 source:d:\dev\ia.git\src\itemdata.cpp
+1385411624 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12446,7 +12446,7 @@
 	"Map.h"
 	"Audio.h"
 
-1384362837 source:d:\dev\ia.git\src\itemdrop.cpp
+1385411046 source:d:\dev\ia.git\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12522,7 +12522,7 @@
 	"Inventory.h"
 	"DungeonClimb.h"
 
-1385102617 source:d:\dev\ia.git\src\itemscroll.cpp
+1385412195 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12878,7 +12878,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1385328273 source:d:\dev\ia.git\src\properties.cpp
+1385413269 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -13807,7 +13807,7 @@
 
 1382910266 d:\dev\ia.git\include\art.h
 
-1384887029 d:\dev\ia.git\include\properties.h
+1385412339 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -13822,7 +13822,7 @@
 	"ItemData.h"
 	"CommonTypes.h"
 
-1384291259 d:\dev\ia.git\include\itemdata.h
+1385413494 d:\dev\ia.git\include\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -14046,7 +14046,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1382910266 d:\dev\ia.git\include\ai_castrandomspell.h
+1385412456 d:\dev\ia.git\include\ai_castrandomspell.h
 	"Log.h"
 
 1382910176 d:\dev\ia.git\include\ai_handleinventory.h

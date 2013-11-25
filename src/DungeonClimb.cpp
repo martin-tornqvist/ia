@@ -67,7 +67,7 @@ void DungeonClimb::travelDown(const int levels) {
   eng->player->updateFov();
   eng->player->updateColor();
   eng->renderer->drawMapAndInterface();
-  eng->audio->tryPlayAmb(1);
+  eng->audio->tryPlayAmb(2);
   trace << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 

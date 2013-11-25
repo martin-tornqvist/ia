@@ -60,7 +60,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedMissileLeavesSmoke = false;
       d->rangedSoundMessage = "";
       d->rangedSoundIsLoud = false;
+      d->rangedMakesRicochetSound = false;
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
+      d->landOnHardSurfaceSfx = endOfSfx;
       d->rangedAttackSfx = endOfSfx;
       d->meleeAttackSfx = endOfSfx;
       d->reloadSfx = endOfSfx;
@@ -260,6 +262,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunSawedOffFire;
+  d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxShotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -278,6 +281,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSoundMessage = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunPumpFire;
+  d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxShotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -337,6 +341,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSoundMessage = "I hear the burst of a machine gun.";
   d->rangedAttackSfx = sfxMachineGunFire;
+  d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxMachineGunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -363,6 +368,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
   d->rangedSoundMessage = "I hear a pistol being fired.";
   d->rangedAttackSfx = sfxPistolFire;
+  d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxPistolReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -540,7 +546,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitChanceMod = 15;
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
-  d->isMissileWeapon = true;
+  d->isMissileWeapon = false;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);

@@ -246,7 +246,7 @@ void GameTime::runStandardTurnEvents() {
 
   eng->soundEmitter->resetNrSoundMsgPrintedCurTurn();
 
-  eng->audio->tryPlayAmb(100);
+  eng->audio->tryPlayAmb(200);
 
 //  traceVerbose << "GameTime::runStandardTurnEvents() [DONE]" << endl;
 }

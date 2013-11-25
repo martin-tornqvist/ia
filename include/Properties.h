@@ -527,6 +527,8 @@ public:
 
   void changeMoveDir(const Pos& actorPos, Dir_t& dir);
 
+  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE);
+
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE);
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE);
 

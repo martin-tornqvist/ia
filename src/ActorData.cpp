@@ -913,9 +913,9 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'd';
   d.color = clrBlueLgt;
   d.tile = tile_hound;
-  d.hp = 13;
-  d.dmgMelee = 4;
-  d.dmgRanged = 4;
+  d.hp = 16;
+  d.dmgMelee = 6;
+  d.dmgRanged = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_accuracyRanged, 60);
   d.abilityVals.setVal(ability_dodgeAttack, 35);

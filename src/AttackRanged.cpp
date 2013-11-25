@@ -219,9 +219,11 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->obstructedInElement = projectilePathElement - 1;
           curProj->isObstructed = true;
 
-          Sound snd("I hear a ricochet.",
-                    sfxRicochet, true, curProj->pos, false, true);
-          eng->soundEmitter->emitSound(snd);
+          if(wpn.getData().rangedMakesRicochetSound) {
+            Sound snd("I hear a ricochet.",
+                      sfxRicochet, true, curProj->pos, false, true);
+            eng->soundEmitter->emitSound(snd);
+          }
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
@@ -248,9 +250,11 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->isObstructed = true;
           curProj->obstructedInElement = projectilePathElement;
 
-          Sound snd("I hear a ricochet.",
-                    sfxRicochet, true, curProj->pos, false, true);
-          eng->soundEmitter->emitSound(snd);
+          if(wpn.getData().rangedMakesRicochetSound) {
+            Sound snd("I hear a ricochet.",
+                      sfxRicochet, true, curProj->pos, false, true);
+            eng->soundEmitter->emitSound(snd);
+          }
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {

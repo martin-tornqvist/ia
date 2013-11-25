@@ -420,7 +420,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'x') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      eng->playerSpellsHandler->run();
+      if(eng->player->getPropHandler()->allowRead(true)) {
+        eng->playerSpellsHandler->run();
+      }
     }
     clearEvents();
     return;
