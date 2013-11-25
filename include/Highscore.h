@@ -12,18 +12,19 @@ class Engine;
 
 struct HighScoreEntry {
 public:
-  HighScoreEntry(string dateAndTime, string name, int xp, int dlvl,
+  HighScoreEntry(string dateAndTime, string name, int xp, int lvl, int dlvl,
                  int insanity, bool isVictory) :
-    dateAndTime_(dateAndTime), name_(name), xp_(xp), dlvl_(dlvl),
+    dateAndTime_(dateAndTime), name_(name), xp_(xp), lvl_(lvl), dlvl_(dlvl),
     insanity_(insanity), isVictory_(isVictory) {}
   ~HighScoreEntry() {}
 
   void set(const string& dateAndTime, const string& name,
-           const int XP, const int DLVL, const int INSANITY,
+           const int XP, const int LVL, const int DLVL, const int INSANITY,
            const bool IS_VICTORY) {
     dateAndTime_ = dateAndTime;
     name_ = name;
     xp_ = XP;
+    lvl_ = LVL;
     dlvl_ = DLVL;
     insanity_ = INSANITY;
     isVictory_ = IS_VICTORY;
@@ -42,6 +43,7 @@ public:
   inline string getDateAndTime() const {return dateAndTime_;}
   inline string getName() const {return name_;}
   inline int getXp() const {return xp_;}
+  inline int getLvl() const {return lvl_;}
   inline int getDlvl() const {return dlvl_;}
   inline int getInsanity() const {return insanity_;}
   inline bool isVictoryGame() const {return isVictory_;}
@@ -49,7 +51,7 @@ public:
 private:
   string dateAndTime_;
   string name_;
-  int xp_, dlvl_, insanity_;
+  int xp_, lvl_, dlvl_, insanity_;
   bool isVictory_;
 };
 
