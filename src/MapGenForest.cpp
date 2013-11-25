@@ -181,8 +181,9 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
   //Place graves
   vector<HighScoreEntry> highscoreEntries = eng->highScore->getEntriesSorted();
-  const unsigned PLACE_TOP_N_HIGHSCORES = 7;
-  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, highscoreEntries.size());
+  const int PLACE_TOP_N_HIGHSCORES = 7;
+  const int NR_HIGHSCORES =
+    min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, blockers);
