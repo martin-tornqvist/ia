@@ -125,9 +125,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       eng->renderer->drawText(
         score, panel_screen, Pos(X_POS_SCORE, yPos), clr);
       eng->renderer->drawText(
-        dlvl, panel_screen, Pos(X_POS_LVL, yPos), clr);
-      eng->renderer->drawText(
-        dlvl, panel_screen, Pos(X_POS_DLVL, yPos), clr);
+        lvl, panel_screen, Pos(X_POS_LVL, yPos), clr);
       eng->renderer->drawText(
         dlvl, panel_screen, Pos(X_POS_DLVL, yPos), clr);
       eng->renderer->drawText(
