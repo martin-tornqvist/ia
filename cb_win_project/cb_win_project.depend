@@ -11469,7 +11469,7 @@
 	<string>
 	<vector>
 
-1385323336 source:d:\dev\ia.git\src\actorplayer.cpp
+1385328918 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11691,7 +11691,7 @@
 	"Map.h"
 	"Postmortem.h"
 
-1385325242 source:d:\dev\ia.git\src\audio.cpp
+1385325417 source:d:\dev\ia.git\src\audio.cpp
 	"Audio.h"
 	<time.h>
 	"SDL/SDL_mixer.h"
@@ -12252,7 +12252,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1385196481 source:d:\dev\ia.git\src\featuretrap.cpp
+1385329019 source:d:\dev\ia.git\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<algorithm>
 	"Engine.h"
@@ -12308,11 +12308,12 @@
 	"Gods.h"
 	"Engine.h"
 
-1383771024 source:d:\dev\ia.git\src\highscore.cpp
+1385406037 source:d:\dev\ia.git\src\highscore.cpp
 	"Highscore.h"
 	<algorithm>
 	<iostream>
 	<fstream>
+	"Converters.h"
 	"Engine.h"
 	"Highscore.h"
 	"ActorPlayer.h"
@@ -12413,7 +12414,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1385324054 source:d:\dev\ia.git\src\itemdata.cpp
+1385325440 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12877,7 +12878,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1385312154 source:d:\dev\ia.git\src\properties.cpp
+1385328273 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -12946,7 +12947,7 @@
 	"Log.h"
 	"Renderer.h"
 
-1385102617 source:d:\dev\ia.git\src\roomtheme.cpp
+1385326920 source:d:\dev\ia.git\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapGen.h"
@@ -14187,9 +14188,10 @@
 	<vector>
 	"ItemData.h"
 
-1382910266 d:\dev\ia.git\include\highscore.h
+1385405052 d:\dev\ia.git\include\highscore.h
 	<vector>
 	<string>
+	"CommonData.h"
 
 1383848053 d:\dev\ia.git\include\examine.h
 	<vector>
@@ -14368,7 +14370,7 @@
 	"Map.h"
 	"FeatureWall.h"
 
-1385245684 source:d:\dev\ia.git\src\mapgenforest.cpp
+1385330433 source:d:\dev\ia.git\src\mapgenforest.cpp
 	"MapGen.h"
 	<iostream>
 	<vector>

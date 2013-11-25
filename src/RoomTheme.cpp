@@ -35,9 +35,8 @@ void RoomThemeMaker::run() {
 }
 
 void RoomThemeMaker::applyThemeToRoom(Room& room) {
-  if(placeThemeFeatures(room) == 0) {
-    return;
-  }
+  placeThemeFeatures(room);
+
   makeThemeSpecificRoomModifications(room);
 
   switch(room.roomTheme) {
@@ -447,7 +446,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   const int MIN_DIM = 3;
   const int MAX_DIM = 12;
-  const int NR_NON_PLAIN_THEMED = eng->dice.range(2, 4);
+  const int NR_NON_PLAIN_THEMED = eng->dice.range(1, 3);
 
   vector<Room*>& rooms = eng->map->rooms;
   const int NR_ROOMS = rooms.size();
@@ -486,8 +485,8 @@ void RoomThemeMaker::assignRoomThemes() {
 
         if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
-          trace << "RoomThemeMaker: Assigned non-plain theme;
-                trace << (" << theme << ") to room" << endl;
+          trace << "RoomThemeMaker: Assigned non-plain theme";
+          trace << "(" << theme << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
           for(int y = room->getY0(); y < room->getY1(); y++) {
             for(int x = room->getX0(); x < room->getX1(); x++) {

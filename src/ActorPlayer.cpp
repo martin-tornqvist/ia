@@ -83,12 +83,12 @@ void Player::actorSpecific_spawnStartItems() {
 //    inventory_->putItemInGeneral(
 //      eng->itemFactory->spawnItem(item_drumOfBullets));
 //  }
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_sawedOff));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_pumpShotgun));
-  inventory_->putItemInGeneral(
-    eng->itemFactory->spawnItem(item_shotgunShell, 80));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_sawedOff));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_pumpShotgun));
+//  inventory_->putItemInGeneral(
+//    eng->itemFactory->spawnItem(item_shotgunShell, 80));
   //--------------------------------------------------------------------------
 
   inventory_->putItemInGeneral(
@@ -1244,8 +1244,8 @@ void Player::actorSpecific_addLight(
       if(item->getData().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern =
           dynamic_cast<DeviceElectricLantern*>(item);
-        if(isUsingLightGivingItem == false) {
-          isUsingLightGivingItem = lantern->isGivingLight();
+        if(lantern->isGivingLight()) {
+          isUsingLightGivingItem = true;
           break;
         }
       }

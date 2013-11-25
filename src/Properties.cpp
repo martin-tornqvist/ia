@@ -1281,7 +1281,7 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(eng->dice.oneIn(200)) {
+  if(eng->dice.oneIn(300)) {
     owningActor_->getPropHandler()->tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
   }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "Converters.h"
 #include "Engine.h"
 #include "Highscore.h"
 #include "ActorPlayer.h"
@@ -13,13 +14,13 @@
 #include "Input.h"
 #include "Renderer.h"
 
-const int X_POS_DATE = 1;
-const int X_POS_NAME = X_POS_DATE + 19;
-const int X_POS_SCORE = X_POS_NAME + 14;
-const int X_POS_LVL = X_POS_SCORE + 12;
-const int X_POS_DLVL = X_POS_LVL + 8;
-const int X_POS_INSANITY = X_POS_DLVL + 8;
-const int X_POS_RANK = X_POS_INSANITY + 10;
+const int X_POS_DATE      = 1;
+const int X_POS_NAME      = X_POS_DATE + 19;
+const int X_POS_SCORE     = X_POS_NAME + 14;
+const int X_POS_LVL       = X_POS_SCORE + 12;
+const int X_POS_DLVL      = X_POS_LVL + 8;
+const int X_POS_INSANITY  = X_POS_DLVL + 8;
+const int X_POS_RANK      = X_POS_INSANITY + 10;
 
 bool HighScore::isEntryHigher(const HighScoreEntry& current,
                               const HighScoreEntry& other) {
@@ -41,6 +42,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   HighScoreEntry currentPlayer(
     eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true),
     eng->player->getNameA(),
+    eng->dungeonMaster->getXp(),
     eng->map->getDLVL(),
     eng->player->getInsanity(),
     IS_VICTORY);
@@ -54,9 +56,11 @@ void HighScore::gameOver(const bool IS_VICTORY) {
 
 void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
                                       const int TOP_ELEMENT) const {
+  trace << "HighScore::renderHighScoreScreen()..." << endl;
+
   eng->renderer->clearScreen();
 
-  if(entries.size() == 0) {
+  if(entries.empty()) {
     const int X0 = 1;
     const int Y0 = 4;
     eng->renderer->drawText(
@@ -87,7 +91,7 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
     eng->renderer->drawText(
       "Score", panel_screen, Pos(X_POS_SCORE, yPos), clrGray);
     eng->renderer->drawText(
-      "Level", panel_screen, Pos(X_POS_LVL, yPos), clrGray);
+      "Depth", panel_screen, Pos(X_POS_LVL, yPos), clrGray);
     eng->renderer->drawText(
       "Depth", panel_screen, Pos(X_POS_DLVL, yPos), clrGray);
     eng->renderer->drawText(
@@ -100,10 +104,15 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       i < int(entries.size()) && (i - TOP_ELEMENT) < MAP_Y_CELLS;
       i++) {
       const string dateAndTime = entries.at(i).getDateAndTime();
+      trace << "HighScore: dateAndTime: " << dateAndTime << endl;
       const string name = entries.at(i).getName();
-      const string SCORE = toString(entries.at(i).getScore());
-      const string DLVL = toString(entries.at(i).getDlvl());
-      const string INSANITY = toString(entries.at(i).getInsanity());
+      trace << "HighScore: name: " << name << endl;
+      const string score = toString(entries.at(i).getScore());
+      trace << "HighScore: score: " << score << endl;
+      const string dlvl = toString(entries.at(i).getDlvl());
+      trace << "HighScore: dlvl: " << dlvl << endl;
+      const string ins = toString(entries.at(i).getInsanity());
+      trace << "HighScore: ins: " << ins << endl;
 
       const SDL_Color clr = clrNosferatuSepia;
       eng->renderer->drawText(
@@ -111,16 +120,18 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       eng->renderer->drawText(
         name, panel_screen, Pos(X_POS_NAME, yPos), clr);
       eng->renderer->drawText(
-        SCORE, panel_screen, Pos(X_POS_SCORE, yPos), clr);
+        score, panel_screen, Pos(X_POS_SCORE, yPos), clr);
       eng->renderer->drawText(
-        DLVL, panel_screen, Pos(X_POS_DLVL, yPos), clr);
+        dlvl, panel_screen, Pos(X_POS_DLVL, yPos), clr);
       eng->renderer->drawText(
-        INSANITY + "%", panel_screen, Pos(X_POS_INSANITY, yPos), clr);
+        ins + "%", panel_screen, Pos(X_POS_INSANITY, yPos), clr);
       yPos++;
     }
   }
 
   eng->renderer->updateScreen();
+
+  trace << "HighScore::renderHighScoreScreen() [DONE]" << endl;
 }
 
 void HighScore::runHighScoreScreen() {
@@ -177,6 +188,7 @@ void HighScore::writeFile(vector<HighScoreEntry>& entries) {
     file << VICTORY_STR << endl;
     file << entry.getDateAndTime() << endl;
     file << entry.getName() << endl;
+    file << entry.getXp() << endl;
     file << entry.getDlvl() << endl;
     file << entry.getInsanity() << endl;
   }
@@ -187,7 +199,7 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
   file.open("data/highscores");
 
   if(file.is_open()) {
-    string line;
+    string line = "";
 
     while(getline(file, line)) {
       bool isVictory = line.at(0) == 'V';
@@ -196,11 +208,13 @@ void HighScore::readFile(vector<HighScoreEntry>& entries) {
       getline(file, line);
       const string name = line;
       getline(file, line);
+      const int XP = toInt(line);
+      getline(file, line);
       const int DLVL = toInt(line);
       getline(file, line);
       const int INSANITY = toInt(line);
       entries.push_back(
-        HighScoreEntry(dateAndTime, name, DLVL, INSANITY, isVictory));
+        HighScoreEntry(dateAndTime, name, XP, DLVL, INSANITY, isVictory));
     }
     file.close();
   }

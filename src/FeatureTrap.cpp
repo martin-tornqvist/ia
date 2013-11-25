@@ -609,12 +609,12 @@ void TrapSummonMonster::trapSpecificTrigger(Actor& actor,
   vector<ActorId_t> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorData& data = eng->actorDataHandler->dataList[i];
-    if(data.canBeSummoned && data.spawnMinDLVL <= eng->map->getDLVL() - 3) {
+    if(data.canBeSummoned && data.spawnMinDLVL <= eng->map->getDLVL() + 3) {
       summonCandidates.push_back(ActorId_t(i));
     }
   }
   const int NR_ELEMENTS = summonCandidates.size();
-  trace << "TrapSummonMonster: Nr candidates" << NR_ELEMENTS << endl;
+  trace << "TrapSummonMonster: Nr candidates: " << NR_ELEMENTS << endl;
 
   if(NR_ELEMENTS == 0) {
     trace << "TrapSummonMonster: No eligible candidates found" << endl;
