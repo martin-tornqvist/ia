@@ -4,15 +4,16 @@
 3. The interface
 4. Insanity
 5. Mythos knowledge
-6. Sneaking and backstabbing
+6. Hit Points, Wounds and healing
+7. Sneaking and backstabbing
 
 
 1. Command list
 ------------------------------------------------
    @    Display character description
    TAB  Melee attack adjacent monster
-   >    Go down staircase
-   a    Examine object
+   >    Descend staircase
+   a    Examine something on the map
    b    Bash door or kick monster
    c    Close door
    e    Use item or throw held explosive
@@ -27,8 +28,8 @@
    S    Save and quit (must stand on stairs)
    t    Throw a missile from the missile slot
    u    Unload or pick up ammunition from the ground
-   w    Handle equipment (wear and wield things)
-   Q    Quit to main menu (will erase the game)
+   w    Handle equipment (wear or wield items)
+   Q    Quit to main menu
    x    Cast memorized spell
    z    Swap to alternative weapon
    ?    Display manual
@@ -63,22 +64,22 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 ------------------------------------------------
 The following is an example of how The interface lines can look:
 
-   Player HP:9/16 INS:45%/12% MTH:6% ENC:40%  M1911 Colt 1d8+4 50% 5/7
-   DLVL:2 LVL:1 NXT:60 ARM:1                  7 Throwing Knives 2d4 50%
-   Blind Diseased
+   Player HP:9/16 INS:45%/12% MTH:6% ENC:40%    M1911 Colt 1d8+4 50% 5/7
+   DLVL:2 LVL:1 NXT:60 ARM:1                    7 Throwing Knives 2d4 50%
+   Blind Diseased Wound(1)
 
-From left to right, the first line displays player name, Hit Points (current/max), shock/Insanity (see section 4: "Insanity"), Mythos knowledge (see section 5: "Mythos knowledge"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
+From left to right, the first line displays player name, Hit Points (current/max), shock/insanity (see section 4: "Insanity"), Mythos knowledge (see section 5: "Mythos knowledge"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
 
-The second line displays the dungeon level, player level, experience points needed for next level, armor value, and your thrown weapon.
+The second line displays the dungeon level, player level, experience points needed for next level, Armor Points (each point reduces your received physical damage by 1), and your thrown weapon.
 
-The third line displays status effects currently affecting you.
+The third line displays properties currently affecting you. This can be temporary properties (e.g. from potions), permanent intrinsic properties (such as resistance to fear), or properties granted by wearing or wielding items (e.g. an asbestos suit giving acid resistance).
 
 
 4. Insanity
 ------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
-Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other events. Finally, there is a slow perpetual draining of your sanity from simply exploring and dwelling in this ancient haunted dungeon.
+Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other bizarre events. Finally, there is a slow perpetual draining of your sanity from exploring and dwelling in this ancient haunted dungeon.
 
 Your state of Insanity is represented by two percentage values in the following manner:
    INS:X%/Y%
@@ -104,12 +105,32 @@ This trait describes your general insight about the mystical and hidden forces a
 Each event that primarily raises your Insanity (INS) also raises your MTH by half the amount. This works the other way too; an event that primarily raises your MTH also raises your INS by half the amount.
 
 The effects of increasing MTH includes:
-   * Increased damage to all bizarre, alien, mystical and shocking creatures
+   * Increased damage to all extraordinary creatures
    * Raised spell casting chances
-   * At a certain level of MTH, you gain a powerful spell
+   * At a certain level of MTH, you gain a special spell
 
 
-6. Sneaking and backstabbing
+6. Hit Points, Wounds and healing
+------------------------------------------------
+The state of your physical health is described in two ways:
+   * Hit Points (HP)
+This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, good stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or exhausted). Hit Points usually regenerates automatically over time.
+
+   * Wounds
+This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high ammount of damage in one hit (only physical damage can cause wounds, never electricity, fire, spirit damge, etc). Each wound reduces your fighting abilities (especially melee) and your HP regeneration rate. If you have more than four wounds, you are dead.
+
+There is an item called a "Medical Bag", which has a certain number of "supplies". It can be used in the following ways:
+   * Sanitize infection
+When bitten or clawed by certain monsters, you can become infected. Use this option to handle the infection before it becomes a disease.
+
+   * Take morphine
+This is used as a painkiller, and will restore your Hit Points. It is not good for the mind however, and your sanity will take a hit.
+
+   * Treat wound
+This will heal a wound, although it requires many uninterrupted turns, and drains many supplies.
+
+
+7. Sneaking and backstabbing
 ------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam around the map, but they will not actively search for you or purposefully attack you.
 
