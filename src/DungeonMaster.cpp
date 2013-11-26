@@ -34,7 +34,7 @@ void DungeonMaster::playerGainLvl() {
     "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
   eng->player->restoreHp(999, false);
-  eng->player->changeMaxHp(2, true);
+  eng->player->changeMaxHp(1, true);
   ActorData& d = eng->actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;

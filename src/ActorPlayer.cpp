@@ -1026,6 +1026,7 @@ void Player::interruptActions() {
 
   if(activeMedicalBag != NULL) {
     activeMedicalBag->interrupted();
+    activeMedicalBag = NULL;
   }
 }
 
@@ -1046,7 +1047,7 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const bool IS_MSG_EMPTY = msg.empty();
 
   if(IS_MSG_EMPTY == false) {
-    eng->log->addMsg(msg);
+    eng->log->addMsg(msg, clrWhite, true);
   }
 
   //Play audio after message to ensure synch between audio and animation

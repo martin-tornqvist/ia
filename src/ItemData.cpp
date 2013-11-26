@@ -447,6 +447,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_ironSpike;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
   d->rangedSoundMessage = "I hear a very crude gun being fired.";
+  d->rangedMakesRicochetSound = true;
   d->rangedMissileGlyph = '/';
   d->rangedMissileColor = clrGray;
   d->spawnStandardMinDLVL = 4;

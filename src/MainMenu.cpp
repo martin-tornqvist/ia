@@ -144,7 +144,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   pos.x = MAP_X_CELLS / 2;
 
   eng->renderer->drawTextCentered(
-    eng->config->GAME_VERSION + "  (c) 2011-2013 Martin Tornqvist",
+    eng->config->GAME_VERSION + " 2013-11-26 (c) 2011-2013 Martin Tornqvist",
     panel_character, Pos(pos.x, 1), clrWhite);
 
 //  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);

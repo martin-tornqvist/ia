@@ -11,7 +11,7 @@ public:
         monsterActing->playerAwarenessCounter > 0 &&
         monsterActing->spellCoolDownCurrent == 0) {
 
-        if(monsterActing->getPropHandler()->allowRead(false)) {
+        if(monsterActing->getPropHandler()->allowRead(false) == false) {
           return false;
         }
 

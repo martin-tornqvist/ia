@@ -103,7 +103,7 @@ struct PropData {
     allowDisplayTurns = true;
     allowApplyMoreWhileActive = true;
     updatePlayerVisualWhenStartOrEnd = false;
-    isEndedByMagicHealing = true;
+    isEndedByMagicHealing = false;
     allowTestingOnBot = false;
     alignment = propAlignmentBad;
   }
