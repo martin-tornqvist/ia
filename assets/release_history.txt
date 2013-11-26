@@ -1,4 +1,49 @@
 --------------------------------------------------------------
+v15.0 November 26, 2013)
+--------------------------------------------------------------
+* Added sound effects (for weapons, monsters, etc) and atmospheric ambient background sounds. Audio can be enabled/disabled in the options menu.
+* The track “Madness” by Musica Cthulhiana (from the album “Fragment”) is used as intro music in the main menu
+* Reworked the status effects system, and changed/added many effects. Internally, status effects are now called “Properties”. They can describe both a creature’s temporary conditions (confused, burning, diseased...) and permanent attributes (natural fire resistance, light sensitivity...). It is now also possible for items to apply properties on the wearer. Properties may prevent damage (e.g. fire resistance will prevent all fire damage).
+* Removed the physical/mental status resistances (measured in percent). The reason is that they felt too dependant on luck - you could for example get confused many times even with high resistance. Now there are instead binary resistances (you are either completely immune, or completely susceptible), such as resistance to fear, confusion, sleep, etc. The “shock resistance” percentage is still kept however, since this simply reduces shock by a certain percent (no luck involved).
+* Changed the spell casting system to use a mana-like resource called “Spirit”, instead of the previous chance-based system. The reason for this is similar to the reason for removing physical/mental status resistances (mentioned above) - it was too unpredictable and luck dependant. Now it should be easier to make tactical decisions about spell casting.
+* Being Confused now prevents spell casting
+* All creatures have a certain amount of Spirit. If a creature’s Spirit is depleted, it dies (monsters may sometimes attempt to cast a spell that could kill it, if it “feels desperate”).
+* Removed “Potion of the Cobra” (gave perfect aiming and dodging)
+* Added “Potion of Frenzy” - Gives the property “Frenzied”: Perfect melee aiming, cannot cast spells or read, resistance to confusion/sleep/fear/weakening, attempting to walk in any direction will cause you to step towards nearest visible monster, becomes weakened when effect ends.
+* Added “Potion of Spirit” - Restores spirit
+* Added “Potion of Fire Resistance”
+* Added “Potion of Insulation” - Electricity resistance
+* Added “Potion of Antidote” - Cures poisoning
+* Removed “Manuscript of Identify”
+* Renamed “Potion of Knowledge” to “Potion of Insight” - It now identifies a random carried item, as well as increasing Mythos knowledge like in previous versions
+* Changed “Manuscript of Descent” to a potion
+* Added “Manuscript of Sacrifice Life Force” - Convert remaining Hit Points to Spirit points
+* Added “Manuscript of Sacrifice Spirit” - Convert remaining Spirit points to Hit Points
+* The spell that you gain after reaching a certain level of Mythos knowledge (“Thaumaturgic Alteration”), now chooses effect automatically (instead of player selecting the effect from a menu), this can include a random manuscript-spell, or a special effect if the circumstances allow it.
+* Renamed the spell “Azathoths Blast” to “Azathoths Wrath”
+* Added armor “Asbestos Suit” - Wearing this gives you resistance to fire/acid/electricity. It has 1 armor point (physical damage protection and durability of the armor)
+* Added armor “Heavy Coat” - Wearing this gives you resistance to cold. It has 1 armor point
+* Bloated Corpse spit attack now does acid damage
+* Added a few cold based monsters that does cold damage
+* Hit points now automatically regenerates over time, although you can receive wounds that need many turns of active healing (similar to how HP were healed in previous versions, but more elaborate - see below). Each wound reduces your fighting abilities (especially melee) and your HP regeneration rate. If you have more than four wounds, you die.
+* Added item “Medical Bag”. This has a number of different uses, the main purpose is to heal wounds.
+* The [h]eal command has been removed, instead you use the Medical Bag.
+* When attacking ethereal monsters (e.g. Ghosts-type monsters), the attack will often fail to hit (“My attack passes right through the Ghost!”). In case of ranged attacks, the projectile will often pass through the monster and continue on its path, even if aiming succeeded.
+* Shadow-type monsters are now light sensitive - they are harmed each turn a light shines on them (e.g. from a lantern, flare, or burning creature).
+* Reworked leveling system: You now pick all your character’s traits and skills at the start of the game instead of when gaining levels. Gaining a level now increases your hit points, and for some levels also attack skills, dodging, spirit points and mythos knowledge.
+* Merged/changed/added some traits and skills
+* The formulas determining XP needed per level, and XP given per monster are completely remade.
+* A monster’s chance of spotting you is now affected by distance.
+* Added fountains that you can drink from for various effects
+* Some dungeon features can now spawn more freely on the map, as well as in themed rooms. Some room themes are also made less obvious now, and their label has been removed from the bottom of the screen. The reason for this is that in the previous version some themed rooms got very repetitive (e.g. too many levels had identical human quarters with a chest, cabinet, and some Cultists).
+* Added a simple animated effect for summoned monsters and for creatures hit by spells
+* You no longer automatically reload your weapon when attempting to fire an empty gun (though there is a setting in the options menu to enable this again). The reason is that it was too easy to reload by accident.
+* Fixed a typo that said “Press ‘v’” when you tried to throw a missile with empty missile slot. Changed it to say “Press ‘w’”, which is the actual command to equip items.
+* Fixed a bug that prevented you from using melee attacks on a turn that you had a free move from the “Dextrous” bonus, and walked in liquid
+* Fixed a bug where carrying multiple electric lanterns prevented you from using any other than the top one
+
+
+--------------------------------------------------------------
 v14.1 (June 16, 2013)
 --------------------------------------------------------------
 Miscellaneous
