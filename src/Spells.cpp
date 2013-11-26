@@ -35,7 +35,7 @@ Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
   switch(spellId) {
     case spell_enfeeble:            return new SpellEnfeeble;           break;
     case spell_disease:             return new SpellDisease;            break;
-    case spell_azathothsBlast:      return new SpellAzathothsBlast;     break;
+    case spell_azathothsWrath:      return new SpellAzathothsWrath;     break;
     case spell_summonRandom:        return new SpellSummonRandom;       break;
     case spell_healSelf:            return new SpellHealSelf;           break;
     case spell_knockBack:           return new SpellKnockBack;          break;
@@ -130,8 +130,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
   return SpellCastRetData(false);
 }
 
-//------------------------------------------------------------ AZATHOTHS BLAST
-SpellCastRetData SpellAzathothsBlast::specificCast(
+//------------------------------------------------------------ AZATHOTHS WRATH
+SpellCastRetData SpellAzathothsWrath::specificCast(
   Actor* const caster, Engine* const eng) {
   DiceParam spellDmg(1, 8, 0);
   if(caster == eng->player) {
@@ -156,7 +156,7 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
           monsterName + " is struck by a roaring blast!", clrMessageGood);
         spotedEnemies.at(i)->getPropHandler()->tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 1));
-        spotedEnemies.at(i)->hit(eng->dice(1, 8), dmgType_physical, true);
+        spotedEnemies.at(i)->hit(eng->dice(1, 8), dmgType_physical, false);
         Sound snd("I hear a roaring blast",
                   endOfSfx, true, spotedEnemies.at(i)->pos, true, true);
         eng->soundEmitter->emitSound(snd);
@@ -169,14 +169,14 @@ SpellCastRetData SpellAzathothsBlast::specificCast(
       vector<Pos>(1, eng->player->pos), clrRedLgt);
     eng->player->getPropHandler()->tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
-    eng->player->hit(eng->dice(1, 8), dmgType_physical, true);
+    eng->player->hit(eng->dice(1, 8), dmgType_physical, false);
     Sound snd("", endOfSfx, true, eng->player->pos, true, true);
     eng->soundEmitter->emitSound(snd);
     return SpellCastRetData(false);
   }
 }
 
-bool SpellAzathothsBlast::isGoodForMonsterToCastNow(
+bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);

@@ -24,7 +24,7 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     const bool IS_PLAYER = &actorBumping == eng->player;
     if(IS_PLAYER) {
       eng->log->addMsg("*glop*");
-      eng->audio->play(sfxGlop);
+//      eng->audio->play(sfxGlop);
     }
   }
 }

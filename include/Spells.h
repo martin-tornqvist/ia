@@ -14,7 +14,7 @@ class Monster;
 
 enum Spell_t {
   //Player and monster available spells
-  spell_azathothsBlast,
+  spell_azathothsWrath,
   spell_enfeeble,
   spell_teleport,
   spell_bless, //TODO Add a curse spell as well, available for player
@@ -79,15 +79,15 @@ protected:
   virtual int getSpecificMaxSpiCost() const = 0;
 };
 
-class SpellAzathothsBlast: public Spell {
+class SpellAzathothsWrath: public Spell {
 public:
-  SpellAzathothsBlast() : Spell() {}
+  SpellAzathothsWrath() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine* const eng);
   bool isLearnableForMonsters() const {return true;}
   bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Azathoths Blast";}
-  Spell_t getId()               const {return spell_azathothsBlast;}
+  string getName()              const {return "Azathoths Wrath";}
+  Spell_t getId()               const {return spell_azathothsWrath;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine* const eng);
   int getSpecificMaxSpiCost()   const {return 8;}

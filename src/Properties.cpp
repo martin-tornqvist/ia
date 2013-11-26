@@ -860,6 +860,23 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool NO_MESSAGES,
                                const bool DISABLE_REDRAW,
                                const bool DISABLE_PROP_START_EFFECTS) {
+
+  //---------------------------------------------------------------------------
+  //TODO This is used for offsetting game time immediately decreasing all prop
+  //turns after they get applied. I.e. being Still (from marksman bonus), or
+  //Waiting (from walking through water) for one turn, will not even register
+  //for the player, since there will be a standard turn between. When using the
+  //code below, one can for example set Still for 1 turn when pressing wait,
+  //which sounds sensible. It also sounds sensible that props should end when
+  //turnsLeft == 0... it's unclear how this should be handled, but the change
+  //below seems to work somewhat well. It doesn't feel like a good long term
+  //solution though, and may have some unknown problems. Investigation needed.
+  //---------------------------------------------------------------------------
+  if(prop->turnsLeft_ > 0) {
+    prop->turnsLeft_++;
+  }
+  //---------------------------------------------------------------------------
+
   prop->owningActor_ = owningActor_;
 
   const bool IS_PLAYER = owningActor_ == eng->player;

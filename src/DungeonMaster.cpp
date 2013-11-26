@@ -34,7 +34,7 @@ void DungeonMaster::playerGainLvl() {
     "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
   eng->player->restoreHp(999, false);
-  eng->player->changeMaxHp(1, true);
+  eng->player->changeMaxHp(2, true);
   ActorData& d = eng->actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;
@@ -110,7 +110,7 @@ void DungeonMaster::winGame() {
   winMessage += "I feel as if I have stirred something. I notice a dark figure observing me from the edge of the light. ";
   winMessage += "It is the shape of a human. The figure approaches me, but still no light falls on it as it enters. ";
   winMessage += "There is no doubt in my mind concerning the nature of this entity; It is the Faceless God who dwells in the depths of ";
-  winMessage += "the earth, it is the Crawling Chaos, the 'Black Man' of the witch-cult, the Devil - NYARLATHOTEP! ";
+  winMessage += "the earth, it is the Crawling Chaos - NYARLATHOTEP! ";
   winMessage += "I panic. Why is it I find myself here, stumbling around in darkness? ";
   winMessage += "The being beckons me to gaze into the stone. In the divine radiance I see visions beyond eternity, ";
   winMessage += "visions of unreal reality, visions of the brightest light of day and the darkest night of madness. ";

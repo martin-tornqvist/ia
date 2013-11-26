@@ -147,7 +147,7 @@ void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
   if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
-    const int TIME_REQ_BETWEEN_AMB_SFX = 30;
+    const int TIME_REQ_BETWEEN_AMB_SFX = 35;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;

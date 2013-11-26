@@ -136,7 +136,7 @@ enum ItemId_t {
   item_scrollOfBlessing,
   item_scrollOfMayhem,
   item_scrollOfClairvoyance,
-  item_scrollOfAzathothsBlast,
+  item_scrollOfAzathothsWrath,
   item_scrollOfOpening,
   item_scrollOfSacrificeLife,
   item_scrollOfSacrificeSpirit,

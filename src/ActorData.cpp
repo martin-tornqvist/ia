@@ -996,7 +996,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_phantasm;
   d.hp = 9;
   d.spi = 12;
-  d.dmgMelee = 6;
+  d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
@@ -1035,7 +1035,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_wraith;
   d.hp = 15;
   d.spi = 20;
-  d.dmgMelee = 6;
+  d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.spawnMinDLVL = 12;
   d.canSeeInDarkness = true;
@@ -1148,8 +1148,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_wolf;
   d.hp = 4;
   d.spi = 2;
-  d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.dmgMelee = 3;
+  d.abilityVals.setVal(ability_accuracyMelee, 35);
   d.abilityVals.setVal(ability_dodgeAttack, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
@@ -1263,8 +1263,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_mantis;
   d.hp = 15;
   d.spi = 20;
-  d.dmgMelee = 7;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.dmgMelee = 5;
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.abilityVals.setVal(ability_dodgeAttack, 40);
   d.abilityVals.setVal(ability_stealth, 20);
   d.spawnMinDLVL = 8;
@@ -1452,7 +1452,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'P';
   d.color = clrMagenta;
   d.tile = tile_mummy;
-  d.hp = 21;
+  d.hp = 25;
   d.spi = 30;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -1491,7 +1491,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'P';
   d.color = clrRed;
   d.tile = tile_mummy;
-  d.hp = 44;
+  d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -1531,7 +1531,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'P';
   d.color = clrRedLgt;
   d.tile = tile_mummy;
-  d.hp = 44;
+  d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -1801,7 +1801,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_ooze;
   d.hp = 13;
   d.spi = 12;
-  d.dmgMelee = 4;
+  d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.abilityVals.setVal(ability_stealth, 90);
   d.spawnMinDLVL = 4;

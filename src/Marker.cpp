@@ -112,16 +112,6 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
       done();
     }
   }
-  // ------------------------------------------------------- AZATHOTS BLAST SPELL
-//  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'x') {
-//    if(markerTask == markerTask_spellAzathothsBlast) {
-//      if(eng->map->playerVision[pos_.x][pos_.y]) {
-//        eng->renderer->drawMapAndInterface();
-//        ScrollOfAzathothsBlast::castAt(pos_, eng);
-//        done();
-//      }
-//    }
-//  }
   if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
     cancel();
   }

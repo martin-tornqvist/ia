@@ -56,8 +56,8 @@ int RoomThemeMaker::getRandomNrFeaturesForTheme(
   const RoomTheme_t theme) const {
 
   switch(theme) {
-    case roomTheme_plain:     return eng->dice.oneIn(14) ? 2 :
-                                       eng->dice.oneIn(5) ? 1 : 0;
+    case roomTheme_plain:     return eng->dice.oneIn(14) ?
+                                       2 : eng->dice.oneIn(5) ? 1 : 0;
     case roomTheme_human:     return eng->dice.oneIn(7) ? 2 : 1;
     case roomTheme_ritual:    return eng->dice.range(1, 3);
     case roomTheme_spider:    return eng->dice.range(0, 2);
@@ -168,9 +168,9 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 //  }
 
     case roomTheme_monster: {
-      bool done = false;
       int nrBloodPut = 0;
-      while(done == false) {
+      const int NR_TRIES = 1000; //TODO Hacky, needs improving
+      for(int i = 0; i < NR_TRIES; i++) {
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
             if(blockers[x][y] == false) {
@@ -183,7 +183,9 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
             }
           }
         }
-        done = nrBloodPut > 0;
+        if(nrBloodPut > 0) {
+          break;
+        }
       }
     } break;
 

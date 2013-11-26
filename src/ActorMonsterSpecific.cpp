@@ -482,7 +482,7 @@ void KeziahMason::actorSpecific_spawnStartItems() {
   spellsKnown.push_back(new SpellTeleport);
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonRandom);
-  spellsKnown.push_back(new SpellAzathothsBlast);
+  spellsKnown.push_back(new SpellAzathothsWrath);
   spellsKnown.push_back(eng->spellHandler->getRandomSpellForMonster());
 }
 

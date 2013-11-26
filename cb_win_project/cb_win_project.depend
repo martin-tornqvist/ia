@@ -11321,7 +11321,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1385413082 source:d:\dev\ia.git\src\actordata.cpp
+1385496243 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11431,7 +11431,7 @@
 1382910176 d:\dev\ia.git\src\ai_handleinventory.h
 	"Inventory.h"
 
-1385102617 source:d:\dev\ia.git\src\actormonsterspecific.cpp
+1385490773 source:d:\dev\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -11691,7 +11691,7 @@
 	"Map.h"
 	"Postmortem.h"
 
-1385325417 source:d:\dev\ia.git\src\audio.cpp
+1385493023 source:d:\dev\ia.git\src\audio.cpp
 	"Audio.h"
 	<time.h>
 	"SDL/SDL_mixer.h"
@@ -11944,7 +11944,7 @@
 	<vector>
 	"ItemData.h"
 
-1385488231 source:d:\dev\ia.git\src\dungeonmaster.cpp
+1385496630 source:d:\dev\ia.git\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -12220,7 +12220,7 @@
 	"Renderer.h"
 	"ActorPlayer.h"
 
-1385325344 source:d:\dev\ia.git\src\featureliquid.cpp
+1385490355 source:d:\dev\ia.git\src\featureliquid.cpp
 	"FeatureLiquid.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12288,7 +12288,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1385410731 source:d:\dev\ia.git\src\gametime.cpp
+1385493002 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12323,7 +12323,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1385412195 source:d:\dev\ia.git\src\input.cpp
+1385494588 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12414,7 +12414,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1385486294 source:d:\dev\ia.git\src\itemdata.cpp
+1385490801 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12466,7 +12466,7 @@
 	"Renderer.h"
 	"GameTime.h"
 
-1385102617 source:d:\dev\ia.git\src\itemfactory.cpp
+1385490796 source:d:\dev\ia.git\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12522,7 +12522,7 @@
 	"Inventory.h"
 	"DungeonClimb.h"
 
-1385412195 source:d:\dev\ia.git\src\itemscroll.cpp
+1385490754 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12750,7 +12750,7 @@
 	"ActorPlayer.h"
 	"GameTime.h"
 
-1385245684 source:d:\dev\ia.git\src\marker.cpp
+1385490839 source:d:\dev\ia.git\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -12783,7 +12783,7 @@
 	<iostream>
 	"Engine.h"
 
-1384983858 source:d:\dev\ia.git\src\playerbonuses.cpp
+1385494073 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -12878,7 +12878,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1385413269 source:d:\dev\ia.git\src\properties.cpp
+1385495276 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -12947,7 +12947,7 @@
 	"Log.h"
 	"Renderer.h"
 
-1385326920 source:d:\dev\ia.git\src\roomtheme.cpp
+1385495400 source:d:\dev\ia.git\src\roomtheme.cpp
 	"RoomTheme.h"
 	"Engine.h"
 	"MapGen.h"
@@ -12987,7 +12987,7 @@
 	"ActorMonster.h"
 	"GameTime.h"
 
-1385302264 source:d:\dev\ia.git\src\spells.cpp
+1385492727 source:d:\dev\ia.git\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -13822,7 +13822,7 @@
 	"ItemData.h"
 	"CommonTypes.h"
 
-1385413494 d:\dev\ia.git\include\itemdata.h
+1385490706 d:\dev\ia.git\include\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -13831,7 +13831,7 @@
 	"FeatureData.h"
 	"AudioIds.h"
 
-1384373394 d:\dev\ia.git\include\spells.h
+1385490765 d:\dev\ia.git\include\spells.h
 	<vector>
 	"CommonTypes.h"
 	"Properties.h"
@@ -14361,7 +14361,7 @@
 	"FeatureFactory.h"
 	"Pathfinding.h"
 
-1385157690 source:d:\dev\ia.git\src\mapgentrapezohedronlvl.cpp
+1385496938 source:d:\dev\ia.git\src\mapgentrapezohedronlvl.cpp
 	"MapGen.h"
 	"Engine.h"
 	"FeatureFactory.h"
