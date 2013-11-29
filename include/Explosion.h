@@ -12,7 +12,6 @@
 using namespace std;
 
 class Engine;
-class TimedEntity;
 
 class ExplosionMaker {
 public:

@@ -111,7 +111,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     attackResult = eng->abilityRoll->roll(hitChanceTot);
 
     //Ethereal target missed?
-    if(currentDefender->getBodyType() == actorBodyType_ethereal) {
+    if(currentDefender->getBodyType() == bodyType_ethereal) {
       if(eng->dice.fraction(2, 3)) {
         isEtherealDefenderMissed = true;
       }
@@ -203,7 +203,7 @@ RangedAttackData::RangedAttackData(
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
 
-      if(currentDefender->getBodyType() == actorBodyType_ethereal) {
+      if(currentDefender->getBodyType() == bodyType_ethereal) {
         if(eng->dice.fraction(2, 3)) {
           isEtherealDefenderMissed = true;
         }

@@ -61,7 +61,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   for(unsigned int i = 1; i < path.size(); i++) {
     //If travelled further than two steps after a killed monster, stop projectile.
     if(monsterKilledInElement != -1) {
-      if(i > static_cast<unsigned int>(monsterKilledInElement + 1)) {
+      if(i > (unsigned int)(monsterKilledInElement + 1)) {
         break;
       }
     }

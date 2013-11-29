@@ -9,7 +9,6 @@
 #include "ActorData.h"
 #include "Sound.h"
 #include "Config.h"
-#include "MapTests.h"
 #include "Art.h"
 
 using namespace std;
@@ -17,7 +16,6 @@ using namespace std;
 class Engine;
 
 class PropHandler;
-class TimedEntity;
 class Inventory;
 
 class Actor {
@@ -83,7 +81,7 @@ public:
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getColor() {return clr_;}
   inline const Tile_t& getTile() const {return tile_;}
-  inline ActorBodyType_t getBodyType() const {return data_->bodyType;}
+  inline BodyType_t getBodyType() const {return data_->bodyType;}
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 

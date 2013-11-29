@@ -10,11 +10,6 @@ class FeatureMob;
 class FeatureStatic;
 class Feature;
 
-enum EntityType_t {
-  entityType_actor, entityType_item, entityType_featureStatic,
-  entityType_featureMob
-};
-
 struct Entity {
 public:
   Entity() :

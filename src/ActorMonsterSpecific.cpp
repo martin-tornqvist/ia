@@ -368,7 +368,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
 
         if(checkIfSeeActor(*(eng->player), blockers)) {
           eng->mapTests->makeMoveBlockerArrayForBodyType(
-            actorBodyType_flying, blockers);
+            bodyType_flying, blockers);
 
           const int SPAWN_AFTER_X =
             eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;

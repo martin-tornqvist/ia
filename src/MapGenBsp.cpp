@@ -190,7 +190,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 //
 //  trace << "MapGenBsp: Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-//  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(actorBodyType_normal, blockers);
+//  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(bodyType_normal, blockers);
 //  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
 //    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
 //      Feature* const feature = eng->map->featuresStatic[x][y];
@@ -550,7 +550,7 @@ void MapGenBsp::buildRoomsInRooms() {
 void MapGenBsp::postProcessFillDeadEnds() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    actorBodyType_normal, blockers);
+    bodyType_normal, blockers);
 
   //Find an origin with no adjacent walls, to ensure we don't start in a dead end
   Pos origin;
@@ -713,7 +713,7 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
   eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    actorBodyType_normal, blockers);
+    bodyType_normal, blockers);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -1140,7 +1140,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
 
           bool cellsWithFloor[MAP_X_CELLS][MAP_Y_CELLS];
           eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-            actorBodyType_normal, cellsWithFloor);
+            bodyType_normal, cellsWithFloor);
           eng->basicUtils->reverseBoolArray(cellsWithFloor);
 
           int connectX, connectY, auxRoomW, auxRoomH, auxRoomX, auxRoomY;

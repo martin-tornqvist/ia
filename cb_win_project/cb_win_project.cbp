@@ -149,6 +149,7 @@
 		<Unit filename="../include/Blood.h" />
 		<Unit filename="../include/Bot.h" />
 		<Unit filename="../include/BresenhamLine.h" />
+		<Unit filename="../include/CellPred.h" />
 		<Unit filename="../include/CharacterDescr.h" />
 		<Unit filename="../include/CharacterLines.h" />
 		<Unit filename="../include/Close.h" />
@@ -211,7 +212,6 @@
 		<Unit filename="../include/MapGen.h" />
 		<Unit filename="../include/MapPatterns.h" />
 		<Unit filename="../include/MapTemplates.h" />
-		<Unit filename="../include/MapTests.h" />
 		<Unit filename="../include/Marker.h" />
 		<Unit filename="../include/MenuBrowser.h" />
 		<Unit filename="../include/MenuInputHandler.h" />
@@ -262,6 +262,7 @@
 		<Unit filename="../src/Blood.cpp" />
 		<Unit filename="../src/Bot.cpp" />
 		<Unit filename="../src/BresenhamLine.cpp" />
+		<Unit filename="../src/CellPred.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
 		<Unit filename="../src/CharacterLines.cpp" />
 		<Unit filename="../src/Close.cpp" />
@@ -329,7 +330,6 @@
 		<Unit filename="../src/MapGenUtils.cpp" />
 		<Unit filename="../src/MapPatterns.cpp" />
 		<Unit filename="../src/MapTemplates.cpp" />
-		<Unit filename="../src/MapTests.cpp" />
 		<Unit filename="../src/Marker.cpp" />
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandler.cpp" />

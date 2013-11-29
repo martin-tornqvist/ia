@@ -11,11 +11,11 @@ using namespace std;
 
 enum Font_t {font_interface, font_big};
 
-enum ActorBodyType_t {
-  actorBodyType_normal,
-  actorBodyType_flying,
-  actorBodyType_ethereal,
-  actorBodyType_ooze,
+enum BodyType_t {
+  bodyType_normal,
+  bodyType_flying,
+  bodyType_ethereal,
+  bodyType_ooze,
   endOfActorBodyTypes
 };
 
@@ -258,26 +258,17 @@ enum Dir_t {
   endOfDirs
 };
 
-//enum EntityStrength_t {
-//  weak, normal, strong, superStrong
-//};
-
-//class EntityStrength {
-//public:
-//  static double getFactor(EntityStrength_t const strength) {
-//    if(strength == weak)        return 0.7;
-//    if(strength == strong)      return 1.6;
-//    if(strength == superStrong) return 2.5;
-//    return 1.0;
-//  }
-//protected:
-//  EntityStrength() {}
-//};
-
 enum ActorDeadState_t {
   actorDeadState_alive,
   actorDeadState_corpse,
   actorDeadState_mangled
+};
+
+enum Entity_t {
+  entityActor,
+  entityItem,
+  entityFeatureStatic,
+  entityFeatureMob
 };
 
 #endif

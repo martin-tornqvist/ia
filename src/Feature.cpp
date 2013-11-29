@@ -37,7 +37,7 @@ bool Feature::isMovePassable(Actor* const actorMoving) const {
   return data_->isBodyTypePassable[actorMoving->getBodyType()];
 }
 
-bool Feature::isBodyTypePassable(const ActorBodyType_t bodyType) const {
+bool Feature::isBodyTypePassable(const BodyType_t bodyType) const {
   return data_->isBodyTypePassable[bodyType];
 }
 

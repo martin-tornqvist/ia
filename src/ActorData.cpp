@@ -22,7 +22,7 @@ void ActorData::reset() {
   hp = dmgMelee = dmgRanged = 1;
   spi = 12;
   speed = actorSpeed_normal;
-  bodyType = actorBodyType_normal;
+  bodyType = bodyType_normal;
   for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
@@ -110,7 +110,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Player";
   d.name_the = "Player";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_player;
   d.hp = 16;
   d.spi = 6;
@@ -126,7 +126,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_zombie;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -167,7 +167,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_zombieAxe;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -209,7 +209,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Bloated Corpse";
   d.name_the = "The Bloated Corpse";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_bloatedZombie;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -249,7 +249,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Major Clapham-Lee";
   d.name_the = "Major Clapham-Lee";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_majorClaphamLee;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -288,7 +288,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Dean Halsey";
   d.name_the = "Dean Halsey";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_deanHalsey;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -328,7 +328,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_cultist;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -366,7 +366,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_cultistTeslaCannon;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -404,7 +404,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_cultistSpikeGun;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -442,7 +442,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Keziah Mason";
   d.name_the = "Keziah Mason";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_keziahMason;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -481,7 +481,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Brown Jenkin";
   d.name_the = "Brown Jenkin";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_brownJenkin;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -517,7 +517,7 @@ void ActorDataHandler::initDataList() {
 
 //  d.name_a = "The Lord of Pestilence";
 //  d.name_the = "The Lord of Pestilence";
-//  d.bodyType = actorBodyType_normal;
+//  d.bodyType = bodyType_normal;
 //  d.id = actor_lordOfPestilence;
 //  d.aiBehavior.looks = true;
 //  d.aiBehavior.makesRoomForFriend = false;
@@ -550,7 +550,7 @@ void ActorDataHandler::initDataList() {
 
 //  d.name_a = "The Lord of Shadows";
 //  d.name_the = "The Lord of Shadows";
-//  d.bodyType = actorBodyType_normal;
+//  d.bodyType = bodyType_normal;
 //  d.id = actor_lordOfShadows;
 //  d.aiBehavior.looks = true;
 //  d.aiBehavior.makesRoomForFriend = false;
@@ -584,7 +584,7 @@ void ActorDataHandler::initDataList() {
 
 //  d.name_a = "The Lord of Spiders";
 //  d.name_the = "The Lord of Spiders";
-//  d.bodyType = actorBodyType_normal;
+//  d.bodyType = bodyType_normal;
 //  d.id = actor_lordOfSpiders;
 //  d.aiBehavior.looks = true;
 //  d.aiBehavior.makesRoomForFriend = false;
@@ -617,7 +617,7 @@ void ActorDataHandler::initDataList() {
 
 //  d.name_a = "The Lord of Spirits";
 //  d.name_the = "The Lord of Spirits";
-//  d.bodyType = actorBodyType_ethereal;
+//  d.bodyType = bodyType_ethereal;
 //  d.id = actor_lordOfSpirits;
 //  d.aiBehavior.looks = true;
 //  d.aiBehavior.makesRoomForFriend = false;
@@ -650,7 +650,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Cultist Priest";
   d.name_the = "The Cultist Priest";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_cultistPriest;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -687,7 +687,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Green Spider";
   d.name_the = "The Green Spider";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_greenSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -720,7 +720,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A White Spider";
   d.name_the = "The White Spider";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_whiteSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -753,7 +753,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Red Spider";
   d.name_the = "The Red Spider";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_redSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -786,7 +786,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Shadow Spider";
   d.name_the = "The Shadow Spider";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_shadowSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -821,7 +821,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Leng Spider";
   d.name_the = "The Leng Spider";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_lengSpider;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -856,7 +856,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Fire hound";
   d.name_the = "The Fire hound";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_fireHound;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -899,7 +899,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Frost hound";
   d.name_the = "The Frost hound";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_frostHound;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -942,7 +942,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Ghost";
   d.name_the = "The Ghost";
-  d.bodyType = actorBodyType_ethereal;
+  d.bodyType = bodyType_ethereal;
   d.id = actor_ghost;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -980,7 +980,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Phantasm";
   d.name_the = "The Phantasm";
-  d.bodyType = actorBodyType_ethereal;
+  d.bodyType = bodyType_ethereal;
   d.id = actor_phantasm;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1018,7 +1018,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Wraith";
   d.name_the = "The Wraith";
-  d.bodyType = actorBodyType_ethereal;
+  d.bodyType = bodyType_ethereal;
   d.id = actor_wraith;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1057,7 +1057,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Rat";
   d.name_the = "The Rat";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_rat;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -1094,7 +1094,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Rat-thing";
   d.name_the = "The Rat-thing";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_ratThing;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1132,7 +1132,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Wolf";
   d.name_the = "The Wolf";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_wolf;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1171,7 +1171,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Giant Bat";
   d.name_the = "The Giant Bat";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_giantBat;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1209,7 +1209,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Byakhee";
   d.name_the = "The Byakhee";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_byakhee;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1248,7 +1248,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Giant Mantis";
   d.name_the = "The Giant Mantis";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_giantMantis;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1283,7 +1283,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Giant Locust";
   d.name_the = "The Giant Locust";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_giantLocust;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -1317,7 +1317,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Fungi from Yuggoth";
   d.name_the = "The Fungi from Yuggoth";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_miGo;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1356,7 +1356,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Ghoul";
   d.name_the = "The Ghoul";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_ghoul;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1395,7 +1395,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Shadow";
   d.name_the = "The Shadow";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_shadow;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1437,7 +1437,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Mummy";
   d.name_the = "The Mummy";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_mummy;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1474,7 +1474,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Khephren";
   d.name_the = "Khephren";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_khephren;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1514,7 +1514,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "Nitokris";
   d.name_the = "Nitokris";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_nitokris;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1553,7 +1553,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Deep One";
   d.name_the = "The Deep One";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_deepOne;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1590,7 +1590,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Mass of Worms";
   d.name_the = "The Mass of Worms";
-  d.bodyType = actorBodyType_normal;
+  d.bodyType = bodyType_normal;
   d.id = actor_wormMass;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;
@@ -1625,7 +1625,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Dust Vortex";
   d.name_the = "The Dust Vortex";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_dustVortex;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1663,7 +1663,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Fire Vortex";
   d.name_the = "The Fire Vortex";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_fireVortex;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1701,7 +1701,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Frost Vortex";
   d.name_the = "The Frost Vortex";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_frostVortex;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1739,7 +1739,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Black Ooze";
   d.name_the = "The Black Ooze";
-  d.bodyType = actorBodyType_ooze;
+  d.bodyType = bodyType_ooze;
   d.id = actor_oozeBlack;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1785,7 +1785,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Clear Ooze";
   d.name_the = "The Clear Ooze";
-  d.bodyType = actorBodyType_ooze;
+  d.bodyType = bodyType_ooze;
   d.id = actor_oozeClear;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1832,7 +1832,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Putrid Ooze";
   d.name_the = "The Putrid Ooze";
-  d.bodyType = actorBodyType_ooze;
+  d.bodyType = bodyType_ooze;
   d.id = actor_oozePutrid;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1878,7 +1878,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Poison Ooze";
   d.name_the = "The Poison Ooze";
-  d.bodyType = actorBodyType_ooze;
+  d.bodyType = bodyType_ooze;
   d.id = actor_oozePoison;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1925,7 +1925,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Colour out of space";
   d.name_the = "The Colour out of space";
-  d.bodyType = actorBodyType_ooze;
+  d.bodyType = bodyType_ooze;
   d.id = actor_colourOutOfSpace;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = true;
@@ -1966,7 +1966,7 @@ void ActorDataHandler::initDataList() {
 
   d.name_a = "A Hunting Horror";
   d.name_the = "The Hunting Horror";
-  d.bodyType = actorBodyType_flying;
+  d.bodyType = bodyType_flying;
   d.id = actor_huntingHorror;
   d.aiBehavior.looks = true;
   d.aiBehavior.makesRoomForFriend = false;

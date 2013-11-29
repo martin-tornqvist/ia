@@ -23,7 +23,7 @@ void SoundEmitter::emitSound(Sound snd) {
     for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
       f = eng->map->featuresStatic[x][y];
       const bool SOUND_CAN_PASS_CELL =
-        f->isBodyTypePassable(actorBodyType_ooze) || f->isBottomless();
+        f->isBodyTypePassable(bodyType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
     }
   }

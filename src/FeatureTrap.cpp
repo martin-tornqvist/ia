@@ -80,7 +80,7 @@ void Trap::bump(Actor& actorBumping) {
 
   trace << "Trap: Name of actor bumping: \"" << d->name_a << "\"" << endl;
 
-  if(d->bodyType == actorBodyType_normal) {
+  if(d->bodyType == bodyType_normal) {
     const bool IS_PLAYER = &actorBumping == actorBumping.eng->player;
     const bool ACTOR_CAN_SEE = actorBumping.getPropHandler()->allowSee();
     AbilityValues& abilities = actorBumping.getData()->abilityVals;

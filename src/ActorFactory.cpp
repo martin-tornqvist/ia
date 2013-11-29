@@ -95,9 +95,10 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
 }
 
 void ActorFactory::deleteAllMonsters() const {
-  for(int i = 0; i < int(eng->gameTime->getLoopSize()); i++) {
-    if(eng->gameTime->getActorAt(i) != eng->player) {
-      eng->gameTime->eraseElement(i);
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    if(&(eng->gameTime->getActorAtElement(i)) != eng->player) {
+      eng->gameTime->eraseActorInElement(i);
       i--;
     }
   }
@@ -116,8 +117,7 @@ void ActorFactory::summonMonsters(
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(
-    actorBodyType_normal, blockers);
+  MapParser().parse(CellPredBlocksBodyType(bodyType, eng)  blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);

@@ -16,10 +16,10 @@ void KnockBack::tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
     if(defender->getData()->actorSize <= actorSize_giant) {
       const bool DEFENDER_IS_MONSTER = defender != eng->player;
 
-      const ActorBodyType_t defenderBodyType = defender->getBodyType();
+      const BodyType_t defenderBodyType = defender->getBodyType();
       const bool WALKTYPE_CAN_BE_KNOCKED_BACK =
-        defenderBodyType != actorBodyType_ethereal &&
-        defenderBodyType != actorBodyType_ooze;
+        defenderBodyType != bodyType_ethereal &&
+        defenderBodyType != bodyType_ooze;
 
       const Pos delta = (defender->pos - attackedFromPos).getSigns();
 

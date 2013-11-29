@@ -98,7 +98,7 @@ public:
   void reset();
 
   ActorId_t id;
-  ActorBodyType_t bodyType;
+  BodyType_t bodyType;
   string name_a;
   string name_the;
   Tile_t tile;

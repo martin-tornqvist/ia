@@ -17,6 +17,7 @@
 #include "Explosion.h"
 #include "DungeonMaster.h"
 #include "Inventory.h"
+#include "CellPred.h"
 
 using namespace std;
 
@@ -74,35 +75,35 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
 
   if(IS_SELF_PLAYER == false) {
-    eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
+    MapParser().parse(CellPredBlocksVision(eng), visionBlockers);
   }
 
-  const unsigned int SIZE_OF_LOOP = eng->gameTime->getLoopSize();
-  for(unsigned int i = 0; i < SIZE_OF_LOOP; i++) {
-    Actor* const actor = eng->gameTime->getActorAt(i);
-    if(actor != this && actor->deadState == actorDeadState_alive) {
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor& actor = eng->gameTime->getActorAtElement(i);
+    if(&actor != this && actor.deadState == actorDeadState_alive) {
 
       if(IS_SELF_PLAYER) {
-        if(dynamic_cast<Monster*>(actor)->leader != this) {
-          if(checkIfSeeActor(*actor, NULL)) {
-            vectorToFill.push_back(actor);
+        if(dynamic_cast<Monster*>(&actor)->leader != this) {
+          if(checkIfSeeActor(actor, NULL)) {
+            vectorToFill.push_back(&actor);
           }
         }
       } else {
-        const bool IS_OTHER_PLAYER = actor == eng->player;
+        const bool IS_OTHER_PLAYER = &actor == eng->player;
         const bool IS_HOSTILE_TO_PLAYER =
           dynamic_cast<Monster*>(this)->leader != eng->player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
           IS_OTHER_PLAYER ? false :
-          dynamic_cast<Monster*>(actor)->leader != eng->player;
+          dynamic_cast<Monster*>(&actor)->leader != eng->player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
           (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
-          if(checkIfSeeActor(*actor, visionBlockers)) {
-            vectorToFill.push_back(actor);
+          if(checkIfSeeActor(actor, visionBlockers)) {
+            vectorToFill.push_back(&actor);
           }
         }
       }
@@ -136,7 +137,8 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArray(this, blockers);
+  MapParser().parse(asdf, blockers)
+//  eng->mapTests->makeMoveBlockerArray(this, blockers);
   eng->basicUtils->reverseBoolArray(blockers);
   vector<Pos> freeCells;
   eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);

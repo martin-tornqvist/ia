@@ -10931,7 +10931,7 @@
 
 1382910176 source:d:\dev\ia.git\icon\resource.rc
 
-1383676376 source:d:\dev\ia.git\src\abilityvalues.cpp
+1385502710 source:d:\dev\ia.git\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -11321,7 +11321,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1385496243 source:d:\dev\ia.git\src\actordata.cpp
+1385675693 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -13747,18 +13747,18 @@
 
 1383767445 d:\dev\ia.git\test\include\stubs\sdlwrapper.h
 
-1382910266 d:\dev\ia.git\include\abilityvalues.h
+1385502710 d:\dev\ia.git\include\abilityvalues.h
 	<vector>
 	<string>
 	<iostream>
 
-1385300377 d:\dev\ia.git\include\engine.h
+1385502710 d:\dev\ia.git\include\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
-1382910176 d:\dev\ia.git\include\debugmodeincl\debugmode.h
+1385502710 d:\dev\ia.git\include\debugmodeincl\debugmode.h
 
-1385052706 d:\dev\ia.git\include\basicutils.h
+1385502710 d:\dev\ia.git\include\basicutils.h
 	<vector>
 	<math.h>
 	<stdexcept>
@@ -13766,19 +13766,18 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1384969081 d:\dev\ia.git\include\commondata.h
+1385502710 d:\dev\ia.git\include\commondata.h
 
-1384982479 d:\dev\ia.git\include\actor.h
+1385675649 d:\dev\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
 	"ActorData.h"
 	"Sound.h"
 	"Config.h"
-	"MapTests.h"
 	"Art.h"
 
-1385196312 d:\dev\ia.git\include\actordata.h
+1385675649 d:\dev\ia.git\include\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -13788,41 +13787,41 @@
 	"Properties.h"
 	"AudioIds.h"
 
-1384982619 d:\dev\ia.git\include\converters.h
+1385502710 d:\dev\ia.git\include\converters.h
 	<string>
 
-1385058429 d:\dev\ia.git\include\roomtheme.h
+1385502710 d:\dev\ia.git\include\roomtheme.h
 	<vector>
 	"CommonData.h"
 	"CommonTypes.h"
 
-1384887029 d:\dev\ia.git\include\commontypes.h
+1385675693 d:\dev\ia.git\include\commontypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
 	"Art.h"
 
-1383388218 d:\dev\ia.git\include\colors.h
+1385502710 d:\dev\ia.git\include\colors.h
 	"SDL/SDL_video.h"
 
-1382910266 d:\dev\ia.git\include\art.h
+1385502710 d:\dev\ia.git\include\art.h
 
-1385488116 d:\dev\ia.git\include\properties.h
+1385662851 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
 	"Converters.h"
 	"CommonTypes.h"
 
-1385325385 d:\dev\ia.git\include\audioids.h
+1385502710 d:\dev\ia.git\include\audioids.h
 
-1384887029 d:\dev\ia.git\include\sound.h
+1385502710 d:\dev\ia.git\include\sound.h
 	<string>
 	"CommonData.h"
 	"ItemData.h"
 	"CommonTypes.h"
 
-1385490706 d:\dev\ia.git\include\itemdata.h
+1385502710 d:\dev\ia.git\include\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -13831,12 +13830,12 @@
 	"FeatureData.h"
 	"AudioIds.h"
 
-1385490765 d:\dev\ia.git\include\spells.h
+1385502710 d:\dev\ia.git\include\spells.h
 	<vector>
 	"CommonTypes.h"
 	"Properties.h"
 
-1382910266 d:\dev\ia.git\include\featuredata.h
+1385502710 d:\dev\ia.git\include\featuredata.h
 	<vector>
 	<string>
 	<iostream>
@@ -13845,12 +13844,12 @@
 	"RoomTheme.h"
 	"MapPatterns.h"
 
-1384887029 d:\dev\ia.git\include\mappatterns.h
+1385502710 d:\dev\ia.git\include\mappatterns.h
 	<vector>
 	"CommonData.h"
 	"CommonTypes.h"
 
-1385321863 d:\dev\ia.git\include\config.h
+1385502710 d:\dev\ia.git\include\config.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13860,19 +13859,19 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1383946838 d:\dev\ia.git\include\mersennetwister.h
+1385502710 d:\dev\ia.git\include\mersennetwister.h
 	<iostream>
 	<climits>
 	<cstdio>
 	<ctime>
 	<cmath>
 
-1384887029 d:\dev\ia.git\include\actorplayer.h
+1385502710 d:\dev\ia.git\include\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"CommonData.h"
 
-1384983678 d:\dev\ia.git\include\playerbonuses.h
+1385502710 d:\dev\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -13887,17 +13886,17 @@
 	"Engine.h"
 	"Item.h"
 
-1382910266 d:\dev\ia.git\include\item.h
+1385502710 d:\dev\ia.git\include\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
 
-1384891363 d:\dev\ia.git\include\gametime.h
+1385502710 d:\dev\ia.git\include\gametime.h
 	<vector>
 	"Feature.h"
 	"ActorData.h"
 
-1384546853 d:\dev\ia.git\include\feature.h
+1385502710 d:\dev\ia.git\include\feature.h
 	<vector>
 	<string>
 	<iostream>
@@ -13944,7 +13943,7 @@
 1383848053 d:\dev\ia.git\include\blood.h
 	"CommonTypes.h"
 
-1385061771 d:\dev\ia.git\include\featuretrap.h
+1385502710 d:\dev\ia.git\include\featuretrap.h
 	"Feature.h"
 	"AbilityValues.h"
 	"Art.h"
@@ -14005,7 +14004,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1384546853 d:\dev\ia.git\include\featuredoor.h
+1385502710 d:\dev\ia.git\include\featuredoor.h
 	"Feature.h"
 
 1383847932 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
@@ -14056,7 +14055,7 @@
 	<string>
 	"Item.h"
 
-1382910266 d:\dev\ia.git\include\featurefactory.h
+1385502710 d:\dev\ia.git\include\featurefactory.h
 	<vector>
 	<string>
 	<iostream>
@@ -14249,7 +14248,7 @@
 	<math.h>
 	"CommonTypes.h"
 
-1383848053 d:\dev\ia.git\include\featuresmoke.h
+1385502710 d:\dev\ia.git\include\featuresmoke.h
 	"Feature.h"
 	"FeatureFactory.h"
 
@@ -14388,7 +14387,7 @@
 	"TextFormatting.h"
 	"PopulateMonsters.h"
 
-1382910176 d:\dev\ia.git\include\releasemodeincl\debugmode.h
+1385502710 d:\dev\ia.git\include\releasemodeincl\debugmode.h
 
 1385245684 source:d:\dev\ia.git\src\mapgenutils.cpp
 	"MapGen.h"

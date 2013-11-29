@@ -1309,7 +1309,7 @@ void Player::updateFov() {
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
     eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-      actorBodyType_flying, blockers);
+      bodyType_flying, blockers);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {

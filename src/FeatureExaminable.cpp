@@ -345,7 +345,7 @@ void Tomb::triggerTrap() {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng->actorDataHandler->dataList[i];
           if(
-            d.bodyType == actorBodyType_ooze &&
+            d.bodyType == bodyType_ooze &&
             d.isAutoSpawnAllowed &&
             d.isUnique == false) {
             actorCandidates.push_back(static_cast<ActorId_t>(i));

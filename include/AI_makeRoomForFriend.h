@@ -3,21 +3,23 @@
 
 #include <algorithm>
 
+#include "CellPred.h"
+
 class AI_makeRoomForFriend {
 public:
   static bool action(Monster& monster, Engine* engine) {
     if(monster.deadState == actorDeadState_alive) {
 
-      bool blockersVision[MAP_X_CELLS][MAP_Y_CELLS];
-      engine->mapTests->makeVisionBlockerArray(monster.pos, blockersVision);
+      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      MapParser().parse(CellPredBlocksVision(engine), visionBlockers);
 
-      if(monster.checkIfSeeActor(*engine->player, blockersVision)) {
-        const unsigned int LOOP_SIZE = engine->gameTime->getLoopSize();
+      if(monster.checkIfSeeActor(*engine->player, visionBlockers)) {
+        const int NR_ACTORS = engine->gameTime->getNrActors();
         Monster* otherMonster = NULL;
         Actor* actor = NULL;
 
         //Loop through all actors
-        for(unsigned int i = 0; i < LOOP_SIZE; i++) {
+        for(int i = 0; i < NR_ACTORS; i++) {
           actor = engine->gameTime->getActorAt(i);
           if(actor != engine->player && actor != &monster) {
             if(actor->deadState == actorDeadState_alive) {
@@ -25,13 +27,13 @@ public:
 
               bool isOtherAdjWithoutVision =
                 isAdjAndWithoutVision(
-                  monster, *otherMonster, blockersVision, engine);
+                  monster, *otherMonster, visionBlockers, engine);
 
               //Other monster sees the player, or it's a neighbour that
               //does not see the player?
               if(
                 otherMonster->checkIfSeeActor(
-                  *engine->player, blockersVision) ||
+                  *engine->player, visionBlockers) ||
                 isOtherAdjWithoutVision) {
 
                 // If we are indeed blocking a pal, check every neighbouring
@@ -58,17 +60,17 @@ public:
 
                   // Test the candidate cells until one is found that
                   //is not also blocking someone.
-                  for(unsigned int ii = 0; ii < candidates.size(); ii++) {
+                  for(int ii = 0; ii < candidates.size(); ii++) {
 
                     bool isGoodCandidateFound = true;
 
-                    for(unsigned int iii = 0; iii < LOOP_SIZE; iii++) {
+                    for(int iii = 0; iii < NR_ACTORS; iii++) {
                       actor = engine->gameTime->getActorAt(iii);
                       if(actor != engine->player && actor != &monster) {
                         otherMonster = dynamic_cast<Monster*>(actor);
                         if(
                           otherMonster->checkIfSeeActor(
-                            *engine->player, blockersVision)) {
+                            *engine->player, visionBlockers)) {
                           if(
                             checkIfBlockingMonster(
                               candidates.at(ii), otherMonster, engine)) {
@@ -156,12 +158,12 @@ private:
    */
   static bool isAdjAndWithoutVision(
     const Monster& self, Monster& other,
-    bool blockersVision[MAP_X_CELLS][MAP_Y_CELLS], Engine* engine) {
+    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS], Engine* engine) {
 
     //If the pal is next to me
     if(engine->mapTests->isCellsAdj(self.pos, other.pos, false)) {
       //If pal does not see player
-      if(other.checkIfSeeActor(*engine->player, blockersVision) == false) {
+      if(other.checkIfSeeActor(*engine->player, visionBlockers) == false) {
         return true;
       }
     }

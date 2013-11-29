@@ -785,7 +785,7 @@ void Renderer::drawAscii() {
           currentDrw->color = clrRed;
         }
         if(eng->map->light[x][y]) {
-          if(eng->map->featuresStatic[x][y]->isBodyTypePassable(actorBodyType_normal)) {
+          if(eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType_normal)) {
             currentDrw->isMarkedAsLit = true;
           }
         }
@@ -961,7 +961,7 @@ void Renderer::drawTiles() {
             currentDrw->color = clrRed;
           }
           if(eng->map->light[x][y]) {
-            if(eng->map->featuresStatic[x][y]->isBodyTypePassable(actorBodyType_normal)) {
+            if(eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType_normal)) {
               currentDrw->isMarkedAsLit = true;
             }
           }

@@ -13,7 +13,6 @@ using namespace std;
 class Engine;
 
 class Actor;
-class TimedEntity;
 class Weapon;
 
 enum PropId_t {

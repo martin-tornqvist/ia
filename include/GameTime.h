@@ -45,28 +45,28 @@ public:
 
   Actor* getCurrentActor();
 
-  unsigned int getLoopSize() const {
+  int getNrActors() const {
     return actors_.size();
   }
 
-  Actor* getActorAt(const unsigned int i) {
-    return actors_.at(i);
+  int getNrFeatureMobs() {
+    return featureMobs_.size();
   }
 
-  void eraseElement(const unsigned int i);
+  Actor& getActorAtElement(const int i) {
+    return *(actors_.at(i));
+  }
+
+  FeatureMob& getFeatureMobAtElement(const int ELEMENT) {
+    return *(featureMobs_.at(ELEMENT));
+  }
+
+  void eraseActorInElement(const unsigned int i);
 
   vector<FeatureMob*> getFeatureMobsAtPos(const Pos& pos);
 
   void addFeatureMob(FeatureMob* const feature) {
     featureMobs_.push_back(feature);
-  }
-
-  unsigned int getFeatureMobsSize() {
-    return featureMobs_.size();
-  }
-
-  FeatureMob* getFeatureMobAt(const unsigned int i) {
-    return featureMobs_.at(i);
   }
 
   void eraseAllFeatureMobs() {

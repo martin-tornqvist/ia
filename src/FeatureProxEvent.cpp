@@ -27,7 +27,7 @@ void ProxEventWallCrumble::playerIsNear() {
     const bool IS_VISION_PASSABLE =
       eng->map->featuresStatic[c.x][c.y]->isVisionPassable();
     const bool IS_WALK_PASSABLE =
-      eng->map->featuresStatic[c.x][c.y]->isBodyTypePassable(actorBodyType_normal);
+      eng->map->featuresStatic[c.x][c.y]->isBodyTypePassable(bodyType_normal);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
       isCrumbleOk = false;
       break;
@@ -38,7 +38,7 @@ void ProxEventWallCrumble::playerIsNear() {
     const bool IS_VISION_PASSABLE =
       eng->map->featuresStatic[c.x][c.y]->isVisionPassable();
     const bool IS_WALK_PASSABLE =
-      eng->map->featuresStatic[c.x][c.y]->isBodyTypePassable(actorBodyType_normal);
+      eng->map->featuresStatic[c.x][c.y]->isBodyTypePassable(bodyType_normal);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
       isCrumbleOk = false;
       break;
@@ -62,7 +62,7 @@ void ProxEventWallCrumble::playerIsNear() {
         if(eng->mapTests->isCellsAdj(eng->player->pos, wallCells_.at(ii), true)) {
           FeatureStatic* const f =
             eng->map->featuresStatic[wallCells_.at(ii).x][wallCells_.at(ii).y];
-          if(f->isBodyTypePassable(actorBodyType_normal) == false) {
+          if(f->isBodyTypePassable(bodyType_normal) == false) {
             isOpeningMade = false;
           }
         }

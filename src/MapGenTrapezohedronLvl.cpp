@@ -27,7 +27,7 @@ bool MapGenTrapezohedronLvl::specificRun() {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    actorBodyType_normal, blockers);
+    bodyType_normal, blockers);
   vector<Pos> spawnCandidates;
   spawnCandidates.resize(0);
   for(int y = 0; y < MAP_Y_CELLS; y++) {

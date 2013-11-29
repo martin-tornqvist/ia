@@ -187,7 +187,7 @@ void Bot::findPathToNextStairs() {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    actorBodyType_normal, blockers);
+    bodyType_normal, blockers);
 
   //Consider all doors passable
   for(int y = 0; y < MAP_Y_CELLS; y++) {

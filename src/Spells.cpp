@@ -209,7 +209,7 @@ SpellCastRetData SpellMayhem::specificCast(
           for(int dx = -1; dx <= 1; dx++) {
             const FeatureStatic* const f =
               eng->map->featuresStatic[x + dx][y + dy];
-            if(f->isBodyTypePassable(actorBodyType_normal)) {
+            if(f->isBodyTypePassable(bodyType_normal)) {
               isAdjToWalkableCell = true;
             }
           }
@@ -256,7 +256,7 @@ SpellCastRetData SpellPestilence::specificCast(
   Actor* const caster, Engine* const eng) {
   (void)caster;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(bodyType_normal, blockers);
 
   const int RADI = 4;
   const int x0 = max(0, eng->player->pos.x - RADI);
@@ -884,7 +884,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(actorBodyType_normal, blockers);
+  eng->mapTests->makeMoveBlockerArrayForBodyType(bodyType_normal, blockers);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
     const Pos pos(freePositionsSeenByPlayer.at(i));
