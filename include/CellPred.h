@@ -17,32 +17,36 @@ enum CellPredCheckEntity_t {
 class CellPred {
 public:
   CellPred(Engine* engine) : eng(engine) {}
-  bool isCheckingStaticFeatures()     const {return false;}
-  bool isCheckingMobFeatures()        const {return false;}
-  bool isCheckingActors()             const {return false;}
-  bool check(const FeatureStatic& f)  const {(void)f; return false;}
-  bool check(const Actor& a)          const {(void)a; return false;}
-
+  virtual bool isCheckingCells()          const = 0;
+  virtual bool isCheckingMobFeatures()    const = 0;
+  virtual bool isCheckingActors()         const = 0;
+  virtual bool check(const Cell& c)       const = 0;
+  virtual bool check(const FeatureMob& f) const = 0;
+  virtual bool check(const Actor& a)      const = 0;
   const Engine* const eng;
 };
 
 class CellPredBlocksVision : public CellPred {
 public:
   CellPredBlocksVision(Engine* engine) : CellPred(engine) {}
-  bool isCheckingStaticFeatures()           const {return true;}
-  bool isCheckingMobFeatures()              const {return true;}
-  bool check(const FeatureStatic& f) const;
+  bool isCheckingCells()          const {return true;}
+  bool isCheckingMobFeatures()    const {return true;}
+  bool isCheckingActors()         const {return false;}
+  bool check(const Cell& c)       const;
+  bool check(const FeatureMob& f) const;
+  bool check(const Actor& a)      const {(void)a; return false;}
 };
 
 class CellPredBlocksBodyType : public CellPred {
 public:
   CellPredBlocksBodyType(BodyType_t bodyType, Engine* engine) :
     CellPred(engine), bodyType_(bodyType) {}
-  bool isCheckingStaticFeatures()     const {return true;}
-  bool isCheckingMobFeatures()        const {return true;}
-  bool isCheckingActors()             const {return true;}
-  bool check(const FeatureStatic& f);
-  bool check(const Actor& a);
+  bool isCheckingCells()          const {return true;}
+  bool isCheckingMobFeatures()    const {return true;}
+  bool isCheckingActors()         const {return true;}
+  bool check(const Cell& c)       const;
+  bool check(const FeatureMob& f) const;
+  bool check(const Actor& a)      const;
   BodyType_t bodyType_;
 };
 
@@ -122,8 +126,6 @@ public:
 //    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
 //    const Pos& target);
 //
-//  void makeBoolVectorFromMapArray(
-//    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
 //
 //  inline bool isPosInsideMap(const Pos& pos) const {
 //    if(

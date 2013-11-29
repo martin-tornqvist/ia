@@ -37,7 +37,7 @@ bool Actor::checkIfSeeActor(
     if(this == eng->player) {
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
-      return eng->map->playerVision[other.pos.x][other.pos.y] &&
+      return eng->map->cells[other.pos.x][other.pos.y].isSeenByPlayer &&
              IS_MONSTER_SNEAKING == false;
     }
 
@@ -137,11 +137,9 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  MapParser().parse(asdf, blockers)
-//  eng->mapTests->makeMoveBlockerArray(this, blockers);
-  eng->basicUtils->reverseBoolArray(blockers);
+  MapParser().parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
   vector<Pos> freeCells;
-  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
 
   if(this == eng->player) {
@@ -385,7 +383,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
   }
 
   const bool IS_ON_BOTTOMLESS =
-    eng->map->featuresStatic[pos.x][pos.y]->isBottomless();
+    eng->map->cells[pos.x][pos.y].featureStatic->isBottomless();
   const bool IS_MANGLED =
     IS_ON_BOTTOMLESS == true ? true :
     (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
@@ -422,8 +420,9 @@ bool Actor::hitSpi(const int DMG) {
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-    Actor* const actor = eng->gameTime->getActorAt(i);
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor* const actor = &(eng->gameTime->getActorAtElement(i));
     if(actor != this && actor != eng->player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {
@@ -443,7 +442,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   bool diedOnVisibleTrap = false;
 
   //If died on a visible trap, always destroy the corpse
-  const Feature* const f = eng->map->featuresStatic[pos.x][pos.y];
+  const Feature* const f = eng->map->cells[pos.x][pos.y].featureStatic;
   if(f->getId() == feature_trap) {
     if(dynamic_cast<const Trap*>(f)->isHidden() == false) {
       diedOnVisibleTrap = true;
@@ -484,13 +483,14 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   } else {
     if(this != eng->player) {
       Pos newPos;
-      Feature* featureHere = eng->map->featuresStatic[pos.x][pos.y];
+      Feature* featureHere = eng->map->cells[pos.x][pos.y].featureStatic;
       //TODO this should be decided with a floodfill instead
       if(featureHere->canHaveCorpse() == false) {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             newPos = pos + Pos(dx, dy);
-            featureHere = eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+            featureHere =
+              eng->map->cells[pos.x + dx][pos.y + dy].featureStatic;
             if(featureHere->canHaveCorpse()) {
               pos.set(newPos);
               dx = 9999;

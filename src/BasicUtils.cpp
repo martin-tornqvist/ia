@@ -21,6 +21,18 @@ public:
   }
 };
 
+void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
+    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill) {
+  vectorToFill.resize(0);
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      if(a[x][y] == VALUE_TO_STORE) {
+        vectorToFill.push_back(Pos(x, y));
+      }
+    }
+  }
+}
+
 void BasicUtils::lexicographicalSortStringAndClrVector(
   vector<StringAndClr>& vect) {
 

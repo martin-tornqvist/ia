@@ -55,7 +55,6 @@ class ExplosionMaker;
 class Thrower;
 class Reload;
 class BasicUtils;
-class MapTests;
 class Gore;
 class Manual;
 class FovPreCalc;
@@ -156,7 +155,6 @@ public:
   BasicUtils* basicUtils;
   Dice dice;
   DirConverter* dirConverter;
-  MapTests* mapTests;
   Gore* gore;
   Manual* manual;
   FovPreCalc* fovPreCalc;

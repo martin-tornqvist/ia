@@ -17,31 +17,49 @@ class Engine;
 class SaveHandler;
 class FeatureStatic;
 
+struct Cell {
+  Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
+  isDark(false), item(NULL), featureStatic(NULL) {
+    playerVisualMemoryAscii.clear();
+    playerVisualMemoryTiles.clear();
+  }
+
+  inline void reset() {
+    isExplored = isSeenByPlayer = isLight = isDark = false;
+    if(item != NULL) {
+      delete item;
+      item = NULL;
+    }
+    if(featureStatic != NULL) {
+      delete featureStatic;
+      featureStatic = NULL;
+    }
+    playerVisualMemoryAscii.clear();
+    playerVisualMemoryTiles.clear();
+  }
+
+  bool isExplored;
+  bool isSeenByPlayer;
+  bool isLight;
+  bool isDark;
+  Item* item;
+  FeatureStatic* featureStatic;
+  CellRenderDataAscii playerVisualMemoryAscii;
+  CellRenderDataTiles playerVisualMemoryTiles;
+};
+
 class Map {
 public:
   Map(Engine* engine);
 
   ~Map();
 
-  bool explored[MAP_X_CELLS][MAP_Y_CELLS];
-
-  bool playerVision[MAP_X_CELLS][MAP_Y_CELLS];
-
-  Item* items[MAP_X_CELLS][MAP_Y_CELLS];
-
-  FeatureStatic* featuresStatic[MAP_X_CELLS][MAP_Y_CELLS];
-
-  CellRenderDataAscii playerVisualMemoryAscii[MAP_X_CELLS][MAP_Y_CELLS];
-  CellRenderDataTiles playerVisualMemoryTiles[MAP_X_CELLS][MAP_Y_CELLS];
-
-  bool light[MAP_X_CELLS][MAP_Y_CELLS];
-
-  bool darkness[MAP_X_CELLS][MAP_Y_CELLS];
+  Cell cells[MAP_X_CELLS][MAP_Y_CELLS];
 
   inline int getDLVL() {return dlvl_;}
 
-  inline void incrDLVL(const int levels = 1) {dlvl_ += levels;}
-  inline void decrDLVL(const int levels = 1) {dlvl_ -= levels;}
+  inline void incrDlvl(const int levels = 1) {dlvl_ += levels;}
+  inline void decrDlvl(const int levels = 1) {dlvl_ -= levels;}
 
   void clearMap();
 
@@ -59,7 +77,7 @@ public:
   vector<Room*> rooms;
 
 private:
-  void clearGrids(const bool DELETE_INSTANCES);
+  void clearCells(const bool DELETE_INSTANCES);
 
   Engine* eng;
 

@@ -44,7 +44,7 @@ struct CellRenderDataAscii {
     color(clrBlack), colorBg(clrBlack), glyph(' '),
     lifebarLength(-1), isFadeEffectAllowed(true), isMarkedAsLit(false) {
   }
-  void clear() {
+  inline void clear() {
     color = clrBlack;
     colorBg = clrBlack;
     glyph = ' ';
@@ -65,7 +65,7 @@ struct CellRenderDataTiles {
     isFadeEffectAllowed(true), isLivingActorSeenHere(false),
     isMarkedAsLit(false) {
   }
-  void clear() {
+  inline void clear() {
     color = clrBlack;
     colorBg = clrBlack;
     tile = tile_empty;

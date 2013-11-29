@@ -6,11 +6,15 @@
 #include "GameTime.h"
 
 //------------------------------------------------------------ CELL PREDICATES
-bool CellPredBlocksVision::check(const FeatureStatic& f) {
+bool CellPredBlocksVision::check(const Cell& c)  {
+  return c.featureStatic.isVisionPassable() == false;
+}
+
+bool CellPredBlocksVision::check(const FeatureMob& f) {
   return f.isVisionPassable() == false;
 }
 
-bool CellPredBlocksBodyType::check(const FeatureStatic& f) {
+bool CellPredBlocksBodyType::check(const FeatureMob& f) {
   return f.isBodyTypePassable(bodyType_) == false;
 }
 
@@ -312,19 +316,6 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
 //
 //  return isCellsAdj(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
-//}
-//
-//void MapTests::makeBoolVectorFromMapArray(
-//  bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill) {
-//
-//  vectorToFill.resize(0);
-//  for(int x = 0; x < MAP_X_CELLS; x++) {
-//    for(int y = 0; y < MAP_Y_CELLS; y++) {
-//      if(a[x][y]) {
-//        vectorToFill.push_back(Pos(x, y));
-//      }
-//    }
-//  }
 //}
 
 void MapTests::floodFill(

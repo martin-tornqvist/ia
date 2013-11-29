@@ -7,6 +7,7 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "Renderer.h"
+#include "CellPred.h"
 
 Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
   if(id < 1 || id >= endOfActorIds) {
@@ -117,10 +118,9 @@ void ActorFactory::summonMonsters(
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  MapParser().parse(CellPredBlocksBodyType(bodyType, eng)  blockers);
-  eng->basicUtils->reverseBoolArray(blockers);
+  MapParser().parse(CellPredBlocksBodyType(bodyType_normal, eng), blockers);
   vector<Pos> freeCells;
-  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));
 
   const int NR_FREE_CELLS   = freeCells.size();

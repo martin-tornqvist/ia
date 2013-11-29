@@ -54,7 +54,6 @@
 #include "MainMenu.h"
 #include "Manual.h"
 #include "MapPatterns.h"
-#include "MapTests.h"
 #include "PopulateItems.h"
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
@@ -176,7 +175,6 @@ void Engine::initGame() {
   thrower = new Thrower(this);
   reload = new Reload(this);
   map = new Map(this);
-  mapTests = new MapTests(this);
   playerVisualMemory = new PlayerVisualMemory(this);
   gore = new Gore(this);
   manual = new Manual(this);
@@ -249,7 +247,6 @@ void Engine::cleanupGame() {
   delete thrower;
   delete reload;
   delete basicUtils;
-  delete mapTests;
   delete gore;
   delete manual;
   delete fovPreCalc;

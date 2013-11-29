@@ -72,6 +72,10 @@ public:
     }
   }
 
+  void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
+    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
+
+
   inline int chebyshevDist(const int X0, const int Y0,
                            const int X1, const int Y1) const {
     if(X0 == X1 && Y0 == Y1) {

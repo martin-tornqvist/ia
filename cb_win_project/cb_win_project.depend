@@ -14396,3 +14396,369 @@
 	"FeatureFactory.h"
 	"Pathfinding.h"
 
+1385747179 source:c:\dev\ia.git\icon\resource.rc
+
+1385747179 source:c:\dev\ia.git\src\abilityvalues.cpp
+	"AbilityValues.h"
+	<math.h>
+	"Engine.h"
+	"ActorPlayer.h"
+	"PlayerBonuses.h"
+	"BasicUtils.h"
+	"Properties.h"
+
+1385747179 c:\dev\ia.git\include\abilityvalues.h
+	<vector>
+	<string>
+	<iostream>
+
+1385748718 c:\dev\ia.git\include\engine.h
+	"DebugMode.h"
+	"BasicUtils.h"
+
+1385747179 c:\dev\ia.git\include\debugmodeincl\debugmode.h
+
+1385750111 c:\dev\ia.git\include\basicutils.h
+	<vector>
+	<math.h>
+	<stdexcept>
+	"CommonData.h"
+	"Actor.h"
+	"MersenneTwister.h"
+
+1385747179 c:\dev\ia.git\include\commondata.h
+
+1385747610 c:\dev\ia.git\include\actor.h
+	<string>
+	<vector>
+	"CommonData.h"
+	"ActorData.h"
+	"Sound.h"
+	"Config.h"
+	"Art.h"
+
+1385747610 c:\dev\ia.git\include\actordata.h
+	<string>
+	<vector>
+	"Converters.h"
+	"AbilityValues.h"
+	"RoomTheme.h"
+	"CommonData.h"
+	"Properties.h"
+	"AudioIds.h"
+
+1385747179 c:\dev\ia.git\include\converters.h
+	<string>
+
+1385747179 c:\dev\ia.git\include\roomtheme.h
+	<vector>
+	"CommonData.h"
+	"CommonTypes.h"
+
+1385749189 c:\dev\ia.git\include\commontypes.h
+	<string>
+	<stdlib.h>
+	"Colors.h"
+	"Art.h"
+
+1385747179 c:\dev\ia.git\include\colors.h
+	"SDL/SDL_video.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	"SDL_config_dreamcast.h"
+	"SDL_config_macos.h"
+	"SDL_config_macosx.h"
+	"SDL_config_symbian.h"
+	"SDL_config_win32.h"
+	"SDL_config_os2.h"
+	"SDL_config_minimal.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_platform.h
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_config_win32.h
+	"SDL_platform.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\begin_code.h
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\close_code.h
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1385747179 c:\dev\ia.git\api\sdl\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1385747179 c:\dev\ia.git\include\art.h
+
+1385747610 c:\dev\ia.git\include\properties.h
+	<string>
+	"AbilityValues.h"
+	"CommonData.h"
+	"Converters.h"
+	"CommonTypes.h"
+
+1385747179 c:\dev\ia.git\include\audioids.h
+
+1385747179 c:\dev\ia.git\include\sound.h
+	<string>
+	"CommonData.h"
+	"ItemData.h"
+	"CommonTypes.h"
+
+1385747179 c:\dev\ia.git\include\itemdata.h
+	<vector>
+	<string>
+	"CommonData.h"
+	"AbilityValues.h"
+	"Spells.h"
+	"FeatureData.h"
+	"AudioIds.h"
+
+1385747179 c:\dev\ia.git\include\spells.h
+	<vector>
+	"CommonTypes.h"
+	"Properties.h"
+
+1385747179 c:\dev\ia.git\include\featuredata.h
+	<vector>
+	<string>
+	<iostream>
+	"Art.h"
+	"CommonData.h"
+	"RoomTheme.h"
+	"MapPatterns.h"
+
+1385747179 c:\dev\ia.git\include\mappatterns.h
+	<vector>
+	"CommonData.h"
+	"CommonTypes.h"
+
+1385747179 c:\dev\ia.git\include\config.h
+	<string>
+	<vector>
+	"CommonData.h"
+
+1385747179 c:\dev\ia.git\include\mersennetwister.h
+	<iostream>
+	<climits>
+	<cstdio>
+	<ctime>
+	<cmath>
+
+1385747179 c:\dev\ia.git\include\actorplayer.h
+	<math.h>
+	"Actor.h"
+	"CommonData.h"
+
+1385747179 c:\dev\ia.git\include\playerbonuses.h
+	<string>
+	<vector>
+	"AbilityValues.h"
+	"Converters.h"
+	"Engine.h"
+	<math.h>
+
+1385750694 source:c:\dev\ia.git\src\actor.cpp
+	"Actor.h"
+	"Engine.h"
+	"Renderer.h"
+	"ItemArmor.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Fov.h"
+	"PlayerVisualMemory.h"
+	"Log.h"
+	"Blood.h"
+	"FeatureTrap.h"
+	"ItemDrop.h"
+	"Explosion.h"
+	"DungeonMaster.h"
+	"Inventory.h"
+	"CellPred.h"
+
+1385747179 c:\dev\ia.git\include\renderer.h
+	<vector>
+	<iostream>
+	"SDL/SDL_video.h"
+	"Panel.h"
+	"CommonData.h"
+	"GameTime.h"
+	"Config.h"
+	"Art.h"
+
+1385747179 c:\dev\ia.git\include\panel.h
+	"CommonTypes.h"
+
+1385747610 c:\dev\ia.git\include\gametime.h
+	<vector>
+	"Feature.h"
+	"ActorData.h"
+
+1385747610 c:\dev\ia.git\include\feature.h
+	<vector>
+	<string>
+	<iostream>
+	"Colors.h"
+	"CommonData.h"
+	"ActorData.h"
+	"FeatureData.h"
+	"CommonTypes.h"
+
+1385747179 c:\dev\ia.git\include\itemarmor.h
+	"Engine.h"
+	"Item.h"
+
+1385747179 c:\dev\ia.git\include\item.h
+	<iostream>
+	"ItemData.h"
+	"Art.h"
+
+1385747179 c:\dev\ia.git\include\actormonster.h
+	"CommonData.h"
+	"Actor.h"
+	"ItemWeapon.h"
+	"Sound.h"
+	"Spells.h"
+
+1385747179 c:\dev\ia.git\include\itemweapon.h
+	"Item.h"
+	"Converters.h"
+
+1385749910 c:\dev\ia.git\include\map.h
+	<vector>
+	<iostream>
+	"CommonTypes.h"
+	"CommonData.h"
+	"Colors.h"
+	"ItemData.h"
+	"Feature.h"
+	"Config.h"
+
+1385747179 c:\dev\ia.git\include\fov.h
+	"Map.h"
+	"CommonData.h"
+
+1385747179 c:\dev\ia.git\include\playervisualmemory.h
+
+1385747179 c:\dev\ia.git\include\log.h
+	<string>
+	<vector>
+	<iostream>
+	"Colors.h"
+	"Converters.h"
+
+1385747179 c:\dev\ia.git\include\blood.h
+	"CommonTypes.h"
+
+1385747179 c:\dev\ia.git\include\featuretrap.h
+	"Feature.h"
+	"AbilityValues.h"
+	"Art.h"
+	"Feature.h"
+	"CommonData.h"
+
+1385747179 c:\dev\ia.git\include\itemdrop.h
+	<iostream>
+	"CommonTypes.h"
+
+1385747610 c:\dev\ia.git\include\explosion.h
+	<vector>
+	"CommonData.h"
+	"Properties.h"
+	"Config.h"
+	"Colors.h"
+	"AudioIds.h"
+
+1385747179 c:\dev\ia.git\include\dungeonmaster.h
+	<iostream>
+	<math.h>
+	"CommonTypes.h"
+	"AbilityValues.h"
+	"Colors.h"
+	"Converters.h"
+	"PlayerCreateCharacter.h"
+	"BasicUtils.h"
+
+1385747179 c:\dev\ia.git\include\playercreatecharacter.h
+	<string>
+	"CommonTypes.h"
+	"PlayerBonuses.h"
+
+1385747179 c:\dev\ia.git\include\inventory.h
+	<vector>
+	<string>
+	<iostream>
+	"ItemData.h"
+	"Item.h"
+
+1385750111 c:\dev\ia.git\include\cellpred.h
+	<vector>
+	"CommonTypes.h"
+	"Config.h"
+
+1385747610 source:c:\dev\ia.git\src\actordata.cpp
+	<string>
+	<vector>
+	<math.h>
+	"ActorData.h"
+	"CommonTypes.h"
+	"Converters.h"
+	"Item.h"
+	"Engine.h"
+
+1385753291 source:c:\dev\ia.git\src\actorfactory.cpp
+	"ActorFactory.h"
+	<algorithm>
+	"Engine.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Renderer.h"
+	"CellPred.h"
+
+1385747179 c:\dev\ia.git\include\actorfactory.h
+	<vector>
+	<string>
+	"GameTime.h"
+

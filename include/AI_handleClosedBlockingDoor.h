@@ -21,7 +21,7 @@ public:
       monster->deadState == actorDeadState_alive &&
       path->empty() == false) {
       Feature* const f =
-        engine->map->featuresStatic[path->back().x][path->back().y];
+        engine->map->cells[path->back().x][path->back().y].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
         if(door->isMovePassable(monster) == false) {
