@@ -20,7 +20,7 @@ public:
 
         //Loop through all actors
         for(int i = 0; i < NR_ACTORS; i++) {
-          actor = engine->gameTime->getActorAt(i);
+          actor = &(engine->gameTime->getActorAtElement(i));
           if(actor != engine->player && actor != &monster) {
             if(actor->deadState == actorDeadState_alive) {
               otherMonster = dynamic_cast<Monster*>(actor);
@@ -65,7 +65,7 @@ public:
                     bool isGoodCandidateFound = true;
 
                     for(int iii = 0; iii < NR_ACTORS; iii++) {
-                      actor = engine->gameTime->getActorAt(iii);
+                      actor = &(engine->gameTime->getActorAtElement(iii));
                       if(actor != engine->player && actor != &monster) {
                         otherMonster = dynamic_cast<Monster*>(actor);
                         if(

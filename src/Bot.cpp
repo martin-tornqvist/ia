@@ -31,7 +31,7 @@ void Bot::act() {
   //=======================================================================
   const int NR_ACTORS = eng->gameTime->getLoopSize();
   for(int i = 0; i < NR_ACTORS; i++) {
-    const Actor* const actor = eng->gameTime->getActorAt(i);
+    const Actor* const actor = eng->gameTime->getActorAtElement(i);
     if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
       throw runtime_error("Actor outside map");
     }

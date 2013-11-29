@@ -161,7 +161,7 @@ void ExplosionMaker::runExplosion(
         //Damage actor, or apply property?
         const unsigned int SIZE_OF_ACTOR_LOOP = eng->gameTime->getLoopSize();
         for(unsigned int i = 0; i < SIZE_OF_ACTOR_LOOP; i++) {
-          currentActor = eng->gameTime->getActorAt(i);
+          currentActor = eng->gameTime->getActorAtElement(i);
           if(currentActor->pos.x == x && currentActor->pos.y == y) {
 
             if(DO_EXPLOSION_DMG) {

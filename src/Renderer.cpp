@@ -798,7 +798,7 @@ void Renderer::drawAscii() {
   //-------------------------------------------- INSERT DEAD ACTORS INTO ARRAY
   Actor* actor = NULL;
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    actor = eng->gameTime->getActorAt(i);
+    actor = eng->gameTime->getActorAtElement(i);
     xPos = actor->pos.x;
     yPos = actor->pos.y;
     if(
@@ -850,7 +850,7 @@ void Renderer::drawAscii() {
 
   //-------------------------------------------- INSERT LIVING ACTORS INTO ARRAY
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    actor = eng->gameTime->getActorAt(i);
+    actor = eng->gameTime->getActorAtElement(i);
     if(actor != eng->player) {
       xPos = actor->pos.x;
       yPos = actor->pos.y;
@@ -975,7 +975,7 @@ void Renderer::drawTiles() {
   //-------------------------------------------- INSERT DEAD ACTORS INTO TILE ARRAY
   Actor* actor = NULL;
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    actor = eng->gameTime->getActorAt(i);
+    actor = eng->gameTime->getActorAtElement(i);
     xPos = actor->pos.x;
     yPos = actor->pos.y;
     if(
@@ -1026,7 +1026,7 @@ void Renderer::drawTiles() {
 
   //-------------------------------------------- INSERT LIVING ACTORS INTO TILE ARRAY
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    actor = eng->gameTime->getActorAt(i);
+    actor = eng->gameTime->getActorAtElement(i);
     if(actor != eng->player) {
       if(
         actor->deadState == actorDeadState_alive &&

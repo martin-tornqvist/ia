@@ -35,7 +35,7 @@ void SoundEmitter::emitSound(Sound snd) {
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
 
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    Actor* const actor = eng->gameTime->getActorAt(i);
+    Actor* const actor = eng->gameTime->getActorAtElement(i);
 
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 

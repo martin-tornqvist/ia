@@ -882,7 +882,7 @@ void Player::actorSpecificOnStandardTurn() {
     //Only print monster-comes-into-view-messages if player is busy with
     //something (first aid, auto travel etc).
 
-    Actor* const actor = eng->gameTime->getActorAt(i);
+    Actor* const actor = eng->gameTime->getActorAtElement(i);
     if(actor != this) {
       if(actor->deadState == actorDeadState_alive) {
 

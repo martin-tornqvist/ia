@@ -33,7 +33,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   }
   const unsigned int ACTOR_LOOP_SIZE = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < ACTOR_LOOP_SIZE; i++) {
-    Actor* curActor = eng->gameTime->getActorAt(i);
+    Actor* curActor = eng->gameTime->getActorAtElement(i);
     if(curActor->deadState == actorDeadState_alive) {
       actorArray[curActor->pos.x][curActor->pos.y] = curActor;
     }

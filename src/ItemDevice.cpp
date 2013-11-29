@@ -150,7 +150,7 @@ void DeviceRepeller::runGoodEffect() {
   const Pos& playerPos = eng->player->pos;
   const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = eng->gameTime->getActorAt(i);
+    Actor* const actor = eng->gameTime->getActorAtElement(i);
     if(actor != eng->player) {
       const Pos& otherPos = actor->pos;
       if(eng->mapTests->isCellsAdj(playerPos, otherPos, false)) {

@@ -236,7 +236,7 @@ SpellCastRetData SpellMayhem::specificCast(
   }
 
   for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-    Actor* actor = eng->gameTime->getActorAt(i);
+    Actor* actor = eng->gameTime->getActorAtElement(i);
     if(actor != eng->player) {
       if(eng->player->checkIfSeeActor(*actor, NULL)) {
         actor->getPropHandler()->tryApplyProp(

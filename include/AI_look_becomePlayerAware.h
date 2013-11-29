@@ -30,7 +30,7 @@ public:
           const Pos& playerPos = engine->player->pos;
 
           const bool IS_LGT_AT_PLAYER =
-            engine->map->light[playerPos.x][playerPos.y];
+            engine->map->cells[playerPos.x][playerPos.y].isLight;
 
           const int PLAYER_SNEAK_BASE =
             engine->player->getData()->abilityVals.getVal(

@@ -272,7 +272,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAt(i);
+//    a = eng->gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
 //      if(arrayToFill[a->pos.x][a->pos.y] == false) {
 //        arrayToFill[a->pos.x][a->pos.y] = true;
@@ -287,7 +287,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAt(i);
+//    a = eng->gameTime->getActorAtElement(i);
 //    if(arrayToFill[a->pos.x][a->pos.y] == false) {
 //      arrayToFill[a->pos.x][a->pos.y] = true;
 //    }
@@ -300,7 +300,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAt(i);
+//    a = eng->gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
 //      if(arrayToFill[a->pos.x][a->pos.y] == false && a->pos != origin) {
 //        if(isCellsAdj(origin, a->pos, false)) {
@@ -483,7 +483,7 @@ void MapTests::getLine(const Pos& origin, const Pos& target,
 Actor* MapTests::getActorAtPos(const Pos pos) const {
   const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
   for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    Actor* actor = eng->gameTime->getActorAt(i);
+    Actor* actor = eng->gameTime->getActorAtElement(i);
     if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
       return actor;
     }
