@@ -1,5 +1,5 @@
-#ifndef MAP_TESTS_H
-#define MAP_TESTS_H
+#ifndef MAP_PARSING_H
+#define MAP_PARSING_H
 
 #include <vector>
 
@@ -16,7 +16,6 @@ enum CellPredCheckEntity_t {
 
 class CellPred {
 public:
-  CellPred(Engine* engine) : eng(engine) {}
   virtual bool isCheckingCells()          const = 0;
   virtual bool isCheckingMobFeatures()    const = 0;
   virtual bool isCheckingActors()         const = 0;
@@ -24,6 +23,8 @@ public:
   virtual bool check(const FeatureMob& f) const = 0;
   virtual bool check(const Actor& a)      const = 0;
   const Engine* const eng;
+protected:
+  CellPred(Engine* engine) : eng(engine) {}
 };
 
 class CellPredBlocksVision : public CellPred {
@@ -47,7 +48,31 @@ public:
   bool check(const Cell& c)       const;
   bool check(const FeatureMob& f) const;
   bool check(const Actor& a)      const;
-  BodyType_t bodyType_;
+  const BodyType_t bodyType_;
+};
+
+class CellPredBlocksProjectiles : public CellPred {
+public:
+  CellPredBlocksProjectiles(Engine* engine) : CellPred(engine) {}
+  bool isCheckingCells()          const {return true;}
+  bool isCheckingMobFeatures()    const {return true;}
+  bool isCheckingActors()         const {return false;}
+  bool check(const Cell& c)       const;
+  bool check(const FeatureMob& f) const;
+  bool check(const Actor& a)      const {(void)a; return false;}
+};
+
+class CellPredLivingActorsAdjToPos : public CellPred {
+public:
+  CellPredLivingActorsAdjToPos(const Pos& pos, Engine* engine) :
+    CellPred(engine), pos_(pos) {}
+  bool isCheckingCells()          const {return false;}
+  bool isCheckingMobFeatures()    const {return false;}
+  bool isCheckingActors()         const {return true;}
+  bool check(const Cell& c)       const {(void)c; return false;}
+  bool check(const FeatureMob& f) const {(void)f; return false;}
+  bool check(const Actor& a)      const;
+  const Pos& pos_;
 };
 
 enum MapParseWriteRule {
@@ -60,9 +85,9 @@ class MapParser {
 public:
   MapParser() {};
 
-  void parse(const CellPred& predicate,
-             bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
-             const MapParseWriteRule writeRule = mapParseWriteAlways);
+  static void parse(const CellPred& predicate,
+                    bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
+                    const MapParseWriteRule writeRule = mapParseWriteAlways);
 };
 
 //Function object for sorting stl containers by distance to origin
@@ -126,15 +151,6 @@ public:
 //    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
 //    const Pos& target);
 //
-//
-//  inline bool isPosInsideMap(const Pos& pos) const {
-//    if(
-//      pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
-//      return false;
-//    }
-//    return true;
-//  }
-//
 //  inline bool isAreaInsideMap(const Rect& area) {
 //    if(
 //      area.x0y0.x < 0 || area.x0y0.y < 0 ||
@@ -172,17 +188,11 @@ public:
 //  bool isCellNextToPlayer(const Pos& pos,
 //                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 //
-//  bool isCellsAdj(const Pos& pos1, const Pos& pos2,
-//                  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 //
 //  Pos getClosestPos(const Pos c, const vector<Pos>& positions) const;
 //  Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 //
-//  void getLine(const Pos& origin, const Pos& target,
-//               bool stopAtTarget, int chebTravelLimit,
-//               vector<Pos>& posList);
 //
-//  Actor* getActorAtPos(const Pos pos) const;
 //
 //private:
 //  Engine* eng;

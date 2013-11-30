@@ -306,7 +306,7 @@ bool Monster::tryAttack(Actor& defender) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
                       Actor* const actorHere =
-                        eng->mapTests->getActorAtPos(curPos);
+                        eng-basicUtils->getActorAtPos(curPos);
                       if(actorHere != NULL) {
                         isBlockedByFriend = true;
                         break;

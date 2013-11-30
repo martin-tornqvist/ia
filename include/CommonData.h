@@ -28,9 +28,9 @@ const int FOV_STANDARD_WIDTH_INT    = 2 * FOV_STANDARD_RADI_INT + 1;
 const double FOV_STANDARD_RADI_DB   = double(FOV_STANDARD_RADI_INT);
 const double FOV_STANDARD_WIDTH_DB  = double(FOV_STANDARD_WIDTH_INT);
 const int FOV_MAX_RADI_INT          = FOV_STANDARD_RADI_INT * 2;
-const int FOV_MAX_WIDTH_INT         = 2 * FOV_MAX_RADI_INT + 1;
+const int FOV_MAX_W_INT             = 2 * FOV_MAX_RADI_INT + 1;
 const double FOV_MAX_RADI_DB        = double(FOV_MAX_RADI_INT);
-const double FOV_MAX_WIDTH_DB       = double(FOV_MAX_WIDTH_INT);
+const double FOV_MAX_W_DB           = double(FOV_MAX_W_INT);
 
 const int THROWING_RANGE_LIMIT      = FOV_STANDARD_RADI_INT + 3;
 

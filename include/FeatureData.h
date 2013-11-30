@@ -140,7 +140,7 @@ struct FeatureData {
   SDL_Color colorBg;
   Tile_t tile;
   bool isBodyTypePassable[endOfActorBodyTypes];
-  bool isShootPassable;
+  bool isProjectilesPassable;
   bool isVisionPassable;
   bool isSmokePassable;
   bool canHaveBlood;

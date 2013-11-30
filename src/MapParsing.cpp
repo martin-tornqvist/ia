@@ -1,4 +1,4 @@
-#include "MapTests.h"
+#include "MapParsing.h"
 
 #include "Engine.h"
 #include "Map.h"
@@ -19,13 +19,35 @@ bool CellPredBlocksBodyType::check(const FeatureMob& f) {
 }
 
 bool CellPredBlocksBodyType::check(const Actor& a) {
-  return true;
+  return a.deadState == actorDeadState_alive;
+}
+
+bool CellPredBlocksProjectiles::check(const Cell& c)  {
+  return c.featureStatic.isProjectilesPassable() == false;
+}
+
+bool CellPredBlocksProjectiles::check(const FeatureMob& f)  {
+  return f.isProjectilesPassable() == false;
+}
+
+bool CellPredLivingActorsAdjToPos::check(const Actor& a) const {
+  if(a.deadState != actorDeadState_alive) {
+    return false;
+  }
+  return eng->basicUtils->isPosAdj(pos_, a.pos);
 }
 
 //------------------------------------------------------------ MAP PARSER
-bool MapParser::operator()(
+static void MapParser::parse(
   const CellPred& predicate, bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
   const MapParseWriteRule writeRule = mapParseWriteAlways) {
+
+  if(
+    predicate.isCheckingCells()       == false &&
+    predicate.isCheckingMobFeatures() == false &&
+    predicate.isCheckingActors()      == false) {
+    throw runtime_error("Predicate not checking anything");
+  }
 
   const Engine* const eng = predicate.eng;
 
@@ -35,11 +57,11 @@ bool MapParser::operator()(
   const bool WRITE_F = writeRule == mapParseWriteAlways ||
                        writeRule == mapParseWriteOnlyFalse;
 
-  if(predicate.isCheckingStaticFeatures()) {
+  if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        const FeatureStatic& f = eng->map->featuresStatic[x][y];
-        const bool IS_MATCH = predicate.checkFeature(f);
+        const Cell& c = eng->map->cells[x][y];
+        const bool IS_MATCH = predicate.check(c);
         if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
           arrayOut[x][y] = IS_MATCH;
         }
@@ -51,7 +73,7 @@ bool MapParser::operator()(
     const int NR_MOB_FEATURES = eng->gameTime->getFeatureMobsSize();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
       const FeatureMob& f = eng->gameTime->getFeatureMobAtElement(i);
-      const bool IS_MATCH = predicate.checkFeature(f);
+      const bool IS_MATCH = predicate.check(f);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
         arrayOut[x][y] = IS_MATCH;
       }
@@ -62,7 +84,7 @@ bool MapParser::operator()(
     const int NR_ACTORS = eng->gameTime->getNrActors();
     for(int i = 0; i < NR_ACTORS; i++) {
       const Actor& a = eng->gameTime->getActorAtElement(i);
-      const bool IS_MATCH = predicate.checkActor(a);
+      const bool IS_MATCH = predicate.check(a);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
         arrayOut[x][y] = IS_MATCH;
       }
@@ -200,7 +222,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isShootPassable() == false;
+//      arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isProjectilesPassable() == false;
 //    }
 //  }
 //  FeatureMob* f = NULL;
@@ -208,7 +230,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = eng->gameTime->getFeatureMobAt(i);
 //    if(arrayToFill[f->getX()][f->getY()] == false) {
-//      arrayToFill[f->getX()][f->getY()] = f->isShootPassable() == false;
+//      arrayToFill[f->getX()][f->getY()] = f->isProjectilesPassable() == false;
 //    }
 //  }
 //}
@@ -400,94 +422,5 @@ void MapTests::floodFill(
       }
     }
   }
-}
-
-bool MapTests::isCellsAdj(
-  const Pos& pos1, const Pos& pos2,
-  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
-
-  if(pos1.x == pos2.x && pos1.y == pos2.y) {
-    return COUNT_SAME_CELL_AS_NEIGHBOUR;
-  }
-  if(pos1.x < pos2.x - 1) {
-    return false;
-  }
-  if(pos1.x > pos2.x + 1) {
-    return false;
-  }
-  if(pos1.y < pos2.y - 1) {
-    return false;
-  }
-  if(pos1.y > pos2.y + 1) {
-    return false;
-  }
-  return true;
-}
-
-void MapTests::getLine(const Pos& origin, const Pos& target,
-                       bool stopAtTarget, int chebTravelLimit,
-                       vector<Pos>& posList) {
-  posList.resize(0);
-
-  if(target == origin) {
-    posList.push_back(origin);
-    return;
-  }
-
-  double deltaX = (double(target.x) - double(origin.x));
-  double deltaY = (double(target.y) - double(origin.y));
-
-  double hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
-
-  double xIncr = (deltaX / hypot);
-  double yIncr = (deltaY / hypot);
-
-  double curX_prec = double(origin.x) + 0.5;
-  double curY_prec = double(origin.y) + 0.5;
-
-  Pos curPos = Pos(int(curX_prec), int(curY_prec));
-
-  for(double i = 0; i <= 9999.0; i += 0.04) {
-    curX_prec += xIncr * 0.04;
-    curY_prec += yIncr * 0.04;
-
-    curPos.set(int(curX_prec), int(curY_prec));
-
-    if(eng->mapTests->isPosInsideMap(curPos) == false) {
-      return;
-    }
-
-    bool isPosOkToAdd = false;
-    if(posList.size() == 0) {
-      isPosOkToAdd = true;
-    } else {
-      isPosOkToAdd = posList.back() != curPos;
-    }
-    if(isPosOkToAdd) {
-      posList.push_back(curPos);
-    }
-
-    //Check distance limits
-    if(stopAtTarget && (curPos == target)) {
-      return;
-    }
-    const int DISTANCE_TRAVELED =
-      eng->basicUtils->chebyshevDist(
-        origin.x, origin.y, curPos.x, curPos.y);
-    if(DISTANCE_TRAVELED >= chebTravelLimit) {
-      return;
-    }
-  }
-}
-
-Actor* MapTests::getActorAtPos(const Pos pos) const {
-  const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
-  for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    Actor* actor = eng->gameTime->getActorAtElement(i);
-    if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
-      return actor;
-    }
-  }
-  return NULL;
 }
 

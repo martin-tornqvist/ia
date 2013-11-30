@@ -47,7 +47,7 @@
 #include "JamWithSpike.h"
 #include "FeatureData.h"
 #include "FeatureTrap.h"
-#include "FovPreCalc.h"
+#include "LineCalc.h"
 #include "Knockback.h"
 #include "Log.h"
 #include "Look.h"
@@ -132,7 +132,7 @@ void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
   basicUtils = new BasicUtils(this);
-  fovPreCalc = new FovPreCalc(this);
+  lineCalc = new LineCalc(this);
   propDataHandler = new PropDataHandler(this);
   actorDataHandler = new ActorDataHandler(this);
   scrollNameHandler = new ScrollNameHandler(this);
@@ -249,7 +249,7 @@ void Engine::cleanupGame() {
   delete basicUtils;
   delete gore;
   delete manual;
-  delete fovPreCalc;
+  delete lineCalc;
   delete populateItems;
   delete populateMonsters;
   delete populateTraps;

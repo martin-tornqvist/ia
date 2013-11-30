@@ -45,8 +45,8 @@ bool Feature::isVisionPassable() const {
   return data_->isVisionPassable;
 }
 
-bool Feature::isShootPassable() const {
-  return data_->isShootPassable;
+bool Feature::isProjectilesPassable() const {
+  return data_->isProjectilesPassable;
 }
 
 bool Feature::isSmokePassable() const {

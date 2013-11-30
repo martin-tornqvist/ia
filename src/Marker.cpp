@@ -63,7 +63,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
         eng->log->clearLog();
         eng->renderer->drawMapAndInterface();
 
-        const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
+        const Actor* const actor = eng-basicUtils->getActorAtPos(pos_);
         if(actor != NULL) {
           eng->player->target = actor;
         }
@@ -93,7 +93,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
         eng->log->addMsg("I should throw this somewhere else.");
       } else {
         eng->renderer->drawMapAndInterface();
-        const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
+        const Actor* const actor = eng-basicUtils->getActorAtPos(pos_);
         if(actor != NULL) {
           eng->player->target = actor;
         }
@@ -194,7 +194,7 @@ void Marker::setPosToClosestEnemyIfVisible() {
     pos_ = eng->mapTests->getClosestPos(eng->player->pos,
                                         spotedEnemiesPositions);
 
-    const Actor* const actor = eng->mapTests->getActorAtPos(pos_);
+    const Actor* const actor = eng-basicUtils->getActorAtPos(pos_);
     eng->player->target = actor;
   }
 }

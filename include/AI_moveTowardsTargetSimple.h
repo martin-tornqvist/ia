@@ -3,6 +3,7 @@
 
 #include "Engine.h"
 #include "Actor.h"
+#include "MapParsing.h"
 
 class AI_moveTowardsTargetSimple {
 public:
@@ -17,7 +18,8 @@ public:
           offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);
           offset.y = offset.y == 0 ? 0 : (offset.y > 0 ? 1 : -1);
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          engine->mapTests->makeMoveBlockerArray(&monster, blockers);
+          MapParser::parse(
+            CellPredBlocksBodyType(monster.getBodyType(), engine), blockers);
           const Pos newPos(monster.pos + offset);
           if(blockers[newPos.x][newPos.y] == false) {
             monster.moveDir(DirConverter(engine).getDir(offset));

@@ -73,8 +73,21 @@ public:
   }
 
   void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill);
+                             bool a[MAP_X_CELLS][MAP_Y_CELLS],
+                             vector<Pos>& vectorToFill);
 
+  Actor* getActorAtPos(const Pos& pos) const;
+
+  inline bool isPosInsideMap(const Pos& pos) const {
+    if(
+      pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
+      return false;
+    }
+    return true;
+  }
+
+  bool isPosAdj(const Pos& pos1, const Pos& pos2,
+                const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 
   inline int chebyshevDist(const int X0, const int Y0,
                            const int X1, const int Y1) const {
@@ -87,21 +100,6 @@ public:
   inline int chebyshevDist(const Pos& c1, const Pos& c2) const {
     return chebyshevDist(c1.x, c1.y, c2.x, c2.y);
   }
-
-//  inline int manhattanDist(const int X0, const int Y0,
-//                               const int X1, const int Y1) const {
-//    return abs(X1 - X0) + abs(Y1 - Y0);
-//  }
-
-//  inline double pointDist(const int x1, const int y1,
-//                              const int x2, const int y2) const {
-//    if(x1 == x2 && y1 == y2)
-//      return 0.0;
-//
-//    const double xSqr = double((x2 - x1) * (x2 - x1));
-//    const double ySqr = double((y2 - y1) * (y2 - y1));
-//    return sqrt(xSqr + ySqr);
-//  }
 
   TimeData getCurrentTime() const;
 

@@ -148,8 +148,6 @@
 		<Unit filename="../include/BasicUtils.h" />
 		<Unit filename="../include/Blood.h" />
 		<Unit filename="../include/Bot.h" />
-		<Unit filename="../include/BresenhamLine.h" />
-		<Unit filename="../include/CellPred.h" />
 		<Unit filename="../include/CharacterDescr.h" />
 		<Unit filename="../include/CharacterLines.h" />
 		<Unit filename="../include/Close.h" />
@@ -180,7 +178,6 @@
 		<Unit filename="../include/FeatureTrap.h" />
 		<Unit filename="../include/FeatureWall.h" />
 		<Unit filename="../include/Fov.h" />
-		<Unit filename="../include/FovPreCalc.h" />
 		<Unit filename="../include/GameTime.h" />
 		<Unit filename="../include/Gods.h" />
 		<Unit filename="../include/Highscore.h" />
@@ -204,12 +201,14 @@
 		<Unit filename="../include/ItemWeapon.h" />
 		<Unit filename="../include/JamWithSpike.h" />
 		<Unit filename="../include/Knockback.h" />
+		<Unit filename="../include/LineCalc.h" />
 		<Unit filename="../include/Log.h" />
 		<Unit filename="../include/Look.h" />
 		<Unit filename="../include/MainMenu.h" />
 		<Unit filename="../include/Manual.h" />
 		<Unit filename="../include/Map.h" />
 		<Unit filename="../include/MapGen.h" />
+		<Unit filename="../include/MapParsing.h" />
 		<Unit filename="../include/MapPatterns.h" />
 		<Unit filename="../include/MapTemplates.h" />
 		<Unit filename="../include/Marker.h" />
@@ -261,8 +260,6 @@
 		<Unit filename="../src/BasicUtils.cpp" />
 		<Unit filename="../src/Blood.cpp" />
 		<Unit filename="../src/Bot.cpp" />
-		<Unit filename="../src/BresenhamLine.cpp" />
-		<Unit filename="../src/CellPred.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
 		<Unit filename="../src/CharacterLines.cpp" />
 		<Unit filename="../src/Close.cpp" />
@@ -290,7 +287,6 @@
 		<Unit filename="../src/FeatureTrap.cpp" />
 		<Unit filename="../src/FeatureWall.cpp" />
 		<Unit filename="../src/Fov.cpp" />
-		<Unit filename="../src/FovPreCalc.cpp" />
 		<Unit filename="../src/GameTime.cpp" />
 		<Unit filename="../src/Gods.cpp" />
 		<Unit filename="../src/Highscore.cpp" />
@@ -317,6 +313,7 @@
 		<Unit filename="../src/ItemWeapon.cpp" />
 		<Unit filename="../src/JamWithSpike.cpp" />
 		<Unit filename="../src/Knockback.cpp" />
+		<Unit filename="../src/LineCalc.cpp" />
 		<Unit filename="../src/Log.cpp" />
 		<Unit filename="../src/Look.cpp" />
 		<Unit filename="../src/MainMenu.cpp" />
@@ -328,6 +325,7 @@
 		<Unit filename="../src/MapGenForest.cpp" />
 		<Unit filename="../src/MapGenTrapezohedronLvl.cpp" />
 		<Unit filename="../src/MapGenUtils.cpp" />
+		<Unit filename="../src/MapParsing.cpp" />
 		<Unit filename="../src/MapPatterns.cpp" />
 		<Unit filename="../src/MapTemplates.cpp" />
 		<Unit filename="../src/Marker.cpp" />

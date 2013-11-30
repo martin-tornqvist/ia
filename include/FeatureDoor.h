@@ -31,7 +31,7 @@ public:
   bool isMovePassable(Actor* const actorMoving) const;
   bool isBodyTypePassable(const BodyType_t bodyType) const;
   bool isVisionPassable() const;
-  bool isShootPassable() const;
+  bool isProjectilesPassable() const;
   bool isSmokePassable() const;
   SDL_Color getColor() const;
   char getGlyph() const;

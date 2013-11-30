@@ -28,7 +28,7 @@ public:
   virtual bool isMovePassable(Actor* const actorMoving) const;
   virtual bool isBodyTypePassable(const BodyType_t bodyType) const;
   virtual bool isVisionPassable() const;
-  virtual bool isShootPassable() const;
+  virtual bool isProjectilesPassable() const;
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
   virtual string getDescription(const bool DEFINITE_ARTICLE) const;

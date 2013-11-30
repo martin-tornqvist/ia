@@ -17,6 +17,8 @@
 #include "FeatureFactory.h"
 #include "Knockback.h"
 #include "Gods.h"
+#include "MapParsing.h"
+#include "LineCalc.h"
 
 using namespace std;
 
@@ -183,7 +185,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
       trace << "Vortex: pullCooldown: " << pullCooldown << endl;
       trace << "Vortex: Is player aware" << endl;
       const Pos& playerPos = eng->player->pos;
-      if(eng->mapTests->isCellsAdj(pos, playerPos, true) == false) {
+      if(eng->basicUtils->isPosAdj(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
         if(eng->dice.percentile() < CHANCE_TO_KNOCK) {
@@ -203,7 +205,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
             trace << "Vortex: Player position: ";
             trace << playerPos.x << "," << playerPos.y << ")" << endl;
             bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-            eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
+            MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
             if(checkIfSeeActor(*(eng->player), visionBlockers)) {
               trace << "Vortex: I am seeing the player" << endl;
               if(eng->player->checkIfSeeActor(*this, NULL)) {
@@ -261,11 +263,11 @@ bool Ghost::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0) {
 
-      if(eng->mapTests->isCellsAdj(pos, eng->player->pos, false)) {
+      if(eng->basicUtils->isPosAdj(pos, eng->player->pos, false)) {
         if(eng->dice.percentile() < 30) {
 
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          eng->mapTests->makeVisionBlockerArray(pos, blockers);
+          MapParser::parse(CellPredBlocksVision(eng), blockers);
           const bool PLAYER_SEES_ME =
             eng->player->checkIfSeeActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
@@ -364,11 +366,11 @@ bool Khephren::monsterSpecificOnActorTurn() {
       if(hasSummonedLocusts == false) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeVisionBlockerArray(pos, blockers);
+        MapParser::parse(CellPredBlocksVision(eng), blockers);
 
         if(checkIfSeeActor(*(eng->player), blockers)) {
-          eng->mapTests->makeMoveBlockerArrayForBodyType(
-            bodyType_flying, blockers);
+          MapParser::parse(
+            CellPredBlocksBodyType(bodyType_flying, eng), blockers);
 
           const int SPAWN_AFTER_X =
             eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;
@@ -378,9 +380,9 @@ bool Khephren::monsterSpecificOnActorTurn() {
             }
           }
 
-          eng->basicUtils->reverseBoolArray(blockers);
           vector<Pos> freeCells;
-          eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+          eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
           const unsigned int NR_OF_SPAWNS = 15;
@@ -444,17 +446,19 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
       if(hasSummonedJenkin == false) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeVisionBlockerArray(pos, blockers);
+        MapParser::parse(CellPredBlocksVision(eng), blockers);
 
         if(checkIfSeeActor(*(eng->player), blockers)) {
 
-          eng->mapTests->makeMoveBlockerArray(this, blockers);
+          MapParser::parse(
+            CellPredBlocksBodyType(bodyType_normal, eng), blockers);
 
           vector<Pos> line;
-          eng->mapTests->getLine(pos, eng->player->pos,
-                                 true, 9999, line);
+          eng->lineCalc->calcNewLine(pos, eng->player->pos, true, 9999,
+                                     false, line);
 
-          for(unsigned int i = 0; i < line.size(); i++) {
+          const int LINE_SIZE = line.size();
+          for(unsigned int i = 0; i < LINE_SIZE; i++) {
             const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
               //TODO Make a generalized summoning funtionality
@@ -572,7 +576,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
       if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeMoveBlockerArray(this, blockers);
+        MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -607,7 +611,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
       if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeMoveBlockerArray(this, blockers);
+        MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {

@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "FeatureTrap.h"
 #include "PlayerBonuses.h"
+#include "MapParsing.h"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
         ability_dodgeAttack, true, *currentDefender);
 
     const int DODGE_MOD_AT_FEATURE =
-      eng->map->featuresStatic[defPos.x][defPos.y]->getDodgeModifier();
+      eng->map->cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
@@ -77,7 +78,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     bool isDefenderHeldByWeb = false;
     const FeatureStatic* const f =
-      eng->map->featuresStatic[defPos.x][defPos.y];
+      eng->map->cells[defPos.x][defPos.y].featureStatic;
     if(f->getId() == feature_trap) {
       const Trap* const t = dynamic_cast<const Trap*>(f);
       if(t->getTrapType() == trap_spiderWeb) {
@@ -155,7 +156,7 @@ RangedAttackData::RangedAttackData(
   verbPlayerAttacks = wpn_.getData().rangedAttackMessages.player;
   verbOtherAttacks  = wpn_.getData().rangedAttackMessages.other;
 
-  Actor* const actorAimedAt = eng->mapTests->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = eng->basicUtils->getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -163,7 +164,7 @@ RangedAttackData::RangedAttackData(
       intendedAimLevel = actorAimedAt->getData()->actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+      MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }
@@ -171,7 +172,7 @@ RangedAttackData::RangedAttackData(
     intendedAimLevel = intendedAimLevel_;
   }
 
-  currentDefender = eng->mapTests->getActorAtPos(curPos_);
+  currentDefender = eng->basicUtils->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
     trace << "RangedAttackData: Defender found" << endl;
@@ -218,13 +219,14 @@ RangedAttackData::RangedAttackData(
   }
 }
 
-MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                                     const Pos& curPos_, Engine* engine,
+MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
+                                     const Pos& aimPos_, const Pos& curPos_,
+                                     Engine* engine,
                                      ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, item_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none) {
 
-  Actor* const actorAimedAt = eng->mapTests->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = eng->basicUtils->getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -232,7 +234,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
       intendedAimLevel = actorAimedAt->getData()->actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+      MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }
@@ -240,7 +242,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_, const 
     intendedAimLevel = intendedAimLevel_;
   }
 
-  currentDefender = eng->mapTests->getActorAtPos(curPos_);
+  currentDefender = eng->basicUtils->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
     trace << "MissileAttackData: Defender found" << endl;

@@ -57,7 +57,7 @@ class Reload;
 class BasicUtils;
 class Gore;
 class Manual;
-class FovPreCalc;
+class LineCalc;
 class BresenhamLine;
 class PopulateItems;
 class PopulateMonsters;
@@ -157,7 +157,7 @@ public:
   DirConverter* dirConverter;
   Gore* gore;
   Manual* manual;
-  FovPreCalc* fovPreCalc;
+  LineCalc* lineCalc;
   BresenhamLine* bresenhamLine;
   PopulateItems* populateItems;
   PopulateMonsters* populateMonsters;

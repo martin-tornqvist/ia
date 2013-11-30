@@ -554,8 +554,8 @@ void Player::incrInsanity() {
 
 void Player::setTempShockFromFeatures() {
   if(
-    eng->map->darkness[pos.x][pos.y] &&
-    eng->map->light[pos.x][pos.y] == false) {
+    eng->map->cells[pos.x][pos.y].isDark &&
+    eng->map->cells[pos.x][pos.y].isLight == false) {
     shockTemp_ += 20;
   }
 
@@ -1078,7 +1078,7 @@ void Player::moveDir(Dir_t dir) {
 
     if(dir != dirCenter) {
       //Attack?
-      Actor* const actorAtDest = eng->mapTests->getActorAtPos(dest);
+      Actor* const actorAtDest = eng-basicUtils->getActorAtPos(dest);
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
@@ -1198,7 +1198,7 @@ void Player::autoMelee() {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
         const Actor* const actor =
-          eng->mapTests->getActorAtPos(pos + Pos(dx, dy));
+          eng-basicUtils->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(checkIfSeeActor(*actor, NULL)) {
             target = actor;

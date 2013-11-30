@@ -18,14 +18,16 @@ public:
         engine->basicUtils->resetBoolArray(blockers, false);
         for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
           for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-              Feature* const f = engine->map->featuresStatic[x][y];
+            const Feature* const f = engine->map->cells[x][y].featureStatic;
             if(f->isMovePassable(&monster) == false) {
 
-              if(engine->map->featuresStatic[x][y]->getId() == feature_door) {
+              if(f->getId() == feature_door) {
 
-                Door* const door = dynamic_cast<Door*>(engine->map->featuresStatic[x][y]);
+                const Door* const door = dynamic_cast<const Door*>(f);
 
-                if(CONSIDER_NORMAL_DOORS_FREE == false || door->isOpenedAndClosedExternally()) {
+                if(
+                  CONSIDER_NORMAL_DOORS_FREE == false ||
+                  door->isOpenedAndClosedExternally()) {
                   blockers[x][y] = true;
                 }
 
@@ -36,9 +38,12 @@ public:
           }
         }
 
-        engine->mapTests->addAdjLivingActorsToBlockerArray(monster.pos, blockers);
+        //Append living adjacent actors to the blocking array
+        MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
+                         blockers, mapParseWriteOnlyTrue);
 
-        *path = engine->pathfinder->findPath(monster.pos, blockers, engine->player->pos);
+        *path = engine->pathfinder->findPath(
+                  monster.pos, blockers, engine->player->pos);
       } else {
         path->resize(0);
       }

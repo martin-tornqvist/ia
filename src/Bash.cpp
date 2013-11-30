@@ -20,7 +20,7 @@ void Bash::playerBash() const {
   eng->log->clearLog();
 
   if(bashInPos != eng->player->pos) {
-    Actor* actor = eng->mapTests->getActorAtPos(bashInPos);
+    Actor* actor = eng-basicUtils->getActorAtPos(bashInPos);
 
     if(actor == NULL) {
       trace << "Bash: No actor at bash pos, ";

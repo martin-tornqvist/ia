@@ -3,7 +3,8 @@
 
 #include <algorithm>
 
-#include "CellPred.h"
+#include "MapParsing.h"
+#include "LineCalc.h"
 
 class AI_makeRoomForFriend {
 public:
@@ -11,7 +12,7 @@ public:
     if(monster.deadState == actorDeadState_alive) {
 
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      MapParser().parse(CellPredBlocksVision(engine), visionBlockers);
+      MapParser::parse(CellPredBlocksVision(engine), visionBlockers);
 
       if(monster.checkIfSeeActor(*engine->player, visionBlockers)) {
         const int NR_ACTORS = engine->gameTime->getNrActors();
@@ -60,7 +61,8 @@ public:
 
                   // Test the candidate cells until one is found that
                   //is not also blocking someone.
-                  for(int ii = 0; ii < candidates.size(); ii++) {
+                  const int NR_CANDIDATES = candidates.size();
+                  for(int ii = 0; ii < NR_CANDIDATES; ii++) {
 
                     bool isGoodCandidateFound = true;
 
@@ -102,8 +104,8 @@ private:
                                      Engine* engine) {
 
     vector<Pos> line;
-    engine->mapTests->getLine(
-      other->pos, engine->player->pos, true, 9999, line);
+    engine->lineCalc->calcNewLine(
+      other->pos, engine->player->pos, true, 9999, false, line);
     for(unsigned int i = 0; i < line.size(); i++) {
       if(line.at(i) == pos) {
         return true;
@@ -127,7 +129,7 @@ private:
     const int OLD_Y = self.pos.y;
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArray(&self, blockers);
+    MapParser::parse(CellPredBlocksBodyType(self.getBodyType(), eng), blockers);
 
     for(int x = -1; x <= 1; x++) {
       for(int y = -1; y <= 1; y++) {
@@ -161,7 +163,7 @@ private:
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS], Engine* engine) {
 
     //If the pal is next to me
-    if(engine->mapTests->isCellsAdj(self.pos, other.pos, false)) {
+    if(engine->basicUtils->isPosAdj(self.pos, other.pos, false)) {
       //If pal does not see player
       if(other.checkIfSeeActor(*engine->player, visionBlockers) == false) {
         return true;

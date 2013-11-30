@@ -22,7 +22,8 @@ public:
 };
 
 void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-    bool a[MAP_X_CELLS][MAP_Y_CELLS], vector<Pos>& vectorToFill) {
+                                       bool a[MAP_X_CELLS][MAP_Y_CELLS],
+                                       vector<Pos>& vectorToFill) {
   vectorToFill.resize(0);
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -31,6 +32,39 @@ void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
       }
     }
   }
+}
+
+Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
+  const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
+  for(unsigned int i = 0; i < LOOP_SIZE; i++) {
+    Actor* actor = eng->gameTime->getActorAtElement(i);
+    if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
+      return actor;
+    }
+  }
+  return NULL;
+}
+
+bool BasicUtils::isCellsAdj(
+  const Pos& pos1, const Pos& pos2,
+  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+
+  if(pos1.x == pos2.x && pos1.y == pos2.y) {
+    return COUNT_SAME_CELL_AS_NEIGHBOUR;
+  }
+  if(pos1.x < pos2.x - 1) {
+    return false;
+  }
+  if(pos1.x > pos2.x + 1) {
+    return false;
+  }
+  if(pos1.y < pos2.y - 1) {
+    return false;
+  }
+  if(pos1.y > pos2.y + 1) {
+    return false;
+  }
+  return true;
 }
 
 void BasicUtils::lexicographicalSortStringAndClrVector(

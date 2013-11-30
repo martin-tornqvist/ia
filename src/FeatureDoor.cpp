@@ -104,7 +104,7 @@ bool Door::isVisionPassable() const {
   return isOpen_;
 }
 
-bool Door::isShootPassable() const {
+bool Door::isProjectilesPassable() const {
   return isOpen_;
 }
 

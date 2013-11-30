@@ -17,7 +17,7 @@
 #include "Explosion.h"
 #include "DungeonMaster.h"
 #include "Inventory.h"
-#include "CellPred.h"
+#include "MapParsing.h"
 
 using namespace std;
 
@@ -75,7 +75,7 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToFill) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
 
   if(IS_SELF_PLAYER == false) {
-    MapParser().parse(CellPredBlocksVision(eng), visionBlockers);
+    MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   }
 
   const int NR_ACTORS = eng->gameTime->getNrActors();
@@ -137,7 +137,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  MapParser().parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
+  MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
   vector<Pos> freeCells;
   eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);

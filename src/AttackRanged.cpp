@@ -15,6 +15,7 @@
 #include "Input.h"
 #include "Log.h"
 #include "Audio.h"
+#include "LineCalc.h"
 
 using namespace std;
 
@@ -49,8 +50,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   //Get projectile path
   const Pos origin = attacker.pos;
   vector<Pos> projectilePath;
-  eng->mapTests->getLine(origin, aimPos, stopAtTarget, chebTrvlLim,
-                         projectilePath);
+  eng->lineCalc->calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
+                             projectilePath);
 
   const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
   char projectileGlyph = wpn.getData().rangedMissileGlyph;
@@ -126,7 +127,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         curProj->pos = projectilePath.at(projectilePathElement);
 
         curProj->isVisibleToPlayer =
-          eng->map->playerVision[curProj->pos.x][curProj->pos.y];
+          eng->map->cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
 
         //Get attack data again for every cell traveled through
         curProj->setAttackData(
@@ -205,13 +206,13 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           unsigned int featMobIndex = 0;
           featMobIndex < featureMobs.size();
           featMobIndex++) {
-          if(featureMobs.at(featMobIndex)->isShootPassable() == false) {
+          if(featureMobs.at(featMobIndex)->isProjectilesPassable() == false) {
             featureBlockingShot = featureMobs.at(featMobIndex);
           }
         }
         FeatureStatic* featureStatic =
           eng->map->featuresStatic[curProj->pos.x][curProj->pos.y];
-        if(featureStatic->isShootPassable() == false) {
+        if(featureStatic->isProjectilesPassable() == false) {
           featureBlockingShot = featureStatic;
         }
 
