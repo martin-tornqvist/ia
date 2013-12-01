@@ -59,7 +59,7 @@ void DungeonClimb::travelDown(const int levels) {
 
   eng->player->restoreShock(999, true);
 
-  eng->map->incrDLVL(levels);
+  eng->map->incrDlvl(levels);
 
   makeLevel();
 
@@ -80,7 +80,7 @@ void DungeonClimb::tryUseDownStairs() {
   const Pos& playerPos = eng->player->pos;
 
   const Feature_t featureIdAtPlayer =
-    eng->map->featuresStatic[playerPos.x][playerPos.y]->getId();
+    eng->map->cells[playerPos.x][playerPos.y].featureStatic->getId();
 
   if(featureIdAtPlayer == feature_stairsDown) {
     trace << "DungeonClimb: Player is on stairs" << endl;

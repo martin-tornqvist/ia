@@ -261,7 +261,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                 for(int dx = -1; dx <= 1; dx++) {
                   const Feature_t featureId = eng->map->featuresStatic[x + dx][y + dy]->getId();
                   const bool IS_FLOOR = featureId == feature_stoneFloor || featureId == feature_caveFloor;
-                  if(IS_FLOOR && eng->mapTests->isPosInside(Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
+                  if(IS_FLOOR && eng->basicUtils->isPosInside(Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
                     blockers[x][y] = true;
                   }
                 }
@@ -304,7 +304,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
         const int CHANCE_TO_MAKE_CHASM = 25;
 
         if(eng->dice.percentile() < CHANCE_TO_MAKE_CHASM) {
-          eng->basicUtils->resetBoolArray(blockers, false);
+          eng->basicUtils->resetArray(blockers, false);
 
           for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
             for(int x = 1; x < MAP_X_CELLS - 1; x++) {
@@ -454,7 +454,7 @@ void MapGenBsp::buildRoomsInRooms() {
             for(int y = Y0 - 1; y <= Y1 + 1; y++) {
               for(int x = X0 - 1; x <= X1 + 1; x++) {
                 if(
-                  eng->mapTests->isPosInside(
+                  eng->basicUtils->isPosInside(
                     Pos(x, y), Rect(roomX0Y0 - Pos(1, 1),
                                     roomX1Y1 + Pos(1, 1)))) {
                   if(
@@ -527,7 +527,7 @@ void MapGenBsp::buildRoomsInRooms() {
 
                   bool positionOk = true;
                   for(unsigned int n = 0; n < positionsWithDoor.size(); n++) {
-                    if(eng->mapTests->isCellsAdj(
+                    if(eng->basicUtils->isPosAdj(
                           doorPos, positionsWithDoor.at(n), false)) {
                       positionOk = false;
                     }
@@ -601,7 +601,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //        for(int yRegion = 0; yRegion < 3; yRegion++) {
 //          for(int xRegion = 0; xRegion < 3; xRegion++) {
 //            Region* region = regions[xRegion][yRegion];
-//            if(eng->mapTests->isPosInside(Pos(x,y), region->getX0Y0(), region->getX1Y1())) {
+//            if(eng->basicUtils->isPosInside(Pos(x,y), region->getX0Y0(), region->getX1Y1())) {
 //              region->mapArea.isSpecialRoomAllowed = false;
 //            }
 //          }
@@ -620,7 +620,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //  const int X_POS_START = MAP_X_CELLS/2 + eng->dice.range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
 //
 //  Pos leftPos(X_POS_START, 0);
-//  while(eng->mapTests->isPosInsideMap(leftPos) && eng->mapTests->isPosInsideMap(leftPos + Pos(WIDTH,0))) {
+//  while(eng->basicUtils->isPosInsideMap(leftPos) && eng->basicUtils->isPosInsideMap(leftPos + Pos(WIDTH,0))) {
 //    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(WIDTH, 0)), feature_deepWater);
 //    leftPos += Pos(eng->dice.range(-1,1), 1);
 //  }
@@ -629,7 +629,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 Pos MapGenBsp::placeStairs() {
   trace << "MapGenBsp::placeStairs()..." << endl;
   bool forbiddenStairCells[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(forbiddenStairCells, true);
+  eng->basicUtils->resetArray(forbiddenStairCells, true);
 
   trace << "MapGenBsp: Setting local forbiddenStairCells from global" << endl;
   vector<Room*>& rooms = eng->map->rooms;
@@ -878,7 +878,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
   for(int dx = -2; dx <= 2; dx++) {
     for(int dy = -2; dy <= 2; dy++) {
       if(dx != 0 || dy != 0) {
-        if(eng->mapTests->isPosInsideMap(pos + Pos(dx, dy))) {
+        if(eng->basicUtils->isPosInsideMap(pos + Pos(dx, dy))) {
           if(eng->map->featuresStatic[pos.x + dx][pos.y + dy]->getId() ==
               feature_door) {
             return;
@@ -935,7 +935,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 
 //void MapGenBsp::findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToFill) {
 //  bool PossToAdd[MAP_X_CELLS][MAP_Y_CELLS];
-//  eng->basicUtils->resetBoolArray(PossToAdd, false);
+//  eng->basicUtils->resetArray(PossToAdd, false);
 //
 //  Pos c;
 //
@@ -1087,7 +1087,7 @@ int MapGenBsp::getNrStepsInDirUntilWallFound(
   int stepsTaken = 0;
   bool done = false;
   while(done == false) {
-    if(eng->mapTests->isPosInsideMap(c) == false) {
+    if(eng->basicUtils->isPosInsideMap(c) == false) {
       return -1;
     }
     if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneWall) {
@@ -1333,7 +1333,7 @@ bool Region::isRegionNeighbour(const Region& other, Engine* const engine) {
     for(int y = x0y0_.y; y <= x1y1_.y; y++) {
       for(int xx = other.x0y0_.x; xx <= other.x1y1_.x; xx++) {
         for(int yy = other.x0y0_.y; yy <= other.x1y1_.y; yy++) {
-          if(engine->mapTests->isCellsAdj(
+          if(engine->basicUtils->isPosAdj(
                 Pos(x, y), Pos(xx, yy), false)) {
             return true;
           }

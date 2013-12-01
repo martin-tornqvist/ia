@@ -153,7 +153,7 @@ void DeviceRepeller::runGoodEffect() {
     Actor* const actor = eng->gameTime->getActorAtElement(i);
     if(actor != eng->player) {
       const Pos& otherPos = actor->pos;
-      if(eng->mapTests->isCellsAdj(playerPos, otherPos, false)) {
+      if(eng->basicUtils->isPosAdj(playerPos, otherPos, false)) {
         eng->knockBack->tryKnockBack(actor, playerPos, false, true);
       }
     }

@@ -10,6 +10,8 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "Postmortem.h"
+#include "MapParsing.h"
+#include "LineCalc.h"
 
 void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
@@ -20,28 +22,15 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   const ActorSizes_t intendedAimLevel = data->intendedAimLevel;
 
-  //Add blocking features to array
   bool featureBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeShootBlockerFeaturesArray(featureBlockers);
+  MapParser::parse(CellPredBlocksProjectiles(eng), featureBlockers);
 
-  //An array of actors
   Actor* actorArray[MAP_X_CELLS][MAP_Y_CELLS];
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      actorArray[x][y] = NULL;
-    }
-  }
-  const unsigned int ACTOR_LOOP_SIZE = eng->gameTime->getLoopSize();
-  for(unsigned int i = 0; i < ACTOR_LOOP_SIZE; i++) {
-    Actor* curActor = eng->gameTime->getActorAtElement(i);
-    if(curActor->deadState == actorDeadState_alive) {
-      actorArray[curActor->pos.x][curActor->pos.y] = curActor;
-    }
-  }
+  eng->basicUtils->makeActorArray(actorArray);
 
   const Pos origin = attacker.pos;
   vector<Pos> path;
-  eng->mapTests->getLine(origin, aimPos, false, 9999, path);
+  eng->lineCalc->calcNewLine(origin, aimPos, false, 9999, false, path);
 
   int nrActorsHit = 0;
 
@@ -86,7 +75,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng->map->playerVision[curPos.x][curPos.y]) {
+          if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
             eng->renderer->drawMapAndInterface(false);
             eng->renderer->coverCellInMap(curPos);
             if(eng->config->isTilesMode) {
@@ -111,8 +100,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           eng->renderer->drawMapAndInterface();
 
           //Special shotgun behavior:
-          //If current defender was killed, and player aimed at humanoid level, or at floor level
-          //but beyond the current position, the shot will continue one cell.
+          //If current defender was killed, and player aimed at humanoid level,
+          //or at floor level but beyond the current position, the shot will
+          //continue one cell.
           const bool IS_TARGET_KILLED =
             data->currentDefender->deadState != actorDeadState_alive;
           if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
@@ -134,7 +124,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
                 sfxRicochet, true, curPos, false, true);
       eng->soundEmitter->emitSound(snd);
 
-      if(eng->map->playerVision[curPos.x][curPos.y]) {
+      if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
         if(eng->config->isTilesMode) {
@@ -156,7 +146,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
                 sfxRicochet, true, curPos, false, true);
       eng->soundEmitter->emitSound(snd);
 
-      if(eng->map->playerVision[curPos.x][curPos.y]) {
+      if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         eng->renderer->drawMapAndInterface(false);
         eng->renderer->coverCellInMap(curPos);
         if(eng->config->isTilesMode) {

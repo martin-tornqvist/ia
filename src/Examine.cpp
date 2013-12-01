@@ -14,7 +14,5 @@ void Examine::playerExamine() const {
   eng->renderer->drawMapAndInterface();
   Pos examineInPos = eng->player->pos + eng->query->dir();
   eng->log->clearLog();
-
-  Feature* const f = eng->map->featuresStatic[examineInPos.x][examineInPos.y];
-  f->examine();
+  eng->map->cells[examineInPos.x][examineInPos.y].featureStatic->examine();
 }

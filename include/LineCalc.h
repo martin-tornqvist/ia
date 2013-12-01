@@ -33,8 +33,8 @@ public:
       if(fovAbsDistances[X][Y] <= MAX_DIST_ABS) {
         return &(fovDeltaLines[X][Y]);
       }
-      return NULL;
     }
+    return NULL;
   }
 
 private:

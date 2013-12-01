@@ -15,7 +15,9 @@ public:
         monster.playerAwarenessCounter > 0) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        engine->mapTests->makeMoveBlockerArray(&monster, blockers);
+        MapParser::parse(
+          CellPredBlocksBodyType(monster.getBodyType(), true, engine),
+          blockers);
 
         const Pos offset =
           getOffsetToRandomAdjacentFreeCell(monster, blockers, engine);
@@ -43,7 +45,7 @@ private:
       const Pos targetCell(monster.pos + offset);
       if(
         blockers[targetCell.x][targetCell.y] == false &&
-        engine->mapTests->isPosInside(targetCell, areaAllowed)) {
+        engine->basicUtils->isPosInside(targetCell, areaAllowed)) {
         return offset;
       }
     }
@@ -58,7 +60,7 @@ private:
           const Pos targetCell(monster.pos + offset);
           if(
             blockers[targetCell.x][targetCell.y] == false &&
-            engine->mapTests->isPosInside(targetCell, areaAllowed)) {
+            engine->basicUtils->isPosInside(targetCell, areaAllowed)) {
             offsetCandidates.push_back(offset);
           }
         }

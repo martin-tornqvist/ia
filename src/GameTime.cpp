@@ -14,6 +14,7 @@
 #include "InventoryHandler.h"
 #include "PlayerBonuses.h"
 #include "Audio.h"
+#include "MapParsing.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(turn_));
@@ -55,7 +56,7 @@ void GameTime::eraseActorInElement(const unsigned int i) {
 
 void GameTime::insertActorInLoop(Actor* actor) {
   //Sanity check actor inserted
-  if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+  if(eng->basicUtils->isPosInsideMap(actor->pos) == false) {
     throw runtime_error("Actor outside map");
   }
 
@@ -159,9 +160,8 @@ void GameTime::runStandardTurnEvents() {
   Actor* actor = NULL;
   unsigned int loopSize = actors_.size();
 
-  bool visionBlockingArray[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(
-    eng->player->pos, visionBlockingArray);
+  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
   int regenSpiEveryNTurns = 10;
   bool isSpiRegenThisTurn =
@@ -170,11 +170,11 @@ void GameTime::runStandardTurnEvents() {
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
 
-    actor->getPropHandler()->newTurnAllProps(visionBlockingArray);
+    actor->getPropHandler()->newTurnAllProps(visionBlockers);
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
-    if(eng->map->light[pos.x][pos.y]) {
+    if(eng->map->cells[pos.x][pos.y].isLight) {
       actor->hit(1, dmgType_light, false);
     }
 
@@ -216,7 +216,7 @@ void GameTime::runStandardTurnEvents() {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->featuresStatic[x][y]->newTurn();
+      eng->map->cells[x][y].featureStatic->newTurn();
     }
   }
 
@@ -256,30 +256,43 @@ void GameTime::runAtomicTurnEvents() {
 }
 
 void GameTime::updateLightMap() {
-  eng->basicUtils->resetBoolArray(eng->map->light, false);
+  bool lightTmp[MAP_X_CELLS][MAP_Y_CELLS];
 
-  for(unsigned int i = 0; i < actors_.size(); i++) {
-    actors_.at(i)->addLight(eng->map->light);
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      eng->map->cells[x][y].isLight = false;
+      lightTmp[x][y] = false;
+    }
   }
 
-  for(unsigned int i = 0; i < featureMobs_.size(); i++) {
-    featureMobs_.at(i)->addLight(eng->map->light);
+  eng->player->addLight(lightTmp);
+
+  const int NR_ACTORS = actors_.size();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    actors_.at(i)->addLight(lightTmp);
+  }
+
+  const int NR_FEATURE_MOBS = featureMobs_.size();
+  for(int i = 0; i < NR_FEATURE_MOBS; i++) {
+    featureMobs_.at(i)->addLight(lightTmp);
   }
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->featuresStatic[x][y]->addLight(eng->map->light);
+      eng->map->cells[x][y].featureStatic->addLight(lightTmp);
+
+      //Note: Here the temporary values are copied to the map.
+      //This must of course be done last!
+      eng->map->cells[x][y].isLight = lightTmp[x][y];
     }
   }
-
-  eng->player->addLight(eng->map->light);
 }
 
 Actor* GameTime::getCurrentActor() {
   Actor* const actor = actors_.at(currentActorVectorPos_);
 
   //Sanity check actor retrieved
-  if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+  if(eng->basicUtils->isPosInsideMap(actor->pos) == false) {
     throw runtime_error("Actor outside map");
   }
 

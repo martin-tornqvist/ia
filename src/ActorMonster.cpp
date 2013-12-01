@@ -37,7 +37,7 @@ Monster::~Monster() {
 }
 
 void Monster::onActorTurn() {
-  if(eng->mapTests->isPosInsideMap(pos) == false) {
+  if(eng->basicUtils->isPosInsideMap(pos) == false) {
     throw runtime_error("Monster outside map");
   }
 
@@ -52,7 +52,7 @@ void Monster::onActorTurn() {
 
   vector<Actor*> spotedEnemies;
   getSpotedEnemies(spotedEnemies);
-  target = eng->mapTests->getClosestActor(pos, spotedEnemies);
+  target = eng->basicUtils->getClosestActor(pos, spotedEnemies);
 
   if(spellCoolDownCurrent != 0) {
     spellCoolDownCurrent--;
@@ -204,7 +204,7 @@ void Monster::moveDir(Dir_t dir) {
   if(dir == endOfDirs) {
     throw runtime_error("Bad direction");
   }
-  if(eng->mapTests->isPosInsideMap(pos) == false) {
+  if(eng->basicUtils->isPosInsideMap(pos) == false) {
     throw runtime_error("Monster outside map");
   }
 
@@ -212,7 +212,7 @@ void Monster::moveDir(Dir_t dir) {
 
   //Trap affects leaving?
   if(dir != dirCenter) {
-    Feature* f = eng->map->featuresStatic[pos.x][pos.y];
+    Feature* f = eng->map->cells[pos.x][pos.y].featureStatic;
     if(f->getId() == feature_trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == dirCenter) {
@@ -228,7 +228,7 @@ void Monster::moveDir(Dir_t dir) {
 
   const Pos targetCell(pos + DirConverter(eng).getOffset(dir));
 
-  if(eng->mapTests->isPosInsideMap(targetCell) == false) {
+  if(eng->basicUtils->isPosInsideMap(targetCell) == false) {
     throw runtime_error("Monster move target cell outside map");
   }
 
@@ -239,7 +239,7 @@ void Monster::moveDir(Dir_t dir) {
   for(unsigned int i = 0; i < featureMobs.size(); i++) {
     featureMobs.at(i)->bump(*this);
   }
-  eng->map->featuresStatic[pos.x][pos.y]->bump(*this);
+  eng->map->cells[pos.x][pos.y].featureStatic->bump(*this);
 
   eng->gameTime->endTurnOfCurrentActor();
 }
@@ -278,7 +278,7 @@ bool Monster::tryAttack(Actor& defender) {
     if(playerAwarenessCounter > 0 || leader == eng->player) {
 
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(pos, blockers);
+      MapParser::parse(CellPredBlocksVision(eng), blockers);
 
       if(checkIfSeeActor(*eng->player, blockers)) {
         AttackOpport opport = getAttackOpport(defender);
@@ -301,12 +301,13 @@ bool Monster::tryAttack(Actor& defender) {
                 bool isBlockedByFriend = false;
                 if(eng->dice.fraction(4, 5)) {
                   vector<Pos> line;
-                  eng->mapTests->getLine(pos, defender.pos, true, 9999, line);
+                  eng->lineCalc->calcNewLine(
+                    pos, defender.pos, true, 9999, false, line);
                   for(unsigned int i = 0; i < line.size(); i++) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
                       Actor* const actorHere =
-                        eng-basicUtils->getActorAtPos(curPos);
+                        eng->basicUtils->getActorAtPos(curPos);
                       if(actorHere != NULL) {
                         isBlockedByFriend = true;
                         break;
@@ -341,7 +342,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
     opport.isMelee =
-      eng->mapTests->isCellsAdj(pos, defender.pos, false);
+      eng->basicUtils->isPosAdj(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();

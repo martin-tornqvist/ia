@@ -105,7 +105,7 @@ void Look::describeBriefFeatureStatic(const Feature& feature) const {
 }
 
 void Look::printExtraActorDescription(const Pos& pos) const {
-  Actor* actor = eng-basicUtils->getActorAtPos(pos);
+  Actor* actor = eng->basicUtils->getActorAtPos(pos);
   if(actor != NULL) {
     if(actor != eng->player) {
       //Add written description.
@@ -147,7 +147,7 @@ Entity Look::getEntityToDescribe(const Pos pos) {
 
   //TODO this method is a little wonky
 
-  Actor* actor = eng-basicUtils->getActorAtPos(pos);
+  Actor* actor = eng->basicUtils->getActorAtPos(pos);
 
   //If there is a living actor there, describe the actor.
   if(actor != NULL && actor != eng->player) {

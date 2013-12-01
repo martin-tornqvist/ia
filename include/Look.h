@@ -31,7 +31,7 @@ public:
   Item* item;
   const Feature* feature;
 
-  EntityType_t entityType;
+  Entity_t entityType;
 };
 
 class Look {

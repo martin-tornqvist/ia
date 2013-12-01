@@ -16,6 +16,7 @@
 #include "Inventory.h"
 #include "FeatureFactory.h"
 #include "ActorMonster.h"
+#include "MapParsing.h"
 
 void Bot::init() {
   currentPath_.resize(0);
@@ -29,10 +30,10 @@ void Bot::act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  const int NR_ACTORS = eng->gameTime->getLoopSize();
+  const int NR_ACTORS = eng->gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    const Actor* const actor = eng->gameTime->getActorAtElement(i);
-    if(eng->mapTests->isPosInsideMap(actor->pos) == false) {
+    const Actor& actor = eng->gameTime->getActorAtElement(i);
+    if(eng->basicUtils->isPosInsideMap(actor.pos) == false) {
       throw runtime_error("Actor outside map");
     }
   }
@@ -76,7 +77,9 @@ void Bot::act() {
   //check if we are finished with the current run or finished with all runs,
   //otherwise descend the stairs
   const Pos& pos = eng->player->pos;
-  if(eng->map->featuresStatic[pos.x][pos.y]->getId() == feature_stairsDown) {
+  const FeatureStatic* const featureHere =
+    eng->map->cells[pos.x][pos.y].featureStatic;
+  if(featureHere->getId() == feature_stairsDown) {
     if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
       trace << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
@@ -98,7 +101,7 @@ void Bot::act() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f =
-        eng->map->featuresStatic[playerPos.x + dx][playerPos.y + dy];
+        eng->map->cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
       if(f->getId() == feature_door) {
         dynamic_cast<Door*>(f)->reveal(false);
         if(dynamic_cast<Door*>(f)->isStuck()) {
@@ -126,7 +129,7 @@ void Bot::act() {
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(eng->player->pos);
 
-  if(eng->mapTests->isCellsAdj(playerCell, cellToGoTo, true) == false) {
+  if(eng->basicUtils->isPosAdj(playerCell, cellToGoTo, true) == false) {
     throw runtime_error("Bad position parameter");
   }
 
@@ -142,15 +145,15 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
   char key = ' ';
 
-  if(xRel == 0 && yRel == 0) {key = '5';}
-  if(xRel == 1 && yRel == 0) {key = '6';}
-  if(xRel == 1 && yRel == -1) {key = '9';}
-  if(xRel == 0 && yRel == -1) {key = '8';}
+  if(xRel ==  0 && yRel ==  0) {key = '5';}
+  if(xRel ==  1 && yRel ==  0) {key = '6';}
+  if(xRel ==  1 && yRel == -1) {key = '9';}
+  if(xRel ==  0 && yRel == -1) {key = '8';}
   if(xRel == -1 && yRel == -1) {key = '7';}
-  if(xRel == -1 && yRel == 0) {key = '4';}
-  if(xRel == -1 && yRel == 1) {key = '1';}
-  if(xRel == 0 && yRel == 1) {key = '2';}
-  if(xRel == 1 && yRel == 1) {key = '3';}
+  if(xRel == -1 && yRel ==  0) {key = '4';}
+  if(xRel == -1 && yRel ==  1) {key = '1';}
+  if(xRel ==  0 && yRel ==  1) {key = '2';}
+  if(xRel ==  1 && yRel ==  1) {key = '3';}
 
   //Occasionally randomize movement
   if(eng->dice.oneIn(2)) {
@@ -167,7 +170,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 Pos Bot::findNextStairs() {
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
-      FeatureStatic* f = eng->map->featuresStatic[x][y];
+      FeatureStatic* f = eng->map->cells[x][y].featureStatic;
       if(f->getId() == feature_stairsDown) {
         return Pos(x, y);
       }
@@ -183,16 +186,15 @@ void Bot::findPathToNextStairs() {
 
   const Pos stairPos = findNextStairs();
 
-//  assert(stairPos != Pos(-1, -1));
-
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    bodyType_normal, blockers);
+  const BodyType_t playerBodyType = eng->player->getBodyType();
+  MapParser::parse(CellPredBlocksBodyType(playerBodyType, false, eng),
+                   blockers);
 
   //Consider all doors passable
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      FeatureStatic* f = eng->map->featuresStatic[x][y];
+      FeatureStatic* f = eng->map->cells[x][y].featureStatic;
       if(f->getId() == feature_door) {
         blockers[x][y] = false;
       }

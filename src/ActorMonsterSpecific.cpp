@@ -370,7 +370,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
 
         if(checkIfSeeActor(*(eng->player), blockers)) {
           MapParser::parse(
-            CellPredBlocksBodyType(bodyType_flying, eng), blockers);
+            CellPredBlocksBodyType(bodyType_flying, true, eng), blockers);
 
           const int SPAWN_AFTER_X =
             eng->player->pos.x + FOV_STANDARD_RADI_INT + 1;
@@ -451,14 +451,14 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
         if(checkIfSeeActor(*(eng->player), blockers)) {
 
           MapParser::parse(
-            CellPredBlocksBodyType(bodyType_normal, eng), blockers);
+            CellPredBlocksBodyType(bodyType_normal, true, eng), blockers);
 
           vector<Pos> line;
           eng->lineCalc->calcNewLine(pos, eng->player->pos, true, 9999,
                                      false, line);
 
           const int LINE_SIZE = line.size();
-          for(unsigned int i = 0; i < LINE_SIZE; i++) {
+          for(int i = 0; i < LINE_SIZE; i++) {
             const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
               //TODO Make a generalized summoning funtionality
@@ -576,7 +576,8 @@ bool WormMass::monsterSpecificOnActorTurn() {
       if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
+        MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng),
+                         blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -611,7 +612,8 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
       if(eng->dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
+        MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng),
+                         blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -667,7 +669,7 @@ bool LordOfSpiders::monsterSpecificOnActorTurn() {
 
             const Pos c(playerPos + Pos(dx, dy));
             const FeatureStatic* const mimicFeature =
-              eng->map->featuresStatic[c.x][c.y];
+              eng->map->cells[c.x][c.y].featureStatic;
 
             if(mimicFeature->canHaveStaticFeature()) {
 
@@ -726,7 +728,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
       if(hasSummonedTombLegions == false) {
 
         bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeVisionBlockerArray(pos, visionBlockers);
+        MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
         if(checkIfSeeActor(*(eng->player), visionBlockers)) {
           eng->log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
@@ -774,7 +776,7 @@ bool Zombie::tryResurrect() {
           clr_ = data_->color;
           hasResurrected = true;
           data_->nrOfKills--;
-          if(eng->map->playerVision[pos.x][pos.y] == true) {
+          if(eng->map->cells[pos.x][pos.y].isSeenByPlayer) {
             eng->log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
             eng->player->incrShock(shockValue_some);

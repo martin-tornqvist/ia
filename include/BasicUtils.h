@@ -48,18 +48,26 @@ public:
 
   void lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect);
 
-  void resetArray(int array[MAP_X_CELLS][MAP_Y_CELLS]) {
+  void resetArray(int a[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        array[x][y] = 0;
+        a[x][y] = 0;
       }
     }
   }
 
-  void resetBoolArray(bool array[MAP_X_CELLS][MAP_Y_CELLS], const bool value) {
+  void resetArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        array[x][y] = value;
+        a[x][y] = NULL;
+      }
+    }
+  }
+
+  void resetArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], const bool value) {
+    for(int y = 0; y < MAP_Y_CELLS; y++) {
+      for(int x = 0; x < MAP_X_CELLS; x++) {
+        a[x][y] = value;
       }
     }
   }
@@ -78,6 +86,8 @@ public:
 
   Actor* getActorAtPos(const Pos& pos) const;
 
+  void makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]);
+
   inline bool isPosInsideMap(const Pos& pos) const {
     if(
       pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
@@ -86,8 +96,20 @@ public:
     return true;
   }
 
+  inline bool isPosInside(const Pos& pos, const Rect& area) const {
+    return
+      pos.x >= area.x0y0.x &&
+      pos.x <= area.x1y1.x &&
+      pos.y >= area.x0y0.y &&
+      pos.y <= area.x1y1.y;
+  }
+
   bool isPosAdj(const Pos& pos1, const Pos& pos2,
                 const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
+
+  Pos getClosestPos(const Pos& c, const vector<Pos>& positions) const;
+
+  Actor* getClosestActor(const Pos& c, const vector<Actor*>& actors) const;
 
   inline int chebyshevDist(const int X0, const int Y0,
                            const int X1, const int Y1) const {

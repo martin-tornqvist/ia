@@ -19,24 +19,12 @@ class FeatureStatic;
 
 struct Cell {
   Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
-  isDark(false), item(NULL), featureStatic(NULL) {
+    isDark(false), item(NULL), featureStatic(NULL) {
     playerVisualMemoryAscii.clear();
     playerVisualMemoryTiles.clear();
   }
 
-  inline void reset() {
-    isExplored = isSeenByPlayer = isLight = isDark = false;
-    if(item != NULL) {
-      delete item;
-      item = NULL;
-    }
-    if(featureStatic != NULL) {
-      delete featureStatic;
-      featureStatic = NULL;
-    }
-    playerVisualMemoryAscii.clear();
-    playerVisualMemoryTiles.clear();
-  }
+  inline void reset();
 
   bool isExplored;
   bool isSeenByPlayer;

@@ -34,7 +34,7 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
     curPos.set(int(curX_prec), int(curY_prec));
 
     if(ALLOW_OUTSIDE_MAP == false) {
-      if(eng->mapTests->isPosInsideMap(curPos) == false) {
+      if(eng->basicUtils->isPosInsideMap(curPos) == false) {
         return;
       }
     }

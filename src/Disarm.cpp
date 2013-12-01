@@ -13,12 +13,12 @@
 void Disarm::playerDisarm() const {
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  const Pos disarmInPos(eng->player->pos + eng->query->dir());
+  const Pos disarmPos(eng->player->pos + eng->query->dir());
   eng->log->clearLog();
 
   bool isDisarmableFound = false;
 
-  Feature* const f = eng->map->featuresStatic[disarmInPos.x][disarmInPos.y];
+  Feature* const f = eng->map->cells[disarmPos.x][disarmPos.y].featureStatic;
 
   if(f->getId() == feature_trap) {
     Trap* const trap = dynamic_cast<Trap*>(f);

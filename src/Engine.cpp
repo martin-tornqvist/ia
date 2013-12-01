@@ -18,7 +18,6 @@
 #include "Bash.h"
 #include "Blood.h"
 #include "Bot.h"
-#include "BresenhamLine.h"
 #include "CharacterDescr.h"
 #include "Close.h"
 #include "Credits.h"

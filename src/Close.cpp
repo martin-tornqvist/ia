@@ -15,11 +15,11 @@ void Close::playerClose() const {
   eng->log->clearLog();
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  Pos closeInPos(eng->player->pos + eng->query->dir());
+  Pos closePos(eng->player->pos + eng->query->dir());
   eng->log->clearLog();
 
-  if(closeInPos != eng->player->pos) {
-    playerCloseFeature(eng->map->featuresStatic[closeInPos.x][closeInPos.y]);
+  if(closePos != eng->player->pos) {
+    playerCloseFeature(eng->map->cells[closePos.x][closePos.y].featureStatic);
   }
 }
 

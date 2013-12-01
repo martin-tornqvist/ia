@@ -123,7 +123,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     curPos.set(path.at(i));
 
-    Actor* const actorHere = eng-basicUtils->getActorAtPos(curPos);
+    Actor* const actorHere = eng->basicUtils->getActorAtPos(curPos);
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||

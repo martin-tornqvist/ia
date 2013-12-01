@@ -15,7 +15,7 @@ public:
           d->canOpenDoors || d->canBashDoors;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        engine->basicUtils->resetBoolArray(blockers, false);
+        engine->basicUtils->resetArray(blockers, false);
         for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
           for(int x = 1; x < MAP_X_CELLS - 1; x++) {
             const Feature* const f = engine->map->cells[x][y].featureStatic;

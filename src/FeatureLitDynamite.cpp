@@ -26,14 +26,16 @@ LitFlare::LitFlare(Feature_t id, Pos pos, Engine* engine, DynamiteSpawnData* spa
 
 void LitFlare::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
   bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(myLight, false);
+  eng->basicUtils->resetArray(myLight, false);
   const int RADI = FOV_STANDARD_RADI_INT; //getLightRadius();
   Pos x0y0(max(0, pos_.x - RADI), max(0, pos_.y - RADI));
-  Pos x1y1(min(MAP_X_CELLS - 1, pos_.x + RADI), min(MAP_Y_CELLS - 1, pos_.y + RADI));
+  Pos x1y1(min(MAP_X_CELLS - 1, pos_.x + RADI),
+           min(MAP_Y_CELLS - 1, pos_.y + RADI));
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   for(int y = x0y0.y; y <= x1y1.y; y++) {
     for(int x = x0y0.x; x <= x1y1.x; x++) {
-      visionBlockers[x][y] = !eng->map->featuresStatic[x][y]->isVisionPassable();
+      visionBlockers[x][y] =
+        eng->map->cells[x][y].featureStatic->isVisionPassable() == false;
     }
   }
 

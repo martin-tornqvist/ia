@@ -12,7 +12,7 @@ public:
       if(leader != NULL) {
         if(leader->deadState == actorDeadState_alive) {
           bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-          engine->mapTests->makeVisionBlockerArray(monster.pos, blockers);
+          MapParser::parse(CellPredBlocksVision(engine), blockers);
 
           if(
             engine->fov->checkCell(
@@ -21,10 +21,11 @@ public:
             return;
           }
 
-          engine->mapTests->makeMoveBlockerArrayFeaturesOnly(
-            &monster, blockers);
-          engine->mapTests->addAdjLivingActorsToBlockerArray(
-            monster.pos, blockers);
+          MapParser::parse(
+            CellPredBlocksBodyType(monster.getBodyType(), false, engine),
+            blockers);
+          MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
+                           blockers, mapParseWriteOnlyTrue);
           *path = engine->pathfinder->findPath(
                     monster.pos, blockers, leader->pos);
           return;

@@ -31,6 +31,7 @@
 #include "PlayerSpellsHandler.h"
 #include "Bot.h"
 #include "Input.h"
+#include "MapParsing.h"
 
 Player::Player() :
   activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -563,9 +564,9 @@ void Player::setTempShockFromFeatures() {
     const int Y = pos.y + dy;
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
-      if(eng->mapTests->isPosInsideMap(Pos(X, Y))) {
+      if(eng->basicUtils->isPosInsideMap(Pos(X, Y))) {
         const Feature* const f =
-          eng->map->featuresStatic[pos.x + dx][pos.y + dy];
+          eng->map->cells[pos.x + dx][pos.y + dy].featureStatic;
         shockTemp_ += f->getShockWhenAdjacent();
       }
     }
@@ -575,7 +576,8 @@ void Player::setTempShockFromFeatures() {
 
 bool Player::isStandingInOpenSpace() const {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(this, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
       if(blockers[x][y]) {
@@ -589,7 +591,8 @@ bool Player::isStandingInOpenSpace() const {
 
 bool Player::isStandingInCrampedSpace() const {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(this, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
@@ -874,15 +877,15 @@ void Player::actorSpecificOnStandardTurn() {
     return;
   }
 
-  const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
+  const int NR_ACTORS = eng->gameTime->getNrActors();
 
-  for(unsigned int i = 0; i < LOOP_SIZE; i++) {
+  for(int i = 0; i < NR_ACTORS; i++) {
     //If applying first aid etc, messages may be printed for monsters that
     //comes into view.
     //Only print monster-comes-into-view-messages if player is busy with
     //something (first aid, auto travel etc).
 
-    Actor* const actor = eng->gameTime->getActorAtElement(i);
+    Actor* const actor = &(eng->gameTime->getActorAtElement(i));
     if(actor != this) {
       if(actor->deadState == actorDeadState_alive) {
 
@@ -900,7 +903,7 @@ void Player::actorSpecificOnStandardTurn() {
           monster->messageMonsterInViewPrinted = false;
 
           //Is the monster sneaking? Try to spot it
-          if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
+          if(eng->map->cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
             if(monster->isStealth) {
               const int PLAYER_SEARCH_SKILL =
                 data_->abilityVals.getVal(ability_searching, true, *this);
@@ -958,8 +961,8 @@ void Player::actorSpecificOnStandardTurn() {
 
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
-          if(eng->map->playerVision[x][y]) {
-            Feature* f = eng->map->featuresStatic[x][y];
+          if(eng->map->cells[x][y].isSeenByPlayer) {
+            Feature* f = eng->map->cells[x][y].featureStatic;
 
             if(f->getId() == feature_trap) {
               dynamic_cast<Trap*>(f)->playerTrySpotHidden();
@@ -980,8 +983,8 @@ void Player::actorSpecificOnStandardTurn() {
 
         for(int y = y0; y <= y1; y++) {
           for(int x = x0; x <= x1; x++) {
-            if(eng->map->playerVision[x][y]) {
-              Feature* f = eng->map->featuresStatic[x][y];
+            if(eng->map->cells[x][y].isSeenByPlayer) {
+              Feature* f = eng->map->cells[x][y].featureStatic;
               if(f->getId() == feature_door) {
                 Door* door = dynamic_cast<Door*>(f);
                 door->playerTryClueHidden();
@@ -1065,7 +1068,7 @@ void Player::moveDir(Dir_t dir) {
 
     //Trap affects leaving?
     if(dir != dirCenter) {
-      Feature* f = eng->map->featuresStatic[pos.x][pos.y];
+      Feature* f = eng->map->cells[pos.x][pos.y].featureStatic;
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
         dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
@@ -1078,7 +1081,7 @@ void Player::moveDir(Dir_t dir) {
 
     if(dir != dirCenter) {
       //Attack?
-      Actor* const actorAtDest = eng-basicUtils->getActorAtPos(dest);
+      Actor* const actorAtDest = eng->basicUtils->getActorAtPos(dest);
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
@@ -1119,7 +1122,7 @@ void Player::moveDir(Dir_t dir) {
 
       //Blocking mobile or static features?
       bool featuresAllowMove =
-        eng->map->featuresStatic[dest.x][dest.y]->isMovePassable(this);
+        eng->map->cells[dest.x][dest.y].featureStatic->isMovePassable(this);
       vector<FeatureMob*> featureMobs =
         eng->gameTime->getFeatureMobsAtPos(dest);
       if(featuresAllowMove) {
@@ -1155,7 +1158,7 @@ void Player::moveDir(Dir_t dir) {
         }
 
         //Print message if walking on item
-        Item* const item = eng->map->items[pos.x][pos.y];
+        Item* const item = eng->map->cells[pos.x][pos.y].item;
         if(item != NULL) {
           string message = propHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
@@ -1168,7 +1171,7 @@ void Player::moveDir(Dir_t dir) {
       for(unsigned int i = 0; i < featureMobs.size(); i++) {
         featureMobs.at(i)->bump(*this);
       }
-      eng->map->featuresStatic[dest.x][dest.y]->bump(*this);
+      eng->map->cells[dest.x][dest.y].featureStatic->bump(*this);
     }
     //If destination reached, then we either moved or were held by something.
     //End turn (unless free turn due to bonus).
@@ -1184,7 +1187,7 @@ void Player::moveDir(Dir_t dir) {
 
 void Player::autoMelee() {
   if(target != NULL) {
-    if(eng->mapTests->isCellsAdj(pos, target->pos, false)) {
+    if(eng->basicUtils->isPosAdj(pos, target->pos, false)) {
       if(checkIfSeeActor(*target, NULL)) {
         moveDir(
           DirConverter(eng).getDir(target->pos - pos));
@@ -1198,7 +1201,7 @@ void Player::autoMelee() {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
         const Actor* const actor =
-          eng-basicUtils->getActorAtPos(pos + Pos(dx, dy));
+          eng->basicUtils->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(checkIfSeeActor(*actor, NULL)) {
             target = actor;
@@ -1255,7 +1258,7 @@ void Player::actorSpecific_addLight(
 
   if(isUsingLightGivingItem) {
     bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->basicUtils->resetBoolArray(myLight, false);
+    eng->basicUtils->resetArray(myLight, false);
     const int RADI = FOV_STANDARD_RADI_INT; //LitFlare::getLightRadius();
     Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos x1y1(min(MAP_X_CELLS - 1, pos.x + RADI), min(MAP_Y_CELLS - 1, pos.y + RADI));
@@ -1263,7 +1266,8 @@ void Player::actorSpecific_addLight(
     bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       for(int x = x0y0.x; x <= x1y1.x; x++) {
-        visionBlockers[x][y] = !eng->map->featuresStatic[x][y]->isVisionPassable();
+        const FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
+        visionBlockers[x][y] = f->isVisionPassable() == false;
       }
     }
 
@@ -1279,9 +1283,9 @@ void Player::actorSpecific_addLight(
 }
 
 void Player::updateFov() {
-  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+  const int NR_FEATURE_MOBS = eng->gameTime->getNrFeatureMobs();
 
-  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
+  for(int i = 0; i < NR_FEATURE_MOBS; i++) {
     eng->gameTime->getFeatureMobAt(i)->addLight(eng->map->light);
   }
 
@@ -1364,7 +1368,7 @@ void Player::FOVhack() {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
-            if(eng->mapTests->isPosInsideMap(adj)) {
+            if(eng->basicUtils->isPosInsideMap(adj)) {
               if(
                 eng->map->playerVision[adj.x][adj.y] &&
                 (eng->map->darkness[adj.x][adj.y] == false ||

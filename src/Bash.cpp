@@ -9,6 +9,7 @@
 #include "Log.h"
 #include "Query.h"
 #include "Renderer.h"
+#include "MapParsing.h"
 
 void Bash::playerBash() const {
   trace << "Bash::playerBash()" << endl;
@@ -16,22 +17,22 @@ void Bash::playerBash() const {
   eng->log->clearLog();
   eng->log->addMsg("Which direction? | space/esc cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  Pos bashInPos(eng->player->pos + eng->query->dir());
+  Pos bashPos(eng->player->pos + eng->query->dir());
   eng->log->clearLog();
 
-  if(bashInPos != eng->player->pos) {
-    Actor* actor = eng-basicUtils->getActorAtPos(bashInPos);
+  if(bashPos != eng->player->pos) {
+    Actor* actor = eng->basicUtils->getActorAtPos(bashPos);
 
     if(actor == NULL) {
       trace << "Bash: No actor at bash pos, ";
       trace << "attempting to bash feature instead" << endl;
-      playerBashFeature(eng->map->featuresStatic[bashInPos.x][bashInPos.y]);
+      playerBashFeature(eng->map->cells[bashPos.x][bashPos.y].featureStatic);
     }  else {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(eng->player->getPropHandler()->allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+        MapParser::parse(CellPredBlocksVision(eng), blockers);
 
         if(eng->player->checkIfSeeActor(*actor, blockers)) {
           trace << "Bash: Player can see actor" << endl;

@@ -25,8 +25,6 @@ public:
                      const bool IS_AFFECTED_BY_DARKNESS);
 
 private:
-  void allUnseen(bool values[MAP_X_CELLS][MAP_Y_CELLS]);
-
   void checkOneCellOfMany(
     const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const Pos& cellToCheck,
     const Pos& origin, bool values[MAP_X_CELLS][MAP_Y_CELLS],

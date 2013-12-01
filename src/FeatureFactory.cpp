@@ -198,9 +198,11 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
 void FeatureFactory::replaceStaticFeatureAt(
   FeatureStatic* const newFeature, const Pos& pos) {
 
-  if((eng->map->featuresStatic[pos.x][pos.y]) != NULL) {
-    delete eng->map->featuresStatic[pos.x][pos.y];
+  FeatureStatic* const oldFeature =
+    eng->map->cells[pos.x][pos.y].featureStatic;
+  if(oldFeature != NULL) {
+    delete oldFeature;
   }
-  eng->map->featuresStatic[pos.x][pos.y] = newFeature;
+  eng->map->cells[pos.x][pos.y].featureStatic = newFeature;
 }
 

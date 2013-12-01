@@ -18,8 +18,12 @@ public:
         return;
       }
 
-      engine->mapTests->makeMoveBlockerArrayFeaturesOnly(&monster, blockers);
-      engine->mapTests->addAdjLivingActorsToBlockerArray(monster.pos, blockers);
+      MapParser::parse(
+        CellPredBlocksBodyType(monster.getBodyType(), false, engine),
+        blockers);
+      MapParser::parse(
+        CellPredLivingActorsAdjToPos(monster.pos, engine),
+        blockers, mapParseWriteOnlyTrue);
       *path = engine->pathfinder->findPath(monster.pos, blockers, lairCell);
       return;
     }

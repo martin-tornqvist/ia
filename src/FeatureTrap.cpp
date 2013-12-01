@@ -186,13 +186,13 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   isHidden_ = false;
   clearGore();
 
-  Item* item = eng->map->items[pos_.x][pos_.y];
+  Item* item = eng->map->cells[pos_.x][pos_.y].item;
   if(item != NULL) {
-    eng->map->items[pos_.x][pos_.y] = NULL;
+    eng->map->cells[pos_.x][pos_.y].item = NULL;
     eng->itemDrop->dropItemOnMap(pos_, *item);
   }
 
-  if(eng->map->playerVision[pos_.x][pos_.y]) {
+  if(eng->map->cells[pos_.x][pos_.y].isSeenByPlayer) {
     eng->renderer->drawMapAndInterface();
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
@@ -205,7 +205,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
 void Trap::playerTrySpotHidden() {
   if(isHidden_) {
-    if(eng->mapTests->isCellsAdj(pos_, eng->player->pos, false)) {
+    if(eng->basicUtils->isPosAdj(pos_, eng->player->pos, false)) {
       const Abilities_t abilityUsed = ability_searching;
       const int PLAYER_SKILL =
         eng->player->getData()->abilityVals.getVal(

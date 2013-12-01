@@ -40,15 +40,18 @@ public:
 
 class CellPredBlocksBodyType : public CellPred {
 public:
-  CellPredBlocksBodyType(BodyType_t bodyType, Engine* engine) :
-    CellPred(engine), bodyType_(bodyType) {}
+  CellPredBlocksBodyType(BodyType_t bodyType, bool isActorsBlocking,
+                         Engine* engine) :
+    CellPred(engine), bodyType_(bodyType),
+    IS_ACTORS_BLOCKING_(isActorsBlocking) {}
   bool isCheckingCells()          const {return true;}
   bool isCheckingMobFeatures()    const {return true;}
-  bool isCheckingActors()         const {return true;}
+  bool isCheckingActors()         const {return IS_ACTORS_BLOCKING_;}
   bool check(const Cell& c)       const;
   bool check(const FeatureMob& f) const;
   bool check(const Actor& a)      const;
   const BodyType_t bodyType_;
+  const bool IS_ACTORS_BLOCKING_;
 };
 
 class CellPredBlocksProjectiles : public CellPred {
@@ -177,20 +180,11 @@ public:
 //    }
 //  }
 //
-//  inline bool isPosInside(const Pos& pos, const Rect& area) const {
-//    return
-//      pos.x >= area.x0y0.x &&
-//      pos.x <= area.x1y1.x &&
-//      pos.y >= area.x0y0.y &&
-//      pos.y <= area.x1y1.y;
-//  }
 //
 //  bool isCellNextToPlayer(const Pos& pos,
 //                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 //
 //
-//  Pos getClosestPos(const Pos c, const vector<Pos>& positions) const;
-//  Actor* getClosestActor(const Pos c, const vector<Actor*>& actors) const;
 //
 //
 //

@@ -99,20 +99,6 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
   return chebDist1 < chebDist2;
 }
 
-//Pos MapTests::getClosestPos(const Pos c, const vector<Pos>& positions) const {
-//  int distToNearest = 99999;
-//  int closestElement = 0;
-//  for(unsigned int i = 0; i < positions.size(); i++) {
-//    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, positions.at(i));
-//    if(CUR_DIST < distToNearest) {
-//      distToNearest = CUR_DIST;
-//      closestElement = i;
-//    }
-//  }
-//
-//  return positions.at(closestElement);
-//}
-//
 //void MapTests::getActorsPositions(const vector<Actor*>& actors,
 //                                  vector<Pos>& vectorToFill) {
 //  vectorToFill.resize(0);
@@ -122,22 +108,6 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //  }
 //}
 //
-//Actor* MapTests::getClosestActor(const Pos c,
-//                                 const vector<Actor*>& actors) const {
-//  if(actors.size() == 0) return NULL;
-//
-//  int distToNearest = 99999;
-//  int closestElement = 0;
-//  for(unsigned int i = 0; i < actors.size(); i++) {
-//    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, actors.at(i)->pos);
-//    if(CUR_DIST < distToNearest) {
-//      distToNearest = CUR_DIST;
-//      closestElement = i;
-//    }
-//  }
-//
-//  return actors.at(closestElement);
-//}
 //
 //void MapTests::makeVisionBlockerArray(
 //  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],

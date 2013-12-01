@@ -211,7 +211,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           }
         }
         FeatureStatic* featureStatic =
-          eng->map->featuresStatic[curProj->pos.x][curProj->pos.y];
+          eng->map->cells[curProj->pos.x][curProj->pos.y].featureStatic;
         if(featureStatic->isProjectilesPassable() == false) {
           featureBlockingShot = featureStatic;
         }
@@ -289,7 +289,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
     //If any projectile can be seen and not obstructed, delay
     for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
-      if(eng->map->playerVision[projectiles.at(nn)->pos.x][projectiles.at(nn)->pos.y] &&
+      const Pos& p = projectiles.at(nn)->pos;
+      if(eng->map->cells[p.x][p.y].isSeenByPlayer &&
           projectiles.at(nn)->isObstructed == false) {
         eng->sleep(DELAY);
         nn = 99999;
@@ -380,7 +381,8 @@ void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
   if(data.attacker == eng->player)
     eng->log->addMsg("I " + data.verbPlayerAttacks + ".");
   else {
-    if(eng->map->playerVision[data.attacker->pos.x][data.attacker->pos.y]) {
+    const Pos& p = data.attacker->pos;
+    if(eng->map->cells[p.x][p.y].isSeenByPlayer) {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
       eng->log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
@@ -395,7 +397,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
   //Only print messages if player can see the cell
   const int defX = data.currentDefender->pos.x;
   const int defY = data.currentDefender->pos.y;
-  if(eng->map->playerVision[defX][defY]) {
+  if(eng->map->cells[defX][defY].isSeenByPlayer) {
 
     //Punctuation or exclamation marks depending on attack strength
     if(IS_HIT) {
@@ -413,7 +415,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
       } else {
         string otherName = "It";
 
-        if(eng->map->playerVision[defX][defY] == true)
+        if(eng->map->cells[defX][defY].isSeenByPlayer)
           otherName = data.currentDefender->getNameThe();
 
         eng->log->addMsg(

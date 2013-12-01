@@ -98,7 +98,7 @@ void MapGenIntroForest::buildForestTreePatch() {
 
   while(nrTerrainCreated < terrain_size) {
     if(
-      eng->mapTests->isPosInsideMap(curPos) &&
+      eng->basicUtils->isPosInsideMap(curPos) &&
       eng->basicUtils->chebyshevDist(curPos, eng->player->pos) > 2) {
       eng->featureFactory->spawnFeatureAt(feature_tree, curPos);
       nrTerrainCreated++;
@@ -121,7 +121,7 @@ void MapGenIntroForest::buildForestTreePatch() {
 
         curPos += Pos(stepX, stepY);
 
-        if(eng->mapTests->isPosInsideMap(curPos) == false) {
+        if(eng->basicUtils->isPosInsideMap(curPos) == false) {
           nrTerrainCreated = 99999;
           break;
         }
@@ -171,7 +171,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(path.at(i) + Pos(dx, dy));
-        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->mapTests->isPosInsideMap(c)) {
+        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->basicUtils->isPosInsideMap(c)) {
           eng->featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
       }

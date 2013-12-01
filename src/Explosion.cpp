@@ -9,7 +9,7 @@
 #include "Fov.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Postmortem.h"
+#include "MapParsing.h"
 
 void ExplosionMaker::renderExplosion(const BasicData* data,
                                      bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
@@ -21,7 +21,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   int y1 = min(MAP_Y_CELLS - 2, data->y1 - 1);
   for(int x = x0; x <= x1; x++) {
     for(int y = y0; y <= y1; y++) {
-      if(eng->map->playerVision[x][y]) {
+      if(eng->map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
           eng->renderer->drawGlyph(
             '*', panel_map, Pos(x, y), clrYellow, true, clrBlack);
@@ -39,7 +39,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   y1 = min(MAP_Y_CELLS - 2, data->y1);
   for(int x = x0; x <= x1; x++) {
     for(int y = y0; y <= y1; y++) {
-      if(eng->map->playerVision[x][y]) {
+      if(eng->map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
           if(
             x == data->x0 || x == data->x1 ||
@@ -65,7 +65,7 @@ void ExplosionMaker::renderExplosionWithColorOverride(
   const int Y1 = min(MAP_Y_CELLS - 2, data->y1);
   for(int x = X0; x <= X1; x++) {
     for(int y = Y0; y <= Y1; y++) {
-      if(eng->map->playerVision[x][y]) {
+      if(eng->map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
           eng->renderer->drawGlyph(
             '*', panel_map, Pos(x, y), clr, true, clrBlack);
@@ -85,9 +85,9 @@ void ExplosionMaker::runExplosion(
 
   //Set up explosion reach array
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
   bool reach[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(reach, false);
+  eng->basicUtils->resetArray(reach, false);
 
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
@@ -108,11 +108,12 @@ void ExplosionMaker::runExplosion(
   //Render
   if(eng->config->isTilesMode) {
     bool forbiddenRenderCells[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->basicUtils->resetBoolArray(forbiddenRenderCells, true);
+    eng->basicUtils->resetArray(forbiddenRenderCells, true);
     for(int y = 1; y < MAP_Y_CELLS - 2; y++) {
       for(int x = 1; x < MAP_X_CELLS - 2; x++) {
-        forbiddenRenderCells[x][y] = reach[x][y] == false ||
-                                     eng->map->playerVision[x][y] == false;
+        forbiddenRenderCells[x][y] =
+          reach[x][y] == false ||
+          eng->map->cells[x][y].isSeenByPlayer == false;
       }
     }
 
@@ -138,15 +139,14 @@ void ExplosionMaker::runExplosion(
   const int DMG_ROLLS = 5;
   const int DMG_SIDES = 6;
   const int DMG_PLUS = 10;
-  Actor* currentActor;
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
 
       if(DO_EXPLOSION_DMG) {
-        if(eng->mapTests->isCellsAdj(Pos(x, y), origin, false)) {
+        if(eng->basicUtils->isPosAdj(Pos(x, y), origin, false)) {
           eng->map->switchToDestroyedFeatAt(Pos(x, y));
 
-          if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
+          if(eng->map->cells[x][y].featureStatic->getId() == feature_door) {
             eng->map->switchToDestroyedFeatAt(Pos(x, y));
           }
         }
@@ -159,23 +159,22 @@ void ExplosionMaker::runExplosion(
           eng->dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
 
         //Damage actor, or apply property?
-        const unsigned int SIZE_OF_ACTOR_LOOP = eng->gameTime->getLoopSize();
-        for(unsigned int i = 0; i < SIZE_OF_ACTOR_LOOP; i++) {
-          currentActor = eng->gameTime->getActorAtElement(i);
-          if(currentActor->pos.x == x && currentActor->pos.y == y) {
+        const int NR_ACTORS = eng->gameTime->getNrActors();
+        for(int i = 0; i < NR_ACTORS; i++) {
+          Actor& actor = eng->gameTime->getActorAtElement(i);
+          if(actor.pos.x == x && actor.pos.y == y) {
 
             if(DO_EXPLOSION_DMG) {
-              if(currentActor == eng->player) {
-                eng->log->addMsg("I am hit by an explosion!",
-                                 clrMessageBad);
+              if(&actor == eng->player) {
+                eng->log->addMsg("I am hit by an explosion!", clrMessageBad);
               }
-              currentActor->hit(EXPLOSION_DMG_AT_DIST, dmgType_physical, true);
+              actor.hit(EXPLOSION_DMG_AT_DIST, dmgType_physical, true);
             }
 
             if(
               prop != NULL &&
-              currentActor->deadState == actorDeadState_alive) {
-              PropHandler* const propHandler = currentActor->getPropHandler();
+              actor.deadState == actorDeadState_alive) {
+              PropHandler* const propHandler = actor.getPropHandler();
               Prop* propCpy = propHandler->makePropFromId(
                                 prop->getId(), propTurnsSpecified,
                                 prop->turnsLeft_);
@@ -211,16 +210,18 @@ void ExplosionMaker::runSmokeExplosion(const Pos& origin,
 
   //Set up explosion reach array
   bool reach[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(reach, false);
+  eng->basicUtils->resetArray(reach, false);
 
-  //There are two scans for blocking objects made, pretty unoptimised, but it doesn't matter.
+  //There are two scans for blocking objects made,
+  //pretty un-optimised, but it doesn't matter.
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeShootBlockerFeaturesArray(blockers);
+  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
 
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
-      //As opposed to the explosion reach, the smoke explosion must not reach into walls and other solid objects
+      //As opposed to the explosion reach, the smoke explosion must not reach
+      //into walls and other solid objects
       reach[x][y] = blockers[x][y] == false && eng->fov->checkCell(
                       blockers, Pos(x, y), origin, false);
     }

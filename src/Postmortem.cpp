@@ -153,7 +153,7 @@ void Postmortem::makeInfoLines() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
-          if(eng->mapTests->isPosInsideMap(Pos(x + dx, y + dy))) {
+          if(eng->basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
             if(eng->map->featuresStatic[x + dx][y + dy]->isVisionPassable()) {
               eng->map->playerVision[x][y] = true;
             }

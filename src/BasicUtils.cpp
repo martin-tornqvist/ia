@@ -8,6 +8,7 @@
 #include "Engine.h"
 
 #include "Converters.h"
+#include "GameTime.h"
 
 // Function for lexicographically comparing two StringAndClr structs
 struct LexicograhicalCompareStringAndClr {
@@ -35,17 +36,64 @@ void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
 }
 
 Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
-  const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
-  for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    Actor* actor = eng->gameTime->getActorAtElement(i);
-    if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
-      return actor;
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor& actor = eng->gameTime->getActorAtElement(i);
+    if(actor.pos == pos && actor.deadState == actorDeadState_alive) {
+      return &actor;
     }
   }
   return NULL;
 }
 
-bool BasicUtils::isCellsAdj(
+void BasicUtils::makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]) {
+  resetArray(a);
+
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor& actor = eng->gameTime->getActorAtElement(i);
+    const Pos& p = actor.pos;
+    a[p.x][p.y] = &actor;
+  }
+}
+
+Pos BasicUtils::getClosestPos(
+  const Pos& c, const vector<Pos>& positions) const {
+  int distToNearest = INT_MAX;
+  int closestElement = 0;
+  const int NR_POSITIONS = positions.size();
+  for(int i = 0; i < NR_POSITIONS; i++) {
+    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, positions.at(i));
+    if(CUR_DIST < distToNearest) {
+      distToNearest = CUR_DIST;
+      closestElement = i;
+    }
+  }
+
+  return positions.at(closestElement);
+}
+
+
+Actor* BasicUtils::getClosestActor(const Pos& c,
+                                   const vector<Actor*>& actors) const {
+  if(actors.size() == 0) return NULL;
+
+  int distToNearest = INT_MAX;
+  int closestElement = 0;
+  for(unsigned int i = 0; i < actors.size(); i++) {
+    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, actors.at(i)->pos);
+    if(CUR_DIST < distToNearest) {
+      distToNearest = CUR_DIST;
+      closestElement = i;
+    }
+  }
+
+  return actors.at(closestElement);
+}
+
+
+
+bool BasicUtils::isPosAdj(
   const Pos& pos1, const Pos& pos2,
   const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
 

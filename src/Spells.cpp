@@ -704,7 +704,7 @@ PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
 
 //------------------------------------------------------------ CONFUSE
 //SpellCastRetData SpellConfuse::specificCast(Actor* const caster, Engine* const eng) {
-//  Actor* actor = eng-basicUtils->getActorAtPos(d.targetCell_);
+//  Actor* actor = eng->basicUtils->getActorAtPos(d.targetCell_);
 //
 //  if(actor != NULL) {
 //
@@ -733,7 +733,7 @@ PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
 
 //------------------------------------------------------------ WEAKNESS
 //SpellCastRetData SpellWeakness::specificCast(Actor* const caster, Engine* const eng) {
-//  Actor* actor = eng-basicUtils->getActorAtPos(d.targetCell_);
+//  Actor* actor = eng->basicUtils->getActorAtPos(d.targetCell_);
 //
 //  if(actor != NULL) {
 //
@@ -762,7 +762,7 @@ PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
 
 //------------------------------------------------------------ BLIND
 //SpellCastRetData SpellBlind::specificCast(Actor* const caster, Engine* const eng) {
-//  Actor* actor = eng-basicUtils->getActorAtPos(d.targetCell_);
+//  Actor* actor = eng->basicUtils->getActorAtPos(d.targetCell_);
 //
 //  if(actor != NULL) {
 //
@@ -791,7 +791,7 @@ PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
 
 //------------------------------------------------------------ FEAR
 //SpellCastRetData SpellFear::specificCast(Actor* const caster, Engine* const eng) {
-//  Actor* actor = eng-basicUtils->getActorAtPos(d.targetCell_);
+//  Actor* actor = eng->basicUtils->getActorAtPos(d.targetCell_);
 //
 //  if(actor != NULL) {
 //
@@ -817,7 +817,7 @@ PropId_t SpellEnfeeble::getPropId(Engine* const eng) const {
 
 //------------------------------------------------------------ SLOW
 //SpellCastRetData SpellSlow::specificCast(Actor* const caster, Engine* const eng) {
-//  Actor* actor = eng-basicUtils->getActorAtPos(d.targetCell_);
+//  Actor* actor = eng->basicUtils->getActorAtPos(d.targetCell_);
 //
 //  if(actor != NULL) {
 //

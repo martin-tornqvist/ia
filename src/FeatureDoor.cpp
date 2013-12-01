@@ -11,6 +11,7 @@
 #include "Postmortem.h"
 #include "PlayerBonuses.h"
 #include "Renderer.h"
+#include "MapParsing.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(Feature_t id, Pos pos, Engine* engine, DoorSpawnData* spawnData) :
@@ -146,11 +147,13 @@ MaterialType_t Door::getMaterialType() const {
 void Door::bump(Actor& actorBumping) {
   if(&actorBumping == eng->player) {
     if(isSecret_) {
-      if(eng->map->playerVision[pos_.x][pos_.y]) {
-        trace << "Door: Player bumped into secret door, with vision in cell" << endl;
+      if(eng->map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+        trace << "Door: Player bumped into secret door, ";
+        trace << "with vision in cell" << endl;
         eng->log->addMsg("That way is blocked.");
       } else {
-        trace << "Door: Player bumped into secret door, without vision in cell" << endl;
+        trace << "Door: Player bumped into secret door, ";
+        trace << "without vision in cell" << endl;
         eng->log->addMsg("I bump into something.");
       }
       return;
@@ -187,7 +190,7 @@ string Door::getDescription(const bool DEFINITE_ARTICLE) const {
 void Door::reveal(const bool ALLOW_MESSAGE) {
   if(isSecret_) {
     isSecret_ = false;
-    if(eng->map->playerVision[pos_.x][pos_.y]) {
+    if(eng->map->cells[pos_.x][pos_.y].isSeenByPlayer) {
       eng->renderer->drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         eng->log->addMsg("A secret is revealed.");
@@ -210,7 +213,7 @@ void Door::clue() {
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
     if(
-      eng->mapTests->isCellsAdj(
+      eng->basicUtils->isPosAdj(
         Pos(pos_.x, pos_.y), eng->player->pos, false)) {
       const int PLAYER_SKILL =
         eng->player->getData()->abilityVals.getVal(
@@ -266,9 +269,9 @@ void Door::tryBash(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng->player;
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler()->allowSee() == false;
-  const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
+  const bool PLAYER_SEE_DOOR = eng->map->cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
@@ -279,7 +282,8 @@ void Door::tryBash(Actor* actorTrying) {
     isOpen_ ||
     (isSecret_ && IS_PLAYER) ||
     (material_ == doorMaterial_metal && IS_PLAYER == false)) {
-    trace << "Door: Not in bashable state (is open, or player trying and is secret)" << endl;
+    trace << "Door: Not in bashable state ";
+    trace << "(is open, or player trying and is secret)" << endl;
     bashable = false;
     if(IS_PLAYER) {
       if(TRYER_IS_BLIND == false) {
@@ -408,17 +412,18 @@ void Door::tryClose(Actor* actorTrying) {
     actorTrying->getPropHandler()->allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng->map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
     eng->player->checkIfSeeActor(*actorTrying, blockers);
 
-  bool closable = true;
+  bool isClosable = true;
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng->log->addMsg("This door refuses to be closed, perhaps it is handled elsewhere?");
+      eng->log->addMsg(
+        "This door refuses to be closed, perhaps it is handled elsewhere?");
       eng->renderer->drawMapAndInterface();
     }
     return;
@@ -426,7 +431,7 @@ void Door::tryClose(Actor* actorTrying) {
 
   //Broken?
   if(isBroken_) {
-    closable = false;
+    isClosable = false;
     if(IS_PLAYER) {
       if(IS_PLAYER)
         eng->log->addMsg("The door appears to be broken.");
@@ -434,9 +439,9 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   //Already closed?
-  if(closable) {
+  if(isClosable) {
     if(isOpen_ == false) {
-      closable = false;
+      isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false)
           eng->log->addMsg("I see nothing there to close.");
@@ -446,13 +451,13 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   //Blocked?
-  if(closable) {
-    eng->mapTests->makeMoveBlockerArrayForBodyType(
-      bodyType_normal, blockers);
-    eng->mapTests->addItemsToBlockerArray(blockers);
-    const bool BLOCKED = blockers[pos_.x][pos_.y];
-    if(BLOCKED) {
-      closable = false;
+  if(isClosable) {
+    const Cell& doorCell = eng->map->cells[pos_.x][pos_.y];
+    const bool IS_BLOCKED =
+      CellPredBlocksBodyType(bodyType_normal, true, eng).check(doorCell) ||
+      doorCell.item != NULL;
+    if(IS_BLOCKED) {
+      isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
           eng->log->addMsg("The door is blocked.");
@@ -463,7 +468,7 @@ void Door::tryClose(Actor* actorTrying) {
     }
   }
 
-  if(closable) {
+  if(isClosable) {
     //Door is in correct state for closing (open, working, not blocked)
 
     if(TRYER_IS_BLIND == false) {
@@ -510,7 +515,7 @@ void Door::tryClose(Actor* actorTrying) {
     }
   }
 
-  if(isOpen_ == false && closable) {
+  if(isOpen_ == false && isClosable) {
     eng->gameTime->endTurnOfCurrentActor();
   }
 }
@@ -518,16 +523,19 @@ void Door::tryClose(Actor* actorTrying) {
 void Door::tryOpen(Actor* actorTrying) {
   trace << "Door::tryOpen()" << endl;
   const bool IS_PLAYER = actorTrying == eng->player;
-  const bool TRYER_IS_BLIND = actorTrying->getPropHandler()->allowSee() == false;
-  const bool PLAYER_SEE_DOOR = eng->map->playerVision[pos_.x][pos_.y];
+  const bool TRYER_IS_BLIND =
+    actorTrying->getPropHandler()->allowSee() == false;
+  const bool PLAYER_SEE_DOOR = eng->map->cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
 
-  const bool PLAYER_SEE_TRYER = IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
+  const bool PLAYER_SEE_TRYER =
+    IS_PLAYER ? true : eng->player->checkIfSeeActor(*actorTrying, blockers);
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng->log->addMsg("I see no way to open this door, perhaps it is opened elsewhere?");
+      eng->log->addMsg(
+        "I see no way to open this door, perhaps it is opened elsewhere?");
       eng->renderer->drawMapAndInterface();
     }
     return;
@@ -585,9 +593,10 @@ void Door::tryOpen(Actor* actorTrying) {
           eng->soundEmitter->emitSound(snd);
           eng->log->addMsg("I fumble blindly with a door and fail to open it.");
         } else {
-          //(emitting the sound from the actor instead of the door here, beacause the sound should
-          //be heard even if the door is seen, and the parameter for muting messages from seen sounds
-          //should be off)
+          //Emitting the sound from the actor instead of the door here,
+          //beacause the sound should be heard even if the door is seen,
+          //and the Sound parameter for muting messages from seen sounds
+          //should be off
           Sound snd("I hear something attempting to open a door.",
                     endOfSfx, true, actorTrying->pos, false, IS_PLAYER);
           eng->soundEmitter->emitSound(snd);

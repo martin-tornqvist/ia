@@ -32,7 +32,7 @@ void CharacterLines::drawLocationInfo() {
         const Room* const room = rooms.at(i);
         const Pos& x0y0 = room->getX0Y0();
         const Pos& x1y1 = room->getX1Y1();
-        if(eng->mapTests->isPosInside(playerPos, Rect(x0y0, x1y1))) {
+        if(eng->basicUtils->isPosInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr.empty() == false) {
             str += room->roomDescr + " ";
@@ -41,10 +41,12 @@ void CharacterLines::drawLocationInfo() {
       }
     }
 
-    const bool IS_DARK_AT_PLAYER = eng->map->darkness[playerPos.x][playerPos.y];
-    const bool IS_LIGHT_AT_PLAYER = eng->map->light[playerPos.x][playerPos.y];
-    if(IS_DARK_AT_PLAYER) {
-      str += IS_LIGHT_AT_PLAYER ?
+    const bool IS_DRK_AT_PLAYER =
+      eng->map->cells[playerPos.x][playerPos.y].isDark;
+    const bool IS_LGT_AT_PLAYER =
+      eng->map->cells[playerPos.x][playerPos.y].isLight;
+    if(IS_DRK_AT_PLAYER) {
+      str += IS_LGT_AT_PLAYER ?
              "The darkness is lit up. " :
              "It is dark here. ";
     }

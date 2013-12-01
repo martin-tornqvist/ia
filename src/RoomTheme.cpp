@@ -423,13 +423,13 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(
   const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
   trace << "RoomThemeMaker::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
-    if(eng->mapTests->isCellsAdj(pos, nextToWalls.at(i), true)) {
+    if(eng->basicUtils->isPosAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
       i--;
     }
   }
   for(unsigned int i = 0; i < awayFromWalls.size(); i++) {
-    if(eng->mapTests->isCellsAdj(pos, awayFromWalls.at(i), true)) {
+    if(eng->basicUtils->isPosAdj(pos, awayFromWalls.at(i), true)) {
       awayFromWalls.erase(awayFromWalls.begin() + i);
       i--;
     }

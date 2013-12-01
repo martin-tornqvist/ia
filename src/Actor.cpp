@@ -137,7 +137,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  MapParser::parse(CellPredBlocksBodyType(getBodyType(), eng), blockers);
+  MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng), blockers);
   vector<Pos> freeCells;
   eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);

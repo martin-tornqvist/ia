@@ -13,7 +13,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   vector<Pos> floorInR1Vector;
   floorInR1Vector.resize(0);
   bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(floorInR1Grid, false);
+  eng->basicUtils->resetArray(floorInR1Grid, false);
 
   for(int y = room1.getY0(); y <= room1.getY1(); y++) {
     for(int x = room1.getX0(); x <= room1.getX1(); x++) {
@@ -52,7 +52,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   vector<Pos> floorInR2Vector;
   floorInR2Vector.resize(0);
   bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(floorInR2Grid, false);
+  eng->basicUtils->resetArray(floorInR2Grid, false);
   for(int y = room2.getY0(); y <= room2.getY1(); y++) {
     for(int x = room2.getX0(); x <= room2.getX1(); x++) {
       Pos c = Pos(x, y);
@@ -72,7 +72,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
               PossInR1closeToR2.push_back(c);
             }
           }
-          if(eng->mapTests->isPosInsideMap(c) == false) {
+          if(eng->basicUtils->isPosInsideMap(c) == false) {
             doneTravelling = true;
           }
         }
@@ -218,7 +218,7 @@ void MapGen::makeStraightPathByPathfinder(
   const bool TUNNEL_THROUGH_ANY_FEATURE) {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetBoolArray(blockers, false);
+  eng->basicUtils->resetArray(blockers, false);
   vector<Pos> path = eng->pathfinder->findPath(origin, blockers, target);
   for(unsigned int i = 0; i < path.size(); i++) {
     const Pos c = path.at(i);

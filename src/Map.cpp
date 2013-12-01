@@ -8,8 +8,23 @@
 #include "GameTime.h"
 #include "Renderer.h"
 #include "MapGen.h"
+#include "Item.h"
 
 using namespace std;
+
+inline void Cell::reset() {
+  isExplored = isSeenByPlayer = isLight = isDark = false;
+  if(item != NULL) {
+    delete item;
+    item = NULL;
+  }
+  if(featureStatic != NULL) {
+    delete featureStatic;
+    featureStatic = NULL;
+  }
+  playerVisualMemoryAscii.clear();
+  playerVisualMemoryTiles.clear();
+}
 
 Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -36,7 +51,7 @@ Map::~Map() {
 
 //TODO This should probably go in a virtual method in Feature instead
 void Map::switchToDestroyedFeatAt(const Pos pos) {
-  if(eng->mapTests->isPosInsideMap(pos)) {
+  if(eng->basicUtils->isPosInsideMap(pos)) {
 
     const Feature_t OLD_FEATURE_ID =
       eng->map->featuresStatic[pos.x][pos.y]->getId();
