@@ -14,14 +14,14 @@ struct Entity {
 public:
   Entity() :
     actor(NULL), item(NULL), feature(NULL),
-    entityType(entityType_featureStatic) {}
+    entityType(entityFeatureStatic) {}
 
   Entity(Actor* actor_) :
-    actor(actor_), entityType(entityType_actor) {
+    actor(actor_), entityType(entityActor) {
   }
 
   Entity(Item* item_) :
-    item(item_), entityType(entityType_item) {
+    item(item_), entityType(entityItem) {
   }
 
   Entity(FeatureMob* feature_);

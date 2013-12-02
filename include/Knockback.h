@@ -11,7 +11,7 @@ class KnockBack {
 public:
   KnockBack(Engine* engine) : eng(engine) {}
 
-  void tryKnockBack(Actor* const defender, const Pos& attackedFromPos,
+  void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                     const bool IS_SPIKE_GUN,
                     const bool IS_KNOCKBACK_MESSAGE_ALLOWED = true);
 

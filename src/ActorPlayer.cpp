@@ -32,6 +32,7 @@
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"
+#include "FloodFill.h"
 
 Player::Player() :
   activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
@@ -1283,24 +1284,17 @@ void Player::actorSpecific_addLight(
 }
 
 void Player::updateFov() {
-  const int NR_FEATURE_MOBS = eng->gameTime->getNrFeatureMobs();
-
-  for(int i = 0; i < NR_FEATURE_MOBS; i++) {
-    eng->gameTime->getFeatureMobAt(i)->addLight(eng->map->light);
-  }
-
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->featuresStatic[x][y]->addLight(eng->map->light);
-      eng->map->playerVision[x][y] = false;
+      eng->map->cells[x][y].isSeenByPlayer = false;
     }
   }
 
   if(propHandler_->allowSee()) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeVisionBlockerArray(pos, blockers);
+    MapParser::parse(CellPredBlocksVision(eng), blockers);
     eng->fov->runPlayerFov(blockers, pos);
-    eng->map->playerVision[pos.x][pos.y] = true;
+    eng->map->cells[pos.x][pos.y].isSeenByPlayer = true;
   }
 
   if(propHandler_->hasProp(propClairvoyant)) {
@@ -1312,24 +1306,25 @@ void Player::updateFov() {
     const int Y1 = min(MAP_Y_CELLS - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-      bodyType_flying, blockers);
+    MapParser::parse(CellPredBlocksBodyType(bodyType_flying, false, eng),
+                     blockers);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
-        if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
+        if(eng->map->cells[x][y].featureStatic->getId() == feature_door) {
           blockers[x][y] = false;
         }
       }
     }
 
     int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->floodFill(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, Pos(-1, -1));
+    eng->floodFill->run(
+      pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, Pos(-1, -1));
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
         if(floodFillValues[x][y]) {
-          eng->map->playerVision[x][y] = true;
+          eng->map->cells[x][y].isSeenByPlayer = true;
         }
       }
     }
@@ -1340,7 +1335,7 @@ void Player::updateFov() {
   if(eng->isCheatVisionEnabled) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        eng->map->playerVision[x][y] = true;
+        eng->map->cells[x][y].isSeenByPlayer = true;
       }
     }
   }
@@ -1348,8 +1343,8 @@ void Player::updateFov() {
   //Explore
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
-      if(eng->map->playerVision[x][y]) {
-        eng->map->explored[x][y] = true;
+      if(eng->map->cells[x][y].isSeenByPlayer) {
+        eng->map->cells[x][y].isExplored = true;
       }
     }
   }
@@ -1357,10 +1352,11 @@ void Player::updateFov() {
 
 void Player::FOVhack() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(pos, visionBlockers, 9999);
+  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayFeaturesOnly(eng->player, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -1369,12 +1365,12 @@ void Player::FOVhack() {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
             if(eng->basicUtils->isPosInsideMap(adj)) {
+              const Cell& adjCell = eng->map->cells[adj.x][adj.y];
               if(
-                eng->map->playerVision[adj.x][adj.y] &&
-                (eng->map->darkness[adj.x][adj.y] == false ||
-                 eng->map->light[adj.x][adj.y]) &&
+                adjCell.isSeenByPlayer &&
+                (adjCell.isDark == false || adjCell.isLight) &&
                 blockers[adj.x][adj.y] == false) {
-                eng->map->playerVision[x][y] = true;
+                eng->map->cells[x][y].isSeenByPlayer = true;
                 dx = 999;
                 dy = 999;
               }

@@ -13,6 +13,7 @@
 #include "Renderer.h"
 #include "Inventory.h"
 #include "DungeonClimb.h"
+#include "MapParsing.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor) {
   actor->getPropHandler()->endAppliedPropsByMagicHealing();
@@ -211,7 +212,7 @@ void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfAntidote::specificQuaff(Actor* const actor) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(actor->pos, visionBlockers, 999);
+  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   const bool IS_POISON_ENDED =
     actor->getPropHandler()->endAppliedProp(propPoisoned, visionBlockers);
 
@@ -401,12 +402,12 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
-  if(eng->map->featuresStatic[pos.x][pos.y]->isBottomless() == false ||
+  if(eng->map->cells[pos.x][pos.y].featureStatic->isBottomless() == false ||
       actor != NULL) {
 //    ItemData* const potData =
 //      eng->itemDataHandler->dataList[d.id];
 
-    const bool PLAYER_SEE_CELL = eng->map->playerVision[pos.x][pos.y];
+    const bool PLAYER_SEE_CELL = eng->map->cells[pos.x][pos.y].isSeenByPlayer;
 
     if(PLAYER_SEE_CELL) {
       // TODO Use standard animation
@@ -419,7 +420,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
             actor->getNameThe() + ".");
         }
       } else {
-        Feature* const f = eng->map->featuresStatic[pos.x][pos.y];
+        Feature* const f = eng->map->cells[pos.x][pos.y].featureStatic;
         eng->log->addMsg(
           "The potion shatters on " + f->getDescription(true) + ".");
       }

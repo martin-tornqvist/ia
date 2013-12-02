@@ -22,10 +22,10 @@ void JamWithSpike::playerJam() const {
 
   eng->log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
   eng->renderer->drawMapAndInterface();
-  const Pos jamInPos(eng->player->pos + eng->query->dir());
+  const Pos jamPos(eng->player->pos + eng->query->dir());
   eng->log->clearLog();
 
-  playerJamFeature(eng->map->featuresStatic[jamInPos.x][jamInPos.y]);
+  playerJamFeature(eng->map->cells[jamPos.x][jamPos.y].featureStatic);
 }
 
 void JamWithSpike::playerJamFeature(Feature* const feature) const {

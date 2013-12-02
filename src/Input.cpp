@@ -258,7 +258,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'g') {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
-      Item* const itemAtPlayer = eng->map->items[eng->player->pos.x][eng->player->pos.y];
+      const Pos& p = eng->player->pos;
+      Item* const itemAtPlayer = eng->map->cells[p.x][p.y].item;
       if(itemAtPlayer != NULL) {
         if(itemAtPlayer->getData().id == item_trapezohedron) {
           eng->dungeonMaster->winGame();
@@ -469,7 +470,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------SAVE AND QUIT
   else if(d.key_ == 'S') {
     if(eng->player->deadState == actorDeadState_alive) {
-      if(eng->map->featuresStatic[eng->player->pos.x][eng->player->pos.y]->getId() == feature_stairsDown) {
+      const Pos& p = eng->player->pos;
+      const FeatureStatic* const f = eng->map->cells[p.x][p.y].featureStatic;
+      if(f->getId() == feature_stairsDown) {
         eng->log->clearLog();
         eng->log->addMsg("Save and quit (y/n)?", clrWhiteHigh);
         eng->renderer->drawMapAndInterface();
@@ -513,7 +516,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
           for(int x = 0; x < MAP_X_CELLS; x++) {
-            eng->map->explored[x][y] = false;
+            eng->map->cells[x][y].featureStatic = false;
           }
         }
         eng->isCheatVisionEnabled = false;

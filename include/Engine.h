@@ -98,6 +98,7 @@ class Credits;
 class PropDataHandler;
 class DirConverter;
 class SdlWrapper;
+class FloodFill;
 
 class Player;
 
@@ -196,6 +197,7 @@ public:
   Credits* credits;
   PropDataHandler* propDataHandler;
   SdlWrapper* sdlWrapper;
+  FloodFill* floodFill;
 
   Player* player;
 

@@ -189,8 +189,9 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                   const AttackData* const curData = curProj->attackData;
                   if(curData->attackResult >= successSmall) {
                     const bool IS_SPIKE_GUN = wpn.getData().id == item_spikeGun;
-                    eng->knockBack->tryKnockBack(curData->currentDefender,
-                                                 curData->attacker->pos, IS_SPIKE_GUN);
+                    eng->knockBack->tryKnockBack(
+                      *(curData->currentDefender), curData->attacker->pos,
+                      IS_SPIKE_GUN);
                   }
                 }
               }

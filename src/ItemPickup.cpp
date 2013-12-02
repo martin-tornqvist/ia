@@ -22,7 +22,8 @@ void ItemPickup::pickupEffects(Actor* actor, Item* item) {
 
 //Can always be called, to check if something is there to be picked up.
 void ItemPickup::tryPick() {
-  Item* const item = eng->map->items[eng->player->pos.x][eng->player->pos.y];
+  const Pos& pos = eng->player->pos;
+  Item* const item = eng->map->cells[pos.x][pos.y].item;
 
   if(item == NULL) {
     eng->log->clearLog();
@@ -44,7 +45,7 @@ void ItemPickup::tryPick() {
           eng->log->addMsg("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->nrItems += item->nrItems;
           delete item;
-          eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
+          eng->map->cells[pos.x][pos.y].item = NULL;
           eng->gameTime->endTurnOfCurrentActor();
           return;
         }
@@ -62,7 +63,7 @@ void ItemPickup::tryPick() {
 
       playerInventory->putItemInGeneral(item);
 
-      eng->map->items[eng->player->pos.x][eng->player->pos.y] = NULL;
+      eng->map->cells[pos.x][pos.y].item = NULL;
 
       eng->gameTime->endTurnOfCurrentActor();
     }
@@ -79,7 +80,7 @@ bool ItemPickup::isInventoryFull(Inventory* inventory, Item* item) const {
 }
 
 void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
-  Item* item = eng->map->items[eng->player->pos.x][eng->player->pos.y];
+  Item* item = eng->map->cells[eng->player->pos.x][eng->player->pos.y].item;
 
   if(item != NULL) {
     if(item->getData().isRangedWeapon) {

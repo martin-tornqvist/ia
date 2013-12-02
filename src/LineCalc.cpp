@@ -50,25 +50,19 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
     }
 
     //Check distance limits
-    if(stopAtTarget && (curPos == target)) {
+    if(SHOULD_STOP_AT_TARGET && (curPos == target)) {
       return;
     }
     const int DISTANCE_TRAVELED =
       eng->basicUtils->chebyshevDist(
         origin.x, origin.y, curPos.x, curPos.y);
-    if(DISTANCE_TRAVELED >= chebTravelLimit) {
+    if(DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {
       return;
     }
   }
 }
 
 void LineCalc::calcFovDeltaLines() {
-  for(int y = 0; y < FOV_MAX_W_INT; y++) {
-    for(int x = 0; x < FOV_MAX_W_INT; x++) {
-      fovLines[x][y] = 0.0;
-    }
-  }
-
   const int R_INT = FOV_MAX_RADI_INT;
 
   for(int deltaX = -R_INT; deltaX <= R_INT; deltaX++) {
@@ -77,7 +71,7 @@ void LineCalc::calcFovDeltaLines() {
       const Pos target(origin + Pos(deltaX, deltaY));
       vector<Pos> curLine;
       calcNewLine(origin, target, true, 999, true, curLine);
-      lineTravelVectors[deltaX + R_INT][deltaY + R_INT] = currentPath;
+      fovDeltaLines[deltaX + R_INT][deltaY + R_INT] = curLine;
     }
   }
 }
@@ -85,7 +79,7 @@ void LineCalc::calcFovDeltaLines() {
 void LineCalc::calcFovAbsDistances() {
   for(int y = 0; y < FOV_MAX_W_INT; y++) {
     for(int x = 0; x < FOV_MAX_W_INT; x++) {
-      absDistances[x][y] = 0;
+      fovAbsDistances[x][y] = 0;
     }
   }
 
@@ -105,7 +99,7 @@ void LineCalc::calcFovAbsDistances() {
       deltaY = double(y);
       deltaY -= FOV_MAX_RADI_DB;
       hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
-      absDistances[x][y] = floor(hypot);
+      fovAbsDistances[x][y] = floor(hypot);
     }
   }
 }

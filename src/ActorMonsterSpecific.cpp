@@ -215,7 +215,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
               }
               trace << "Vortex: Attempt pull (knockback)" << endl;
               eng->knockBack->tryKnockBack(
-                eng->player, knockBackFromPos, false, false);
+                *(eng->player), knockBackFromPos, false, false);
               pullCooldown = 5;
               eng->gameTime->endTurnOfCurrentActor();
               return true;

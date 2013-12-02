@@ -19,11 +19,11 @@
 
 Entity::Entity(FeatureMob* feature_) :
   feature(dynamic_cast<Feature*>(feature_)),
-  entityType(entityType_featureMob) {}
+  entityType(entityFeatureMob) {}
 
 Entity::Entity(FeatureStatic* feature_) :
   feature(dynamic_cast<Feature*>(feature_)),
-  entityType(entityType_featureStatic) {}
+  entityType(entityFeatureStatic) {}
 
 void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                        const Item* const itemThrown) {

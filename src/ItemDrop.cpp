@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
+#include "MapParsing.h"
 
 #include <algorithm>
 
@@ -52,7 +53,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(eng->player->pos, blockers);
+      MapParser::parse(CellPredBlocksVision(eng), blockers);
       if(eng->player->checkIfSeeActor(*curActor, blockers)) {
         eng->log->addMsg(
           "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
@@ -67,7 +68,9 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
 
 Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
-  if(eng->map->featuresStatic[intendedPos.x][intendedPos.y]->isBottomless()) {
+  const Feature* const targetFeature =
+    eng->map->cells[intendedPos.x][intendedPos.y].featureStatic;
+  if(targetFeature->isBottomless()) {
     delete &item;
     return NULL;
   }
@@ -76,12 +79,12 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   bool freeCellArray[MAP_X_CELLS][MAP_Y_CELLS];
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      FeatureStatic* const f = eng->map->featuresStatic[x][y];
+      FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
       freeCellArray[x][y] = f->canHaveItem() && f->isBottomless() == false;
     }
   }
   vector<Pos> freeCells;
-  eng->mapTests->makeBoolVectorFromMapArray(freeCellArray, freeCells);
+  eng->basicUtils->makeVectorFromBoolMap(true, freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
   IsCloserToOrigin isCloserToOrigin(intendedPos, eng);
@@ -99,12 +102,12 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
       //While ii cell is not further away than i cell
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
         stackPos = freeCells.at(ii);
-        Item* itemFoundOnFloor = eng->map->items[stackPos.x][stackPos.y];
+        Item* itemFoundOnFloor = eng->map->cells[stackPos.x][stackPos.y].item;
         if(itemFoundOnFloor != NULL) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
             item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
-            eng->map->items[stackPos.x][stackPos.y] = &item;
+            eng->map->cells[stackPos.x][stackPos.y].item = &item;
             return &item;
           }
         }
@@ -117,9 +120,9 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
     if(&item == NULL) {break;}
 
     curPos = freeCells.at(i);
-    if(eng->map->items[curPos.x][curPos.y] == NULL) {
+    if(eng->map->cells[curPos.x][curPos.y].item == NULL) {
 
-      eng->map->items[curPos.x][curPos.y] = &item;
+      eng->map->cells[curPos.x][curPos.y].item = &item;
 
       if(eng->player->pos == curPos && curPos != intendedPos) {
         eng->log->addMsg("I feel something by my feet.");

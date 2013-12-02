@@ -29,6 +29,7 @@
 #include "Explosion.h"
 #include "Examine.h"
 #include "FeatureFactory.h"
+#include "FloodFill.h"
 #include "Fov.h"
 #include "GameTime.h"
 #include "Gods.h"
@@ -150,6 +151,7 @@ void Engine::initGame() {
     &(actorDataHandler->dataList[actor_player]), this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
+  floodFill = new FloodFill(this);
   marker = new Marker(this);
   log = new Log(this);
   pathfinder = new Pathfinder(this);
@@ -177,7 +179,6 @@ void Engine::initGame() {
   playerVisualMemory = new PlayerVisualMemory(this);
   gore = new Gore(this);
   manual = new Manual(this);
-  bresenhamLine = new BresenhamLine(this);
   populateItems = new PopulateItems(this);
   populateMonsters = new PopulateMonsters(this);
   populateTraps = new PopulateTraps(this);
@@ -268,7 +269,6 @@ void Engine::cleanupGame() {
   delete highScore;
   delete popup;
   delete saveHandler;
-  delete bresenhamLine;
   delete jamWithSpike;
   delete menuInputHandler;
   delete playerSpellsHandler;
@@ -282,6 +282,7 @@ void Engine::cleanupGame() {
   delete credits;
   delete propDataHandler;
   delete dirConverter;
+  delete floodFill;
 
   delete marker;
 

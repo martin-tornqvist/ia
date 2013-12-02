@@ -37,7 +37,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         if(wpn.getData().meleeCausesKnockBack) {
           if(data.attackResult > successSmall) {
             eng->knockBack->tryKnockBack(
-              data.currentDefender, data.attacker->pos, false);
+              *(data.currentDefender), data.attacker->pos, false);
           }
         }
       }

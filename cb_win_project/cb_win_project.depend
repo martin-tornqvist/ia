@@ -11433,7 +11433,7 @@
 1382910176 d:\dev\ia.git\src\ai_handleinventory.h
 	"Inventory.h"
 
-1385823780 source:d:\dev\ia.git\src\actormonsterspecific.cpp
+1386012939 source:d:\dev\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -11473,7 +11473,7 @@
 	<string>
 	<vector>
 
-1385487263 source:d:\dev\ia.git\src\actorplayer.cpp
+1386021384 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11505,6 +11505,8 @@
 	"PlayerSpellsHandler.h"
 	"Bot.h"
 	"Input.h"
+	"MapParsing.h"
+	"FloodFill.h"
 
 1382910266 d:\dev\ia.git\src\characterlines.h
 
@@ -11558,7 +11560,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1385502710 source:d:\dev\ia.git\src\attackmelee.cpp
+1386012931 source:d:\dev\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11571,7 +11573,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1385929047 source:d:\dev\ia.git\src\attackranged.cpp
+1386013000 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11970,7 +11972,7 @@
 	<vector>
 	<string>
 
-1385102617 source:d:\dev\ia.git\src\engine.cpp
+1386021422 source:d:\dev\ia.git\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -11987,7 +11989,6 @@
 	"Bash.h"
 	"Blood.h"
 	"Bot.h"
-	"BresenhamLine.h"
 	"CharacterDescr.h"
 	"Close.h"
 	"Credits.h"
@@ -11999,6 +12000,7 @@
 	"Explosion.h"
 	"Examine.h"
 	"FeatureFactory.h"
+	"FloodFill.h"
 	"Fov.h"
 	"GameTime.h"
 	"Gods.h"
@@ -12016,14 +12018,13 @@
 	"JamWithSpike.h"
 	"FeatureData.h"
 	"FeatureTrap.h"
-	"FovPreCalc.h"
+	"LineCalc.h"
 	"Knockback.h"
 	"Log.h"
 	"Look.h"
 	"MainMenu.h"
 	"Manual.h"
 	"MapPatterns.h"
-	"MapTests.h"
 	"PopulateItems.h"
 	"PopulateMonsters.h"
 	"PopulateTraps.h"
@@ -12299,7 +12300,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1385493002 source:d:\dev\ia.git\src\gametime.cpp
+1385934447 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12314,6 +12315,7 @@
 	"InventoryHandler.h"
 	"PlayerBonuses.h"
 	"Audio.h"
+	"MapParsing.h"
 
 1385502710 source:d:\dev\ia.git\src\gods.cpp
 	"Gods.h"
@@ -12334,7 +12336,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1385494588 source:d:\dev\ia.git\src\input.cpp
+1386009453 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12366,7 +12368,7 @@
 	"Disarm.h"
 	"SdlWrapper.h"
 
-1385102629 source:d:\dev\ia.git\src\inventory.cpp
+1385502710 source:d:\dev\ia.git\src\inventory.cpp
 	"Inventory.h"
 	<algorithm>
 	"ItemWeapon.h"
@@ -12381,7 +12383,7 @@
 	"DungeonMaster.h"
 	"PlayerBonuses.h"
 
-1385102617 source:d:\dev\ia.git\src\inventoryhandler.cpp
+1385502710 source:d:\dev\ia.git\src\inventoryhandler.cpp
 	"InventoryHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -12404,28 +12406,28 @@
 	"Properties.h"
 	"Item.h"
 
-1385102618 source:d:\dev\ia.git\src\inventoryindexes.cpp
+1385502710 source:d:\dev\ia.git\src\inventoryindexes.cpp
 	"InventoryIndexes.h"
 	"Inventory.h"
 	"Engine.h"
 
-1382910266 source:d:\dev\ia.git\src\item.cpp
+1385502710 source:d:\dev\ia.git\src\item.cpp
 	"Item.h"
 
 1382910176 source:d:\dev\ia.git\src\itemammo.cpp
 
-1385102617 source:d:\dev\ia.git\src\itemarmor.cpp
+1385502710 source:d:\dev\ia.git\src\itemarmor.cpp
 	"ItemArmor.h"
 	"Engine.h"
 	"Log.h"
 
-1382910266 source:d:\dev\ia.git\src\itemartifact.cpp
+1385502710 source:d:\dev\ia.git\src\itemartifact.cpp
 	"ItemArtifact.h"
 
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1385490801 source:d:\dev\ia.git\src\itemdata.cpp
+1385502710 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12445,7 +12447,7 @@
 	"Item.h"
 	"Converters.h"
 
-1384982914 source:d:\dev\ia.git\src\itemdevice.cpp
+1386012915 source:d:\dev\ia.git\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12457,7 +12459,7 @@
 	"Map.h"
 	"Audio.h"
 
-1385411046 source:d:\dev\ia.git\src\itemdrop.cpp
+1386020497 source:d:\dev\ia.git\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12467,9 +12469,10 @@
 	"Map.h"
 	"Inventory.h"
 	"ItemFactory.h"
+	"MapParsing.h"
 	<algorithm>
 
-1383848053 source:d:\dev\ia.git\src\itemexplosive.cpp
+1385502710 source:d:\dev\ia.git\src\itemexplosive.cpp
 	"ItemExplosive.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12477,7 +12480,7 @@
 	"Renderer.h"
 	"GameTime.h"
 
-1385490796 source:d:\dev\ia.git\src\itemfactory.cpp
+1385502710 source:d:\dev\ia.git\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12490,7 +12493,7 @@
 	"ItemDevice.h"
 	"ItemMedicalBag.h"
 
-1385485891 source:d:\dev\ia.git\src\itemmedicalbag.cpp
+1386013092 source:d:\dev\ia.git\src\itemmedicalbag.cpp
 	"ItemMedicalBag.h"
 	"Engine.h"
 	"Properties.h"
@@ -12501,8 +12504,9 @@
 	"PlayerBonuses.h"
 	"Popup.h"
 	"GameTime.h"
+	"MapParsing.h"
 
-1383770711 source:d:\dev\ia.git\src\itempickup.cpp
+1386020523 source:d:\dev\ia.git\src\itempickup.cpp
 	"ItemPickup.h"
 	"Engine.h"
 	"Item.h"
@@ -12517,7 +12521,7 @@
 	"GameTime.h"
 	"Audio.h"
 
-1384808904 source:d:\dev\ia.git\src\itempotion.cpp
+1386021489 source:d:\dev\ia.git\src\itempotion.cpp
 	"ItemPotion.h"
 	"Engine.h"
 	"Properties.h"
@@ -12532,8 +12536,9 @@
 	"Renderer.h"
 	"Inventory.h"
 	"DungeonClimb.h"
+	"MapParsing.h"
 
-1385490754 source:d:\dev\ia.git\src\itemscroll.cpp
+1385502710 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12544,12 +12549,12 @@
 	"PlayerSpellsHandler.h"
 	"Renderer.h"
 
-1382910266 source:d:\dev\ia.git\src\itemweapon.cpp
+1385502710 source:d:\dev\ia.git\src\itemweapon.cpp
 	"ItemWeapon.h"
 	"Engine.h"
 	"Explosion.h"
 
-1384886881 source:d:\dev\ia.git\src\jamwithspike.cpp
+1386020662 source:d:\dev\ia.git\src\jamwithspike.cpp
 	"JamWithSpike.h"
 	"Engine.h"
 	"GameTime.h"
@@ -12562,7 +12567,7 @@
 	"Inventory.h"
 	"Renderer.h"
 
-1384547037 source:d:\dev\ia.git\src\knockback.cpp
+1386021744 source:d:\dev\ia.git\src\knockback.cpp
 	"Knockback.h"
 	"Engine.h"
 	"Attack.h"
@@ -12572,8 +12577,9 @@
 	"Config.h"
 	"GameTime.h"
 	"Renderer.h"
+	"MapParsing.h"
 
-1384370364 source:d:\dev\ia.git\src\log.cpp
+1385502710 source:d:\dev\ia.git\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Input.h"
@@ -12601,7 +12607,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1385322866 source:d:\dev\ia.git\src\main.cpp
+1385502710 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12623,7 +12629,7 @@
 	"Audio.h"
 	"Bot.h"
 
-1385484739 source:d:\dev\ia.git\src\mainmenu.cpp
+1385502710 source:d:\dev\ia.git\src\mainmenu.cpp
 	"MainMenu.h"
 	<string>
 	"Engine.h"
@@ -12638,7 +12644,7 @@
 	"Credits.h"
 	"Audio.h"
 
-1384369237 source:d:\dev\ia.git\src\manual.cpp
+1385502710 source:d:\dev\ia.git\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -13763,7 +13769,7 @@
 	<string>
 	<iostream>
 
-1385804809 d:\dev\ia.git\include\engine.h
+1386021038 d:\dev\ia.git\include\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -14077,7 +14083,7 @@
 	"FeatureTrap.h"
 	"FeatureDoor.h"
 
-1385502710 d:\dev\ia.git\include\knockback.h
+1386012899 d:\dev\ia.git\include\knockback.h
 	"CommonTypes.h"
 
 1385673277 d:\dev\ia.git\include\gods.h
@@ -14106,13 +14112,13 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1383394056 d:\dev\ia.git\include\itemdevice.h
+1385502710 d:\dev\ia.git\include\itemdevice.h
 	"Item.h"
 
-1384898298 d:\dev\ia.git\include\inventoryhandler.h
+1385502710 d:\dev\ia.git\include\inventoryhandler.h
 	"Inventory.h"
 
-1384289165 d:\dev\ia.git\include\itemmedicalbag.h
+1385502710 d:\dev\ia.git\include\itemmedicalbag.h
 	"Item.h"
 
 1385502710 d:\dev\ia.git\include\playerspellshandler.h
@@ -14210,14 +14216,14 @@
 	<vector>
 	<string>
 
-1383848053 d:\dev\ia.git\include\inventoryindexes.h
+1385502710 d:\dev\ia.git\include\inventoryindexes.h
 	<vector>
 	<iostream>
 
-1383848053 d:\dev\ia.git\include\itempickup.h
+1385502710 d:\dev\ia.git\include\itempickup.h
 	"Inventory.h"
 
-1383848053 d:\dev\ia.git\include\jamwithspike.h
+1385502710 d:\dev\ia.git\include\jamwithspike.h
 	"FeatureDoor.h"
 
 1384978254 d:\dev\ia.git\include\fovprecalc.h
@@ -14226,36 +14232,36 @@
 	"CommonData.h"
 	"CommonTypes.h"
 
-1383848053 d:\dev\ia.git\include\look.h
+1386021413 d:\dev\ia.git\include\look.h
 	"CommonTypes.h"
 
-1383944256 d:\dev\ia.git\include\mainmenu.h
+1385502710 d:\dev\ia.git\include\mainmenu.h
 	"MenuBrowser.h"
 	"CommonData.h"
 
-1382910176 d:\dev\ia.git\include\manual.h
+1385502710 d:\dev\ia.git\include\manual.h
 	<vector>
 	<string>
 
-1382910266 d:\dev\ia.git\include\populatetraps.h
+1385502710 d:\dev\ia.git\include\populatetraps.h
 	"RoomTheme.h"
 
-1382910266 d:\dev\ia.git\include\marker.h
+1385502710 d:\dev\ia.git\include\marker.h
 	<iostream>
 	<vector>
 	"CommonTypes.h"
 
-1382910176 d:\dev\ia.git\include\renderinventory.h
+1385502710 d:\dev\ia.git\include\renderinventory.h
 	"InventoryHandler.h"
 	"ItemData.h"
 	"MenuBrowser.h"
 
-1382910176 d:\dev\ia.git\include\savehandler.h
+1385502710 d:\dev\ia.git\include\savehandler.h
 	<vector>
 	<string>
 	"MenuBrowser.h"
 
-1382910266 d:\dev\ia.git\include\thrower.h
+1385502710 d:\dev\ia.git\include\thrower.h
 	<iostream>
 	<vector>
 	<iostream>
@@ -14286,14 +14292,14 @@
 1385502710 d:\dev\ia.git\include\featurewall.h
 	"Feature.h"
 
-1382910266 d:\dev\ia.git\include\itemexplosive.h
+1385502710 d:\dev\ia.git\include\itemexplosive.h
 	"Properties.h"
 	"Item.h"
 
-1382910266 d:\dev\ia.git\include\itemartifact.h
+1385502710 d:\dev\ia.git\include\itemartifact.h
 	"Item.h"
 
-1382910266 d:\dev\ia.git\include\itemammo.h
+1385502710 d:\dev\ia.git\include\itemammo.h
 	"Item.h"
 	"Converters.h"
 
@@ -14316,7 +14322,7 @@
 	"SDL/SDL.h"
 	"CommonData.h"
 
-1385102617 d:\dev\ia.git\include\sdlwrapper.h
+1385502710 d:\dev\ia.git\include\sdlwrapper.h
 	"SDL/SDL.h"
 	"SDL/SDL_image.h"
 	"SDL/SDL_mixer.h"
@@ -14781,7 +14787,7 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1385823985 d:\dev\ia.git\include\mapparsing.h
+1386020925 d:\dev\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"
@@ -14791,4 +14797,16 @@
 	<iostream>
 	"CommonData.h"
 	"CommonTypes.h"
+
+1386021448 d:\dev\ia.git\include\floodfill.h
+	"CommonTypes.h"
+	"CommonData.h"
+
+1386021471 source:d:\dev\ia.git\src\floodfill.cpp
+	"FloodFill.h"
+	"Engine.h"
+
+1386021682 source:d:\dev\ia.git\src\linecalc.cpp
+	"LineCalc.h"
+	"Engine.h"
 

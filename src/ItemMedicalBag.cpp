@@ -9,6 +9,7 @@
 #include "PlayerBonuses.h"
 #include "Popup.h"
 #include "GameTime.h"
+#include "MapParsing.h"
 
 bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
@@ -139,7 +140,7 @@ void MedicalBag::finishCurAction() {
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(eng->player->pos, visionBlockers);
+      MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
       eng->player->getPropHandler()->endAppliedProp(
         propInfected, visionBlockers);
     } break;

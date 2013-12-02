@@ -7,6 +7,7 @@
 #include "Config.h"
 
 class Engine;
+class Cell;
 
 enum CellPredCheckEntity_t {
   cellPredCheckEntityActor,
@@ -149,10 +150,6 @@ public:
 //  void makeWalkBlockingArrayFeaturesOnly(
 //    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
 //
-//  void floodFill(
-//    const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-//    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
-//    const Pos& target);
 //
 //  inline bool isAreaInsideMap(const Rect& area) {
 //    if(
