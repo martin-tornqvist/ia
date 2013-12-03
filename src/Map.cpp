@@ -12,39 +12,42 @@
 
 using namespace std;
 
-inline void Cell::reset() {
+inline void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
-  if(item != NULL) {
-    delete item;
-    item = NULL;
-  }
+
   if(featureStatic != NULL) {
     delete featureStatic;
     featureStatic = NULL;
   }
+
+  if(item != NULL) {
+    delete item;
+    item = NULL;
+  }
+
   playerVisualMemoryAscii.clear();
   playerVisualMemoryTiles.clear();
 }
 
 Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      //Note: FeatureFactory cannot be used at this point, since the
-      //feature array is not yet initialized
-      featuresStatic[x][y] =
-        new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
-    }
-  }
+//  for(int y = 0; y < MAP_Y_CELLS; y++) {
+//    for(int x = 0; x < MAP_X_CELLS; x++) {
+//      //Note: FeatureFactory cannot be used at this point, since the
+//      //feature array is not yet initialized
+//      cells[x][y].featureStatic =
+//        new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
+//    }
+//  }
 
   rooms.resize(0);
-  clearGrids(false);
+  resetMap();
 }
 
 Map::~Map() {
-  clearMap();
+  resetMap();
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      delete featuresStatic[x][y];
+      delete cells[x][y].featureStatic;
     }
   }
 }
@@ -54,7 +57,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
   if(eng->basicUtils->isPosInsideMap(pos)) {
 
     const Feature_t OLD_FEATURE_ID =
-      eng->map->featuresStatic[pos.x][pos.y]->getId();
+      eng->map->cells[pos.x][pos.y].featureStatic->getId();
 
     const vector<Feature_t> convertionCandidates =
       eng->featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
@@ -73,7 +76,9 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
         for(int x = pos.x - 1; x <= pos.x + 1; x++) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
-              if(eng->map->featuresStatic[x][y]->getId() == feature_door) {
+              const FeatureStatic* const f =
+                eng->map->cells[x][y].featureStatic;
+              if(f->getId() == feature_door) {
                 eng->featureFactory->spawnFeatureAt(
                   feature_rubbleLow, Pos(x, y));
               }
@@ -91,7 +96,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
   }
 }
 
-void Map::clearMap() {
+void Map::resetMap() {
   eng->actorFactory->deleteAllMonsters();
 
   const int NR_ROOMS = rooms.size();
@@ -100,36 +105,20 @@ void Map::clearMap() {
   }
   rooms.resize(0);
 
-  clearGrids(true);
+  resetCells(true);
   eng->gameTime->eraseAllFeatureMobs();
   eng->gameTime->resetTurnTypeAndActorCounters();
 }
 
-void Map::clearGrids(const bool DELETE_INSTANCES) {
+void Map::resetCells(const bool MAKE_STONE_WALLS) {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      explored[x][y] = false;
-      playerVision[x][y] = false;
 
-      if(DELETE_INSTANCES == true) {
+      cells[x][y].clear();
+
+      if(MAKE_STONE_WALLS) {
         eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
-
-        if(items[x][y] != NULL) {
-          delete(items[x][y]);
-        }
       }
-
-      items[x][y] = NULL;
-      darkness[x][y] = false;
-      light[x][y] = false;
-      playerVisualMemoryAscii[x][y].glyph = ' ';
-      playerVisualMemoryAscii[x][y].color = clrBlack;
-      playerVisualMemoryTiles[x][y].tile = tile_empty;
-      playerVisualMemoryTiles[x][y].color = clrBlack;
-      eng->renderer->renderArrayAscii[x][y].clear();
-      eng->renderer->renderArrayTiles[x][y].clear();
-      eng->renderer->renderArrayActorsOmittedAscii[x][y].clear();
-      eng->renderer->renderArrayActorsOmittedTiles[x][y].clear();
     }
   }
 }

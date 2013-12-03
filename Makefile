@@ -1,66 +1,64 @@
 CC=g++
+BUILD=release
 
 # Directiories
 SRC_DIR=src
 INC_DIR=include
-DEBUG_MODE_INC_DIR=$(INC_DIR)/debugModeIncl
-RELEASE_MODE_INC_DIR=$(INC_DIR)/releaseModeIncl
 TARGET_DIR=target
 ASSETS_DIR=assets
 
 # Includes
-INCLUDES=-I $(INC_DIR)
-
-# Target specific include files
-_INCLUDES=
-_CFLAGS=
-debug : _INCLUDES=-I $(DEBUG_MODE_INC_DIR)
-debug : _CFLAGS=-O0 -g
-release : _INCLUDES=-I $(RELEASE_MODE_INC_DIR)
-release : _CFLAGS=-O2
+INC_DIR_debug=$(INC_DIR)/debugModeIncl
+INC_DIR_release=$(INC_DIR)/releaseModeIncl
+INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
 
 #Flags
-CFLAGS=-Wall -Wextra $(shell sdl-config --cflags)
+CFLAGS_release=-O2
+CFLAGS_debug=-O0 -g
+CFLAGS=-Wall -Wextra $(shell sdl-config --cflags) $(CFLAGS_$(BUILD))
 LDFLAGS=$(shell sdl-config --libs) -lSDL_image -lSDL_mixer
 
 # Output and sources
 EXECUTABLE=ia
-SOURCES=$(shell ls $(SRC_DIR)/*.cpp)
+SOURCES=$(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
-OBJECTS_STAMP_FILE=obj_stamp
+DEPENDS=$(SOURCES:.cpp=.d)
 
 # Various bash commands
 RM=rm -rf
 MV=mv -f
 MKDIR=mkdir -p
 CP=cp -r
-
-# Dependencies 
-debug: $(SOURCES) $(EXECUTABLE)
-release: $(SOURCES) $(EXECUTABLE)
+CAT=cat
 
 # Make targets
-.DEFAULT_GOAL=default_target
-.PHONY: default_target
-default_target:
-	@echo "Use \"make debug\" or \"make release\""
+all: $(EXECUTABLE)
 
-.PHONY: $(EXECUTABLE)
-$(EXECUTABLE): $(OBJECTS_STAMP_FILE)
-	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $^ -o $@
 	$(RM) $(TARGET_DIR)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
-.PHONY: $(OBJECTS_STAMP_FILE)
-$(OBJECTS_STAMP_FILE): $(SOURCES)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(CC) $(CFLAGS) $(_CFLAGS) $(INCLUDES) $(_INCLUDES) $(SOURCES) -c
-	$(MV) *.o ./$(SRC_DIR)/
+%.o: %.cpp
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
-.PHONY: clean
+# Optional auto dependency tracking
+-include depends.mk
+
+depends: $(DEPENDS)
+
+%.d:
+	$(CC) -MM $(CFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
+	$(CAT) depends.tmp >> depends.mk
+	$(RM) depends.tmp
+
+clean-depends:
+	$(RM) depends.mk
+
+# Remove object files
 clean:
-	find . -type f -name '*~' | xargs $(RM)
-	find . -type f -name '*.o' | xargs $(RM)
-	$(RM) $(TARGET_DIR)
+	$(RM) $(TARGET_DIR) $(OBJECTS) $(EXECUTABLE)
+
+.PHONY: all depends clean clean-depends

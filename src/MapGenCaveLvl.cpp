@@ -11,14 +11,16 @@
 #include "Map.h"
 #include "FeatureWall.h"
 #include "PopulateMonsters.h"
+#include "MapParsing.h"
 
 bool MapGenCaveLvl::specificRun() {
-  eng->map->clearMap();
+  eng->map->resetMap();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
-      Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x][y]);
+      Wall* const wall = dynamic_cast<Wall*>(
+                           eng->map->cells[x][y].featureStatic);
       wall->wallType = wall_cave;
       wall->isMossGrown = false;
     }
@@ -52,10 +54,10 @@ bool MapGenCaveLvl::specificRun() {
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(
-    bodyType_normal, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+                   blockers);
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->floodFill(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
+  eng->floodFill->run(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;
   for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {

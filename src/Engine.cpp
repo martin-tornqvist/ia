@@ -29,7 +29,6 @@
 #include "Explosion.h"
 #include "Examine.h"
 #include "FeatureFactory.h"
-#include "FloodFill.h"
 #include "Fov.h"
 #include "GameTime.h"
 #include "Gods.h"
@@ -53,6 +52,7 @@
 #include "Look.h"
 #include "MainMenu.h"
 #include "Manual.h"
+#include "MapParsing.h"
 #include "MapPatterns.h"
 #include "PopulateItems.h"
 #include "PopulateMonsters.h"
@@ -213,13 +213,11 @@ void Engine::initGame() {
 void Engine::cleanupGame() {
   trace << "Engine::cleanupGame()..." << endl;
 
-  map->clearMap();
-
+  delete map;
   delete playerCreateCharacter;
   delete playerBonHandler;
   delete playerVisualMemory;
   delete itemDataHandler;
-  delete map;
   delete log;
   delete pathfinder;
   delete fov;

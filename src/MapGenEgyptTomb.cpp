@@ -9,7 +9,7 @@
 #include "FeatureWall.h"
 
 bool MapGenEgyptTomb::specificRun() {
-  eng->map->clearMap();
+  eng->map->resetMap();
 
   buildFromTemplate(Pos(0, 0), mapTemplate_pharaohsChamber);
 
@@ -17,7 +17,7 @@ bool MapGenEgyptTomb::specificRun() {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      Feature* const f = eng->map->featuresStatic[x][y];
+      Feature* const f = eng->map->cells[x][y].featureStatic;
       if(f->getId() == feature_stoneWall) {
         dynamic_cast<Wall*>(f)->wallType = wall_egypt;
       }

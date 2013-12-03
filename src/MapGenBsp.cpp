@@ -15,12 +15,13 @@
 #include "ItemFactory.h"
 #include "Map.h"
 #include "FeatureWall.h"
+#include "MapParsing.h"
 
 //============================================================= MAPBUILD-BSP
 bool MapGenBsp::specificRun() {
   trace << "MapGenBsp::specificRun()..." << endl;
 
-  eng->map->clearMap();
+  eng->map->resetMap();
 
   trace << "MapGenBsp: Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -112,10 +113,10 @@ bool MapGenBsp::specificRun() {
 
   trace << "MapGenBsp: Moving player to nearest floor cell" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
-  eng->basicUtils->reverseBoolArray(blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
   vector<Pos> freeCells;
-  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(),
        IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();
@@ -125,9 +126,9 @@ bool MapGenBsp::specificRun() {
 
   trace << "MapGenBsp: Moving player to nearest floor cell again ";
   trace << "after room theme maker" << endl;
-  eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
-  eng->basicUtils->reverseBoolArray(blockers);
-  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
+  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(),
        IsCloserToOrigin(eng->player->pos, eng));
   eng->player->pos = freeCells.front();

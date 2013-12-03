@@ -104,7 +104,7 @@ void MapGenIntroForest::buildForestTreePatch() {
       nrTerrainCreated++;
 
       while(
-        eng->map->featuresStatic[curPos.x][curPos.y]->getId() == feature_tree ||
+        eng->map->cells[curPos.x][curPos.y].featureStatic->getId() == feature_tree ||
         eng->basicUtils->chebyshevDist(curPos, eng->player->pos) <= 2) {
 
         if(eng->dice(1, 2) == 1) {
@@ -151,7 +151,8 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     buildFromTemplate(churchPos, mapTemplate_church);
 
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(bodyType_normal, blockers);
+    MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                     blockers);
 
     path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
 

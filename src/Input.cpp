@@ -516,7 +516,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng->isCheatVisionEnabled) {
         for(int y = 0; y < MAP_Y_CELLS; y++) {
           for(int x = 0; x < MAP_X_CELLS; x++) {
-            eng->map->cells[x][y].featureStatic = false;
+            eng->map->cells[x][y].isSeenByPlayer = false;
           }
         }
         eng->isCheatVisionEnabled = false;

@@ -18,7 +18,8 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   for(int y = room1.getY0(); y <= room1.getY1(); y++) {
     for(int x = room1.getX0(); x <= room1.getX1(); x++) {
       const Pos c = Pos(x, y);
-      if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+      if(eng->map->cells[c.x][c.y].featureStatic->getId() ==
+          feature_stoneFloor) {
         floorInR1Vector.push_back(c);
         floorInR1Grid[x][y] = true;
       }

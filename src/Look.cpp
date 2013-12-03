@@ -28,7 +28,7 @@ Entity::Entity(FeatureStatic* feature_) :
 void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                        const Item* const itemThrown) {
 
-  const bool IS_VISION = eng->map->playerVision[pos.x][pos.y];
+  const bool IS_VISION = eng->map->cells[pos.x][pos.y].isSeenByPlayer;
 
   eng->log->clearLog();
   if(IS_VISION) {
@@ -37,16 +37,16 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
     entityDescribed = getEntityToDescribe(pos);
 
     switch(entityDescribed.entityType) {
-      case entityType_actor:
+      case entityActor:
         describeBriefActor(*entityDescribed.actor, markerTask, itemThrown);
         break;
-      case entityType_featureStatic:
+      case entityFeatureStatic:
         describeBriefFeatureStatic(*entityDescribed.feature);
         break;
-      case entityType_featureMob:
+      case entityFeatureMob:
         describeBriefFeatureMob(*entityDescribed.feature);
         break;
-      case entityType_item:
+      case entityItem:
         describeBriefItem(*entityDescribed.item);
         break;
     }
@@ -159,20 +159,21 @@ Entity Look::getEntityToDescribe(const Pos pos) {
   }
 
   //Describe mob feature
-  for(unsigned int i = 0; i < eng->gameTime->getFeatureMobsSize(); i++) {
-    FeatureMob* f = eng->gameTime->getFeatureMobAt(i);
-    if(f->getPos() == pos) {
-      return Entity(f);
+  const int NR_MOBS = eng->gameTime->getNrFeatureMobs();
+  for(int i = 0; i < NR_MOBS; i++) {
+    FeatureMob& f = eng->gameTime->getFeatureMobAtElement(i);
+    if(f.getPos() == pos) {
+      return Entity(&f);
     }
   }
 
   //If item there, describe that.
-  Item* item = eng->map->items[pos.x][pos.y];
+  Item* item = eng->map->cells[pos.x][pos.y].item;
   if(item != NULL)
     return Entity(item);
 
   //If static feature, describe that.
-  return Entity(eng->map->featuresStatic[pos.x][pos.y]);
+  return Entity(eng->map->cells[pos.x][pos.y].featureStatic);
 
   return Entity();
 }

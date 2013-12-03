@@ -8,6 +8,8 @@
 
 class Engine;
 class Cell;
+class FeatureMob;
+class Actor;
 
 enum CellPredCheckEntity_t {
   cellPredCheckEntityActor,
@@ -103,6 +105,19 @@ public:
   bool operator()(const Pos& c1, const Pos& c2);
   Pos c_;
   const Engine* eng;
+};
+
+class FloodFill {
+public:
+  FloodFill(Engine* engine) : eng(engine) {}
+
+  void run(
+    const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
+    const Pos& target);
+
+private:
+  Engine* const eng;
 };
 
 //class MapTests {

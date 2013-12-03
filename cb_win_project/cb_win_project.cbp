@@ -177,7 +177,6 @@
 		<Unit filename="../include/FeatureSmoke.h" />
 		<Unit filename="../include/FeatureTrap.h" />
 		<Unit filename="../include/FeatureWall.h" />
-		<Unit filename="../include/FloodFill.h" />
 		<Unit filename="../include/Fov.h" />
 		<Unit filename="../include/GameTime.h" />
 		<Unit filename="../include/Gods.h" />
@@ -287,7 +286,6 @@
 		<Unit filename="../src/FeatureSmoke.cpp" />
 		<Unit filename="../src/FeatureTrap.cpp" />
 		<Unit filename="../src/FeatureWall.cpp" />
-		<Unit filename="../src/FloodFill.cpp" />
 		<Unit filename="../src/Fov.cpp" />
 		<Unit filename="../src/GameTime.cpp" />
 		<Unit filename="../src/Gods.cpp" />

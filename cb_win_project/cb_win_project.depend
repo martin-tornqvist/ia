@@ -11473,7 +11473,7 @@
 	<string>
 	<vector>
 
-1386021384 source:d:\dev\ia.git\src\actorplayer.cpp
+1386092241 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11506,7 +11506,6 @@
 	"Bot.h"
 	"Input.h"
 	"MapParsing.h"
-	"FloodFill.h"
 
 1382910266 d:\dev\ia.git\src\characterlines.h
 
@@ -11972,7 +11971,7 @@
 	<vector>
 	<string>
 
-1386021422 source:d:\dev\ia.git\src\engine.cpp
+1386092601 source:d:\dev\ia.git\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -12000,7 +11999,6 @@
 	"Explosion.h"
 	"Examine.h"
 	"FeatureFactory.h"
-	"FloodFill.h"
 	"Fov.h"
 	"GameTime.h"
 	"Gods.h"
@@ -12024,6 +12022,7 @@
 	"Look.h"
 	"MainMenu.h"
 	"Manual.h"
+	"MapParsing.h"
 	"MapPatterns.h"
 	"PopulateItems.h"
 	"PopulateMonsters.h"
@@ -12336,7 +12335,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1386009453 source:d:\dev\ia.git\src\input.cpp
+1386091263 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12589,7 +12588,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1384808199 source:d:\dev\ia.git\src\look.cpp
+1386091945 source:d:\dev\ia.git\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -12653,7 +12652,7 @@
 	"TextFormatting.h"
 	"Renderer.h"
 
-1385245684 source:d:\dev\ia.git\src\map.cpp
+1386091833 source:d:\dev\ia.git\src\map.cpp
 	"Map.h"
 	"Engine.h"
 	"Feature.h"
@@ -12663,6 +12662,7 @@
 	"GameTime.h"
 	"Renderer.h"
 	"MapGen.h"
+	"Item.h"
 
 1383849401 source:d:\dev\ia.git\src\mapbuild.cpp
 	"MapBuild.h"
@@ -13934,7 +13934,7 @@
 	"Item.h"
 	"Converters.h"
 
-1385929154 d:\dev\ia.git\include\map.h
+1386091000 d:\dev\ia.git\include\map.h
 	<vector>
 	<iostream>
 	"CommonTypes.h"
@@ -14350,7 +14350,7 @@
 	"Map.h"
 	"FeatureWall.h"
 
-1385157665 source:d:\dev\ia.git\src\mapgencavelvl.cpp
+1386092115 source:d:\dev\ia.git\src\mapgencavelvl.cpp
 	"MapGen.h"
 	<iostream>
 	<vector>
@@ -14362,8 +14362,9 @@
 	"Map.h"
 	"FeatureWall.h"
 	"PopulateMonsters.h"
+	"MapParsing.h"
 
-1385157683 source:d:\dev\ia.git\src\mapgenegypttomb.cpp
+1386092010 source:d:\dev\ia.git\src\mapgenegypttomb.cpp
 	"MapGen.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -14380,7 +14381,7 @@
 	"FeatureFactory.h"
 	"Pathfinding.h"
 
-1385496938 source:d:\dev\ia.git\src\mapgentrapezohedronlvl.cpp
+1386093239 source:d:\dev\ia.git\src\mapgentrapezohedronlvl.cpp
 	"MapGen.h"
 	"Engine.h"
 	"FeatureFactory.h"
@@ -14388,6 +14389,7 @@
 	"ItemFactory.h"
 	"Map.h"
 	"FeatureWall.h"
+	"MapParsing.h"
 
 1385407079 source:d:\dev\ia.git\src\mapgenforest.cpp
 	"MapGen.h"
@@ -14787,7 +14789,7 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1386020925 d:\dev\ia.git\include\mapparsing.h
+1386093274 d:\dev\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"

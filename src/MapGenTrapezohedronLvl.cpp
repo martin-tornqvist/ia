@@ -6,14 +6,16 @@
 #include "ItemFactory.h"
 #include "Map.h"
 #include "FeatureWall.h"
+#include "MapParsing.h"
 
 bool MapGenTrapezohedronLvl::specificRun() {
-  eng->map->clearMap();
+  eng->map->resetMap();
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
-      dynamic_cast<Wall*>(eng->map->featuresStatic[x][y])->wallType = wall_cave;
+      dynamic_cast<Wall*>(
+        eng->map->cells[x][y].featureStatic)->wallType = wall_cave;
     }
   }
 
@@ -26,8 +28,8 @@ bool MapGenTrapezohedronLvl::specificRun() {
     feature_caveFloor, false, true);
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    bodyType_normal, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
   vector<Pos> spawnCandidates;
   spawnCandidates.resize(0);
   for(int y = 0; y < MAP_Y_CELLS; y++) {

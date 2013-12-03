@@ -6,27 +6,27 @@
 #include "GameTime.h"
 
 //------------------------------------------------------------ CELL PREDICATES
-bool CellPredBlocksVision::check(const Cell& c)  {
-  return c.featureStatic.isVisionPassable() == false;
+bool CellPredBlocksVision::check(const Cell& c)  const {
+  return c.featureStatic->isVisionPassable() == false;
 }
 
-bool CellPredBlocksVision::check(const FeatureMob& f) {
+bool CellPredBlocksVision::check(const FeatureMob& f) const {
   return f.isVisionPassable() == false;
 }
 
-bool CellPredBlocksBodyType::check(const FeatureMob& f) {
+bool CellPredBlocksBodyType::check(const FeatureMob& f) const {
   return f.isBodyTypePassable(bodyType_) == false;
 }
 
-bool CellPredBlocksBodyType::check(const Actor& a) {
+bool CellPredBlocksBodyType::check(const Actor& a) const {
   return a.deadState == actorDeadState_alive;
 }
 
-bool CellPredBlocksProjectiles::check(const Cell& c)  {
-  return c.featureStatic.isProjectilesPassable() == false;
+bool CellPredBlocksProjectiles::check(const Cell& c)  const {
+  return c.featureStatic->isProjectilesPassable() == false;
 }
 
-bool CellPredBlocksProjectiles::check(const FeatureMob& f)  {
+bool CellPredBlocksProjectiles::check(const FeatureMob& f)  const {
   return f.isProjectilesPassable() == false;
 }
 
@@ -34,13 +34,13 @@ bool CellPredLivingActorsAdjToPos::check(const Actor& a) const {
   if(a.deadState != actorDeadState_alive) {
     return false;
   }
-  return eng->basicUtils->isPosAdj(pos_, a.pos);
+  return eng->basicUtils->isPosAdj(pos_, a.pos, true);
 }
 
 //------------------------------------------------------------ MAP PARSER
-static void MapParser::parse(
+void MapParser::parse(
   const CellPred& predicate, bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
-  const MapParseWriteRule writeRule = mapParseWriteAlways) {
+  const MapParseWriteRule writeRule) {
 
   if(
     predicate.isCheckingCells()       == false &&
@@ -70,12 +70,13 @@ static void MapParser::parse(
   }
 
   if(predicate.isCheckingMobFeatures()) {
-    const int NR_MOB_FEATURES = eng->gameTime->getFeatureMobsSize();
+    const int NR_MOB_FEATURES = eng->gameTime->getNrFeatureMobs();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
       const FeatureMob& f = eng->gameTime->getFeatureMobAtElement(i);
+      const Pos& p = f->pos;
       const bool IS_MATCH = predicate.check(f);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
-        arrayOut[x][y] = IS_MATCH;
+        arrayOut[p.x][p.y] = IS_MATCH;
       }
     }
   }
@@ -97,6 +98,90 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
   const int chebDist1 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
   const int chebDist2 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
+}
+
+//------------------------------------------------------------ FLOOD FILL
+void FloodFill::run(
+  const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+  int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const Pos& target) {
+
+  eng->basicUtils->resetArray(values);
+
+  vector<Pos> positions;
+  positions.resize(0);
+  unsigned int nrElementsToSkip = 0;
+  Pos c;
+
+  int currentX = origin.x;
+  int currentY = origin.y;
+
+  int currentValue = 0;
+
+  bool pathExists = true;
+  bool isAtTarget = false;
+
+  bool isStoppingAtTarget = target.x != -1;
+
+  const Rect bounds(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+
+  bool done = false;
+  while(done == false) {
+    for(int dx = -1; dx <= 1; dx++) {
+      for(int dy = -1; dy <= 1; dy++) {
+        if((dx != 0 || dy != 0)) {
+          const Pos newPos(currentX + dx, currentY + dy);
+          if(
+            blockers[newPos.x][newPos.y] == false &&
+            eng->basicUtils->isPosInside(Pos(newPos.x, newPos.y), bounds) &&
+            values[newPos.x][newPos.y] == 0) {
+            currentValue = values[currentX][currentY];
+
+            if(currentValue < travelLimit) {
+              values[newPos.x][newPos.y] = currentValue + 1;
+            }
+
+            if(isStoppingAtTarget) {
+              if(currentX == target.x - dx && currentY == target.y - dy) {
+                isAtTarget = true;
+                dx = 9999;
+                dy = 9999;
+              }
+            }
+
+            if(isStoppingAtTarget == false || isAtTarget == false) {
+              positions.push_back(newPos);
+            }
+          }
+        }
+      }
+    }
+
+    if(isStoppingAtTarget) {
+      if(positions.size() == nrElementsToSkip) {
+        pathExists = false;
+      }
+      if(isAtTarget || pathExists == false) {
+        done = true;
+      }
+    } else if(positions.size() == nrElementsToSkip) {
+      done = true;
+    }
+
+    if(currentValue == travelLimit) {
+      done = true;
+    }
+
+    if(isStoppingAtTarget == false || isAtTarget == false) {
+      if(positions.size() == nrElementsToSkip) {
+        pathExists = false;
+      } else {
+        c = positions.at(nrElementsToSkip);
+        currentX = c.x;
+        currentY = c.y;
+        nrElementsToSkip++;
+      }
+    }
+  }
 }
 
 //void MapTests::getActorsPositions(const vector<Actor*>& actors,

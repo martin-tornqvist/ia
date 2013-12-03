@@ -24,7 +24,7 @@ struct Cell {
     playerVisualMemoryTiles.clear();
   }
 
-  inline void reset();
+  inline void clear();
 
   bool isExplored;
   bool isSeenByPlayer;
@@ -49,7 +49,7 @@ public:
   inline void incrDlvl(const int levels = 1) {dlvl_ += levels;}
   inline void decrDlvl(const int levels = 1) {dlvl_ -= levels;}
 
-  void clearMap();
+  void resetMap();
 
   void switchToDestroyedFeatAt(const Pos pos);
 
@@ -65,7 +65,7 @@ public:
   vector<Room*> rooms;
 
 private:
-  void clearCells(const bool DELETE_INSTANCES);
+  void resetCells(const bool MAKE_STONE_WALLS);
 
   Engine* eng;
 

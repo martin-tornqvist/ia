@@ -32,7 +32,6 @@
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"
-#include "FloodFill.h"
 
 Player::Player() :
   activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
