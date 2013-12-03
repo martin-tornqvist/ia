@@ -12,7 +12,6 @@
 #include "Attack.h"
 #include "ItemWeapon.h"
 #include "FeatureDoor.h"
-#include "Pathfinding.h"
 #include "Inventory.h"
 #include "FeatureFactory.h"
 #include "ActorMonster.h"
@@ -200,8 +199,7 @@ void Bot::findPathToNextStairs() {
       }
     }
   }
-  currentPath_ =
-    eng->pathfinder->findPath(eng->player->pos, blockers, stairPos);
+  eng->pathFinder->run(eng->player->pos, stairPos, blockers, currentPath_);
 //  assert(currentPath_.size() > 0);
 }
 

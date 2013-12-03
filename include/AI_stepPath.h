@@ -5,10 +5,10 @@
 
 class AI_stepPath {
 public:
-  static bool action(Monster& monster, vector<Pos>* path) {
+  static bool action(Monster& monster, vector<Pos>& path) {
     if(monster.deadState == actorDeadState_alive) {
-      if(path->empty() == false) {
-        const Pos delta = path->back() - monster.pos;
+      if(path.empty() == false) {
+        const Pos delta = path.back() - monster.pos;
         monster.moveDir(DirConverter(monster.eng).getDir(delta));
         return true;
       }

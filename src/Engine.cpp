@@ -59,7 +59,6 @@
 #include "PopulateTraps.h"
 #include "MapTemplates.h"
 #include "Marker.h"
-#include "Pathfinding.h"
 #include "PlayerCreateCharacter.h"
 #include "PlayerBonuses.h"
 #include "PlayerSpellsHandler.h"
@@ -154,7 +153,7 @@ void Engine::initGame() {
   floodFill = new FloodFill(this);
   marker = new Marker(this);
   log = new Log(this);
-  pathfinder = new Pathfinder(this);
+  pathFinder = new PathFinder(this);
   fov = new Fov(this);
   soundEmitter = new SoundEmitter(this);
   featureDataHandler = new FeatureDataHandler(this);
@@ -219,7 +218,7 @@ void Engine::cleanupGame() {
   delete playerVisualMemory;
   delete itemDataHandler;
   delete log;
-  delete pathfinder;
+  delete pathFinder;
   delete fov;
   delete mapPatterns;
   delete soundEmitter;

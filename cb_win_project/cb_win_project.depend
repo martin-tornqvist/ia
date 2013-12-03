@@ -11347,7 +11347,7 @@
 	<string>
 	"GameTime.h"
 
-1385930233 source:d:\dev\ia.git\src\actormonster.cpp
+1386109053 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
 	"Engine.h"
 	"Item.h"
@@ -11747,7 +11747,7 @@
 	"Engine.h"
 	"Map.h"
 
-1385931820 source:d:\dev\ia.git\src\bot.cpp
+1386106891 source:d:\dev\ia.git\src\bot.cpp
 	"Bot.h"
 	"Engine.h"
 	"Properties.h"
@@ -11760,7 +11760,6 @@
 	"Attack.h"
 	"ItemWeapon.h"
 	"FeatureDoor.h"
-	"Pathfinding.h"
 	"Inventory.h"
 	"FeatureFactory.h"
 	"ActorMonster.h"
@@ -11971,7 +11970,7 @@
 	<vector>
 	<string>
 
-1386092601 source:d:\dev\ia.git\src\engine.cpp
+1386109079 source:d:\dev\ia.git\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -12029,7 +12028,6 @@
 	"PopulateTraps.h"
 	"MapTemplates.h"
 	"Marker.h"
-	"Pathfinding.h"
 	"PlayerCreateCharacter.h"
 	"PlayerBonuses.h"
 	"PlayerSpellsHandler.h"
@@ -12751,12 +12749,12 @@
 
 1382910266 source:d:\dev\ia.git\src\mapbuildroomsandcorridors.cpp
 
-1385102617 source:d:\dev\ia.git\src\mappatterns.cpp
+1386106169 source:d:\dev\ia.git\src\mappatterns.cpp
 	"MapPatterns.h"
 	"Engine.h"
 	"Map.h"
 
-1383848053 source:d:\dev\ia.git\src\maptemplates.cpp
+1385502710 source:d:\dev\ia.git\src\maptemplates.cpp
 	"MapTemplates.h"
 	"Engine.h"
 
@@ -12784,15 +12782,15 @@
 	"Map.h"
 	"ItemFactory.h"
 
-1384887029 source:d:\dev\ia.git\src\menubrowser.cpp
+1385502710 source:d:\dev\ia.git\src\menubrowser.cpp
 	"MenuBrowser.h"
 
-1384886881 source:d:\dev\ia.git\src\menuinputhandler.cpp
+1385502710 source:d:\dev\ia.git\src\menuinputhandler.cpp
 	"MenuInputHandler.h"
 	"Engine.h"
 	"Input.h"
 
-1382910266 source:d:\dev\ia.git\src\panel.cpp
+1385502710 source:d:\dev\ia.git\src\panel.cpp
 	"Panel.h"
 
 1383848053 source:d:\dev\ia.git\src\pathfinding.cpp
@@ -12800,7 +12798,7 @@
 	<iostream>
 	"Engine.h"
 
-1385494073 source:d:\dev\ia.git\src\playerbonuses.cpp
+1385502710 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -12812,7 +12810,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1384808904 source:d:\dev\ia.git\src\playercreatecharacter.cpp
+1385502710 source:d:\dev\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -12821,7 +12819,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1383683723 source:d:\dev\ia.git\src\playerspellshandler.cpp
+1385502710 source:d:\dev\ia.git\src\playerspellshandler.cpp
 	"PlayerSpellsHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -12833,7 +12831,7 @@
 	"ItemFactory.h"
 	"PlayerBonuses.h"
 
-1383772089 source:d:\dev\ia.git\src\playervisualmemory.cpp
+1386109381 source:d:\dev\ia.git\src\playervisualmemory.cpp
 	"PlayerVisualMemory.h"
 	"Engine.h"
 	"Map.h"
@@ -13769,7 +13767,7 @@
 	<string>
 	<iostream>
 
-1386021038 d:\dev\ia.git\include\engine.h
+1386106820 d:\dev\ia.git\include\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
@@ -14017,7 +14015,7 @@
 
 1385502710 d:\dev\ia.git\include\reload.h
 
-1385798969 d:\dev\ia.git\include\ai_handleclosedblockingdoor.h
+1386109017 d:\dev\ia.git\include\ai_handleclosedblockingdoor.h
 	"Map.h"
 	"FeatureDoor.h"
 
@@ -14033,7 +14031,7 @@
 	"MapParsing.h"
 	"LineCalc.h"
 
-1385502710 d:\dev\ia.git\include\ai_steppath.h
+1386109068 d:\dev\ia.git\include\ai_steppath.h
 	"Engine.h"
 
 1385821647 d:\dev\ia.git\include\ai_movetowardstargetsimple.h
@@ -14045,19 +14043,16 @@
 	"Engine.h"
 	"Fov.h"
 
-1385928638 d:\dev\ia.git\include\ai_setpathtoplayerifaware.h
+1386106834 d:\dev\ia.git\include\ai_setpathtoplayerifaware.h
 	"Engine.h"
-	"Pathfinding.h"
+	"MapParsing.h"
 
-1385502710 d:\dev\ia.git\include\pathfinding.h
-	<queue>
-	"CommonTypes.h"
-	"Config.h"
+1386106323 d:\dev\ia.git\include\pathfinding.h
 
-1385821753 d:\dev\ia.git\include\ai_setpathtolairifnolostolair.h
+1386106898 d:\dev\ia.git\include\ai_setpathtolairifnolostolair.h
 	"Engine.h"
 
-1385822800 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
+1386106930 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
 
 1385823868 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
@@ -14411,12 +14406,12 @@
 
 1385502710 d:\dev\ia.git\include\releasemodeincl\debugmode.h
 
-1385245684 source:d:\dev\ia.git\src\mapgenutils.cpp
+1386109239 source:d:\dev\ia.git\src\mapgenutils.cpp
 	"MapGen.h"
 	"Engine.h"
 	"Map.h"
 	"FeatureFactory.h"
-	"Pathfinding.h"
+	"MapParsing.h"
 
 1385747179 source:c:\dev\ia.git\icon\resource.rc
 
@@ -14789,7 +14784,7 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1386093274 d:\dev\ia.git\include\mapparsing.h
+1386106532 d:\dev\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"
@@ -14808,7 +14803,14 @@
 	"FloodFill.h"
 	"Engine.h"
 
-1386021682 source:d:\dev\ia.git\src\linecalc.cpp
+1386109094 source:d:\dev\ia.git\src\linecalc.cpp
 	"LineCalc.h"
 	"Engine.h"
+
+1386109253 source:d:\dev\ia.git\src\mapparsing.cpp
+	"MapParsing.h"
+	"Engine.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"GameTime.h"
 

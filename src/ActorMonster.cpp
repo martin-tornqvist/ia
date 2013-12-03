@@ -152,23 +152,23 @@ void Monster::onActorTurn() {
 
   if(ai.pathsToTargetWhenAware) {
     if(leader != eng->player) {
-      AI_setPathToPlayerIfAware::learn(*this, &path, eng);
+      AI_setPathToPlayerIfAware::learn(*this, path, eng);
     }
   }
 
   if(leader != eng->player) {
-    if(AI_handleClosedBlockingDoor::action(this, &path, eng)) {
+    if(AI_handleClosedBlockingDoor::action(this, path, eng)) {
       return;
     }
   }
 
-  if(AI_stepPath::action(*this, &path)) {
+  if(AI_stepPath::action(*this, path)) {
     return;
   }
 
   if(ai.movesTowardLeader) {
-    AI_setPathToLeaderIfNoLosToleader::learn(*this, &path, eng);
-    if(AI_stepPath::action(*this, &path)) {
+    AI_setPathToLeaderIfNoLosToleader::learn(*this, path, eng);
+    if(AI_stepPath::action(*this, path)) {
       return;
     }
   }
@@ -178,8 +178,8 @@ void Monster::onActorTurn() {
       if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;
       }
-      AI_setPathToLairIfNoLosToLair::learn(*this, &path, lairCell_, eng);
-      if(AI_stepPath::action(*this, &path)) {
+      AI_setPathToLairIfNoLosToLair::learn(*this, path, lairCell_, eng);
+      if(AI_stepPath::action(*this, path)) {
         return;
       }
     }

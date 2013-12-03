@@ -83,7 +83,7 @@ void LineCalc::calcFovAbsDistances() {
     }
   }
 
-  double deltaX, deltaY, hypot, xIncr, yIncr;
+  double deltaX, deltaY, hypot;
 
   //deltaX corresponds to i - FOV_MAX_W_INT, and vice versa for deltaY and j.
   //So:

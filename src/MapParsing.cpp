@@ -73,7 +73,7 @@ void MapParser::parse(
     const int NR_MOB_FEATURES = eng->gameTime->getNrFeatureMobs();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
       const FeatureMob& f = eng->gameTime->getFeatureMobAtElement(i);
-      const Pos& p = f->pos;
+      const Pos& p = f.getPos();
       const bool IS_MATCH = predicate.check(f);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
         arrayOut[p.x][p.y] = IS_MATCH;
@@ -85,9 +85,10 @@ void MapParser::parse(
     const int NR_ACTORS = eng->gameTime->getNrActors();
     for(int i = 0; i < NR_ACTORS; i++) {
       const Actor& a = eng->gameTime->getActorAtElement(i);
+      const Pos& p = a.pos;
       const bool IS_MATCH = predicate.check(a);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
-        arrayOut[x][y] = IS_MATCH;
+        arrayOut[p.x][p.y] = IS_MATCH;
       }
     }
   }
@@ -183,6 +184,63 @@ void FloodFill::run(
     }
   }
 }
+
+//------------------------------------------------------------ PATHFINDER
+void PathFinder::run(const Pos& origin, const Pos& target,
+                     bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+                     vector<Pos>& vectorToFill) const {
+
+  vectorToFill.resize(0);
+
+  int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
+  eng->floodFill->run(origin, blockers, floodValues, 1000, target);
+
+  bool pathExists = floodValues[target.x][target.y] != 0;
+
+  if(pathExists == true) {
+    vector<Pos> positions;
+    Pos c;
+
+    int currentX = target.x;
+    int currentY = target.y;
+
+    bool done = false;
+    while(done == false) {
+      //TODO use for-loop instead
+      //starts from 0 instead of -1 so that cardinal directions are tried first
+      int xOffset = 0;
+      while(xOffset <= 1) {
+        int yOffset = 0;
+        while(yOffset <= 1) {
+          if(xOffset != 0 || yOffset != 0) {
+            //TODO increase readability
+            if(currentX + xOffset >= 0 && currentY + yOffset >= 0) {
+              if((floodValues[currentX + xOffset][currentY + yOffset] == floodValues[currentX][currentY] - 1 && floodValues[currentX
+                  + xOffset][currentY + yOffset] != 0) || (currentX + xOffset == origin.x && currentY + yOffset == origin.y)) {
+                c.x = currentX;
+                c.y = currentY;
+                vectorToFill.push_back(c);
+
+                currentX = currentX + xOffset;
+                currentY = currentY + yOffset;
+
+                if(currentX == origin.x && currentY == origin.y) {
+                  done = true;
+                }
+
+                xOffset = 99;
+                yOffset = 99;
+              }
+            }
+          }
+          yOffset = yOffset == 1 ? 2 : yOffset == -1 ? 1 : yOffset == 0 ? -1 : yOffset;
+        }
+        xOffset = xOffset == 1 ? 2 : xOffset == -1 ? 1 : xOffset == 0 ? -1 : xOffset;
+      }
+    }
+  }
+}
+
 
 //void MapTests::getActorsPositions(const vector<Actor*>& actors,
 //                                  vector<Pos>& vectorToFill) {

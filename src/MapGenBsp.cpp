@@ -11,7 +11,6 @@
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "ItemDrop.h"
-#include "Pathfinding.h"
 #include "ItemFactory.h"
 #include "Map.h"
 #include "FeatureWall.h"
@@ -260,7 +259,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             } else {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  const Feature_t featureId = eng->map->featuresStatic[x + dx][y + dy]->getId();
+                  const Feature_t featureId = eng->map->cells[x + dx][y + dy].featureStatic->getId();
                   const bool IS_FLOOR = featureId == feature_stoneFloor || featureId == feature_caveFloor;
                   if(IS_FLOOR && eng->basicUtils->isPosInside(Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
                     blockers[x][y] = true;
@@ -276,8 +275,8 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
 
         const int FLOOD_FILL_TRAVEL_LIMIT = 20;
 
-        eng->mapTests->floodFill(origin, blockers, floodFillResult,
-                                 FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1));
+        eng->floodFill->run(origin, blockers, floodFillResult,
+                            FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1));
 
         for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
           for(int x = 1; x < MAP_X_CELLS - 1; x++) {
@@ -290,9 +289,9 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  if(eng->map->featuresStatic[x + dx][y + dy]->getId() == feature_stoneWall) {
+                  if(eng->map->cells[x + dx][y + dy].featureStatic->getId() == feature_stoneWall) {
                     eng->featureFactory->spawnFeatureAt(feature_stoneWall, c + Pos(dx , dy));
-                    Wall* const wall = dynamic_cast<Wall*>(eng->map->featuresStatic[x + dx][y + dy]);
+                    Wall* const wall = dynamic_cast<Wall*>(eng->map->cells[x + dx][y + dy].featureStatic);
                     wall->wallType = wall_cave;
                     wall->setRandomIsMossGrown();
                   }
@@ -311,7 +310,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             for(int x = 1; x < MAP_X_CELLS - 1; x++) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  if(eng->map->featuresStatic[x + dx][y + dy]->getId() == feature_stoneWall) {
+                  if(eng->map->cells[x + dx][y + dy].featureStatic->getId() == feature_stoneWall) {
                     blockers[x][y] = blockers[x + dx][y + dy] = true;
                   }
                 }

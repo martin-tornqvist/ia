@@ -120,6 +120,17 @@ private:
   Engine* const eng;
 };
 
+class PathFinder {
+public:
+  PathFinder(Engine* engine) : eng(engine) {}
+
+  void run(const Pos& origin, const Pos& target,
+           bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+           vector<Pos>& vectorToFill) const;
+private:
+  Engine* eng;
+};
+
 //class MapTests {
 //public:
 //  MapTests(Engine* engine) : eng(engine) {}

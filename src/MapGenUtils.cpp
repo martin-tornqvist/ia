@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Map.h"
 #include "FeatureFactory.h"
-#include "Pathfinding.h"
+#include "MapParsing.h"
 
 void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
@@ -57,7 +57,9 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   for(int y = room2.getY0(); y <= room2.getY1(); y++) {
     for(int x = room2.getX0(); x <= room2.getX1(); x++) {
       Pos c = Pos(x, y);
-      if(eng->map->featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+      const FeatureStatic* const f =
+        eng->map->cells[c.x][c.y].featureStatic;
+      if(f->getId() == feature_stoneFloor) {
         floorInR2Vector.push_back(c);
         floorInR2Grid[x][y] = true;
 
@@ -201,7 +203,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 void MapGen::backupMap() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      backup[x][y] = eng->map->featuresStatic[x][y]->getId();
+      backup[x][y] = eng->map->cells[x][y].featureStatic->getId();
     }
   }
 }
@@ -220,12 +222,14 @@ void MapGen::makeStraightPathByPathfinder(
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   eng->basicUtils->resetArray(blockers, false);
-  vector<Pos> path = eng->pathfinder->findPath(origin, blockers, target);
-  for(unsigned int i = 0; i < path.size(); i++) {
+  vector<Pos> path;
+  eng->pathFinder->run(origin, target, blockers, path);
+  const int PATH_SIZE = path.size();
+  for(int i = 0; i < PATH_SIZE; i++) {
     const Pos c = path.at(i);
-    if(
-      eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() ||
-      TUNNEL_THROUGH_ANY_FEATURE) {
+    const FeatureStatic* const f =
+      eng->map->cells[c.x][c.y].featureStatic;
+    if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       eng->featureFactory->spawnFeatureAt(feature, c);
       if(SMOOTH == false && eng->dice.percentile() < 33) {
         makePathByRandomWalk(c.x, c.y, eng->dice(1, 6), feature, true);
@@ -260,9 +264,9 @@ void MapGen::makePathByRandomWalk(
           (ONLY_STRAIGHT == true && dx != 0 && dy != 0)
         );
     }
-    if(
-      eng->map->featuresStatic[xPos + dx][yPos + dy]->canHaveStaticFeature() ||
-      TUNNEL_THROUGH_ANY_FEATURE) {
+    const FeatureStatic* const f =
+      eng->map->cells[xPos + dx][yPos + dy].featureStatic;
+    if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       positionsToFill.push_back(Pos(xPos + dx, yPos + dy));
       xPos += dx;
       yPos += dy;

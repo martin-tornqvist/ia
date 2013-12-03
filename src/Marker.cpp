@@ -11,9 +11,9 @@
 #include "Look.h"
 #include "Thrower.h"
 #include "Renderer.h"
-#include "ItemScroll.h"
 #include "Map.h"
 #include "ItemFactory.h"
+#include "LineCalc.h"
 
 void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
@@ -127,7 +127,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
 //    trail.push_back(Pos(pos_.x, pos_.y));
 //  } else {
   const Pos playerPos = eng->player->pos;
-  eng->mapTests->getLine(playerPos, pos_, true, 9999, trail);
+  eng->lineCalc->calcNewLine(playerPos, pos_, true, 9999, false, trail);
 //  }
 
   if(markerTask == markerTask_aimRangedWeapon) {

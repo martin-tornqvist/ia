@@ -29,7 +29,7 @@ class ItemDataHandler;
 class Map;
 class Log;
 class Phrases;
-class Pathfinder;
+class PathFinder;
 class Fov;
 class MapPatterns;
 class SoundEmitter;
@@ -128,7 +128,7 @@ public:
   Map* map;
   Log* log;
   Phrases* phrases;
-  Pathfinder* pathfinder;
+  PathFinder* pathFinder;
   Fov* fov;
   MapPatterns* mapPatterns;
   SoundEmitter* soundEmitter;

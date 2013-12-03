@@ -7,7 +7,6 @@
 #include "Converters.h"
 #include "FeatureFactory.h"
 #include "ActorPlayer.h"
-#include "Pathfinding.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "Map.h"
@@ -16,6 +15,7 @@
 #include "FeatureGrave.h"
 #include "TextFormatting.h"
 #include "PopulateMonsters.h"
+#include "MapParsing.h"
 
 void MapGenIntroForest::buildForestLimit() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
@@ -154,7 +154,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                      blockers);
 
-    path = eng->pathfinder->findPath(eng->player->pos, blockers, stairsPos);
+    eng->pathFinder->run(eng->player->pos, stairsPos, blockers, path);
 
     eng->featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
 

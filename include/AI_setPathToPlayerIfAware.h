@@ -2,11 +2,11 @@
 #define AI_SET_PATH_TO_PLAYER_IF_AWARE_H
 
 #include "Engine.h"
-#include "Pathfinding.h"
+#include "MapParsing.h"
 
 class AI_setPathToPlayerIfAware {
 public:
-  static void learn(Monster& monster, vector<Pos>* path, Engine* engine) {
+  static void learn(Monster& monster, vector<Pos>& path, Engine* engine) {
     if(monster.deadState == actorDeadState_alive) {
       if(monster.playerAwarenessCounter > 0) {
 
@@ -42,13 +42,13 @@ public:
         MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
                          blockers, mapParseWriteOnlyTrue);
 
-        *path = engine->pathfinder->findPath(
-                  monster.pos, blockers, engine->player->pos);
+        engine->pathFinder->run(
+          monster.pos, engine->player->pos, blockers, path);
       } else {
-        path->resize(0);
+        path.resize(0);
       }
     } else {
-      path->resize(0);
+      path.resize(0);
     }
   }
 

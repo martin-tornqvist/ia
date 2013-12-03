@@ -5,7 +5,7 @@
 
 class AI_setPathToLeaderIfNoLosToleader {
 public:
-  static void learn(Monster& monster, vector<Pos>* path, Engine* engine) {
+  static void learn(Monster& monster, vector<Pos> path, Engine* engine) {
 
     if(monster.deadState == actorDeadState_alive) {
       Actor* leader = monster.leader;
@@ -17,7 +17,7 @@ public:
           if(
             engine->fov->checkCell(
               blockers, leader->pos, monster.pos, true)) {
-            path->resize(0);
+            path.resize(0);
             return;
           }
 
@@ -26,14 +26,14 @@ public:
             blockers);
           MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
                            blockers, mapParseWriteOnlyTrue);
-          *path = engine->pathfinder->findPath(
-                    monster.pos, blockers, leader->pos);
+          engine->pathFinder->run(
+            monster.pos, leader->pos, blockers, path);
           return;
         }
       }
     }
 
-    path->resize(0);
+    path.resize(0);
 
   }
 private:
