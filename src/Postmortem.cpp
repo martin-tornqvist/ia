@@ -154,8 +154,10 @@ void Postmortem::makeInfoLines() {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
           if(eng->basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
-            if(eng->map->featuresStatic[x + dx][y + dy]->isVisionPassable()) {
-              eng->map->playerVision[x][y] = true;
+            const FeatureStatic* const f =
+              eng->map->cells[x + dx][y + dy].featureStatic;
+            if(f->isVisionPassable()) {
+              eng->map->cells[x][y].isSeenByPlayer = true;
             }
           }
         }

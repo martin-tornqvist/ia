@@ -60,7 +60,6 @@
 				</Linker>
 				<ExtraCommands>
 					<Add after="$exe_output" />
-					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">

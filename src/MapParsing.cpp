@@ -14,6 +14,10 @@ bool CellPredBlocksVision::check(const FeatureMob& f) const {
   return f.isVisionPassable() == false;
 }
 
+bool CellPredBlocksBodyType::check(const Cell& c) const {
+  return c.featureStatic->isBodyTypePassable(bodyType_) == false;
+}
+
 bool CellPredBlocksBodyType::check(const FeatureMob& f) const {
   return f.isBodyTypePassable(bodyType_) == false;
 }
@@ -35,6 +39,14 @@ bool CellPredLivingActorsAdjToPos::check(const Actor& a) const {
     return false;
   }
   return eng->basicUtils->isPosAdj(pos_, a.pos, true);
+}
+
+bool CellPredBlocksItems::check(const Cell& c)  const {
+  return c.featureStatic->canHaveItem() == false;
+}
+
+bool CellPredBlocksItems::check(const FeatureMob& f) const {
+  return f.canHaveItem() == false;
 }
 
 //------------------------------------------------------------ MAP PARSER
@@ -242,16 +254,6 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 }
 
 
-//void MapTests::getActorsPositions(const vector<Actor*>& actors,
-//                                  vector<Pos>& vectorToFill) {
-//  vectorToFill.resize(0);
-//  const unsigned int NR_ACTORS = actors.size();
-//  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    vectorToFill.push_back(actors.at(i)->pos);
-//  }
-//}
-//
-//
 //void MapTests::makeVisionBlockerArray(
 //  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
 //  const int MAX_VISION_RANGE) {

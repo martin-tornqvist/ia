@@ -102,7 +102,7 @@ bool Feature::canHaveItem() const {
   return data_->canHaveItem;
 }
 
-bool Feature::hasBlood() {
+bool Feature::hasBlood() const {
   return hasBlood_;
 }
 

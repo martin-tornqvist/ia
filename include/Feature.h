@@ -43,7 +43,7 @@ public:
   virtual bool canHaveBlood() const;
   virtual bool canHaveGore() const;
   virtual bool canHaveItem() const;
-  bool hasBlood();
+  bool hasBlood() const;
   void setHasBlood(const bool HAS_BLOOD);
   Feature_t getId() const;
   virtual int getDodgeModifier() const;
@@ -91,9 +91,9 @@ public:
 
   void setGoreIfPossible();
 
-  inline Tile_t getGoreTile() {return goreTile_;}
+  inline Tile_t getGoreTile() const {return goreTile_;}
 
-  inline char getGoreGlyph()  {return goreGlyph_;}
+  inline char getGoreGlyph()  const {return goreGlyph_;}
 
   inline void clearGore() {
     goreTile_ = tile_empty;

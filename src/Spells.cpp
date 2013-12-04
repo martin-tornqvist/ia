@@ -17,6 +17,7 @@
 #include "ItemScroll.h"
 #include "ItemArmor.h"
 #include "Inventory.h"
+#include "MapParsing.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<Spell_t> candidates;
@@ -70,7 +71,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
-        if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
+        if(eng->map->cells[x][y].featureStatic->getId() == feature_altar) {
           costMax -= 1;
           y = 9999;
           x = 9999;
@@ -106,7 +107,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     } else {
       trace << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);
-      if(eng->map->playerVision[monster->pos.x][monster->pos.y]) {
+      if(eng->map->cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
         const string spellStr = monster->getData()->spellCastMessage;
         eng->log->addMsg(spellStr);
       }
@@ -179,7 +180,7 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
@@ -208,7 +209,7 @@ SpellCastRetData SpellMayhem::specificCast(
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             const FeatureStatic* const f =
-              eng->map->featuresStatic[x + dx][y + dy];
+              eng->map->cells[x + dx][y + dy].featureStatic;
             if(f->isBodyTypePassable(bodyType_normal)) {
               isAdjToWalkableCell = true;
             }
@@ -226,20 +227,23 @@ SpellCastRetData SpellMayhem::specificCast(
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      if(eng->map->featuresStatic[x][y]->canHaveBlood()) {
+      FeatureStatic* const f =
+        eng->map->cells[x][y].featureStatic;
+      if(f->canHaveBlood()) {
         const int CHANCE_FOR_BLOOD = 10;
         if(eng->dice.percentile() < CHANCE_FOR_BLOOD) {
-          eng->map->featuresStatic[x][y]->setHasBlood(true);
+          f->setHasBlood(true);
         }
       }
     }
   }
 
-  for(unsigned int i = 0; i < eng->gameTime->getLoopSize(); i++) {
-    Actor* actor = eng->gameTime->getActorAtElement(i);
-    if(actor != eng->player) {
-      if(eng->player->checkIfSeeActor(*actor, NULL)) {
-        actor->getPropHandler()->tryApplyProp(
+  const int NR_ACTORS = eng->gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor& actor = eng->gameTime->getActorAtElement(i);
+    if(&actor != eng->player) {
+      if(eng->player->checkIfSeeActor(actor, NULL)) {
+        actor.getPropHandler()->tryApplyProp(
           new PropBurning(eng, propTurnsStandard));
       }
     }
@@ -256,7 +260,8 @@ SpellCastRetData SpellPestilence::specificCast(
   Actor* const caster, Engine* const eng) {
   (void)caster;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(bodyType_normal, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+                   blockers);
 
   const int RADI = 4;
   const int x0 = max(0, eng->player->pos.x - RADI);
@@ -313,10 +318,10 @@ SpellCastRetData SpellDetectItems::specificCast(
 
   for(int y = Y0; y < Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      Item* item = eng->map->items[x][y];
+      Item* item = eng->map->cells[x][y].item;
       if(item != NULL) {
-        eng->map->playerVision[x][y] = true;
-        eng->map->explored[x][y] = true;
+        eng->map->cells[x][y].isSeenByPlayer = true;
+        eng->map->cells[x][y].isExplored = true;
         itemsRevealedPositions.push_back(Pos(x, y));
       }
     }
@@ -349,8 +354,8 @@ SpellCastRetData SpellDetectTraps::specificCast(
 
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
-      if(eng->map->playerVision[x][y]) {
-        FeatureStatic* const f = eng->map->featuresStatic[x][y];
+      if(eng->map->cells[x][y].isSeenByPlayer) {
+        FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
         if(f->getId() == feature_trap) {
           Trap* const trap = dynamic_cast<Trap*>(f);
           trap->reveal(false);
@@ -396,8 +401,8 @@ SpellCastRetData SpellOpening::specificCast(
 
   for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
     for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-      if(eng->map->playerVision[x][y]) {
-        if(eng->map->featuresStatic[x][y]->openFeature()) {
+      if(eng->map->cells[x][y].isSeenByPlayer) {
+        if(eng->map->cells[x][y].featureStatic->openFeature()) {
           featuresOpenedPositions.push_back(Pos(x, y));
         }
       }
@@ -508,8 +513,7 @@ bool SpellMthPower::doSpecialAction(Engine* const eng) const {
       eng->dice.oneIn(3) &&
       eng->player->getHp() < eng->player->getHpMax(true)) {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
-      eng->mapTests->makeVisionBlockerArray(
-        eng->player->pos, visionBlockers);
+      MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
       eng->player->getPropHandler()->endAppliedProp(
         propDiseased, visionBlockers);
       eng->player->restoreHp(999, true);
@@ -520,14 +524,14 @@ bool SpellMthPower::doSpecialAction(Engine* const eng) const {
     for(int y = 1; y < MAP_Y_CELLS; y++) {
       for(int x = 1; x < MAP_X_CELLS; x++) {
         if(
-          eng->map->featuresStatic[x][y]->getId() == feature_stairsDown &&
-          eng->map->explored[x][y] == false) {
+          eng->map->cells[x][y].featureStatic->getId() == feature_stairsDown &&
+          eng->map->cells[x][y].isExplored == false) {
 
           trace << "SpellMthPower: Find stairs" << endl;
           for(int dy = -1; dy <= 1; dy++) {
             for(int dx = -1; dx <= 1; dx++) {
-              eng->map->playerVision[x + dx][y + dy] = true;
-              eng->map->explored[x + dx][y + dy] = true;
+              eng->map->cells[x + dx][y + dy].isSeenByPlayer = true;
+              eng->map->cells[x + dx][y + dy].isExplored = true;
             }
           }
           eng->log->addMsg("The way forward is revealed!");
@@ -614,9 +618,9 @@ SpellCastRetData SpellTeleport::specificCast(
 bool SpellTeleport::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
-  return monster->checkIfSeeActor(*(eng->player), blockers)  &&
-         monster->getHp() <= (monster->getHpMax(true) / 2)      &&
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  return monster->checkIfSeeActor(*(eng->player), blockers) &&
+         monster->getHp() <= (monster->getHpMax(true) / 2) &&
          eng->dice.coinToss();
 }
 
@@ -627,7 +631,7 @@ SpellCastRetData SpellKnockBack::specificCast(
 
   } else {
     eng->log->addMsg("A force pushes me!", clrMessageBad);
-    eng->knockBack->tryKnockBack(eng->player, caster->pos, false);
+    eng->knockBack->tryKnockBack(*(eng->player), caster->pos, false);
   }
   return SpellCastRetData(false);
 }
@@ -635,7 +639,7 @@ SpellCastRetData SpellKnockBack::specificCast(
 bool SpellKnockBack::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
@@ -686,7 +690,7 @@ SpellCastRetData SpellEnfeeble::specificCast(
 bool SpellEnfeeble::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
@@ -858,7 +862,7 @@ SpellCastRetData SpellDisease::specificCast(
 bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng->player), blockers);
 }
 
@@ -877,14 +881,15 @@ SpellCastRetData SpellSummonRandom::specificCast(
   const int Y1 = min(MAP_Y_CELLS, playerPos.y + RADI) - 1;
   for(int x = X0; x <= X1; x++) {
     for(int y = Y0; y <= Y1; y++) {
-      if(eng->map->playerVision[x][y]) {
+      if(eng->map->cells[x][y].isSeenByPlayer) {
         freePositionsSeenByPlayer.push_back(Pos(x, y));
       }
     }
   }
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyType(bodyType_normal, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+                   blockers);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
     const Pos pos(freePositionsSeenByPlayer.at(i));
@@ -896,7 +901,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
 
   if(freePositionsSeenByPlayer.empty()) {
     vector<Pos> freeCellsVector;
-    eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCellsVector);
+    eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCellsVector);
     if(freeCellsVector.empty() == false) {
       sort(freeCellsVector.begin(), freeCellsVector.end(),
            IsCloserToOrigin(caster->pos, eng));
@@ -922,7 +927,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
   Actor* const actor = eng->actorFactory->spawnActor(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
   monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
-  if(eng->map->playerVision[summonPos.x][summonPos.y]) {
+  if(eng->map->cells[summonPos.x][summonPos.y].isSeenByPlayer) {
     eng->log->addMsg(monster->getNameA() + " appears.");
   }
   return SpellCastRetData(false);
@@ -932,7 +937,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
   Monster* const monster, Engine* const eng) {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeVisionBlockerArray(monster->pos, blockers);
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
   const bool IS_PLAYER_SEEN =
     monster->checkIfSeeActor(*(eng->player), blockers);
   return IS_PLAYER_SEEN || (eng->dice.percentile() < 5);

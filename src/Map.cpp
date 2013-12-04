@@ -32,15 +32,19 @@ inline void Cell::clear() {
 Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      //Note: FeatureFactory cannot be used at this point, since the
-//      //feature array is not yet initialized
-//      cells[x][y].featureStatic =
-//        new FeatureStatic(feature_stoneWall, Pos(x, y), eng);
+//      cells[x][y].featureStatic = NULL;
+//      cells[x][y].item = NULL;
 //    }
 //  }
 
   rooms.resize(0);
-  resetMap();
+//  resetMap();
+
+  eng->actorFactory->deleteAllMonsters();
+
+  resetCells(false);
+  eng->gameTime->eraseAllFeatureMobs();
+  eng->gameTime->resetTurnTypeAndActorCounters();
 }
 
 Map::~Map() {

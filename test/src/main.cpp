@@ -24,7 +24,7 @@ struct BasicFixture {
     eng->initGame();
     eng->gameTime->insertActorInLoop(eng->player);
     eng->player->pos = Pos(1, 1);
-    eng->map->clearMap();
+    eng->map->resetMap();
   }
   ~BasicFixture() {
     eng->cleanupGame();
@@ -125,7 +125,7 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   Pos target(5, 8);
   Item* item = eng->itemFactory->spawnItem(item_throwingKnife);
   eng->thrower->throwItem(*(eng->player), target, *item);
-  CHECK(eng->map->items[5][9] != NULL);
+  CHECK(eng->map->cells[5][9].item != NULL);
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
@@ -161,7 +161,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
     //Create a spider web in the right cell
     const Feature_t mimicId =
-      eng->map->featuresStatic[posR.x][posR.x]->getId();
+      eng->map->cells[posR.x][posR.x].featureStatic->getId();
     const FeatureData* const mimicData =
       eng->featureDataHandler->getData(mimicId);
     TrapSpawnData* const trapSpawnData = new TrapSpawnData(
@@ -182,7 +182,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
       isTestedStuck = true;
     } else if(monster->pos == posL) {
       const Feature_t featureId =
-        eng->map->featuresStatic[posR.x][posR.y]->getId();
+        eng->map->cells[posR.x][posR.y].featureStatic->getId();
       if(featureId == feature_trashedSpiderWeb) {
         isTestedLooseWebDestroyed = true;
       } else {

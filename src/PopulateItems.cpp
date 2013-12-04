@@ -5,13 +5,13 @@
 #include "Map.h"
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"
+#include "MapParsing.h"
 
 void PopulateItems::spawnItems() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeItemBlockerArray(blockers);
-  eng->basicUtils->reverseBoolArray(blockers);
+  MapParser::parse(CellPredBlocksItems(eng), blockers);
   vector<Pos> freeCells;
-  eng->mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
+  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
 
   const int CELLS_PER_SPAWN = 135;
 

@@ -8,6 +8,7 @@
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "GameTime.h"
+#include "MapParsing.h"
 
 bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
                                        const Sound& snd) const {
@@ -21,7 +22,7 @@ void SoundEmitter::emitSound(Sound snd) {
   FeatureStatic* f = NULL;
   for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
     for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-      f = eng->map->featuresStatic[x][y];
+      f = eng->map->cells[x][y].featureStatic;
       const bool SOUND_CAN_PASS_CELL =
         f->isBodyTypePassable(bodyType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
@@ -29,21 +30,21 @@ void SoundEmitter::emitSound(Sound snd) {
   }
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   const Pos& origin = snd.getOrigin();
-  eng->mapTests->floodFill(origin, blockers, floodFill, 999, Pos(-1, -1));
+  eng->floodFill->run(origin, blockers, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
 
-  const unsigned int LOOP_SIZE = eng->gameTime->getLoopSize();
+  const int NR_ACTORS = eng->gameTime->getNrActors();
 
-  for(unsigned int i = 0; i < LOOP_SIZE; i++) {
-    Actor* const actor = eng->gameTime->getActorAtElement(i);
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor& actor = eng->gameTime->getActorAtElement(i);
 
-    const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
+    const int FLOOD_VALUE_AT_ACTOR = floodFill[actor.pos.x][actor.pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
-      eng->map->playerVision[origin.x][origin.y];
+      eng->map->cells[origin.x][origin.y].isSeenByPlayer;
 
     if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
-      if(actor == eng->player) {
+      if(&actor == eng->player) {
 
         //Various conditions may clear the sound message
         if(
@@ -76,7 +77,7 @@ void SoundEmitter::emitSound(Sound snd) {
         eng->player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
                                dirToOrigin, PERCENT_DISTANCE);
       } else {
-        Monster* const monster = dynamic_cast<Monster*>(actor);
+        Monster* const monster = dynamic_cast<Monster*>(&actor);
         monster->hearSound(snd);
       }
     }

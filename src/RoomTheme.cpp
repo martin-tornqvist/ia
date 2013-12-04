@@ -10,6 +10,7 @@
 #include "PopulateTraps.h"
 #include "Blood.h"
 #include "Gods.h"
+#include "MapParsing.h"
 
 void RoomThemeMaker::run() {
   trace << "RoomThemeMaker::run()..." << endl;
@@ -141,7 +142,8 @@ bool RoomThemeMaker::isThemeAllowed(
 
 void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
 
 //  if(room.roomTheme == roomTheme_dungeon) {}
   switch(room.roomTheme) {
@@ -202,7 +204,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         vector<Pos> originCandidates;
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
-            if(eng->map->featuresStatic[x][y]->getId() == feature_altar) {
+            if(eng->map->cells[x][y].featureStatic->getId() == feature_altar) {
               origin = Pos(x, y);
               y = 999;
               x = 999;
@@ -336,7 +338,7 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
     if(eng->dice.range(1, 100) < chanceToMakeDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
-          eng->map->darkness[x][y] = true;
+          eng->map->cells[x][y].isDark = true;
         }
       }
     }
@@ -475,7 +477,8 @@ void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker: Trying to set non-plain themes ";
   trace << "for some rooms" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeWalkBlockingArrayFeaturesOnly(blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
   const int NR_TRIES_TO_ASSIGN = 100;
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {

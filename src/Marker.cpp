@@ -187,12 +187,13 @@ void Marker::setPosToClosestEnemyIfVisible() {
   vector<Actor*> spotedEnemies;
   eng->player->getSpotedEnemies(spotedEnemies);
   vector<Pos> spotedEnemiesPositions;
-  eng->mapTests->getActorsPositions(spotedEnemies, spotedEnemiesPositions);
+
+  eng->basicUtils->getActorPositions(spotedEnemies, spotedEnemiesPositions);
 
   //If player sees enemies, suggest one for targeting
   if(spotedEnemiesPositions.empty() == false) {
-    pos_ = eng->mapTests->getClosestPos(eng->player->pos,
-                                        spotedEnemiesPositions);
+    pos_ = eng->basicUtils->getClosestPos(eng->player->pos,
+                                          spotedEnemiesPositions);
 
     const Actor* const actor = eng->basicUtils->getActorAtPos(pos_);
     eng->player->target = actor;

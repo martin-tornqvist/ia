@@ -10,7 +10,7 @@
 #include "Converters.h"
 #include "GameTime.h"
 
-// Function for lexicographically comparing two StringAndClr structs
+
 struct LexicograhicalCompareStringAndClr {
 public:
   LexicograhicalCompareStringAndClr() {
@@ -34,6 +34,16 @@ void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
     }
   }
 }
+
+void BasicUtils::getActorPositions(const vector<Actor*>& actors,
+                                   vector<Pos>& vectorToFill) {
+  vectorToFill.resize(0);
+  const unsigned int NR_ACTORS = actors.size();
+  for(unsigned int i = 0; i < NR_ACTORS; i++) {
+    vectorToFill.push_back(actors.at(i)->pos);
+  }
+}
+
 
 Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
   const int NR_ACTORS = eng->gameTime->getNrActors();

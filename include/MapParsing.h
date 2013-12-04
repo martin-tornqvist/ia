@@ -81,6 +81,17 @@ public:
   const Pos& pos_;
 };
 
+class CellPredBlocksItems : public CellPred {
+public:
+  CellPredBlocksItems(Engine* engine) : CellPred(engine) {}
+  bool isCheckingCells()          const {return true;}
+  bool isCheckingMobFeatures()    const {return true;}
+  bool isCheckingActors()         const {return false;}
+  bool check(const Cell& c)       const;
+  bool check(const FeatureMob& f) const;
+  bool check(const Actor& a)      const {(void)a; return false;}
+};
+
 enum MapParseWriteRule {
   mapParseWriteAlways,
   mapParseWriteOnlyFalse,
@@ -131,79 +142,7 @@ private:
   Engine* eng;
 };
 
-//class MapTests {
-//public:
-//  MapTests(Engine* engine) : eng(engine) {}
-//
-//  void getActorsPositions(const vector<Actor*>& actors,
-//                          vector<Pos>& vectorToFill);
-//
-//  void makeVisionBlockerArray(
-//    const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
-//    const int MAX_VISION_RANGE = FOV_MAX_RADI_INT);
-//
-//  void makeMoveBlockerArray(
-//    const Actor* const actorMoving,
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeMoveBlockerArrayForBodyType(
-//    const BodyType_t bodyType,
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeShootBlockerFeaturesArray(
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeItemBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeMoveBlockerArrayFeaturesOnly(
-//    const Actor* const actorMoving,
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-//    const BodyType_t bodyType,
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void addItemsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void addLivingActorsToBlockerArray(
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void addAllActorsToBlockerArray(bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void addAdjLivingActorsToBlockerArray(
-//    const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//  void makeWalkBlockingArrayFeaturesOnly(
-//    bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]);
-//
-//
-//  inline bool isAreaInsideMap(const Rect& area) {
-//    if(
-//      area.x0y0.x < 0 || area.x0y0.y < 0 ||
-//      area.x1y1.x >= MAP_X_CELLS || area.x1y1.y >= MAP_Y_CELLS) {
-//      return false;
-//    }
-//    return true;
-//  }
-//
-//  inline bool isAreaInsideOther(const Rect& inner, const Rect& outer,
-//                                const bool COUNT_EQUAL_AS_INSIDE) const {
-//    if(COUNT_EQUAL_AS_INSIDE) {
-//      return
-//        inner.x0y0.x >= outer.x0y0.x &&
-//        inner.x1y1.x <= outer.x1y1.x &&
-//        inner.x0y0.y >= outer.x0y0.y &&
-//        inner.x1y1.y <= outer.x1y1.y;
-//    } else {
-//      return
-//        inner.x0y0.x > outer.x0y0.x &&
-//        inner.x1y1.x < outer.x1y1.x &&
-//        inner.x0y0.y > outer.x0y0.y &&
-//        inner.x1y1.y < outer.x1y1.y;
-//    }
-//  }
-//
-//
+
 //  bool isCellNextToPlayer(const Pos& pos,
 //                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
 //

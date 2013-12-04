@@ -46,6 +46,7 @@ public:
     return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
   }
 
+  //Function for lexicographically comparing two StringAndClr structs
   void lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect);
 
   void resetArray(int a[MAP_X_CELLS][MAP_Y_CELLS]) {
@@ -86,6 +87,9 @@ public:
 
   Actor* getActorAtPos(const Pos& pos) const;
 
+  void getActorPositions(const vector<Actor*>& actors,
+                         vector<Pos>& vectorToFill);
+
   void makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]);
 
   inline bool isPosInsideMap(const Pos& pos) const {
@@ -103,6 +107,33 @@ public:
       pos.y >= area.x0y0.y &&
       pos.y <= area.x1y1.y;
   }
+
+  inline bool isAreaInsideOther(const Rect& inner, const Rect& outer,
+                                const bool COUNT_EQUAL_AS_INSIDE) const {
+    if(COUNT_EQUAL_AS_INSIDE) {
+      return
+        inner.x0y0.x >= outer.x0y0.x &&
+        inner.x1y1.x <= outer.x1y1.x &&
+        inner.x0y0.y >= outer.x0y0.y &&
+        inner.x1y1.y <= outer.x1y1.y;
+    } else {
+      return
+        inner.x0y0.x > outer.x0y0.x &&
+        inner.x1y1.x < outer.x1y1.x &&
+        inner.x0y0.y > outer.x0y0.y &&
+        inner.x1y1.y < outer.x1y1.y;
+    }
+  }
+
+  inline bool isAreaInsideMap(const Rect& area) {
+    if(
+      area.x0y0.x < 0 || area.x0y0.y < 0 ||
+      area.x1y1.x >= MAP_X_CELLS || area.x1y1.y >= MAP_Y_CELLS) {
+      return false;
+    }
+    return true;
+  }
+
 
   bool isPosAdj(const Pos& pos1, const Pos& pos2,
                 const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;

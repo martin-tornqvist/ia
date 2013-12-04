@@ -148,6 +148,11 @@ void Engine::initGame() {
   player->place(
     Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
     &(actorDataHandler->dataList[actor_player]), this);
+  actorFactory = new ActorFactory(this);
+  gameTime = new GameTime(this);
+  featureDataHandler = new FeatureDataHandler(this);
+  featureFactory = new FeatureFactory(this);
+  map = new Map(this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
   floodFill = new FloodFill(this);
@@ -156,25 +161,20 @@ void Engine::initGame() {
   pathFinder = new PathFinder(this);
   fov = new Fov(this);
   soundEmitter = new SoundEmitter(this);
-  featureDataHandler = new FeatureDataHandler(this);
   dungeonMaster = new DungeonMaster(this);
   input = new Input(this, quitToMainMenu_);
   dungeonClimb = new DungeonClimb(this);
-  actorFactory = new ActorFactory(this);
   mapTemplateHandler = new MapTemplateHandler(this);
   itemDrop = new ItemDrop(this);
   itemPickup = new ItemPickup(this);
   attack = new Attack(this);
   characterLines = new CharacterLines(this);
-  gameTime = new GameTime(this);
   mainMenu = new MainMenu(this);
   bot = new Bot(this);
-  featureFactory = new FeatureFactory(this);
   art = new Art;
   explosionMaker = new ExplosionMaker(this);
   thrower = new Thrower(this);
   reload = new Reload(this);
-  map = new Map(this);
   playerVisualMemory = new PlayerVisualMemory(this);
   gore = new Gore(this);
   manual = new Manual(this);

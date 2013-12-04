@@ -5,16 +5,15 @@
 #include "MapGen.h"
 #include "FeatureTrap.h"
 #include "FeatureFactory.h"
-
-//TODO Uncomment
+#include "MapParsing.h"
 
 void PopulateTraps::populateRoomAndCorridorLevel(
   RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS],
   const vector<Room*>& rooms) const {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-    bodyType_normal, blockers);
+  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+                   blockers);
 
   //Put traps in non-plain rooms
   for(unsigned int i = 0; i < rooms.size(); i++) {
@@ -48,7 +47,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(
         for(int y = x0y0.y; y <= x1y1.y; y++) {
           for(int x = x0y0.x; x <= x1y1.x; x++) {
             if(blockers[x][y] == false) {
-              if(eng->map->featuresStatic[x][y]->canHaveStaticFeature()) {
+              if(eng->map->cells[x][y].featureStatic->canHaveStaticFeature()) {
                 trapPositionCandidates.push_back(Pos(x, y));
               }
             }
@@ -69,7 +68,8 @@ void PopulateTraps::populateRoomAndCorridorLevel(
             const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
             const Trap_t trapType =
               theme == roomTheme_spider ? trap_spiderWeb : trap_any;
-            FeatureStatic* const f = eng->map->featuresStatic[pos.x][pos.y];
+            FeatureStatic* const f =
+              eng->map->cells[pos.x][pos.y].featureStatic;
             const FeatureData* const dataAtTrap =
               eng->featureDataHandler->getData(f->getId());
             eng->featureFactory->spawnFeatureAt(
@@ -101,7 +101,8 @@ void PopulateTraps::populateRoomAndCorridorLevel(
         const unsigned int CANDIDATE_ELEMENT =
           eng->dice.range(0, trapPositionCandidates.size() - 1);
         const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
-        FeatureStatic* const f = eng->map->featuresStatic[pos.x][pos.y];
+        FeatureStatic* const f =
+          eng->map->cells[pos.x][pos.y].featureStatic;
         const FeatureData* const dataAtTrap =
           eng->featureDataHandler->getData(f->getId());
         eng->featureFactory->spawnFeatureAt(

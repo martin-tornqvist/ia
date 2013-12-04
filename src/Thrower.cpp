@@ -15,6 +15,7 @@
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "Attack.h"
+#include "LineCalc.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = eng->player->dynamiteFuseTurns;
@@ -23,13 +24,14 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   eng->player->explosiveThrown();
 
   vector<Pos> path;
-  eng->mapTests->getLine(eng->player->pos, aimCell, true,
-                         THROWING_RANGE_LIMIT, path);
+  eng->lineCalc->calcNewLine(eng->player->pos, aimCell, true,
+                             THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
-    const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
+    const Feature* featureHere =
+      eng->map->cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilesPassable() == false) {
       path.resize(i);
       break;
@@ -42,7 +44,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       eng->renderer->drawMapAndInterface(false);
-      if(eng->map->playerVision[path[i].x][path[i].y]) {
+      if(eng->map->cells[path[i].x][path[i].y].isSeenByPlayer) {
         eng->renderer->drawGlyph(glyph, panel_map, path[i], clr);
         eng->renderer->updateScreen();
         eng->sleep(eng->config->delayProjectileDraw);
@@ -51,7 +53,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   }
 
   Feature* const featureAtDest =
-    eng->map->featuresStatic[path.back().x][path.back().y];
+    eng->map->cells[path.back().x][path.back().y].featureStatic;
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
@@ -90,8 +92,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   const ActorSizes_t aimLevel = data->intendedAimLevel;
 
   vector<Pos> path;
-  eng->mapTests->getLine(actorThrowing.pos, targetCell, false,
-                         THROWING_RANGE_LIMIT, path);
+  eng->lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
+                             THROWING_RANGE_LIMIT, false, path);
 
   const ItemData& itemThrownData = itemThrown.getData();
 
@@ -101,7 +103,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     eng->log->clearLog();
     eng->log->addMsg("I throw " + itemName_a + ".");
   } else {
-    if(eng->map->playerVision[path.front().x][path.front().y] == true) {
+    const Pos& p = path.front();
+    if(eng->map->cells[p.x][p.y].isSeenByPlayer) {
       eng->log->addMsg(
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
@@ -136,7 +139,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         if(
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng->map->playerVision[curPos.x][curPos.y]) {
+          if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
             eng->renderer->drawGlyph('*', panel_map,
                                      curPos, clrRedLgt);
             eng->renderer->updateScreen();
@@ -167,13 +170,14 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       }
     }
 
-    if(eng->map->playerVision[curPos.x][curPos.y]) {
+    if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
       eng->renderer->drawGlyph(glyph, panel_map, curPos, clr);
       eng->renderer->updateScreen();
       eng->sleep(eng->config->delayProjectileDraw);
     }
 
-    const Feature* featureHere = eng->map->featuresStatic[curPos.x][curPos.y];
+    const Feature* featureHere =
+      eng->map->cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilesPassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
@@ -204,7 +208,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
     const MaterialType_t materialAtDropPos =
-      eng->map->featuresStatic[dropPos.x][dropPos.y]->getMaterialType();
+      eng->map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
       if(isActorHit == false) {

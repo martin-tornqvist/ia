@@ -172,7 +172,9 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(path.at(i) + Pos(dx, dy));
-        if(eng->map->featuresStatic[c.x][c.y]->canHaveStaticFeature() && eng->basicUtils->isPosInsideMap(c)) {
+        if(
+          eng->map->cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
+          eng->basicUtils->isPosInsideMap(c)) {
           eng->featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
       }
@@ -187,7 +189,8 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
     bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->mapTests->makeMoveBlockerArrayForBodyTypeFeaturesOnly(bodyType_normal, blockers);
+    MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+                     blockers);
 
     bool vision[MAP_X_CELLS][MAP_Y_CELLS];
 
@@ -209,14 +212,16 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
             const int Y = path.at(i).y + dy;
 
             const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
-            const bool IS_ON_STONE_PATH = eng->map->featuresStatic[X][Y]->getId() == feature_forestPath;
+            const bool IS_ON_STONE_PATH =
+              eng->map->cells[X][Y].featureStatic->getId() == feature_forestPath;
 
             bool isLeftOfPrev = true;
             if(gravePositions.empty() == false) {
               isLeftOfPrev = X < gravePositions.back().x;
             }
 
-            bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH && IS_ON_STONE_PATH == false && isLeftOfPrev;
+            bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH &&
+                           IS_ON_STONE_PATH == false && isLeftOfPrev;
 
             if(isPosOk) {
               for(int dy_small = -1; dy_small <= 1; dy_small++) {
