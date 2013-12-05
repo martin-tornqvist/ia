@@ -14,24 +14,27 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
     return;
   }
 
-  double deltaX = (double(target.x) - double(origin.x));
-  double deltaY = (double(target.y) - double(origin.y));
+  const double DELTA_X_DB = double(target.x - origin.x);
+  const double DELTA_Y_DB = double(target.y - origin.y);
 
-  double hypot = sqrt((deltaX * deltaX) + (deltaY * deltaY));
+  const double HYPOT_DB =
+    sqrt((DELTA_X_DB * DELTA_X_DB) + (DELTA_Y_DB * DELTA_Y_DB));
 
-  double xIncr = (deltaX / hypot);
-  double yIncr = (deltaY / hypot);
+  const double X_INCR_DB = (DELTA_X_DB / HYPOT_DB);
+  const double Y_INCR_DB = (DELTA_Y_DB / HYPOT_DB);
 
-  double curX_prec = double(origin.x) + 0.5;
-  double curY_prec = double(origin.y) + 0.5;
+  double curX_db = double(origin.x) + 0.5;
+  double curY_db = double(origin.y) + 0.5;
 
-  Pos curPos = Pos(int(curX_prec), int(curY_prec));
+  Pos curPos = Pos(int(curX_db), int(curY_db));
 
-  for(double i = 0; i <= 9999.0; i += 0.04) {
-    curX_prec += xIncr * 0.04;
-    curY_prec += yIncr * 0.04;
+  const double STEP_SIZE_DB = 0.04;
 
-    curPos.set(int(curX_prec), int(curY_prec));
+  for(double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB) {
+    curX_db += X_INCR_DB * STEP_SIZE_DB;
+    curY_db += Y_INCR_DB * STEP_SIZE_DB;
+
+    curPos.set(floor(curX_db), floor(curY_db));
 
     if(ALLOW_OUTSIDE_MAP == false) {
       if(eng->basicUtils->isPosInsideMap(curPos) == false) {
@@ -68,7 +71,7 @@ void LineCalc::calcFovDeltaLines() {
   for(int deltaX = -R_INT; deltaX <= R_INT; deltaX++) {
     for(int deltaY = -R_INT; deltaY <= R_INT; deltaY++) {
       const Pos origin(0, 0);
-      const Pos target(origin + Pos(deltaX, deltaY));
+      const Pos target(Pos(deltaX, deltaY));
       vector<Pos> curLine;
       calcNewLine(origin, target, true, 999, true, curLine);
       fovDeltaLines[deltaX + R_INT][deltaY + R_INT] = curLine;

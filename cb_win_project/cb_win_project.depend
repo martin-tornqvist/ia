@@ -11332,7 +11332,7 @@
 	"Item.h"
 	"Engine.h"
 
-1385821617 source:d:\dev\ia.git\src\actorfactory.cpp
+1386268422 source:d:\dev\ia.git\src\actorfactory.cpp
 	"ActorFactory.h"
 	<algorithm>
 	"Engine.h"
@@ -12261,7 +12261,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1385934047 source:d:\dev\ia.git\src\featuretrap.cpp
+1386267991 source:d:\dev\ia.git\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<algorithm>
 	"Engine.h"
@@ -13050,7 +13050,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1386191233 source:d:\dev\ia.git\test\src\main.cpp
+1386280974 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"Engine.h"
 	"BasicUtils.h"
@@ -13066,6 +13066,9 @@
 	"MapGen.h"
 	"Converters.h"
 	"CommonTypes.h"
+	"MapParsing.h"
+	"Fov.h"
+	"LineCalc.h"
 
 1385502710 d:\dev\ia.git\test\unittest++\src\unittest++.h
 	"Config.h"
@@ -13819,7 +13822,7 @@
 	"CommonData.h"
 	"CommonTypes.h"
 
-1385798969 d:\dev\ia.git\include\commontypes.h
+1386276600 d:\dev\ia.git\include\commontypes.h
 	<string>
 	<stdlib.h>
 	"Colors.h"
@@ -14812,7 +14815,7 @@
 	"FloodFill.h"
 	"Engine.h"
 
-1386109094 source:d:\dev\ia.git\src\linecalc.cpp
+1386280929 source:d:\dev\ia.git\src\linecalc.cpp
 	"LineCalc.h"
 	"Engine.h"
 

@@ -169,7 +169,7 @@ void Log::addMsg(const string& text, const SDL_Color color,
 
   if(repeated == false) {
     const int REPEAT_LEN  = 4;
-    const int MORE_LEN    = 7;
+    const int MORE_LEN    = 9;
 
     const int CUR_X_POS = findCurXpos(line, line.size());
 
@@ -179,7 +179,7 @@ void Log::addMsg(const string& text, const SDL_Color color,
     if(IS_MSG_FIT == false) {
       eng->renderer->drawMapAndInterface(false);
       eng->renderer->drawText(
-        "[MORE]", panel_log, Pos(CUR_X_POS, 0), clrCyanLgt);
+        "--More--", panel_log, Pos(CUR_X_POS, 0), clrBlack, clrGray);
       eng->renderer->updateScreen();
       eng->query->waitForKeyPress();
       clearLog();

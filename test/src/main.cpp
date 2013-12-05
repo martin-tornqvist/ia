@@ -14,6 +14,9 @@
 #include "MapGen.h"
 #include "Converters.h"
 #include "CommonTypes.h"
+#include "MapParsing.h"
+#include "Fov.h"
+#include "LineCalc.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -67,7 +70,6 @@ TEST(ConstrainValInRange) {
   CHECK_EQUAL(val, 10);
 }
 
-
 TEST(CalculateDistances) {
   Engine eng;
   BasicUtils utils(&eng);
@@ -106,6 +108,159 @@ TEST(FormatText) {
   CHECK_EQUAL(int(formattedLines.size()), 2);
 }
 
+TEST_FIXTURE(BasicFixture, LineCalculation) {
+  Pos origin(0, 0);
+  vector<Pos> line;
+
+  eng->lineCalc->calcNewLine(origin, Pos(3, 0), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(1, 0));
+  CHECK(line.at(2) == Pos(2, 0));
+  CHECK(line.at(3) ==  Pos(3, 0));
+
+  eng->lineCalc->calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(-1, 0));
+  CHECK(line.at(2) == Pos(-2, 0));
+  CHECK(line.at(3) == Pos(-3, 0));
+
+  eng->lineCalc->calcNewLine(origin, Pos(0, 3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(0, 1));
+  CHECK(line.at(2) == Pos(0, 2));
+  CHECK(line.at(3) == Pos(0, 3));
+
+  eng->lineCalc->calcNewLine(origin, Pos(0, -3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(0, -1));
+  CHECK(line.at(2) == Pos(0, -2));
+  CHECK(line.at(3) == Pos(0, -3));
+
+  eng->lineCalc->calcNewLine(origin, Pos(3, 3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(1, 1));
+  CHECK(line.at(2) == Pos(2, 2));
+  CHECK(line.at(3) == Pos(3, 3));
+
+  eng->lineCalc->calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == Pos(9, 9));
+  CHECK(line.at(1) == Pos(8, 10));
+  CHECK(line.at(2) == Pos(7, 11));
+  CHECK(line.at(3) == Pos(6, 12));
+
+  eng->lineCalc->calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(-1, 1));
+  CHECK(line.at(2) == Pos(-2, 2));
+  CHECK(line.at(3) == Pos(-3, 3));
+
+  eng->lineCalc->calcNewLine(origin, Pos(3, -3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(1, -1));
+  CHECK(line.at(2) == Pos(2, -2));
+  CHECK(line.at(3) == Pos(3, -3));
+
+  eng->lineCalc->calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
+  CHECK(line.size() == 4);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(-1, -1));
+  CHECK(line.at(2) == Pos(-2, -2));
+  CHECK(line.at(3) == Pos(-3, -3));
+
+  //Test disallowing outside map
+  eng->lineCalc->calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
+  CHECK(line.size() == 2);
+  CHECK(line.at(0) == Pos(1, 0));
+  CHECK(line.at(1) == Pos(0, 0));
+
+  //Test travel limit parameter
+  eng->lineCalc->calcNewLine(origin, Pos(20, 0), true, 2, true, line);
+  CHECK(line.size() == 3);
+  CHECK(line.at(0) == origin);
+  CHECK(line.at(1) == Pos(1, 0));
+  CHECK(line.at(2) == Pos(2, 0));
+
+  //Test precalculated FOV line offsets
+  const vector<Pos>* deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STANDARD_RADI_DB);
+  CHECK(deltaLine->size() == 4);
+  CHECK(deltaLine->at(0) == Pos(0, 0));
+  CHECK(deltaLine->at(1) == Pos(1, 1));
+  CHECK(deltaLine->at(2) == Pos(2, 2));
+  CHECK(deltaLine->at(3) == Pos(3, 3));
+
+  deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STANDARD_RADI_DB);
+  CHECK(deltaLine->size() == 4);
+  CHECK(deltaLine->at(0) == Pos(0, 0));
+  CHECK(deltaLine->at(1) == Pos(-1, 1));
+  CHECK(deltaLine->at(2) == Pos(-2, 2));
+  CHECK(deltaLine->at(3) == Pos(-3, 3));
+
+  deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STANDARD_RADI_DB);
+  CHECK(deltaLine->size() == 4);
+  CHECK(deltaLine->at(0) == Pos(0, 0));
+  CHECK(deltaLine->at(1) == Pos(1, -1));
+  CHECK(deltaLine->at(2) == Pos(2, -2));
+  CHECK(deltaLine->at(3) == Pos(3, -3));
+
+  deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STANDARD_RADI_DB);
+  CHECK(deltaLine->size() == 4);
+  CHECK(deltaLine->at(0) == Pos(0, 0));
+  CHECK(deltaLine->at(1) == Pos(-1, -1));
+  CHECK(deltaLine->at(2) == Pos(-2, -2));
+  CHECK(deltaLine->at(3) == Pos(-3, -3));
+
+  //Check constraints for retrieving FOV offset lines
+  //Delta > parameter max distance
+  deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(3, 0), 2);
+  CHECK(deltaLine == NULL);
+  //Delta > limit of precalculated
+  deltaLine =
+    eng->lineCalc->getFovDeltaLine(Pos(50, 0), 999);
+  CHECK(deltaLine == NULL);
+}
+
+TEST_FIXTURE(BasicFixture, Fov) {
+  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+
+  eng->basicUtils->resetArray(blockers, false); //Nothing blocking sight
+
+  const int X = MAP_X_CELLS_HALF;
+  const int Y = MAP_Y_CELLS_HALF;
+
+  eng->player->pos = Pos(X, Y);
+
+  eng->fov->runPlayerFov(blockers, eng->player->pos);
+
+  const int R = FOV_STANDARD_RADI_INT;
+
+  CHECK(eng->map->cells[X    ][Y    ].isSeenByPlayer);
+  CHECK(eng->map->cells[X + 1][Y    ].isSeenByPlayer);
+  CHECK(eng->map->cells[X - 1][Y    ].isSeenByPlayer);
+  CHECK(eng->map->cells[X    ][Y + 1].isSeenByPlayer);
+  CHECK(eng->map->cells[X    ][Y - 1].isSeenByPlayer);
+  CHECK(eng->map->cells[X + 2][Y + 2].isSeenByPlayer);
+  CHECK(eng->map->cells[X - 2][Y + 2].isSeenByPlayer);
+  CHECK(eng->map->cells[X + 2][Y - 2].isSeenByPlayer);
+  CHECK(eng->map->cells[X - 2][Y - 2].isSeenByPlayer);
+  CHECK(eng->map->cells[X + R][Y    ].isSeenByPlayer);
+  CHECK(eng->map->cells[X - R][Y    ].isSeenByPlayer);
+  CHECK(eng->map->cells[X    ][Y + R].isSeenByPlayer);
+  CHECK(eng->map->cells[X    ][Y - R].isSeenByPlayer);
+}
+
 TEST_FIXTURE(BasicFixture, ThrowItems) {
   //-----------------------------------------------------------------
   // Throwing a throwing knife at a wall should make it land
@@ -128,77 +283,77 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   CHECK(eng->map->cells[5][9].item != NULL);
 }
 
-TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
-  //-----------------------------------------------------------------
-  // Test that-
-  // * a monster can get stuck in a spider web,
-  // * the monster can get loose, and
-  // * the web can get destroyed
-  //-----------------------------------------------------------------
-
-  const Pos posL(1, 4);
-  const Pos posR(2, 4);
-
-  //Spawn left floor cell
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
-
-  //Conditions for finished test
-  bool isTestedStuck              = false;
-  bool isTestedLooseWebIntact     = false;
-  bool isTestedLooseWebDestroyed  = false;
-
-  while(
-    isTestedStuck             == false ||
-    isTestedLooseWebIntact    == false ||
-    isTestedLooseWebDestroyed == false) {
-
-    //Spawn right floor cell
-    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
-
-    //Spawn a monster that can get stuck in the web
-    Actor* const actor = eng->actorFactory->spawnActor(actor_zombie, posL);
-    Monster* const monster = dynamic_cast<Monster*>(actor);
-
-    //Create a spider web in the right cell
-    const Feature_t mimicId =
-      eng->map->cells[posR.x][posR.x].featureStatic->getId();
-    const FeatureData* const mimicData =
-      eng->featureDataHandler->getData(mimicId);
-    TrapSpawnData* const trapSpawnData = new TrapSpawnData(
-      mimicData, trap_spiderWeb);
-    eng->featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
-
-    //Move the monster into the trap, and back again
-    monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
-    monster->pos = posL;
-    monster->moveDir(dirRight);
-    CHECK(monster->pos == posR);
-    monster->moveDir(dirLeft);    //Move left to try to break loose
-    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
-    monster->moveDir(dirLeft);    //Move left again to actually move if free
-
-    //Check conditions
-    if(monster->pos == posR) {
-      isTestedStuck = true;
-    } else if(monster->pos == posL) {
-      const Feature_t featureId =
-        eng->map->cells[posR.x][posR.y].featureStatic->getId();
-      if(featureId == feature_trashedSpiderWeb) {
-        isTestedLooseWebDestroyed = true;
-      } else {
-        isTestedLooseWebIntact = true;
-      }
-    }
-
-    //Remove the monster
-    eng->actorFactory->deleteAllMonsters();
-  }
-  //Check that all cases have been triggered (not really necessary, it just
-  //verifies that the loop above is correctly written).
-  CHECK_EQUAL(isTestedStuck, true);
-  CHECK_EQUAL(isTestedLooseWebIntact, true);
-  CHECK_EQUAL(isTestedLooseWebDestroyed, true);
-}
+//TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
+//  //-----------------------------------------------------------------
+//  // Test that-
+//  // * a monster can get stuck in a spider web,
+//  // * the monster can get loose, and
+//  // * the web can get destroyed
+//  //-----------------------------------------------------------------
+//
+//  const Pos posL(1, 4);
+//  const Pos posR(2, 4);
+//
+//  //Spawn left floor cell
+//  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
+//
+//  //Conditions for finished test
+//  bool isTestedStuck              = false;
+//  bool isTestedLooseWebIntact     = false;
+//  bool isTestedLooseWebDestroyed  = false;
+//
+//  while(
+//    isTestedStuck             == false ||
+//    isTestedLooseWebIntact    == false ||
+//    isTestedLooseWebDestroyed == false) {
+//
+//    //Spawn right floor cell
+//    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
+//
+//    //Spawn a monster that can get stuck in the web
+//    Actor* const actor = eng->actorFactory->spawnActor(actor_zombie, posL);
+//    Monster* const monster = dynamic_cast<Monster*>(actor);
+//
+//    //Create a spider web in the right cell
+//    const Feature_t mimicId =
+//      eng->map->cells[posR.x][posR.x].featureStatic->getId();
+//    const FeatureData* const mimicData =
+//      eng->featureDataHandler->getData(mimicId);
+//    TrapSpawnData* const trapSpawnData = new TrapSpawnData(
+//      mimicData, trap_spiderWeb);
+//    eng->featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
+//
+//    //Move the monster into the trap, and back again
+//    monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
+//    monster->pos = posL;
+//    monster->moveDir(dirRight);
+//    CHECK(monster->pos == posR);
+//    monster->moveDir(dirLeft);    //Move left to try to break loose
+//    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
+//    monster->moveDir(dirLeft);    //Move left again to actually move if free
+//
+//    //Check conditions
+//    if(monster->pos == posR) {
+//      isTestedStuck = true;
+//    } else if(monster->pos == posL) {
+//      const Feature_t featureId =
+//        eng->map->cells[posR.x][posR.y].featureStatic->getId();
+//      if(featureId == feature_trashedSpiderWeb) {
+//        isTestedLooseWebDestroyed = true;
+//      } else {
+//        isTestedLooseWebIntact = true;
+//      }
+//    }
+//
+//    //Remove the monster
+//    eng->actorFactory->deleteAllMonsters();
+//  }
+//  //Check that all cases have been triggered (not really necessary, it just
+//  //verifies that the loop above is correctly written).
+//  CHECK_EQUAL(isTestedStuck, true);
+//  CHECK_EQUAL(isTestedLooseWebIntact, true);
+//  CHECK_EQUAL(isTestedLooseWebDestroyed, true);
+//}
 
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
@@ -233,5 +388,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //}
 
 int main() {
+  trace << "Running all tests" << endl;
   return UnitTest::RunAllTests();
 }
+
+

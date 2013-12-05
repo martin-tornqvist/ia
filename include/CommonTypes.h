@@ -141,7 +141,8 @@ struct Pos {
   }
 
   Pos getSigns() const {
-    return Pos(x == 0 ? 0 : x / abs(x), y == 0 ? 0 : y / abs(y));
+    return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
+               y == 0 ? 0 : y > 0 ? 1 : -1);
   }
 
   void set(const int x_, const int y_) {

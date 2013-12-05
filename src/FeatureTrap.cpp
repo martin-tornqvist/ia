@@ -768,7 +768,6 @@ Dir_t TrapSpiderWeb::specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
         }
         eng->featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
       }
-      return dirCenter;
     } else {
       if(IS_PLAYER) {
         eng->log->addMsg("I struggle to break free.");

@@ -96,8 +96,7 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
 }
 
 void ActorFactory::deleteAllMonsters() const {
-  const int NR_ACTORS = eng->gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
+  for(int i = 0; i < eng->gameTime->getNrActors(); i++) {
     if(&(eng->gameTime->getActorAtElement(i)) != eng->player) {
       eng->gameTime->eraseActorInElement(i);
       i--;
