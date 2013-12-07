@@ -127,7 +127,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDir(dirCenter);
-      if(eng->playerBonHandler->isBonPicked(playerBon_marksman)) {
+      if(eng->playerBonHandler->isTraitPicked(traitmarksman)) {
         eng->player->getPropHandler()->tryApplyProp(
           new PropStill(eng, propTurnsSpecified, 1));
       }
@@ -312,7 +312,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng->player->deadState == actorDeadState_alive) {
 
-      const bool IS_FREE_TURN = false; //eng->playerBonHandler->isBonPicked(playerBon_nimble);
+      const bool IS_FREE_TURN = false; //eng->playerBonHandler->isTraitPicked(traitnimble);
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 

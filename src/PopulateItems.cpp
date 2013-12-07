@@ -19,7 +19,7 @@ void PopulateItems::spawnItems() {
   nrOfSpawns = max(1, nrOfSpawns);
   nrOfSpawns += eng->dice(1, (nrOfSpawns / 2) + 2) - 1;
 
-  if(eng->playerBonHandler->isBonPicked(playerBon_treasureHunter)) {
+  if(eng->playerBonHandler->isTraitPicked(traitTreasureHunter)) {
     nrOfSpawns = (nrOfSpawns * 3) / 2;
   }
 

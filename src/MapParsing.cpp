@@ -200,9 +200,9 @@ void FloodFill::run(
 //------------------------------------------------------------ PATHFINDER
 void PathFinder::run(const Pos& origin, const Pos& target,
                      bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-                     vector<Pos>& vectorToFill) const {
+                     vector<Pos>& vectorToSet) const {
 
-  vectorToFill.resize(0);
+  vectorToSet.resize(0);
 
   int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
   eng->floodFill->run(origin, blockers, floodValues, 1000, target);
@@ -231,7 +231,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
                   + xOffset][currentY + yOffset] != 0) || (currentX + xOffset == origin.x && currentY + yOffset == origin.y)) {
                 c.x = currentX;
                 c.y = currentY;
-                vectorToFill.push_back(c);
+                vectorToSet.push_back(c);
 
                 currentX = currentX + xOffset;
                 currentY = currentY + yOffset;
@@ -255,7 +255,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 
 
 //void MapTests::makeVisionBlockerArray(
-//  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS],
+//  const Pos& origin, bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS],
 //  const int MAX_VISION_RANGE) {
 //
 //  const int X0 = max(0, origin.x - MAX_VISION_RANGE - 1);
@@ -267,7 +267,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //
 //  for(int y = Y0; y <= Y1; y++) {
 //    for(int x = X0; x <= X1; x++) {
-//      arrayToFill[x][y] =
+//      arrayToSet[x][y] =
 //        map->featuresStatic[x][y]->isVisionPassable() == false;
 //    }
 //  }
@@ -281,42 +281,42 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //    x = f->getX();
 //    y = f->getY();
 //    if(map->featuresStatic[x][y]->isVisionPassable()) {
-//      arrayToFill[x][y] = f->isVisionPassable() == false;
+//      arrayToSet[x][y] = f->isVisionPassable() == false;
 //    }
 //  }
 //}
 //
 //void MapTests::makeMoveBlockerArray(
 //  const Actor* const actorMoving,
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
-//  makeMoveBlockerArrayForBodyType(actorMoving->getBodyType(), arrayToFill);
+//  makeMoveBlockerArrayForBodyType(actorMoving->getBodyType(), arrayToSet);
 //}
 //
 //void MapTests::makeMoveBlockerArrayFeaturesOnly(
 //  const Actor* const actorMoving,
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-//    actorMoving->getBodyType(), arrayToFill);
+//    actorMoving->getBodyType(), arrayToSet);
 //}
 //
 //void MapTests::makeWalkBlockingArrayFeaturesOnly(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  makeMoveBlockerArrayForBodyTypeFeaturesOnly(
-//    bodyType_normal, arrayToFill);
+//    bodyType_normal, arrayToSet);
 //}
 //
 //void MapTests::makeMoveBlockerArrayForBodyTypeFeaturesOnly(
 //  const BodyType_t bodyType,
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  const Map* const map = eng->map;
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      arrayToFill[x][y] =
+//      arrayToSet[x][y] =
 //        map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
@@ -326,37 +326,37 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = gameTime->getFeatureMobAt(i);
 //    const Pos& pos = f->getPos();
-//    if(arrayToFill[pos.x][pos.y] == false) {
-//      arrayToFill[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
+//    if(arrayToSet[pos.x][pos.y] == false) {
+//      arrayToSet[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
 //}
 //
 //void MapTests::makeShootBlockerFeaturesArray(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      arrayToFill[x][y] = eng->map->featuresStatic[x][y]->isProjectilesPassable() == false;
+//      arrayToSet[x][y] = eng->map->featuresStatic[x][y]->isProjectilesPassable() == false;
 //    }
 //  }
 //  FeatureMob* f = NULL;
 //  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = eng->gameTime->getFeatureMobAt(i);
-//    if(arrayToFill[f->getX()][f->getY()] == false) {
-//      arrayToFill[f->getX()][f->getY()] = f->isProjectilesPassable() == false;
+//    if(arrayToSet[f->getX()][f->getY()] == false) {
+//      arrayToSet[f->getX()][f->getY()] = f->isProjectilesPassable() == false;
 //    }
 //  }
 //}
 //
 //void MapTests::addItemsToBlockerArray(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
 //      if(eng->map->items[x][y] != NULL) {
-//        arrayToFill[x][y] = true;
+//        arrayToSet[x][y] = true;
 //      }
 //    }
 //  }
@@ -364,11 +364,11 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //
 //void MapTests::makeMoveBlockerArrayForBodyType(
 //  const BodyType_t bodyType,
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      arrayToFill[x][y] =
+//      arrayToSet[x][y] =
 //        eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
@@ -377,71 +377,71 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = eng->gameTime->getFeatureMobAt(i);
 //    const Pos& pos = f->getPos();
-//    if(arrayToFill[pos.x][pos.y] == false) {
-//      arrayToFill[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
+//    if(arrayToSet[pos.x][pos.y] == false) {
+//      arrayToSet[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
-//  addLivingActorsToBlockerArray(arrayToFill);
+//  addLivingActorsToBlockerArray(arrayToSet);
 //}
 //
 //void MapTests::makeItemBlockerArray(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
 //    for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-//      arrayToFill[x][y] = !eng->map->featuresStatic[x][y]->canHaveItem();
+//      arrayToSet[x][y] = !eng->map->featuresStatic[x][y]->canHaveItem();
 //    }
 //  }
 //  FeatureMob* f = NULL;
 //  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = eng->gameTime->getFeatureMobAt(i);
-//    if(arrayToFill[f->getX()][f->getY()] == false) {
-//      arrayToFill[f->getX()][f->getY()] = !f->canHaveItem();
+//    if(arrayToSet[f->getX()][f->getY()] == false) {
+//      arrayToSet[f->getX()][f->getY()] = !f->canHaveItem();
 //    }
 //  }
-//  //addActorsToBlockerArray(arrayToFill); //Why?
+//  //addActorsToBlockerArray(arrayToSet); //Why?
 //}
 //
 //void MapTests::addLivingActorsToBlockerArray(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
 //    a = eng->gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
-//      if(arrayToFill[a->pos.x][a->pos.y] == false) {
-//        arrayToFill[a->pos.x][a->pos.y] = true;
+//      if(arrayToSet[a->pos.x][a->pos.y] == false) {
+//        arrayToSet[a->pos.x][a->pos.y] = true;
 //      }
 //    }
 //  }
 //}
 //
 //void MapTests::addAllActorsToBlockerArray(
-//  bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
 //    a = eng->gameTime->getActorAtElement(i);
-//    if(arrayToFill[a->pos.x][a->pos.y] == false) {
-//      arrayToFill[a->pos.x][a->pos.y] = true;
+//    if(arrayToSet[a->pos.x][a->pos.y] == false) {
+//      arrayToSet[a->pos.x][a->pos.y] = true;
 //    }
 //  }
 //}
 //
 //void MapTests::addAdjLivingActorsToBlockerArray(
-//  const Pos& origin, bool arrayToFill[MAP_X_CELLS][MAP_Y_CELLS]) {
+//  const Pos& origin, bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
 //  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
 //    a = eng->gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
-//      if(arrayToFill[a->pos.x][a->pos.y] == false && a->pos != origin) {
+//      if(arrayToSet[a->pos.x][a->pos.y] == false && a->pos != origin) {
 //        if(isCellsAdj(origin, a->pos, false)) {
-//          arrayToFill[a->pos.x][a->pos.y] = true;
+//          arrayToSet[a->pos.x][a->pos.y] = true;
 //        }
 //      }
 //    }

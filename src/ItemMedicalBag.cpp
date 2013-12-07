@@ -185,7 +185,7 @@ void MedicalBag::interrupted() {
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
   const bool IS_HEALER =
-    eng->playerBonHandler->isBonPicked(playerBon_healer);
+    eng->playerBonHandler->isTraitPicked(traitHealer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
@@ -209,7 +209,7 @@ int MedicalBag::getNrSuppliesNeededForAction(
   const MedicalBagAction_t action) const {
 
   const bool IS_HEALER =
-    eng->playerBonHandler->isBonPicked(playerBon_healer);
+    eng->playerBonHandler->isTraitPicked(traitHealer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {

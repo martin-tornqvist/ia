@@ -283,77 +283,77 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   CHECK(eng->map->cells[5][9].item != NULL);
 }
 
-//TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
-//  //-----------------------------------------------------------------
-//  // Test that-
-//  // * a monster can get stuck in a spider web,
-//  // * the monster can get loose, and
-//  // * the web can get destroyed
-//  //-----------------------------------------------------------------
-//
-//  const Pos posL(1, 4);
-//  const Pos posR(2, 4);
-//
-//  //Spawn left floor cell
-//  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
-//
-//  //Conditions for finished test
-//  bool isTestedStuck              = false;
-//  bool isTestedLooseWebIntact     = false;
-//  bool isTestedLooseWebDestroyed  = false;
-//
-//  while(
-//    isTestedStuck             == false ||
-//    isTestedLooseWebIntact    == false ||
-//    isTestedLooseWebDestroyed == false) {
-//
-//    //Spawn right floor cell
-//    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
-//
-//    //Spawn a monster that can get stuck in the web
-//    Actor* const actor = eng->actorFactory->spawnActor(actor_zombie, posL);
-//    Monster* const monster = dynamic_cast<Monster*>(actor);
-//
-//    //Create a spider web in the right cell
-//    const Feature_t mimicId =
-//      eng->map->cells[posR.x][posR.x].featureStatic->getId();
-//    const FeatureData* const mimicData =
-//      eng->featureDataHandler->getData(mimicId);
-//    TrapSpawnData* const trapSpawnData = new TrapSpawnData(
-//      mimicData, trap_spiderWeb);
-//    eng->featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
-//
-//    //Move the monster into the trap, and back again
-//    monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
-//    monster->pos = posL;
-//    monster->moveDir(dirRight);
-//    CHECK(monster->pos == posR);
-//    monster->moveDir(dirLeft);    //Move left to try to break loose
-//    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
-//    monster->moveDir(dirLeft);    //Move left again to actually move if free
-//
-//    //Check conditions
-//    if(monster->pos == posR) {
-//      isTestedStuck = true;
-//    } else if(monster->pos == posL) {
-//      const Feature_t featureId =
-//        eng->map->cells[posR.x][posR.y].featureStatic->getId();
-//      if(featureId == feature_trashedSpiderWeb) {
-//        isTestedLooseWebDestroyed = true;
-//      } else {
-//        isTestedLooseWebIntact = true;
-//      }
-//    }
-//
-//    //Remove the monster
-//    eng->actorFactory->deleteAllMonsters();
-//  }
-//  //Check that all cases have been triggered (not really necessary, it just
-//  //verifies that the loop above is correctly written).
-//  CHECK_EQUAL(isTestedStuck, true);
-//  CHECK_EQUAL(isTestedLooseWebIntact, true);
-//  CHECK_EQUAL(isTestedLooseWebDestroyed, true);
-//}
+TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
+  //-----------------------------------------------------------------
+  // Test that-
+  // * a monster can get stuck in a spider web,
+  // * the monster can get loose, and
+  // * the web can get destroyed
+  //-----------------------------------------------------------------
+
+  const Pos posL(1, 4);
+  const Pos posR(2, 4);
+
+  //Spawn left floor cell
+  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
+
+  //Conditions for finished test
+  bool isTestedStuck              = false;
+  bool isTestedLooseWebIntact     = false;
+  bool isTestedLooseWebDestroyed  = false;
+
+  while(
+    isTestedStuck             == false ||
+    isTestedLooseWebIntact    == false ||
+    isTestedLooseWebDestroyed == false) {
+
+    //Spawn right floor cell
+    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
+
+    //Spawn a monster that can get stuck in the web
+    Actor* const actor = eng->actorFactory->spawnActor(actor_zombie, posL);
+    Monster* const monster = dynamic_cast<Monster*>(actor);
+
+    //Create a spider web in the right cell
+    const Feature_t mimicId =
+      eng->map->cells[posR.x][posR.x].featureStatic->getId();
+    const FeatureData* const mimicData =
+      eng->featureDataHandler->getData(mimicId);
+    TrapSpawnData* const trapSpawnData = new TrapSpawnData(
+      mimicData, trap_spiderWeb);
+    eng->featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
+
+    //Move the monster into the trap, and back again
+    monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
+    monster->pos = posL;
+    monster->moveDir(dirRight);
+    CHECK(monster->pos == posR);
+    monster->moveDir(dirLeft);    //Move left to try to break loose
+    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
+    monster->moveDir(dirLeft);    //Move left again to actually move if free
+
+    //Check conditions
+    if(monster->pos == posR) {
+      isTestedStuck = true;
+    } else if(monster->pos == posL) {
+      const Feature_t featureId =
+        eng->map->cells[posR.x][posR.y].featureStatic->getId();
+      if(featureId == feature_trashedSpiderWeb) {
+        isTestedLooseWebDestroyed = true;
+      } else {
+        isTestedLooseWebIntact = true;
+      }
+    }
+
+    //Remove the monster
+    eng->actorFactory->deleteAllMonsters();
+  }
+  //Check that all cases have been triggered (not really necessary, it just
+  //verifies that the loop above is correctly written).
+  CHECK_EQUAL(isTestedStuck, true);
+  CHECK_EQUAL(isTestedLooseWebIntact, true);
+  CHECK_EQUAL(isTestedLooseWebDestroyed, true);
+}
 
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
@@ -380,7 +380,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 
 //TEST_FIXTURE(BasicFixture, MakeBspMap) {
 //  MapGenBsp mapGen(eng);
-//  for(int i = 0; i < 100; i++) {
+//  for(int i = 0; i < 1000; i++) {
 //    eng->player->pos = Pos(eng->dice.range(1, MAP_X_CELLS - 1),
 //                           eng->dice.range(1, MAP_Y_CELLS - 1));
 //    mapGen.run();

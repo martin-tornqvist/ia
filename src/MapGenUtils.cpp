@@ -248,7 +248,7 @@ void MapGen::makePathByRandomWalk(
   int xPos = originX;
   int yPos = originY;
 
-  vector<Pos> positionsToFill;
+  vector<Pos> positionsToSet;
 
   bool dirOk = false;
   while(len > 0) {
@@ -267,15 +267,15 @@ void MapGen::makePathByRandomWalk(
     const FeatureStatic* const f =
       eng->map->cells[xPos + dx][yPos + dy].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
-      positionsToFill.push_back(Pos(xPos + dx, yPos + dy));
+      positionsToSet.push_back(Pos(xPos + dx, yPos + dy));
       xPos += dx;
       yPos += dy;
       len--;
     }
     dirOk = false;
   }
-  for(unsigned int i = 0; i < positionsToFill.size(); i++) {
-    eng->featureFactory->spawnFeatureAt(featureToMake, positionsToFill.at(i));
+  for(unsigned int i = 0; i < positionsToSet.size(); i++) {
+    eng->featureFactory->spawnFeatureAt(featureToMake, positionsToSet.at(i));
   }
 }
 

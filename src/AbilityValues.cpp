@@ -25,31 +25,31 @@ int AbilityValues::getVal(const Abilities_t ability,
 
       case ability_accuracyMelee: {
         val += 45;
-        if(eng->playerBonHandler->isBonPicked(playerBon_adeptMeleeCombatant))
+        if(eng->playerBonHandler->isTraitPicked(traitAdeptMeleeCombatant))
           val += 15;
       } break;
 
       case ability_accuracyRanged: {
         val += 50;
-        if(eng->playerBonHandler->isBonPicked(playerBon_marksman))
+        if(eng->playerBonHandler->isTraitPicked(traitMarksman))
           val += 15;
       } break;
 
       case ability_dodgeTrap: {
         val += 5;
-        if(eng->playerBonHandler->isBonPicked(playerBon_dexterous))
+        if(eng->playerBonHandler->isTraitPicked(traitDexterous))
           val += 20;
       } break;
 
       case ability_dodgeAttack: {
         val += 10;
-        if(eng->playerBonHandler->isBonPicked(playerBon_dexterous))
+        if(eng->playerBonHandler->isTraitPicked(traitDexterous))
           val += 25;
       } break;
 
       case ability_stealth: {
         val += 5;
-        if(eng->playerBonHandler->isBonPicked(playerBon_stealthy))
+        if(eng->playerBonHandler->isTraitPicked(traitStealthy))
           val += 40;
       } break;
 

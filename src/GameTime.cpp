@@ -181,7 +181,7 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == actorDeadState_alive) {
       //Regen Spi
       if(actor == eng->player) {
-        if(eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer)) {
+        if(eng->playerBonHandler->isTraitPicked(traitRapidRecoverer)) {
           regenSpiEveryNTurns = 6;
           isSpiRegenThisTurn =
             turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;

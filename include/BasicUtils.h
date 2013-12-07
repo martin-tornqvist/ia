@@ -83,12 +83,12 @@ public:
 
   void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                              bool a[MAP_X_CELLS][MAP_Y_CELLS],
-                             vector<Pos>& vectorToFill);
+                             vector<Pos>& vectorToSet);
 
   Actor* getActorAtPos(const Pos& pos) const;
 
   void getActorPositions(const vector<Actor*>& actors,
-                         vector<Pos>& vectorToFill);
+                         vector<Pos>& vectorToSet);
 
   void makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]);
 

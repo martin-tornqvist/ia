@@ -133,7 +133,7 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine* engine) :
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const int NR_ITEMS_MIN = eng->dice.oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
-    NR_ITEMS_MIN + (bonHandler->isBonPicked(playerBon_treasureHunter) ? 1 : 0);
+    NR_ITEMS_MIN + (bonHandler->isTraitPicked(traitTreasureHunter) ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
     feature_tomb, eng->dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
@@ -201,8 +201,8 @@ void Tomb::doAction(const TombAction_t action) {
   PropHandler* const propHandler = eng->player->getPropHandler();
   PlayerBonHandler* const bonusHandler = eng->playerBonHandler;
 
-  const bool IS_TOUGH     = bonusHandler->isBonPicked(playerBon_tough);
-  const bool IS_OBSERVANT = bonusHandler->isBonPicked(playerBon_observant);
+  const bool IS_TOUGH     = bonusHandler->isTraitPicked(traitTough);
+  const bool IS_OBSERVANT = bonusHandler->isTraitPicked(traitObservant);
   const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
   const bool IS_WEAK      = propHandler->hasProp(propWeakened);
   const bool IS_CURSED    = propHandler->hasProp(propCursed);
@@ -368,8 +368,7 @@ void Tomb::triggerTrap() {
 }
 
 void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
-  const bool IS_OCCULTIST =
-    eng->playerBonHandler->isBonPicked(playerBon_occultist);
+  const bool IS_OCCULTIST = eng->playerBonHandler->getBg() == bgOccultist;
 
   if(isTraitKnown_) {
     if(IS_OCCULTIST) {
@@ -430,8 +429,7 @@ void Tomb::getChoiceLabels(const vector<TombAction_t>& possibleActions,
 }
 
 void Tomb::getTraitDescr(string& descr) const {
-  const bool IS_OCCULTIST =
-    eng->playerBonHandler->isBonPicked(playerBon_occultist);
+  const bool IS_OCCULTIST = eng->playerBonHandler->getBg() == bgOccultist;
 
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
@@ -486,7 +484,7 @@ Chest::Chest(Feature_t id, Pos pos, Engine* engine) :
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHandler->isBonPicked(playerBon_treasureHunter);
+    bonHandler->isTraitPicked(traitTreasureHunter);
   const int NR_ITEMS_MIN = eng->dice.oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 4 : 3;
   itemContainer_.setRandomItemsForFeature(
@@ -525,8 +523,8 @@ void Chest::doAction(const ChestAction_t action) {
   PropHandler* const propHandler      = eng->player->getPropHandler();
   PlayerBonHandler* const bonHandler  = eng->playerBonHandler;
 
-  const bool IS_OBSERVANT = bonHandler->isBonPicked(playerBon_observant);
-  const bool IS_TOUGH     = bonHandler->isBonPicked(playerBon_tough);
+  const bool IS_OBSERVANT = bonHandler->isTraitPicked(traitObservant);
+  const bool IS_TOUGH     = bonHandler->isTraitPicked(traitTough);
   const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
   const bool IS_WEAK      = propHandler->hasProp(propWeakened);
   const bool IS_CURSED    = propHandler->hasProp(propCursed);
@@ -859,7 +857,7 @@ Cabinet::Cabinet(Feature_t id, Pos pos, Engine* engine) :
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHandler->isBonPicked(playerBon_treasureHunter);
+    bonHandler->isTraitPicked(traitTreasureHunter);
   const int IS_EMPTY_N_IN_10 = 5;
   const int NR_ITEMS_MIN = eng->dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 2 : 1;
@@ -951,7 +949,7 @@ Cocoon::Cocoon(Feature_t id, Pos pos, Engine* engine) :
 
   PlayerBonHandler* const bonHandler = eng->playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHandler->isBonPicked(playerBon_treasureHunter);
+    bonHandler->isTraitPicked(traitTreasureHunter);
   const int IS_EMPTY_N_IN_10 = 6;
   const int NR_ITEMS_MIN = eng->dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);

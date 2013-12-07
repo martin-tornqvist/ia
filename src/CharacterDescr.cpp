@@ -132,13 +132,15 @@ void CharacterDescr::makeLines() {
   lines.push_back(StringAndClr("Abilities gained", clrHeader));
   string abilitiesLine = "";
   bool isAnyBonusPicked = false;
-  for(unsigned int i = 0; i < endOfPlayerBons; i++) {
-    const PlayerBon_t bon = static_cast<PlayerBon_t>(i);
-    if(eng->playerBonHandler->isBonPicked(bon)) {
+  for(int i = 0; i < endOfTraits; i++) {
+    const Trait_t trait = Trait_t(i);
+    if(eng->playerBonHandler->isTraitPicked(trait)) {
       isAnyBonusPicked = true;
-      const string currentTitle = eng->playerBonHandler->getBonTitle(bon);
+      string currentTitle;
+      eng->playerBonHandler->getTraitTitle(trait, currentTitle);
       lines.push_back(StringAndClr(offset + currentTitle, clrText));
-      const string curDescr = eng->playerBonHandler->getBonEffectDescr(bon);
+      string curDescr;
+      eng->playerBonHandler->getTraitDescr(trait, curDescr);
       lines.push_back(StringAndClr(offset + curDescr, clrTextDark));
     }
   }

@@ -71,7 +71,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Scroll::tryLearn() {
-  if(eng->playerBonHandler->isBonPicked(playerBon_occultist)) {
+  if(eng->playerBonHandler->getBg() == bgOccultist) {
     Spell* const spell = getSpell();
     if(
       spell->isLearnableForPlayer() &&

@@ -322,7 +322,8 @@ void Door::tryBash(Actor* actorTrying) {
     bool isBasherWeak = actorTrying->getPropHandler()->hasProp(propWeakened);
     if(isBasherWeak == false) {
       if(actorTrying == eng->player) {
-        const int BON = eng->playerBonHandler->isBonPicked(playerBon_tough) ? 20 : 0;
+        const int BON =
+          eng->playerBonHandler->isTraitPicked(traitTough) ? 20 : 0;
         skillValueBash = 60 + BON - min(58, nrSpikes_ * 20);
       } else {
         skillValueBash = 10 - min(9, nrSpikes_ * 3);

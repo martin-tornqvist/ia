@@ -64,7 +64,7 @@ public:
     const Actor& other,
     const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  void getSpotedEnemies(vector<Actor*>& vectorToFill);
+  void getSpotedEnemies(vector<Actor*>& vectorToSet);
 
   inline ActorId_t getId()  const {return data_->id;}
   inline int getHp()        const {return hp_;}

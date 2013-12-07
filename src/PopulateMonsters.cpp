@@ -15,9 +15,9 @@
 using namespace std;
 
 void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
-  const int NR_LVLS_OUT_OF_DEPTH, vector<ActorId_t>& listToFill) const {
+  const int NR_LVLS_OUT_OF_DEPTH, vector<ActorId_t>& listToSet) const {
 
-  listToFill.resize(0);
+  listToSet.resize(0);
 
   const int DLVL = eng->map->getDLVL();
   const int EFFECTIVE_DLVL =
@@ -30,7 +30,7 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
       d.nrLeftAllowedToSpawn != 0 &&
       EFFECTIVE_DLVL >= d.spawnMinDLVL &&
       EFFECTIVE_DLVL <= d.spawnMaxDLVL) {
-      listToFill.push_back((ActorId_t)(i));
+      listToSet.push_back((ActorId_t)(i));
     }
   }
 }
@@ -381,9 +381,9 @@ void PopulateMonsters::spawnGroupAt(
 
 void PopulateMonsters::makeSortedFreeCellsVector(
   const Pos& origin, const bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-  vector<Pos>& vectorToFill) const {
+  vector<Pos>& vectorToSet) const {
 
-  vectorToFill.resize(0);
+  vectorToSet.resize(0);
 
   const int RADI = 10;
   const int X0 = getConstrInRange(1, origin.x - RADI, MAP_X_CELLS - 2);
@@ -394,13 +394,13 @@ void PopulateMonsters::makeSortedFreeCellsVector(
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       if(blockers[x][y] == false) {
-        vectorToFill.push_back(Pos(x, y));
+        vectorToSet.push_back(Pos(x, y));
       }
     }
   }
 
   IsCloserToOrigin sorter(origin, eng);
-  std::sort(vectorToFill.begin(), vectorToFill.end(), sorter);
+  std::sort(vectorToSet.begin(), vectorToSet.end(), sorter);
 }
 
 int PopulateMonsters::getRandomOutOfDepth() const {

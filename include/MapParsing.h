@@ -137,7 +137,7 @@ public:
 
   void run(const Pos& origin, const Pos& target,
            bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-           vector<Pos>& vectorToFill) const;
+           vector<Pos>& vectorToSet) const;
 private:
   Engine* eng;
 };

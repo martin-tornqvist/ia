@@ -397,7 +397,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
-      isFreeTurn = false; //engine->playerBonHandler->isBonPicked(playerBon_nimble);
+      isFreeTurn = false; //engine->playerBonHandler->isTraitPicked(traitnimble);
     }
   }
 
@@ -477,7 +477,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 }
 
 //void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine) {
-//  const bool IS_FREE_TURN = engine->playerBonHandler->isBonPicked(playerBon_nimble);
+//  const bool IS_FREE_TURN = engine->playerBonHandler->isTraitPicked(traitnimble);
 //
 //  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
 //  moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);

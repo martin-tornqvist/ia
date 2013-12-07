@@ -38,7 +38,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   } else {
     isDefenderAware =
       eng->player->checkIfSeeActor(*attacker, NULL) ||
-      eng->playerBonHandler->isBonPicked(playerBon_observant);
+      eng->playerBonHandler->isTraitPicked(traitObservant);
   }
 
   isDefenderDodging = false;

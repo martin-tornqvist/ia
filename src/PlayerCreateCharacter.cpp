@@ -10,23 +10,25 @@
 const int NR_TRAITS = 2;
 const int NR_SKILLS = 2;
 
-void PlayerCreateCharacter::run() {
+void PlayerCreateCharacter::createCharacter() const {
+  //------------------------------------------------------ NAME
+  PlayerEnterName playerEnterName(eng);
+  playerEnterName.run(Pos(50, Y0_CREATE_CHARACTER + 2));
+}
+
+void PlayerCreateCharacter::pickTrait() const {
   //------------------------------------------------------ TRAITS AND SKILLS
   if(eng->config->isBotPlaying == false) {
-    vector<PlayerBon_t> bonsTraits;
-    vector<PlayerBon_t> bonsSkills;
+    vector<Trait_t> traits;
 
-    for(int i = 0; i < endOfPlayerBons; i++) {
-      PlayerBon_t bon = PlayerBon_t(i);
-      if(eng->playerBonHandler->getBonType(bon) == playerBonType_trait) {
-        bonsTraits.push_back(bon);
+    for(int i = 0; i < endOfTraits; i++) {
+      Trait_t trait = Trait_t(i);
+      if(eng->playerBonHandler->getBonType(trait) == playerBonType_trait) {
+        bonsTraits.push_back(trait);
       } else {
-        bonsSkills.push_back(bon);
+        bonsSkills.push_back(trait);
       }
     }
-
-    int nrTraitsPicked = 0;
-    int nrSkillsPicked = 0;
 
     CharGenStep_t step = CharGenStep_traits;
 
@@ -43,8 +45,8 @@ void PlayerCreateCharacter::run() {
 
         case menuAction_selected: {
           if(step == CharGenStep_traits) {
-            const PlayerBon_t bon = bonsTraits.at(browser.getPos().y);
-            if(eng->playerBonHandler->isBonPicked(bon) == false) {
+            const Trait_t bon = bonsTraits.at(browser.getPos().y);
+            if(eng->playerBonHandler->isTraitPicked(bon) == false) {
               eng->playerBonHandler->pickBon(bon);
               nrTraitsPicked++;
             }
@@ -53,8 +55,8 @@ void PlayerCreateCharacter::run() {
               browser = MenuBrowser(bonsSkills.size(), 0);
             }
           } else {
-            const PlayerBon_t bon = bonsSkills.at(browser.getPos().y);
-            if(eng->playerBonHandler->isBonPicked(bon) == false) {
+            const Trait_t bon = bonsSkills.at(browser.getPos().y);
+            if(eng->playerBonHandler->isTraitPicked(bon) == false) {
               eng->playerBonHandler->pickBon(bon);
               nrSkillsPicked++;
             }
@@ -70,20 +72,16 @@ void PlayerCreateCharacter::run() {
       }
     }
   }
-
-  //------------------------------------------------------ NAME
-  PlayerEnterName playerEnterName(eng);
-  playerEnterName.run(Pos(50, Y0_CREATE_CHARACTER + 2));
 }
 
-void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
-                                 const vector<PlayerBon_t>& bonsSkills,
+void PlayerCreateCharacter::draw(const vector<Trait_t>& bonsTraits,
+                                 const vector<Trait_t>& bonsSkills,
                                  const MenuBrowser& browser,
                                  const CharGenStep_t step) const {
   eng->renderer->coverPanel(panel_screen);
 
-  const unsigned int NR_BONS_TRAITS = bonsTraits.size();
-  const unsigned int NR_BONS_SKILLS = bonsSkills.size();
+  const int NR_BONS_TRAITS = bonsTraits.size();
+  const int NR_BONS_SKILLS = bonsSkills.size();
 
   const int LEN_OF_LONGEST_LIST = max(NR_BONS_TRAITS, NR_BONS_SKILLS);
 
@@ -104,13 +102,13 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
     eng->renderer->drawText(
       "* Pick two traits", panel_screen, Pos(X_TRAITS - 2, yPos - 2), clrWhite);
   }
-  for(unsigned int i = 0; i < NR_BONS_TRAITS; i++) {
-    const PlayerBon_t bon = bonsTraits.at(i);
+  for(int i = 0; i < NR_BONS_TRAITS; i++) {
+    const Trait_t bon = bonsTraits.at(i);
     const string name     = eng->playerBonHandler->getBonTitle(bon);
     if(int(name.size()) > lenOfWidestName) {lenOfWidestName = name.size();}
     const bool IS_MARKED  = browserY == int(i) &&
                             step == CharGenStep_traits;
-    const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
+    const bool IS_PICKED  = eng->playerBonHandler->isTraitPicked(bon);
     const SDL_Color clr   = IS_MARKED ? clrNosferatuSepiaLgt :
                             clrNosferatuSepiaDrk;
     eng->renderer->drawText(name, panel_screen, Pos(X_TRAITS, yPos), clr);
@@ -139,13 +137,13 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
       eng->renderer->drawText(
         "* Pick two skills", panel_screen, Pos(X_SKILLS - 2, yPos - 2), clrWhite);
     }
-    for(unsigned int i = 0; i < NR_BONS_SKILLS; i++) {
-      const PlayerBon_t bon = bonsSkills.at(i);
+    for(int i = 0; i < NR_BONS_SKILLS; i++) {
+      const Trait_t bon = bonsSkills.at(i);
       const string name     = eng->playerBonHandler->getBonTitle(bon);
       if(int(name.size()) > lenOfWidestName) {lenOfWidestName = name.size();}
       const bool IS_MARKED  = browserY == int(i) &&
                               step == CharGenStep_skills;
-      const bool IS_PICKED  = eng->playerBonHandler->isBonPicked(bon);
+      const bool IS_PICKED  = eng->playerBonHandler->isTraitPicked(bon);
       const SDL_Color clr   = IS_MARKED ? clrNosferatuSepiaLgt :
                               clrNosferatuSepiaDrk;
       eng->renderer->drawText(name, panel_screen, Pos(X_SKILLS, yPos), clr);
@@ -170,7 +168,7 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
   if(step < CharGenStep_name) {
     const int Y0_DESCR = Y0_BONUSES + NR_BONS_SKILLS + 2;
     yPos = Y0_DESCR;
-    const PlayerBon_t markedBon =
+    const Trait_t markedBon =
       step == CharGenStep_traits ? bonsTraits.at(browserY) :
       bonsSkills.at(browserY);
     string effectDescr =
@@ -188,7 +186,7 @@ void PlayerCreateCharacter::draw(const vector<PlayerBon_t>& bonsTraits,
   eng->renderer->updateScreen();
 }
 
-void PlayerEnterName::run(const Pos& pos) {
+void PlayerEnterName::run(const Pos& pos) const {
   string name = "";
   draw(name, pos);
   bool done = false;
@@ -205,7 +203,7 @@ void PlayerEnterName::run(const Pos& pos) {
   def.name_a = def.name_the = name;
 }
 
-void PlayerEnterName::draw(const string& currentString, const Pos& pos) {
+void PlayerEnterName::draw(const string& currentString, const Pos& pos) const {
   eng->renderer->coverArea(panel_screen, pos, Pos(16, 2));
   const string LABEL = "What is your name?";
   eng->renderer->drawText(LABEL, panel_screen, pos, clrWhite);
@@ -218,7 +216,7 @@ void PlayerEnterName::draw(const string& currentString, const Pos& pos) {
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& done,
-                               const Pos& pos) {
+                               const Pos& pos) const {
   const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RETURN) {

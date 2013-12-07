@@ -230,8 +230,8 @@ void Player::actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
 
 int Player::getCarryWeightLimit() const {
   PlayerBonHandler* const bon = eng->playerBonHandler;
-  const bool IS_TOUGH         = bon->isBonPicked(playerBon_tough);
-  const bool IS_STRONG_BACKED = bon->isBonPicked(playerBon_strongBacked);
+  const bool IS_TOUGH         = bon->isTraitPicked(traitTough);
+  const bool IS_STRONG_BACKED = bon->isTraitPicked(traitStrongBacked);
   const bool IS_WEAKENED      = propHandler_->hasProp(propWeakened);
   const int CARRY_WEIGHT_MOD =
     IS_TOUGH * 10 + IS_STRONG_BACKED * 30 - IS_WEAKENED * 15;
@@ -241,10 +241,10 @@ int Player::getCarryWeightLimit() const {
 
 int Player::getShockResistance() const {
   int ret = 0;
-  if(eng->playerBonHandler->isBonPicked(playerBon_fearless)) {
+  if(eng->playerBonHandler->isTraitPicked(traitFearless)) {
     ret += 5;
   }
-  if(eng->playerBonHandler->isBonPicked(playerBon_coolHeaded)) {
+  if(eng->playerBonHandler->isTraitPicked(traitCoolHeaded)) {
     ret += 20;
   }
   return min(100, max(0, ret));
@@ -940,7 +940,7 @@ void Player::actorSpecificOnStandardTurn() {
       }
 
       const bool IS_RAPID_REC =
-        eng->playerBonHandler->isBonPicked(playerBon_rapidRecoverer);
+        eng->playerBonHandler->isTraitPicked(traitRapidRecoverer);
 
       const int REGEN_N_TURN = (IS_RAPID_REC ? 6 : 10) + (nrWounds * 5);
 
@@ -974,7 +974,7 @@ void Player::actorSpecificOnStandardTurn() {
         }
       }
 
-      if(eng->playerBonHandler->isBonPicked(playerBon_observant)) {
+      if(eng->playerBonHandler->isTraitPicked(traitObservant)) {
         const int CLUE_RADI = 3;
         x0 = max(0, pos.x - CLUE_RADI);
         y0 = max(0, pos.y - CLUE_RADI);
@@ -1145,7 +1145,7 @@ void Player::moveDir(Dir_t dir) {
         pos = dest;
 
         PlayerBonHandler* const bon = eng->playerBonHandler;
-        if(bon->isBonPicked(playerBon_dexterous)) {
+        if(bon->isTraitPicked(traitDexterous)) {
           const int FREE_MOVE_EVERY_N_TURN = 4;
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;

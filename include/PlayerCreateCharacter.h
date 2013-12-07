@@ -12,35 +12,33 @@ class Engine;
 
 const int Y0_CREATE_CHARACTER = 6;
 
-enum CharGenStep_t {
-  CharGenStep_traits,
-  CharGenStep_skills,
-  CharGenStep_name
-};
-
+//This class is responsible for letting the player create a character
+//(background and name), and also for picking traits when gaining levels
 class PlayerCreateCharacter {
 public:
   PlayerCreateCharacter(Engine* engine) : eng(engine) {}
 
-  void run();
+  void createCharacter() const;
+
+  void pickTrait() const;
 
 private:
-  void draw(const vector<PlayerBon_t>& bonsTraits,
-            const vector<PlayerBon_t>& bonsSkills,
-            const MenuBrowser& browser,
-            const CharGenStep_t step) const;
+  void drawPickTrait(const vector<Trait_t>& traitsToDraw,
+                     const MenuBrowser& browser) const;
 
   Engine* eng;
 };
 
+//Helper class for PlayerCreateCharacter for input and rendering when the
+//player enters a character name
 class PlayerEnterName {
 public:
 private:
   friend class PlayerCreateCharacter;
   PlayerEnterName(Engine* engine) : eng(engine) {}
-  void run(const Pos& pos);
-  void draw(const string& currentString, const Pos& pos);
-  void readKeys(string& currentString, bool& done, const Pos& pos);
+  void run(const Pos& pos) const;
+  void draw(const string& currentString, const Pos& pos) const;
+  void readKeys(string& currentString, bool& done, const Pos& pos) const;
   Engine* eng;
 };
 

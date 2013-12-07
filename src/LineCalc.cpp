@@ -6,11 +6,11 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
                            const bool SHOULD_STOP_AT_TARGET,
                            const int CHEB_TRAVEL_LIMIT,
                            const bool ALLOW_OUTSIDE_MAP,
-                           vector<Pos>& lineToFill) {
-  lineToFill.resize(0);
+                           vector<Pos>& lineToSet) {
+  lineToSet.resize(0);
 
   if(target == origin) {
-    lineToFill.push_back(origin);
+    lineToSet.push_back(origin);
     return;
   }
 
@@ -43,13 +43,13 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
     }
 
     bool isPosOkToAdd = false;
-    if(lineToFill.empty()) {
+    if(lineToSet.empty()) {
       isPosOkToAdd = true;
     } else {
-      isPosOkToAdd = lineToFill.back() != curPos;
+      isPosOkToAdd = lineToSet.back() != curPos;
     }
     if(isPosOkToAdd) {
-      lineToFill.push_back(curPos);
+      lineToSet.push_back(curPos);
     }
 
     //Check distance limits

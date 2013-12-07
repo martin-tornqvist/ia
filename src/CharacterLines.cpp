@@ -217,7 +217,7 @@ void CharacterLines::drawInfoLines() {
   }
 
 //  const bool IS_SELF_AWARE =
-//    playerBonHandler->isBonPicked(playerBon_selfAware);
+//    playerBonHandler->isTraitPicked(traitselfAware);
 //  //TODO This should be collected from applied and inventory by the Property handler
 //  const vector<Prop*>& appliedProps =
 //    player->getPropHandler()->appliedProps_;
