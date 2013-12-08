@@ -102,21 +102,21 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '3') {
+  } else if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDir(dirDownRight);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '1') {
+  } else if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDir(dirDownLeft);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '7') {
+  } else if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDir(dirUpLeft);
