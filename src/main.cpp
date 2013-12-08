@@ -57,10 +57,10 @@ int main(int argc, char* argv[]) {
 
         if(gameEntryType == gameEntry_new) {
           if(eng->config->isBotPlaying) {
-            eng->playerBonHandler->setAllBonsToPicked();
+            eng->playerBonHandler->setAllTraitsToPicked();
             eng->bot->init();
           }
-          eng->playerCreateCharacter->run();
+          eng->playerCreateCharacter->createCharacter();
           eng->player->actorSpecific_spawnStartItems();
 
           eng->gameTime->insertActorInLoop(eng->player);

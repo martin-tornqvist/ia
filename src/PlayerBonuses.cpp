@@ -129,56 +129,88 @@ void PlayerBonHandler::getTraitDescr(
   }
 }
 
-void PlayerBonHandler::pickBon(const Trait_t bon) {
-  bons_[bon].isPicked_ = true;
+void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
+                                       vector<Trait_t>& traitsToFill) {
+  traitsToFill.resize(0);
+  //TODO Add prereqs
+}
 
-  switch(bon) {
-    case traittough: {
+void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsToSet) {
+  traitsToSet.resize(0);
+
+  for(int i = 0; i < endOfTraits; i++) {
+    if(traitsPicked_[i] == false) {
+
+      vector<Trait_t> traitPrereqs;
+      getTraitPrereqs(Trait_t(i), traitPrereqs);
+
+      bool isPickable = true;
+      for(unsigned int ii = 0; ii < traitPrereqs.size(); ii++) {
+        if(traitsPicked_[traitPrereqs.at(ii)] == false) {
+          isPickable = false;
+          break;
+        }
+      }
+
+      //TODO Check player background prereq
+
+      if(isPickable) {
+        traitsToSet.push_back(Trait_t(i));
+      }
+    }
+  }
+}
+
+void PlayerBonHandler::pickTrait(const Trait_t id) {
+  traitsPicked_[id] = true;
+
+  switch(id) {
+    case traitTough: {
       eng->player->changeMaxHp(3, false);
     } break;
 
-    case traitspirited: {
+    case traitSpirited: {
       eng->player->changeMaxSpi(3, false);
     } break;
 
-    case traitselfAware: {
+    case traitSelfAware: {
       eng->player->getPropHandler()->tryApplyProp(
         new PropRConfusion(eng, propTurnsIndefinite), true, true, true);
     } break;
 
-    case traitfearless: {
+    case traitFearless: {
       eng->player->getPropHandler()->tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true);
     } break;
 
-    case traitoccultist: {
-      const int NR_SCROLLS_TO_START_WITH = 2;
-      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
-        Item* const item =
-          eng->itemFactory->spawnRandomScrollOrPotion(true, false);
+//    case traitOccultist: {
+//      const int NR_SCROLLS_TO_START_WITH = 2;
+//      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
+//        Item* const item =
+//          eng->itemFactory->spawnRandomScrollOrPotion(true, false);
+//
+//        Spell_t spellId = item->getData().spellCastFromScroll;
+//        Spell* const spell = eng->spellHandler->getSpellFromId(spellId);
+//        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
+//        delete spell;
+//
+//        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
+//          Scroll* const scroll = dynamic_cast<Scroll*>(item);
+//          scroll->identify(true);
+//          eng->player->getInventory()->putItemInGeneral(scroll);
+//
+//          if(item->nrItems == 2) {
+//            item->nrItems = 1;
+//            i--;
+//          }
+//        } else {
+//          delete item;
+//          i--;
+//        }
+//      }
+//    } break;
 
-        Spell_t spellId = item->getData().spellCastFromScroll;
-        Spell* const spell = eng->spellHandler->getSpellFromId(spellId);
-        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
-        delete spell;
-
-        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
-          Scroll* const scroll = dynamic_cast<Scroll*>(item);
-          scroll->identify(true);
-          eng->player->getInventory()->putItemInGeneral(scroll);
-
-          if(item->nrItems == 2) {
-            item->nrItems = 1;
-            i--;
-          }
-        } else {
-          delete item;
-          i--;
-        }
-      }
-    } break;
-
-    case traitalchemist: {
+    case traitAlchemist: {
       for(int i = 1; i < endOfItemIds; i++) {
         ItemData* const d = eng->itemDataHandler->dataList[i];
         if(d->isPotion) {
@@ -199,22 +231,26 @@ void PlayerBonHandler::pickBon(const Trait_t bon) {
   }
 }
 
-void PlayerBonHandler::getAllPickedBonTitlesList(vector<string>& titlesToSet) {
+void PlayerBonHandler::getAllPickedTraitsTitlesList(
+  vector<string>& titlesToSet) {
+
   titlesToSet.resize(0);
-  for(unsigned int i = 0; i < endOfTraits; i++) {
-    const PlayerBon& bon = bons_[i];
-    if(bon.isPicked_) {
-      titlesToSet.push_back(bon.title_);
+  for(int i = 0; i < endOfTraits; i++) {
+    if(traitsPicked_[i]) {
+      string title = "";
+      getTraitTitle(Trait_t(i), title);
+      titlesToSet.push_back(title);
     }
   }
 }
 
-void PlayerBonHandler::getAllPickedBonTitlesLine(string& strToSet) {
+void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strToSet) {
   strToSet = "";
-  for(unsigned int i = 0; i < endOfTraits; i++) {
-    const PlayerBon& bon = bons_[i];
-    if(bon.isPicked_) {
-      const string title = "\"" + bon.title_ + "\"";
+  for(int i = 0; i < endOfTraits; i++) {
+    if(traitsPicked_[i]) {
+      string title = "";
+      getTraitTitle(Trait_t(i), title);
+      title = "\"" + title + "\"";
       strToSet += strToSet.empty() ? title : (", " + title);
     }
   }

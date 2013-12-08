@@ -1099,7 +1099,7 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
   line.resize(0);
 
   const bool IS_SELF_AWARE =
-    eng->playerBonHandler->isTraitPicked(traitselfAware);
+    eng->playerBonHandler->isTraitPicked(traitSelfAware);
 
   vector<Prop*> props;
   getPropsFromSource(props, propSrcAppliedAndInv);

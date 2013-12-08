@@ -23,7 +23,8 @@ public:
   void pickTrait() const;
 
 private:
-  void drawPickTrait(const vector<Trait_t>& traitsToDraw,
+  void drawPickTrait(const vector<Trait_t>& traitsColOne,
+                     const vector<Trait_t>& traitsColTwo,
                      const MenuBrowser& browser) const;
 
   Engine* eng;

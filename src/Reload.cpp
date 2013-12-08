@@ -109,7 +109,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   bool isSwiftReload    = false;
 
   if(&actorReloading == eng->player) {
-    isSwiftReload = eng->playerBonHandler->isTraitPicked(traitmarksman) &&
+    isSwiftReload = eng->playerBonHandler->isTraitPicked(traitMarksman) &&
                     eng->dice.coinToss();
   }
 

@@ -127,7 +127,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng->player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng->player->moveDir(dirCenter);
-      if(eng->playerBonHandler->isTraitPicked(traitmarksman)) {
+      if(eng->playerBonHandler->isTraitPicked(traitMarksman)) {
         eng->player->getPropHandler()->tryApplyProp(
           new PropStill(eng, propTurnsSpecified, 1));
       }

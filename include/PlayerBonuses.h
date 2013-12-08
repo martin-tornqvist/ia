@@ -63,6 +63,11 @@ public:
     return traitsPicked_[id];
   }
 
+  void getAllPickableTraits(vector<Trait_t>& traitsToSet);
+
+  void getTraitPrereqs(const Trait_t id,
+                       vector<Trait_t>& traitsToFill);
+
   inline bool getBg() const {return bg_;}
 
   void getTraitTitle(const Trait_t id, string& strToSet) const;
@@ -71,8 +76,8 @@ public:
   void getBgTitle(const Bg_t id, string& strToSet) const;
   void getBgDescr(const Bg_t id, string& strToSet) const;
 
-  void getAllPickedBonTitlesList(vector<string>& titlesToSet);
-  void getAllPickedBonTitlesLine(string& strToSet);
+  void getAllPickedTraitsTitlesList(vector<string>& titlesToSet);
+  void getAllPickedTraitsTitlesLine(string& strToSet);
 
   void pickTrait(const Trait_t id);
 
