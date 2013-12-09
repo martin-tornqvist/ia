@@ -124,7 +124,9 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
 
       eng->map->cells[curPos.x][curPos.y].item = &item;
 
-      if(eng->player->pos == curPos && curPos != intendedPos) {
+      const bool IS_PLAYER_POS    = eng->player->pos == curPos;
+      const bool IS_INTENDED_POS  = curPos == intendedPos;
+      if(IS_PLAYER_POS && IS_INTENDED_POS == false) {
         eng->log->addMsg("I feel something by my feet.");
       }
 
