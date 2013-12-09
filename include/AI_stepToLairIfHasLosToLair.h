@@ -24,8 +24,7 @@ public:
         if(blockers[newPos.x][newPos.y]) {
           return false;
         } else {
-          monster.moveDir(
-            DirConverter(engine).getDir(delta));
+          monster.moveDir(DirConverter().getDir(delta));
           return true;
         }
       }

@@ -11347,7 +11347,7 @@
 	<string>
 	"GameTime.h"
 
-1386109053 source:d:\dev\ia.git\src\actormonster.cpp
+1386622400 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
 	"Engine.h"
 	"Item.h"
@@ -11473,7 +11473,7 @@
 	<string>
 	<vector>
 
-1386369180 source:d:\dev\ia.git\src\actorplayer.cpp
+1386622419 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11732,7 +11732,7 @@
 1382910176 d:\dev\ia.git\src\bash.h
 	"FeatureDoor.h"
 
-1386364358 source:d:\dev\ia.git\src\basicutils.cpp
+1386621988 source:d:\dev\ia.git\src\basicutils.cpp
 	"BasicUtils.h"
 	<stdlib.h>
 	<iostream>
@@ -11846,7 +11846,7 @@
 1382910266 d:\dev\ia.git\src\close.h
 	"CommonData.h"
 
-1386369114 source:d:\dev\ia.git\src\config.cpp
+1386622663 source:d:\dev\ia.git\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -11970,7 +11970,7 @@
 	<vector>
 	<string>
 
-1386192307 source:d:\dev\ia.git\src\engine.cpp
+1386622440 source:d:\dev\ia.git\src\engine.cpp
 	"Engine.h"
 	<iostream>
 	"Converters.h"
@@ -12333,7 +12333,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1386459922 source:d:\dev\ia.git\src\input.cpp
+1386519183 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12896,7 +12896,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1386459600 source:d:\dev\ia.git\src\properties.cpp
+1386622574 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -12998,7 +12998,7 @@
 	"Inventory.h"
 	"GameTime.h"
 
-1386181594 source:d:\dev\ia.git\src\sound.cpp
+1386622569 source:d:\dev\ia.git\src\sound.cpp
 	"Sound.h"
 	<iostream>
 	"Engine.h"
@@ -13779,13 +13779,13 @@
 	<string>
 	<iostream>
 
-1386106820 d:\dev\ia.git\include\engine.h
+1386622434 d:\dev\ia.git\include\engine.h
 	"DebugMode.h"
 	"BasicUtils.h"
 
 1385502710 d:\dev\ia.git\include\debugmodeincl\debugmode.h
 
-1386364358 d:\dev\ia.git\include\basicutils.h
+1386621988 d:\dev\ia.git\include\basicutils.h
 	<vector>
 	<math.h>
 	<stdexcept>
@@ -14038,20 +14038,20 @@
 	"Engine.h"
 	"ActorPlayer.h"
 
-1385821598 d:\dev\ia.git\include\ai_makeroomforfriend.h
+1386622358 d:\dev\ia.git\include\ai_makeroomforfriend.h
 	<algorithm>
 	"MapParsing.h"
 	"LineCalc.h"
 
-1386109068 d:\dev\ia.git\include\ai_steppath.h
+1386622364 d:\dev\ia.git\include\ai_steppath.h
 	"Engine.h"
 
-1385821647 d:\dev\ia.git\include\ai_movetowardstargetsimple.h
+1386622368 d:\dev\ia.git\include\ai_movetowardstargetsimple.h
 	"Engine.h"
 	"Actor.h"
 	"MapParsing.h"
 
-1385809502 d:\dev\ia.git\include\ai_steptolairifhaslostolair.h
+1386622379 d:\dev\ia.git\include\ai_steptolairifhaslostolair.h
 	"Engine.h"
 	"Fov.h"
 
@@ -14067,7 +14067,7 @@
 1386106930 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
 
-1385823868 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
+1386622390 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
 	"Engine.h"
 	"Actor.h"
 	"CommonData.h"
@@ -14418,7 +14418,7 @@
 
 1385502710 d:\dev\ia.git\include\releasemodeincl\debugmode.h
 
-1386364358 source:d:\dev\ia.git\src\mapgenutils.cpp
+1386622491 source:d:\dev\ia.git\src\mapgenutils.cpp
 	"MapGen.h"
 	"Engine.h"
 	"Map.h"

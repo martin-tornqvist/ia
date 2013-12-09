@@ -11,6 +11,7 @@
 #include "GameTime.h"
 
 
+//------------------------------------------------------ LEX. COMPARE
 struct LexicograhicalCompareStringAndClr {
 public:
   LexicograhicalCompareStringAndClr() {
@@ -22,6 +23,7 @@ public:
   }
 };
 
+//------------------------------------------------------ BASIC UTILS
 void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                                        bool a[MAP_X_CELLS][MAP_Y_CELLS],
                                        vector<Pos>& vectorToSet) {
@@ -101,8 +103,6 @@ Actor* BasicUtils::getClosestActor(const Pos& c,
   return actors.at(closestElement);
 }
 
-
-
 bool BasicUtils::isPosAdj(
   const Pos& pos1, const Pos& pos2,
   const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
@@ -132,6 +132,14 @@ void BasicUtils::lexicographicalSortStringAndClrVector(
   std::sort(vect.begin(), vect.end(), cmp);
 }
 
+TimeData BasicUtils::getCurrentTime() const {
+  time_t t = time(0);
+  struct tm* now = localtime(&t);
+  return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
+                  now->tm_hour, now->tm_min, now->tm_sec);
+}
+
+//------------------------------------------------------ TIME DATA
 string TimeData::getTimeStr(const Time_t lowest,
                             const bool ADD_SEPARATORS) const {
   string ret = toString(year_);
@@ -151,9 +159,84 @@ string TimeData::getTimeStr(const Time_t lowest,
   return ret;
 }
 
-TimeData BasicUtils::getCurrentTime() const {
-  time_t t = time(0);
-  struct tm* now = localtime(&t);
-  return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
-                  now->tm_hour, now->tm_min, now->tm_sec);
+//------------------------------------------------------ DIRECTION CONVERTER
+DirConverter::DirConverter() {
+  compassDirNames[0][0] = "NW";
+  compassDirNames[0][1] = "W";
+  compassDirNames[0][2] = "SW";
+  compassDirNames[1][0] = "N";
+  compassDirNames[1][1] = "";
+  compassDirNames[1][2] = "S";
+  compassDirNames[2][0] = "NE";
+  compassDirNames[2][1] = "E";
+  compassDirNames[2][2] = "SE";
 }
+
+Dir_t DirConverter::getDir(const Pos& offset) const {
+  if(offset.x < -1 || offset.y < -1 || offset.x > 1 || offset.y > 1) {
+    throw runtime_error("Expected x & y [-1, 1]");
+  }
+
+  if(offset.y == -1) {
+    return offset.x == -1 ? dirUpLeft :
+           offset.x == 0 ? dirUp :
+           offset.x == 1 ? dirUpRight :
+           endOfDirs;
+  }
+
+  if(offset.y == 0) {
+    return offset.x == -1 ? dirLeft :
+           offset.x == 0 ? dirCenter :
+           offset.x == 1 ? dirRight :
+           endOfDirs;
+  }
+  if(offset.y == 1) {
+    return offset.x == -1 ? dirDownLeft :
+           offset.x == 0 ? dirDown :
+           offset.x == 1 ? dirDownRight :
+           endOfDirs;
+  }
+  return endOfDirs;
+}
+
+Pos DirConverter::getOffset(const Dir_t dir) const {
+  if(dir == endOfDirs) {
+    throw runtime_error("Invalid direction");
+  }
+  switch(dir) {
+    case dirDownLeft:   return Pos(-1, 1);
+    case dirDown:       return Pos(0, 1);
+    case dirDownRight:  return Pos(1, 1);
+    case dirLeft:       return Pos(-1, 0);
+    case dirCenter:     return Pos(0, 0);
+    case dirRight:      return Pos(1, 0);
+    case dirUpLeft:     return Pos(-1, -1);
+    case dirUp:         return Pos(0, -1);
+    case dirUpRight:    return Pos(1, -1);
+    case endOfDirs:     return Pos(0, 0);
+  }
+  return Pos(0, 0);
+}
+
+void DirConverter::getCompassDirName(
+  const Pos& fromPos, const Pos& toPos, string& strToSet) const {
+  strToSet = "";
+
+  (void)fromPos;
+  (void)toPos;
+
+}
+
+void DirConverter::getCompassDirName(
+  const Dir_t dir, string& strToSet) const {
+
+  const Pos& offset = getOffset(dir);
+  strToSet = compassDirNames[offset.x + 1][offset.y + 1];
+}
+
+void DirConverter::getCompassDirName(
+  const Pos& offset, string& strToSet) const {
+
+  strToSet = compassDirNames[offset.x + 1][offset.y + 1];
+}
+

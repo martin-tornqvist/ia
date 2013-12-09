@@ -1077,7 +1077,7 @@ void Player::moveDir(Dir_t dir) {
 
     bool isFreeTurn = false;;
 
-    const Pos dest(pos + DirConverter(eng).getOffset(dir));
+    const Pos dest(pos + DirConverter().getOffset(dir));
 
     if(dir != dirCenter) {
       //Attack?
@@ -1190,7 +1190,7 @@ void Player::autoMelee() {
     if(eng->basicUtils->isPosAdj(pos, target->pos, false)) {
       if(checkIfSeeActor(*target, NULL)) {
         moveDir(
-          DirConverter(eng).getDir(target->pos - pos));
+          DirConverter().getDir(target->pos - pos));
         return;
       }
     }
@@ -1206,7 +1206,7 @@ void Player::autoMelee() {
           if(checkIfSeeActor(*actor, NULL)) {
             target = actor;
             moveDir(
-              DirConverter(eng).getDir(Pos(dx, dy)));
+              DirConverter().getDir(Pos(dx, dy)));
             return;
           }
         }

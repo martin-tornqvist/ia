@@ -96,7 +96,6 @@ class Disarm;
 class Gods;
 class Credits;
 class PropDataHandler;
-class DirConverter;
 class SdlWrapper;
 class FloodFill;
 
@@ -155,7 +154,6 @@ public:
   Reload* reload;
   BasicUtils* basicUtils;
   Dice dice;
-  DirConverter* dirConverter;
   Gore* gore;
   Manual* manual;
   LineCalc* lineCalc;

@@ -9,7 +9,7 @@ public:
     if(monster.deadState == actorDeadState_alive) {
       if(path.empty() == false) {
         const Pos delta = path.back() - monster.pos;
-        monster.moveDir(DirConverter(monster.eng).getDir(delta));
+        monster.moveDir(DirConverter().getDir(delta));
         return true;
       }
     }

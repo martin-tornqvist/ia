@@ -46,7 +46,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 //  const Pos travelStartDir(travelDirCandidates.at(ELEMENT));
 
   const Pos roomDeltaSigns(
-    DirConverter(eng).getOffset(cardinalDirToTravel));
+    DirConverter().getOffset(cardinalDirToTravel));
 
   vector<Pos> PossInR1closeToR2;
   PossInR1closeToR2.resize(0);

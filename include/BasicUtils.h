@@ -217,80 +217,22 @@ private:
 
 class DirConverter {
 public:
-  DirConverter(Engine* const engine) : eng(engine) {
-    compassDirNames[0][0] = "NW";
-    compassDirNames[0][1] = "W";
-    compassDirNames[0][2] = "SW";
-    compassDirNames[1][0] = "N";
-    compassDirNames[1][1] = "";
-    compassDirNames[1][2] = "S";
-    compassDirNames[2][0] = "NE";
-    compassDirNames[2][1] = "E";
-    compassDirNames[2][2] = "SE";
-  }
+  DirConverter();
 
   ~DirConverter() {}
 
-  Dir_t getDir(const Pos& offset) const {
-    if(offset.x < -1 || offset.y < -1 || offset.x > 1 || offset.y > 1) {
-      throw runtime_error("Expected x & y [-1, 1]");
-    }
+  Dir_t getDir(const Pos& offset) const;
 
-    if(offset.y == -1) {
-      return offset.x == -1 ? dirUpLeft :
-             offset.x == 0 ? dirUp :
-             offset.x == 1 ? dirUpRight :
-             endOfDirs;
-    }
+  Pos getOffset(const Dir_t dir) const;
 
-    if(offset.y == 0) {
-      return offset.x == -1 ? dirLeft :
-             offset.x == 0 ? dirCenter :
-             offset.x == 1 ? dirRight :
-             endOfDirs;
-    }
-    if(offset.y == 1) {
-      return offset.x == -1 ? dirDownLeft :
-             offset.x == 0 ? dirDown :
-             offset.x == 1 ? dirDownRight :
-             endOfDirs;
-    }
-    return endOfDirs;
-  }
+  void getCompassDirName(
+    const Pos& fromPos, const Pos& toPos, string& strToSet) const;
 
-  Pos getOffset(const Dir_t dir) const {
-    if(dir == endOfDirs) {
-      throw runtime_error("Invalid direction");
-    }
-    switch(dir) {
-      case dirDownLeft:   return Pos(-1, 1);
-      case dirDown:       return Pos(0, 1);
-      case dirDownRight:  return Pos(1, 1);
-      case dirLeft:       return Pos(-1, 0);
-      case dirCenter:     return Pos(0, 0);
-      case dirRight:      return Pos(1, 0);
-      case dirUpLeft:     return Pos(-1, -1);
-      case dirUp:         return Pos(0, -1);
-      case dirUpRight:    return Pos(1, -1);
-      case endOfDirs:     return Pos(0, 0);
-    }
-    return Pos(0, 0);
-  }
+  void getCompassDirName(const Dir_t dir, string& strToSet) const;
 
-  string getCompassDirName(const Dir_t dir) const {
-    const Pos& offset = getOffset(dir);
-    return compassDirNames[offset.x + 1][offset.y + 1];
-  }
-
-  string getCompassDirName(const Pos& offset) const {
-    return compassDirNames[offset.x + 1][offset.y + 1];
-  }
+  void getCompassDirName(const Pos& offset, string& strToSet) const;
 
 private:
-  DirConverter() : eng(NULL) {}
-
-  Engine* const eng;
-
   string compassDirNames[3][3];
 };
 

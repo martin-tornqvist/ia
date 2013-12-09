@@ -79,6 +79,30 @@ TEST(CalculateDistances) {
   CHECK_EQUAL(utils.chebyshevDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
+TEST(Directions) {
+  DirConverter dirConv;
+  const int X0 = 20;
+  const int Y0 = 20;
+  const Pos fromPos(X0, Y0);
+  string str = "";
+  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0), str);
+  CHECK_EQUAL("E", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 1), str);
+  CHECK_EQUAL("SE", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0    , Y0 + 1), str);
+  CHECK_EQUAL("S", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0 + 1), str);
+  CHECK_EQUAL("SW", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0), str);
+  CHECK_EQUAL("W", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0 - 1), str);
+  CHECK_EQUAL("NW", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0    , Y0 - 1), str);
+  CHECK_EQUAL("N", str);
+  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 1), str);
+  CHECK_EQUAL("NE", str);
+}
+
 TEST(FormatText) {
   Engine eng;
   TextFormatting t;

@@ -226,7 +226,7 @@ void Monster::moveDir(Dir_t dir) {
   // Movement direction is stored for AI purposes
   lastDirTraveled = dir;
 
-  const Pos targetCell(pos + DirConverter(eng).getOffset(dir));
+  const Pos targetCell(pos + DirConverter().getOffset(dir));
 
   if(eng->basicUtils->isPosInsideMap(targetCell) == false) {
     throw runtime_error("Monster move target cell outside map");

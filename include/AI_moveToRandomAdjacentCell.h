@@ -21,7 +21,7 @@ public:
 
         const Pos offset =
           getOffsetToRandomAdjacentFreeCell(monster, blockers, engine);
-        const Dir_t dir = DirConverter(engine).getDir(offset);
+        const Dir_t dir = DirConverter().getDir(offset);
         if(dir != dirCenter) {
           monster.moveDir(dir);
           return true;
@@ -41,7 +41,7 @@ private:
     //First, try the same direction as last travelled
     if(monster.lastDirTraveled != dirCenter) {
       const Pos offset =
-        DirConverter(engine).getOffset(monster.lastDirTraveled);
+        DirConverter().getOffset(monster.lastDirTraveled);
       const Pos targetCell(monster.pos + offset);
       if(
         blockers[targetCell.x][targetCell.y] == false &&
