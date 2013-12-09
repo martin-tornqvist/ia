@@ -160,7 +160,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       addFeatureFoundIn(d, feature_tomb);
       addFeatureFoundIn(d, feature_cabinet, 25);
       addFeatureFoundIn(d, feature_cocoon, 25);
-      eng->scrollNameHandler->setFalseScrollName(d);
+      eng->scrollNameHandler->setFalseScrollName(*d);
     } break;
 
     case itemData_potion: {

@@ -12424,7 +12424,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1385502710 source:d:\dev\ia.git\src\itemdata.cpp
+1386624441 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12535,7 +12535,7 @@
 	"DungeonClimb.h"
 	"MapParsing.h"
 
-1386369152 source:d:\dev\ia.git\src\itemscroll.cpp
+1386624485 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -13050,7 +13050,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1386347907 source:d:\dev\ia.git\test\src\main.cpp
+1386622726 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"Engine.h"
 	"BasicUtils.h"
@@ -14162,7 +14162,7 @@
 	"Item.h"
 	"CommonData.h"
 
-1385502710 d:\dev\ia.git\include\itemscroll.h
+1386624418 d:\dev\ia.git\include\itemscroll.h
 	"Item.h"
 	"Spells.h"
 

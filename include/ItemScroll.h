@@ -35,15 +35,15 @@ protected:
 class ScrollNameHandler {
 public:
   ScrollNameHandler(Engine* engine);
-  ~ScrollNameHandler() {m_falseNames.resize(0);}
+  ~ScrollNameHandler() {}
 
-  void setFalseScrollName(ItemData* d);
+  void setFalseScrollName(ItemData& d);
 
   void addSaveLines(vector<string>& lines) const;
   void setParametersFromSaveLines(vector<string>& lines);
 
 private:
-  vector<string> m_falseNames;
+  vector<string> falseNames_;
 
   Engine* eng;
 };

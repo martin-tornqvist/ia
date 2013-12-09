@@ -37,10 +37,10 @@ Config::Config(Engine* engine) :
   fontImageNames.resize(0);
   fontImageNames.push_back("images/8x12.png");
   fontImageNames.push_back("images/11x19.png");
+  fontImageNames.push_back("images/11x22_uw_ttyp0.png");
+  fontImageNames.push_back("images/12x24_terminus.png");
   fontImageNames.push_back("images/16x24_clean_v1.png");
   fontImageNames.push_back("images/16x24_clean_v2.png");
-  fontImageNames.push_back("images/11x22_uw_ttyp0.png");
-  fontImageNames.push_back("images/12x24_terminus.png.png");
   fontImageNames.push_back("images/16x24_typewriter.png");
 
   setDefaultVariables();

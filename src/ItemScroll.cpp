@@ -125,30 +125,30 @@ void Scroll::failedToLearnRealName(const string overrideFailString) {
 
 ScrollNameHandler::ScrollNameHandler(Engine* engine) :
   eng(engine) {
-  m_falseNames.resize(0);
-  m_falseNames.push_back("Cruensseasrjit");
-  m_falseNames.push_back("Rudsceleratus");
-  m_falseNames.push_back("Rudminuox");
-  m_falseNames.push_back("Cruo-stragaraNa");
-  m_falseNames.push_back("PrayaNavita");
-  m_falseNames.push_back("Pretiacruento");
-  m_falseNames.push_back("Pestis cruento");
-  m_falseNames.push_back("Cruento pestis");
-  m_falseNames.push_back("Domus-bhaava");
-  m_falseNames.push_back("Acerbus-shatruex");
-  m_falseNames.push_back("Pretaanluxis");
-  m_falseNames.push_back("PraaNsilenux");
-  m_falseNames.push_back("Quodpipax");
-  m_falseNames.push_back("Lokemundux");
-  m_falseNames.push_back("Profanuxes");
-  m_falseNames.push_back("Shaantitus");
-  m_falseNames.push_back("Geropayati");
-  m_falseNames.push_back("Vilomaxus");
-  m_falseNames.push_back("Bhuudesco");
-  m_falseNames.push_back("Durbentia");
-  m_falseNames.push_back("Bhuuesco");
-  m_falseNames.push_back("Maravita");
-  m_falseNames.push_back("Infirmux");
+  falseNames_.resize(0);
+  falseNames_.push_back("Cruensseasrjit");
+  falseNames_.push_back("Rudsceleratus");
+  falseNames_.push_back("Rudminuox");
+  falseNames_.push_back("Cruo-stragaraNa");
+  falseNames_.push_back("PrayaNavita");
+  falseNames_.push_back("Pretiacruento");
+  falseNames_.push_back("Pestis cruento");
+  falseNames_.push_back("Cruento pestis");
+  falseNames_.push_back("Domus-bhaava");
+  falseNames_.push_back("Acerbus-shatruex");
+  falseNames_.push_back("Pretaanluxis");
+  falseNames_.push_back("PraaNsilenux");
+  falseNames_.push_back("Quodpipax");
+  falseNames_.push_back("Lokemundux");
+  falseNames_.push_back("Profanuxes");
+  falseNames_.push_back("Shaantitus");
+  falseNames_.push_back("Geropayati");
+  falseNames_.push_back("Vilomaxus");
+  falseNames_.push_back("Bhuudesco");
+  falseNames_.push_back("Durbentia");
+  falseNames_.push_back("Bhuuesco");
+  falseNames_.push_back("Maravita");
+  falseNames_.push_back("Infirmux");
 
   vector<string> cmb;
   cmb.resize(0);
@@ -177,28 +177,27 @@ ScrollNameHandler::ScrollNameHandler(Engine* engine) :
   cmb.push_back("Barada");
   cmb.push_back("Nikto");
 
-  const unsigned int CMB_SIZ = cmb.size();
-  for(unsigned int i = 0; i < CMB_SIZ; i++) {
-    for(unsigned int ii = 0; ii < CMB_SIZ; ii++) {
+  const int CMB_SIZ = cmb.size();
+  for(int i = 0; i < CMB_SIZ; i++) {
+    for(int ii = 0; ii < CMB_SIZ; ii++) {
       if(i != ii) {
-        m_falseNames.push_back(cmb.at(i) + " " + cmb.at(ii));
+        falseNames_.push_back(cmb.at(i) + " " + cmb.at(ii));
       }
     }
   }
 }
 
-void ScrollNameHandler::setFalseScrollName(ItemData* d) {
-  const unsigned int NR_NAMES = m_falseNames.size();
+void ScrollNameHandler::setFalseScrollName(ItemData& d) {
+  const int NR_ELEMENTS = falseNames_.size();
+  const int ELEMENT     = eng->dice.range(0, NR_ELEMENTS - 1);
 
-  const unsigned int ELEMENT = (unsigned int)(eng->dice(1, NR_NAMES) - 1);
+  const string& TITLE = "\"" + falseNames_.at(ELEMENT) + "\"";
 
-  const string TITLE = "\"" + m_falseNames.at(ELEMENT) + "\"";
+  d.name.name         = "Manuscript titled " + TITLE;
+  d.name.name_plural  = "Manuscripts titled " + TITLE;
+  d.name.name_a       = "a Manuscript titled " + TITLE;
 
-  m_falseNames.erase(m_falseNames.begin() + ELEMENT);
-
-  d->name.name = "Manuscript titled " + TITLE;
-  d->name.name_plural = "Manuscripts titled " + TITLE;
-  d->name.name_a = "a Manuscript titled " + TITLE;
+  falseNames_.erase(falseNames_.begin() + ELEMENT);
 }
 
 void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
