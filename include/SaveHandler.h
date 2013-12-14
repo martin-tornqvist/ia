@@ -12,7 +12,7 @@ class Engine;
 
 class SaveHandler {
 public:
-  SaveHandler(Engine* engine) : eng(engine) {}
+  SaveHandler(Engine& engine) : eng(engine) {}
 
   void load();
   void save();
@@ -25,7 +25,7 @@ private:
   void readFile(vector<string>& lines);
   void writeFile(const vector<string>& lines) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

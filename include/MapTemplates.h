@@ -31,7 +31,7 @@ struct MapTemplate {
 
 class MapTemplateHandler {
 public:
-  MapTemplateHandler(Engine* engine) :
+  MapTemplateHandler(Engine& engine) :
     eng(engine) {
     initTemplates();
   }
@@ -72,7 +72,7 @@ private:
 
   vector<MapTemplate> templates_;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

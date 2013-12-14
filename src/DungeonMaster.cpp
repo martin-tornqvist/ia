@@ -30,24 +30,24 @@ int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
 void DungeonMaster::playerGainLvl() {
   clvl++;
 
-  eng->log->addMsg(
+  eng.log->addMsg(
     "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
-  eng->player->restoreHp(999, false);
-  eng->player->changeMaxHp(2, true);
-  ActorData& d = eng->actorDataHandler->dataList[actor_player];
+  eng.player->restoreHp(999, false);
+  eng.player->changeMaxHp(2, true);
+  ActorData& d = eng.actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;
   if(clvl % BON_EVERY_N_LVL == 0) {
     d.abilityVals.changeVal(ability_accuracyMelee,  5);
     d.abilityVals.changeVal(ability_accuracyRanged, 5);
     d.abilityVals.changeVal(ability_dodgeAttack,    5);
-    eng->log->addMsg("I am more proficient in combat!");
+    eng.log->addMsg("I am more proficient in combat!");
 
-    eng->player->changeMaxSpi(1, true);
+    eng.player->changeMaxSpi(1, true);
 
-    eng->player->incrMth(2);
-    eng->log->addMsg("I feel more knowledgeable!");
+    eng.player->incrMth(2);
+    eng.log->addMsg("I feel more knowledgeable!");
   }
 }
 
@@ -104,7 +104,7 @@ void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
 }
 
 void DungeonMaster::winGame() {
-  eng->highScore->gameOver(true);
+  eng.highScore->gameOver(true);
 
   string winMessage = "As I touch the crystal, there is a jolt of electricity. A surreal glow suddenly illuminates the area. ";
   winMessage += "I feel as if I have stirred something. I notice a dark figure observing me from the edge of the light. ";
@@ -120,33 +120,33 @@ void DungeonMaster::winGame() {
   winMessage += "The destinies of all things on earth, living and dead, are mine. ";
 
   vector<string> winMessageLines;
-  eng->textFormatting->lineToLines(winMessage, 68, winMessageLines);
+  eng.textFormatting->lineToLines(winMessage, 68, winMessageLines);
 
-  eng->renderer->coverPanel(panel_screen);
-  eng->renderer->updateScreen();
+  eng.renderer->coverPanel(panel_screen);
+  eng.renderer->updateScreen();
 
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
   const int DELAY_BETWEEN_LINES = 40;
-  eng->sleep(DELAY_BETWEEN_LINES);
+  eng.sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
-      eng->renderer->drawTextCentered(winMessageLines.at(ii), panel_screen,
+      eng.renderer->drawTextCentered(winMessageLines.at(ii), panel_screen,
                                       Pos(MAP_X_CELLS_HALF, Y0 + ii),
                                       clrMessageBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
-        eng->renderer->drawTextCentered(
+        eng.renderer->drawTextCentered(
           CMD_LABEL, panel_screen,
           Pos(MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
           clrWhite, clrBlack, true);
       }
     }
-    eng->renderer->updateScreen();
-    eng->sleep(DELAY_BETWEEN_LINES);
+    eng.renderer->updateScreen();
+    eng.sleep(DELAY_BETWEEN_LINES);
   }
 
-  eng->query->waitForEscOrSpace();
+  eng.query->waitForEscOrSpace();
 }
 
 void DungeonMaster::monsterKilled(Actor* monster) {
@@ -155,8 +155,8 @@ void DungeonMaster::monsterKilled(Actor* monster) {
   d->nrOfKills += 1;
 
   if(d->hp >= 3) {
-    if(eng->player->insanityObsessions[insanityObsession_sadism]) {
-      eng->player->shock_ = max(0.0, eng->player->shock_ - 3.0);
+    if(eng.player->insanityObsessions[insanityObsession_sadism]) {
+      eng.player->shock_ = max(0.0, eng.player->shock_ - 3.0);
     }
   }
 
@@ -164,6 +164,6 @@ void DungeonMaster::monsterKilled(Actor* monster) {
 }
 
 void DungeonMaster::setTimeStartedToNow() {
-  timeStarted = eng->basicUtils->getCurrentTime();
+  timeStarted = eng.basicUtils->getCurrentTime();
 }
 

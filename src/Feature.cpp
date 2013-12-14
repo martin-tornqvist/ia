@@ -6,20 +6,20 @@
 #include "Log.h"
 #include "Renderer.h"
 
-Feature::Feature(Feature_t id, Pos pos, Engine* engine,
+Feature::Feature(Feature_t id, Pos pos, Engine& engine,
                  FeatureSpawnData* spawnData) :
-  pos_(pos), eng(engine), data_(eng->featureDataHandler->getData(id)),
+  pos_(pos), eng(engine), data_(eng.featureDataHandler->getData(id)),
   hasBlood_(false) {
   (void)spawnData;
 }
 
 void Feature::bump(Actor& actorBumping) {
   if(isMovePassable(&actorBumping) == false) {
-    if(&actorBumping == eng->player) {
-      if(eng->player->getPropHandler()->allowSee()) {
-        eng->log->addMsg(data_->messageOnPlayerBlocked);
+    if(&actorBumping == eng.player) {
+      if(eng.player->getPropHandler()->allowSee()) {
+        eng.log->addMsg(data_->messageOnPlayerBlocked);
       } else {
-        eng->log->addMsg(data_->messageOnPlayerBlockedBlind);
+        eng.log->addMsg(data_->messageOnPlayerBlockedBlind);
       }
     }
   }
@@ -127,12 +127,12 @@ MaterialType_t Feature::getMaterialType() const {
 }
 
 void Feature::examine() {
-  eng->log->addMsg("I find nothing specific there to examine or use.");
+  eng.log->addMsg("I find nothing specific there to examine or use.");
 }
 
 void FeatureStatic::setGoreIfPossible() {
   if(data_->canHaveGore) {
-    const int ROLL_GLYPH = eng->dice(1, 4);
+    const int ROLL_GLYPH = eng.dice(1, 4);
     switch(ROLL_GLYPH) {
       case 1: {
         goreGlyph_ = ',';
@@ -152,7 +152,7 @@ void FeatureStatic::setGoreIfPossible() {
       break;
     }
 
-    const int ROLL_TILE = eng->dice(1, 8);
+    const int ROLL_TILE = eng.dice(1, 8);
     switch(ROLL_TILE) {
       case 1: {
         goreTile_ = tile_gore1;

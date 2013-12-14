@@ -7,12 +7,12 @@
 
 class AI_moveTowardsTargetSimple {
 public:
-  static bool action(Monster& monster, Engine* engine) {
+  static bool action(Monster& monster, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
       if(monster.target != NULL) {
         if(
           monster.playerAwarenessCounter > 0 ||
-          monster.leader == engine->player) {
+          monster.leader == engine.player) {
           Pos result;
           Pos offset = monster.target->pos - monster.pos;
           offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);

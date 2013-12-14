@@ -260,7 +260,7 @@ enum ItemRef_t {itemRef_plain, itemRef_a, itemRef_plural};
 
 class ItemDataHandler {
 public:
-  ItemDataHandler(Engine* engine) : eng(engine) {initDataList();}
+  ItemDataHandler(Engine& engine) : eng(engine) {initDataList();}
   ~ItemDataHandler() {
     for(unsigned int i = 1; i < endOfItemIds; i++)
       delete dataList[i];
@@ -291,7 +291,7 @@ private:
   void addFeatureFoundIn(ItemData* const itemData, const Feature_t featureId,
                          const int CHANCE_TO_INCLUDE = 100) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

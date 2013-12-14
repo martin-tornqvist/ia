@@ -20,18 +20,18 @@ void CharacterDescr::makeLines() {
   const SDL_Color clrText = clrWhite;
   const SDL_Color clrTextDark = clrGray;
 
-  const AbilityValues& abilities = eng->player->getData()->abilityVals;
+  const AbilityValues& abilities = eng.player->getData()->abilityVals;
 
   lines.push_back(StringAndClr("Combat skills", clrHeader));
   const int BASE_MELEE =
-    min(100, abilities.getVal(ability_accuracyMelee, true, *(eng->player)));
+    min(100, abilities.getVal(ability_accuracyMelee, true, *(eng.player)));
   const int BASE_RANGED =
-    min(100, abilities.getVal(ability_accuracyRanged, true, *(eng->player)));
+    min(100, abilities.getVal(ability_accuracyRanged, true, *(eng.player)));
   const int BASE_DODGE_ATTACKS =
-    min(100, abilities.getVal(ability_dodgeAttack, true, *(eng->player)));
+    min(100, abilities.getVal(ability_dodgeAttack, true, *(eng.player)));
   Weapon* kick =
-    dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerKick));
-  string kickStr = eng->itemDataHandler->getItemInterfaceRef(
+    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerKick));
+  string kickStr = eng.itemDataHandler->getItemInterfaceRef(
                      *kick, false, primaryAttackMode_melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
@@ -42,8 +42,8 @@ void CharacterDescr::makeLines() {
     }
   }
   Weapon* punch =
-    dynamic_cast<Weapon*>(eng->itemFactory->spawnItem(item_playerPunch));
-  string punchStr = eng->itemDataHandler->getItemInterfaceRef(
+    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerPunch));
+  string punchStr = eng.itemDataHandler->getItemInterfaceRef(
                       *punch, false, primaryAttackMode_melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
@@ -71,7 +71,7 @@ void CharacterDescr::makeLines() {
   lines.push_back(StringAndClr(" ", clrText));
 
 
-  const int SHOCK_RESISTANCE = eng->player->getShockResistance();
+  const int SHOCK_RESISTANCE = eng.player->getShockResistance();
   lines.push_back(StringAndClr(
                     "Shock resistance : " +
                     toString(SHOCK_RESISTANCE) + "%", clrHeader));
@@ -79,7 +79,7 @@ void CharacterDescr::makeLines() {
 
 
   lines.push_back(StringAndClr("Mythos knowledge effects", clrHeader));
-  const int MTH = eng->player->getMth();
+  const int MTH = eng.player->getMth();
   if(MTH == 0) {
     lines.push_back(StringAndClr(offset + "No effects", clrText));
   } else {
@@ -89,7 +89,7 @@ void CharacterDescr::makeLines() {
                       "alien, mystical and shocking creatures",
                       clrText));
     const int CASTING_BON =
-      eng->player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+      eng.player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
     if(CASTING_BON > 0) {
       lines.push_back(StringAndClr(
                         offset + "-" + toString(CASTING_BON) +
@@ -102,24 +102,24 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StringAndClr("Mental conditions", clrHeader));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
-  if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
+  if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
     lines.push_back(StringAndClr(offset + "Phobia of enclosed spaces", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_dog])
+  if(eng.player->insanityPhobias[insanityPhobia_dog])
     lines.push_back(StringAndClr(offset + "Phobia of dogs", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_rat])
+  if(eng.player->insanityPhobias[insanityPhobia_rat])
     lines.push_back(StringAndClr(offset + "Phobia of rats", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_undead])
+  if(eng.player->insanityPhobias[insanityPhobia_undead])
     lines.push_back(StringAndClr(offset + "Phobia of the dead", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_openPlace])
+  if(eng.player->insanityPhobias[insanityPhobia_openPlace])
     lines.push_back(StringAndClr(offset + "Phobia of open places", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_spider])
+  if(eng.player->insanityPhobias[insanityPhobia_spider])
     lines.push_back(StringAndClr(offset + "Phobia of spiders", clrText));
-  if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
+  if(eng.player->insanityPhobias[insanityPhobia_deepPlaces])
     lines.push_back(StringAndClr(offset + "Phobia of deep places", clrText));
 
-  if(eng->player->insanityObsessions[insanityObsession_masochism])
+  if(eng.player->insanityObsessions[insanityObsession_masochism])
     lines.push_back(StringAndClr(offset + "Masochistic obsession", clrText));
-  if(eng->player->insanityObsessions[insanityObsession_sadism])
+  if(eng.player->insanityObsessions[insanityObsession_sadism])
     lines.push_back(StringAndClr(offset + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines.size();
 
@@ -134,13 +134,13 @@ void CharacterDescr::makeLines() {
   bool isAnyBonusPicked = false;
   for(int i = 0; i < endOfTraits; i++) {
     const Trait_t trait = Trait_t(i);
-    if(eng->playerBonHandler->isTraitPicked(trait)) {
+    if(eng.playerBonHandler->isTraitPicked(trait)) {
       isAnyBonusPicked = true;
       string currentTitle;
-      eng->playerBonHandler->getTraitTitle(trait, currentTitle);
+      eng.playerBonHandler->getTraitTitle(trait, currentTitle);
       lines.push_back(StringAndClr(offset + currentTitle, clrText));
       string curDescr;
-      eng->playerBonHandler->getTraitDescr(trait, curDescr);
+      eng.playerBonHandler->getTraitDescr(trait, curDescr);
       lines.push_back(StringAndClr(offset + curDescr, clrTextDark));
     }
   }
@@ -154,20 +154,20 @@ void CharacterDescr::makeLines() {
   vector<StringAndClr> potionList;
   vector<StringAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    const ItemData* const d = eng->itemDataHandler->dataList[i];
+    const ItemData* const d = eng.itemDataHandler->dataList[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
-      Item* item = eng->itemFactory->spawnItem(d->id);
+      Item* item = eng.itemFactory->spawnItem(d->id);
       potionList.push_back(
         StringAndClr(
-          offset + eng->itemDataHandler->getItemRef(*item, itemRef_plain),
+          offset + eng.itemDataHandler->getItemRef(*item, itemRef_plain),
           d->color));
       delete item;
     } else {
       if(d->isScroll && (d->isTried || d->isIdentified)) {
-        Item* item = eng->itemFactory->spawnItem(d->id);
+        Item* item = eng.itemFactory->spawnItem(d->id);
         manuscriptList.push_back(
           StringAndClr(
-            offset + eng->itemDataHandler->getItemRef(*item, itemRef_plain),
+            offset + eng.itemDataHandler->getItemRef(*item, itemRef_plain),
             item->getInterfaceClr()));
         delete item;
       }
@@ -177,7 +177,7 @@ void CharacterDescr::makeLines() {
   if(potionList.size() == 0) {
     lines.push_back(StringAndClr(offset + "No known potions", clrText));
   } else {
-    eng->basicUtils->lexicographicalSortStringAndClrVector(potionList);
+    eng.basicUtils->lexicographicalSortStringAndClrVector(potionList);
     for(unsigned int i = 0; i < potionList.size(); i++) {
       lines.push_back(potionList.at(i));
     }
@@ -189,7 +189,7 @@ void CharacterDescr::makeLines() {
   if(manuscriptList.size() == 0) {
     lines.push_back(StringAndClr(offset + "No known manuscripts", clrText));
   } else {
-    eng->basicUtils->lexicographicalSortStringAndClrVector(manuscriptList);
+    eng.basicUtils->lexicographicalSortStringAndClrVector(manuscriptList);
     for(unsigned int i = 0; i < manuscriptList.size(); i++) {
       lines.push_back(manuscriptList.at(i));
     }
@@ -201,14 +201,14 @@ void CharacterDescr::makeLines() {
 void CharacterDescr::drawInterface() {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
-  eng->renderer->drawText(
+  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
+  eng.renderer->drawText(
     decorationLine, panel_screen, Pos(1, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     " Displaying character description ", panel_screen, Pos(3, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     decorationLine, panel_character, Pos(1, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit ",
     panel_character, Pos(3, 1), clrWhite);
 }
@@ -216,7 +216,7 @@ void CharacterDescr::drawInterface() {
 void CharacterDescr::run() {
   makeLines();
 
-  eng->renderer->coverPanel(panel_screen);
+  eng.renderer->coverPanel(panel_screen);
 
   StringAndClr currentLine;
 
@@ -227,17 +227,17 @@ void CharacterDescr::run() {
 
   Pos pos(1, 2);
   for(int i = topElement; i <= btmElement; i++) {
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       lines.at(i).str , panel_screen, pos, lines.at(i).clr);
     pos.y++;
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 
   //Read keys
   bool done = false;
   while(done == false) {
-    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = min(
@@ -245,37 +245,37 @@ void CharacterDescr::run() {
                      int(lines.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+      eng.renderer->coverArea(panel_screen, Pos(0, 2),
                                Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawInterface();
       pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(
+        eng.renderer->drawText(
           lines.at(i).str , panel_screen, pos, lines.at(i).clr);
         pos.y++;
       }
-      eng->renderer->updateScreen();
+      eng.renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = min(
                      topElement - int(MAP_Y_CELLS / 5),
                      int(lines.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
-      eng->renderer->coverArea(panel_screen, Pos(0, 2),
+      eng.renderer->coverArea(panel_screen, Pos(0, 2),
                                Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawInterface();
       pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
-        eng->renderer->drawText(
+        eng.renderer->drawText(
           lines.at(i).str , panel_screen, pos, lines.at(i).clr);
         pos.y++;
       }
-      eng->renderer->updateScreen();
+      eng.renderer->updateScreen();
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
 
   }
-  eng->renderer->coverPanel(panel_screen);
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->coverPanel(panel_screen);
+  eng.renderer->drawMapAndInterface();
 }

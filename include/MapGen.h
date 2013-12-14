@@ -46,7 +46,7 @@ private:
 
 class MapGenUtilCorridorBuilder {
 public:
-  MapGenUtilCorridorBuilder(Engine* engine) : eng(engine) {}
+  MapGenUtilCorridorBuilder(Engine& engine) : eng(engine) {}
   ~MapGenUtilCorridorBuilder() {}
 
   void buildZCorridorBetweenRooms(
@@ -54,12 +54,12 @@ public:
     bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS] = NULL);
 
 private:
-  Engine* const eng;
+  Engine& eng;
 };
 
 class MapGen {
 public:
-  MapGen(Engine* engine) : eng(engine) {}
+  MapGen(Engine& engine) : eng(engine) {}
   ~MapGen() {}
 
   inline bool run() {return specificRun();}
@@ -84,12 +84,12 @@ protected:
     const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
     const bool TUNNEL_THROUGH_ANY_FEATURE);
 
-  Engine* const eng;
+  Engine& eng;
 };
 
 class MapGenBsp : public MapGen {
 public:
-  MapGenBsp(Engine* engine) : MapGen(engine) {}
+  MapGenBsp(Engine& engine) : MapGen(engine) {}
   virtual ~MapGenBsp() {}
 
 private:
@@ -168,12 +168,12 @@ public:
   Region();
   ~Region();
 
-  Rect getRandomPossForRoom(Engine* eng) const;
+  Rect getRandomPossForRoom(Engine& eng) const;
   Rect getRegionPoss() const {
     return Rect(x0y0_, x1y1_);
   }
 
-  bool isRegionNeighbour(const Region& other, Engine* const engine);
+  bool isRegionNeighbour(const Region& other, Engine& engine);
 
   inline Pos getCenterPos() const {return (x1y1_ + x0y0_) / 2;}
   inline Pos getX0Y0()      const {return x0y0_;}
@@ -193,7 +193,7 @@ private:
 
 class MapGenIntroForest : public MapGen {
 public:
-  MapGenIntroForest(Engine* engine) : MapGen(engine) {}
+  MapGenIntroForest(Engine& engine) : MapGen(engine) {}
   ~MapGenIntroForest() {}
 
 private:
@@ -207,7 +207,7 @@ private:
 
 class MapGenEgyptTomb : public MapGen {
 public:
-  MapGenEgyptTomb(Engine* engine) : MapGen(engine) {}
+  MapGenEgyptTomb(Engine& engine) : MapGen(engine) {}
   ~MapGenEgyptTomb() {}
 
 private:
@@ -216,7 +216,7 @@ private:
 
 class MapGenCaveLvl : public MapGen {
 public:
-  MapGenCaveLvl(Engine* engine) : MapGen(engine) {}
+  MapGenCaveLvl(Engine& engine) : MapGen(engine) {}
   ~MapGenCaveLvl() {}
 
 private:
@@ -225,7 +225,7 @@ private:
 
 class MapGenTrapezohedronLvl : public MapGen {
 public:
-  MapGenTrapezohedronLvl(Engine* engine) : MapGen(engine) {}
+  MapGenTrapezohedronLvl(Engine& engine) : MapGen(engine) {}
   ~MapGenTrapezohedronLvl() {}
 
 private:

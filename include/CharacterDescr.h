@@ -9,13 +9,13 @@ class Engine;
 
 class CharacterDescr {
 public:
-  CharacterDescr(Engine* engine) : eng(engine) {}
+  CharacterDescr(Engine& engine) : eng(engine) {}
   void run();
 private:
   void drawInterface();
   void makeLines();
   vector<StringAndClr> lines;
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

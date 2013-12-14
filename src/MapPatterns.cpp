@@ -12,7 +12,7 @@ void MapPatterns::setPositionsInArea(
 
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
-      FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
+      FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
       if(f->isBodyTypePassable(bodyType_normal) && f->canHaveStaticFeature()) {
         positionCandidates.push_back(Pos(x, y));
       }
@@ -44,7 +44,7 @@ void MapPatterns::setPositionsInArea(
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
-          eng->map->cells[pos.x + dx][pos.y + dy].featureStatic;
+          eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
         if(f->getId() == feature_door) {
           isDoorAdjacent = true;
         }
@@ -77,7 +77,7 @@ int MapPatterns::getWalkBlockersInDir(
     case dirRight: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
-          eng->map->cells[pos.x + 1][pos.y + dy].featureStatic;
+          eng.map->cells[pos.x + 1][pos.y + dy].featureStatic;
         if(f->isBodyTypePassable(bodyType_normal) == false) {
           nrBlockers += 1;
         }
@@ -87,7 +87,7 @@ int MapPatterns::getWalkBlockersInDir(
     case dirDown: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
-          eng->map->cells[pos.x + dx][pos.y + 1].featureStatic;
+          eng.map->cells[pos.x + dx][pos.y + 1].featureStatic;
         if(f->isBodyTypePassable(bodyType_normal) == false) {
           nrBlockers += 1;
         }
@@ -97,7 +97,7 @@ int MapPatterns::getWalkBlockersInDir(
     case dirLeft: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
-          eng->map->cells[pos.x - 1][pos.y + dy].featureStatic;
+          eng.map->cells[pos.x - 1][pos.y + dy].featureStatic;
         if(f->isBodyTypePassable(bodyType_normal) == false) {
           nrBlockers += 1;
         }
@@ -107,7 +107,7 @@ int MapPatterns::getWalkBlockersInDir(
     case dirUp: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
-          eng->map->cells[pos.x + dx][pos.y - 1].featureStatic;
+          eng.map->cells[pos.x + dx][pos.y - 1].featureStatic;
         if(f->isBodyTypePassable(bodyType_normal) == false) {
           nrBlockers += 1;
         }

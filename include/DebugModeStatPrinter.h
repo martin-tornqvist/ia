@@ -11,7 +11,7 @@ class Engine;
 
 class DebugModeStatPrinter {
 public:
-  DebugModeStatPrinter(Engine* const engine) : eng(engine) {
+  DebugModeStatPrinter(Engine& engine) : eng(engine) {
   }
 
   ~DebugModeStatPrinter() {
@@ -24,7 +24,7 @@ private:
 
   ofstream statFile;
 
-  Engine* const eng;
+  Engine& eng;
 };
 
 

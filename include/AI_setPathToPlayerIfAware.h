@@ -6,7 +6,7 @@
 
 class AI_setPathToPlayerIfAware {
 public:
-  static void learn(Monster& monster, vector<Pos>& path, Engine* engine) {
+  static void learn(Monster& monster, vector<Pos>& path, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
       if(monster.playerAwarenessCounter > 0) {
 
@@ -15,10 +15,10 @@ public:
           d->canOpenDoors || d->canBashDoors;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-        engine->basicUtils->resetArray(blockers, false);
+        engine.basicUtils->resetArray(blockers, false);
         for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
           for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-            const Feature* const f = engine->map->cells[x][y].featureStatic;
+            const Feature* const f = engine.map->cells[x][y].featureStatic;
             if(f->isMovePassable(&monster) == false) {
 
               if(f->getId() == feature_door) {
@@ -42,8 +42,8 @@ public:
         MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
                          blockers, mapParseWriteOnlyTrue);
 
-        engine->pathFinder->run(
-          monster.pos, engine->player->pos, blockers, path);
+        engine.pathFinder->run(
+          monster.pos, engine.player->pos, blockers, path);
       } else {
         path.resize(0);
       }

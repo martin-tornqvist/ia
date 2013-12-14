@@ -40,7 +40,7 @@ enum Bg_t {
 
 class PlayerBonHandler {
 public:
-  PlayerBonHandler(Engine* engine);
+  PlayerBonHandler(Engine& engine);
 
   void addSaveLines(vector<string>& lines) {
     lines.push_back(toString(bg_));
@@ -100,7 +100,7 @@ private:
 
   Bg_t bg_;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

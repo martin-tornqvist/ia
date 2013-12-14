@@ -29,7 +29,7 @@ inline void Cell::clear() {
   playerVisualMemoryTiles.clear();
 }
 
-Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
+Map::Map(Engine& engine) : eng(engine), dlvl_(0) {
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
 //      cells[x][y].featureStatic = NULL;
@@ -40,11 +40,11 @@ Map::Map(Engine* engine) : eng(engine), dlvl_(0) {
   rooms.resize(0);
 //  resetMap();
 
-  eng->actorFactory->deleteAllMonsters();
+  eng.actorFactory->deleteAllMonsters();
 
   resetCells(false);
-  eng->gameTime->eraseAllFeatureMobs();
-  eng->gameTime->resetTurnTypeAndActorCounters();
+  eng.gameTime->eraseAllFeatureMobs();
+  eng.gameTime->resetTurnTypeAndActorCounters();
 }
 
 Map::~Map() {
@@ -58,20 +58,20 @@ Map::~Map() {
 
 //TODO This should probably go in a virtual method in Feature instead
 void Map::switchToDestroyedFeatAt(const Pos pos) {
-  if(eng->basicUtils->isPosInsideMap(pos)) {
+  if(eng.basicUtils->isPosInsideMap(pos)) {
 
     const Feature_t OLD_FEATURE_ID =
-      eng->map->cells[pos.x][pos.y].featureStatic->getId();
+      eng.map->cells[pos.x][pos.y].featureStatic->getId();
 
     const vector<Feature_t> convertionCandidates =
-      eng->featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
+      eng.featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
     const int SIZE = convertionCandidates.size();
     if(SIZE > 0) {
       const Feature_t NEW_ID =
-        convertionCandidates.at(eng->dice(1, SIZE) - 1);
+        convertionCandidates.at(eng.dice(1, SIZE) - 1);
 
-      eng->featureFactory->spawnFeatureAt(NEW_ID, pos);
+      eng.featureFactory->spawnFeatureAt(NEW_ID, pos);
 
       //Destroy adjacent doors?
       if(
@@ -81,9 +81,9 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
               const FeatureStatic* const f =
-                eng->map->cells[x][y].featureStatic;
+                eng.map->cells[x][y].featureStatic;
               if(f->getId() == feature_door) {
-                eng->featureFactory->spawnFeatureAt(
+                eng.featureFactory->spawnFeatureAt(
                   feature_rubbleLow, Pos(x, y));
               }
             }
@@ -92,8 +92,8 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
       }
 
       if(NEW_ID == feature_rubbleLow && NEW_ID != OLD_FEATURE_ID) {
-        if(eng->dice.percentile() < 50) {
-          eng->itemFactory->spawnItemOnMap(item_rock, pos);
+        if(eng.dice.percentile() < 50) {
+          eng.itemFactory->spawnItemOnMap(item_rock, pos);
         }
       }
     }
@@ -101,7 +101,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
 }
 
 void Map::resetMap() {
-  eng->actorFactory->deleteAllMonsters();
+  eng.actorFactory->deleteAllMonsters();
 
   const int NR_ROOMS = rooms.size();
   for(int i = 0; i < NR_ROOMS; i++) {
@@ -110,8 +110,8 @@ void Map::resetMap() {
   rooms.resize(0);
 
   resetCells(true);
-  eng->gameTime->eraseAllFeatureMobs();
-  eng->gameTime->resetTurnTypeAndActorCounters();
+  eng.gameTime->eraseAllFeatureMobs();
+  eng.gameTime->resetTurnTypeAndActorCounters();
 }
 
 void Map::resetCells(const bool MAKE_STONE_WALLS) {
@@ -121,7 +121,7 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
       cells[x][y].clear();
 
       if(MAKE_STONE_WALLS) {
-        eng->featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+        eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
       }
     }
   }

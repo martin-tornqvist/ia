@@ -18,31 +18,31 @@ PlayerSpellsHandler::~PlayerSpellsHandler() {
 
 void PlayerSpellsHandler::run() {
   if(learnedSpells.empty()) {
-    eng->log->addMsg("I do not know any spells to invoke.");
+    eng.log->addMsg("I do not know any spells to invoke.");
   } else {
     MenuBrowser browser(learnedSpells.size(), 0);
 
-    eng->renderer->drawMapAndInterface();
+    eng.renderer->drawMapAndInterface();
 
     draw(browser);
 
     while(true) {
-      const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+      const MenuAction_t action = eng.menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {
           draw(browser);
         }
         break;
         case menuAction_canceled: {
-          eng->log->clearLog();
-          eng->renderer->drawMapAndInterface();
+          eng.log->clearLog();
+          eng.renderer->drawMapAndInterface();
           return;
         }
         break;
         case menuAction_selected: {
-          eng->log->clearLog();
-          eng->renderer->drawMapAndInterface();
-          learnedSpells.at(browser.getPos().y)->cast(eng->player, true, eng);
+          eng.log->clearLog();
+          eng.renderer->drawMapAndInterface();
+          learnedSpells.at(browser.getPos().y)->cast(eng.player, true, eng);
           return;
         }
         break;
@@ -61,7 +61,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   const string label =
     "Choose a memorized power to evoke [a-" + endLetter + "]" +
     " | Space/esc to exit";
-  eng->renderer->drawText(label, panel_screen, Pos(1, 1), clrWhiteHigh);
+  eng.renderer->drawText(label, panel_screen, Pos(1, 1), clrWhiteHigh);
 
   int currentListPos = 0;
 
@@ -75,7 +75,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str[0] = CURRENT_KEY;
     str += ") " + name;
 
-    eng->renderer->drawText(str, panel_map, Pos(1, currentListPos), clr);
+    eng.renderer->drawText(str, panel_map, Pos(1, currentListPos), clr);
 
     string fill;
     fill.resize(0);
@@ -85,20 +85,20 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     }
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
     const int x = 28;
 
-    const Range spiCost = spell->getSpiCost(false, eng->player, eng);
+    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
 
     str = "SPI:";
     str += spiCost.upper == 1 ? "1" :
            (toString(spiCost.lower) +  "-" + toString(spiCost.upper));
-    eng->renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
+    eng.renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
     currentListPos++;
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
@@ -111,7 +111,7 @@ bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
 }
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(const Spell_t id) {
-  learnSpellIfNotKnown(eng->spellHandler->getSpellFromId(id));
+  learnSpellIfNotKnown(eng.spellHandler->getSpellFromId(id));
 }
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {

@@ -11,7 +11,7 @@
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::newTurn() {
-  if(eng->basicUtils->isPosAdj(pos_, eng->player->pos, true)) {
+  if(eng.basicUtils->isPosAdj(pos_, eng.player->pos, true)) {
     playerIsNear();
   }
 }
@@ -24,7 +24,7 @@ void ProxEventWallCrumble::playerIsNear() {
   const int NR_WALL_CELLS = wallCells_.size();
   for(int i = 0; i < NR_WALL_CELLS; i++) {
     const Pos c = wallCells_.at(i);
-    FeatureStatic* const f = eng->map->cells[c.x][c.y].featureStatic;
+    FeatureStatic* const f = eng.map->cells[c.x][c.y].featureStatic;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->isBodyTypePassable(bodyType_normal);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -35,7 +35,7 @@ void ProxEventWallCrumble::playerIsNear() {
   const int NR_INNER_CELLS = innerCells_.size();
   for(int i = 0; i < NR_INNER_CELLS; i++) {
     const Pos c = innerCells_.at(i);
-    FeatureStatic* const f  = eng->map->cells[c.x][c.y].featureStatic;
+    FeatureStatic* const f  = eng.map->cells[c.x][c.y].featureStatic;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->isBodyTypePassable(bodyType_normal);
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -50,25 +50,25 @@ void ProxEventWallCrumble::playerIsNear() {
     while(done == false) {
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
-        if(eng->basicUtils->isPosInside(
+        if(eng.basicUtils->isPosInside(
               pos, Rect(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
-          eng->map->switchToDestroyedFeatAt(wallCells_.at(i));
+          eng.map->switchToDestroyedFeatAt(wallCells_.at(i));
         }
       }
 
       bool isOpeningMade = true;
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
-        if(eng->basicUtils->isPosAdj(eng->player->pos, pos, true)) {
-          FeatureStatic* const f = eng->map->cells[pos.x][pos.y].featureStatic;
+        if(eng.basicUtils->isPosAdj(eng.player->pos, pos, true)) {
+          FeatureStatic* const f = eng.map->cells[pos.x][pos.y].featureStatic;
           if(f->isBodyTypePassable(bodyType_normal) == false) {
             isOpeningMade = false;
           }
         }
       }
 
-      eng->player->updateFov();
-      eng->renderer->drawMapAndInterface();
+      eng.player->updateFov();
+      eng.renderer->drawMapAndInterface();
 
       done = isOpeningMade;
     }
@@ -76,7 +76,7 @@ void ProxEventWallCrumble::playerIsNear() {
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
     ActorId_t monsterType = actor_zombie;
-    const int RND = eng->dice.range(0, 4);
+    const int RND = eng.dice.range(0, 4);
     switch(RND) {
       case 0: {
         monsterType = actor_zombie;
@@ -105,18 +105,18 @@ void ProxEventWallCrumble::playerIsNear() {
     for(int i = 0; i < NR_INNER_CELLS; i++) {
       const Pos& pos = innerCells_.at(i);
 
-      eng->featureFactory->spawnFeatureAt(
+      eng.featureFactory->spawnFeatureAt(
         feature_stoneFloor, pos);
 
-      if(eng->dice.range(1, 100) < 20) {
-        eng->gore->makeGore(pos);
-        eng->gore->makeBlood(pos);
+      if(eng.dice.range(1, 100) < 20) {
+        eng.gore->makeGore(pos);
+        eng.gore->makeBlood(pos);
       }
 
       if(
         nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry ||
-        eng->basicUtils->isPosAdj(pos, pos_, false)) {
-        Actor* const actor = eng->actorFactory->spawnActor(monsterType, pos);
+        eng.basicUtils->isPosAdj(pos, pos_, false)) {
+        Actor* const actor = eng.actorFactory->spawnActor(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->playerAwarenessCounter =
           monster->getData()->nrTurnsAwarePlayer;
@@ -124,10 +124,10 @@ void ProxEventWallCrumble::playerIsNear() {
       }
     }
 
-    eng->log->addMsg("The walls suddenly crumbles!");
-    eng->player->updateFov();
-    eng->renderer->drawMapAndInterface();
-    eng->gameTime->eraseFeatureMob(this, true);
+    eng.log->addMsg("The walls suddenly crumbles!");
+    eng.player->updateFov();
+    eng.renderer->drawMapAndInterface();
+    eng.gameTime->eraseFeatureMob(this, true);
   }
 }
 

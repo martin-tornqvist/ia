@@ -11,6 +11,10 @@
 // 1 : Standard
 // 2 : Verbose
 #define TRACE_LVL 1
+
+//Enable lots of rendering and delays during map gen for demo purposes
+//Comment out to disable, uncomment to enable
+//#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
 #ifdef DEBUG

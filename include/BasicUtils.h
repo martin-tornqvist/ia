@@ -38,9 +38,7 @@ struct TimeData {
 
 class BasicUtils {
 public:
-  BasicUtils(Engine* engine) {
-    eng = engine;
-  }
+  BasicUtils(Engine& engine) : eng(engine) {}
 
   inline bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
     return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
@@ -157,7 +155,7 @@ public:
   TimeData getCurrentTime() const;
 
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 class Dice {

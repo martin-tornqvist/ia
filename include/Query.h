@@ -7,7 +7,7 @@ class Engine;
 
 class Query {
 public:
-  Query(Engine* engine) : eng(engine) {}
+  Query(Engine& engine) : eng(engine) {}
   void waitForKeyPress() const;
 
   bool yesOrNo() const;
@@ -23,7 +23,7 @@ public:
 private:
 //  int readKeys() const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

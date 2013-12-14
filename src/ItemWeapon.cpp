@@ -4,7 +4,7 @@
 #include "Explosion.h"
 
 Weapon::Weapon(ItemData* const itemData, ItemData* const ammoData,
-               Engine* engine) :
+               Engine& engine) :
   Item(itemData, engine), ammoData_(ammoData) {
   nrAmmoLoaded = 0;
   ammoCapacity = 0;
@@ -17,7 +17,7 @@ void Weapon::setRandomMeleePlus() {
   meleeDmgPlus = 0;
 
   int chance = 45;
-  while(eng->dice.percentile() < chance && meleeDmgPlus < 3) {
+  while(eng.dice.percentile() < chance && meleeDmgPlus < 3) {
     meleeDmgPlus++;
     chance -= 5;
   }
@@ -26,6 +26,6 @@ void Weapon::setRandomMeleePlus() {
 void Incinerator::weaponSpecific_projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
-  eng->explosionMaker->runExplosion(
+  eng.explosionMaker->runExplosion(
     pos, sfxExplosion, true, new PropBurning(eng, propTurnsStandard));
 }

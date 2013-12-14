@@ -12,7 +12,7 @@ class Engine;
 
 class Popup {
 public:
-  Popup(Engine* engine) :
+  Popup(Engine& engine) :
     eng(engine) {
   }
 
@@ -33,7 +33,7 @@ private:
                                        const unsigned int currentChoice,
                                        const int TEXT_AREA_HEIGHT,
                                        const string title = "") const;
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

@@ -19,7 +19,7 @@ struct MarkerReturnData {
 
 class Marker {
 public:
-  Marker(Engine* engine) : eng(engine) {
+  Marker(Engine& engine) : eng(engine) {
   }
 
   MarkerReturnData run(const MarkerTask_t markerTask, Item* itemThrown);
@@ -47,7 +47,7 @@ private:
 
   Pos pos_;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 

@@ -122,14 +122,14 @@ struct PropData {
 
 class PropDataHandler {
 public:
-  PropDataHandler(Engine* engine) : eng(engine) {initDataList();}
+  PropDataHandler(Engine& engine) : eng(engine) {initDataList();}
 
   PropData dataList[endOfPropIds];
 
 private:
   void initDataList();
   void addPropData(PropData& d);
-  Engine* eng;
+  Engine& eng;
 };
 
 class Prop;
@@ -137,7 +137,7 @@ class Prop;
 // Each actor has an instance of this
 class PropHandler {
 public:
-  PropHandler(Actor* owningActor, Engine* engine);
+  PropHandler(Actor* owningActor, Engine& engine);
 
   ~PropHandler();
 
@@ -196,12 +196,12 @@ private:
                      const vector<Prop*>& propList);
 
   Actor* owningActor_;
-  Engine* eng;
+  Engine& eng;
 };
 
 class Prop {
 public:
-  Prop(PropId_t id, Engine* engine, PropTurns_t turnsInit, int turns);
+  Prop(PropId_t id, Engine& engine, PropTurns_t turnsInit, int turns);
 
   virtual ~Prop() {}
 
@@ -292,13 +292,13 @@ public:
 
 protected:
   const PropId_t id_;
-  Engine* const eng;
+  Engine& eng;
   const PropData* const data_;
 };
 
 class PropWound: public Prop {
 public:
-  PropWound(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropWound(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propWound, engine, turnsInit, turns), nrWounds_(1) {}
 
   ~PropWound() {}
@@ -328,7 +328,7 @@ private:
 
 class PropTerrified: public Prop {
 public:
-  PropTerrified(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropTerrified(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propTerrified, engine, turnsInit, turns) {}
 
   ~PropTerrified() {}
@@ -348,7 +348,7 @@ private:
 
 class PropWeakened: public Prop {
 public:
-  PropWeakened(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropWeakened(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propWeakened, engine, turnsInit, turns) {}
 
   ~PropWeakened() {}
@@ -358,7 +358,7 @@ private:
 
 class PropInfected: public Prop {
 public:
-  PropInfected(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropInfected(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propInfected, engine, turnsInit, turns) {}
 
   ~PropInfected() {}
@@ -370,7 +370,7 @@ private:
 
 class PropDiseased: public Prop {
 public:
-  PropDiseased(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropDiseased(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propDiseased, engine, turnsInit, turns) {}
 
   ~PropDiseased() {}
@@ -384,7 +384,7 @@ private:
 
 class PropPoisoned: public Prop {
 public:
-  PropPoisoned(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropPoisoned(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propPoisoned, engine, turnsInit, turns) {}
 
   ~PropPoisoned() {}
@@ -396,7 +396,7 @@ private:
 
 class PropStill: public Prop {
 public:
-  PropStill(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropStill(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propStill, engine, turnsInit, turns) {}
 
   ~PropStill() {}
@@ -411,7 +411,7 @@ private:
 
 class PropBlind: public Prop {
 public:
-  PropBlind(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropBlind(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propBlind, engine, turnsInit, turns) {}
 
   ~PropBlind() {}
@@ -436,7 +436,7 @@ private:
 
 class PropBlessed: public Prop {
 public:
-  PropBlessed(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropBlessed(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propBlessed, engine, turnsInit, turns) {}
 
   ~PropBlessed() {}
@@ -453,7 +453,7 @@ private:
 
 class PropCursed: public Prop {
 public:
-  PropCursed(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropCursed(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propCursed, engine, turnsInit, turns) {}
 
   ~PropCursed() {}
@@ -471,7 +471,7 @@ private:
 
 class PropClairvoyant: public Prop {
 public:
-  PropClairvoyant(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropClairvoyant(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propClairvoyant, engine, turnsInit, turns) {}
 
   ~PropClairvoyant() {}
@@ -487,7 +487,7 @@ private:
 
 class PropBurning: public Prop {
 public:
-  PropBurning(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropBurning(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propBurning, engine, turnsInit, turns) {}
 
   ~PropBurning() {}
@@ -507,7 +507,7 @@ private:
 
 class PropFlared: public Prop {
 public:
-  PropFlared(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropFlared(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propFlared, engine, turnsInit, turns) {}
 
   ~PropFlared() {}
@@ -519,7 +519,7 @@ private:
 
 class PropConfused: public Prop {
 public:
-  PropConfused(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropConfused(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propConfused, engine, turnsInit, turns) {}
 
   ~PropConfused() {}
@@ -536,7 +536,7 @@ private:
 
 class PropStunned: public Prop {
 public:
-  PropStunned(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropStunned(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propStunned, engine, turnsInit, turns) {}
   ~PropStunned() {}
 private:
@@ -544,7 +544,7 @@ private:
 
 class PropNailed: public Prop {
 public:
-  PropNailed(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropNailed(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propNailed, engine, turnsInit, turns), nrSpikes_(1) {}
   ~PropNailed() {}
 
@@ -562,7 +562,7 @@ private:
 
 class PropWaiting: public Prop {
 public:
-  PropWaiting(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropWaiting(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propWaiting, engine, turnsInit, turns) {}
 
   ~PropWaiting() {}
@@ -583,7 +583,7 @@ private:
 
 class PropDisabledAttack: public Prop {
 public:
-  PropDisabledAttack(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropDisabledAttack(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propDisabledAttack, engine, turnsInit, turns) {}
 
   ~PropDisabledAttack() {}
@@ -602,7 +602,7 @@ private:
 
 class PropDisabledMelee: public Prop {
 public:
-  PropDisabledMelee(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropDisabledMelee(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propDisabledMelee, engine, turnsInit, turns) {}
 
   ~PropDisabledMelee() {}
@@ -617,7 +617,7 @@ private:
 
 class PropDisabledRanged: public Prop {
 public:
-  PropDisabledRanged(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropDisabledRanged(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propDisabledRanged, engine, turnsInit, turns) {}
 
   ~PropDisabledRanged() {}
@@ -632,7 +632,7 @@ private:
 
 class PropParalyzed: public Prop {
 public:
-  PropParalyzed(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropParalyzed(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propParalysed, engine, turnsInit, turns) {}
 
   ~PropParalyzed() {}
@@ -660,7 +660,7 @@ private:
 
 class PropFainted: public Prop {
 public:
-  PropFainted(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropFainted(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propFainted, engine, turnsInit, turns) {}
 
   ~PropFainted() {}
@@ -697,7 +697,7 @@ private:
 
 class PropSlowed: public Prop {
 public:
-  PropSlowed(Engine* engine, PropTurns_t turnsInit,
+  PropSlowed(Engine& engine, PropTurns_t turnsInit,
              int turns = -1) :
     Prop(propSlowed, engine, turnsInit, turns) {}
 
@@ -708,7 +708,7 @@ private:
 
 class PropFrenzied: public Prop {
 public:
-  PropFrenzied(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropFrenzied(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propFrenzied, engine, turnsInit, turns) {}
 
   ~PropFrenzied() {}
@@ -733,7 +733,7 @@ private:
 
 class PropRAcid: public Prop {
 public:
-  PropRAcid(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRAcid(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRAcid, engine, turnsInit, turns) {}
   ~PropRAcid() {}
 
@@ -745,7 +745,7 @@ private:
 
 class PropRCold: public Prop {
 public:
-  PropRCold(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRCold(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRCold, engine, turnsInit, turns) {}
   ~PropRCold() {}
 
@@ -757,7 +757,7 @@ private:
 
 class PropRConfusion: public Prop {
 public:
-  PropRConfusion(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRConfusion(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRConfusion, engine, turnsInit, turns) {}
   ~PropRConfusion() {}
 
@@ -770,7 +770,7 @@ private:
 
 class PropRElec: public Prop {
 public:
-  PropRElec(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRElec(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRElec, engine, turnsInit, turns) {}
   ~PropRElec() {}
 
@@ -782,7 +782,7 @@ private:
 
 class PropRFear: public Prop {
 public:
-  PropRFear(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRFear(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRFear, engine, turnsInit, turns) {}
   ~PropRFear() {}
 
@@ -795,7 +795,7 @@ private:
 
 class PropRFire: public Prop {
 public:
-  PropRFire(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRFire(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRFire, engine, turnsInit, turns) {}
   ~PropRFire() {}
 
@@ -811,7 +811,7 @@ private:
 
 class PropRPoison: public Prop {
 public:
-  PropRPoison(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRPoison(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRPoison, engine, turnsInit, turns) {}
   ~PropRPoison() {}
 
@@ -824,7 +824,7 @@ private:
 
 class PropRSleep: public Prop {
 public:
-  PropRSleep(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropRSleep(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propRSleep, engine, turnsInit, turns) {}
   ~PropRSleep() {}
 
@@ -837,7 +837,7 @@ private:
 
 class PropLightSensitive: public Prop {
 public:
-  PropLightSensitive(Engine* engine, PropTurns_t turnsInit, int turns = -1) :
+  PropLightSensitive(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
     Prop(propLightSensitive, engine, turnsInit, turns) {}
   ~PropLightSensitive() {}
 private:

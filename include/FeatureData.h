@@ -162,7 +162,7 @@ struct FeatureData {
 
 class FeatureDataHandler {
 public:
-  FeatureDataHandler(Engine* engine) : eng(engine) {initDataList();}
+  FeatureDataHandler(Engine& engine) : eng(engine) {initDataList();}
 
   ~FeatureDataHandler() {}
 
@@ -179,7 +179,7 @@ private:
 
   void resetData(FeatureData& d);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

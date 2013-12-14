@@ -18,7 +18,7 @@ private:
   string inscription_;
 
   friend class FeatureFactory;
-  Grave(Feature_t id, Pos pos, Engine* engine);
+  Grave(Feature_t id, Pos pos, Engine& engine);
 };
 
 #endif

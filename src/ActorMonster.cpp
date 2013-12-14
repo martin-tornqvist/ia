@@ -24,8 +24,8 @@
 #include "AI_castRandomSpell.h"
 #include "AI_handleInventory.h"
 
-Monster::Monster() :
-  playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
+Monster::Monster(Engine& engine) :
+  Actor(engine), playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
   lastDirTraveled(dirCenter), spellCoolDownCurrent(0),
   isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL),
   waiting_(false), shockCausedCurrent(0.0) {}
@@ -37,7 +37,7 @@ Monster::~Monster() {
 }
 
 void Monster::onActorTurn() {
-  if(eng->basicUtils->isPosInsideMap(pos) == false) {
+  if(eng.basicUtils->isPosInsideMap(pos) == false) {
     throw runtime_error("Monster outside map");
   }
 
@@ -45,14 +45,14 @@ void Monster::onActorTurn() {
 
   if(waiting_) {
     if(playerAwarenessCounter <= 0) {
-      eng->gameTime->endTurnOfCurrentActor();
+      eng.gameTime->endTurnOfCurrentActor();
       return;
     }
   }
 
   vector<Actor*> spotedEnemies;
   getSpotedEnemies(spotedEnemies);
-  target = eng->basicUtils->getClosestActor(pos, spotedEnemies);
+  target = eng.basicUtils->getClosestActor(pos, spotedEnemies);
 
   if(spellCoolDownCurrent != 0) {
     spellCoolDownCurrent--;
@@ -62,13 +62,13 @@ void Monster::onActorTurn() {
     isRoamingAllowed = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
-        if(eng->dice.percentile() < 7) {
+        if(eng.dice.percentile() < 7) {
           speakPhrase();
         }
       }
     } else {
       if(leader->deadState == actorDeadState_alive) {
-        if(leader != eng->player) {
+        if(leader != eng.player) {
           dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
             leader->getData()->nrTurnsAwarePlayer;
         }
@@ -78,7 +78,7 @@ void Monster::onActorTurn() {
 
   const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
                                  ability_stealth, true, *this) > 0;
-  isStealth = eng->player->checkIfSeeActor(*this, NULL) == false &&
+  isStealth = eng.player->checkIfSeeActor(*this, NULL) == false &&
               HAS_SNEAK_SKILL;
 
   const AiBehavior& ai = data_->aiBehavior;
@@ -86,7 +86,7 @@ void Monster::onActorTurn() {
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
   // TODO temporary restriction, allow this later(?)
-  if(leader != eng->player) {
+  if(leader != eng.player) {
     if(monsterSpecificOnActorTurn()) {
       return;
     }
@@ -98,7 +98,7 @@ void Monster::onActorTurn() {
   //from looking. (This is to give the monsters some reaction time, and not
   //instantly attack)
   if(ai.looks) {
-    if(leader != eng->player) {
+    if(leader != eng.player) {
       if(AI_look_becomePlayerAware::action(this, eng)) {
         return;
       }
@@ -106,7 +106,7 @@ void Monster::onActorTurn() {
   }
 
   if(ai.makesRoomForFriend) {
-    if(leader != eng->player) {
+    if(leader != eng.player) {
       if(AI_makeRoomForFriend::action(*this, eng)) {
         return;
       }
@@ -115,7 +115,7 @@ void Monster::onActorTurn() {
 
   if(target != NULL) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
-    if(eng->dice.percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
+    if(eng.dice.percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(AI_castRandomSpellIfAware::action(this, eng)) {
         return;
       }
@@ -136,7 +136,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(eng->dice.percentile() < data_->erraticMovement) {
+  if(eng.dice.percentile() < data_->erraticMovement) {
     if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
       return;
     }
@@ -151,12 +151,12 @@ void Monster::onActorTurn() {
   vector<Pos> path;
 
   if(ai.pathsToTargetWhenAware) {
-    if(leader != eng->player) {
+    if(leader != eng.player) {
       AI_setPathToPlayerIfAware::learn(*this, path, eng);
     }
   }
 
-  if(leader != eng->player) {
+  if(leader != eng.player) {
     if(AI_handleClosedBlockingDoor::action(this, path, eng)) {
       return;
     }
@@ -174,7 +174,7 @@ void Monster::onActorTurn() {
   }
 
   if(ai.movesTowardLair) {
-    if(leader != eng->player) {
+    if(leader != eng.player) {
       if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;
       }
@@ -189,14 +189,14 @@ void Monster::onActorTurn() {
     return;
   }
 
-  eng->gameTime->endTurnOfCurrentActor();
+  eng.gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::onMonsterHit(int& dmg) {
   playerAwarenessCounter = data_->nrTurnsAwarePlayer;
 
   if(data_->monsterShockLevel != monsterShockLevel_none) {
-    dmg = (dmg * (100 + eng->player->getMth())) / 100;
+    dmg = (dmg * (100 + eng.player->getMth())) / 100;
   }
 }
 
@@ -204,7 +204,7 @@ void Monster::moveDir(Dir_t dir) {
   if(dir == endOfDirs) {
     throw runtime_error("Bad direction");
   }
-  if(eng->basicUtils->isPosInsideMap(pos) == false) {
+  if(eng.basicUtils->isPosInsideMap(pos) == false) {
     throw runtime_error("Monster outside map");
   }
 
@@ -212,12 +212,12 @@ void Monster::moveDir(Dir_t dir) {
 
   //Trap affects leaving?
   if(dir != dirCenter) {
-    Feature* f = eng->map->cells[pos.x][pos.y].featureStatic;
+    Feature* f = eng.map->cells[pos.x][pos.y].featureStatic;
     if(f->getId() == feature_trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == dirCenter) {
         traceVerbose << "Monster: Move prevented by trap" << endl;
-        eng->gameTime->endTurnOfCurrentActor();
+        eng.gameTime->endTurnOfCurrentActor();
         return;
       }
     }
@@ -228,20 +228,20 @@ void Monster::moveDir(Dir_t dir) {
 
   const Pos targetCell(pos + DirConverter().getOffset(dir));
 
-  if(eng->basicUtils->isPosInsideMap(targetCell) == false) {
+  if(eng.basicUtils->isPosInsideMap(targetCell) == false) {
     throw runtime_error("Monster move target cell outside map");
   }
 
   pos = targetCell;
 
   // Bump features in target cell (i.e. to trigger traps)
-  vector<FeatureMob*> featureMobs = eng->gameTime->getFeatureMobsAtPos(pos);
+  vector<FeatureMob*> featureMobs = eng.gameTime->getFeatureMobsAtPos(pos);
   for(unsigned int i = 0; i < featureMobs.size(); i++) {
     featureMobs.at(i)->bump(*this);
   }
-  eng->map->cells[pos.x][pos.y].featureStatic->bump(*this);
+  eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
 
-  eng->gameTime->endTurnOfCurrentActor();
+  eng.gameTime->endTurnOfCurrentActor();
 }
 
 void Monster::hearSound(const Sound& snd) {
@@ -253,21 +253,21 @@ void Monster::hearSound(const Sound& snd) {
 }
 
 void Monster::speakPhrase() {
-  const bool IS_SEEN_BY_PLAYER = eng->player->checkIfSeeActor(*this, NULL);
+  const bool IS_SEEN_BY_PLAYER = eng.player->checkIfSeeActor(*this, NULL);
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonsterSeen() :
                      getAggroPhraseMonsterHidden();
   const Sfx_t sfx = IS_SEEN_BY_PLAYER ?
                     getAggroSfxMonsterSeen() :
                     getAggroSfxMonsterHidden();
-  eng->soundEmitter->emitSound(Sound(msg, sfx, false, pos, false, true));
+  eng.soundEmitter->emitSound(Sound(msg, sfx, false, pos, false, true));
 }
 
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
     const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
     playerAwarenessCounter = data_->nrTurnsAwarePlayer;
-    if(PLAYER_AWARENESS_BEFORE <= 0 && eng->dice.coinToss()) {
+    if(PLAYER_AWARENESS_BEFORE <= 0 && eng.dice.coinToss()) {
       speakPhrase();
     }
   }
@@ -275,39 +275,39 @@ void Monster::becomeAware() {
 
 bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0 || leader == eng->player) {
+    if(playerAwarenessCounter > 0 || leader == eng.player) {
 
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksVision(eng), blockers);
 
-      if(checkIfSeeActor(*eng->player, blockers)) {
+      if(checkIfSeeActor(*eng.player, blockers)) {
         AttackOpport opport = getAttackOpport(defender);
         const BestAttack attack = getBestAttack(opport);
 
         if(attack.weapon != NULL) {
           if(attack.isMelee) {
             if(attack.weapon->getData().isMeleeWeapon) {
-              eng->attack->melee(*this, *attack.weapon, defender);
+              eng.attack->melee(*this, *attack.weapon, defender);
               return true;
             }
           } else {
             if(attack.weapon->getData().isRangedWeapon) {
               if(opport.isTimeToReload) {
-                eng->reload->reloadWieldedWpn(*this);
+                eng.reload->reloadWieldedWpn(*this);
                 return true;
               } else {
                 //Check if friend is in the way
                 //(with a small chance to ignore this)
                 bool isBlockedByFriend = false;
-                if(eng->dice.fraction(4, 5)) {
+                if(eng.dice.fraction(4, 5)) {
                   vector<Pos> line;
-                  eng->lineCalc->calcNewLine(
+                  eng.lineCalc->calcNewLine(
                     pos, defender.pos, true, 9999, false, line);
                   for(unsigned int i = 0; i < line.size(); i++) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
                       Actor* const actorHere =
-                        eng->basicUtils->getActorAtPos(curPos);
+                        eng.basicUtils->getActorAtPos(curPos);
                       if(actorHere != NULL) {
                         isBlockedByFriend = true;
                         break;
@@ -323,7 +323,7 @@ bool Monster::tryAttack(Actor& defender) {
                     new PropDisabledRanged(
                     eng, propTurnsSpecified, NR_TURNS_DISABLED_RANGED);
                   propHandler_->tryApplyProp(status);
-                  eng->attack->ranged(*this, *attack.weapon, defender.pos);
+                  eng.attack->ranged(*this, *attack.weapon, defender.pos);
                   return true;
                 } else {
                   return false;
@@ -342,7 +342,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
     opport.isMelee =
-      eng->basicUtils->isPosAdj(pos, defender.pos, false);
+      eng.basicUtils->isPosAdj(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
@@ -428,7 +428,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(eng->itemDataHandler->isWeaponStronger(*data, *newData, attack.isMelee)) {
+        if(eng.itemDataHandler->isWeaponStronger(*data, *newData, attack.isMelee)) {
           // - use new weapon instead.
           attack.weapon = newWeapon;
           data = newData;

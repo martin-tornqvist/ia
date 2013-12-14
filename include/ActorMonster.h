@@ -42,7 +42,7 @@ class Weapon;
 
 class Monster: public Actor {
 public:
-  Monster();
+  Monster(Engine& engine);
   virtual ~Monster();
 
   void moveDir(Dir_t dir);
@@ -104,69 +104,69 @@ protected:
 
 class Rat: public Monster {
 public:
-  Rat() : Monster() {}
+  Rat(Engine& engine) : Monster(engine) {}
   ~Rat() {}
   virtual void actorSpecific_spawnStartItems();
 };
 
 class RatThing: public Rat {
 public:
-  RatThing() : Rat() {}
+  RatThing(Engine& engine) : Rat(engine) {}
   ~RatThing() {}
   void actorSpecific_spawnStartItems();
 };
 
 class BrownJenkin: public RatThing {
 public:
-  BrownJenkin() : RatThing() {}
+  BrownJenkin(Engine& engine) : RatThing(engine) {}
   ~BrownJenkin() {}
 };
 
 class Spider: public Monster {
 public:
-  Spider() : Monster() {}
+  Spider(Engine& engine) : Monster(engine) {}
   virtual ~Spider() {}
   bool monsterSpecificOnActorTurn();
 };
 
 class GreenSpider: public Spider {
 public:
-  GreenSpider() : Spider() {}
+  GreenSpider(Engine& engine) : Spider(engine) {}
   ~GreenSpider() {}
   void actorSpecific_spawnStartItems();
 };
 
 class WhiteSpider: public Spider {
 public:
-  WhiteSpider() : Spider() {}
+  WhiteSpider(Engine& engine) : Spider(engine) {}
   ~WhiteSpider() {}
   void actorSpecific_spawnStartItems();
 };
 
 class RedSpider: public Spider {
 public:
-  RedSpider() : Spider() {}
+  RedSpider(Engine& engine) : Spider(engine) {}
   ~RedSpider() {}
   void actorSpecific_spawnStartItems();
 };
 
 class ShadowSpider: public Spider {
 public:
-  ShadowSpider() : Spider() {}
+  ShadowSpider(Engine& engine) : Spider(engine) {}
   ~ShadowSpider() {}
   void actorSpecific_spawnStartItems();
 };
 
 class LengSpider: public Spider {
 public:
-  LengSpider() : Spider() {}
+  LengSpider(Engine& engine) : Spider(engine) {}
   ~LengSpider() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Zombie: public Monster {
 public:
-  Zombie() : Monster() {
+  Zombie(Engine& engine) : Monster(engine) {
     deadTurnCounter = 0;
     hasResurrected = false;
   }
@@ -181,21 +181,21 @@ protected:
 
 class ZombieClaw: public Zombie {
 public:
-  ZombieClaw() : Zombie() {}
+  ZombieClaw(Engine& engine) : Zombie(engine) {}
   ~ZombieClaw() {}
   void actorSpecific_spawnStartItems();
 };
 
 class ZombieAxe: public Zombie {
 public:
-  ZombieAxe() : Zombie() {}
+  ZombieAxe(Engine& engine) : Zombie(engine) {}
   ~ZombieAxe() {}
   void actorSpecific_spawnStartItems();
 };
 
 class BloatedZombie: public Zombie {
 public:
-  BloatedZombie() : Zombie() {}
+  BloatedZombie(Engine& engine) : Zombie(engine) {}
   ~BloatedZombie() {}
 
   void actorSpecific_spawnStartItems();
@@ -203,8 +203,8 @@ public:
 
 class MajorClaphamLee: public ZombieClaw {
 public:
-  MajorClaphamLee() :
-    ZombieClaw(), hasSummonedTombLegions(false) {
+  MajorClaphamLee(Engine& engine) :
+    ZombieClaw(engine), hasSummonedTombLegions(false) {
   }
   ~MajorClaphamLee() {}
 
@@ -215,15 +215,13 @@ private:
 
 class DeanHalsey: public ZombieClaw {
 public:
-  DeanHalsey() : ZombieClaw() {}
+  DeanHalsey(Engine& engine) : ZombieClaw(engine) {}
   ~DeanHalsey() {}
 };
 
 class KeziahMason: public Monster {
 public:
-  KeziahMason() : Monster() {
-    hasSummonedJenkin = false;
-  }
+  KeziahMason(Engine& engine) : Monster(engine), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
   bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
@@ -233,11 +231,11 @@ private:
 
 class Cultist: public Monster {
 public:
-  Cultist() : Monster() {}
+  Cultist(Engine& engine) : Monster(engine) {}
 
   virtual void actorSpecific_spawnStartItems();
 
-  static string getCultistPhrase(Engine* const engine);
+  static string getCultistPhrase(Engine& engine);
 
   string getAggroPhraseMonsterSeen() const {
     return getNameThe() + ": " + getCultistPhrase(eng);
@@ -251,28 +249,28 @@ public:
 
 class CultistTeslaCannon: public Cultist {
 public:
-  CultistTeslaCannon() : Cultist() {}
+  CultistTeslaCannon(Engine& engine) : Cultist(engine) {}
   ~CultistTeslaCannon() {}
   void actorSpecific_spawnStartItems();
 };
 
 class CultistSpikeGun: public Cultist {
 public:
-  CultistSpikeGun() : Cultist() {}
+  CultistSpikeGun(Engine& engine) : Cultist(engine) {}
   ~CultistSpikeGun() {}
   void actorSpecific_spawnStartItems();
 };
 
 class CultistPriest: public Cultist {
 public:
-  CultistPriest() : Cultist() {}
+  CultistPriest(Engine& engine) : Cultist(engine) {}
   ~CultistPriest() {}
   void actorSpecific_spawnStartItems();
 };
 
 class LordOfShadows: public Monster {
 public:
-  LordOfShadows() : Monster() {}
+  LordOfShadows(Engine& engine) : Monster(engine) {}
   ~LordOfShadows() {}
   bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
@@ -280,7 +278,7 @@ public:
 
 class LordOfSpiders: public Monster {
 public:
-  LordOfSpiders() : Monster() {}
+  LordOfSpiders(Engine& engine) : Monster(engine) {}
   ~LordOfSpiders() {}
   bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
@@ -288,7 +286,7 @@ public:
 
 class LordOfSpirits: public Monster {
 public:
-  LordOfSpirits() : Monster() {}
+  LordOfSpirits(Engine& engine) : Monster(engine) {}
   ~LordOfSpirits() {}
   bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
@@ -296,7 +294,7 @@ public:
 
 class LordOfPestilence: public Monster {
 public:
-  LordOfPestilence() : Monster() {}
+  LordOfPestilence(Engine& engine) : Monster(engine) {}
   ~LordOfPestilence() {}
   bool monsterSpecificOnActorTurn();
   void actorSpecific_spawnStartItems();
@@ -304,21 +302,21 @@ public:
 
 class FireHound: public Monster {
 public:
-  FireHound() : Monster() {}
+  FireHound(Engine& engine) : Monster(engine) {}
   ~FireHound() {}
   void actorSpecific_spawnStartItems();
 };
 
 class FrostHound: public Monster {
 public:
-  FrostHound() : Monster() {}
+  FrostHound(Engine& engine) : Monster(engine) {}
   ~FrostHound() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Ghost: public Monster {
 public:
-  Ghost() : Monster() {}
+  Ghost(Engine& engine) : Monster(engine) {}
   ~Ghost() {}
   bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
@@ -326,91 +324,91 @@ public:
 
 class Phantasm: public Ghost {
 public:
-  Phantasm() : Ghost() {}
+  Phantasm(Engine& engine) : Ghost(engine) {}
   ~Phantasm() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Wraith: public Ghost {
 public:
-  Wraith() : Ghost() {}
+  Wraith(Engine& engine) : Ghost(engine) {}
   ~Wraith() {}
   void actorSpecific_spawnStartItems();
 };
 
 class GiantBat: public Monster {
 public:
-  GiantBat() : Monster() {}
+  GiantBat(Engine& engine) : Monster(engine) {}
   ~GiantBat() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Byakhee: public GiantBat {
 public:
-  Byakhee() : GiantBat() {}
+  Byakhee(Engine& engine) : GiantBat(engine) {}
   ~Byakhee() {}
   void actorSpecific_spawnStartItems();
 };
 
 class GiantMantis: public Monster {
 public:
-  GiantMantis() : Monster() {}
+  GiantMantis(Engine& engine) : Monster(engine) {}
   ~GiantMantis() {}
   void actorSpecific_spawnStartItems();
 };
 
 class HuntingHorror: public GiantBat {
 public:
-  HuntingHorror() : GiantBat() {}
+  HuntingHorror(Engine& engine) : GiantBat(engine) {}
   ~HuntingHorror() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Wolf: public Monster {
 public:
-  Wolf() : Monster() {}
+  Wolf(Engine& engine) : Monster(engine) {}
   ~Wolf() {}
   void actorSpecific_spawnStartItems();
 };
 
 class MiGo: public Monster {
 public:
-  MiGo() : Monster() {}
+  MiGo(Engine& engine) : Monster(engine) {}
   ~MiGo() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Ghoul: public Monster {
 public:
-  Ghoul() : Monster() {}
+  Ghoul(Engine& engine) : Monster(engine) {}
   ~Ghoul() {}
   virtual void actorSpecific_spawnStartItems();
 };
 
 class DeepOne: public Monster {
 public:
-  DeepOne() : Monster() {}
+  DeepOne(Engine& engine) : Monster(engine) {}
   ~DeepOne() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Mummy: public Monster {
 public:
-  Mummy() : Monster() {}
+  Mummy(Engine& engine) : Monster(engine) {}
   ~Mummy() {}
   virtual void actorSpecific_spawnStartItems();
 };
 
 class MummyUnique: public Mummy {
 public:
-  MummyUnique() : Mummy() {}
+  MummyUnique(Engine& engine) : Mummy(engine) {}
   ~MummyUnique() {}
   void actorSpecific_spawnStartItems();
 };
 
 class Khephren: public MummyUnique {
 public:
-  Khephren() : MummyUnique() {}
+  Khephren(Engine& engine) : MummyUnique(engine) {}
   ~Khephren() {}
 
   bool monsterSpecificOnActorTurn();
@@ -420,7 +418,7 @@ private:
 
 class Shadow: public Monster {
 public:
-  Shadow() : Monster() {}
+  Shadow(Engine& engine) : Monster(engine) {}
   ~Shadow() {}
 
   virtual void actorSpecific_spawnStartItems();
@@ -428,7 +426,7 @@ public:
 
 class WormMass: public Monster {
 public:
-  WormMass() : Monster(), chanceToSpawnNew(12) {}
+  WormMass(Engine& engine) : Monster(engine), chanceToSpawnNew(12) {}
   ~WormMass() {}
   bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
@@ -438,7 +436,7 @@ private:
 
 class GiantLocust: public Monster {
 public:
-  GiantLocust() : Monster(), chanceToSpawnNew(5) {}
+  GiantLocust(Engine& engine) : Monster(engine), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
   bool monsterSpecificOnActorTurn();
   virtual void actorSpecific_spawnStartItems();
@@ -448,7 +446,7 @@ private:
 
 class Vortex: public Monster {
 public:
-  Vortex() : Monster(), pullCooldown(0) {}
+  Vortex(Engine& engine) : Monster(engine), pullCooldown(0) {}
   virtual ~Vortex() {}
 
   bool monsterSpecificOnActorTurn();
@@ -461,7 +459,7 @@ private:
 
 class DustVortex: public Vortex {
 public:
-  DustVortex() : Vortex() {}
+  DustVortex(Engine& engine) : Vortex(engine) {}
   ~DustVortex() {}
   void actorSpecific_spawnStartItems();
   void onMonsterDeath();
@@ -469,7 +467,7 @@ public:
 
 class FireVortex: public Vortex {
 public:
-  FireVortex() : Vortex() {}
+  FireVortex(Engine& engine) : Vortex(engine) {}
   ~FireVortex() {}
   void actorSpecific_spawnStartItems();
   void onMonsterDeath();
@@ -477,7 +475,7 @@ public:
 
 class FrostVortex: public Vortex {
 public:
-  FrostVortex() : Vortex() {}
+  FrostVortex(Engine& engine) : Vortex(engine) {}
   ~FrostVortex() {}
   void actorSpecific_spawnStartItems();
   void onMonsterDeath();
@@ -485,7 +483,7 @@ public:
 
 class Ooze: public Monster {
 public:
-  Ooze() : Monster() {}
+  Ooze(Engine& engine) : Monster(engine) {}
   ~Ooze() {}
   virtual void actorSpecificOnStandardTurn();
   virtual void actorSpecific_spawnStartItems() = 0;
@@ -493,35 +491,36 @@ public:
 
 class OozeBlack: public Ooze {
 public:
-  OozeBlack() : Ooze() {}
+  OozeBlack(Engine& engine) : Ooze(engine) {}
   ~OozeBlack() {}
   void actorSpecific_spawnStartItems();
 };
 
 class OozeClear: public Ooze {
 public:
-  OozeClear() : Ooze() {}
+  OozeClear(Engine& engine) : Ooze(engine) {}
   ~OozeClear() {}
   void actorSpecific_spawnStartItems();
 };
 
 class OozePutrid: public Ooze {
 public:
-  OozePutrid() : Ooze() {}
+  OozePutrid(Engine& engine) : Ooze(engine) {}
   ~OozePutrid() {}
   void actorSpecific_spawnStartItems();
 };
 
 class OozePoison: public Ooze {
 public:
-  OozePoison() : Ooze() {}
+  OozePoison(Engine& engine) : Ooze(engine) {}
   ~OozePoison() {}
   void actorSpecific_spawnStartItems();
 };
 
 class ColourOutOfSpace: public Ooze {
 public:
-  ColourOutOfSpace() : Ooze(), currentColor(clrMagentaLgt) {}
+  ColourOutOfSpace(Engine& engine) : Ooze(engine),
+    currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
 //  bool monsterSpecificOnActorTurn();
   void actorSpecificOnStandardTurn();

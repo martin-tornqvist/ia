@@ -26,7 +26,7 @@ class Actor;
 
 class Thrower {
 public:
-  Thrower(Engine* engine) :
+  Thrower(Engine& engine) :
     eng(engine) {
   }
 
@@ -36,7 +36,7 @@ public:
   void playerThrowLitExplosive(const Pos& aimCell);
 
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

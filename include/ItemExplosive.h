@@ -8,7 +8,7 @@ class Engine;
 
 class Explosive : public Item {
 public:
-  Explosive(ItemData* const itemData, Engine* engine) :
+  Explosive(ItemData* const itemData, Engine& engine) :
     Item(itemData, engine) {}
   virtual ~Explosive() {}
 
@@ -30,7 +30,7 @@ protected:
 
 class Dynamite: public Explosive {
 public:
-  Dynamite(ItemData* const itemData, Engine* engine) :
+  Dynamite(ItemData* const itemData, Engine& engine) :
     Explosive(itemData, engine) {}
   ~Dynamite() {}
   void setPlayerExplosive() const;
@@ -39,7 +39,7 @@ private:
 
 class Molotov: public Explosive {
 public:
-  Molotov(ItemData* const itemData, Engine* engine) :
+  Molotov(ItemData* const itemData, Engine& engine) :
     Explosive(itemData, engine) {}
   ~Molotov() {}
   void setPlayerExplosive() const;
@@ -48,7 +48,7 @@ private:
 
 class Flare: public Explosive {
 public:
-  Flare(ItemData* const itemData, Engine* engine) :
+  Flare(ItemData* const itemData, Engine& engine) :
     Explosive(itemData, engine) {}
   ~Flare() {}
   void setPlayerExplosive() const;

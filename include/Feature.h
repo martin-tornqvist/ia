@@ -52,15 +52,15 @@ public:
   virtual MaterialType_t getMaterialType() const;
 protected:
   friend class Map;
-  Feature(Feature_t id, Pos pos, Engine* engine,
+  Feature(Feature_t id, Pos pos, Engine& engine,
           FeatureSpawnData* spawnData = NULL);
 
-  Feature() : eng(NULL), data_(NULL) {}
-  Feature(const Feature& other) : eng(NULL), data_(NULL) {
-    (void)other;
-  }
+//  Feature() : eng(NULL), data_(NULL) {}
+//  Feature(const Feature& other) : eng(NULL), data_(NULL) {
+//    (void)other;
+//  }
   Pos pos_;
-  Engine* const eng;
+  Engine& eng;
   const FeatureData* const data_;
   bool hasBlood_;
 };
@@ -76,7 +76,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  FeatureMob(Feature_t id, Pos pos, Engine* engine,
+  FeatureMob(Feature_t id, Pos pos, Engine& engine,
              FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), shouldBeDeleted_(false) {
     (void)spawnData;
@@ -106,7 +106,7 @@ public:
 protected:
   friend class FeatureFactory;
   friend class Map;
-  FeatureStatic(Feature_t id, Pos pos, Engine* engine,
+  FeatureStatic(Feature_t id, Pos pos, Engine& engine,
                 FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), goreTile_(tile_empty), goreGlyph_(' ') {
     (void)spawnData;

@@ -38,7 +38,7 @@ struct Cell {
 
 class Map {
 public:
-  Map(Engine* engine);
+  Map(Engine& engine);
 
   ~Map();
 
@@ -67,7 +67,7 @@ public:
 private:
   void resetCells(const bool MAKE_STONE_WALLS);
 
-  Engine* eng;
+  Engine& eng;
 
   friend class SaveHandler;
   friend class Bot;

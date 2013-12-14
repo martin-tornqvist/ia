@@ -26,14 +26,14 @@ public:
   bool isEtherealDefenderMissed;
 
 protected:
-  AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine* engine);
-  Engine* const eng;
+  AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine& engine);
+  Engine& eng;
 };
 
 class MeleeAttackData: public AttackData {
 public:
   MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
-                  Actor& defender_, Engine* engine);
+                  Actor& defender_, Engine& engine);
   bool isDefenderDodging;
   bool isBackstab;
   bool isWeakAttack;
@@ -43,7 +43,7 @@ public:
 class RangedAttackData: public AttackData {
 public:
   RangedAttackData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-                   const Pos& curPos_, Engine* engine,
+                   const Pos& curPos_, Engine& engine,
                    ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
@@ -55,7 +55,7 @@ public:
 class MissileAttackData: public AttackData {
 public:
   MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                    const Pos& curPos_, Engine* engine,
+                    const Pos& curPos_, Engine& engine,
                     ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
@@ -105,7 +105,7 @@ struct Projectile {
 
 class Attack {
 public:
-  Attack(Engine* engine) : eng(engine) {}
+  Attack(Engine& engine) : eng(engine) {}
 
   bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
 
@@ -127,7 +127,7 @@ private:
 
   bool isCellOnLine(vector<Pos> line, int x, int y);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

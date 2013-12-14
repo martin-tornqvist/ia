@@ -24,7 +24,7 @@ protected:
   EventRegularity_t getEventRegularity();
 
   friend class FeatureFactory;
-  FeatureExaminable(Feature_t id, Pos pos, Engine* engine);
+  FeatureExaminable(Feature_t id, Pos pos, Engine& engine);
 };
 
 class ExaminableItemContainer {
@@ -35,11 +35,11 @@ public:
 
   void setRandomItemsForFeature(const Feature_t featureId,
                                 const int NR_ITEMS_TO_ATTEMPT,
-                                Engine* const engine);
+                                Engine& engine);
 
-  void dropItems(const Pos& pos, Engine* const engine);
+  void dropItems(const Pos& pos, Engine& engine);
 
-  void destroySingleFragile(Engine* const engine);
+  void destroySingleFragile(Engine& engine);
 
   vector<Item*> items_;
 };
@@ -74,7 +74,7 @@ public:
 private:
   friend class FeatureFactory;
 
-  Tomb(Feature_t id, Pos pos, Engine* engine);
+  Tomb(Feature_t id, Pos pos, Engine& engine);
 
   bool openFeature();
   void triggerTrap();
@@ -104,7 +104,7 @@ public:
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
-  Cabinet(Feature_t id, Pos pos, Engine* engine);
+  Cabinet(Feature_t id, Pos pos, Engine& engine);
 
   void triggerTrap();
   bool openFeature();
@@ -137,7 +137,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Chest(Feature_t id, Pos pos, Engine* engine);
+  Chest(Feature_t id, Pos pos, Engine& engine);
 
   void triggerTrap();
   bool openFeature();
@@ -173,7 +173,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Fountain(Feature_t id, Pos pos, Engine* engine);
+  Fountain(Feature_t id, Pos pos, Engine& engine);
 
   void drink();
 
@@ -191,7 +191,7 @@ public:
   void featureSpecific_examine();
 private:
   friend class FeatureFactory;
-  Cocoon(Feature_t id, Pos pos, Engine* engine);
+  Cocoon(Feature_t id, Pos pos, Engine& engine);
 
   void triggerTrap();
   bool openFeature();
@@ -210,7 +210,7 @@ private:
 //  void featureSpecific_examine();
 //private:
 //  friend class FeatureFactory;
-//  Altar(Feature_t id, Pos pos, Engine* engine);
+//  Altar(Feature_t id, Pos pos, Engine& engine);
 //};
 
 //class CarvedPillar: public FeatureExaminable {
@@ -219,7 +219,7 @@ private:
 //  void featureSpecific_examine();
 //private:
 //  friend class FeatureFactory;
-//  CarvedPillar(Feature_t id, Pos pos, Engine* engine);
+//  CarvedPillar(Feature_t id, Pos pos, Engine& engine);
 //};
 
 //class Barrel: public FeatureExaminable {
@@ -228,7 +228,7 @@ private:
 //  void featureSpecific_examine();
 //private:
 //  friend class FeatureFactory;
-//  Barrel(Feature_t id, Pos pos, Engine* engine);
+//  Barrel(Feature_t id, Pos pos, Engine& engine);
 //
 //  ExaminableItemContainer itemContainer;
 //};

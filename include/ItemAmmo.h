@@ -7,7 +7,7 @@
 
 class ItemAmmo: public Item {
 public:
-  ItemAmmo(ItemData* const itemData, Engine* engine) :
+  ItemAmmo(ItemData* const itemData, Engine& engine) :
     Item(itemData, engine) {}
   virtual ~ItemAmmo() {}
   virtual SDL_Color getInterfaceClr() const {return clrWhite;}
@@ -17,7 +17,7 @@ private:
 
 class ItemAmmoClip: public ItemAmmo {
 public:
-  ItemAmmoClip(ItemData* const itemData, Engine* engine) :
+  ItemAmmoClip(ItemData* const itemData, Engine& engine) :
     ItemAmmo(itemData, engine) {
     setFullAmmo();
   }

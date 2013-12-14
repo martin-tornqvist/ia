@@ -10,14 +10,14 @@ class SaveHandler;
 
 class DungeonClimb {
 public:
-  DungeonClimb(Engine* engine) {eng = engine;}
+  DungeonClimb(Engine& engine) : eng(engine) {}
 
   void tryUseDownStairs();
 
   void travelDown(const int levels = 1);
 
 private:
-  Engine* eng;
+  Engine& eng;
 
   void makeLevel();
 };

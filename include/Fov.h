@@ -9,9 +9,7 @@ class Actor;
 
 class Fov {
 public:
-  Fov(Engine* engine) {
-    eng = engine;
-  }
+  Fov(Engine& engine) : eng(engine) {}
 
   bool checkCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
                  const Pos& cellToCheck,
@@ -30,7 +28,7 @@ private:
     const Pos& origin, bool values[MAP_X_CELLS][MAP_Y_CELLS],
     const bool IS_AFFECTED_BY_DARKNESS);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

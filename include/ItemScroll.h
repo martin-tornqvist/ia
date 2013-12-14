@@ -9,7 +9,7 @@ class Actor;
 
 class Scroll: public Item {
 public:
-  Scroll(ItemData* const itemData, Engine* engine) : Item(itemData, engine) {}
+  Scroll(ItemData* const itemData, Engine& engine) : Item(itemData, engine) {}
 
   ~Scroll() {}
 
@@ -34,7 +34,7 @@ protected:
 
 class ScrollNameHandler {
 public:
-  ScrollNameHandler(Engine* engine);
+  ScrollNameHandler(Engine& engine);
   ~ScrollNameHandler() {}
 
   void setFalseScrollName(ItemData& d);
@@ -45,7 +45,7 @@ public:
 private:
   vector<string> falseNames_;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

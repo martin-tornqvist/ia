@@ -22,7 +22,7 @@ private:
 
 class Gods {
 public:
-  Gods(Engine* const engine) : eng(engine) {initGodList();}
+  Gods(Engine& engine) : eng(engine) {initGodList();}
   ~Gods() {}
 
   inline bool isGodLevel() const {return currentGodElem_ >= 0;}
@@ -45,7 +45,7 @@ private:
 
   void initGodList();
 
-  Engine* const eng;
+  Engine& eng;
 };
 
 #endif

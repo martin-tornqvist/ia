@@ -10,7 +10,7 @@ class Engine;
 
 class Examine {
 public:
-  Examine(Engine* engine) : eng(engine) {
+  Examine(Engine& engine) : eng(engine) {
   }
 
   ~Examine() {
@@ -20,7 +20,7 @@ public:
 
 private:
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

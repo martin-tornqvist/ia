@@ -61,7 +61,7 @@ public:
 protected:
   friend class FeatureFactory;
   friend class Disarm;
-  Trap(Feature_t id, Pos pos, Engine* engine, TrapSpawnData* spawnData);
+  Trap(Feature_t id, Pos pos, Engine& engine, TrapSpawnData* spawnData);
 
   void trigger(Actor& actor);
 
@@ -80,9 +80,9 @@ public:
 
 protected:
   friend class Trap;
-  SpecificTrapBase(Pos pos, Trap_t trapType, Engine* engine) :
+  SpecificTrapBase(Pos pos, Trap_t trapType, Engine& engine) :
     pos_(pos), trapType_(trapType), eng(engine) {}
-  SpecificTrapBase() {}
+//  SpecificTrapBase() {}
   virtual ~SpecificTrapBase() {}
 
   virtual Dir_t specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
@@ -101,14 +101,14 @@ protected:
 
   Pos pos_;
   Trap_t trapType_;
-  Engine* eng;
+  Engine& eng;
 };
 
 class TrapDart: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapDart(Pos pos, Engine* engine);
+  TrapDart(Pos pos, Engine& engine);
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
@@ -124,7 +124,7 @@ class TrapSpear: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSpear(Pos pos, Engine* engine);
+  TrapSpear(Pos pos, Engine& engine);
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
   SDL_Color getTrapSpecificColor() const {return clrWhiteHigh;}
@@ -140,7 +140,7 @@ class TrapGasConfusion: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasConfusion(Pos pos, Engine* engine) :
+  TrapGasConfusion(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_gasConfusion, engine) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
@@ -156,7 +156,7 @@ class TrapGasParalyzation: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasParalyzation(Pos pos, Engine* engine) :
+  TrapGasParalyzation(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_gasParalyze, engine) {
   }
   void trapSpecificTrigger(Actor& actor,
@@ -173,7 +173,7 @@ class TrapGasFear: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapGasFear(Pos pos, Engine* engine) :
+  TrapGasFear(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_gasFear, engine) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
@@ -189,7 +189,7 @@ class TrapBlindingFlash: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapBlindingFlash(Pos pos, Engine* engine) :
+  TrapBlindingFlash(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_blinding, engine) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
@@ -205,7 +205,7 @@ class TrapTeleport: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapTeleport(Pos pos, Engine* engine) :
+  TrapTeleport(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_teleport, engine) {
   }
   void trapSpecificTrigger(Actor& actor,
@@ -222,7 +222,7 @@ class TrapSummonMonster: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSummonMonster(Pos pos, Engine* engine) :
+  TrapSummonMonster(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_summonMonster, engine) {
   }
   void trapSpecificTrigger(Actor& actor,
@@ -239,7 +239,7 @@ class TrapSmoke: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapSmoke(Pos pos, Engine* engine) :
+  TrapSmoke(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_smoke, engine) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
@@ -255,7 +255,7 @@ class TrapAlarm: public SpecificTrapBase {
 public:
 private:
   friend class Trap;
-  TrapAlarm(Pos pos, Engine* engine) :
+  TrapAlarm(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_alarm, engine) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
@@ -276,7 +276,7 @@ public:
 
 private:
   friend class Trap;
-  TrapSpiderWeb(Pos pos, Engine* engine) :
+  TrapSpiderWeb(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {}
   void trapSpecificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);

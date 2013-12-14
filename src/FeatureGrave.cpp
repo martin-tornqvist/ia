@@ -1,6 +1,6 @@
 #include "FeatureGrave.h"
 
-Grave::Grave(Feature_t id, Pos pos, Engine* engine) :
+Grave::Grave(Feature_t id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine) {}
 
 string Grave::getDescription(const bool DEFINITE_ARTICLE) const {

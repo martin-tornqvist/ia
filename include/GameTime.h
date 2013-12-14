@@ -21,7 +21,7 @@ enum TurnType_t {
 
 class GameTime {
 public:
-  GameTime(Engine* engine) :
+  GameTime(Engine& engine) :
     currentTurnTypePos_(0),
     currentActorVectorPos_(0),
     turn_(0), eng(engine) {
@@ -115,7 +115,7 @@ private:
 
   int turn_;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

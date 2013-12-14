@@ -7,7 +7,7 @@
 
 class Armor: public Item {
 public:
-  Armor(ItemData* const itemData, Engine* engine);
+  Armor(ItemData* const itemData, Engine& engine);
 
   ~Armor() {}
 
@@ -43,7 +43,7 @@ protected:
 
 class ArmorAsbestosSuit: public Armor {
 public:
-  ArmorAsbestosSuit(ItemData* const itemData, Engine* engine) :
+  ArmorAsbestosSuit(ItemData* const itemData, Engine& engine) :
     Armor(itemData, engine) {}
   ~ArmorAsbestosSuit() {}
 
@@ -53,7 +53,7 @@ public:
 
 class ArmorHeavyCoat: public Armor {
 public:
-  ArmorHeavyCoat(ItemData* const itemData, Engine* engine) :
+  ArmorHeavyCoat(ItemData* const itemData, Engine& engine) :
     Armor(itemData, engine) {}
   ~ArmorHeavyCoat() {}
 

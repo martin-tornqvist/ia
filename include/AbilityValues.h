@@ -60,11 +60,11 @@ enum AbilityRollResult_t {
 //This is a single global class
 class AbilityRoll {
 public:
-  AbilityRoll(Engine* engine) : eng(engine) {}
+  AbilityRoll(Engine& engine) : eng(engine) {}
   AbilityRollResult_t roll(const int TOTAL_SKILL_VALUE) const;
 
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

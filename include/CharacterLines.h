@@ -5,7 +5,7 @@ class Engine;
 
 class CharacterLines {
 public:
-  CharacterLines(Engine* engine) : eng(engine) {}
+  CharacterLines(Engine& engine) : eng(engine) {}
 
 private:
   friend class Renderer;
@@ -13,7 +13,7 @@ private:
 
   void drawLocationInfo();
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

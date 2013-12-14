@@ -5,7 +5,7 @@
 
 class Device: public Item {
 public:
-  Device(ItemData* const itemData, Engine* engine);
+  Device(ItemData* const itemData, Engine& engine);
 
   virtual ~Device() {}
 
@@ -53,7 +53,7 @@ protected:
 
 class DeviceSentry: public Device {
 public:
-  DeviceSentry(ItemData* const itemData, Engine* engine) :
+  DeviceSentry(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
   ~DeviceSentry() {}
@@ -65,7 +65,7 @@ private:
 
 class DeviceRepeller: public Device {
 public:
-  DeviceRepeller(ItemData* const itemData, Engine* engine) :
+  DeviceRepeller(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
   ~DeviceRepeller() {}
@@ -78,7 +78,7 @@ private:
 
 class DeviceRejuvenator: public Device {
 public:
-  DeviceRejuvenator(ItemData* const itemData, Engine* engine) :
+  DeviceRejuvenator(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
   ~DeviceRejuvenator() {}
@@ -90,7 +90,7 @@ private:
 
 class DeviceTranslocator: public Device {
 public:
-  DeviceTranslocator(ItemData* const itemData, Engine* engine) :
+  DeviceTranslocator(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
   ~DeviceTranslocator() {}
@@ -102,7 +102,7 @@ private:
 
 class DeviceElectricLantern: public Device {
 public:
-  DeviceElectricLantern(ItemData* const itemData, Engine* engine) :
+  DeviceElectricLantern(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine), malfunctCooldown_(-1) {}
 
   ~DeviceElectricLantern() {}

@@ -14,7 +14,7 @@ class Engine;
 
 class Log {
 public:
-  Log(Engine* engine) :
+  Log(Engine& engine) :
     eng(engine) {clearLog();}
 
   void addMsg(const string& text, const SDL_Color = clrWhite,
@@ -66,7 +66,7 @@ private:
   int findCurXpos(const vector<Message>& line,
                   const unsigned int messageNr) const;
 
-  const Engine* eng;
+  const Engine& eng;
 
   friend class Postmortem;
   vector<vector<Message> > history;

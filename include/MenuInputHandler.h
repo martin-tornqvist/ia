@@ -22,10 +22,10 @@ public:
   MenuAction_t getAction(MenuBrowser& browser);
 
 private:
-  Engine* eng;
+  Engine& eng;
 
   friend class Engine;
-  MenuInputHandler(Engine* engine) :
+  MenuInputHandler(Engine& engine) :
     eng(engine) {
   }
 };

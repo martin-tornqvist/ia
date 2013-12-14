@@ -21,7 +21,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   vector<string> logo;
 
-  if(eng->config->isTilesMode == false) {
+  if(eng.config->isTilesMode == false) {
     logo.push_back("        ___  __                __  __                  ");
     logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
     logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -32,23 +32,23 @@ void MainMenu::draw(const MenuBrowser& browser) {
   Pos pos(MAP_X_CELLS / 2, 3);
 
   trace << "MainMenu: Calling clearWindow()" << endl;
-  eng->renderer->clearScreen();
+  eng.renderer->clearScreen();
 
   trace << "MainMenu: Drawing random background letters" << endl;
-  const int NR_X_CELLS = eng->config->screenWidth / eng->config->cellW;
-  const int NR_Y_CELLS = eng->config->screenHeight / eng->config->cellH;
-  const int BG_BRIGHTNESS = eng->dice.range(14, 17);
+  const int NR_X_CELLS = eng.config->screenWidth / eng.config->cellW;
+  const int NR_Y_CELLS = eng.config->screenHeight / eng.config->cellH;
+  const int BG_BRIGHTNESS = eng.dice.range(14, 17);
   for(int y = 0; y < NR_Y_CELLS; y++) {
     for(int x = 0; x < NR_X_CELLS; x++) {
       char cha = ' ';
-      if(eng->dice.coinToss()) {
-        cha = 'a' + eng->dice.range(0, 25);
+      if(eng.dice.coinToss()) {
+        cha = 'a' + eng.dice.range(0, 25);
       }
       SDL_Color bgClr = clrBlack;
       bgClr.r = BG_BRIGHTNESS / 2;
       bgClr.g = BG_BRIGHTNESS / 2;
       bgClr.b = BG_BRIGHTNESS;
-      eng->renderer->drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
+      eng.renderer->drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
     }
   }
 
@@ -60,16 +60,16 @@ void MainMenu::draw(const MenuBrowser& browser) {
   quoteClr.b = QUOTE_BRIGHTNESS;
 
   vector<string> quoteLines;
-  eng->textFormatting->lineToLines(getHplQuote(), 45, quoteLines);
-  const int Y0_LOGO = eng->config->isTilesMode ? 17 : 15;
+  eng.textFormatting->lineToLines(getHplQuote(), 45, quoteLines);
+  const int Y0_LOGO = eng.config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
-    eng->renderer->drawText(quoteLines.at(i), panel_screen,
+    eng.renderer->drawText(quoteLines.at(i), panel_screen,
                             Pos(7, Y0_LOGO + i), quoteClr);
   }
 
-  if(eng->config->isTilesMode) {
+  if(eng.config->isTilesMode) {
     trace << "MainMenu: Calling drawMainMenuLogo()" << endl;
-    eng->renderer->drawMainMenuLogo(4);
+    eng.renderer->drawMainMenuLogo(4);
     pos.y += 10;
   } else {
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
@@ -78,9 +78,9 @@ void MainMenu::draw(const MenuBrowser& browser) {
       for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
         if(logo.at(i).at(ii) != ' ') {
           SDL_Color clr = clrRed;
-          clr.r += eng->dice.range(-60, 100);
+          clr.r += eng.dice.range(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
-          eng->renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
+          eng.renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
                                    pos, clr);
         }
         pos.x++;
@@ -93,63 +93,63 @@ void MainMenu::draw(const MenuBrowser& browser) {
   pos.x = 48;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1),
+    eng.renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1),
                             clrYellow);
   }
 
   SDL_Color clrActive   = clrNosferatuSepiaLgt;
   SDL_Color clrInactive = clrNosferatuSepiaDrk;
 
-  eng->renderer->drawText("New journey", panel_screen, pos,
+  eng.renderer->drawText("New journey", panel_screen, pos,
                           browser.isPosAtKey('a') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("Resurrect", panel_screen, pos,
+  eng.renderer->drawText("Resurrect", panel_screen, pos,
                           browser.isPosAtKey('b') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("Manual", panel_screen, pos,
+  eng.renderer->drawText("Manual", panel_screen, pos,
                           browser.isPosAtKey('c') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("Options", panel_screen, pos,
+  eng.renderer->drawText("Options", panel_screen, pos,
                           browser.isPosAtKey('d') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("Credits", panel_screen, pos,
+  eng.renderer->drawText("Credits", panel_screen, pos,
                           browser.isPosAtKey('e') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("High scores", panel_screen, pos,
+  eng.renderer->drawText("High scores", panel_screen, pos,
                           browser.isPosAtKey('f') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
-  eng->renderer->drawText("Escape to reality", panel_screen, pos,
+  eng.renderer->drawText("Escape to reality", panel_screen, pos,
                           browser.isPosAtKey('g') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   if(IS_DEBUG_MODE) {
-    eng->renderer->drawText("DEBUG: RUN BOT", panel_screen, pos,
+    eng.renderer->drawText("DEBUG: RUN BOT", panel_screen, pos,
                             browser.isPosAtKey('h') ? clrActive : clrInactive);
     pos.y += 1;
   }
 
   pos.x = MAP_X_CELLS / 2;
 
-  eng->renderer->drawTextCentered(
-    eng->config->GAME_VERSION + " 2013-11-26 (c) 2011-2013 Martin Tornqvist",
+  eng.renderer->drawTextCentered(
+    eng.config->GAME_VERSION + " 2013-11-26 (c) 2011-2013 Martin Tornqvist",
     panel_character, Pos(pos.x, 1), clrWhite);
 
-//  eng->renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
+//  eng.renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 
   trace << "MainMenu::draw() [DONE]" << endl;
 }
@@ -159,15 +159,15 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
 
   MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
-  const bool IS_SAVE_AVAILABLE = eng->saveHandler->isSaveAvailable();
+  const bool IS_SAVE_AVAILABLE = eng.saveHandler->isSaveAvailable();
 
-  introMusChannel = eng->audio->play(musCthulhiana_Madness);
+  introMusChannel = eng.audio->play(musCthulhiana_Madness);
 
   draw(browser);
 
   bool proceed = false;
   while(proceed == false) {
-    const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         draw(browser);
@@ -185,30 +185,30 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
         }
         if(browser.isPosAtKey('b')) {
           if(IS_SAVE_AVAILABLE) {
-            eng->saveHandler->load();
+            eng.saveHandler->load();
             proceed = true;
             return gameEntry_load;
           } else {
-            eng->popup->showMessage(
+            eng.popup->showMessage(
               "No save available. Starting a new character instead.", false);
             proceed = true;
             return gameEntry_new;
           }
         }
         if(browser.isPosAtKey('c')) {
-          eng->manual->run();
+          eng.manual->run();
           draw(browser);
         }
         if(browser.isPosAtKey('d')) {
-          eng->config->runOptionsMenu();
+          eng.config->runOptionsMenu();
           draw(browser);
         }
         if(browser.isPosAtKey('e')) {
-          eng->credits->run();
+          eng.credits->run();
           draw(browser);
         }
         if(browser.isPosAtKey('f')) {
-          eng->highScore->runHighScoreScreen();
+          eng.highScore->runHighScoreScreen();
           draw(browser);
         }
         if(browser.isPosAtKey('g')) {
@@ -218,7 +218,7 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
             proceed = true;
-            eng->config->isBotPlaying = true;
+            eng.config->isBotPlaying = true;
           }
         }
       }
@@ -280,5 +280,5 @@ string MainMenu::getHplQuote() {
   quotes.push_back("It was just a colour out of space - a frightful messenger from unformed realms of infinity beyond all Nature as we know it; from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes.");
   quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness. The Thing cannot be described - there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
   quotes.push_back("I could tell I was at the gateway of a region half-bewitched through the piling-up of unbroken time-accumulations; a region where old, strange things have had a chance to grow and linger because they have never been stirred up.");
-  return "\"" + quotes.at(eng->dice.range(0, quotes.size() - 1)) + "\"";
+  return "\"" + quotes.at(eng.dice.range(0, quotes.size() - 1)) + "\"";
 }

@@ -14,8 +14,10 @@ enum ItemActivateReturn_t {
 
 class Item {
 public:
-  Item(ItemData* itemData, Engine* engine) :
+  Item(ItemData* itemData, Engine& engine) :
     nrItems(1), data_(itemData), eng(engine) {}
+
+  Item& operator=(Item& other) {(void)other; return *this;}
 
   virtual ~Item() {}
 
@@ -77,7 +79,7 @@ protected:
 
   ItemData* data_;
 
-  Engine* eng;
+  Engine& eng;
 
   //Called by the ItemDrop class to make noise etc
   friend class ItemDrop;

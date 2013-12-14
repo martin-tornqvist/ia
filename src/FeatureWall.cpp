@@ -4,7 +4,7 @@
 
 #include "Map.h"
 
-Wall::Wall(Feature_t id, Pos pos, Engine* engine) :
+Wall::Wall(Feature_t id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
 }
 
@@ -64,7 +64,7 @@ SDL_Color Wall::getColor() const {
 }
 
 char Wall::getGlyph() const {
-  if(eng->config->isAsciiWallSymbolFullSquare) {
+  if(eng.config->isAsciiWallSymbolFullSquare) {
     return 10;
   } else {
     return '#';
@@ -112,7 +112,7 @@ Tile_t Wall::getTopWallTile() const {
 }
 
 void Wall::setRandomNormalWall() {
-  const int RND = eng->dice.range(1, 6);
+  const int RND = eng.dice.range(1, 6);
   switch(RND) {
     case 1:
       wallType = wall_alt1;
@@ -125,7 +125,7 @@ void Wall::setRandomNormalWall() {
 }
 
 void Wall::setRandomIsMossGrown() {
-  isMossGrown = eng->dice.range(1, 40) == 1;
+  isMossGrown = eng.dice.range(1, 40) == 1;
 }
 
 

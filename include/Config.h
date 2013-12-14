@@ -13,7 +13,7 @@ class MenuBrowser;
 
 class Config {
 public:
-  Config(Engine* engine);
+  Config(Engine& engine);
   ~Config() {}
 
   const string  GAME_VERSION;
@@ -77,7 +77,7 @@ private:
 
   vector<string> fontImageNames;
 
-  Engine* const eng;
+  Engine& eng;
 };
 
 #endif

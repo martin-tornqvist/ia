@@ -37,7 +37,7 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
     curPos.set(floor(curX_db), floor(curY_db));
 
     if(ALLOW_OUTSIDE_MAP == false) {
-      if(eng->basicUtils->isPosInsideMap(curPos) == false) {
+      if(eng.basicUtils->isPosInsideMap(curPos) == false) {
         return;
       }
     }
@@ -57,7 +57,7 @@ void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
       return;
     }
     const int DISTANCE_TRAVELED =
-      eng->basicUtils->chebyshevDist(
+      eng.basicUtils->chebyshevDist(
         origin.x, origin.y, curPos.x, curPos.y);
     if(DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {
       return;

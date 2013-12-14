@@ -6,12 +6,12 @@
 
 class AI_stepToLairIfHasLosToLair {
 public:
-  static bool action(Monster& monster, const Pos& lairCell, Engine* engine) {
+  static bool action(Monster& monster, const Pos& lairCell, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksVision(engine), blockers);
       const bool HAS_LOS_TO_LAIR =
-        engine->fov->checkCell(blockers, lairCell, monster.pos, true);
+        engine.fov->checkCell(blockers, lairCell, monster.pos, true);
 
       if(HAS_LOS_TO_LAIR) {
         Pos delta = lairCell - monster.pos;

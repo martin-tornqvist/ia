@@ -30,7 +30,7 @@ class MedicalBag;
 
 class Player: public Actor {
 public:
-  Player();
+  Player(Engine& eng);
   virtual ~Player() {}
 
   int getHpMax(const bool WITH_MODIFIERS) const;

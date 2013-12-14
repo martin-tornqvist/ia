@@ -14,11 +14,16 @@
 #include "FeatureGrave.h"
 #include "FeatureWall.h"
 
+#ifdef DEMO_MODE
+#include "Renderer.h"
+#include "SdlWrapper.h"
+#endif // DEMO_MODE
+
 using namespace std;
 
 Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
                                         FeatureSpawnData* spawnData) {
-  const FeatureData* const data = eng->featureDataHandler->getData(id);
+  const FeatureData* const data = eng.featureDataHandler->getData(id);
 
   //General (simple) features
   if(data->spawnType == featureSpawnType_static) {
@@ -30,7 +35,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
   if(data->spawnType == featureSpawnType_mob) {
     if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
     FeatureMob* feature = new FeatureMob(id, pos, eng);
-    eng->gameTime->addFeatureMob(feature);
+    eng.gameTime->addFeatureMob(feature);
     return feature;
   }
 
@@ -74,7 +79,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       LitDynamite* dynamite =
         new LitDynamite(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      eng->gameTime->addFeatureMob(dynamite);
+      eng.gameTime->addFeatureMob(dynamite);
       delete spawnData;
       return dynamite;
     }
@@ -85,7 +90,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       LitFlare* flare =
         new LitFlare(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      eng->gameTime->addFeatureMob(flare);
+      eng.gameTime->addFeatureMob(flare);
       delete spawnData;
       return flare;
     }
@@ -95,7 +100,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       }
       Smoke* smoke =
         new Smoke(id, pos, eng, dynamic_cast<SmokeSpawnData*>(spawnData));
-      eng->gameTime->addFeatureMob(smoke);
+      eng.gameTime->addFeatureMob(smoke);
       delete spawnData;
       return smoke;
     }
@@ -107,7 +112,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       ProxEventWallCrumble* proxEvent =
         new ProxEventWallCrumble(
         id, pos, eng, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
-      eng->gameTime->addFeatureMob(proxEvent);
+      eng.gameTime->addFeatureMob(proxEvent);
       delete spawnData;
       return proxEvent;
     }
@@ -198,7 +203,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
 void FeatureFactory::replaceStaticFeatureAt(
   FeatureStatic* const newFeature, const Pos& pos) {
 
-  Cell& cell = eng->map->cells[pos.x][pos.y];
+  Cell& cell = eng.map->cells[pos.x][pos.y];
 
   FeatureStatic* const oldFeature = cell.featureStatic;
 
@@ -206,5 +211,11 @@ void FeatureFactory::replaceStaticFeatureAt(
     delete oldFeature;
   }
   cell.featureStatic = newFeature;
+
+#ifdef DEMO_MODE
+  cell.isSeenByPlayer = true;
+  cell.isExplored = true;
+  eng.renderer->drawMapAndInterface(true);
+#endif // DEMO_MODE
 }
 

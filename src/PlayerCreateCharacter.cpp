@@ -18,9 +18,9 @@ void PlayerCreateCharacter::createCharacter() const {
 
 void PlayerCreateCharacter::pickTrait() const {
   //------------------------------------------------------ TRAITS AND SKILLS
-  if(eng->config->isBotPlaying == false) {
+  if(eng.config->isBotPlaying == false) {
     vector<Trait_t> pickableTraits;
-    eng->playerBonHandler->getAllPickableTraits(pickableTraits);
+    eng.playerBonHandler->getAllPickableTraits(pickableTraits);
 
     if(pickableTraits.empty() == false) {
 
@@ -46,7 +46,7 @@ void PlayerCreateCharacter::pickTrait() const {
       drawPickTrait(traitsColOne, traitsColTwo, browser);
 
       while(true) {
-        const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+        const MenuAction_t action = eng.menuInputHandler->getAction(browser);
         switch(action) {
           case menuAction_browsed: {
             drawPickTrait(traitsColOne, traitsColTwo, browser);
@@ -59,13 +59,13 @@ void PlayerCreateCharacter::pickTrait() const {
           case menuAction_selected: {
             const Pos browserPos = browser.getPos();
             if(browserPos.x == 0) {
-              eng->playerBonHandler->pickTrait(
+              eng.playerBonHandler->pickTrait(
                 traitsColOne.at(browser.getPos().y));
             } else {
-              eng->playerBonHandler->pickTrait(
+              eng.playerBonHandler->pickTrait(
                 traitsColTwo.at(browser.getPos().y));
             }
-            eng->renderer->drawMapAndInterface();
+            eng.renderer->drawMapAndInterface();
             return;
           }
           break;
@@ -83,7 +83,7 @@ void PlayerCreateCharacter::drawPickTrait(
   const vector<Trait_t>& traitsColOne, const vector<Trait_t>& traitsColTwo,
   const MenuBrowser& browser) const {
 
-  eng->renderer->coverPanel(panel_screen);
+  eng.renderer->coverPanel(panel_screen);
 
   const int NR_TRAITS_COL_ONE = traitsColOne.size();
   const int NR_TRAITS_COL_TWO = traitsColTwo.size();
@@ -93,7 +93,7 @@ void PlayerCreateCharacter::drawPickTrait(
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
-  eng->renderer->drawTextCentered(
+  eng.renderer->drawTextCentered(
     "Choose new ability", panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE),
     clrWhite, clrBlack, true);
 
@@ -105,10 +105,10 @@ void PlayerCreateCharacter::drawPickTrait(
   for(int i = 0; i < NR_TRAITS_COL_ONE; i++) {
     const Trait_t trait = traitsColOne.at(i);
     string name = "";
-    eng->playerBonHandler->getTraitTitle(trait, name);
+    eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 0 && browserPos.y == int(i);
     const SDL_Color drwClr = IS_TRAIT_MARKED ? clrWhite : clrRedLgt;
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       name, panel_screen, Pos(X_COLUMN_ONE, yPos), drwClr);
     yPos++;
   }
@@ -116,10 +116,10 @@ void PlayerCreateCharacter::drawPickTrait(
   for(int i = 0; i < NR_TRAITS_COL_TWO; i++) {
     const Trait_t trait = traitsColTwo.at(i);
     string name = "";
-    eng->playerBonHandler->getTraitTitle(trait, name);
+    eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 1 && browserPos.y == int(i);
     const SDL_Color drwClr = IS_TRAIT_MARKED ? clrWhite : clrRedLgt;
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       name, panel_screen, Pos(X_COLUMN_TWO, yPos), drwClr);
     yPos++;
   }
@@ -131,14 +131,14 @@ void PlayerCreateCharacter::drawPickTrait(
     browserPos.x == 0 ? traitsColOne.at(browserPos.y) :
     traitsColTwo.at(browserPos.y);
   string descr;
-  eng->playerBonHandler->getTraitDescr(markedTrait, descr);
+  eng.playerBonHandler->getTraitDescr(markedTrait, descr);
   const int MAX_WIDTH_DESCR = 50;
   vector<string> descrLines;
-  eng->textFormatting->lineToLines(
+  eng.textFormatting->lineToLines(
     "Effect(s): " + descr, MAX_WIDTH_DESCR, descrLines);
   const int NR_DESCR_LINES = descrLines.size();
   for(int i = 0; i < NR_DESCR_LINES; i++) {
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       descrLines.at(i), panel_screen, Pos(X_COLUMN_ONE, yPos), clrRed);
     yPos++;
   }
@@ -147,14 +147,14 @@ void PlayerCreateCharacter::drawPickTrait(
   yPos = max(Y0_DESCR + 3, yPos);
 
   vector<Trait_t> prereqsForCurTrait;
-  eng->playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
+  eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
   const int NR_PREREQS = prereqsForCurTrait.size();
   if(NR_PREREQS > 0) {
     string prereqStr = "This ability had the following prerequisite(s): ";
     for(int i = 0; i < NR_PREREQS; i++) {
       const Trait_t prereqTrait = prereqsForCurTrait.at(i);
       string prereqTitle;
-      eng->playerBonHandler->getTraitTitle(prereqTrait, prereqTitle);
+      eng.playerBonHandler->getTraitTitle(prereqTrait, prereqTitle);
       if(i == 0) {
         prereqStr += "\"" + prereqTitle + "\"";
       } else {
@@ -162,16 +162,16 @@ void PlayerCreateCharacter::drawPickTrait(
       }
     }
     vector<string> prereqLines;
-    eng->textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR, prereqLines);
+    eng.textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR, prereqLines);
     const int NR_PREREQ_LINES = prereqLines.size();
     for(int i = 0; i < NR_PREREQ_LINES; i++) {
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         prereqLines.at(i), panel_screen, Pos(X_COLUMN_ONE, yPos), clrRed);
       yPos++;
     }
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 void PlayerEnterName::run(const Pos& pos) const {
@@ -179,7 +179,7 @@ void PlayerEnterName::run(const Pos& pos) const {
   draw(name, pos);
   bool done = false;
   while(done == false) {
-    if(eng->config->isBotPlaying == false) {
+    if(eng.config->isBotPlaying == false) {
       readKeys(name, done, pos);
     } else {
       name = "AZATHOTH";
@@ -187,25 +187,25 @@ void PlayerEnterName::run(const Pos& pos) const {
     }
   }
 
-  ActorData& def = *(eng->player->getData());
+  ActorData& def = *(eng.player->getData());
   def.name_a = def.name_the = name;
 }
 
 void PlayerEnterName::draw(const string& currentString, const Pos& pos) const {
-  eng->renderer->coverArea(panel_screen, pos, Pos(16, 2));
+  eng.renderer->coverArea(panel_screen, pos, Pos(16, 2));
   const string LABEL = "What is your name?";
-  eng->renderer->drawText(LABEL, panel_screen, pos, clrWhite);
+  eng.renderer->drawText(LABEL, panel_screen, pos, clrWhite);
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     NAME_STR, panel_screen, pos + Pos(0, 1), clrNosferatuSepiaLgt);
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& done,
                                const Pos& pos) const {
-  const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
+  const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RETURN) {
     done = true;

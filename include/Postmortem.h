@@ -12,7 +12,7 @@ class Engine;
 
 class Postmortem {
 public:
-  Postmortem(Engine* engine) :
+  Postmortem(Engine& engine) :
     eng(engine) {
   }
 
@@ -43,7 +43,7 @@ private:
 
   void makeInfoLines();
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

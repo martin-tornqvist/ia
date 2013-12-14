@@ -13,7 +13,7 @@ class Monster;
 
 class ActorFactory {
 public:
-  ActorFactory(Engine* engine) : eng(engine) {}
+  ActorFactory(Engine& engine) : eng(engine) {}
 
   void deleteAllMonsters() const;
 
@@ -28,7 +28,7 @@ private:
   friend class DebugModeStatPrinter;
   Actor* makeActorFromId(const ActorId_t id) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

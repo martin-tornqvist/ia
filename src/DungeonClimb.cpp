@@ -14,7 +14,7 @@
 void DungeonClimb::makeLevel() {
   trace << "DungeonClimb::makeLevel()..." << endl;
 
-  const int DLVL = eng->map->getDLVL();
+  const int DLVL = eng.map->getDLVL();
 
   bool levelBuilt = false;
 
@@ -49,7 +49,7 @@ void DungeonClimb::makeLevel() {
   }
   if(DLVL > 0 && DLVL <= LAST_CAVERN_LEVEL) {
     trace << "DungeonClimb: Calling PopulateItems::spawnItems()" << endl;
-    eng->populateItems->spawnItems();
+    eng.populateItems->spawnItems();
   }
   trace << "DungeonClimb::makeLevel() [DONE]" << endl;
 }
@@ -57,54 +57,54 @@ void DungeonClimb::makeLevel() {
 void DungeonClimb::travelDown(const int levels) {
   trace << "DungeonClimb::travelDown()..." << endl;
 
-  eng->player->restoreShock(999, true);
+  eng.player->restoreShock(999, true);
 
-  eng->map->incrDlvl(levels);
+  eng.map->incrDlvl(levels);
 
   makeLevel();
 
-  eng->player->target = NULL;
-  eng->player->updateFov();
-  eng->player->updateColor();
-  eng->renderer->drawMapAndInterface();
-  eng->audio->tryPlayAmb(2);
+  eng.player->target = NULL;
+  eng.player->updateFov();
+  eng.player->updateColor();
+  eng.renderer->drawMapAndInterface();
+  eng.audio->tryPlayAmb(2);
   trace << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 
 void DungeonClimb::tryUseDownStairs() {
   trace << "DungeonClimb::tryUseDownStairs()..." << endl;
 
-  eng->log->clearLog();
+  eng.log->clearLog();
 
-  const int DLVL = eng->map->getDLVL();
-  const Pos& playerPos = eng->player->pos;
+  const int DLVL = eng.map->getDLVL();
+  const Pos& playerPos = eng.player->pos;
 
   const Feature_t featureIdAtPlayer =
-    eng->map->cells[playerPos.x][playerPos.y].featureStatic->getId();
+    eng.map->cells[playerPos.x][playerPos.y].featureStatic->getId();
 
   if(featureIdAtPlayer == feature_stairsDown) {
     trace << "DungeonClimb: Player is on stairs" << endl;
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-      eng->log->addMsg("I climb downwards.");
+      eng.log->addMsg("I climb downwards.");
     } else {
-      eng->log->addMsg("I descend the stairs.");
+      eng.log->addMsg("I descend the stairs.");
     }
-//    eng->renderer->updateScreen();
+//    eng.renderer->updateScreen();
     travelDown();
 
-    if(eng->player->insanityPhobias[insanityPhobia_deepPlaces]) {
-      eng->log->addMsg("I am plagued by my phobia of deep places!");
-      eng->player->getPropHandler()->tryApplyProp(
+    if(eng.player->insanityPhobias[insanityPhobia_deepPlaces]) {
+      eng.log->addMsg("I am plagued by my phobia of deep places!");
+      eng.player->getPropHandler()->tryApplyProp(
         new PropTerrified(eng, propTurnsStandard));
       return;
     }
   } else {
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
-      eng->log->addMsg("I see no path leading downwards here.");
+      eng.log->addMsg("I see no path leading downwards here.");
     } else {
-      eng->log->addMsg("I see no stairs leading downwards here.");
+      eng.log->addMsg("I see no stairs leading downwards here.");
     }
-//    eng->renderer->updateScreen();
+//    eng.renderer->updateScreen();
   }
   trace << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }

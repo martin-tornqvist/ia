@@ -91,7 +91,7 @@ public:
 
 class FeatureFactory {
 public:
-  FeatureFactory(Engine* engine) : eng(engine) {}
+  FeatureFactory(Engine& engine) : eng(engine) {}
 
   //Note: Position parameter should NOT be a reference here, because the
   //calling object (e.g. a spider web) might get destroyed.
@@ -101,7 +101,7 @@ public:
 private:
   void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

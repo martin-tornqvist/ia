@@ -17,7 +17,7 @@ struct Projectile;
 
 class Renderer {
 public:
-  Renderer(Engine* engine);
+  Renderer(Engine& engine);
 
   ~Renderer();
 
@@ -135,7 +135,7 @@ private:
   void drawAscii();
   void drawTiles();
 
-  Engine* eng;
+  Engine& eng;
 
   SDL_Surface* screenSurface_;
   SDL_Surface* mainMenuLogoSurface_;

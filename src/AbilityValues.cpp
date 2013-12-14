@@ -69,7 +69,7 @@ int AbilityValues::getVal(const Abilities_t ability,
 }
 
 AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
-  const int ROLL = eng->dice.percentile();
+  const int ROLL = eng.dice.percentile();
 
   const int successCriticalLimit  = int(ceil(float(TOTAL_SKILL_VALUE) / 20.0));
   const int successBigLimit       = int(ceil(float(TOTAL_SKILL_VALUE) / 5.0));

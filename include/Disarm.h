@@ -5,14 +5,14 @@ class Engine;
 
 class Disarm {
 public:
-  Disarm(Engine* const engine) : eng(engine) {
+  Disarm(Engine& engine) : eng(engine) {
 
   }
 
   void playerDisarm() const;
 
 private:
-  Engine* const eng;
+  Engine& eng;
 };
 
 #endif

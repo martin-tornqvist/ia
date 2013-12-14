@@ -57,7 +57,7 @@ private:
 
 class HighScore {
 public:
-  HighScore(Engine* engine) : eng(engine) {}
+  HighScore(Engine& engine) : eng(engine) {}
   ~HighScore() {}
 
   void gameOver(const bool IS_VICTORY);
@@ -75,7 +75,7 @@ private:
   static bool isEntryHigher(const HighScoreEntry& current,
                             const HighScoreEntry& other);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 

@@ -10,7 +10,7 @@ class Engine;
 
 class PopulateMonsters {
 public:
-  PopulateMonsters(Engine* engine) : eng(engine) {}
+  PopulateMonsters(Engine& engine) : eng(engine) {}
 
   void trySpawnDueToTimePassed() const;
 
@@ -36,7 +36,7 @@ private:
 
   void makeListOfMonstersEligibleForAutoSpawning(const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, vector<ActorId_t>& listToSet) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 

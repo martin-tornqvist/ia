@@ -48,9 +48,9 @@ void BasicUtils::getActorPositions(const vector<Actor*>& actors,
 
 
 Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng->gameTime->getActorAtElement(i);
+    Actor& actor = eng.gameTime->getActorAtElement(i);
     if(actor.pos == pos && actor.deadState == actorDeadState_alive) {
       return &actor;
     }
@@ -61,9 +61,9 @@ Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
 void BasicUtils::makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]) {
   resetArray(a);
 
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng->gameTime->getActorAtElement(i);
+    Actor& actor = eng.gameTime->getActorAtElement(i);
     const Pos& p = actor.pos;
     a[p.x][p.y] = &actor;
   }
@@ -75,7 +75,7 @@ Pos BasicUtils::getClosestPos(
   int closestElement = 0;
   const int NR_POSITIONS = positions.size();
   for(int i = 0; i < NR_POSITIONS; i++) {
-    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, positions.at(i));
+    const int CUR_DIST = eng.basicUtils->chebyshevDist(c, positions.at(i));
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;
@@ -93,7 +93,7 @@ Actor* BasicUtils::getClosestActor(const Pos& c,
   int distToNearest = INT_MAX;
   int closestElement = 0;
   for(unsigned int i = 0; i < actors.size(); i++) {
-    const int CUR_DIST = eng->basicUtils->chebyshevDist(c, actors.at(i)->pos);
+    const int CUR_DIST = eng.basicUtils->chebyshevDist(c, actors.at(i)->pos);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;

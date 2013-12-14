@@ -18,20 +18,20 @@
 #include "LineCalc.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
-  const int DYNAMITE_FUSE = eng->player->dynamiteFuseTurns;
-  const int FLARE_FUSE = eng->player->flareFuseTurns;
+  const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
+  const int FLARE_FUSE = eng.player->flareFuseTurns;
 
-  eng->player->explosiveThrown();
+  eng.player->explosiveThrown();
 
   vector<Pos> path;
-  eng->lineCalc->calcNewLine(eng->player->pos, aimCell, true,
+  eng.lineCalc->calcNewLine(eng.player->pos, aimCell, true,
                              THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
     const Feature* featureHere =
-      eng->map->cells[curPos.x][curPos.y].featureStatic;
+      eng.map->cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilesPassable() == false) {
       path.resize(i);
       break;
@@ -40,48 +40,48 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   //Render
   if(path.size() > 1) {
-    const char glyph = eng->itemDataHandler->dataList[item_dynamite]->glyph;
+    const char glyph = eng.itemDataHandler->dataList[item_dynamite]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
-      eng->renderer->drawMapAndInterface(false);
-      if(eng->map->cells[path[i].x][path[i].y].isSeenByPlayer) {
-        eng->renderer->drawGlyph(glyph, panel_map, path[i], clr);
-        eng->renderer->updateScreen();
-        eng->sleep(eng->config->delayProjectileDraw);
+      eng.renderer->drawMapAndInterface(false);
+      if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
+        eng.renderer->drawGlyph(glyph, panel_map, path[i], clr);
+        eng.renderer->updateScreen();
+        eng.sleep(eng.config->delayProjectileDraw);
       }
     }
   }
 
   Feature* const featureAtDest =
-    eng->map->cells[path.back().x][path.back().y].featureStatic;
+    eng.map->cells[path.back().x][path.back().y].featureStatic;
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
-    eng->log->addMsg("I throw a lit dynamite stick.");
+    eng.log->addMsg("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng->featureFactory->spawnFeatureAt(
+      eng.featureFactory->spawnFeatureAt(
         feature_litDynamite, path.back(),
         new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
-    eng->log->addMsg("I throw a lit flare.");
+    eng.log->addMsg("I throw a lit flare.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng->featureFactory->spawnFeatureAt(
+      eng.featureFactory->spawnFeatureAt(
         feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
     }
-    eng->gameTime->updateLightMap();
-    eng->player->updateFov();
-    eng->renderer->drawMapAndInterface();
+    eng.gameTime->updateLightMap();
+    eng.player->updateFov();
+    eng.renderer->drawMapAndInterface();
   } else {
-    eng->log->addMsg("I throw a lit Molotov Cocktail.");
+    eng.log->addMsg("I throw a lit Molotov Cocktail.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng->explosionMaker->runExplosion(
+      eng.explosionMaker->runExplosion(
         path.back(), sfxExplosionMolotov, false,
         new PropBurning(eng, propTurnsStandard));
     }
   }
 
-  eng->gameTime->endTurnOfCurrentActor();
+  eng.gameTime->endTurnOfCurrentActor();
 }
 
 void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
@@ -92,24 +92,24 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   const ActorSizes_t aimLevel = data->intendedAimLevel;
 
   vector<Pos> path;
-  eng->lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
+  eng.lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
                              THROWING_RANGE_LIMIT, false, path);
 
   const ItemData& itemThrownData = itemThrown.getData();
 
   const string itemName_a =
-    eng->itemDataHandler->getItemRef(itemThrown, itemRef_a, true);
-  if(&actorThrowing == eng->player) {
-    eng->log->clearLog();
-    eng->log->addMsg("I throw " + itemName_a + ".");
+    eng.itemDataHandler->getItemRef(itemThrown, itemRef_a, true);
+  if(&actorThrowing == eng.player) {
+    eng.log->clearLog();
+    eng.log->addMsg("I throw " + itemName_a + ".");
   } else {
     const Pos& p = path.front();
-    if(eng->map->cells[p.x][p.y].isSeenByPlayer) {
-      eng->log->addMsg(
+    if(eng.map->cells[p.x][p.y].isSeenByPlayer) {
+      eng.log->addMsg(
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
   }
-  eng->renderer->drawMapAndInterface(true);
+  eng.renderer->drawMapAndInterface(true);
 
   int blockedInElement = -1;
   bool isActorHit = false;
@@ -122,11 +122,11 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   Pos curPos(-1, -1);
 
   for(unsigned int i = 1; i < path.size(); i++) {
-    eng->renderer->drawMapAndInterface(false);
+    eng.renderer->drawMapAndInterface(false);
 
     curPos.set(path.at(i));
 
-    Actor* const actorHere = eng->basicUtils->getActorAtPos(curPos);
+    Actor* const actorHere = eng.basicUtils->getActorAtPos(curPos);
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||
@@ -139,15 +139,15 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         if(
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-            eng->renderer->drawGlyph('*', panel_map,
+          if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+            eng.renderer->drawGlyph('*', panel_map,
                                      curPos, clrRedLgt);
-            eng->renderer->updateScreen();
-            eng->sleep(eng->config->delayProjectileDraw * 4);
+            eng.renderer->updateScreen();
+            eng.sleep(eng.config->delayProjectileDraw * 4);
           }
           const SDL_Color hitMessageClr =
-            actorHere == eng->player ? clrMessageBad : clrMessageGood;
-          eng->log->addMsg(
+            actorHere == eng.player ? clrMessageBad : clrMessageGood;
+          eng.log->addMsg(
             actorHere->getNameThe() + " is hit.", hitMessageClr);
           actorHere->hit(data->dmg, dmgType_physical, true);
           isActorHit = true;
@@ -159,7 +159,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
               curPos, actorHere);
             delete &itemThrown;
             delete data;
-            eng->gameTime->endTurnOfCurrentActor();
+            eng.gameTime->endTurnOfCurrentActor();
             return;
           }
 
@@ -170,14 +170,14 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       }
     }
 
-    if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-      eng->renderer->drawGlyph(glyph, panel_map, curPos, clr);
-      eng->renderer->updateScreen();
-      eng->sleep(eng->config->delayProjectileDraw);
+    if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+      eng.renderer->drawGlyph(glyph, panel_map, curPos, clr);
+      eng.renderer->updateScreen();
+      eng.sleep(eng.config->delayProjectileDraw);
     }
 
     const Feature* featureHere =
-      eng->map->cells[curPos.x][curPos.y].featureStatic;
+      eng.map->cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilesPassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
@@ -196,32 +196,32 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         path.at(blockedInElement), NULL);
       delete &itemThrown;
       delete data;
-      eng->gameTime->endTurnOfCurrentActor();
+      eng.gameTime->endTurnOfCurrentActor();
       return;
     }
   }
 
-  if(eng->dice.percentile() < chanceToDestroyItem) {
+  if(eng.dice.percentile() < chanceToDestroyItem) {
     delete &itemThrown;
   } else {
     const int DROP_ELEMENT = blockedInElement == -1 ?
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
     const MaterialType_t materialAtDropPos =
-      eng->map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
+      eng.map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
-      const bool IS_ALERTING_MONSTERS = &actorThrowing == eng->player;
+      const bool IS_ALERTING_MONSTERS = &actorThrowing == eng.player;
       if(isActorHit == false) {
         Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
                   itemThrownData.landOnHardSurfaceSfx, true, dropPos, false,
                   IS_ALERTING_MONSTERS);
-        eng->soundEmitter->emitSound(snd);
+        eng.soundEmitter->emitSound(snd);
       }
     }
-    eng->itemDrop->dropItemOnMap(dropPos, itemThrown);
+    eng.itemDrop->dropItemOnMap(dropPos, itemThrown);
   }
 
   delete data;
-  eng->renderer->drawMapAndInterface();
-  eng->gameTime->endTurnOfCurrentActor();
+  eng.renderer->drawMapAndInterface();
+  eng.gameTime->endTurnOfCurrentActor();
 }

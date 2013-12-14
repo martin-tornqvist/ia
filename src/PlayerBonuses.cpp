@@ -13,7 +13,7 @@
 
 using namespace std;
 
-PlayerBonHandler::PlayerBonHandler(Engine* engine) :
+PlayerBonHandler::PlayerBonHandler(Engine& engine) :
   bg_(endOfBgs), eng(engine) {
 
   for(int i = 0; i < endOfTraits; i++) {
@@ -166,20 +166,20 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 
   switch(id) {
     case traitTough: {
-      eng->player->changeMaxHp(3, false);
+      eng.player->changeMaxHp(3, false);
     } break;
 
     case traitSpirited: {
-      eng->player->changeMaxSpi(3, false);
+      eng.player->changeMaxSpi(3, false);
     } break;
 
     case traitSelfAware: {
-      eng->player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler()->tryApplyProp(
         new PropRConfusion(eng, propTurnsIndefinite), true, true, true);
     } break;
 
     case traitFearless: {
-      eng->player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler()->tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true);
     } break;
 
@@ -187,17 +187,17 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 //      const int NR_SCROLLS_TO_START_WITH = 2;
 //      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
 //        Item* const item =
-//          eng->itemFactory->spawnRandomScrollOrPotion(true, false);
+//          eng.itemFactory->spawnRandomScrollOrPotion(true, false);
 //
 //        Spell_t spellId = item->getData().spellCastFromScroll;
-//        Spell* const spell = eng->spellHandler->getSpellFromId(spellId);
+//        Spell* const spell = eng.spellHandler->getSpellFromId(spellId);
 //        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
 //        delete spell;
 //
 //        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
 //          Scroll* const scroll = dynamic_cast<Scroll*>(item);
 //          scroll->identify(true);
-//          eng->player->getInventory()->putItemInGeneral(scroll);
+//          eng.player->getInventory()->putItemInGeneral(scroll);
 //
 //          if(item->nrItems == 2) {
 //            item->nrItems = 1;
@@ -212,9 +212,9 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 
     case traitAlchemist: {
       for(int i = 1; i < endOfItemIds; i++) {
-        ItemData* const d = eng->itemDataHandler->dataList[i];
+        ItemData* const d = eng.itemDataHandler->dataList[i];
         if(d->isPotion) {
-          Item* const item      = eng->itemFactory->spawnItem(d->id);
+          Item* const item      = eng.itemFactory->spawnItem(d->id);
           Potion* const potion  = dynamic_cast<Potion*>(item);
           potion->identify(true);
           delete potion;
@@ -222,8 +222,8 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
       }
       const int NR_POTIONS_TO_START_WITH = 5;
       for(int i = 0; i < NR_POTIONS_TO_START_WITH; i++) {
-        eng->player->getInventory()->putItemInGeneral(
-          eng->itemFactory->spawnRandomScrollOrPotion(false, true));
+        eng.player->getInventory()->putItemInGeneral(
+          eng.itemFactory->spawnRandomScrollOrPotion(false, true));
       }
     } break;
 

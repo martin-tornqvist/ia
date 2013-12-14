@@ -42,7 +42,7 @@ void Log::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
 
     drawXpos = findCurXpos(lineToDraw, i);
 
-    eng->renderer->drawText(str, panel_log, Pos(drawXpos, yCell), clr);
+    eng.renderer->drawText(str, panel_log, Pos(drawXpos, yCell), clr);
   }
 }
 
@@ -53,7 +53,7 @@ void Log::drawLog() const {
 void Log::displayHistory() {
   clearLog();
 
-  eng->renderer->clearScreen();
+  eng.renderer->clearScreen();
 
   string str;
 
@@ -66,14 +66,14 @@ void Log::displayHistory() {
     yCell++;
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 
   const int LINE_JUMP = 3;
 
   //Read keys
   bool done = false;
   while(done == false) {
-    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = min(topElement + LINE_JUMP,
@@ -81,55 +81,55 @@ void Log::displayHistory() {
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1,
                        int(history.size()) - 1);
-      eng->renderer->coverArea(panel_screen, Pos(0, 2),
-                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
+      eng.renderer->coverArea(panel_screen, Pos(0, 2),
+                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
         drawLine(history.at(static_cast<unsigned int>(i)), yCell);
         yCell++;
       }
-      eng->renderer->updateScreen();
+      eng.renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = min(topElement - LINE_JUMP,
                        int(history.size()) - int(MAP_Y_CELLS));
       topElement = max(0, topElement);
       btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
-      eng->renderer->coverArea(panel_screen, Pos(0, 2),
-                               Pos(MAP_X_CELLS, MAP_Y_CELLS));
+      eng.renderer->coverArea(panel_screen, Pos(0, 2),
+                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
         drawLine(history.at(static_cast<unsigned int>(i)), yCell);
         yCell++;
       }
-      eng->renderer->updateScreen();
+      eng.renderer->updateScreen();
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       done = true;
     }
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 }
 
 void Log::drawHistoryInterface(const int topLine, const int bottomLine) const {
   const string decorationLine(MAP_X_CELLS - 2, '-');
 
-  eng->renderer->coverPanel(panel_log);
-  eng->renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
+  eng.renderer->coverPanel(panel_log);
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
   if(history.empty()) {
-    eng->renderer->drawText(" No message history ", panel_screen,
-                            Pos(3, 1), clrWhite);
+    eng.renderer->drawText(" No message history ", panel_screen,
+                           Pos(3, 1), clrWhite);
   } else {
-    eng ->renderer->drawText(
+    eng.renderer->drawText(
       " Displaying messages " + toString(topLine) + "-" +
       toString(bottomLine) + " of " +
       toString(history.size()) + " ", panel_screen, Pos(3, 1), clrWhite);
   }
 
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     decorationLine, panel_character, Pos(1, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit ",
     panel_character, Pos(3, 1), clrWhite);
 }
@@ -177,13 +177,13 @@ void Log::addMsg(const string& text, const SDL_Color color,
       CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
 
     if(IS_MSG_FIT == false) {
-      eng->renderer->drawMapAndInterface(false);
-      eng->renderer->drawText(
+      eng.renderer->drawMapAndInterface(false);
+      eng.renderer->drawText(
         "--More--", panel_log, Pos(CUR_X_POS, 0), clrBlack, clrGray);
-      eng->renderer->updateScreen();
-      eng->query->waitForKeyPress();
+      eng.renderer->updateScreen();
+      eng.query->waitForKeyPress();
       clearLog();
-      eng->renderer->drawMapAndInterface(true);
+      eng.renderer->drawMapAndInterface(true);
     }
 
     const Message m(text, color);
@@ -193,19 +193,19 @@ void Log::addMsg(const string& text, const SDL_Color color,
   drawLog();
 
   if(FORCE_MORE_PROMPT) {
-    eng->renderer->drawMapAndInterface(false);
+    eng.renderer->drawMapAndInterface(false);
     const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
-    eng->renderer->drawText("[MORE]", panel_log,
-                            Pos(CUR_X_POS_AFTER, 0), clrCyanLgt);
-    eng->renderer->updateScreen();
-    eng->query->waitForKeyPress();
+    eng.renderer->drawText("[MORE]", panel_log,
+                           Pos(CUR_X_POS_AFTER, 0), clrCyanLgt);
+    eng.renderer->updateScreen();
+    eng.query->waitForKeyPress();
     clearLog();
-    eng->renderer->drawMapAndInterface(true);
+    eng.renderer->drawMapAndInterface(true);
   }
 
   //Messages may stop long actions like first aid and auto travel.
   if(INTERRUPT_PLAYER_ACTIONS) {
-    eng->player->interruptActions();
+    eng.player->interruptActions();
   }
 }
 

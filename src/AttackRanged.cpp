@@ -21,7 +21,7 @@ using namespace std;
 
 void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
-  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
+  const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
 
   vector<Projectile*> projectiles;
 
@@ -40,7 +40,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const ActorSizes_t aimLevel =
     projectiles.at(0)->attackData->intendedAimLevel;
 
-  const int DELAY = eng->config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
+  const int DELAY = eng.config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
@@ -50,7 +50,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   //Get projectile path
   const Pos origin = attacker.pos;
   vector<Pos> projectilePath;
-  eng->lineCalc->calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
+  eng.lineCalc->calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
                              projectilePath);
 
   const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
@@ -110,7 +110,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         if(sndMsg.empty() == false) {
           sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
           const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
-          eng->soundEmitter->emitSound(
+          eng.soundEmitter->emitSound(
             Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
         }
       }
@@ -127,7 +127,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         curProj->pos = projectilePath.at(projectilePathElement);
 
         curProj->isVisibleToPlayer =
-          eng->map->cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
+          eng.map->cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
 
         //Get attack data again for every cell traveled through
         curProj->setAttackData(
@@ -151,23 +151,23 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
-                if(eng->config->isTilesMode) {
+                if(eng.config->isTilesMode) {
                   curProj->setTile(tile_blastAnimation1, clrRedLgt);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(DELAY / 2);
+                  eng.renderer->drawProjectiles(projectiles);
+                  eng.sleep(DELAY / 2);
                   curProj->setTile(tile_blastAnimation2, clrRedLgt);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(DELAY / 2);
+                  eng.renderer->drawProjectiles(projectiles);
+                  eng.sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  eng->renderer->drawProjectiles(projectiles);
-                  eng->sleep(DELAY);
+                  eng.renderer->drawProjectiles(projectiles);
+                  eng.sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjectileAtActorMessages(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                eng->renderer->drawProjectiles(projectiles);
+                eng.renderer->drawProjectiles(projectiles);
               }
 
               curProj->isDoneRendering = true;
@@ -189,7 +189,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                   const AttackData* const curData = curProj->attackData;
                   if(curData->attackResult >= successSmall) {
                     const bool IS_SPIKE_GUN = wpn.getData().id == item_spikeGun;
-                    eng->knockBack->tryKnockBack(
+                    eng.knockBack->tryKnockBack(
                       *(curData->currentDefender), curData->attacker->pos,
                       IS_SPIKE_GUN);
                   }
@@ -201,7 +201,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //PROJECTILE HIT FEATURE?
         vector<FeatureMob*> featureMobs =
-          eng->gameTime->getFeatureMobsAtPos(curProj->pos);
+          eng.gameTime->getFeatureMobsAtPos(curProj->pos);
         Feature* featureBlockingShot = NULL;
         for(
           unsigned int featMobIndex = 0;
@@ -212,7 +212,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           }
         }
         FeatureStatic* featureStatic =
-          eng->map->cells[curProj->pos.x][curProj->pos.y].featureStatic;
+          eng.map->cells[curProj->pos.x][curProj->pos.y].featureStatic;
         if(featureStatic->isProjectilesPassable() == false) {
           featureBlockingShot = featureStatic;
         }
@@ -224,22 +224,22 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(wpn.getData().rangedMakesRicochetSound) {
             Sound snd("I hear a ricochet.",
                       sfxRicochet, true, curProj->pos, false, true);
-            eng->soundEmitter->emitSound(snd);
+            eng.soundEmitter->emitSound(snd);
           }
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
-            if(eng->config->isTilesMode) {
+            if(eng.config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY / 2);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY / 2);
               curProj->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY / 2);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY);
             }
           }
         }
@@ -255,34 +255,34 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(wpn.getData().rangedMakesRicochetSound) {
             Sound snd("I hear a ricochet.",
                       sfxRicochet, true, curProj->pos, false, true);
-            eng->soundEmitter->emitSound(snd);
+            eng.soundEmitter->emitSound(snd);
           }
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
-            if(eng->config->isTilesMode) {
+            if(eng.config->isTilesMode) {
               curProj->setTile(tile_blastAnimation1, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY / 2);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY / 2);
               curProj->setTile(tile_blastAnimation2, clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY / 2);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng->renderer->drawProjectiles(projectiles);
-              eng->sleep(DELAY);
+              eng.renderer->drawProjectiles(projectiles);
+              eng.sleep(DELAY);
             }
           }
         }
 
         //RENDER FLYING PROJECTILES
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
-          if(eng->config->isTilesMode) {
+          if(eng.config->isTilesMode) {
             curProj->setTile(projectileTile, projectileColor);
-            eng->renderer->drawProjectiles(projectiles);
+            eng.renderer->drawProjectiles(projectiles);
           } else {
             curProj->setGlyph(projectileGlyph, projectileColor);
-            eng->renderer->drawProjectiles(projectiles);
+            eng.renderer->drawProjectiles(projectiles);
           }
         }
       }
@@ -291,9 +291,9 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     //If any projectile can be seen and not obstructed, delay
     for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
       const Pos& p = projectiles.at(nn)->pos;
-      if(eng->map->cells[p.x][p.y].isSeenByPlayer &&
+      if(eng.map->cells[p.x][p.y].isSeenByPlayer &&
           projectiles.at(nn)->isObstructed == false) {
-        eng->sleep(DELAY);
+        eng.sleep(DELAY);
         nn = 99999;
       }
     }
@@ -328,7 +328,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     delete projectiles.at(i);
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 }
 
 bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
@@ -356,7 +356,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
       projectileFire(attacker, wpn, aimPos);
 
-      if(eng->player->deadState == actorDeadState_alive) {
+      if(eng.player->deadState == actorDeadState_alive) {
 
         didAttack = true;
 
@@ -369,28 +369,28 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     }
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 
   if(didAttack) {
-    eng->gameTime->endTurnOfCurrentActor();
+    eng.gameTime->endTurnOfCurrentActor();
   }
 
   return didAttack;
 }
 
 void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
-  if(data.attacker == eng->player)
-    eng->log->addMsg("I " + data.verbPlayerAttacks + ".");
+  if(data.attacker == eng.player)
+    eng.log->addMsg("I " + data.verbPlayerAttacks + ".");
   else {
     const Pos& p = data.attacker->pos;
-    if(eng->map->cells[p.x][p.y].isSeenByPlayer) {
+    if(eng.map->cells[p.x][p.y].isSeenByPlayer) {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
-      eng->log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
+      eng.log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
     }
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 }
 
 void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
@@ -398,7 +398,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
   //Only print messages if player can see the cell
   const int defX = data.currentDefender->pos.x;
   const int defY = data.currentDefender->pos.y;
-  if(eng->map->cells[defX][defY].isSeenByPlayer) {
+  if(eng.map->cells[defX][defY].isSeenByPlayer) {
 
     //Punctuation or exclamation marks depending on attack strength
     if(IS_HIT) {
@@ -411,15 +411,15 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
           dmgPunctuation;
       }
 
-      if(data.currentDefender == eng->player) {
-        eng->log->addMsg("I am hit" + dmgPunctuation, clrMessageBad, true);
+      if(data.currentDefender == eng.player) {
+        eng.log->addMsg("I am hit" + dmgPunctuation, clrMessageBad, true);
       } else {
         string otherName = "It";
 
-        if(eng->map->cells[defX][defY].isSeenByPlayer)
+        if(eng.map->cells[defX][defY].isSeenByPlayer)
           otherName = data.currentDefender->getNameThe();
 
-        eng->log->addMsg(
+        eng.log->addMsg(
           otherName + " is hit" + dmgPunctuation, clrMessageGood);
       }
     }

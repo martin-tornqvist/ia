@@ -16,11 +16,11 @@
 
 class AI_handleClosedBlockingDoor {
 public:
-  static bool action(Monster* monster, vector<Pos> path, Engine* engine) {
+  static bool action(Monster* monster, vector<Pos> path, Engine& engine) {
     if(monster->deadState == actorDeadState_alive && path.empty() == false) {
       const Pos& p = path.back();
       Feature* const f =
-        engine->map->cells[p.x][p.y].featureStatic;
+        engine.map->cells[p.x][p.y].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
         if(door->isMovePassable(monster) == false) {

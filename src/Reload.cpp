@@ -23,38 +23,38 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   const string actorName    = actorReloading.getNameThe();
   const string ammoCapacity = wpn == NULL ? "" : toString(wpn->ammoCapacity);
   const string ammoCurrent  = wpn == NULL ? "" : toString(wpn->nrAmmoLoaded);
-  const bool IS_PLAYER      = &actorReloading == eng->player;
+  const bool IS_PLAYER      = &actorReloading == eng.player;
 
   string ammoName = " ";
   bool isClip = false;
 
   if(ammo != NULL) {
-    ammoName = eng->itemDataHandler->getItemRef(*ammo, itemRef_a);
+    ammoName = eng.itemDataHandler->getItemRef(*ammo, itemRef_a);
     isClip = ammo->getData().isAmmoClip;
   }
 
   switch(result) {
     case reloadResult_notCarryingWpn: {
       if(IS_PLAYER) {
-        eng->log->addMsg("I am not wielding a weapon.");
+        eng.log->addMsg("I am not wielding a weapon.");
       }
     } break;
 
     case reloadResult_wpnNotUsingAmmo: {
       if(IS_PLAYER) {
-        eng->log->addMsg("Weapon does not use ammo.");
+        eng.log->addMsg("Weapon does not use ammo.");
       }
     } break;
 
     case reloadResult_alreadyFull: {
       if(IS_PLAYER) {
-        eng->log->addMsg("Weapon already loaded.");
+        eng.log->addMsg("Weapon already loaded.");
       }
     } break;
 
     case reloadResult_noAmmo: {
       if(IS_PLAYER) {
-        eng->log->addMsg("I carry no ammunition for this weapon.");
+        eng.log->addMsg("I carry no ammunition for this weapon.");
       }
     } break;
 
@@ -62,30 +62,30 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
       const string swiftStr = IS_SWIFT_RELOAD ? " swiftly" : "";
       if(IS_PLAYER) {
 
-        eng->audio->play(wpn->getData().reloadSfx);
+        eng.audio->play(wpn->getData().reloadSfx);
 
         if(isClip) {
           const string wpnName =
-            eng->itemDataHandler->getItemRef(*wpn, itemRef_plain, true);
-          eng->log->addMsg(
+            eng.itemDataHandler->getItemRef(*wpn, itemRef_plain, true);
+          eng.log->addMsg(
             "I" + swiftStr + " reload the " + wpnName + ".");
         } else {
-          eng->log->addMsg("I" + swiftStr + " load " + ammoName + ".");
+          eng.log->addMsg("I" + swiftStr + " load " + ammoName + ".");
         }
-        eng->renderer->drawMapAndInterface();
+        eng.renderer->drawMapAndInterface();
       } else {
-        if(eng->player->checkIfSeeActor(actorReloading, NULL)) {
-          eng->log->addMsg(actorName + swiftStr + " reloads.");
+        if(eng.player->checkIfSeeActor(actorReloading, NULL)) {
+          eng.log->addMsg(actorName + swiftStr + " reloads.");
         }
       }
     } break;
 
     case reloadResult_fumble: {
       if(IS_PLAYER) {
-        eng->log->addMsg("I fumble with the " + ammoName + ".");
+        eng.log->addMsg("I fumble with the " + ammoName + ".");
       } else {
-        if(eng->player->checkIfSeeActor(actorReloading, NULL)) {
-          eng->log->addMsg(actorName + " fumbles with " + ammoName + ".");
+        if(eng.player->checkIfSeeActor(actorReloading, NULL)) {
+          eng.log->addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }
     } break;
@@ -108,9 +108,9 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   ReloadResult_t result = reloadResult_noAmmo;
   bool isSwiftReload    = false;
 
-  if(&actorReloading == eng->player) {
-    isSwiftReload = eng->playerBonHandler->isTraitPicked(traitMarksman) &&
-                    eng->dice.coinToss();
+  if(&actorReloading == eng.player) {
+    isSwiftReload = eng.playerBonHandler->isTraitPicked(traitMarksman) &&
+                    eng.dice.coinToss();
   }
 
   const int wpnAmmoCapacity = wpn->ammoCapacity;
@@ -138,7 +138,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-          if(eng->dice.percentile() < CHANCE_TO_FUMBLE) {
+          if(eng.dice.percentile() < CHANCE_TO_FUMBLE) {
             isSwiftReload = false;
             result = reloadResult_fumble;
             printMsgAndPlaySfx(actorReloading, NULL, ammo,
@@ -161,7 +161,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
 
               //If weapon previously contained ammo, create a new clip item
               if(previousAmmoCount > 0) {
-                ammo = eng->itemFactory->spawnItem(ammoType);
+                ammo = eng.itemFactory->spawnItem(ammoType);
                 clipItem = dynamic_cast<ItemAmmoClip*>(ammo);
                 clipItem->ammo = previousAmmoCount;
                 inv->putItemInGeneral(clipItem);
@@ -195,7 +195,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   if(result == reloadResult_success || result == reloadResult_fumble) {
     didAct = true;
     if(isSwiftReload == false) {
-      eng->gameTime->endTurnOfCurrentActor();
+      eng.gameTime->endTurnOfCurrentActor();
     }
   }
 

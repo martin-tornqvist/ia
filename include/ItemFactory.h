@@ -11,9 +11,7 @@ class Engine;
 
 class ItemFactory {
 public:
-  ItemFactory(Engine* engine) {
-    eng = engine;
-  }
+  ItemFactory(Engine& engine) : eng(engine) {}
 
   Item* spawnItem(const ItemId_t itemId, const int NR_ITEMS = 1);
 
@@ -27,7 +25,7 @@ public:
   Item* copyItem(Item* oldItem);
 
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

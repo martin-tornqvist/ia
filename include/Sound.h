@@ -53,7 +53,7 @@ private:
 
 class SoundEmitter {
 public:
-  SoundEmitter(Engine* engine) :
+  SoundEmitter(Engine& engine) :
     NR_STEPS_HEARD_NORMAL(10), NR_STEPS_HEARD_LOUD(25), eng(engine) {}
 
   void emitSound(Sound snd);
@@ -74,7 +74,7 @@ private:
   const int NR_STEPS_HEARD_NORMAL;
   const int NR_STEPS_HEARD_LOUD;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

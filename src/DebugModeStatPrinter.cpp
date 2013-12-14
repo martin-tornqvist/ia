@@ -30,17 +30,17 @@ void DebugModeStatPrinter::run() {
 
   statFile.open("debug_mode_stats_file.txt", ios::trunc);
   printLine("This file was created because Infra Arcana was run in Debug mode\n");
-  printLine("Created on   : " + eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true));
-  printLine("Game version : " + eng->config->GAME_VERSION);
+  printLine("Created on   : " + eng.basicUtils->getCurrentTime().getTimeStr(time_minute, true));
+  printLine("Game version : " + eng.config->GAME_VERSION);
   printLine("\n");
 
   printLine("SPELL MAX SPI COSTS");
   printLine(separator);
   for(int i = 0; i < endOfSpells; i++) {
-    Spell* const spell = eng->spellHandler->getSpellFromId(Spell_t(i));
+    Spell* const spell = eng.spellHandler->getSpellFromId(Spell_t(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');
-    Range cost = spell->getSpiCost(true, eng->player, eng);
+    Range cost = spell->getSpiCost(true, eng.player, eng);
     const string costStr =
       toString(cost.lower) + "-" + toString(cost.upper);
     delete spell;
@@ -50,7 +50,7 @@ void DebugModeStatPrinter::run() {
 
   vector<ActorData*> actorDataSorted;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    actorDataSorted.push_back(&(eng->actorDataHandler->dataList[i]));
+    actorDataSorted.push_back(&(eng.actorDataHandler->dataList[i]));
   }
   IsHigherSpawnMinLvl isHigherSpawnMinLvl;
   std::sort(actorDataSorted.begin(), actorDataSorted.end(), isHigherSpawnMinLvl);
@@ -90,21 +90,23 @@ void DebugModeStatPrinter::run() {
   for(unsigned int i = 0; i < actorDataSorted.size(); i++) {
     ActorData& d = *(actorDataSorted.at(i));
 
-    Actor* const actor = eng->actorFactory->makeActorFromId(d.id);
-    actor->place(Pos(-1, -1), &d, eng);
+    Actor* const actor = eng.actorFactory->makeActorFromId(d.id);
+    actor->place(Pos(-1, -1), d);
 
     const string uniqueStr = d.isUnique ? " (U)" : "";
     printLine(indent1 + actor->getNameA() + uniqueStr);
 
     const string xpStr =
-      "XP:" + toString(eng->dungeonMaster->getMonsterXpWorth(d));
+      "XP:" + toString(eng.dungeonMaster->getMonsterXpWorth(d));
     printLine(indent2 + xpStr);
 
     string hpStr = "HP:" + toString(d.hp);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
 
-    const int attackSkill = d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
-    const string attackSkillStr = "Attack skill:" + toString(attackSkill) + "%";
+    const int attackSkill =
+      d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
+    const string attackSkillStr =
+      "Attack skill:" + toString(attackSkill) + "%";
     printLine(indent2 + hpStr + attackSkillStr);
 
     const Inventory* const inv = actor->getInventory();

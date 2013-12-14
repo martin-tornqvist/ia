@@ -15,12 +15,12 @@
 Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
   Item* item = NULL;
 
-  ItemData* const d = eng->itemDataHandler->dataList[itemId];
+  ItemData* const d = eng.itemDataHandler->dataList[itemId];
 
   ItemData* ammoD = NULL;
 
   if(d->rangedAmmoTypeUsed != item_empty) {
-    ammoD = eng->itemDataHandler->dataList[d->rangedAmmoTypeUsed];
+    ammoD = eng.itemDataHandler->dataList[d->rangedAmmoTypeUsed];
   }
 
   switch(itemId) {
@@ -170,7 +170,7 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   if(d.isRangedWeapon && d.rangedHasInfiniteAmmo == false) {
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     if(weapon->ammoCapacity == 1) {
-      weapon->nrAmmoLoaded = eng->dice.coinToss() ? 1 : 0;
+      weapon->nrAmmoLoaded = eng.dice.coinToss() ? 1 : 0;
     } else {
       if(d.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
@@ -178,24 +178,24 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
         const int CAP_SCALED = CAP / NR_MACHINEGUN_PROJECTILES;
         const int MIN_SCALED = MIN / NR_MACHINEGUN_PROJECTILES;
         weapon->nrAmmoLoaded =
-          eng->dice.range(MIN_SCALED, CAP_SCALED) *
+          eng.dice.range(MIN_SCALED, CAP_SCALED) *
           NR_MACHINEGUN_PROJECTILES;
       } else {
         weapon->nrAmmoLoaded =
-          eng->dice.range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
+          eng.dice.range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
       }
     }
   }
 
   if(d.isStackable) {
-    item->nrItems = eng->dice(1, d.maxStackSizeAtSpawn);
+    item->nrItems = eng.dice(1, d.maxStackSizeAtSpawn);
   }
 }
 
 Item* ItemFactory::spawnItemOnMap(const ItemId_t itemId, const Pos& pos) {
   Item* item = spawnItem(itemId);
   setItemRandomizedProperties(item);
-  eng->itemDrop->dropItemOnMap(pos, *item);
+  eng.itemDrop->dropItemOnMap(pos, *item);
   return item;
 }
 
@@ -210,7 +210,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   vector<ItemId_t> itemCandidates;
 
   for(unsigned int i = 1; i < endOfItemIds; i++) {
-    const ItemData* const d = eng->itemDataHandler->dataList[i];
+    const ItemData* const d = eng.itemDataHandler->dataList[i];
     if(
       d->isIntrinsic == false &&
       ((d->isScroll && ALLOW_SCROLLS) ||
@@ -220,7 +220,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   }
 
   if(itemCandidates.size() > 0) {
-    const unsigned int ELEMENT = eng->dice(1, itemCandidates.size()) - 1;
+    const unsigned int ELEMENT = eng.dice(1, itemCandidates.size()) - 1;
     return spawnItem(itemCandidates.at(ELEMENT));
   }
 

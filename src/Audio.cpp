@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Renderer.h"
 
-Audio::Audio(Engine* engine) :
+Audio::Audio(Engine& engine) :
   curChannel(0), timeAtLastAmb(-1), eng(engine) {
 
   for(int i = 0; i < endOfSfx; i++) {
@@ -25,7 +25,7 @@ Audio::~Audio() {
 void Audio::initAndClearPrev() {
   freeAssets();
 
-  if(eng->config->isAudioEnabled) {
+  if(eng.config->isAudioEnabled) {
     //Monster sounds
     loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
     loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
@@ -78,10 +78,10 @@ void Audio::initAndClearPrev() {
 void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
   const string fileRelPath = "audio/" + filename;
 
-  eng->renderer->clearScreen();
-  eng->renderer->drawText("Loading " + fileRelPath + "...", panel_screen,
+  eng.renderer->clearScreen();
+  eng.renderer->drawText("Loading " + fileRelPath + "...", panel_screen,
                           Pos(1, 1), clrWhite);
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 
   audioChunks[sfx] = Mix_LoadWAV((fileRelPath).data());
 
@@ -96,9 +96,9 @@ int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
   if(
-    eng->config->isAudioEnabled &&
+    eng.config->isAudioEnabled &&
     sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
-    eng->config->isBotPlaying == false) {
+    eng.config->isBotPlaying == false) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
@@ -144,16 +144,16 @@ void Audio::playFromDir(const Sfx_t sfx, const Dir_t dir,
 }
 
 void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
-  if(eng->dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
+  if(eng.dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
     const int TIME_REQ_BETWEEN_AMB_SFX = 35;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = eng->dice.oneIn(5) ?
-                              eng->dice.range(51, 100) :
-                              eng->dice.range(1, 50);
+      const int VOL_PERCENT = eng.dice.oneIn(5) ?
+                              eng.dice.range(51, 100) :
+                              eng.dice.range(1, 50);
       play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);
     }
   }
@@ -163,7 +163,7 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
   vector<Sfx_t> sfxCandidates;
   sfxCandidates.resize(0);
 
-  const int DLVL = eng->map->getDLVL();
+  const int DLVL = eng.map->getDLVL();
   if(DLVL >= 1 && DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
     sfxCandidates.push_back(amb002);
     sfxCandidates.push_back(amb003);
@@ -217,7 +217,7 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
     return endOfSfx;
   }
 
-  const int ELEMENT = eng->dice.range(0, sfxCandidates.size() - 1);
+  const int ELEMENT = eng.dice.range(0, sfxCandidates.size() - 1);
   return sfxCandidates.at(ELEMENT);
 }
 

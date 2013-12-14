@@ -15,9 +15,9 @@ bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
   vector<Actor*> spotedEnemies;
-  eng->player->getSpotedEnemies(spotedEnemies);
+  eng.player->getSpotedEnemies(spotedEnemies);
   if(spotedEnemies.empty() == false) {
-    eng->log->addMsg("Not while an enemy is near.");
+    eng.log->addMsg("Not while an enemy is near.");
     return false;
   }
 
@@ -26,25 +26,25 @@ bool MedicalBag::activateDefault(Actor* const actor) {
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
     const PropHandler* const propHandler =
-      eng->player->getPropHandler();
+      eng.player->getPropHandler();
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
         if(propHandler->hasProp(propInfected) == false) {
-          eng->log->addMsg("I have no infections to sanitize.");
+          eng.log->addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_takeMorphine: {
-        if(eng->player->getHp() >= eng->player->getHpMax(true)) {
-          eng->log->addMsg("I am not in pain.");
+        if(eng.player->getHp() >= eng.player->getHpMax(true)) {
+          eng.log->addMsg("I am not in pain.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_treatWound: {
         if(propHandler->hasProp(propWound) == false) {
-          eng->log->addMsg("I have no wounds to treat.");
+          eng.log->addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
@@ -54,7 +54,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
     if(curAction_ != endOfMedicalBagActions) {
       if(getNrSuppliesNeededForAction(curAction_) > nrSupplies_) {
-        eng->log->addMsg("I do not have enough supplies for that.");
+        eng.log->addMsg("I do not have enough supplies for that.");
         curAction_ = endOfMedicalBagActions;
       }
     }
@@ -62,25 +62,25 @@ bool MedicalBag::activateDefault(Actor* const actor) {
     if(curAction_ != endOfMedicalBagActions) {
       //Action can be done
       nrTurnsLeft_ = getTotTurnsForAction(curAction_);
-      eng->player->activeMedicalBag = this;
+      eng.player->activeMedicalBag = this;
 
       switch(curAction_) {
         case medicalBagAction_sanitizeInfection: {
-          eng->log->addMsg("I start to sanitize an infection.");
+          eng.log->addMsg("I start to sanitize an infection.");
         } break;
 
         case medicalBagAction_takeMorphine: {
-          eng->log->addMsg("I start to take Morphine.");
+          eng.log->addMsg("I start to take Morphine.");
         } break;
 
         case medicalBagAction_treatWound: {
-          eng->log->addMsg("I start to treat a wound.");
+          eng.log->addMsg("I start to treat a wound.");
         } break;
 
         case endOfMedicalBagActions: {} break;
       }
 
-      eng->gameTime->endTurnOfCurrentActor();
+      eng.gameTime->endTurnOfCurrentActor();
     }
   }
 
@@ -120,7 +120,7 @@ MedicalBagAction_t MedicalBag::playerChooseAction() const {
   const string nrSuppliesMsg =
     toString(nrSupplies_) + " medical supplies available.";
 
-  return MedicalBagAction_t(eng->popup->showMultiChoiceMessage(
+  return MedicalBagAction_t(eng.popup->showMultiChoiceMessage(
                               nrSuppliesMsg, true, choiceLabels,
                               "Use medical bag"));
 }
@@ -130,24 +130,24 @@ void MedicalBag::continueAction() {
   if(nrTurnsLeft_ <= 0) {
     finishCurAction();
   } else {
-    eng->gameTime->endTurnOfCurrentActor();
+    eng.gameTime->endTurnOfCurrentActor();
   }
 }
 
 void MedicalBag::finishCurAction() {
-  eng->player->activeMedicalBag = NULL;
+  eng.player->activeMedicalBag = NULL;
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
-      eng->player->getPropHandler()->endAppliedProp(
+      eng.player->getPropHandler()->endAppliedProp(
         propInfected, visionBlockers);
     } break;
 
     case medicalBagAction_treatWound: {
       Prop* prop =
-        eng->player->getPropHandler()->getAppliedProp(propWound);
+        eng.player->getPropHandler()->getAppliedProp(propWound);
       if(prop == NULL) {
         trace << "[WARNING] No wound prop found, ";
         trace << "in MedicalBag::finishCurAction()" << endl;
@@ -157,9 +157,9 @@ void MedicalBag::finishCurAction() {
     } break;
 
     case medicalBagAction_takeMorphine: {
-      eng->player->restoreHp(999);
-      eng->log->addMsg("The morphine takes a toll on my mind.");
-      eng->player->incrShock(shockValue_heavy);
+      eng.player->restoreHp(999);
+      eng.log->addMsg("The morphine takes a toll on my mind.");
+      eng.player->incrShock(shockValue_heavy);
     } break;
 
     case endOfMedicalBagActions: {} break;
@@ -170,22 +170,22 @@ void MedicalBag::finishCurAction() {
   curAction_ = endOfMedicalBagActions;
 
   if(nrSupplies_ <= 0) {
-    Inventory* const inv = eng->player->getInventory();
+    Inventory* const inv = eng.player->getInventory();
     inv->removetemInGeneralWithPointer(this, true);
   }
 }
 
 void MedicalBag::interrupted() {
-  eng->log->addMsg("My healing is disrupted.", clrWhite, false);
+  eng.log->addMsg("My healing is disrupted.", clrWhite, false);
 
   nrTurnsLeft_ = -1;
 
-  eng->player->activeMedicalBag = NULL;
+  eng.player->activeMedicalBag = NULL;
 }
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
   const bool IS_HEALER =
-    eng->playerBonHandler->isTraitPicked(traitHealer);
+    eng.playerBonHandler->isTraitPicked(traitHealer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
@@ -209,7 +209,7 @@ int MedicalBag::getNrSuppliesNeededForAction(
   const MedicalBagAction_t action) const {
 
   const bool IS_HEALER =
-    eng->playerBonHandler->isTraitPicked(traitHealer);
+    eng.playerBonHandler->isTraitPicked(traitHealer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {

@@ -56,7 +56,7 @@ void GameTime::eraseActorInElement(const unsigned int i) {
 
 void GameTime::insertActorInLoop(Actor* actor) {
   //Sanity check actor inserted
-  if(eng->basicUtils->isPosInsideMap(actor->pos) == false) {
+  if(eng.basicUtils->isPosInsideMap(actor->pos) == false) {
     throw runtime_error("Actor outside map");
   }
 
@@ -76,9 +76,9 @@ void GameTime::endTurnOfCurrentActor() {
 
   Actor* currentActor = getCurrentActor();
 
-  if(currentActor == eng->player) {
-    eng->playerVisualMemory->updateVisualMemory();
-    eng->player->updateFov();
+  if(currentActor == eng.player) {
+    eng.playerVisualMemory->updateVisualMemory();
+    eng.player->updateFov();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
     if(monster->playerAwarenessCounter > 0) {
@@ -121,7 +121,7 @@ void GameTime::endTurnOfCurrentActor() {
         actorWhoCanActThisTurnFound =
           (currentTurnType == turnType_slow ||
            currentTurnType == turnType_normal_2)
-          && eng->dice.fraction(2, 3);
+          && eng.dice.fraction(2, 3);
       }
       break;
       case actorSpeed_slow: {
@@ -174,14 +174,14 @@ void GameTime::runStandardTurnEvents() {
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
-    if(eng->map->cells[pos.x][pos.y].isLight) {
+    if(eng.map->cells[pos.x][pos.y].isLight) {
       actor->hit(1, dmgType_light, false);
     }
 
     if(actor->deadState == actorDeadState_alive) {
       //Regen Spi
-      if(actor == eng->player) {
-        if(eng->playerBonHandler->isTraitPicked(traitRapidRecoverer)) {
+      if(actor == eng.player) {
+        if(eng.playerBonHandler->isTraitPicked(traitRapidRecoverer)) {
           regenSpiEveryNTurns = 6;
           isSpiRegenThisTurn =
             turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
@@ -198,8 +198,8 @@ void GameTime::runStandardTurnEvents() {
     //Delete dead, mangled actors
     if(actor->deadState == actorDeadState_mangled) {
       delete actor;
-      if(eng->player->target == actor) {
-        eng->player->target = NULL;
+      if(eng.player->target == actor) {
+        eng.player->target = NULL;
       }
       actors_.erase(actors_.begin() + i);
       i--;
@@ -216,22 +216,22 @@ void GameTime::runStandardTurnEvents() {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->cells[x][y].featureStatic->newTurn();
+      eng.map->cells[x][y].featureStatic->newTurn();
     }
   }
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is aborted)
-  const int DLVL = eng->map->getDLVL();
+  const int DLVL = eng.map->getDLVL();
   if(DLVL >= 1 && DLVL <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
-      eng->populateMonsters->trySpawnDueToTimePassed();
+      eng.populateMonsters->trySpawnDueToTimePassed();
     }
   }
 
   //Run new turn events on all player items
-  Inventory* playerInv = eng->player->getInventory();
+  Inventory* playerInv = eng.player->getInventory();
   vector<Item*>* playerBackpack = playerInv->getGeneral();
   for(unsigned int i = 0; i < playerBackpack->size(); i++) {
     playerBackpack->at(i)->newTurnInInventory();
@@ -244,9 +244,9 @@ void GameTime::runStandardTurnEvents() {
     }
   }
 
-  eng->soundEmitter->resetNrSoundMsgPrintedCurTurn();
+  eng.soundEmitter->resetNrSoundMsgPrintedCurTurn();
 
-  eng->audio->tryPlayAmb(250);
+  eng.audio->tryPlayAmb(250);
 
 //  traceVerbose << "GameTime::runStandardTurnEvents() [DONE]" << endl;
 }
@@ -260,12 +260,12 @@ void GameTime::updateLightMap() {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->cells[x][y].isLight = false;
+      eng.map->cells[x][y].isLight = false;
       lightTmp[x][y] = false;
     }
   }
 
-  eng->player->addLight(lightTmp);
+  eng.player->addLight(lightTmp);
 
   const int NR_ACTORS = actors_.size();
   for(int i = 0; i < NR_ACTORS; i++) {
@@ -279,11 +279,11 @@ void GameTime::updateLightMap() {
 
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->map->cells[x][y].featureStatic->addLight(lightTmp);
+      eng.map->cells[x][y].featureStatic->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.
       //This must of course be done last!
-      eng->map->cells[x][y].isLight = lightTmp[x][y];
+      eng.map->cells[x][y].isLight = lightTmp[x][y];
     }
   }
 }
@@ -292,7 +292,7 @@ Actor* GameTime::getCurrentActor() {
   Actor* const actor = actors_.at(currentActorVectorPos_);
 
   //Sanity check actor retrieved
-  if(eng->basicUtils->isPosInsideMap(actor->pos) == false) {
+  if(eng.basicUtils->isPosInsideMap(actor->pos) == false) {
     throw runtime_error("Actor outside map");
   }
 

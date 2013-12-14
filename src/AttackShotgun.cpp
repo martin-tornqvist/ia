@@ -26,24 +26,24 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   MapParser::parse(CellPredBlocksProjectiles(eng), featureBlockers);
 
   Actor* actorArray[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->makeActorArray(actorArray);
+  eng.basicUtils->makeActorArray(actorArray);
 
   const Pos origin = attacker.pos;
   vector<Pos> path;
-  eng->lineCalc->calcNewLine(origin, aimPos, false, 9999, false, path);
+  eng.lineCalc->calcNewLine(origin, aimPos, false, 9999, false, path);
 
   int nrActorsHit = 0;
 
   int monsterKilledInElement = -1;
 
   //Emit sound
-  const bool IS_ATTACKER_PLAYER = &attacker == eng->player;
+  const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
   string sndMsg = wpn.getData().rangedSoundMessage;
   if(sndMsg.empty() == false) {
     sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
     const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
     const Sfx_t sfx = wpn.getData().rangedAttackSfx;
-    eng->soundEmitter->emitSound(
+    eng.soundEmitter->emitSound(
       Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
   }
 
@@ -69,23 +69,23 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         data = new RangedAttackData(
           attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
         const bool IS_WITHIN_RANGE_LMT =
-          eng->basicUtils->chebyshevDist(origin, curPos) <=
+          eng.basicUtils->chebyshevDist(origin, curPos) <=
           wpn.effectiveRangeLimit;
         if(
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-            eng->renderer->drawMapAndInterface(false);
-            eng->renderer->coverCellInMap(curPos);
-            if(eng->config->isTilesMode) {
-              eng->renderer->drawTile(
+          if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+            eng.renderer->drawMapAndInterface(false);
+            eng.renderer->coverCellInMap(curPos);
+            if(eng.config->isTilesMode) {
+              eng.renderer->drawTile(
                 tile_blastAnimation2, panel_map, curPos, clrRedLgt);
             } else {
-              eng->renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
+              eng.renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
             }
-            eng->renderer->updateScreen();
-            eng->sleep(eng->config->delayShotgun);
+            eng.renderer->updateScreen();
+            eng.sleep(eng.config->delayShotgun);
           }
 
           //Messages
@@ -97,7 +97,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
           nrActorsHit++;
 
-          eng->renderer->drawMapAndInterface();
+          eng.renderer->drawMapAndInterface();
 
           //Special shotgun behavior:
           //If current defender was killed, and player aimed at humanoid level,
@@ -122,20 +122,20 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     if(featureBlockers[curPos.x][curPos.y]) {
       Sound snd("I hear a ricochet.",
                 sfxRicochet, true, curPos, false, true);
-      eng->soundEmitter->emitSound(snd);
+      eng.soundEmitter->emitSound(snd);
 
-      if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-        eng->renderer->drawMapAndInterface(false);
-        eng->renderer->coverCellInMap(curPos);
-        if(eng->config->isTilesMode) {
-          eng->renderer->drawTile(
+      if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+        eng.renderer->drawMapAndInterface(false);
+        eng.renderer->coverCellInMap(curPos);
+        if(eng.config->isTilesMode) {
+          eng.renderer->drawTile(
             tile_blastAnimation2, panel_map, curPos, clrYellow);
         } else {
-          eng->renderer->drawGlyph('*', panel_map, curPos, clrYellow);
+          eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }
-        eng->renderer->updateScreen();
-        eng->sleep(eng->config->delayShotgun);
-        eng->renderer->drawMapAndInterface();
+        eng.renderer->updateScreen();
+        eng.sleep(eng.config->delayShotgun);
+        eng.renderer->drawMapAndInterface();
       }
       break;
     }
@@ -144,20 +144,20 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
       Sound snd("I hear a ricochet.",
                 sfxRicochet, true, curPos, false, true);
-      eng->soundEmitter->emitSound(snd);
+      eng.soundEmitter->emitSound(snd);
 
-      if(eng->map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-        eng->renderer->drawMapAndInterface(false);
-        eng->renderer->coverCellInMap(curPos);
-        if(eng->config->isTilesMode) {
-          eng->renderer->drawTile(
+      if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+        eng.renderer->drawMapAndInterface(false);
+        eng.renderer->coverCellInMap(curPos);
+        if(eng.config->isTilesMode) {
+          eng.renderer->drawTile(
             tile_blastAnimation2, panel_map, curPos, clrYellow);
         } else {
-          eng->renderer->drawGlyph('*', panel_map, curPos, clrYellow);
+          eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }
-        eng->renderer->updateScreen();
-        eng->sleep(eng->config->delayShotgun);
-        eng->renderer->drawMapAndInterface();
+        eng.renderer->updateScreen();
+        eng.sleep(eng.config->delayShotgun);
+        eng.renderer->drawMapAndInterface();
       }
       break;
     }

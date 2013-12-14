@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "ActorPlayer.h"
 
-FeatureLever::FeatureLever(Feature_t id, Pos pos, Engine* engine, LeverSpawnData* spawnData) :
+FeatureLever::FeatureLever(Feature_t id, Pos pos, Engine& engine, LeverSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 
@@ -34,8 +34,8 @@ void FeatureLever::pull() {
     doorLinkedTo_->isOpen_ = !doorLinkedTo_->isOpen_;
     doorLinkedTo_->isStuck_ = false;
   }
-  eng->player->updateFov();
-  eng->renderer->drawMapAndInterface();
+  eng.player->updateFov();
+  eng.renderer->drawMapAndInterface();
   trace << "FeatureLever::pull() [DONE]" << endl;
 }
 

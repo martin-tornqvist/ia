@@ -15,7 +15,7 @@
 using namespace std;
 
 AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
-                       Engine* engine) :
+                       Engine& engine) :
   attacker(&attacker_), currentDefender(NULL), attackResult(failSmall),
   dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
   isIntrinsicAttack(false), isEtherealDefenderMissed(false), eng(engine) {
@@ -23,7 +23,7 @@ AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
-                                 Actor& defender_, Engine* engine) :
+                                 Actor& defender_, Engine& engine) :
   AttackData(attacker_, wpn_, engine), isDefenderDodging(false),
   isBackstab(false), isWeakAttack(false) {
 
@@ -32,13 +32,13 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   const Pos& defPos = currentDefender->pos;
 
   bool isDefenderAware = true;
-  if(attacker == eng->player) {
+  if(attacker == eng.player) {
     isDefenderAware =
       dynamic_cast<Monster*>(currentDefender)->playerAwarenessCounter > 0;
   } else {
     isDefenderAware =
-      eng->player->checkIfSeeActor(*attacker, NULL) ||
-      eng->playerBonHandler->isTraitPicked(traitObservant);
+      eng.player->checkIfSeeActor(*attacker, NULL) ||
+      eng.playerBonHandler->isTraitPicked(traitObservant);
   }
 
   isDefenderDodging = false;
@@ -48,13 +48,13 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
         ability_dodgeAttack, true, *currentDefender);
 
     const int DODGE_MOD_AT_FEATURE =
-      eng->map->cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
+      eng.map->cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
     if(DODGE_CHANCE_TOT > 0) {
       isDefenderDodging =
-        eng->abilityRoll->roll(DODGE_CHANCE_TOT) >= successSmall;
+        eng.abilityRoll->roll(DODGE_CHANCE_TOT) >= successSmall;
     }
   }
 
@@ -69,8 +69,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     int hitChanceTot              = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
 
     bool isAttackerAware = true;
-    if(attacker == eng->player) {
-      isAttackerAware = eng->player->checkIfSeeActor(*currentDefender, NULL);
+    if(attacker == eng.player) {
+      isAttackerAware = eng.player->checkIfSeeActor(*currentDefender, NULL);
     } else {
       Monster* const monster = dynamic_cast<Monster*>(attacker);
       isAttackerAware = monster->playerAwarenessCounter > 0;
@@ -78,7 +78,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     bool isDefenderHeldByWeb = false;
     const FeatureStatic* const f =
-      eng->map->cells[defPos.x][defPos.y].featureStatic;
+      eng.map->cells[defPos.x][defPos.y].featureStatic;
     if(f->getId() == feature_trap) {
       const Trap* const t = dynamic_cast<const Trap*>(f);
       if(t->getTrapType() == trap_spiderWeb) {
@@ -109,11 +109,11 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       }
     }
 
-    attackResult = eng->abilityRoll->roll(hitChanceTot);
+    attackResult = eng.abilityRoll->roll(hitChanceTot);
 
     //Ethereal target missed?
     if(currentDefender->getBodyType() == bodyType_ethereal) {
-      if(eng->dice.fraction(2, 3)) {
+      if(eng.dice.fraction(2, 3)) {
         isEtherealDefenderMissed = true;
       }
     }
@@ -140,7 +140,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       dmg = max(0, dmgRoll + dmgPlus);
     } else if(attackResult >= successSmall) {
       //Normal hit
-      dmgRoll = eng->dice(dmgRolls, dmgSides);
+      dmgRoll = eng.dice(dmgRolls, dmgSides);
       dmg = max(0, dmgRoll + dmgPlus);
     }
   }
@@ -148,7 +148,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
 RangedAttackData::RangedAttackData(
   Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-  const Pos& curPos_, Engine* engine, ActorSizes_t intendedAimLevel_) :
+  const Pos& curPos_, Engine& engine, ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, wpn_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
@@ -156,7 +156,7 @@ RangedAttackData::RangedAttackData(
   verbPlayerAttacks = wpn_.getData().rangedAttackMessages.player;
   verbOtherAttacks  = wpn_.getData().rangedAttackMessages.other;
 
-  Actor* const actorAimedAt = eng->basicUtils->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = eng.basicUtils->getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -172,7 +172,7 @@ RangedAttackData::RangedAttackData(
     intendedAimLevel = intendedAimLevel_;
   }
 
-  currentDefender = eng->basicUtils->getActorAtPos(curPos_);
+  currentDefender = eng.basicUtils->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
     trace << "RangedAttackData: Defender found" << endl;
@@ -181,7 +181,7 @@ RangedAttackData::RangedAttackData(
     const int WPN_HIT_MOD         = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
-    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDist(
+    const int DIST_TO_TARGET      = eng.basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
     const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
@@ -199,13 +199,13 @@ RangedAttackData::RangedAttackData(
                        SPEED_HIT_MOD  +
                        SIZE_HIT_MOD);
 
-    attackResult = eng->abilityRoll->roll(hitChanceTot);
+    attackResult = eng.abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
 
       if(currentDefender->getBodyType() == bodyType_ethereal) {
-        if(eng->dice.fraction(2, 3)) {
+        if(eng.dice.fraction(2, 3)) {
           isEtherealDefenderMissed = true;
         }
       }
@@ -213,7 +213,7 @@ RangedAttackData::RangedAttackData(
       dmgRolls  = wpn_.getData().rangedDmg.rolls;
       dmgSides  = wpn_.getData().rangedDmg.sides;
       dmgPlus   = wpn_.getData().rangedDmg.plus;
-      dmgRoll   = eng->dice(dmgRolls, dmgSides);
+      dmgRoll   = eng.dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }
@@ -221,12 +221,12 @@ RangedAttackData::RangedAttackData(
 
 MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
                                      const Pos& aimPos_, const Pos& curPos_,
-                                     Engine* engine,
+                                     Engine& engine,
                                      ActorSizes_t intendedAimLevel_) :
   AttackData(attacker_, item_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), currentDefenderSize(actorSize_none) {
 
-  Actor* const actorAimedAt = eng->basicUtils->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = eng.basicUtils->getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -242,7 +242,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     intendedAimLevel = intendedAimLevel_;
   }
 
-  currentDefender = eng->basicUtils->getActorAtPos(curPos_);
+  currentDefender = eng.basicUtils->getActorAtPos(curPos_);
 
   if(currentDefender != NULL) {
     trace << "MissileAttackData: Defender found" << endl;
@@ -251,7 +251,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int WPN_HIT_MOD         = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(currentDefender->pos);
-    const int DIST_TO_TARGET      = eng->basicUtils->chebyshevDist(
+    const int DIST_TO_TARGET      = eng.basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
     const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
@@ -269,14 +269,14 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
                        SPEED_HIT_MOD  +
                        SIZE_HIT_MOD);
 
-    attackResult = eng->abilityRoll->roll(hitChanceTot);
+    attackResult = eng.abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
       trace << "MissileAttackData: Attack roll succeeded" << endl;
       dmgRolls  = item_.getData().missileDmg.rolls;
       dmgSides  = item_.getData().missileDmg.sides;
       dmgPlus   = item_.getData().missileDmg.plus;
-      dmgRoll   = eng->dice(dmgRolls, dmgSides);
+      dmgRoll   = eng.dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }

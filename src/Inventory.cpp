@@ -86,7 +86,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
 }
 
 void Inventory::setParametersFromSaveLines(
-  vector<string>& lines, Engine* const engine) {
+  vector<string>& lines, Engine& engine) {
 
   for(unsigned int i = 0; i < slots_.size(); i++) {
     //Previous item is destroyed
@@ -99,7 +99,7 @@ void Inventory::setParametersFromSaveLines(
     const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
     lines.erase(lines.begin());
     if(id != item_empty) {
-      item = engine->itemFactory->spawnItem(id);
+      item = engine.itemFactory->spawnItem(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
       item->itemSpecificSetParametersFromSaveLines(lines);
@@ -117,7 +117,7 @@ void Inventory::setParametersFromSaveLines(
   for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
     const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
     lines.erase(lines.begin());
-    Item* item = engine->itemFactory->spawnItem(id);
+    Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
     item->itemSpecificSetParametersFromSaveLines(lines);
@@ -223,7 +223,7 @@ int Inventory::getElementToStackItem(Item* item) const {
 }
 
 void Inventory::dropAllNonIntrinsic(
-  const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine) {
+  const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine) {
 
   Item* item;
 
@@ -231,11 +231,11 @@ void Inventory::dropAllNonIntrinsic(
   for(unsigned int i = 0; i < slots_.size(); i++) {
     item = slots_.at(i).item;
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+      if(ROLL_FOR_DESTRUCTION && engine.dice.percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slots_.at(i).item;
       } else {
-        engine->itemDrop->dropItemOnMap(pos, *item);
+        engine.itemDrop->dropItemOnMap(pos, *item);
       }
 
       slots_.at(i).item = NULL;
@@ -247,11 +247,11 @@ void Inventory::dropAllNonIntrinsic(
   while(i < general_.size()) {
     item = general_.at(i);
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine->dice.percentile() <
+      if(ROLL_FOR_DESTRUCTION && engine.dice.percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
-        engine->itemDrop->dropItemOnMap(pos, *item);
+        engine.itemDrop->dropItemOnMap(pos, *item);
       }
 
       general_.erase(general_.begin() + i);
@@ -386,9 +386,9 @@ void Inventory::moveItemToSlot(
 
 void Inventory::equipGeneralItemAndPossiblyEndTurn(
   const unsigned int GENERAL_INV_ELEMENT,
-  const SlotTypes_t slotToEquip, Engine* const engine) {
+  const SlotTypes_t slotToEquip, Engine& engine) {
 
-  const bool IS_PLAYER = this == engine->player->getInventory();
+  const bool IS_PLAYER = this == engine.player->getInventory();
 
   bool isFreeTurn = false;
 
@@ -397,7 +397,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
-      isFreeTurn = false; //engine->playerBonHandler->isTraitPicked(traitnimble);
+      isFreeTurn = false; //engine.playerBonHandler->isTraitPicked(traitnimble);
     }
   }
 
@@ -408,13 +408,13 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMsg(
+          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+        engine.log->addMsg(
           "I was wielding " + nameBefore + ".");
       }
       const string nameAfter =
-        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
-      engine->log->addMsg(
+        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_a);
+      engine.log->addMsg(
         "I am now wielding " + nameAfter + ".");
     }
   }
@@ -426,13 +426,13 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMsg(
+          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+        engine.log->addMsg(
           "I was wielding " + nameBefore + " as a prepared weapon.");
       }
       const string nameAfter =
-        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_a);
-      engine->log->addMsg(
+        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_a);
+      engine.log->addMsg(
         "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
   }
@@ -444,12 +444,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_a);
-        engine->log->addMsg("I wore " + nameBefore + ".");
+          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+        engine.log->addMsg("I wore " + nameBefore + ".");
       }
       const string nameAfter =
-        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
-      engine->log->addMsg("I am now wearing " + nameAfter + ".");
+        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
+      engine.log->addMsg("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
   }
@@ -461,43 +461,43 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine->itemDataHandler->getItemRef(*itemBefore, itemRef_plural);
-        engine->log->addMsg(
+          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_plural);
+        engine.log->addMsg(
           "I was using " + nameBefore + " as missile weapon.");
       }
       const string nameAfter =
-        engine->itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
-      engine->log->addMsg(
+        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
+      engine.log->addMsg(
         "I am now using " + nameAfter + " as missile weapon.");
     }
   }
   if(isFreeTurn == false) {
-    engine->gameTime->endTurnOfCurrentActor();
+    engine.gameTime->endTurnOfCurrentActor();
   }
 }
 
-//void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine) {
-//  const bool IS_FREE_TURN = engine->playerBonHandler->isTraitPicked(traitnimble);
+//void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine& engine) {
+//  const bool IS_FREE_TURN = engine.playerBonHandler->isTraitPicked(traitnimble);
 //
 //  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
 //  moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);
 //  Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
 //
-//  engine->renderer->drawMapAndInterface();
+//  engine.renderer->drawMapAndInterface();
 //
 //  if(itemBefore != NULL) {
-//    engine->log->addMsg("I was using " + engine->itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
+//    engine.log->addMsg("I was using " + engine.itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
 //  }
-//  engine->log->addMsg("I am now using " + engine->itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
+//  engine.log->addMsg("I am now using " + engine.itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
 //
-//  engine->renderer->drawMapAndInterface();
+//  engine.renderer->drawMapAndInterface();
 //
 //  if(IS_FREE_TURN == false) {
-//    engine->gameTime->endTurnOfCurrentActor();
+//    engine.gameTime->endTurnOfCurrentActor();
 //  }
 //}
 
-void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* const engine) {
+void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine& engine) {
   InventorySlot* slot1 = getSlot(slot_wielded);
   InventorySlot* slot2 = getSlot(slot_wieldedAlt);
   Item* item1 = slot1->item;
@@ -505,10 +505,10 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine* const engine
   slot1->item = item2;
   slot2->item = item1;
 
-  engine->renderer->drawMapAndInterface();
+  engine.renderer->drawMapAndInterface();
 
   if(END_TURN) {
-    engine->gameTime->endTurnOfCurrentActor();
+    engine.gameTime->endTurnOfCurrentActor();
   }
 }
 
@@ -666,20 +666,20 @@ int Inventory::getTotalItemWeight() const {
 // Function for lexicographically comparing two items
 struct LexicograhicalCompareItems {
 public:
-  LexicograhicalCompareItems(Engine* const engine) : eng(engine) {
+  LexicograhicalCompareItems(Engine& engine) : eng(engine) {
   }
   bool operator()(Item* const item1, Item* const item2) {
     const string& itemName1 =
-      eng->itemDataHandler->getItemRef(*item1, itemRef_plain, true);
+      eng.itemDataHandler->getItemRef(*item1, itemRef_plain, true);
     const string& itemName2 =
-      eng->itemDataHandler->getItemRef(*item2, itemRef_plain, true);
+      eng.itemDataHandler->getItemRef(*item2, itemRef_plain, true);
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }
-  Engine* const eng;
+  Engine& eng;
 };
 
-void Inventory::sortGeneralInventory(Engine* const engine) {
+void Inventory::sortGeneralInventory(Engine& engine) {
   vector< vector<Item*> > sortBuffer;
 
   // Sort according to item interface color first
@@ -687,7 +687,7 @@ void Inventory::sortGeneralInventory(Engine* const engine) {
     bool isAddedToBuffer = false;
     for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
       const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
-      if(engine->basicUtils->isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
+      if(engine.basicUtils->isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
         sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
         isAddedToBuffer = true;
         break;

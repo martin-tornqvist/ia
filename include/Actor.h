@@ -20,20 +20,16 @@ class Inventory;
 
 class Actor {
 public:
-  Actor() {}
+  Actor(Engine& engine);
   virtual ~Actor();
 
   inline PropHandler* getPropHandler() {return propHandler_;}
 
   inline ActorData* getData() {return data_;}
 
-  Pos pos;
-  ActorDeadState_t deadState;
-
   Inventory* getInventory() {return inventory_;}
 
-  void place(const Pos& pos_, ActorData* const actorDefinition,
-             Engine* engine);
+  void place(const Pos& pos_, ActorData& data);
 
   bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);
@@ -92,7 +88,10 @@ public:
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
-  Engine* eng;
+  Pos pos;
+  ActorDeadState_t deadState;
+
+  Engine& eng;
 
 protected:
   //TODO Try to get rid of these friend declarations

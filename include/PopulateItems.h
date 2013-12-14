@@ -7,7 +7,7 @@
 
 class PopulateItems {
 public:
-  PopulateItems(Engine* engine) : eng(engine) {}
+  PopulateItems(Engine& engine) : eng(engine) {}
 
   void spawnItems();
 
@@ -18,7 +18,7 @@ private:
 
   vector<ItemId_t> candidates;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 

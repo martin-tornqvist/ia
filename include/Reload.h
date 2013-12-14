@@ -18,7 +18,7 @@ enum ReloadResult_t {
 
 class Reload {
 public:
-  Reload(Engine* engine) : eng(engine) {}
+  Reload(Engine& engine) : eng(engine) {}
 
   bool reloadWieldedWpn(Actor& actorReloading);
 
@@ -26,7 +26,7 @@ private:
   void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
                           Item* const ammo, const ReloadResult_t result,
                           const bool IS_SWIFT_RELOAD);
-  Engine* eng;
+  Engine& eng;
 };
 
 

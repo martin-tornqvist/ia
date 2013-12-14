@@ -12,7 +12,7 @@ class Engine;
 
 class Bot {
 public:
-  Bot(Engine* engine) :
+  Bot(Engine& engine) :
     eng(engine) {
   }
 
@@ -26,7 +26,7 @@ private:
   bool walkToAdjacentCell(const Pos& cellToGoTo);
 
   vector<Pos> currentPath_;
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

@@ -12,7 +12,7 @@ using namespace std;
 
 class Audio {
 public:
-  Audio(Engine* engine);
+  Audio(Engine& engine);
   ~Audio();
 
   void initAndClearPrev();
@@ -41,7 +41,7 @@ private:
 
   int timeAtLastAmb;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

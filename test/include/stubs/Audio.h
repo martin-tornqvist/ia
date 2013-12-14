@@ -8,7 +8,7 @@ class Engine;
 
 class Audio {
 public:
-  Audio(Engine* engine) {(void)engine;}
+  Audio(Engine& engine) {(void)engine;}
   ~Audio() {}
 
   void initAndClearPrev() {}

@@ -11,15 +11,15 @@ void PopulateItems::spawnItems() {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksItems(eng), blockers);
   vector<Pos> freeCells;
-  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
 
   const int CELLS_PER_SPAWN = 135;
 
   int nrOfSpawns = freeCells.size() / CELLS_PER_SPAWN;
   nrOfSpawns = max(1, nrOfSpawns);
-  nrOfSpawns += eng->dice(1, (nrOfSpawns / 2) + 2) - 1;
+  nrOfSpawns += eng.dice(1, (nrOfSpawns / 2) + 2) - 1;
 
-  if(eng->playerBonHandler->isTraitPicked(traitTreasureHunter)) {
+  if(eng.playerBonHandler->isTraitPicked(traitTreasureHunter)) {
     nrOfSpawns = (nrOfSpawns * 3) / 2;
   }
 
@@ -33,14 +33,14 @@ void PopulateItems::spawnItems() {
     if(freeCells.size() > 0) {
 
       //Roll the dice for random element
-      n = eng->dice(1, freeCells.size()) - 1;
+      n = eng.dice(1, freeCells.size()) - 1;
       const Pos pos(freeCells.at(n));
 
       //Get type to spawn
       id = getFromCandidateList();
 
       //Spawn
-      eng->itemFactory->spawnItemOnMap(id, pos);
+      eng.itemFactory->spawnItemOnMap(id, pos);
 
       //Erase position from the vector
       freeCells.erase(freeCells.begin() + n);
@@ -51,16 +51,16 @@ void PopulateItems::spawnItems() {
 void PopulateItems::buildCandidateList() {
   candidates.resize(0);
 
-  ItemData** dataList = eng->itemDataHandler->dataList;
+  ItemData** dataList = eng.itemDataHandler->dataList;
 
   const unsigned int NUMBER_DEFINED = static_cast<unsigned int>(endOfItemIds);
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
     if(
-      eng->map->getDLVL() >= dataList[i]->spawnStandardMinDLVL &&
-      eng->map->getDLVL() <= dataList[i]->spawnStandardMaxDLVL &&
+      eng.map->getDLVL() >= dataList[i]->spawnStandardMinDLVL &&
+      eng.map->getDLVL() <= dataList[i]->spawnStandardMaxDLVL &&
       dataList[i]->isIntrinsic == false) {
-      if(eng->dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
+      if(eng.dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));
       }
     }
@@ -69,5 +69,5 @@ void PopulateItems::buildCandidateList() {
 
 ItemId_t PopulateItems::getFromCandidateList() {
   const int NUMBER_CANDIDATES = int(candidates.size());
-  return candidates.at(eng->dice(1, NUMBER_CANDIDATES) - 1);
+  return candidates.at(eng.dice(1, NUMBER_CANDIDATES) - 1);
 }

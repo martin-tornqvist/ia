@@ -7,7 +7,7 @@ class Engine;
 
 class PopulateTraps {
 public:
-  PopulateTraps(Engine* engine) : eng(engine) {
+  PopulateTraps(Engine& engine) : eng(engine) {
   }
 
   void populateRoomAndCorridorLevel(
@@ -15,7 +15,7 @@ public:
     const vector<Room*>& rooms) const;
 
 private:
-  Engine* const eng;
+  Engine& eng;
 };
 
 #endif

@@ -10,7 +10,7 @@ class Engine;
 
 class RenderInventory {
 public:
-  RenderInventory(Engine* engine);
+  RenderInventory(Engine& engine);
 
   void drawBrowseSlotsMode(const MenuBrowser& browser,
                            const vector<InventorySlotButton>& invSlotButtons);
@@ -34,7 +34,7 @@ private:
 
   void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const SDL_Color& clr);
 
-  Engine* eng;
+  Engine& eng;
 
   const int X_POS_LEFT;
   const int X_POS_WEIGHT;

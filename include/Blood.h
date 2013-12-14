@@ -7,7 +7,7 @@ class Engine;
 
 class Gore {
 public:
-  Gore(Engine* engine) :
+  Gore(Engine& engine) :
     eng(engine) {
   }
 
@@ -15,7 +15,7 @@ public:
   void makeGore(const Pos& origin);
 
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

@@ -30,7 +30,7 @@ struct Room;
 
 class RoomThemeMaker {
 public:
-  RoomThemeMaker(Engine* engine) : eng(engine) {}
+  RoomThemeMaker(Engine& engine) : eng(engine) {}
 
   void run();
 
@@ -64,7 +64,7 @@ private:
 
   bool isThemeExistInMap(const RoomTheme_t theme) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 

@@ -18,7 +18,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   MeleeAttackData data(attacker, wpn, defender, eng);
 
   printMeleeMessages(data, wpn);
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 
   if(data.isEtherealDefenderMissed == false) {
     if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
@@ -30,13 +30,13 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       }
       if(data.attackResult >= successNormal) {
         if(data.currentDefender->getData()->canBleed == true) {
-          eng->gore->makeBlood(data.currentDefender->pos);
+          eng.gore->makeBlood(data.currentDefender->pos);
         }
       }
       if(IS_DEFENDER_KILLED == false) {
         if(wpn.getData().meleeCausesKnockBack) {
           if(data.attackResult > successSmall) {
-            eng->knockBack->tryKnockBack(
+            eng.knockBack->tryKnockBack(
               *(data.currentDefender), data.attacker->pos, false);
           }
         }
@@ -46,12 +46,12 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
         Sound snd("", endOfSfx, true, data.currentDefender->pos, false, true);
-        eng->soundEmitter->emitSound(snd);
+        eng.soundEmitter->emitSound(snd);
       }
     }
   }
 
-  if(data.currentDefender == eng->player) {
+  if(data.currentDefender == eng.player) {
     if(data.attackResult >= failSmall) {
       dynamic_cast<Monster*>(data.attacker)->isStealth = false;
     }
@@ -59,7 +59,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
     monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
   }
-  eng->gameTime->endTurnOfCurrentActor();
+  eng.gameTime->endTurnOfCurrentActor();
 }
 
 void Attack::printMeleeMessages(const MeleeAttackData& data,
@@ -69,65 +69,65 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
 
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
-    if(data.attacker == eng->player) {
-      if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+    if(data.attacker == eng.player) {
+      if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
         otherName = data.currentDefender->getNameThe();
       } else {
         otherName = "It ";
       }
-      eng->log->addMsg(otherName + " dodges my attack.");
+      eng.log->addMsg(otherName + " dodges my attack.");
     } else {
-      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+      if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
       }
-      eng->log->addMsg(
+      eng.log->addMsg(
         "I dodge an attack from " + otherName + ".", clrMessageGood);
     }
   } else if(data.attackResult <= failSmall) {
     //----- BAD AIMING --------
-    if(data.attacker == eng->player) {
+    if(data.attacker == eng.player) {
       if(data.attackResult == failSmall) {
-        eng->log->addMsg("I barely miss!");
+        eng.log->addMsg("I barely miss!");
       } else if(data.attackResult == failNormal) {
-        eng->log->addMsg("I miss.");
+        eng.log->addMsg("I miss.");
       } else if(data.attackResult == failBig) {
-        eng->log->addMsg("I miss completely.");
+        eng.log->addMsg("I miss completely.");
       }
     } else {
-      if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+      if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
       }
       if(data.attackResult == failSmall) {
-        eng->log->addMsg(otherName + " barely misses me!", clrWhite, true);
+        eng.log->addMsg(otherName + " barely misses me!", clrWhite, true);
       } else if(data.attackResult == failNormal) {
-        eng->log->addMsg(otherName + " misses me.", clrWhite, true);
+        eng.log->addMsg(otherName + " misses me.", clrWhite, true);
       } else if(data.attackResult == failBig) {
-        eng->log->addMsg(otherName + " misses me completely.", clrWhite, true);
+        eng.log->addMsg(otherName + " misses me completely.", clrWhite, true);
       }
     }
   } else {
     //----- AIM IS CORRECT -------
     if(data.isEtherealDefenderMissed) {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
-      if(data.attacker == eng->player) {
-        if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+      if(data.attacker == eng.player) {
+        if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
           otherName = data.currentDefender->getNameThe();
         } else {
           otherName = "It ";
         }
-        eng->log->addMsg(
+        eng.log->addMsg(
           "My attack passes right throuth " + otherName + "!");
       } else {
-        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+        if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
         }
-        eng->log->addMsg(
+        eng.log->addMsg(
           "The attack of " + otherName + " passes right through me!",
           clrMessageGood);
       }
@@ -143,10 +143,10 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
           dmgPunct;
       }
 
-      if(data.attacker == eng->player) {
+      if(data.attacker == eng.player) {
         const string wpnVerb = wpn.getData().meleeAttackMessages.player;
 
-        if(eng->player->checkIfSeeActor(*data.currentDefender, NULL)) {
+        if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
           otherName = data.currentDefender->getNameThe();
         } else {
           otherName = "it";
@@ -154,7 +154,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
 
         if(data.isIntrinsicAttack) {
           const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
-          eng->log->addMsg(
+          eng.log->addMsg(
             "I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
             clrMessageGood);
         } else {
@@ -164,8 +164,8 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
           const SDL_Color clr =
             data.isBackstab ? clrBlueLgt : clrMessageGood;
           const string wpnName_a =
-            eng->itemDataHandler->getItemRef(wpn, itemRef_a, true);
-          eng->log->addMsg(
+            eng.itemDataHandler->getItemRef(wpn, itemRef_a, true);
+          eng.log->addMsg(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
             "with " + wpnName_a + dmgPunct,
             clr);
@@ -173,13 +173,13 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
       } else {
         const string wpnVerb = wpn.getData().meleeAttackMessages.other;
 
-        if(eng->player->checkIfSeeActor(*data.attacker, NULL)) {
+        if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
         }
 
-        eng->log->addMsg(otherName + " " + wpnVerb + dmgPunct,
+        eng.log->addMsg(otherName + " " + wpnVerb + dmgPunct,
                          clrMessageBad, true);
       }
     }

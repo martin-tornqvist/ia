@@ -18,21 +18,21 @@
 using namespace std;
 
 void CharacterLines::drawLocationInfo() {
-  Player* const player = eng->player;
+  Player* const player = eng.player;
 
   if(player->getPropHandler()->allowSee()) {
     string str = "";
 
     const Pos& playerPos = player->pos;
 
-    const int DLVL = eng->map->getDLVL();
+    const int DLVL = eng.map->getDLVL();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
-      const vector<Room*>& rooms = eng->map->rooms;
+      const vector<Room*>& rooms = eng.map->rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
         const Pos& x0y0 = room->getX0Y0();
         const Pos& x1y1 = room->getX1Y1();
-        if(eng->basicUtils->isPosInside(playerPos, Rect(x0y0, x1y1))) {
+        if(eng.basicUtils->isPosInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr.empty() == false) {
             str += room->roomDescr + " ";
@@ -42,9 +42,9 @@ void CharacterLines::drawLocationInfo() {
     }
 
     const bool IS_DRK_AT_PLAYER =
-      eng->map->cells[playerPos.x][playerPos.y].isDark;
+      eng.map->cells[playerPos.x][playerPos.y].isDark;
     const bool IS_LGT_AT_PLAYER =
-      eng->map->cells[playerPos.x][playerPos.y].isLight;
+      eng.map->cells[playerPos.x][playerPos.y].isLight;
     if(IS_DRK_AT_PLAYER) {
       str += IS_LGT_AT_PLAYER ?
              "The darkness is lit up. " :
@@ -52,15 +52,15 @@ void CharacterLines::drawLocationInfo() {
     }
 
     if(str.empty() == false) {
-      eng->renderer->drawText(str, panel_character, Pos(1, -1), clrWhite);
+      eng.renderer->drawText(str, panel_character, Pos(1, -1), clrWhite);
     }
   }
 }
 
 void CharacterLines::drawInfoLines() {
-  Player* const player = eng->player;
+  Player* const player = eng.player;
 
-  eng->renderer->coverPanel(panel_character);
+  eng.renderer->coverPanel(panel_character);
 
   const int CHARACTER_LINE_X0 = 1;
   const int CHARACTER_LINE_Y0 = 0;
@@ -74,56 +74,56 @@ void CharacterLines::drawInfoLines() {
 
   //Name
 //  str = player->getNameA();
-//  eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
+//  eng.renderer->drawText(str, panel_character, pos, clrRedLgt);
 //  pos.x += str.length() + 1;
 
   //Health
   const string hp = toString(player->getHp());
   const string hpMax = toString(player->getHpMax(true));
-  eng->renderer->drawText("HP:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("HP:", panel_character, pos, clrGenDrk);
   pos.x += 3;
   str = hp + "/" + hpMax;
-  eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrRedLgt);
   pos.x += str.length() + 1;
 
   //Spirit
   const string spi    = toString(player->getSpi());
   const string spiMax = toString(player->getSpiMax());
-  eng->renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("SPI:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
-  eng->renderer->drawText(str, panel_character, pos, clrBlueLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrBlueLgt);
   pos.x += str.length() + 1;
 
   //Wounds
 //  const string wnd = "0"; //toString(player->getNrWounds());
 //  const string wndMax = "5"; //toString(player->getWndMax());
-//  eng->renderer->drawText("WND:", panel_character, pos, clrGenDrk);
+//  eng.renderer->drawText("WND:", panel_character, pos, clrGenDrk);
 //  pos.x += 4;
 //  str = wnd + "/" + wndMax;
-//  eng->renderer->drawText(str, panel_character, pos, clrRedLgt);
+//  eng.renderer->drawText(str, panel_character, pos, clrRedLgt);
 //  pos.x += str.length() + 1;
 
   //Sanity
   const int SHOCK = player->getShockTotal();
   const int INS = player->getInsanity();
-  eng->renderer->drawText("INS:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("INS:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   const SDL_Color shortSanClr =
     SHOCK < 50 ? clrGreenLgt :
     SHOCK < 75 ? clrYellow : clrMagenta;
   str = toString(SHOCK) + "%/";
-  eng->renderer->drawText(str, panel_character, pos, shortSanClr);
+  eng.renderer->drawText(str, panel_character, pos, shortSanClr);
   pos.x += str.length();
   str = toString(INS) + "%";
-  eng->renderer->drawText(str, panel_character, pos, clrMagenta);
+  eng.renderer->drawText(str, panel_character, pos, clrMagenta);
   pos.x += str.length() + 1;
 
   const int MTH = player->getMth();
-  eng->renderer->drawText("MTH:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("MTH:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = toString(MTH) + "%";
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Wielded weapon
@@ -133,11 +133,11 @@ void CharacterLines::drawInfoLines() {
 
   Item* itemWielded = player->getInventory()->getItemInSlot(slot_wielded);
   if(itemWielded == NULL) {
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Unarmed", panel_character, pos, clrGenMed);
   } else {
-    str = eng->itemDataHandler->getItemInterfaceRef(*itemWielded, false);
-    eng->renderer->drawText(str, panel_character, pos, clrGenMed);
+    str = eng.itemDataHandler->getItemInterfaceRef(*itemWielded, false);
+    eng.renderer->drawText(str, panel_character, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
 
@@ -145,49 +145,49 @@ void CharacterLines::drawInfoLines() {
   pos.y += 1;
 
   // Level and xp
-  DungeonMaster* const dm = eng->dungeonMaster;
-  eng->renderer->drawText("LVL:", panel_character, pos, clrGenDrk);
+  DungeonMaster* const dm = eng.dungeonMaster;
+  eng.renderer->drawText("LVL:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = toString(dm->getCLvl());
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
-  eng->renderer->drawText("NXT:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("NXT:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" :
         toString(dm->getXpToNextLvl());
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Dungeon level
-  eng->renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
   pos.x += 5;
-  const int DLVL = eng->map->getDLVL();
+  const int DLVL = eng.map->getDLVL();
   str = DLVL >= 0 ? toString(DLVL) : "?";
-  eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+  eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Armor
-  eng->renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   const Item* const armor =
     player->getInventory()->getItemInSlot(slot_armorBody);
   if(armor == NULL) {
-    eng->renderer->drawText("N/A", panel_character, pos, clrGenLgt);
+    eng.renderer->drawText("N/A", panel_character, pos, clrGenLgt);
     pos.x += 4;
   } else {
     str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
-    eng->renderer->drawText(str, panel_character, pos, clrGenLgt);
+    eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
     pos.x += str.length() + 1;
   }
 
   //Encumbrance
-  eng->renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
+  eng.renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   const int TOTAL_W = player->getInventory()->getTotalItemWeight();
   const int MAX_W = player->getCarryWeightLimit();
   const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = toString(ENC) + "%";
-  eng->renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
+  eng.renderer->drawText(str, panel_character, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
   pos.x += str.length() + 1;
 
   //Missile weapon
@@ -195,11 +195,11 @@ void CharacterLines::drawInfoLines() {
 
   Item* const itemMissiles = player->getInventory()->getItemInSlot(slot_missiles);
   if(itemMissiles == NULL) {
-    eng->renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
+    eng.renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
   } else {
-    str = eng->itemDataHandler->getItemInterfaceRef(
+    str = eng.itemDataHandler->getItemInterfaceRef(
             *itemMissiles, false, primaryAttackMode_missile);
-    eng->renderer->drawText(str, panel_character, pos, clrGenMed);
+    eng.renderer->drawText(str, panel_character, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
 
@@ -211,7 +211,7 @@ void CharacterLines::drawInfoLines() {
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; i++) {
     const StringAndClr& curPropLabel = propsLine.at(i);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       curPropLabel.str, panel_character, pos, curPropLabel.clr);
     pos.x += curPropLabel.str.length() + 1;
   }
@@ -232,13 +232,13 @@ void CharacterLines::drawInfoLines() {
 //      // +1 to offset that the turn is also active on turn 0
 //      propText += "(" + toString(prop->turnsLeft_ + 1) + ")";
 //    }
-//    eng->renderer->drawText(propText, panel_character, pos, statusColor);
+//    eng.renderer->drawText(propText, panel_character, pos, statusColor);
 //    pos.x += propText.length() + 1;
 //  }
 
 // Turn number
-  str = "TRN:" + toString(eng->gameTime->getTurn());
+  str = "TRN:" + toString(eng.gameTime->getTurn());
   pos.x = MAP_X_CELLS - str.length() - 1;
-  eng->renderer->drawText(str, panel_character, pos, clrGenMed);
+  eng.renderer->drawText(str, panel_character, pos, clrGenMed);
 }
 

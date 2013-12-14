@@ -8,7 +8,7 @@
 class AI_moveToRandomAdjacentCell {
 public:
 
-  static bool action(Monster& monster, Engine* const engine) {
+  static bool action(Monster& monster, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
       if(
         monster.isRoamingAllowed == true ||
@@ -34,7 +34,7 @@ public:
 private:
   static Pos getOffsetToRandomAdjacentFreeCell(
     const Monster& monster, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-    Engine* const engine) {
+    Engine& engine) {
 
     const Rect areaAllowed(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
 
@@ -45,7 +45,7 @@ private:
       const Pos targetCell(monster.pos + offset);
       if(
         blockers[targetCell.x][targetCell.y] == false &&
-        engine->basicUtils->isPosInside(targetCell, areaAllowed)) {
+        engine.basicUtils->isPosInside(targetCell, areaAllowed)) {
         return offset;
       }
     }
@@ -60,7 +60,7 @@ private:
           const Pos targetCell(monster.pos + offset);
           if(
             blockers[targetCell.x][targetCell.y] == false &&
-            engine->basicUtils->isPosInside(targetCell, areaAllowed)) {
+            engine.basicUtils->isPosInside(targetCell, areaAllowed)) {
             offsetCandidates.push_back(offset);
           }
         }
@@ -71,7 +71,7 @@ private:
     if(NR_ELEMENTS == 0) {
       return Pos(0, 0);
     } else {
-      return offsetCandidates.at(engine->dice.range(0, NR_ELEMENTS - 1));
+      return offsetCandidates.at(engine.dice.range(0, NR_ELEMENTS - 1));
     }
   }
 };

@@ -15,7 +15,7 @@ class Engine;
 
 class DungeonMaster {
 public:
-  DungeonMaster(Engine* engine) : clvl(1), xp(0), eng(engine) {
+  DungeonMaster(Engine& engine) : clvl(1), xp(0), eng(engine) {
     initXpArray();
   }
   ~DungeonMaster() {}
@@ -51,7 +51,7 @@ private:
   int clvl, xp;
 
   TimeData timeStarted;
-  Engine* const eng;
+  Engine& eng;
 };
 
 #endif

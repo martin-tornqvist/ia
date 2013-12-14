@@ -21,6 +21,20 @@
 
 using namespace std;
 
+Actor::Actor(Engine& engine) :
+  pos(),
+  deadState(actorDeadState_alive),
+  eng(engine),
+  clr_(clrBlack),
+  glyph_(' '),
+  tile_(tile_empty),
+  hp_(-1),
+  spi_(-1),
+  lairCell_(),
+  propHandler_(NULL),
+  data_(NULL),
+  inventory_(NULL) {}
+
 Actor::~Actor() {
   delete propHandler_;
   delete inventory_;
@@ -34,16 +48,16 @@ bool Actor::checkIfSeeActor(
       return true;
     }
 
-    if(this == eng->player) {
+    if(this == eng.player) {
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
-      return eng->map->cells[other.pos.x][other.pos.y].isSeenByPlayer &&
+      return eng.map->cells[other.pos.x][other.pos.y].isSeenByPlayer &&
              IS_MONSTER_SNEAKING == false;
     }
 
     if(
       dynamic_cast<const Monster*>(this)->leader ==
-      eng->player && &other != eng->player) {
+      eng.player && &other != eng.player) {
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
@@ -60,7 +74,7 @@ bool Actor::checkIfSeeActor(
 
     if(visionBlockingCells != NULL) {
       const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
-      return eng->fov->checkCell(
+      return eng.fov->checkCell(
                visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
   }
@@ -70,7 +84,7 @@ bool Actor::checkIfSeeActor(
 void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
   vectorToSet.resize(0);
 
-  const bool IS_SELF_PLAYER = this == eng->player;
+  const bool IS_SELF_PLAYER = this == eng.player;
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
 
@@ -78,9 +92,9 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
     MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   }
 
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng->gameTime->getActorAtElement(i);
+    Actor& actor = eng.gameTime->getActorAtElement(i);
     if(&actor != this && actor.deadState == actorDeadState_alive) {
 
       if(IS_SELF_PLAYER) {
@@ -90,12 +104,12 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
           }
         }
       } else {
-        const bool IS_OTHER_PLAYER = &actor == eng->player;
+        const bool IS_OTHER_PLAYER = &actor == eng.player;
         const bool IS_HOSTILE_TO_PLAYER =
-          dynamic_cast<Monster*>(this)->leader != eng->player;
+          dynamic_cast<Monster*>(this)->leader != eng.player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
           IS_OTHER_PLAYER ? false :
-          dynamic_cast<Monster*>(&actor)->leader != eng->player;
+          dynamic_cast<Monster*>(&actor)->leader != eng.player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
@@ -111,11 +125,9 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
   }
 }
 
-void Actor::place(const Pos& pos_, ActorData* const actorDefinition,
-                  Engine* engine) {
-  eng             = engine;
+void Actor::place(const Pos& pos_, ActorData& data) {
   pos             = pos_;
-  data_           = actorDefinition;
+  data_           = &data;
   inventory_      = new Inventory(data_->isHumanoid);
   propHandler_    = new PropHandler(this, eng);
   deadState       = actorDeadState_alive;
@@ -126,7 +138,7 @@ void Actor::place(const Pos& pos_, ActorData* const actorDefinition,
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(this != eng->player) {
+  if(this != eng.player) {
     actorSpecific_spawnStartItems();
   }
 
@@ -139,22 +151,22 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng), blockers);
   vector<Pos> freeCells;
-  eng->basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
-  const Pos CELL = freeCells.at(eng->dice(1, freeCells.size()) - 1);
+  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+  const Pos CELL = freeCells.at(eng.dice(1, freeCells.size()) - 1);
 
-  if(this == eng->player) {
-    eng->player->updateFov();
-    eng->renderer->drawMapAndInterface();
-    eng->playerVisualMemory->updateVisualMemory();
+  if(this == eng.player) {
+    eng.player->updateFov();
+    eng.renderer->drawMapAndInterface();
+    eng.playerVisualMemory->updateVisualMemory();
   }
 
   pos = CELL;
 
-  if(this == eng->player) {
-    eng->player->updateFov();
-    eng->renderer->drawMapAndInterface();
-    eng->playerVisualMemory->updateVisualMemory();
-    eng->log->addMsg("I suddenly find myself in a different location!");
+  if(this == eng.player) {
+    eng.player->updateFov();
+    eng.renderer->drawMapAndInterface();
+    eng.playerVisualMemory->updateVisualMemory();
+    eng.log->addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(eng, propTurnsSpecified, 8));
   }
 }
@@ -204,14 +216,14 @@ bool Actor::restoreHp(const int HP_RESTORED,
 
   if(ALLOW_MESSAGES) {
     if(isHpGained) {
-      if(this == eng->player) {
-        eng->log->addMsg("I feel healthier!", clrMessageGood);
+      if(this == eng.player) {
+        eng.log->addMsg("I feel healthier!", clrMessageGood);
       } else {
-        if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMsg(data_->name_the + " looks healthier.");
+        if(eng.player->checkIfSeeActor(*this, NULL)) {
+          eng.log->addMsg(data_->name_the + " looks healthier.");
         }
       }
-      eng->renderer->drawMapAndInterface();
+      eng.renderer->drawMapAndInterface();
     }
   }
 
@@ -248,14 +260,14 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
 
   if(ALLOW_MESSAGES) {
     if(isSpiGained) {
-      if(this == eng->player) {
-        eng->log->addMsg("I feel more spirited!", clrMessageGood);
+      if(this == eng.player) {
+        eng.log->addMsg("I feel more spirited!", clrMessageGood);
       } else {
-        if(eng->player->checkIfSeeActor(*this, NULL)) {
-          eng->log->addMsg(data_->name_the + " looks more spirited.");
+        if(eng.player->checkIfSeeActor(*this, NULL)) {
+          eng.log->addMsg(data_->name_the + " looks more spirited.");
         }
       }
-      eng->renderer->drawMapAndInterface();
+      eng.renderer->drawMapAndInterface();
     }
   }
 
@@ -267,20 +279,20 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES) {
   hp_     = max(1, hp_ + CHANGE);
 
   if(ALLOW_MESSAGES) {
-    if(this == eng->player) {
+    if(this == eng.player) {
       if(CHANGE > 0) {
-        eng->log->addMsg("I feel more vigorous!");
+        eng.log->addMsg("I feel more vigorous!");
       }
       if(CHANGE < 0) {
-        eng->log->addMsg("I feel frailer!");
+        eng.log->addMsg("I feel frailer!");
       }
     } else {
-      if(eng->player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->checkIfSeeActor(*this, NULL)) {
         if(CHANGE > 0) {
-          eng->log->addMsg(getNameThe() + " looks more vigorous.");
+          eng.log->addMsg(getNameThe() + " looks more vigorous.");
         }
         if(CHANGE < 0) {
-          eng->log->addMsg(getNameThe() + " looks frailer.");
+          eng.log->addMsg(getNameThe() + " looks frailer.");
         }
       }
     }
@@ -292,20 +304,20 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   spi_    = max(1, spi_ + CHANGE);
 
   if(ALLOW_MESSAGES) {
-    if(this == eng->player) {
+    if(this == eng.player) {
       if(CHANGE > 0) {
-        eng->log->addMsg("My spirit is stronger!");
+        eng.log->addMsg("My spirit is stronger!");
       }
       if(CHANGE < 0) {
-        eng->log->addMsg("My spirit is weaker!");
+        eng.log->addMsg("My spirit is weaker!");
       }
     } else {
-      if(eng->player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->checkIfSeeActor(*this, NULL)) {
         if(CHANGE > 0) {
-          eng->log->addMsg(getNameThe() + " appears to grow in spirit.");
+          eng.log->addMsg(getNameThe() + " appears to grow in spirit.");
         }
         if(CHANGE < 0) {
-          eng->log->addMsg(getNameThe() + " appears to shrink in spirit.");
+          eng.log->addMsg(getNameThe() + " appears to shrink in spirit.");
         }
       }
     }
@@ -350,9 +362,9 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
 
       if(armor->isDestroyed()) {
         trace << "Actor: Armor was destroyed" << endl;
-        if(this == eng->player) {
-          eng->log->addMsg("My " + eng->itemDataHandler->getItemRef(
-                             *armor, itemRef_plain) + " is torn apart!");
+        if(this == eng.player) {
+          eng.log->addMsg("My " + eng.itemDataHandler->getItemRef(
+                            *armor, itemRef_plain) + " is torn apart!");
         }
         delete armor;
         armor = NULL;
@@ -371,19 +383,19 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
       deadState = actorDeadState_mangled;
       glyph_ = ' ';
       if(isHumanoid()) {
-        eng->gore->makeGore(pos);
+        eng.gore->makeGore(pos);
       }
     }
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return false;
   }
 
-  if(this != eng->player || eng->config->isBotPlaying == false) {
+  if(this != eng.player || eng.config->isBotPlaying == false) {
     hp_ -= dmg;
   }
 
   const bool IS_ON_BOTTOMLESS =
-    eng->map->cells[pos.x][pos.y].featureStatic->isBottomless();
+    eng.map->cells[pos.x][pos.y].featureStatic->isBottomless();
   const bool IS_MANGLED =
     IS_ON_BOTTOMLESS == true ? true :
     (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
@@ -399,16 +411,16 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
 }
 
 bool Actor::hitSpi(const int DMG) {
-  if(this != eng->player || eng->config->isBotPlaying == false) {
+  if(this != eng.player || eng.config->isBotPlaying == false) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {
-    if(this == eng->player) {
-      eng->log->addMsg(
+    if(this == eng.player) {
+      eng.log->addMsg(
         "All my spirit is depleted, I am devoid of life!");
     } else {
-      if(eng->player->checkIfSeeActor(*this, NULL)) {
-        eng->log->addMsg(getNameThe() + " has no spirit left!");
+      if(eng.player->checkIfSeeActor(*this, NULL)) {
+        eng.log->addMsg(getNameThe() + " has no spirit left!");
       }
     }
     die(false, false, true);
@@ -420,10 +432,10 @@ bool Actor::hitSpi(const int DMG) {
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = &(eng->gameTime->getActorAtElement(i));
-    if(actor != this && actor != eng->player) {
+    Actor* const actor = &(eng.gameTime->getActorAtElement(i));
+    if(actor != this && actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {
         monster->leader = NULL;
@@ -431,9 +443,9 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   }
 
-  if(this != eng->player) {
+  if(this != eng.player) {
     if(isHumanoid() == true) {
-      eng->soundEmitter->emitSound(
+      eng.soundEmitter->emitSound(
         Sound("I hear agonised screaming.", endOfSfx, true, pos, false, false));
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
@@ -442,7 +454,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   bool diedOnVisibleTrap = false;
 
   //If died on a visible trap, always destroy the corpse
-  const Feature* const f = eng->map->cells[pos.x][pos.y].featureStatic;
+  const Feature* const f = eng.map->cells[pos.x][pos.y].featureStatic;
   if(f->getId() == feature_trap) {
     if(dynamic_cast<const Trap*>(f)->isHidden() == false) {
       diedOnVisibleTrap = true;
@@ -450,14 +462,14 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   }
 
   //Print death messages
-  if(this != eng->player) {
+  if(this != eng.player) {
     //Only print if visible
-    if(eng->player->checkIfSeeActor(*this, NULL)) {
+    if(eng.player->checkIfSeeActor(*this, NULL)) {
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride.empty() == false) {
-        eng->log->addMsg(deathMessageOverride);
+        eng.log->addMsg(deathMessageOverride);
       } else {
-        eng->log->addMsg(getNameThe() + " dies.");
+        eng.log->addMsg(getNameThe() + " dies.");
       }
     }
   }
@@ -465,11 +477,11 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   //If mangled because of damage, or if a monster died on a visible trap,
   //gib the corpse.
   deadState =
-    (IS_MANGLED || (diedOnVisibleTrap && this != eng->player)) ?
+    (IS_MANGLED || (diedOnVisibleTrap && this != eng.player)) ?
     actorDeadState_mangled : actorDeadState_corpse;
 
   if(ALLOW_DROP_ITEMS) {
-    eng->itemDrop->dropAllCharactersItems(this, true);
+    eng.itemDrop->dropAllCharactersItems(this, true);
   }
 
   if(IS_MANGLED) {
@@ -477,20 +489,20 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     tile_ = tile_empty;
     if(isHumanoid() == true) {
       if(ALLOW_GORE) {
-        eng->gore->makeGore(pos);
+        eng.gore->makeGore(pos);
       }
     }
   } else {
-    if(this != eng->player) {
+    if(this != eng.player) {
       Pos newPos;
-      Feature* featureHere = eng->map->cells[pos.x][pos.y].featureStatic;
+      Feature* featureHere = eng.map->cells[pos.x][pos.y].featureStatic;
       //TODO this should be decided with a floodfill instead
       if(featureHere->canHaveCorpse() == false) {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             newPos = pos + Pos(dx, dy);
             featureHere =
-              eng->map->cells[pos.x + dx][pos.y + dy].featureStatic;
+              eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
             if(featureHere->canHaveCorpse()) {
               pos.set(newPos);
               dx = 9999;
@@ -509,11 +521,11 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   onMonsterDeath();
 
   //Give exp if monster, and count up nr of kills.
-  if(this != eng->player) {
-    eng->dungeonMaster->monsterKilled(this);
+  if(this != eng.player) {
+    eng.dungeonMaster->monsterKilled(this);
   }
 
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 }
 
 void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {

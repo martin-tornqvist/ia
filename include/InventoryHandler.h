@@ -20,7 +20,7 @@ struct InventorySlotButton {
 
 class InventoryHandler {
 public:
-  InventoryHandler(Engine* engine);
+  InventoryHandler(Engine& engine);
 
   void runSlotsScreen();
   bool runUseScreen();
@@ -48,7 +48,7 @@ private:
 
   void swapItems(Item** item1, Item** item2);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

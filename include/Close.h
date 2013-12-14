@@ -9,7 +9,7 @@ class Feature;
 
 class Close {
 public:
-  Close(Engine* engine) : eng(engine) {
+  Close(Engine& engine) : eng(engine) {
   }
 
   ~Close() {
@@ -21,7 +21,7 @@ private:
   friend class Feature;
   void playerCloseFeature(Feature* const feature) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

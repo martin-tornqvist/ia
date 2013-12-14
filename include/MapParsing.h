@@ -25,14 +25,14 @@ public:
   virtual bool check(const Cell& c)       const = 0;
   virtual bool check(const FeatureMob& f) const = 0;
   virtual bool check(const Actor& a)      const = 0;
-  const Engine* const eng;
+  const Engine& eng;
 protected:
-  CellPred(Engine* engine) : eng(engine) {}
+  CellPred(Engine& engine) : eng(engine) {}
 };
 
 class CellPredBlocksVision : public CellPred {
 public:
-  CellPredBlocksVision(Engine* engine) : CellPred(engine) {}
+  CellPredBlocksVision(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const {return true;}
   bool isCheckingMobFeatures()    const {return true;}
   bool isCheckingActors()         const {return false;}
@@ -44,7 +44,7 @@ public:
 class CellPredBlocksBodyType : public CellPred {
 public:
   CellPredBlocksBodyType(BodyType_t bodyType, bool isActorsBlocking,
-                         Engine* engine) :
+                         Engine& engine) :
     CellPred(engine), bodyType_(bodyType),
     IS_ACTORS_BLOCKING_(isActorsBlocking) {}
   bool isCheckingCells()          const {return true;}
@@ -59,7 +59,7 @@ public:
 
 class CellPredBlocksProjectiles : public CellPred {
 public:
-  CellPredBlocksProjectiles(Engine* engine) : CellPred(engine) {}
+  CellPredBlocksProjectiles(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const {return true;}
   bool isCheckingMobFeatures()    const {return true;}
   bool isCheckingActors()         const {return false;}
@@ -70,7 +70,7 @@ public:
 
 class CellPredLivingActorsAdjToPos : public CellPred {
 public:
-  CellPredLivingActorsAdjToPos(const Pos& pos, Engine* engine) :
+  CellPredLivingActorsAdjToPos(const Pos& pos, Engine& engine) :
     CellPred(engine), pos_(pos) {}
   bool isCheckingCells()          const {return false;}
   bool isCheckingMobFeatures()    const {return false;}
@@ -83,7 +83,7 @@ public:
 
 class CellPredBlocksItems : public CellPred {
 public:
-  CellPredBlocksItems(Engine* engine) : CellPred(engine) {}
+  CellPredBlocksItems(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const {return true;}
   bool isCheckingMobFeatures()    const {return true;}
   bool isCheckingActors()         const {return false;}
@@ -110,17 +110,17 @@ public:
 //Function object for sorting stl containers by distance to origin
 struct IsCloserToOrigin {
 public:
-  IsCloserToOrigin(const Pos& c, const Engine* engine) :
+  IsCloserToOrigin(const Pos& c, const Engine& engine) :
     c_(c), eng(engine) {
   }
   bool operator()(const Pos& c1, const Pos& c2);
   Pos c_;
-  const Engine* eng;
+  const Engine& eng;
 };
 
 class FloodFill {
 public:
-  FloodFill(Engine* engine) : eng(engine) {}
+  FloodFill(Engine& engine) : eng(engine) {}
 
   void run(
     const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
@@ -128,18 +128,18 @@ public:
     const Pos& target);
 
 private:
-  Engine* const eng;
+  Engine& eng;
 };
 
 class PathFinder {
 public:
-  PathFinder(Engine* engine) : eng(engine) {}
+  PathFinder(Engine& engine) : eng(engine) {}
 
   void run(const Pos& origin, const Pos& target,
            bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
            vector<Pos>& vectorToSet) const;
 private:
-  Engine* eng;
+  Engine& eng;
 };
 
 
@@ -151,7 +151,7 @@ private:
 //
 //
 //private:
-//  Engine* eng;
+//  Engine& eng;
 //};
 
 #endif

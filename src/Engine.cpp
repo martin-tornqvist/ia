@@ -97,7 +97,7 @@ void Engine::cleanupSdl() {
 
 void Engine::initConfig() {
   trace << "Engine::initConfig()..." << endl;
-  config = new Config(this);
+  config = new Config(*this);
   trace << "Engine::initConfig() [DONE]" << endl;
 }
 
@@ -109,7 +109,7 @@ void Engine::cleanupConfig() {
 
 void Engine::initRenderer() {
   trace << "Engine::initRenderer()..." << endl;
-  renderer = new Renderer(this);
+  renderer = new Renderer(*this);
   trace << "Engine::initRenderer() [DONE]" << endl;
 }
 
@@ -120,7 +120,7 @@ void Engine::cleanupRenderer() {
 }
 
 void Engine::initAudio() {
-  audio = new Audio(this);
+  audio = new Audio(*this);
 }
 
 void Engine::cleanupAudio() {
@@ -130,80 +130,80 @@ void Engine::cleanupAudio() {
 void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
-  basicUtils = new BasicUtils(this);
-  lineCalc = new LineCalc(this);
-  propDataHandler = new PropDataHandler(this);
-  actorDataHandler = new ActorDataHandler(this);
-  scrollNameHandler = new ScrollNameHandler(this);
-  potionNameHandler = new PotionNameHandler(this);
-  itemDataHandler = new ItemDataHandler(this);
-  abilityRoll = new AbilityRoll(this);
-  itemFactory = new ItemFactory(this);
-  inventoryHandler = new InventoryHandler(this);
-  playerBonHandler = new PlayerBonHandler(this);
-  playerCreateCharacter = new PlayerCreateCharacter(this);
-  mapPatterns = new MapPatterns(this);
-  roomThemeMaker = new RoomThemeMaker(this);
-  player = new Player;
+  basicUtils = new BasicUtils(*this);
+  lineCalc = new LineCalc(*this);
+  propDataHandler = new PropDataHandler(*this);
+  actorDataHandler = new ActorDataHandler(*this);
+  scrollNameHandler = new ScrollNameHandler(*this);
+  potionNameHandler = new PotionNameHandler(*this);
+  itemDataHandler = new ItemDataHandler(*this);
+  abilityRoll = new AbilityRoll(*this);
+  itemFactory = new ItemFactory(*this);
+  inventoryHandler = new InventoryHandler(*this);
+  playerBonHandler = new PlayerBonHandler(*this);
+  playerCreateCharacter = new PlayerCreateCharacter(*this);
+  mapPatterns = new MapPatterns(*this);
+  roomThemeMaker = new RoomThemeMaker(*this);
+  player = new Player(*this);
   player->place(
     Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
-    &(actorDataHandler->dataList[actor_player]), this);
-  actorFactory = new ActorFactory(this);
-  gameTime = new GameTime(this);
-  featureDataHandler = new FeatureDataHandler(this);
-  featureFactory = new FeatureFactory(this);
-  map = new Map(this);
+    actorDataHandler->dataList[actor_player]);
+  actorFactory = new ActorFactory(*this);
+  gameTime = new GameTime(*this);
+  featureDataHandler = new FeatureDataHandler(*this);
+  featureFactory = new FeatureFactory(*this);
+  map = new Map(*this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
-  floodFill = new FloodFill(this);
-  marker = new Marker(this);
-  log = new Log(this);
-  pathFinder = new PathFinder(this);
-  fov = new Fov(this);
-  soundEmitter = new SoundEmitter(this);
-  dungeonMaster = new DungeonMaster(this);
-  input = new Input(this, quitToMainMenu_);
-  dungeonClimb = new DungeonClimb(this);
-  mapTemplateHandler = new MapTemplateHandler(this);
-  itemDrop = new ItemDrop(this);
-  itemPickup = new ItemPickup(this);
-  attack = new Attack(this);
-  characterLines = new CharacterLines(this);
-  mainMenu = new MainMenu(this);
-  bot = new Bot(this);
+  floodFill = new FloodFill(*this);
+  marker = new Marker(*this);
+  log = new Log(*this);
+  pathFinder = new PathFinder(*this);
+  fov = new Fov(*this);
+  soundEmitter = new SoundEmitter(*this);
+  dungeonMaster = new DungeonMaster(*this);
+  input = new Input(*this, quitToMainMenu_);
+  dungeonClimb = new DungeonClimb(*this);
+  mapTemplateHandler = new MapTemplateHandler(*this);
+  itemDrop = new ItemDrop(*this);
+  itemPickup = new ItemPickup(*this);
+  attack = new Attack(*this);
+  characterLines = new CharacterLines(*this);
+  mainMenu = new MainMenu(*this);
+  bot = new Bot(*this);
   art = new Art;
-  explosionMaker = new ExplosionMaker(this);
-  thrower = new Thrower(this);
-  reload = new Reload(this);
-  playerVisualMemory = new PlayerVisualMemory(this);
-  gore = new Gore(this);
-  manual = new Manual(this);
-  populateItems = new PopulateItems(this);
-  populateMonsters = new PopulateMonsters(this);
-  populateTraps = new PopulateTraps(this);
-  renderInventory = new RenderInventory(this);
+  explosionMaker = new ExplosionMaker(*this);
+  thrower = new Thrower(*this);
+  reload = new Reload(*this);
+  playerVisualMemory = new PlayerVisualMemory(*this);
+  gore = new Gore(*this);
+  manual = new Manual(*this);
+  populateItems = new PopulateItems(*this);
+  populateMonsters = new PopulateMonsters(*this);
+  populateTraps = new PopulateTraps(*this);
+  renderInventory = new RenderInventory(*this);
   inventoryIndexes = new InventoryIndexes;
-  query = new Query(this);
-  bash = new Bash(this);
-  close = new Close(this);
-  look = new Look(this);
-  autoDescribeActor = new AutoDescribeActor(this);
+  query = new Query(*this);
+  bash = new Bash(*this);
+  close = new Close(*this);
+  look = new Look(*this);
+  autoDescribeActor = new AutoDescribeActor(*this);
   textFormatting = new TextFormatting();
-  spellHandler = new SpellHandler(this);
-  postmortem = new Postmortem(this);
-  highScore = new HighScore(this);
-  popup = new Popup(this);
-  saveHandler = new SaveHandler(this);
-  jamWithSpike = new JamWithSpike(this);
-  menuInputHandler = new MenuInputHandler(this);
-  playerSpellsHandler = new PlayerSpellsHandler(this);
-  knockBack = new KnockBack(this);
-  examine = new Examine(this);
-  characterDescr = new CharacterDescr(this);
-  debugModeStatPrinter = new DebugModeStatPrinter(this);
-  disarm = new Disarm(this);
-  gods = new Gods(this);
-  credits = new Credits(this);
+  spellHandler = new SpellHandler(*this);
+  postmortem = new Postmortem(*this);
+  highScore = new HighScore(*this);
+  popup = new Popup(*this);
+  saveHandler = new SaveHandler(*this);
+  jamWithSpike = new JamWithSpike(*this);
+  menuInputHandler = new MenuInputHandler(*this);
+  playerSpellsHandler = new PlayerSpellsHandler(*this);
+  knockBack = new KnockBack(*this);
+  examine = new Examine(*this);
+  characterDescr = new CharacterDescr(*this);
+  debugModeStatPrinter = new DebugModeStatPrinter(*this);
+  disarm = new Disarm(*this);
+  gods = new Gods(*this);
+  credits = new Credits(*this);
 
   trace << "Engine::initGame() [DONE]" << endl;
 }

@@ -1,4 +1,4 @@
-#include "Engine.h"
+#include "engine.h"
 
 #include "MainMenu.h"
 #include "Renderer.h"
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
             //If intro level is used, build forest.
             eng->renderer->coverPanel(panel_screen);
             eng->renderer->updateScreen();
-            MapGenIntroForest(eng).run();
+            MapGenIntroForest(*eng).run();
           } else {
             //Else build first dungeon level
             eng->dungeonClimb->travelDown();

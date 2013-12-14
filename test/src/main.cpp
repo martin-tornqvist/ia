@@ -1,6 +1,6 @@
 #include "UnitTest++.h"
 
-#include "Engine.h"
+#include "engine.h"
 #include "BasicUtils.h"
 #include "Renderer.h"
 #include "Map.h"
@@ -72,7 +72,7 @@ TEST(ConstrainValInRange) {
 
 TEST(CalculateDistances) {
   Engine eng;
-  BasicUtils utils(&eng);
+  BasicUtils utils(eng);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 3)), 1);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 4)), 2);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(1, 2)), 0);
@@ -398,12 +398,12 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room1(roomArea1);
   Room room2(roomArea2);
 
-  MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
+  MapGenUtilCorridorBuilder(*eng).buildZCorridorBetweenRooms(
     room1, room2, dirRight);
 }
 
 //TEST_FIXTURE(BasicFixture, MakeBspMap) {
-//  MapGenBsp mapGen(eng);
+//  MapGenBsp mapGen(eng->;
 //  for(int i = 0; i < 1000; i++) {
 //    eng->player->pos = Pos(eng->dice.range(1, MAP_X_CELLS - 1),
 //                           eng->dice.range(1, MAP_Y_CELLS - 1));

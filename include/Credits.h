@@ -10,7 +10,7 @@ class Engine;
 
 class Credits {
 public:
-  Credits(Engine* engine) : eng(engine) {readFile();}
+  Credits(Engine& engine) : eng(engine) {readFile();}
 
   void run();
 
@@ -19,7 +19,7 @@ private:
   void drawInterface();
 
   vector<string> lines;
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

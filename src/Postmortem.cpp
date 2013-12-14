@@ -31,44 +31,44 @@ void Postmortem::makeInfoLines() {
   const SDL_Color clrInfo     = clrWhite;
 
   postmortemLines.push_back(
-    StringAndClr(" " + eng->player->getNameA(), clrHeading));
+    StringAndClr(" " + eng.player->getNameA(), clrHeading));
 
   postmortemLines.push_back(
     StringAndClr("   * Explored to the depth of dungeon level " +
-                 toString(eng->map->getDLVL()), clrInfo));
+                 toString(eng.map->getDLVL()), clrInfo));
   postmortemLines.push_back(
     StringAndClr("   * Was " +
-                 toString(min(100, eng->player->getInsanity())) +
+                 toString(min(100, eng.player->getInsanity())) +
                  "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored,
-  //this shit is ugly as hell
-  if(eng->player->insanityPhobias[insanityPhobia_closedPlace])
+  //this is ugly as hell
+  if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of enclosed spaces", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_dog])
+  if(eng.player->insanityPhobias[insanityPhobia_dog])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of dogs", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_rat])
+  if(eng.player->insanityPhobias[insanityPhobia_rat])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of rats", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_undead])
+  if(eng.player->insanityPhobias[insanityPhobia_undead])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of the dead", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_openPlace])
+  if(eng.player->insanityPhobias[insanityPhobia_openPlace])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of open places", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_spider])
+  if(eng.player->insanityPhobias[insanityPhobia_spider])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of spiders", clrInfo));
-  if(eng->player->insanityPhobias[insanityPhobia_deepPlaces])
+  if(eng.player->insanityPhobias[insanityPhobia_deepPlaces])
     postmortemLines.push_back(
       StringAndClr("   * Had a phobia of deep places", clrInfo));
 
-  if(eng->player->insanityObsessions[insanityObsession_masochism])
+  if(eng.player->insanityObsessions[insanityObsession_masochism])
     postmortemLines.push_back(
       StringAndClr("   * Had a masochistic obsession", clrInfo));
-  if(eng->player->insanityObsessions[insanityObsession_sadism])
+  if(eng.player->insanityObsessions[insanityObsession_sadism])
     postmortemLines.push_back(
       StringAndClr("   * Had a sadistic obsession", clrInfo));
 
@@ -78,12 +78,12 @@ void Postmortem::makeInfoLines() {
   trace << "Postmortem: Listing abilities gained" << endl;
   postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
-  eng->playerBonHandler->getAllPickedTraitsTitlesLine(abilitiesLine);
+  eng.playerBonHandler->getAllPickedTraitsTitlesLine(abilitiesLine);
   if(abilitiesLine.empty()) {
     postmortemLines.push_back(StringAndClr("   * None", clrInfo));
   } else {
     vector<string> abilitiesLines;
-    eng->textFormatting->lineToLines(abilitiesLine, 60, abilitiesLines);
+    eng.textFormatting->lineToLines(abilitiesLine, 60, abilitiesLines);
     for(unsigned int i = 0; i < abilitiesLines.size(); i++) {
       postmortemLines.push_back(
         StringAndClr("   " + abilitiesLines.at(i), clrInfo));
@@ -97,7 +97,7 @@ void Postmortem::makeInfoLines() {
   vector< pair<string, int> > killList;
   int nrOfTotalKills = 0;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorData& d = eng->actorDataHandler->dataList[i];
+    const ActorData& d = eng.actorDataHandler->dataList[i];
     if(d.nrOfKills > 0) {
 
       nrOfTotalKills += d.nrOfKills;
@@ -137,11 +137,11 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(StringAndClr(" The last messages:", clrHeading));
   int historyElement = static_cast<unsigned int>(
-                         max(0, int(eng->log->history.size()) - 10));
-  for(unsigned int i = historyElement; i < eng->log->history.size(); i++) {
+                         max(0, int(eng.log->history.size()) - 10));
+  for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
     string row = "";
-    for(unsigned int ii = 0; ii < eng->log->history.at(i).size(); ii++) {
-      row += eng->log->history.at(i).at(ii).str + " ";
+    for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {
+      row += eng.log->history.at(i).at(ii).str + " ";
     }
     postmortemLines.push_back(StringAndClr("   " + row, clrInfo));
   }
@@ -153,34 +153,34 @@ void Postmortem::makeInfoLines() {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
-          if(eng->basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
+          if(eng.basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
             const FeatureStatic* const f =
-              eng->map->cells[x + dx][y + dy].featureStatic;
+              eng.map->cells[x + dx][y + dy].featureStatic;
             if(f->isVisionPassable()) {
-              eng->map->cells[x][y].isSeenByPlayer = true;
+              eng.map->cells[x][y].isSeenByPlayer = true;
             }
           }
         }
       }
     }
   }
-  eng->renderer->drawAscii(); //To set the glyph array
+  eng.renderer->drawAscii(); //To set the glyph array
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     string currentRow = "";
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      if(Pos(x, y) == eng->player->pos) {
+      if(Pos(x, y) == eng.player->pos) {
         currentRow.push_back('@');
       } else {
         if(
-          eng->renderer->renderArrayAscii[x][y].glyph == ' ' &&
+          eng.renderer->renderArrayAscii[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
           currentRow.push_back('*');
         } else {
-          if(eng->renderer->renderArrayAscii[x][y].glyph ==
-              eng->featureDataHandler->getData(feature_stoneWall)->glyph) {
+          if(eng.renderer->renderArrayAscii[x][y].glyph ==
+              eng.featureDataHandler->getData(feature_stoneWall)->glyph) {
             currentRow.push_back('#');
           } else {
-            currentRow.push_back(eng->renderer->renderArrayAscii[x][y].glyph);
+            currentRow.push_back(eng.renderer->renderArrayAscii[x][y].glyph);
           }
         }
       }
@@ -193,14 +193,14 @@ void Postmortem::makeInfoLines() {
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
-  eng->renderer->coverPanel(panel_screen);
+  eng.renderer->coverPanel(panel_screen);
   const string decorationLine(MAP_X_CELLS - 2, '-');
-  eng->renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
+  eng.renderer->drawText(
     " Displaying postmortem information ", panel_screen, Pos(3, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     decorationLine, panel_character, Pos(1, 1), clrWhite);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit  ",
     panel_character, Pos(3, 1), clrWhite);
   int x = 0;
@@ -208,13 +208,13 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
   const int NR = int(postmortemLines.size());
 
   for(int i = TOP_ELEMENT; i < NR && (i - TOP_ELEMENT) <= MAP_Y_CELLS; i++) {
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       postmortemLines.at(i).str, panel_map, Pos(x, y),
       postmortemLines.at(i).clr);
     y++;
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 void Postmortem::runInfo() {
@@ -226,7 +226,7 @@ void Postmortem::runInfo() {
   //Read keys
   bool done = false;
   while(done == false) {
-    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topElement = min(
@@ -248,9 +248,9 @@ void Postmortem::runInfo() {
 
 void Postmortem::makeMemorialFile() {
   const string timeStamp =
-    eng->dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
+    eng.dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
-    eng->player->getNameA() + "_" + timeStamp + ".txt";
+    eng.player->getNameA() + "_" + timeStamp + ".txt";
   const string memorialFilePath = "data/" + memorialFileName;
 
   // Add memorial file
@@ -275,7 +275,7 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
 
   bool done = false;
   while(done == false) {
-    const MenuAction_t action = eng->menuInputHandler->getAction(browser);
+    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         renderMenu(browser);
@@ -290,11 +290,11 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
           renderMenu(browser);
         }
         if(browser.isPosAtKey('b')) {
-          eng->highScore->runHighScoreScreen();
+          eng.highScore->runHighScoreScreen();
           renderMenu(browser);
         }
         if(browser.isPosAtKey('c')) {
-          eng->log->displayHistory();
+          eng.log->displayHistory();
           renderMenu(browser);
         }
         if(browser.isPosAtKey('d')) {
@@ -331,49 +331,49 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  eng->renderer->coverPanel(panel_screen);
+  eng.renderer->coverPanel(panel_screen);
 
   Pos pos(1, 1);
 
   for(unsigned int i = 0; i < art.size(); i++) {
-    eng->renderer->drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
+    eng.renderer->drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
     pos.y += 1;
   }
 
   pos.set(45, 18);
-  const string NAME_STR = eng->player->getData()->name_a;
-  eng->renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
+  const string NAME_STR = eng.player->getData()->name_a;
+  eng.renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
-//  const string LVL_STR = "LVL " + toString(eng->dungeonMaster->getLevel());
-//  eng->renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
+//  const string LVL_STR = "LVL " + toString(eng.dungeonMaster->getLevel());
+//  eng.renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
 
   //Draw command labels
   pos.set(55, 14);
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     "a) Information", panel_screen, pos,
     browser.isPosAtKey('a') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     "b) View the High Score", panel_screen, pos,
     browser.isPosAtKey('b') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     "c) View messages", panel_screen, pos,
     browser.isPosAtKey('c') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     "d) Return to main menu", panel_screen, pos,
     browser.isPosAtKey('d') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng->renderer->drawText(
+  eng.renderer->drawText(
     "e) Quit the game", panel_screen, pos,
     browser.isPosAtKey('e') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }

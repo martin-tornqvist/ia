@@ -11,7 +11,7 @@
 
 class AI_handleInventory {
 public:
-  static bool action(Monster* monster, Engine* engine) {
+  static bool action(Monster* monster, Engine& engine) {
     (void)monster;
     (void)engine;
     return false;

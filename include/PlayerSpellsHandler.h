@@ -18,7 +18,7 @@ class Spell;
 
 class PlayerSpellsHandler {
 public:
-  PlayerSpellsHandler(Engine* engine) : eng(engine) {}
+  PlayerSpellsHandler(Engine& engine) : eng(engine) {}
   ~PlayerSpellsHandler();
 
   void run();
@@ -40,7 +40,7 @@ private:
 
   vector<Spell*> learnedSpells;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

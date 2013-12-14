@@ -18,7 +18,7 @@ enum PlacementRule_t {
 
 class MapPatterns {
 public:
-  MapPatterns(Engine* engine) :
+  MapPatterns(Engine& engine) :
     eng(engine) {
   }
 
@@ -28,7 +28,7 @@ public:
 private:
   int getWalkBlockersInDir(const Dir_t dir, const Pos pos);
 
-  Engine* eng;
+  Engine& eng;
 
 };
 

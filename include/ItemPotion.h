@@ -8,7 +8,7 @@ class Engine;
 
 class Potion: public Item {
 public:
-  Potion(ItemData* const itemData, Engine* engine) :
+  Potion(ItemData* const itemData, Engine& engine) :
     Item(itemData, engine) {}
 
   virtual ~Potion() {}
@@ -41,7 +41,7 @@ protected:
 
 class PotionOfHealing: public Potion {
 public:
-  PotionOfHealing(ItemData* const itemData, Engine* engine) :
+  PotionOfHealing(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfHealing() {}
   void specificQuaff(Actor* const actor);
@@ -52,7 +52,7 @@ private:
 
 class PotionOfSpirit: public Potion {
 public:
-  PotionOfSpirit(ItemData* const itemData, Engine* engine) :
+  PotionOfSpirit(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfSpirit() {}
   void specificQuaff(Actor* const actor);
@@ -63,7 +63,7 @@ private:
 
 class PotionOfBlindness: public Potion {
 public:
-  PotionOfBlindness(ItemData* const itemData, Engine* engine) :
+  PotionOfBlindness(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfBlindness() {}
   void specificQuaff(Actor* const actor);
@@ -74,7 +74,7 @@ private:
 
 class PotionOfParalyzation: public Potion {
 public:
-  PotionOfParalyzation(ItemData* const itemData, Engine* engine) :
+  PotionOfParalyzation(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfParalyzation() {}
   void specificQuaff(Actor* const actor);
@@ -85,7 +85,7 @@ private:
 
 class PotionOfDisease: public Potion {
 public:
-  PotionOfDisease(ItemData* const itemData, Engine* engine) :
+  PotionOfDisease(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfDisease() {}
   void specificQuaff(Actor* const actor);
@@ -99,7 +99,7 @@ private:
 
 class PotionOfConfusion: public Potion {
 public:
-  PotionOfConfusion(ItemData* const itemData, Engine* engine) :
+  PotionOfConfusion(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfConfusion() {}
   void specificQuaff(Actor* const actor);
@@ -110,7 +110,7 @@ private:
 
 class PotionOfFrenzy: public Potion {
 public:
-  PotionOfFrenzy(ItemData* const itemData, Engine* engine) :
+  PotionOfFrenzy(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfFrenzy() {}
   void specificQuaff(Actor* const actor);
@@ -121,7 +121,7 @@ private:
 
 class PotionOfFortitude: public Potion {
 public:
-  PotionOfFortitude(ItemData* const itemData, Engine* engine) :
+  PotionOfFortitude(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfFortitude() {}
   void specificQuaff(Actor* const actor);
@@ -134,7 +134,7 @@ private:
 
 class PotionOfPoison: public Potion {
 public:
-  PotionOfPoison(ItemData* const itemData, Engine* engine) :
+  PotionOfPoison(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfPoison() {}
   void specificQuaff(Actor* const actor);
@@ -145,7 +145,7 @@ private:
 
 class PotionOfInsight: public Potion {
 public:
-  PotionOfInsight(ItemData* const itemData, Engine* engine) :
+  PotionOfInsight(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfInsight() {}
   void specificQuaff(Actor* const actor);
@@ -159,7 +159,7 @@ private:
 
 class PotionOfRFire: public Potion {
 public:
-  PotionOfRFire(ItemData* const itemData, Engine* engine) :
+  PotionOfRFire(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfRFire() {}
   void specificQuaff(Actor* const actor);
@@ -170,7 +170,7 @@ private:
 
 class PotionOfAntidote: public Potion {
 public:
-  PotionOfAntidote(ItemData* const itemData, Engine* engine) :
+  PotionOfAntidote(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfAntidote() {}
   void specificQuaff(Actor* const actor);
@@ -181,7 +181,7 @@ private:
 
 class PotionOfRElec: public Potion {
 public:
-  PotionOfRElec(ItemData* const itemData, Engine* engine) :
+  PotionOfRElec(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfRElec() {}
   void specificQuaff(Actor* const actor);
@@ -192,7 +192,7 @@ private:
 
 class PotionOfRAcid: public Potion {
 public:
-  PotionOfRAcid(ItemData* const itemData, Engine* engine) :
+  PotionOfRAcid(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfRAcid() {}
   void specificQuaff(Actor* const actor);
@@ -203,7 +203,7 @@ private:
 
 class PotionOfDescent: public Potion {
 public:
-  PotionOfDescent(ItemData* const itemData, Engine* engine) :
+  PotionOfDescent(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
   ~PotionOfDescent() {}
   void specificQuaff(Actor* const actor);
@@ -214,7 +214,7 @@ private:
 
 class PotionNameHandler {
 public:
-  PotionNameHandler(Engine* engine) :
+  PotionNameHandler(Engine& engine) :
     eng(engine) {
     m_falseNames.resize(0);
 
@@ -255,7 +255,7 @@ private:
     m_falseNames.push_back(StringAndClr(str, clr));
   }
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

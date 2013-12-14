@@ -10,7 +10,7 @@ class Actor;
 
 class ItemPickup {
 public:
-  ItemPickup(Engine* engine) {eng = engine;}
+  ItemPickup(Engine& engine) : eng(engine) {}
 
   void tryPick();
 
@@ -21,7 +21,7 @@ private:
 
   bool isInventoryFull(Inventory* inventory, Item* item) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

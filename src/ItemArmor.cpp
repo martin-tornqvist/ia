@@ -3,8 +3,8 @@
 #include "Engine.h"
 #include "Log.h"
 
-Armor::Armor(ItemData* const itemData, Engine* engine) :
-  Item(itemData, engine), dur_(engine->dice.range(60, 100)) {}
+Armor::Armor(ItemData* const itemData, Engine& engine) :
+  Item(itemData, engine), dur_(engine.dice.range(60, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
@@ -30,7 +30,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   const int AP_BEFORE = getAbsorptionPoints();
 
   const double DDF_BASE     = data_->armorData.dmgToDurabilityFactor;
-  const double RND_FRACTION = double(eng->dice.percentile()) / 100.0;
+  const double RND_FRACTION = double(eng.dice.percentile()) / 100.0;
   const double DDF_ADJUST   = 3.0;
 
   const double DMG_BEFORE_DB = double(DMG_BEFORE);
@@ -42,8 +42,8 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
     const string armorName =
-      eng->itemDataHandler->getItemRef(*this, itemRef_plain, true);
-    eng->log->addMsg("My " + armorName + " is damaged!");
+      eng.itemDataHandler->getItemRef(*this, itemRef_plain, true);
+    eng.log->addMsg("My " + armorName + " is damaged!");
   }
 
   trace << "Armor: Damage before: " + toString(DMG_BEFORE) << endl;

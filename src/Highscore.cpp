@@ -40,12 +40,12 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   vector<HighScoreEntry> entries = getEntriesSorted();
 
   HighScoreEntry currentPlayer(
-    eng->basicUtils->getCurrentTime().getTimeStr(time_minute, true),
-    eng->player->getNameA(),
-    eng->dungeonMaster->getXp(),
-    eng->dungeonMaster->getCLvl(),
-    eng->map->getDLVL(),
-    eng->player->getInsanity(),
+    eng.basicUtils->getCurrentTime().getTimeStr(time_minute, true),
+    eng.player->getNameA(),
+    eng.dungeonMaster->getXp(),
+    eng.dungeonMaster->getCLvl(),
+    eng.map->getDLVL(),
+    eng.player->getInsanity(),
     IS_VICTORY);
 
   entries.push_back(currentPlayer);
@@ -59,43 +59,43 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
                                       const int TOP_ELEMENT) const {
   trace << "HighScore::renderHighScoreScreen()..." << endl;
 
-  eng->renderer->clearScreen();
+  eng.renderer->clearScreen();
 
   if(entries.empty()) {
     const int X0 = 1;
     const int Y0 = 4;
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "No High Score entries found | space/esc to exit ",
       panel_screen, Pos(X0, Y0), clrWhite);
   } else {
     const string decorationLine(MAP_X_CELLS - 2, '-');
 
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       decorationLine, panel_character, Pos(0, 1), clrWhite);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       " 2/8, down/up to navigate | space/esc to exit ",
       panel_character, Pos(3, 1), clrWhite);
 
     int yPos = 1;
 
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       decorationLine, panel_screen, Pos(1, yPos), clrWhite);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       " Displaying High Scores ", panel_screen, Pos(3, yPos), clrWhite);
 
     yPos++;
 
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Ended", panel_screen, Pos(X_POS_DATE, yPos), clrGray);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Name", panel_screen, Pos(X_POS_NAME, yPos), clrGray);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Score", panel_screen, Pos(X_POS_SCORE, yPos), clrGray);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Level", panel_screen, Pos(X_POS_LVL, yPos), clrGray);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Depth", panel_screen, Pos(X_POS_DLVL, yPos), clrGray);
-    eng->renderer->drawText(
+    eng.renderer->drawText(
       "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
 
     yPos++;
@@ -118,23 +118,23 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       trace << "HighScore: ins: " << ins << endl;
 
       const SDL_Color clr = clrNosferatuSepia;
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         dateAndTime, panel_screen, Pos(X_POS_DATE, yPos), clr);
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         name, panel_screen, Pos(X_POS_NAME, yPos), clr);
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         score, panel_screen, Pos(X_POS_SCORE, yPos), clr);
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         lvl, panel_screen, Pos(X_POS_LVL, yPos), clr);
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         dlvl, panel_screen, Pos(X_POS_DLVL, yPos), clr);
-      eng->renderer->drawText(
+      eng.renderer->drawText(
         ins + "%", panel_screen, Pos(X_POS_INSANITY, yPos), clr);
       yPos++;
     }
   }
 
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 
   trace << "HighScore::renderHighScoreScreen() [DONE]" << endl;
 }
@@ -144,7 +144,7 @@ void HighScore::runHighScoreScreen() {
   readFile(entries);
 
   if(entries.empty()) {
-    eng->popup->showMessage("No High Score entries found.", false);
+    eng.popup->showMessage("No High Score entries found.", false);
     return;
   }
 
@@ -156,7 +156,7 @@ void HighScore::runHighScoreScreen() {
   //Read keys
   bool done = false;
   while(done == false) {
-    const KeyboardReadReturnData& d = eng->input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement =

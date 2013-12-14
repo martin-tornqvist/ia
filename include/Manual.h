@@ -10,7 +10,7 @@ class Engine;
 
 class Manual {
 public:
-  Manual(Engine* engine) : eng(engine) {
+  Manual(Engine& engine) : eng(engine) {
     readFile();
   }
 
@@ -23,7 +23,7 @@ private:
 
   vector<string> lines;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

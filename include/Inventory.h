@@ -62,7 +62,7 @@ public:
   }
 
   void dropAllNonIntrinsic(
-    const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine* const engine);
+    const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
 
   bool hasItemInSlot(SlotTypes_t slotName) const;
 
@@ -87,11 +87,11 @@ public:
 
   void equipGeneralItemAndPossiblyEndTurn(
     const unsigned int GENERAL_INV_ELEMENT,
-    const SlotTypes_t slotToEquip, Engine* const engine);
+    const SlotTypes_t slotToEquip, Engine& engine);
 
-//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine* const engine);
+//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine& engine);
 
-  void swapWieldedAndPrepared(const bool END_TURN, Engine* const engine);
+  void swapWieldedAndPrepared(const bool END_TURN, Engine& engine);
 
   bool hasAmmoForFirearmInInventory();
 
@@ -133,7 +133,7 @@ public:
 
   InventorySlot* getSlot(SlotTypes_t slotName);
 
-  void sortGeneralInventory(Engine* const engine);
+  void sortGeneralInventory(Engine& engine);
 
   vector<InventorySlot>* getSlots() {
     return &slots_;
@@ -148,7 +148,7 @@ public:
 
   void addSaveLines(vector<string>& lines) const;
   void setParametersFromSaveLines(
-    vector<string>& lines, Engine* const engine);
+    vector<string>& lines, Engine& engine);
 
 private:
   vector<InventorySlot> slots_;

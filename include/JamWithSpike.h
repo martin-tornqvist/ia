@@ -8,7 +8,7 @@ class Feature;
 
 class JamWithSpike {
 public:
-  JamWithSpike(Engine* engine) : eng(engine) {}
+  JamWithSpike(Engine& engine) : eng(engine) {}
   ~JamWithSpike() {}
 
   void playerJam() const;
@@ -17,7 +17,7 @@ private:
   friend class Feature;
   void playerJamFeature(Feature* const feature) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

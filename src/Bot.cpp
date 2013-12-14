@@ -29,42 +29,42 @@ void Bot::act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    const Actor& actor = eng->gameTime->getActorAtElement(i);
-    if(eng->basicUtils->isPosInsideMap(actor.pos) == false) {
+    const Actor& actor = eng.gameTime->getActorAtElement(i);
+    if(eng.basicUtils->isPosInsideMap(actor.pos) == false) {
       throw runtime_error("Actor outside map");
     }
   }
   //=======================================================================
 
-  PropHandler* const propHandler = eng->player->getPropHandler();
+  PropHandler* const propHandler = eng.player->getPropHandler();
 
   //Occasionally apply RFear
   //(Helps avoiding getting stuck on fear-causing monsters too long)
-  if(eng->dice.oneIn(7)) {
+  if(eng.dice.oneIn(7)) {
     propHandler->tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
   }
 
   //Ocassionally send a TAB command to attack nearby monsters
   //(Helps avoiding getting stuck around monsters too long)
-  if(eng->dice.coinToss()) {
-    eng->input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
+  if(eng.dice.coinToss()) {
+    eng.input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
     return;
   }
 
   //Occasionally apply a random property to exercise the prop code
-  if(eng->dice.oneIn(10)) {
+  if(eng.dice.oneIn(10)) {
     vector<PropId_t> propCandidates;
     propCandidates.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
-      PropData& d = eng->propDataHandler->dataList[i];
+      PropData& d = eng.propDataHandler->dataList[i];
       if(d.allowTestingOnBot) {
         propCandidates.push_back(PropId_t(i));
       }
     }
     PropId_t propId =
-      propCandidates.at(eng->dice.range(0, propCandidates.size() - 1));
+      propCandidates.at(eng.dice.range(0, propCandidates.size() - 1));
 
     Prop* const prop =
       propHandler->makePropFromId(propId, propTurnsSpecified, 5);
@@ -75,36 +75,36 @@ void Bot::act() {
   //If we are on the stairs,
   //check if we are finished with the current run or finished with all runs,
   //otherwise descend the stairs
-  const Pos& pos = eng->player->pos;
+  const Pos& pos = eng.player->pos;
   const FeatureStatic* const featureHere =
-    eng->map->cells[pos.x][pos.y].featureStatic;
+    eng.map->cells[pos.x][pos.y].featureStatic;
   if(featureHere->getId() == feature_stairsDown) {
-    if(eng->map->getDLVL() >= PLAY_TO_DLVL) {
+    if(eng.map->getDLVL() >= PLAY_TO_DLVL) {
       trace << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
       if(runCount >= NR_OF_RUNS) {
         trace << "Bot: All runs finished, stopping" << endl;
-        eng->config->isBotPlaying = false;
+        eng.config->isBotPlaying = false;
         return;
       } else {
         trace << "Bot: Starting new run on first dungeon level" << endl;
-        eng->map->dlvl_ = 0;
+        eng.map->dlvl_ = 0;
       }
     }
-    eng->input->handleKeyPress(KeyboardReadReturnData('>'));
+    eng.input->handleKeyPress(KeyboardReadReturnData('>'));
     return;
   }
 
   //Handle blocking door
-  const Pos& playerPos = eng->player->pos;
+  const Pos& playerPos = eng.player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f =
-        eng->map->cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
+        eng.map->cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
       if(f->getId() == feature_door) {
         dynamic_cast<Door*>(f)->reveal(false);
         if(dynamic_cast<Door*>(f)->isStuck()) {
-          dynamic_cast<Door*>(f)->tryBash(eng->player);
+          dynamic_cast<Door*>(f)->tryBash(eng.player);
           return;
         }
       }
@@ -112,7 +112,7 @@ void Bot::act() {
   }
 
   //If we are terrified, wait in place
-  if(eng->player->getPropHandler()->hasProp(propTerrified)) {
+  if(eng.player->getPropHandler()->hasProp(propTerrified)) {
     if(walkToAdjacentCell(playerPos)) {
       return;
     }
@@ -126,9 +126,9 @@ void Bot::act() {
 }
 
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
-  Pos playerCell(eng->player->pos);
+  Pos playerCell(eng.player->pos);
 
-  if(eng->basicUtils->isPosAdj(playerCell, cellToGoTo, true) == false) {
+  if(eng.basicUtils->isPosAdj(playerCell, cellToGoTo, true) == false) {
     throw runtime_error("Bad position parameter");
   }
 
@@ -155,13 +155,13 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   if(xRel ==  1 && yRel ==  1) {key = '3';}
 
   //Occasionally randomize movement
-  if(eng->dice.oneIn(2)) {
-    key = '0' + eng->dice.range(1, 9);
+  if(eng.dice.oneIn(2)) {
+    key = '0' + eng.dice.range(1, 9);
   }
 
 //  assert(key >= '1' && key <= '9');
 
-  eng->input->handleKeyPress(KeyboardReadReturnData(key));
+  eng.input->handleKeyPress(KeyboardReadReturnData(key));
 
   return playerCell == cellToGoTo;
 }
@@ -169,7 +169,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 Pos Bot::findNextStairs() {
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
-      FeatureStatic* f = eng->map->cells[x][y].featureStatic;
+      FeatureStatic* f = eng.map->cells[x][y].featureStatic;
       if(f->getId() == feature_stairsDown) {
         return Pos(x, y);
       }
@@ -186,20 +186,20 @@ void Bot::findPathToNextStairs() {
   const Pos stairPos = findNextStairs();
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  const BodyType_t playerBodyType = eng->player->getBodyType();
+  const BodyType_t playerBodyType = eng.player->getBodyType();
   MapParser::parse(CellPredBlocksBodyType(playerBodyType, false, eng),
                    blockers);
 
   //Consider all doors passable
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      FeatureStatic* f = eng->map->cells[x][y].featureStatic;
+      FeatureStatic* f = eng.map->cells[x][y].featureStatic;
       if(f->getId() == feature_door) {
         blockers[x][y] = false;
       }
     }
   }
-  eng->pathFinder->run(eng->player->pos, stairPos, blockers, currentPath_);
+  eng.pathFinder->run(eng.player->pos, stairPos, blockers, currentPath_);
 //  assert(currentPath_.size() > 0);
 }
 

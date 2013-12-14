@@ -38,7 +38,7 @@ bool CellPredLivingActorsAdjToPos::check(const Actor& a) const {
   if(a.deadState != actorDeadState_alive) {
     return false;
   }
-  return eng->basicUtils->isPosAdj(pos_, a.pos, true);
+  return eng.basicUtils->isPosAdj(pos_, a.pos, true);
 }
 
 bool CellPredBlocksItems::check(const Cell& c)  const {
@@ -61,7 +61,7 @@ void MapParser::parse(
     throw runtime_error("Predicate not checking anything");
   }
 
-  const Engine* const eng = predicate.eng;
+  const Engine& eng = predicate.eng;
 
   const bool WRITE_T = writeRule == mapParseWriteAlways ||
                        writeRule == mapParseWriteOnlyTrue;
@@ -72,7 +72,7 @@ void MapParser::parse(
   if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        const Cell& c = eng->map->cells[x][y];
+        const Cell& c = eng.map->cells[x][y];
         const bool IS_MATCH = predicate.check(c);
         if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
           arrayOut[x][y] = IS_MATCH;
@@ -82,9 +82,9 @@ void MapParser::parse(
   }
 
   if(predicate.isCheckingMobFeatures()) {
-    const int NR_MOB_FEATURES = eng->gameTime->getNrFeatureMobs();
+    const int NR_MOB_FEATURES = eng.gameTime->getNrFeatureMobs();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
-      const FeatureMob& f = eng->gameTime->getFeatureMobAtElement(i);
+      const FeatureMob& f = eng.gameTime->getFeatureMobAtElement(i);
       const Pos& p = f.getPos();
       const bool IS_MATCH = predicate.check(f);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
@@ -94,9 +94,9 @@ void MapParser::parse(
   }
 
   if(predicate.isCheckingActors()) {
-    const int NR_ACTORS = eng->gameTime->getNrActors();
+    const int NR_ACTORS = eng.gameTime->getNrActors();
     for(int i = 0; i < NR_ACTORS; i++) {
-      const Actor& a = eng->gameTime->getActorAtElement(i);
+      const Actor& a = eng.gameTime->getActorAtElement(i);
       const Pos& p = a.pos;
       const bool IS_MATCH = predicate.check(a);
       if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
@@ -108,8 +108,8 @@ void MapParser::parse(
 
 
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = eng->basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
+  const int chebDist1 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
+  const int chebDist2 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 
@@ -118,7 +118,7 @@ void FloodFill::run(
   const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
   int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const Pos& target) {
 
-  eng->basicUtils->resetArray(values);
+  eng.basicUtils->resetArray(values);
 
   vector<Pos> positions;
   positions.resize(0);
@@ -145,7 +145,7 @@ void FloodFill::run(
           const Pos newPos(currentX + dx, currentY + dy);
           if(
             blockers[newPos.x][newPos.y] == false &&
-            eng->basicUtils->isPosInside(Pos(newPos.x, newPos.y), bounds) &&
+            eng.basicUtils->isPosInside(Pos(newPos.x, newPos.y), bounds) &&
             values[newPos.x][newPos.y] == 0) {
             currentValue = values[currentX][currentY];
 
@@ -205,7 +205,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
   vectorToSet.resize(0);
 
   int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->floodFill->run(origin, blockers, floodValues, 1000, target);
+  eng.floodFill->run(origin, blockers, floodValues, 1000, target);
 
   bool pathExists = floodValues[target.x][target.y] != 0;
 
@@ -263,7 +263,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  const int X1 = min(MAP_X_CELLS - 1, origin.x + MAX_VISION_RANGE + 1);
 //  const int Y1 = min(MAP_Y_CELLS - 1, origin.y + MAX_VISION_RANGE + 1);
 //
-//  const Map* const map = eng->map;
+//  const Map* const map = eng.map;
 //
 //  for(int y = Y0; y <= Y1; y++) {
 //    for(int x = X0; x <= X1; x++) {
@@ -272,12 +272,12 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //    }
 //  }
 //
-//  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+//  const unsigned int FEATURE_MOBS_SIZE = eng.gameTime->getFeatureMobsSize();
 //  int x = 0;
 //  int y = 0;
 //  FeatureMob* f = NULL;
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
-//    f = eng->gameTime->getFeatureMobAt(i);
+//    f = eng.gameTime->getFeatureMobAt(i);
 //    x = f->getX();
 //    y = f->getY();
 //    if(map->featuresStatic[x][y]->isVisionPassable()) {
@@ -312,7 +312,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  const BodyType_t bodyType,
 //  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
-//  const Map* const map = eng->map;
+//  const Map* const map = eng.map;
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
@@ -320,9 +320,9 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //        map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
-//  GameTime* const gameTime = eng->gameTime;
+//  GameTime* const gameTime = eng.gameTime;
 //  FeatureMob* f = NULL;
-//  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+//  const unsigned int FEATURE_MOBS_SIZE = eng.gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
 //    f = gameTime->getFeatureMobAt(i);
 //    const Pos& pos = f->getPos();
@@ -337,13 +337,13 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      arrayToSet[x][y] = eng->map->featuresStatic[x][y]->isProjectilesPassable() == false;
+//      arrayToSet[x][y] = eng.map->featuresStatic[x][y]->isProjectilesPassable() == false;
 //    }
 //  }
 //  FeatureMob* f = NULL;
-//  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+//  const unsigned int FEATURE_MOBS_SIZE = eng.gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
-//    f = eng->gameTime->getFeatureMobAt(i);
+//    f = eng.gameTime->getFeatureMobAt(i);
 //    if(arrayToSet[f->getX()][f->getY()] == false) {
 //      arrayToSet[f->getX()][f->getY()] = f->isProjectilesPassable() == false;
 //    }
@@ -355,7 +355,7 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      if(eng->map->items[x][y] != NULL) {
+//      if(eng.map->items[x][y] != NULL) {
 //        arrayToSet[x][y] = true;
 //      }
 //    }
@@ -369,13 +369,13 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  for(int y = 0; y < MAP_Y_CELLS; y++) {
 //    for(int x = 0; x < MAP_X_CELLS; x++) {
 //      arrayToSet[x][y] =
-//        eng->map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
+//        eng.map->featuresStatic[x][y]->isBodyTypePassable(bodyType) == false;
 //    }
 //  }
 //  FeatureMob* f = NULL;
-//  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+//  const unsigned int FEATURE_MOBS_SIZE = eng.gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
-//    f = eng->gameTime->getFeatureMobAt(i);
+//    f = eng.gameTime->getFeatureMobAt(i);
 //    const Pos& pos = f->getPos();
 //    if(arrayToSet[pos.x][pos.y] == false) {
 //      arrayToSet[pos.x][pos.y] = f->isBodyTypePassable(bodyType) == false;
@@ -389,13 +389,13 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //
 //  for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
 //    for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-//      arrayToSet[x][y] = !eng->map->featuresStatic[x][y]->canHaveItem();
+//      arrayToSet[x][y] = !eng.map->featuresStatic[x][y]->canHaveItem();
 //    }
 //  }
 //  FeatureMob* f = NULL;
-//  const unsigned int FEATURE_MOBS_SIZE = eng->gameTime->getFeatureMobsSize();
+//  const unsigned int FEATURE_MOBS_SIZE = eng.gameTime->getFeatureMobsSize();
 //  for(unsigned int i = 0; i < FEATURE_MOBS_SIZE; i++) {
-//    f = eng->gameTime->getFeatureMobAt(i);
+//    f = eng.gameTime->getFeatureMobAt(i);
 //    if(arrayToSet[f->getX()][f->getY()] == false) {
 //      arrayToSet[f->getX()][f->getY()] = !f->canHaveItem();
 //    }
@@ -407,9 +407,9 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
-//  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
+//  const unsigned int NR_ACTORS = eng.gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAtElement(i);
+//    a = eng.gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
 //      if(arrayToSet[a->pos.x][a->pos.y] == false) {
 //        arrayToSet[a->pos.x][a->pos.y] = true;
@@ -422,9 +422,9 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
-//  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
+//  const unsigned int NR_ACTORS = eng.gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAtElement(i);
+//    a = eng.gameTime->getActorAtElement(i);
 //    if(arrayToSet[a->pos.x][a->pos.y] == false) {
 //      arrayToSet[a->pos.x][a->pos.y] = true;
 //    }
@@ -435,9 +435,9 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  const Pos& origin, bool arrayToSet[MAP_X_CELLS][MAP_Y_CELLS]) {
 //
 //  Actor* a = NULL;
-//  const unsigned int NR_ACTORS = eng->gameTime->getLoopSize();
+//  const unsigned int NR_ACTORS = eng.gameTime->getLoopSize();
 //  for(unsigned int i = 0; i < NR_ACTORS; i++) {
-//    a = eng->gameTime->getActorAtElement(i);
+//    a = eng.gameTime->getActorAtElement(i);
 //    if(a->deadState == actorDeadState_alive) {
 //      if(arrayToSet[a->pos.x][a->pos.y] == false && a->pos != origin) {
 //        if(isCellsAdj(origin, a->pos, false)) {
@@ -452,5 +452,5 @@ void PathFinder::run(const Pos& origin, const Pos& target,
 //  const Pos& pos,
 //  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
 //
-//  return isCellsAdj(pos, eng->player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
+//  return isCellsAdj(pos, eng.player->pos, COUNT_SAME_CELL_AS_NEIGHBOUR);
 //}

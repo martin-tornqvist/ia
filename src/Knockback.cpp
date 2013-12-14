@@ -13,9 +13,9 @@
 void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
                              const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
-  const bool DEFENDER_IS_MONSTER = &defender != eng->player;
+  const bool DEFENDER_IS_MONSTER = &defender != eng.player;
 
-  if(DEFENDER_IS_MONSTER || eng->config->isBotPlaying == false) {
+  if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
     if(defender.getData()->actorSize <= actorSize_giant) {
 
       const BodyType_t defenderBodyType = defender.getBodyType();
@@ -38,7 +38,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           CellPredBlocksBodyType(defender.getBodyType(), true, eng), blockers);
         const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
-          eng->map->cells[newPos.x][newPos.y].featureStatic->isBottomless();
+          eng.map->cells[newPos.x][newPos.y].featureStatic->isBottomless();
 
         if(
           (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
@@ -46,10 +46,10 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           if(i == 0) {
             if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
               if(DEFENDER_IS_MONSTER) {
-                eng->log->addMsg(
+                eng.log->addMsg(
                   defender.getNameThe() + " is knocked back!");
               } else {
-                eng->log->addMsg("I am knocked back!");
+                eng.log->addMsg("I am knocked back!");
               }
             }
             defender.getPropHandler()->tryApplyProp(
@@ -62,17 +62,17 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           defender.pos = newPos;
 
-          eng->renderer->drawMapAndInterface();
+          eng.renderer->drawMapAndInterface();
 
-          eng->sleep(eng->config->delayProjectileDraw);
+          eng.sleep(eng.config->delayProjectileDraw);
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER) {
-              eng->log->addMsg(
+              eng.log->addMsg(
                 defender.getNameThe() + " plummets down the depths.",
                 clrMessageGood);
             } else {
-              eng->log->addMsg(
+              eng.log->addMsg(
                 "I plummet down the depths!", clrMessageBad);
             }
             defender.die(true, false, false);
@@ -81,7 +81,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           // Bump features (e.g. so monsters can be knocked back into traps)
           vector<FeatureMob*> featureMobs =
-            eng->gameTime->getFeatureMobsAtPos(defender.pos);
+            eng.gameTime->getFeatureMobsAtPos(defender.pos);
           for(
             unsigned int featureMobIndex = 0;
             featureMobIndex < featureMobs.size();
@@ -94,7 +94,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           }
 
           FeatureStatic* const f =
-            eng->map->cells[defender.pos.x][defender.pos.y].featureStatic;
+            eng.map->cells[defender.pos.x][defender.pos.y].featureStatic;
           f->bump(defender);
 
           if(defender.deadState != actorDeadState_alive) {
@@ -104,7 +104,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           // Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN) {
             FeatureStatic* const f =
-              eng->map->cells[newPos.x][newPos.y].featureStatic;
+              eng.map->cells[newPos.x][newPos.y].featureStatic;
             if(f->isVisionPassable() == false) {
               defender.getPropHandler()->tryApplyProp(
                 new PropNailed(eng, propTurnsIndefinite));

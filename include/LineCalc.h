@@ -13,7 +13,7 @@ class Engine;
 
 class LineCalc {
 public:
-  LineCalc(Engine* engine) :
+  LineCalc(Engine& engine) :
     eng(engine) {
     calcFovAbsDistances();
     calcFovDeltaLines();
@@ -44,7 +44,7 @@ private:
   void calcFovDeltaLines();
   vector<Pos> fovDeltaLines[FOV_MAX_W_INT][FOV_MAX_W_INT];
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

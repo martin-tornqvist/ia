@@ -13,7 +13,7 @@
 
 void ExplosionMaker::renderExplosion(const BasicData* data,
                                      bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 
   int x0 = max(1, data->x0 + 1);
   int y0 = max(1, data->y0 + 1);
@@ -21,17 +21,17 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   int y1 = min(MAP_Y_CELLS - 2, data->y1 - 1);
   for(int x = x0; x <= x1; x++) {
     for(int y = y0; y <= y1; y++) {
-      if(eng->map->cells[x][y].isSeenByPlayer) {
+      if(eng.map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
-          eng->renderer->drawGlyph(
+          eng.renderer->drawGlyph(
             '*', panel_map, Pos(x, y), clrYellow, true, clrBlack);
         }
       }
     }
   }
 
-  eng->renderer->updateScreen();
-  eng->sleep(eng->config->delayExplosion / 2);
+  eng.renderer->updateScreen();
+  eng.sleep(eng.config->delayExplosion / 2);
 
   x0 = max(1, data->x0);
   y0 = max(1, data->y0);
@@ -39,25 +39,25 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
   y1 = min(MAP_Y_CELLS - 2, data->y1);
   for(int x = x0; x <= x1; x++) {
     for(int y = y0; y <= y1; y++) {
-      if(eng->map->cells[x][y].isSeenByPlayer) {
+      if(eng.map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
           if(
             x == data->x0 || x == data->x1 ||
             y == data->y0 || y == data->y1) {
-            eng->renderer->drawGlyph(
+            eng.renderer->drawGlyph(
               '*', panel_map, Pos(x, y), clrRedLgt, true, clrBlack);
           }
         }
       }
     }
   }
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 void ExplosionMaker::renderExplosionWithColorOverride(
   const BasicData* data, const SDL_Color clr,
   bool reach[MAP_X_CELLS][MAP_Y_CELLS]) {
-  eng->renderer->drawMapAndInterface();
+  eng.renderer->drawMapAndInterface();
 
   const int X0 = max(1, data->x0);
   const int Y0 = max(1, data->y0);
@@ -65,15 +65,15 @@ void ExplosionMaker::renderExplosionWithColorOverride(
   const int Y1 = min(MAP_Y_CELLS - 2, data->y1);
   for(int x = X0; x <= X1; x++) {
     for(int y = Y0; y <= Y1; y++) {
-      if(eng->map->cells[x][y].isSeenByPlayer) {
+      if(eng.map->cells[x][y].isSeenByPlayer) {
         if(reach[x][y]) {
-          eng->renderer->drawGlyph(
+          eng.renderer->drawGlyph(
             '*', panel_map, Pos(x, y), clr, true, clrBlack);
         }
       }
     }
   }
-  eng->renderer->updateScreen();
+  eng.renderer->updateScreen();
 }
 
 void ExplosionMaker::runExplosion(
@@ -87,11 +87,11 @@ void ExplosionMaker::runExplosion(
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
   bool reach[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetArray(reach, false);
+  eng.basicUtils->resetArray(reach, false);
 
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
-      reach[x][y] = eng->fov->checkCell(
+      reach[x][y] = eng.fov->checkCell(
                       blockers, Pos(x, y), origin, false) &&
                     !blockers[x][y];
     }
@@ -101,27 +101,27 @@ void ExplosionMaker::runExplosion(
   //TODO Explosion sound msg should be parameterized with an enumerated type
 //  if(DO_EXPLOSION_DMG) {
   Sound snd("I hear an explosion!", sfx, true, origin, true, true);
-  eng->soundEmitter->emitSound(snd);
-//    eng->audio->playSound(audio_explosion);
+  eng.soundEmitter->emitSound(snd);
+//    eng.audio->playSound(audio_explosion);
 //  }
 
   //Render
-  if(eng->config->isTilesMode) {
+  if(eng.config->isTilesMode) {
     bool forbiddenRenderCells[MAP_X_CELLS][MAP_Y_CELLS];
-    eng->basicUtils->resetArray(forbiddenRenderCells, true);
+    eng.basicUtils->resetArray(forbiddenRenderCells, true);
     for(int y = 1; y < MAP_Y_CELLS - 2; y++) {
       for(int x = 1; x < MAP_X_CELLS - 2; x++) {
         forbiddenRenderCells[x][y] =
           reach[x][y] == false ||
-          eng->map->cells[x][y].isSeenByPlayer == false;
+          eng.map->cells[x][y].isSeenByPlayer == false;
       }
     }
 
     if(OVERRIDE_EXPLOSION_RENDERING) {
-      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
+      eng.renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
           forbiddenRenderCells, colorOverride, colorOverride);
     } else {
-      eng->renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
+      eng.renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
           forbiddenRenderCells, clrYellow, clrRedLgt);
     }
   } else {
@@ -133,7 +133,7 @@ void ExplosionMaker::runExplosion(
   }
 
   //Delay before applying damage and effects
-//  eng->sleep(eng->config->delayExplosion);
+//  eng.sleep(eng.config->delayExplosion);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -143,30 +143,30 @@ void ExplosionMaker::runExplosion(
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
 
       if(DO_EXPLOSION_DMG) {
-        if(eng->basicUtils->isPosAdj(Pos(x, y), origin, false)) {
-          eng->map->switchToDestroyedFeatAt(Pos(x, y));
+        if(eng.basicUtils->isPosAdj(Pos(x, y), origin, false)) {
+          eng.map->switchToDestroyedFeatAt(Pos(x, y));
 
-          if(eng->map->cells[x][y].featureStatic->getId() == feature_door) {
-            eng->map->switchToDestroyedFeatAt(Pos(x, y));
+          if(eng.map->cells[x][y].featureStatic->getId() == feature_door) {
+            eng.map->switchToDestroyedFeatAt(Pos(x, y));
           }
         }
       }
 
       if(reach[x][y] == true) {
         const int CHEBY_DIST =
-          eng->basicUtils->chebyshevDist(origin.x, origin.y, x, y);
+          eng.basicUtils->chebyshevDist(origin.x, origin.y, x, y);
         const int EXPLOSION_DMG_AT_DIST =
-          eng->dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
+          eng.dice(DMG_ROLLS - CHEBY_DIST, DMG_SIDES) + DMG_PLUS;
 
         //Damage actor, or apply property?
-        const int NR_ACTORS = eng->gameTime->getNrActors();
+        const int NR_ACTORS = eng.gameTime->getNrActors();
         for(int i = 0; i < NR_ACTORS; i++) {
-          Actor& actor = eng->gameTime->getActorAtElement(i);
+          Actor& actor = eng.gameTime->getActorAtElement(i);
           if(actor.pos.x == x && actor.pos.y == y) {
 
             if(DO_EXPLOSION_DMG) {
-              if(&actor == eng->player) {
-                eng->log->addMsg("I am hit by an explosion!", clrMessageBad);
+              if(&actor == eng.player) {
+                eng.log->addMsg("I am hit by an explosion!", clrMessageBad);
               }
               actor.hit(EXPLOSION_DMG_AT_DIST, dmgType_physical, true);
             }
@@ -184,10 +184,10 @@ void ExplosionMaker::runExplosion(
         }
 
         if(DO_EXPLOSION_DMG == true) {
-          if(eng->dice.percentile() < 55) {
-            eng->featureFactory->spawnFeatureAt(
+          if(eng.dice.percentile() < 55) {
+            eng.featureFactory->spawnFeatureAt(
               feature_smoke, Pos(x, y),
-              new SmokeSpawnData(1 + eng->dice(1, 3)));
+              new SmokeSpawnData(1 + eng.dice(1, 3)));
           }
         }
       }
@@ -195,8 +195,8 @@ void ExplosionMaker::runExplosion(
   }
 
   //Set graphics back to normal
-  eng->player->updateFov();
-  eng->renderer->drawMapAndInterface();
+  eng.player->updateFov();
+  eng.renderer->drawMapAndInterface();
 
   if(prop != NULL) {
     delete prop;
@@ -210,7 +210,7 @@ void ExplosionMaker::runSmokeExplosion(const Pos& origin,
 
   //Set up explosion reach array
   bool reach[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetArray(reach, false);
+  eng.basicUtils->resetArray(reach, false);
 
   //There are two scans for blocking objects made,
   //pretty un-optimised, but it doesn't matter.
@@ -222,7 +222,7 @@ void ExplosionMaker::runSmokeExplosion(const Pos& origin,
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       //As opposed to the explosion reach, the smoke explosion must not reach
       //into walls and other solid objects
-      reach[x][y] = blockers[x][y] == false && eng->fov->checkCell(
+      reach[x][y] = blockers[x][y] == false && eng.fov->checkCell(
                       blockers, Pos(x, y), origin, false);
     }
   }
@@ -231,16 +231,16 @@ void ExplosionMaker::runSmokeExplosion(const Pos& origin,
   for(int x = max(1, data.x0); x <= min(MAP_X_CELLS - 2, data.x1); x++) {
     for(int y = max(1, data.y0); y <= min(MAP_Y_CELLS - 2, data.y1); y++) {
       if(reach[x][y] == true) {
-        eng->featureFactory->spawnFeatureAt(
-          feature_smoke, Pos(x, y), new SmokeSpawnData(16 + eng->dice(1, 6)));
+        eng.featureFactory->spawnFeatureAt(
+          feature_smoke, Pos(x, y), new SmokeSpawnData(16 + eng.dice(1, 6)));
       }
     }
   }
 
   //Draw map
-  eng->player->updateFov();
-  eng->renderer->drawMapAndInterface();
+  eng.player->updateFov();
+  eng.renderer->drawMapAndInterface();
 
   //Delay
-  eng->sleep(eng->config->delayExplosion);
+  eng.sleep(eng.config->delayExplosion);
 }

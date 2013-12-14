@@ -8,7 +8,7 @@ class Engine;
 
 class Weapon: public Item {
 public:
-  Weapon(ItemData* const itemData, ItemData* const ammoData, Engine* engine);
+  Weapon(ItemData* const itemData, ItemData* const ammoData, Engine& engine);
   virtual ~Weapon() {}
 
   int nrAmmoLoaded;
@@ -79,7 +79,7 @@ protected:
 class SawedOff: public Weapon {
 public:
   SawedOff(ItemData* const itemData, ItemData* const ammoData,
-           Engine* const engine) :
+           Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 2;
     nrAmmoLoaded = ammoCapacity;
@@ -93,7 +93,7 @@ private:
 class PumpShotgun: public Weapon {
 public:
   PumpShotgun(ItemData* const itemData, ItemData* const ammoData,
-              Engine* const engine) :
+              Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 8;
     nrAmmoLoaded = ammoCapacity;
@@ -107,7 +107,7 @@ private:
 class Pistol: public Weapon {
 public:
   Pistol(ItemData* const itemData, ItemData* const ammoData,
-         Engine* const engine) :
+         Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 7;
     nrAmmoLoaded = ammoCapacity;
@@ -121,7 +121,7 @@ private:
 class FlareGun: public Weapon {
 public:
   FlareGun(ItemData* const itemData, ItemData* const ammoData,
-           Engine* const engine) :
+           Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     nrAmmoLoaded = 1;
     ammoCapacity = 1;
@@ -135,7 +135,7 @@ private:
 class MachineGun: public Weapon {
 public:
   MachineGun(ItemData* const itemData, ItemData* const ammoData,
-             Engine* const engine) :
+             Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
@@ -150,7 +150,7 @@ private:
 class Incinerator: public Weapon {
 public:
   Incinerator(ItemData* const itemData, ItemData* const ammoData,
-              Engine* const engine) :
+              Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
@@ -166,7 +166,7 @@ private:
 class TeslaCanon: public Weapon {
 public:
   TeslaCanon(ItemData* const itemData, ItemData* const ammoData,
-             Engine* const engine) :
+             Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
@@ -180,7 +180,7 @@ private:
 class SpikeGun: public Weapon {
 public:
   SpikeGun(ItemData* const itemData, ItemData* const ammoData,
-           Engine* const engine) :
+           Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = 12;
     nrAmmoLoaded = ammoCapacity;

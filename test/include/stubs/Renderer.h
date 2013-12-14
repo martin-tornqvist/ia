@@ -6,11 +6,9 @@
 class Engine;
 class Projectile;
 
-const int TEST_THIS_SHIT = 5;
-
 class Renderer {
 public:
-  Renderer(Engine* const) {}
+  Renderer(Engine&) {}
   ~Renderer() {}
 
   void drawMapAndInterface(const bool = false) {}

@@ -13,12 +13,12 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   vector<Pos> floorInR1Vector;
   floorInR1Vector.resize(0);
   bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetArray(floorInR1Grid, false);
+  eng.basicUtils->resetArray(floorInR1Grid, false);
 
   for(int y = room1.getY0(); y <= room1.getY1(); y++) {
     for(int x = room1.getX0(); x <= room1.getX1(); x++) {
       const Pos c = Pos(x, y);
-      if(eng->map->cells[c.x][c.y].featureStatic->getId() ==
+      if(eng.map->cells[c.x][c.y].featureStatic->getId() ==
           feature_stoneFloor) {
         floorInR1Vector.push_back(c);
         floorInR1Grid[x][y] = true;
@@ -42,7 +42,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 //    travelDirCandidates.push_back(Pos(1, 0));   //Right
 //  }
 //
-//  const int ELEMENT = eng->dice.range(0, travelDirCandidates.size() - 1);
+//  const int ELEMENT = eng.dice.range(0, travelDirCandidates.size() - 1);
 //  const Pos travelStartDir(travelDirCandidates.at(ELEMENT));
 
   const Pos roomDeltaSigns(
@@ -53,12 +53,12 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   vector<Pos> floorInR2Vector;
   floorInR2Vector.resize(0);
   bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetArray(floorInR2Grid, false);
+  eng.basicUtils->resetArray(floorInR2Grid, false);
   for(int y = room2.getY0(); y <= room2.getY1(); y++) {
     for(int x = room2.getX0(); x <= room2.getX1(); x++) {
       Pos c = Pos(x, y);
       const FeatureStatic* const f =
-        eng->map->cells[c.x][c.y].featureStatic;
+        eng.map->cells[c.x][c.y].featureStatic;
       if(f->getId() == feature_stoneFloor) {
         floorInR2Vector.push_back(c);
         floorInR2Grid[x][y] = true;
@@ -75,7 +75,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
               PossInR1closeToR2.push_back(c);
             }
           }
-          if(eng->basicUtils->isPosInsideMap(c) == false) {
+          if(eng.basicUtils->isPosInsideMap(c) == false) {
             doneTravelling = true;
           }
         }
@@ -84,10 +84,10 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   }
 
   if(PossInR1closeToR2.size() > 0) {
-    Pos c = PossInR1closeToR2.at(eng->dice(1, PossInR1closeToR2.size()) - 1);
+    Pos c = PossInR1closeToR2.at(eng.dice(1, PossInR1closeToR2.size()) - 1);
     while(floorInR2Grid[c.x][c.y] == false) {
       c += roomDeltaSigns;
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
       if(doorPosCandidates != NULL) {
         doorPosCandidates[c.x][c.y] = true;
       }
@@ -151,9 +151,9 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 
     // (1)
     const Pos c1 = floorInR1Vector.at(
-                     eng->dice(1, floorInR1Vector.size()) - 1);
+                     eng.dice(1, floorInR1Vector.size()) - 1);
     const Pos c2 = floorInR2Vector.at(
-                     eng->dice(1, floorInR2Vector.size()) - 1);
+                     eng.dice(1, floorInR2Vector.size()) - 1);
 
     Pos c = c1;
 
@@ -161,7 +161,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     while(floorInR1Grid[c.x][c.y] == true) {
       c += roomDeltaSigns;
     }
-    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
     if(doorPosCandidates != NULL) {
       doorPosCandidates[c.x][c.y] = true;
     }
@@ -170,7 +170,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     // (3)
     Pos cTemp(c - roomDeltaSigns);
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
       cTemp -= roomDeltaSigns;
     }
 
@@ -182,13 +182,13 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 
     // (4)
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
       c += deltaCurSign - roomDeltaSigns;
     }
 
     // (5)
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
       c += roomDeltaSigns;
     }
     c -= roomDeltaSigns;
@@ -203,7 +203,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 void MapGen::backupMap() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      backup[x][y] = eng->map->cells[x][y].featureStatic->getId();
+      backup[x][y] = eng.map->cells[x][y].featureStatic->getId();
     }
   }
 }
@@ -211,7 +211,7 @@ void MapGen::backupMap() {
 void MapGen::restoreMap() {
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
-      eng->featureFactory->spawnFeatureAt(backup[x][y], Pos(x, y));
+      eng.featureFactory->spawnFeatureAt(backup[x][y], Pos(x, y));
     }
   }
 }
@@ -221,18 +221,18 @@ void MapGen::makeStraightPathByPathfinder(
   const bool TUNNEL_THROUGH_ANY_FEATURE) {
 
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
-  eng->basicUtils->resetArray(blockers, false);
+  eng.basicUtils->resetArray(blockers, false);
   vector<Pos> path;
-  eng->pathFinder->run(origin, target, blockers, path);
+  eng.pathFinder->run(origin, target, blockers, path);
   const int PATH_SIZE = path.size();
   for(int i = 0; i < PATH_SIZE; i++) {
     const Pos c = path.at(i);
     const FeatureStatic* const f =
-      eng->map->cells[c.x][c.y].featureStatic;
+      eng.map->cells[c.x][c.y].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
-      eng->featureFactory->spawnFeatureAt(feature, c);
-      if(SMOOTH == false && eng->dice.percentile() < 33) {
-        makePathByRandomWalk(c.x, c.y, eng->dice(1, 6), feature, true);
+      eng.featureFactory->spawnFeatureAt(feature, c);
+      if(SMOOTH == false && eng.dice.percentile() < 33) {
+        makePathByRandomWalk(c.x, c.y, eng.dice(1, 6), feature, true);
       }
     }
   }
@@ -253,8 +253,8 @@ void MapGen::makePathByRandomWalk(
   bool dirOk = false;
   while(len > 0) {
     while(dirOk == false) {
-      dx = eng->dice(1, 3) - 2;
-      dy = eng->dice(1, 3) - 2;
+      dx = eng.dice(1, 3) - 2;
+      dy = eng.dice(1, 3) - 2;
       //TODO This is really ugly!
       dirOk =
         !(
@@ -265,7 +265,7 @@ void MapGen::makePathByRandomWalk(
         );
     }
     const FeatureStatic* const f =
-      eng->map->cells[xPos + dx][yPos + dy].featureStatic;
+      eng.map->cells[xPos + dx][yPos + dy].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       positionsToSet.push_back(Pos(xPos + dx, yPos + dy));
       xPos += dx;
@@ -275,7 +275,7 @@ void MapGen::makePathByRandomWalk(
     dirOk = false;
   }
   for(unsigned int i = 0; i < positionsToSet.size(); i++) {
-    eng->featureFactory->spawnFeatureAt(featureToMake, positionsToSet.at(i));
+    eng.featureFactory->spawnFeatureAt(featureToMake, positionsToSet.at(i));
   }
 }
 
@@ -284,13 +284,13 @@ void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
     for(int dx = 0; dx < t->width; dx++) {
       const Feature_t featureId = t->featureVector[dy][dx];
       if(featureId != feature_empty) {
-        eng->featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));
+        eng.featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));
       }
     }
   }
 }
 
 void MapGen::buildFromTemplate(const Pos pos, MapTemplateId_t templateId) {
-  MapTemplate* t = eng->mapTemplateHandler->getTemplate(templateId);
+  MapTemplate* t = eng.mapTemplateHandler->getTemplate(templateId);
   buildFromTemplate(pos, t);
 }

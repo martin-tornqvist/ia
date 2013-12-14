@@ -16,7 +16,7 @@ const int Y0_CREATE_CHARACTER = 6;
 //(background and name), and also for picking traits when gaining levels
 class PlayerCreateCharacter {
 public:
-  PlayerCreateCharacter(Engine* engine) : eng(engine) {}
+  PlayerCreateCharacter(Engine& engine) : eng(engine) {}
 
   void createCharacter() const;
 
@@ -27,7 +27,7 @@ private:
                      const vector<Trait_t>& traitsColTwo,
                      const MenuBrowser& browser) const;
 
-  Engine* eng;
+  Engine& eng;
 };
 
 //Helper class for PlayerCreateCharacter for input and rendering when the
@@ -36,11 +36,11 @@ class PlayerEnterName {
 public:
 private:
   friend class PlayerCreateCharacter;
-  PlayerEnterName(Engine* engine) : eng(engine) {}
+  PlayerEnterName(Engine& engine) : eng(engine) {}
   void run(const Pos& pos) const;
   void draw(const string& currentString, const Pos& pos) const;
   void readKeys(string& currentString, bool& done, const Pos& pos) const;
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

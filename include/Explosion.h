@@ -15,7 +15,7 @@ class Engine;
 
 class ExplosionMaker {
 public:
-  ExplosionMaker(Engine* engine) :
+  ExplosionMaker(Engine& engine) :
     width(5), height(5), eng(engine) {
   }
 
@@ -63,7 +63,7 @@ private:
     const BasicData* data, const SDL_Color clr,
     bool reach[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif

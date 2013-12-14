@@ -22,7 +22,7 @@ void SoundEmitter::emitSound(Sound snd) {
   FeatureStatic* f = NULL;
   for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
     for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
-      f = eng->map->cells[x][y].featureStatic;
+      f = eng.map->cells[x][y].featureStatic;
       const bool SOUND_CAN_PASS_CELL =
         f->isBodyTypePassable(bodyType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
@@ -30,21 +30,21 @@ void SoundEmitter::emitSound(Sound snd) {
   }
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
   const Pos& origin = snd.getOrigin();
-  eng->floodFill->run(origin, blockers, floodFill, 999, Pos(-1, -1));
+  eng.floodFill->run(origin, blockers, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
 
-  const int NR_ACTORS = eng->gameTime->getNrActors();
+  const int NR_ACTORS = eng.gameTime->getNrActors();
 
   for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng->gameTime->getActorAtElement(i);
+    Actor& actor = eng.gameTime->getActorAtElement(i);
 
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor.pos.x][actor.pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
-      eng->map->cells[origin.x][origin.y].isSeenByPlayer;
+      eng.map->cells[origin.x][origin.y].isSeenByPlayer;
 
     if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
-      if(&actor == eng->player) {
+      if(&actor == eng.player) {
 
         //Various conditions may clear the sound message
         if(
@@ -73,7 +73,7 @@ void SoundEmitter::emitSound(Sound snd) {
         const int PERCENT_DISTANCE =
           (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 
-        eng->player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
+        eng.player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
                                dirToOrigin, PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(&actor);
@@ -87,7 +87,7 @@ Dir_t SoundEmitter::getPlayerToOriginDir(
   const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
   int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
-  const Pos& playerPos = eng->player->pos;
+  const Pos& playerPos = eng.player->pos;
   Dir_t sourceDir = endOfDirs;
 
   for(int dx = -1; dx <= 1; dx++) {

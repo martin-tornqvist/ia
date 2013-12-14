@@ -36,7 +36,7 @@ public:
 
 class Look {
 public:
-  Look(Engine* engine) :
+  Look(Engine& engine) :
     eng(engine) {
   }
 
@@ -55,7 +55,7 @@ private:
 
   Entity getEntityToDescribe(const Pos pos);
 
-  Engine* eng;
+  Engine& eng;
 };
 
 #endif
