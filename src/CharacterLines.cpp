@@ -66,7 +66,6 @@ void CharacterLines::drawInfoLines() {
   const int CHARACTER_LINE_Y0 = 0;
 
   Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
-  string str = "";
 
   const SDL_Color clrGenDrk = clrNosferatuSepiaDrk;
   const SDL_Color clrGenLgt = clrNosferatuSepiaLgt;
@@ -82,7 +81,7 @@ void CharacterLines::drawInfoLines() {
   const string hpMax = toString(player->getHpMax(true));
   eng.renderer->drawText("HP:", panel_character, pos, clrGenDrk);
   pos.x += 3;
-  str = hp + "/" + hpMax;
+  string str = hp + "/" + hpMax;
   eng.renderer->drawText(str, panel_character, pos, clrRedLgt);
   pos.x += str.length() + 1;
 

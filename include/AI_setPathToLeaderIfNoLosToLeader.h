@@ -5,7 +5,7 @@
 
 class AI_setPathToLeaderIfNoLosToleader {
 public:
-  static void learn(Monster& monster, vector<Pos> path, Engine& engine) {
+  static void learn(Monster& monster, vector<Pos>& path, Engine& engine) {
 
     if(monster.deadState == actorDeadState_alive) {
       Actor* leader = monster.leader;

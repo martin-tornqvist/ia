@@ -129,6 +129,7 @@
 		<Unit filename="../include/AI_setPathToLairIfNoLosToLair.h" />
 		<Unit filename="../include/AI_setPathToLeaderIfNoLosToLeader.h" />
 		<Unit filename="../include/AI_setPathToPlayerIfAware.h" />
+		<Unit filename="../include/AI_setSpecialBlockedCells.h" />
 		<Unit filename="../include/AI_stepPath.h" />
 		<Unit filename="../include/AI_stepToLairIfHasLosToLair.h" />
 		<Unit filename="../include/AbilityValues.h" />

@@ -108,7 +108,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         string sndMsg = wpn.getData().rangedSoundMessage;
         const Sfx_t sfx = wpn.getData().rangedAttackSfx;
         if(sndMsg.empty() == false) {
-          sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
+          if(IS_ATTACKER_PLAYER) sndMsg = "";
           const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
           eng.soundEmitter->emitSound(
             Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));

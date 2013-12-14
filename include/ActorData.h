@@ -76,19 +76,15 @@ enum MonsterShockLevel {
   monsterShockLevel_mindShattering  = 4
 };
 
-struct AiBehavior {
-public:
-  AiBehavior() : looks(false), makesRoomForFriend(false), triesAttack(false),
-    pathsToTargetWhenAware(false), movesTowardTargetWhenVision(false),
-    movesTowardLair(false), movesTowardLeader(false) {}
-
-  void reset() {
-    looks = makesRoomForFriend = triesAttack = pathsToTargetWhenAware = false;
-    movesTowardTargetWhenVision = movesTowardLair = movesTowardLeader = false;
-  }
-
-  bool looks, makesRoomForFriend, triesAttack, pathsToTargetWhenAware;
-  bool movesTowardTargetWhenVision, movesTowardLair, movesTowardLeader;
+enum AiBehavior_t {
+  aiLooks,
+  aiMakesRoomForFriend,
+  aiAttacks,
+  aiPathsToTargetWhenAware,
+  aiMovesTowardTargetWhenVision,
+  aiMovesTowardLair,
+  aiMovesTowardLeader,
+  endOfAiBehavior
 };
 
 struct ActorData {
@@ -110,7 +106,7 @@ public:
   AbilityValues abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-  AiBehavior aiBehavior;
+  bool ai[endOfAiBehavior];
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;
   ActorSizes_t actorSize;

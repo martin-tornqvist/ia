@@ -111,8 +111,6 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
                         const Pos& origin,
                         bool values[MAP_X_CELLS][MAP_Y_CELLS],
                         const bool IS_AFFECTED_BY_DARKNESS) {
-  int checkX, checkY;
-
   for(int x = 0; x < MAP_X_CELLS; x++) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       values[x][y] = false;
@@ -124,10 +122,10 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
   const int checkX_end = min(MAP_X_CELLS - 1, origin.x + FOV_STANDARD_RADI_INT);
   const int checkY_end = min(MAP_Y_CELLS - 1, origin.y + FOV_STANDARD_RADI_INT);
 
-  checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
+  int checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
 
   while(checkX <= checkX_end) {
-    checkY = max(0, origin.y - FOV_STANDARD_RADI_INT);
+    int checkY = max(0, origin.y - FOV_STANDARD_RADI_INT);
 
     while(checkY <= checkY_end) {
       checkOneCellOfMany(obstructions, Pos(checkX, checkY), origin, values,

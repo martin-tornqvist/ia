@@ -22,16 +22,16 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
   Inventory* inventory = actorDropping->getInventory();
   Item* itemToDrop = inventory->getItemInElement(ELEMENT);
 
-  const bool IS_STACKABLE = itemToDrop->getData().isStackable;
-  const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
-  const bool IS_WHOLE_STACK_DROPPED =
-    IS_STACKABLE == false ||
-    NR_ITEMS_TO_DROP == -1 ||
-    (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
-
-  string itemRef = "";
-
   if(itemToDrop != NULL) {
+    const bool IS_STACKABLE = itemToDrop->getData().isStackable;
+    const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
+    const bool IS_WHOLE_STACK_DROPPED =
+      IS_STACKABLE == false ||
+      NR_ITEMS_TO_DROP == -1 ||
+      (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
+
+    string itemRef = "";
+
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
       inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);

@@ -11,6 +11,7 @@
 #include "Inventory.h"
 #include "FeatureTrap.h"
 
+#include "AI_setSpecialBlockedCells.h"
 #include "AI_handleClosedBlockingDoor.h"
 #include "AI_look_becomePlayerAware.h"
 #include "AI_makeRoomForFriend.h"
@@ -81,12 +82,16 @@ void Monster::onActorTurn() {
   isStealth = eng.player->checkIfSeeActor(*this, NULL) == false &&
               HAS_SNEAK_SKILL;
 
-  const AiBehavior& ai = data_->aiBehavior;
+  //Array used for AI purposes, e.g. to prevent tactically bad positions,
+  //or prevent certain monsters from walking on a certain type of cells, etc.
+  //This is checked in all AI movement functions. Cells set to true are
+  //totally forbidden for the monster to move into.
+  bool aiSpecialBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  AI_setSpecialBlockedCells::learn(*this, aiSpecialBlockers, eng);
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-  // TODO temporary restriction, allow this later(?)
-  if(leader != eng.player) {
+  if(leader != eng.player/*TODO temporary restriction, allow this later(?)*/) {
     if(monsterSpecificOnActorTurn()) {
       return;
     }
@@ -97,15 +102,15 @@ void Monster::onActorTurn() {
   //Looking counts as an action if monster not aware before, and became aware
   //from looking. (This is to give the monsters some reaction time, and not
   //instantly attack)
-  if(ai.looks) {
+  if(data_->ai[aiLooks]) {
     if(leader != eng.player) {
-      if(AI_look_becomePlayerAware::action(this, eng)) {
+      if(AI_look_becomePlayerAware::action(*this, eng)) {
         return;
       }
     }
   }
 
-  if(ai.makesRoomForFriend) {
+  if(data_->ai[aiMakesRoomForFriend]) {
     if(leader != eng.player) {
       if(AI_makeRoomForFriend::action(*this, eng)) {
         return;
@@ -122,7 +127,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(ai.triesAttack) {
+  if(data_->ai[aiAttacks]) {
     if(target != NULL) {
       if(tryAttack(*target)) {
         return;
@@ -142,7 +147,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(ai.movesTowardTargetWhenVision) {
+  if(data_->ai[aiMovesTowardTargetWhenVision]) {
     if(AI_moveTowardsTargetSimple::action(*this, eng)) {
       return;
     }
@@ -150,7 +155,7 @@ void Monster::onActorTurn() {
 
   vector<Pos> path;
 
-  if(ai.pathsToTargetWhenAware) {
+  if(data_->ai[aiPathsToTargetWhenAware]) {
     if(leader != eng.player) {
       AI_setPathToPlayerIfAware::learn(*this, path, eng);
     }
@@ -166,14 +171,14 @@ void Monster::onActorTurn() {
     return;
   }
 
-  if(ai.movesTowardLeader) {
+  if(data_->ai[aiMovesTowardLeader]) {
     AI_setPathToLeaderIfNoLosToleader::learn(*this, path, eng);
     if(AI_stepPath::action(*this, path)) {
       return;
     }
   }
 
-  if(ai.movesTowardLair) {
+  if(data_->ai[aiMovesTowardLair]) {
     if(leader != eng.player) {
       if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;

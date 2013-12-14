@@ -11322,7 +11322,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1385675693 source:d:\dev\ia.git\src\actordata.cpp
+1387057464 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11347,7 +11347,7 @@
 	<string>
 	"GameTime.h"
 
-1386707450 source:d:\dev\ia.git\src\actormonster.cpp
+1387058687 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
 	"Engine.h"
 	"Item.h"
@@ -11358,6 +11358,7 @@
 	"Reload.h"
 	"Inventory.h"
 	"FeatureTrap.h"
+	"AI_setSpecialBlockedCells.h"
 	"AI_handleClosedBlockingDoor.h"
 	"AI_look_becomePlayerAware.h"
 	"AI_makeRoomForFriend.h"
@@ -11572,7 +11573,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1386706016 source:d:\dev\ia.git\src\attackranged.cpp
+1387053733 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11808,7 +11809,7 @@
 	"Item.h"
 	"Spells.h"
 
-1386706016 source:d:\dev\ia.git\src\characterlines.cpp
+1387053842 source:d:\dev\ia.git\src\characterlines.cpp
 	"CharacterLines.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -12287,7 +12288,7 @@
 	"Engine.h"
 	"Map.h"
 
-1386706016 source:d:\dev\ia.git\src\fov.cpp
+1387053792 source:d:\dev\ia.git\src\fov.cpp
 	"Fov.h"
 	<math.h>
 	<iostream>
@@ -12458,7 +12459,7 @@
 	"Map.h"
 	"Audio.h"
 
-1386706016 source:d:\dev\ia.git\src\itemdrop.cpp
+1387053933 source:d:\dev\ia.git\src\itemdrop.cpp
 	"ItemDrop.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -13806,7 +13807,7 @@
 	"Config.h"
 	"Art.h"
 
-1386706309 d:\dev\ia.git\include\actordata.h
+1387057385 d:\dev\ia.git\include\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -14036,7 +14037,7 @@
 1386705953 d:\dev\ia.git\include\featuredoor.h
 	"Feature.h"
 
-1386792373 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
+1387058602 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
 	"Engine.h"
 	"ActorPlayer.h"
 	"Log.h"
@@ -14067,7 +14068,7 @@
 1386707387 d:\dev\ia.git\include\ai_setpathtolairifnolostolair.h
 	"Engine.h"
 
-1386707387 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
+1387058752 d:\dev\ia.git\include\ai_setpathtoleaderifnolostoleader.h
 	"Engine.h"
 
 1386707387 d:\dev\ia.git\include\ai_movetorandomadjacentcell.h
@@ -14828,4 +14829,7 @@
 	"Map.h"
 	"ActorPlayer.h"
 	"GameTime.h"
+
+1387058670 d:\dev\ia.git\include\ai_setspecialblockedcells.h
+	"Engine.h"
 
