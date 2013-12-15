@@ -229,25 +229,25 @@ void DirConverter::getCompassDirName(
   double edge[4];
 
   for(int i = 0; i < 4; i++) {
-    edge[i] = ANGLE_45_DB / 2 + ANGLE_45_DB * i;
+    edge[i] = (ANGLE_45_DB / 2) + (ANGLE_45_DB * i);
   }
 
   const Pos offset(toPos - fromPos);
-  const double ANGLE_DB = atan2(offset.y, offset.x);
+  const double ANGLE_DB = atan2(-offset.y, offset.x);
 
-  if(ANGLE_DB < -edge[2] && ANGLE_DB > -edge[3]) {
+  if(ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3]) {
     strToSet = "SW";
   } else if(ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2]) {
     strToSet = "S";
-  } else if(ANGLE_DB < -edge[0] && ANGLE_DB > -edge[1]) {
+  } else if(ANGLE_DB <  -edge[0] && ANGLE_DB >  -edge[1]) {
     strToSet = "SE";
-  } else if(ANGLE_DB >= -edge[0] && ANGLE_DB <= edge[0]) {
+  } else if(ANGLE_DB >= -edge[0] && ANGLE_DB <=  edge[0]) {
     strToSet = "E";
-  } else if(ANGLE_DB > edge[0] && ANGLE_DB < edge [1]) {
+  } else if(ANGLE_DB >   edge[0] && ANGLE_DB <   edge[1]) {
     strToSet = "NE";
-  } else if(ANGLE_DB >= edge[1] && ANGLE_DB <= edge[2]) {
+  } else if(ANGLE_DB >=  edge[1] && ANGLE_DB <=  edge[2]) {
     strToSet = "N";
-  } else if(ANGLE_DB > edge[2] && ANGLE_DB < edge[3]) {
+  } else if(ANGLE_DB >   edge[2] && ANGLE_DB <   edge[3]) {
     strToSet = "NW";
   } else {
     strToSet = "W";
