@@ -233,7 +233,7 @@ void DirConverter::getCompassDirName(
   }
 
   const Pos offset(toPos - fromPos);
-  const double ANGLE_DB = atan2(offset.x, offset.y);
+  const double ANGLE_DB = atan2(offset.y, offset.x);
 
   if(ANGLE_DB < -edge[2] && ANGLE_DB > -edge[3]) {
     strToSet = "SW";
