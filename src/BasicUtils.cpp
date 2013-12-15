@@ -220,11 +220,38 @@ Pos DirConverter::getOffset(const Dir_t dir) const {
 
 void DirConverter::getCompassDirName(
   const Pos& fromPos, const Pos& toPos, string& strToSet) const {
+
   strToSet = "";
 
-  (void)fromPos;
-  (void)toPos;
+  const double PI_DB        = 3.14159265;
+  const double ANGLE_45_DB  = 2 * PI_DB / 8;
 
+  double edge[4];
+
+  for(int i = 0; i < 4; i++) {
+    edge[i] = ANGLE_45_DB / 2 + ANGLE_45_DB * i;
+  }
+
+  const Pos offset(toPos - fromPos);
+  const double ANGLE_DB = atan2(offset.x, offset.y);
+
+  if(ANGLE_DB < -edge[2] && ANGLE_DB > -edge[3]) {
+    strToSet = "SW";
+  } else if(ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2]) {
+    strToSet = "S";
+  } else if(ANGLE_DB < -edge[0] && ANGLE_DB > -edge[1]) {
+    strToSet = "SE";
+  } else if(ANGLE_DB >= -edge[0] && ANGLE_DB <= edge[0]) {
+    strToSet = "E";
+  } else if(ANGLE_DB > edge[0] && ANGLE_DB < edge [1]) {
+    strToSet = "NE";
+  } else if(ANGLE_DB >= edge[1] && ANGLE_DB <= edge[2]) {
+    strToSet = "N";
+  } else if(ANGLE_DB > edge[2] && ANGLE_DB < edge[3]) {
+    strToSet = "NW";
+  } else {
+    strToSet = "W";
+  }
 }
 
 void DirConverter::getCompassDirName(
