@@ -61,10 +61,10 @@ public:
   void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
                           const SDL_Color& clr);
 
-  void drawLineHorizontal(const Pos& pixelPos, const int W,
+  void drawLineHor(const Pos& pixelPos, const int W,
                           const SDL_Color& clr);
 
-  void drawLineVertical(const Pos& pixelPos, const int H,
+  void drawLineVer(const Pos& pixelPos, const int H,
                         const SDL_Color& clr);
 
   void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);

@@ -1,5 +1,7 @@
 #include "FeatureFactory.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "FeatureDoor.h"
@@ -27,13 +29,13 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
 
   //General (simple) features
   if(data->spawnType == featureSpawnType_static) {
-    if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+    assert(spawnData == NULL);
     FeatureStatic* feature = new FeatureStatic(id, pos, eng);
     replaceStaticFeatureAt(feature, pos);
     return feature;
   }
   if(data->spawnType == featureSpawnType_mob) {
-    if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+    assert(spawnData == NULL);
     FeatureMob* feature = new FeatureMob(id, pos, eng);
     eng.gameTime->addFeatureMob(feature);
     return feature;
@@ -42,9 +44,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
   //Features with specific class
   switch(id) {
     case feature_door: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_door) {
-        throw runtime_error("Expected door spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_door);
       Door* door =
         new Door(id, pos, eng, dynamic_cast<DoorSpawnData*>(spawnData));
       replaceStaticFeatureAt(door, pos);
@@ -52,9 +52,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return door;
     }
     case feature_lever: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_lever) {
-        throw runtime_error("Expected lever spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
       FeatureLever* lever =
         new FeatureLever(
         id, pos, eng, dynamic_cast<LeverSpawnData*>(spawnData));
@@ -63,9 +61,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return lever;
     }
     case feature_trap: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_trap) {
-        throw runtime_error("Expected trap spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_trap);
       Trap* trap =
         new Trap(id, pos, eng, dynamic_cast<TrapSpawnData*>(spawnData));
       replaceStaticFeatureAt(trap, pos);
@@ -73,9 +69,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return trap;
     }
     case feature_litDynamite: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_dynamite) {
-        throw runtime_error("Expected dynamite spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
       LitDynamite* dynamite =
         new LitDynamite(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
@@ -84,9 +78,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return dynamite;
     }
     case feature_litFlare: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_dynamite) {
-        throw runtime_error("Expected dynamite spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
       LitFlare* flare =
         new LitFlare(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
@@ -95,9 +87,7 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return flare;
     }
     case feature_smoke: {
-      if(spawnData->getFeatureSpawnDataType() != featureSpawnData_smoke) {
-        throw runtime_error("Expected smoke spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_smoke);
       Smoke* smoke =
         new Smoke(id, pos, eng, dynamic_cast<SmokeSpawnData*>(spawnData));
       eng.gameTime->addFeatureMob(smoke);
@@ -105,10 +95,8 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return smoke;
     }
     case feature_proxEventWallCrumble: {
-      if(spawnData->getFeatureSpawnDataType() !=
-          featureSpawnData_proxEventWallCrumble) {
-        throw runtime_error("Expected prox event wall crumble spawn data");
-      }
+      assert(spawnData->getFeatureSpawnDataType() ==
+             featureSpawnData_proxEventWallCrumble);
       ProxEventWallCrumble* proxEvent =
         new ProxEventWallCrumble(
         id, pos, eng, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
@@ -117,51 +105,51 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       return proxEvent;
     }
     case feature_tomb: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Tomb* tomb = new Tomb(id, pos, eng);
       replaceStaticFeatureAt(tomb, pos);
       return tomb;
     }
 //    case feature_pillarCarved: {
-//        if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+//        assert(spawnData == NULL);
 //        CarvedPillar* pillar = new CarvedPillar(id, pos, eng);
 //        replaceStaticFeatureAt(pillar, pos);
 //        return pillar;
 //      }
 //      break;
 //    case feature_barrel: {
-//        if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+//        assert(spawnData == NULL);
 //        Barrel* barrel = new Barrel(id, pos, eng);
 //        replaceStaticFeatureAt(barrel, pos);
 //        return barrel;
 //      }
 //      break;
     case feature_cabinet: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Cabinet* cabinet = new Cabinet(id, pos, eng);
       replaceStaticFeatureAt(cabinet, pos);
       return cabinet;
     }
     case feature_chest: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Chest* chest = new Chest(id, pos, eng);
       replaceStaticFeatureAt(chest, pos);
       return chest;
     }
     case feature_fountain: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Fountain* fountain = new Fountain(id, pos, eng);
       replaceStaticFeatureAt(fountain, pos);
       return fountain;
     }
     case feature_cocoon: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Cocoon* cocoon = new Cocoon(id, pos, eng);
       replaceStaticFeatureAt(cocoon, pos);
       return cocoon;
     }
 //    case feature_altar: {
-//        if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+//        assert(spawnData == NULL);
 //        Altar* altar = new Altar(id, pos, eng);
 //        replaceStaticFeatureAt(altar, pos);
 //
@@ -171,25 +159,25 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
     case feature_shallowMud:
     case feature_shallowWater:
     case feature_poolBlood: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       FeatureLiquidShallow* liquid = new FeatureLiquidShallow(id, pos, eng);
       replaceStaticFeatureAt(liquid, pos);
       return liquid;
     }
     case feature_deepWater: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       FeatureLiquidDeep* liquid = new FeatureLiquidDeep(id, pos, eng);
       replaceStaticFeatureAt(liquid, pos);
       return liquid;
     }
     case feature_gravestone: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Grave* grave = new Grave(id, pos, eng);
       replaceStaticFeatureAt(grave, pos);
       return grave;
     }
     case feature_stoneWall: {
-      if(spawnData != NULL) {throw runtime_error("Expected NULL spawnData");}
+      assert(spawnData == NULL);
       Wall* wall = new Wall(id, pos, eng);
       replaceStaticFeatureAt(wall, pos);
       return wall;
@@ -211,11 +199,5 @@ void FeatureFactory::replaceStaticFeatureAt(
     delete oldFeature;
   }
   cell.featureStatic = newFeature;
-
-#ifdef DEMO_MODE
-  cell.isSeenByPlayer = true;
-  cell.isExplored = true;
-  eng.renderer->drawMapAndInterface(true);
-#endif // DEMO_MODE
 }
 

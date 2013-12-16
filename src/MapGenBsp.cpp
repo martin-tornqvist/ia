@@ -1,7 +1,7 @@
 #include "MapGen.h"
 
 #include <algorithm>
-#include <stdlib.h>
+#include <assert.h>
 
 #include "Engine.h"
 #include "MapGen.h"
@@ -16,6 +16,11 @@
 #include "FeatureWall.h"
 #include "MapParsing.h"
 
+#ifdef DEMO_MODE
+#include "Renderer.h"
+#include "SdlWrapper.h"
+#endif // DEMO_MODE
+
 //============================================================= MAPBUILD-BSP
 bool MapGenBsp::specificRun() {
   trace << "MapGenBsp::specificRun()..." << endl;
@@ -29,13 +34,44 @@ bool MapGenBsp::specificRun() {
 //      eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
       globalDoorPosCandidates[x][y] = false;
       forbiddenStairCellsGlobal[x][y] = false;
+
+#ifdef DEMO_MODE
+      Cell& cell = eng.map->cells[x][y];
+      cell.isSeenByPlayer = cell.isExplored = true;
+#endif // DEMO_MODE
     }
   }
 
-  const int SPLIT_X1 = MAP_X_CELLS / 3 + eng.dice.range(-1, 1);
-  const int SPLIT_X2 = 2 * (MAP_X_CELLS / 3) + eng.dice.range(-1, 1);
-  const int SPLIT_Y1 = MAP_Y_CELLS / 3;
-  const int SPLIT_Y2 = 2 * (MAP_Y_CELLS / 3);
+  const int SPL_X1 = MAP_X_CELLS / 3 + eng.dice.range(-1, 1);
+  const int SPL_X2 = 2 * (MAP_X_CELLS / 3) + eng.dice.range(-1, 1);
+  const int SPL_Y1 = MAP_Y_CELLS / 3;
+  const int SPL_Y2 = 2 * (MAP_Y_CELLS / 3);
+
+#ifdef DEMO_MODE
+  eng.renderer->drawMapAndInterface();
+  eng.sdlWrapper->sleep(1000);
+  const int P_W = eng.config->cellW;
+  const int P_H = eng.config->cellH;
+  const int P_M_O = eng.config->mainscreenOffsetY;
+  const int P_S_W = eng.config->screenWidth;
+//  const int P_S_H = eng.config->screenHeight;
+  const int P_C_O = eng.config->characterLinesOffsetY;
+  const int P_M_H = P_C_O - P_M_O;
+  eng.renderer->drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
+  eng.renderer->updateScreen();
+  eng.sdlWrapper->sleep(2000);
+  eng.renderer->drawLineHor(Pos(0, SPL_Y2 * P_H + P_M_O), P_S_W, clrRedLgt);
+  eng.renderer->updateScreen();
+  eng.sdlWrapper->sleep(2000);
+  eng.renderer->drawLineVer(Pos(SPL_X1 * P_W, P_M_O), P_M_H, clrRedLgt);
+  eng.renderer->updateScreen();
+  eng.sdlWrapper->sleep(2000);
+  eng.renderer->drawLineVer(Pos(SPL_X2 * P_W, P_M_O), P_M_H, clrRedLgt);
+  eng.renderer->updateScreen();
+  eng.sdlWrapper->sleep(2000);
+  eng.renderer->drawMapAndInterface(true);
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
 
   Region* regions[3][3];
 
@@ -46,11 +82,12 @@ bool MapGenBsp::specificRun() {
     }
   }
 
-  buildMergedRegionsAndRooms(regions, SPLIT_X1, SPLIT_X2, SPLIT_Y1, SPLIT_Y2);
+  buildMergedRegionsAndRooms(regions, SPL_X1, SPL_X2, SPL_Y1, SPL_Y2);
 
-  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
+  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 0; //10;
   const int DLVL = eng.map->getDLVL();
-  const int CHANCE_FOR_CAVE_AREA = (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
+  const int CHANCE_FOR_CAVE_AREA =
+    60; //(DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
   if(eng.dice.percentile() < CHANCE_FOR_CAVE_AREA) {
     const bool IS_TWO_CAVES = eng.dice.percentile() < CHANCE_FOR_CAVE_AREA / 3;
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
@@ -70,18 +107,29 @@ bool MapGenBsp::specificRun() {
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
       if(regions[x][y] == NULL) {
-        const int X0 = x == 0 ? 0 : x == 1 ? SPLIT_X1 : SPLIT_X2;
-        const int Y0 = y == 0 ? 0 : y == 1 ? SPLIT_Y1 : SPLIT_Y2;
-        const int X1 = x == 0 ? SPLIT_X1 - 1 : x == 1 ? SPLIT_X2 - 1 : MAP_X_CELLS - 1;
-        const int Y1 = y == 0 ? SPLIT_Y1 - 1 : y == 1 ? SPLIT_Y2 - 1 : MAP_Y_CELLS - 1;
+        const int X0 = x == 0 ? 0 : x == 1 ? SPL_X1 : SPL_X2;
+        const int Y0 = y == 0 ? 0 : y == 1 ? SPL_Y1 : SPL_Y2;
+        const int X1 = x == 0 ? SPL_X1 - 1 :
+                       x == 1 ? SPL_X2 - 1 : MAP_X_CELLS - 1;
+        const int Y1 = y == 0 ? SPL_Y1 - 1 :
+                       y == 1 ? SPL_Y2 - 1 : MAP_Y_CELLS - 1;
         Region* region = new Region(Pos(X0, Y0), Pos(X1, Y1));
         regions[x][y] = region;
+
+#ifdef DEMO_MODE
+        const Pos dims((X1 - X0) * P_W, (Y1 - Y0) * P_H);
+        eng.renderer->drawRectangleSolid(
+          Pos(X0 * P_W, P_M_O + Y0 * P_H), dims, clrGreenLgt);
+        eng.renderer->updateScreen();
+        eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
+
         const Rect roomPoss = region->getRandomPossForRoom(eng);
 
         eng.map->rooms.push_back(buildRoom(roomPoss));
         regions[x][y]->mainRoom = eng.map->rooms.back();
 
-        if(eng.dice.percentile() < 30) {
+        if(eng.dice.percentile() < 50) {
           reshapeRoom(*(regions[x][y]->mainRoom));
         }
       }
@@ -99,16 +147,19 @@ bool MapGenBsp::specificRun() {
   postProcessFillDeadEnds();
 
   trace << "MapGenBsp: Placing doors" << endl;
-  const int CHANCE_TO_PLACE_DOOR = 70;
+  const int CHANCE_TP_OLACE_DOOR = 70;
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(globalDoorPosCandidates[x][y] == true) {
-        if(eng.dice.percentile() < CHANCE_TO_PLACE_DOOR) {
+        if(eng.dice.percentile() < CHANCE_TP_OLACE_DOOR) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
       }
     }
   }
+#ifdef DEMO_MODE
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
 
   trace << "MapGenBsp: Moving player to nearest floor cell" << endl;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
@@ -122,6 +173,10 @@ bool MapGenBsp::specificRun() {
 
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
   eng.roomThemeMaker->run();
+#ifdef DEMO_MODE
+  eng.renderer->drawMapAndInterface();
+  eng.sdlWrapper->sleep(3000);
+#endif // DEMO_MODE
 
   trace << "MapGenBsp: Moving player to nearest floor cell again ";
   trace << "after room theme maker" << endl;
@@ -154,6 +209,10 @@ bool MapGenBsp::specificRun() {
     }
   }
 
+#ifdef DEMO_MODE
+  eng.renderer->drawMapAndInterface();
+  eng.sdlWrapper->sleep(5000);
+#endif // DEMO_MODE
   trace << "MapGenBsp::specificRun() [DONE]" << endl;
   return true;
 }
@@ -254,14 +313,22 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
 
             blockers[x][y] = false;
 
-            if(x == 0 || y == 0 || x == MAP_X_CELLS - 1 || y == MAP_Y_CELLS - 1) {
+            if(
+              x == 0 || y == 0 ||
+              x == MAP_X_CELLS - 1 || y == MAP_Y_CELLS - 1) {
               blockers[x][y] = true;
             } else {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  const Feature_t featureId = eng.map->cells[x + dx][y + dy].featureStatic->getId();
-                  const bool IS_FLOOR = featureId == feature_stoneFloor || featureId == feature_caveFloor;
-                  if(IS_FLOOR && eng.basicUtils->isPosInside(Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
+                  const Feature_t featureId =
+                    eng.map->cells[x + dx][y + dy].featureStatic->getId();
+                  const bool IS_FLOOR =
+                    featureId == feature_stoneFloor ||
+                    featureId == feature_caveFloor;
+                  if(
+                    IS_FLOOR &&
+                    eng.basicUtils->isPosInside(
+                      Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
                     blockers[x][y] = true;
                   }
                 }
@@ -284,16 +351,25 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             if(c == origin || floodFillResult[x][y] > 0) {
 
               eng.featureFactory->spawnFeatureAt(feature_caveFloor, c);
-
-//              eng.featureFactory->spawnFeatureAt(feature_shallowMud, c);
+#ifdef DEMO_MODE
+              eng.renderer->drawMapAndInterface();
+              eng.sdlWrapper->sleep(5);
+#endif // DEMO_MODE
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  if(eng.map->cells[x + dx][y + dy].featureStatic->getId() == feature_stoneWall) {
-                    eng.featureFactory->spawnFeatureAt(feature_stoneWall, c + Pos(dx , dy));
-                    Wall* const wall = dynamic_cast<Wall*>(eng.map->cells[x + dx][y + dy].featureStatic);
+                  Cell& adjCell = eng.map->cells[x + dx][y + dy];
+                  if(adjCell.featureStatic->getId() == feature_stoneWall) {
+                    eng.featureFactory->spawnFeatureAt(
+                      feature_stoneWall, c + Pos(dx , dy));
+                    Wall* const wall =
+                      dynamic_cast<Wall*>(adjCell.featureStatic);
                     wall->wallType = wall_cave;
                     wall->setRandomIsMossGrown();
+#ifdef DEMO_MODE
+                    eng.renderer->drawMapAndInterface();
+                    eng.sdlWrapper->sleep(5);
+#endif // DEMO_MODE
                   }
                 }
               }
@@ -310,7 +386,8 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             for(int x = 1; x < MAP_X_CELLS - 1; x++) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  if(eng.map->cells[x + dx][y + dy].featureStatic->getId() == feature_stoneWall) {
+                  Cell& adjCell = eng.map->cells[x + dx][y + dy];
+                  if(adjCell.featureStatic->getId() == feature_stoneWall) {
                     blockers[x][y] = blockers[x + dx][y + dy] = true;
                   }
                 }
@@ -329,6 +406,10 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                 blockers[x][y] == false &&
                 (c == origin || floodFillResult[x][y] > 0)) {
                 eng.featureFactory->spawnFeatureAt(feature_chasm, c);
+#ifdef DEMO_MODE
+                eng.renderer->drawMapAndInterface();
+                eng.sdlWrapper->sleep(5);
+#endif // DEMO_MODE
               }
             }
           }
@@ -336,12 +417,15 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
       }
     }
   }
+#ifdef DEMO_MODE
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
   trace << "MapGenBsp::buildCaves()[DONE]" << endl;
 }
 
 void MapGenBsp::buildMergedRegionsAndRooms(
-  Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
-  const int SPLIT_Y1, const int SPLIT_Y2) {
+  Region* regions[3][3], const int SPL_X1, const int SPL_X2,
+  const int SPL_Y1, const int SPL_Y2) {
 
   const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng.dice.range(0, 2);
 
@@ -363,16 +447,38 @@ void MapGenBsp::buildMergedRegionsAndRooms(
 
       regionIndex1 = Pos(eng.dice.range(0, 2), eng.dice.range(0, 1));
       regionIndex2 = Pos(regionIndex1 + Pos(0, 1));
-      isGoodRegionsFound = regions[regionIndex1.x][regionIndex1.y] == NULL && regions[regionIndex2.x][regionIndex2.y] == NULL;
+      isGoodRegionsFound =
+        regions[regionIndex1.x][regionIndex1.y] == NULL &&
+        regions[regionIndex2.x][regionIndex2.y] == NULL;
     }
 
-    const int MERGED_X0 = regionIndex1.x == 0 ? 0 : regionIndex1.x == 1 ? SPLIT_X1 : SPLIT_X2;
-    const int MERGED_Y0 = regionIndex1.y == 0 ? 0 : regionIndex1.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
-    const int MERGED_X1 = regionIndex2.x == 0 ? SPLIT_X1 - 1 : regionIndex2.x == 1 ? SPLIT_X2 - 1 : MAP_X_CELLS - 1;
-    const int MERGED_Y1 = regionIndex2.y == 0 ? SPLIT_Y1 - 1 : regionIndex2.y == 1 ? SPLIT_Y2 - 1 : MAP_Y_CELLS - 1;
+    const int MERGED_X0 =
+      regionIndex1.x == 0 ? 0 : regionIndex1.x == 1 ? SPL_X1 : SPL_X2;
+    const int MERGED_Y0 =
+      regionIndex1.y == 0 ? 0 : regionIndex1.y == 1 ? SPL_Y1 : SPL_Y2;
+    const int MERGED_X1 =
+      regionIndex2.x == 0 ? SPL_X1 - 1 :
+      regionIndex2.x == 1 ? SPL_X2 - 1 : MAP_X_CELLS - 1;
+    const int MERGED_Y1 =
+      regionIndex2.y == 0 ? SPL_Y1 - 1 :
+      regionIndex2.y == 1 ? SPL_Y2 - 1 : MAP_Y_CELLS - 1;
 
-    const int AREA_2_X0 = regionIndex2.x == 0 ? 0 : regionIndex2.x == 1 ? SPLIT_X1 : SPLIT_X2;
-    const int AREA_2_Y0 = regionIndex2.y == 0 ? 0 : regionIndex2.y == 1 ? SPLIT_Y1 : SPLIT_Y2;
+#ifdef DEMO_MODE
+    const int P_W = eng.config->cellW;
+    const int P_H = eng.config->cellH;
+    const int P_O = eng.config->mainscreenOffsetY;
+    Pos dims((MERGED_X1 - MERGED_X0) * P_W, (MERGED_Y1 - MERGED_Y0) * P_H);
+    eng.renderer->drawRectangleSolid(
+      Pos(MERGED_X0 * P_W, P_O + MERGED_Y0 * P_H), dims,
+      clrBlueLgt);
+    eng.renderer->updateScreen();
+    eng.sdlWrapper->sleep(500);
+#endif // DEMO_MODE
+
+    const int AREA_2_X0 =
+      regionIndex2.x == 0 ? 0 : regionIndex2.x == 1 ? SPL_X1 : SPL_X2;
+    const int AREA_2_Y0 =
+      regionIndex2.y == 0 ? 0 : regionIndex2.y == 1 ? SPL_Y1 : SPL_Y2;
     const int AREA_2_X1 = MERGED_X1;
     const int AREA_2_Y1 = MERGED_Y1;
 
@@ -395,7 +501,8 @@ void MapGenBsp::buildMergedRegionsAndRooms(
     const int OFFSET_Y0 = eng.dice.range(1, 4);
     const int OFFSET_X1 = eng.dice.range(1, 4);
     const int OFFSET_Y1 = eng.dice.range(1, 4);
-    Rect roomPoss(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0), area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
+    Rect roomPoss(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0),
+                  area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomPoss);
     eng.map->rooms.push_back(room);
 
@@ -411,7 +518,6 @@ void MapGenBsp::buildMergedRegionsAndRooms(
 }
 
 void MapGenBsp::buildRoomsInRooms() {
-
   const int NR_OF_TRIES = 40;
   const int MAX_NR_INNER_ROOMS = 7;
   const int MIN_DIM_W = 4;
@@ -492,13 +598,14 @@ void MapGenBsp::buildRoomsInRooms() {
                 for(int x = X0; x <= X1; x++) {
                   if(x == X0 || x == X1 || y == Y0 || y == Y1) {
 
-                    eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+                    eng.featureFactory->spawnFeatureAt(
+                      feature_stoneWall, Pos(x, y));
 
                     if(
-                      x != roomX0Y0.x - 1 && x != roomX0Y0.x &&
-                      x != roomX1Y1.x && x != roomX1Y1.x + 1 &&
-                      y != roomX0Y0.y - 1 && y != roomX0Y0.y &&
-                      y != roomX1Y1.y && y != roomX1Y1.y + 1) {
+                      x != roomX0Y0.x - 1 && x != roomX0Y0.x      &&
+                      x != roomX1Y1.x     && x != roomX1Y1.x + 1  &&
+                      y != roomX0Y0.y - 1 && y != roomX0Y0.y      &&
+                      y != roomX1Y1.y     && y != roomX1Y1.y + 1) {
                       if((x != X0 && x != X1) || (y != Y0 && y != Y1)) {
                         doorCandidates.push_back(Pos(x, y));
                       }
@@ -510,13 +617,8 @@ void MapGenBsp::buildRoomsInRooms() {
                 const int DOOR_POS_ELEMENT =
                   eng.dice.range(0, doorCandidates.size() - 1);
                 const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
-//                if(eng.dice.coinToss()) {
-//                  eng.featureFactory->spawnFeatureAt(feature_door, doorPos, new DoorSpawnData(eng.featureData->getFeatureDef(feature_stoneWall)));
                 eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
                 globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
-//                } else {
-//                  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
-//                }
               } else {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = eng.dice.range(1, 10);
@@ -533,11 +635,16 @@ void MapGenBsp::buildRoomsInRooms() {
                     }
                   }
                   if(positionOk) {
-                    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+                    eng.featureFactory->spawnFeatureAt(
+                      feature_stoneFloor, doorPos);
                     positionsWithDoor.push_back(doorPos);
                   }
                 }
               }
+#ifdef DEMO_MODE
+              eng.renderer->drawMapAndInterface();
+              eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
               tryCount = 99999;
             }
           }
@@ -762,6 +869,10 @@ void MapGenBsp::decorate() {
         //Randomly convert walls to rubble
         if(eng.dice.percentile() < 10) {
           eng.featureFactory->spawnFeatureAt(feature_rubbleHigh, Pos(x, y));
+#ifdef DEMO_MODE
+          eng.renderer->drawMapAndInterface();
+          eng.sdlWrapper->sleep(1);
+#endif // DEMO_MODE
           continue;
         }
 
@@ -769,28 +880,43 @@ void MapGenBsp::decorate() {
         FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
         Wall* const wall = dynamic_cast<Wall*>(f);
         wall->setRandomIsMossGrown();
+#ifdef DEMO_MODE
+        eng.renderer->drawMapAndInterface();
+        eng.sdlWrapper->sleep(1);
+#endif // DEMO_MODE
 
         //Convert walls with no adjacent stone floor to cave walls
         if(nrAdjFloor == 0) {
           wall->wallType = wall_cave;
         } else {
           wall->setRandomNormalWall();
+#ifdef DEMO_MODE
+          eng.renderer->drawMapAndInterface();
+          eng.sdlWrapper->sleep(1);
+#endif // DEMO_MODE
         }
       }
     }
   }
 
-//  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-//    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
-//      if(eng.map->featuresStatic[x][y]->getId() == feature_stoneFloor) {
-//        //Randomly convert stone floor to low rubble
-//        if(eng.dice.percentile() == 1) {
-//          eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
-//          continue;
-//        }
-//      }
-//    }
-//  }
+  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
+    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+      if(eng.map->cells[x][y].featureStatic->getId() == feature_stoneFloor) {
+        //Randomly convert stone floor to low rubble
+        if(eng.dice.percentile() == 1) {
+          eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
+#ifdef DEMO_MODE
+          eng.renderer->drawMapAndInterface();
+          eng.sdlWrapper->sleep(1);
+#endif // DEMO_MODE
+          continue;
+        }
+      }
+    }
+  }
+#ifdef DEMO_MODE
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
 }
 
 void MapGenBsp::connectRegions(Region* regions[3][3]) {
@@ -828,6 +954,12 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
 
       MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
         *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
+
+#ifdef DEMO_MODE
+      eng.renderer->drawMapAndInterface();
+      eng.sdlWrapper->sleep(1000);
+#endif // DEMO_MODE
+
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
     }
@@ -928,6 +1060,10 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
       eng.featureDataHandler->getData(feature_stoneWall);
     eng.featureFactory->spawnFeatureAt(
       feature_door, pos, new DoorSpawnData(mimicFeatData));
+#ifdef DEMO_MODE
+    eng.renderer->drawMapAndInterface();
+    eng.sdlWrapper->sleep(1000);
+#endif // DEMO_MODE
   }
 }
 
@@ -938,6 +1074,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
       roomCells[x][y] = true;
     }
   }
+
   return new Room(roomPoss);
 }
 
@@ -995,7 +1132,9 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 
 // The parameter rectangle does not have to go up-left to bottom-right,
 // the method adjusts the order
-void MapGenBsp::coverAreaWithFeature(const Rect& area, const Feature_t feature) {
+void MapGenBsp::coverAreaWithFeature(
+  const Rect& area, const Feature_t feature) {
+
   const Pos x0y0 =
     Pos(min(area.x0y0.x, area.x1y1.x), min(area.x0y0.y, area.x1y1.y));
   const Pos x1y1 =
@@ -1004,8 +1143,17 @@ void MapGenBsp::coverAreaWithFeature(const Rect& area, const Feature_t feature) 
   for(int x = x0y0.x; x <= x1y1.x; x++) {
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       eng.featureFactory->spawnFeatureAt(feature, Pos(x, y), NULL);
+
+#ifdef DEMO_MODE
+      eng.renderer->drawMapAndInterface();
+      eng.sdlWrapper->sleep(1);
+#endif // DEMO_MODE
     }
   }
+
+#ifdef DEMO_MODE
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
 }
 
 void MapGenBsp::reshapeRoom(const Room& room) {
@@ -1087,6 +1235,11 @@ void MapGenBsp::reshapeRoom(const Room& room) {
       }
     }
   }
+
+#ifdef DEMO_MODE
+  eng.renderer->drawMapAndInterface();
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
 }
 
 int MapGenBsp::getNrStepsInDirUntilWallFound(
@@ -1237,6 +1390,11 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
       }
     }
   }
+#ifdef DEMO_MODE
+  eng.renderer->drawMapAndInterface();
+  eng.sdlWrapper->sleep(2000);
+#endif // DEMO_MODE
+
   trace << "MapGenBsp::buildAuxRooms() [DONE]" << endl;
 }
 
@@ -1270,6 +1428,10 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
       room = NULL;
     } else {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+#ifdef DEMO_MODE
+      eng.renderer->drawMapAndInterface();
+      eng.sdlWrapper->sleep(1000);
+#endif // DEMO_MODE
       globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
     }
 
@@ -1304,7 +1466,7 @@ void MapGenBsp::makeCrumbleRoom(const Rect roomAreaIncludingWalls,
 
 
 //=============================================================== REGION
-Region::Region(Pos x0y0, Pos x1y1) :
+Region::Region(const Pos& x0y0, const Pos& x1y1) :
   mainRoom(NULL), isConnected(false), x0y0_(x0y0), x1y1_(x1y1) {
   for(int x = 0; x <= 2; x++) {
     for(int y = 0; y <= 2; y++) {
@@ -1322,8 +1484,7 @@ Region::Region() :
   }
 }
 
-Region::~Region() {
-}
+Region::~Region() {}
 
 int Region::getNrOfConnections() {
   int nRconnections = 0;

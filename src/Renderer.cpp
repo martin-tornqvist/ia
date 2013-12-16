@@ -220,8 +220,8 @@ Uint32 Renderer::getPixel(SDL_Surface* const surface,
   Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
   switch(bpp) {
-    case 1:   return *p;            break;
-    case 2:   return *(Uint16*)p;  break;
+    case 1:   return *p;          break;
+    case 2:   return *(Uint16*)p; break;
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         return p[0] << 16 | p[1] << 8 | p[2];
@@ -229,8 +229,8 @@ Uint32 Renderer::getPixel(SDL_Surface* const surface,
         return p[0] | p[1] << 8 | p[2] << 16;
       }
     } break;
-    case 4:   return *(Uint32*)p;  break;
-    default:  return -1;            break;
+    case 4:   return *(Uint32*)p; break;
+    default:  return -1;          break;
   }
   return -1;
 }
@@ -595,15 +595,15 @@ void Renderer::coverCellInMap(const Pos& pos) {
   coverAreaPixel((pos + offset) * cellDims, cellDims);
 }
 
-void Renderer::drawLineHorizontal(const Pos& pixelPos, const int W,
-                                  const SDL_Color& clr) {
+void Renderer::drawLineHor(const Pos& pixelPos, const int W,
+                           const SDL_Color& clr) {
   const Pos offset(0, 1 - eng.config->fontScale);
   drawRectangleSolid(
     pixelPos + offset, Pos(W, 2 * eng.config->fontScale), clr);
 }
 
-void Renderer::drawLineVertical(const Pos& pixelPos, const int H,
-                                const SDL_Color& clr) {
+void Renderer::drawLineVer(const Pos& pixelPos, const int H,
+                           const SDL_Color& clr) {
   drawRectangleSolid(pixelPos, Pos(1, H), clr);
 }
 
@@ -748,10 +748,10 @@ void Renderer::drawLifeBar(const Pos& pos, const int LENGTH) {
     const int X0_RED = X0_GREEN + W_GREEN;
 
     if(W_GREEN > 0) {
-      drawLineHorizontal(Pos(X0_GREEN, Y0), W_GREEN, clrGreenLgt);
+      drawLineHor(Pos(X0_GREEN, Y0), W_GREEN, clrGreenLgt);
     }
     if(W_RED > 0) {
-      drawLineHorizontal(Pos(X0_RED, Y0), W_RED, clrRedLgt);
+      drawLineHor(Pos(X0_RED, Y0), W_RED, clrRedLgt);
     }
   }
 }

@@ -5,6 +5,10 @@
 #include "FeatureFactory.h"
 #include "MapParsing.h"
 
+#ifdef DEMO_MODE
+#include "SdlWrapper.h"
+#endif // DEMO_MODE
+
 void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
   bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS]) {
@@ -162,6 +166,9 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
       c += roomDeltaSigns;
     }
     eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+#ifdef DEMO_MODE
+    eng.sdlWrapper->sleep(50);
+#endif // DEMO_MODE
     if(doorPosCandidates != NULL) {
       doorPosCandidates[c.x][c.y] = true;
     }
@@ -171,6 +178,9 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     Pos cTemp(c - roomDeltaSigns);
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
+#ifdef DEMO_MODE
+      eng.sdlWrapper->sleep(50);
+#endif // DEMO_MODE
       cTemp -= roomDeltaSigns;
     }
 
@@ -183,12 +193,18 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     // (4)
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+#ifdef DEMO_MODE
+      eng.sdlWrapper->sleep(50);
+#endif // DEMO_MODE
       c += deltaCurSign - roomDeltaSigns;
     }
 
     // (5)
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+#ifdef DEMO_MODE
+      eng.sdlWrapper->sleep(50);
+#endif // DEMO_MODE
       c += roomDeltaSigns;
     }
     c -= roomDeltaSigns;

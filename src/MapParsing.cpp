@@ -1,5 +1,7 @@
 #include "MapParsing.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 #include "Map.h"
 #include "ActorPlayer.h"
@@ -54,12 +56,9 @@ void MapParser::parse(
   const CellPred& predicate, bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
   const MapParseWriteRule writeRule) {
 
-  if(
-    predicate.isCheckingCells()       == false &&
-    predicate.isCheckingMobFeatures() == false &&
-    predicate.isCheckingActors()      == false) {
-    throw runtime_error("Predicate not checking anything");
-  }
+  assert(predicate.isCheckingCells()       == true ||
+         predicate.isCheckingMobFeatures() == true ||
+         predicate.isCheckingActors()      == true);
 
   const Engine& eng = predicate.eng;
 

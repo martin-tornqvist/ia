@@ -164,7 +164,7 @@ private:
 
 struct Region {
 public:
-  Region(Pos x0y0, Pos x1y1);
+  Region(const Pos& x0y0, const Pos& x1y1);
   Region();
   ~Region();
 

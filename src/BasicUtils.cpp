@@ -1,9 +1,7 @@
 #include "BasicUtils.h"
 
-#include <stdlib.h>
-#include <iostream>
-#include <ctime>
 #include <algorithm>
+#include <assert.h>
 
 #include "Engine.h"
 
@@ -173,9 +171,7 @@ DirConverter::DirConverter() {
 }
 
 Dir_t DirConverter::getDir(const Pos& offset) const {
-  if(offset.x < -1 || offset.y < -1 || offset.x > 1 || offset.y > 1) {
-    throw runtime_error("Expected x & y [-1, 1]");
-  }
+  assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
   if(offset.y == -1) {
     return offset.x == -1 ? dirUpLeft :
@@ -200,9 +196,8 @@ Dir_t DirConverter::getDir(const Pos& offset) const {
 }
 
 Pos DirConverter::getOffset(const Dir_t dir) const {
-  if(dir == endOfDirs) {
-    throw runtime_error("Invalid direction");
-  }
+  assert(dir != endOfDirs);
+
   switch(dir) {
     case dirDownLeft:   return Pos(-1, 1);
     case dirDown:       return Pos(0, 1);

@@ -602,8 +602,9 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        if(event_.key.keysym.unicode >= 33 && event_.key.keysym.unicode < 126) {
-          return KeyboardReadReturnData(static_cast<char>(event_.key.keysym.unicode));
+        const Uint16 UNICODE = event_.key.keysym.unicode;
+        if(UNICODE >= 33 && UNICODE < 126) {
+          return KeyboardReadReturnData(static_cast<char>(UNICODE));
           clearEvents();
         } else {
           // Other key pressed? (escape, return, space, etc)

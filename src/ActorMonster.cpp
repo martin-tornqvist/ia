@@ -1,5 +1,7 @@
 #include "ActorMonster.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "Item.h"
@@ -38,9 +40,7 @@ Monster::~Monster() {
 }
 
 void Monster::onActorTurn() {
-  if(eng.basicUtils->isPosInsideMap(pos) == false) {
-    throw runtime_error("Monster outside map");
-  }
+  assert(eng.basicUtils->isPosInsideMap(pos));
 
   waiting_ = !waiting_;
 
@@ -206,12 +206,8 @@ void Monster::onMonsterHit(int& dmg) {
 }
 
 void Monster::moveDir(Dir_t dir) {
-  if(dir == endOfDirs) {
-    throw runtime_error("Bad direction");
-  }
-  if(eng.basicUtils->isPosInsideMap(pos) == false) {
-    throw runtime_error("Monster outside map");
-  }
+  assert(dir != endOfDirs);
+  assert(eng.basicUtils->isPosInsideMap(pos));
 
   getPropHandler()->changeMoveDir(pos, dir);
 
@@ -233,9 +229,7 @@ void Monster::moveDir(Dir_t dir) {
 
   const Pos targetCell(pos + DirConverter().getOffset(dir));
 
-  if(eng.basicUtils->isPosInsideMap(targetCell) == false) {
-    throw runtime_error("Monster move target cell outside map");
-  }
+  assert(eng.basicUtils->isPosInsideMap(targetCell));
 
   pos = targetCell;
 

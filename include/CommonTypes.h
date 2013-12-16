@@ -2,7 +2,6 @@
 #define COMMON_TYPES_H
 
 #include <string>
-#include <stdlib.h>
 
 #include "Colors.h"
 #include "Art.h"

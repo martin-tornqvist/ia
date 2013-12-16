@@ -1,5 +1,7 @@
 #include "Bot.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "Properties.h"
@@ -32,9 +34,7 @@ void Bot::act() {
   const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
     const Actor& actor = eng.gameTime->getActorAtElement(i);
-    if(eng.basicUtils->isPosInsideMap(actor.pos) == false) {
-      throw runtime_error("Actor outside map");
-    }
+    assert(eng.basicUtils->isPosInsideMap(actor.pos));
   }
   //=======================================================================
 
@@ -128,9 +128,7 @@ void Bot::act() {
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(eng.player->pos);
 
-  if(eng.basicUtils->isPosAdj(playerCell, cellToGoTo, true) == false) {
-    throw runtime_error("Bad position parameter");
-  }
+  assert(eng.basicUtils->isPosAdj(playerCell, cellToGoTo, true));
 
   //Get relative positions
   const int xRel =
@@ -138,9 +136,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   const int yRel =
     cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
 
-  if(cellToGoTo != playerCell) {
-    if(xRel == 0 && yRel == 0) {throw runtime_error("Expected non zero");}
-  }
+  assert(cellToGoTo == playerCell || xRel != 0 || yRel != 0);
 
   char key = ' ';
 

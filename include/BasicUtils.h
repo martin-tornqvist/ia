@@ -2,8 +2,7 @@
 #define BASIC_UTILS_H
 
 #include <vector>
-#include <math.h>
-#include <stdexcept>
+//#include <math.h>
 
 #include "CommonData.h"
 #include "Actor.h"

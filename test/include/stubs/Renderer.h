@@ -11,7 +11,7 @@ public:
   Renderer(Engine&) {}
   ~Renderer() {}
 
-  void drawMapAndInterface(const bool = false) {}
+  void drawMapAndInterface(const bool = true) {}
 
   inline void updateScreen() {}
 
@@ -43,9 +43,9 @@ public:
 
   void drawRectangleSolid(const Pos&, const Pos&, const SDL_Color&) {}
 
-  void drawLineHorizontal(const Pos&, const int, const SDL_Color&) {}
+  void drawLineHor(const Pos&, const int, const SDL_Color&) {}
 
-  void drawLineVertical(const Pos&, const int, const SDL_Color&) {}
+  void drawLineVer(const Pos&, const int, const SDL_Color&) {}
 
   void drawMarker(const vector<Pos>&, const int = -1) {}
 

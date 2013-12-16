@@ -1,5 +1,6 @@
 #include "ActorFactory.h"
 
+#include <assert.h>
 #include <algorithm>
 
 #include "Engine.h"
@@ -10,9 +11,7 @@
 #include "MapParsing.h"
 
 Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
-  if(id < 1 || id >= endOfActorIds) {
-    throw runtime_error("Bad actor id");
-  }
+  assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
     case actor_zombie:              return new ZombieClaw(eng); break;

@@ -1,5 +1,7 @@
 #include "GameTime.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "CommonTypes.h"
@@ -56,10 +58,7 @@ void GameTime::eraseActorInElement(const unsigned int i) {
 
 void GameTime::insertActorInLoop(Actor* actor) {
   //Sanity check actor inserted
-  if(eng.basicUtils->isPosInsideMap(actor->pos) == false) {
-    throw runtime_error("Actor outside map");
-  }
-
+  assert(eng.basicUtils->isPosInsideMap(actor->pos));
   actors_.push_back(actor);
 }
 
@@ -292,9 +291,6 @@ Actor* GameTime::getCurrentActor() {
   Actor* const actor = actors_.at(currentActorVectorPos_);
 
   //Sanity check actor retrieved
-  if(eng.basicUtils->isPosInsideMap(actor->pos) == false) {
-    throw runtime_error("Actor outside map");
-  }
-
+  assert(eng.basicUtils->isPosInsideMap(actor->pos));
   return actor;
 }

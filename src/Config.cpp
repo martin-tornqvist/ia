@@ -513,7 +513,7 @@ void Config::setDefaultVariables() {
   useRangedWpnAutoReload = false;
   keyRepeatDelay = 130;
   keyRepeatInterval = 60;
-  delayProjectileDraw = 45;
+  delayProjectileDraw = 50;
   delayShotgun = 120;
   delayExplosion = 350;
   trace << "Config::setDefaultVariables() [DONE]" << endl;

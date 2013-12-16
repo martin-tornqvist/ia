@@ -46,10 +46,14 @@ public:
   }
 
   inline void sleep(const Uint32 DURATION) const {
-    SDL_Delay(DURATION);
+    const Uint32 TICKS_BEFORE = SDL_GetTicks();
+    while(SDL_GetTicks() < TICKS_BEFORE + DURATION) {
+      SDL_PumpEvents();
+    }
   }
 
 private:
+
 };
 
 #endif

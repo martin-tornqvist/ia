@@ -1,6 +1,7 @@
 #include "FeatureTrap.h"
 
 #include <algorithm>
+#include <assert.h>
 
 #include "Engine.h"
 
@@ -23,25 +24,19 @@ Trap::Trap(Feature_t id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
   isHidden_(true) {
 
-  if(spawnData->trapType_ == endOfTraps) {throw runtime_error("Bad trap type");}
-  if(mimicFeature_ == NULL) {
-    throw runtime_error("Failed to set feature to mimic");
-  }
+  assert(spawnData->trapType_ != endOfTraps);
+  assert(mimicFeature_ != NULL);
 
   if(spawnData->trapType_ == trap_any) {
     setSpecificTrapFromId(Trap_t(eng.dice.range(0, endOfTraps - 1)));
   } else {
     setSpecificTrapFromId(spawnData->trapType_);
   }
-  if(specificTrap_ == NULL) {
-    throw runtime_error("Failed to create specific trap");
-  }
+  assert(specificTrap_ != NULL);
 }
 
 Trap::~Trap() {
-  if(specificTrap_ == NULL) {
-    throw runtime_error("Expected trap to have specific trap");
-  }
+  assert(specificTrap_ != NULL);
   delete specificTrap_;
 }
 
@@ -650,7 +645,7 @@ void TrapSmoke::trapSpecificTrigger(Actor& actor,
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       eng.log->addMsg("Suddenly the air around " + actorName +
-                       " is thick with smoke!");
+                      " is thick with smoke!");
     }
   }
 
@@ -672,7 +667,7 @@ void TrapAlarm::trapSpecificTrigger(Actor& actor,
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       eng.log->addMsg("Suddenly the air around " + actorName +
-                       " is thick with smoke!");
+                      " is thick with smoke!");
     } else {
     }
   }
