@@ -61,23 +61,18 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   eng.map->setParametersFromSaveLines(lines);
   eng.actorDataHandler->setParametersFromSaveLines(lines);
   eng.gameTime->setParametersFromSaveLines(lines);
-
-  eng.gameTime->insertActorInLoop(eng.player);
-  eng.dungeonClimb->travelDown();
 }
 
 bool SaveHandler::isSaveAvailable() {
-  vector<string> lines;
-  readFile(lines);
-
-  bool isSaveExists = false;
-
-  if(lines.size() > 0) {
-    isSaveExists = true;
+  ifstream file("data/save");
+  if(file.good()) {
+    const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
+    file.close();
+    return IS_EMPTY == false;
+  } else {
+    file.close();
+    return false;
   }
-
-  writeFile(lines);
-  return isSaveExists;
 }
 
 void SaveHandler::readFile(vector<string>& lines) {
@@ -85,7 +80,6 @@ void SaveHandler::readFile(vector<string>& lines) {
 
   string curLine;
   ifstream file("data/save");
-
   if(file.is_open()) {
     while(getline(file, curLine)) {
       lines.push_back(curLine);
@@ -96,7 +90,8 @@ void SaveHandler::readFile(vector<string>& lines) {
     emptyLines.resize(0);
     writeFile(emptyLines);
   } else {
-    trace << "[WARNING] Could not open save file, in SaveHandler::readFile()" << endl;
+    trace << "[WARNING] Could not open save file, ";
+    trace << "in SaveHandler::readFile()" << endl;
   }
 }
 
@@ -104,12 +99,13 @@ void SaveHandler::writeFile(const vector<string>& lines) const {
   ofstream file;
   file.open("data/save", ios::trunc);
 
-  for(unsigned int i = 0; i < lines.size(); i++) {
-    file << lines.at(i);
-    if(i != lines.size() - 1) {
-      file << endl;
+  if(file.is_open()) {
+    for(unsigned int i = 0; i < lines.size(); i++) {
+      file << lines.at(i);
+      if(i != lines.size() - 1) {
+        file << endl;
+      }
     }
+    file.close();
   }
-
-  file.close();
 }

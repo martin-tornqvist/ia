@@ -74,7 +74,7 @@ string Cultist::getCultistPhrase(Engine& engine) {
 }
 
 void Cultist::actorSpecific_spawnStartItems() {
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
 
   const int PISTOL = 6;
   const int PUMP_SHOTGUN = PISTOL + 4;

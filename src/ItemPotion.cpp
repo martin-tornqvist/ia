@@ -313,7 +313,7 @@ void PotionOfInsight::specificQuaff(Actor* const actor) {
 
 void PotionOfDescent::specificQuaff(Actor* const actor) {
   (void)actor;
-  if(eng.map->getDLVL() < LAST_CAVERN_LEVEL) {
+  if(eng.map->getDlvl() < LAST_CAVERN_LEVEL) {
     eng.dungeonClimb->travelDown(1);
     eng.log->addMsg("I sink downwards!");
   } else {

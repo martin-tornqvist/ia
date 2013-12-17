@@ -19,7 +19,7 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
 
   listToSet.resize(0);
 
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LEVEL, DLVL + NR_LVLS_OUT_OF_DEPTH));
 
@@ -404,7 +404,7 @@ void PopulateMonsters::makeSortedFreeCellsVector(
 }
 
 int PopulateMonsters::getRandomOutOfDepth() const {
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   if(DLVL == 0) {
     return 0;
   }
@@ -488,7 +488,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  vector<Pos> freeCells;
 //  eng.mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
-//  const int MIN_DIST_FROM_PLAYER = eng.map->getDLVL() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
+//  const int MIN_DIST_FROM_PLAYER = eng.map->getDlvl() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
 //
 //  unsigned int i = 0;
 //  bool increaseIndex = true;
@@ -502,7 +502,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    i += increaseIndex ? 1 : 0;
 //  }
 //
-//  if(eng.map->getDLVL() >= 1 && eng.map->getDLVL() < FIRST_CAVERN_LEVEL) {
+//  if(eng.map->getDlvl() >= 1 && eng.map->getDlvl() < FIRST_CAVERN_LEVEL) {
 //    bool blockersTraps[MAP_X_CELLS][MAP_Y_CELLS];
 //    eng.mapTests->makeItemBlockerArray(blockersTraps);
 //    eng.basicUtils->reverseBoolArray(blockersTraps);
@@ -529,7 +529,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //    }
 //  }
 //
-//  const int CELLS_PER_MONSTER_GROUP = eng.map->getDLVL() == 0 ? 500 : 110;
+//  const int CELLS_PER_MONSTER_GROUP = eng.map->getDlvl() == 0 ? 500 : 110;
 //
 //  trace << "PopulateMonsters: Cells per monster group: " << CELLS_PER_MONSTER_GROUP << endl;
 //

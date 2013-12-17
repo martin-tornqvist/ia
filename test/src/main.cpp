@@ -17,26 +17,25 @@
 #include "MapParsing.h"
 #include "Fov.h"
 #include "LineCalc.h"
+#include "SaveHandler.h"
 
 struct BasicFixture {
   BasicFixture() {
-    eng = new Engine;
-    eng->initConfig();
-    eng->initRenderer();
-    eng->initAudio();
-    eng->initGame();
-    eng->gameTime->insertActorInLoop(eng->player);
-    eng->player->pos = Pos(1, 1);
-    eng->map->resetMap();
+    eng.initConfig();
+    eng.initRenderer();
+    eng.initAudio();
+    eng.initGame();
+    eng.gameTime->insertActorInLoop(eng.player);
+    eng.player->pos = Pos(1, 1);
+    eng.map->resetMap();
   }
   ~BasicFixture() {
-    eng->cleanupGame();
-    eng->cleanupAudio();
-    eng->cleanupRenderer();
-    eng->cleanupConfig();
-    delete eng;
+    eng.cleanupGame();
+    eng.cleanupAudio();
+    eng.cleanupRenderer();
+    eng.cleanupConfig();
   }
-  Engine* eng;
+  Engine eng;
 };
 
 TEST(RollDice) {
@@ -170,63 +169,63 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   Pos origin(0, 0);
   vector<Pos> line;
 
-  eng->lineCalc->calcNewLine(origin, Pos(3, 0), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(3, 0), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 0));
   CHECK(line.at(2) == Pos(2, 0));
   CHECK(line.at(3) ==  Pos(3, 0));
 
-  eng->lineCalc->calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, 0));
   CHECK(line.at(2) == Pos(-2, 0));
   CHECK(line.at(3) == Pos(-3, 0));
 
-  eng->lineCalc->calcNewLine(origin, Pos(0, 3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(0, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(0, 1));
   CHECK(line.at(2) == Pos(0, 2));
   CHECK(line.at(3) == Pos(0, 3));
 
-  eng->lineCalc->calcNewLine(origin, Pos(0, -3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(0, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(0, -1));
   CHECK(line.at(2) == Pos(0, -2));
   CHECK(line.at(3) == Pos(0, -3));
 
-  eng->lineCalc->calcNewLine(origin, Pos(3, 3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(3, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 1));
   CHECK(line.at(2) == Pos(2, 2));
   CHECK(line.at(3) == Pos(3, 3));
 
-  eng->lineCalc->calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
+  eng.lineCalc->calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == Pos(9, 9));
   CHECK(line.at(1) == Pos(8, 10));
   CHECK(line.at(2) == Pos(7, 11));
   CHECK(line.at(3) == Pos(6, 12));
 
-  eng->lineCalc->calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, 1));
   CHECK(line.at(2) == Pos(-2, 2));
   CHECK(line.at(3) == Pos(-3, 3));
 
-  eng->lineCalc->calcNewLine(origin, Pos(3, -3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(3, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, -1));
   CHECK(line.at(2) == Pos(2, -2));
   CHECK(line.at(3) == Pos(3, -3));
 
-  eng->lineCalc->calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, -1));
@@ -234,13 +233,13 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(line.at(3) == Pos(-3, -3));
 
   //Test disallowing outside map
-  eng->lineCalc->calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
+  eng.lineCalc->calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
   CHECK(line.size() == 2);
   CHECK(line.at(0) == Pos(1, 0));
   CHECK(line.at(1) == Pos(0, 0));
 
   //Test travel limit parameter
-  eng->lineCalc->calcNewLine(origin, Pos(20, 0), true, 2, true, line);
+  eng.lineCalc->calcNewLine(origin, Pos(20, 0), true, 2, true, line);
   CHECK(line.size() == 3);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 0));
@@ -248,7 +247,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 
   //Test precalculated FOV line offsets
   const vector<Pos>* deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STANDARD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, 1));
@@ -256,7 +255,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, 3));
 
   deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STANDARD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, 1));
@@ -264,7 +263,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(-3, 3));
 
   deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STANDARD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, -1));
@@ -272,7 +271,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, -3));
 
   deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STANDARD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, -1));
@@ -282,41 +281,41 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   //Check constraints for retrieving FOV offset lines
   //Delta > parameter max distance
   deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(3, 0), 2);
+    eng.lineCalc->getFovDeltaLine(Pos(3, 0), 2);
   CHECK(deltaLine == NULL);
   //Delta > limit of precalculated
   deltaLine =
-    eng->lineCalc->getFovDeltaLine(Pos(50, 0), 999);
+    eng.lineCalc->getFovDeltaLine(Pos(50, 0), 999);
   CHECK(deltaLine == NULL);
 }
 
 TEST_FIXTURE(BasicFixture, Fov) {
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
 
-  eng->basicUtils->resetArray(blockers, false); //Nothing blocking sight
+  eng.basicUtils->resetArray(blockers, false); //Nothing blocking sight
 
   const int X = MAP_X_CELLS_HALF;
   const int Y = MAP_Y_CELLS_HALF;
 
-  eng->player->pos = Pos(X, Y);
+  eng.player->pos = Pos(X, Y);
 
-  eng->fov->runPlayerFov(blockers, eng->player->pos);
+  eng.fov->runPlayerFov(blockers, eng.player->pos);
 
   const int R = FOV_STANDARD_RADI_INT;
 
-  CHECK(eng->map->cells[X    ][Y    ].isSeenByPlayer);
-  CHECK(eng->map->cells[X + 1][Y    ].isSeenByPlayer);
-  CHECK(eng->map->cells[X - 1][Y    ].isSeenByPlayer);
-  CHECK(eng->map->cells[X    ][Y + 1].isSeenByPlayer);
-  CHECK(eng->map->cells[X    ][Y - 1].isSeenByPlayer);
-  CHECK(eng->map->cells[X + 2][Y + 2].isSeenByPlayer);
-  CHECK(eng->map->cells[X - 2][Y + 2].isSeenByPlayer);
-  CHECK(eng->map->cells[X + 2][Y - 2].isSeenByPlayer);
-  CHECK(eng->map->cells[X - 2][Y - 2].isSeenByPlayer);
-  CHECK(eng->map->cells[X + R][Y    ].isSeenByPlayer);
-  CHECK(eng->map->cells[X - R][Y    ].isSeenByPlayer);
-  CHECK(eng->map->cells[X    ][Y + R].isSeenByPlayer);
-  CHECK(eng->map->cells[X    ][Y - R].isSeenByPlayer);
+  CHECK(eng.map->cells[X    ][Y    ].isSeenByPlayer);
+  CHECK(eng.map->cells[X + 1][Y    ].isSeenByPlayer);
+  CHECK(eng.map->cells[X - 1][Y    ].isSeenByPlayer);
+  CHECK(eng.map->cells[X    ][Y + 1].isSeenByPlayer);
+  CHECK(eng.map->cells[X    ][Y - 1].isSeenByPlayer);
+  CHECK(eng.map->cells[X + 2][Y + 2].isSeenByPlayer);
+  CHECK(eng.map->cells[X - 2][Y + 2].isSeenByPlayer);
+  CHECK(eng.map->cells[X + 2][Y - 2].isSeenByPlayer);
+  CHECK(eng.map->cells[X - 2][Y - 2].isSeenByPlayer);
+  CHECK(eng.map->cells[X + R][Y    ].isSeenByPlayer);
+  CHECK(eng.map->cells[X - R][Y    ].isSeenByPlayer);
+  CHECK(eng.map->cells[X    ][Y + R].isSeenByPlayer);
+  CHECK(eng.map->cells[X    ][Y - R].isSeenByPlayer);
 }
 
 TEST_FIXTURE(BasicFixture, ThrowItems) {
@@ -325,20 +324,20 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   // in front of the wall - i.e. the cell it travelled through
   // before encountering the wall.
   //
-  // .  <- (5, 7)
+  // . <- (5, 7)
   // # <- If aiming at wall here... (5, 8)
   // . <- ...throwing knife should finally land here (5, 9)
   // @ <- Player position (5, 10).
   //-----------------------------------------------------------------
 
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 7));
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 9));
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 10));
-  eng->player->pos = Pos(5, 10);
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 7));
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 9));
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 10));
+  eng.player->pos = Pos(5, 10);
   Pos target(5, 8);
-  Item* item = eng->itemFactory->spawnItem(item_throwingKnife);
-  eng->thrower->throwItem(*(eng->player), target, *item);
-  CHECK(eng->map->cells[5][9].item != NULL);
+  Item* item = eng.itemFactory->spawnItem(item_throwingKnife);
+  eng.thrower->throwItem(*(eng.player), target, *item);
+  CHECK(eng.map->cells[5][9].item != NULL);
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
@@ -353,7 +352,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   const Pos posR(2, 4);
 
   //Spawn left floor cell
-  eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
 
   //Conditions for finished test
   bool isTestedStuck              = false;
@@ -366,20 +365,20 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     isTestedLooseWebDestroyed == false) {
 
     //Spawn right floor cell
-    eng->featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
+    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
 
     //Spawn a monster that can get stuck in the web
-    Actor* const actor = eng->actorFactory->spawnActor(actor_zombie, posL);
+    Actor* const actor = eng.actorFactory->spawnActor(actor_zombie, posL);
     Monster* const monster = dynamic_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
     const Feature_t mimicId =
-      eng->map->cells[posR.x][posR.x].featureStatic->getId();
+      eng.map->cells[posR.x][posR.x].featureStatic->getId();
     const FeatureData* const mimicData =
-      eng->featureDataHandler->getData(mimicId);
+      eng.featureDataHandler->getData(mimicId);
     TrapSpawnData* const trapSpawnData = new TrapSpawnData(
       mimicData, trap_spiderWeb);
-    eng->featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
+    eng.featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
     monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
@@ -395,7 +394,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
       isTestedStuck = true;
     } else if(monster->pos == posL) {
       const Feature_t featureId =
-        eng->map->cells[posR.x][posR.y].featureStatic->getId();
+        eng.map->cells[posR.x][posR.y].featureStatic->getId();
       if(featureId == feature_trashedSpiderWeb) {
         isTestedLooseWebDestroyed = true;
       } else {
@@ -404,7 +403,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     }
 
     //Remove the monster
-    eng->actorFactory->deleteAllMonsters();
+    eng.actorFactory->deleteAllMonsters();
   }
   //Check that all cases have been triggered (not really necessary, it just
   //verifies that the loop above is correctly written).
@@ -413,34 +412,70 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   CHECK_EQUAL(isTestedLooseWebDestroyed, true);
 }
 
+TEST_FIXTURE(BasicFixture, SavingGame) {
+  ActorData& def = *(eng.player->getData());
+  def.name_a = def.name_the = "TEST PLAYER";
+  eng.player->changeMaxHp(5, false);
+
+  const int CUR_DLVL = eng.map->getDlvl();
+  eng.map->incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
+
+  eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills = 123;
+
+  eng.saveHandler->save();
+
+  CHECK(eng.saveHandler->isSaveAvailable());
+}
+
+TEST_FIXTURE(BasicFixture, LoadingGame) {
+  CHECK(eng.saveHandler->isSaveAvailable());
+
+  const int PLAYER_MAX_HP_BEFORE = eng.player->getHpMax(true);
+
+  eng.saveHandler->load();
+
+  ActorData& def = *(eng.player->getData());
+  def.name_a = def.name_the = "TEST PLAYER";
+  CHECK_EQUAL("TEST PLAYER", def.name_a);
+  CHECK_EQUAL("TEST PLAYER", def.name_the);
+
+  CHECK_EQUAL(PLAYER_MAX_HP_BEFORE + 5, eng.player->getHpMax(true));
+
+  CHECK_EQUAL(7, eng.map->getDlvl());
+
+  CHECK_EQUAL(123, eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills);
+
+  CHECK_EQUAL(0, eng.gameTime->getTurn());
+}
+
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
 
   for(int y = roomArea1.x0y0.y; y <= roomArea1.x1y1.y; y++) {
     for(int x = roomArea1.x0y0.x; x <= roomArea1.x1y1.x; x++) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
     }
   }
 
   for(int y = roomArea2.x0y0.y; y <= roomArea2.x1y1.y; y++) {
     for(int x = roomArea2.x0y0.x; x <= roomArea2.x1y1.x; x++) {
-      eng->featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
     }
   }
 
   Room room1(roomArea1);
   Room room2(roomArea2);
 
-  MapGenUtilCorridorBuilder(*eng).buildZCorridorBetweenRooms(
+  MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
     room1, room2, dirRight);
 }
 
 //TEST_FIXTURE(BasicFixture, MakeBspMap) {
-//  MapGenBsp mapGen(eng->;
+//  MapGenBsp mapGen(eng.;
 //  for(int i = 0; i < 1000; i++) {
-//    eng->player->pos = Pos(eng->dice.range(1, MAP_X_CELLS - 1),
-//                           eng->dice.range(1, MAP_Y_CELLS - 1));
+//    eng.player->pos = Pos(eng.dice.range(1, MAP_X_CELLS - 1),
+//                           eng.dice.range(1, MAP_Y_CELLS - 1));
 //    mapGen.run();
 //  }
 //}

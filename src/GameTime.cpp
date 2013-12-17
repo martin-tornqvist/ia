@@ -221,7 +221,7 @@ void GameTime::runStandardTurnEvents() {
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is aborted)
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   if(DLVL >= 1 && DLVL <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {

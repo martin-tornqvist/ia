@@ -84,7 +84,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(
   }
 
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
-    min(85, 30 + (eng.map->getDLVL() * 5));
+    min(85, 30 + (eng.map->getDlvl() * 5));
   if(eng.dice.percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     vector<Pos> trapPositionCandidates;
     for(int y = 1; y < MAP_Y_CELLS - 1; y++) {

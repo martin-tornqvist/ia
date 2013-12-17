@@ -58,7 +58,7 @@
 					<Add library="..\test\UnitTest++\bin\libUnitTest++.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="$exe_output" />
+					<Add after="cmd /c cd $TARGET_OUTPUT_DIR &amp; $TARGET_OUTPUT_BASENAME" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">

@@ -163,7 +163,7 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
   vector<Sfx_t> sfxCandidates;
   sfxCandidates.resize(0);
 
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   if(DLVL >= 1 && DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
     sfxCandidates.push_back(amb002);
     sfxCandidates.push_back(amb003);

@@ -733,7 +733,7 @@ void Chest::triggerTrap() {
 
     const int EXPLODE_ONE_IN_N = 7;
     if(
-      eng.map->getDLVL() >= MIN_DLVL_NASTY_TRAPS &&
+      eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
       eng.dice.oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
       eng.explosionMaker->runExplosion(pos_, sfxExplosion, true);

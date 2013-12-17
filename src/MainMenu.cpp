@@ -13,6 +13,10 @@
 #include "TextFormatting.h"
 #include "Credits.h"
 #include "Audio.h"
+#include "GameTime.h"
+#include "DungeonClimb.h"
+#include "Actor.h"
+#include "ActorPlayer.h"
 
 using namespace std;
 
@@ -64,7 +68,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
   const int Y0_LOGO = eng.config->isTilesMode ? 17 : 15;
   for(unsigned int i = 0; i < quoteLines.size(); i++) {
     eng.renderer->drawText(quoteLines.at(i), panel_screen,
-                            Pos(7, Y0_LOGO + i), quoteClr);
+                           Pos(7, Y0_LOGO + i), quoteClr);
   }
 
   if(eng.config->isTilesMode) {
@@ -81,7 +85,7 @@ void MainMenu::draw(const MenuBrowser& browser) {
           clr.r += eng.dice.range(-60, 100);
           clr.r = max(0, min(254, int(clr.r)));
           eng.renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
-                                   pos, clr);
+                                  pos, clr);
         }
         pos.x++;
       }
@@ -94,50 +98,50 @@ void MainMenu::draw(const MenuBrowser& browser) {
 
   if(IS_DEBUG_MODE) {
     eng.renderer->drawText("## DEBUG MODE ##", panel_screen, Pos(1, 1),
-                            clrYellow);
+                           clrYellow);
   }
 
   SDL_Color clrActive   = clrNosferatuSepiaLgt;
   SDL_Color clrInactive = clrNosferatuSepiaDrk;
 
   eng.renderer->drawText("New journey", panel_screen, pos,
-                          browser.isPosAtKey('a') ? clrActive : clrInactive);
+                         browser.isPosAtKey('a') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Resurrect", panel_screen, pos,
-                          browser.isPosAtKey('b') ? clrActive : clrInactive);
+                         browser.isPosAtKey('b') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Manual", panel_screen, pos,
-                          browser.isPosAtKey('c') ? clrActive : clrInactive);
+                         browser.isPosAtKey('c') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Options", panel_screen, pos,
-                          browser.isPosAtKey('d') ? clrActive : clrInactive);
+                         browser.isPosAtKey('d') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Credits", panel_screen, pos,
-                          browser.isPosAtKey('e') ? clrActive : clrInactive);
+                         browser.isPosAtKey('e') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("High scores", panel_screen, pos,
-                          browser.isPosAtKey('f') ? clrActive : clrInactive);
+                         browser.isPosAtKey('f') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Escape to reality", panel_screen, pos,
-                          browser.isPosAtKey('g') ? clrActive : clrInactive);
+                         browser.isPosAtKey('g') ? clrActive : clrInactive);
   pos.y += 1;
   pos.x += 1;
 
   if(IS_DEBUG_MODE) {
     eng.renderer->drawText("DEBUG: RUN BOT", panel_screen, pos,
-                            browser.isPosAtKey('h') ? clrActive : clrInactive);
+                           browser.isPosAtKey('h') ? clrActive : clrInactive);
     pos.y += 1;
   }
 
@@ -158,8 +162,6 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
   trace << "MainMenu::run()" << endl;
 
   MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
-
-  const bool IS_SAVE_AVAILABLE = eng.saveHandler->isSaveAvailable();
 
   introMusChannel = eng.audio->play(musCthulhiana_Madness);
 
@@ -184,8 +186,10 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
           return gameEntry_new;
         }
         if(browser.isPosAtKey('b')) {
-          if(IS_SAVE_AVAILABLE) {
+          if(eng.saveHandler->isSaveAvailable()) {
             eng.saveHandler->load();
+            eng.gameTime->insertActorInLoop(dynamic_cast<Actor*>(eng.player));
+            eng.dungeonClimb->travelDown();
             proceed = true;
             return gameEntry_load;
           } else {

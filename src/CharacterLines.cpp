@@ -25,7 +25,7 @@ void CharacterLines::drawLocationInfo() {
 
     const Pos& playerPos = player->pos;
 
-    const int DLVL = eng.map->getDLVL();
+    const int DLVL = eng.map->getDlvl();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
       const vector<Room*>& rooms = eng.map->rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
@@ -160,7 +160,7 @@ void CharacterLines::drawInfoLines() {
   //Dungeon level
   eng.renderer->drawText("DLVL:", panel_character, pos, clrGenDrk);
   pos.x += 5;
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   str = DLVL >= 0 ? toString(DLVL) : "?";
   eng.renderer->drawText(str, panel_character, pos, clrGenLgt);
   pos.x += str.length() + 1;

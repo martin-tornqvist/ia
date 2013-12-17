@@ -79,7 +79,7 @@ void Bot::act() {
   const FeatureStatic* const featureHere =
     eng.map->cells[pos.x][pos.y].featureStatic;
   if(featureHere->getId() == feature_stairsDown) {
-    if(eng.map->getDLVL() >= PLAY_TO_DLVL) {
+    if(eng.map->getDlvl() >= PLAY_TO_DLVL) {
       trace << "Bot: Run " << runCount << " finished" << endl;
       runCount++;
       if(runCount >= NR_OF_RUNS) {

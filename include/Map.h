@@ -44,7 +44,7 @@ public:
 
   Cell cells[MAP_X_CELLS][MAP_Y_CELLS];
 
-  inline int getDLVL() {return dlvl_;}
+  inline int getDlvl() {return dlvl_;}
 
   inline void incrDlvl(const int levels = 1) {dlvl_ += levels;}
   inline void decrDlvl(const int levels = 1) {dlvl_ -= levels;}

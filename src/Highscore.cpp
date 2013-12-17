@@ -44,7 +44,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
     eng.player->getNameA(),
     eng.dungeonMaster->getXp(),
     eng.dungeonMaster->getCLvl(),
-    eng.map->getDLVL(),
+    eng.map->getDlvl(),
     eng.player->getInsanity(),
     IS_VICTORY);
 

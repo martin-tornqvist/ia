@@ -14,7 +14,7 @@
 void DungeonClimb::makeLevel() {
   trace << "DungeonClimb::makeLevel()..." << endl;
 
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
 
   bool levelBuilt = false;
 
@@ -76,7 +76,7 @@ void DungeonClimb::tryUseDownStairs() {
 
   eng.log->clearLog();
 
-  const int DLVL = eng.map->getDLVL();
+  const int DLVL = eng.map->getDlvl();
   const Pos& playerPos = eng.player->pos;
 
   const Feature_t featureIdAtPlayer =

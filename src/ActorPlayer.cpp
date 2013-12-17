@@ -458,7 +458,7 @@ void Player::incrInsanity() {
                       }
                     }
                   } else {
-                    if(eng.map->getDLVL() >= 5) {
+                    if(eng.map->getDlvl() >= 5) {
                       if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
                         msg += "I am afflicted by Bathophobia. ";
                         msg += "It suddenly seems terrifying to delve deeper.";
@@ -523,7 +523,7 @@ void Player::incrInsanity() {
 
             const int NR_SHADOWS_LOWER = 1;
             const int NR_SHADOWS_UPPER =
-              getConstrInRange(2, (eng.map->getDLVL() + 1) / 2, 6);
+              getConstrInRange(2, (eng.map->getDlvl() + 1) / 2, 6);
             const int NR_SHADOWS =
               eng.dice.range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
@@ -863,7 +863,7 @@ void Player::actorSpecificOnStandardTurn() {
       incrShock(shockValue_heavy);
       eng.renderer->drawMapAndInterface();
     } else {
-      if(eng.map->getDLVL() != 0) {
+      if(eng.map->getDlvl() != 0) {
         incrShock(1);
       }
     }

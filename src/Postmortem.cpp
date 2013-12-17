@@ -35,7 +35,7 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(
     StringAndClr("   * Explored to the depth of dungeon level " +
-                 toString(eng.map->getDLVL()), clrInfo));
+                 toString(eng.map->getDlvl()), clrInfo));
   postmortemLines.push_back(
     StringAndClr("   * Was " +
                  toString(min(100, eng.player->getInsanity())) +

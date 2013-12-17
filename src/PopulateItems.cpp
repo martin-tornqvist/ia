@@ -57,8 +57,8 @@ void PopulateItems::buildCandidateList() {
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
     if(
-      eng.map->getDLVL() >= dataList[i]->spawnStandardMinDLVL &&
-      eng.map->getDLVL() <= dataList[i]->spawnStandardMaxDLVL &&
+      eng.map->getDlvl() >= dataList[i]->spawnStandardMinDLVL &&
+      eng.map->getDlvl() <= dataList[i]->spawnStandardMaxDLVL &&
       dataList[i]->isIntrinsic == false) {
       if(eng.dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId_t>(i));

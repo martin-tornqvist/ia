@@ -477,6 +477,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng.log->addMsg("Save and quit (y/n)?", clrWhiteHigh);
         eng.renderer->drawMapAndInterface();
         if(eng.query->yesOrNo()) {
+//          eng.map->incrDlvl(1);
           eng.saveHandler->save();
           *quitToMainMenu_ = true;
         } else {

@@ -27,6 +27,7 @@ void RoomThemeMaker::run() {
   }
 
   trace << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
+  trace << "DLVL: " << eng.map->getDlvl() << endl;
   eng.populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
 
   trace << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
@@ -333,7 +334,7 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       default: break;
     }
 
-    chanceToMakeDark += eng.map->getDLVL() - 1;
+    chanceToMakeDark += eng.map->getDlvl() - 1;
 
     if(eng.dice.range(1, 100) < chanceToMakeDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {

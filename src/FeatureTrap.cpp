@@ -255,7 +255,7 @@ MaterialType_t Trap::getMaterialType() const {
 TrapDart::TrapDart(Pos pos, Engine& engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDLVL() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
+    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
 }
 
 void TrapDart::trapSpecificTrigger(Actor& actor,
@@ -327,7 +327,7 @@ void TrapDart::trapSpecificTrigger(Actor& actor,
 TrapSpear::TrapSpear(Pos pos, Engine& engine) :
   SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDLVL() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
+    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
 }
 
 void TrapSpear::trapSpecificTrigger(Actor& actor,
@@ -604,7 +604,7 @@ void TrapSummonMonster::trapSpecificTrigger(Actor& actor,
   vector<ActorId_t> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorData& data = eng.actorDataHandler->dataList[i];
-    if(data.canBeSummoned && data.spawnMinDLVL <= eng.map->getDLVL() + 3) {
+    if(data.canBeSummoned && data.spawnMinDLVL <= eng.map->getDlvl() + 3) {
       summonCandidates.push_back(ActorId_t(i));
     }
   }
