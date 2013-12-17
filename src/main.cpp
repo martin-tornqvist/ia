@@ -1,4 +1,4 @@
-#include "engine.h"
+#include "Engine.h"
 
 #include "MainMenu.h"
 #include "Renderer.h"
@@ -24,6 +24,9 @@
 int main(int argc, char* argv[]) {
   trace << "main()..." << endl;
 
+  (void)argc;
+  (void)argv;
+
   bool quitToMainMenu = false;
 
   Engine* const eng = new Engine(&quitToMainMenu);
@@ -36,20 +39,13 @@ int main(int argc, char* argv[]) {
   while(quitGame == false) {
     eng->initGame();
 
-    if(argc > 1) {
-      const string arg1 = argv[1];
-      if(arg1 == "-b") {
-        eng->config->isBotPlaying = true;
-      }
-    }
-
     if(IS_DEBUG_MODE) {
       eng->debugModeStatPrinter->run();
     }
 
     int introMusChannel = -1;
-    const GameEntry_t gameEntryType = eng->mainMenu->run(
-                                        quitGame, introMusChannel);
+    const GameEntry_t gameEntryType =
+      eng->mainMenu->run(quitGame, introMusChannel);
 
     if(quitGame == false) {
       quitToMainMenu = false;

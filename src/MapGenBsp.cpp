@@ -84,10 +84,10 @@ bool MapGenBsp::specificRun() {
 
   buildMergedRegionsAndRooms(regions, SPL_X1, SPL_X2, SPL_Y1, SPL_Y2);
 
-  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 0; //10;
+  const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
   const int DLVL = eng.map->getDLVL();
   const int CHANCE_FOR_CAVE_AREA =
-    60; //(DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
+    (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
   if(eng.dice.percentile() < CHANCE_FOR_CAVE_AREA) {
     const bool IS_TWO_CAVES = eng.dice.percentile() < CHANCE_FOR_CAVE_AREA / 3;
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
@@ -212,6 +212,13 @@ bool MapGenBsp::specificRun() {
 #ifdef DEMO_MODE
   eng.renderer->drawMapAndInterface();
   eng.sdlWrapper->sleep(5000);
+
+  for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_X_CELLS; x++) {
+      Cell& cell = eng.map->cells[x][y];
+      cell.isSeenByPlayer = cell.isExplored = false;
+    }
+  }
 #endif // DEMO_MODE
   trace << "MapGenBsp::specificRun() [DONE]" << endl;
   return true;
