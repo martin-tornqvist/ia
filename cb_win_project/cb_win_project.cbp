@@ -43,7 +43,7 @@
 				<Option output="../test/bin/test" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../test/bin/" />
 				<Option object_output="../test/obj/" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-pg" />

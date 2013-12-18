@@ -717,7 +717,7 @@ PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
 }
 
 Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
-                                  const int NR_TURNS) {
+                                  const int NR_TURNS) const {
   switch(id) {
     case propWound:             return new PropWound(eng, turnsInit, NR_TURNS);
     case propNailed:            return new PropNailed(eng, turnsInit, NR_TURNS);
@@ -816,7 +816,7 @@ bool PropHandler::hasProp(const PropId_t id,
 }
 
 bool PropHandler::tryResistProp(
-  const PropId_t id, const vector<Prop*>& propList) {
+  const PropId_t id, const vector<Prop*>& propList) const {
 
   const int NR_PROPS = propList.size();
   for(int i = 0; i < NR_PROPS; i++) {
@@ -829,7 +829,7 @@ bool PropHandler::tryResistProp(
 }
 
 bool PropHandler::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
 
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -842,7 +842,7 @@ bool PropHandler::tryResistDmg(
   return false;
 }
 
-bool PropHandler::allowSee() {
+bool PropHandler::allowSee() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
 
@@ -965,7 +965,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   }
 
   if(DISABLE_REDRAW == false) {
-    if(prop->updatePlayerVisualWhenStartOrEnd()) {
+    if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
       prop->owningActor_->updateColor();
       eng.player->updateFov();
       eng.renderer->drawMapAndInterface();
@@ -991,7 +991,9 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   }
 }
 
-void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
+void PropHandler::tryApplyPropFromWpn(
+  const Weapon& wpn, const bool IS_MELEE) {
+
   const ItemData& wpnData = wpn.getData();
   Prop* propAppliedFromWpn =
     IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
@@ -1028,7 +1030,7 @@ bool PropHandler::endAppliedProp(
 
   if(RUN_PROP_END_EFFECTS) {
     const bool IS_VISUAL_UPDATE_NEEDED =
-      prop->updatePlayerVisualWhenStartOrEnd();
+      prop->shouldUpdatePlayerVisualWhenStartOrEnd();
 
     if(IS_VISUAL_UPDATE_NEEDED) {
       prop->owningActor_->updateColor();
@@ -1095,7 +1097,7 @@ void PropHandler::newTurnAllProps(
   }
 }
 
-void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
+void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) const {
   line.resize(0);
 
   const bool IS_SELF_AWARE =
@@ -1121,7 +1123,7 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) {
   }
 }
 
-void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1130,7 +1132,7 @@ void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   }
 }
 
-bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1144,7 +1146,7 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1156,7 +1158,7 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1168,7 +1170,7 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-bool PropHandler::allowMove() {
+bool PropHandler::allowMove() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1180,7 +1182,7 @@ bool PropHandler::allowMove() {
   return true;
 }
 
-bool PropHandler::allowAct() {
+bool PropHandler::allowAct() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1192,7 +1194,7 @@ bool PropHandler::allowAct() {
   return true;
 }
 
-bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   traceVerbose << "PropHandler::allowRead()..." << endl;
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -1207,7 +1209,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return true;
 }
 
-bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   const unsigned int NR_PROPS = propList.size();
@@ -1222,19 +1224,15 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
 void PropHandler::onHit() {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    propList.at(i)->onHit();
-  }
+  for(Prop * prop : propList) {prop->onHit();}
 }
 
-int PropHandler::getAbilityMod(const Abilities_t ability) {
+int PropHandler::getAbilityMod(const Abilities_t ability) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
   int modifier = 0;
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    modifier += propList.at(i)->getAbilityMod(ability);
+  for(Prop * prop : propList) {
+    modifier += prop->getAbilityMod(ability);
   }
   return modifier;
 }
@@ -1249,15 +1247,10 @@ Prop* PropHandler::getAppliedProp(const PropId_t id) const {
   return NULL;
 }
 
-bool PropHandler::changeActorClr(SDL_Color& clr) {
+bool PropHandler::changeActorClr(SDL_Color& clr) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->changeActorClr(clr)) {
-      return true;
-    }
-  }
+  for(Prop * prop : propList) {if(prop->changeActorClr(clr)) return true;}
   return false;
 }
 
@@ -1332,7 +1325,9 @@ void PropPoisoned::onNewTurn() {
   }
 }
 
-bool PropTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropTerrified::allowAttackMelee(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg(
       "I am too terrified to engage in close combat!");
@@ -1340,12 +1335,14 @@ bool PropTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
   return false;
 }
 
-bool PropTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropTerrified::allowAttackRanged(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
 }
 
-void PropWound::getMsg(const PropMsg_t msgType, string& msgRef) {
+void PropWound::getMsg(const PropMsg_t msgType, string& msgRef) const {
   switch(msgType) {
     case propMsgOnStartPlayer:
       msgRef = data_->msg[propMsgOnStartPlayer];
@@ -1436,23 +1433,29 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   }
 }
 
-bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too confused.");
   }
   return false;
 }
 
-bool PropConfused::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropConfused::allowAttackMelee(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+
   (void)ALLOW_MESSAGE_WHEN_FALSE;
+
   if(owningActor_ != eng.player) {
     return eng.dice.coinToss();
   }
   return true;
 }
 
-bool PropConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropConfused::allowAttackRanged(
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+
   (void)ALLOW_MESSAGE_WHEN_FALSE;
+
 
   if(owningActor_ != eng.player) {
     return eng.dice.coinToss();
@@ -1521,9 +1524,9 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   }
 }
 
-bool PropFrenzied::tryResistOtherProp(const PropId_t id) {
-  return id == propConfused || id == propFainted || id == propTerrified ||
-         id == propWeakened;
+bool PropFrenzied::tryResistOtherProp(const PropId_t id) const {
+  return id == propConfused || id == propFainted ||
+         id == propTerrified || id == propWeakened;
 }
 
 void PropFrenzied::onStart() {
@@ -1540,14 +1543,14 @@ void PropFrenzied::onEnd() {
     new PropWeakened(eng, propTurnsStandard));
 }
 
-bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
-bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too enraged to concentrate!");
   }
@@ -1565,7 +1568,7 @@ void PropBurning::onNewTurn() {
   owningActor_->hit(eng.dice(1, 2), dmgType_fire, false);
 }
 
-bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I cannot read while I'm burning.");
   }
@@ -1579,7 +1582,7 @@ void PropBlind::onStart() {
     propClairvoyant, visionBlockers);
 }
 
-bool PropBlind::updatePlayerVisualWhenStartOrEnd() {
+bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const {
   return owningActor_ == eng.player;
 }
 
@@ -1635,11 +1638,11 @@ void PropFainted::onStart() {
     propClairvoyant, visionBlockers);
 }
 
-bool PropFainted::updatePlayerVisualWhenStartOrEnd() {
+bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
   return owningActor_ == eng.player;
 }
 
-bool PropClairvoyant::updatePlayerVisualWhenStartOrEnd() {
+bool PropClairvoyant::shouldUpdatePlayerVisualWhenStartOrEnd() const {
   return owningActor_ == eng.player;
 }
 
@@ -1663,7 +1666,8 @@ void PropFlared::onNewTurn() {
 }
 
 bool PropRAcid::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+
   if(dmgType == dmgType_acid) {
     if(ALLOW_MESSAGE_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
@@ -1678,7 +1682,8 @@ bool PropRAcid::tryResistDmg(
 }
 
 bool PropRCold::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+
   if(dmgType == dmgType_cold) {
     if(ALLOW_MESSAGE_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
@@ -1693,7 +1698,8 @@ bool PropRCold::tryResistDmg(
 }
 
 bool PropRElec::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+
   if(dmgType == dmgType_electric) {
     if(ALLOW_MESSAGE_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
@@ -1707,7 +1713,7 @@ bool PropRElec::tryResistDmg(
   return false;
 }
 
-bool PropRConfusion::tryResistOtherProp(const PropId_t id) {
+bool PropRConfusion::tryResistOtherProp(const PropId_t id) const {
   return id == propConfused;
 }
 
@@ -1717,7 +1723,7 @@ void PropRConfusion::onStart() {
   owningActor_->getPropHandler()->endAppliedProp(propConfused, visionBlockers);
 }
 
-bool PropRFear::tryResistOtherProp(const PropId_t id) {
+bool PropRFear::tryResistOtherProp(const PropId_t id) const {
   return id == propTerrified;
 }
 
@@ -1727,7 +1733,7 @@ void PropRFear::onStart() {
   owningActor_->getPropHandler()->endAppliedProp(propTerrified, visionBlockers);
 }
 
-bool PropRFire::tryResistOtherProp(const PropId_t id) {
+bool PropRFire::tryResistOtherProp(const PropId_t id) const {
   return id == propBurning;
 }
 
@@ -1738,7 +1744,8 @@ void PropRFire::onStart() {
 }
 
 bool PropRFire::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) {
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+
   if(dmgType == dmgType_fire) {
     if(ALLOW_MESSAGE_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
@@ -1752,7 +1759,7 @@ bool PropRFire::tryResistDmg(
   return false;
 }
 
-bool PropRPoison::tryResistOtherProp(const PropId_t id) {
+bool PropRPoison::tryResistOtherProp(const PropId_t id) const {
   return id == propPoisoned;
   return false;
 }
@@ -1763,7 +1770,7 @@ void PropRPoison::onStart() {
   owningActor_->getPropHandler()->endAppliedProp(propPoisoned, visionBlockers);
 }
 
-bool PropRSleep::tryResistOtherProp(const PropId_t id) {
+bool PropRSleep::tryResistOtherProp(const PropId_t id) const {
   return id == propFainted;
   return false;
 }

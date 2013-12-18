@@ -30,15 +30,7 @@ inline void Cell::clear() {
 }
 
 Map::Map(Engine& engine) : eng(engine), dlvl_(0) {
-//  for(int y = 0; y < MAP_Y_CELLS; y++) {
-//    for(int x = 0; x < MAP_X_CELLS; x++) {
-//      cells[x][y].featureStatic = NULL;
-//      cells[x][y].item = NULL;
-//    }
-//  }
-
   rooms.resize(0);
-//  resetMap();
 
   eng.actorFactory->deleteAllMonsters();
 
@@ -103,10 +95,8 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
 void Map::resetMap() {
   eng.actorFactory->deleteAllMonsters();
 
-  const int NR_ROOMS = rooms.size();
-  for(int i = 0; i < NR_ROOMS; i++) {
-    delete rooms.at(i);
-  }
+  for(Room* room : rooms) {delete room;}
+
   rooms.resize(0);
 
   resetCells(true);

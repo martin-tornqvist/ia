@@ -19,6 +19,7 @@
 #include "LineCalc.h"
 #include "SaveHandler.h"
 #include "Inventory.h"
+#include "PlayerSpellsHandler.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -414,25 +415,33 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
-  ActorData& def = *(eng.player->getData());
-  def.name_a = def.name_the = "TEST PLAYER";
-  eng.player->changeMaxHp(5, false);
+  //Item data
+  eng.itemDataHandler->dataList[item_scrollOfTeleportation]->isTried = true;
+  eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
 
+  //Player inventory
   Inventory* const inv = eng.player->getInventory();
   inv->moveItemToGeneral(inv->getSlot(slot_wielded));
   inv->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
 
-  eng.itemDataHandler->dataList[item_scrollOfTeleportation]->isTried = true;
-  eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
+  //Player
+  ActorData& def = *(eng.player->getData());
+  def.name_a = def.name_the = "TEST PLAYER";
+  eng.player->changeMaxHp(5, false);
 
+  //Map
   const int CUR_DLVL = eng.map->getDlvl();
   eng.map->incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
 
+  //Actor data
   eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills = 123;
 
-  eng.saveHandler->save();
+  //Learned spells
+  eng.playerSpellsHandler->learnSpellIfNotKnown(spell_bless);
+  eng.playerSpellsHandler->learnSpellIfNotKnown(spell_enfeeble);
 
+  eng.saveHandler->save();
   CHECK(eng.saveHandler->isSaveAvailable());
 }
 
@@ -443,15 +452,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   eng.saveHandler->load();
 
-  ActorData& def = *(eng.player->getData());
-  def.name_a = def.name_the = "TEST PLAYER";
-  CHECK_EQUAL("TEST PLAYER", def.name_a);
-  CHECK_EQUAL("TEST PLAYER", def.name_the);
-
-  Inventory* const inv = eng.player->getInventory();
-  CHECK_EQUAL(
-    item_teslaCannon, inv->getItemInSlot(slot_wielded)->getData().id);
-
+  //Item data
   const ItemDataHandler& iHlr = *(eng.itemDataHandler);
   CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfTeleportation]->isTried);
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfTeleportation]->isIdentified);
@@ -460,12 +461,31 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isTried);
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isIdentified);
 
+  //Player inventory
+  Inventory* const inv = eng.player->getInventory();
+  CHECK_EQUAL(
+    item_teslaCannon, inv->getItemInSlot(slot_wielded)->getData().id);
+
+  //Player
+  ActorData& def = *(eng.player->getData());
+  def.name_a = def.name_the = "TEST PLAYER";
+  CHECK_EQUAL("TEST PLAYER", def.name_a);
+  CHECK_EQUAL("TEST PLAYER", def.name_the);
   CHECK_EQUAL(PLAYER_MAX_HP_BEFORE + 5, eng.player->getHpMax(true));
 
+  //Map
   CHECK_EQUAL(7, eng.map->getDlvl());
 
-  CHECK_EQUAL(123, eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills);
+  //Actor data
+  CHECK_EQUAL(
+    123, eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills);
 
+  //Learned spells
+  PlayerSpellsHandler& spHlr = *(eng.playerSpellsHandler);
+  CHECK(spHlr.isSpellLearned(spell_bless));
+  CHECK(spHlr.isSpellLearned(spell_enfeeble));
+
+  //Game time
   CHECK_EQUAL(0, eng.gameTime->getTurn());
 }
 

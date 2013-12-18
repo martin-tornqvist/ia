@@ -11703,7 +11703,7 @@
 	"MapParsing.h"
 	"LineCalc.h"
 
-1386706016 source:d:\dev\ia.git\src\audio.cpp
+1387321677 source:d:\dev\ia.git\src\audio.cpp
 	"Audio.h"
 	<time.h>
 	"SDL/SDL_mixer.h"
@@ -12244,7 +12244,7 @@
 	"PlayerBonuses.h"
 	"Audio.h"
 
-1386706016 source:d:\dev\ia.git\src\featurelitdynamite.cpp
+1387402597 source:d:\dev\ia.git\src\featurelitdynamite.cpp
 	"FeatureLitDynamite.h"
 	"Engine.h"
 	"Explosion.h"
@@ -12303,7 +12303,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1387321677 source:d:\dev\ia.git\src\gametime.cpp
+1387404170 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	<assert.h>
 	"Engine.h"
@@ -12611,7 +12611,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1387305710 source:d:\dev\ia.git\src\main.cpp
+1387404306 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12661,7 +12661,7 @@
 	"TextFormatting.h"
 	"Renderer.h"
 
-1386706016 source:d:\dev\ia.git\src\map.cpp
+1387400115 source:d:\dev\ia.git\src\map.cpp
 	"Map.h"
 	"Engine.h"
 	"Feature.h"
@@ -12907,7 +12907,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1386707387 source:d:\dev\ia.git\src\properties.cpp
+1387399961 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -13061,7 +13061,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1387390469 source:d:\dev\ia.git\test\src\main.cpp
+1387404744 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"engine.h"
 	"BasicUtils.h"
@@ -13843,7 +13843,7 @@
 
 1385502710 d:\dev\ia.git\include\art.h
 
-1386706106 d:\dev\ia.git\include\properties.h
+1387399779 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -13928,7 +13928,7 @@
 	"ItemData.h"
 	"Art.h"
 
-1386706106 d:\dev\ia.git\include\gametime.h
+1387403735 d:\dev\ia.git\include\gametime.h
 	<vector>
 	"Feature.h"
 	"ActorData.h"
@@ -14041,7 +14041,7 @@
 	"Map.h"
 	"FeatureDoor.h"
 
-1386705953 d:\dev\ia.git\include\featuredoor.h
+1387398962 d:\dev\ia.git\include\featuredoor.h
 	"Feature.h"
 
 1387058602 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
@@ -14130,7 +14130,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1386705953 d:\dev\ia.git\include\itemdevice.h
+1387398479 d:\dev\ia.git\include\itemdevice.h
 	"Item.h"
 
 1386706106 d:\dev\ia.git\include\inventoryhandler.h
@@ -14286,7 +14286,7 @@
 	<math.h>
 	"CommonTypes.h"
 
-1386705953 d:\dev\ia.git\include\featuresmoke.h
+1387400216 d:\dev\ia.git\include\featuresmoke.h
 	"Feature.h"
 	"FeatureFactory.h"
 

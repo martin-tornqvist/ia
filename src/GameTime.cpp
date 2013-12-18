@@ -208,11 +208,12 @@ void GameTime::runStandardTurnEvents() {
       }
     }
   }
-  //Update all timed features
-  for(unsigned int i = 0; i < featureMobs_.size(); i++) {
-    featureMobs_.at(i)->newTurn(); //Note: this may erase the feature
-  }
 
+  //Update mobile features
+  const vector<FeatureMob*> mobTmp = featureMobs_;
+  for(FeatureMob * f : mobTmp) {f->newTurn();}
+
+  //Update timed features
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       eng.map->cells[x][y].featureStatic->newTurn();

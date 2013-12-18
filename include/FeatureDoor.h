@@ -24,33 +24,26 @@ class DoorSpawnData;
 
 class Door: public FeatureStatic {
 public:
-  ~Door() {
-  }
+  ~Door() override {}
 
-  void bump(Actor& actorBumping);
-  bool isMovePassable(Actor* const actorMoving) const;
-  bool isBodyTypePassable(const BodyType_t bodyType) const;
-  bool isVisionPassable() const;
-  bool isProjectilesPassable() const;
-  bool isSmokePassable() const;
-  SDL_Color getColor() const;
-  char getGlyph() const;
-  Tile_t getTile() const;
+  void bump(Actor& actorBumping)                      override;
+  bool isMovePassable(Actor* const actorMoving)       const override;
+  bool isBodyTypePassable(const BodyType_t bodyType)  const override;
+  bool isVisionPassable()                             const override;
+  bool isProjectilesPassable()                        const override;
+  bool isSmokePassable()                              const override;
+  SDL_Color getColor()                                const override;
+  char getGlyph()                                     const override;
+  Tile_t getTile()                                    const override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
   void tryBash(Actor* actorTrying);
   bool trySpike(Actor* actorTrying);
 
-  bool isOpen() const {
-    return isOpen_;
-  }
-  bool isSecret() const {
-    return isSecret_;
-  }
-  bool isStuck() const {
-    return isStuck_;
-  }
+  bool isOpen()   const {return isOpen_;}
+  bool isSecret() const {return isSecret_;}
+  bool isStuck()  const {return isStuck_;}
   bool isOpenedAndClosedExternally() const {
     return isOpenedAndClosedExternally_;
   }
@@ -62,10 +55,7 @@ public:
   void reveal(const bool ALLOW_MESSAGE);
   void clue();
 
-  void setToSecret() {
-    isOpen_ = false;
-    isSecret_ = true;
-  }
+  void setToSecret() {isOpen_ = isSecret_ = false;}
 
   virtual bool openFeature();
 
@@ -85,7 +75,8 @@ protected:
   const FeatureData* const mimicFeature_;
   int nrSpikes_;
 
-  bool isOpen_, isBroken_, isStuck_, isSecret_, isClued_, isOpenedAndClosedExternally_;
+  bool isOpen_, isBroken_, isStuck_, isSecret_,
+       isClued_, isOpenedAndClosedExternally_;
 
   DoorMaterial_t material_;
 

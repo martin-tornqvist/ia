@@ -77,18 +77,14 @@ public:
   }
 
   void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT) {
-    int index = -1;
-    const unsigned int SIZE = featureMobs_.size();
-    for(unsigned int i = 0; i < SIZE; i++) {
+    const int SIZE = featureMobs_.size();
+    for(int i = 0; i < SIZE; i++) {
       if(featureMobs_.at(i) == feature) {
-        index = i;
-        i = 9999;
+        if(DESTROY_OBJECT) {delete feature;}
+        featureMobs_.erase(featureMobs_.begin() + i);
+        return;
       }
     }
-    if(DESTROY_OBJECT) {
-      delete featureMobs_.at(index);
-    }
-    featureMobs_.erase(featureMobs_.begin() + index);
   }
 
   void resetTurnTypeAndActorCounters() {

@@ -20,7 +20,8 @@ void LitFlare::newTurn() {
   }
 }
 
-LitFlare::LitFlare(Feature_t id, Pos pos, Engine& engine, DynamiteSpawnData* spawnData) :
+LitFlare::LitFlare(Feature_t id, Pos pos, Engine& engine,
+                   DynamiteSpawnData* spawnData) :
   FeatureMob(id, pos, engine), life_(spawnData->turnsLeftToExplosion_) {
 }
 

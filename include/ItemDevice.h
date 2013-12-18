@@ -56,11 +56,11 @@ public:
   DeviceSentry(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
-  ~DeviceSentry() {}
+  ~DeviceSentry() override {}
 
 private:
-  void runGoodEffect();
-  string getSpecificActivateMessage();
+  void runGoodEffect() override;
+  string getSpecificActivateMessage() override;
 };
 
 class DeviceRepeller: public Device {
@@ -68,12 +68,12 @@ public:
   DeviceRepeller(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
-  ~DeviceRepeller() {}
+  ~DeviceRepeller() override {}
 
 private:
-  void runGoodEffect();
-  int getRandomNrTurnsToNextGoodEffect() const;
-  string getSpecificActivateMessage();
+  void runGoodEffect() override;
+  int getRandomNrTurnsToNextGoodEffect() const override;
+  string getSpecificActivateMessage() override;
 };
 
 class DeviceRejuvenator: public Device {
@@ -81,11 +81,11 @@ public:
   DeviceRejuvenator(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
-  ~DeviceRejuvenator() {}
+  ~DeviceRejuvenator() override {}
 
 private:
-  void runGoodEffect();
-  string getSpecificActivateMessage();
+  void runGoodEffect() override;
+  string getSpecificActivateMessage() override;
 };
 
 class DeviceTranslocator: public Device {
@@ -93,11 +93,11 @@ public:
   DeviceTranslocator(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine) {}
 
-  ~DeviceTranslocator() {}
+  ~DeviceTranslocator() override {}
 
 private:
-  void runGoodEffect();
-  string getSpecificActivateMessage();
+  void runGoodEffect() override;
+  string getSpecificActivateMessage() override;
 };
 
 class DeviceElectricLantern: public Device {
@@ -105,18 +105,18 @@ public:
   DeviceElectricLantern(ItemData* const itemData, Engine& engine) :
     Device(itemData, engine), malfunctCooldown_(-1) {}
 
-  ~DeviceElectricLantern() {}
+  ~DeviceElectricLantern() override {}
 
   bool isGivingLight() const;
 
 private:
-  void printToggleMessage();
+  void printToggleMessage() override;
 
-  void specificnewTurnInInventory();
+  void specificnewTurnInInventory() override;
 
-  void runBadEffect();
+  void runBadEffect() override;
 
-  void specificToggle();
+  void specificToggle() override;
 
   int malfunctCooldown_;
 };
