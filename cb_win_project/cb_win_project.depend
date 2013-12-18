@@ -11436,7 +11436,7 @@
 1382910176 d:\dev\ia.git\src\ai_handleinventory.h
 	"Inventory.h"
 
-1387321677 source:d:\dev\ia.git\src\actormonsterspecific.cpp
+1387390139 source:d:\dev\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -12431,7 +12431,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1386706016 source:d:\dev\ia.git\src\itemdata.cpp
+1387390175 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12484,7 +12484,7 @@
 	"Renderer.h"
 	"GameTime.h"
 
-1386706016 source:d:\dev\ia.git\src\itemfactory.cpp
+1387390149 source:d:\dev\ia.git\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12992,7 +12992,7 @@
 	"Gods.h"
 	"MapParsing.h"
 
-1387320341 source:d:\dev\ia.git\src\savehandler.cpp
+1387388725 source:d:\dev\ia.git\src\savehandler.cpp
 	"SaveHandler.h"
 	<fstream>
 	<iostream>
@@ -13061,7 +13061,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1387321720 source:d:\dev\ia.git\test\src\main.cpp
+1387390469 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"engine.h"
 	"BasicUtils.h"
@@ -13081,6 +13081,7 @@
 	"Fov.h"
 	"LineCalc.h"
 	"SaveHandler.h"
+	"Inventory.h"
 
 1385502710 d:\dev\ia.git\test\unittest++\src\unittest++.h
 	"Config.h"
@@ -13857,7 +13858,7 @@
 	"ItemData.h"
 	"CommonTypes.h"
 
-1386706106 d:\dev\ia.git\include\itemdata.h
+1387390139 d:\dev\ia.git\include\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -13907,7 +13908,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1386706106 d:\dev\ia.git\include\playerbonuses.h
+1387390579 d:\dev\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -13922,7 +13923,7 @@
 	"Engine.h"
 	"Item.h"
 
-1386709675 d:\dev\ia.git\include\item.h
+1387390344 d:\dev\ia.git\include\item.h
 	<iostream>
 	"ItemData.h"
 	"Art.h"
@@ -13949,7 +13950,7 @@
 	"Sound.h"
 	"Spells.h"
 
-1386706129 d:\dev\ia.git\include\itemweapon.h
+1387390149 d:\dev\ia.git\include\itemweapon.h
 	"Item.h"
 	"Converters.h"
 

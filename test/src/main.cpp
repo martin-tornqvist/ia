@@ -18,6 +18,7 @@
 #include "Fov.h"
 #include "LineCalc.h"
 #include "SaveHandler.h"
+#include "Inventory.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -417,6 +418,14 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   def.name_a = def.name_the = "TEST PLAYER";
   eng.player->changeMaxHp(5, false);
 
+  Inventory* const inv = eng.player->getInventory();
+  inv->moveItemToGeneral(inv->getSlot(slot_wielded));
+  inv->putItemInSlot(
+    slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
+
+  eng.itemDataHandler->dataList[item_scrollOfTeleportation]->isTried = true;
+  eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
+
   const int CUR_DLVL = eng.map->getDlvl();
   eng.map->incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
 
@@ -438,6 +447,18 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   def.name_a = def.name_the = "TEST PLAYER";
   CHECK_EQUAL("TEST PLAYER", def.name_a);
   CHECK_EQUAL("TEST PLAYER", def.name_the);
+
+  Inventory* const inv = eng.player->getInventory();
+  CHECK_EQUAL(
+    item_teslaCannon, inv->getItemInSlot(slot_wielded)->getData().id);
+
+  const ItemDataHandler& iHlr = *(eng.itemDataHandler);
+  CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfTeleportation]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfTeleportation]->isIdentified);
+  CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfOpening]->isIdentified);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfOpening]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isIdentified);
 
   CHECK_EQUAL(PLAYER_MAX_HP_BEFORE + 5, eng.player->getHpMax(true));
 

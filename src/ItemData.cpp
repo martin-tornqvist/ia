@@ -401,9 +401,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
 
-  d = new ItemData(item_teslaCanon);
+  d = new ItemData(item_teslaCannon);
   resetData(d, itemData_rangedWpn);
-  d->name = ItemName("Tesla Canon", "Tesla Canons", "a Tesla Canon");
+  d->name = ItemName("Tesla Cannon", "Tesla Cannons", "a Tesla Cannon");
   d->itemWeight = itemWeight_medium;
   d->tile = tile_teslaCannon;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Tesla Cannon");

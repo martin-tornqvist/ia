@@ -119,7 +119,7 @@ void Cultist::actorSpecific_spawnStartItems() {
 }
 
 void CultistTeslaCannon::actorSpecific_spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(item_teslaCanon);
+  Item* item = eng.itemFactory->spawnItem(item_teslaCannon);
   inventory_->putItemInSlot(slot_wielded, item, true);
 
   inventory_->putItemInGeneral(

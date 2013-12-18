@@ -163,9 +163,9 @@ public:
 private:
 };
 
-class TeslaCanon: public Weapon {
+class TeslaCannon: public Weapon {
 public:
-  TeslaCanon(ItemData* const itemData, ItemData* const ammoData,
+  TeslaCannon(ItemData* const itemData, ItemData* const ammoData,
              Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
@@ -173,7 +173,7 @@ public:
     effectiveRangeLimit = 8;
     clip = true;
   }
-  ~TeslaCanon() {}
+  ~TeslaCannon() {}
 private:
 };
 

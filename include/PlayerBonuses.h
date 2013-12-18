@@ -52,6 +52,7 @@ public:
 
   void setParametersFromSaveLines(vector<string>& lines) {
     bg_ = Bg_t(toInt(lines.front()));
+    lines.erase(lines.begin());
 
     for(int i = 0; i < endOfTraits; i++) {
       traitsPicked_[i] = lines.front() == toString(1);

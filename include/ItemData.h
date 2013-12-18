@@ -67,7 +67,7 @@ enum ItemId_t {
   item_pumpShotgun,
   item_machineGun,
   item_incinerator,
-  item_teslaCanon,
+  item_teslaCannon,
   item_spikeGun,
   item_shotgunShell,
   item_drumOfBullets,
