@@ -484,6 +484,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   PlayerSpellsHandler& spHlr = *(eng.playerSpellsHandler);
   CHECK(spHlr.isSpellLearned(spell_bless));
   CHECK(spHlr.isSpellLearned(spell_enfeeble));
+  CHECK_EQUAL(false, spHlr.isSpellLearned(spell_mayhem));
 
   //Game time
   CHECK_EQUAL(0, eng.gameTime->getTurn());
@@ -523,7 +524,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 
 int main() {
   trace << "Running all tests" << endl;
-  return UnitTest::RunAllTests();
+  UnitTest::RunAllTests();
 }
 
 

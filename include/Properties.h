@@ -86,25 +86,23 @@ enum PropSrc_t {
 };
 
 struct PropData {
-  PropData() {
-    reset();
-  }
-  inline void reset() {
-    id = endOfPropIds;
-    stdRndTurns = Range(10, 10);
-    name = "";
-    nameShort = "";
+  PropData() :
+    id(endOfPropIds),
+    stdRndTurns(Range(10, 10)),
+    name(""),
+    nameShort(""),
+    isMakingMonsterAware(false),
+    allowDisplayTurns(true),
+    allowApplyMoreWhileActive(true),
+    updatePlayerVisualWhenStartOrEnd(false),
+    isEndedByMagicHealing(false),
+    allowTestingOnBot(false),
+    alignment(propAlignmentBad) {
     for(int i = 0; i < endOfPropMsg; i++) {
       msg[i] = "";
     }
-    isMakingMonsterAware = false;
-    allowDisplayTurns = true;
-    allowApplyMoreWhileActive = true;
-    updatePlayerVisualWhenStartOrEnd = false;
-    isEndedByMagicHealing = false;
-    allowTestingOnBot = false;
-    alignment = propAlignmentBad;
   }
+
   PropId_t id;
   Range stdRndTurns;
   string name;

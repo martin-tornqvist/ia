@@ -23,7 +23,7 @@ public:
                    const bool SHOULD_STOP_AT_TARGET,
                    const int CHEB_TRAVEL_LIMIT,
                    const bool ALLOW_OUTSIDE_MAP,
-                   vector<Pos>& lineToSet);
+                   vector<Pos>& lineRef);
 
   inline const vector<Pos>* getFovDeltaLine(
     const Pos& delta, const double& MAX_DIST_ABS) const {

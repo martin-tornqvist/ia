@@ -477,7 +477,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng.log->addMsg("Save and quit (y/n)?", clrWhiteHigh);
         eng.renderer->drawMapAndInterface();
         if(eng.query->yesOrNo()) {
-//          eng.map->incrDlvl(1);
           eng.saveHandler->save();
           *quitToMainMenu_ = true;
         } else {
@@ -605,8 +604,8 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
         // '~' = 126
         const Uint16 UNICODE = event_.key.keysym.unicode;
         if(UNICODE >= 33 && UNICODE < 126) {
-          return KeyboardReadReturnData(static_cast<char>(UNICODE));
           clearEvents();
+          return KeyboardReadReturnData(char(UNICODE));
         } else {
           // Other key pressed? (escape, return, space, etc)
           const SDLKey sdlKey = event_.key.keysym.sym;

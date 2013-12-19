@@ -100,19 +100,14 @@ public:
   }
 
 private:
+  //Check if acting monster is on a line between player and other monster
   static bool checkIfBlockingMonster(const Pos& pos, Monster* other,
                                      Engine& engine) {
-
     vector<Pos> line;
     engine.lineCalc->calcNewLine(
       other->pos, engine.player->pos, true, 9999, false, line);
-    for(unsigned int i = 0; i < line.size(); i++) {
-      if(line.at(i) == pos) {
-        return true;
-      } else if(line.at(i) == engine.player->pos) {
-        return false;
-      }
-    }
+
+    for(const Pos & posInLine : line) {if(posInLine == pos) {return true;}}
     return false;
   }
 

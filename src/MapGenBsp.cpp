@@ -1085,7 +1085,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
   return new Room(roomPoss);
 }
 
-//void MapGenBsp::findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToSet) {
+//void MapGenBsp::findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef) {
 //  bool PossToAdd[MAP_X_CELLS][MAP_Y_CELLS];
 //  eng.basicUtils->resetArray(PossToAdd, false);
 //
@@ -1131,7 +1131,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 //  for(c.x = roomPoss.x0y0.x; c.x <= roomPoss.x1y1.x; c.x++) {
 //    for(c.y = roomPoss.x0y0.y; c.y <= roomPoss.x1y1.y; c.y++) {
 //      if(PossToAdd[c.x][c.y] == true) {
-//        vectorToSet.push_back(c);
+//        vectorRef.push_back(c);
 //      }
 //    }
 //  }

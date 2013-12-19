@@ -33,12 +33,12 @@ protected:
 class CellPredBlocksVision : public CellPred {
 public:
   CellPredBlocksVision(Engine& engine) : CellPred(engine) {}
-  bool isCheckingCells()          const {return true;}
-  bool isCheckingMobFeatures()    const {return true;}
-  bool isCheckingActors()         const {return false;}
-  bool check(const Cell& c)       const;
-  bool check(const FeatureMob& f) const;
-  bool check(const Actor& a)      const {(void)a; return false;}
+  bool isCheckingCells()          const override {return true;}
+  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingActors()         const override {return false;}
+  bool check(const Cell& c)       const override;
+  bool check(const FeatureMob& f) const override;
+  bool check(const Actor& a)      const override {(void)a; return false;}
 };
 
 class CellPredBlocksBodyType : public CellPred {
@@ -47,12 +47,12 @@ public:
                          Engine& engine) :
     CellPred(engine), bodyType_(bodyType),
     IS_ACTORS_BLOCKING_(isActorsBlocking) {}
-  bool isCheckingCells()          const {return true;}
-  bool isCheckingMobFeatures()    const {return true;}
-  bool isCheckingActors()         const {return IS_ACTORS_BLOCKING_;}
-  bool check(const Cell& c)       const;
-  bool check(const FeatureMob& f) const;
-  bool check(const Actor& a)      const;
+  bool isCheckingCells()          const override {return true;}
+  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
+  bool check(const Cell& c)       const override;
+  bool check(const FeatureMob& f) const override;
+  bool check(const Actor& a)      const override;
   const BodyType_t bodyType_;
   const bool IS_ACTORS_BLOCKING_;
 };
@@ -60,42 +60,40 @@ public:
 class CellPredBlocksProjectiles : public CellPred {
 public:
   CellPredBlocksProjectiles(Engine& engine) : CellPred(engine) {}
-  bool isCheckingCells()          const {return true;}
-  bool isCheckingMobFeatures()    const {return true;}
-  bool isCheckingActors()         const {return false;}
-  bool check(const Cell& c)       const;
-  bool check(const FeatureMob& f) const;
-  bool check(const Actor& a)      const {(void)a; return false;}
+  bool isCheckingCells()          const override {return true;}
+  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingActors()         const override {return false;}
+  bool check(const Cell& c)       const override;
+  bool check(const FeatureMob& f) const override;
+  bool check(const Actor& a)      const override {(void)a; return false;}
 };
 
 class CellPredLivingActorsAdjToPos : public CellPred {
 public:
   CellPredLivingActorsAdjToPos(const Pos& pos, Engine& engine) :
     CellPred(engine), pos_(pos) {}
-  bool isCheckingCells()          const {return false;}
-  bool isCheckingMobFeatures()    const {return false;}
-  bool isCheckingActors()         const {return true;}
-  bool check(const Cell& c)       const {(void)c; return false;}
-  bool check(const FeatureMob& f) const {(void)f; return false;}
-  bool check(const Actor& a)      const;
+  bool isCheckingCells()          const override {return false;}
+  bool isCheckingMobFeatures()    const override {return false;}
+  bool isCheckingActors()         const override {return true;}
+  bool check(const Cell& c)       const override {(void)c; return false;}
+  bool check(const FeatureMob& f) const override {(void)f; return false;}
+  bool check(const Actor& a)      const override;
   const Pos& pos_;
 };
 
 class CellPredBlocksItems : public CellPred {
 public:
   CellPredBlocksItems(Engine& engine) : CellPred(engine) {}
-  bool isCheckingCells()          const {return true;}
-  bool isCheckingMobFeatures()    const {return true;}
-  bool isCheckingActors()         const {return false;}
-  bool check(const Cell& c)       const;
-  bool check(const FeatureMob& f) const;
-  bool check(const Actor& a)      const {(void)a; return false;}
+  bool isCheckingCells()          const override {return true;}
+  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingActors()         const override {return false;}
+  bool check(const Cell& c)       const override;
+  bool check(const FeatureMob& f) const override;
+  bool check(const Actor& a)      const override {(void)a; return false;}
 };
 
 enum MapParseWriteRule {
-  mapParseWriteAlways,
-  mapParseWriteOnlyFalse,
-  mapParseWriteOnlyTrue
+  mapParseWriteAlways, mapParseWriteOnlyFalse, mapParseWriteOnlyTrue
 };
 
 class MapParser {
@@ -137,21 +135,9 @@ public:
 
   void run(const Pos& origin, const Pos& target,
            bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-           vector<Pos>& vectorToSet) const;
+           vector<Pos>& vectorRef) const;
 private:
   Engine& eng;
 };
-
-
-//  bool isCellNextToPlayer(const Pos& pos,
-//                          const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const;
-//
-//
-//
-//
-//
-//private:
-//  Engine& eng;
-//};
 
 #endif

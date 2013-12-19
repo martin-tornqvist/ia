@@ -80,12 +80,12 @@ public:
 
   void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                              bool a[MAP_X_CELLS][MAP_Y_CELLS],
-                             vector<Pos>& vectorToSet);
+                             vector<Pos>& vectorRef);
 
   Actor* getActorAtPos(const Pos& pos) const;
 
   void getActorPositions(const vector<Actor*>& actors,
-                         vector<Pos>& vectorToSet);
+                         vector<Pos>& vectorRef);
 
   void makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]);
 
@@ -223,11 +223,11 @@ public:
   Pos getOffset(const Dir_t dir) const;
 
   void getCompassDirName(
-    const Pos& fromPos, const Pos& toPos, string& strToSet) const;
+    const Pos& fromPos, const Pos& toPos, string& strRef) const;
 
-  void getCompassDirName(const Dir_t dir, string& strToSet) const;
+  void getCompassDirName(const Dir_t dir, string& strRef) const;
 
-  void getCompassDirName(const Pos& offset, string& strToSet) const;
+  void getCompassDirName(const Pos& offset, string& strRef) const;
 
 private:
   string compassDirNames[3][3];

@@ -21,7 +21,7 @@ public:
               const bool INTERRUPT_PLAYER_ACTIONS = false,
               const bool FORCE_MORE_PROMPT = false);
 
-  void drawLog() const;
+  void drawLog(const bool SHOULD_UPDATE_SCREEN) const;
 
   void displayHistory();
 

@@ -21,7 +21,7 @@ public:
 
   ~Renderer();
 
-  void drawMapAndInterface(const bool UPDATE_SCREEN = true);
+  void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN = true);
 
   inline void updateScreen() {SDL_Flip(screenSurface_);}
 

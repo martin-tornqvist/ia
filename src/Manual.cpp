@@ -16,12 +16,11 @@ void Manual::readFile() {
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
-      bool shouldFormatLine = true;
-
       if(curLine.empty()) {
         lines.push_back(curLine);
       } else {
         //Do not format lines that start with two spaces
+        bool shouldFormatLine = true;
         if(curLine.size() > 1) {
           if(curLine.at(0) == ' ' && curLine.at(1) == ' ') {
             shouldFormatLine = false;

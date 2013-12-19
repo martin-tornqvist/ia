@@ -708,7 +708,7 @@ void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
   }
 }
 
-void Renderer::drawMapAndInterface(const bool UPDATE_SCREEN) {
+void Renderer::drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
   clearScreen();
 
   if(eng.config->isTilesMode) {
@@ -719,9 +719,9 @@ void Renderer::drawMapAndInterface(const bool UPDATE_SCREEN) {
 
   eng.characterLines->drawInfoLines();
   eng.characterLines->drawLocationInfo();
-  eng.log->drawLog();
+  eng.log->drawLog(false);
 
-  if(UPDATE_SCREEN) {
+  if(SHOULD_UPDATE_SCREEN) {
     updateScreen();
   }
 }

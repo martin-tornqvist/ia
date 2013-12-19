@@ -11185,7 +11185,7 @@
 	"Engine.h"
 	<math.h>
 
-1386708619 source:d:\dev\ia.git\src\actor.cpp
+1387405854 source:d:\dev\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11735,7 +11735,7 @@
 1382910176 d:\dev\ia.git\src\bash.h
 	"FeatureDoor.h"
 
-1387213045 source:d:\dev\ia.git\src\basicutils.cpp
+1387405854 source:d:\dev\ia.git\src\basicutils.cpp
 	"BasicUtils.h"
 	<algorithm>
 	<assert.h>
@@ -12340,7 +12340,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1387319823 source:d:\dev\ia.git\src\input.cpp
+1387489877 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12583,7 +12583,7 @@
 	"Renderer.h"
 	"MapParsing.h"
 
-1386709432 source:d:\dev\ia.git\src\log.cpp
+1387491965 source:d:\dev\ia.git\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Input.h"
@@ -12652,7 +12652,7 @@
 	"Actor.h"
 	"ActorPlayer.h"
 
-1386706016 source:d:\dev\ia.git\src\manual.cpp
+1387488411 source:d:\dev\ia.git\src\manual.cpp
 	"Manual.h"
 	<fstream>
 	<iostream>
@@ -12765,7 +12765,7 @@
 	"Engine.h"
 	"Map.h"
 
-1385502710 source:d:\dev\ia.git\src\maptemplates.cpp
+1387488343 source:d:\dev\ia.git\src\maptemplates.cpp
 	"MapTemplates.h"
 	"Engine.h"
 
@@ -12809,7 +12809,7 @@
 	<iostream>
 	"Engine.h"
 
-1386706016 source:d:\dev\ia.git\src\playerbonuses.cpp
+1387405854 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -12857,7 +12857,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1387321677 source:d:\dev\ia.git\src\populatemonsters.cpp
+1387405854 source:d:\dev\ia.git\src\populatemonsters.cpp
 	"PopulateMonsters.h"
 	<algorithm>
 	"Engine.h"
@@ -12907,7 +12907,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1387399961 source:d:\dev\ia.git\src\properties.cpp
+1387489411 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<algorithm>
 	"Engine.h"
@@ -12926,7 +12926,7 @@
 	"MapParsing.h"
 	"LineCalc.h"
 
-1386706016 source:d:\dev\ia.git\src\query.cpp
+1387488171 source:d:\dev\ia.git\src\query.cpp
 	"Query.h"
 	<iostream>
 	"Engine.h"
@@ -13061,7 +13061,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1387404744 source:d:\dev\ia.git\test\src\main.cpp
+1387406551 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"engine.h"
 	"BasicUtils.h"
@@ -13082,6 +13082,7 @@
 	"LineCalc.h"
 	"SaveHandler.h"
 	"Inventory.h"
+	"PlayerSpellsHandler.h"
 
 1385502710 d:\dev\ia.git\test\unittest++\src\unittest++.h
 	"Config.h"
@@ -13177,7 +13178,7 @@
 	"Config.h"
 	"Art.h"
 
-1387213558 source:d:\dev\ia.git\src\renderer.cpp
+1387491458 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -13798,7 +13799,7 @@
 
 1385502710 d:\dev\ia.git\include\debugmodeincl\debugmode.h
 
-1387211649 d:\dev\ia.git\include\basicutils.h
+1387405854 d:\dev\ia.git\include\basicutils.h
 	<vector>
 	"CommonData.h"
 	"Actor.h"
@@ -13806,7 +13807,7 @@
 
 1385805779 d:\dev\ia.git\include\commondata.h
 
-1386708610 d:\dev\ia.git\include\actor.h
+1387405854 d:\dev\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13843,7 +13844,7 @@
 
 1385502710 d:\dev\ia.git\include\art.h
 
-1387399779 d:\dev\ia.git\include\properties.h
+1387489352 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -13908,7 +13909,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1387390579 d:\dev\ia.git\include\playerbonuses.h
+1387405854 d:\dev\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -13970,7 +13971,7 @@
 
 1386707070 d:\dev\ia.git\include\playervisualmemory.h
 
-1386706106 d:\dev\ia.git\include\log.h
+1387491205 d:\dev\ia.git\include\log.h
 	<string>
 	<vector>
 	<iostream>
@@ -14049,7 +14050,7 @@
 	"ActorPlayer.h"
 	"Log.h"
 
-1386707387 d:\dev\ia.git\include\ai_makeroomforfriend.h
+1387406554 d:\dev\ia.git\include\ai_makeroomforfriend.h
 	<algorithm>
 	"MapParsing.h"
 	"LineCalc.h"
@@ -14217,7 +14218,7 @@
 	<iostream>
 	"FeatureData.h"
 
-1386706106 d:\dev\ia.git\include\populatemonsters.h
+1387405854 d:\dev\ia.git\include\populatemonsters.h
 	<vector>
 	"ActorData.h"
 
@@ -14321,7 +14322,7 @@
 	"Item.h"
 	"Converters.h"
 
-1387136837 d:\dev\ia.git\include\renderer.h
+1387491426 d:\dev\ia.git\include\renderer.h
 	<vector>
 	<iostream>
 	"SDL/SDL_video.h"
@@ -14345,13 +14346,13 @@
 	"SDL/SDL_image.h"
 	"SDL/SDL_mixer.h"
 
-1387124757 d:\dev\ia.git\include\mapgen.h
+1387405854 d:\dev\ia.git\include\mapgen.h
 	"CommonTypes.h"
 	"RoomTheme.h"
 	"Feature.h"
 	"MapTemplates.h"
 
-1387321677 source:d:\dev\ia.git\src\mapgenbsp.cpp
+1387405854 source:d:\dev\ia.git\src\mapgenbsp.cpp
 	"MapGen.h"
 	<algorithm>
 	<assert.h>
@@ -14810,12 +14811,12 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1386706106 d:\dev\ia.git\include\mapparsing.h
+1387405494 d:\dev\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"
 
-1386706106 d:\dev\ia.git\include\linecalc.h
+1387405854 d:\dev\ia.git\include\linecalc.h
 	<vector>
 	<iostream>
 	"CommonData.h"
@@ -14829,11 +14830,11 @@
 	"FloodFill.h"
 	"Engine.h"
 
-1386706016 source:d:\dev\ia.git\src\linecalc.cpp
+1387405854 source:d:\dev\ia.git\src\linecalc.cpp
 	"LineCalc.h"
 	"Engine.h"
 
-1387213002 source:d:\dev\ia.git\src\mapparsing.cpp
+1387405854 source:d:\dev\ia.git\src\mapparsing.cpp
 	"MapParsing.h"
 	<assert.h>
 	"Engine.h"

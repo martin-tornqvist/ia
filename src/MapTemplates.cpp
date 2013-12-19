@@ -78,13 +78,9 @@ void MapTemplateHandler::initTemplates() {
 }
 
 MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId_t templateId) {
-  for(unsigned int i = 0; i < templates_.size(); i++) {
-    if(templates_.at(i).templateId == templateId) {
-      return &(templates_.at(i));
-      i = 9999;
-    }
+  for(MapTemplate & t : templates_) {
+    if(t.templateId == templateId) return &t;
   }
-
   return NULL;
 }
 

@@ -22,7 +22,6 @@ using namespace std;
 
 void PropDataHandler::initDataList() {
   PropData d;
-  d.reset();
 
   d.id = propRFire;
   d.stdRndTurns = Range(40, 60);
@@ -144,26 +143,6 @@ void PropDataHandler::initDataList() {
   d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
-
-//  d.id = propFreeAction;
-//  d.stdRndTurns = Range(40, 60);
-//  d.name = "Free action";
-//  d.nameShort = "FreeAction";
-//  d.msg[propMsgOnStartPlayer] = "[FreeAction Player start]";
-//  d.msg[propMsgOnStartMonster] = "[FreeAction Monster start]";
-//  d.msg[propMsgOnEndPlayer] = "[FreeAction Player end]";
-//  d.msg[propMsgOnEndMonster] = "[FreeAction Monster end]";
-//  d.msg[propMsgOnMorePlayer] = "[FreeAction Player more]";
-//  d.msg[propMsgOnMoreMonster] = "[FreeAction Monster more]";
-//  d.msg[propMsgOnResPlayer] = "";
-//  d.msg[propMsgOnResMonster] = "";
-//  d.isMakingMonsterAware = false;
-//  d.allowDisplayTurns = true;
-//  d.allowApplyMoreWhileActive = true;
-//  d.updatePlayerVisualWhenStartOrEnd = false;
-//  d.allowTestingOnBot = true;
-//  d.alignment = propAlignmentGood;
-//  addPropData(d);
 
   d.id = propRFear;
   d.stdRndTurns = Range(40, 60);
@@ -699,7 +678,7 @@ void PropDataHandler::initDataList() {
 
 void PropDataHandler::addPropData(PropData& d) {
   dataList[d.id] = d;
-  d.reset();
+  d = PropData();
 }
 
 PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
@@ -1761,7 +1740,6 @@ bool PropRFire::tryResistDmg(
 
 bool PropRPoison::tryResistOtherProp(const PropId_t id) const {
   return id == propPoisoned;
-  return false;
 }
 
 void PropRPoison::onStart() {
@@ -1772,7 +1750,6 @@ void PropRPoison::onStart() {
 
 bool PropRSleep::tryResistOtherProp(const PropId_t id) const {
   return id == propFainted;
-  return false;
 }
 
 void PropRSleep::onStart() {

@@ -22,107 +22,107 @@ PlayerBonHandler::PlayerBonHandler(Engine& engine) :
 }
 
 void PlayerBonHandler::getTraitTitle(
-  const Trait_t id, string& strToSet) const {
+  const Trait_t id, string& strRef) const {
 
-  strToSet = "";
+  strRef = "";
 
   switch(id) {
-    case traitAdeptMeleeCombatant:  strToSet = "Adept Melee Combatant"; break;
-    case traitAlchemist:            strToSet = "Alchemist";             break;
-    case traitCoolHeaded:           strToSet = "Cool-headed";           break;
-    case traitDexterous:            strToSet = "Dexterous";             break;
-    case traitFearless:             strToSet = "Fearless";              break;
-    case traitHealer:               strToSet = "Healer";                break;
-    case traitMarksman:             strToSet = "Marksman";              break;
-    case traitObservant:            strToSet = "Observant";             break;
-    case traitRapidRecoverer:       strToSet = "Rapid Recoverer";       break;
-    case traitSelfAware:            strToSet = "Self-aware";            break;
-    case traitSpirited:             strToSet = "Spirited";              break;
-    case traitStealthy:             strToSet = "Stealthy";              break;
-    case traitStrongBacked:         strToSet = "Strong-backed";         break;
-    case traitTough:                strToSet = "Tough";                 break;
-    case traitTreasureHunter:       strToSet = "Treasure Hunter";       break;
+    case traitAdeptMeleeCombatant:  strRef = "Adept Melee Combatant"; break;
+    case traitAlchemist:            strRef = "Alchemist";             break;
+    case traitCoolHeaded:           strRef = "Cool-headed";           break;
+    case traitDexterous:            strRef = "Dexterous";             break;
+    case traitFearless:             strRef = "Fearless";              break;
+    case traitHealer:               strRef = "Healer";                break;
+    case traitMarksman:             strRef = "Marksman";              break;
+    case traitObservant:            strRef = "Observant";             break;
+    case traitRapidRecoverer:       strRef = "Rapid Recoverer";       break;
+    case traitSelfAware:            strRef = "Self-aware";            break;
+    case traitSpirited:             strRef = "Spirited";              break;
+    case traitStealthy:             strRef = "Stealthy";              break;
+    case traitStrongBacked:         strRef = "Strong-backed";         break;
+    case traitTough:                strRef = "Tough";                 break;
+    case traitTreasureHunter:       strRef = "Treasure Hunter";       break;
     case endOfTraits: break;
   }
 }
 
 void PlayerBonHandler::getTraitDescr(
-  const Trait_t id, string& strToSet) const {
+  const Trait_t id, string& strRef) const {
 
-  strToSet = "";
+  strRef = "";
 
   switch(id) {
     case traitAdeptMeleeCombatant: {
-      strToSet  = "+15% hit chance with melee weapons";
+      strRef  = "+15% hit chance with melee weapons";
     } break;
 
     case traitAlchemist: {
-      strToSet  = "All potions are identified, you start with five potions";
+      strRef  = "All potions are identified, you start with five potions";
     } break;
 
     case traitCoolHeaded: {
-      strToSet  = "+20% shock resistance";
+      strRef  = "+20% shock resistance";
 
     } break;
 
     case traitDexterous: {
-      strToSet  = "+25% chance to evade attacks and traps, ";
-      strToSet += "every fourth move is a free action";
+      strRef  = "+25% chance to evade attacks and traps, ";
+      strRef += "every fourth move is a free action";
     } break;
 
     case traitFearless: {
-      strToSet  = "You cannot become terrified, +5% shock resistance";
+      strRef  = "You cannot become terrified, +5% shock resistance";
     } break;
 
     case traitHealer: {
-      strToSet  = "Healing takes half the normal time and resources";
+      strRef  = "Healing takes half the normal time and resources";
     } break;
 
     case traitMarksman: {
-      strToSet  = "+15% hit chance with firearms and thrown weapons, ";
-      strToSet += "standing still gives another 10% hit chance, ";
-      strToSet += "you occasionally reload instantly";
+      strRef  = "+15% hit chance with firearms and thrown weapons, ";
+      strRef += "standing still gives another 10% hit chance, ";
+      strRef += "you occasionally reload instantly";
     } break;
 
     case traitObservant: {
-      strToSet  = "You occasionally spot clues about hidden passages, ";
-      strToSet += "your attentiveness is higher when examining objects ";
-      strToSet += "(e.g. when searching a chest for traps), and you cannot ";
-      strToSet += "be backstabbed - hidden monsters gets no melee attack ";
-      strToSet += "bonus against you, and their attacks can be dodged";
+      strRef  = "You occasionally spot clues about hidden passages, ";
+      strRef += "your attentiveness is higher when examining objects ";
+      strRef += "(e.g. when searching a chest for traps), and you cannot ";
+      strRef += "be backstabbed - hidden monsters gets no melee attack ";
+      strRef += "bonus against you, and their attacks can be dodged";
     } break;
 
     case traitRapidRecoverer: {
-      strToSet  = "Greatly increased hit point and spirit point ";
-      strToSet += "regeneration rate";
+      strRef  = "Greatly increased hit point and spirit point ";
+      strRef += "regeneration rate";
     } break;
 
     case traitSelfAware: {
-      strToSet  = "You cannot become confused, the number of remaining turns ";
-      strToSet += "for status effects are displayed";
+      strRef  = "You cannot become confused, the number of remaining turns ";
+      strRef += "for status effects are displayed";
 
     } break;
 
     case traitSpirited: {
-      strToSet  = "+3 spirit points";
+      strRef  = "+3 spirit points";
     } break;
 
     case traitStealthy: {
-      strToSet  = "You are more likely to avoid detection";
+      strRef  = "You are more likely to avoid detection";
     } break;
 
     case traitStrongBacked: {
-      strToSet  = "+30% carry weight limit";
+      strRef  = "+30% carry weight limit";
     } break;
 
     case traitTough: {
-      strToSet  = "+3 hit points, +10% carry weight limit, better results ";
-      strToSet += "for object interactions requiring strength (such as ";
-      strToSet += "bashing doors, or moving the lid from a stone coffin)";
+      strRef  = "+3 hit points, +10% carry weight limit, better results ";
+      strRef += "for object interactions requiring strength (such as ";
+      strRef += "bashing doors, or moving the lid from a stone coffin)";
     } break;
 
     case traitTreasureHunter: {
-      strToSet  = "You tend to find more items";
+      strRef  = "You tend to find more items";
     } break;
 
     case endOfTraits: {} break;
@@ -135,8 +135,8 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
   //TODO Add prereqs
 }
 
-void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsToSet) {
-  traitsToSet.resize(0);
+void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
+  traitsRef.resize(0);
 
   for(int i = 0; i < endOfTraits; i++) {
     if(traitsPicked_[i] == false) {
@@ -155,7 +155,7 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsToSet) {
       //TODO Check player background prereq
 
       if(isPickable) {
-        traitsToSet.push_back(Trait_t(i));
+        traitsRef.push_back(Trait_t(i));
       }
     }
   }
@@ -232,26 +232,26 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 }
 
 void PlayerBonHandler::getAllPickedTraitsTitlesList(
-  vector<string>& titlesToSet) {
+  vector<string>& titlesRef) {
 
-  titlesToSet.resize(0);
+  titlesRef.resize(0);
   for(int i = 0; i < endOfTraits; i++) {
     if(traitsPicked_[i]) {
       string title = "";
       getTraitTitle(Trait_t(i), title);
-      titlesToSet.push_back(title);
+      titlesRef.push_back(title);
     }
   }
 }
 
-void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strToSet) {
-  strToSet = "";
+void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strRef) {
+  strRef = "";
   for(int i = 0; i < endOfTraits; i++) {
     if(traitsPicked_[i]) {
       string title = "";
       getTraitTitle(Trait_t(i), title);
       title = "\"" + title + "\"";
-      strToSet += strToSet.empty() ? title : (", " + title);
+      strRef += strRef.empty() ? title : (", " + title);
     }
   }
 }

@@ -60,7 +60,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       retNum = retNum / 10;
       eng.renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       eng.renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
-                              panel_screen, pos, clr);
+                             panel_screen, pos, clr);
       eng.renderer->updateScreen();
       continue;
     }
@@ -70,7 +70,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       retNum = max(MIN, retNum * 10 + curDigit);
       eng.renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       eng.renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
-                              panel_screen, pos, clr);
+                             panel_screen, pos, clr);
       eng.renderer->updateScreen();
     }
   }
@@ -92,7 +92,7 @@ Pos Query::dir() const {
   while(d.sdlKey_ != SDLK_RIGHT && d.sdlKey_ != SDLK_UP &&
         d.sdlKey_ != SDLK_LEFT && d.sdlKey_ != SDLK_DOWN &&
         d.sdlKey_ != SDLK_ESCAPE && d.sdlKey_ != SDLK_SPACE &&
-        d.sdlKey_ != SDLK_PAGEUP && d.sdlKey_ != SDLK_END &&
+        d.sdlKey_ != SDLK_PAGEUP && d.sdlKey_ != SDLK_HOME &&
         d.sdlKey_ != SDLK_END && d.sdlKey_ != SDLK_PAGEDOWN &&
         (d.key_ < '1' || d.key_ > '9' || d.key_ == '5')) {
     d = eng.input->readKeysUntilFound();

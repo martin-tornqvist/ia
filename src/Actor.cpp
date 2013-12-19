@@ -81,8 +81,8 @@ bool Actor::checkIfSeeActor(
   return false;
 }
 
-void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
-  vectorToSet.resize(0);
+void Actor::getSpotedEnemies(vector<Actor*>& vectorRef) {
+  vectorRef.resize(0);
 
   const bool IS_SELF_PLAYER = this == eng.player;
 
@@ -100,7 +100,7 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
       if(IS_SELF_PLAYER) {
         if(dynamic_cast<Monster*>(&actor)->leader != this) {
           if(checkIfSeeActor(actor, NULL)) {
-            vectorToSet.push_back(&actor);
+            vectorRef.push_back(&actor);
           }
         }
       } else {
@@ -117,7 +117,7 @@ void Actor::getSpotedEnemies(vector<Actor*>& vectorToSet) {
           (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
           if(checkIfSeeActor(actor, visionBlockers)) {
-            vectorToSet.push_back(&actor);
+            vectorRef.push_back(&actor);
           }
         }
       }

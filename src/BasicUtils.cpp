@@ -24,23 +24,23 @@ public:
 //------------------------------------------------------ BASIC UTILS
 void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                                        bool a[MAP_X_CELLS][MAP_Y_CELLS],
-                                       vector<Pos>& vectorToSet) {
-  vectorToSet.resize(0);
+                                       vector<Pos>& vectorRef) {
+  vectorRef.resize(0);
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       if(a[x][y] == VALUE_TO_STORE) {
-        vectorToSet.push_back(Pos(x, y));
+        vectorRef.push_back(Pos(x, y));
       }
     }
   }
 }
 
 void BasicUtils::getActorPositions(const vector<Actor*>& actors,
-                                   vector<Pos>& vectorToSet) {
-  vectorToSet.resize(0);
+                                   vector<Pos>& vectorRef) {
+  vectorRef.resize(0);
   const unsigned int NR_ACTORS = actors.size();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
-    vectorToSet.push_back(actors.at(i)->pos);
+    vectorRef.push_back(actors.at(i)->pos);
   }
 }
 
@@ -214,9 +214,9 @@ Pos DirConverter::getOffset(const Dir_t dir) const {
 }
 
 void DirConverter::getCompassDirName(
-  const Pos& fromPos, const Pos& toPos, string& strToSet) const {
+  const Pos& fromPos, const Pos& toPos, string& strRef) const {
 
-  strToSet = "";
+  strRef = "";
 
   const double PI_DB        = 3.14159265;
   const double ANGLE_45_DB  = 2 * PI_DB / 8;
@@ -231,34 +231,34 @@ void DirConverter::getCompassDirName(
   const double ANGLE_DB = atan2(-offset.y, offset.x);
 
   if(ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3]) {
-    strToSet = "SW";
+    strRef = "SW";
   } else if(ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2]) {
-    strToSet = "S";
+    strRef = "S";
   } else if(ANGLE_DB <  -edge[0] && ANGLE_DB >  -edge[1]) {
-    strToSet = "SE";
+    strRef = "SE";
   } else if(ANGLE_DB >= -edge[0] && ANGLE_DB <=  edge[0]) {
-    strToSet = "E";
+    strRef = "E";
   } else if(ANGLE_DB >   edge[0] && ANGLE_DB <   edge[1]) {
-    strToSet = "NE";
+    strRef = "NE";
   } else if(ANGLE_DB >=  edge[1] && ANGLE_DB <=  edge[2]) {
-    strToSet = "N";
+    strRef = "N";
   } else if(ANGLE_DB >   edge[2] && ANGLE_DB <   edge[3]) {
-    strToSet = "NW";
+    strRef = "NW";
   } else {
-    strToSet = "W";
+    strRef = "W";
   }
 }
 
 void DirConverter::getCompassDirName(
-  const Dir_t dir, string& strToSet) const {
+  const Dir_t dir, string& strRef) const {
 
   const Pos& offset = getOffset(dir);
-  strToSet = compassDirNames[offset.x + 1][offset.y + 1];
+  strRef = compassDirNames[offset.x + 1][offset.y + 1];
 }
 
 void DirConverter::getCompassDirName(
-  const Pos& offset, string& strToSet) const {
+  const Pos& offset, string& strRef) const {
 
-  strToSet = compassDirNames[offset.x + 1][offset.y + 1];
+  strRef = compassDirNames[offset.x + 1][offset.y + 1];
 }
 

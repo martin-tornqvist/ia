@@ -21,41 +21,35 @@ void Log::clearLog() {
     }
 
     line.resize(0);
-    drawLog();
   }
 }
 
 void Log::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
-  SDL_Color clr;
-  string str;
-  int drawXpos;
+  string str = "";
 
   const unsigned int LINE_SIZE = lineToDraw.size();
-
   for(unsigned int i = 0; i < LINE_SIZE; i++) {
-    const Message& curMessage = lineToDraw.at(i);
-    clr = curMessage.clr;
-    str = curMessage.str;
-    if(curMessage.repeats > 1) {
-      str += curMessage.strRepeats;
+    const Message& curMsg = lineToDraw.at(i);
+    str = curMsg.str;
+    if(curMsg.repeats > 1) {
+      str += curMsg.strRepeats;
     }
 
-    drawXpos = findCurXpos(lineToDraw, i);
-
-    eng.renderer->drawText(str, panel_log, Pos(drawXpos, yCell), clr);
+    const int DRAW_X_POS = findCurXpos(lineToDraw, i);
+    eng.renderer->drawText(str, panel_log, Pos(DRAW_X_POS, yCell), curMsg.clr);
   }
 }
 
-void Log::drawLog() const {
+void Log::drawLog(const bool SHOULD_UPDATE_SCREEN) const {
+  eng.renderer->coverArea(panel_log, Pos(0, 0), Pos(MAP_X_CELLS, 1));
   drawLine(line, 0);
+  if(SHOULD_UPDATE_SCREEN) eng.renderer->updateScreen();
 }
 
 void Log::displayHistory() {
   clearLog();
 
   eng.renderer->clearScreen();
-
-  string str;
 
   int topElement = max(0, int(history.size()) - int(MAP_Y_CELLS));
   int btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
@@ -177,31 +171,29 @@ void Log::addMsg(const string& text, const SDL_Color color,
       CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
 
     if(IS_MSG_FIT == false) {
-      eng.renderer->drawMapAndInterface(false);
+      drawLog(false);
       eng.renderer->drawText(
         "--More--", panel_log, Pos(CUR_X_POS, 0), clrBlack, clrGray);
       eng.renderer->updateScreen();
       eng.query->waitForKeyPress();
       clearLog();
-      eng.renderer->drawMapAndInterface(true);
     }
 
     const Message m(text, color);
     line.push_back(m);
   }
 
-  drawLog();
-
   if(FORCE_MORE_PROMPT) {
-    eng.renderer->drawMapAndInterface(false);
+    drawLog(false);
     const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
-    eng.renderer->drawText("[MORE]", panel_log,
-                           Pos(CUR_X_POS_AFTER, 0), clrCyanLgt);
+    eng.renderer->drawText("--More--", panel_log,
+                           Pos(CUR_X_POS_AFTER, 0), clrBlack, clrGray);
     eng.renderer->updateScreen();
     eng.query->waitForKeyPress();
     clearLog();
-    eng.renderer->drawMapAndInterface(true);
   }
+
+  drawLog(true);
 
   //Messages may stop long actions like first aid and auto travel.
   if(INTERRUPT_PLAYER_ACTIONS) {

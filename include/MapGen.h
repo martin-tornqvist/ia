@@ -131,7 +131,7 @@ private:
 
   bool globalDoorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS];
 
-//  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorToSet);
+//  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef);
 
   bool isRegionFoundInCardinalDir(
     const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
