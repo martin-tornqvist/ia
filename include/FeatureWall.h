@@ -15,7 +15,7 @@ public:
   ~Wall() {
   }
 
-  string getDescription(const bool DEFINITE_ARTICLE) const;
+  string getDescr(const bool DEFINITE_ARTICLE) const override;
   SDL_Color getColor() const;
   char getGlyph() const;
 

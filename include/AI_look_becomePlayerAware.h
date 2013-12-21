@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "ActorPlayer.h"
 #include "Log.h"
+#include "Renderer.h"
 
 class AI_look_becomePlayerAware {
 public:
@@ -41,6 +42,8 @@ public:
 
           if(engine.abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
             if(engine.player->checkIfSeeActor(monster, NULL)) {
+              engine.player->updateFov();
+              engine.renderer->drawMapAndInterface(true);
               engine.log->addMsg(monster.getNameThe() + " sees me!");
             }
             monster.becomeAware();

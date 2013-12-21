@@ -174,7 +174,7 @@ public:
   void newTurnAllProps(
     const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]);
 
-  void getPropsInterfaceLine(vector<StringAndClr>& line) const;
+  void getPropsInterfaceLine(vector<StrAndClr>& line) const;
 
   Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
                        const int NR_TURNS = -1) const;

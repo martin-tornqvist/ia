@@ -39,7 +39,7 @@ Player::Player(Engine& engine) :
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
   mth(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {}
 
-void Player::actorSpecific_spawnStartItems() {
+void Player::specificSpawnStartItems() {
   data_->abilityVals.reset();
 
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -202,7 +202,9 @@ void Player::setParametersFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Player::actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
+void Player::specificHit(const int DMG, const bool ALLOW_WOUNDS) {
+  interruptActions();
+
   //Hit aborts first aid
   if(activeMedicalBag != NULL) {
     activeMedicalBag->interrupted();
@@ -229,8 +231,8 @@ void Player::actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
 
 int Player::getCarryWeightLimit() const {
   PlayerBonHandler* const bon = eng.playerBonHandler;
-  const bool IS_TOUGH         = bon->isTraitPicked(traitTough);
-  const bool IS_STRONG_BACKED = bon->isTraitPicked(traitStrongBacked);
+  const bool IS_TOUGH         = bon->hasTrait(traitTough);
+  const bool IS_STRONG_BACKED = bon->hasTrait(traitStrongBacked);
   const bool IS_WEAKENED      = propHandler_->hasProp(propWeakened);
   const int CARRY_WEIGHT_MOD =
     IS_TOUGH * 10 + IS_STRONG_BACKED * 30 - IS_WEAKENED * 15;
@@ -240,10 +242,10 @@ int Player::getCarryWeightLimit() const {
 
 int Player::getShockResistance() const {
   int ret = 0;
-  if(eng.playerBonHandler->isTraitPicked(traitFearless)) {
+  if(eng.playerBonHandler->hasTrait(traitFearless)) {
     ret += 5;
   }
-  if(eng.playerBonHandler->isTraitPicked(traitCoolHeaded)) {
+  if(eng.playerBonHandler->hasTrait(traitCoolHeaded)) {
     ret += 20;
   }
   return min(100, max(0, ret));
@@ -760,7 +762,7 @@ void Player::onActorTurn() {
   }
 }
 
-void Player::actorSpecificOnStandardTurn() {
+void Player::specificOnStandardTurn() {
   // Dynamite
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;
@@ -939,7 +941,7 @@ void Player::actorSpecificOnStandardTurn() {
       }
 
       const bool IS_RAPID_REC =
-        eng.playerBonHandler->isTraitPicked(traitRapidRecoverer);
+        eng.playerBonHandler->hasTrait(traitRapidRecoverer);
 
       const int REGEN_N_TURN = (IS_RAPID_REC ? 6 : 10) + (nrWounds * 5);
 
@@ -973,7 +975,7 @@ void Player::actorSpecificOnStandardTurn() {
         }
       }
 
-      if(eng.playerBonHandler->isTraitPicked(traitObservant)) {
+      if(eng.playerBonHandler->hasTrait(traitObservant)) {
         const int CLUE_RADI = 3;
         x0 = max(0, pos.x - CLUE_RADI);
         y0 = max(0, pos.y - CLUE_RADI);
@@ -1144,7 +1146,7 @@ void Player::moveDir(Dir_t dir) {
         pos = dest;
 
         PlayerBonHandler* const bon = eng.playerBonHandler;
-        if(bon->isTraitPicked(traitDexterous)) {
+        if(bon->hasTrait(traitDexterous)) {
           const int FREE_MOVE_EVERY_N_TURN = 4;
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
@@ -1236,7 +1238,7 @@ void Player::punch(Actor& actorToPunch) {
   delete punchWeapon;
 }
 
-void Player::actorSpecific_addLight(
+void Player::specificAddLight(
   bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
   bool isUsingLightGivingItem = flareFuseTurns > 0;

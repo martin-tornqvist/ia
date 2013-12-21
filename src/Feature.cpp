@@ -5,7 +5,9 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "MapParsing.h"
 
+//---------------------------------------------------------- FEATURE
 Feature::Feature(Feature_t id, Pos pos, Engine& engine,
                  FeatureSpawnData* spawnData) :
   pos_(pos), eng(engine), data_(eng.featureDataHandler->getData(id)),
@@ -57,7 +59,7 @@ bool Feature::isBottomless() const {
   return data_->isBottomless;
 }
 
-string Feature::getDescription(const bool DEFINITE_ARTICLE) const {
+string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
 }
 
@@ -130,67 +132,122 @@ void Feature::examine() {
   eng.log->addMsg("I find nothing specific there to examine or use.");
 }
 
+//---------------------------------------------------------- STATIC FEATURE
+void FeatureStatic::tryBash(Actor& actorTrying) {
+
+  const bool IS_PLAYER = &actorTrying == eng.player;
+
+  string sndMsg = "";
+
+  if(IS_PLAYER) {
+    const bool IS_BLIND    = eng.player->getPropHandler()->allowSee() == false;
+    const bool IS_BLOCKING = isBodyTypePassable(bodyType_normal) == false;
+    if(IS_BLOCKING) {
+      eng.log->addMsg(
+        "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
+
+      if(eng.dice.oneIn(4)) {
+        eng.log->addMsg("I sprain myself.", clrMessageBad);
+        const int SPRAIN_DMG = eng.dice.range(1, 5);
+        actorTrying.hit(SPRAIN_DMG, dmgType_pure, false);
+      }
+
+      if(eng.dice.oneIn(4)) {
+        eng.log->addMsg("I am off-balance.");
+
+        actorTrying.getPropHandler()->tryApplyProp(
+          new PropParalyzed(eng, propTurnsSpecified, 2));
+      }
+
+    } else {
+      eng.log->addMsg("I kick the air!");
+    }
+  } else {
+    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    const bool PLAYER_SEE_TRYER =
+      eng.player->checkIfSeeActor(actorTrying, blockers);
+
+    if(PLAYER_SEE_TRYER) {
+      eng.log->addMsg(actorTrying.getNameThe() + " bashes at a door!");
+    }
+
+    sndMsg = "I hear a loud banging on a door.";
+  }
+
+  //The sound emits from the actor instead of the bashed object, and the
+  //parameter to ignore the message if source is seen is enabled.
+  //This is because the player shoudl receive the ound message even if the
+  //bashed object is seen - but never if the bashing actor is seen
+  Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, false, IS_PLAYER);
+  eng.soundEmitter->emitSound(snd);
+
+  specificTryBash(actorTrying);
+
+  eng.gameTime->endTurnOfCurrentActor();
+  eng.player->updateFov();
+  eng.renderer->drawMapAndInterface();
+}
+
 void FeatureStatic::setGoreIfPossible() {
   if(data_->canHaveGore) {
     const int ROLL_GLYPH = eng.dice(1, 4);
     switch(ROLL_GLYPH) {
       case 1: {
         goreGlyph_ = ',';
-      }
-      break;
+      } break;
+
       case 2: {
         goreGlyph_ = '`';
-      }
-      break;
+      } break;
+
       case 3: {
         goreGlyph_ = 39;
-      }
-      break;
+      } break;
+
       case 4: {
         goreGlyph_ = ';';
-      }
-      break;
+      } break;
     }
 
     const int ROLL_TILE = eng.dice(1, 8);
     switch(ROLL_TILE) {
       case 1: {
         goreTile_ = tile_gore1;
-      }
-      break;
+      } break;
+
       case 2: {
         goreTile_ = tile_gore2;
-      }
-      break;
+      } break;
+
       case 3: {
         goreTile_ = tile_gore3;
-      }
-      break;
+      } break;
+
       case 4: {
         goreTile_ = tile_gore4;
-      }
-      break;
+      } break;
+
       case 5: {
         goreTile_ = tile_gore5;
-      }
-      break;
+      } break;
+
       case 6: {
         goreTile_ = tile_gore6;
-      }
-      break;
+      } break;
+
       case 7: {
         goreTile_ = tile_gore7;
-      }
-      break;
+      } break;
+
       case 8: {
         goreTile_ = tile_gore8;
-      }
-      break;
+      } break;
     }
   }
 }
 
-string FeatureStatic::getDescription(const bool DEFINITE_ARTICLE) const {
+string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
   if(goreGlyph_ == ' ') {
     return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
   } else {

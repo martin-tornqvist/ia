@@ -16,7 +16,7 @@ class Item;
 class FeatureExaminable: public FeatureStatic {
 public:
   ~FeatureExaminable() {}
-  void examine();
+  void examine() override;
 
 protected:
   virtual void featureSpecific_examine() = 0;
@@ -69,7 +69,7 @@ enum TombAppearance_t {
 class Tomb: public FeatureExaminable {
 public:
   ~Tomb() {}
-  void featureSpecific_examine();
+  void featureSpecific_examine() override;
 
 private:
   friend class FeatureFactory;
@@ -101,7 +101,7 @@ enum CabinetAction_t {
 class Cabinet: public FeatureExaminable {
 public:
   ~Cabinet() {}
-  void featureSpecific_examine();
+  void featureSpecific_examine() override;
 private:
   friend class FeatureFactory;
   Cabinet(Feature_t id, Pos pos, Engine& engine);
@@ -129,7 +129,7 @@ enum ChestAction_t {
 class Chest: public FeatureExaminable {
 public:
   ~Chest() {}
-  void featureSpecific_examine();
+  void featureSpecific_examine() override;
 
 //  string getDescr(const bool DEFINITE_ARTICLE) const;
 
@@ -169,7 +169,7 @@ enum FountainType_t {
 class Fountain: public FeatureExaminable {
 public:
   ~Fountain() {}
-  void featureSpecific_examine();
+  void featureSpecific_examine() override;
 
 private:
   friend class FeatureFactory;
@@ -188,7 +188,7 @@ enum CocoonAction_t {
 class Cocoon: public FeatureExaminable {
 public:
   ~Cocoon() {}
-  void featureSpecific_examine();
+  void featureSpecific_examine() override;
 private:
   friend class FeatureFactory;
   Cocoon(Feature_t id, Pos pos, Engine& engine);
@@ -207,7 +207,7 @@ private:
 //class Altar: public FeatureExaminable {
 //public:
 //  ~Altar() {}
-//  void featureSpecific_examine();
+//  void featureSpecific_examine() override;
 //private:
 //  friend class FeatureFactory;
 //  Altar(Feature_t id, Pos pos, Engine& engine);
@@ -216,7 +216,7 @@ private:
 //class CarvedPillar: public FeatureExaminable {
 //public:
 //  ~CarvedPillar() {}
-//  void featureSpecific_examine();
+//  void featureSpecific_examine() override;
 //private:
 //  friend class FeatureFactory;
 //  CarvedPillar(Feature_t id, Pos pos, Engine& engine);
@@ -225,7 +225,7 @@ private:
 //class Barrel: public FeatureExaminable {
 //public:
 //  ~Barrel() {}
-//  void featureSpecific_examine();
+//  void featureSpecific_examine() override;
 //private:
 //  friend class FeatureFactory;
 //  Barrel(Feature_t id, Pos pos, Engine& engine);

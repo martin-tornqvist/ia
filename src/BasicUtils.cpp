@@ -8,19 +8,6 @@
 #include "Converters.h"
 #include "GameTime.h"
 
-
-//------------------------------------------------------ LEX. COMPARE
-struct LexicograhicalCompareStringAndClr {
-public:
-  LexicograhicalCompareStringAndClr() {
-  }
-  bool operator()(const StringAndClr& entry1, const StringAndClr& entry2) {
-    return std::lexicographical_compare(
-             entry1.str.begin(), entry1.str.end(),
-             entry2.str.begin(), entry2.str.end());
-  }
-};
-
 //------------------------------------------------------ BASIC UTILS
 void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                                        bool a[MAP_X_CELLS][MAP_Y_CELLS],
@@ -121,13 +108,6 @@ bool BasicUtils::isPosAdj(
     return false;
   }
   return true;
-}
-
-void BasicUtils::lexicographicalSortStringAndClrVector(
-  vector<StringAndClr>& vect) {
-
-  LexicograhicalCompareStringAndClr cmp;
-  std::sort(vect.begin(), vect.end(), cmp);
 }
 
 TimeData BasicUtils::getCurrentTime() const {

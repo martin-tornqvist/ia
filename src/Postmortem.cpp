@@ -31,13 +31,13 @@ void Postmortem::makeInfoLines() {
   const SDL_Color clrInfo     = clrWhite;
 
   postmortemLines.push_back(
-    StringAndClr(" " + eng.player->getNameA(), clrHeading));
+    StrAndClr(" " + eng.player->getNameA(), clrHeading));
 
   postmortemLines.push_back(
-    StringAndClr("   * Explored to the depth of dungeon level " +
+    StrAndClr("   * Explored to the depth of dungeon level " +
                  toString(eng.map->getDlvl()), clrInfo));
   postmortemLines.push_back(
-    StringAndClr("   * Was " +
+    StrAndClr("   * Was " +
                  toString(min(100, eng.player->getInsanity())) +
                  "% insane", clrInfo));
 
@@ -45,55 +45,55 @@ void Postmortem::makeInfoLines() {
   //this is ugly as hell
   if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of enclosed spaces", clrInfo));
+      StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_dog])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of dogs", clrInfo));
+      StrAndClr("   * Had a phobia of dogs", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_rat])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of rats", clrInfo));
+      StrAndClr("   * Had a phobia of rats", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_undead])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of the dead", clrInfo));
+      StrAndClr("   * Had a phobia of the dead", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_openPlace])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of open places", clrInfo));
+      StrAndClr("   * Had a phobia of open places", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_spider])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of spiders", clrInfo));
+      StrAndClr("   * Had a phobia of spiders", clrInfo));
   if(eng.player->insanityPhobias[insanityPhobia_deepPlaces])
     postmortemLines.push_back(
-      StringAndClr("   * Had a phobia of deep places", clrInfo));
+      StrAndClr("   * Had a phobia of deep places", clrInfo));
 
   if(eng.player->insanityObsessions[insanityObsession_masochism])
     postmortemLines.push_back(
-      StringAndClr("   * Had a masochistic obsession", clrInfo));
+      StrAndClr("   * Had a masochistic obsession", clrInfo));
   if(eng.player->insanityObsessions[insanityObsession_sadism])
     postmortemLines.push_back(
-      StringAndClr("   * Had a sadistic obsession", clrInfo));
+      StrAndClr("   * Had a sadistic obsession", clrInfo));
 
-  postmortemLines.push_back(StringAndClr(" ", clrInfo));
+  postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
 
   trace << "Postmortem: Listing abilities gained" << endl;
-  postmortemLines.push_back(StringAndClr(" Abilities gained:", clrHeading));
+  postmortemLines.push_back(StrAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(abilitiesLine);
   if(abilitiesLine.empty()) {
-    postmortemLines.push_back(StringAndClr("   * None", clrInfo));
+    postmortemLines.push_back(StrAndClr("   * None", clrInfo));
   } else {
     vector<string> abilitiesLines;
     eng.textFormatting->lineToLines(abilitiesLine, 60, abilitiesLines);
     for(unsigned int i = 0; i < abilitiesLines.size(); i++) {
       postmortemLines.push_back(
-        StringAndClr("   " + abilitiesLines.at(i), clrInfo));
+        StrAndClr("   " + abilitiesLines.at(i), clrInfo));
     }
   }
-  postmortemLines.push_back(StringAndClr(" ", clrInfo));
+  postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
   trace << "Postmortem: Listing monster kills" << endl;
   // TODO Add name_plural_a, and name_plural_the to actor defs?
-  postmortemLines.push_back(StringAndClr(" Monsters killed:", clrHeading));
+  postmortemLines.push_back(StrAndClr(" Monsters killed:", clrHeading));
   vector< pair<string, int> > killList;
   int nrOfTotalKills = 0;
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
@@ -120,7 +120,7 @@ void Postmortem::makeInfoLines() {
     }
   }
   if(killList.empty()) {
-    postmortemLines.push_back(StringAndClr("   * None", clrInfo));
+    postmortemLines.push_back(StrAndClr("   * None", clrInfo));
   } else {
     postmortemLines.back().str += " (" + toString(nrOfTotalKills) + " total)";
 
@@ -130,12 +130,12 @@ void Postmortem::makeInfoLines() {
       const string nrOfKillsStr =
         nrOfKills == -1 ? "" : (": " + toString(nrOfKills));
       postmortemLines.push_back(
-        StringAndClr("   * " + name + nrOfKillsStr, clrInfo));
+        StrAndClr("   * " + name + nrOfKillsStr, clrInfo));
     }
   }
-  postmortemLines.push_back(StringAndClr(" ", clrInfo));
+  postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
-  postmortemLines.push_back(StringAndClr(" The last messages:", clrHeading));
+  postmortemLines.push_back(StrAndClr(" The last messages:", clrHeading));
   int historyElement = static_cast<unsigned int>(
                          max(0, int(eng.log->history.size()) - 10));
   for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
@@ -143,12 +143,12 @@ void Postmortem::makeInfoLines() {
     for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {
       row += eng.log->history.at(i).at(ii).str + " ";
     }
-    postmortemLines.push_back(StringAndClr("   " + row, clrInfo));
+    postmortemLines.push_back(StrAndClr("   " + row, clrInfo));
   }
-  postmortemLines.push_back(StringAndClr(" ", clrInfo));
+  postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
   trace << "Postmortem: Drawing the final map" << endl;
-  postmortemLines.push_back(StringAndClr(" The final moment:", clrHeading));
+  postmortemLines.push_back(StrAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_Y_CELLS; y++) {
     for(int x = 0; x < MAP_X_CELLS; x++) {
       for(int dx = -1; dx <= 1; dx++) {
@@ -185,7 +185,7 @@ void Postmortem::makeInfoLines() {
         }
       }
     }
-    postmortemLines.push_back(StringAndClr(currentRow, clrInfo));
+    postmortemLines.push_back(StrAndClr(currentRow, clrInfo));
     currentRow.clear();
   }
 

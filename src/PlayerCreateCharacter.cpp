@@ -12,19 +12,21 @@ const int NR_SKILLS = 2;
 
 void PlayerCreateCharacter::createCharacter() const {
   //------------------------------------------------------ NAME
+  pickNewTrait(true);
   PlayerEnterName playerEnterName(eng);
   playerEnterName.run(Pos(50, Y0_CREATE_CHARACTER + 2));
 }
 
-void PlayerCreateCharacter::pickTrait() const {
-  //------------------------------------------------------ TRAITS AND SKILLS
+void PlayerCreateCharacter::pickNewTrait(
+  const bool IS_CHARACTER_CREATION)  const {
+
   if(eng.config->isBotPlaying == false) {
     vector<Trait_t> pickableTraits;
     eng.playerBonHandler->getAllPickableTraits(pickableTraits);
 
     if(pickableTraits.empty() == false) {
 
-      const int NR_TRAITS_TOT = int(pickableTraits.size());
+      const int NR_TRAITS_TOT     = int(pickableTraits.size());
       const int NR_TRAITS_COL_TWO = NR_TRAITS_TOT / 2;
       const int NR_TRAITS_COL_ONE = NR_TRAITS_TOT - NR_TRAITS_COL_TWO;
 
@@ -36,20 +38,22 @@ void PlayerCreateCharacter::pickTrait() const {
       for(int i = 0; i < NR_TRAITS_TOT; i++) {
         const Trait_t trait = pickableTraits.at(i);
         if(i < NR_TRAITS_COL_ONE) {
-          traitsColOne.push_back(Trait_t(i));
+          traitsColOne.push_back(trait);
         } else {
-          traitsColTwo.push_back(Trait_t(i));
+          traitsColTwo.push_back(trait);
         }
       }
 
       MenuBrowser browser(traitsColOne.size(), traitsColTwo.size());
-      drawPickTrait(traitsColOne, traitsColTwo, browser);
+      drawPickTrait(
+        traitsColOne, traitsColTwo, browser, IS_CHARACTER_CREATION);
 
       while(true) {
         const MenuAction_t action = eng.menuInputHandler->getAction(browser);
         switch(action) {
           case menuAction_browsed: {
-            drawPickTrait(traitsColOne, traitsColTwo, browser);
+            drawPickTrait(
+              traitsColOne, traitsColTwo, browser, IS_CHARACTER_CREATION);
           }
           break;
 
@@ -81,7 +85,7 @@ void PlayerCreateCharacter::pickTrait() const {
 
 void PlayerCreateCharacter::drawPickTrait(
   const vector<Trait_t>& traitsColOne, const vector<Trait_t>& traitsColTwo,
-  const MenuBrowser& browser) const {
+  const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) const {
 
   eng.renderer->coverPanel(panel_screen);
 
@@ -93,8 +97,12 @@ void PlayerCreateCharacter::drawPickTrait(
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
+  string label = IS_CHARACTER_CREATION ?
+                 "Which trait do you start with?" :
+                 "You have reached a new level! Which trait do you gain?";
+
   eng.renderer->drawTextCentered(
-    "Choose new ability", panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE),
+    label, panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE),
     clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -107,7 +115,8 @@ void PlayerCreateCharacter::drawPickTrait(
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    const SDL_Color drwClr = IS_TRAIT_MARKED ? clrWhite : clrRedLgt;
+    const SDL_Color drwClr =
+      IS_TRAIT_MARKED ? clrNosferatuSepiaLgt : clrNosferatuSepiaDrk;
     eng.renderer->drawText(
       name, panel_screen, Pos(X_COLUMN_ONE, yPos), drwClr);
     yPos++;
@@ -118,7 +127,8 @@ void PlayerCreateCharacter::drawPickTrait(
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    const SDL_Color drwClr = IS_TRAIT_MARKED ? clrWhite : clrRedLgt;
+    const SDL_Color drwClr =
+      IS_TRAIT_MARKED ? clrNosferatuSepiaLgt : clrNosferatuSepiaDrk;
     eng.renderer->drawText(
       name, panel_screen, Pos(X_COLUMN_TWO, yPos), drwClr);
     yPos++;
@@ -138,8 +148,8 @@ void PlayerCreateCharacter::drawPickTrait(
     "Effect(s): " + descr, MAX_WIDTH_DESCR, descrLines);
   const int NR_DESCR_LINES = descrLines.size();
   for(int i = 0; i < NR_DESCR_LINES; i++) {
-    eng.renderer->drawText(
-      descrLines.at(i), panel_screen, Pos(X_COLUMN_ONE, yPos), clrRed);
+    eng.renderer->drawText(descrLines.at(i), panel_screen,
+                           Pos(X_COLUMN_ONE, yPos), clrNosferatuSepiaDrk);
     yPos++;
   }
   yPos++;
@@ -165,8 +175,8 @@ void PlayerCreateCharacter::drawPickTrait(
     eng.textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR, prereqLines);
     const int NR_PREREQ_LINES = prereqLines.size();
     for(int i = 0; i < NR_PREREQ_LINES; i++) {
-      eng.renderer->drawText(
-        prereqLines.at(i), panel_screen, Pos(X_COLUMN_ONE, yPos), clrRed);
+      eng.renderer->drawText(prereqLines.at(i), panel_screen,
+                             Pos(X_COLUMN_ONE, yPos), clrNosferatuSepiaDrk);
       yPos++;
     }
   }

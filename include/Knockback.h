@@ -13,7 +13,7 @@ public:
 
   void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                     const bool IS_SPIKE_GUN,
-                    const bool IS_KNOCKBACK_MESSAGE_ALLOWED = true);
+                    const bool IS_MSG_ALLOWED = true);
 
 private:
   Engine& eng;

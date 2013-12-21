@@ -20,12 +20,13 @@ public:
 
   void createCharacter() const;
 
-  void pickTrait() const;
+  void pickNewTrait(const bool IS_CHARACTER_CREATION) const;
 
 private:
   void drawPickTrait(const vector<Trait_t>& traitsColOne,
                      const vector<Trait_t>& traitsColTwo,
-                     const MenuBrowser& browser) const;
+                     const MenuBrowser& browser,
+                     const bool IS_CHARACTER_CREATION) const;
 
   Engine& eng;
 };

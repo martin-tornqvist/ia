@@ -52,6 +52,7 @@ void ExplosionMaker::renderExplosion(const BasicData* data,
     }
   }
   eng.renderer->updateScreen();
+  eng.sleep(eng.config->delayExplosion / 2);
 }
 
 void ExplosionMaker::renderExplosionWithColorOverride(
@@ -131,9 +132,6 @@ void ExplosionMaker::runExplosion(
       renderExplosion(&data, reach);
     }
   }
-
-  //Delay before applying damage and effects
-//  eng.sleep(eng.config->delayExplosion);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;

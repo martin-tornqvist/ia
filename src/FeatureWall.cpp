@@ -1,5 +1,7 @@
 #include "FeatureWall.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "Map.h"
@@ -25,26 +27,25 @@ bool Wall::isTileAnyWallTop(const Tile_t tile) {
     tile == tile_rubbleHigh;
 }
 
-string Wall::getDescription(const bool DEFINITE_ARTICLE) const {
+string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
+  const string modStr = isMossGrown ? "moss-grown " : "";
+
   switch(wallType) {
     case wall_common:
     case wall_alt1: {
-      const string modStr = isMossGrown ? "moss-grown " : "";
-      return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
+      return (DEFINITE_ARTICLE ? "the " : "a ") + modStr + "stone wall";
     }
-    break;
+
     case wall_cave: {
-      const string modStr = isMossGrown ? "moss-grown " : "";
-      return DEFINITE_ARTICLE ? "the " + modStr + "cavern wall" : "a " + modStr + "cavern wall";
-
+      return (DEFINITE_ARTICLE ? "the " : "a ") + modStr + "cavern wall";
     }
+
     case wall_egypt: {
-      const string modStr = isMossGrown ? "moss-grown " : "";
-      return DEFINITE_ARTICLE ? "the " + modStr + "stone wall" : "a " + modStr + "stone wall";
-
+      return (DEFINITE_ARTICLE ? "the " : "a ") + modStr + "stone wall";
     }
+
   }
-  return "[WARNING]";
+  assert(false && "Failed to get door description");
 }
 
 SDL_Color Wall::getColor() const {
@@ -60,7 +61,7 @@ SDL_Color Wall::getColor() const {
     return clrBrownGray;
   }
 
-  return data_->color; // clrGray;
+  return data_->color;
 }
 
 char Wall::getGlyph() const {
@@ -114,18 +115,13 @@ Tile_t Wall::getTopWallTile() const {
 void Wall::setRandomNormalWall() {
   const int RND = eng.dice.range(1, 6);
   switch(RND) {
-    case 1:
-      wallType = wall_alt1;
-      break;
-//  case 2: wallType = wall_alt2; break;
-    default:
-      wallType = wall_common;
-      break;
+    case 1:   wallType = wall_alt1;     break;
+    default:  wallType = wall_common;   break;
   }
 }
 
 void Wall::setRandomIsMossGrown() {
-  isMossGrown = eng.dice.range(1, 40) == 1;
+  isMossGrown = eng.dice.oneIn(40);
 }
 
 

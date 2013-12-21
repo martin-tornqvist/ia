@@ -26,7 +26,8 @@ void Bash::playerBash() const {
     if(actor == NULL) {
       trace << "Bash: No actor at bash pos, ";
       trace << "attempting to bash feature instead" << endl;
-      playerBashFeature(eng.map->cells[bashPos.x][bashPos.y].featureStatic);
+      Cell& cell = eng.map->cells[bashPos.x][bashPos.y];
+      cell.featureStatic->tryBash(*eng.player);
     }  else {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(eng.player->getPropHandler()->allowAttackMelee(true)) {
@@ -34,31 +35,10 @@ void Bash::playerBash() const {
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         MapParser::parse(CellPredBlocksVision(eng), blockers);
 
-        if(eng.player->checkIfSeeActor(*actor, blockers)) {
-          trace << "Bash: Player can see actor" << endl;
-          eng.player->kick(*actor);
-          return;
-        }
+        trace << "Bash: Player can see actor" << endl;
+        eng.player->kick(*actor);
+        return;
       }
-    }
-  }
-}
-
-void Bash::playerBashFeature(Feature* const feature) const {
-  bool bashableObjectFound = false;
-
-  if(feature->getId() == feature_door) {
-    Door* const door = dynamic_cast<Door*>(feature);
-    door->tryBash(eng.player);
-    bashableObjectFound = true;
-  }
-
-  if(bashableObjectFound == false) {
-    const bool PLAYER_IS_BLIND = eng.player->getPropHandler()->allowSee();
-    if(PLAYER_IS_BLIND == false) {
-      eng.log->addMsg("I see nothing there to bash.");
-    } else {
-      eng.log->addMsg("I find nothing there to bash.");
     }
   }
 }

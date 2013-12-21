@@ -102,9 +102,10 @@ void Bot::act() {
       FeatureStatic* f =
         eng.map->cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
       if(f->getId() == feature_door) {
-        dynamic_cast<Door*>(f)->reveal(false);
-        if(dynamic_cast<Door*>(f)->isStuck()) {
-          dynamic_cast<Door*>(f)->tryBash(eng.player);
+        Door* const door = dynamic_cast<Door*>(f);
+        door->reveal(false);
+        if(door->isStuck()) {
+          f->tryBash(*eng.player);
           return;
         }
       }

@@ -5,14 +5,11 @@
 
 class Grave: public FeatureStatic {
 public:
-  ~Grave() {
-  }
+  ~Grave() {}
 
-  string getDescription(const bool DEFINITE_ARTICLE) const;
+  string getDescr(const bool DEFINITE_ARTICLE) const override;
 
-  void setInscription(const string& str) {
-    inscription_ = str;
-  }
+  void setInscription(const string& str) {inscription_ = str;}
 
 private:
   string inscription_;

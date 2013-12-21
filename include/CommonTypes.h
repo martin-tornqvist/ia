@@ -79,14 +79,14 @@ struct CellRenderDataTiles {
   bool isFadeEffectAllowed, isLivingActorSeenHere, isMarkedAsLit;
 };
 
-struct StringAndClr {
-  StringAndClr() : str(""), clr(clrBlack) {}
+struct StrAndClr {
+  StrAndClr() : str(""), clr(clrBlack) {}
 
-  StringAndClr(const string& text, const SDL_Color& color) :
+  StrAndClr(const string& text, const SDL_Color& color) :
     str(text), clr(color) {
   }
 
-  StringAndClr& operator=(const StringAndClr& other) {
+  StrAndClr& operator=(const StrAndClr& other) {
     str = other.str;
     clr = other.clr;
     return *this;

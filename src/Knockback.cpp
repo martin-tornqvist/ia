@@ -12,7 +12,7 @@
 
 void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
-                             const bool IS_KNOCKBACK_MESSAGE_ALLOWED) {
+                             const bool IS_MSG_ALLOWED) {
   const bool DEFENDER_IS_MONSTER = &defender != eng.player;
 
   if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
@@ -43,9 +43,16 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         if(
           (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
           (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
+
+          bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+          MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+          const bool PLAYER_SEE_DEFENDER =
+            DEFENDER_IS_MONSTER == false ? true :
+            eng.player->checkIfSeeActor(defender, blockers);
+
           if(i == 0) {
-            if(IS_KNOCKBACK_MESSAGE_ALLOWED) {
-              if(DEFENDER_IS_MONSTER) {
+            if(IS_MSG_ALLOWED) {
+              if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
                 eng.log->addMsg(
                   defender.getNameThe() + " is knocked back!");
               } else {
@@ -67,7 +74,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           eng.sleep(eng.config->delayProjectileDraw);
 
           if(CELL_IS_BOTTOMLESS) {
-            if(DEFENDER_IS_MONSTER) {
+            if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
               eng.log->addMsg(
                 defender.getNameThe() + " plummets down the depths.",
                 clrMessageGood);

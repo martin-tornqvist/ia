@@ -12,25 +12,38 @@
 
 using namespace std;
 
-// *************************************************** //
-// Keep the following values lexicographically sorted! //
-// *************************************************** //
 enum Trait_t {
   traitAdeptMeleeCombatant,
-  traitAlchemist,
+  traitExpertMeleeCombatant,
+  traitMasterMeleeCombatant,
+  traitAdeptMarksman,
+  traitExpertMarksman,
+  traitMasterMarksman,
+  traitSteadyAimer,
+  traitSniper,
+  traitBreachExpert,
   traitCoolHeaded,
+  traitCourageous,
+  traitDemolitionExpert,
   traitDexterous,
   traitFearless,
-  traitHealer,
-  traitMarksman,
-  traitObservant,
-  traitRapidRecoverer,
-  traitSelfAware,
-  traitSpirited,
+  traitImperceptible,
   traitStealthy,
-  traitStrongBacked,
-  traitTough,
+  traitMobile,
+  traitLithe,
+  traitMythologist,
+  traitObservant,
+  traitVigilant,
   traitTreasureHunter,
+  traitSelfAware,
+  traitSelfPossessed,
+  traitHealer,
+  traitRapidRecoverer,
+  traitSurvivalist,
+  traitSpirited,
+  traitTough,
+  traitRugged,
+  traitStrongBacked,
   endOfTraits
 };
 
@@ -60,7 +73,7 @@ public:
     }
   }
 
-  inline bool isTraitPicked(const Trait_t id) const {
+  inline bool hasTrait(const Trait_t id) const {
     return traitsPicked_[id];
   }
 
@@ -90,11 +103,11 @@ public:
     }
   }
 
-//  void setAllTraitsToNotPicked() {
-//    for(int i = 0; i < endOfTraits; i++) {
-//      traitsPicked_[i] = false;
-//    }
-//  }
+  //  void setAllTraitsToNotPicked() {
+  //    for(int i = 0; i < endOfTraits; i++) {
+  //      traitsPicked_[i] = false;
+  //    }
+  //  }
 
 private:
   bool traitsPicked_[endOfTraits];

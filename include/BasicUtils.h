@@ -43,9 +43,6 @@ public:
     return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
   }
 
-  //Function for lexicographically comparing two StringAndClr structs
-  void lexicographicalSortStringAndClrVector(vector<StringAndClr>& vect);
-
   void resetArray(int a[MAP_X_CELLS][MAP_Y_CELLS]) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {

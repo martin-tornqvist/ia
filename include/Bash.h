@@ -14,9 +14,6 @@ public:
   void playerBash() const;
 
 private:
-  friend class Feature;
-  void playerBashFeature(Feature* const feature) const;
-
   Engine& eng;
 };
 

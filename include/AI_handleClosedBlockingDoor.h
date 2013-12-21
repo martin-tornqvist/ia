@@ -29,11 +29,11 @@ public:
               door->tryOpen(monster);
               return true;
             } else if(monster->getData()->canBashDoors) {
-              door->tryBash(monster);
+              door->tryBash(*monster);
               return true;
             }
           } else if(monster->getData()->canBashDoors) {
-            door->tryBash(monster);
+            door->tryBash(*monster);
             return true;
           }
         }

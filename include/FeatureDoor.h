@@ -36,9 +36,10 @@ public:
   char getGlyph()                                     const override;
   Tile_t getTile()                                    const override;
 
+  void specificTryBash(Actor& actorTrying) override;
+
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
-  void tryBash(Actor* actorTrying);
   bool trySpike(Actor* actorTrying);
 
   bool isOpen()   const {return isOpen_;}
@@ -48,7 +49,7 @@ public:
     return isOpenedAndClosedExternally_;
   }
 
-  string getDescription(const bool DEFINITE_ARTICLE) const;
+  string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   MaterialType_t getMaterialType() const;
 

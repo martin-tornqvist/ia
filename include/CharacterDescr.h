@@ -14,7 +14,7 @@ public:
 private:
   void drawInterface();
   void makeLines();
-  vector<StringAndClr> lines;
+  vector<StrAndClr> lines;
   Engine& eng;
 };
 

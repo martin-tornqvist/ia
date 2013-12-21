@@ -205,18 +205,18 @@ void CharacterLines::drawInfoLines() {
   pos.y += 1;
   pos.x = CHARACTER_LINE_X0;
 
-  vector<StringAndClr> propsLine;
+  vector<StrAndClr> propsLine;
   player->getPropHandler()->getPropsInterfaceLine(propsLine);
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; i++) {
-    const StringAndClr& curPropLabel = propsLine.at(i);
+    const StrAndClr& curPropLabel = propsLine.at(i);
     eng.renderer->drawText(
       curPropLabel.str, panel_character, pos, curPropLabel.clr);
     pos.x += curPropLabel.str.length() + 1;
   }
 
 //  const bool IS_SELF_AWARE =
-//    playerBonHandler->isTraitPicked(traitselfAware);
+//    playerBonHandler->hasTrait(traitselfAware);
 //  //TODO This should be collected from applied and inventory by the Property handler
 //  const vector<Prop*>& appliedProps =
 //    player->getPropHandler()->appliedProps_;

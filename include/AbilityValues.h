@@ -24,7 +24,9 @@ enum Abilities_t {
 //Each actor has an instance of this class
 class AbilityValues {
 public:
-  AbilityValues() : eng(NULL) {reset();}
+  AbilityValues() : eng(NULL) {
+    reset();
+  }
 
   AbilityValues& operator=(const AbilityValues& other) {
     for(unsigned int i = 0; i < endOfAbilities; i++) {

@@ -27,21 +27,37 @@ void PlayerBonHandler::getTraitTitle(
   strRef = "";
 
   switch(id) {
-    case traitAdeptMeleeCombatant:  strRef = "Adept Melee Combatant"; break;
-    case traitAlchemist:            strRef = "Alchemist";             break;
-    case traitCoolHeaded:           strRef = "Cool-headed";           break;
-    case traitDexterous:            strRef = "Dexterous";             break;
-    case traitFearless:             strRef = "Fearless";              break;
-    case traitHealer:               strRef = "Healer";                break;
-    case traitMarksman:             strRef = "Marksman";              break;
-    case traitObservant:            strRef = "Observant";             break;
-    case traitRapidRecoverer:       strRef = "Rapid Recoverer";       break;
-    case traitSelfAware:            strRef = "Self-aware";            break;
-    case traitSpirited:             strRef = "Spirited";              break;
-    case traitStealthy:             strRef = "Stealthy";              break;
-    case traitStrongBacked:         strRef = "Strong-backed";         break;
-    case traitTough:                strRef = "Tough";                 break;
-    case traitTreasureHunter:       strRef = "Treasure Hunter";       break;
+    case traitAdeptMeleeCombatant:  strRef = "Adept Melee Combatant";   break;
+    case traitExpertMeleeCombatant: strRef = "Expert Melee Combatant";  break;
+    case traitMasterMeleeCombatant: strRef = "Master Melee Combatant";  break;
+    case traitCoolHeaded:           strRef = "Cool-headed";             break;
+    case traitCourageous:           strRef = "Courageous";              break;
+    case traitSelfPossessed:        strRef = "Self-possessed";          break;
+    case traitMythologist:          strRef = "Mythologist";             break;
+    case traitDexterous:            strRef = "Dexterous";               break;
+    case traitLithe:                strRef = "Lithe";                   break;
+    case traitMobile:               strRef = "Mobile";                  break;
+    case traitFearless:             strRef = "Fearless";                break;
+    case traitHealer:               strRef = "Healer";                  break;
+    case traitAdeptMarksman:        strRef = "Adept Marksman";          break;
+    case traitExpertMarksman:       strRef = "Expert Marksman";         break;
+    case traitMasterMarksman:       strRef = "Master Marksman";         break;
+    case traitSteadyAimer:          strRef = "Steady Aimer";            break;
+    case traitSniper:               strRef = "Sniper";                  break;
+    case traitObservant:            strRef = "Observant";               break;
+    case traitVigilant:             strRef = "Vigilant";                break;
+    case traitRapidRecoverer:       strRef = "Rapid Recoverer";         break;
+    case traitSurvivalist:          strRef = "Survivalist";             break;
+    case traitSelfAware:            strRef = "Self-aware";              break;
+    case traitSpirited:             strRef = "Spirited";                break;
+    case traitStealthy:             strRef = "Stealthy";                break;
+    case traitImperceptible:        strRef = "Imperceptible";           break;
+    case traitStrongBacked:         strRef = "Strong-backed";           break;
+    case traitTough:                strRef = "Tough";                   break;
+    case traitRugged:               strRef = "Rugged";                  break;
+    case traitBreachExpert:         strRef = "Breach Expert";           break;
+    case traitTreasureHunter:       strRef = "Treasure Hunter";         break;
+    case traitDemolitionExpert:     strRef = "Demolition Expert";       break;
     case endOfTraits: break;
   }
 }
@@ -49,15 +65,11 @@ void PlayerBonHandler::getTraitTitle(
 void PlayerBonHandler::getTraitDescr(
   const Trait_t id, string& strRef) const {
 
-  strRef = "";
+  strRef = "[DESCRIPTION MISSING]";
 
   switch(id) {
     case traitAdeptMeleeCombatant: {
       strRef  = "+15% hit chance with melee weapons";
-    } break;
-
-    case traitAlchemist: {
-      strRef  = "All potions are identified, you start with five potions";
     } break;
 
     case traitCoolHeaded: {
@@ -78,10 +90,18 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "Healing takes half the normal time and resources";
     } break;
 
-    case traitMarksman: {
-      strRef  = "+15% hit chance with firearms and thrown weapons, ";
-      strRef += "standing still gives another 10% hit chance, ";
+    case traitAdeptMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons, ";
+      strRef += "standing still gives another 10% hit chance";
+    } break;
+
+    case traitExpertMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons, ";
       strRef += "you occasionally reload instantly";
+    } break;
+
+    case traitMasterMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons";
     } break;
 
     case traitObservant: {
@@ -159,6 +179,16 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
       }
     }
   }
+
+  // Sort lexicographically
+  sort(traitsRef.begin(), traitsRef.end(),
+  [this](const Trait_t & t1, const Trait_t & t2) {
+    string str1 = "";
+    string str2 = "";
+    getTraitTitle(t1, str1);
+    getTraitTitle(t2, str2);
+    return str1 < str2;
+  });
 }
 
 void PlayerBonHandler::pickTrait(const Trait_t id) {
@@ -209,23 +239,6 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 //        }
 //      }
 //    } break;
-
-    case traitAlchemist: {
-      for(int i = 1; i < endOfItemIds; i++) {
-        ItemData* const d = eng.itemDataHandler->dataList[i];
-        if(d->isPotion) {
-          Item* const item      = eng.itemFactory->spawnItem(d->id);
-          Potion* const potion  = dynamic_cast<Potion*>(item);
-          potion->identify(true);
-          delete potion;
-        }
-      }
-      const int NR_POTIONS_TO_START_WITH = 5;
-      for(int i = 0; i < NR_POTIONS_TO_START_WITH; i++) {
-        eng.player->getInventory()->putItemInGeneral(
-          eng.itemFactory->spawnRandomScrollOrPotion(false, true));
-      }
-    } break;
 
     default: {} break;
   }

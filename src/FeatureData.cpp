@@ -490,8 +490,9 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '8';
   d.color = clrWhite;
   d.tile = tile_cocoon;
+  d.isBodyTypePassable[bodyType_normal] = false;
   d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -509,7 +510,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '+';
   d.color = clrBrownDark;
   d.tile = tile_chestClosed;
-  d.isBodyTypePassable[bodyType_normal] = true;
+  d.isBodyTypePassable[bodyType_normal] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;

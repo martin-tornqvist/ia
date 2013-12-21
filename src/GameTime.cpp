@@ -180,7 +180,7 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == actorDeadState_alive) {
       //Regen Spi
       if(actor == eng.player) {
-        if(eng.playerBonHandler->isTraitPicked(traitRapidRecoverer)) {
+        if(eng.playerBonHandler->hasTrait(traitRapidRecoverer)) {
           regenSpiEveryNTurns = 6;
           isSpiRegenThisTurn =
             turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
@@ -191,7 +191,7 @@ void GameTime::runStandardTurnEvents() {
         actor->restoreSpi(1, false);
       }
 
-      actor->actorSpecificOnStandardTurn();
+      actor->specificOnStandardTurn();
     }
 
     //Delete dead, mangled actors

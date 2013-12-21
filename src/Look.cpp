@@ -92,7 +92,7 @@ void Look::describeBriefActor(const Actor& actor,
 }
 
 void Look::describeBriefFeatureMob(const Feature& feature) const {
-  eng.log->addMsg(feature.getDescription(false) + ".");
+  eng.log->addMsg(feature.getDescr(false) + ".");
 }
 
 void Look::describeBriefItem(const Item& item) const {
@@ -101,7 +101,7 @@ void Look::describeBriefItem(const Item& item) const {
 }
 
 void Look::describeBriefFeatureStatic(const Feature& feature) const {
-  eng.log->addMsg(feature.getDescription(false) + ".");
+  eng.log->addMsg(feature.getDescr(false) + ".");
 }
 
 void Look::printExtraActorDescription(const Pos& pos) const {

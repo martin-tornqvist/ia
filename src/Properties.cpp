@@ -1076,11 +1076,11 @@ void PropHandler::newTurnAllProps(
   }
 }
 
-void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) const {
+void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   line.resize(0);
 
   const bool IS_SELF_AWARE =
-    eng.playerBonHandler->isTraitPicked(traitSelfAware);
+    eng.playerBonHandler->hasTrait(traitSelfAware);
 
   vector<Prop*> props;
   getPropsFromSource(props, propSrcAppliedAndInv);
@@ -1094,7 +1094,7 @@ void PropHandler::getPropsInterfaceLine(vector<StringAndClr>& line) const {
       const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
                               ("(" + toString(TURNS_LEFT) + ")") : "";
       line.push_back(
-        StringAndClr(propName + turnsStr,
+        StrAndClr(propName + turnsStr,
                      alignment == propAlignmentGood ? clrMessageGood :
                      alignment == propAlignmentBad  ? clrMessageBad :
                      clrWhite));

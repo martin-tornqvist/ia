@@ -30,19 +30,21 @@ int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
 void DungeonMaster::playerGainLvl() {
   clvl++;
 
-  eng.log->addMsg(
-    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+//  eng.log->addMsg(
+//    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+
+  eng.playerCreateCharacter->pickNewTrait(false);
 
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
-  ActorData& d = eng.actorDataHandler->dataList[actor_player];
+//  ActorData& d = eng.actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;
   if(clvl % BON_EVERY_N_LVL == 0) {
-    d.abilityVals.changeVal(ability_accuracyMelee,  5);
-    d.abilityVals.changeVal(ability_accuracyRanged, 5);
-    d.abilityVals.changeVal(ability_dodgeAttack,    5);
-    eng.log->addMsg("I am more proficient in combat!");
+//    d.abilityVals.changeVal(ability_accuracyMelee,  5);
+//    d.abilityVals.changeVal(ability_accuracyRanged, 5);
+//    d.abilityVals.changeVal(ability_dodgeAttack,    5);
+//    eng.log->addMsg("I am more proficient in combat!");
 
     eng.player->changeMaxSpi(1, true);
 
@@ -132,8 +134,8 @@ void DungeonMaster::winGame() {
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       eng.renderer->drawTextCentered(winMessageLines.at(ii), panel_screen,
-                                      Pos(MAP_X_CELLS_HALF, Y0 + ii),
-                                      clrMessageBad, clrBlack, true);
+                                     Pos(MAP_X_CELLS_HALF, Y0 + ii),
+                                     clrMessageBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
         eng.renderer->drawTextCentered(

@@ -47,7 +47,7 @@ public:
            const bool ALLOW_DROP_ITEMS);
 
   virtual void onActorTurn() {}
-  virtual void actorSpecificOnStandardTurn() {}
+  virtual void specificOnStandardTurn() {}
 
   virtual void moveDir(Dir_t dir) = 0;
 
@@ -81,7 +81,7 @@ public:
 
   void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
 
-  virtual void actorSpecific_addLight(
+  virtual void specificAddLight(
     bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
     (void)light;
   }
@@ -102,12 +102,12 @@ protected:
   friend class Flare;
   friend class PropDiseased;
 
-  virtual void actorSpecificDie() {}
-  virtual void actorSpecific_hit(const int DMG, const bool ALLOW_WOUNDS) {
+  virtual void specificDie() {}
+  virtual void specificHit(const int DMG, const bool ALLOW_WOUNDS) {
     (void)DMG;
     (void)ALLOW_WOUNDS;
   }
-  virtual void actorSpecific_spawnStartItems() = 0;
+  virtual void specificSpawnStartItems() = 0;
 
   virtual void onMonsterHit(int& dmg) {(void)dmg;}
   virtual void onMonsterDeath() {}

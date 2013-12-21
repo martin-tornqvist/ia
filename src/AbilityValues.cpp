@@ -17,6 +17,8 @@ int AbilityValues::getVal(const Abilities_t ability,
     val += actor.getPropHandler()->getAbilityMod(ability);
   }
 
+  PlayerBonHandler& bonHlr = *eng->playerBonHandler;
+
   if(&actor == eng->player) {
     switch(ability) {
       case ability_searching: {
@@ -25,32 +27,29 @@ int AbilityValues::getVal(const Abilities_t ability,
 
       case ability_accuracyMelee: {
         val += 45;
-        if(eng->playerBonHandler->isTraitPicked(traitAdeptMeleeCombatant))
-          val += 15;
+        if(bonHlr.hasTrait(traitAdeptMeleeCombatant)) val += 15;
       } break;
 
       case ability_accuracyRanged: {
         val += 50;
-        if(eng->playerBonHandler->isTraitPicked(traitMarksman))
-          val += 15;
+        if(bonHlr.hasTrait(traitAdeptMarksman)) val += 10;
+        if(bonHlr.hasTrait(traitExpertMarksman)) val += 10;
+        if(bonHlr.hasTrait(traitMasterMarksman)) val += 10;
       } break;
 
       case ability_dodgeTrap: {
         val += 5;
-        if(eng->playerBonHandler->isTraitPicked(traitDexterous))
-          val += 20;
+        if(bonHlr.hasTrait(traitDexterous)) val += 20;
       } break;
 
       case ability_dodgeAttack: {
         val += 10;
-        if(eng->playerBonHandler->isTraitPicked(traitDexterous))
-          val += 25;
+        if(bonHlr.hasTrait(traitDexterous)) val += 25;
       } break;
 
       case ability_stealth: {
         val += 5;
-        if(eng->playerBonHandler->isTraitPicked(traitStealthy))
-          val += 40;
+        if(bonHlr.hasTrait(traitStealthy)) val += 40;
       } break;
 
       case ability_empty:

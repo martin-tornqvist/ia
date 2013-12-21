@@ -31,7 +31,7 @@ public:
   virtual bool isProjectilesPassable() const;
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
-  virtual string getDescription(const bool DEFINITE_ARTICLE) const;
+  virtual string getDescr(const bool DEFINITE_ARTICLE) const;
   virtual void hit(const int DMG, const DmgTypes_t dmgType);
   virtual SDL_Color getColor() const;
   virtual SDL_Color getColorBg() const;
@@ -55,10 +55,6 @@ protected:
   Feature(Feature_t id, Pos pos, Engine& engine,
           FeatureSpawnData* spawnData = NULL);
 
-//  Feature() : eng(NULL), data_(NULL) {}
-//  Feature(const Feature& other) : eng(NULL), data_(NULL) {
-//    (void)other;
-//  }
   Pos pos_;
   Engine& eng;
   const FeatureData* const data_;
@@ -87,7 +83,7 @@ protected:
 
 class FeatureStatic: public Feature {
 public:
-  virtual string getDescription(const bool DEFINITE_ARTICLE) const;
+  virtual string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   void setGoreIfPossible();
 
@@ -100,6 +96,9 @@ public:
     goreGlyph_ = ' ';
     hasBlood_ = false;
   }
+
+  void tryBash(Actor& actorTrying);
+  virtual void specificTryBash(Actor& actorTrying) {(void)actorTrying;}
 
   virtual bool openFeature() { return false;}
 
