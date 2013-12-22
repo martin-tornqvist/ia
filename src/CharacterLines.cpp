@@ -20,7 +20,7 @@ using namespace std;
 void CharacterLines::drawLocationInfo() {
   Player* const player = eng.player;
 
-  if(player->getPropHandler()->allowSee()) {
+  if(player->getPropHandler().allowSee()) {
     string str = "";
 
     const Pos& playerPos = player->pos;
@@ -130,7 +130,7 @@ void CharacterLines::drawInfoLines() {
   //Store x position, because missile wpn info will be directly beaneath wielded wpn info
   const int X_POS_MISSILE = pos.x;
 
-  Item* itemWielded = player->getInventory()->getItemInSlot(slot_wielded);
+  Item* itemWielded = player->getInv().getItemInSlot(slot_wielded);
   if(itemWielded == NULL) {
     eng.renderer->drawText(
       "Unarmed", panel_character, pos, clrGenMed);
@@ -169,7 +169,7 @@ void CharacterLines::drawInfoLines() {
   eng.renderer->drawText("ARM:", panel_character, pos, clrGenDrk);
   pos.x += 4;
   const Item* const armor =
-    player->getInventory()->getItemInSlot(slot_armorBody);
+    player->getInv().getItemInSlot(slot_armorBody);
   if(armor == NULL) {
     eng.renderer->drawText("N/A", panel_character, pos, clrGenLgt);
     pos.x += 4;
@@ -182,7 +182,7 @@ void CharacterLines::drawInfoLines() {
   //Encumbrance
   eng.renderer->drawText("ENC:", panel_character, pos, clrGenDrk);
   pos.x += 4;
-  const int TOTAL_W = player->getInventory()->getTotalItemWeight();
+  const int TOTAL_W = player->getInv().getTotalItemWeight();
   const int MAX_W = player->getCarryWeightLimit();
   const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = toString(ENC) + "%";
@@ -192,7 +192,7 @@ void CharacterLines::drawInfoLines() {
   //Missile weapon
   pos.x = X_POS_MISSILE;
 
-  Item* const itemMissiles = player->getInventory()->getItemInSlot(slot_missiles);
+  Item* const itemMissiles = player->getInv().getItemInSlot(slot_missiles);
   if(itemMissiles == NULL) {
     eng.renderer->drawText("No missile weapon", panel_character, pos, clrGenMed);
   } else {
@@ -206,7 +206,7 @@ void CharacterLines::drawInfoLines() {
   pos.x = CHARACTER_LINE_X0;
 
   vector<StrAndClr> propsLine;
-  player->getPropHandler()->getPropsInterfaceLine(propsLine);
+  player->getPropHandler().getPropsInterfaceLine(propsLine);
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; i++) {
     const StrAndClr& curPropLabel = propsLine.at(i);
@@ -219,7 +219,7 @@ void CharacterLines::drawInfoLines() {
 //    playerBonHandler->hasTrait(traitselfAware);
 //  //TODO This should be collected from applied and inventory by the Property handler
 //  const vector<Prop*>& appliedProps =
-//    player->getPropHandler()->appliedProps_;
+//    player->getPropHandler().appliedProps_;
 //  for(unsigned int i = 0; i < appliedProps.size(); i++) {
 //    Prop* const prop = appliedProps.at(i);
 //    const PropAlignment_t alignment = prop->getAlignment();

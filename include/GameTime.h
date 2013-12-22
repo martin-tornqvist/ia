@@ -103,6 +103,8 @@ private:
 
   void runAtomicTurnEvents();
 
+  bool isSpiRegenThisTurn(const int REGEN_N_TURNS);
+
   vector<ActorSpeed_t> turnTypeVector_;
   int currentTurnTypePos_;
   vector<Actor*> actors_;

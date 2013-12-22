@@ -36,7 +36,7 @@ void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   eng.scrollNameHandler->addSaveLines(lines);
   eng.potionNameHandler->addSaveLines(lines);
   eng.itemDataHandler->addSaveLines(lines);
-  eng.player->getInventory()->addSaveLines(lines);
+  eng.player->getInv().addSaveLines(lines);
   eng.player->addSaveLines(lines);
   eng.playerBonHandler->addSaveLines(lines);
   eng.map->addSaveLines(lines);
@@ -48,14 +48,14 @@ void SaveHandler::setGameParametersFromLines(vector<string>& lines) const {
   string playerName = lines.front();
   lines.erase(lines.begin());
   playerName.erase(playerName.begin());
-  eng.player->getData()->name_a = playerName;
-  eng.player->getData()->name_the = playerName;
+  eng.player->getData().name_a = playerName;
+  eng.player->getData().name_the = playerName;
 
   eng.dungeonMaster->setParametersFromSaveLines(lines);
   eng.scrollNameHandler->setParametersFromSaveLines(lines);
   eng.potionNameHandler->setParametersFromSaveLines(lines);
   eng.itemDataHandler->setParametersFromSaveLines(lines);
-  eng.player->getInventory()->setParametersFromSaveLines(lines, eng);
+  eng.player->getInv().setParametersFromSaveLines(lines, eng);
   eng.player->setParametersFromSaveLines(lines);
   eng.playerBonHandler->setParametersFromSaveLines(lines);
   eng.map->setParametersFromSaveLines(lines);

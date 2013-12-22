@@ -16,7 +16,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
   const bool DEFENDER_IS_MONSTER = &defender != eng.player;
 
   if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
-    if(defender.getData()->actorSize <= actorSize_giant) {
+    if(defender.getData().actorSize <= actorSize_giant) {
 
       const BodyType_t defenderBodyType = defender.getBodyType();
       const bool WALKTYPE_CAN_BE_KNOCKED_BACK =
@@ -27,7 +27,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
       const int KNOCK_BACK_RANGE = 2;
 
-      const bool IS_NAILED = defender.getPropHandler()->hasProp(propNailed);
+      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 
@@ -59,10 +59,10 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                 eng.log->addMsg("I am knocked back!");
               }
             }
-            defender.getPropHandler()->tryApplyProp(
+            defender.getPropHandler().tryApplyProp(
               new PropParalyzed(eng, propTurnsSpecified, 1),
               false, false);
-            defender.getPropHandler()->tryApplyProp(
+            defender.getPropHandler().tryApplyProp(
               new PropConfused(eng, propTurnsSpecified, 5),
               false, false);
           }
@@ -113,7 +113,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             FeatureStatic* const f =
               eng.map->cells[newPos.x][newPos.y].featureStatic;
             if(f->isVisionPassable() == false) {
-              defender.getPropHandler()->tryApplyProp(
+              defender.getPropHandler().tryApplyProp(
                 new PropNailed(eng, propTurnsIndefinite));
             }
           }

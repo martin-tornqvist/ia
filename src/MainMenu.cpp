@@ -23,16 +23,6 @@ using namespace std;
 void MainMenu::draw(const MenuBrowser& browser) {
   trace << "MainMenu::draw()..." << endl;
 
-  vector<string> logo;
-
-  if(eng.config->isTilesMode == false) {
-    logo.push_back("        ___  __                __  __                  ");
-    logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
-    logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
-    logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
-    logo.push_back("               \\                 \\                      ");
-  }
-
   Pos pos(MAP_X_CELLS / 2, 3);
 
   trace << "MainMenu: Calling clearWindow()" << endl;
@@ -76,16 +66,23 @@ void MainMenu::draw(const MenuBrowser& browser) {
     eng.renderer->drawMainMenuLogo(4);
     pos.y += 10;
   } else {
+    vector<string> logo;
+    if(eng.config->isTilesMode == false) {
+      logo.push_back("        ___  __                __  __                  ");
+      logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
+      logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
+      logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
+      logo.push_back("               \\                 \\                      ");
+    }
     const int LOGO_X_POS_LEFT = (MAP_X_CELLS - logo.at(0).size()) / 2;
-    for(unsigned int i = 0; i < logo.size(); i++) {
+    for(const string & row : logo) {
       pos.x = LOGO_X_POS_LEFT;
-      for(unsigned int ii = 0; ii < logo.at(i).size(); ii++) {
-        if(logo.at(i).at(ii) != ' ') {
-          SDL_Color clr = clrRed;
-          clr.r += eng.dice.range(-60, 100);
-          clr.r = max(0, min(254, int(clr.r)));
-          eng.renderer->drawGlyph(logo.at(i).at(ii), panel_screen,
-                                  pos, clr);
+      for(const char & glyph : row) {
+        if(glyph != ' ') {
+          SDL_Color clr = clrGreenLgt;
+          clr.g += eng.dice.range(-50, 100);
+          clr.g = max(0, min(254, int(clr.g)));
+          eng.renderer->drawGlyph(glyph, panel_screen, pos, clr);
         }
         pos.x++;
       }
@@ -101,47 +98,58 @@ void MainMenu::draw(const MenuBrowser& browser) {
                            clrYellow);
   }
 
-  SDL_Color clrActive   = clrNosferatuSepiaLgt;
-  SDL_Color clrInactive = clrNosferatuSepiaDrk;
+  SDL_Color clrActive     = clrNosferatuSepiaLgt;
+  SDL_Color clrInactive   = clrNosferatuSepiaDrk;
+  SDL_Color clrActiveBg   = clrBlack;
+  SDL_Color clrInactiveBg = clrBlack;
 
   eng.renderer->drawText("New journey", panel_screen, pos,
-                         browser.isPosAtKey('a') ? clrActive : clrInactive);
+                         browser.isPosAtKey('a') ? clrActive : clrInactive,
+                         browser.isPosAtKey('a') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Resurrect", panel_screen, pos,
-                         browser.isPosAtKey('b') ? clrActive : clrInactive);
+                         browser.isPosAtKey('b') ? clrActive : clrInactive,
+                         browser.isPosAtKey('b') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Manual", panel_screen, pos,
-                         browser.isPosAtKey('c') ? clrActive : clrInactive);
+                         browser.isPosAtKey('c') ? clrActive : clrInactive,
+                         browser.isPosAtKey('c') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Options", panel_screen, pos,
-                         browser.isPosAtKey('d') ? clrActive : clrInactive);
+                         browser.isPosAtKey('d') ? clrActive : clrInactive,
+                         browser.isPosAtKey('d') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Credits", panel_screen, pos,
-                         browser.isPosAtKey('e') ? clrActive : clrInactive);
+                         browser.isPosAtKey('e') ? clrActive : clrInactive,
+                         browser.isPosAtKey('e') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("High scores", panel_screen, pos,
-                         browser.isPosAtKey('f') ? clrActive : clrInactive);
+                         browser.isPosAtKey('f') ? clrActive : clrInactive,
+                         browser.isPosAtKey('f') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   eng.renderer->drawText("Escape to reality", panel_screen, pos,
-                         browser.isPosAtKey('g') ? clrActive : clrInactive);
+                         browser.isPosAtKey('g') ? clrActive : clrInactive,
+                         browser.isPosAtKey('g') ? clrActiveBg : clrInactiveBg);
   pos.y += 1;
   pos.x += 1;
 
   if(IS_DEBUG_MODE) {
-    eng.renderer->drawText("DEBUG: RUN BOT", panel_screen, pos,
-                           browser.isPosAtKey('h') ? clrActive : clrInactive);
+    eng.renderer->drawText(
+      "DEBUG: RUN BOT", panel_screen, pos,
+      browser.isPosAtKey('h') ? clrActive : clrInactive,
+      browser.isPosAtKey('h') ? clrActiveBg : clrInactiveBg);
     pos.y += 1;
   }
 
@@ -150,8 +158,6 @@ void MainMenu::draw(const MenuBrowser& browser) {
   eng.renderer->drawTextCentered(
     eng.config->GAME_VERSION + " 2013-11-26 (c) 2011-2013 Martin Tornqvist",
     panel_character, Pos(pos.x, 1), clrWhite);
-
-//  eng.renderer->drawTileInScreen(tile_playerMelee, 0, 0, clrRed, true, clrBlue);
 
   eng.renderer->updateScreen();
 

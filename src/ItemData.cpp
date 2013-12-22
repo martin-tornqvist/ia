@@ -1375,7 +1375,7 @@ string ItemDataHandler::getItemInterfaceRef(
   }
 
   const int PLAYER_RANGED_SKILL =
-    eng.player->getData()->abilityVals.getVal(
+    eng.player->getData().abilityVals.getVal(
       ability_accuracyRanged, true, *(eng.player));
 
   if(
@@ -1389,7 +1389,7 @@ string ItemDataHandler::getItemInterfaceRef(
                            toString(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL =
-      eng.player->getData()->abilityVals.getVal(
+      eng.player->getData().abilityVals.getVal(
         ability_accuracyMelee, true, *(eng.player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
     const string skillStr = toString(TOTAL_SKILL) + "%";

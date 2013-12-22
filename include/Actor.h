@@ -23,11 +23,9 @@ public:
   Actor(Engine& engine);
   virtual ~Actor();
 
-  inline PropHandler* getPropHandler() {return propHandler_;}
-
-  inline ActorData* getData() {return data_;}
-
-  Inventory* getInventory() {return inventory_;}
+  inline PropHandler& getPropHandler()  {return *propHandler_;}
+  inline ActorData&   getData()         {return *data_;}
+  inline Inventory&   getInv()          {return *inventory_;}
 
   void place(const Pos& pos_, ActorData& data);
 

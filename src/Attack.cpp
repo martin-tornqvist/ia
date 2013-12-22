@@ -42,9 +42,9 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 
   isDefenderDodging = false;
-  if(isDefenderAware && currentDefender->getData()->canDodge) {
+  if(isDefenderAware && currentDefender->getData().canDodge) {
     const int DEFENDER_DODGE_SKILL =
-      currentDefender->getData()->abilityVals.getVal(
+      currentDefender->getData().abilityVals.getVal(
         ability_dodgeAttack, true, *currentDefender);
 
     const int DODGE_MOD_AT_FEATURE =
@@ -62,7 +62,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     //--------------------------------------- DETERMINE ATTACK RESULT
     isBackstab = false;
 
-    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
                                       ability_accuracyMelee, true, *attacker);
     const int WPN_HIT_CHANCE_MOD  = wpn_.getData().meleeHitChanceMod;
 
@@ -90,21 +90,20 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       }
     }
     if(isAttackerAware) {
-      PropHandler* const defenderPropHandler =
-        currentDefender->getPropHandler();
+      PropHandler& defenderPropHandler = currentDefender->getPropHandler();
       if(
         (isDefenderAware == false ||
          isDefenderHeldByWeb ||
-         defenderPropHandler->hasProp(propParalysed)  ||
-         defenderPropHandler->hasProp(propNailed)     ||
-         defenderPropHandler->hasProp(propFainted))) {
+         defenderPropHandler.hasProp(propParalysed)  ||
+         defenderPropHandler.hasProp(propNailed)     ||
+         defenderPropHandler.hasProp(propFainted))) {
         hitChanceTot += 50;
       }
       if(
-        defenderPropHandler->allowSee() == false    ||
-        defenderPropHandler->hasProp(propConfused)  ||
-        defenderPropHandler->hasProp(propSlowed)    ||
-        defenderPropHandler->hasProp(propBurning)) {
+        defenderPropHandler.allowSee() == false    ||
+        defenderPropHandler.hasProp(propConfused)  ||
+        defenderPropHandler.hasProp(propSlowed)    ||
+        defenderPropHandler.hasProp(propBurning)) {
         hitChanceTot += 20;
       }
     }
@@ -124,7 +123,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     dmgPlus   = wpn_.meleeDmgPlus;
 
     isWeakAttack = false;
-    if(attacker->getPropHandler()->hasProp(propWeakened)) {
+    if(attacker->getPropHandler().hasProp(propWeakened)) {
       //Weak attack (min damage)
       dmgRoll = dmgRolls;
       dmg = dmgRoll + dmgPlus;
@@ -161,7 +160,7 @@ RangedAttackData::RangedAttackData(
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
     if(actorAimedAt != NULL) {
-      intendedAimLevel = actorAimedAt->getData()->actorSize;
+      intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
@@ -176,7 +175,7 @@ RangedAttackData::RangedAttackData(
 
   if(currentDefender != NULL) {
     trace << "RangedAttackData: Defender found" << endl;
-    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
@@ -184,13 +183,13 @@ RangedAttackData::RangedAttackData(
     const int DIST_TO_TARGET      = eng.basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
-    const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
+    const ActorSpeed_t defSpeed   = currentDefender->getData().speed;
     const int SPEED_HIT_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :
       defSpeed == actorSpeed_normal   ?   0 :
       defSpeed == actorSpeed_fast     ? -10 : -30;
-    currentDefenderSize           = currentDefender->getData()->actorSize;
+    currentDefenderSize           = currentDefender->getData().actorSize;
     const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -10 : 0;
     hitChanceTot = max(5,
                        ATTACKER_SKILL +
@@ -231,7 +230,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
     if(actorAimedAt != NULL) {
-      intendedAimLevel = actorAimedAt->getData()->actorSize;
+      intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
@@ -246,7 +245,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
 
   if(currentDefender != NULL) {
     trace << "MissileAttackData: Defender found" << endl;
-    const int ATTACKER_SKILL      = attacker->getData()->abilityVals.getVal(
+    const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
                                       ability_accuracyRanged, true, *attacker);
     const int WPN_HIT_MOD         = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
@@ -254,13 +253,13 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int DIST_TO_TARGET      = eng.basicUtils->chebyshevDist(
                                       attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_HIT_MOD        = 15 - (DIST_TO_TARGET * 5);
-    const ActorSpeed_t defSpeed   = currentDefender->getData()->speed;
+    const ActorSpeed_t defSpeed   = currentDefender->getData().speed;
     const int SPEED_HIT_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :
       defSpeed == actorSpeed_normal   ?   0 :
       defSpeed == actorSpeed_fast     ? -15 : -35;
-    currentDefenderSize           = currentDefender->getData()->actorSize;
+    currentDefenderSize           = currentDefender->getData().actorSize;
     const int SIZE_HIT_MOD = currentDefenderSize == actorSize_floor ? -15 : 0;
     hitChanceTot = max(5,
                        ATTACKER_SKILL +

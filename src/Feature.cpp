@@ -18,7 +18,7 @@ Feature::Feature(Feature_t id, Pos pos, Engine& engine,
 void Feature::bump(Actor& actorBumping) {
   if(isMovePassable(&actorBumping) == false) {
     if(&actorBumping == eng.player) {
-      if(eng.player->getPropHandler()->allowSee()) {
+      if(eng.player->getPropHandler().allowSee()) {
         eng.log->addMsg(data_->messageOnPlayerBlocked);
       } else {
         eng.log->addMsg(data_->messageOnPlayerBlockedBlind);
@@ -140,7 +140,7 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
   string sndMsg = "";
 
   if(IS_PLAYER) {
-    const bool IS_BLIND    = eng.player->getPropHandler()->allowSee() == false;
+    const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
     const bool IS_BLOCKING = isBodyTypePassable(bodyType_normal) == false;
     if(IS_BLOCKING) {
       eng.log->addMsg(
@@ -155,7 +155,7 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
       if(eng.dice.oneIn(4)) {
         eng.log->addMsg("I am off-balance.");
 
-        actorTrying.getPropHandler()->tryApplyProp(
+        actorTrying.getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
       }
 

@@ -33,7 +33,7 @@ const SDL_Color clrBrown              = {153, 102,  61, 0};
 //===========================================================
 const SDL_Color clrNosferatuSepia     = {139, 114,  57, 0};
 const SDL_Color clrNosferatuSepiaLgt  = {225, 205, 154, 0};
-const SDL_Color clrNosferatuSepiaDrk  = { 69,  62,  37, 0};
+const SDL_Color clrNosferatuSepiaDrk  = { 81,  72,  43, 0};
 
 const SDL_Color clrNosferatuTeal      = { 57, 157, 155, 0};
 const SDL_Color clrNosferatuTealLgt   = { 88, 226, 228, 0};

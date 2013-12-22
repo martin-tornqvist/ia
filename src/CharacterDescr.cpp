@@ -22,7 +22,7 @@ void CharacterDescr::makeLines() {
   const SDL_Color clrText = clrWhite;
   const SDL_Color clrTextDark = clrGray;
 
-  const AbilityValues& abilities = eng.player->getData()->abilityVals;
+  const AbilityValues& abilities = eng.player->getData().abilityVals;
 
   lines.push_back(StrAndClr("Combat skills", clrHeader));
   const int BASE_MELEE =

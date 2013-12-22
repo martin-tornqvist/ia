@@ -111,7 +111,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
@@ -177,7 +177,7 @@ void RenderInventory::drawEquipMode(
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
@@ -235,7 +235,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
 
   for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);

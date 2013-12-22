@@ -49,7 +49,8 @@ void PlayerBonHandler::getTraitTitle(
     case traitRapidRecoverer:       strRef = "Rapid Recoverer";         break;
     case traitSurvivalist:          strRef = "Survivalist";             break;
     case traitSelfAware:            strRef = "Self-aware";              break;
-    case traitSpirited:             strRef = "Spirited";                break;
+    case traitStrongSpirited:       strRef = "Strong-spirited";         break;
+    case traitMightySpirited:       strRef = "Mighty-spirited";         break;
     case traitStealthy:             strRef = "Stealthy";                break;
     case traitImperceptible:        strRef = "Imperceptible";           break;
     case traitStrongBacked:         strRef = "Strong-backed";           break;
@@ -69,12 +70,73 @@ void PlayerBonHandler::getTraitDescr(
 
   switch(id) {
     case traitAdeptMeleeCombatant: {
-      strRef  = "+15% hit chance with melee weapons";
+      strRef  = "+10% hit chance with melee weapons";
+    } break;
+
+    case traitExpertMeleeCombatant: {
+      strRef  = "+10% hit chance with melee weapons";
+    } break;
+
+    case traitMasterMeleeCombatant: {
+      strRef  = "+10% hit chance with melee weapons";
+    } break;
+
+    case traitAdeptMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons";
+    } break;
+
+    case traitExpertMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons, ";
+      strRef += "you occasionally reload instantly";
+    } break;
+
+    case traitMasterMarksman: {
+      strRef  = "+10% hit chance with firearms and thrown weapons";
+    } break;
+
+    case traitSteadyAimer: {
+      strRef  = "Standing still for one turn gives ranged attacks +10% ";
+      strRef += "hit chance on the following turn";
+    } break;
+
+    case traitSniper: {
+      strRef  = "Standing still for three turns gives ranged attacks ";
+      strRef += "maximum damage and hit chance on the following turn";
+    } break;
+
+    case traitDemolitionExpert: {
+      strRef = "Increased area of effect from Dynamite and Molotov Cocktails";
     } break;
 
     case traitCoolHeaded: {
       strRef  = "+20% shock resistance";
+    } break;
 
+    case traitCourageous: {
+      strRef  = "+30% shock resistance";
+    } break;
+
+    case traitSelfPossessed: {
+      strRef  = "Passive shock received over time is reduced when shock is ";
+      strRef += "high - at 50%, passive shock is halved, and at 75% you ";
+      strRef += "receive no shock over time (does not affect shock from ";
+      strRef += "seeing monsters, using magic, etc)";
+    } break;
+
+    case traitTough: {
+      strRef  = " + 3 hit points, +10 % carry weight limit, better results ";
+      strRef += "for object interactions requiring strength(such as ";
+      strRef += "bashing doors, or moving the lid from a stone coffin)";
+    } break;
+
+    case traitStrongBacked: {
+      strRef  = " + 30 % carry weight limit";
+    } break;
+
+    case traitBreachExpert: {
+      strRef  = "Increased chance for success when bashing doors, breaking ";
+      strRef += "a door is a free turn, any creature adjacent to the door ";
+      strRef += "on the opposite side is damaged and stunned";
     } break;
 
     case traitDexterous: {
@@ -90,31 +152,24 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "Healing takes half the normal time and resources";
     } break;
 
-    case traitAdeptMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons, ";
-      strRef += "standing still gives another 10% hit chance";
-    } break;
-
-    case traitExpertMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons, ";
-      strRef += "you occasionally reload instantly";
-    } break;
-
-    case traitMasterMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons";
-    } break;
-
     case traitObservant: {
       strRef  = "You occasionally spot clues about hidden passages, ";
       strRef += "your attentiveness is higher when examining objects ";
-      strRef += "(e.g. when searching a chest for traps), and you cannot ";
-      strRef += "be backstabbed - hidden monsters gets no melee attack ";
-      strRef += "bonus against you, and their attacks can be dodged";
+      strRef += "(e.g. when searching a chest for traps)";
+    } break;
+
+    case traitVigilant: {
+      strRef  = "You cannot be backstabbed - hidden monsters gets no melee";
+      strRef += "attack bonus against you, and their attacks can be dodged";
     } break;
 
     case traitRapidRecoverer: {
-      strRef  = "Greatly increased hit point and spirit point ";
-      strRef += "regeneration rate";
+      strRef  = "Increased Hit Point regeneration rate";
+    } break;
+
+    case traitSurvivalist: {
+      strRef  = "Increased Hit Point regeneration rate, reduced penalties ";
+      strRef += "from wounds and disease";
     } break;
 
     case traitSelfAware: {
@@ -123,22 +178,16 @@ void PlayerBonHandler::getTraitDescr(
 
     } break;
 
-    case traitSpirited: {
-      strRef  = "+3 spirit points";
+    case traitStrongSpirited: {
+      strRef  = "+2 Spirit Points, increased Spirit Point regeneration rate";
+    } break;
+
+    case traitMightySpirited: {
+      strRef  = "+2 Spirit Points, increased Spirit Point regeneration rate";
     } break;
 
     case traitStealthy: {
       strRef  = "You are more likely to avoid detection";
-    } break;
-
-    case traitStrongBacked: {
-      strRef  = "+30% carry weight limit";
-    } break;
-
-    case traitTough: {
-      strRef  = "+3 hit points, +10% carry weight limit, better results ";
-      strRef += "for object interactions requiring strength (such as ";
-      strRef += "bashing doors, or moving the lid from a stone coffin)";
     } break;
 
     case traitTreasureHunter: {
@@ -199,46 +248,50 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
       eng.player->changeMaxHp(3, false);
     } break;
 
-    case traitSpirited: {
-      eng.player->changeMaxSpi(3, false);
+    case traitStrongSpirited: {
+      eng.player->changeMaxSpi(2, false);
+    } break;
+
+    case traitMightySpirited: {
+      eng.player->changeMaxSpi(2, false);
     } break;
 
     case traitSelfAware: {
-      eng.player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler().tryApplyProp(
         new PropRConfusion(eng, propTurnsIndefinite), true, true, true);
     } break;
 
     case traitFearless: {
-      eng.player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler().tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true);
     } break;
 
-//    case traitOccultist: {
-//      const int NR_SCROLLS_TO_START_WITH = 2;
-//      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
-//        Item* const item =
-//          eng.itemFactory->spawnRandomScrollOrPotion(true, false);
-//
-//        Spell_t spellId = item->getData().spellCastFromScroll;
-//        Spell* const spell = eng.spellHandler->getSpellFromId(spellId);
-//        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
-//        delete spell;
-//
-//        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
-//          Scroll* const scroll = dynamic_cast<Scroll*>(item);
-//          scroll->identify(true);
-//          eng.player->getInventory()->putItemInGeneral(scroll);
-//
-//          if(item->nrItems == 2) {
-//            item->nrItems = 1;
-//            i--;
-//          }
-//        } else {
-//          delete item;
-//          i--;
-//        }
-//      }
-//    } break;
+    //    case traitOccultist: {
+    //      const int NR_SCROLLS_TO_START_WITH = 2;
+    //      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
+    //        Item* const item =
+    //          eng.itemFactory->spawnRandomScrollOrPotion(true, false);
+    //
+    //        Spell_t spellId = item->getData().spellCastFromScroll;
+    //        Spell* const spell = eng.spellHandler->getSpellFromId(spellId);
+    //        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
+    //        delete spell;
+    //
+    //        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
+    //          Scroll* const scroll = dynamic_cast<Scroll*>(item);
+    //          scroll->identify(true);
+    //          eng.player->getInv().putItemInGeneral(scroll);
+    //
+    //          if(item->nrItems == 2) {
+    //            item->nrItems = 1;
+    //            i--;
+    //          }
+    //        } else {
+    //          delete item;
+    //          i--;
+    //        }
+    //      }
+    //    } break;
 
     default: {} break;
   }

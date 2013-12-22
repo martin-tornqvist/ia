@@ -10,9 +10,9 @@ public:
     if(monster.deadState == actorDeadState_alive) {
       if(monster.playerAwarenessCounter > 0) {
 
-        const ActorData* const d = monster.getData();
+        const ActorData& d = monster.getData();
         const bool CONSIDER_NORMAL_DOORS_FREE =
-          d->canOpenDoors || d->canBashDoors;
+          d.canOpenDoors || d.canBashDoors;
 
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         engine.basicUtils->resetArray(blockers, false);

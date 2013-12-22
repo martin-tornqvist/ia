@@ -71,7 +71,7 @@ void Monster::onActorTurn() {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng.player) {
           dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
-            leader->getData()->nrTurnsAwarePlayer;
+            leader->getData().nrTurnsAwarePlayer;
         }
       }
     }
@@ -209,7 +209,7 @@ void Monster::moveDir(Dir_t dir) {
   assert(dir != endOfDirs);
   assert(eng.basicUtils->isPosInsideMap(pos));
 
-  getPropHandler()->changeMoveDir(pos, dir);
+  getPropHandler().changeMoveDir(pos, dir);
 
   //Trap affects leaving?
   if(dir != dirCenter) {

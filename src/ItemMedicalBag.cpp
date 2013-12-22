@@ -25,11 +25,10 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    const PropHandler* const propHandler =
-      eng.player->getPropHandler();
+    const PropHandler& propHandler = eng.player->getPropHandler();
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
-        if(propHandler->hasProp(propInfected) == false) {
+        if(propHandler.hasProp(propInfected) == false) {
           eng.log->addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -141,13 +140,13 @@ void MedicalBag::finishCurAction() {
     case medicalBagAction_sanitizeInfection: {
       bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
       MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
-      eng.player->getPropHandler()->endAppliedProp(
+      eng.player->getPropHandler().endAppliedProp(
         propInfected, visionBlockers);
     } break;
 
     case medicalBagAction_treatWound: {
       Prop* prop =
-        eng.player->getPropHandler()->getAppliedProp(propWound);
+        eng.player->getPropHandler().getAppliedProp(propWound);
       if(prop == NULL) {
         trace << "[WARNING] No wound prop found, ";
         trace << "in MedicalBag::finishCurAction()" << endl;
@@ -170,7 +169,7 @@ void MedicalBag::finishCurAction() {
   curAction_ = endOfMedicalBagActions;
 
   if(nrSupplies_ <= 0) {
-    Inventory* const inv = eng.player->getInventory();
+    Inventory* const inv = eng.player->getInv();
     inv->removetemInGeneralWithPointer(this, true);
   }
 }

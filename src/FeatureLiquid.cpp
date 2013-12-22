@@ -12,9 +12,9 @@ FeatureLiquidShallow::FeatureLiquidShallow(
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor& actorBumping) {
-  if(actorBumping.getData()->bodyType == bodyType_normal) {
+  if(actorBumping.getData().bodyType == bodyType_normal) {
 
-    actorBumping.getPropHandler()->tryApplyProp(
+    actorBumping.getPropHandler().tryApplyProp(
       new PropWaiting(eng, propTurnsStandard));
 
     //TODO For unknown reason, when player is walking in liquid, empty log

@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 
           actor->updateColor();
 
-          if(actor->getPropHandler()->allowAct()) {
+          if(actor->getPropHandler().allowAct()) {
             actor->onActorTurn();
           } else {
             if(actor == eng->player) {

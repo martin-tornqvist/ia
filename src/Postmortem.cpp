@@ -341,7 +341,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   }
 
   pos.set(45, 18);
-  const string NAME_STR = eng.player->getData()->name_a;
+  const string NAME_STR = eng.player->getData().name_a;
   eng.renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;

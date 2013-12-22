@@ -26,10 +26,10 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         data.currentDefender->hit(data.dmg, wpn.getData().meleeDmgType, true);
 
       if(IS_DEFENDER_KILLED == false) {
-        data.currentDefender->getPropHandler()->tryApplyPropFromWpn(wpn, true);
+        data.currentDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
       if(data.attackResult >= successNormal) {
-        if(data.currentDefender->getData()->canBleed == true) {
+        if(data.currentDefender->getData().canBleed == true) {
           eng.gore->makeBlood(data.currentDefender->pos);
         }
       }
@@ -57,7 +57,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     }
   } else {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
-    monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
+    monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
   }
   eng.gameTime->endTurnOfCurrentActor();
 }

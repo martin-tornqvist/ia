@@ -30,7 +30,7 @@ void Bash::playerBash() const {
       cell.featureStatic->tryBash(*eng.player);
     }  else {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
-      if(eng.player->getPropHandler()->allowAttackMelee(true)) {
+      if(eng.player->getPropHandler().allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         MapParser::parse(CellPredBlocksVision(eng), blockers);

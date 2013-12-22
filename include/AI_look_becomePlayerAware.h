@@ -30,7 +30,7 @@ public:
             engine.map->cells[playerPos.x][playerPos.y].isLight;
 
           const int PLAYER_SNEAK_BASE =
-            engine.player->getData()->abilityVals.getVal(
+            engine.player->getData().abilityVals.getVal(
               ability_stealth, true, *(engine.player));
 
           const int DIST_TO_PLAYER =

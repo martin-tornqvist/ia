@@ -198,15 +198,15 @@ void Tomb::featureSpecific_examine() {
 }
 
 void Tomb::doAction(const TombAction_t action) {
-  PropHandler* const propHandler = eng.player->getPropHandler();
-  PlayerBonHandler* const bonusHandler = eng.playerBonHandler;
+  PropHandler& propHandler              = eng.player->getPropHandler();
+  PlayerBonHandler* const bonusHandler  = eng.playerBonHandler;
 
   const bool IS_TOUGH     = bonusHandler->hasTrait(traitTough);
   const bool IS_OBSERVANT = bonusHandler->hasTrait(traitObservant);
-  const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
-  const bool IS_WEAK      = propHandler->hasProp(propWeakened);
-  const bool IS_CURSED    = propHandler->hasProp(propCursed);
-  const bool IS_BLESSED   = propHandler->hasProp(propBlessed);
+  const bool IS_CONFUSED  = propHandler.hasProp(propConfused);
+  const bool IS_WEAK      = propHandler.hasProp(propWeakened);
+  const bool IS_CURSED    = propHandler.hasProp(propCursed);
+  const bool IS_BLESSED   = propHandler.hasProp(propBlessed);
 
   switch(action) {
     case tombAction_carveCurseWard: {
@@ -217,7 +217,7 @@ void Tomb::doAction(const TombAction_t action) {
         PropCursed* const curse =
           new PropCursed(eng, propTurnsStandard);
         curse->turnsLeft_ *= 2;
-        propHandler->tryApplyProp(curse, true);
+        propHandler.tryApplyProp(curse, true);
       }
       trait_ = endOfTombTraits;
     } break;
@@ -243,7 +243,7 @@ void Tomb::doAction(const TombAction_t action) {
 
       if(eng.dice.oneIn(PARALYZE_ONE_IN_N)) {
         eng.log->addMsg("I am off-balance.");
-        propHandler->tryApplyProp(
+        propHandler.tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
       }
 
@@ -319,7 +319,7 @@ void Tomb::triggerTrap() {
     } break;
 
     case tombTrait_forebodingCarvedSigns: {
-      eng.player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler().tryApplyProp(
         new PropCursed(eng, propTurnsStandard));
     } break;
 
@@ -382,18 +382,18 @@ void Tomb::getPossibleActions(vector<TombAction_t>& possibleActions) const {
 
   possibleActions.push_back(tombAction_pushLid);
 
-  const Inventory* const inv = eng.player->getInventory();
+  const Inventory& inv = eng.player->getInv();
   bool hasSledgehammer = false;
-  Item* item = inv->getItemInSlot(slot_wielded);
+  Item* item = inv.getItemInSlot(slot_wielded);
   if(item != NULL) {
     hasSledgehammer = item->getData().id == item_sledgeHammer;
   }
   if(hasSledgehammer == false) {
-    item = inv->getItemInSlot(slot_wieldedAlt);
+    item = inv.getItemInSlot(slot_wieldedAlt);
     hasSledgehammer = item->getData().id == item_sledgeHammer;
   }
   if(hasSledgehammer == false) {
-    hasSledgehammer = inv->hasItemInGeneral(item_sledgeHammer);
+    hasSledgehammer = inv.hasItemInGeneral(item_sledgeHammer);
   }
   if(hasSledgehammer) {
     possibleActions.push_back(tombAction_smashLidWithSledgehammer);
@@ -466,7 +466,7 @@ void Tomb::getDescr(string& descr) const {
     descr += " " + traitDescr;
   }
 
-  const bool IS_WEAK = eng.player->getPropHandler()->hasProp(propWeakened);
+  const bool IS_WEAK = eng.player->getPropHandler().hasProp(propWeakened);
 
   if(chanceToPushLid_ < 10 || IS_WEAK) {
     descr += " The lid seems very heavy.";
@@ -520,15 +520,15 @@ void Chest::featureSpecific_examine() {
 }
 
 void Chest::doAction(const ChestAction_t action) {
-  PropHandler* const propHandler      = eng.player->getPropHandler();
-  PlayerBonHandler* const bonHandler  = eng.playerBonHandler;
+  PropHandler& propHandler = eng.player->getPropHandler();
+  PlayerBonHandler* const bonHandler = eng.playerBonHandler;
 
   const bool IS_OBSERVANT = bonHandler->hasTrait(traitObservant);
   const bool IS_TOUGH     = bonHandler->hasTrait(traitTough);
-  const bool IS_CONFUSED  = propHandler->hasProp(propConfused);
-  const bool IS_WEAK      = propHandler->hasProp(propWeakened);
-  const bool IS_CURSED    = propHandler->hasProp(propCursed);
-  const bool IS_BLESSED   = propHandler->hasProp(propBlessed);
+  const bool IS_CONFUSED  = propHandler.hasProp(propConfused);
+  const bool IS_WEAK      = propHandler.hasProp(propWeakened);
+  const bool IS_CURSED    = propHandler.hasProp(propCursed);
+  const bool IS_BLESSED   = propHandler.hasProp(propBlessed);
 
   switch(action) {
     case chestAction_open: {
@@ -565,8 +565,8 @@ void Chest::doAction(const ChestAction_t action) {
     } break;
 
     case chestAction_forceLock: {
-      Inventory* const inv  = eng.player->getInventory();
-      Item* const item      = inv->getItemInSlot(slot_wielded);
+      Inventory& inv    = eng.player->getInv();
+      Item* const item  = inv.getItemInSlot(slot_wielded);
 
       if(item == NULL) {
         eng.log->addMsg(
@@ -585,7 +585,7 @@ void Chest::doAction(const ChestAction_t action) {
           if(wpn->meleeDmgPlus == 0) {
             eng.log->addMsg("My " + wpnName + " breaks!");
             delete wpn;
-            inv->getSlot(slot_wielded)->item = NULL;
+            inv.getSlot(slot_wielded)->item = NULL;
           } else {
             eng.log->addMsg("My " + wpnName + " is damaged!");
             wpn->meleeDmgPlus--;
@@ -670,7 +670,7 @@ void Chest::getPossibleActions(vector<ChestAction_t>& possibleActions) const {
     possibleActions.push_back(chestAction_kick);
 
     Item* const wpn =
-      eng.player->getInventory()->getItemInSlot(slot_wielded);
+      eng.player->getInv().getItemInSlot(slot_wielded);
     bool canTryForce = false;
     if(wpn == NULL) {
       canTryForce = true;
@@ -791,7 +791,7 @@ void Fountain::featureSpecific_examine() {
 }
 
 void Fountain::drink() {
-  PropHandler* const propHandler = eng.player->getPropHandler();
+  PropHandler& propHandler = eng.player->getPropHandler();
 
   eng.log->addMsg("I drink from the fountain.");
 
@@ -810,12 +810,12 @@ void Fountain::drink() {
     } break;
 
     case fountainTypeBlessed: {
-      propHandler->tryApplyProp(
+      propHandler.tryApplyProp(
         new PropBlessed(eng, propTurnsStandard));
     } break;
 
     case fountainTypeCursed: {
-      propHandler->tryApplyProp(
+      propHandler.tryApplyProp(
         new PropCursed(eng, propTurnsStandard));
     } break;
 
@@ -828,17 +828,17 @@ void Fountain::drink() {
     } break;
 
     case fountainTypeDiseased: {
-      propHandler->tryApplyProp(
+      propHandler.tryApplyProp(
         new PropDiseased(eng, propTurnsStandard));
     } break;
 
     case fountainTypePoisoned: {
-      propHandler->tryApplyProp(
+      propHandler.tryApplyProp(
         new PropPoisoned(eng, propTurnsStandard));
     } break;
 
     case fountainTypeFrenzy: {
-      propHandler->tryApplyProp(
+      propHandler.tryApplyProp(
         new PropFrenzied(eng, propTurnsStandard));
     } break;
 

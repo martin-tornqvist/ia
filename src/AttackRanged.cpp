@@ -180,9 +180,9 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                                   wpn.getData().rangedDmgType, true);
               if(DIED == false) {
                 // Aply weapon hit properties
-                PropHandler* const defenderPropHandler =
+                PropHandler& defenderPropHandler =
                   curProj->attackData->currentDefender->getPropHandler();
-                defenderPropHandler->tryApplyPropFromWpn(wpn, false);
+                defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
                 // Knock-back?
                 if(wpn.getData().rangedCausesKnockBack) {

@@ -109,10 +109,10 @@ void DebugModeStatPrinter::run() {
       "Attack skill:" + toString(attackSkill) + "%";
     printLine(indent2 + hpStr + attackSkillStr);
 
-    const Inventory* const inv = actor->getInventory();
-    const unsigned int NR_INTRINSIC_ATTACKS = inv->getIntrinsicsSize();
+    const Inventory& inv = actor->getInv();
+    const unsigned int NR_INTRINSIC_ATTACKS = inv.getIntrinsicsSize();
     for(unsigned int i_intr = 0; i_intr < NR_INTRINSIC_ATTACKS; i_intr++) {
-      const Item* const item = inv->getIntrinsicInElement(i_intr);
+      const Item* const item = inv.getIntrinsicInElement(i_intr);
       const ItemData& itemData = item->getData();
       const string meleeOrRangedStr = itemData.isRangedWeapon ? "(R)" : "(M)";
       const string attackNrStr = "Attack " + toString(i_intr + 1);

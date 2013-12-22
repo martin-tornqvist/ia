@@ -130,7 +130,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||
-        actorHere->getData()->actorSize >= actorSize_humanoid) {
+        actorHere->getData().actorSize >= actorSize_humanoid) {
 
         delete data;
         data = new MissileAttackData(actorThrowing, itemThrown, targetCell,

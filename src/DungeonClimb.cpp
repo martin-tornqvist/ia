@@ -94,7 +94,7 @@ void DungeonClimb::tryUseDownStairs() {
 
     if(eng.player->insanityPhobias[insanityPhobia_deepPlaces]) {
       eng.log->addMsg("I am plagued by my phobia of deep places!");
-      eng.player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler().tryApplyProp(
         new PropTerrified(eng, propTurnsStandard));
       return;
     }

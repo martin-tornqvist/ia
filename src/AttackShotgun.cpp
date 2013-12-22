@@ -61,7 +61,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
       //Only attempt hit if aiming at a level that would hit the actor
       const ActorSizes_t sizeOfActor =
-        actorArray[curPos.x][curPos.y]->getData()->actorSize;
+        actorArray[curPos.x][curPos.y]->getData().actorSize;
       if(sizeOfActor >= actorSize_humanoid || curPos == aimPos) {
 
         //Actor hit?

@@ -119,7 +119,7 @@ void ProxEventWallCrumble::playerIsNear() {
         Actor* const actor = eng.actorFactory->spawnActor(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->playerAwarenessCounter =
-          monster->getData()->nrTurnsAwarePlayer;
+          monster->getData().nrTurnsAwarePlayer;
         nrMonstersSpawned++;
       }
     }

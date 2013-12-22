@@ -14,7 +14,7 @@ int AbilityValues::getVal(const Abilities_t ability,
   int val = abilityList[ability];
 
   if(IS_AFFECTED_BY_STATUS_EFFECTS) {
-    val += actor.getPropHandler()->getAbilityMod(ability);
+    val += actor.getPropHandler().getAbilityMod(ability);
   }
 
   PlayerBonHandler& bonHlr = *eng->playerBonHandler;

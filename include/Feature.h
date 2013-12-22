@@ -25,8 +25,8 @@ public:
 
   virtual void bump(Actor& actorBumping);
   virtual void newTurn();
-  virtual bool isMovePassable(Actor* const actorMoving) const;
-  virtual bool isBodyTypePassable(const BodyType_t bodyType) const;
+  virtual bool isMovePassable(Actor* const actorMoving) const; asdf
+  virtual bool isBodyTypePassable(const BodyType_t bodyType) const; asdf
   virtual bool isVisionPassable() const;
   virtual bool isProjectilesPassable() const;
   virtual bool isSmokePassable() const;

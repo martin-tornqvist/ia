@@ -110,8 +110,8 @@ void GameTime::endTurnOfCurrentActor() {
     currentActor = getCurrentActor();
 
     const bool IS_SLOWED =
-      currentActor->getPropHandler()->hasProp(propSlowed);
-    const ActorSpeed_t defSpeed = currentActor->getData()->speed;
+      currentActor->getPropHandler().hasProp(propSlowed);
+    const ActorSpeed_t defSpeed = currentActor->getData().speed;
     const ActorSpeed_t realSpeed =
       IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
       defSpeed : ActorSpeed_t(defSpeed - 1);
@@ -162,14 +162,12 @@ void GameTime::runStandardTurnEvents() {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
-  int regenSpiEveryNTurns = 10;
-  bool isSpiRegenThisTurn =
-    turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
+  int regenSpiEveryNTurns = 11;
 
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
 
-    actor->getPropHandler()->newTurnAllProps(visionBlockers);
+    actor->getPropHandler().newTurnAllProps(visionBlockers);
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
@@ -180,14 +178,15 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == actorDeadState_alive) {
       //Regen Spi
       if(actor == eng.player) {
-        if(eng.playerBonHandler->hasTrait(traitRapidRecoverer)) {
-          regenSpiEveryNTurns = 6;
-          isSpiRegenThisTurn =
-            turn_ == (turn_ / regenSpiEveryNTurns) * regenSpiEveryNTurns;
+        if(eng.playerBonHandler->hasTrait(traitStrongSpirited)) {
+          regenSpiEveryNTurns -= 3;
+        }
+        if(eng.playerBonHandler->hasTrait(traitMightySpirited)) {
+          regenSpiEveryNTurns -= 3;
         }
       }
 
-      if(isSpiRegenThisTurn) {
+      if(isSpiRegenThisTurn(regenSpiEveryNTurns)) {
         actor->restoreSpi(1, false);
       }
 
@@ -197,9 +196,7 @@ void GameTime::runStandardTurnEvents() {
     //Delete dead, mangled actors
     if(actor->deadState == actorDeadState_mangled) {
       delete actor;
-      if(eng.player->target == actor) {
-        eng.player->target = NULL;
-      }
+      if(eng.player->target == actor) {eng.player->target = NULL;}
       actors_.erase(actors_.begin() + i);
       i--;
       loopSize--;
@@ -231,16 +228,13 @@ void GameTime::runStandardTurnEvents() {
   }
 
   //Run new turn events on all player items
-  Inventory* playerInv = eng.player->getInventory();
-  vector<Item*>* playerBackpack = playerInv->getGeneral();
-  for(unsigned int i = 0; i < playerBackpack->size(); i++) {
-    playerBackpack->at(i)->newTurnInInventory();
-  }
-  vector<InventorySlot>* playerSlots = playerInv->getSlots();
-  for(unsigned int i = 0; i < playerSlots->size(); i++) {
-    Item* const item = playerSlots->at(i).item;
-    if(item != NULL) {
-      item->newTurnInInventory();
+  Inventory& playerInv = eng.player->getInv();
+  vector<Item*>& playerBackpack = playerInv.getGeneral();
+  for(Item * const item : playerBackpack) {item->newTurnInInventory();}
+  vector<InventorySlot>& playerSlots = playerInv.getSlots();
+  for(InventorySlot & slot : playerSlots) {
+    if(slot.item != NULL) {
+      slot.item->newTurnInInventory();
     }
   }
 
@@ -249,6 +243,10 @@ void GameTime::runStandardTurnEvents() {
   eng.audio->tryPlayAmb(250);
 
 //  traceVerbose << "GameTime::runStandardTurnEvents() [DONE]" << endl;
+}
+
+bool GameTime::isSpiRegenThisTurn(const int REGEN_N_TURNS) {
+  return turn_ == (turn_ / REGEN_N_TURNS) * REGEN_N_TURNS;
 }
 
 void GameTime::runAtomicTurnEvents() {

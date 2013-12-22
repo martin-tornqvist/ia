@@ -95,7 +95,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
 bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   bool didAct = false;
 
-  Inventory* const inv  = actorReloading.getInventory();
+  Inventory* const inv  = actorReloading.getInv();
   Item* const wpnItem   = inv->getItemInSlot(slot_wielded);
 
   if(wpnItem == NULL) {
@@ -132,9 +132,9 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
 
         if(ammo->getData().id == ammoType) {
           const bool IS_RELOADER_BLIND =
-            actorReloading.getPropHandler()->allowSee() == false;
+            actorReloading.getPropHandler().allowSee() == false;
           const bool IS_REALOADER_TERRIFIED =
-            actorReloading.getPropHandler()->hasProp(propTerrified);
+            actorReloading.getPropHandler().hasProp(propTerrified);
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 

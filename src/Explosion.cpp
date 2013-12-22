@@ -120,10 +120,10 @@ void ExplosionMaker::runExplosion(
 
     if(OVERRIDE_EXPLOSION_RENDERING) {
       eng.renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, colorOverride, colorOverride);
+                                              forbiddenRenderCells, colorOverride, colorOverride);
     } else {
       eng.renderer->drawBlastAnimationAtField(origin, (data.x1 - data.x0) / 2,
-          forbiddenRenderCells, clrYellow, clrRedLgt);
+                                              forbiddenRenderCells, clrYellow, clrRedLgt);
     }
   } else {
     if(OVERRIDE_EXPLOSION_RENDERING) {
@@ -172,11 +172,11 @@ void ExplosionMaker::runExplosion(
             if(
               prop != NULL &&
               actor.deadState == actorDeadState_alive) {
-              PropHandler* const propHandler = actor.getPropHandler();
-              Prop* propCpy = propHandler->makePropFromId(
+              PropHandler& propHandler = actor.getPropHandler();
+              Prop* propCpy = propHandler.makePropFromId(
                                 prop->getId(), propTurnsSpecified,
                                 prop->turnsLeft_);
-              propHandler->tryApplyProp(propCpy);
+              propHandler.tryApplyProp(propCpy);
             }
           }
         }

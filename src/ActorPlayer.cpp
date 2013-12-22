@@ -319,9 +319,9 @@ void Player::incrInsanity() {
     bool playerSeeShockingMonster = false;
     vector<Actor*> spotedEnemies;
     getSpotedEnemies(spotedEnemies);
-    for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      const ActorData* const def = spotedEnemies.at(i)->getData();
-      if(def->monsterShockLevel != monsterShockLevel_none) {
+    for(Actor* actor : spotedEnemies) {
+      const ActorData& def = actor->getData();
+      if(def.monsterShockLevel != monsterShockLevel_none) {
         playerSeeShockingMonster = true;
       }
     }
@@ -379,7 +379,7 @@ void Player::incrInsanity() {
         } break;
 
         case 5: {
-          if(getPropHandler()->hasProp(propRFear) == false) {
+          if(getPropHandler().hasProp(propRFear) == false) {
 
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
@@ -391,13 +391,13 @@ void Player::incrInsanity() {
               }
               if(phobiasActive < 2) {
                 if(eng.dice.coinToss()) {
-                  if(spotedEnemies.size() > 0) {
+                  if(spotedEnemies.empty() == false) {
                     const int MONSTER_ROLL =
-                      eng.dice(1, spotedEnemies.size()) - 1;
-                    const ActorData* const monsterData =
+                      eng.dice.range(0, spotedEnemies.size() - 1);
+                    const ActorData& monsterData =
                       spotedEnemies.at(MONSTER_ROLL)->getData();
                     if(
-                      monsterData->isRat &&
+                      monsterData.isRat &&
                       insanityPhobias[insanityPhobia_rat] == false) {
                       msg += "I am afflicted by Murophobia. ";
                       msg += "Rats suddenly seem terrifying.";
@@ -407,7 +407,7 @@ void Player::incrInsanity() {
                       return;
                     }
                     if(
-                      monsterData->isSpider &&
+                      monsterData.isSpider &&
                       insanityPhobias[insanityPhobia_spider] == false) {
                       msg += "I am afflicted by Arachnophobia. ";
                       msg += "Spiders suddenly seem terrifying.";
@@ -418,7 +418,7 @@ void Player::incrInsanity() {
                       return;
                     }
                     if(
-                      monsterData->isCanine &&
+                      monsterData.isCanine &&
                       insanityPhobias[insanityPhobia_dog] == false) {
                       msg += "I am afflicted by Cynophobia. ";
                       msg += "Dogs suddenly seem terrifying.";
@@ -428,7 +428,7 @@ void Player::incrInsanity() {
                       return;
                     }
                     if(
-                      monsterData->isUndead &&
+                      monsterData.isUndead &&
                       insanityPhobias[insanityPhobia_undead] == false) {
                       msg += "I am afflicted by Necrophobia. ";
                       msg += "The undead suddenly seem much more terrifying.";
@@ -617,9 +617,9 @@ void Player::testPhobias() {
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      const ActorData* const monsterData = spotedEnemies.at(0)->getData();
+      const ActorData& monsterData = spotedEnemies.at(0)->getData();
       if(
-        monsterData->isCanine &&
+        monsterData.isCanine &&
         insanityPhobias[insanityPhobia_dog]) {
         eng.log->addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
@@ -627,7 +627,7 @@ void Player::testPhobias() {
         return;
       }
       if(
-        monsterData->isRat &&
+        monsterData.isRat &&
         insanityPhobias[insanityPhobia_rat]) {
         eng.log->addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
@@ -635,7 +635,7 @@ void Player::testPhobias() {
         return;
       }
       if(
-        monsterData->isUndead &&
+        monsterData.isUndead &&
         insanityPhobias[insanityPhobia_undead]) {
         eng.log->addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
@@ -643,7 +643,7 @@ void Player::testPhobias() {
         return;
       }
       if(
-        monsterData->isSpider &&
+        monsterData.isSpider &&
         insanityPhobias[insanityPhobia_spider]) {
         eng.log->addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
@@ -821,11 +821,11 @@ void Player::specificOnStandardTurn() {
   vector<Actor*> spotedEnemies;
   getSpotedEnemies(spotedEnemies);
   double shockFromMonstersCurrentPlayerTurn = 0.0;
-  for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-    Monster* monster = dynamic_cast<Monster*>(spotedEnemies.at(i));
-    const ActorData* const data = monster->getData();
-    if(data->monsterShockLevel != monsterShockLevel_none) {
-      switch(data->monsterShockLevel) {
+  for(Actor* actor : spotedEnemies) {
+    Monster* monster = dynamic_cast<Monster*>(actor);
+    const ActorData& data = monster->getData();
+    if(data.monsterShockLevel != monsterShockLevel_none) {
+      switch(data.monsterShockLevel) {
         case monsterShockLevel_unsettling: {
           monster->shockCausedCurrent += 0.10;
           monster->shockCausedCurrent =
@@ -1219,12 +1219,14 @@ void Player::autoMelee() {
 void Player::kick(Actor& actorToKick) {
   Weapon* kickWeapon = NULL;
 
-  const ActorData* const d = actorToKick.getData();
+  const ActorData& d = actorToKick.getData();
 
-  if(d->actorSize == actorSize_floor && (d->isSpider || d->isRat)) {
-    kickWeapon = dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerStomp));
+  if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
+    kickWeapon =
+      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerStomp));
   } else {
-    kickWeapon = dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerKick));
+    kickWeapon =
+      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerKick));
   }
   eng.attack->melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
@@ -1244,8 +1246,8 @@ void Player::specificAddLight(
   bool isUsingLightGivingItem = flareFuseTurns > 0;
 
   if(isUsingLightGivingItem == false) {
-    for(unsigned int i = 0; i < inventory_->getGeneral()->size(); i++) {
-      Item* const item = inventory_->getGeneral()->at(i);
+    vector<Item*>& generalItems = inventory_->getGeneral();
+    for(Item* const item : generalItems) {
       if(item->getData().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern =
           dynamic_cast<DeviceElectricLantern*>(item);

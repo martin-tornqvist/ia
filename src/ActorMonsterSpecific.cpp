@@ -273,13 +273,13 @@ bool Ghost::monsterSpecificOnActorTurn() {
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
           const AbilityRollResult_t rollResult = eng.abilityRoll->roll(
-              eng.player->getData()->abilityVals.getVal(
+              eng.player->getData().abilityVals.getVal(
                 ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
             eng.log->addMsg("I dodge!", clrMessageGood);
           } else {
-            eng.player->getPropHandler()->tryApplyProp(
+            eng.player->getPropHandler().tryApplyProp(
               new PropSlowed(eng, propTurnsStandard));
           }
           eng.gameTime->endTurnOfCurrentActor();
@@ -531,7 +531,7 @@ void ColourOutOfSpace::specificOnStandardTurn() {
   restoreHp(1, false);
 
   if(eng.player->checkIfSeeActor(*this, NULL)) {
-    eng.player->getPropHandler()->tryApplyProp(
+    eng.player->getPropHandler().tryApplyProp(
       new PropConfused(eng, propTurnsStandard));
   }
 }

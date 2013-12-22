@@ -10,7 +10,7 @@ using namespace std;
 
 class Engine;
 
-const int Y0_CREATE_CHARACTER = 6;
+const int Y0_CREATE_CHARACTER = 1;
 
 //This class is responsible for letting the player create a character
 //(background and name), and also for picking traits when gaining levels

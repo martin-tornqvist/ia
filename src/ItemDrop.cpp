@@ -14,13 +14,13 @@
 
 void ItemDrop::dropAllCharactersItems(Actor* actor, bool died) {
   (void)died;
-  actor->getInventory()->dropAllNonIntrinsic(actor->pos, true, eng);
+  actor->getInv().dropAllNonIntrinsic(actor->pos, true, eng);
 }
 
 void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
                                      const int NR_ITEMS_TO_DROP) {
-  Inventory* inventory = actorDropping->getInventory();
-  Item* itemToDrop = inventory->getItemInElement(ELEMENT);
+  Inventory& inv = actorDropping->getInv();
+  Item* itemToDrop = inv.getItemInElement(ELEMENT);
 
   if(itemToDrop != NULL) {
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
@@ -34,7 +34,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
 
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
-      inventory->removeItemInElementWithoutDeletingInstance(ELEMENT);
+      inv.removeItemInElementWithoutDeletingInstance(ELEMENT);
       dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;

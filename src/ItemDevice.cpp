@@ -86,12 +86,12 @@ void Device::runBadEffect() {
   const int RND = eng.dice.percentile();
   if(RND < 2) {
     eng.log->addMsg("The " + name + " breaks!");
-    eng.player->getInventory()->removetemInGeneralWithPointer(this, false);
+    eng.player->getInv().removetemInGeneralWithPointer(this, false);
   } else if(RND < 40) {
     eng.log->addMsg(
       "I am hit with a jolt of electricity from the " + name +
       ".", clrMessageBad, true);
-    eng.player->getPropHandler()->tryApplyProp(
+    eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 2));
     eng.player->hit(eng.dice.range(1, 2), dmgType_electric, false);
   } else {
@@ -230,7 +230,7 @@ void DeviceElectricLantern::runBadEffect() {
     const int RND = eng.dice.percentile();
     if(RND < 6) {
       eng.log->addMsg("My Electric Lantern breaks!");
-      eng.player->getInventory()->removetemInGeneralWithPointer(this, false);
+      eng.player->getInv().removetemInGeneralWithPointer(this, false);
       isVisionUpdateNeeded = true;
       isItemDestroyed = true;
     } else if(RND < 20) {

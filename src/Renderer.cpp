@@ -804,7 +804,7 @@ void Renderer::drawAscii() {
     yPos = actor.pos.y;
     if(
       actor.deadState == actorDeadState_corpse &&
-      actor.getData()->glyph != ' ' &&
+      actor.getData().glyph != ' ' &&
       eng.map->cells[xPos][yPos].isSeenByPlayer) {
       currentDrw = &renderArrayAscii[xPos][yPos];
       currentDrw->color = clrRed;
@@ -1156,7 +1156,7 @@ void Renderer::drawTiles() {
 
   //-------------------------------------------- DRAW PLAYER CHARACTER
   bool isWieldingRangedWeapon = false;
-  Item* item = eng.player->getInventory()->getItemInSlot(slot_wielded);
+  Item* item = eng.player->getInv().getItemInSlot(slot_wielded);
   if(item != NULL) {
     isWieldingRangedWeapon = item->getData().isRangedWeapon;
   }

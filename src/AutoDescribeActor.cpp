@@ -5,18 +5,18 @@
 void AutoDescribeActor::addAutoDescriptionLines(
   Actor* const actor, string& line) const {
 
-  const ActorData* const def = actor->getData();
+  const ActorData& def = actor->getData();
 
-  if(def->isUnique) {
-    if(def->spawnMinDLVL < LAST_CAVERN_LEVEL) {
-      line += " " + def->name_the + " is normally found beneath level " +
-              getDwellingLevelStr(*def) + ". ";
+  if(def.isUnique) {
+    if(def.spawnMinDLVL < LAST_CAVERN_LEVEL) {
+      line += " " + def.name_the + " is normally found beneath level " +
+              getDwellingLevelStr(def) + ". ";
     }
   } else {
-    line += " They tend to dwell " + getNormalGroupSizeStr(*def) + ",";
+    line += " They tend to dwell " + getNormalGroupSizeStr(def) + ",";
     line += " and usually stay at depths beneath level " +
-            getDwellingLevelStr(*def) + ".";
-    line += " They move " + getSpeedStr(*def) + ". ";
+            getDwellingLevelStr(def) + ".";
+    line += " They move " + getSpeedStr(def) + ". ";
   }
 }
 

@@ -128,7 +128,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       clearLogMessages();
       eng.player->moveDir(dirCenter);
       if(eng.playerBonHandler->hasTrait(traitAdeptMarksman)) {
-        eng.player->getPropHandler()->tryApplyProp(
+        eng.player->getPropHandler().tryApplyProp(
           new PropStill(eng, propTurnsSpecified, 1));
       }
     }
@@ -150,7 +150,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'a') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.player->getPropHandler()->allowSee()) {
+      if(eng.player->getPropHandler().allowSee()) {
         eng.examine->playerExamine();
         eng.renderer->drawMapAndInterface();
       } else {
@@ -204,7 +204,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 //  else if(d.key_ == 'd') {
 //    clearLogMessages();
 //    if(eng.player->deadState == actorDeadState_alive) {
-//      if(eng.player->getPropHandler()->allowSee()) {
+//      if(eng.player->getPropHandler().allowSee()) {
 //        eng.disarm->playerDisarm();
 //        eng.renderer->drawMapAndInterface();
 //      } else {
@@ -227,10 +227,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
 
-      if(eng.player->getPropHandler()->allowAttackRanged(true)) {
+      if(eng.player->getPropHandler().allowAttackRanged(true)) {
 
         Item* const item =
-          eng.player->getInventory()->getItemInSlot(slot_wielded);
+          eng.player->getInv().getItemInSlot(slot_wielded);
 
         Weapon* wpn = NULL;
 
@@ -316,8 +316,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 
-      Item* const itemWielded = eng.player->getInventory()->getItemInSlot(slot_wielded);
-      Item* const itemAlt = eng.player->getInventory()->getItemInSlot(slot_wieldedAlt);
+      Item* const itemWielded = eng.player->getInv().getItemInSlot(slot_wielded);
+      Item* const itemAlt = eng.player->getInv().getItemInSlot(slot_wieldedAlt);
       const string ITEM_WIELDED_NAME =
         itemWielded == NULL ? "" :
         eng.itemDataHandler->getItemRef(*itemWielded, itemRef_a);
@@ -339,7 +339,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
               "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
           }
         }
-        eng.player->getInventory()->swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
+        eng.player->getInv().swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
       }
     }
     clearEvents();
@@ -370,9 +370,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
 
-      if(eng.player->getPropHandler()->allowAttackRanged(true)) {
-        Inventory* const playerInv = eng.player->getInventory();
-        Item* itemStack = playerInv->getItemInSlot(slot_missiles);
+      if(eng.player->getPropHandler().allowAttackRanged(true)) {
+        Inventory& playerInv = eng.player->getInv();
+        Item* itemStack = playerInv.getItemInSlot(slot_missiles);
 
         if(itemStack == NULL) {
           eng.log->addMsg(
@@ -385,7 +385,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             eng.marker->run(markerTask_aimThrownWeapon, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
-            playerInv->decreaseItemInSlot(slot_missiles);
+            playerInv.decreaseItemInSlot(slot_missiles);
           } else {
             delete itemToThrow;
           }
@@ -399,7 +399,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'l') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.player->getPropHandler()->allowSee()) {
+      if(eng.player->getPropHandler().allowSee()) {
         eng.marker->run(markerTask_look, NULL);
       } else {
         eng.log->addMsg("I am blind.");
@@ -421,7 +421,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'x') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.player->getPropHandler()->allowRead(true)) {
+      if(eng.player->getPropHandler().allowRead(true)) {
         eng.playerSpellsHandler->run();
       }
     }
@@ -568,7 +568,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------INFECTED
   else if(d.sdlKey_ == SDLK_F9) {
     if(IS_DEBUG_MODE) {
-      eng.player->getPropHandler()->tryApplyProp(
+      eng.player->getPropHandler().tryApplyProp(
         new PropInfected(eng, propTurnsStandard));
       clearEvents();
     }

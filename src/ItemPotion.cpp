@@ -16,7 +16,7 @@
 #include "MapParsing.h"
 
 void PotionOfHealing::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->endAppliedPropsByMagicHealing();
+  actor->getPropHandler().endAppliedPropsByMagicHealing();
 
   //TODO What about wounds?
 
@@ -58,7 +58,7 @@ void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfBlindness::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropBlind(eng, propTurnsStandard));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -71,7 +71,7 @@ void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfParalyzation::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropParalyzed(eng, propTurnsStandard));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -88,7 +88,7 @@ void PotionOfParalyzation::specificCollide(
 }
 
 void PotionOfDisease::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropDiseased(eng, propTurnsStandard));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -96,7 +96,7 @@ void PotionOfDisease::specificQuaff(Actor* const actor) {
 }
 
 void PotionOfConfusion::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropConfused(eng, propTurnsStandard));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -112,7 +112,7 @@ void PotionOfConfusion::specificCollide(
 }
 
 void PotionOfFrenzy::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropFrenzied(eng, propTurnsStandard));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -179,7 +179,7 @@ void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfPoison::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropPoisoned(eng, propTurnsStandard));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -195,7 +195,7 @@ void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfRFire::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropRFire(eng, propTurnsStandard));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -214,7 +214,7 @@ void PotionOfAntidote::specificQuaff(Actor* const actor) {
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   const bool IS_POISON_ENDED =
-    actor->getPropHandler()->endAppliedProp(propPoisoned, visionBlockers);
+    actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 
   if(IS_POISON_ENDED && eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -229,7 +229,7 @@ void PotionOfAntidote::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfRElec::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropRElec(eng, propTurnsStandard));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -245,7 +245,7 @@ void PotionOfRElec::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfRAcid::specificQuaff(Actor* const actor) {
-  actor->getPropHandler()->tryApplyProp(
+  actor->getPropHandler().tryApplyProp(
     new PropRAcid(eng, propTurnsStandard));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -263,7 +263,7 @@ void PotionOfRAcid::specificCollide(const Pos& pos, Actor* const actor) {
 void PotionOfInsight::specificQuaff(Actor* const actor) {
   (void)actor;
 
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
 
   vector<Item*> itemIdentifyCandidates;
 

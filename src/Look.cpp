@@ -79,7 +79,7 @@ void Look::describeBriefActor(const Actor& actor,
   } else if(actor.pos != eng.player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
       Item* const item =
-        eng.player->getInventory()->getItemInSlot(slot_wielded);
+        eng.player->getInv().getItemInSlot(slot_wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng.player, *wpn, actor.pos, actor.pos, eng);
       eng.log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
@@ -109,10 +109,10 @@ void Look::printExtraActorDescription(const Pos& pos) const {
   if(actor != NULL) {
     if(actor != eng.player) {
       //Add written description.
-      string description = actor->getData()->description;
+      string description = actor->getData().description;
 
       //Add auto-description.
-      if(actor->getData()->isAutoDescriptionAllowed) {
+      if(actor->getData().isAutoDescriptionAllowed) {
         eng.autoDescribeActor->addAutoDescriptionLines(actor, description);
       }
 

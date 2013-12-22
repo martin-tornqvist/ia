@@ -49,16 +49,11 @@ class Engine;
 class Inventory {
 public:
   Inventory(bool humanoid);
+
   ~Inventory() {
-    for(unsigned int i = 0; i < slots_.size(); i++)
-      if(slots_.at(i).item != NULL)
-        delete slots_.at(i).item;
-
-    for(unsigned int i = 0; i < general_.size(); i++)
-      delete general_.at(i);
-
-    for(unsigned int i = 0; i < intrinsics_.size(); i++)
-      delete intrinsics_.at(i);
+    for(InventorySlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
+    for(Item * item : general_)         {delete item;}
+    for(Item * item : intrinsics_)      {delete item;}
   }
 
   void dropAllNonIntrinsic(
@@ -89,8 +84,6 @@ public:
     const unsigned int GENERAL_INV_ELEMENT,
     const SlotTypes_t slotToEquip, Engine& engine);
 
-//  void equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine& engine);
-
   void swapWieldedAndPrepared(const bool END_TURN, Engine& engine);
 
   bool hasAmmoForFirearmInInventory();
@@ -112,9 +105,7 @@ public:
   void removetemInGeneralWithPointer(
     Item* const item, const bool DELETE_ITEM);
 
-  int getIntrinsicsSize() const {
-    return intrinsics_.size();
-  }
+  int getIntrinsicsSize() const {return intrinsics_.size();}
 
   Item* getIntrinsicInElement(const int ELEMENT) const;
 
@@ -128,19 +119,13 @@ public:
 
   void decreaseDynamiteInGeneral();
 
-  //bool hasFirstAidInGeneral();
-  //void decreaseFirstAidInGeneral();
-
   InventorySlot* getSlot(SlotTypes_t slotName);
 
   void sortGeneralInventory(Engine& engine);
 
-  vector<InventorySlot>* getSlots() {
-    return &slots_;
-  }
-  vector<Item*>* getGeneral() {
-    return &general_;
-  }
+  vector<InventorySlot>& getSlots() {return slots_;}
+
+  vector<Item*>& getGeneral() {return general_;}
 
   int getTotalItemWeight() const;
 

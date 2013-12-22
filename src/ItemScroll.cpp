@@ -87,7 +87,7 @@ void Scroll::tryLearn() {
 bool Scroll::read() {
   eng.renderer->drawMapAndInterface();
 
-  if(eng.player->getPropHandler()->allowSee() == false) {
+  if(eng.player->getPropHandler().allowSee() == false) {
     eng.log->addMsg("I cannot read while blind.");
     return false;
   }

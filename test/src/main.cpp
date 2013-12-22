@@ -420,7 +420,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
 
   //Player inventory
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
   inv->moveItemToGeneral(inv->getSlot(slot_wielded));
   inv->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
@@ -462,7 +462,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isIdentified);
 
   //Player inventory
-  Inventory* const inv = eng.player->getInventory();
+  Inventory* const inv = eng.player->getInv();
   CHECK_EQUAL(
     item_teslaCannon, inv->getItemInSlot(slot_wielded)->getData().id);
 

@@ -152,17 +152,17 @@ void DungeonMaster::winGame() {
 }
 
 void DungeonMaster::monsterKilled(Actor* monster) {
-  ActorData* const d = monster->getData();
+  ActorData& d = monster->getData();
 
-  d->nrOfKills += 1;
+  d.nrOfKills += 1;
 
-  if(d->hp >= 3) {
+  if(d.hp >= 3) {
     if(eng.player->insanityObsessions[insanityObsession_sadism]) {
       eng.player->shock_ = max(0.0, eng.player->shock_ - 3.0);
     }
   }
 
-  playerGainXp(getMonsterXpWorth(*d));
+  playerGainXp(getMonsterXpWorth(d));
 }
 
 void DungeonMaster::setTimeStartedToNow() {

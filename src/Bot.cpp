@@ -38,12 +38,12 @@ void Bot::act() {
   }
   //=======================================================================
 
-  PropHandler* const propHandler = eng.player->getPropHandler();
+  PropHandler& propHandler = eng.player->getPropHandler();
 
   //Occasionally apply RFear
   //(Helps avoiding getting stuck on fear-causing monsters too long)
   if(eng.dice.oneIn(7)) {
-    propHandler->tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
+    propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
   }
 
   //Ocassionally send a TAB command to attack nearby monsters
@@ -67,9 +67,9 @@ void Bot::act() {
       propCandidates.at(eng.dice.range(0, propCandidates.size() - 1));
 
     Prop* const prop =
-      propHandler->makePropFromId(propId, propTurnsSpecified, 5);
+      propHandler.makePropFromId(propId, propTurnsSpecified, 5);
 
-    propHandler->tryApplyProp(prop, true);
+    propHandler.tryApplyProp(prop, true);
   }
 
   //If we are on the stairs,
@@ -113,7 +113,7 @@ void Bot::act() {
   }
 
   //If we are terrified, wait in place
-  if(eng.player->getPropHandler()->hasProp(propTerrified)) {
+  if(eng.player->getPropHandler().hasProp(propTerrified)) {
     if(walkToAdjacentCell(playerPos)) {
       return;
     }

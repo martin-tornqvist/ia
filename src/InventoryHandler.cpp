@@ -27,21 +27,21 @@ InventoryHandler::InventoryHandler(Engine& engine) :
 void InventoryHandler::activateDefault(
   const unsigned int GENERAL_ITEMS_ELEMENT) {
 
-  Inventory* const playerInv = eng.player->getInventory();
-  Item* item = playerInv->getGeneral()->at(GENERAL_ITEMS_ELEMENT);
+  Inventory& playerInv = eng.player->getInv();
+  Item* item = playerInv.getGeneral().at(GENERAL_ITEMS_ELEMENT);
   if(item->activateDefault(eng.player)) {
-    playerInv->decreaseItemInGeneral(GENERAL_ITEMS_ELEMENT);
+    playerInv.decreaseItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
   const SlotTypes_t slotToEquip) {
 
-  vector<Item*>* general = eng.player->getInventory()->getGeneral();
+  vector<Item*>& general = eng.player->getInv().getGeneral();
   generalItemsToShow.resize(0);
 
-  for(unsigned int i = 0; i < general->size(); i++) {
-    const Item* const item = general->at(i);
+  for(unsigned int i = 0; i < general.size(); i++) {
+    const Item* const item = general.at(i);
     const ItemData& data = item->getData();
 
     switch(slotToEquip) {
@@ -74,20 +74,18 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
-  vector<Item*>* general = eng.player->getInventory()->getGeneral();
+  vector<Item*>& general = eng.player->getInv().getGeneral();
 
   vector< vector<unsigned int> > groups;
 
-  for(unsigned int i = 0; i < general->size(); i++) {
-    const Item* const item = general->at(i);
+  for(unsigned int i = 0; i < general.size(); i++) {
+    const Item* const item = general.at(i);
     const string& label = item->getDefaultActivationLabel();
     if(label.empty() == false) {
       bool isExistingGroupFound = false;
-      for(unsigned int ii = 0; ii < groups.size(); ii++) {
-        if(
-          label ==
-          general->at(groups.at(ii).front())->getDefaultActivationLabel()) {
-          groups.at(ii).push_back(i);
+      for(vector<unsigned int>& group : groups) {
+        if(label == general.at(group.front())->getDefaultActivationLabel()) {
+          group.push_back(i);
           isExistingGroupFound = true;
           break;
         }
@@ -102,42 +100,40 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
 
   generalItemsToShow.resize(0);
 
-  for(unsigned int i = 0; i < groups.size(); i++) {
-    for(unsigned int ii = 0; ii < groups.at(i).size(); ii++) {
-      generalItemsToShow.push_back(groups.at(i).at(ii));
+  for(vector<unsigned int>& group : groups) {
+    for(unsigned int itemIndex : group) {
+      generalItemsToShow.push_back(itemIndex);
     }
   }
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
-  vector<Item*>* general = eng.player->getInventory()->getGeneral();
+  vector<Item*>& general = eng.player->getInv().getGeneral();
   generalItemsToShow.resize(0);
-
-  for(unsigned int i = 0; i < general->size(); i++) {
-    generalItemsToShow.push_back(i);
-  }
+  const int NR_GEN = general.size();
+  for(unsigned int i = 0; i < NR_GEN; i++) {generalItemsToShow.push_back(i);}
 }
 
 void InventoryHandler::runSlotsScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng.renderer->drawMapAndInterface();
 
-  Inventory* const inv = eng.player->getInventory();
-  vector<InventorySlot>* invSlots = inv->getSlots();
+  Inventory& inv                  = eng.player->getInv();
+  vector<InventorySlot>& invSlots = inv.getSlots();
 
-  inv->sortGeneralInventory(eng);
+  inv.sortGeneralInventory(eng);
 
   equipmentSlotButtons.resize(0);
   char key = 'a';
   InventorySlotButton inventorySlotButton;
-  for(unsigned int i = 0; i < invSlots->size(); i++) {
-    inventorySlotButton.inventorySlot = &invSlots->at(i);
-    inventorySlotButton.key = key;
+  for(InventorySlot & slot : invSlots) {
+    inventorySlotButton.inventorySlot = &slot;
+    inventorySlotButton.key           = key;
     key++;
     equipmentSlotButtons.push_back(inventorySlotButton);
   }
 
-  MenuBrowser browser(invSlots->size() + 1, 0);
+  MenuBrowser browser(invSlots.size() + 1, 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
   eng.renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
@@ -162,9 +158,9 @@ void InventoryHandler::runSlotsScreen() {
       case menuAction_selected: {
         const char charIndex = 'a' + browser.getPos().y;
         if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
-          InventorySlot* const slot = &(invSlots->at(charIndex - 'a'));
-          if(slot->item == NULL) {
-            if(runEquipScreen(slot)) {
+          InventorySlot& slot = invSlots.at(charIndex - 'a');
+          if(slot.item == NULL) {
+            if(runEquipScreen(&slot)) {
               eng.renderer->drawMapAndInterface();
               return;
             } else {
@@ -172,14 +168,14 @@ void InventoryHandler::runSlotsScreen() {
                 browser, equipmentSlotButtons);
             }
           } else {
-            Item* const item = slot->item;
+            Item* const item = slot.item;
 
             const string itemName =
               eng.itemDataHandler->getItemRef(*item, itemRef_plain);
 
-            inv->moveItemToGeneral(slot);
+            inv.moveItemToGeneral(&slot);
 
-            if(slot->id == slot_armorBody) {
+            if(slot.id == slot_armorBody) {
               screenToOpenAfterDrop = inventoryScreen_slots;
               browserPosToSetAfterDrop = browser.getPos().y;
 
@@ -214,7 +210,7 @@ bool InventoryHandler::runUseScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng.renderer->drawMapAndInterface();
 
-  eng.player->getInventory()->sortGeneralInventory(eng);
+  eng.player->getInv().sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsUsable();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -240,8 +236,10 @@ bool InventoryHandler::runUseScreen() {
       }
       break;
       case menuAction_selectedWithShift: {
-        const int SLOTS_SIZE = eng.player->getInventory()->getSlots()->size();
-        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        if(
+          runDropScreen(
+            SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
           screenToOpenAfterDrop = inventoryScreen_use;
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
@@ -260,8 +258,8 @@ bool InventoryHandler::runUseScreen() {
 
 bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   trace << "InventoryHandler::runDropScreen()" << endl;
-  Inventory* const inv = eng.player->getInventory();
-  Item* const item = inv->getItemInElement(GLOBAL_ELEMENT_NR);
+  Inventory& inv = eng.player->getInv();
+  Item* const item = inv.getItemInElement(GLOBAL_ELEMENT_NR);
   const ItemData& data = item->getData();
 
   eng.log->clearLog();
@@ -297,7 +295,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   equipSlotToOpenAfterDrop = slotToEquip;
   eng.renderer->drawMapAndInterface();
 
-  eng.player->getInventory()->sortGeneralInventory(eng);
+  eng.player->getInv().sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsEquip(slotToEquip->id);
 
@@ -316,33 +314,32 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
       case menuAction_browsed: {
         eng.renderInventory->drawEquipMode(
           browser, slotToEquip->id, generalItemsToShow);
-      }
-      break;
+      } break;
+
       case menuAction_selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-        eng.player->getInventory()->equipGeneralItemAndPossiblyEndTurn(
+        eng.player->getInv().equipGeneralItemAndPossiblyEndTurn(
           INV_ELEM, slotToEquip->id, eng);
         if(slotToEquip->id == slot_armorBody) {
           slotToEquip->item->onWear();
         }
         return true;
-      }
-      break;
+      } break;
+
       case menuAction_selectedWithShift: {
-        const int SLOTS_SIZE = eng.player->getInventory()->getSlots()->size();
-        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        if(
+          runDropScreen(
+            SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
           screenToOpenAfterDrop = inventoryScreen_equip;
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
         }
         eng.renderInventory->drawEquipMode(
           browser, slotToEquip->id, generalItemsToShow);
-      }
-      break;
-      case menuAction_canceled: {
-        return false;
-      }
-      break;
+      } break;
+
+      case menuAction_canceled: {return false;} break;
     }
   }
 }
@@ -351,7 +348,7 @@ void InventoryHandler::runBrowseInventoryMode() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   eng.renderer->drawMapAndInterface();
 
-  eng.player->getInventory()->sortGeneralInventory(eng);
+  eng.player->getInv().sortGeneralInventory(eng);
 
   filterPlayerGeneralSlotButtonsShowAll();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -368,25 +365,26 @@ void InventoryHandler::runBrowseInventoryMode() {
       case menuAction_browsed: {
         eng.renderInventory->drawBrowseInventoryMode(
           browser, generalItemsToShow);
-      }
-      break;
-      case menuAction_selected: {
-      }
-      break;
+      } break;
+
+      case menuAction_selected: {} break;
+
       case menuAction_selectedWithShift: {
-        const int SLOTS_SIZE = eng.player->getInventory()->getSlots()->size();
-        if(runDropScreen(SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
+        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        if(
+          runDropScreen(
+            SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
           screenToOpenAfterDrop = inventoryScreen_backpack;
           browserPosToSetAfterDrop = browser.getPos().y;
           return;
         }
-        eng.renderInventory->drawBrowseInventoryMode(browser, generalItemsToShow);
-      }
-      break;
+        eng.renderInventory->drawBrowseInventoryMode(
+          browser, generalItemsToShow);
+      } break;
+
       case menuAction_canceled: {
         return;
-      }
-      break;
+      } break;
     }
   }
 }

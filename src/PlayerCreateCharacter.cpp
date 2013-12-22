@@ -92,8 +92,18 @@ void PlayerCreateCharacter::drawPickTrait(
   const int NR_TRAITS_COL_ONE = traitsColOne.size();
   const int NR_TRAITS_COL_TWO = traitsColTwo.size();
 
-  const int X_COLUMN_ONE = 14;
-  const int X_COLUMN_TWO = MAP_X_CELLS_HALF + 6;
+  const int MARGIN_W = 17;
+  int lenOfLongestInCol2 = -1;
+  for(const Trait_t & id : traitsColTwo) {
+    string title = "";
+    eng.playerBonHandler->getTraitTitle(id, title);
+    const int CUR_LEN = title.length();
+    if(CUR_LEN > lenOfLongestInCol2) {lenOfLongestInCol2 = CUR_LEN;}
+  }
+
+  const int X_COL_ONE       = MARGIN_W;
+  const int X_COL_TWO_RIGHT = MAP_X_CELLS - MARGIN_W - 1;
+  const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
 
   const int Y0_TITLE = Y0_CREATE_CHARACTER;
 
@@ -107,49 +117,62 @@ void PlayerCreateCharacter::drawPickTrait(
 
   const Pos& browserPos = browser.getPos();
 
+  SDL_Color clrActive     = clrNosferatuSepiaLgt;
+  SDL_Color clrInactive   = clrNosferatuSepiaDrk;
+  SDL_Color clrActiveBg   = clrBlack;
+  SDL_Color clrInactiveBg = clrBlack;
+
   //Draw traits
-  const int Y0_BONUSES = Y0_TITLE + 2;
-  int yPos = Y0_BONUSES;
+  const int Y0_TRAITS = Y0_TITLE + 2;
+  int yPos = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_COL_ONE; i++) {
     const Trait_t trait = traitsColOne.at(i);
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    const SDL_Color drwClr =
-      IS_TRAIT_MARKED ? clrNosferatuSepiaLgt : clrNosferatuSepiaDrk;
+    const SDL_Color& drwClr =
+      IS_TRAIT_MARKED ? clrActive : clrInactive;
+    const SDL_Color& drwClrBg =
+      IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
-      name, panel_screen, Pos(X_COLUMN_ONE, yPos), drwClr);
+      name, panel_screen, Pos(X_COL_ONE, yPos), drwClr, drwClrBg);
     yPos++;
   }
-  yPos = Y0_BONUSES;
+  yPos = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_COL_TWO; i++) {
     const Trait_t trait = traitsColTwo.at(i);
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
     const bool IS_TRAIT_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    const SDL_Color drwClr =
-      IS_TRAIT_MARKED ? clrNosferatuSepiaLgt : clrNosferatuSepiaDrk;
+    const SDL_Color& drwClr =
+      IS_TRAIT_MARKED ? clrActive : clrInactive;
+    const SDL_Color& drwClrBg =
+      IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
-      name, panel_screen, Pos(X_COLUMN_TWO, yPos), drwClr);
+      name, panel_screen, Pos(X_COL_TWO, yPos), drwClr, drwClrBg);
     yPos++;
   }
 
+  //Draw frame around traits
+  Rect boxRect(
+    Pos(MARGIN_W - 2, Y0_TRAITS - 1),
+    Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traitsColOne.size()));
+  eng.renderer->drawPopupBox(boxRect, panel_screen);
+
   //Draw description
-  const int Y0_DESCR = Y0_BONUSES + NR_TRAITS_COL_ONE + 2;
+  const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_COL_ONE + 2;
   yPos = Y0_DESCR;
   const Trait_t markedTrait =
     browserPos.x == 0 ? traitsColOne.at(browserPos.y) :
     traitsColTwo.at(browserPos.y);
   string descr;
   eng.playerBonHandler->getTraitDescr(markedTrait, descr);
-  const int MAX_WIDTH_DESCR = 50;
+  const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
   vector<string> descrLines;
   eng.textFormatting->lineToLines(
-    "Effect(s): " + descr, MAX_WIDTH_DESCR, descrLines);
-  const int NR_DESCR_LINES = descrLines.size();
-  for(int i = 0; i < NR_DESCR_LINES; i++) {
-    eng.renderer->drawText(descrLines.at(i), panel_screen,
-                           Pos(X_COLUMN_ONE, yPos), clrNosferatuSepiaDrk);
+    "Effect(s): " + descr, MAX_W_DESCR, descrLines);
+  for(const string & str : descrLines) {
+    eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, yPos), clrWhite);
     yPos++;
   }
   yPos++;
@@ -172,11 +195,9 @@ void PlayerCreateCharacter::drawPickTrait(
       }
     }
     vector<string> prereqLines;
-    eng.textFormatting->lineToLines(prereqStr, MAX_WIDTH_DESCR, prereqLines);
-    const int NR_PREREQ_LINES = prereqLines.size();
-    for(int i = 0; i < NR_PREREQ_LINES; i++) {
-      eng.renderer->drawText(prereqLines.at(i), panel_screen,
-                             Pos(X_COLUMN_ONE, yPos), clrNosferatuSepiaDrk);
+    eng.textFormatting->lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
+    for(const string & str : prereqLines) {
+      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, yPos), clrWhite);
       yPos++;
     }
   }

@@ -85,8 +85,8 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
 
   actor->place(pos, eng.actorDataHandler->dataList[id]);
 
-  if(actor->getData()->nrLeftAllowedToSpawn != -1) {
-    actor->getData()->nrLeftAllowedToSpawn--;
+  if(actor->getData().nrLeftAllowedToSpawn != -1) {
+    actor->getData().nrLeftAllowedToSpawn--;
   }
 
   eng.gameTime->insertActorInLoop(actor);
@@ -143,7 +143,7 @@ void ActorFactory::summonMonsters(
       monster->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {
-      monster->playerAwarenessCounter = monster->getData()->nrTurnsAwarePlayer;
+      monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
     }
 
     if(eng.player->checkIfSeeActor(*actor, NULL)) {

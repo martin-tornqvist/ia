@@ -388,7 +388,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
   const unsigned int GENERAL_INV_ELEMENT,
   const SlotTypes_t slotToEquip, Engine& engine) {
 
-  const bool IS_PLAYER = this == engine.player->getInventory();
+  const bool IS_PLAYER = this == &engine.player->getInv();
 
   bool isFreeTurn = false;
 

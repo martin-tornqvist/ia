@@ -88,17 +88,17 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
 }
 
 bool Door::isMovePassable(Actor* const actorMoving) const {
-  (void)actorMoving;
+  if(actorMoving->getBodyType() == bodyType_ooze) {return true;}
   return isOpen_;
 }
 
 bool Door::isBodyTypePassable(const BodyType_t bodyType) const {
   switch(bodyType) {
-    case bodyType_normal:    return isOpen_;   break;
-    case bodyType_ethereal:  return true;      break;
-    case bodyType_ooze:      return true;      break;
-    case bodyType_flying:    return isOpen_;   break;
-    case endOfActorBodyTypes:     return isOpen_;   break;
+    case bodyType_normal:     return isOpen_;   break;
+    case bodyType_ethereal:   return true;      break;
+    case bodyType_ooze:       return true;      break;
+    case bodyType_flying:     return isOpen_;   break;
+    case endOfActorBodyTypes: return isOpen_;   break;
   }
   return false;
 }
@@ -218,7 +218,7 @@ void Door::playerTrySpotHidden() {
       eng.basicUtils->isPosAdj(
         Pos(pos_.x, pos_.y), eng.player->pos, false)) {
       const int PLAYER_SKILL =
-        eng.player->getData()->abilityVals.getVal(
+        eng.player->getData().abilityVals.getVal(
           ability_searching, true, *(eng.player));
       if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
         reveal(true);
@@ -230,7 +230,7 @@ void Door::playerTrySpotHidden() {
 void Door::playerTryClueHidden() {
   if(isSecret_ && isClued_ == false) {
     const int PLAYER_SKILL =
-      eng.player->getData()->abilityVals.getVal(
+      eng.player->getData().abilityVals.getVal(
         ability_searching, true, *(eng.player));
     const int BONUS = 10;
     if(eng.abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
@@ -242,7 +242,7 @@ void Door::playerTryClueHidden() {
 bool Door::trySpike(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng.player;
   const bool TRYER_IS_BLIND =
-    actorTrying->getPropHandler()->allowSee() == false;
+    actorTrying->getPropHandler().allowSee() == false;
 
   if(isSecret_ || isOpen_) {
     return false;
@@ -275,7 +275,7 @@ void Door::specificTryBash(Actor& actorTrying) {
 
     int skillValueBash = 0;
 
-    bool isBasherWeak = actorTrying.getPropHandler()->hasProp(propWeakened);
+    bool isBasherWeak = actorTrying.getPropHandler().hasProp(propWeakened);
 
     if(isBasherWeak == false) {
       if(IS_PLAYER) {
@@ -306,7 +306,7 @@ void Door::specificTryBash(Actor& actorTrying) {
       if(IS_PLAYER) {
         Sound snd("", sfxDoorBreak, true, pos_, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
-        if(actorTrying.getPropHandler()->allowSee() == false) {
+        if(actorTrying.getPropHandler().allowSee() == false) {
           eng.log->addMsg("I feel a door crashing open!");
         } else {
           if(IS_SECRET_BEFORE) {
@@ -335,7 +335,7 @@ void Door::specificTryBash(Actor& actorTrying) {
 void Door::tryClose(Actor* actorTrying) {
   const bool IS_PLAYER = actorTrying == eng.player;
   const bool TRYER_IS_BLIND =
-    actorTrying->getPropHandler()->allowSee() == false;
+    actorTrying->getPropHandler().allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng.map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
@@ -450,7 +450,7 @@ void Door::tryOpen(Actor* actorTrying) {
   trace << "Door::tryOpen()" << endl;
   const bool IS_PLAYER = actorTrying == eng.player;
   const bool TRYER_IS_BLIND =
-    actorTrying->getPropHandler()->allowSee() == false;
+    actorTrying->getPropHandler().allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
