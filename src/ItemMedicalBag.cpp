@@ -42,7 +42,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
       } break;
 
       case medicalBagAction_treatWound: {
-        if(propHandler->hasProp(propWound) == false) {
+        if(propHandler.hasProp(propWound) == false) {
           eng.log->addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -79,7 +79,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
         case endOfMedicalBagActions: {} break;
       }
 
-      eng.gameTime->endTurnOfCurrentActor();
+      eng.gameTime->actorDidAct();
     }
   }
 
@@ -129,7 +129,7 @@ void MedicalBag::continueAction() {
   if(nrTurnsLeft_ <= 0) {
     finishCurAction();
   } else {
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
   }
 }
 
@@ -169,8 +169,7 @@ void MedicalBag::finishCurAction() {
   curAction_ = endOfMedicalBagActions;
 
   if(nrSupplies_ <= 0) {
-    Inventory* const inv = eng.player->getInv();
-    inv->removetemInGeneralWithPointer(this, true);
+    eng.player->getInv().removetemInGeneralWithPointer(this, true);
   }
 }
 

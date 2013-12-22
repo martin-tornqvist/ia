@@ -20,7 +20,7 @@ bool Device::activateDefault(Actor* const actor) {
 
   if(data_->isIdentified) {
     bool isDestroyed = toggle();
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
     return isDestroyed;
   } else {
     eng.log->addMsg("I cannot yet use this.");

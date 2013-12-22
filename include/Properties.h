@@ -55,10 +55,10 @@ enum PropId_t {
   endOfPropIds
 };
 
+enum PropTurnMode_t {propTurnModeStandard, propTurnModeActor};
+
 enum PropTurns_t {
-  propTurnsSpecified,
-  propTurnsIndefinite,
-  propTurnsStandard
+  propTurnsSpecified, propTurnsIndefinite, propTurnsStandard
 };
 
 enum PropMsg_t {
@@ -74,16 +74,10 @@ enum PropMsg_t {
 };
 
 enum PropAlignment_t {
-  propAlignmentGood,
-  propAlignmentBad,
-  propAlignmentNeutral
+  propAlignmentGood, propAlignmentBad, propAlignmentNeutral
 };
 
-enum PropSrc_t {
-  propSrcApplied,
-  propSrcInv,
-  propSrcAppliedAndInv
-};
+enum PropSrc_t {propSrcApplied, propSrcInv, propSrcAppliedAndInv};
 
 struct PropData {
   PropData() :
@@ -98,9 +92,7 @@ struct PropData {
     isEndedByMagicHealing(false),
     allowTestingOnBot(false),
     alignment(propAlignmentBad) {
-    for(int i = 0; i < endOfPropMsg; i++) {
-      msg[i] = "";
-    }
+    for(int i = 0; i < endOfPropMsg; i++) {msg[i] = "";}
   }
 
   PropId_t id;
@@ -170,9 +162,12 @@ public:
   bool changeActorClr(SDL_Color& clr) const;
 
   vector<Prop*> appliedProps_;
+  vector<Prop*> actorTurnPropBuffer_;
 
-  void newTurnAllProps(
-    const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]);
+  void applyActorTurnPropBuffer();
+
+  void tick(const PropTurnMode_t turnMode,
+            const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]);
 
   void getPropsInterfaceLine(vector<StrAndClr>& line) const;
 
@@ -204,24 +199,14 @@ public:
 
   PropId_t getId() {return id_;}
 
-  virtual bool isFinnished() const {
-    return turnsLeft_ == 0;
-  }
-  virtual PropAlignment_t getAlignment() const {
-    return data_->alignment;
-  }
-  virtual bool allowDisplayTurns() const {
-    return data_->allowDisplayTurns;
-  }
+  virtual bool isFinnished() const {return turnsLeft_ == 0;}
+  virtual PropAlignment_t getAlignment() const {return data_->alignment;}
+  virtual bool allowDisplayTurns() const {return data_->allowDisplayTurns;}
   virtual bool isMakingMonsterAware() const {
     return data_->isMakingMonsterAware;
   }
-  virtual string getName() const {
-    return data_->name;
-  }
-  virtual string getNameShort() const {
-    return data_->nameShort;
-  }
+  virtual string getName() const {return data_->name;}
+  virtual string getNameShort() const {return data_->nameShort;}
   virtual void getMsg(const PropMsg_t msgType, string& msgRef) const {
     msgRef = data_->msg[msgType];
   }
@@ -243,10 +228,7 @@ public:
   virtual void onEnd()            {}
   virtual void onMore()           {}
 
-  virtual bool changeActorClr(SDL_Color& clr) const {
-    (void)clr;
-    return false;
-  }
+  virtual bool changeActorClr(SDL_Color& clr) const {(void)clr; return false;}
 
   virtual bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -282,6 +264,8 @@ public:
     (void)ALLOW_MESSAGE_WHEN_TRUE;
     return false;
   }
+
+  virtual PropTurnMode_t getTurnMode() const {return propTurnModeStandard;}
 
   int turnsLeft_;
 
@@ -385,6 +369,8 @@ public:
     Prop(propStill, engine, turnsInit, turns) {}
 
   ~PropStill() override {}
+
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
 
   int getAbilityMod(const Abilities_t ability) const override {
     if(ability == ability_accuracyRanged) return 10;
@@ -534,6 +520,8 @@ public:
 
   ~PropWaiting() override {}
 
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
+
   bool allowMove() const override  {return false;}
   bool allowAct() const override   {return false;}
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
@@ -553,6 +541,8 @@ public:
 
   ~PropDisabledAttack() override {}
 
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
+
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
@@ -570,6 +560,8 @@ public:
 
   ~PropDisabledMelee() override {}
 
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
+
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
     return false;
@@ -582,6 +574,8 @@ public:
     Prop(propDisabledRanged, engine, turnsInit, turns) {}
 
   ~PropDisabledRanged() override {}
+
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;

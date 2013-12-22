@@ -37,25 +37,17 @@ public:
 
   void insertActorInLoop(Actor* actor);
 
-  void endTurnOfCurrentActor();
+  void actorDidAct(const bool IS_FREE_TURN = false);
 
-  int getTurn() {
-    return turn_;
-  }
+  inline int getTurn() {return turn_;}
 
   Actor* getCurrentActor();
 
-  int getNrActors() const {
-    return actors_.size();
-  }
+  inline int getNrActors() const {return actors_.size();}
 
-  int getNrFeatureMobs() {
-    return featureMobs_.size();
-  }
+  inline int getNrFeatureMobs() {return featureMobs_.size();}
 
-  Actor& getActorAtElement(const int i) {
-    return *(actors_.at(i));
-  }
+  inline Actor& getActorAtElement(const int i) {return *(actors_.at(i));}
 
   FeatureMob& getFeatureMobAtElement(const int ELEMENT) {
     return *(featureMobs_.at(ELEMENT));
@@ -63,16 +55,14 @@ public:
 
   void eraseActorInElement(const unsigned int i);
 
-  vector<FeatureMob*> getFeatureMobsAtPos(const Pos& pos);
+  void getFeatureMobsAtPos(const Pos& pos, vector<FeatureMob*>& vectorRef);
 
   void addFeatureMob(FeatureMob* const feature) {
     featureMobs_.push_back(feature);
   }
 
   void eraseAllFeatureMobs() {
-    for(unsigned int i = 0; i < featureMobs_.size(); i++) {
-      delete featureMobs_.at(i);
-    }
+    for(FeatureMob * m : featureMobs_) {delete m;}
     featureMobs_.resize(0);
   }
 

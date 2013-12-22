@@ -81,7 +81,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 }
 
 void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
@@ -152,14 +152,12 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           actorHere->hit(data->dmg, dmgType_physical, true);
           isActorHit = true;
 
-          //If the thing that hit an actor is a potion,
-          //let it make stuff happen...
+          //If throwing a potion on an actor, let it make stuff happen...
           if(itemThrownData.isPotion) {
-            dynamic_cast<Potion*>(&itemThrown)->collide(
-              curPos, actorHere);
+            dynamic_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
             delete data;
-            eng.gameTime->endTurnOfCurrentActor();
+            eng.gameTime->actorDidAct();
             return;
           }
 
@@ -196,7 +194,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         path.at(blockedInElement), NULL);
       delete &itemThrown;
       delete data;
-      eng.gameTime->endTurnOfCurrentActor();
+      eng.gameTime->actorDidAct();
       return;
     }
   }
@@ -223,5 +221,5 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
   delete data;
   eng.renderer->drawMapAndInterface();
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 }

@@ -111,11 +111,11 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInv();
-
-  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+  Inventory& inv = eng.player->getInv();
+  const int NR_INDEXES = genInvIndexes.size();
+  for(unsigned int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
-    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+    Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
@@ -177,9 +177,9 @@ void RenderInventory::drawEquipMode(
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInv();
-
-  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+  Inventory& inv = eng.player->getInv();
+  const int NR_INDEXES = genInvIndexes.size();
+  for(unsigned int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     str = "x) ";
     str.at(0) = 'a' + i;
@@ -188,7 +188,7 @@ void RenderInventory::drawEquipMode(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 2;
 
-    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+    Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
@@ -235,11 +235,11 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory* const inv = eng.player->getInv();
-
-  for(unsigned int i = 0; i < genInvIndexes.size(); i++) {
+  Inventory& inv = eng.player->getInv();
+  const int NR_INDEXES = genInvIndexes.size();
+  for(unsigned int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
-    Item* const item = inv->getGeneral()->at(genInvIndexes.at(i));
+    Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
@@ -251,7 +251,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     if(i == 0) {
       isNewLabel = true;
     } else {
-      Item* const itemPrev = inv->getGeneral()->at(genInvIndexes.at(i - 1));
+      Item* const itemPrev = inv.getGeneral().at(genInvIndexes.at(i - 1));
       const string& labelPrev = itemPrev->getDefaultActivationLabel();
       isNewLabel = label != labelPrev;
     }

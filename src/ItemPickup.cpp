@@ -36,8 +36,7 @@ void ItemPickup::tryPick() {
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().isMissileWeapon) {
-      Item* const carriedMissile =
-        playerInventory->getItemInSlot(slot_missiles);
+      Item* const carriedMissile = playerInv.getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
         if(item->getData().id == carriedMissile->getData().id) {
           eng.audio->play(sfxPickup);
@@ -46,13 +45,13 @@ void ItemPickup::tryPick() {
           carriedMissile->nrItems += item->nrItems;
           delete item;
           eng.map->cells[pos.x][pos.y].item = NULL;
-          eng.gameTime->endTurnOfCurrentActor();
+          eng.gameTime->actorDidAct();
           return;
         }
       }
     }
 
-    if(isInventoryFull(playerInventory, item)) {
+    if(isInvFull(playerInv, *item)) {
       eng.log->clearLog();
       eng.log->addMsg("I cannot carry more.");
     } else {
@@ -61,22 +60,19 @@ void ItemPickup::tryPick() {
       eng.log->clearLog();
       eng.log->addMsg("I pick up " + ITEM_NAME + ".");
 
-      playerInventory->putItemInGeneral(item);
+      playerInv.putItemInGeneral(item);
 
       eng.map->cells[pos.x][pos.y].item = NULL;
 
-      eng.gameTime->endTurnOfCurrentActor();
+      eng.gameTime->actorDidAct();
     }
   }
 }
 
-bool ItemPickup::isInventoryFull(Inventory* inventory, Item* item) const {
+bool ItemPickup::isInvFull(Inventory& inv, Item& item) const {
   //If item can be stacked, the inventory is not considered full.
-  if(inventory->getElementToStackItem(item) != -1) {
-    return false;
-  }
-
-  return inventory->getGeneral()->size() + 'a' - 1 >= 'z';
+  if(inv.getElementToStackItem(&item) != -1) {return false;}
+  return inv.getGeneral().size() + 'a' - 1 >= 'z';
 }
 
 void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
@@ -88,7 +84,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
       if(nrAmmoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
-        Inventory* const playerInventory = eng.player->getInv();
+        Inventory& playerInv = eng.player->getInv();
         const ItemId_t ammoType = weapon->getData().rangedAmmoTypeUsed;
 
         ItemData* const ammoData = eng.itemDataHandler->dataList[ammoType];
@@ -106,9 +102,9 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           eng.itemDataHandler->getItemRef(*weapon, itemRef_a);
         eng.log->addMsg("I unload " + WEAPON_REF_A);
 
-        if(isInventoryFull(playerInventory, spawnedAmmo) == false) {
+        if(isInvFull(playerInv, *spawnedAmmo) == false) {
           eng.audio->play(sfxPickup);
-          playerInventory->putItemInGeneral(spawnedAmmo);
+          playerInv.putItemInGeneral(spawnedAmmo);
         } else {
           eng.audio->play(sfxPickup);
           eng.itemDrop->dropItemOnMap(eng.player->pos, *spawnedAmmo);
@@ -118,7 +114,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
 
         dynamic_cast<Weapon*>(item)->nrAmmoLoaded = 0;
 
-        eng.gameTime->endTurnOfCurrentActor();
+        eng.gameTime->actorDidAct();
         return;
       }
     } else {

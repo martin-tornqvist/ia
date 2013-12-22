@@ -98,6 +98,14 @@ int main(int argc, char* argv[]) {
 
           Actor* const actor = eng->gameTime->getCurrentActor();
 
+          //Properties running on the actor's turn are not immediately applied
+          //on the actor, but instead placed in a buffer. This is to ensure
+          //that e.g. a property set to last one turn actually covers one turn
+          //(and not applied after the actor acts, and ends before the actor's
+          //next turn)
+          //The contents of the buffer are moved to the applied properties here
+          actor->getPropHandler().applyActorTurnPropBuffer();
+
           actor->updateColor();
 
           if(actor->getPropHandler().allowAct()) {
@@ -107,7 +115,7 @@ int main(int argc, char* argv[]) {
               eng->renderer->drawMapAndInterface();
               eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
-            eng->gameTime->endTurnOfCurrentActor();
+            eng->gameTime->actorDidAct();
           }
         } else {
           //Player is dead, run postmortem, then return to main menu

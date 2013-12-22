@@ -30,7 +30,7 @@ void InventoryHandler::activateDefault(
   Inventory& playerInv = eng.player->getInv();
   Item* item = playerInv.getGeneral().at(GENERAL_ITEMS_ELEMENT);
   if(item->activateDefault(eng.player)) {
-    playerInv.decreaseItemInGeneral(GENERAL_ITEMS_ELEMENT);
+    playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
 }
 
@@ -111,7 +111,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
   vector<Item*>& general = eng.player->getInv().getGeneral();
   generalItemsToShow.resize(0);
   const int NR_GEN = general.size();
-  for(unsigned int i = 0; i < NR_GEN; i++) {generalItemsToShow.push_back(i);}
+  for(int i = 0; i < NR_GEN; i++) {generalItemsToShow.push_back(i);}
 }
 
 void InventoryHandler::runSlotsScreen() {
@@ -183,7 +183,7 @@ void InventoryHandler::runSlotsScreen() {
                 "I take off my " + itemName + ".", clrWhite, true, true);
               item->onTakeOff();
               eng.renderer->drawMapAndInterface();
-              eng.gameTime->endTurnOfCurrentActor();
+              eng.gameTime->actorDidAct();
               return;
             } else {
               eng.renderInventory->drawBrowseSlotsMode(

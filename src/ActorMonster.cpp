@@ -46,7 +46,7 @@ void Monster::onActorTurn() {
 
   if(waiting_) {
     if(playerAwarenessCounter <= 0) {
-      eng.gameTime->endTurnOfCurrentActor();
+      eng.gameTime->actorDidAct();
       return;
     }
   }
@@ -194,7 +194,7 @@ void Monster::onActorTurn() {
     return;
   }
 
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 }
 
 void Monster::onMonsterHit(int& dmg) {
@@ -218,7 +218,7 @@ void Monster::moveDir(Dir_t dir) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == dirCenter) {
         traceVerbose << "Monster: Move prevented by trap" << endl;
-        eng.gameTime->endTurnOfCurrentActor();
+        eng.gameTime->actorDidAct();
         return;
       }
     }
@@ -234,13 +234,12 @@ void Monster::moveDir(Dir_t dir) {
   pos = targetCell;
 
   // Bump features in target cell (i.e. to trigger traps)
-  vector<FeatureMob*> featureMobs = eng.gameTime->getFeatureMobsAtPos(pos);
-  for(unsigned int i = 0; i < featureMobs.size(); i++) {
-    featureMobs.at(i)->bump(*this);
-  }
+  vector<FeatureMob*> featureMobs;
+  eng.gameTime->getFeatureMobsAtPos(pos, featureMobs);
+  for(FeatureMob* m : featureMobs) {m->bump(*this);}
   eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
 
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 }
 
 void Monster::hearSound(const Sound& snd) {

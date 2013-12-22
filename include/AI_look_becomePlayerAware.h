@@ -50,7 +50,7 @@ public:
             if(WAS_AWARE_BEFORE) {
               return false;
             } else {
-              engine.gameTime->endTurnOfCurrentActor();
+              engine.gameTime->actorDidAct();
               return true;
             }
           }
@@ -59,7 +59,7 @@ public:
           if(WAS_AWARE_BEFORE) {
             return false;
           } else {
-            engine.gameTime->endTurnOfCurrentActor();
+            engine.gameTime->actorDidAct();
             return true;
           }
         }
@@ -67,9 +67,6 @@ public:
     }
     return false;
   }
-
-private:
-
 };
 
 #endif

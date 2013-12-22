@@ -59,7 +59,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
     monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
   }
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 }
 
 void Attack::printMeleeMessages(const MeleeAttackData& data,

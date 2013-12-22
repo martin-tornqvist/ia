@@ -84,7 +84,7 @@ public:
     const unsigned int GENERAL_INV_ELEMENT,
     const SlotTypes_t slotToEquip, Engine& engine);
 
-  void swapWieldedAndPrepared(const bool END_TURN, Engine& engine);
+  void swapWieldedAndPrepared(const bool IS_FREE_TURN, Engine& engine);
 
   bool hasAmmoForFirearmInInventory();
 
@@ -95,11 +95,11 @@ public:
 
   void removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
 
-  void decreaseItemInSlot(SlotTypes_t slotName);
+  void decrItemInSlot(SlotTypes_t slotName);
 
-  void decreaseItemInGeneral(unsigned element);
+  void decrItemInGeneral(unsigned element);
 
-  void decreaseItemTypeInGeneral(const ItemId_t itemId);
+  void decrItemTypeInGeneral(const ItemId_t itemId);
 
   void deleteItemInGeneralWithElement(const unsigned ELEMENT);
   void removetemInGeneralWithPointer(
@@ -117,7 +117,7 @@ public:
 
   bool hasDynamiteInGeneral() const;
 
-  void decreaseDynamiteInGeneral();
+  void decrDynamiteInGeneral();
 
   InventorySlot* getSlot(SlotTypes_t slotName);
 

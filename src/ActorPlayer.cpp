@@ -319,7 +319,7 @@ void Player::incrInsanity() {
     bool playerSeeShockingMonster = false;
     vector<Actor*> spotedEnemies;
     getSpotedEnemies(spotedEnemies);
-    for(Actor* actor : spotedEnemies) {
+    for(Actor * actor : spotedEnemies) {
       const ActorData& def = actor->getData();
       if(def.monsterShockLevel != monsterShockLevel_none) {
         playerSeeShockingMonster = true;
@@ -821,7 +821,7 @@ void Player::specificOnStandardTurn() {
   vector<Actor*> spotedEnemies;
   getSpotedEnemies(spotedEnemies);
   double shockFromMonstersCurrentPlayerTurn = 0.0;
-  for(Actor* actor : spotedEnemies) {
+  for(Actor * actor : spotedEnemies) {
     Monster* monster = dynamic_cast<Monster*>(actor);
     const ActorData& data = monster->getData();
     if(data.monsterShockLevel != monsterShockLevel_none) {
@@ -874,12 +874,11 @@ void Player::specificOnStandardTurn() {
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
     incrInsanity();
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
     return;
   }
 
   const int NR_ACTORS = eng.gameTime->getNrActors();
-
   for(int i = 0; i < NR_ACTORS; i++) {
     //If applying first aid etc, messages may be printed for monsters that
     //comes into view.
@@ -1011,7 +1010,7 @@ void Player::specificOnStandardTurn() {
       eng.sleep(DELAY_PLAYER_WAITING);
     }
     waitTurnsLeft--;
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
   }
 }
 
@@ -1122,20 +1121,23 @@ void Player::moveDir(Dir_t dir) {
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or static features?
-      bool featuresAllowMove =
-        eng.map->cells[dest.x][dest.y].featureStatic->isMovePassable(this);
-      vector<FeatureMob*> featureMobs =
-        eng.gameTime->getFeatureMobsAtPos(dest);
-      if(featuresAllowMove) {
-        for(unsigned int i = 0; i < featureMobs.size(); i++) {
-          if(featureMobs.at(i)->isMovePassable(this) == false) {
-            featuresAllowMove = false;
+      Cell& cell = eng.map->cells[dest.x][dest.y];
+      bool isFeaturesAllowMove =
+        cell.featureStatic->isBodyTypePassable(getBodyType());
+
+      vector<FeatureMob*> featureMobs;
+      eng.gameTime->getFeatureMobsAtPos(dest, featureMobs);
+
+      if(isFeaturesAllowMove) {
+        for(FeatureMob * m : featureMobs) {
+          if(m->isBodyTypePassable(getBodyType()) == false) {
+            isFeaturesAllowMove = false;
             break;
           }
         }
       }
 
-      if(featuresAllowMove) {
+      if(isFeaturesAllowMove) {
         // Encumbered?
         if(inventory_->getTotalItemWeight() >= getCarryWeightLimit()) {
           eng.log->addMsg("I am too encumbered to move!");
@@ -1169,17 +1171,15 @@ void Player::moveDir(Dir_t dir) {
       }
 
       //Note: bump() prints block messages.
-      for(unsigned int i = 0; i < featureMobs.size(); i++) {
-        featureMobs.at(i)->bump(*this);
-      }
+      for(FeatureMob* m : featureMobs) {m->bump(*this);}
       eng.map->cells[dest.x][dest.y].featureStatic->bump(*this);
     }
-    //If destination reached, then we either moved or were held by something.
-    //End turn (unless free turn due to bonus).
-    if(pos == dest && isFreeTurn == false) {
-      eng.gameTime->endTurnOfCurrentActor();
+
+    if(pos == dest) {
+      eng.gameTime->actorDidAct(isFreeTurn);
       return;
     }
+
     eng.gameTime->updateLightMap();
     updateFov();
     eng.renderer->drawMapAndInterface();
@@ -1247,7 +1247,7 @@ void Player::specificAddLight(
 
   if(isUsingLightGivingItem == false) {
     vector<Item*>& generalItems = inventory_->getGeneral();
-    for(Item* const item : generalItems) {
+    for(Item * const item : generalItems) {
       if(item->getData().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern =
           dynamic_cast<DeviceElectricLantern*>(item);

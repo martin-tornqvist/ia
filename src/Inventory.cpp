@@ -152,10 +152,10 @@ int Inventory::getItemStackSizeInGeneral(const ItemId_t id) const {
   return 0;
 }
 
-void Inventory::decreaseDynamiteInGeneral() {
+void Inventory::decrDynamiteInGeneral() {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == item_dynamite) {
-      decreaseItemInGeneral(i);
+      decrItemInGeneral(i);
       break;
     }
   }
@@ -176,7 +176,7 @@ void Inventory::decreaseDynamiteInGeneral() {
  {
  for(unsigned int i = 0; i < general_.size(); i++) {
  if(general_.at(i)->getInstanceDefinition().id == item_firstAidKit) {
- decreaseItemInGeneral(i);
+ decrItemInGeneral(i);
  break;
  }
  }
@@ -289,7 +289,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
   return false;
 }
 
-void Inventory::decreaseItemInSlot(SlotTypes_t slotName) {
+void Inventory::decrItemInSlot(SlotTypes_t slotName) {
   Item* item = getItemInSlot(slotName);
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
@@ -331,7 +331,7 @@ void Inventory::removetemInGeneralWithPointer(
 }
 
 
-void Inventory::decreaseItemInGeneral(unsigned element) {
+void Inventory::decrItemInGeneral(unsigned element) {
   Item* item = general_.at(element);
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
@@ -351,10 +351,10 @@ void Inventory::decreaseItemInGeneral(unsigned element) {
   }
 }
 
-void Inventory::decreaseItemTypeInGeneral(const ItemId_t id) {
+void Inventory::decrItemTypeInGeneral(const ItemId_t id) {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id) {
-      decreaseItemInGeneral(i);
+      decrItemInGeneral(i);
       return;
     }
   }
@@ -397,7 +397,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
-      isFreeTurn = false; //engine.playerBonHandler->hasTrait(traitnimble);
+      isFreeTurn = false;
     }
   }
 
@@ -471,33 +471,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
         "I am now using " + nameAfter + " as missile weapon.");
     }
   }
-  if(isFreeTurn == false) {
-    engine.gameTime->endTurnOfCurrentActor();
-  }
+  engine.gameTime->actorDidAct(isFreeTurn);
 }
 
-//void Inventory::equipGeneralItemToAltAndPossiblyEndTurn(const unsigned int GENERAL_INV_ELEMENT, Engine& engine) {
-//  const bool IS_FREE_TURN = engine.playerBonHandler->hasTrait(traitnimble);
-//
-//  Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
-//  moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);
-//  Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
-//
-//  engine.renderer->drawMapAndInterface();
-//
-//  if(itemBefore != NULL) {
-//    engine.log->addMsg("I was using " + engine.itemData->itemInterfaceName(itemBefore, true) + " as a prepared weapon.");
-//  }
-//  engine.log->addMsg("I am now using " + engine.itemData->itemInterfaceName(itemAfter, true) + " as a prepared weapon.");
-//
-//  engine.renderer->drawMapAndInterface();
-//
-//  if(IS_FREE_TURN == false) {
-//    engine.gameTime->endTurnOfCurrentActor();
-//  }
-//}
-
-void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine& engine) {
+void Inventory::swapWieldedAndPrepared(
+  const bool IS_FREE_TURN, Engine& engine) {
   InventorySlot* slot1 = getSlot(slot_wielded);
   InventorySlot* slot2 = getSlot(slot_wieldedAlt);
   Item* item1 = slot1->item;
@@ -507,12 +485,11 @@ void Inventory::swapWieldedAndPrepared(const bool END_TURN, Engine& engine) {
 
   engine.renderer->drawMapAndInterface();
 
-  if(END_TURN) {
-    engine.gameTime->endTurnOfCurrentActor();
-  }
+  engine.gameTime->actorDidAct(IS_FREE_TURN);
 }
 
-void Inventory::moveItemFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT) {
+void Inventory::moveItemFromGeneralToIntrinsics(
+  const unsigned int GENERAL_INV_ELEMENT) {
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
 
   if(generalSlotExists) {

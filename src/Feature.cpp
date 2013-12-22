@@ -16,7 +16,7 @@ Feature::Feature(Feature_t id, Pos pos, Engine& engine,
 }
 
 void Feature::bump(Actor& actorBumping) {
-  if(isMovePassable(&actorBumping) == false) {
+  if(isBodyTypePassable(actorBumping.getBodyType()) == false) {
     if(&actorBumping == eng.player) {
       if(eng.player->getPropHandler().allowSee()) {
         eng.log->addMsg(data_->messageOnPlayerBlocked);
@@ -33,10 +33,6 @@ void Feature::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
 
 void Feature::newTurn() {
 
-}
-
-bool Feature::isMovePassable(Actor* const actorMoving) const {
-  return data_->isBodyTypePassable[actorMoving->getBodyType()];
 }
 
 bool Feature::isBodyTypePassable(const BodyType_t bodyType) const {
@@ -184,7 +180,8 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
 
   specificTryBash(actorTrying);
 
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
+
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
 }

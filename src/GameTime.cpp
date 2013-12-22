@@ -27,14 +27,14 @@ void GameTime::setParametersFromSaveLines(vector<string>& lines) {
   lines.erase(lines.begin());
 }
 
-vector<FeatureMob*> GameTime::getFeatureMobsAtPos(const Pos& pos) {
-  vector<FeatureMob*> returnVector;
-  for(unsigned int i = 0; i < featureMobs_.size(); i++) {
-    if(featureMobs_.at(i)->getPos() == pos) {
-      returnVector.push_back(featureMobs_.at(i));
+void GameTime::getFeatureMobsAtPos(
+  const Pos& pos, vector<FeatureMob*>& vectorRef) {
+  vectorRef.resize(0);
+  for(FeatureMob * m : featureMobs_) {
+    if(m->getPos() == pos) {
+      vectorRef.push_back(m);
     }
   }
-  return returnVector;
 }
 
 GameTime::~GameTime() {
@@ -62,18 +62,17 @@ void GameTime::insertActorInLoop(Actor* actor) {
   actors_.push_back(actor);
 }
 
-/*
- * For every turn type step, iterate through all actors and let those who can act
- * during this type of turn act. When all actors who can act during this phase have
- * acted, if this is a normal speed phase - consider it a global new turn; update
- * status effects, update timed features, spawn more monsters etc.
- */
-void GameTime::endTurnOfCurrentActor() {
-//  traceVerbose << "GameTime::endTurnOfCurrentActor().." << endl;
-
+//For every turn type step, run through all actors and let those who can act
+//during this type of turn act. When all actors who can act on this phase have
+//acted, and if this is a normal speed phase - consider it a standard turn;
+//update status effects, update timed features, spawn more monsters etc.
+void GameTime::actorDidAct(const bool IS_FREE_TURN) {
   runAtomicTurnEvents();
 
   Actor* currentActor = getCurrentActor();
+
+  //Tick properties running on actor turns
+  currentActor->getPropHandler().tick(propTurnModeActor, NULL);
 
   if(currentActor == eng.player) {
     eng.playerVisualMemory->updateVisualMemory();
@@ -85,64 +84,65 @@ void GameTime::endTurnOfCurrentActor() {
     }
   }
 
-  TurnType_t currentTurnType = static_cast<TurnType_t>(currentTurnTypePos_);
+  if(IS_FREE_TURN == false) {
+    TurnType_t currentTurnType = TurnType_t(currentTurnTypePos_);
 
-  bool actorWhoCanActThisTurnFound = false;
-  while(actorWhoCanActThisTurnFound == false) {
-    currentTurnType = (TurnType_t)(currentTurnTypePos_);
+    bool actorWhoCanActThisTurnFound = false;
+    while(actorWhoCanActThisTurnFound == false) {
+      currentTurnType = (TurnType_t)(currentTurnTypePos_);
 
-    currentActorVectorPos_++;
+      currentActorVectorPos_++;
 
-    if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
-      currentActorVectorPos_ = 0;
-      currentTurnTypePos_++;
-      if(currentTurnTypePos_ == endOfTurnType) {
-        currentTurnTypePos_ = 0;
-      }
+      if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
+        currentActorVectorPos_ = 0;
+        currentTurnTypePos_++;
+        if(currentTurnTypePos_ == endOfTurnType) {
+          currentTurnTypePos_ = 0;
+        }
 
-      if(
-        currentTurnType != turnType_fast &&
-        currentTurnType != turnType_fastest) {
-        runStandardTurnEvents();
-      }
-    }
-
-    currentActor = getCurrentActor();
-
-    const bool IS_SLOWED =
-      currentActor->getPropHandler().hasProp(propSlowed);
-    const ActorSpeed_t defSpeed = currentActor->getData().speed;
-    const ActorSpeed_t realSpeed =
-      IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
-      defSpeed : ActorSpeed_t(defSpeed - 1);
-    switch(realSpeed) {
-      case actorSpeed_sluggish: {
-        actorWhoCanActThisTurnFound =
-          (currentTurnType == turnType_slow ||
-           currentTurnType == turnType_normal_2)
-          && eng.dice.fraction(2, 3);
-      }
-      break;
-      case actorSpeed_slow: {
-        actorWhoCanActThisTurnFound =
-          currentTurnType == turnType_slow ||
-          currentTurnType == turnType_normal_2;
-      }
-      break;
-      case actorSpeed_normal: {
-        actorWhoCanActThisTurnFound =
+        if(
           currentTurnType != turnType_fast &&
-          currentTurnType != turnType_fastest;
+          currentTurnType != turnType_fastest) {
+          runStandardTurnEvents();
+        }
       }
-      break;
-      case actorSpeed_fast: {
-        actorWhoCanActThisTurnFound = currentTurnType != turnType_fastest;
+
+      currentActor = getCurrentActor();
+
+      const bool IS_SLOWED =
+        currentActor->getPropHandler().hasProp(propSlowed);
+      const ActorSpeed_t defSpeed = currentActor->getData().speed;
+      const ActorSpeed_t realSpeed =
+        IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
+        defSpeed : ActorSpeed_t(defSpeed - 1);
+      switch(realSpeed) {
+        case actorSpeed_sluggish: {
+          actorWhoCanActThisTurnFound =
+            (currentTurnType == turnType_slow ||
+             currentTurnType == turnType_normal_2)
+            && eng.dice.fraction(2, 3);
+        } break;
+
+        case actorSpeed_slow: {
+          actorWhoCanActThisTurnFound =
+            currentTurnType == turnType_slow ||
+            currentTurnType == turnType_normal_2;
+        } break;
+
+        case actorSpeed_normal: {
+          actorWhoCanActThisTurnFound =
+            currentTurnType != turnType_fast &&
+            currentTurnType != turnType_fastest;
+        } break;
+
+        case actorSpeed_fast: {
+          actorWhoCanActThisTurnFound = currentTurnType != turnType_fastest;
+        } break;
+
+        case actorSpeed_fastest: {
+          actorWhoCanActThisTurnFound = true;
+        } break;
       }
-      break;
-      case actorSpeed_fastest: {
-        actorWhoCanActThisTurnFound = true;
-      }
-      break;
     }
   }
 
@@ -167,7 +167,7 @@ void GameTime::runStandardTurnEvents() {
   for(unsigned int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
 
-    actor->getPropHandler().newTurnAllProps(visionBlockers);
+    actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;

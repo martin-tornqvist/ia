@@ -61,8 +61,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     }
 
     //End turn
-    eng.gameTime->endTurnOfCurrentActor();
-
+    eng.gameTime->actorDidAct();
   }
 }
 

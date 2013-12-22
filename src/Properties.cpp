@@ -1,5 +1,6 @@
 #include "Properties.h"
 
+#include <assert.h>
 #include <algorithm>
 
 #include "Engine.h"
@@ -684,11 +685,12 @@ void PropDataHandler::addPropData(PropData& d) {
 PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
   owningActor_(owningActor), eng(engine) {
   appliedProps_.resize(0);
+  actorTurnPropBuffer_.resize(0);
 
-  const ActorData* const actorData = owningActor->getData();
+  const ActorData& d = owningActor->getData();
 
   for(unsigned int i = 0; i < endOfPropIds; i++) {
-    if(actorData->intrProps[i]) {
+    if(d.intrProps[i]) {
       Prop* const prop = makePropFromId(PropId_t(i), propTurnsIndefinite);
       tryApplyProp(prop, true, true, true, true);
     }
@@ -704,8 +706,6 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propBurning:           return new PropBurning(eng, turnsInit, NR_TURNS);
     case propFlared:            return new PropFlared(eng, turnsInit, NR_TURNS);
     case propParalysed:         return new PropParalyzed(eng, turnsInit, NR_TURNS);
-//    case propFrozen:            return new PropFrozen(eng, turnsInit, NR_TURNS);
-//    case propFreeAction:        return new PropFreeAction(eng, turnsInit, NR_TURNS);
     case propTerrified:         return new PropTerrified(eng, turnsInit, NR_TURNS);
     case propWeakened:          return new PropWeakened(eng, turnsInit, NR_TURNS);
     case propConfused:          return new PropConfused(eng, turnsInit, NR_TURNS);
@@ -717,9 +717,6 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propPoisoned:          return new PropPoisoned(eng, turnsInit, NR_TURNS);
     case propFainted:           return new PropFainted(eng, turnsInit, NR_TURNS);
     case propFrenzied:          return new PropFrenzied(eng, turnsInit, NR_TURNS);
-//    case propPerfectStealth:    return new PropPerfectStealth(eng, turnsInit, NR_TURNS);
-//    case propPerfectFortitude:  return new PropPerfectFortitude(eng, turnsInit, NR_TURNS);
-//    case propPerfectToughness:  return new PropPerfectToughness(eng, turnsInit, NR_TURNS);
     case propStill:             return new PropStill(eng, turnsInit, NR_TURNS);
     case propDisabledAttack:    return new PropDisabledAttack(eng, turnsInit, NR_TURNS);
     case propDisabledMelee:     return new PropDisabledMelee(eng, turnsInit, NR_TURNS);
@@ -736,18 +733,13 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propRPoison:           return new PropRPoison(eng, turnsInit, NR_TURNS);
     case propRSleep:            return new PropRSleep(eng, turnsInit, NR_TURNS);
     case propLightSensitive:    return new PropLightSensitive(eng, turnsInit, NR_TURNS);
-    case endOfPropIds: {
-      trace << "[WARNING] Illegal property id, in PropHandler::makePropFromId()" << endl;
-      return NULL;
-    }
+    case endOfPropIds: {assert(false && "Bad property id");}
   }
   return NULL;
 }
 
 PropHandler::~PropHandler() {
-  for(unsigned int i = 0; i < appliedProps_.size(); i++) {
-    delete appliedProps_.at(i);
-  }
+  for(Prop * prop : appliedProps_) {delete prop;}
 }
 
 void PropHandler::getPropsFromSource(vector<Prop*>& propList,
@@ -842,21 +834,20 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool DISABLE_REDRAW,
                                const bool DISABLE_PROP_START_EFFECTS) {
 
-  //---------------------------------------------------------------------------
-  //TODO This is used for offsetting game time immediately decreasing all prop
-  //turns after they get applied. I.e. being Still (from marksman bonus), or
-  //Waiting (from walking through water) for one turn, will not even register
-  //for the player, since there will be a standard turn between. When using the
-  //code below, one can for example set Still for 1 turn when pressing wait,
-  //which sounds sensible. It also sounds sensible that props should end when
-  //turnsLeft == 0... it's unclear how this should be handled, but the change
-  //below seems to work somewhat well. It doesn't feel like a good long term
-  //solution though, and may have some unknown problems. Investigation needed.
-  //---------------------------------------------------------------------------
-  if(prop->turnsLeft_ > 0) {
-    prop->turnsLeft_++;
+  //First, if this is a prop that runs on actor turns, check if the actor-turn
+  //prop buffer does not already contain the prop.
+  //* If it doesn't, then just add it to the buffer and return.
+  //* If the buffer already contains the prop, it means it was requested to be
+  //applied from the buffer to the applied props.
+  //This way, this function can be used both for requesting to appply props,
+  //and for applying props from the buffer.
+  if(prop->getTurnMode() == propTurnModeActor) {
+    vector<Prop*>& buffer = actorTurnPropBuffer_;
+    if(find(buffer.begin(), buffer.end(), prop) == buffer.end()) {
+      buffer.push_back(prop);
+      return;
+    }
   }
-  //---------------------------------------------------------------------------
 
   prop->owningActor_ = owningActor_;
 
@@ -937,8 +928,9 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     }
   }
 
-  //This part reached means the applied property is new.
+  //This part reached means the property is new
   appliedProps_.push_back(prop);
+
   if(DISABLE_PROP_START_EFFECTS == false) {
     prop->onStart();
   }
@@ -1037,35 +1029,46 @@ bool PropHandler::endAppliedProp(
   return true;
 }
 
-void PropHandler::newTurnAllProps(
-  const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]) {
+void PropHandler::applyActorTurnPropBuffer() {
+  for(Prop * prop : actorTurnPropBuffer_) {tryApplyProp(prop);}
+  actorTurnPropBuffer_.resize(0);
+}
+
+void PropHandler::tick(const PropTurnMode_t turnMode,
+                       const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]) {
 
   for(unsigned int i = 0; i < appliedProps_.size();) {
     Prop* const prop = appliedProps_.at(i);
-    if(owningActor_ != eng.player) {
-      if(prop->isMakingMonsterAware()) {
-        dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
-          owningActor_->getData().nrTurnsAwarePlayer;
+
+    //Only tick property if it runs on the given turn mode
+    //(standard turns or actor turns)
+    if(prop->getTurnMode() == turnMode) {
+
+      if(owningActor_ != eng.player) {
+        if(prop->isMakingMonsterAware()) {
+          dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
+            owningActor_->getData().nrTurnsAwarePlayer;
+        }
       }
-    }
 
-    if(prop->turnsLeft_ > 0) {
-      prop->turnsLeft_--;
-    }
+      if(prop->turnsLeft_ > 0) {
+        prop->turnsLeft_--;
+      }
 
-    if(prop->isFinnished()) {
-      endAppliedProp(prop->getId(), visionBlockers);
+      if(prop->isFinnished()) {
+        endAppliedProp(prop->getId(), visionBlockers);
+      } else {
+        prop->onNewTurn();
+        i++;
+      }
     } else {
-      prop->onNewTurn();
       i++;
     }
   }
 
   vector<Prop*> invProps;
   getPropsFromSource(invProps, propSrcInv);
-  const unsigned int NR_INV_PROPS = invProps.size();
-  for(unsigned int i = 0; i < NR_INV_PROPS; i++) {
-    Prop* const prop = invProps.at(i);
+  for(Prop * prop : invProps) {
     if(owningActor_ != eng.player) {
       if(prop->isMakingMonsterAware()) {
         dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
@@ -1082,11 +1085,9 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   const bool IS_SELF_AWARE =
     eng.playerBonHandler->hasTrait(traitSelfAware);
 
-  vector<Prop*> props;
-  getPropsFromSource(props, propSrcAppliedAndInv);
-  const int NR_PROPS = props.size();
-  for(int i = 0; i < NR_PROPS; i++) {
-    Prop* const prop = props.at(i);
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  for(Prop * prop : propList) {
     const string propName = prop->getNameShort();
     if(propName.empty() == false) {
       const PropAlignment_t alignment = prop->getAlignment();
@@ -1095,9 +1096,9 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
                               ("(" + toString(TURNS_LEFT) + ")") : "";
       line.push_back(
         StrAndClr(propName + turnsStr,
-                     alignment == propAlignmentGood ? clrMessageGood :
-                     alignment == propAlignmentBad  ? clrMessageBad :
-                     clrWhite));
+                  alignment == propAlignmentGood ? clrMessageGood :
+                  alignment == propAlignmentBad  ? clrMessageBad :
+                  clrWhite));
     }
   }
 }
@@ -1105,20 +1106,16 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
 void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    propList.at(i)->changeMoveDir(actorPos, dir);
-  }
+  for(Prop * prop : propList) {prop->changeMoveDir(actorPos, dir);}
 }
 
 bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
+  for(Prop * prop : propList) {
     if(
-      propList.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
-      propList.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+      prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
+      prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }
@@ -1128,9 +1125,8 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+  for(Prop * prop : propList) {
+    if(prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }
@@ -1140,9 +1136,8 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+  for(Prop * prop : propList) {
+    if(prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
   }
@@ -1152,9 +1147,8 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowMove() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowMove() == false) {
+  for(Prop * prop : propList) {
+    if(prop->allowMove() == false) {
       return false;
     }
   }
@@ -1164,9 +1158,8 @@ bool PropHandler::allowMove() const {
 bool PropHandler::allowAct() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowAct() == false) {
+  for(Prop * prop : propList) {
+    if(prop->allowAct() == false) {
       return false;
     }
   }

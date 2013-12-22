@@ -27,7 +27,6 @@ public:
   ~Door() override {}
 
   void bump(Actor& actorBumping)                      override;
-  bool isMovePassable(Actor* const actorMoving)       const override;
   bool isBodyTypePassable(const BodyType_t bodyType)  const override;
   bool isVisionPassable()                             const override;
   bool isProjectilesPassable()                        const override;

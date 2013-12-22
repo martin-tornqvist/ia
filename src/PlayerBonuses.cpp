@@ -124,13 +124,13 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitTough: {
-      strRef  = " + 3 hit points, +10 % carry weight limit, better results ";
+      strRef  = "+3 hit points, +10 % carry weight limit, better results ";
       strRef += "for object interactions requiring strength(such as ";
       strRef += "bashing doors, or moving the lid from a stone coffin)";
     } break;
 
     case traitStrongBacked: {
-      strRef  = " + 30 % carry weight limit";
+      strRef  = "+ 30 % carry weight limit";
     } break;
 
     case traitBreachExpert: {
@@ -258,12 +258,12 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 
     case traitSelfAware: {
       eng.player->getPropHandler().tryApplyProp(
-        new PropRConfusion(eng, propTurnsIndefinite), true, true, true);
+        new PropRConfusion(eng, propTurnsIndefinite), true, true, true, true);
     } break;
 
     case traitFearless: {
       eng.player->getPropHandler().tryApplyProp(
-        new PropRFear(eng, propTurnsIndefinite), true, true, true);
+        new PropRFear(eng, propTurnsIndefinite), true, true, true, true);
     } break;
 
     //    case traitOccultist: {

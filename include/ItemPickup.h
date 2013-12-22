@@ -19,7 +19,7 @@ public:
 private:
   void pickupEffects(Actor* actor, Item* item);
 
-  bool isInventoryFull(Inventory* inventory, Item* item) const;
+  bool isInvFull(Inventory& inv, Item& item) const;
 
   Engine& eng;
 };

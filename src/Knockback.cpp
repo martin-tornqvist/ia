@@ -87,8 +87,8 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           }
 
           // Bump features (e.g. so monsters can be knocked back into traps)
-          vector<FeatureMob*> featureMobs =
-            eng.gameTime->getFeatureMobsAtPos(defender.pos);
+          vector<FeatureMob*> featureMobs;
+          eng.gameTime->getFeatureMobsAtPos(defender.pos, featureMobs);
           for(
             unsigned int featureMobIndex = 0;
             featureMobIndex < featureMobs.size();

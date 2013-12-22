@@ -79,11 +79,11 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
       }
     }
 
-    PropHandler* propHandeler = caster->getPropHandler();
+    PropHandler& propHandler = caster->getPropHandler();
 
-    if(propHandeler->hasProp(propBlessed))  {costMax -= 1;}
-    if(propHandeler->allowSee() == false)   {costMax -= 1;}
-    if(propHandeler->hasProp(propCursed))   {costMax += 3;}
+    if(propHandler.hasProp(propBlessed))  {costMax -= 1;}
+    if(propHandler.allowSee() == false)   {costMax -= 1;}
+    if(propHandler.hasProp(propCursed))   {costMax += 3;}
 
     if(caster == eng.player) {
       costMax -= eng.player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
@@ -123,7 +123,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
       ret = specificCast(caster, eng);
     }
 
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
     trace << "Spell::cast() [DONE]" << endl;
     return ret;
   }
@@ -667,10 +667,10 @@ SpellCastRetData SpellEnfeeble::specificCast(
         actorPositions, clrMagenta);
 
       for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        PropHandler* const propHandler = spotedEnemies.at(i)->getPropHandler();
-        Prop* const prop = propHandler->makePropFromId(
+        PropHandler& propHandler = spotedEnemies.at(i)->getPropHandler();
+        Prop* const prop = propHandler.makePropFromId(
                              propId, propTurnsStandard);
-        propHandler->tryApplyProp(prop);
+        propHandler.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
     }
@@ -678,10 +678,10 @@ SpellCastRetData SpellEnfeeble::specificCast(
     eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
       vector<Pos>(1, eng.player->pos), clrMagenta);
 
-    PropHandler* const propHandler = eng.player->getPropHandler();
-    Prop* const prop = propHandler->makePropFromId(
+    PropHandler& propHandler = eng.player->getPropHandler();
+    Prop* const prop = propHandler.makePropFromId(
                          propId, propTurnsStandard);
-    eng.player->getPropHandler().tryApplyProp(prop);
+    propHandler.tryApplyProp(prop);
 
     return SpellCastRetData(false);
   }

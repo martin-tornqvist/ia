@@ -127,7 +127,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng.player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng.player->moveDir(dirCenter);
-      if(eng.playerBonHandler->hasTrait(traitAdeptMarksman)) {
+      if(eng.playerBonHandler->hasTrait(traitSteadyAimer)) {
         eng.player->getPropHandler().tryApplyProp(
           new PropStill(eng, propTurnsSpecified, 1));
       }
@@ -339,7 +339,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
               "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
           }
         }
-        eng.player->getInv().swapWieldedAndPrepared(IS_FREE_TURN == false, eng);
+        eng.player->getInv().swapWieldedAndPrepared(IS_FREE_TURN, eng);
       }
     }
     clearEvents();
@@ -356,7 +356,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         const string TURNS_STR = toString(TURNS_TO_APPLY);
         eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
         eng.player->waitTurnsLeft = TURNS_TO_APPLY - 1;
-        eng.gameTime->endTurnOfCurrentActor();
+        eng.gameTime->actorDidAct();
       } else {
         eng.log->addMsg("Not while an enemy is near.");
         eng.renderer->drawMapAndInterface();
@@ -385,7 +385,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             eng.marker->run(markerTask_aimThrownWeapon, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
-            playerInv.decreaseItemInSlot(slot_missiles);
+            playerInv.decrItemInSlot(slot_missiles);
           } else {
             delete itemToThrow;
           }

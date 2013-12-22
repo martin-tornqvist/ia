@@ -87,11 +87,6 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
   material_ = doorMaterial_wood;
 }
 
-bool Door::isMovePassable(Actor* const actorMoving) const {
-  if(actorMoving->getBodyType() == bodyType_ooze) {return true;}
-  return isOpen_;
-}
-
 bool Door::isBodyTypePassable(const BodyType_t bodyType) const {
   switch(bodyType) {
     case bodyType_normal:     return isOpen_;   break;
@@ -261,9 +256,8 @@ bool Door::trySpike(Actor* actorTrying) {
     eng.soundEmitter->emitSound(
       Sound("", endOfSfx, true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
   }
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
   return true;
-
 }
 
 void Door::specificTryBash(Actor& actorTrying) {
@@ -442,7 +436,7 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   if(isOpen_ == false && isClosable) {
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
   }
 }
 
@@ -542,7 +536,7 @@ void Door::tryOpen(Actor* actorTrying) {
       reveal(true);
     }
     trace << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
   }
 }
 

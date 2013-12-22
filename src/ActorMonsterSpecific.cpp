@@ -217,7 +217,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
               eng.knockBack->tryKnockBack(
                 *(eng.player), knockBackFromPos, false, false);
               pullCooldown = 5;
-              eng.gameTime->endTurnOfCurrentActor();
+              eng.gameTime->actorDidAct();
               return true;
             }
           }
@@ -282,7 +282,7 @@ bool Ghost::monsterSpecificOnActorTurn() {
             eng.player->getPropHandler().tryApplyProp(
               new PropSlowed(eng, propTurnsStandard));
           }
-          eng.gameTime->endTurnOfCurrentActor();
+          eng.gameTime->actorDidAct();
           return true;
         }
       }
@@ -400,7 +400,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
             }
             eng.renderer->drawMapAndInterface();
             hasSummonedLocusts = true;
-            eng.gameTime->endTurnOfCurrentActor();
+            eng.gameTime->actorDidAct();
             return true;
           }
         }
@@ -470,7 +470,7 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
               hasSummonedJenkin = true;
               jenkin->playerAwarenessCounter = 999;
               jenkin->leader = this;
-              eng.gameTime->endTurnOfCurrentActor();
+              eng.gameTime->actorDidAct();
               return true;
             }
           }
@@ -590,7 +590,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
               worm->playerAwarenessCounter = playerAwarenessCounter;
-              eng.gameTime->endTurnOfCurrentActor();
+              eng.gameTime->actorDidAct();
               return true;
             }
           }
@@ -626,7 +626,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
               locust->playerAwarenessCounter = playerAwarenessCounter;
-              eng.gameTime->endTurnOfCurrentActor();
+              eng.gameTime->actorDidAct();
               return true;
             }
           }
@@ -753,7 +753,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
           eng.renderer->drawMapAndInterface();
           hasSummonedTombLegions = true;
           eng.player->incrShock(shockValue_heavy);
-          eng.gameTime->endTurnOfCurrentActor();
+          eng.gameTime->actorDidAct();
           return true;
         }
       }
@@ -783,7 +783,7 @@ bool Zombie::tryResurrect() {
           }
 
           playerAwarenessCounter = data_->nrTurnsAwarePlayer * 2;
-          eng.gameTime->endTurnOfCurrentActor();
+          eng.gameTime->actorDidAct();
           return true;
         }
       }

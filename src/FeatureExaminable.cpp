@@ -26,7 +26,7 @@ void FeatureExaminable::examine() {
   trace << "FeatureExaminable::examine()..." << endl;
 
   featureSpecific_examine();
-  eng.gameTime->endTurnOfCurrentActor();
+  eng.gameTime->actorDidAct();
 
   trace << "FeatureExaminable::examine() [DONE]" << endl;
 }

@@ -218,7 +218,7 @@ void PlayerEnterName::run(const Pos& pos) const {
     }
   }
 
-  ActorData& def = *(eng.player->getData());
+  ActorData& def = eng.player->getData();
   def.name_a = def.name_the = name;
 }
 

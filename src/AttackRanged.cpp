@@ -51,7 +51,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const Pos origin = attacker.pos;
   vector<Pos> projectilePath;
   eng.lineCalc->calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
-                             projectilePath);
+                            projectilePath);
 
   const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
   char projectileGlyph = wpn.getData().rangedMissileGlyph;
@@ -200,8 +200,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         }
 
         //PROJECTILE HIT FEATURE?
-        vector<FeatureMob*> featureMobs =
-          eng.gameTime->getFeatureMobsAtPos(curProj->pos);
+        vector<FeatureMob*> featureMobs;
+        eng.gameTime->getFeatureMobsAtPos(curProj->pos, featureMobs);
         Feature* featureBlockingShot = NULL;
         for(
           unsigned int featMobIndex = 0;
@@ -371,9 +371,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   eng.renderer->drawMapAndInterface();
 
-  if(didAttack) {
-    eng.gameTime->endTurnOfCurrentActor();
-  }
+  if(didAttack) {eng.gameTime->actorDidAct();}
 
   return didAttack;
 }

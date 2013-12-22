@@ -104,7 +104,7 @@ void Trap::bump(Actor& actorBumping) {
         trigger(actorBumping);
       }
     } else {
-      if(d->actorSize == actorSize_humanoid && d->isSpider == false) {
+      if(d.actorSize == actorSize_humanoid && d.isSpider == false) {
         trace << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(&actorBumping);
         if(
@@ -116,7 +116,7 @@ void Trap::bump(Actor& actorBumping) {
             actorBumping.eng.player->checkIfSeeActor(actorBumping, NULL);
 
           const int CHANCE_TO_AVOID =
-            BASE_CHANCE_TO_AVOID + d->canDodge ? DODGE_SKILL_VALUE : 0;
+            BASE_CHANCE_TO_AVOID + d.canDodge ? DODGE_SKILL_VALUE : 0;
           const AbilityRollResult_t result =
             actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
 
@@ -142,13 +142,13 @@ void Trap::trigger(Actor& actor) {
   trace << "Trap: Specific trap is ";
   trace << specificTrap_->getSpecificTitle() << endl;
 
-  const ActorData* const d = actor.getData();
+  const ActorData& d = actor.getData();
 
   trace << "Trap: Actor triggering is ";
-  trace << d->name_a << endl;
+  trace << d.name_a << endl;
 
   const int DODGE_SKILL_VALUE =
-    d->abilityVals.getVal(ability_dodgeTrap, true, actor);
+    d.abilityVals.getVal(ability_dodgeTrap, true, actor);
 
   trace << "Trap: Actor dodge skill is ";
   trace << DODGE_SKILL_VALUE << endl;
@@ -165,7 +165,7 @@ void Trap::trigger(Actor& actor) {
     const bool IS_ACTOR_SEEN_BY_PLAYER =
       eng.player->checkIfSeeActor(actor, NULL);
     const AbilityRollResult_t dodgeResult =
-      d->canDodge ? eng.abilityRoll->roll(DODGE_SKILL_VALUE) : failNormal;
+      d.canDodge ? eng.abilityRoll->roll(DODGE_SKILL_VALUE) : failNormal;
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
     }
@@ -259,7 +259,7 @@ TrapDart::TrapDart(Pos pos, Engine& engine) :
 }
 
 void TrapDart::specificTrigger(Actor& actor,
-                                   const AbilityRollResult_t dodgeResult) {
+                               const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapDart::specificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
@@ -331,7 +331,7 @@ TrapSpear::TrapSpear(Pos pos, Engine& engine) :
 }
 
 void TrapSpear::specificTrigger(Actor& actor,
-                                    const AbilityRollResult_t dodgeResult) {
+                                const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapSpear::specificTrigger()..." << endl;
 
   const bool IS_PLAYER = &actor == eng.player;
@@ -403,7 +403,7 @@ void TrapSpear::specificTrigger(Actor& actor,
 }
 
 void TrapGasConfusion::specificTrigger(Actor& actor,
-    const AbilityRollResult_t dodgeResult) {
+                                       const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapGasConfusion::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -461,7 +461,7 @@ void TrapGasParalyzation::specificTrigger(Actor& actor,
 }
 
 void TrapGasFear::specificTrigger(Actor& actor,
-                                      const AbilityRollResult_t dodgeResult) {
+                                  const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapGasFear::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -490,7 +490,7 @@ void TrapGasFear::specificTrigger(Actor& actor,
 }
 
 void TrapBlindingFlash::specificTrigger(Actor& actor,
-    const AbilityRollResult_t dodgeResult) {
+                                        const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapBlindingFlash::specificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
@@ -537,7 +537,7 @@ void TrapBlindingFlash::specificTrigger(Actor& actor,
 }
 
 void TrapTeleport::specificTrigger(Actor& actor,
-                                       const AbilityRollResult_t dodgeResult) {
+                                   const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapTeleport::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -567,7 +567,7 @@ void TrapTeleport::specificTrigger(Actor& actor,
 }
 
 void TrapSummonMonster::specificTrigger(Actor& actor,
-    const AbilityRollResult_t dodgeResult) {
+                                        const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapSummonMonster::specificTrigger()..." << endl;
 
   (void)dodgeResult;
@@ -626,7 +626,7 @@ void TrapSummonMonster::specificTrigger(Actor& actor,
 }
 
 void TrapSmoke::specificTrigger(Actor& actor,
-                                    const AbilityRollResult_t dodgeResult) {
+                                const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapSmoke::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -654,7 +654,7 @@ void TrapSmoke::specificTrigger(Actor& actor,
 }
 
 void TrapAlarm::specificTrigger(Actor& actor,
-                                    const AbilityRollResult_t dodgeResult) {
+                                const AbilityRollResult_t dodgeResult) {
   traceVerbose << "TrapAlarm::specificTrigger() ..." << endl;
   (void)dodgeResult;
 
@@ -693,8 +693,8 @@ void TrapSpiderWeb::specificTrigger(
 
   if(IS_PLAYER) {
     trace << "TrapSpiderWeb: Checking if player has machete" << endl;
-    Inventory* const playerInv = eng.player->getInv();
-    Item* itemWielded = playerInv->getItemInSlot(slot_wielded);
+    Inventory& playerInv = eng.player->getInv();
+    Item* itemWielded = playerInv.getItemInSlot(slot_wielded);
     bool hasMachete = false;
     if(itemWielded != NULL) {
       hasMachete = itemWielded->getData().id == item_machete;

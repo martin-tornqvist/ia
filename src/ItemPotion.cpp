@@ -127,7 +127,7 @@ void PotionOfFrenzy::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfFortitude::specificQuaff(Actor* const actor) {
-  PropHandler* const propHandler = actor->getPropHandler();
+  PropHandler& propHandler = actor->getPropHandler();
 
   PropRFear*      const rFear   = new PropRFear(eng, propTurnsStandard);
   PropRConfusion* const rConf   = new PropRConfusion(
@@ -135,9 +135,9 @@ void PotionOfFortitude::specificQuaff(Actor* const actor) {
   PropRSleep*     const rSleep  = new PropRSleep(
     eng, propTurnsSpecified, rFear->turnsLeft_);
 
-  propHandler->tryApplyProp(rFear);
-  propHandler->tryApplyProp(rConf);
-  propHandler->tryApplyProp(rSleep);
+  propHandler.tryApplyProp(rFear);
+  propHandler.tryApplyProp(rConf);
+  propHandler.tryApplyProp(rSleep);
 
   if(actor == eng.player) {
     bool isPhobiasCured = false;
@@ -263,23 +263,22 @@ void PotionOfRAcid::specificCollide(const Pos& pos, Actor* const actor) {
 void PotionOfInsight::specificQuaff(Actor* const actor) {
   (void)actor;
 
-  Inventory* const inv = eng.player->getInv();
+  Inventory& inv = eng.player->getInv();
 
   vector<Item*> itemIdentifyCandidates;
 
-  vector<InventorySlot>* slots = inv->getSlots();
-  for(unsigned int i = 0; i < slots->size(); i++) {
-    Item* const item = slots->at(i).item;
-    if(item != NULL) {
+  vector<InventorySlot>& slots = inv.getSlots();
+  for(InventorySlot& slot : slots) {
+    Item* const item = slot.item;
+    if(item) {
       const ItemData& d = item->getData();
       if(d.isIdentified == false) {
         itemIdentifyCandidates.push_back(item);
       }
     }
   }
-  vector<Item*>* backpack = inv->getGeneral();
-  for(unsigned int i = 0; i < backpack->size(); i++) {
-    Item* const item = backpack->at(i);
+  vector<Item*>& general = inv.getGeneral();
+  for(Item* item : general) {
     if(item->getData().id != item_potionOfInsight) {
       const ItemData& d = item->getData();
       if(d.isIdentified == false) {
@@ -457,7 +456,7 @@ void Potion::quaff(Actor* const actor) {
   specificQuaff(actor);
 
   if(eng.player->deadState == actorDeadState_alive) {
-    eng.gameTime->endTurnOfCurrentActor();
+    eng.gameTime->actorDidAct();
   }
 }
 

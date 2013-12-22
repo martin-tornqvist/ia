@@ -95,8 +95,8 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
 bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   bool didAct = false;
 
-  Inventory* const inv  = actorReloading.getInv();
-  Item* const wpnItem   = inv->getItemInSlot(slot_wielded);
+  Inventory& inv      = actorReloading.getInv();
+  Item* const wpnItem = inv.getItemInSlot(slot_wielded);
 
   if(wpnItem == NULL) {
     printMsgAndPlaySfx(actorReloading, NULL, NULL,
@@ -120,17 +120,17 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
                        reloadResult_wpnNotUsingAmmo, false);
   } else {
     const ItemId_t ammoType = wpn->getData().rangedAmmoTypeUsed;
-    Item* ammo = NULL;
     bool isClip = wpn->clip;
+    Item* item = NULL;
 
     if(wpn->nrAmmoLoaded < wpnAmmoCapacity) {
 
-      const vector<Item*>* genInv = inv->getGeneral();
+      const vector<Item*>& general = inv.getGeneral();
+      const int NR_ITEMS = general.size();
+      for(int i = 0; i < NR_ITEMS; i++) {
+        item = general.at(i);
 
-      for(unsigned int i = 0; i < genInv->size(); i++) {
-        ammo = genInv->at(i);
-
-        if(ammo->getData().id == ammoType) {
+        if(item->getData().id == ammoType) {
           const bool IS_RELOADER_BLIND =
             actorReloading.getPropHandler().allowSee() == false;
           const bool IS_REALOADER_TERRIFIED =
@@ -141,62 +141,60 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
           if(eng.dice.percentile() < CHANCE_TO_FUMBLE) {
             isSwiftReload = false;
             result = reloadResult_fumble;
-            printMsgAndPlaySfx(actorReloading, NULL, ammo,
+            printMsgAndPlaySfx(actorReloading, NULL, item,
                                reloadResult_fumble, false);
           } else {
             result = reloadResult_success;
-            isClip = ammo->getData().isAmmoClip;
+            isClip = item->getData().isAmmoClip;
 
             //If ammo comes in clips
             if(isClip) {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
-              ItemAmmoClip* clipItem = dynamic_cast<ItemAmmoClip*>(ammo);
+              ItemAmmoClip* clipItem = dynamic_cast<ItemAmmoClip*>(item);
               wpn->nrAmmoLoaded = clipItem->ammo;
 
-              printMsgAndPlaySfx(actorReloading, wpn, ammo, result,
+              printMsgAndPlaySfx(actorReloading, wpn, item, result,
                                  isSwiftReload);
 
               //Erase loaded clip
-              inv->deleteItemInGeneralWithElement(i);
+              inv.deleteItemInGeneralWithElement(i);
 
               //If weapon previously contained ammo, create a new clip item
               if(previousAmmoCount > 0) {
-                ammo = eng.itemFactory->spawnItem(ammoType);
-                clipItem = dynamic_cast<ItemAmmoClip*>(ammo);
+                item = eng.itemFactory->spawnItem(ammoType);
+                clipItem = dynamic_cast<ItemAmmoClip*>(item);
                 clipItem->ammo = previousAmmoCount;
-                inv->putItemInGeneral(clipItem);
+                inv.putItemInGeneral(clipItem);
               }
             }
             //Else ammo is a pile
             else {
               wpn->nrAmmoLoaded += 1;
 
-              printMsgAndPlaySfx(actorReloading, wpn, ammo, result,
-                                 isSwiftReload);
+              printMsgAndPlaySfx(
+                actorReloading, wpn, item, result, isSwiftReload);
 
               //Decrease ammo item number
-              inv->decreaseItemInGeneral(i);
+              inv.decrItemInGeneral(i);
             }
           }
           break;
         }
       }
       if(result == reloadResult_noAmmo) {
-        printMsgAndPlaySfx(actorReloading, wpn, ammo, result,
+        printMsgAndPlaySfx(actorReloading, wpn, item, result,
                            isSwiftReload);
       }
     } else {
       result = reloadResult_alreadyFull;
-      printMsgAndPlaySfx(actorReloading, wpn, ammo, result,
+      printMsgAndPlaySfx(actorReloading, wpn, item, result,
                          isSwiftReload);
     }
   }
 
   if(result == reloadResult_success || result == reloadResult_fumble) {
     didAct = true;
-    if(isSwiftReload == false) {
-      eng.gameTime->endTurnOfCurrentActor();
-    }
+    eng.gameTime->actorDidAct(isSwiftReload);
   }
 
   return didAct;

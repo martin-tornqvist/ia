@@ -37,11 +37,7 @@ const string Scroll::getRealTypeName() {
 }
 
 bool Scroll::activateDefault(Actor* const actor) {
-  PropHandler* const propHandler = actor->getPropHandler();
-
-  if(propHandler->allowRead(true)) {
-    return read();
-  }
+  if(actor->getPropHandler().allowRead(true)) {return read();}
   return false;
 }
 

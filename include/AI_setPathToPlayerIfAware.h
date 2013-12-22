@@ -10,23 +10,21 @@ public:
     if(monster.deadState == actorDeadState_alive) {
       if(monster.playerAwarenessCounter > 0) {
 
-        const ActorData& d = monster.getData();
-        const bool CONSIDER_NORMAL_DOORS_FREE =
-          d.canOpenDoors || d.canBashDoors;
-
         bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
         engine.basicUtils->resetArray(blockers, false);
         for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
           for(int x = 1; x < MAP_X_CELLS - 1; x++) {
             const Feature* const f = engine.map->cells[x][y].featureStatic;
-            if(f->isMovePassable(&monster) == false) {
+            if(f->isBodyTypePassable(monster.getBodyType()) == false) {
 
               if(f->getId() == feature_door) {
 
                 const Door* const door = dynamic_cast<const Door*>(f);
 
+                const ActorData& d = monster.getData();
+
                 if(
-                  CONSIDER_NORMAL_DOORS_FREE == false ||
+                  (d.canOpenDoors == false && d.canBashDoors == false) ||
                   door->isOpenedAndClosedExternally()) {
                   blockers[x][y] = true;
                 }
