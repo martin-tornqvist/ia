@@ -20,7 +20,7 @@ enum Trait_t {
   traitExpertMarksman,
   traitMasterMarksman,
   traitSteadyAimer,
-  traitSniper,
+  traitSharpShooter,
   traitBreachExpert,
   traitCoolHeaded,
   traitCourageous,

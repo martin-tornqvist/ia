@@ -12307,7 +12307,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1387740775 source:d:\dev\ia.git\src\gametime.cpp
+1387749489 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	<assert.h>
 	"Engine.h"
@@ -12344,7 +12344,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1387742473 source:d:\dev\ia.git\src\input.cpp
+1387751282 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12813,7 +12813,7 @@
 	<iostream>
 	"Engine.h"
 
-1387742552 source:d:\dev\ia.git\src\playerbonuses.cpp
+1387751296 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -12911,7 +12911,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1387742386 source:d:\dev\ia.git\src\properties.cpp
+1387750178 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -12974,7 +12974,7 @@
 	"FeatureDoor.h"
 	"Inventory.h"
 
-1387716342 source:d:\dev\ia.git\src\renderinventory.cpp
+1387749694 source:d:\dev\ia.git\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -13849,7 +13849,7 @@
 
 1385502710 d:\dev\ia.git\include\art.h
 
-1387738127 d:\dev\ia.git\include\properties.h
+1387749644 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -13914,7 +13914,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1387707355 d:\dev\ia.git\include\playerbonuses.h
+1387751208 d:\dev\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"

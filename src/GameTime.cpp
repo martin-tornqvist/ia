@@ -157,14 +157,14 @@ void GameTime::runStandardTurnEvents() {
 //  traceVerbose << "GameTime: Current turn: " << turn_ << endl;
 
   Actor* actor = NULL;
-  unsigned int loopSize = actors_.size();
+  int loopSize = actors_.size();
 
   bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
   int regenSpiEveryNTurns = 11;
 
-  for(unsigned int i = 0; i < loopSize; i++) {
+  for(int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
 
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
@@ -207,8 +207,8 @@ void GameTime::runStandardTurnEvents() {
   }
 
   //Update mobile features
-  const vector<FeatureMob*> mobTmp = featureMobs_;
-  for(FeatureMob * f : mobTmp) {f->newTurn();}
+  const vector<FeatureMob*> mobsCpy = featureMobs_;
+  for(FeatureMob * f : mobsCpy) {f->newTurn();}
 
   //Update timed features
   for(int y = 0; y < MAP_Y_CELLS; y++) {

@@ -836,8 +836,8 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   //First, if this is a prop that runs on actor turns, check if the actor-turn
   //prop buffer does not already contain the prop.
-  //* If it doesn't, then just add it to the buffer and return.
-  //* If the buffer already contains the prop, it means it was requested to be
+  //-If it doesn't, then just add it to the buffer and return.
+  //-If the buffer already contains the prop, it means it was requested to be
   //applied from the buffer to the applied props.
   //This way, this function can be used both for requesting to appply props,
   //and for applying props from the buffer.
@@ -1210,12 +1210,7 @@ int PropHandler::getAbilityMod(const Abilities_t ability) const {
 }
 
 Prop* PropHandler::getAppliedProp(const PropId_t id) const {
-  const unsigned int NR_PROPS = appliedProps_.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(appliedProps_.at(i)->getId() == id) {
-      return appliedProps_.at(i);
-    }
-  }
+  for(Prop * prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
   return NULL;
 }
 

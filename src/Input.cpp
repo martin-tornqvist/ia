@@ -127,9 +127,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng.player->deadState == actorDeadState_alive) {
       clearLogMessages();
       eng.player->moveDir(dirCenter);
-      if(eng.playerBonHandler->hasTrait(traitSteadyAimer)) {
-        eng.player->getPropHandler().tryApplyProp(
-          new PropStill(eng, propTurnsSpecified, 1));
+      PlayerBonHandler& bonHlr = *eng.playerBonHandler;
+      int nrTurnsStill =
+        bonHlr.hasTrait(traitSharpShooter)  ? 3 :
+        bonHlr.hasTrait(traitSteadyAimer)   ? 1 : 0;
+      if(nrTurnsStill > 0) {
+        PropHandler& propHlr = eng.player->getPropHandler();
+        propHlr.tryApplyProp(
+          new PropStill(eng, propTurnsSpecified, nrTurnsStill));
       }
     }
     clearEvents();

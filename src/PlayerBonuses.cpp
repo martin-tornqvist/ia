@@ -43,7 +43,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitExpertMarksman:       strRef = "Expert Marksman";         break;
     case traitMasterMarksman:       strRef = "Master Marksman";         break;
     case traitSteadyAimer:          strRef = "Steady Aimer";            break;
-    case traitSniper:               strRef = "Sniper";                  break;
+    case traitSharpShooter:         strRef = "Sharpshooter";            break;
     case traitObservant:            strRef = "Observant";               break;
     case traitVigilant:             strRef = "Vigilant";                break;
     case traitRapidRecoverer:       strRef = "Rapid Recoverer";         break;
@@ -95,13 +95,13 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSteadyAimer: {
-      strRef  = "Standing still for one turn gives ranged attacks +10% ";
+      strRef  = "Standing still gives ranged attacks +10% ";
       strRef += "hit chance on the following turn";
     } break;
 
-    case traitSniper: {
-      strRef  = "Standing still for three turns gives ranged attacks ";
-      strRef += "maximum damage and hit chance on the following turn";
+    case traitSharpShooter: {
+      strRef  = "Standing still gives ranged attacks +10% ";
+      strRef += "hit chance on the following three turns";
     } break;
 
     case traitDemolitionExpert: {

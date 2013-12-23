@@ -113,7 +113,7 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
 
   Inventory& inv = eng.player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(unsigned int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
@@ -179,7 +179,7 @@ void RenderInventory::drawEquipMode(
 
   Inventory& inv = eng.player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(unsigned int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     str = "x) ";
     str.at(0) = 'a' + i;
@@ -237,7 +237,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
 
   Inventory& inv = eng.player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(unsigned int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 

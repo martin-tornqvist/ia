@@ -372,6 +372,8 @@ public:
 
   PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
 
+  void onMore() override {}
+
   int getAbilityMod(const Abilities_t ability) const override {
     if(ability == ability_accuracyRanged) return 10;
     return 0;
