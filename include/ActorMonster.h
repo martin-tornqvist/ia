@@ -314,6 +314,13 @@ public:
   void specificSpawnStartItems();
 };
 
+class Zuul: public Monster {
+public:
+  Zuul(Engine& engine) : Monster(engine) {}
+  ~Zuul() {}
+  void specificSpawnStartItems();
+};
+
 class Ghost: public Monster {
 public:
   Ghost(Engine& engine) : Monster(engine) {}

@@ -14851,3 +14851,2138 @@
 1387058670 d:\dev\ia.git\include\ai_setspecialblockedcells.h
 	"Engine.h"
 
+1387888635 source:c:\_martin_\ia.git\icon\resource.rc
+
+1387890310 source:c:\_martin_\ia.git\src\abilityvalues.cpp
+	"AbilityValues.h"
+	<math.h>
+	"Engine.h"
+	"ActorPlayer.h"
+	"PlayerBonuses.h"
+	"BasicUtils.h"
+	"Properties.h"
+
+1387890310 c:\_martin_\ia.git\include\abilityvalues.h
+	<vector>
+	<string>
+	<iostream>
+
+1387890310 c:\_martin_\ia.git\include\engine.h
+	"DebugMode.h"
+	"BasicUtils.h"
+
+1387888636 c:\_martin_\ia.git\include\debugmodeincl\debugmode.h
+
+1387890310 c:\_martin_\ia.git\include\basicutils.h
+	<vector>
+	"CommonData.h"
+	"Actor.h"
+	"MersenneTwister.h"
+
+1387890310 c:\_martin_\ia.git\include\commondata.h
+
+1387890310 c:\_martin_\ia.git\include\actor.h
+	<string>
+	<vector>
+	"CommonData.h"
+	"ActorData.h"
+	"Sound.h"
+	"Config.h"
+	"Art.h"
+
+1387974041 c:\_martin_\ia.git\include\actordata.h
+	<string>
+	<vector>
+	"Converters.h"
+	"AbilityValues.h"
+	"RoomTheme.h"
+	"CommonData.h"
+	"Properties.h"
+	"AudioIds.h"
+
+1387888635 c:\_martin_\ia.git\include\converters.h
+	<string>
+
+1387890310 c:\_martin_\ia.git\include\roomtheme.h
+	<vector>
+	"CommonData.h"
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\commontypes.h
+	<string>
+	"Colors.h"
+	"Art.h"
+
+1387888635 c:\_martin_\ia.git\include\colors.h
+	"SDL/SDL_video.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	"SDL_config_dreamcast.h"
+	"SDL_config_macos.h"
+	"SDL_config_macosx.h"
+	"SDL_config_symbian.h"
+	"SDL_config_win32.h"
+	"SDL_config_os2.h"
+	"SDL_config_minimal.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_platform.h
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_config_win32.h
+	"SDL_platform.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\begin_code.h
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\close_code.h
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\include\art.h
+
+1387890310 c:\_martin_\ia.git\include\properties.h
+	<string>
+	"AbilityValues.h"
+	"CommonData.h"
+	"Converters.h"
+	"CommonTypes.h"
+
+1387888635 c:\_martin_\ia.git\include\audioids.h
+
+1387890310 c:\_martin_\ia.git\include\sound.h
+	<string>
+	"CommonData.h"
+	"ItemData.h"
+	"CommonTypes.h"
+
+1387975140 c:\_martin_\ia.git\include\itemdata.h
+	<vector>
+	<string>
+	"CommonData.h"
+	"AbilityValues.h"
+	"Spells.h"
+	"FeatureData.h"
+	"AudioIds.h"
+
+1387890310 c:\_martin_\ia.git\include\spells.h
+	<vector>
+	"CommonTypes.h"
+	"Properties.h"
+
+1387890310 c:\_martin_\ia.git\include\featuredata.h
+	<vector>
+	<string>
+	<iostream>
+	"Art.h"
+	"CommonData.h"
+	"RoomTheme.h"
+	"MapPatterns.h"
+
+1387890310 c:\_martin_\ia.git\include\mappatterns.h
+	<vector>
+	"CommonData.h"
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\config.h
+	<string>
+	<vector>
+	"CommonData.h"
+
+1387888635 c:\_martin_\ia.git\include\mersennetwister.h
+	<iostream>
+	<climits>
+	<cstdio>
+	<ctime>
+	<cmath>
+
+1387890310 c:\_martin_\ia.git\include\actorplayer.h
+	<math.h>
+	"Actor.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\playerbonuses.h
+	<string>
+	<vector>
+	"AbilityValues.h"
+	"Converters.h"
+	"Engine.h"
+	<math.h>
+
+1387890310 source:c:\_martin_\ia.git\src\actor.cpp
+	"Actor.h"
+	"Engine.h"
+	"Renderer.h"
+	"ItemArmor.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Fov.h"
+	"PlayerVisualMemory.h"
+	"Log.h"
+	"Blood.h"
+	"FeatureTrap.h"
+	"ItemDrop.h"
+	"Explosion.h"
+	"DungeonMaster.h"
+	"Inventory.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\renderer.h
+	<vector>
+	<iostream>
+	"SDL/SDL_video.h"
+	"Panel.h"
+	"CommonData.h"
+	"GameTime.h"
+	"Config.h"
+	"Art.h"
+
+1387888635 c:\_martin_\ia.git\include\panel.h
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\gametime.h
+	<vector>
+	"Feature.h"
+	"ActorData.h"
+
+1387890310 c:\_martin_\ia.git\include\feature.h
+	<vector>
+	<string>
+	<iostream>
+	"Colors.h"
+	"CommonData.h"
+	"ActorData.h"
+	"FeatureData.h"
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\itemarmor.h
+	"Engine.h"
+	"Item.h"
+
+1387890310 c:\_martin_\ia.git\include\item.h
+	<iostream>
+	"ItemData.h"
+	"Art.h"
+
+1387975083 c:\_martin_\ia.git\include\actormonster.h
+	"CommonData.h"
+	"Actor.h"
+	"ItemWeapon.h"
+	"Sound.h"
+	"Spells.h"
+
+1387890310 c:\_martin_\ia.git\include\itemweapon.h
+	"Item.h"
+	"Converters.h"
+
+1387890310 c:\_martin_\ia.git\include\map.h
+	<vector>
+	<iostream>
+	"CommonTypes.h"
+	"CommonData.h"
+	"Colors.h"
+	"ItemData.h"
+	"Feature.h"
+	"Config.h"
+
+1387890310 c:\_martin_\ia.git\include\fov.h
+	"Map.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\playervisualmemory.h
+
+1387890310 c:\_martin_\ia.git\include\log.h
+	<string>
+	<vector>
+	<iostream>
+	"Colors.h"
+	"Converters.h"
+
+1387890310 c:\_martin_\ia.git\include\blood.h
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\featuretrap.h
+	"Feature.h"
+	"AbilityValues.h"
+	"Art.h"
+	"Feature.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\itemdrop.h
+	<iostream>
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\explosion.h
+	<vector>
+	"CommonData.h"
+	"Properties.h"
+	"Config.h"
+	"Colors.h"
+	"AudioIds.h"
+
+1387890310 c:\_martin_\ia.git\include\dungeonmaster.h
+	<iostream>
+	<math.h>
+	"CommonTypes.h"
+	"AbilityValues.h"
+	"Colors.h"
+	"Converters.h"
+	"PlayerCreateCharacter.h"
+	"BasicUtils.h"
+
+1387890310 c:\_martin_\ia.git\include\playercreatecharacter.h
+	<string>
+	"CommonTypes.h"
+	"PlayerBonuses.h"
+
+1387890310 c:\_martin_\ia.git\include\inventory.h
+	<vector>
+	<string>
+	<iostream>
+	"ItemData.h"
+	"Item.h"
+
+1387890310 c:\_martin_\ia.git\include\mapparsing.h
+	<vector>
+	"CommonTypes.h"
+	"Config.h"
+
+1387974120 source:c:\_martin_\ia.git\src\actorfactory.cpp
+	"ActorFactory.h"
+	<assert.h>
+	<algorithm>
+	"Engine.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Renderer.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\actorfactory.h
+	<vector>
+	<string>
+	"GameTime.h"
+
+1387975831 source:c:\_martin_\ia.git\src\actordata.cpp
+	<string>
+	<vector>
+	<math.h>
+	"ActorData.h"
+	"CommonTypes.h"
+	"Converters.h"
+	"Item.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\actormonster.cpp
+	"ActorMonster.h"
+	<assert.h>
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"GameTime.h"
+	"Attack.h"
+	"Reload.h"
+	"Inventory.h"
+	"FeatureTrap.h"
+	"AI_setSpecialBlockedCells.h"
+	"AI_handleClosedBlockingDoor.h"
+	"AI_look_becomePlayerAware.h"
+	"AI_makeRoomForFriend.h"
+	"AI_stepPath.h"
+	"AI_moveTowardsTargetSimple.h"
+	"AI_stepToLairIfHasLosToLair.h"
+	"AI_setPathToPlayerIfAware.h"
+	"AI_setPathToLairIfNoLosToLair.h"
+	"AI_setPathToLeaderIfNoLosToLeader.h"
+	"AI_moveToRandomAdjacentCell.h"
+	"AI_castRandomSpell.h"
+	"AI_handleInventory.h"
+
+1387890310 c:\_martin_\ia.git\include\attack.h
+	<vector>
+	<math.h>
+	<iostream>
+	"AbilityValues.h"
+	"ItemData.h"
+	"ActorData.h"
+	"Art.h"
+
+1387890310 c:\_martin_\ia.git\include\reload.h
+
+1387890310 c:\_martin_\ia.git\include\ai_setspecialblockedcells.h
+	"Engine.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_handleclosedblockingdoor.h
+	"Map.h"
+	"FeatureDoor.h"
+
+1387890310 c:\_martin_\ia.git\include\featuredoor.h
+	"Feature.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_look_becomeplayeraware.h
+	"Engine.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Renderer.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_makeroomforfriend.h
+	<algorithm>
+	"MapParsing.h"
+	"LineCalc.h"
+
+1387890310 c:\_martin_\ia.git\include\linecalc.h
+	<vector>
+	<iostream>
+	"CommonData.h"
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_steppath.h
+	"Engine.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_movetowardstargetsimple.h
+	"Engine.h"
+	"Actor.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_steptolairifhaslostolair.h
+	"Engine.h"
+	"Fov.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_setpathtoplayerifaware.h
+	"Engine.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_setpathtolairifnolostolair.h
+	"Engine.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_setpathtoleaderifnolostoleader.h
+	"Engine.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_movetorandomadjacentcell.h
+	"Engine.h"
+	"Actor.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_castrandomspell.h
+	"Log.h"
+
+1387890310 c:\_martin_\ia.git\include\ai_handleinventory.h
+	"Inventory.h"
+
+1387890310 source:c:\_martin_\ia.git\src\actorplayer.cpp
+	"ActorPlayer.h"
+	"Engine.h"
+	"Renderer.h"
+	"Audio.h"
+	"ItemWeapon.h"
+	"FeatureTrap.h"
+	"PlayerCreateCharacter.h"
+	"Log.h"
+	"CharacterLines.h"
+	"Popup.h"
+	"Postmortem.h"
+	"DungeonMaster.h"
+	"Map.h"
+	"Explosion.h"
+	"ActorMonster.h"
+	"FeatureDoor.h"
+	"Query.h"
+	"Attack.h"
+	"PlayerVisualMemory.h"
+	"Fov.h"
+	"ItemFactory.h"
+	"ActorFactory.h"
+	"PlayerBonuses.h"
+	"FeatureLitDynamite.h"
+	"ItemDevice.h"
+	"Inventory.h"
+	"InventoryHandler.h"
+	"ItemMedicalBag.h"
+	"PlayerSpellsHandler.h"
+	"Bot.h"
+	"Input.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\audio.h
+	"SDL/SDL_mixer.h"
+	"CommonTypes.h"
+	"AudioIds.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_mixer.h
+	"SDL_types.h"
+	"SDL_rwops.h"
+	"SDL_audio.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_types.h
+	"SDL_stdinc.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387890310 c:\_martin_\ia.git\include\characterlines.h
+
+1387890310 c:\_martin_\ia.git\include\popup.h
+	<vector>
+	<string>
+	"AudioIds.h"
+
+1387890310 c:\_martin_\ia.git\include\postmortem.h
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1387888635 c:\_martin_\ia.git\include\menubrowser.h
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\query.h
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\itemfactory.h
+	<string>
+	"Item.h"
+
+1387890310 c:\_martin_\ia.git\include\featurelitdynamite.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1387890310 c:\_martin_\ia.git\include\featurefactory.h
+	<vector>
+	<string>
+	<iostream>
+	"GameTime.h"
+	"FeatureTrap.h"
+	"FeatureDoor.h"
+
+1387890310 c:\_martin_\ia.git\include\itemdevice.h
+	"Item.h"
+
+1387890310 c:\_martin_\ia.git\include\inventoryhandler.h
+	"Inventory.h"
+
+1387890310 c:\_martin_\ia.git\include\itemmedicalbag.h
+	"Item.h"
+
+1387890310 c:\_martin_\ia.git\include\playerspellshandler.h
+	<vector>
+	"MenuBrowser.h"
+	"Spells.h"
+
+1387890310 c:\_martin_\ia.git\include\bot.h
+	<iostream>
+	<vector>
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\input.h
+	"SDL/SDL.h"
+	"CommonData.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_keysym.h
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387888636 source:c:\_martin_\ia.git\src\art.cpp
+	"Art.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\attack.cpp
+	"Attack.h"
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"FeatureTrap.h"
+	"PlayerBonuses.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\attackmelee.cpp
+	"Attack.h"
+	"Engine.h"
+	"GameTime.h"
+	"ItemWeapon.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Postmortem.h"
+	"Blood.h"
+	"Knockback.h"
+	"Log.h"
+
+1387890310 c:\_martin_\ia.git\include\knockback.h
+	"CommonTypes.h"
+
+1387890310 source:c:\_martin_\ia.git\src\attackranged.cpp
+	"Attack.h"
+	"Engine.h"
+	"GameTime.h"
+	"CommonTypes.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"Renderer.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Postmortem.h"
+	"Knockback.h"
+	"Input.h"
+	"Log.h"
+	"Audio.h"
+	"LineCalc.h"
+
+1387890310 source:c:\_martin_\ia.git\src\attackshotgun.cpp
+	"Attack.h"
+	"Engine.h"
+	"Renderer.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Postmortem.h"
+	"MapParsing.h"
+	"LineCalc.h"
+
+1387890310 source:c:\_martin_\ia.git\src\audio.cpp
+	"Audio.h"
+	<time.h>
+	"SDL/SDL_mixer.h"
+	"Engine.h"
+	"Map.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\autodescribeactor.cpp
+	"AutoDescribeActor.h"
+	"Engine.h"
+
+1387890310 c:\_martin_\ia.git\include\autodescribeactor.h
+	<vector>
+	<string>
+	"ActorData.h"
+
+1387890310 source:c:\_martin_\ia.git\src\bash.cpp
+	"Bash.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+	"Renderer.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\bash.h
+	"FeatureDoor.h"
+
+1387890310 source:c:\_martin_\ia.git\src\basicutils.cpp
+	"BasicUtils.h"
+	<algorithm>
+	<assert.h>
+	"Engine.h"
+	"Converters.h"
+	"GameTime.h"
+
+1387890310 source:c:\_martin_\ia.git\src\blood.cpp
+	"Blood.h"
+	"Engine.h"
+	"Map.h"
+
+1387890310 source:c:\_martin_\ia.git\src\bot.cpp
+	"Bot.h"
+	<assert.h>
+	"Engine.h"
+	"Properties.h"
+	"Actor.h"
+	"Feature.h"
+	"Input.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorFactory.h"
+	"Attack.h"
+	"ItemWeapon.h"
+	"FeatureDoor.h"
+	"Inventory.h"
+	"FeatureFactory.h"
+	"ActorMonster.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\characterdescr.cpp
+	"CharacterDescr.h"
+	<algorithm>
+	"Engine.h"
+	"PlayerBonuses.h"
+	"ActorPlayer.h"
+	"Renderer.h"
+	"TextFormatting.h"
+	"Input.h"
+	"ItemPotion.h"
+	"ItemScroll.h"
+	"ItemFactory.h"
+	"Item.h"
+	"ItemWeapon.h"
+
+1387890310 c:\_martin_\ia.git\include\characterdescr.h
+	<vector>
+	"CommonTypes.h"
+
+1387888635 c:\_martin_\ia.git\include\textformatting.h
+	<vector>
+	<string>
+
+1387890310 c:\_martin_\ia.git\include\itempotion.h
+	"Item.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\itemscroll.h
+	"Item.h"
+	"Spells.h"
+
+1387890310 source:c:\_martin_\ia.git\src\characterlines.cpp
+	"CharacterLines.h"
+	"Engine.h"
+	"CommonTypes.h"
+	"GameTime.h"
+	"Colors.h"
+	"ItemWeapon.h"
+	"ItemArmor.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"DungeonMaster.h"
+	"MapGen.h"
+	"PlayerBonuses.h"
+	"Inventory.h"
+
+1387890310 c:\_martin_\ia.git\include\mapgen.h
+	"CommonTypes.h"
+	"RoomTheme.h"
+	"Feature.h"
+	"MapTemplates.h"
+
+1387890310 c:\_martin_\ia.git\include\maptemplates.h
+	<vector>
+	<string>
+	<iostream>
+	"FeatureData.h"
+
+1387890310 source:c:\_martin_\ia.git\src\close.cpp
+	"Close.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"FeatureDoor.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+	"Renderer.h"
+
+1387890310 c:\_martin_\ia.git\include\close.h
+	"CommonData.h"
+
+1387890310 source:c:\_martin_\ia.git\src\config.cpp
+	"Config.h"
+	<fstream>
+	<iostream>
+	"SDL/SDL_image.h"
+	"Engine.h"
+	"Converters.h"
+	"MenuInputHandler.h"
+	"MenuBrowser.h"
+	"Query.h"
+	"Renderer.h"
+	"Input.h"
+	"Audio.h"
+
+1387888635 c:\_martin_\ia.git\api\sdl\include\sdl\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1387890310 c:\_martin_\ia.git\include\menuinputhandler.h
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1387888636 source:c:\_martin_\ia.git\src\converters.cpp
+	"Converters.h"
+	<string>
+	<sstream>
+	<iostream>
+
+1387890310 source:c:\_martin_\ia.git\src\credits.cpp
+	"Credits.h"
+	<fstream>
+	<iostream>
+	"Input.h"
+	"Engine.h"
+	"TextFormatting.h"
+	"Renderer.h"
+
+1387890310 c:\_martin_\ia.git\include\credits.h
+	<vector>
+	<string>
+
+1387890310 source:c:\_martin_\ia.git\src\debugmodestatprinter.cpp
+	"DebugModeStatPrinter.h"
+	<vector>
+	<algorithm>
+	"Engine.h"
+	"ActorData.h"
+	"ActorFactory.h"
+	"Inventory.h"
+	"Item.h"
+	"PlayerSpellsHandler.h"
+	"ItemScroll.h"
+	"ItemData.h"
+	"Spells.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+
+1387890310 c:\_martin_\ia.git\include\debugmodestatprinter.h
+	<string>
+	<iostream>
+	<fstream>
+
+1387890310 source:c:\_martin_\ia.git\src\disarm.cpp
+	"Disarm.h"
+	"Engine.h"
+	"GameTime.h"
+	"Log.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+	"Query.h"
+	"Map.h"
+	"FeatureTrap.h"
+
+1387890310 c:\_martin_\ia.git\include\disarm.h
+
+1387890310 source:c:\_martin_\ia.git\src\dungeonclimb.cpp
+	"DungeonClimb.h"
+	"Engine.h"
+	"Map.h"
+	"MapGen.h"
+	"PopulateMonsters.h"
+	"PopulateItems.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Item.h"
+	"Renderer.h"
+	"Audio.h"
+
+1387890310 c:\_martin_\ia.git\include\dungeonclimb.h
+	<iostream>
+
+1387890310 c:\_martin_\ia.git\include\populatemonsters.h
+	<vector>
+	"ActorData.h"
+
+1387890310 c:\_martin_\ia.git\include\populateitems.h
+	<vector>
+	"ItemData.h"
+
+1387890310 source:c:\_martin_\ia.git\src\dungeonmaster.cpp
+	"DungeonMaster.h"
+	"Engine.h"
+	"Highscore.h"
+	"TextFormatting.h"
+	"Renderer.h"
+	"Query.h"
+	"ActorPlayer.h"
+	"CharacterLines.h"
+	"Log.h"
+
+1387890310 c:\_martin_\ia.git\include\highscore.h
+	<vector>
+	<string>
+	"CommonData.h"
+
+1387890310 source:c:\_martin_\ia.git\src\engine.cpp
+	"Engine.h"
+	<iostream>
+	"Converters.h"
+	"Config.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"AbilityValues.h"
+	"ActorData.h"
+	"ActorFactory.h"
+	"Art.h"
+	"Attack.h"
+	"Audio.h"
+	"AutoDescribeActor.h"
+	"Bash.h"
+	"Blood.h"
+	"Bot.h"
+	"CharacterDescr.h"
+	"Close.h"
+	"Credits.h"
+	"DebugModeStatPrinter.h"
+	"Disarm.h"
+	"Map.h"
+	"DungeonClimb.h"
+	"DungeonMaster.h"
+	"Explosion.h"
+	"Examine.h"
+	"FeatureFactory.h"
+	"Fov.h"
+	"GameTime.h"
+	"Gods.h"
+	"Highscore.h"
+	"CharacterLines.h"
+	"Input.h"
+	"InventoryHandler.h"
+	"InventoryIndexes.h"
+	"ItemData.h"
+	"ItemDrop.h"
+	"ItemFactory.h"
+	"ItemPickup.h"
+	"ItemPotion.h"
+	"ItemScroll.h"
+	"JamWithSpike.h"
+	"FeatureData.h"
+	"FeatureTrap.h"
+	"LineCalc.h"
+	"Knockback.h"
+	"Log.h"
+	"Look.h"
+	"MainMenu.h"
+	"Manual.h"
+	"MapParsing.h"
+	"MapPatterns.h"
+	"PopulateItems.h"
+	"PopulateMonsters.h"
+	"PopulateTraps.h"
+	"MapTemplates.h"
+	"Marker.h"
+	"PlayerCreateCharacter.h"
+	"PlayerBonuses.h"
+	"PlayerSpellsHandler.h"
+	"PlayerVisualMemory.h"
+	"Popup.h"
+	"Postmortem.h"
+	"Query.h"
+	"Reload.h"
+	"Renderer.h"
+	"RenderInventory.h"
+	"RoomTheme.h"
+	"SaveHandler.h"
+	"Sound.h"
+	"Spells.h"
+	"Properties.h"
+	"TextFormatting.h"
+	"Thrower.h"
+	"MenuInputHandler.h"
+	"SdlWrapper.h"
+
+1387890310 c:\_martin_\ia.git\include\examine.h
+	<vector>
+	<string>
+
+1387890310 c:\_martin_\ia.git\include\gods.h
+	<string>
+	<vector>
+
+1387888635 c:\_martin_\ia.git\include\inventoryindexes.h
+	<vector>
+	<iostream>
+
+1387890310 c:\_martin_\ia.git\include\itempickup.h
+	"Inventory.h"
+
+1387890310 c:\_martin_\ia.git\include\jamwithspike.h
+	"FeatureDoor.h"
+
+1387890310 c:\_martin_\ia.git\include\look.h
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\mainmenu.h
+	"MenuBrowser.h"
+	"CommonData.h"
+
+1387890310 c:\_martin_\ia.git\include\manual.h
+	<vector>
+	<string>
+
+1387890310 c:\_martin_\ia.git\include\populatetraps.h
+	"RoomTheme.h"
+
+1387890310 c:\_martin_\ia.git\include\marker.h
+	<iostream>
+	<vector>
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\renderinventory.h
+	"InventoryHandler.h"
+	"ItemData.h"
+	"MenuBrowser.h"
+
+1387890310 c:\_martin_\ia.git\include\savehandler.h
+	<vector>
+	<string>
+	"MenuBrowser.h"
+
+1387890310 c:\_martin_\ia.git\include\thrower.h
+	<iostream>
+	<vector>
+	<iostream>
+	<math.h>
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\include\sdlwrapper.h
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	"SDL/SDL_mixer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\examine.cpp
+	"Examine.h"
+	"Engine.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Query.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\explosion.cpp
+	"Explosion.h"
+	"Engine.h"
+	"FeatureData.h"
+	"FeatureSmoke.h"
+	"Renderer.h"
+	"Map.h"
+	"Fov.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"MapParsing.h"
+
+1387890310 c:\_martin_\ia.git\include\featuresmoke.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1387975601 source:c:\_martin_\ia.git\src\feature.cpp
+	"Feature.h"
+	"Engine.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Renderer.h"
+	"MapParsing.h"
+	"GameTime.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featuredata.cpp
+	"FeatureData.h"
+	"Engine.h"
+	"Colors.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featuredoor.cpp
+	"FeatureDoor.h"
+	<assert.h>
+	"Engine.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+	"FeatureData.h"
+	"Map.h"
+	"Log.h"
+	"Postmortem.h"
+	"PlayerBonuses.h"
+	"Renderer.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featureexaminable.cpp
+	"FeatureExaminable.h"
+	"Engine.h"
+	"Log.h"
+	"Renderer.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemFactory.h"
+	"ItemDrop.h"
+	"Popup.h"
+	"PlayerBonuses.h"
+	"ActorPlayer.h"
+	"Inventory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"Explosion.h"
+	"PopulateMonsters.h"
+	"Map.h"
+	"FeatureFactory.h"
+
+1387890310 c:\_martin_\ia.git\include\featureexaminable.h
+	"Feature.h"
+	"FeatureDoor.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featurefactory.cpp
+	"FeatureFactory.h"
+	<assert.h>
+	"Engine.h"
+	"FeatureDoor.h"
+	"FeatureLever.h"
+	"FeatureLitDynamite.h"
+	"FeatureTrap.h"
+	"FeatureSmoke.h"
+	"FeatureProxEvent.h"
+	"Map.h"
+	"FeatureExaminable.h"
+	"FeatureLiquid.h"
+	"FeatureGrave.h"
+	"FeatureWall.h"
+	"Renderer.h"
+	"SdlWrapper.h"
+
+1387890310 c:\_martin_\ia.git\include\featurelever.h
+	"Feature.h"
+
+1387890310 c:\_martin_\ia.git\include\featureproxevent.h
+	"Feature.h"
+	"FeatureFactory.h"
+
+1387890310 c:\_martin_\ia.git\include\featureliquid.h
+	"Feature.h"
+
+1387890310 c:\_martin_\ia.git\include\featuregrave.h
+	"Feature.h"
+
+1387890310 c:\_martin_\ia.git\include\featurewall.h
+	"Feature.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featuregrave.cpp
+	"FeatureGrave.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featurelever.cpp
+	"FeatureLever.h"
+	"FeatureDoor.h"
+	"FeatureFactory.h"
+	"Engine.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featureliquid.cpp
+	"FeatureLiquid.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Renderer.h"
+	"PlayerBonuses.h"
+	"Audio.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featurelitdynamite.cpp
+	"FeatureLitDynamite.h"
+	"Engine.h"
+	"Explosion.h"
+	"Map.h"
+	"Fov.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featureproxevent.cpp
+	"FeatureProxEvent.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Blood.h"
+	"ActorFactory.h"
+	"Log.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featuresmoke.cpp
+	"FeatureSmoke.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featuretrap.cpp
+	"FeatureTrap.h"
+	<algorithm>
+	<assert.h>
+	"Engine.h"
+	"FeatureFactory.h"
+	"FeatureData.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"ItemDrop.h"
+	"Postmortem.h"
+	"Explosion.h"
+	"Popup.h"
+	"ActorMonster.h"
+	"Inventory.h"
+	"Sound.h"
+	"ActorFactory.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\featurewall.cpp
+	"FeatureWall.h"
+	<assert.h>
+	"Engine.h"
+	"Map.h"
+
+1387890310 source:c:\_martin_\ia.git\src\fov.cpp
+	"Fov.h"
+	<math.h>
+	<iostream>
+	"Engine.h"
+	"CommonTypes.h"
+	"LineCalc.h"
+
+1387890310 source:c:\_martin_\ia.git\src\gametime.cpp
+	"GameTime.h"
+	<assert.h>
+	"Engine.h"
+	"CommonTypes.h"
+	"Feature.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"PlayerVisualMemory.h"
+	"Map.h"
+	"PopulateMonsters.h"
+	"Input.h"
+	"Inventory.h"
+	"InventoryHandler.h"
+	"PlayerBonuses.h"
+	"Audio.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\gods.cpp
+	"Gods.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\highscore.cpp
+	"Highscore.h"
+	<algorithm>
+	<iostream>
+	<fstream>
+	"Converters.h"
+	"Engine.h"
+	"Highscore.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"Map.h"
+	"Popup.h"
+	"Input.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\input.cpp
+	"Input.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"DungeonClimb.h"
+	"Input.h"
+	"Reload.h"
+	"Bash.h"
+	"Renderer.h"
+	"Close.h"
+	"JamWithSpike.h"
+	"ItemPickup.h"
+	"InventoryHandler.h"
+	"Marker.h"
+	"Map.h"
+	"DungeonMaster.h"
+	"PlayerSpellsHandler.h"
+	"Manual.h"
+	"CharacterDescr.h"
+	"Query.h"
+	"SaveHandler.h"
+	"ItemFactory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"PlayerBonuses.h"
+	"Examine.h"
+	"PlayerCreateCharacter.h"
+	"Disarm.h"
+	"SdlWrapper.h"
+
+1387890310 source:c:\_martin_\ia.git\src\inventory.cpp
+	"Inventory.h"
+	<algorithm>
+	"ItemWeapon.h"
+	"Engine.h"
+	"ItemDrop.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"GameTime.h"
+	"Renderer.h"
+	"ItemFactory.h"
+	"PlayerCreateCharacter.h"
+	"DungeonMaster.h"
+	"PlayerBonuses.h"
+
+1387890310 source:c:\_martin_\ia.git\src\inventoryhandler.cpp
+	"InventoryHandler.h"
+	"Engine.h"
+	"ItemScroll.h"
+	"ItemExplosive.h"
+	"ActorPlayer.h"
+	"ItemPotion.h"
+	"InventoryIndexes.h"
+	"MenuBrowser.h"
+	"Log.h"
+	"RenderInventory.h"
+	"MenuInputHandler.h"
+	"Renderer.h"
+	"ItemDrop.h"
+	"Query.h"
+	"ItemFactory.h"
+	"GameTime.h"
+	"Audio.h"
+
+1387890310 c:\_martin_\ia.git\include\itemexplosive.h
+	"Properties.h"
+	"Item.h"
+
+1387888636 source:c:\_martin_\ia.git\src\inventoryindexes.cpp
+	"InventoryIndexes.h"
+	"Inventory.h"
+	"Engine.h"
+
+1387888636 source:c:\_martin_\ia.git\src\item.cpp
+	"Item.h"
+
+1387888636 source:c:\_martin_\ia.git\src\itemammo.cpp
+
+1387890310 source:c:\_martin_\ia.git\src\itemarmor.cpp
+	"ItemArmor.h"
+	"Engine.h"
+	"Log.h"
+
+1387888636 source:c:\_martin_\ia.git\src\itemartifact.cpp
+	"ItemArtifact.h"
+
+1387888635 c:\_martin_\ia.git\include\itemartifact.h
+	"Item.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itemdevice.cpp
+	"ItemDevice.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Renderer.h"
+	"GameTime.h"
+	"Log.h"
+	"Knockback.h"
+	"Inventory.h"
+	"Map.h"
+	"Audio.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itemdrop.cpp
+	"ItemDrop.h"
+	"Engine.h"
+	"CommonTypes.h"
+	"GameTime.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Inventory.h"
+	"ItemFactory.h"
+	"MapParsing.h"
+	<algorithm>
+
+1387890310 source:c:\_martin_\ia.git\src\itemexplosive.cpp
+	"ItemExplosive.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Renderer.h"
+	"GameTime.h"
+
+1387975966 source:c:\_martin_\ia.git\src\itemfactory.cpp
+	"ItemFactory.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ItemAmmo.h"
+	"ItemExplosive.h"
+	"ItemArmor.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"ItemDrop.h"
+	"ItemDevice.h"
+	"ItemMedicalBag.h"
+
+1387890310 c:\_martin_\ia.git\include\itemammo.h
+	"Item.h"
+	"Converters.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itemmedicalbag.cpp
+	"ItemMedicalBag.h"
+	"Engine.h"
+	"Properties.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Renderer.h"
+	"Inventory.h"
+	"PlayerBonuses.h"
+	"Popup.h"
+	"GameTime.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itempickup.cpp
+	"ItemPickup.h"
+	"Engine.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmo.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Query.h"
+	"ItemDrop.h"
+	"ItemFactory.h"
+	"GameTime.h"
+	"Audio.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itempotion.cpp
+	"ItemPotion.h"
+	"Engine.h"
+	"Properties.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"ActorMonster.h"
+	"PlayerSpellsHandler.h"
+	"ItemScroll.h"
+	"GameTime.h"
+	"Audio.h"
+	"Renderer.h"
+	"Inventory.h"
+	"DungeonClimb.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itemscroll.cpp
+	"ItemScroll.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"PlayerBonuses.h"
+	"Log.h"
+	"Inventory.h"
+	"PlayerSpellsHandler.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\itemweapon.cpp
+	"ItemWeapon.h"
+	"Engine.h"
+	"Explosion.h"
+
+1387890310 source:c:\_martin_\ia.git\src\jamwithspike.cpp
+	"JamWithSpike.h"
+	"Engine.h"
+	"GameTime.h"
+	"Feature.h"
+	"Actor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Query.h"
+	"Inventory.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\knockback.cpp
+	"Knockback.h"
+	"Engine.h"
+	"Attack.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"Log.h"
+	"Config.h"
+	"GameTime.h"
+	"Renderer.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\linecalc.cpp
+	"LineCalc.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\log.cpp
+	"Log.h"
+	<algorithm>
+	"Input.h"
+	"Engine.h"
+	"Converters.h"
+	"Renderer.h"
+	"Query.h"
+	"ActorPlayer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\look.cpp
+	"Look.h"
+	"Engine.h"
+	"ActorMonster.h"
+	"Feature.h"
+	"Item.h"
+	"Log.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"AutoDescribeActor.h"
+	"TextFormatting.h"
+	"Query.h"
+	"Marker.h"
+	"Inventory.h"
+	"Attack.h"
+	"GameTime.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\main.cpp
+	"Engine.h"
+	"MainMenu.h"
+	"Renderer.h"
+	"InventoryHandler.h"
+	"PlayerBonuses.h"
+	"PlayerCreateCharacter.h"
+	"ActorPlayer.h"
+	"MapGen.h"
+	"PopulateMonsters.h"
+	"DungeonClimb.h"
+	"Popup.h"
+	"CharacterLines.h"
+	"Log.h"
+	"Query.h"
+	"Highscore.h"
+	"Postmortem.h"
+	"DungeonMaster.h"
+	"DebugModeStatPrinter.h"
+	"Audio.h"
+	"Bot.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mainmenu.cpp
+	"MainMenu.h"
+	<string>
+	"Engine.h"
+	"Colors.h"
+	"Renderer.h"
+	"MenuInputHandler.h"
+	"SaveHandler.h"
+	"Highscore.h"
+	"Manual.h"
+	"Popup.h"
+	"TextFormatting.h"
+	"Credits.h"
+	"Audio.h"
+	"GameTime.h"
+	"DungeonClimb.h"
+	"Actor.h"
+	"ActorPlayer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\manual.cpp
+	"Manual.h"
+	<fstream>
+	<iostream>
+	"Input.h"
+	"Engine.h"
+	"TextFormatting.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\map.cpp
+	"Map.h"
+	"Engine.h"
+	"Feature.h"
+	"FeatureFactory.h"
+	"ActorFactory.h"
+	"ItemFactory.h"
+	"GameTime.h"
+	"Renderer.h"
+	"MapGen.h"
+	"Item.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgenbsp.cpp
+	"MapGen.h"
+	<algorithm>
+	<assert.h>
+	"Engine.h"
+	"MapGen.h"
+	"FeatureProxEvent.h"
+	"ActorPlayer.h"
+	"FeatureDoor.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"ItemDrop.h"
+	"ItemFactory.h"
+	"Map.h"
+	"FeatureWall.h"
+	"MapParsing.h"
+	"Renderer.h"
+	"SdlWrapper.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgencavelvl.cpp
+	"MapGen.h"
+	<iostream>
+	<vector>
+	<algorithm>
+	"Engine.h"
+	"Converters.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"FeatureWall.h"
+	"PopulateMonsters.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgenegypttomb.cpp
+	"MapGen.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"Map.h"
+	"FeatureWall.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgenforest.cpp
+	"MapGen.h"
+	<iostream>
+	<vector>
+	"Engine.h"
+	"Converters.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"Map.h"
+	"Highscore.h"
+	"Fov.h"
+	"FeatureGrave.h"
+	"TextFormatting.h"
+	"PopulateMonsters.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgentrapezohedronlvl.cpp
+	"MapGen.h"
+	"Engine.h"
+	"FeatureFactory.h"
+	"ActorPlayer.h"
+	"ItemFactory.h"
+	"Map.h"
+	"FeatureWall.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapgenutils.cpp
+	"MapGen.h"
+	"Engine.h"
+	"Map.h"
+	"FeatureFactory.h"
+	"MapParsing.h"
+	"SdlWrapper.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mapparsing.cpp
+	"MapParsing.h"
+	<assert.h>
+	"Engine.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"GameTime.h"
+
+1387890310 source:c:\_martin_\ia.git\src\mappatterns.cpp
+	"MapPatterns.h"
+	"Engine.h"
+	"Map.h"
+
+1387890310 source:c:\_martin_\ia.git\src\maptemplates.cpp
+	"MapTemplates.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\marker.cpp
+	"Marker.h"
+	"Engine.h"
+	"Input.h"
+	"InventoryHandler.h"
+	"ItemWeapon.h"
+	"Input.h"
+	"ActorPlayer.h"
+	"Attack.h"
+	"Log.h"
+	"Look.h"
+	"Thrower.h"
+	"Renderer.h"
+	"Map.h"
+	"ItemFactory.h"
+	"LineCalc.h"
+
+1387888636 source:c:\_martin_\ia.git\src\menubrowser.cpp
+	"MenuBrowser.h"
+
+1387890310 source:c:\_martin_\ia.git\src\menuinputhandler.cpp
+	"MenuInputHandler.h"
+	"Engine.h"
+	"Input.h"
+
+1387888636 source:c:\_martin_\ia.git\src\panel.cpp
+	"Panel.h"
+
+1387890310 source:c:\_martin_\ia.git\src\playerbonuses.cpp
+	"PlayerBonuses.h"
+	<algorithm>
+	"Engine.h"
+	"TextFormatting.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"ItemFactory.h"
+	"Inventory.h"
+
+1387890310 source:c:\_martin_\ia.git\src\playercreatecharacter.cpp
+	"PlayerCreateCharacter.h"
+	"Engine.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+	"Input.h"
+	"MenuInputHandler.h"
+	"TextFormatting.h"
+
+1387890310 source:c:\_martin_\ia.git\src\playerspellshandler.cpp
+	"PlayerSpellsHandler.h"
+	"Engine.h"
+	"ItemScroll.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"MenuInputHandler.h"
+	"Renderer.h"
+	"Inventory.h"
+	"ItemFactory.h"
+	"PlayerBonuses.h"
+
+1387890310 source:c:\_martin_\ia.git\src\playervisualmemory.cpp
+	"PlayerVisualMemory.h"
+	"Engine.h"
+	"Map.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\populateitems.cpp
+	"PopulateItems.h"
+	"Engine.h"
+	"ActorPlayer.h"
+	"Map.h"
+	"ItemFactory.h"
+	"PlayerBonuses.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\populatemonsters.cpp
+	"PopulateMonsters.h"
+	<algorithm>
+	"Engine.h"
+	"FeatureTrap.h"
+	"Map.h"
+	"ActorFactory.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"FeatureFactory.h"
+	"MapGen.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\populatetraps.cpp
+	"PopulateTraps.h"
+	"Engine.h"
+	"Map.h"
+	"MapGen.h"
+	"FeatureTrap.h"
+	"FeatureFactory.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\popup.cpp
+	"Popup.h"
+	"Engine.h"
+	"Renderer.h"
+	"TextFormatting.h"
+	"Log.h"
+	"Query.h"
+	"CommonTypes.h"
+	"MenuBrowser.h"
+	"MenuInputHandler.h"
+	"Audio.h"
+
+1387890310 source:c:\_martin_\ia.git\src\postmortem.cpp
+	"Postmortem.h"
+	<fstream>
+	<iostream>
+	"Engine.h"
+	"Renderer.h"
+	"Input.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"Map.h"
+	"Log.h"
+	"MenuInputHandler.h"
+	"Highscore.h"
+	"PlayerBonuses.h"
+	"TextFormatting.h"
+
+1387890310 source:c:\_martin_\ia.git\src\properties.cpp
+	"Properties.h"
+	<assert.h>
+	<algorithm>
+	"Engine.h"
+	"ItemArmor.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Postmortem.h"
+	"Renderer.h"
+	"ItemWeapon.h"
+	"ActorMonster.h"
+	"Inventory.h"
+	"Map.h"
+	"Explosion.h"
+	"FeatureFactory.h"
+	"PlayerBonuses.h"
+	"MapParsing.h"
+	"LineCalc.h"
+
+1387890310 source:c:\_martin_\ia.git\src\query.cpp
+	"Query.h"
+	<iostream>
+	"Engine.h"
+	"Input.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\reload.cpp
+	"Reload.h"
+	"Engine.h"
+	"Converters.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmo.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Map.h"
+	"Inventory.h"
+	"ItemFactory.h"
+	"DungeonMaster.h"
+	"PlayerBonuses.h"
+	"GameTime.h"
+	"Audio.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\renderer.cpp
+	"Renderer.h"
+	<vector>
+	<iostream>
+	"SDL/SDL_image.h"
+	"Engine.h"
+	"Item.h"
+	"CharacterLines.h"
+	"Marker.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"Log.h"
+	"Attack.h"
+	"FeatureWall.h"
+	"FeatureDoor.h"
+	"Inventory.h"
+
+1387890310 source:c:\_martin_\ia.git\src\renderinventory.cpp
+	"RenderInventory.h"
+	"Engine.h"
+	"ItemWeapon.h"
+	"ActorPlayer.h"
+	"InventoryIndexes.h"
+	"Log.h"
+	"Renderer.h"
+
+1387890310 source:c:\_martin_\ia.git\src\roomtheme.cpp
+	"RoomTheme.h"
+	"Engine.h"
+	"MapGen.h"
+	"FeatureData.h"
+	"FeatureFactory.h"
+	"Map.h"
+	"PopulateItems.h"
+	"PopulateMonsters.h"
+	"PopulateTraps.h"
+	"Blood.h"
+	"Gods.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\savehandler.cpp
+	"SaveHandler.h"
+	<fstream>
+	<iostream>
+	"Engine.h"
+	"Log.h"
+	"Renderer.h"
+	"ActorPlayer.h"
+	"DungeonMaster.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"PlayerBonuses.h"
+	"Map.h"
+	"DungeonClimb.h"
+	"Inventory.h"
+	"GameTime.h"
+
+1387890310 source:c:\_martin_\ia.git\src\sound.cpp
+	"Sound.h"
+	<iostream>
+	"Engine.h"
+	"Feature.h"
+	"Map.h"
+	"ActorPlayer.h"
+	"ActorMonster.h"
+	"GameTime.h"
+	"MapParsing.h"
+
+1387890310 source:c:\_martin_\ia.git\src\spells.cpp
+	"Spells.h"
+	<algorithm>
+	"Engine.h"
+	"Renderer.h"
+	"ActorMonster.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"Postmortem.h"
+	"Knockback.h"
+	"Map.h"
+	"ActorFactory.h"
+	"FeatureTrap.h"
+	"PlayerSpellsHandler.h"
+	"ItemScroll.h"
+	"ItemArmor.h"
+	"Inventory.h"
+	"MapParsing.h"
+
+1387888636 source:c:\_martin_\ia.git\src\textformatting.cpp
+	"TextFormatting.h"
+	"Engine.h"
+
+1387890310 source:c:\_martin_\ia.git\src\thrower.cpp
+	"Thrower.h"
+	"Engine.h"
+	"Item.h"
+	"ItemPotion.h"
+	"ActorData.h"
+	"ActorPlayer.h"
+	"Renderer.h"
+	"Map.h"
+	"Log.h"
+	"FeatureFactory.h"
+	"Explosion.h"
+	"ItemDrop.h"
+	"Inventory.h"
+	"ItemFactory.h"
+	"Attack.h"
+	"LineCalc.h"
+
+1387888636 c:\_martin_\ia.git\include\releasemodeincl\debugmode.h
+
+1387890310 c:\_martin_\ia.git\test\include\stubs\renderer.h
+	"Panel.h"
+
+1387975121 source:c:\_martin_\ia.git\src\actormonsterspecific.cpp
+	"ActorMonster.h"
+	<algorithm>
+	"Engine.h"
+	"ItemFactory.h"
+	"Inventory.h"
+	"Explosion.h"
+	"ActorPlayer.h"
+	"Log.h"
+	"GameTime.h"
+	"ActorFactory.h"
+	"Renderer.h"
+	"CommonData.h"
+	"Map.h"
+	"Blood.h"
+	"FeatureFactory.h"
+	"Knockback.h"
+	"Gods.h"
+	"MapParsing.h"
+	"LineCalc.h"
+
+1387975180 source:c:\_martin_\ia.git\src\itemdata.cpp
+	"ItemData.h"
+	<iostream>
+	"Engine.h"
+	"Colors.h"
+	"Item.h"
+	"ItemWeapon.h"
+	"ItemAmmo.h"
+	"CommonData.h"
+	"ActorData.h"
+	"ItemArmor.h"
+	"ItemScroll.h"
+	"ItemPotion.h"
+	"ActorPlayer.h"
+	"ItemMedicalBag.h"
+
+1387890310 c:\_martin_\ia.git\test\include\stubs\audio.h
+	"AudioIds.h"
+	"CommonTypes.h"
+
+1387890310 c:\_martin_\ia.git\test\include\stubs\input.h
+	"SDL/SDL.h"
+	"CommonData.h"
+
+1387888636 c:\_martin_\ia.git\test\unittest++\src\config.h
+
+1387888636 c:\_martin_\ia.git\test\include\stubs\sdlwrapper.h
+

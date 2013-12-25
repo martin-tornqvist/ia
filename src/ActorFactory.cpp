@@ -29,6 +29,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
     case actor_lengSpider:          return new LengSpider(eng); break;
     case actor_fireHound:           return new FireHound(eng); break;
     case actor_frostHound:          return new FrostHound(eng); break;
+    case actor_zuul:                return new Zuul(eng); break;
     case actor_ghost:               return new Ghost(eng); break;
     case actor_wraith:              return new Wraith(eng); break;
     case actor_phantasm:            return new Phantasm(eng); break;

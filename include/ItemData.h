@@ -101,7 +101,7 @@ enum ItemId_t {
   item_giantMantisClaw,
   item_giantLocustBite,
   item_fireHoundBreath, item_frostHoundBreath, //TODO Make them spells instead?
-  item_fireHoundBite, item_frostHoundBite,
+  item_fireHoundBite, item_frostHoundBite, item_zuulBite,
   item_giantBatBite,
   item_zombieAxe,
   item_zombieClaw,

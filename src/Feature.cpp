@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "MapParsing.h"
+#include "GameTime.h"
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(Feature_t id, Pos pos, Engine& engine,

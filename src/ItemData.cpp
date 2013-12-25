@@ -815,6 +815,13 @@ void ItemDataHandler::initDataList() {
   d->meleeDmgType = dmgType_cold;
   dataList[d->id] = d;
 
+  d = new ItemData(item_zuulBite);
+  resetData(d, itemData_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "bites me");
+  setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zuul]);
+  d->meleeDmgType = dmgType_physical;
+  dataList[d->id] = d;
+
   d = new ItemData(item_dustVortexEngulf);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");

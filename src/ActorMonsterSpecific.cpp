@@ -175,6 +175,11 @@ void FrostHound::specificSpawnStartItems() {
     eng.itemFactory->spawnItem(item_frostHoundBite));
 }
 
+void Zuul::specificSpawnStartItems() {
+  inventory_->putItemInIntrinsics(
+    eng.itemFactory->spawnItem(item_zuulBite));
+}
+
 bool Vortex::monsterSpecificOnActorTurn() {
   if(pullCooldown > 0) {
     pullCooldown--;
