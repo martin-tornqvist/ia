@@ -10,6 +10,7 @@
 #include "CharacterLines.h"
 #include "Marker.h"
 #include "Map.h"
+#include "Actor.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Log.h"

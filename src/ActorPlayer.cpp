@@ -673,15 +673,6 @@ void Player::testPhobias() {
   }
 }
 
-int Player::getHpMax(const bool WITH_MODIFIERS) const {
-  if(WITH_MODIFIERS) {
-    if(propHandler_->hasProp(propDiseased)) {
-      return (hpMax_ * 3) / 4;
-    }
-  }
-  return hpMax_;
-}
-
 void Player::updateColor() {
   if(deadState != actorDeadState_alive) {
     clr_ = clrRed;

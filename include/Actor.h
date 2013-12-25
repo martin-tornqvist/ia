@@ -63,10 +63,7 @@ public:
   inline ActorId_t getId()  const {return data_->id;}
   inline int getHp()        const {return hp_;}
   inline int getSpi()       const {return spi_;}
-  virtual int getHpMax(const bool WITH_MODIFIERS) const {
-    (void)WITH_MODIFIERS;
-    return hpMax_;
-  }
+  int getHpMax(const bool WITH_MODIFIERS) const;
   inline int getSpiMax()    const {return spiMax_;}
 
   inline string getNameThe() const {return data_->name_the;}

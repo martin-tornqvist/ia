@@ -318,6 +318,7 @@ class Zuul: public Monster {
 public:
   Zuul(Engine& engine) : Monster(engine) {}
   ~Zuul() {}
+
   void specificSpawnStartItems();
 };
 

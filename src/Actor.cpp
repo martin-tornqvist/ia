@@ -40,6 +40,10 @@ Actor::~Actor() {
   delete inventory_;
 }
 
+int Actor::getHpMax(const bool WITH_MODIFIERS) const {
+  return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
+}
+
 bool Actor::checkIfSeeActor(
   const Actor& other,
   const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
@@ -461,10 +465,13 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   }
 
+ bool isPlayerSeeDyingActor = true;
+
   //Print death messages
   if(this != eng.player) {
     //Only print if visible
     if(eng.player->checkIfSeeActor(*this, NULL)) {
+      isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride.empty() == false) {
         eng.log->addMsg(deathMessageOverride);
@@ -519,6 +526,8 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   clr_ = clrRedLgt;
 
   onMonsterDeath();
+
+  propHandler_->onDeath(isPlayerSeeDyingActor);
 
   //Give exp if monster, and count up nr of kills.
   if(this != eng.player) {

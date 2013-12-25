@@ -18,6 +18,8 @@
 #include "PlayerBonuses.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
+#include "Blood.h"
+#include "ActorFactory.h"
 
 using namespace std;
 
@@ -387,16 +389,8 @@ void PropDataHandler::initDataList() {
 
   d.id = propFlared;
   d.stdRndTurns = Range(3, 4);
-  d.name = "";
-  d.nameShort = "";
-  d.msg[propMsgOnStartPlayer] = "";
   d.msg[propMsgOnStartMonster] = "is perforated by a flare!";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
   d.msg[propMsgOnMoreMonster] = "is perforated by another flare!";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -412,8 +406,6 @@ void PropDataHandler::initDataList() {
   d.msg[propMsgOnEndMonster] = "tears free!";
   d.msg[propMsgOnMorePlayer] = "I am fastened by another spike!";
   d.msg[propMsgOnMoreMonster] = "is fastened by another spike.";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -509,13 +501,7 @@ void PropDataHandler::initDataList() {
   d.name = "Clairvoyant";
   d.nameShort = "Clairvoyant";
   d.msg[propMsgOnStartPlayer] = "I see far and beyond!";
-  d.msg[propMsgOnStartMonster] = "";
   d.msg[propMsgOnEndPlayer] = "My sight is limited.";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -528,13 +514,8 @@ void PropDataHandler::initDataList() {
   d.name = "Blessed";
   d.nameShort = "Blessed";
   d.msg[propMsgOnStartPlayer] = "I feel luckier.";
-  d.msg[propMsgOnStartMonster] = "";
   d.msg[propMsgOnEndPlayer] = "I have normal luck.";
-  d.msg[propMsgOnEndMonster] = "";
   d.msg[propMsgOnMorePlayer] = "I feel luckier.";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -548,13 +529,9 @@ void PropDataHandler::initDataList() {
   d.name = "Cursed";
   d.nameShort = "Cursed";
   d.msg[propMsgOnStartPlayer] = "I feel misfortunate.";
-  d.msg[propMsgOnStartMonster] = "";
   d.msg[propMsgOnEndPlayer] = "I feel more fortunate.";
-  d.msg[propMsgOnEndMonster] = "";
   d.msg[propMsgOnMorePlayer] = "I feel more misfortunate.";
-  d.msg[propMsgOnMoreMonster] = "";
   d.msg[propMsgOnResPlayer] = "I resist misfortune.";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -567,14 +544,6 @@ void PropDataHandler::initDataList() {
   d.stdRndTurns = Range(1, 1);
   d.name = "Still";
   d.nameShort = "Still";
-  d.msg[propMsgOnStartPlayer] = "";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -585,13 +554,8 @@ void PropDataHandler::initDataList() {
   d.id = propWound;
   d.name = "Wound";
   d.msg[propMsgOnStartPlayer] = "I am wounded!";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
   d.msg[propMsgOnMorePlayer] = "I am more wounded!";
-  d.msg[propMsgOnMoreMonster] = "";
   d.msg[propMsgOnResPlayer] = "I resist wounding!";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -600,18 +564,18 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
+  d.id = propPossessedByZuul;
+  d.isMakingMonsterAware = false;
+  d.allowDisplayTurns = false;
+  d.allowApplyMoreWhileActive = false;
+  d.updatePlayerVisualWhenStartOrEnd = true;
+  d.isEndedByMagicHealing = false;
+  d.allowTestingOnBot = true;
+  d.alignment = propAlignmentNeutral;
+  addPropData(d);
+
   d.id = propWaiting;
   d.stdRndTurns = Range(1, 1);
-  d.name = "";
-  d.nameShort = "";
-  d.msg[propMsgOnStartPlayer] = "";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -621,16 +585,6 @@ void PropDataHandler::initDataList() {
 
   d.id = propDisabledAttack;
   d.stdRndTurns = Range(1, 1);
-  d.name = "";
-  d.nameShort = "";
-  d.msg[propMsgOnStartPlayer] = "";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -640,16 +594,6 @@ void PropDataHandler::initDataList() {
 
   d.id = propDisabledMelee;
   d.stdRndTurns = Range(1, 1);
-  d.name = "";
-  d.nameShort = "";
-  d.msg[propMsgOnStartPlayer] = "";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -659,16 +603,6 @@ void PropDataHandler::initDataList() {
 
   d.id = propDisabledRanged;
   d.stdRndTurns = Range(1, 1);
-  d.name = "";
-  d.nameShort = "";
-  d.msg[propMsgOnStartPlayer] = "";
-  d.msg[propMsgOnStartMonster] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMonster] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMonster] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -733,6 +667,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propRPoison:           return new PropRPoison(eng, turnsInit, NR_TURNS);
     case propRSleep:            return new PropRSleep(eng, turnsInit, NR_TURNS);
     case propLightSensitive:    return new PropLightSensitive(eng, turnsInit, NR_TURNS);
+    case propPossessedByZuul:   return new PropPossessedByZuul(eng, turnsInit, NR_TURNS);
     case endOfPropIds: {assert(false && "Bad property id");}
   }
   return NULL;
@@ -1103,6 +1038,14 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   }
 }
 
+int PropHandler::getChangedMaxHp(const int HP_MAX) const {
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  int newHpMax = HP_MAX;
+  for(Prop * prop : propList) {newHpMax = prop->getChangedMaxHp(newHpMax);}
+  return newHpMax;
+}
+
 void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -1199,6 +1142,12 @@ void PropHandler::onHit() {
   for(Prop * prop : propList) {prop->onHit();}
 }
 
+void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
+  vector<Prop*> propList;
+  getPropsFromSource(propList, propSrcAppliedAndInv);
+  for(Prop * prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
+}
+
 int PropHandler::getAbilityMod(const Abilities_t ability) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -1267,10 +1216,23 @@ void PropInfected::onNewTurn() {
 }
 
 void PropDiseased::onStart() {
-  //player->getHpMax() will now return a decreased value,
+  //Actor::getHpMax() will now return a decreased value,
   //cap current HP to the new, lower, maximum
-  int& hp = eng.player->hp_;
+  int& hp = owningActor_->hp_;
   hp = min(eng.player->getHpMax(true), hp);
+}
+
+void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
+  if(IS_PLAYER_SEE_OWNING_ACTOR) {
+    const string& name1 = owningActor_->getNameThe();
+    const string& name2 = eng.actorDataHandler->dataList[actor_zuul].name_the;
+    eng.log->addMsg(name1 + " was possessed by " + name2 + "!");
+  }
+  owningActor_->deadState = actorDeadState_corpse;
+  const Pos& pos = owningActor_->pos;
+  eng.gore->makeGore(pos);
+  eng.gore->makeBlood(pos);
+  eng.actorFactory->summonMonsters(pos, vector<ActorId_t>{actor_zuul}, true);
 }
 
 void PropPoisoned::onNewTurn() {

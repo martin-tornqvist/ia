@@ -108,4 +108,5 @@ void Gods::initGodList() {
   godList.push_back(God("Zindarak", "The Fiery Messenger"));
   godList.push_back(God("Zushakon", "The Dark Silent One"));
   godList.push_back(God("Zvilpogghua", "The Feaster from the Stars"));
+  godList.push_back(God("Gozer", "The Destroyer"));
 }

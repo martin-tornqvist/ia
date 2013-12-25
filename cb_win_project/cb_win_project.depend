@@ -14881,7 +14881,7 @@
 
 1387890310 c:\_martin_\ia.git\include\commondata.h
 
-1387890310 c:\_martin_\ia.git\include\actor.h
+1387994181 c:\_martin_\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -14981,7 +14981,7 @@
 
 1387888635 c:\_martin_\ia.git\include\art.h
 
-1387890310 c:\_martin_\ia.git\include\properties.h
+1387993708 c:\_martin_\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -15036,7 +15036,7 @@
 	<ctime>
 	<cmath>
 
-1387890310 c:\_martin_\ia.git\include\actorplayer.h
+1387989381 c:\_martin_\ia.git\include\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"CommonData.h"
@@ -15049,7 +15049,7 @@
 	"Engine.h"
 	<math.h>
 
-1387890310 source:c:\_martin_\ia.git\src\actor.cpp
+1387993654 source:c:\_martin_\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -15106,7 +15106,7 @@
 	"ItemData.h"
 	"Art.h"
 
-1387975083 c:\_martin_\ia.git\include\actormonster.h
+1387994184 c:\_martin_\ia.git\include\actormonster.h
 	"CommonData.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -15205,7 +15205,7 @@
 	<string>
 	"GameTime.h"
 
-1387975831 source:c:\_martin_\ia.git\src\actordata.cpp
+1387993894 source:c:\_martin_\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -15312,7 +15312,7 @@
 1387890310 c:\_martin_\ia.git\include\ai_handleinventory.h
 	"Inventory.h"
 
-1387890310 source:c:\_martin_\ia.git\src\actorplayer.cpp
+1387989381 source:c:\_martin_\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -16215,7 +16215,7 @@
 	"Audio.h"
 	"MapParsing.h"
 
-1387890310 source:c:\_martin_\ia.git\src\gods.cpp
+1387987583 source:c:\_martin_\ia.git\src\gods.cpp
 	"Gods.h"
 	"Engine.h"
 
@@ -16234,7 +16234,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1387890310 source:c:\_martin_\ia.git\src\input.cpp
+1387993293 source:c:\_martin_\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -16777,7 +16777,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1387890310 source:c:\_martin_\ia.git\src\properties.cpp
+1387993770 source:c:\_martin_\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -16796,6 +16796,8 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 	"LineCalc.h"
+	"Blood.h"
+	"ActorFactory.h"
 
 1387890310 source:c:\_martin_\ia.git\src\query.cpp
 	"Query.h"
@@ -16822,7 +16824,7 @@
 	"Audio.h"
 	"Renderer.h"
 
-1387890310 source:c:\_martin_\ia.git\src\renderer.cpp
+1387990262 source:c:\_martin_\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -16832,6 +16834,7 @@
 	"CharacterLines.h"
 	"Marker.h"
 	"Map.h"
+	"Actor.h"
 	"ActorPlayer.h"
 	"ActorMonster.h"
 	"Log.h"

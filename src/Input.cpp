@@ -580,6 +580,19 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
 
+  //----------------------------------------POSSESSED BY ZUUL
+  else if(d.sdlKey_ == SDLK_F10) {
+    if(IS_DEBUG_MODE) {
+      const int NR_ACTORS = eng.gameTime->getNrActors();
+      for(int i = 0; i < NR_ACTORS; i++) {
+        Actor& actor = eng.gameTime->getActorAtElement(i);
+        actor.getPropHandler().tryApplyProp(
+          new PropPossessedByZuul(eng, propTurnsIndefinite), true);
+      }
+    }
+    return;
+  }
+
   //----------------------------------------UNDEFINED COMMANDS
   else if(d.key_ != -1) {
     string cmdTried = " ";

@@ -33,8 +33,6 @@ public:
   Player(Engine& eng);
   virtual ~Player() {}
 
-  int getHpMax(const bool WITH_MODIFIERS) const;
-
   void updateFov();
 
   void moveDir(Dir_t dir);

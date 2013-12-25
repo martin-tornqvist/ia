@@ -45,6 +45,7 @@ enum PropId_t {
   propCursed,
   propStill,
   propWound,
+  propPossessedByZuul,
 
   //The following are used for AI control
   propWaiting,
@@ -138,6 +139,7 @@ public:
   void tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE);
 
   void changeMoveDir(const Pos& actorPos, Dir_t& dir) const;
+  int getChangedMaxHp(const int HP_MAX) const;
   bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
@@ -147,6 +149,7 @@ public:
   bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   void onHit();
+  void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const Abilities_t ability) const;
 
   bool hasProp(const PropId_t id) const;
@@ -227,6 +230,11 @@ public:
   virtual void onStart()          {}
   virtual void onEnd()            {}
   virtual void onMore()           {}
+  virtual void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
+    (void)IS_PLAYER_SEE_OWNING_ACTOR;
+  }
+
+  virtual int getChangedMaxHp(const int HP_MAX) const {return HP_MAX;}
 
   virtual bool changeActorClr(SDL_Color& clr) const {(void)clr; return false;}
 
@@ -350,7 +358,25 @@ public:
 
   ~PropDiseased() override {}
 
+  int getChangedMaxHp(const int HP_MAX) const override {
+    return (HP_MAX * 3) / 4;
+  }
+
   void onStart() override;
+};
+
+class PropPossessedByZuul: public Prop {
+public:
+  PropPossessedByZuul(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propPossessedByZuul, engine, turnsInit, turns) {}
+
+  ~PropPossessedByZuul() override {}
+
+  void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
+
+  int getChangedMaxHp(const int HP_MAX) const override {
+    return HP_MAX * 2;
+  }
 };
 
 class PropPoisoned: public Prop {
