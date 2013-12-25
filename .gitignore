@@ -6,3 +6,4 @@ test/obj
 *~
 #*
 *.patch
+CppCheckResults.xml
