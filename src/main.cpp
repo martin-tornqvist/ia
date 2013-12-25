@@ -40,10 +40,6 @@ int main(int argc, char* argv[]) {
   while(quitGame == false) {
     eng->initGame();
 
-    if(IS_DEBUG_MODE) {
-      eng->debugModeStatPrinter->run();
-    }
-
     int introMusChannel = -1;
     const GameEntry_t gameEntryType =
       eng->mainMenu->run(quitGame, introMusChannel);
@@ -73,6 +69,10 @@ int main(int argc, char* argv[]) {
         eng->dungeonMaster->setTimeStartedToNow();
         const TimeData& t = eng->dungeonMaster->getTimeStarted();
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
+
+//        if(IS_DEBUG_MODE) {
+//          eng->debugModeStatPrinter->run();
+//        }
       }
 
       eng->audio->fadeOutChannel(introMusChannel);

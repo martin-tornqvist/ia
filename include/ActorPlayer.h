@@ -39,7 +39,7 @@ public:
 
   void specific_init() {}
 
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 
   void onActorTurn();
 

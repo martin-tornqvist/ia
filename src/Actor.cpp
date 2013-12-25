@@ -142,9 +142,9 @@ void Actor::place(const Pos& pos_, ActorData& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(this != eng.player) {
-    specificSpawnStartItems();
-  }
+  if(this != eng.player) {specificSpawnStartItems();}
+
+  specificPlace();
 
   updateColor();
 }

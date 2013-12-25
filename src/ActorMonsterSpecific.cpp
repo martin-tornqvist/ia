@@ -175,6 +175,22 @@ void FrostHound::specificSpawnStartItems() {
     eng.itemFactory->spawnItem(item_frostHoundBite));
 }
 
+void Zuul::specificPlace() {
+  if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
+    //Note: Do not call die() here, that would have side effects, such as
+    //player getting XP.
+    deadState = actorDeadState_mangled;
+    vector<Monster*> monsters;
+    eng.actorFactory->summonMonsters(
+      pos, vector<ActorId_t>{actor_cultistPriest}, false, NULL, &monsters);
+    if(monsters.empty() == false) {
+      PropHandler& propHandler = monsters.at(0)->getPropHandler();
+      propHandler.tryApplyProp(
+        new PropPossessedByZuul(eng, propTurnsIndefinite), true);
+    }
+  }
+}
+
 void Zuul::specificSpawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_zuulBite));

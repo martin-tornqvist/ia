@@ -45,6 +45,8 @@ public:
   Monster(Engine& engine);
   virtual ~Monster();
 
+  virtual void specificPlace() {}
+
   void moveDir(Dir_t dir);
 
   AttackOpport getAttackOpport(Actor& defender);
@@ -106,14 +108,14 @@ class Rat: public Monster {
 public:
   Rat(Engine& engine) : Monster(engine) {}
   ~Rat() {}
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 };
 
 class RatThing: public Rat {
 public:
   RatThing(Engine& engine) : Rat(engine) {}
   ~RatThing() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class BrownJenkin: public RatThing {
@@ -133,35 +135,35 @@ class GreenSpider: public Spider {
 public:
   GreenSpider(Engine& engine) : Spider(engine) {}
   ~GreenSpider() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class WhiteSpider: public Spider {
 public:
   WhiteSpider(Engine& engine) : Spider(engine) {}
   ~WhiteSpider() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class RedSpider: public Spider {
 public:
   RedSpider(Engine& engine) : Spider(engine) {}
   ~RedSpider() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class ShadowSpider: public Spider {
 public:
   ShadowSpider(Engine& engine) : Spider(engine) {}
   ~ShadowSpider() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class LengSpider: public Spider {
 public:
   LengSpider(Engine& engine) : Spider(engine) {}
   ~LengSpider() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Zombie: public Monster {
@@ -183,14 +185,14 @@ class ZombieClaw: public Zombie {
 public:
   ZombieClaw(Engine& engine) : Zombie(engine) {}
   ~ZombieClaw() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class ZombieAxe: public Zombie {
 public:
   ZombieAxe(Engine& engine) : Zombie(engine) {}
   ~ZombieAxe() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class BloatedZombie: public Zombie {
@@ -198,7 +200,7 @@ public:
   BloatedZombie(Engine& engine) : Zombie(engine) {}
   ~BloatedZombie() {}
 
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class MajorClaphamLee: public ZombieClaw {
@@ -224,7 +226,7 @@ public:
   KeziahMason(Engine& engine) : Monster(engine), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
   bool monsterSpecificOnActorTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 private:
   bool hasSummonedJenkin;
 };
@@ -233,7 +235,7 @@ class Cultist: public Monster {
 public:
   Cultist(Engine& engine) : Monster(engine) {}
 
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 
   static string getCultistPhrase(Engine& engine);
 
@@ -251,21 +253,21 @@ class CultistTeslaCannon: public Cultist {
 public:
   CultistTeslaCannon(Engine& engine) : Cultist(engine) {}
   ~CultistTeslaCannon() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class CultistSpikeGun: public Cultist {
 public:
   CultistSpikeGun(Engine& engine) : Cultist(engine) {}
   ~CultistSpikeGun() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class CultistPriest: public Cultist {
 public:
   CultistPriest(Engine& engine) : Cultist(engine) {}
   ~CultistPriest() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class LordOfShadows: public Monster {
@@ -273,7 +275,7 @@ public:
   LordOfShadows(Engine& engine) : Monster(engine) {}
   ~LordOfShadows() {}
   bool monsterSpecificOnActorTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class LordOfSpiders: public Monster {
@@ -281,7 +283,7 @@ public:
   LordOfSpiders(Engine& engine) : Monster(engine) {}
   ~LordOfSpiders() {}
   bool monsterSpecificOnActorTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class LordOfSpirits: public Monster {
@@ -289,7 +291,7 @@ public:
   LordOfSpirits(Engine& engine) : Monster(engine) {}
   ~LordOfSpirits() {}
   bool monsterSpecificOnActorTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class LordOfPestilence: public Monster {
@@ -297,21 +299,21 @@ public:
   LordOfPestilence(Engine& engine) : Monster(engine) {}
   ~LordOfPestilence() {}
   bool monsterSpecificOnActorTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class FireHound: public Monster {
 public:
   FireHound(Engine& engine) : Monster(engine) {}
   ~FireHound() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class FrostHound: public Monster {
 public:
   FrostHound(Engine& engine) : Monster(engine) {}
   ~FrostHound() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Zuul: public Monster {
@@ -319,7 +321,9 @@ public:
   Zuul(Engine& engine) : Monster(engine) {}
   ~Zuul() {}
 
-  void specificSpawnStartItems();
+  void specificPlace() override;
+
+  void specificSpawnStartItems() override;
 };
 
 class Ghost: public Monster {
@@ -327,91 +331,91 @@ public:
   Ghost(Engine& engine) : Monster(engine) {}
   ~Ghost() {}
   bool monsterSpecificOnActorTurn();
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 };
 
 class Phantasm: public Ghost {
 public:
   Phantasm(Engine& engine) : Ghost(engine) {}
   ~Phantasm() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Wraith: public Ghost {
 public:
   Wraith(Engine& engine) : Ghost(engine) {}
   ~Wraith() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class GiantBat: public Monster {
 public:
   GiantBat(Engine& engine) : Monster(engine) {}
   ~GiantBat() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Byakhee: public GiantBat {
 public:
   Byakhee(Engine& engine) : GiantBat(engine) {}
   ~Byakhee() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class GiantMantis: public Monster {
 public:
   GiantMantis(Engine& engine) : Monster(engine) {}
   ~GiantMantis() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class HuntingHorror: public GiantBat {
 public:
   HuntingHorror(Engine& engine) : GiantBat(engine) {}
   ~HuntingHorror() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Wolf: public Monster {
 public:
   Wolf(Engine& engine) : Monster(engine) {}
   ~Wolf() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class MiGo: public Monster {
 public:
   MiGo(Engine& engine) : Monster(engine) {}
   ~MiGo() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Ghoul: public Monster {
 public:
   Ghoul(Engine& engine) : Monster(engine) {}
   ~Ghoul() {}
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 };
 
 class DeepOne: public Monster {
 public:
   DeepOne(Engine& engine) : Monster(engine) {}
   ~DeepOne() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Mummy: public Monster {
 public:
   Mummy(Engine& engine) : Monster(engine) {}
   ~Mummy() {}
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 };
 
 class MummyUnique: public Mummy {
 public:
   MummyUnique(Engine& engine) : Mummy(engine) {}
   ~MummyUnique() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class Khephren: public MummyUnique {
@@ -429,7 +433,7 @@ public:
   Shadow(Engine& engine) : Monster(engine) {}
   ~Shadow() {}
 
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 };
 
 class WormMass: public Monster {
@@ -437,7 +441,7 @@ public:
   WormMass(Engine& engine) : Monster(engine), chanceToSpawnNew(12) {}
   ~WormMass() {}
   bool monsterSpecificOnActorTurn();
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 private:
   int chanceToSpawnNew;
 };
@@ -447,7 +451,7 @@ public:
   GiantLocust(Engine& engine) : Monster(engine), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
   bool monsterSpecificOnActorTurn();
-  virtual void specificSpawnStartItems();
+  virtual void specificSpawnStartItems() override;
 private:
   int chanceToSpawnNew;
 };
@@ -469,7 +473,7 @@ class DustVortex: public Vortex {
 public:
   DustVortex(Engine& engine) : Vortex(engine) {}
   ~DustVortex() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
   void onMonsterDeath();
 };
 
@@ -477,7 +481,7 @@ class FireVortex: public Vortex {
 public:
   FireVortex(Engine& engine) : Vortex(engine) {}
   ~FireVortex() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
   void onMonsterDeath();
 };
 
@@ -485,7 +489,7 @@ class FrostVortex: public Vortex {
 public:
   FrostVortex(Engine& engine) : Vortex(engine) {}
   ~FrostVortex() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
   void onMonsterDeath();
 };
 
@@ -501,28 +505,28 @@ class OozeBlack: public Ooze {
 public:
   OozeBlack(Engine& engine) : Ooze(engine) {}
   ~OozeBlack() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class OozeClear: public Ooze {
 public:
   OozeClear(Engine& engine) : Ooze(engine) {}
   ~OozeClear() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class OozePutrid: public Ooze {
 public:
   OozePutrid(Engine& engine) : Ooze(engine) {}
   ~OozePutrid() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class OozePoison: public Ooze {
 public:
   OozePoison(Engine& engine) : Ooze(engine) {}
   ~OozePoison() {}
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
 };
 
 class ColourOutOfSpace: public Ooze {
@@ -532,7 +536,7 @@ public:
   ~ColourOutOfSpace() {}
 //  bool monsterSpecificOnActorTurn();
   void specificOnStandardTurn();
-  void specificSpawnStartItems();
+  void specificSpawnStartItems() override;
   const SDL_Color& getColor();
 private:
   SDL_Color currentColor;

@@ -28,6 +28,7 @@ public:
   inline Inventory&   getInv()          {return *inventory_;}
 
   void place(const Pos& pos_, ActorData& data);
+  virtual void specificPlace() {}
 
   bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);

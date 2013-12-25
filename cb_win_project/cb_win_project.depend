@@ -14881,7 +14881,7 @@
 
 1387890310 c:\_martin_\ia.git\include\commondata.h
 
-1387994181 c:\_martin_\ia.git\include\actor.h
+1387997573 c:\_martin_\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -15036,7 +15036,7 @@
 	<ctime>
 	<cmath>
 
-1387989381 c:\_martin_\ia.git\include\actorplayer.h
+1387997655 c:\_martin_\ia.git\include\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"CommonData.h"
@@ -15049,7 +15049,7 @@
 	"Engine.h"
 	<math.h>
 
-1387993654 source:c:\_martin_\ia.git\src\actor.cpp
+1387997700 source:c:\_martin_\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -15106,7 +15106,7 @@
 	"ItemData.h"
 	"Art.h"
 
-1387994184 c:\_martin_\ia.git\include\actormonster.h
+1387997643 c:\_martin_\ia.git\include\actormonster.h
 	"CommonData.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -15189,7 +15189,7 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1387974120 source:c:\_martin_\ia.git\src\actorfactory.cpp
+1387998181 source:c:\_martin_\ia.git\src\actorfactory.cpp
 	"ActorFactory.h"
 	<assert.h>
 	<algorithm>
@@ -16493,7 +16493,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1387890310 source:c:\_martin_\ia.git\src\main.cpp
+1387998452 source:c:\_martin_\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -16777,7 +16777,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1387993770 source:c:\_martin_\ia.git\src\properties.cpp
+1387998741 source:c:\_martin_\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -16940,7 +16940,7 @@
 1387890310 c:\_martin_\ia.git\test\include\stubs\renderer.h
 	"Panel.h"
 
-1387975121 source:c:\_martin_\ia.git\src\actormonsterspecific.cpp
+1387998215 source:c:\_martin_\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
