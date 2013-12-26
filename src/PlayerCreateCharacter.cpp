@@ -122,9 +122,9 @@ void PlayerCreateCharacter::drawPickTrait(
   SDL_Color clrActiveBg   = clrBlack;
   SDL_Color clrInactiveBg = clrBlack;
 
-  //Draw traits
+  //------------------------------------------------------------- TRAITS
   const int Y0_TRAITS = Y0_TITLE + 2;
-  int yPos = Y0_TRAITS;
+  int y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_COL_ONE; i++) {
     const Trait_t trait = traitsColOne.at(i);
     string name = "";
@@ -135,10 +135,10 @@ void PlayerCreateCharacter::drawPickTrait(
     const SDL_Color& drwClrBg =
       IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
-      name, panel_screen, Pos(X_COL_ONE, yPos), drwClr, drwClrBg);
-    yPos++;
+      name, panel_screen, Pos(X_COL_ONE, y), drwClr, drwClrBg);
+    y++;
   }
-  yPos = Y0_TRAITS;
+  y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_COL_TWO; i++) {
     const Trait_t trait = traitsColTwo.at(i);
     string name = "";
@@ -149,8 +149,8 @@ void PlayerCreateCharacter::drawPickTrait(
     const SDL_Color& drwClrBg =
       IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
-      name, panel_screen, Pos(X_COL_TWO, yPos), drwClr, drwClrBg);
-    yPos++;
+      name, panel_screen, Pos(X_COL_TWO, y), drwClr, drwClrBg);
+    y++;
   }
 
   //Draw frame around traits
@@ -159,9 +159,9 @@ void PlayerCreateCharacter::drawPickTrait(
     Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traitsColOne.size()));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
 
-  //Draw description
+  //------------------------------------------------------------- DESCRIPTION
   const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_COL_ONE + 2;
-  yPos = Y0_DESCR;
+  y = Y0_DESCR;
   const Trait_t markedTrait =
     browserPos.x == 0 ? traitsColOne.at(browserPos.y) :
     traitsColTwo.at(browserPos.y);
@@ -172,13 +172,14 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.textFormatting->lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
-    eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, yPos), clrWhite);
-    yPos++;
+    eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+    y++;
   }
-  yPos++;
+  y++;
 
-  yPos = max(Y0_DESCR + 3, yPos);
-
+  //------------------------------------------------------------- PREREQUISITES
+  const int Y0_PREREQS = 18;
+  y = Y0_PREREQS;
   vector<Trait_t> prereqsForCurTrait;
   eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
   const int NR_PREREQS = prereqsForCurTrait.size();
@@ -197,8 +198,22 @@ void PlayerCreateCharacter::drawPickTrait(
     vector<string> prereqLines;
     eng.textFormatting->lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string & str : prereqLines) {
-      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, yPos), clrWhite);
-      yPos++;
+      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+      y++;
+    }
+  }
+
+  //------------------------------------------------------------- PREVIOUS
+  y = Y0_PREREQS + 6;
+  string pickedStr = "";
+  eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
+  if(pickedStr != "") {
+    pickedStr = "Previously picked trait(s): " + pickedStr;
+    vector<string> pickedLines;
+    eng.textFormatting->lineToLines(pickedStr, MAX_W_DESCR, pickedLines);
+    for(const string & str : pickedLines) {
+      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+      y++;
     }
   }
 
