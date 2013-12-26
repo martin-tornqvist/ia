@@ -100,8 +100,8 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSharpShooter: {
-      strRef  = "Standing still gives ranged attacks +10% ";
-      strRef += "hit chance on the following three turns";
+      strRef  = "Standing still for three turns gives ranged attacks ";
+      strRef += "maximum hit chance and damage on the following turn";
     } break;
 
     case traitDemolitionExpert: {
@@ -116,6 +116,12 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "+30% shock resistance";
     } break;
 
+    case traitMythologist: {
+      strRef  = "50% less shock taken from observing strange creatures, ";
+      strRef += "for casting spells and using and identifying mysterious ";
+      strRef += "strange items (e.g. potions)";
+    } break;
+
     case traitSelfPossessed: {
       strRef  = "Passive shock received over time is reduced when shock is ";
       strRef += "high - at 50%, passive shock is halved, and at 75% you ";
@@ -124,24 +130,39 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitTough: {
-      strRef  = "+3 hit points, +10 % carry weight limit, better results ";
-      strRef += "for object interactions requiring strength(such as ";
+      strRef  = "+2 hit points, +10 % carry weight limit, better results ";
+      strRef += "for object interactions requiring strength (e.g. bashing";
+      strRef += "doors or pushing a lid)";
+    } break;
+
+    case traitRugged: {
+      strRef  = "+2 hit points, +10 % carry weight limit, better results ";
+      strRef += "for object interactions requiring strength (such as ";
       strRef += "bashing doors, or moving the lid from a stone coffin)";
     } break;
 
     case traitStrongBacked: {
-      strRef  = "+ 30 % carry weight limit";
+      strRef  = "+30% carry weight limit";
     } break;
 
     case traitBreachExpert: {
-      strRef  = "Increased chance for success when bashing doors, breaking ";
+      strRef  = "Increased chance of success when bashing doors, breaking ";
       strRef += "a door is a free turn, any creature adjacent to the door ";
       strRef += "on the opposite side is damaged and stunned";
     } break;
 
     case traitDexterous: {
       strRef  = "+25% chance to evade attacks and traps, ";
+      strRef += "every fifth move is a free action";
+    } break;
+
+    case traitLithe: {
+      strRef  = "+20% chance to evade attacks and traps, ";
       strRef += "every fourth move is a free action";
+    } break;
+
+    case traitMobile: {
+      strRef  = "Every second move is a free action";
     } break;
 
     case traitFearless: {
@@ -190,6 +211,10 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "You are more likely to avoid detection";
     } break;
 
+    case traitImperceptible: {
+      strRef  = "You are more likely to avoid detection";
+    } break;
+
     case traitTreasureHunter: {
       strRef  = "You tend to find more items";
     } break;
@@ -199,9 +224,138 @@ void PlayerBonHandler::getTraitDescr(
 }
 
 void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
-                                       vector<Trait_t>& traitsToFill) {
-  traitsToFill.resize(0);
-  //TODO Add prereqs
+                                       vector<Trait_t>& traitsRef) {
+  traitsRef.resize(0);
+
+  //TODO Add background prereqs
+  //TODO Add CLVL prereqs
+
+  switch(id) {
+    case traitAdeptMeleeCombatant: {
+    } break;
+
+    case traitExpertMeleeCombatant: {
+      traitsRef.push_back(traitAdeptMeleeCombatant);
+    } break;
+
+    case traitMasterMeleeCombatant: {
+      traitsRef.push_back(traitExpertMeleeCombatant);
+    } break;
+
+    case traitAdeptMarksman: {
+    } break;
+
+    case traitExpertMarksman: {
+      traitsRef.push_back(traitAdeptMarksman);
+    } break;
+
+    case traitMasterMarksman: {
+      traitsRef.push_back(traitMasterMarksman);
+    } break;
+
+    case traitSteadyAimer: {
+      traitsRef.push_back(traitAdeptMarksman);
+    } break;
+
+    case traitSharpShooter: {
+      traitsRef.push_back(traitSteadyAimer);
+      traitsRef.push_back(traitExpertMarksman);
+    } break;
+
+    case traitDemolitionExpert: {
+    } break;
+
+    case traitCoolHeaded: {
+    } break;
+
+    case traitCourageous: {
+      traitsRef.push_back(traitCoolHeaded);
+    } break;
+
+    case traitMythologist: {
+      traitsRef.push_back(traitCoolHeaded);
+    } break;
+
+    case traitSelfPossessed: {
+      traitsRef.push_back(traitCoolHeaded);
+    } break;
+
+    case traitTough: {
+    } break;
+
+    case traitRugged: {
+      traitsRef.push_back(traitTough);
+    } break;
+
+    case traitStrongBacked: {
+      traitsRef.push_back(traitTough);
+    } break;
+
+    case traitBreachExpert: {
+      traitsRef.push_back(traitTough);
+      traitsRef.push_back(traitDexterous);
+    } break;
+
+    case traitDexterous: {
+    } break;
+
+    case traitLithe: {
+      traitsRef.push_back(traitDexterous);
+    } break;
+
+    case traitMobile: {
+      traitsRef.push_back(traitLithe);
+    } break;
+
+    case traitFearless: {
+      traitsRef.push_back(traitCoolHeaded);
+    } break;
+
+    case traitHealer: {
+    } break;
+
+    case traitObservant: {
+    } break;
+
+    case traitVigilant: {
+      traitsRef.push_back(traitObservant);
+    } break;
+
+    case traitRapidRecoverer: {
+      traitsRef.push_back(traitTough);
+      traitsRef.push_back(traitHealer);
+    } break;
+
+    case traitSurvivalist: {
+      traitsRef.push_back(traitSurvivalist);
+    } break;
+
+    case traitSelfAware: {
+      traitsRef.push_back(traitStrongSpirited);
+      traitsRef.push_back(traitObservant);
+    } break;
+
+    case traitStrongSpirited: {
+    } break;
+
+    case traitMightySpirited: {
+      traitsRef.push_back(traitStrongSpirited);
+    } break;
+
+    case traitStealthy: {
+    } break;
+
+    case traitImperceptible: {
+      traitsRef.push_back(traitStealthy);
+      traitsRef.push_back(traitDexterous);
+    } break;
+
+    case traitTreasureHunter: {
+      traitsRef.push_back(traitObservant);
+    } break;
+
+    case endOfTraits: {} break;
+  }
 }
 
 void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
@@ -214,14 +368,14 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
       getTraitPrereqs(Trait_t(i), traitPrereqs);
 
       bool isPickable = true;
-      for(unsigned int ii = 0; ii < traitPrereqs.size(); ii++) {
-        if(traitsPicked_[traitPrereqs.at(ii)] == false) {
+      for(Trait_t prereqId : traitPrereqs) {
+        if(traitsPicked_[prereqId] == false) {
           isPickable = false;
           break;
         }
       }
 
-      //TODO Check player background prereq
+      //TODO Check player background and CLVL prereqs
 
       if(isPickable) {
         traitsRef.push_back(Trait_t(i));
@@ -229,7 +383,7 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
     }
   }
 
-  // Sort lexicographically
+  //Sort lexicographically
   sort(traitsRef.begin(), traitsRef.end(),
   [this](const Trait_t & t1, const Trait_t & t2) {
     string str1 = "";

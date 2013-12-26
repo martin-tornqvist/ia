@@ -87,9 +87,7 @@ void CharacterDescr::makeLines() {
   } else {
     lines.push_back(StrAndClr(
                       offset + "+" + toString(MTH) +
-                      "% damage against all bizarre, " +
-                      "alien, mystical and shocking creatures",
-                      clrText));
+                      "% damage against all strange creatures", clrText));
     const int CASTING_BON =
       eng.player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
     if(CASTING_BON > 0) {

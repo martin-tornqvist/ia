@@ -946,14 +946,12 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ HEAL SELF
 SpellCastRetData SpellHealSelf::specificCast(
   Actor* const caster, Engine& eng) {
-
   (void)eng;
   return SpellCastRetData(caster->restoreHp(999, true));
 }
 
 bool SpellHealSelf::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-
   (void)eng;
   return monster->getHp() < monster->getHpMax(true);
 }

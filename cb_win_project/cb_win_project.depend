@@ -15041,7 +15041,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1387890310 c:\_martin_\ia.git\include\playerbonuses.h
+1388055723 c:\_martin_\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -15205,7 +15205,7 @@
 	<string>
 	"GameTime.h"
 
-1387993894 source:c:\_martin_\ia.git\src\actordata.cpp
+1387999384 source:c:\_martin_\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -15676,7 +15676,7 @@
 	"ActorMonster.h"
 	"MapParsing.h"
 
-1387890310 source:c:\_martin_\ia.git\src\characterdescr.cpp
+1388054462 source:c:\_martin_\ia.git\src\characterdescr.cpp
 	"CharacterDescr.h"
 	<algorithm>
 	"Engine.h"
@@ -16493,7 +16493,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1387998452 source:c:\_martin_\ia.git\src\main.cpp
+1387999239 source:c:\_martin_\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -16679,7 +16679,7 @@
 1387888636 source:c:\_martin_\ia.git\src\panel.cpp
 	"Panel.h"
 
-1387890310 source:c:\_martin_\ia.git\src\playerbonuses.cpp
+1388056079 source:c:\_martin_\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -16691,7 +16691,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1387890310 source:c:\_martin_\ia.git\src\playercreatecharacter.cpp
+1388055315 source:c:\_martin_\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -16894,7 +16894,7 @@
 	"GameTime.h"
 	"MapParsing.h"
 
-1387890310 source:c:\_martin_\ia.git\src\spells.cpp
+1388004409 source:c:\_martin_\ia.git\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"

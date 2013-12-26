@@ -183,7 +183,7 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
   const int NR_PREREQS = prereqsForCurTrait.size();
   if(NR_PREREQS > 0) {
-    string prereqStr = "This ability had the following prerequisite(s): ";
+    string prereqStr = "This trait had the following prerequisite(s): ";
     for(int i = 0; i < NR_PREREQS; i++) {
       const Trait_t prereqTrait = prereqsForCurTrait.at(i);
       string prereqTitle;

@@ -81,7 +81,7 @@ public:
   void getAllPickableTraits(vector<Trait_t>& traitsRef);
 
   void getTraitPrereqs(const Trait_t id,
-                       vector<Trait_t>& traitsToFill);
+                       vector<Trait_t>& traitsRef);
 
   inline bool getBg() const {return bg_;}
 
