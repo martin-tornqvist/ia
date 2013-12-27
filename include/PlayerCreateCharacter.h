@@ -10,10 +10,8 @@ using namespace std;
 
 class Engine;
 
-const int Y0_CREATE_CHARACTER = 1;
-
 //This class is responsible for letting the player create a character
-//(background and name), and also for picking traits when gaining levels
+//(bg, traits and name), and also for picking traits when gaining levels
 class PlayerCreateCharacter {
 public:
   PlayerCreateCharacter(Engine& engine) : eng(engine) {}
@@ -28,6 +26,10 @@ private:
                      const MenuBrowser& browser,
                      const bool IS_CHARACTER_CREATION) const;
 
+  void pickBg() const;
+  void drawPickBg(const vector<Bg_t>& bgs,
+                  const MenuBrowser& browser) const;
+
   Engine& eng;
 };
 
@@ -38,9 +40,9 @@ public:
 private:
   friend class PlayerCreateCharacter;
   PlayerEnterName(Engine& engine) : eng(engine) {}
-  void run(const Pos& pos) const;
-  void draw(const string& currentString, const Pos& pos) const;
-  void readKeys(string& currentString, bool& done, const Pos& pos) const;
+  void run(const int Y0_TITLE) const;
+  void draw(const string& currentString, const int Y0_TITLE) const;
+  void readKeys(string& currentString, bool& isDone, const int Y0_TITLE) const;
   Engine& eng;
 };
 

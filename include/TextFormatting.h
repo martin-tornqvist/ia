@@ -14,9 +14,9 @@ public:
   ~TextFormatting() {}
 
   void lineToLines(string line, const int MAX_WIDTH,
-                   vector<string>& linesToMake) const;
+                   vector<string>& linesRef) const;
 
-  void getSpaceSeparatedList(string line, vector<string>& linesToMake) const;
+  void getSpaceSeparatedList(string line, vector<string>& linesRef) const;
 
 private:
   void readAndRemoveNextWord(string& line, string& nextWordToMake) const;

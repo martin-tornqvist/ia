@@ -21,10 +21,20 @@ PlayerBonHandler::PlayerBonHandler(Engine& engine) :
   }
 }
 
+void PlayerBonHandler::getBgTitle(const Bg_t id, string& strRef) const {
+  strRef = "[BG TITLE MISSING]";
+  switch(id) {
+    case bgOccultist: strRef = "Occultist"; break;
+    case bgRogue:     strRef = "Rogue";     break;
+    case bgSoldier:   strRef = "Soldier";   break;
+    case endOfBgs: {} break;
+  }
+}
+
 void PlayerBonHandler::getTraitTitle(
   const Trait_t id, string& strRef) const {
 
-  strRef = "";
+  strRef = "[TRAIT TITLE MISSING]";
 
   switch(id) {
     case traitAdeptMeleeCombatant:  strRef = "Adept Melee Combatant";   break;
@@ -63,10 +73,20 @@ void PlayerBonHandler::getTraitTitle(
   }
 }
 
+void PlayerBonHandler::getBgDescr(const Bg_t id, string& strRef) const {
+  strRef = "[BG DESCRIPTION MISSING]";
+  switch(id) {
+    case bgOccultist: {} break;
+    case bgRogue:     {} break;
+    case bgSoldier:   {} break;
+    case endOfBgs:    {} break;
+  }
+}
+
 void PlayerBonHandler::getTraitDescr(
   const Trait_t id, string& strRef) const {
 
-  strRef = "[DESCRIPTION MISSING]";
+  strRef = "[TRAIT DESCRIPTION MISSING]";
 
   switch(id) {
     case traitAdeptMeleeCombatant: {
@@ -123,20 +143,18 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSelfPossessed: {
-      strRef  = "Passive shock received over time is reduced when shock is ";
-      strRef += "high - at 50%, passive shock is halved, and at 75% you ";
-      strRef += "receive no shock over time (does not affect shock from ";
-      strRef += "seeing monsters, using magic, etc)";
+      strRef  = "Passive shock received over time is reduced by 50% (does ";
+      strRef += "not affect shock from seeing monsters, using magic, etc)";
     } break;
 
     case traitTough: {
-      strRef  = "+2 hit points, +10 % carry weight limit, better results ";
+      strRef  = "+2 hit points, +10% carry weight limit, better results ";
       strRef += "for object interactions requiring strength (e.g. bashing";
       strRef += "doors or pushing a lid)";
     } break;
 
     case traitRugged: {
-      strRef  = "+2 hit points, +10 % carry weight limit, better results ";
+      strRef  = "+2 hit points, +10% carry weight limit, better results ";
       strRef += "for object interactions requiring strength (such as ";
       strRef += "bashing doors, or moving the lid from a stone coffin)";
     } break;
@@ -180,7 +198,7 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitVigilant: {
-      strRef  = "You cannot be backstabbed - hidden monsters gets no melee";
+      strRef  = "You cannot be backstabbed - hidden monsters gets no melee ";
       strRef += "attack bonus against you, and their attacks can be dodged";
     } break;
 
@@ -224,7 +242,7 @@ void PlayerBonHandler::getTraitDescr(
 }
 
 void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
-                                       vector<Trait_t>& traitsRef) {
+                                       vector<Trait_t>& traitsRef) const {
   traitsRef.resize(0);
 
   //TODO Add background prereqs
@@ -358,7 +376,23 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
   }
 }
 
-void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
+void PlayerBonHandler::getAllPickableBgs(vector<Bg_t>& bgsRef) const {
+  bgsRef.resize(0);
+
+  for(int i = 0; i < endOfBgs; i++) {bgsRef.push_back(Bg_t(i));}
+
+  //Sort lexicographically
+  sort(bgsRef.begin(), bgsRef.end(),
+  [this](const Bg_t & bg1, const Bg_t & bg2) {
+    string str1 = "";
+    string str2 = "";
+    getBgTitle(bg1, str1);
+    getBgTitle(bg2, str2);
+    return str1 < str2;
+  });
+}
+
+void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) const {
   traitsRef.resize(0);
 
   for(int i = 0; i < endOfTraits; i++) {
@@ -392,6 +426,10 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) {
     getTraitTitle(t2, str2);
     return str1 < str2;
   });
+}
+
+void PlayerBonHandler::pickBg(const Bg_t bg) {
+  bg_ = bg;
 }
 
 void PlayerBonHandler::pickTrait(const Trait_t id) {

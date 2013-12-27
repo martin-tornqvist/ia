@@ -78,10 +78,11 @@ public:
     return traitsPicked_[id];
   }
 
-  void getAllPickableTraits(vector<Trait_t>& traitsRef);
+  void getAllPickableBgs(vector<Bg_t>& bgsRef) const;
+  void getAllPickableTraits(vector<Trait_t>& traitsRef) const;
 
   void getTraitPrereqs(const Trait_t id,
-                       vector<Trait_t>& traitsRef);
+                       vector<Trait_t>& traitsRef) const;
 
   inline bool getBg() const {return bg_;}
 

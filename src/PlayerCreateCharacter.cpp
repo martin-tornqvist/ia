@@ -7,14 +7,98 @@
 #include "MenuInputHandler.h"
 #include "TextFormatting.h"
 
-const int NR_TRAITS = 2;
-const int NR_SKILLS = 2;
+const int Y0        = 1;
+const int MARGIN_W  = 17;
 
 void PlayerCreateCharacter::createCharacter() const {
-  //------------------------------------------------------ NAME
+  pickBg();
   pickNewTrait(true);
-  PlayerEnterName playerEnterName(eng);
-  playerEnterName.run(Pos(50, Y0_CREATE_CHARACTER + 2));
+  PlayerEnterName(eng).run(Y0);
+}
+
+void PlayerCreateCharacter::pickBg() const {
+  if(eng.config->isBotPlaying) {
+      eng.playerBonHandler->pickBg(Bg_t(eng.dice.range(0, endOfBgs - 1)));
+  } else {
+    vector<Bg_t> bgs;
+    eng.playerBonHandler->getAllPickableBgs(bgs);
+
+    MenuBrowser browser(bgs.size(), 0);
+    drawPickBg(bgs, browser);
+
+    while(true) {
+      const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+      switch(action) {
+        case menuAction_browsed: {drawPickBg(bgs, browser);} break;
+        case menuAction_canceled: {} break;
+        case menuAction_selected: {
+          eng.playerBonHandler->pickBg(bgs.at(browser.getPos().y));
+          return;
+        } break;
+
+        case menuAction_selectedWithShift: {} break;
+      }
+    }
+  }
+}
+
+void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
+                                       const MenuBrowser& browser) const {
+  eng.renderer->coverPanel(panel_screen);
+
+  string title = "Choose your background";
+
+  eng.renderer->drawTextCentered(
+    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0),
+    clrWhite, clrBlack, true);
+
+  const Pos& browserPos = browser.getPos();
+
+  const SDL_Color& clrActive      = clrNosferatuSepiaLgt;
+  const SDL_Color& clrInactive    = clrNosferatuSepiaDrk;
+  const SDL_Color& clrActiveBg    = clrBlack;
+  const SDL_Color& clrInactiveBg  = clrBlack;
+
+  const int Y0_BGS = Y0 + 2;
+
+  int y = Y0_BGS;
+
+  const Bg_t markedBg = bgs.at(browserPos.y);
+
+  const int NR_BGS = bgs.size();
+
+  //------------------------------------------------------------- BACKGROUNDS
+  for(int i = 0; i < NR_BGS; i++) {
+    const Bg_t bg = bgs.at(i);
+    string name = "";
+    eng.playerBonHandler->getBgTitle(bg, name);
+    const bool IS_MARKED = bg == markedBg;
+    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
+    eng.renderer->drawTextCentered(
+      name, panel_screen, Pos(MAP_X_CELLS_HALF, y), drwClr, drwClrBg);
+    y++;
+  }
+  y++;
+
+  const int BGS_BOX_W_HALF = 6;
+  Rect boxRect(Pos(MAP_X_CELLS_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
+               Pos(MAP_X_CELLS_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
+  eng.renderer->drawPopupBox(boxRect, panel_screen);
+
+  //------------------------------------------------------------- DESCRIPTION
+  const int X0_DESCR    = MARGIN_W;
+  const int MAX_W_DESCR = MAP_X_CELLS - (MARGIN_W * 2);
+  string descr = "";
+  eng.playerBonHandler->getBgDescr(markedBg, descr);
+  vector<string> descrLines;
+  eng.textFormatting->lineToLines(descr, MAX_W_DESCR, descrLines);
+  for(string& line : descrLines) {
+    eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
+    y++;
+  }
+
+  eng.renderer->updateScreen();
 }
 
 void PlayerCreateCharacter::pickNewTrait(
@@ -26,57 +110,45 @@ void PlayerCreateCharacter::pickNewTrait(
 
     if(pickableTraits.empty() == false) {
 
-      const int NR_TRAITS_TOT     = int(pickableTraits.size());
-      const int NR_TRAITS_COL_TWO = NR_TRAITS_TOT / 2;
-      const int NR_TRAITS_COL_ONE = NR_TRAITS_TOT - NR_TRAITS_COL_TWO;
+      const int NR_TRAITS_TOT = int(pickableTraits.size());
+      const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
+      const int NR_TRAITS_1   = NR_TRAITS_TOT - NR_TRAITS_2;
 
-      vector<Trait_t> traitsColOne;
-      vector<Trait_t> traitsColTwo;
-      traitsColOne.resize(0);
-      traitsColTwo.resize(0);
+      vector<Trait_t> traits1; traits1.resize(0);
+      vector<Trait_t> traits2; traits2.resize(0);
 
       for(int i = 0; i < NR_TRAITS_TOT; i++) {
         const Trait_t trait = pickableTraits.at(i);
-        if(i < NR_TRAITS_COL_ONE) {
-          traitsColOne.push_back(trait);
+        if(i < NR_TRAITS_1) {
+          traits1.push_back(trait);
         } else {
-          traitsColTwo.push_back(trait);
+          traits2.push_back(trait);
         }
       }
 
-      MenuBrowser browser(traitsColOne.size(), traitsColTwo.size());
-      drawPickTrait(
-        traitsColOne, traitsColTwo, browser, IS_CHARACTER_CREATION);
+      MenuBrowser browser(traits1.size(), traits2.size());
+      drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
 
       while(true) {
         const MenuAction_t action = eng.menuInputHandler->getAction(browser);
         switch(action) {
           case menuAction_browsed: {
-            drawPickTrait(
-              traitsColOne, traitsColTwo, browser, IS_CHARACTER_CREATION);
-          }
-          break;
-
-          case menuAction_canceled: {
+            drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
           } break;
 
+          case menuAction_canceled: {} break;
+
           case menuAction_selected: {
-            const Pos browserPos = browser.getPos();
-            if(browserPos.x == 0) {
-              eng.playerBonHandler->pickTrait(
-                traitsColOne.at(browser.getPos().y));
-            } else {
-              eng.playerBonHandler->pickTrait(
-                traitsColTwo.at(browser.getPos().y));
+            const Pos pos = browser.getPos();
+            eng.playerBonHandler->pickTrait(
+              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
+            if(IS_CHARACTER_CREATION == false) {
+              eng.renderer->drawMapAndInterface();
             }
-            eng.renderer->drawMapAndInterface();
             return;
-          }
-          break;
+          } break;
 
-          case menuAction_selectedWithShift:
-          {} break;
-
+          case menuAction_selectedWithShift: {} break;
         }
       }
     }
@@ -84,17 +156,16 @@ void PlayerCreateCharacter::pickNewTrait(
 }
 
 void PlayerCreateCharacter::drawPickTrait(
-  const vector<Trait_t>& traitsColOne, const vector<Trait_t>& traitsColTwo,
+  const vector<Trait_t>& traits1, const vector<Trait_t>& traits2,
   const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) const {
 
   eng.renderer->coverPanel(panel_screen);
 
-  const int NR_TRAITS_COL_ONE = traitsColOne.size();
-  const int NR_TRAITS_COL_TWO = traitsColTwo.size();
+  const int NR_TRAITS_1 = traits1.size();
+  const int NR_TRAITS_2 = traits2.size();
 
-  const int MARGIN_W = 17;
   int lenOfLongestInCol2 = -1;
-  for(const Trait_t & id : traitsColTwo) {
+  for(const Trait_t & id : traits2) {
     string title = "";
     eng.playerBonHandler->getTraitTitle(id, title);
     const int CUR_LEN = title.length();
@@ -105,49 +176,43 @@ void PlayerCreateCharacter::drawPickTrait(
   const int X_COL_TWO_RIGHT = MAP_X_CELLS - MARGIN_W - 1;
   const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
 
-  const int Y0_TITLE = Y0_CREATE_CHARACTER;
-
-  string label = IS_CHARACTER_CREATION ?
+  string title = IS_CHARACTER_CREATION ?
                  "Which trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
   eng.renderer->drawTextCentered(
-    label, panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE),
+    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0),
     clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
-  SDL_Color clrActive     = clrNosferatuSepiaLgt;
-  SDL_Color clrInactive   = clrNosferatuSepiaDrk;
-  SDL_Color clrActiveBg   = clrBlack;
-  SDL_Color clrInactiveBg = clrBlack;
+  const SDL_Color& clrActive      = clrNosferatuSepiaLgt;
+  const SDL_Color& clrInactive    = clrNosferatuSepiaDrk;
+  const SDL_Color& clrActiveBg    = clrBlack;
+  const SDL_Color& clrInactiveBg  = clrBlack;
 
   //------------------------------------------------------------- TRAITS
-  const int Y0_TRAITS = Y0_TITLE + 2;
+  const int Y0_TRAITS = Y0 + 2;
   int y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_COL_ONE; i++) {
-    const Trait_t trait = traitsColOne.at(i);
+  for(int i = 0; i < NR_TRAITS_1; i++) {
+    const Trait_t trait = traits1.at(i);
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
-    const bool IS_TRAIT_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    const SDL_Color& drwClr =
-      IS_TRAIT_MARKED ? clrActive : clrInactive;
-    const SDL_Color& drwClrBg =
-      IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
+    const bool IS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
+    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
       name, panel_screen, Pos(X_COL_ONE, y), drwClr, drwClrBg);
     y++;
   }
   y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_COL_TWO; i++) {
-    const Trait_t trait = traitsColTwo.at(i);
+  for(int i = 0; i < NR_TRAITS_2; i++) {
+    const Trait_t trait = traits2.at(i);
     string name = "";
     eng.playerBonHandler->getTraitTitle(trait, name);
-    const bool IS_TRAIT_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    const SDL_Color& drwClr =
-      IS_TRAIT_MARKED ? clrActive : clrInactive;
-    const SDL_Color& drwClrBg =
-      IS_TRAIT_MARKED ? clrActiveBg : clrInactiveBg;
+    const bool IS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
+    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawText(
       name, panel_screen, Pos(X_COL_TWO, y), drwClr, drwClrBg);
     y++;
@@ -156,26 +221,25 @@ void PlayerCreateCharacter::drawPickTrait(
   //Draw frame around traits
   Rect boxRect(
     Pos(MARGIN_W - 2, Y0_TRAITS - 1),
-    Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traitsColOne.size()));
+    Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
 
   //------------------------------------------------------------- DESCRIPTION
-  const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_COL_ONE + 2;
+  const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 2;
   y = Y0_DESCR;
   const Trait_t markedTrait =
-    browserPos.x == 0 ? traitsColOne.at(browserPos.y) :
-    traitsColTwo.at(browserPos.y);
+    browserPos.x == 0 ? traits1.at(browserPos.y) :
+    traits2.at(browserPos.y);
   string descr;
   eng.playerBonHandler->getTraitDescr(markedTrait, descr);
   const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
   vector<string> descrLines;
   eng.textFormatting->lineToLines(
-    "Effect(s): " + descr, MAX_W_DESCR, descrLines);
+    "* Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
     eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
     y++;
   }
-  y++;
 
   //------------------------------------------------------------- PREREQUISITES
   const int Y0_PREREQS = 18;
@@ -184,7 +248,7 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
   const int NR_PREREQS = prereqsForCurTrait.size();
   if(NR_PREREQS > 0) {
-    string prereqStr = "This trait had the following prerequisite(s): ";
+    string prereqStr = "* Trait had the following prerequisite(s): ";
     for(int i = 0; i < NR_PREREQS; i++) {
       const Trait_t prereqTrait = prereqsForCurTrait.at(i);
       string prereqTitle;
@@ -208,7 +272,7 @@ void PlayerCreateCharacter::drawPickTrait(
   string pickedStr = "";
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
   if(pickedStr != "") {
-    pickedStr = "Previously picked trait(s): " + pickedStr;
+    pickedStr = "* Previously picked trait(s): " + pickedStr;
     vector<string> pickedLines;
     eng.textFormatting->lineToLines(pickedStr, MAX_W_DESCR, pickedLines);
     for(const string & str : pickedLines) {
@@ -220,41 +284,46 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.renderer->updateScreen();
 }
 
-void PlayerEnterName::run(const Pos& pos) const {
+void PlayerEnterName::run(const int Y0_TITLE) const {
   string name = "";
-  draw(name, pos);
-  bool done = false;
-  while(done == false) {
-    if(eng.config->isBotPlaying == false) {
-      readKeys(name, done, pos);
-    } else {
+  draw(name, Y0_TITLE);
+  bool isDone = false;
+  while(isDone == false) {
+    if(eng.config->isBotPlaying) {
       name = "AZATHOTH";
-      done = true;
+      isDone = true;
+    } else {
+      readKeys(name, isDone, Y0_TITLE);
     }
   }
-
-  ActorData& def = eng.player->getData();
-  def.name_a = def.name_the = name;
+  ActorData& def  = eng.player->getData();
+  def.name_a      = def.name_the = name;
 }
 
-void PlayerEnterName::draw(const string& currentString, const Pos& pos) const {
-  eng.renderer->coverArea(panel_screen, pos, Pos(16, 2));
-  const string LABEL = "What is your name?";
-  eng.renderer->drawText(LABEL, panel_screen, pos, clrWhite);
+void PlayerEnterName::draw(const string& currentString,
+                           const int Y0_TITLE) const {
+  eng.renderer->coverPanel(panel_screen);
+  const string title = "What is your name?";
+  eng.renderer->drawTextCentered(
+    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE), clrWhite);
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
+  const int NAME_X0 = MAP_X_CELLS_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
+  const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   eng.renderer->drawText(
-    NAME_STR, panel_screen, pos + Pos(0, 1), clrNosferatuSepiaLgt);
+    NAME_STR, panel_screen, Pos(NAME_X0, Y0_TITLE + 2), clrNosferatuSepiaLgt);
+  Rect boxRect(Pos(NAME_X0 - 1, Y0_TITLE + 1), Pos(NAME_X1 + 1, Y0_TITLE + 3));
+  eng.renderer->drawPopupBox(boxRect, panel_screen);
   eng.renderer->updateScreen();
 }
 
-void PlayerEnterName::readKeys(string& currentString, bool& done,
-                               const Pos& pos) const {
+void PlayerEnterName::readKeys(string& currentString, bool& isDone,
+                               const int Y0_TITLE) const {
   const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RETURN) {
-    done = true;
+    isDone = true;
     currentString = currentString.empty() ? "Rogue" : currentString;
     return;
   }
@@ -270,7 +339,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done,
       } else {
         currentString.push_back(char(d.key_));
       }
-      draw(currentString, pos);
+      draw(currentString, Y0_TITLE);
       return;
     }
   }
@@ -278,7 +347,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& done,
   if(currentString.size() > 0) {
     if(d.sdlKey_ == SDLK_BACKSPACE) {
       currentString.erase(currentString.end() - 1);
-      draw(currentString, pos);
+      draw(currentString, Y0_TITLE);
     }
   }
 }

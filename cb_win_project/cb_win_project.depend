@@ -15041,7 +15041,7 @@
 	"Actor.h"
 	"CommonData.h"
 
-1388055723 c:\_martin_\ia.git\include\playerbonuses.h
+1388145446 c:\_martin_\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
 	"AbilityValues.h"
@@ -15172,7 +15172,7 @@
 	"PlayerCreateCharacter.h"
 	"BasicUtils.h"
 
-1387890310 c:\_martin_\ia.git\include\playercreatecharacter.h
+1388156950 c:\_martin_\ia.git\include\playercreatecharacter.h
 	<string>
 	"CommonTypes.h"
 	"PlayerBonuses.h"
@@ -15695,7 +15695,7 @@
 	<vector>
 	"CommonTypes.h"
 
-1387888635 c:\_martin_\ia.git\include\textformatting.h
+1388155840 c:\_martin_\ia.git\include\textformatting.h
 	<vector>
 	<string>
 
@@ -16679,7 +16679,7 @@
 1387888636 source:c:\_martin_\ia.git\src\panel.cpp
 	"Panel.h"
 
-1388056100 source:c:\_martin_\ia.git\src\playerbonuses.cpp
+1388145455 source:c:\_martin_\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<algorithm>
 	"Engine.h"
@@ -16691,7 +16691,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1388055315 source:c:\_martin_\ia.git\src\playercreatecharacter.cpp
+1388161090 source:c:\_martin_\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -16913,7 +16913,7 @@
 	"Inventory.h"
 	"MapParsing.h"
 
-1387888636 source:c:\_martin_\ia.git\src\textformatting.cpp
+1388155840 source:c:\_martin_\ia.git\src\textformatting.cpp
 	"TextFormatting.h"
 	"Engine.h"
 
