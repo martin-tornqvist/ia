@@ -15184,7 +15184,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1387890310 c:\_martin_\ia.git\include\mapparsing.h
+1388247696 c:\_martin_\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"
@@ -15312,7 +15312,7 @@
 1387890310 c:\_martin_\ia.git\include\ai_handleinventory.h
 	"Inventory.h"
 
-1387989381 source:c:\_martin_\ia.git\src\actorplayer.cpp
+1388247515 source:c:\_martin_\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -15564,7 +15564,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1387890310 source:c:\_martin_\ia.git\src\attackmelee.cpp
+1388242676 source:c:\_martin_\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -15580,7 +15580,7 @@
 1387890310 c:\_martin_\ia.git\include\knockback.h
 	"CommonTypes.h"
 
-1387890310 source:c:\_martin_\ia.git\src\attackranged.cpp
+1388242707 source:c:\_martin_\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -15965,7 +15965,7 @@
 1387890310 c:\_martin_\ia.git\include\jamwithspike.h
 	"FeatureDoor.h"
 
-1387890310 c:\_martin_\ia.git\include\look.h
+1388244697 c:\_martin_\ia.git\include\look.h
 	"CommonTypes.h"
 
 1387890310 c:\_martin_\ia.git\include\mainmenu.h
@@ -16108,7 +16108,7 @@
 1387890310 c:\_martin_\ia.git\include\featurelever.h
 	"Feature.h"
 
-1387890310 c:\_martin_\ia.git\include\featureproxevent.h
+1388245322 c:\_martin_\ia.git\include\featureproxevent.h
 	"Feature.h"
 	"FeatureFactory.h"
 
@@ -16148,7 +16148,7 @@
 	"Map.h"
 	"Fov.h"
 
-1387890310 source:c:\_martin_\ia.git\src\featureproxevent.cpp
+1388245591 source:c:\_martin_\ia.git\src\featureproxevent.cpp
 	"FeatureProxEvent.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -16475,7 +16475,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1387890310 source:c:\_martin_\ia.git\src\look.cpp
+1388244820 source:c:\_martin_\ia.git\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -16634,7 +16634,7 @@
 	"MapParsing.h"
 	"SdlWrapper.h"
 
-1387890310 source:c:\_martin_\ia.git\src\mapparsing.cpp
+1388247868 source:c:\_martin_\ia.git\src\mapparsing.cpp
 	"MapParsing.h"
 	<assert.h>
 	"Engine.h"
@@ -16651,7 +16651,7 @@
 	"MapTemplates.h"
 	"Engine.h"
 
-1387890310 source:c:\_martin_\ia.git\src\marker.cpp
+1388245133 source:c:\_martin_\ia.git\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -16824,7 +16824,7 @@
 	"Audio.h"
 	"Renderer.h"
 
-1387990262 source:c:\_martin_\ia.git\src\renderer.cpp
+1388243171 source:c:\_martin_\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>

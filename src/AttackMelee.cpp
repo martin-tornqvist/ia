@@ -18,7 +18,6 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   MeleeAttackData data(attacker, wpn, defender, eng);
 
   printMeleeMessages(data, wpn);
-  eng.renderer->drawMapAndInterface();
 
   if(data.isEtherealDefenderMissed == false) {
     if(data.attackResult >= successSmall && data.isDefenderDodging == false) {

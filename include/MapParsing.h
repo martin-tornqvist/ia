@@ -93,7 +93,7 @@ public:
 };
 
 enum MapParseWriteRule {
-  mapParseWriteAlways, mapParseWriteOnlyFalse, mapParseWriteOnlyTrue
+  mapParseWriteAlways, mapParseWriteOnlyTrue
 };
 
 class MapParser {

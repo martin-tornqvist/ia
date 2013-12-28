@@ -68,8 +68,8 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
           eng.player->target = actor;
         }
 
-        Weapon* const weapon = dynamic_cast<Weapon*>(
-                                 eng.player->getInv().getItemInSlot(slot_wielded));
+        Item* const item = eng.player->getInv().getItemInSlot(slot_wielded);
+        Weapon* const weapon = dynamic_cast<Weapon*>(item);
         if(eng.attack->ranged(*eng.player, *weapon, pos_) == false) {
           eng.log->addMsg("No ammunition loaded.");
         }
@@ -104,7 +104,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
       done();
     }
   }
-  // ------------------------------------------------------- THROW LIT EXPLOSIVE
+  // ------------------------------------------------------- THROW EXPLOSIVE
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
     if(markerTask == markerTask_aimLitExplosive) {
       eng.renderer->drawMapAndInterface();
@@ -161,8 +161,6 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
   eng.log->clearLog();
 
   eng.renderer->drawMapAndInterface(false);
-  draw(markerTask);
-  eng.renderer->updateScreen();
 
   if(
     markerTask == markerTask_look ||
@@ -171,7 +169,6 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
     eng.look->markerAtPos(pos_, markerTask, itemThrown);
   }
 
-  eng.renderer->drawMapAndInterface(false);
   draw(markerTask);
   eng.renderer->updateScreen();
 
@@ -229,6 +226,8 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
     isMoved = true;
   }
 
+  eng.renderer->drawMapAndInterface(false);
+
   if(isMoved) {
     if(
       markerTask == markerTask_look             ||
@@ -238,9 +237,9 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
     }
   }
 
-  eng.renderer->drawMapAndInterface(false);
   draw(markerTask);
   eng.renderer->updateScreen();
+
 }
 
 void Marker::done() {

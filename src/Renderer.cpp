@@ -275,7 +275,8 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
   applySurface(pos, mainMenuLogoSurface_);
 }
 
-void Renderer::drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
+void Renderer::drawMarker(const vector<Pos>& trail,
+                          const int EFFECTIVE_RANGE) {
   if(trail.size() > 2) {
     for(unsigned int i = 1; i < trail.size() - 1; i++) {
       coverCellInMap(trail.at(i));

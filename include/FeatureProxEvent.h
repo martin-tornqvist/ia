@@ -6,8 +6,7 @@
 
 class ProxEvent: public FeatureMob {
 public:
-  ~ProxEvent() {
-  }
+  ~ProxEvent() {}
 
   void newTurn();
 
@@ -23,17 +22,15 @@ public:
 
 private:
   friend class FeatureFactory;
-  ProxEventWallCrumble(Feature_t id, Pos pos, Engine& engine, ProxEventWallCrumbleSpawnData* spawnData) :
-    ProxEvent(id, pos, engine), wallCells_(spawnData->wallCells_), innerCells_(spawnData->innerCells_) {
-  }
+  ProxEventWallCrumble(Feature_t id, Pos pos, Engine& engine,
+                       ProxEventWallCrumbleSpawnData* spawnData) :
+    ProxEvent(id, pos, engine), wallCells_(spawnData->wallCells_),
+    innerCells_(spawnData->innerCells_) {}
 
   void playerIsNear();
 
   vector<Pos> wallCells_;
   vector<Pos> innerCells_;
 };
-
-
-
 
 #endif

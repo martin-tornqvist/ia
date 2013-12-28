@@ -387,8 +387,6 @@ void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
       eng.log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
     }
   }
-
-  eng.renderer->drawMapAndInterface();
 }
 
 void Attack::printProjectileAtActorMessages(const RangedAttackData& data,

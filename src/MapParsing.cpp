@@ -62,18 +62,14 @@ void MapParser::parse(
 
   const Engine& eng = predicate.eng;
 
-  const bool WRITE_T = writeRule == mapParseWriteAlways ||
-                       writeRule == mapParseWriteOnlyTrue;
-
-  const bool WRITE_F = writeRule == mapParseWriteAlways ||
-                       writeRule == mapParseWriteOnlyFalse;
+  const bool ALLOW_WRITE_FALSE = writeRule == mapParseWriteAlways;
 
   if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_Y_CELLS; y++) {
       for(int x = 0; x < MAP_X_CELLS; x++) {
-        const Cell& c = eng.map->cells[x][y];
+        const Cell& c       = eng.map->cells[x][y];
         const bool IS_MATCH = predicate.check(c);
-        if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
+        if(IS_MATCH || ALLOW_WRITE_FALSE) {
           arrayOut[x][y] = IS_MATCH;
         }
       }
@@ -84,10 +80,11 @@ void MapParser::parse(
     const int NR_MOB_FEATURES = eng.gameTime->getNrFeatureMobs();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
       const FeatureMob& f = eng.gameTime->getFeatureMobAtElement(i);
-      const Pos& p = f.getPos();
+      const Pos& p        = f.getPos();
       const bool IS_MATCH = predicate.check(f);
-      if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
-        arrayOut[p.x][p.y] = IS_MATCH;
+      if(IS_MATCH || ALLOW_WRITE_FALSE) {
+        bool& v = arrayOut[p.x][p.y];
+        if(v == false) {v = IS_MATCH;}
       }
     }
   }
@@ -95,11 +92,12 @@ void MapParser::parse(
   if(predicate.isCheckingActors()) {
     const int NR_ACTORS = eng.gameTime->getNrActors();
     for(int i = 0; i < NR_ACTORS; i++) {
-      const Actor& a = eng.gameTime->getActorAtElement(i);
-      const Pos& p = a.pos;
+      const Actor& a      = eng.gameTime->getActorAtElement(i);
+      const Pos& p        = a.pos;
       const bool IS_MATCH = predicate.check(a);
-      if((IS_MATCH && WRITE_T) || (IS_MATCH == false && WRITE_F)) {
-        arrayOut[p.x][p.y] = IS_MATCH;
+      if(IS_MATCH || ALLOW_WRITE_FALSE) {
+        bool& v = arrayOut[p.x][p.y];
+        if(v == false) {v = IS_MATCH;}
       }
     }
   }

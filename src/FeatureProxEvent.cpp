@@ -16,7 +16,6 @@ void ProxEvent::newTurn() {
   }
 }
 
-
 //-------------------------------------------WALL CRUMBLE
 void ProxEventWallCrumble::playerIsNear() {
   //Check that it still makes sense to run the crumbling
