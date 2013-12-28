@@ -84,13 +84,17 @@ public:
   void getTraitPrereqs(const Trait_t id,
                        vector<Trait_t>& traitsRef) const;
 
-  inline bool getBg() const {return bg_;}
+  inline Bg_t getBg() const {return bg_;}
 
   void getTraitTitle(const Trait_t id, string& strRef) const;
   void getTraitDescr(const Trait_t id, string& strRef) const;
 
   void getBgTitle(const Bg_t id, string& strRef) const;
-  void getBgDescr(const Bg_t id, string& strRef) const;
+  //The string vector reference parameter set in this function does not get
+  //formatted in getBgDescr. Each line still needs to be formatted by the
+  //calling function. The reason for using a vector reference instead of simply
+  //a string, is only to specify line breaks.
+  void getBgDescr(const Bg_t id, vector<string>& linesRef) const;
 
   void getAllPickedTraitsTitlesList(vector<string>& titlesRef);
   void getAllPickedTraitsTitlesLine(string& strRef);

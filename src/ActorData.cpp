@@ -957,7 +957,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_hound;
   d.hp = 60;
   d.spi = 40;
-  d.dmgMelee = 9;
+  d.dmgMelee = 8;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.abilityVals.setVal(ability_dodgeAttack, 25);
   d.intrProps[propRFear] = true;

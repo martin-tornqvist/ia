@@ -89,15 +89,18 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   //------------------------------------------------------------- DESCRIPTION
   const int X0_DESCR    = MARGIN_W;
   const int MAX_W_DESCR = MAP_X_CELLS - (MARGIN_W * 2);
-  string descr = "";
-  eng.playerBonHandler->getBgDescr(markedBg, descr);
-  vector<string> descrLines;
-  eng.textFormatting->lineToLines(descr, MAX_W_DESCR, descrLines);
-  for(string& line : descrLines) {
-    eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
+
+  vector<string> rawDescrLines;
+  eng.playerBonHandler->getBgDescr(markedBg, rawDescrLines);
+  for(string& rawLine : rawDescrLines) {
+    vector<string> formattedLines;
+    eng.textFormatting->lineToLines(rawLine, MAX_W_DESCR, formattedLines);
+    for(string& line : formattedLines) {
+      eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
+      y++;
+    }
     y++;
   }
-
   eng.renderer->updateScreen();
 }
 
@@ -177,7 +180,7 @@ void PlayerCreateCharacter::drawPickTrait(
   const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
 
   string title = IS_CHARACTER_CREATION ?
-                 "Which trait do you start with?" :
+                 "Which additional trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
   eng.renderer->drawTextCentered(
@@ -268,15 +271,18 @@ void PlayerCreateCharacter::drawPickTrait(
   }
 
   //------------------------------------------------------------- PREVIOUS
-  y = Y0_PREREQS + 6;
+  const int X0_PREV_PICKS     = MARGIN_W / 2;
+  const int MAX_W_PREV_PICKS  = MAP_X_CELLS - (X0_PREV_PICKS * 2);
+  y = Y0_PREREQS + 4;
   string pickedStr = "";
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
   if(pickedStr != "") {
-    pickedStr = "* Previously picked trait(s): " + pickedStr;
+    pickedStr = "Picked trait(s): " + pickedStr;
     vector<string> pickedLines;
-    eng.textFormatting->lineToLines(pickedStr, MAX_W_DESCR, pickedLines);
+    eng.textFormatting->lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string & str : pickedLines) {
-      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+      eng.renderer->drawText(
+        str, panel_screen, Pos(X0_PREV_PICKS, y), clrWhite);
       y++;
     }
   }

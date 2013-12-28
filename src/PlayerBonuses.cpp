@@ -15,10 +15,7 @@ using namespace std;
 
 PlayerBonHandler::PlayerBonHandler(Engine& engine) :
   bg_(endOfBgs), eng(engine) {
-
-  for(int i = 0; i < endOfTraits; i++) {
-    traitsPicked_[i] = false;
-  }
+  for(int i = 0; i < endOfTraits; i++) {traitsPicked_[i] = false;}
 }
 
 void PlayerBonHandler::getBgTitle(const Bg_t id, string& strRef) const {
@@ -73,13 +70,41 @@ void PlayerBonHandler::getTraitTitle(
   }
 }
 
-void PlayerBonHandler::getBgDescr(const Bg_t id, string& strRef) const {
-  strRef = "[BG DESCRIPTION MISSING]";
+void PlayerBonHandler::getBgDescr(const Bg_t id,
+                                  vector<string>& linesRef) const {
+  linesRef.resize(0);
+  string str = "";
+  string traitTitle = "";
+
   switch(id) {
-    case bgOccultist: {} break;
-    case bgRogue:     {} break;
-    case bgSoldier:   {} break;
-    case endOfBgs:    {} break;
+    case bgOccultist: {
+      str = "* Starts with the following trait(s)";
+      linesRef.push_back(str);
+      getTraitDescr(traitStrongSpirited, str);
+      getTraitTitle(traitStrongSpirited, traitTitle);
+      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+    } break;
+
+    case bgRogue: {
+      str = "* Starts with the following trait(s)";
+      linesRef.push_back(str);
+      getTraitDescr(traitStealthy, str);
+      getTraitTitle(traitStealthy, traitTitle);
+      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+    } break;
+
+    case bgSoldier: {
+      str = "* Starts with the following trait(s)";
+      linesRef.push_back(str);
+      getTraitDescr(traitAdeptMarksman, str);
+      getTraitTitle(traitAdeptMarksman, traitTitle);
+      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+      getTraitDescr(traitTough, str);
+      getTraitTitle(traitTough, traitTitle);
+      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+    } break;
+
+    case endOfBgs: {} break;
   }
 }
 
@@ -137,9 +162,9 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitMythologist: {
-      strRef  = "50% less shock taken from observing strange creatures, ";
-      strRef += "for casting spells and using and identifying mysterious ";
-      strRef += "strange items (e.g. potions)";
+      strRef  = "50% less shock taken from observing strange creatures, for ";
+      strRef += "casting spells and using and identifying strange items ";
+      strRef += "(e.g. potions)";
     } break;
 
     case traitSelfPossessed: {
@@ -149,7 +174,7 @@ void PlayerBonHandler::getTraitDescr(
 
     case traitTough: {
       strRef  = "+2 hit points, +10% carry weight limit, better results ";
-      strRef += "for object interactions requiring strength (e.g. bashing";
+      strRef += "for object interactions requiring strength (e.g. bashing ";
       strRef += "doors or pushing a lid)";
     } break;
 
@@ -214,7 +239,6 @@ void PlayerBonHandler::getTraitDescr(
     case traitSelfAware: {
       strRef  = "You cannot become confused, the number of remaining turns ";
       strRef += "for status effects are displayed";
-
     } break;
 
     case traitStrongSpirited: {
@@ -508,7 +532,6 @@ void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strRef) {
     if(traitsPicked_[i]) {
       string title = "";
       getTraitTitle(Trait_t(i), title);
-      title = "\"" + title + "\"";
       strRef += strRef.empty() ? title : (", " + title);
     }
   }
