@@ -136,8 +136,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
   postmortemLines.push_back(StrAndClr(" The last messages:", clrHeading));
-  int historyElement = static_cast<unsigned int>(
-                         max(0, int(eng.log->history.size()) - 10));
+  int historyElement = max(0, int(eng.log->history.size()) - 10);
   for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
     string row = "";
     for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {

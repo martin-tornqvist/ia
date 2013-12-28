@@ -184,9 +184,11 @@ void Zuul::specificPlace() {
     eng.actorFactory->summonMonsters(
       pos, vector<ActorId_t>{actor_cultistPriest}, false, NULL, &monsters);
     if(monsters.empty() == false) {
-      PropHandler& propHandler = monsters.at(0)->getPropHandler();
+      Monster* const monster = monsters.at(0);
+      PropHandler& propHandler = monster->getPropHandler();
       propHandler.tryApplyProp(
         new PropPossessedByZuul(eng, propTurnsIndefinite), true);
+      monster->restoreHp(999, false);
     }
   }
 }

@@ -193,7 +193,7 @@ void Tomb::featureSpecific_examine() {
 
     const int CHOICE_NR = eng.popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A tomb");
-    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)CHOICE_NR));
   }
 }
 
@@ -515,7 +515,7 @@ void Chest::featureSpecific_examine() {
     const int CHOICE_NR = eng.popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A chest");
 
-    doAction(possibleActions.at((unsigned int)(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)CHOICE_NR));
   }
 }
 
@@ -880,7 +880,7 @@ void Cabinet::featureSpecific_examine() {
 
     const int CHOICE_NR = eng.popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A cabinet");
-    doAction(possibleActions.at((unsigned int)(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)CHOICE_NR));
   }
 }
 
@@ -972,7 +972,7 @@ void Cocoon::featureSpecific_examine() {
 
     const int CHOICE_NR = eng.popup->showMultiChoiceMessage(
                             descr, true, actionLabels, "A cocoon");
-    doAction(possibleActions.at(static_cast<unsigned int>(CHOICE_NR)));
+    doAction(possibleActions.at((unsigned int)CHOICE_NR));
   }
 }
 

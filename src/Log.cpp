@@ -13,13 +13,8 @@ using namespace std;
 
 void Log::clearLog() {
   if(line.empty() == false) {
-
     history.push_back(line);
-
-    while(history.size() > 300) {
-      history.erase(history.begin());
-    }
-
+    while(history.size() > 300) {history.erase(history.begin());}
     line.resize(0);
   }
 }
@@ -46,6 +41,62 @@ void Log::drawLog(const bool SHOULD_UPDATE_SCREEN) const {
   if(SHOULD_UPDATE_SCREEN) eng.renderer->updateScreen();
 }
 
+void Log::addMsg(const string& text, const SDL_Color color,
+                 const bool INTERRUPT_PLAYER_ACTIONS,
+                 const bool FORCE_MORE_PROMPT) {
+
+  eng.renderer->drawMapAndInterface(true);
+
+  bool repeated = false;
+
+  //New message equal to previous?
+  if(line.empty() == false) {
+    if(line.back().str.compare(text) == 0) {
+      line.back().addRepeat();
+      repeated = true;
+    }
+  }
+
+  if(repeated == false) {
+    const int REPEAT_LEN  = 4;
+    const int MORE_LEN    = 9;
+
+    const int CUR_X_POS = findCurXpos(line, line.size());
+
+    const bool IS_MSG_FIT =
+      CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
+
+    if(IS_MSG_FIT == false) {
+      drawLog(false);
+      eng.renderer->drawText(
+        "--More--", panel_log, Pos(CUR_X_POS, 0), clrBlack, clrGray);
+      eng.renderer->updateScreen();
+      eng.query->waitForKeyPress();
+      clearLog();
+    }
+
+    const Message m(text, color);
+    line.push_back(m);
+  }
+
+  if(FORCE_MORE_PROMPT) {
+    drawLog(false);
+    const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
+    eng.renderer->drawText("--More--", panel_log,
+                           Pos(CUR_X_POS_AFTER, 0), clrBlack, clrGray);
+    eng.renderer->updateScreen();
+    eng.query->waitForKeyPress();
+    clearLog();
+  }
+
+  drawLog(true);
+
+  //Messages may stop long actions like first aid and auto travel.
+  if(INTERRUPT_PLAYER_ACTIONS) {
+    eng.player->interruptActions();
+  }
+}
+
 void Log::displayHistory() {
   clearLog();
 
@@ -56,7 +107,7 @@ void Log::displayHistory() {
   drawHistoryInterface(topElement, btmElement);
   int yCell = 1;
   for(int i = topElement; i <= btmElement; i++) {
-    drawLine(history.at(static_cast<unsigned int>(i)), yCell);
+    drawLine(history.at((unsigned int)i), yCell);
     yCell++;
   }
 
@@ -80,7 +131,7 @@ void Log::displayHistory() {
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
-        drawLine(history.at(static_cast<unsigned int>(i)), yCell);
+        drawLine(history.at((unsigned int)i), yCell);
         yCell++;
       }
       eng.renderer->updateScreen();
@@ -94,7 +145,7 @@ void Log::displayHistory() {
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
-        drawLine(history.at(static_cast<unsigned int>(i)), yCell);
+        drawLine(history.at((unsigned int)i), yCell);
         yCell++;
       }
       eng.renderer->updateScreen();
@@ -146,58 +197,5 @@ int Log::findCurXpos(const vector<Message>& afterLine,
   }
 
   return xPos;
-}
-
-void Log::addMsg(const string& text, const SDL_Color color,
-                 const bool INTERRUPT_PLAYER_ACTIONS,
-                 const bool FORCE_MORE_PROMPT) {
-  bool repeated = false;
-
-  //New message equal to previous?
-  if(line.empty() == false) {
-    if(line.back().str.compare(text) == 0) {
-      line.back().addRepeat();
-      repeated = true;
-    }
-  }
-
-  if(repeated == false) {
-    const int REPEAT_LEN  = 4;
-    const int MORE_LEN    = 9;
-
-    const int CUR_X_POS = findCurXpos(line, line.size());
-
-    const bool IS_MSG_FIT =
-      CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
-
-    if(IS_MSG_FIT == false) {
-      drawLog(false);
-      eng.renderer->drawText(
-        "--More--", panel_log, Pos(CUR_X_POS, 0), clrBlack, clrGray);
-      eng.renderer->updateScreen();
-      eng.query->waitForKeyPress();
-      clearLog();
-    }
-
-    const Message m(text, color);
-    line.push_back(m);
-  }
-
-  if(FORCE_MORE_PROMPT) {
-    drawLog(false);
-    const int CUR_X_POS_AFTER = findCurXpos(line, line.size());
-    eng.renderer->drawText("--More--", panel_log,
-                           Pos(CUR_X_POS_AFTER, 0), clrBlack, clrGray);
-    eng.renderer->updateScreen();
-    eng.query->waitForKeyPress();
-    clearLog();
-  }
-
-  drawLog(true);
-
-  //Messages may stop long actions like first aid and auto travel.
-  if(INTERRUPT_PLAYER_ACTIONS) {
-    eng.player->interruptActions();
-  }
 }
 

@@ -234,7 +234,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
               if(isPosOk) {
                 gravePositions.push_back(Pos(X, Y));
                 blockers[X][Y] = true;
-                if(gravePositions.size() == static_cast<unsigned int>(NR_HIGHSCORES)) {
+                if(gravePositions.size() == (unsigned int)NR_HIGHSCORES) {
                   i = 9999;
                 }
                 dy = 99999;

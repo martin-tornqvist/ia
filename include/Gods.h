@@ -29,7 +29,7 @@ public:
 
   inline const God* getCurrentGod() const {
     if(currentGodElem_ >= 0) {
-      return &(godList.at((unsigned int)(currentGodElem_)));
+      return &(godList.at((unsigned int)currentGodElem_));
     }
     return NULL;
   }

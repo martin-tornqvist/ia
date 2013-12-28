@@ -53,7 +53,7 @@ void PopulateItems::buildCandidateList() {
 
   ItemData** dataList = eng.itemDataHandler->dataList;
 
-  const unsigned int NUMBER_DEFINED = static_cast<unsigned int>(endOfItemIds);
+  const unsigned int NUMBER_DEFINED = (unsigned int)endOfItemIds;
 
   for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
     if(

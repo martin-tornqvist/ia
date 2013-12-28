@@ -93,7 +93,7 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
 
       currentActorVectorPos_++;
 
-      if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
+      if((unsigned int)currentActorVectorPos_ >= actors_.size()) {
         currentActorVectorPos_ = 0;
         currentTurnTypePos_++;
         if(currentTurnTypePos_ == endOfTurnType) {
@@ -200,7 +200,7 @@ void GameTime::runStandardTurnEvents() {
       actors_.erase(actors_.begin() + i);
       i--;
       loopSize--;
-      if((unsigned int)(currentActorVectorPos_) >= actors_.size()) {
+      if((unsigned int)currentActorVectorPos_ >= actors_.size()) {
         currentActorVectorPos_ = 0;
       }
     }
