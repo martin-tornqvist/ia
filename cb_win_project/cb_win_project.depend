@@ -10931,7 +10931,7 @@
 
 1382910176 source:d:\dev\ia.git\icon\resource.rc
 
-1387708723 source:d:\dev\ia.git\src\abilityvalues.cpp
+1388424212 source:d:\dev\ia.git\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -11185,7 +11185,7 @@
 	"Engine.h"
 	<math.h>
 
-1387622778 source:d:\dev\ia.git\src\actor.cpp
+1388331624 source:d:\dev\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11322,7 +11322,7 @@
 	"ItemData.h"
 	"Item.h"
 
-1387057464 source:d:\dev\ia.git\src\actordata.cpp
+1388331624 source:d:\dev\ia.git\src\actordata.cpp
 	<string>
 	<vector>
 	<math.h>
@@ -11332,7 +11332,7 @@
 	"Item.h"
 	"Engine.h"
 
-1387708774 source:d:\dev\ia.git\src\actorfactory.cpp
+1388331624 source:d:\dev\ia.git\src\actorfactory.cpp
 	"ActorFactory.h"
 	<assert.h>
 	<algorithm>
@@ -11436,7 +11436,7 @@
 1382910176 d:\dev\ia.git\src\ai_handleinventory.h
 	"Inventory.h"
 
-1387740725 source:d:\dev\ia.git\src\actormonsterspecific.cpp
+1388331624 source:d:\dev\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -11476,7 +11476,7 @@
 	<string>
 	<vector>
 
-1387740614 source:d:\dev\ia.git\src\actorplayer.cpp
+1388331624 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11562,7 +11562,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1387739322 source:d:\dev\ia.git\src\attackmelee.cpp
+1388331624 source:d:\dev\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11575,7 +11575,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1387740479 source:d:\dev\ia.git\src\attackranged.cpp
+1388331624 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11780,7 +11780,7 @@
 	<vector>
 	"CommonData.h"
 
-1387708774 source:d:\dev\ia.git\src\characterdescr.cpp
+1388331624 source:d:\dev\ia.git\src\characterdescr.cpp
 	"CharacterDescr.h"
 	<algorithm>
 	"Engine.h"
@@ -11958,7 +11958,7 @@
 	<vector>
 	"ItemData.h"
 
-1387709065 source:d:\dev\ia.git\src\dungeonmaster.cpp
+1388414357 source:d:\dev\ia.git\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -12140,7 +12140,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1387740678 source:d:\dev\ia.git\src\feature.cpp
+1388331624 source:d:\dev\ia.git\src\feature.cpp
 	"Feature.h"
 	"Engine.h"
 	"Actor.h"
@@ -12148,6 +12148,7 @@
 	"Log.h"
 	"Renderer.h"
 	"MapParsing.h"
+	"GameTime.h"
 
 1387618688 source:d:\dev\ia.git\src\featuredata.cpp
 	"FeatureData.h"
@@ -12169,7 +12170,7 @@
 	"Renderer.h"
 	"MapParsing.h"
 
-1387740717 source:d:\dev\ia.git\src\featureexaminable.cpp
+1388331624 source:d:\dev\ia.git\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -12254,7 +12255,7 @@
 	"Map.h"
 	"Fov.h"
 
-1387708774 source:d:\dev\ia.git\src\featureproxevent.cpp
+1388331624 source:d:\dev\ia.git\src\featureproxevent.cpp
 	"FeatureProxEvent.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12307,7 +12308,7 @@
 	"FovPreCalc.h"
 	"Engine.h"
 
-1387749489 source:d:\dev\ia.git\src\gametime.cpp
+1388331624 source:d:\dev\ia.git\src\gametime.cpp
 	"GameTime.h"
 	<assert.h>
 	"Engine.h"
@@ -12325,7 +12326,7 @@
 	"Audio.h"
 	"MapParsing.h"
 
-1386706016 source:d:\dev\ia.git\src\gods.cpp
+1388331624 source:d:\dev\ia.git\src\gods.cpp
 	"Gods.h"
 	"Engine.h"
 
@@ -12344,7 +12345,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1387751282 source:d:\dev\ia.git\src\input.cpp
+1388331624 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12435,7 +12436,7 @@
 1382910266 d:\dev\ia.git\src\itemartifact.h
 	"Item.h"
 
-1387708774 source:d:\dev\ia.git\src\itemdata.cpp
+1388331624 source:d:\dev\ia.git\src\itemdata.cpp
 	"ItemData.h"
 	<iostream>
 	"Engine.h"
@@ -12488,7 +12489,7 @@
 	"Renderer.h"
 	"GameTime.h"
 
-1387390149 source:d:\dev\ia.git\src\itemfactory.cpp
+1388331624 source:d:\dev\ia.git\src\itemfactory.cpp
 	"ItemFactory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12587,7 +12588,7 @@
 	"Renderer.h"
 	"MapParsing.h"
 
-1387492128 source:d:\dev\ia.git\src\log.cpp
+1388331624 source:d:\dev\ia.git\src\log.cpp
 	"Log.h"
 	<algorithm>
 	"Input.h"
@@ -12597,7 +12598,7 @@
 	"Query.h"
 	"ActorPlayer.h"
 
-1387710502 source:d:\dev\ia.git\src\look.cpp
+1388331624 source:d:\dev\ia.git\src\look.cpp
 	"Look.h"
 	"Engine.h"
 	"ActorMonster.h"
@@ -12615,7 +12616,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1387741066 source:d:\dev\ia.git\src\main.cpp
+1388331624 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12780,7 +12781,7 @@
 	"ActorPlayer.h"
 	"GameTime.h"
 
-1387710502 source:d:\dev\ia.git\src\marker.cpp
+1388331624 source:d:\dev\ia.git\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -12813,9 +12814,9 @@
 	<iostream>
 	"Engine.h"
 
-1387751296 source:d:\dev\ia.git\src\playerbonuses.cpp
+1388424207 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
-	<algorithm>
+	<assert.h>
 	"Engine.h"
 	"TextFormatting.h"
 	"ActorPlayer.h"
@@ -12825,7 +12826,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1387715888 source:d:\dev\ia.git\src\playercreatecharacter.cpp
+1388424344 source:d:\dev\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -12852,7 +12853,7 @@
 	"Map.h"
 	"Renderer.h"
 
-1387570925 source:d:\dev\ia.git\src\populateitems.cpp
+1388331624 source:d:\dev\ia.git\src\populateitems.cpp
 	"PopulateItems.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12895,7 +12896,7 @@
 	"MenuInputHandler.h"
 	"Audio.h"
 
-1387708774 source:d:\dev\ia.git\src\postmortem.cpp
+1388331624 source:d:\dev\ia.git\src\postmortem.cpp
 	"Postmortem.h"
 	<fstream>
 	<iostream>
@@ -12911,7 +12912,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1387750178 source:d:\dev\ia.git\src\properties.cpp
+1388331624 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -12930,6 +12931,8 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 	"LineCalc.h"
+	"Blood.h"
+	"ActorFactory.h"
 
 1387488171 source:d:\dev\ia.git\src\query.cpp
 	"Query.h"
@@ -13025,7 +13028,7 @@
 	"GameTime.h"
 	"MapParsing.h"
 
-1387741116 source:d:\dev\ia.git\src\spells.cpp
+1388331624 source:d:\dev\ia.git\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -13044,7 +13047,7 @@
 	"Inventory.h"
 	"MapParsing.h"
 
-1385502710 source:d:\dev\ia.git\src\textformatting.cpp
+1388412061 source:d:\dev\ia.git\src\textformatting.cpp
 	"TextFormatting.h"
 	"Engine.h"
 
@@ -13066,7 +13069,7 @@
 	"Attack.h"
 	"LineCalc.h"
 
-1387406551 source:d:\dev\ia.git\test\src\main.cpp
+1388331624 source:d:\dev\ia.git\test\src\main.cpp
 	"UnitTest++.h"
 	"engine.h"
 	"BasicUtils.h"
@@ -13183,7 +13186,7 @@
 	"Config.h"
 	"Art.h"
 
-1387710502 source:d:\dev\ia.git\src\renderer.cpp
+1388331624 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -13193,6 +13196,7 @@
 	"CharacterLines.h"
 	"Marker.h"
 	"Map.h"
+	"Actor.h"
 	"ActorPlayer.h"
 	"ActorMonster.h"
 	"Log.h"
@@ -13812,7 +13816,7 @@
 
 1385805779 d:\dev\ia.git\include\commondata.h
 
-1387710438 d:\dev\ia.git\include\actor.h
+1388331624 d:\dev\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13821,7 +13825,7 @@
 	"Config.h"
 	"Art.h"
 
-1387321457 d:\dev\ia.git\include\actordata.h
+1388331624 d:\dev\ia.git\include\actordata.h
 	<string>
 	<vector>
 	"Converters.h"
@@ -13849,7 +13853,7 @@
 
 1385502710 d:\dev\ia.git\include\art.h
 
-1387749644 d:\dev\ia.git\include\properties.h
+1388331624 d:\dev\ia.git\include\properties.h
 	<string>
 	"AbilityValues.h"
 	"CommonData.h"
@@ -13864,7 +13868,7 @@
 	"ItemData.h"
 	"CommonTypes.h"
 
-1387390139 d:\dev\ia.git\include\itemdata.h
+1388331624 d:\dev\ia.git\include\itemdata.h
 	<vector>
 	<string>
 	"CommonData.h"
@@ -13909,14 +13913,15 @@
 	<ctime>
 	<cmath>
 
-1387622778 d:\dev\ia.git\include\actorplayer.h
+1388331624 d:\dev\ia.git\include\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"CommonData.h"
 
-1387751208 d:\dev\ia.git\include\playerbonuses.h
+1388424207 d:\dev\ia.git\include\playerbonuses.h
 	<string>
 	<vector>
+	<algorithm>
 	"AbilityValues.h"
 	"Converters.h"
 	"Engine.h"
@@ -13949,7 +13954,7 @@
 	"FeatureData.h"
 	"CommonTypes.h"
 
-1387622732 d:\dev\ia.git\include\actormonster.h
+1388331624 d:\dev\ia.git\include\actormonster.h
 	"CommonData.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -14015,7 +14020,7 @@
 	"PlayerCreateCharacter.h"
 	"BasicUtils.h"
 
-1387642776 d:\dev\ia.git\include\playercreatecharacter.h
+1388331624 d:\dev\ia.git\include\playercreatecharacter.h
 	<string>
 	"CommonTypes.h"
 	"PlayerBonuses.h"
@@ -14111,7 +14116,7 @@
 1387626578 d:\dev\ia.git\include\knockback.h
 	"CommonTypes.h"
 
-1386706129 d:\dev\ia.git\include\gods.h
+1388331624 d:\dev\ia.git\include\gods.h
 	<string>
 	<vector>
 
@@ -14172,7 +14177,7 @@
 	<vector>
 	"CommonTypes.h"
 
-1385502710 d:\dev\ia.git\include\textformatting.h
+1388331624 d:\dev\ia.git\include\textformatting.h
 	<vector>
 	<string>
 
@@ -14257,7 +14262,7 @@
 	"CommonData.h"
 	"CommonTypes.h"
 
-1386706106 d:\dev\ia.git\include\look.h
+1388331624 d:\dev\ia.git\include\look.h
 	"CommonTypes.h"
 
 1386706106 d:\dev\ia.git\include\mainmenu.h
@@ -14304,7 +14309,7 @@
 1386705953 d:\dev\ia.git\include\featurelever.h
 	"Feature.h"
 
-1386705953 d:\dev\ia.git\include\featureproxevent.h
+1388331624 d:\dev\ia.git\include\featureproxevent.h
 	"Feature.h"
 	"FeatureFactory.h"
 
@@ -14418,7 +14423,7 @@
 	"FeatureWall.h"
 	"MapParsing.h"
 
-1386706016 source:d:\dev\ia.git\src\mapgenforest.cpp
+1388331624 source:d:\dev\ia.git\src\mapgenforest.cpp
 	"MapGen.h"
 	<iostream>
 	<vector>
@@ -14817,7 +14822,7 @@
 	"CommonTypes.h"
 	"Config.h"
 
-1387405494 d:\dev\ia.git\include\mapparsing.h
+1388331624 d:\dev\ia.git\include\mapparsing.h
 	<vector>
 	"CommonTypes.h"
 	"Config.h"
@@ -14840,7 +14845,7 @@
 	"LineCalc.h"
 	"Engine.h"
 
-1387405854 source:d:\dev\ia.git\src\mapparsing.cpp
+1388331624 source:d:\dev\ia.git\src\mapparsing.cpp
 	"MapParsing.h"
 	<assert.h>
 	"Engine.h"

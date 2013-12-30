@@ -30,22 +30,17 @@ int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
 void DungeonMaster::playerGainLvl() {
   clvl++;
 
-//  eng.log->addMsg(
-//    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
-
-  eng.playerCreateCharacter->pickNewTrait(false);
+  eng.log->addMsg(
+    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+  if(clvl % 2 != 0) {
+    eng.playerCreateCharacter->pickNewTrait(false);
+  }
 
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
-//  ActorData& d = eng.actorDataHandler->dataList[actor_player];
 
   const int BON_EVERY_N_LVL = 3;
   if(clvl % BON_EVERY_N_LVL == 0) {
-//    d.abilityVals.changeVal(ability_accuracyMelee,  5);
-//    d.abilityVals.changeVal(ability_accuracyRanged, 5);
-//    d.abilityVals.changeVal(ability_dodgeAttack,    5);
-//    eng.log->addMsg("I am more proficient in combat!");
-
     eng.player->changeMaxSpi(1, true);
 
     eng.player->incrMth(2);

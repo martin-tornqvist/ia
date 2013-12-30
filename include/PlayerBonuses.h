@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "AbilityValues.h"
 #include "Converters.h"
@@ -59,23 +60,20 @@ public:
   void addSaveLines(vector<string>& lines) {
     lines.push_back(toString(bg_));
 
-    for(int i = 0; i < endOfTraits; i++) {
-      lines.push_back(traitsPicked_[i] ? toString(1) : toString(0));
-    }
+    for(Trait_t t : traitsPicked_) {lines.push_back(toString(t));}
   }
 
   void setParametersFromSaveLines(vector<string>& lines) {
     bg_ = Bg_t(toInt(lines.front()));
     lines.erase(lines.begin());
 
-    for(int i = 0; i < endOfTraits; i++) {
-      traitsPicked_[i] = lines.front() == toString(1);
+    const int NR_TRAITS = toInt(lines.front());
+    lines.erase(lines.begin());
+
+    for(int i = 0; i < NR_TRAITS; i++) {
+      traitsPicked_.push_back(Trait_t(toInt(lines.front())));
       lines.erase(lines.begin());
     }
-  }
-
-  inline bool hasTrait(const Trait_t id) const {
-    return traitsPicked_[id];
   }
 
   void getAllPickableBgs(vector<Bg_t>& bgsRef) const;
@@ -96,28 +94,24 @@ public:
   //a string, is only to specify line breaks.
   void getBgDescr(const Bg_t id, vector<string>& linesRef) const;
 
-  void getAllPickedTraitsTitlesList(vector<string>& titlesRef);
-  void getAllPickedTraitsTitlesLine(string& strRef);
+  void getAllPickedTraitsTitlesLine(string& strRef) const;
 
   void pickTrait(const Trait_t id);
 
   void pickBg(const Bg_t bg);
 
   void setAllTraitsToPicked() {
-    for(int i = 0; i < endOfTraits; i++) {
-      traitsPicked_[i] = true;
-    }
+    for(int i = 0; i < endOfTraits; i++) {traitsPicked_.push_back(Trait_t(i));}
   }
 
-  //  void setAllTraitsToNotPicked() {
-  //    for(int i = 0; i < endOfTraits; i++) {
-  //      traitsPicked_[i] = false;
-  //    }
-  //  }
+  inline bool hasTrait(const Trait_t t) const {
+    return find(traitsPicked_.begin(), traitsPicked_.end(), t)
+           != traitsPicked_.end();
+  }
+
+  vector<Trait_t> traitsPicked_;
 
 private:
-  bool traitsPicked_[endOfTraits];
-
   Bg_t bg_;
 
   Engine& eng;

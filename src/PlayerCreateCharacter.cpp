@@ -18,7 +18,7 @@ void PlayerCreateCharacter::createCharacter() const {
 
 void PlayerCreateCharacter::pickBg() const {
   if(eng.config->isBotPlaying) {
-      eng.playerBonHandler->pickBg(Bg_t(eng.dice.range(0, endOfBgs - 1)));
+    eng.playerBonHandler->pickBg(Bg_t(eng.dice.range(0, endOfBgs - 1)));
   } else {
     vector<Bg_t> bgs;
     eng.playerBonHandler->getAllPickableBgs(bgs);
@@ -92,14 +92,14 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
 
   vector<string> rawDescrLines;
   eng.playerBonHandler->getBgDescr(markedBg, rawDescrLines);
-  for(string& rawLine : rawDescrLines) {
+  for(string & rawLine : rawDescrLines) {
     vector<string> formattedLines;
     eng.textFormatting->lineToLines(rawLine, MAX_W_DESCR, formattedLines);
-    for(string& line : formattedLines) {
+    for(string & line : formattedLines) {
       eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
-    y++;
+//    y++;
   }
   eng.renderer->updateScreen();
 }
@@ -228,7 +228,7 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.renderer->drawPopupBox(boxRect, panel_screen);
 
   //------------------------------------------------------------- DESCRIPTION
-  const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 2;
+  const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
   y = Y0_DESCR;
   const Trait_t markedTrait =
     browserPos.x == 0 ? traits1.at(browserPos.y) :
@@ -238,30 +238,25 @@ void PlayerCreateCharacter::drawPickTrait(
   const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
   vector<string> descrLines;
   eng.textFormatting->lineToLines(
-    "* Effect(s): " + descr, MAX_W_DESCR, descrLines);
+    "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
     eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
     y++;
   }
 
   //------------------------------------------------------------- PREREQUISITES
-  const int Y0_PREREQS = 18;
+  const int Y0_PREREQS = 19;
   y = Y0_PREREQS;
   vector<Trait_t> prereqsForCurTrait;
   eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
-  const int NR_PREREQS = prereqsForCurTrait.size();
-  if(NR_PREREQS > 0) {
-    string prereqStr = "* Trait had the following prerequisite(s): ";
-    for(int i = 0; i < NR_PREREQS; i++) {
-      const Trait_t prereqTrait = prereqsForCurTrait.at(i);
-      string prereqTitle;
+  if(prereqsForCurTrait.empty() == false) {
+    string prereqStr = "";
+    for(Trait_t prereqTrait : prereqsForCurTrait) {
+      string prereqTitle = "";
       eng.playerBonHandler->getTraitTitle(prereqTrait, prereqTitle);
-      if(i == 0) {
-        prereqStr += "\"" + prereqTitle + "\"";
-      } else {
-        prereqStr += ", \"" + prereqTitle + "\"";
-      }
+      prereqStr += (prereqStr.empty() ? "" : ", ") + prereqTitle;
     }
+    prereqStr = "This trait had the following prerequisite(s): " + prereqStr;
     vector<string> prereqLines;
     eng.textFormatting->lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string & str : prereqLines) {
@@ -271,13 +266,13 @@ void PlayerCreateCharacter::drawPickTrait(
   }
 
   //------------------------------------------------------------- PREVIOUS
+  y = Y0_PREREQS + 4;
   const int X0_PREV_PICKS     = MARGIN_W / 2;
   const int MAX_W_PREV_PICKS  = MAP_X_CELLS - (X0_PREV_PICKS * 2);
-  y = Y0_PREREQS + 4;
   string pickedStr = "";
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
   if(pickedStr != "") {
-    pickedStr = "Picked trait(s): " + pickedStr;
+    pickedStr = "Trait(s) gained: " + pickedStr;
     vector<string> pickedLines;
     eng.textFormatting->lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string & str : pickedLines) {

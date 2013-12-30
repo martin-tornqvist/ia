@@ -1,6 +1,6 @@
 #include "PlayerBonuses.h"
 
-#include <algorithm>
+#include <assert.h>
 
 #include "Engine.h"
 #include "TextFormatting.h"
@@ -15,7 +15,7 @@ using namespace std;
 
 PlayerBonHandler::PlayerBonHandler(Engine& engine) :
   bg_(endOfBgs), eng(engine) {
-  for(int i = 0; i < endOfTraits; i++) {traitsPicked_[i] = false;}
+  traitsPicked_.resize(0);
 }
 
 void PlayerBonHandler::getBgTitle(const Bg_t id, string& strRef) const {
@@ -73,35 +73,45 @@ void PlayerBonHandler::getTraitTitle(
 void PlayerBonHandler::getBgDescr(const Bg_t id,
                                   vector<string>& linesRef) const {
   linesRef.resize(0);
-  string str = "";
-  string traitTitle = "";
+  string s = "";
 
   switch(id) {
     case bgOccultist: {
-      str = "* Starts with the following trait(s)";
-      linesRef.push_back(str);
-      getTraitDescr(traitStrongSpirited, str);
-      getTraitTitle(traitStrongSpirited, traitTitle);
-      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+      linesRef.push_back("Can memorize spells cast from manuscripts");
+      linesRef.push_back("");
+      linesRef.push_back("-2 Hit Point penalty");
+      linesRef.push_back("");
+      linesRef.push_back("Starts with the following trait(s):");
+      linesRef.push_back("");
+      getTraitTitle(traitStrongSpirited, s);      linesRef.push_back("* " + s);
+      getTraitDescr(traitStrongSpirited, s);      linesRef.push_back(s);
     } break;
 
     case bgRogue: {
-      str = "* Starts with the following trait(s)";
-      linesRef.push_back(str);
-      getTraitDescr(traitStealthy, str);
-      getTraitTitle(traitStealthy, traitTitle);
-      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+      linesRef.push_back("Can actively hide from monsters (press [h])");
+      linesRef.push_back("");
+      linesRef.push_back("Unaware monsters cause no shock");
+      linesRef.push_back("");
+      linesRef.push_back("Starts with the following trait(s):");
+      linesRef.push_back("");
+      getTraitTitle(traitObservant, s);           linesRef.push_back("* " + s);
+      getTraitDescr(traitObservant, s);           linesRef.push_back(s);
+      linesRef.push_back("");
+      getTraitTitle(traitStealthy, s);            linesRef.push_back("* " + s);
+      getTraitDescr(traitStealthy, s);            linesRef.push_back(s);
     } break;
 
     case bgSoldier: {
-      str = "* Starts with the following trait(s)";
-      linesRef.push_back(str);
-      getTraitDescr(traitAdeptMarksman, str);
-      getTraitTitle(traitAdeptMarksman, traitTitle);
-      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
-      getTraitDescr(traitTough, str);
-      getTraitTitle(traitTough, traitTitle);
-      linesRef.push_back("- " + traitTitle + ": \"" + str + "\"");
+      linesRef.push_back("Starts with the following trait(s):");
+      linesRef.push_back("");
+      getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
+      getTraitDescr(traitAdeptMarksman, s);       linesRef.push_back(s);
+      linesRef.push_back("");
+      getTraitTitle(traitAdeptMeleeCombatant, s); linesRef.push_back("* " + s);
+      getTraitDescr(traitAdeptMeleeCombatant, s); linesRef.push_back(s);
+      linesRef.push_back("");
+      getTraitTitle(traitTough, s);               linesRef.push_back("* " + s);
+      getTraitDescr(traitTough, s);               linesRef.push_back(s);
     } break;
 
     case endOfBgs: {} break;
@@ -335,7 +345,6 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitBreachExpert: {
       traitsRef.push_back(traitTough);
-      traitsRef.push_back(traitDexterous);
     } break;
 
     case traitDexterous: {
@@ -369,7 +378,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitSurvivalist: {
-      traitsRef.push_back(traitSurvivalist);
+      traitsRef.push_back(traitRapidRecoverer);
     } break;
 
     case traitSelfAware: {
@@ -398,6 +407,14 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case endOfTraits: {} break;
   }
+
+  //Sort lexicographically
+  sort(traitsRef.begin(), traitsRef.end(),
+  [this](const Trait_t & t1, const Trait_t & t2) {
+    string str1 = ""; getTraitTitle(t1, str1);
+    string str2 = ""; getTraitTitle(t2, str2);
+    return str1 < str2;
+  });
 }
 
 void PlayerBonHandler::getAllPickableBgs(vector<Bg_t>& bgsRef) const {
@@ -408,10 +425,8 @@ void PlayerBonHandler::getAllPickableBgs(vector<Bg_t>& bgsRef) const {
   //Sort lexicographically
   sort(bgsRef.begin(), bgsRef.end(),
   [this](const Bg_t & bg1, const Bg_t & bg2) {
-    string str1 = "";
-    string str2 = "";
-    getBgTitle(bg1, str1);
-    getBgTitle(bg2, str2);
+    string str1 = ""; getBgTitle(bg1, str1);
+    string str2 = ""; getBgTitle(bg2, str2);
     return str1 < str2;
   });
 }
@@ -420,14 +435,18 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) const {
   traitsRef.resize(0);
 
   for(int i = 0; i < endOfTraits; i++) {
-    if(traitsPicked_[i] == false) {
+
+    const Trait_t trait = Trait_t(i);
+
+    if(hasTrait(trait) == false) {
 
       vector<Trait_t> traitPrereqs;
       getTraitPrereqs(Trait_t(i), traitPrereqs);
 
       bool isPickable = true;
-      for(Trait_t prereqId : traitPrereqs) {
-        if(traitsPicked_[prereqId] == false) {
+      for(Trait_t prereq : traitPrereqs) {
+
+        if(hasTrait(prereq) == false) {
           isPickable = false;
           break;
         }
@@ -444,24 +463,49 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) const {
   //Sort lexicographically
   sort(traitsRef.begin(), traitsRef.end(),
   [this](const Trait_t & t1, const Trait_t & t2) {
-    string str1 = "";
-    string str2 = "";
-    getTraitTitle(t1, str1);
-    getTraitTitle(t2, str2);
+    string str1 = ""; getTraitTitle(t1, str1);
+    string str2 = ""; getTraitTitle(t2, str2);
     return str1 < str2;
   });
 }
 
 void PlayerBonHandler::pickBg(const Bg_t bg) {
+  assert(bg != endOfBgs);
+
   bg_ = bg;
+
+  switch(bg_) {
+    case bgOccultist: {
+      pickTrait(traitStrongSpirited);
+    } break;
+
+    case bgRogue: {
+      pickTrait(traitObservant);
+      pickTrait(traitStealthy);
+    } break;
+
+    case bgSoldier: {
+      pickTrait(traitAdeptMeleeCombatant);
+      pickTrait(traitAdeptMarksman);
+      pickTrait(traitTough);
+    } break;
+
+    case endOfBgs: {} break;
+  }
 }
 
 void PlayerBonHandler::pickTrait(const Trait_t id) {
-  traitsPicked_[id] = true;
+  assert(id != endOfTraits);
+
+  traitsPicked_.push_back(id);
 
   switch(id) {
     case traitTough: {
-      eng.player->changeMaxHp(3, false);
+      eng.player->changeMaxHp(2, false);
+    } break;
+
+    case traitRugged: {
+      eng.player->changeMaxHp(2, false);
     } break;
 
     case traitStrongSpirited: {
@@ -513,26 +557,11 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
   }
 }
 
-void PlayerBonHandler::getAllPickedTraitsTitlesList(
-  vector<string>& titlesRef) {
-
-  titlesRef.resize(0);
-  for(int i = 0; i < endOfTraits; i++) {
-    if(traitsPicked_[i]) {
-      string title = "";
-      getTraitTitle(Trait_t(i), title);
-      titlesRef.push_back(title);
-    }
-  }
-}
-
-void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strRef) {
+void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strRef) const {
   strRef = "";
-  for(int i = 0; i < endOfTraits; i++) {
-    if(traitsPicked_[i]) {
-      string title = "";
-      getTraitTitle(Trait_t(i), title);
-      strRef += strRef.empty() ? title : (", " + title);
-    }
+
+  for(Trait_t t : traitsPicked_) {
+    string title = ""; getTraitTitle(t, title);
+    strRef += (strRef.empty() ? "" : ", ") + title;
   }
 }

@@ -17,7 +17,7 @@
 void CharacterDescr::makeLines() {
   lines.resize(0);
 
-  const string offset = " ";
+  const string offset = "   ";
   const SDL_Color clrHeader = clrWhiteHigh;
   const SDL_Color clrText = clrWhite;
   const SDL_Color clrTextDark = clrGray;
@@ -128,28 +128,6 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StrAndClr(" ", clrText));
 
-
-  lines.push_back(StrAndClr("Abilities gained", clrHeader));
-  string abilitiesLine = "";
-  bool isAnyBonusPicked = false;
-  for(int i = 0; i < endOfTraits; i++) {
-    const Trait_t trait = Trait_t(i);
-    if(eng.playerBonHandler->hasTrait(trait)) {
-      isAnyBonusPicked = true;
-      string currentTitle;
-      eng.playerBonHandler->getTraitTitle(trait, currentTitle);
-      lines.push_back(StrAndClr(offset + currentTitle, clrText));
-      string curDescr;
-      eng.playerBonHandler->getTraitDescr(trait, curDescr);
-      lines.push_back(StrAndClr(offset + curDescr, clrTextDark));
-    }
-  }
-  if(isAnyBonusPicked == false) {
-    lines.push_back(StrAndClr(offset + "None", clrText));
-  }
-  lines.push_back(StrAndClr(" ", clrText));
-
-
   lines.push_back(StrAndClr("Potion knowledge", clrHeader));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
@@ -196,6 +174,29 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StrAndClr(" ", clrText));
 
+  lines.push_back(StrAndClr("Traits gained", clrHeader));
+  string abilitiesLine = "";
+  vector<Trait_t>& traits = eng.playerBonHandler->traitsPicked_;
+  if(traits.empty()) {
+    lines.push_back(StrAndClr(offset + "None", clrText));
+    lines.push_back(StrAndClr(" ", clrText));
+  } else {
+    const int MAX_W_DESCR = (MAP_X_CELLS * 2) / 3;
+
+    for(Trait_t trait : traits) {
+      string title = "";
+      eng.playerBonHandler->getTraitTitle(trait, title);
+      lines.push_back(StrAndClr(offset + title, clrText));
+      string descr = "";
+      eng.playerBonHandler->getTraitDescr(trait, descr);
+      vector<string> descrLines;
+      eng.textFormatting->lineToLines(descr, MAX_W_DESCR, descrLines);
+      for(string & descrLine : descrLines) {
+        lines.push_back(StrAndClr(offset + descrLine, clrTextDark));
+      }
+      lines.push_back(StrAndClr(" ", clrText));
+    }
+  }
 }
 
 void CharacterDescr::drawInterface() {

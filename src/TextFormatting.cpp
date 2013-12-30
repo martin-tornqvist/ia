@@ -11,13 +11,12 @@ void TextFormatting::lineToLines(string line, const int MAX_WIDTH,
   string curWord;
 
   readAndRemoveNextWord(line, curWord);
+  if(linesRef.empty()) {
+    linesRef.resize(1);
+    linesRef.front() = "";
+  }
 
   while(curWord.empty() == false) {
-    if(linesRef.empty()) {
-      linesRef.resize(1);
-      linesRef.front() = "";
-    }
-
     if(isWordFit(linesRef.at(curRow), curWord, MAX_WIDTH) == false) {
       //Current word did not fit on current line, make a new line
       curRow++;
