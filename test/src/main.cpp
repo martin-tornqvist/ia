@@ -292,12 +292,12 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 }
 
 TEST_FIXTURE(BasicFixture, Fov) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
 
   eng.basicUtils->resetArray(blockers, false); //Nothing blocking sight
 
-  const int X = MAP_X_CELLS_HALF;
-  const int Y = MAP_Y_CELLS_HALF;
+  const int X = MAP_W_HALF;
+  const int Y = MAP_H_HALF;
 
   eng.player->pos = Pos(X, Y);
 
@@ -516,8 +516,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //TEST_FIXTURE(BasicFixture, MakeBspMap) {
 //  MapGenBsp mapGen(eng.;
 //  for(int i = 0; i < 1000; i++) {
-//    eng.player->pos = Pos(eng.dice.range(1, MAP_X_CELLS - 1),
-//                           eng.dice.range(1, MAP_Y_CELLS - 1));
+//    eng.player->pos = Pos(eng.dice.range(1, MAP_W - 1),
+//                           eng.dice.range(1, MAP_H - 1));
 //    mapGen.run();
 //  }
 //}

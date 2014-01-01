@@ -129,13 +129,13 @@ void DungeonMaster::winGame() {
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       eng.renderer->drawTextCentered(winMessageLines.at(ii), panel_screen,
-                                     Pos(MAP_X_CELLS_HALF, Y0 + ii),
+                                     Pos(MAP_W_HALF, Y0 + ii),
                                      clrMessageBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
         eng.renderer->drawTextCentered(
           CMD_LABEL, panel_screen,
-          Pos(MAP_X_CELLS_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
+          Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
           clrWhite, clrBlack, true);
       }
     }

@@ -6,7 +6,7 @@
 class AI_setSpecialBlockedCells {
 public:
   static void learn(
-    Monster& monster, bool a[MAP_X_CELLS][MAP_Y_CELLS], Engine& eng) {
+    Monster& monster, bool a[MAP_W][MAP_H], Engine& eng) {
     eng.basicUtils->resetArray(a, false);
   }
 private:

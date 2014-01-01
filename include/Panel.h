@@ -3,7 +3,7 @@
 
 #include "CommonTypes.h"
 
-enum Panel_t {panel_screen, panel_map, panel_character, panel_log};
+enum Panel_t {panel_screen, panel_map, panel_char, panel_log};
 
 class Panel {
 public:

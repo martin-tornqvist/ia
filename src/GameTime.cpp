@@ -159,7 +159,7 @@ void GameTime::runStandardTurnEvents() {
   Actor* actor = NULL;
   int loopSize = actors_.size();
 
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool visionBlockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
   int regenSpiEveryNTurns = 11;
@@ -211,8 +211,8 @@ void GameTime::runStandardTurnEvents() {
   for(FeatureMob * f : mobsCpy) {f->newTurn();}
 
   //Update timed features
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.map->cells[x][y].featureStatic->newTurn();
     }
   }
@@ -254,10 +254,10 @@ void GameTime::runAtomicTurnEvents() {
 }
 
 void GameTime::updateLightMap() {
-  bool lightTmp[MAP_X_CELLS][MAP_Y_CELLS];
+  bool lightTmp[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.map->cells[x][y].isLight = false;
       lightTmp[x][y] = false;
     }
@@ -275,8 +275,8 @@ void GameTime::updateLightMap() {
     featureMobs_.at(i)->addLight(lightTmp);
   }
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.map->cells[x][y].featureStatic->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.

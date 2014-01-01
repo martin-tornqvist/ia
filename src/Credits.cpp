@@ -22,7 +22,7 @@ void Credits::readFile() {
         lines.push_back(curLine);
       } else {
         eng.textFormatting->lineToLines(
-          curLine, MAP_X_CELLS - 2, formatedLines);
+          curLine, MAP_W - 2, formatedLines);
 
         for(unsigned int i = 0; i < formatedLines.size(); i++) {
           lines.push_back(formatedLines.at(i));
@@ -35,10 +35,10 @@ void Credits::readFile() {
 }
 
 void Credits::drawInterface() {
-  const string decorationLine(MAP_X_CELLS - 2, '-');
+  const string decorationLine(MAP_W - 2, '-');
 
   eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
+    panel_screen, Pos(0, 1), Pos(MAP_W, 2));
 
   eng.renderer->drawText(
     decorationLine, panel_screen, Pos(1, 1), clrWhite);
@@ -47,10 +47,10 @@ void Credits::drawInterface() {
     " Displaying credits.txt ", panel_screen, Pos(3, 1), clrWhite);
 
   eng.renderer->drawText(
-    decorationLine, panel_character, Pos(1, 1), clrWhite);
+    decorationLine, panel_char, Pos(1, 1), clrWhite);
 
   eng.renderer->drawText(
-    " space/esc to exit ", panel_character, Pos(3, 1), clrWhite);
+    " space/esc to exit ", panel_char, Pos(3, 1), clrWhite);
 }
 
 void Credits::run() {

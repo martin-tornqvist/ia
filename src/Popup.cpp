@@ -11,7 +11,7 @@
 #include "Audio.h"
 
 const int TEXT_AREA_WIDTH = 39;
-const int TEXT_AREA_X0 = MAP_X_CELLS_HALF - ((TEXT_AREA_WIDTH) / 2);
+const int TEXT_AREA_X0 = MAP_W_HALF - ((TEXT_AREA_WIDTH) / 2);
 
 int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
   const int BOX_WIDTH = TEXT_AREA_WIDTH + 2;
@@ -21,7 +21,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_AREA_HEIGHT) const {
 
   const int Y_OFFSET = -1;
 
-  const int Y0 = MAP_Y_CELLS_HALF - BOX_HEIGHT / 2 + Y_OFFSET;
+  const int Y0 = MAP_H_HALF - BOX_HEIGHT / 2 + Y_OFFSET;
   const int X1 = X0 + BOX_WIDTH - 1;
   const int Y1 = Y0 + BOX_HEIGHT - 1;
 
@@ -52,8 +52,8 @@ void Popup::showMessage(const string& message,
 
   if(title.empty() == false) {
     eng.renderer->drawTextCentered(
-      title, panel_map, Pos(MAP_X_CELLS_HALF, TITLE_Y_POS),
-      clrNosferatuSepiaLgt, clrBlack, true);
+      title, panel_map, Pos(MAP_W_HALF, TITLE_Y_POS),
+      clrNosferatuTealLgt, clrBlack, true);
   }
 
   const bool SHOW_MESSAGE_CENTERED = lines.size() == 1;
@@ -62,7 +62,7 @@ void Popup::showMessage(const string& message,
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
       eng.renderer->drawTextCentered(
-        lines.at(i), panel_map, Pos(MAP_X_CELLS_HALF, yPos), clrWhite,
+        lines.at(i), panel_map, Pos(MAP_W_HALF, yPos), clrWhite,
         clrBlack, true);
     } else {
       eng.renderer->drawText(
@@ -73,8 +73,8 @@ void Popup::showMessage(const string& message,
   yPos += 2;
 
   eng.renderer->drawTextCentered(
-    "space/esc to close", panel_map, Pos(MAP_X_CELLS_HALF, yPos),
-    clrNosferatuSepia);
+    "space/esc to close", panel_map, Pos(MAP_W_HALF, yPos),
+    clrNosferatuTeal);
 
   eng.renderer->updateScreen();
 
@@ -148,7 +148,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines,
 
   if(title.empty() == false) {
     eng.renderer->drawTextCentered(
-      title, panel_map, Pos(MAP_X_CELLS_HALF, TITLE_Y_POS),
+      title, panel_map, Pos(MAP_W_HALF, TITLE_Y_POS),
       clrCyanLgt, clrBlack, true);
   }
 
@@ -158,7 +158,7 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines,
     yPos++;
     if(SHOW_MESSAGE_CENTERED) {
       eng.renderer->drawTextCentered(
-        lines.at(i), panel_map, Pos(MAP_X_CELLS_HALF, yPos),
+        lines.at(i), panel_map, Pos(MAP_W_HALF, yPos),
         clrWhite, clrBlack, true);
     } else {
       eng.renderer->drawText(
@@ -170,10 +170,10 @@ void Popup::multiChoiceMessageDrawingHelper(const vector<string>& lines,
 
   for(unsigned int i = 0; i < choices.size(); i++) {
     yPos++;
-    SDL_Color clr = i == currentChoice ? clrNosferatuSepiaLgt :
-                    clrNosferatuSepiaDrk;
+    SDL_Color clr = i == currentChoice ? clrNosferatuTealLgt :
+                    clrNosferatuTealDrk;
     eng.renderer->drawTextCentered(
-      choices.at(i), panel_map, Pos(MAP_X_CELLS_HALF, yPos),
+      choices.at(i), panel_map, Pos(MAP_W_HALF, yPos),
       clr, clrBlack, true);
   }
   eng.renderer->updateScreen();

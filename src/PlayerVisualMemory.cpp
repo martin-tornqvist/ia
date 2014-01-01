@@ -6,20 +6,19 @@
 
 void PlayerVisualMemory::updateVisualMemory() {
   if(eng.config->isTilesMode) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      for(int y = 0; y < MAP_H; y++) {
         eng.map->cells[x][y].playerVisualMemoryTiles =
           eng.renderer->renderArrayActorsOmittedTiles[x][y];
       }
     }
   } else {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
-      for(int y = 0; y < MAP_Y_CELLS; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      for(int y = 0; y < MAP_H; y++) {
         eng.map->cells[x][y].playerVisualMemoryAscii =
           eng.renderer->renderArrayActorsOmittedAscii[x][y];
       }
     }
   }
-
 }
 

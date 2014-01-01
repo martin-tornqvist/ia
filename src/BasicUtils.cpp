@@ -10,11 +10,11 @@
 
 //------------------------------------------------------ BASIC UTILS
 void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-                                       bool a[MAP_X_CELLS][MAP_Y_CELLS],
+                                       bool a[MAP_W][MAP_H],
                                        vector<Pos>& vectorRef) {
   vectorRef.resize(0);
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       if(a[x][y] == VALUE_TO_STORE) {
         vectorRef.push_back(Pos(x, y));
       }
@@ -43,7 +43,7 @@ Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
   return NULL;
 }
 
-void BasicUtils::makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]) {
+void BasicUtils::makeActorArray(Actor* a[MAP_W][MAP_H]) {
   resetArray(a);
 
   const int NR_ACTORS = eng.gameTime->getNrActors();

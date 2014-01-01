@@ -53,7 +53,7 @@ bool CellPredBlocksItems::check(const FeatureMob& f) const {
 
 //------------------------------------------------------------ MAP PARSER
 void MapParser::parse(
-  const CellPred& predicate, bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
+  const CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
   const MapParseWriteRule writeRule) {
 
   assert(predicate.isCheckingCells()       == true ||
@@ -65,8 +65,8 @@ void MapParser::parse(
   const bool ALLOW_WRITE_FALSE = writeRule == mapParseWriteAlways;
 
   if(predicate.isCheckingCells()) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         const Cell& c       = eng.map->cells[x][y];
         const bool IS_MATCH = predicate.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {
@@ -111,8 +111,8 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 
 //------------------------------------------------------------ FLOOD FILL
 void FloodFill::run(
-  const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-  int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit, const Pos& target) {
+  const Pos& origin, bool blockers[MAP_W][MAP_H],
+  int values[MAP_W][MAP_H], int travelLimit, const Pos& target) {
 
   eng.basicUtils->resetArray(values);
 
@@ -131,7 +131,7 @@ void FloodFill::run(
 
   bool isStoppingAtTarget = target.x != -1;
 
-  const Rect bounds(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+  const Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
 
   bool done = false;
   while(done == false) {
@@ -195,12 +195,12 @@ void FloodFill::run(
 
 //------------------------------------------------------------ PATHFINDER
 void PathFinder::run(const Pos& origin, const Pos& target,
-                     bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+                     bool blockers[MAP_W][MAP_H],
                      vector<Pos>& vectorRef) const {
 
   vectorRef.resize(0);
 
-  int floodValues[MAP_X_CELLS][MAP_Y_CELLS];
+  int floodValues[MAP_W][MAP_H];
   eng.floodFill->run(origin, blockers, floodValues, 1000, target);
 
   bool pathExists = floodValues[target.x][target.y] != 0;

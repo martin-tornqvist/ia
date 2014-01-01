@@ -50,7 +50,7 @@ void ProxEventWallCrumble::playerIsNear() {
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
         if(eng.basicUtils->isPosInside(
-              pos, Rect(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2)))) {
+              pos, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2)))) {
           eng.map->switchToDestroyedFeatAt(wallCells_.at(i));
         }
       }

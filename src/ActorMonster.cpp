@@ -51,9 +51,9 @@ void Monster::onActorTurn() {
     }
   }
 
-  vector<Actor*> spotedEnemies;
-  getSpotedEnemies(spotedEnemies);
-  target = eng.basicUtils->getClosestActor(pos, spotedEnemies);
+  vector<Actor*> SpottedEnemies;
+  getSpottedEnemies(SpottedEnemies);
+  target = eng.basicUtils->getClosestActor(pos, SpottedEnemies);
 
   if(spellCoolDownCurrent != 0) {
     spellCoolDownCurrent--;
@@ -86,7 +86,7 @@ void Monster::onActorTurn() {
   //or prevent certain monsters from walking on a certain type of cells, etc.
   //This is checked in all AI movement functions. Cells set to true are
   //totally forbidden for the monster to move into.
-  bool aiSpecialBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool aiSpecialBlockers[MAP_W][MAP_H];
   AI_setSpecialBlockedCells::learn(*this, aiSpecialBlockers, eng);
 
   //------------------------------ SPECIAL MONSTER ACTIONS
@@ -275,7 +275,7 @@ bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
     if(playerAwarenessCounter > 0 || leader == eng.player) {
 
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool blockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(eng), blockers);
 
       if(checkIfSeeActor(*eng.player, blockers)) {

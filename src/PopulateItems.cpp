@@ -8,7 +8,7 @@
 #include "MapParsing.h"
 
 void PopulateItems::spawnItems() {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksItems(eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);

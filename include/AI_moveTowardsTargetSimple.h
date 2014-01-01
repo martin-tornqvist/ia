@@ -17,7 +17,7 @@ public:
           Pos offset = monster.target->pos - monster.pos;
           offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);
           offset.y = offset.y == 0 ? 0 : (offset.y > 0 ? 1 : -1);
-          bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+          bool blockers[MAP_W][MAP_H];
           MapParser::parse(
             CellPredBlocksBodyType(monster.getBodyType(), true, engine),
             blockers);

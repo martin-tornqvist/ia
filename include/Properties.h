@@ -157,7 +157,7 @@ public:
   Prop* getAppliedProp(const PropId_t id) const;
 
   bool endAppliedProp(const PropId_t id,
-                      const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS],
+                      const bool visionBlockers[MAP_W][MAP_H],
                       const bool RUN_PROP_END_EFFECTS = true);
 
   void endAppliedPropsByMagicHealing();
@@ -170,7 +170,7 @@ public:
   void applyActorTurnPropBuffer();
 
   void tick(const PropTurnMode_t turnMode,
-            const bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS]);
+            const bool visionBlockers[MAP_W][MAP_H]);
 
   void getPropsInterfaceLine(vector<StrAndClr>& line) const;
 

@@ -57,11 +57,11 @@ private:
   };
 
   void renderExplosion(const BasicData* data,
-                       bool reach[MAP_X_CELLS][MAP_Y_CELLS]);
+                       bool reach[MAP_W][MAP_H]);
 
   void renderExplosionWithColorOverride(
     const BasicData* data, const SDL_Color clr,
-    bool reach[MAP_X_CELLS][MAP_Y_CELLS]);
+    bool reach[MAP_W][MAP_H]);
 
   Engine& eng;
 };

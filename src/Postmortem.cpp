@@ -148,8 +148,8 @@ void Postmortem::makeInfoLines() {
 
   trace << "Postmortem: Drawing the final map" << endl;
   postmortemLines.push_back(StrAndClr(" The final moment:", clrHeading));
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
           if(eng.basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
@@ -164,15 +164,15 @@ void Postmortem::makeInfoLines() {
     }
   }
   eng.renderer->drawAscii(); //To set the glyph array
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int y = 0; y < MAP_H; y++) {
     string currentRow = "";
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+    for(int x = 0; x < MAP_W; x++) {
       if(Pos(x, y) == eng.player->pos) {
         currentRow.push_back('@');
       } else {
         if(
           eng.renderer->renderArrayAscii[x][y].glyph == ' ' &&
-          (y == 0 || x == 0 || y == MAP_Y_CELLS - 1 || x == MAP_X_CELLS - 1)) {
+          (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           currentRow.push_back('*');
         } else {
           if(eng.renderer->renderArrayAscii[x][y].glyph ==
@@ -193,20 +193,20 @@ void Postmortem::makeInfoLines() {
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
   eng.renderer->coverPanel(panel_screen);
-  const string decorationLine(MAP_X_CELLS - 2, '-');
+  const string decorationLine(MAP_W - 2, '-');
   eng.renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
   eng.renderer->drawText(
     " Displaying postmortem information ", panel_screen, Pos(3, 1), clrWhite);
   eng.renderer->drawText(
-    decorationLine, panel_character, Pos(1, 1), clrWhite);
+    decorationLine, panel_char, Pos(1, 1), clrWhite);
   eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit  ",
-    panel_character, Pos(3, 1), clrWhite);
+    panel_char, Pos(3, 1), clrWhite);
   int x = 0;
   int y = 0;
   const int NR = int(postmortemLines.size());
 
-  for(int i = TOP_ELEMENT; i < NR && (i - TOP_ELEMENT) <= MAP_Y_CELLS; i++) {
+  for(int i = TOP_ELEMENT; i < NR && (i - TOP_ELEMENT) <= MAP_H; i++) {
     eng.renderer->drawText(
       postmortemLines.at(i).str, panel_map, Pos(x, y),
       postmortemLines.at(i).clr);
@@ -230,13 +230,13 @@ void Postmortem::runInfo() {
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topElement = min(
                      topElement + SCROLL_LINES,
-                     int(postmortemLines.size()) - int(MAP_Y_CELLS));
+                     int(postmortemLines.size()) - int(MAP_H));
       topElement = max(0, topElement);
       renderInfo(topElement);
     } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       topElement = min(
                      topElement - SCROLL_LINES,
-                     int(postmortemLines.size()) - int(MAP_Y_CELLS));
+                     int(postmortemLines.size()) - int(MAP_H));
       topElement = max(0, topElement);
       renderInfo(topElement);
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

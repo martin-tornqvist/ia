@@ -16,8 +16,8 @@
 bool MapGenCaveLvl::specificRun() {
   eng.map->resetMap();
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
       Wall* const wall = dynamic_cast<Wall*>(
                            eng.map->cells[x][y].featureStatic);
@@ -40,8 +40,8 @@ bool MapGenCaveLvl::specificRun() {
   //Make some more at random places, connect them to each other.
   const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? eng.dice.range(6, 8) : 4;
   for(int i = 0; i < NR_OPEN_PLACES; i++) {
-    const Pos curCenter(10 + eng.dice(1, MAP_X_CELLS - 1 - 10) - 1,
-                        2 + eng.dice(1, MAP_Y_CELLS - 1 - 2) - 1);
+    const Pos curCenter(10 + eng.dice(1, MAP_W - 1 - 10) - 1,
+                        2 + eng.dice(1, MAP_H - 1 - 2) - 1);
     length = IS_TUNNEL_CAVE ? 30 + eng.dice(1, 50) : 650;
     makePathByRandomWalk(
       curCenter.x, curCenter.y, length, feature_caveFloor, true);
@@ -53,14 +53,14 @@ bool MapGenCaveLvl::specificRun() {
   }
 
   //Make a floodfill and place the stairs in one of the furthest positions
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
-  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
+  int floodFill[MAP_W][MAP_H];
   eng.floodFill->run(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;
-  for(unsigned int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(unsigned int x = 1; x < MAP_X_CELLS - 1; x++) {
+  for(unsigned int y = 1; y < MAP_H - 1; y++) {
+    for(unsigned int x = 1; x < MAP_W - 1; x++) {
       const int VAL = floodFill[x][y];
       if(VAL > 0) {
         floodFillVector.push_back(PosAndVal(Pos(x, y), VAL));

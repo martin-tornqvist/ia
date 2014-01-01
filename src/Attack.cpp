@@ -162,7 +162,7 @@ RangedAttackData::RangedAttackData(
     if(actorAimedAt != NULL) {
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool blockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
@@ -232,7 +232,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     if(actorAimedAt != NULL) {
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool blockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;

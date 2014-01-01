@@ -32,6 +32,7 @@
 #include "Fov.h"
 #include "GameTime.h"
 #include "Gods.h"
+#include "Hide.h"
 #include "Highscore.h"
 #include "CharacterLines.h"
 #include "Input.h"
@@ -145,9 +146,8 @@ void Engine::initGame() {
   mapPatterns = new MapPatterns(*this);
   roomThemeMaker = new RoomThemeMaker(*this);
   player = new Player(*this);
-  player->place(
-    Pos(config->PLAYER_START_X, config->PLAYER_START_Y),
-    actorDataHandler->dataList[actor_player]);
+  player->place(Pos(PLAYER_START_X, PLAYER_START_Y),
+                actorDataHandler->dataList[actor_player]);
   actorFactory = new ActorFactory(*this);
   gameTime = new GameTime(*this);
   featureDataHandler = new FeatureDataHandler(*this);
@@ -204,6 +204,7 @@ void Engine::initGame() {
   disarm = new Disarm(*this);
   gods = new Gods(*this);
   credits = new Credits(*this);
+  hide = new Hide(*this);
 
   trace << "Engine::initGame() [DONE]" << endl;
 }
@@ -278,6 +279,7 @@ void Engine::cleanupGame() {
   delete credits;
   delete propDataHandler;
   delete floodFill;
+  delete hide;
 
   delete marker;
 

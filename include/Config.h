@@ -16,31 +16,20 @@ public:
   Config(Engine& engine);
   ~Config() {}
 
-  const string  GAME_VERSION;
-
-  const string  TILES_IMAGE_NAME;
-  const string  MAIN_MENU_LOGO_IMAGE_NAME;
   string        fontBig;
 
   bool          isFullscreen;
 
-  const int     LOG_X_CELLS_OFFSET;
-  const int     LOG_Y_CELLS_OFFSET;
-  const int     LOG_X_CELLS;
-  bool          isAsciiWallSymbolFullSquare;
+  bool          isTilesWallSymbolFullSquare, isAsciiWallSymbolFullSquare;
   bool          useRangedWpnMeleeePrompt;
   bool          useRangedWpnAutoReload;
   bool          isIntroLevelSkipped;
-  int           mainscreenHeight;
-  int           logHeight;
-  const int     CHARACTER_LINES_Y_CELLS_OFFSET;
-  const int     CHARACTER_LINES_Y_CELLS;
-  int           CHARACTER_LINES_HEIGHT;
-  int           screenWidth, screenHeight;
-  const int     SCREEN_BPP;
-  const int     FRAMES_PER_SECOND;
-  const int     PLAYER_START_X;
-  const int     PLAYER_START_Y;
+  int           mapPixelH;
+  int           logPixelH;
+  int           mapPixelOffsetH;
+  int           charLinesPixelH;
+  int           charLinesPixelOffsetH;
+  int           screenPixelW, screenPixelH;
   int           keyRepeatDelay, keyRepeatInterval;
   int           delayProjectileDraw;
   int           delayShotgun;
@@ -48,8 +37,6 @@ public:
   bool          isBotPlaying;
   bool          isAudioEnabled;
   bool          isTilesMode;
-  int           logOffsetX, logOffsetY;
-  const int     MAINSCREEN_Y_CELLS_OFFSET;
   int           mainscreenOffsetY;
   int           characterLinesOffsetY;
   int           fontScale;

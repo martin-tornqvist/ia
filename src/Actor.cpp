@@ -46,7 +46,7 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const {
 
 bool Actor::checkIfSeeActor(
   const Actor& other,
-  const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  const bool visionBlockingCells[MAP_W][MAP_H]) const {
   if(other.deadState == actorDeadState_alive) {
     if(this == &other) {
       return true;
@@ -85,12 +85,12 @@ bool Actor::checkIfSeeActor(
   return false;
 }
 
-void Actor::getSpotedEnemies(vector<Actor*>& vectorRef) {
+void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
   vectorRef.resize(0);
 
   const bool IS_SELF_PLAYER = this == eng.player;
 
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool visionBlockers[MAP_W][MAP_H];
 
   if(IS_SELF_PLAYER == false) {
     MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
@@ -152,7 +152,7 @@ void Actor::place(const Pos& pos_, ActorData& data) {
 void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
@@ -537,7 +537,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   eng.renderer->drawMapAndInterface();
 }
 
-void Actor::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+void Actor::addLight(bool light[MAP_W][MAP_H]) const {
   if(propHandler_->hasProp(propBurning)) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {

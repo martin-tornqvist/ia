@@ -116,7 +116,7 @@ void ActorFactory::summonMonsters(
     monstersRet->resize(0);
   }
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(
     CellPredBlocksBodyType(bodyType_normal, true, eng), blockers);
   vector<Pos> freeCells;

@@ -102,6 +102,7 @@ class Credits;
 class PropDataHandler;
 class SdlWrapper;
 class FloodFill;
+class Hide;
 
 class Player;
 
@@ -200,6 +201,7 @@ public:
   PropDataHandler* propDataHandler;
   SdlWrapper* sdlWrapper;
   FloodFill* floodFill;
+  Hide* hide;
 
   Player* player;
 

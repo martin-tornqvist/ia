@@ -8,8 +8,8 @@
 #include "LineCalc.h"
 
 void Fov::checkOneCellOfMany(
-  const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS], const Pos& cellToCheck,
-  const Pos& origin, bool values[MAP_X_CELLS][MAP_Y_CELLS],
+  const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
+  const Pos& origin, bool values[MAP_W][MAP_H],
   const bool IS_AFFECTED_BY_DARKNESS) {
 
   const Pos deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
@@ -52,7 +52,7 @@ void Fov::checkOneCellOfMany(
   }
 }
 
-bool Fov::checkCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
+bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
                     const Pos& cellToCheck,
                     const Pos& origin,
                     const bool IS_AFFECTED_BY_DARKNESS) {
@@ -107,20 +107,20 @@ bool Fov::checkCell(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
   return false;
 }
 
-void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
+void Fov::runFovOnArray(const bool obstructions[MAP_W][MAP_H],
                         const Pos& origin,
-                        bool values[MAP_X_CELLS][MAP_Y_CELLS],
+                        bool values[MAP_W][MAP_H],
                         const bool IS_AFFECTED_BY_DARKNESS) {
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
       values[x][y] = false;
     }
   }
 
   values[origin.x][origin.y] = true;
 
-  const int checkX_end = min(MAP_X_CELLS - 1, origin.x + FOV_STANDARD_RADI_INT);
-  const int checkY_end = min(MAP_Y_CELLS - 1, origin.y + FOV_STANDARD_RADI_INT);
+  const int checkX_end = min(MAP_W - 1, origin.x + FOV_STANDARD_RADI_INT);
+  const int checkY_end = min(MAP_H - 1, origin.y + FOV_STANDARD_RADI_INT);
 
   int checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
 
@@ -136,13 +136,13 @@ void Fov::runFovOnArray(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
   }
 }
 
-void Fov::runPlayerFov(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
+void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
                        const Pos& origin) {
 
-  bool visionTmp[MAP_X_CELLS][MAP_Y_CELLS];
+  bool visionTmp[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
       eng.map->cells[x][y].isSeenByPlayer = false;
       visionTmp[x][y] = false;
     }
@@ -152,10 +152,10 @@ void Fov::runPlayerFov(const bool obstructions[MAP_X_CELLS][MAP_Y_CELLS],
   visionTmp[origin.x][origin.y] = true;
 
   const int R = FOV_STANDARD_RADI_INT;
-  const int X0 = getConstrInRange(0, origin.x - R, MAP_X_CELLS - 1);
-  const int Y0 = getConstrInRange(0, origin.y - R, MAP_Y_CELLS - 1);
-  const int X1 = getConstrInRange(0, origin.x + R, MAP_X_CELLS - 1);
-  const int Y1 = getConstrInRange(0, origin.y + R, MAP_Y_CELLS - 1);
+  const int X0 = getConstrInRange(0, origin.x - R, MAP_W - 1);
+  const int Y0 = getConstrInRange(0, origin.y - R, MAP_H - 1);
+  const int X1 = getConstrInRange(0, origin.x + R, MAP_W - 1);
+  const int Y1 = getConstrInRange(0, origin.y + R, MAP_H - 1);
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {

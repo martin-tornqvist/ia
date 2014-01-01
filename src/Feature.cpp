@@ -28,7 +28,7 @@ void Feature::bump(Actor& actorBumping) {
   }
 }
 
-void Feature::addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+void Feature::addLight(bool light[MAP_W][MAP_H]) const {
   (void)light;
 }
 
@@ -160,7 +160,7 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
       eng.log->addMsg("I kick the air!");
     }
   } else {
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksVision(eng), blockers);
     const bool PLAYER_SEE_TRYER =
       eng.player->checkIfSeeActor(actorTrying, blockers);

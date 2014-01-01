@@ -51,7 +51,7 @@ public:
 
   void buildZCorridorBetweenRooms(
     const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
-    bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS] = NULL);
+    bool doorPosCandidates[MAP_W][MAP_H] = NULL);
 
 private:
   Engine& eng;
@@ -70,7 +70,7 @@ protected:
   void buildFromTemplate(const Pos pos, MapTemplate* t);
   void buildFromTemplate(const Pos pos, MapTemplateId_t templateId);
 
-  Feature_t backup[MAP_X_CELLS][MAP_Y_CELLS];
+  Feature_t backup[MAP_W][MAP_H];
   void backupMap();
   void restoreMap();
 
@@ -78,7 +78,7 @@ protected:
     int originX, int originY, int len, Feature_t featureToMake,
     const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true,
     const Pos x0y0Lim = Pos(1, 1),
-    const Pos x1y1Lim = Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+    const Pos x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
 
   void makeStraightPathByPathfinder(
     const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
@@ -103,7 +103,7 @@ private:
 
   Room* buildRoom(const Rect& roomPoss);
 
-  bool roomCells[MAP_X_CELLS][MAP_Y_CELLS]; //Used for help building the map
+  bool roomCells[MAP_W][MAP_H]; //Used for help building the map
   bool regionsToBuildCave[3][3];
 
   void makeCrumbleRoom(const Rect roomAreaIncludingWalls,
@@ -113,7 +113,7 @@ private:
   void buildAuxRooms(Region* regions[3][3]);
   bool tryPlaceAuxRoom(
     const int X0, const int Y0, const int W, const int H,
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS], const Pos doorPos);
+    bool blockers[MAP_W][MAP_H], const Pos doorPos);
 
   void buildMergedRegionsAndRooms(
     Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
@@ -129,20 +129,20 @@ private:
 
   void postProcessFillDeadEnds();
 
-  bool globalDoorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS];
+  bool globalDoorPosCandidates[MAP_W][MAP_H];
 
 //  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef);
 
   bool isRegionFoundInCardinalDir(
-    const Pos pos, bool region[MAP_X_CELLS][MAP_Y_CELLS]) const;
+    const Pos pos, bool region[MAP_W][MAP_H]) const;
 
   bool isAreaFree(
-    const Rect& area, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+    const Rect& area, bool blockingCells[MAP_W][MAP_H]);
   bool isAreaAndBorderFree(
-    const Rect& areaWithBorder, bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+    const Rect& areaWithBorder, bool blockingCells[MAP_W][MAP_H]);
   bool isAreaFree(
     const int X0, const int Y0, const int X1, const int Y1,
-    bool blockingCells[MAP_X_CELLS][MAP_Y_CELLS]);
+    bool blockingCells[MAP_W][MAP_H]);
 
   void decorate();
 
@@ -159,7 +159,7 @@ private:
 //  vector<Room*> rooms_;
   void deleteAndRemoveRoomFromList(Room* const room);
 
-  bool forbiddenStairCellsGlobal[MAP_X_CELLS][MAP_Y_CELLS];
+  bool forbiddenStairCellsGlobal[MAP_W][MAP_H];
 };
 
 struct Region {

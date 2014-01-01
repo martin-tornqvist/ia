@@ -50,7 +50,7 @@ public:
   void drawMarker(const vector<Pos>&, const int = -1) {}
 
   void drawBlastAnimationAtField(
-    const Pos&, const int, bool [MAP_X_CELLS][MAP_Y_CELLS],
+    const Pos&, const int, bool [MAP_W][MAP_H],
     const SDL_Color&, const SDL_Color&) {}
 
   void drawBlastAnimationAtPositions(const vector<Pos>&,
@@ -61,15 +61,15 @@ public:
 
   void drawMainMenuLogo(const int) {}
 
-  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_X_CELLS][MAP_Y_CELLS];
-  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_W][MAP_H];
+  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_W][MAP_H];
 
-  CellRenderDataAscii renderArrayAscii[MAP_X_CELLS][MAP_Y_CELLS];
-  CellRenderDataTiles renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArrayAscii[MAP_W][MAP_H];
+  CellRenderDataTiles renderArrayTiles[MAP_W][MAP_H];
 
   void drawProjectiles(vector<Projectile*>&) {}
 
-  void drawPopupBox(const Rect&, const Panel_t,
+  void drawPopupBox(const Rect&, const Panel_t = panel_screen,
                     const SDL_Color& = clrGray) {}
 
   void applySurface(const Pos&, SDL_Surface* const, SDL_Rect* = NULL) {}

@@ -18,27 +18,27 @@
 #include "MapParsing.h"
 
 void MapGenIntroForest::buildForestLimit() {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int y = 0; y < MAP_H; y++) {
     eng.featureFactory->spawnFeatureAt(feature_tree, Pos(0, y));
   }
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int x = 0; x < MAP_W; x++) {
     eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, 0));
   }
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    eng.featureFactory->spawnFeatureAt(feature_tree, Pos(MAP_X_CELLS - 1, y));
+  for(int y = 0; y < MAP_H; y++) {
+    eng.featureFactory->spawnFeatureAt(feature_tree, Pos(MAP_W - 1, y));
   }
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, MAP_Y_CELLS - 1));
+  for(int x = 0; x < MAP_W; x++) {
+    eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, MAP_H - 1));
   }
 }
 
 void MapGenIntroForest::buildForestOuterTreeline() {
   const int MAX_LEN = 2;
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x <= MAX_LEN; x++) {
       if(eng.dice(1, 4) > 1 || x == 0) {
         eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
@@ -48,7 +48,7 @@ void MapGenIntroForest::buildForestOuterTreeline() {
     }
   }
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAX_LEN; y++) {
       if(eng.dice(1, 4) > 1 || y == 0) {
         eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
@@ -58,9 +58,9 @@ void MapGenIntroForest::buildForestOuterTreeline() {
     }
   }
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = MAP_X_CELLS - 1; x >= MAP_X_CELLS - MAX_LEN; x--) {
-      if(eng.dice(1, 4) > 1 || x == MAP_X_CELLS - 1) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--) {
+      if(eng.dice(1, 4) > 1 || x == MAP_W - 1) {
         eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         x = -1;
@@ -68,9 +68,9 @@ void MapGenIntroForest::buildForestOuterTreeline() {
     }
   }
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = MAP_Y_CELLS - 1; y >= MAP_Y_CELLS - MAX_LEN; y--) {
-      if(eng.dice(1, 4) > 1 || y == MAP_Y_CELLS - 1) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--) {
+      if(eng.dice(1, 4) > 1 || y == MAP_H - 1) {
         eng.featureFactory->spawnFeatureAt(feature_tree, Pos(x, y));
       } else {
         y = -1;
@@ -88,8 +88,8 @@ void MapGenIntroForest::buildForestTreePatch() {
   int nrTerrainCreated = 0;
 
   //Set a start position where trees start to spawn
-  int terrainStartX = eng.dice(1, MAP_X_CELLS - 1);
-  int terrainStartY = eng.dice(1, MAP_Y_CELLS - 1);
+  int terrainStartX = eng.dice(1, MAP_W - 1);
+  int terrainStartY = eng.dice(1, MAP_H - 1);
 
   int stepX = 0;
   int stepY = 0;
@@ -150,7 +150,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
     buildFromTemplate(churchPos, mapTemplate_church);
 
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                      blockers);
 
@@ -188,11 +188,11 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
   const int NR_HIGHSCORES =
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                      blockers);
 
-    bool vision[MAP_X_CELLS][MAP_Y_CELLS];
+    bool vision[MAP_W][MAP_H];
 
     const int SEARCH_RADI = FOV_STANDARD_RADI_INT - 2;
     const int TRY_PLACE_EVERY_N_STEP = 2;
@@ -266,8 +266,8 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
 bool MapGenIntroForest::specificRun() {
   int grass = 0;
-  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; y++) {
+    for(int x = 1; x < MAP_W - 1; x++) {
       const Pos c(x, y);
       grass = eng.dice(1, 12);
       if(grass == 1) {
@@ -285,7 +285,7 @@ bool MapGenIntroForest::specificRun() {
     }
   }
 
-  Pos stairCell(MAP_X_CELLS - 6, 9);
+  Pos stairCell(MAP_W - 6, 9);
   buildForestOuterTreeline();
   buildForestTrees(stairCell);
   buildForestLimit();

@@ -66,8 +66,8 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
   if(IS_BASE_COST_ONLY == false) {
     const int X0 = max(0, caster->pos.x - 1);
     const int Y0 = max(0, caster->pos.y - 1);
-    const int X1 = min(MAP_X_CELLS - 1, caster->pos.x + 1);
-    const int Y1 = min(MAP_Y_CELLS - 1, caster->pos.y + 1);
+    const int X1 = min(MAP_W - 1, caster->pos.x + 1);
+    const int Y1 = min(MAP_H - 1, caster->pos.y + 1);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -136,30 +136,30 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
   Actor* const caster, Engine& eng) {
   DiceParam spellDmg(1, 8, 0);
   if(caster == eng.player) {
-    vector<Actor*> spotedEnemies;
-    eng.player->getSpotedEnemies(spotedEnemies);
+    vector<Actor*> SpottedEnemies;
+    eng.player->getSpottedEnemies(SpottedEnemies);
 
-    if(spotedEnemies.empty()) {
+    if(SpottedEnemies.empty()) {
       return SpellCastRetData(false);
     } else {
       vector<Pos> actorPositions;
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        actorPositions.push_back(spotedEnemies.at(i)->pos);
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        actorPositions.push_back(SpottedEnemies.at(i)->pos);
       }
 
       eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
         actorPositions, clrRedLgt);
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        const string monsterName = spotedEnemies.at(i)->getNameThe();
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        const string monsterName = SpottedEnemies.at(i)->getNameThe();
         eng.log->addMsg(
           monsterName + " is struck by a roaring blast!", clrMessageGood);
-        spotedEnemies.at(i)->getPropHandler().tryApplyProp(
+        SpottedEnemies.at(i)->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 1));
-        spotedEnemies.at(i)->hit(eng.dice(1, 8), dmgType_physical, false);
+        SpottedEnemies.at(i)->hit(eng.dice(1, 8), dmgType_physical, false);
         Sound snd("I hear a roaring blast",
-                  endOfSfx, true, spotedEnemies.at(i)->pos, true, true);
+                  endOfSfx, true, SpottedEnemies.at(i)->pos, true, true);
         eng.soundEmitter->emitSound(snd);
       }
       return SpellCastRetData(true);
@@ -179,7 +179,7 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
 
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
@@ -198,8 +198,8 @@ SpellCastRetData SpellMayhem::specificCast(
 
   const int X0 = max(1, playerPos.x - AREA_RADI);
   const int Y0 = max(1, playerPos.y - AREA_RADI);
-  const int X1 = min(MAP_X_CELLS - 1, playerPos.x + AREA_RADI) - 1;
-  const int Y1 = min(MAP_Y_CELLS - 1, playerPos.y + AREA_RADI) - 1;
+  const int X1 = min(MAP_W - 1, playerPos.x + AREA_RADI) - 1;
+  const int Y1 = min(MAP_H - 1, playerPos.y + AREA_RADI) - 1;
 
   for(int i = 0; i < NR_OF_SWEEPS; i++) {
     for(int y = Y0; y <= Y1; y++) {
@@ -259,15 +259,15 @@ SpellCastRetData SpellMayhem::specificCast(
 SpellCastRetData SpellPestilence::specificCast(
   Actor* const caster, Engine& eng) {
   (void)caster;
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const int RADI = 4;
   const int x0 = max(0, eng.player->pos.x - RADI);
   const int y0 = max(0, eng.player->pos.y - RADI);
-  const int x1 = min(MAP_X_CELLS - 1, eng.player->pos.x + RADI);
-  const int y1 = min(MAP_Y_CELLS - 1, eng.player->pos.y + RADI);
+  const int x1 = min(MAP_W - 1, eng.player->pos.x + RADI);
+  const int y1 = min(MAP_H - 1, eng.player->pos.y + RADI);
 
   ActorId_t monsterId = endOfActorIds;
   Dice& dice = eng.dice;
@@ -311,8 +311,8 @@ SpellCastRetData SpellDetectItems::specificCast(
   const int ORIG_Y  = eng.player->pos.y;
   const int X0      = max(0, ORIG_X - RADI);
   const int Y0      = max(0, ORIG_Y - RADI);
-  const int X1      = min(MAP_X_CELLS - 1, ORIG_X + RADI);
-  const int Y1      = min(MAP_Y_CELLS - 1, ORIG_Y + RADI);
+  const int X1      = min(MAP_W - 1, ORIG_X + RADI);
+  const int Y1      = min(MAP_H - 1, ORIG_Y + RADI);
 
   vector<Pos> itemsRevealedPositions;
 
@@ -352,8 +352,8 @@ SpellCastRetData SpellDetectTraps::specificCast(
 
   vector<Pos> trapsRevealedPositions;
 
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
       if(eng.map->cells[x][y].isSeenByPlayer) {
         FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
         if(f->getId() == feature_trap) {
@@ -399,8 +399,8 @@ SpellCastRetData SpellOpening::specificCast(
 
   vector<Pos> featuresOpenedPositions;
 
-  for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-    for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; y++) {
+    for(int x = 1; x < MAP_W - 1; x++) {
       if(eng.map->cells[x][y].isSeenByPlayer) {
         if(eng.map->cells[x][y].featureStatic->openFeature()) {
           featuresOpenedPositions.push_back(Pos(x, y));
@@ -482,26 +482,26 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
 
   if(eng.dice.coinToss()) {
 
-    vector<Actor*> spotedEnemies;
-    eng.player->getSpotedEnemies(spotedEnemies);
+    vector<Actor*> SpottedEnemies;
+    eng.player->getSpottedEnemies(SpottedEnemies);
 
     const int MTH = eng.player->getMth();
 
     //Slay enemies
-    if(eng.dice.oneIn(2) && MTH >= 35 && spotedEnemies.empty() == false) {
+    if(eng.dice.oneIn(2) && MTH >= 35 && SpottedEnemies.empty() == false) {
       vector<Pos> actorPositions;
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        actorPositions.push_back(spotedEnemies.at(i)->pos);
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        actorPositions.push_back(SpottedEnemies.at(i)->pos);
       }
 
       eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
         actorPositions, clrYellow);
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        const string monsterName = spotedEnemies.at(i)->getNameThe();
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        const string monsterName = SpottedEnemies.at(i)->getNameThe();
         eng.log->addMsg(
           monsterName + " is crushed by an unseen force!", clrMessageGood);
-        spotedEnemies.at(i)->hit(25, dmgType_physical, true);
+        SpottedEnemies.at(i)->hit(25, dmgType_physical, true);
       }
 
       eng.renderer->drawMapAndInterface(true);
@@ -512,7 +512,7 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
     if(
       eng.dice.oneIn(3) &&
       eng.player->getHp() < eng.player->getHpMax(true)) {
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool visionBlockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
       eng.player->getPropHandler().endAppliedProp(
         propDiseased, visionBlockers);
@@ -521,8 +521,8 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
     }
 
     //Find stairs
-    for(int y = 1; y < MAP_Y_CELLS; y++) {
-      for(int x = 1; x < MAP_X_CELLS; x++) {
+    for(int y = 1; y < MAP_H; y++) {
+      for(int x = 1; x < MAP_W; x++) {
         if(
           eng.map->cells[x][y].featureStatic->getId() == feature_stairsDown &&
           eng.map->cells[x][y].isExplored == false) {
@@ -617,7 +617,7 @@ SpellCastRetData SpellTeleport::specificCast(
 
 bool SpellTeleport::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers) &&
          monster->getHp() <= (monster->getHpMax(true) / 2) &&
@@ -638,7 +638,7 @@ SpellCastRetData SpellKnockBack::specificCast(
 
 bool SpellKnockBack::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
@@ -650,24 +650,24 @@ SpellCastRetData SpellEnfeeble::specificCast(
   const PropId_t propId = getPropId(eng);
 
   if(caster == eng.player) {
-    vector<Actor*> spotedEnemies;
-    eng.player->getSpotedEnemies(spotedEnemies);
+    vector<Actor*> SpottedEnemies;
+    eng.player->getSpottedEnemies(SpottedEnemies);
 
-    if(spotedEnemies.empty()) {
+    if(SpottedEnemies.empty()) {
       return SpellCastRetData(false);
     } else {
       vector<Pos> actorPositions;
       actorPositions.resize(0);
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        actorPositions.push_back(spotedEnemies.at(i)->pos);
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        actorPositions.push_back(SpottedEnemies.at(i)->pos);
       }
 
       eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        PropHandler& propHandler = spotedEnemies.at(i)->getPropHandler();
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        PropHandler& propHandler = SpottedEnemies.at(i)->getPropHandler();
         Prop* const prop = propHandler.makePropFromId(
                              propId, propTurnsStandard);
         propHandler.tryApplyProp(prop);
@@ -689,7 +689,7 @@ SpellCastRetData SpellEnfeeble::specificCast(
 
 bool SpellEnfeeble::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
@@ -727,7 +727,7 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
 //
 //bool SpellConfuse::isGoodForMonsterToCastNow(
 //  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  bool blockers[MAP_W][MAP_H];
 //  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
 //  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
 //    return engine.player->getPropHandler().allowSee();
@@ -756,7 +756,7 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
 //
 //bool SpellWeakness::isGoodForMonsterToCastNow(
 //  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  bool blockers[MAP_W][MAP_H];
 //  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
 //  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
 //    return engine.player->getPropHandler().allowSee();
@@ -785,7 +785,7 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
 //
 //bool SpellBlind::isGoodForMonsterToCastNow(
 //  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  bool blockers[MAP_W][MAP_H];
 //  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
 //  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
 //    return engine.player->getPropHandler().allowSee() ;
@@ -814,7 +814,7 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
 //
 //bool SpellFear::isGoodForMonsterToCastNow(
 //  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  bool blockers[MAP_W][MAP_H];
 //  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
 //  return monster->checkIfSeeActor(*(engine.player), blockers);
 //}
@@ -840,7 +840,7 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
 //
 //bool SpellSlow::isGoodForMonsterToCastNow(
 //  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+//  bool blockers[MAP_W][MAP_H];
 //  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
 //  return monster->checkIfSeeActor(*(engine.player), blockers);
 //}
@@ -861,7 +861,7 @@ SpellCastRetData SpellDisease::specificCast(
 
 bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
@@ -877,8 +877,8 @@ SpellCastRetData SpellSummonRandom::specificCast(
   const Pos playerPos(eng.player->pos);
   const int X0 = max(0, playerPos.x - RADI);
   const int Y0 = max(0, playerPos.y - RADI);
-  const int X1 = min(MAP_X_CELLS, playerPos.x + RADI) - 1;
-  const int Y1 = min(MAP_Y_CELLS, playerPos.y + RADI) - 1;
+  const int X1 = min(MAP_W, playerPos.x + RADI) - 1;
+  const int Y1 = min(MAP_H, playerPos.y + RADI) - 1;
   for(int x = X0; x <= X1; x++) {
     for(int y = Y0; y <= Y1; y++) {
       if(eng.map->cells[x][y].isSeenByPlayer) {
@@ -887,7 +887,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
     }
   }
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
@@ -936,7 +936,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
 bool SpellSummonRandom::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
   const bool IS_PLAYER_SEEN =
     monster->checkIfSeeActor(*(eng.player), blockers);

@@ -18,20 +18,8 @@
 using namespace std;
 
 Config::Config(Engine& engine) :
-  GAME_VERSION("v15.0"),
-  TILES_IMAGE_NAME("images/gfx_16x24.png"),
-  MAIN_MENU_LOGO_IMAGE_NAME("images/main_menu_logo.png"),
   fontBig(""),
-  LOG_X_CELLS_OFFSET(1), LOG_Y_CELLS_OFFSET(1),
-  LOG_X_CELLS(MAP_X_CELLS - LOG_X_CELLS_OFFSET),
-  CHARACTER_LINES_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1 + MAP_Y_CELLS),
-  CHARACTER_LINES_Y_CELLS(3),
-  SCREEN_BPP(32),
-  FRAMES_PER_SECOND(30),
-  PLAYER_START_X(10),
-  PLAYER_START_Y(MAP_Y_CELLS_HALF),
   isBotPlaying(false),
-  MAINSCREEN_Y_CELLS_OFFSET(LOG_Y_CELLS_OFFSET + 1),
   eng(engine) {
 
   fontImageNames.resize(0);
@@ -56,7 +44,7 @@ Config::Config(Engine& engine) :
 }
 
 void Config::runOptionsMenu() {
-  MenuBrowser browser(15, 0);
+  MenuBrowser browser(16, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -176,33 +164,26 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     } break;
 
     case 5: {
+      isTilesWallSymbolFullSquare = !isTilesWallSymbolFullSquare;
+    } break;
+
+    case 6: {
       isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
     } break;
 
-    case 6: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
+    case 7: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
 
-    case 7: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
+    case 8: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
 
-    case 8: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
-
-    case 9: {
-      const int NR = eng.query->number(
-                       Pos(OPTION_VALUES_X_POS,
-                           OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuSepiaLgt, 1, 3, keyRepeatDelay, true);
-      if(NR != -1) {
-        keyRepeatDelay = NR;
-        eng.input->setKeyRepeatDelays();
-      }
-    } break;
+    case 9: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
 
     case 10: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuSepiaLgt, 1, 3, keyRepeatInterval, true);
+                       clrNosferatuTealLgt, 1, 3, keyRepeatDelay, true);
       if(NR != -1) {
-        keyRepeatInterval = NR;
+        keyRepeatDelay = NR;
         eng.input->setKeyRepeatDelays();
       }
     } break;
@@ -211,9 +192,10 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuSepiaLgt, 1, 3, delayProjectileDraw, true);
+                       clrNosferatuTealLgt, 1, 3, keyRepeatInterval, true);
       if(NR != -1) {
-        delayProjectileDraw = NR;
+        keyRepeatInterval = NR;
+        eng.input->setKeyRepeatDelays();
       }
     } break;
 
@@ -221,9 +203,9 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuSepiaLgt, 1, 3, delayShotgun, true);
+                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
       if(NR != -1) {
-        delayShotgun = NR;
+        delayProjectileDraw = NR;
       }
     } break;
 
@@ -231,13 +213,23 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuSepiaLgt, 1, 3, delayExplosion, true);
+                       clrNosferatuTealLgt, 1, 3, delayShotgun, true);
+      if(NR != -1) {
+        delayShotgun = NR;
+      }
+    } break;
+
+    case 14: {
+      const int NR = eng.query->number(
+                       Pos(OPTION_VALUES_X_POS,
+                           OPTIONS_Y_POS + browser->getPos().y),
+                       clrNosferatuTealLgt, 1, 3, delayExplosion, true);
       if(NR != -1) {
         delayExplosion = NR;
       }
     } break;
 
-    case 14: {
+    case 15: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -250,8 +242,8 @@ void Config::draw(const MenuBrowser* const browser,
                   const int OPTION_VALUES_X_POS,
                   const int OPTIONS_Y_POS) {
 
-  const SDL_Color clrActive     = clrNosferatuSepiaLgt;
-  const SDL_Color clrInactive   = clrNosferatuSepiaDrk;
+  const SDL_Color clrActive     = clrNosferatuTealLgt;
+  const SDL_Color clrInactive   = clrNosferatuTealDrk;
 
   eng.renderer->clearScreen();
 
@@ -265,203 +257,213 @@ void Config::draw(const MenuBrowser* const browser,
 
   eng.renderer->drawText("-Options-", panel_screen, Pos(X0, Y0 - 1), clrWhite);
   eng.renderer->drawText("Play audio", panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = isAudioEnabled ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   eng.renderer->drawText("Use tile set", panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = isTilesMode ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   eng.renderer->drawText("Font", panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(fontBig, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   eng.renderer->drawText("Scale font 2x", panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = fontScale == 2 ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   eng.renderer->drawText("Fullscreen (experimental)", panel_screen,
-                          Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X0, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(isFullscreen ? "Yes" : "No",
-                          panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         panel_screen, Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
+  optionNr++;
+
+  str = "Tiles mode wall symbol";
+  eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
+                         browser->getPos().y == optionNr ? clrActive : clrInactive);
+  eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
+  str = isTilesWallSymbolFullSquare ? "Full square" : "Pseudo-3D";
+  eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Ascii mode wall symbol";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ? clrActive : clrInactive);
+                         browser->getPos().y == optionNr ? clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = isAsciiWallSymbolFullSquare ? "Full square" : "Hash sign";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   eng.renderer->drawText("Skip intro level", panel_screen,
-                          Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X0, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = isIntroLevelSkipped ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Ranged weapon melee attack warning";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = useRangedWpnMeleeePrompt ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Ranged weapon auto reload";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   str = useRangedWpnAutoReload ? "Yes" : "No";
   eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Key repeat delay (ms)";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(toString(keyRepeatDelay), panel_screen,
-                          Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Key repeat interval (ms)";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(toString(keyRepeatInterval), panel_screen,
-                          Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Projectile delay (ms)";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(toString(delayProjectileDraw), panel_screen,
-                          Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Shotgun delay (ms)";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(toString(delayShotgun), panel_screen,
-                          Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Explosion delay (ms)";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   eng.renderer->drawText(toString(delayExplosion), panel_screen,
-                          Pos(X1, Y0 + optionNr),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         Pos(X1, Y0 + optionNr),
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
   optionNr++;
 
   str = "Reset to defaults";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr + 1),
-                          browser->getPos().y == optionNr ?
-                          clrActive : clrInactive);
+                         browser->getPos().y == optionNr ?
+                         clrActive : clrInactive);
 
   str = "space/esc to confirm changes";
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr + 4),
-                          clrWhite);
+                         clrWhite);
 
   eng.renderer->updateScreen();
 }
 
 void Config::setCellDimDependentVariables() {
-  mainscreenHeight        = MAP_Y_CELLS * cellH;
-  logOffsetX              = LOG_X_CELLS_OFFSET * cellW;
-  logOffsetY              = LOG_Y_CELLS_OFFSET * cellH;
-  logHeight               = cellH;
-  mainscreenOffsetY       = MAINSCREEN_Y_CELLS_OFFSET * cellH;
-  characterLinesOffsetY   = logOffsetY + logHeight + mainscreenHeight;
-  CHARACTER_LINES_HEIGHT  = CHARACTER_LINES_Y_CELLS * cellH;
-  screenWidth             = MAP_X_CELLS * cellW;
-  screenHeight            = characterLinesOffsetY + CHARACTER_LINES_HEIGHT;
+  mapPixelH             = cellH * MAP_H;
+  mapPixelOffsetH       = cellH * MAP_OFFSET_H;
+  logPixelH             = cellH * LOG_H;
+  charLinesPixelH       = cellH * CHAR_LINES_H;
+  charLinesPixelOffsetH = cellH * CHAR_LINES_OFFSET_H;
+  screenPixelW          = cellW * SCREEN_W;
+  screenPixelH          = cellH * SCREEN_H;
 }
 
 void Config::parseFontNameAndSetCellDims() {
@@ -507,6 +509,7 @@ void Config::setDefaultVariables() {
   fontScale = 1;
   parseFontNameAndSetCellDims();
   isFullscreen = false;
+  isTilesWallSymbolFullSquare = true;
   isAsciiWallSymbolFullSquare = false;
   isIntroLevelSkipped = false;
   useRangedWpnMeleeePrompt = true;
@@ -527,6 +530,7 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(toString(fontScale));
   lines.push_back(fontBig);
   lines.push_back(isFullscreen == false ? "0" : "1");
+  lines.push_back(isTilesWallSymbolFullSquare == false ? "0" : "1");
   lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
   lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
   lines.push_back(useRangedWpnMeleeePrompt == false ? "0" : "1");
@@ -586,6 +590,10 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
 
   curLine = lines.front();
   isFullscreen = curLine == "0" ? false : true;
+  lines.erase(lines.begin());
+
+  curLine = lines.front();
+  isTilesWallSymbolFullSquare = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 
   curLine = lines.front();

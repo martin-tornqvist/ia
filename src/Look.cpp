@@ -125,7 +125,7 @@ void Look::printExtraActorDescription(const Pos& pos) const {
 
       vector<string> formattedText;
       eng.textFormatting->lineToLines(
-        description, MAP_X_CELLS - 2, formattedText);
+        description, MAP_W - 2, formattedText);
 
       const unsigned int NR_OF_LINES = formattedText.size();
 

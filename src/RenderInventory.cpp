@@ -24,12 +24,12 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     const vector<InventorySlotButton>& invSlotButtons) {
-  Pos pos(X_POS_LEFT, 1);
+  Pos pos(X_POS_LEFT, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, NR_ITEMS + 2));
+    panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
 
   string str =
     "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
@@ -95,12 +95,12 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     const vector<unsigned int>& genInvIndexes) {
 
-  Pos pos(X_POS_LEFT, 1);
+  Pos pos(X_POS_LEFT, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng.renderer->coverArea(panel_screen, Pos(0, 1),
-                           Pos(MAP_X_CELLS, NR_ITEMS + 1));
+                           Pos(MAP_W, NR_ITEMS + 1));
 
   const bool HAS_ANY_ITEM = genInvIndexes.empty() == false;
 
@@ -142,12 +142,12 @@ void RenderInventory::drawEquipMode(
   const MenuBrowser& browser, const SlotTypes_t slotToEquip,
   const vector<unsigned int>& genInvIndexes) {
 
-  Pos pos(X_POS_LEFT, 1);
+  Pos pos(X_POS_LEFT, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, NR_ITEMS + 1));
+    panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
   const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
 
@@ -219,12 +219,12 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
                                   const vector<unsigned int>& genInvIndexes) {
   const int X_POS_CMD = X_POS_LEFT + 11;
 
-  Pos pos(X_POS_LEFT, 1);
+  Pos pos(X_POS_LEFT, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, NR_ITEMS + 1));
+    panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
   const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
   string str =

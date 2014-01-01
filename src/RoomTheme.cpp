@@ -84,7 +84,7 @@ bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
 
 bool RoomThemeMaker::isThemeAllowed(
   const Room* const room, const RoomTheme_t theme,
-  const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  const bool blockers[MAP_W][MAP_H]) const {
 
   (void)blockers;
 
@@ -142,7 +142,7 @@ bool RoomThemeMaker::isThemeAllowed(
 }
 
 void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
@@ -443,8 +443,8 @@ void RoomThemeMaker::eraseAdjacentCellsFromVectors(
 void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker::assignRoomThemes()..." << endl;
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       themeMap[x][y] = roomTheme_plain;
     }
   }
@@ -477,7 +477,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   trace << "RoomThemeMaker: Trying to set non-plain themes ";
   trace << "for some rooms" << endl;
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   const int NR_TRIES_TO_ASSIGN = 100;

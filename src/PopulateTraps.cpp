@@ -8,10 +8,10 @@
 #include "MapParsing.h"
 
 void PopulateTraps::populateRoomAndCorridorLevel(
-  RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS],
+  RoomTheme_t themeMap[MAP_W][MAP_H],
   const vector<Room*>& rooms) const {
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
@@ -87,8 +87,8 @@ void PopulateTraps::populateRoomAndCorridorLevel(
     min(85, 30 + (eng.map->getDlvl() * 5));
   if(eng.dice.percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     vector<Pos> trapPositionCandidates;
-    for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-      for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+    for(int y = 1; y < MAP_H - 1; y++) {
+      for(int x = 1; x < MAP_W - 1; x++) {
         if(blockers[x][y] == false && themeMap[x][y] == roomTheme_plain) {
           trapPositionCandidates.push_back(Pos(x, y));
         }

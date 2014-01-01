@@ -28,7 +28,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const bool IS_MACHINE_GUN = wpn.getData().isMachineGun;
 
   const unsigned int NR_PROJECTILES = IS_MACHINE_GUN ?
-                                      NR_MACHINEGUN_PROJECTILES : 1;
+                                      NR_MG_PROJECTILES : 1;
 
   for(unsigned int i = 0; i < NR_PROJECTILES; i++) {
     Projectile* const p = new Projectile;
@@ -92,7 +92,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE =
     projectilePath.size() + (NR_PROJECTILES - 1) *
-    NR_CELL_JUMPS_BETWEEN_MACHINEGUN_PROJECTILES;
+    NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;
 
   for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
 
@@ -101,7 +101,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       //Current projectile's place in the path is the current global place (i)
       //minus a certain number of elements
       int projectilePathElement =
-        i - (p * NR_CELL_JUMPS_BETWEEN_MACHINEGUN_PROJECTILES);
+        i - (p * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES);
 
       //Emit sound
       if(projectilePathElement == 1) {
@@ -350,7 +350,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     int nrOfProjectiles = 1;
 
     if(wpn.getData().isMachineGun) {
-      nrOfProjectiles = NR_MACHINEGUN_PROJECTILES;
+      nrOfProjectiles = NR_MG_PROJECTILES;
     }
 
     if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {

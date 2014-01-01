@@ -164,8 +164,8 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 }
 
 Pos Bot::findNextStairs() {
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
       FeatureStatic* f = eng.map->cells[x][y].featureStatic;
       if(f->getId() == feature_stairsDown) {
         return Pos(x, y);
@@ -182,14 +182,14 @@ void Bot::findPathToNextStairs() {
 
   const Pos stairPos = findNextStairs();
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   const BodyType_t playerBodyType = eng.player->getBodyType();
   MapParser::parse(CellPredBlocksBodyType(playerBodyType, false, eng),
                    blockers);
 
   //Consider all doors passable
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       FeatureStatic* f = eng.map->cells[x][y].featureStatic;
       if(f->getId() == feature_door) {
         blockers[x][y] = false;

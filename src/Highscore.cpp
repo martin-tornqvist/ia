@@ -68,15 +68,15 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
       "No High Score entries found | space/esc to exit ",
       panel_screen, Pos(X0, Y0), clrWhite);
   } else {
-    const string decorationLine(MAP_X_CELLS - 2, '-');
+    const string decorationLine(MAP_W - 2, '-');
 
     eng.renderer->drawText(
-      decorationLine, panel_character, Pos(0, 1), clrWhite);
+      decorationLine, panel_char, Pos(0, 2), clrWhite);
     eng.renderer->drawText(
       " 2/8, down/up to navigate | space/esc to exit ",
-      panel_character, Pos(3, 1), clrWhite);
+      panel_char, Pos(3, 2), clrWhite);
 
-    int yPos = 1;
+    int yPos = 0;
 
     eng.renderer->drawText(
       decorationLine, panel_screen, Pos(1, yPos), clrWhite);
@@ -102,22 +102,16 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
     for(
       int i = TOP_ELEMENT;
-      i < int(entries.size()) && (i - TOP_ELEMENT) < MAP_Y_CELLS;
+      i < int(entries.size()) && (i - TOP_ELEMENT) < MAP_H;
       i++) {
-      const string dateAndTime = entries.at(i).getDateAndTime();
-      trace << "HighScore: dateAndTime: " << dateAndTime << endl;
-      const string name = entries.at(i).getName();
-      trace << "HighScore: name: " << name << endl;
-      const string score = toString(entries.at(i).getScore());
-      trace << "HighScore: score: " << score << endl;
-      const string lvl = toString(entries.at(i).getLvl());
-      trace << "HighScore: lvl: " << lvl << endl;
-      const string dlvl = toString(entries.at(i).getDlvl());
-      trace << "HighScore: dlvl: " << dlvl << endl;
-      const string ins = toString(entries.at(i).getInsanity());
-      trace << "HighScore: ins: " << ins << endl;
+      const string dateAndTime  = entries.at(i).getDateAndTime();
+      const string name         = entries.at(i).getName();
+      const string score        = toString(entries.at(i).getScore());
+      const string lvl          = toString(entries.at(i).getLvl());
+      const string dlvl         = toString(entries.at(i).getDlvl());
+      const string ins          = toString(entries.at(i).getInsanity());
 
-      const SDL_Color clr = clrNosferatuSepia;
+      const SDL_Color clr = clrNosferatuTeal;
       eng.renderer->drawText(
         dateAndTime, panel_screen, Pos(X_POS_DATE, yPos), clr);
       eng.renderer->drawText(
@@ -160,15 +154,15 @@ void HighScore::runHighScoreScreen() {
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement =
-        min(topElement + int(MAP_Y_CELLS / 5),
-            int(entries.size()) - int(MAP_Y_CELLS));
+        min(topElement + int(MAP_H / 5),
+            int(entries.size()) - int(MAP_H));
       topElement = max(0, topElement);
       renderHighScoreScreen(entries, topElement);
     }
     if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement =
-        min(topElement - int(MAP_Y_CELLS / 5),
-            int(entries.size()) - int(MAP_Y_CELLS));
+        min(topElement - int(MAP_H / 5),
+            int(entries.size()) - int(MAP_H));
       topElement = max(0, topElement);
       renderHighScoreScreen(entries, topElement);
     }

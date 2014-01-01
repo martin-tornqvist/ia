@@ -211,7 +211,7 @@ void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
 }
 
 void PotionOfAntidote::specificQuaff(Actor* const actor) {
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool visionBlockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   const bool IS_POISON_ENDED =
     actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);

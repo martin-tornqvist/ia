@@ -57,9 +57,9 @@ public:
   //another actor.
   bool checkIfSeeActor(
     const Actor& other,
-    const bool visionBlockingCells[MAP_X_CELLS][MAP_Y_CELLS]) const;
+    const bool visionBlockingCells[MAP_W][MAP_H]) const;
 
-  void getSpotedEnemies(vector<Actor*>& vectorRef);
+  void getSpottedEnemies(vector<Actor*>& vectorRef);
 
   inline ActorId_t getId()  const {return data_->id;}
   inline int getHp()        const {return hp_;}
@@ -75,10 +75,10 @@ public:
   inline const Tile_t& getTile() const {return tile_;}
   inline BodyType_t getBodyType() const {return data_->bodyType;}
 
-  void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  void addLight(bool light[MAP_W][MAP_H]) const;
 
   virtual void specificAddLight(
-    bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+    bool light[MAP_W][MAP_H]) const {
     (void)light;
   }
 

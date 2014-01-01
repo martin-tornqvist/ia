@@ -36,7 +36,7 @@ public:
 
 private:
   //This array supports placing items, monsters and traps
-  RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS];
+  RoomTheme_t themeMap[MAP_W][MAP_H];
 
   void applyThemeToRoom(Room& room);
 
@@ -60,7 +60,7 @@ private:
   void assignRoomThemes();
 
   bool isThemeAllowed(const Room* const room, const RoomTheme_t theme,
-                      const bool blockers[MAP_X_CELLS][MAP_Y_CELLS]) const;
+                      const bool blockers[MAP_W][MAP_H]) const;
 
   bool isThemeExistInMap(const RoomTheme_t theme) const;
 

@@ -10,7 +10,7 @@ public:
 
     if(monster.deadState == actorDeadState_alive) {
 
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool blockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(engine), blockers);
 
       if(engine.fov->checkCell(blockers, lairCell, monster.pos, true)) {

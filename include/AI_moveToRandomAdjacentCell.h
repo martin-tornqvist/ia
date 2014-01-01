@@ -14,7 +14,7 @@ public:
         monster.isRoamingAllowed == true ||
         monster.playerAwarenessCounter > 0) {
 
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        bool blockers[MAP_W][MAP_H];
         MapParser::parse(
           CellPredBlocksBodyType(monster.getBodyType(), true, engine),
           blockers);
@@ -33,10 +33,10 @@ public:
 
 private:
   static Pos getOffsetToRandomAdjacentFreeCell(
-    const Monster& monster, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+    const Monster& monster, bool blockers[MAP_W][MAP_H],
     Engine& engine) {
 
-    const Rect areaAllowed(Pos(1, 1), Pos(MAP_X_CELLS - 2, MAP_Y_CELLS - 2));
+    const Rect areaAllowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
 
     //First, try the same direction as last travelled
     if(monster.lastDirTraveled != dirCenter) {

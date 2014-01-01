@@ -180,6 +180,7 @@
 		<Unit filename="../include/Fov.h" />
 		<Unit filename="../include/GameTime.h" />
 		<Unit filename="../include/Gods.h" />
+		<Unit filename="../include/Hide.h" />
 		<Unit filename="../include/Highscore.h" />
 		<Unit filename="../include/Input.h" />
 		<Unit filename="../include/Inventory.h" />
@@ -288,6 +289,7 @@
 		<Unit filename="../src/Fov.cpp" />
 		<Unit filename="../src/GameTime.cpp" />
 		<Unit filename="../src/Gods.cpp" />
+		<Unit filename="../src/Hide.cpp" />
 		<Unit filename="../src/Highscore.cpp" />
 		<Unit filename="../src/Input.cpp">
 			<Option target="Debug" />

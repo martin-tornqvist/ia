@@ -11,7 +11,7 @@ public:
   static bool action(Monster& monster, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
 
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool visionBlockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(engine), visionBlockers);
 
       if(monster.checkIfSeeActor(*engine.player, visionBlockers)) {
@@ -123,7 +123,7 @@ private:
     const int OLD_X = self.pos.x;
     const int OLD_Y = self.pos.y;
 
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(
       CellPredBlocksBodyType(self.getBodyType(), true, eng), blockers);
 
@@ -156,7 +156,7 @@ private:
    */
   static bool isAdjAndWithoutVision(
     const Monster& self, Monster& other,
-    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS], Engine& engine) {
+    bool visionBlockers[MAP_W][MAP_H], Engine& engine) {
 
     //If the pal is next to me
     if(engine.basicUtils->isPosAdj(self.pos, other.pos, false)) {

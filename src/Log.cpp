@@ -36,7 +36,7 @@ void Log::drawLine(const vector<Message>& lineToDraw, const int yCell) const {
 }
 
 void Log::drawLog(const bool SHOULD_UPDATE_SCREEN) const {
-  eng.renderer->coverArea(panel_log, Pos(0, 0), Pos(MAP_X_CELLS, 1));
+  eng.renderer->coverArea(panel_log, Pos(0, 0), Pos(MAP_W, 1));
   drawLine(line, 0);
   if(SHOULD_UPDATE_SCREEN) eng.renderer->updateScreen();
 }
@@ -64,7 +64,7 @@ void Log::addMsg(const string& text, const SDL_Color color,
     const int CUR_X_POS = findCurXpos(line, line.size());
 
     const bool IS_MSG_FIT =
-      CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_X_CELLS;
+      CUR_X_POS + int(text.size()) + REPEAT_LEN + MORE_LEN < MAP_W;
 
     if(IS_MSG_FIT == false) {
       drawLog(false);
@@ -102,8 +102,8 @@ void Log::displayHistory() {
 
   eng.renderer->clearScreen();
 
-  int topElement = max(0, int(history.size()) - int(MAP_Y_CELLS));
-  int btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
+  int topElement = max(0, int(history.size()) - int(MAP_H));
+  int btmElement = min(topElement + MAP_H - 1, int(history.size()) - 1);
   drawHistoryInterface(topElement, btmElement);
   int yCell = 1;
   for(int i = topElement; i <= btmElement; i++) {
@@ -122,12 +122,12 @@ void Log::displayHistory() {
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = min(topElement + LINE_JUMP,
-                       int(history.size()) - int(MAP_Y_CELLS));
+                       int(history.size()) - int(MAP_H));
       topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_Y_CELLS - 1,
+      btmElement = min(topElement + MAP_H - 1,
                        int(history.size()) - 1);
       eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
+                              Pos(MAP_W, MAP_H));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
@@ -137,11 +137,11 @@ void Log::displayHistory() {
       eng.renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = min(topElement - LINE_JUMP,
-                       int(history.size()) - int(MAP_Y_CELLS));
+                       int(history.size()) - int(MAP_H));
       topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_Y_CELLS - 1, int(history.size()) - 1);
+      btmElement = min(topElement + MAP_H - 1, int(history.size()) - 1);
       eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
+                              Pos(MAP_W, MAP_H));
       drawHistoryInterface(topElement, btmElement);
       yCell = 1;
       for(int i = topElement; i <= btmElement; i++) {
@@ -158,25 +158,25 @@ void Log::displayHistory() {
 }
 
 void Log::drawHistoryInterface(const int topLine, const int bottomLine) const {
-  const string decorationLine(MAP_X_CELLS - 2, '-');
+  const string decorationLine(MAP_W - 2, '-');
 
   eng.renderer->coverPanel(panel_log);
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrWhite);
   if(history.empty()) {
     eng.renderer->drawText(" No message history ", panel_screen,
-                           Pos(3, 1), clrWhite);
+                           Pos(3, 0), clrWhite);
   } else {
     eng.renderer->drawText(
       " Displaying messages " + toString(topLine) + "-" +
       toString(bottomLine) + " of " +
-      toString(history.size()) + " ", panel_screen, Pos(3, 1), clrWhite);
+      toString(history.size()) + " ", panel_screen, Pos(3, 0), clrWhite);
   }
 
   eng.renderer->drawText(
-    decorationLine, panel_character, Pos(1, 1), clrWhite);
+    decorationLine, panel_char, Pos(0, 2), clrWhite);
   eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit ",
-    panel_character, Pos(3, 1), clrWhite);
+    panel_char, Pos(3, 2), clrWhite);
 }
 
 int Log::findCurXpos(const vector<Message>& afterLine,

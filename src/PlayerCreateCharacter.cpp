@@ -21,7 +21,7 @@ void PlayerCreateCharacter::pickBg() const {
     eng.playerBonHandler->pickBg(Bg_t(eng.dice.range(0, endOfBgs - 1)));
   } else {
     vector<Bg_t> bgs;
-    eng.playerBonHandler->getAllPickableBgs(bgs);
+    eng.playerBonHandler->getPickableBgs(bgs);
 
     MenuBrowser browser(bgs.size(), 0);
     drawPickBg(bgs, browser);
@@ -44,18 +44,19 @@ void PlayerCreateCharacter::pickBg() const {
 
 void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
                                        const MenuBrowser& browser) const {
-  eng.renderer->coverPanel(panel_screen);
+  eng.renderer->clearScreen();
+  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   string title = "Choose your background";
 
   eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0),
+    title, panel_screen, Pos(MAP_W_HALF, Y0),
     clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosferatuSepiaLgt;
-  const SDL_Color& clrInactive    = clrNosferatuSepiaDrk;
+  const SDL_Color& clrActive      = clrNosferatuTealLgt;
+  const SDL_Color& clrInactive    = clrNosferatuTealDrk;
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
@@ -76,19 +77,19 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     eng.renderer->drawTextCentered(
-      name, panel_screen, Pos(MAP_X_CELLS_HALF, y), drwClr, drwClrBg);
+      name, panel_screen, Pos(MAP_W_HALF, y), drwClr, drwClrBg);
     y++;
   }
   y++;
 
   const int BGS_BOX_W_HALF = 6;
-  Rect boxRect(Pos(MAP_X_CELLS_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
-               Pos(MAP_X_CELLS_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
+  Rect boxRect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
+               Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
 
   //------------------------------------------------------------- DESCRIPTION
   const int X0_DESCR    = MARGIN_W;
-  const int MAX_W_DESCR = MAP_X_CELLS - (MARGIN_W * 2);
+  const int MAX_W_DESCR = MAP_W - (MARGIN_W * 2);
 
   vector<string> rawDescrLines;
   eng.playerBonHandler->getBgDescr(markedBg, rawDescrLines);
@@ -109,7 +110,7 @@ void PlayerCreateCharacter::pickNewTrait(
 
   if(eng.config->isBotPlaying == false) {
     vector<Trait_t> pickableTraits;
-    eng.playerBonHandler->getAllPickableTraits(pickableTraits);
+    eng.playerBonHandler->getPickableTraits(pickableTraits);
 
     if(pickableTraits.empty() == false) {
 
@@ -162,7 +163,8 @@ void PlayerCreateCharacter::drawPickTrait(
   const vector<Trait_t>& traits1, const vector<Trait_t>& traits2,
   const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) const {
 
-  eng.renderer->coverPanel(panel_screen);
+  eng.renderer->clearScreen();
+  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   const int NR_TRAITS_1 = traits1.size();
   const int NR_TRAITS_2 = traits2.size();
@@ -176,7 +178,7 @@ void PlayerCreateCharacter::drawPickTrait(
   }
 
   const int X_COL_ONE       = MARGIN_W;
-  const int X_COL_TWO_RIGHT = MAP_X_CELLS - MARGIN_W - 1;
+  const int X_COL_TWO_RIGHT = MAP_W - MARGIN_W - 1;
   const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
 
   string title = IS_CHARACTER_CREATION ?
@@ -184,13 +186,13 @@ void PlayerCreateCharacter::drawPickTrait(
                  "You have reached a new level! Which trait do you gain?";
 
   eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0),
+    title, panel_screen, Pos(MAP_W_HALF, Y0),
     clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosferatuSepiaLgt;
-  const SDL_Color& clrInactive    = clrNosferatuSepiaDrk;
+  const SDL_Color& clrActive      = clrNosferatuTealLgt;
+  const SDL_Color& clrInactive    = clrNosferatuTealDrk;
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
@@ -245,7 +247,7 @@ void PlayerCreateCharacter::drawPickTrait(
   }
 
   //------------------------------------------------------------- PREREQUISITES
-  const int Y0_PREREQS = 19;
+  const int Y0_PREREQS = 17;
   y = Y0_PREREQS;
   vector<Trait_t> prereqsForCurTrait;
   eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
@@ -267,8 +269,8 @@ void PlayerCreateCharacter::drawPickTrait(
 
   //------------------------------------------------------------- PREVIOUS
   y = Y0_PREREQS + 4;
-  const int X0_PREV_PICKS     = MARGIN_W / 2;
-  const int MAX_W_PREV_PICKS  = MAP_X_CELLS - (X0_PREV_PICKS * 2);
+  const int X0_PREV_PICKS     = 1;
+  const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
   string pickedStr = "";
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
   if(pickedStr != "") {
@@ -303,17 +305,19 @@ void PlayerEnterName::run(const int Y0_TITLE) const {
 
 void PlayerEnterName::draw(const string& currentString,
                            const int Y0_TITLE) const {
-  eng.renderer->coverPanel(panel_screen);
+  eng.renderer->clearScreen();
+  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+
   const string title = "What is your name?";
   eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_X_CELLS_HALF, Y0_TITLE), clrWhite);
+    title, panel_screen, Pos(MAP_W_HALF, Y0_TITLE), clrWhite);
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
-  const int NAME_X0 = MAP_X_CELLS_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
+  const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   eng.renderer->drawText(
-    NAME_STR, panel_screen, Pos(NAME_X0, Y0_TITLE + 2), clrNosferatuSepiaLgt);
+    NAME_STR, panel_screen, Pos(NAME_X0, Y0_TITLE + 2), clrNosferatuTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y0_TITLE + 1), Pos(NAME_X1 + 1, Y0_TITLE + 3));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
   eng.renderer->updateScreen();

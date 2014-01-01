@@ -176,11 +176,11 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
       if(d.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
-        const int CAP_SCALED = CAP / NR_MACHINEGUN_PROJECTILES;
-        const int MIN_SCALED = MIN / NR_MACHINEGUN_PROJECTILES;
+        const int CAP_SCALED = CAP / NR_MG_PROJECTILES;
+        const int MIN_SCALED = MIN / NR_MG_PROJECTILES;
         weapon->nrAmmoLoaded =
           eng.dice.range(MIN_SCALED, CAP_SCALED) *
-          NR_MACHINEGUN_PROJECTILES;
+          NR_MG_PROJECTILES;
       } else {
         weapon->nrAmmoLoaded =
           eng.dice.range(weapon->ammoCapacity / 4, weapon->ammoCapacity);

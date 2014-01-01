@@ -11,7 +11,7 @@ public:
   }
 
   void populateRoomAndCorridorLevel(
-    RoomTheme_t themeMap[MAP_X_CELLS][MAP_Y_CELLS],
+    RoomTheme_t themeMap[MAP_W][MAP_H],
     const vector<Room*>& rooms) const;
 
 private:

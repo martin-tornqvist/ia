@@ -18,17 +18,17 @@ bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
 }
 
 void SoundEmitter::emitSound(Sound snd) {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   FeatureStatic* f = NULL;
-  for(int y = MAP_Y_CELLS - 1; y >= 0; y--) {
-    for(int x = MAP_X_CELLS - 1; x >= 0; x--) {
+  for(int y = MAP_H - 1; y >= 0; y--) {
+    for(int x = MAP_W - 1; x >= 0; x--) {
       f = eng.map->cells[x][y].featureStatic;
       const bool SOUND_CAN_PASS_CELL =
         f->isBodyTypePassable(bodyType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
     }
   }
-  int floodFill[MAP_X_CELLS][MAP_Y_CELLS];
+  int floodFill[MAP_W][MAP_H];
   const Pos& origin = snd.getOrigin();
   eng.floodFill->run(origin, blockers, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
@@ -85,7 +85,7 @@ void SoundEmitter::emitSound(Sound snd) {
 
 Dir_t SoundEmitter::getPlayerToOriginDir(
   const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
-  int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  int floodFill[MAP_W][MAP_H]) const {
 
   const Pos& playerPos = eng.player->pos;
   Dir_t sourceDir = endOfDirs;

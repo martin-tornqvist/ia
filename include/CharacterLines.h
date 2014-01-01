@@ -1,5 +1,5 @@
-#ifndef CHARACTER_LINES_H
-#define CHARACTER_LINES_H
+#ifndef CHAR_LINES_HANDLER_H
+#define CHAR_LINES_HANDLER_H
 
 class Engine;
 

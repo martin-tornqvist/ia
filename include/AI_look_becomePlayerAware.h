@@ -13,16 +13,15 @@ public:
 
     if(monster.deadState == actorDeadState_alive) {
 
-      vector<Actor*> spotedEnemies;
-      monster.getSpotedEnemies(spotedEnemies);
+      vector<Actor*> SpottedEnemies;
+      monster.getSpottedEnemies(SpottedEnemies);
 
-      if(spotedEnemies.empty() == false && WAS_AWARE_BEFORE) {
+      if(SpottedEnemies.empty() == false && WAS_AWARE_BEFORE) {
         monster.becomeAware();
         return false;
       }
 
-      for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-        Actor* const actor = spotedEnemies.at(i);
+      for(Actor* actor : SpottedEnemies) {
         if(actor == engine.player) {
           const Pos& playerPos = engine.player->pos;
 

@@ -52,7 +52,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
       eng.log->addMsg(
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
-      bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool blockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(eng), blockers);
       if(eng.player->checkIfSeeActor(*curActor, blockers)) {
         eng.log->addMsg(
@@ -75,9 +75,9 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   }
 
   //Make a vector of all cells on map with no blocking feature
-  bool freeCellArray[MAP_X_CELLS][MAP_Y_CELLS];
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  bool freeCellArray[MAP_W][MAP_H];
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
       freeCellArray[x][y] = f->canHaveItem() && f->isBottomless() == false;
     }

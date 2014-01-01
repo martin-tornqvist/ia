@@ -67,7 +67,7 @@ private:
 
   Dir_t getPlayerToOriginDir(
     const int FLOOD_VALUE_AT_PLAYER,
-    const Pos& origin, int floodFill[MAP_X_CELLS][MAP_Y_CELLS]) const;
+    const Pos& origin, int floodFill[MAP_W][MAP_H]) const;
 
   bool isSoundHeardAtRange(const int RANGE, const Sound& snd) const;
 

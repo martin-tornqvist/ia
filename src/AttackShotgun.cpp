@@ -22,10 +22,10 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   const ActorSizes_t intendedAimLevel = data->intendedAimLevel;
 
-  bool featureBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool featureBlockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksProjectiles(eng), featureBlockers);
 
-  Actor* actorArray[MAP_X_CELLS][MAP_Y_CELLS];
+  Actor* actorArray[MAP_W][MAP_H];
   eng.basicUtils->makeActorArray(actorArray);
 
   const Pos origin = attacker.pos;

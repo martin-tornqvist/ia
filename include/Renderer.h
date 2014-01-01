@@ -71,7 +71,7 @@ public:
 
   void drawBlastAnimationAtField(
     const Pos& center, const int RADIUS,
-    bool forbiddenCells[MAP_X_CELLS][MAP_Y_CELLS],
+    bool forbiddenCells[MAP_W][MAP_H],
     const SDL_Color& colorInner, const SDL_Color& colorOuter);
 
   void drawBlastAnimationAtPositions(const vector<Pos>& positions,
@@ -82,15 +82,15 @@ public:
 
   void drawMainMenuLogo(const int Y_POS);
 
-  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_X_CELLS][MAP_Y_CELLS];
-  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_W][MAP_H];
+  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_W][MAP_H];
 
-  CellRenderDataAscii renderArrayAscii[MAP_X_CELLS][MAP_Y_CELLS];
-  CellRenderDataTiles renderArrayTiles[MAP_X_CELLS][MAP_Y_CELLS];
+  CellRenderDataAscii renderArrayAscii[MAP_W][MAP_H];
+  CellRenderDataTiles renderArrayTiles[MAP_W][MAP_H];
 
   void drawProjectiles(vector<Projectile*>& projectiles);
 
-  void drawPopupBox(const Rect& area, const Panel_t panel,
+  void drawPopupBox(const Rect& area, const Panel_t panel = panel_screen,
                     const SDL_Color& clr = clrGray);
 
 private:
@@ -107,7 +107,7 @@ private:
   void coverGlyphAtPixel(const Pos& pixelPos);
   void coverTileAtPixel(const Pos& pixelPos);
 
-  Pos getPixelPosForCellInPanel(const Panel_t panel, const Pos& pos);
+  Pos getPixelPosForCellInPanel(const Panel_t panel, const Pos& pos) const;
 
   int getLifebarLength(const Actor& actor) const;
   void drawLifeBar(const Pos& pos, const int LENGTH);

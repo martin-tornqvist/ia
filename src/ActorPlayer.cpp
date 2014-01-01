@@ -317,9 +317,9 @@ void Player::incrInsanity() {
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
-    vector<Actor*> spotedEnemies;
-    getSpotedEnemies(spotedEnemies);
-    for(Actor * actor : spotedEnemies) {
+    vector<Actor*> SpottedEnemies;
+    getSpottedEnemies(SpottedEnemies);
+    for(Actor * actor : SpottedEnemies) {
       const ActorData& def = actor->getData();
       if(def.monsterShockLevel != monsterShockLevel_none) {
         playerSeeShockingMonster = true;
@@ -391,11 +391,11 @@ void Player::incrInsanity() {
               }
               if(phobiasActive < 2) {
                 if(eng.dice.coinToss()) {
-                  if(spotedEnemies.empty() == false) {
+                  if(SpottedEnemies.empty() == false) {
                     const int MONSTER_ROLL =
-                      eng.dice.range(0, spotedEnemies.size() - 1);
+                      eng.dice.range(0, SpottedEnemies.size() - 1);
                     const ActorData& monsterData =
-                      spotedEnemies.at(MONSTER_ROLL)->getData();
+                      SpottedEnemies.at(MONSTER_ROLL)->getData();
                     if(
                       monsterData.isRat &&
                       insanityPhobias[insanityPhobia_rat] == false) {
@@ -576,7 +576,7 @@ void Player::setTempShockFromFeatures() {
 }
 
 bool Player::isStandingInOpenSpace() const {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
@@ -591,7 +591,7 @@ bool Player::isStandingInOpenSpace() const {
 }
 
 bool Player::isStandingInCrampedSpace() const {
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   int blockCount = 0;
@@ -610,14 +610,14 @@ bool Player::isStandingInCrampedSpace() const {
 }
 
 void Player::testPhobias() {
-  vector<Actor*> spotedEnemies;
-  getSpotedEnemies(spotedEnemies);
+  vector<Actor*> SpottedEnemies;
+  getSpottedEnemies(SpottedEnemies);
 
   const int ROLL = eng.dice.percentile();
   //Phobia vs creature type?
   if(ROLL < 10) {
-    for(unsigned int i = 0; i < spotedEnemies.size(); i++) {
-      const ActorData& monsterData = spotedEnemies.at(0)->getData();
+    for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+      const ActorData& monsterData = SpottedEnemies.at(0)->getData();
       if(
         monsterData.isCanine &&
         insanityPhobias[insanityPhobia_dog]) {
@@ -712,9 +712,9 @@ void Player::onActorTurn() {
   }
 
   //If player dropped item, check if should go back to inventory screen
-  vector<Actor*> spotedEnemies;
-  getSpotedEnemies(spotedEnemies);
-  if(spotedEnemies.empty()) {
+  vector<Actor*> SpottedEnemies;
+  getSpottedEnemies(SpottedEnemies);
+  if(SpottedEnemies.empty()) {
     const InventoryScreen_t invScreen =
       eng.inventoryHandler->screenToOpenAfterDrop;
     if(invScreen != endOfInventoryScreens) {
@@ -809,10 +809,10 @@ void Player::specificOnStandardTurn() {
   }
 
   //Shock from seen monsters
-  vector<Actor*> spotedEnemies;
-  getSpotedEnemies(spotedEnemies);
+  vector<Actor*> SpottedEnemies;
+  getSpottedEnemies(SpottedEnemies);
   double shockFromMonstersCurrentPlayerTurn = 0.0;
-  for(Actor * actor : spotedEnemies) {
+  for(Actor * actor : SpottedEnemies) {
     Monster* monster = dynamic_cast<Monster*>(actor);
     const ActorData& data = monster->getData();
     if(data.monsterShockLevel != monsterShockLevel_none) {
@@ -969,8 +969,8 @@ void Player::specificOnStandardTurn() {
         const int CLUE_RADI = 3;
         x0 = max(0, pos.x - CLUE_RADI);
         y0 = max(0, pos.y - CLUE_RADI);
-        x1 = min(MAP_X_CELLS - 1, pos.x + CLUE_RADI);
-        y1 = max(MAP_Y_CELLS - 1, pos.y + CLUE_RADI);
+        x1 = min(MAP_W - 1, pos.x + CLUE_RADI);
+        y1 = max(MAP_H - 1, pos.y + CLUE_RADI);
 
         for(int y = y0; y <= y1; y++) {
           for(int x = x0; x <= x1; x++) {
@@ -1232,7 +1232,7 @@ void Player::punch(Actor& actorToPunch) {
 }
 
 void Player::specificAddLight(
-  bool light[MAP_X_CELLS][MAP_Y_CELLS]) const {
+  bool light[MAP_W][MAP_H]) const {
 
   bool isUsingLightGivingItem = flareFuseTurns > 0;
 
@@ -1251,13 +1251,13 @@ void Player::specificAddLight(
   }
 
   if(isUsingLightGivingItem) {
-    bool myLight[MAP_X_CELLS][MAP_Y_CELLS];
+    bool myLight[MAP_W][MAP_H];
     eng.basicUtils->resetArray(myLight, false);
     const int RADI = FOV_STANDARD_RADI_INT; //LitFlare::getLightRadius();
     Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
-    Pos x1y1(min(MAP_X_CELLS - 1, pos.x + RADI), min(MAP_Y_CELLS - 1, pos.y + RADI));
+    Pos x1y1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
-    bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool visionBlockers[MAP_W][MAP_H];
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       for(int x = x0y0.x; x <= x1y1.x; x++) {
         const FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
@@ -1277,14 +1277,14 @@ void Player::specificAddLight(
 }
 
 void Player::updateFov() {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.map->cells[x][y].isSeenByPlayer = false;
     }
   }
 
   if(propHandler_->allowSee()) {
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksVision(eng), blockers);
     eng.fov->runPlayerFov(blockers, pos);
     eng.map->cells[pos.x][pos.y].isSeenByPlayer = true;
@@ -1295,10 +1295,10 @@ void Player::updateFov() {
 
     const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
     const int Y0 = max(0, pos.y - FLOODFILL_TRAVEL_LIMIT);
-    const int X1 = min(MAP_X_CELLS - 1, pos.x + FLOODFILL_TRAVEL_LIMIT);
-    const int Y1 = min(MAP_Y_CELLS - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
+    const int X1 = min(MAP_W - 1, pos.x + FLOODFILL_TRAVEL_LIMIT);
+    const int Y1 = min(MAP_H - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
 
-    bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+    bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksBodyType(bodyType_flying, false, eng),
                      blockers);
 
@@ -1310,7 +1310,7 @@ void Player::updateFov() {
       }
     }
 
-    int floodFillValues[MAP_X_CELLS][MAP_Y_CELLS];
+    int floodFillValues[MAP_W][MAP_H];
     eng.floodFill->run(
       pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, Pos(-1, -1));
 
@@ -1326,16 +1326,16 @@ void Player::updateFov() {
   if(propHandler_->allowSee()) {FOVhack();}
 
   if(eng.isCheatVisionEnabled) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         eng.map->cells[x][y].isSeenByPlayer = true;
       }
     }
   }
 
   //Explore
-  for(int x = 0; x < MAP_X_CELLS; x++) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
       if(eng.map->cells[x][y].isSeenByPlayer) {
         eng.map->cells[x][y].isExplored = true;
       }
@@ -1344,15 +1344,15 @@ void Player::updateFov() {
 }
 
 void Player::FOVhack() {
-  bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool visionBlockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       if(visionBlockers[x][y] && blockers[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {

@@ -14,9 +14,9 @@
 using namespace std;
 
 enum Trait_t {
-  traitAdeptMeleeCombatant,
-  traitExpertMeleeCombatant,
-  traitMasterMeleeCombatant,
+  traitAdeptMeleeFighter,
+  traitExpertMeleeFighter,
+  traitMasterMeleeFighter,
   traitAdeptMarksman,
   traitExpertMarksman,
   traitMasterMarksman,
@@ -76,8 +76,8 @@ public:
     }
   }
 
-  void getAllPickableBgs(vector<Bg_t>& bgsRef) const;
-  void getAllPickableTraits(vector<Trait_t>& traitsRef) const;
+  void getPickableBgs(vector<Bg_t>& bgsRef) const;
+  void getPickableTraits(vector<Trait_t>& traitsRef) const;
 
   void getTraitPrereqs(const Trait_t id,
                        vector<Trait_t>& traitsRef) const;

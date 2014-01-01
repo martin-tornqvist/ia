@@ -10,10 +10,10 @@ public:
     if(monster.deadState == actorDeadState_alive) {
       if(monster.playerAwarenessCounter > 0) {
 
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        bool blockers[MAP_W][MAP_H];
         engine.basicUtils->resetArray(blockers, false);
-        for(int y = 1; y < MAP_Y_CELLS - 1; y++) {
-          for(int x = 1; x < MAP_X_CELLS - 1; x++) {
+        for(int y = 1; y < MAP_H - 1; y++) {
+          for(int x = 1; x < MAP_W - 1; x++) {
             const Feature* const f = engine.map->cells[x][y].featureStatic;
             if(f->isBodyTypePassable(monster.getBodyType()) == false) {
 

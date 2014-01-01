@@ -27,14 +27,16 @@ int AbilityValues::getVal(const Abilities_t ability,
 
       case ability_accuracyMelee: {
         val += 45;
-        if(bonHlr.hasTrait(traitAdeptMeleeCombatant)) val += 15;
+        if(bonHlr.hasTrait(traitAdeptMeleeFighter))   val += 10;
+        if(bonHlr.hasTrait(traitExpertMeleeFighter))  val += 10;
+        if(bonHlr.hasTrait(traitMasterMeleeFighter))  val += 10;
       } break;
 
       case ability_accuracyRanged: {
         val += 50;
-        if(bonHlr.hasTrait(traitAdeptMarksman)) val += 10;
-        if(bonHlr.hasTrait(traitExpertMarksman)) val += 10;
-        if(bonHlr.hasTrait(traitMasterMarksman)) val += 10;
+        if(bonHlr.hasTrait(traitAdeptMarksman))   val += 10;
+        if(bonHlr.hasTrait(traitExpertMarksman))  val += 10;
+        if(bonHlr.hasTrait(traitMasterMarksman))  val += 10;
       } break;
 
       case ability_dodgeTrap: {

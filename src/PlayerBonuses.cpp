@@ -34,9 +34,9 @@ void PlayerBonHandler::getTraitTitle(
   strRef = "[TRAIT TITLE MISSING]";
 
   switch(id) {
-    case traitAdeptMeleeCombatant:  strRef = "Adept Melee Combatant";   break;
-    case traitExpertMeleeCombatant: strRef = "Expert Melee Combatant";  break;
-    case traitMasterMeleeCombatant: strRef = "Master Melee Combatant";  break;
+    case traitAdeptMeleeFighter:    strRef = "Adept Melee Fighter";     break;
+    case traitExpertMeleeFighter:   strRef = "Expert Melee Fighter";    break;
+    case traitMasterMeleeFighter:   strRef = "Master Melee Fighter";    break;
     case traitCoolHeaded:           strRef = "Cool-headed";             break;
     case traitCourageous:           strRef = "Courageous";              break;
     case traitSelfPossessed:        strRef = "Self-possessed";          break;
@@ -107,8 +107,8 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
       getTraitDescr(traitAdeptMarksman, s);       linesRef.push_back(s);
       linesRef.push_back("");
-      getTraitTitle(traitAdeptMeleeCombatant, s); linesRef.push_back("* " + s);
-      getTraitDescr(traitAdeptMeleeCombatant, s); linesRef.push_back(s);
+      getTraitTitle(traitAdeptMeleeFighter, s); linesRef.push_back("* " + s);
+      getTraitDescr(traitAdeptMeleeFighter, s); linesRef.push_back(s);
       linesRef.push_back("");
       getTraitTitle(traitTough, s);               linesRef.push_back("* " + s);
       getTraitDescr(traitTough, s);               linesRef.push_back(s);
@@ -124,15 +124,15 @@ void PlayerBonHandler::getTraitDescr(
   strRef = "[TRAIT DESCRIPTION MISSING]";
 
   switch(id) {
-    case traitAdeptMeleeCombatant: {
+    case traitAdeptMeleeFighter: {
       strRef  = "+10% hit chance with melee weapons";
     } break;
 
-    case traitExpertMeleeCombatant: {
+    case traitExpertMeleeFighter: {
       strRef  = "+10% hit chance with melee weapons";
     } break;
 
-    case traitMasterMeleeCombatant: {
+    case traitMasterMeleeFighter: {
       strRef  = "+10% hit chance with melee weapons";
     } break;
 
@@ -178,7 +178,7 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSelfPossessed: {
-      strRef  = "Passive shock received over time is reduced by 50% (does ";
+      strRef  = "Passive shock received over time is reduced by 75% (does ";
       strRef += "not affect shock from seeing monsters, using magic, etc)";
     } break;
 
@@ -283,15 +283,15 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
   //TODO Add CLVL prereqs
 
   switch(id) {
-    case traitAdeptMeleeCombatant: {
+    case traitAdeptMeleeFighter: {
     } break;
 
-    case traitExpertMeleeCombatant: {
-      traitsRef.push_back(traitAdeptMeleeCombatant);
+    case traitExpertMeleeFighter: {
+      traitsRef.push_back(traitAdeptMeleeFighter);
     } break;
 
-    case traitMasterMeleeCombatant: {
-      traitsRef.push_back(traitExpertMeleeCombatant);
+    case traitMasterMeleeFighter: {
+      traitsRef.push_back(traitExpertMeleeFighter);
     } break;
 
     case traitAdeptMarksman: {
@@ -302,7 +302,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitMasterMarksman: {
-      traitsRef.push_back(traitMasterMarksman);
+      traitsRef.push_back(traitExpertMeleeFighter);
     } break;
 
     case traitSteadyAimer: {
@@ -417,7 +417,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
   });
 }
 
-void PlayerBonHandler::getAllPickableBgs(vector<Bg_t>& bgsRef) const {
+void PlayerBonHandler::getPickableBgs(vector<Bg_t>& bgsRef) const {
   bgsRef.resize(0);
 
   for(int i = 0; i < endOfBgs; i++) {bgsRef.push_back(Bg_t(i));}
@@ -431,7 +431,7 @@ void PlayerBonHandler::getAllPickableBgs(vector<Bg_t>& bgsRef) const {
   });
 }
 
-void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) const {
+void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
   traitsRef.resize(0);
 
   for(int i = 0; i < endOfTraits; i++) {
@@ -460,6 +460,11 @@ void PlayerBonHandler::getAllPickableTraits(vector<Trait_t>& traitsRef) const {
     }
   }
 
+  //Limit the number of trait choices (due to screen space constraints)
+  random_shuffle(traitsRef.begin(), traitsRef.end());
+  const int MAX_NR_TRAIT_CHOICES = 16;
+  traitsRef.resize(min(int(traitsRef.size()), MAX_NR_TRAIT_CHOICES));
+
   //Sort lexicographically
   sort(traitsRef.begin(), traitsRef.end(),
   [this](const Trait_t & t1, const Trait_t & t2) {
@@ -485,7 +490,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
     } break;
 
     case bgSoldier: {
-      pickTrait(traitAdeptMeleeCombatant);
+      pickTrait(traitAdeptMeleeFighter);
       pickTrait(traitAdeptMarksman);
       pickTrait(traitTough);
     } break;

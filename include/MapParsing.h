@@ -101,7 +101,7 @@ public:
   MapParser() {};
 
   static void parse(const CellPred& predicate,
-                    bool arrayOut[MAP_X_CELLS][MAP_Y_CELLS],
+                    bool arrayOut[MAP_W][MAP_H],
                     const MapParseWriteRule writeRule = mapParseWriteAlways);
 };
 
@@ -121,8 +121,8 @@ public:
   FloodFill(Engine& engine) : eng(engine) {}
 
   void run(
-    const Pos& origin, bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
-    int values[MAP_X_CELLS][MAP_Y_CELLS], int travelLimit,
+    const Pos& origin, bool blockers[MAP_W][MAP_H],
+    int values[MAP_W][MAP_H], int travelLimit,
     const Pos& target);
 
 private:
@@ -134,7 +134,7 @@ public:
   PathFinder(Engine& engine) : eng(engine) {}
 
   void run(const Pos& origin, const Pos& target,
-           bool blockers[MAP_X_CELLS][MAP_Y_CELLS],
+           bool blockers[MAP_W][MAP_H],
            vector<Pos>& vectorRef) const;
 private:
   Engine& eng;

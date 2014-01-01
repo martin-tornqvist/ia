@@ -181,7 +181,7 @@ void CharacterDescr::makeLines() {
     lines.push_back(StrAndClr(offset + "None", clrText));
     lines.push_back(StrAndClr(" ", clrText));
   } else {
-    const int MAX_W_DESCR = (MAP_X_CELLS * 2) / 3;
+    const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
     for(Trait_t trait : traits) {
       string title = "";
@@ -200,18 +200,18 @@ void CharacterDescr::makeLines() {
 }
 
 void CharacterDescr::drawInterface() {
-  const string decorationLine(MAP_X_CELLS - 2, '-');
+  const string decorationLine(MAP_W - 2, '-');
 
-  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_X_CELLS, 2));
+  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, 2));
   eng.renderer->drawText(
-    decorationLine, panel_screen, Pos(1, 1), clrWhite);
+    decorationLine, panel_screen, Pos(1, 0), clrWhite);
   eng.renderer->drawText(
-    " Displaying character description ", panel_screen, Pos(3, 1), clrWhite);
+    " Displaying character description ", panel_screen, Pos(3, 0), clrWhite);
   eng.renderer->drawText(
-    decorationLine, panel_character, Pos(1, 1), clrWhite);
+    decorationLine, panel_char, Pos(1, 2), clrWhite);
   eng.renderer->drawText(
     " 2/8, down/up to navigate | space/esc to exit ",
-    panel_character, Pos(3, 1), clrWhite);
+    panel_char, Pos(3, 2), clrWhite);
 }
 
 void CharacterDescr::run() {
@@ -222,7 +222,7 @@ void CharacterDescr::run() {
   StrAndClr currentLine;
 
   int topElement = 0;
-  int btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
+  int btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
 
   drawInterface();
 
@@ -242,12 +242,12 @@ void CharacterDescr::run() {
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topElement = min(
-                     topElement + int(MAP_Y_CELLS / 5),
-                     int(lines.size()) - int(MAP_Y_CELLS));
+                     topElement + int(MAP_H / 5),
+                     int(lines.size()) - int(MAP_H));
       topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
+      btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
       eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
+                              Pos(MAP_W, MAP_H));
       drawInterface();
       pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {
@@ -258,12 +258,12 @@ void CharacterDescr::run() {
       eng.renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
       topElement = min(
-                     topElement - int(MAP_Y_CELLS / 5),
-                     int(lines.size()) - int(MAP_Y_CELLS));
+                     topElement - int(MAP_H / 5),
+                     int(lines.size()) - int(MAP_H));
       topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_Y_CELLS - 1, int(lines.size()) - 1);
+      btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
       eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                              Pos(MAP_X_CELLS, MAP_Y_CELLS));
+                              Pos(MAP_W, MAP_H));
       drawInterface();
       pos.y = 2;
       for(int i = topElement; i <= btmElement; i++) {

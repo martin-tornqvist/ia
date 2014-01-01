@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef LOG_HANDLER_H
+#define LOG_HANDLER_H
 
 #include <string>
 #include <vector>

@@ -955,13 +955,13 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'D';
   d.color = clrGray;
   d.tile = tile_hound;
-  d.hp = 60;
+  d.hp = 55;
   d.spi = 40;
   d.dmgMelee = 8;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.abilityVals.setVal(ability_dodgeAttack, 25);
   d.intrProps[propRFear] = true;
-  d.spawnMinDLVL = 0; //13;
+  d.spawnMinDLVL = 13;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;

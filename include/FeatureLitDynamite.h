@@ -29,7 +29,7 @@ public:
 
   void newTurn();
 
-  void addLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  void addLight(bool light[MAP_W][MAP_H]) const;
 
 //  static int getLightRadius() {
 //    return FOV_STANDARD_RADI_INT;

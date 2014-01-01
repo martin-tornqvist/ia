@@ -14,9 +14,9 @@
 bool MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
-  vector<Actor*> spotedEnemies;
-  eng.player->getSpotedEnemies(spotedEnemies);
-  if(spotedEnemies.empty() == false) {
+  vector<Actor*> SpottedEnemies;
+  eng.player->getSpottedEnemies(SpottedEnemies);
+  if(SpottedEnemies.empty() == false) {
     eng.log->addMsg("Not while an enemy is near.");
     return false;
   }
@@ -138,7 +138,7 @@ void MedicalBag::finishCurAction() {
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
-      bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+      bool visionBlockers[MAP_W][MAP_H];
       MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
       eng.player->getPropHandler().endAppliedProp(
         propInfected, visionBlockers);

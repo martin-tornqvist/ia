@@ -31,7 +31,7 @@ void DebugModeStatPrinter::run() {
   statFile.open("debug_mode_stats_file.txt", ios::trunc);
   printLine("This file was created because Infra Arcana was run in Debug mode\n");
   printLine("Created on   : " + eng.basicUtils->getCurrentTime().getTimeStr(time_minute, true));
-  printLine("Game version : " + eng.config->GAME_VERSION);
+  printLine("Game version : " + gameVersionStr);
   printLine("\n");
 
   printLine("SPELL MAX SPI COSTS");

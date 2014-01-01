@@ -11,12 +11,12 @@
 
 void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
-  bool doorPosCandidates[MAP_X_CELLS][MAP_Y_CELLS]) {
+  bool doorPosCandidates[MAP_W][MAP_H]) {
 
   //Find all floor in both rooms
   vector<Pos> floorInR1Vector;
   floorInR1Vector.resize(0);
-  bool floorInR1Grid[MAP_X_CELLS][MAP_Y_CELLS];
+  bool floorInR1Grid[MAP_W][MAP_H];
   eng.basicUtils->resetArray(floorInR1Grid, false);
 
   for(int y = room1.getY0(); y <= room1.getY1(); y++) {
@@ -56,7 +56,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   PossInR1closeToR2.resize(0);
   vector<Pos> floorInR2Vector;
   floorInR2Vector.resize(0);
-  bool floorInR2Grid[MAP_X_CELLS][MAP_Y_CELLS];
+  bool floorInR2Grid[MAP_W][MAP_H];
   eng.basicUtils->resetArray(floorInR2Grid, false);
   for(int y = room2.getY0(); y <= room2.getY1(); y++) {
     for(int x = room2.getX0(); x <= room2.getX1(); x++) {
@@ -217,16 +217,16 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 }
 
 void MapGen::backupMap() {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       backup[x][y] = eng.map->cells[x][y].featureStatic->getId();
     }
   }
 }
 
 void MapGen::restoreMap() {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       eng.featureFactory->spawnFeatureAt(backup[x][y], Pos(x, y));
     }
   }
@@ -236,7 +236,7 @@ void MapGen::makeStraightPathByPathfinder(
   const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
   const bool TUNNEL_THROUGH_ANY_FEATURE) {
 
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   eng.basicUtils->resetArray(blockers, false);
   vector<Pos> path;
   eng.pathFinder->run(origin, target, blockers, path);

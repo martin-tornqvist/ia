@@ -41,8 +41,8 @@ Map::Map(Engine& engine) : eng(engine), dlvl_(0) {
 
 Map::~Map() {
   resetMap();
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       delete cells[x][y].featureStatic;
     }
   }
@@ -105,8 +105,8 @@ void Map::resetMap() {
 }
 
 void Map::resetCells(const bool MAKE_STONE_WALLS) {
-  for(int y = 0; y < MAP_Y_CELLS; y++) {
-    for(int x = 0; x < MAP_X_CELLS; x++) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
 
       cells[x][y].clear();
 

@@ -33,7 +33,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
         const Pos newPos = defender.pos + delta;
 
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        bool blockers[MAP_W][MAP_H];
         MapParser::parse(
           CellPredBlocksBodyType(defender.getBodyType(), true, eng), blockers);
         const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
@@ -44,7 +44,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
           (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
 
-          bool visionBlockers[MAP_X_CELLS][MAP_Y_CELLS];
+          bool visionBlockers[MAP_W][MAP_H];
           MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MONSTER == false ? true :

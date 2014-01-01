@@ -29,6 +29,7 @@
 #include "PlayerCreateCharacter.h"
 #include "Disarm.h"
 #include "SdlWrapper.h"
+#include "Hide.h"
 
 void Input::clearLogMessages() {
   if(eng.player->deadState == actorDeadState_alive) {
@@ -296,6 +297,19 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
+  //----------------------------------------HIDE (ROGUE)
+  else if(d.key_ == 'h') {
+    clearLogMessages();
+    if(eng.player->deadState == actorDeadState_alive) {
+      if(eng.playerBonHandler->getBg() == bgRogue) {
+        eng.hide->playerTryHide();
+      } else {
+        eng.log->addMsg("I do not have this ability.");
+      }
+    }
+    clearEvents();
+    return;
+  }
   //----------------------------------------USE
   else if(d.key_ == 'e') {
     clearLogMessages();
@@ -354,9 +368,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 's') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      vector<Actor*> spotedEnemies;
-      eng.player->getSpotedEnemies(spotedEnemies);
-      if(spotedEnemies.empty()) {
+      vector<Actor*> SpottedEnemies;
+      eng.player->getSpottedEnemies(SpottedEnemies);
+      if(SpottedEnemies.empty()) {
         const int TURNS_TO_APPLY = 10;
         const string TURNS_STR = toString(TURNS_TO_APPLY);
         eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
@@ -519,8 +533,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       if(eng.isCheatVisionEnabled) {
-        for(int y = 0; y < MAP_Y_CELLS; y++) {
-          for(int x = 0; x < MAP_X_CELLS; x++) {
+        for(int y = 0; y < MAP_H; y++) {
+          for(int x = 0; x < MAP_W; x++) {
             eng.map->cells[x][y].isSeenByPlayer = false;
           }
         }

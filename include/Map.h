@@ -1,11 +1,11 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef MAP_HANDLER_H
+#define MAP_HANDLER_H
 
 #include <vector>
 #include <iostream>
 
-#include "CommonTypes.h"
 #include "CommonData.h"
+#include "CommonTypes.h"
 #include "Colors.h"
 #include "ItemData.h"
 #include "Feature.h"
@@ -42,7 +42,7 @@ public:
 
   ~Map();
 
-  Cell cells[MAP_X_CELLS][MAP_Y_CELLS];
+  Cell cells[MAP_W][MAP_H];
 
   inline int getDlvl() {return dlvl_;}
 

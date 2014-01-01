@@ -310,7 +310,7 @@ void Door::specificTryBash(Actor& actorTrying) {
           }
         }
       } else {
-        bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+        bool blockers[MAP_W][MAP_H];
         MapParser::parse(CellPredBlocksVision(eng), blockers);
         if(eng.player->checkIfSeeActor(actorTrying, blockers)) {
           eng.log->addMsg("The door crashes open!");
@@ -331,7 +331,7 @@ void Door::tryClose(Actor* actorTrying) {
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng.map->playerVision[pos_.x][pos_.y];
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
@@ -446,7 +446,7 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
-  bool blockers[MAP_X_CELLS][MAP_Y_CELLS];
+  bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =

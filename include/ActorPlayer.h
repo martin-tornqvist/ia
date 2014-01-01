@@ -88,7 +88,7 @@ public:
 
   void updateColor();
 
-  void specificAddLight(bool light[MAP_X_CELLS][MAP_Y_CELLS]) const;
+  void specificAddLight(bool light[MAP_W][MAP_H]) const;
 
   void grantMthPower() const;
 

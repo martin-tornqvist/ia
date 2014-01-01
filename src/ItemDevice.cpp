@@ -126,7 +126,7 @@ void DeviceSentry::runGoodEffect() {
   const int DMG = eng.dice(1, 6) + 2;
 
   vector<Actor*> targetCandidates;
-  eng.player->getSpotedEnemies(targetCandidates);
+  eng.player->getSpottedEnemies(targetCandidates);
   const unsigned int NR_CANDIDATES = targetCandidates.size();
   if(NR_CANDIDATES > 0) {
     const int ELEMENT = eng.dice.range(0, NR_CANDIDATES - 1);
@@ -182,11 +182,11 @@ string DeviceTranslocator::getSpecificActivateMessage() {
 
 void DeviceTranslocator::runGoodEffect() {
   Player* const player = eng.player;
-  vector<Actor*> spotedEnemies;
-  player->getSpotedEnemies(spotedEnemies);
+  vector<Actor*> SpottedEnemies;
+  player->getSpottedEnemies(SpottedEnemies);
   if(
     player->getHp() <= player->getHpMax(true) / 4 &&
-    spotedEnemies.empty() == false) {
+    SpottedEnemies.empty() == false) {
     const string name = eng.itemDataHandler->getItemRef(
                           *this, itemRef_plain, true);
     eng.log->addMsg("The " + name + " makes a droning noise...");

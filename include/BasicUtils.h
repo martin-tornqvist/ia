@@ -43,40 +43,40 @@ public:
     return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
   }
 
-  void resetArray(int a[MAP_X_CELLS][MAP_Y_CELLS]) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+  void resetArray(int a[MAP_W][MAP_H]) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         a[x][y] = 0;
       }
     }
   }
 
-  void resetArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+  void resetArray(Actor* a[MAP_W][MAP_H]) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         a[x][y] = NULL;
       }
     }
   }
 
-  void resetArray(bool a[MAP_X_CELLS][MAP_Y_CELLS], const bool value) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+  void resetArray(bool a[MAP_W][MAP_H], const bool value) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         a[x][y] = value;
       }
     }
   }
 
-  void reverseBoolArray(bool array[MAP_X_CELLS][MAP_Y_CELLS]) {
-    for(int y = 0; y < MAP_Y_CELLS; y++) {
-      for(int x = 0; x < MAP_X_CELLS; x++) {
+  void reverseBoolArray(bool array[MAP_W][MAP_H]) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
         array[x][y] = !array[x][y];
       }
     }
   }
 
   void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-                             bool a[MAP_X_CELLS][MAP_Y_CELLS],
+                             bool a[MAP_W][MAP_H],
                              vector<Pos>& vectorRef);
 
   Actor* getActorAtPos(const Pos& pos) const;
@@ -84,11 +84,11 @@ public:
   void getActorPositions(const vector<Actor*>& actors,
                          vector<Pos>& vectorRef);
 
-  void makeActorArray(Actor* a[MAP_X_CELLS][MAP_Y_CELLS]);
+  void makeActorArray(Actor* a[MAP_W][MAP_H]);
 
   inline bool isPosInsideMap(const Pos& pos) const {
     if(
-      pos.x < 0 || pos.y < 0 || pos.x >= MAP_X_CELLS || pos.y >= MAP_Y_CELLS) {
+      pos.x < 0 || pos.y < 0 || pos.x >= MAP_W || pos.y >= MAP_H) {
       return false;
     }
     return true;
@@ -122,7 +122,7 @@ public:
   inline bool isAreaInsideMap(const Rect& area) {
     if(
       area.x0y0.x < 0 || area.x0y0.y < 0 ||
-      area.x1y1.x >= MAP_X_CELLS || area.x1y1.y >= MAP_Y_CELLS) {
+      area.x1y1.x >= MAP_W || area.x1y1.y >= MAP_H) {
       return false;
     }
     return true;

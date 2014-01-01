@@ -1408,7 +1408,7 @@ string ItemDataHandler::getItemInterfaceRef(
      d.primaryAttackMode == primaryAttackMode_ranged) ||
     (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
     const int MULTIPL = d.isMachineGun == true ?
-                        NR_MACHINEGUN_PROJECTILES : 1;
+                        NR_MG_PROJECTILES : 1;
     const string rollsStr = toString(d.rangedDmg.rolls * MULTIPL);
     const string sidesStr = toString(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
