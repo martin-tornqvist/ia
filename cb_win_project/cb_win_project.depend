@@ -10931,7 +10931,7 @@
 
 1382910176 source:d:\dev\ia.git\icon\resource.rc
 
-1388588020 source:d:\dev\ia.git\src\abilityvalues.cpp
+1388615721 source:d:\dev\ia.git\src\abilityvalues.cpp
 	"AbilityValues.h"
 	<math.h>
 	"Engine.h"
@@ -11185,7 +11185,7 @@
 	"Engine.h"
 	<math.h>
 
-1388583443 source:d:\dev\ia.git\src\actor.cpp
+1388617165 source:d:\dev\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11348,7 +11348,7 @@
 	<string>
 	"GameTime.h"
 
-1388583443 source:d:\dev\ia.git\src\actormonster.cpp
+1388604636 source:d:\dev\ia.git\src\actormonster.cpp
 	"ActorMonster.h"
 	<assert.h>
 	"Engine.h"
@@ -11476,7 +11476,7 @@
 	<string>
 	<vector>
 
-1388583443 source:d:\dev\ia.git\src\actorplayer.cpp
+1388605390 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11562,7 +11562,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1388331624 source:d:\dev\ia.git\src\attackmelee.cpp
+1388650401 source:d:\dev\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11849,7 +11849,7 @@
 1382910266 d:\dev\ia.git\src\close.h
 	"CommonData.h"
 
-1388586030 source:d:\dev\ia.git\src\config.cpp
+1388616939 source:d:\dev\ia.git\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
@@ -12156,7 +12156,7 @@
 	"Engine.h"
 	"Colors.h"
 
-1388583443 source:d:\dev\ia.git\src\featuredoor.cpp
+1388615538 source:d:\dev\ia.git\src\featuredoor.cpp
 	"FeatureDoor.h"
 	<assert.h>
 	"Engine.h"
@@ -12346,7 +12346,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1388583443 source:d:\dev\ia.git\src\input.cpp
+1388649771 source:d:\dev\ia.git\src\input.cpp
 	"Input.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -12816,7 +12816,7 @@
 	<iostream>
 	"Engine.h"
 
-1388587964 source:d:\dev\ia.git\src\playerbonuses.cpp
+1388668927 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<assert.h>
 	"Engine.h"
@@ -12828,7 +12828,7 @@
 	"ItemFactory.h"
 	"Inventory.h"
 
-1388587872 source:d:\dev\ia.git\src\playercreatecharacter.cpp
+1388668860 source:d:\dev\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -12914,7 +12914,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1388583443 source:d:\dev\ia.git\src\properties.cpp
+1388650076 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -13188,7 +13188,7 @@
 	"Config.h"
 	"Art.h"
 
-1388585979 source:d:\dev\ia.git\src\renderer.cpp
+1388617389 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
@@ -13819,7 +13819,7 @@
 1388585262 d:\dev\ia.git\include\commondata.h
 	<string>
 
-1388583443 d:\dev\ia.git\include\actor.h
+1388612388 d:\dev\ia.git\include\actor.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13899,7 +13899,7 @@
 	"CommonData.h"
 	"CommonTypes.h"
 
-1388585661 d:\dev\ia.git\include\config.h
+1388617316 d:\dev\ia.git\include\config.h
 	<string>
 	<vector>
 	"CommonData.h"
@@ -13957,7 +13957,7 @@
 	"FeatureData.h"
 	"CommonTypes.h"
 
-1388331624 d:\dev\ia.git\include\actormonster.h
+1388604636 d:\dev\ia.git\include\actormonster.h
 	"CommonData.h"
 	"Actor.h"
 	"ItemWeapon.h"
@@ -14023,7 +14023,7 @@
 	"PlayerCreateCharacter.h"
 	"BasicUtils.h"
 
-1388331624 d:\dev\ia.git\include\playercreatecharacter.h
+1388668705 d:\dev\ia.git\include\playercreatecharacter.h
 	<string>
 	"CommonTypes.h"
 	"PlayerBonuses.h"
@@ -14058,7 +14058,7 @@
 1387714722 d:\dev\ia.git\include\featuredoor.h
 	"Feature.h"
 
-1388441269 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
+1388605540 d:\dev\ia.git\include\ai_look_becomeplayeraware.h
 	"Engine.h"
 	"ActorPlayer.h"
 	"Log.h"
@@ -16999,10 +16999,12 @@
 
 1388440385 d:\dev\ia.git\include\hide.h
 
-1388441065 source:d:\dev\ia.git\src\hide.cpp
+1388650587 source:d:\dev\ia.git\src\hide.cpp
 	"Hide.h"
+	<algorithm>
 	"Engine.h"
 	"GameTime.h"
 	"ActorPlayer.h"
 	"ActorMonster.h"
+	"Log.h"
 

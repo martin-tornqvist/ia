@@ -40,9 +40,9 @@ public:
 private:
   friend class PlayerCreateCharacter;
   PlayerEnterName(Engine& engine) : eng(engine) {}
-  void run(const int Y0_TITLE) const;
-  void draw(const string& currentString, const int Y0_TITLE) const;
-  void readKeys(string& currentString, bool& isDone, const int Y0_TITLE) const;
+  void run() const;
+  void draw(const string& currentString) const;
+  void readKeys(string& currentString, bool& isDone) const;
   Engine& eng;
 };
 

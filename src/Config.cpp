@@ -509,7 +509,7 @@ void Config::setDefaultVariables() {
   fontScale = 1;
   parseFontNameAndSetCellDims();
   isFullscreen = false;
-  isTilesWallSymbolFullSquare = true;
+  isTilesWallSymbolFullSquare = false;
   isAsciiWallSymbolFullSquare = false;
   isIntroLevelSkipped = false;
   useRangedWpnMeleeePrompt = true;

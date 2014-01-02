@@ -119,7 +119,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
           otherName = "It ";
         }
         eng.log->addMsg(
-          "My attack passes right throuth " + otherName + "!");
+          "My attack passes right through " + otherName + "!");
       } else {
         if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();

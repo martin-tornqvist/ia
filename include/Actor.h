@@ -27,6 +27,12 @@ public:
   inline ActorData&   getData()         {return *data_;}
   inline Inventory&   getInv()          {return *inventory_;}
 
+  //This function is not concerned with whether the parameter actor is within
+  //FOV, or if the actor is actually hidden or not. It merely tests the sneak
+  //skill of the actor, and various conditions such as light/dark.
+  //It has no side effects - it merely does a randomized check.
+  bool isSpottingHiddenActor(Actor& actor);
+
   void place(const Pos& pos_, ActorData& data);
   virtual void specificPlace() {}
 

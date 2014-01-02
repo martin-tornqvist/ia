@@ -327,7 +327,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propConfused;
-  d.stdRndTurns = Range(100, 200);
+  d.stdRndTurns = Range(80, 120);
   d.name = "Confused";
   d.nameShort = "Confused";
   d.msg[propMsgOnStartPlayer] = "I am confused!";

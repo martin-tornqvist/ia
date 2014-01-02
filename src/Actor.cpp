@@ -40,13 +40,29 @@ Actor::~Actor() {
   delete inventory_;
 }
 
+bool Actor::isSpottingHiddenActor(Actor& other) {
+  const Pos& otherPos = other.pos;
+
+  const int OTHER_SNEAK_BASE =
+    other.getData().abilityVals.getVal(ability_stealth, true, other);
+
+  const int  DIST              = eng.basicUtils->chebyshevDist(pos, otherPos);
+  const int  DIST_BON          = getConstrInRange(0, (DIST - 1) * 10, 60);
+  const bool IS_LGT            = eng.map->cells[otherPos.x][otherPos.y].isLight;
+  const int  LGT_DIV           = IS_LGT ? 2 : 1;
+  const int  OTHER_SNEAK_SKILL =
+    getConstrInRange(0, (OTHER_SNEAK_BASE + DIST_BON) / LGT_DIV, 90);
+
+  return eng.abilityRoll->roll(OTHER_SNEAK_SKILL) <= failSmall;
+}
+
 int Actor::getHpMax(const bool WITH_MODIFIERS) const {
   return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
 }
 
 bool Actor::checkIfSeeActor(
-  const Actor& other,
-  const bool visionBlockingCells[MAP_W][MAP_H]) const {
+  const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const {
+
   if(other.deadState == actorDeadState_alive) {
     if(this == &other) {
       return true;
@@ -465,7 +481,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   }
 
- bool isPlayerSeeDyingActor = true;
+  bool isPlayerSeeDyingActor = true;
 
   //Print death messages
   if(this != eng.player) {

@@ -2,6 +2,7 @@
 #define AI_SET_INTEREST_IF_SEE_TARGET_H
 
 #include "Engine.h"
+
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -9,37 +10,21 @@
 class AI_look_becomePlayerAware {
 public:
   static bool action(Monster& monster, Engine& engine) {
-    const bool WAS_AWARE_BEFORE = monster.playerAwarenessCounter > 0;
-
     if(monster.deadState == actorDeadState_alive) {
 
-      vector<Actor*> SpottedEnemies;
-      monster.getSpottedEnemies(SpottedEnemies);
+      const bool WAS_AWARE_BEFORE = monster.playerAwarenessCounter > 0;
 
-      if(SpottedEnemies.empty() == false && WAS_AWARE_BEFORE) {
+      vector<Actor*> spottedEnemies;
+      monster.getSpottedEnemies(spottedEnemies);
+
+      if(spottedEnemies.empty() == false && WAS_AWARE_BEFORE) {
         monster.becomeAware();
         return false;
       }
 
-      for(Actor* actor : SpottedEnemies) {
+      for(Actor * actor : spottedEnemies) {
         if(actor == engine.player) {
-          const Pos& playerPos = engine.player->pos;
-
-          const bool IS_LGT_AT_PLAYER =
-            engine.map->cells[playerPos.x][playerPos.y].isLight;
-
-          const int PLAYER_SNEAK_BASE =
-            engine.player->getData().abilityVals.getVal(
-              ability_stealth, true, *(engine.player));
-
-          const int DIST_TO_PLAYER =
-            engine.basicUtils->chebyshevDist(monster.pos, playerPos);
-          const int DIST_BON = max(0, (DIST_TO_PLAYER - 1) * 10);
-
-          const int PLAYER_SNEAK =
-            IS_LGT_AT_PLAYER ? 0 : PLAYER_SNEAK_BASE + DIST_BON;
-
-          if(engine.abilityRoll->roll(PLAYER_SNEAK) <= failSmall) {
+          if(monster.isSpottingHiddenActor(*actor)) {
             if(engine.player->checkIfSeeActor(monster, NULL)) {
               engine.player->updateFov();
               engine.renderer->drawMapAndInterface(true);

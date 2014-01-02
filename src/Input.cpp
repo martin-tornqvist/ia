@@ -127,7 +127,13 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   } else if(d.key_ == '5' || d.key_ == '.') {
     if(eng.player->deadState == actorDeadState_alive) {
       clearLogMessages();
+
+      if(eng.playerBonHandler->getBg() == bgRogue) {
+        eng.hide->playerTryHide();
+      }
+
       eng.player->moveDir(dirCenter);
+
       PlayerBonHandler& bonHlr = *eng.playerBonHandler;
       int nrTurnsStill =
         bonHlr.hasTrait(traitSharpShooter)  ? 3 :
@@ -298,18 +304,18 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------------HIDE (ROGUE)
-  else if(d.key_ == 'h') {
-    clearLogMessages();
-    if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.playerBonHandler->getBg() == bgRogue) {
-        eng.hide->playerTryHide();
-      } else {
-        eng.log->addMsg("I do not have this ability.");
-      }
-    }
-    clearEvents();
-    return;
-  }
+//  else if(d.key_ == 'h') {
+//    clearLogMessages();
+//    if(eng.player->deadState == actorDeadState_alive) {
+//      if(eng.playerBonHandler->getBg() == bgRogue) {
+//        eng.hide->playerTryHide();
+//      } else {
+//        eng.log->addMsg("I do not have this ability.");
+//      }
+//    }
+//    clearEvents();
+//    return;
+//  }
   //----------------------------------------USE
   else if(d.key_ == 'e') {
     clearLogMessages();

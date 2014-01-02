@@ -37,8 +37,6 @@ public:
   bool          isBotPlaying;
   bool          isAudioEnabled;
   bool          isTilesMode;
-  int           mainscreenOffsetY;
-  int           characterLinesOffsetY;
   int           fontScale;
   int           cellW, cellH;
 

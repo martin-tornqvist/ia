@@ -7,13 +7,10 @@
 #include "MenuInputHandler.h"
 #include "TextFormatting.h"
 
-const int Y0        = 1;
-const int MARGIN_W  = 17;
-
 void PlayerCreateCharacter::createCharacter() const {
   pickBg();
   pickNewTrait(true);
-  PlayerEnterName(eng).run(Y0);
+  PlayerEnterName(eng).run();
 }
 
 void PlayerCreateCharacter::pickBg() const {
@@ -49,9 +46,8 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
 
   string title = "Choose your background";
 
-  eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_W_HALF, Y0),
-    clrWhite, clrBlack, true);
+  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 1),
+                                 clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -60,7 +56,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
-  const int Y0_BGS = Y0 + 2;
+  const int Y0_BGS = 3;
 
   int y = Y0_BGS;
 
@@ -88,8 +84,9 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   eng.renderer->drawPopupBox(boxRect, panel_screen);
 
   //------------------------------------------------------------- DESCRIPTION
-  const int X0_DESCR    = MARGIN_W;
-  const int MAX_W_DESCR = MAP_W - (MARGIN_W * 2);
+  const int MARGIN_W_DESCR  = 12;
+  const int X0_DESCR        = MARGIN_W_DESCR;
+  const int MAX_W_DESCR     = MAP_W - (MARGIN_W_DESCR * 2);
 
   vector<string> rawDescrLines;
   eng.playerBonHandler->getBgDescr(markedBg, rawDescrLines);
@@ -177,6 +174,7 @@ void PlayerCreateCharacter::drawPickTrait(
     if(CUR_LEN > lenOfLongestInCol2) {lenOfLongestInCol2 = CUR_LEN;}
   }
 
+  const int MARGIN_W        = 17;
   const int X_COL_ONE       = MARGIN_W;
   const int X_COL_TWO_RIGHT = MAP_W - MARGIN_W - 1;
   const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
@@ -185,9 +183,8 @@ void PlayerCreateCharacter::drawPickTrait(
                  "Which additional trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
-  eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_W_HALF, Y0),
-    clrWhite, clrBlack, true);
+  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 1),
+                                 clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -197,7 +194,7 @@ void PlayerCreateCharacter::drawPickTrait(
   const SDL_Color& clrInactiveBg  = clrBlack;
 
   //------------------------------------------------------------- TRAITS
-  const int Y0_TRAITS = Y0 + 2;
+  const int Y0_TRAITS = 3;
   int y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_1; i++) {
     const Trait_t trait = traits1.at(i);
@@ -287,44 +284,42 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.renderer->updateScreen();
 }
 
-void PlayerEnterName::run(const int Y0_TITLE) const {
+void PlayerEnterName::run() const {
   string name = "";
-  draw(name, Y0_TITLE);
+  draw(name);
   bool isDone = false;
   while(isDone == false) {
     if(eng.config->isBotPlaying) {
       name = "AZATHOTH";
       isDone = true;
     } else {
-      readKeys(name, isDone, Y0_TITLE);
+      readKeys(name, isDone);
     }
   }
   ActorData& def  = eng.player->getData();
   def.name_a      = def.name_the = name;
 }
 
-void PlayerEnterName::draw(const string& currentString,
-                           const int Y0_TITLE) const {
+void PlayerEnterName::draw(const string& currentString) const {
   eng.renderer->clearScreen();
   eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   const string title = "What is your name?";
   eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_W_HALF, Y0_TITLE), clrWhite);
+    title, panel_screen, Pos(MAP_W_HALF, 1), clrWhite);
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   eng.renderer->drawText(
-    NAME_STR, panel_screen, Pos(NAME_X0, Y0_TITLE + 2), clrNosferatuTealLgt);
-  Rect boxRect(Pos(NAME_X0 - 1, Y0_TITLE + 1), Pos(NAME_X1 + 1, Y0_TITLE + 3));
+    NAME_STR, panel_screen, Pos(NAME_X0, 3), clrNosferatuTealLgt);
+  Rect boxRect(Pos(NAME_X0 - 1, 2), Pos(NAME_X1 + 1, 4));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
   eng.renderer->updateScreen();
 }
 
-void PlayerEnterName::readKeys(string& currentString, bool& isDone,
-                               const int Y0_TITLE) const {
+void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
   const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RETURN) {
@@ -344,7 +339,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& isDone,
       } else {
         currentString.push_back(char(d.key_));
       }
-      draw(currentString, Y0_TITLE);
+      draw(currentString);
       return;
     }
   }
@@ -352,7 +347,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& isDone,
   if(currentString.size() > 0) {
     if(d.sdlKey_ == SDLK_BACKSPACE) {
       currentString.erase(currentString.end() - 1);
-      draw(currentString, Y0_TITLE);
+      draw(currentString);
     }
   }
 }

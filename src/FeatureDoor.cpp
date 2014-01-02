@@ -170,11 +170,9 @@ string Door::getDescr(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? "the broken door" : "a broken door";
   }
   if(isSecret_) {
-    const string cluedStr = isClued_ ? " {strange}" : "";
     return (DEFINITE_ARTICLE ?
             mimicFeature_->name_the :
-            mimicFeature_->name_a) +
-           cluedStr;
+            mimicFeature_->name_a);
   }
   if(isOpen_ == false) {
     return DEFINITE_ARTICLE ? "the door" : "a door";

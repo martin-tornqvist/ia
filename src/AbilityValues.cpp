@@ -50,8 +50,9 @@ int AbilityValues::getVal(const Abilities_t ability,
       } break;
 
       case ability_stealth: {
-        val += 5;
-        if(bonHlr.hasTrait(traitStealthy)) val += 40;
+        val += 10;
+        if(bonHlr.hasTrait(traitStealthy))      val += 50;
+        if(bonHlr.hasTrait(traitImperceptible)) val += 30;
       } break;
 
       case ability_empty:

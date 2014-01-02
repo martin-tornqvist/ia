@@ -236,7 +236,7 @@ void Monster::moveDir(Dir_t dir) {
   // Bump features in target cell (i.e. to trigger traps)
   vector<FeatureMob*> featureMobs;
   eng.gameTime->getFeatureMobsAtPos(pos, featureMobs);
-  for(FeatureMob* m : featureMobs) {m->bump(*this);}
+  for(FeatureMob * m : featureMobs) {m->bump(*this);}
   eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
 
   eng.gameTime->actorDidAct();

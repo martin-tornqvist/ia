@@ -871,42 +871,32 @@ void Player::specificOnStandardTurn() {
 
   const int NR_ACTORS = eng.gameTime->getNrActors();
   for(int i = 0; i < NR_ACTORS; i++) {
-    //If applying first aid etc, messages may be printed for monsters that
-    //comes into view.
-    //Only print monster-comes-into-view-messages if player is busy with
-    //something (first aid, auto travel etc).
-
     Actor* const actor = &(eng.gameTime->getActorAtElement(i));
     if(actor != this) {
       if(actor->deadState == actorDeadState_alive) {
 
-        Monster* const monster = dynamic_cast<Monster*>(actor);
+        Monster& monster = *dynamic_cast<Monster*>(actor);
         const bool IS_MONSTER_SEEN = checkIfSeeActor(*actor, NULL);
         if(IS_MONSTER_SEEN) {
-          if(monster->messageMonsterInViewPrinted == false) {
+          if(monster.messageMonsterInViewPrinted == false) {
             if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
-              eng.log->addMsg(actor->getNameA() + " comes into my view.",
-                              clrWhite, true);
+              eng.log->addMsg(
+                actor->getNameA() + " comes into my view.", clrWhite, true);
             }
-            monster->messageMonsterInViewPrinted = true;
+            monster.messageMonsterInViewPrinted = true;
           }
         } else {
-          monster->messageMonsterInViewPrinted = false;
+          monster.messageMonsterInViewPrinted = false;
 
           //Is the monster sneaking? Try to spot it
-          if(eng.map->cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
-            if(monster->isStealth) {
-              const int PLAYER_SEARCH_SKILL =
-                data_->abilityVals.getVal(ability_searching, true, *this);
-              const AbilityRollResult_t rollResult =
-                eng.abilityRoll->roll(PLAYER_SEARCH_SKILL);
-              if(rollResult == successSmall) {
-                eng.log->addMsg("I see something moving in the shadows.");
-              } else if(rollResult > successSmall) {
-                monster->isStealth = false;
+          if(eng.map->cells[monster.pos.x][monster.pos.y].isSeenByPlayer) {
+            if(monster.isStealth) {
+              if(isSpottingHiddenActor(monster)) {
+                monster.isStealth = false;
                 updateFov();
                 eng.renderer->drawMapAndInterface();
-                eng.log->addMsg("I spot " + monster->getNameA() + "!");
+                eng.log->addMsg(
+                  "I spot " + monster.getNameA() + "!", clrWhite, true);
               }
             }
           }
@@ -1162,7 +1152,7 @@ void Player::moveDir(Dir_t dir) {
       }
 
       //Note: bump() prints block messages.
-      for(FeatureMob* m : featureMobs) {m->bump(*this);}
+      for(FeatureMob * m : featureMobs) {m->bump(*this);}
       eng.map->cells[dest.x][dest.y].featureStatic->bump(*this);
     }
 

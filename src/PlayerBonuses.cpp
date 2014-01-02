@@ -88,9 +88,14 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
     } break;
 
     case bgRogue: {
-      linesRef.push_back("Can actively hide from monsters (press [h])");
+      s = "Attempts to hide when standing still (press '5' or '.')";
+      linesRef.push_back(s);
       linesRef.push_back("");
-      linesRef.push_back("Unaware monsters cause no shock");
+      s = "+10% hit chance with ranged attacks vs unaware targets";
+      linesRef.push_back(s);
+      linesRef.push_back("");
+      s = "Takes no shock from seeing monsters who are unaware";
+      linesRef.push_back(s);
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
@@ -107,8 +112,8 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
       getTraitDescr(traitAdeptMarksman, s);       linesRef.push_back(s);
       linesRef.push_back("");
-      getTraitTitle(traitAdeptMeleeFighter, s); linesRef.push_back("* " + s);
-      getTraitDescr(traitAdeptMeleeFighter, s); linesRef.push_back(s);
+      getTraitTitle(traitAdeptMeleeFighter, s);   linesRef.push_back("* " + s);
+      getTraitDescr(traitAdeptMeleeFighter, s);   linesRef.push_back(s);
       linesRef.push_back("");
       getTraitTitle(traitTough, s);               linesRef.push_back("* " + s);
       getTraitDescr(traitTough, s);               linesRef.push_back(s);

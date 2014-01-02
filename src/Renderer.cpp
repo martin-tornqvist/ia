@@ -584,7 +584,7 @@ void Renderer::coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims) {
 
 void Renderer::coverCellInMap(const Pos& pos) {
   const Pos cellDims(eng.config->cellW, eng.config->cellH);
-  const Pos offset = Pos(0, eng.config->mainscreenOffsetY);
+  const Pos offset = Pos(0, eng.config->mapPixelOffsetH);
   coverAreaPixel((pos + offset) * cellDims, cellDims);
 }
 
@@ -731,14 +731,14 @@ int Renderer::getLifebarLength(const Actor& actor) const {
 
 void Renderer::drawLifeBar(const Pos& pos, const int LENGTH) {
   if(LENGTH >= 0) {
-    const int W_GREEN = LENGTH;
     const Pos cellDims(eng.config->cellW,  eng.config->cellH);
+    const int W_GREEN   = LENGTH;
     const int W_BAR_TOT = cellDims.x - 2;
-    const int W_RED = W_BAR_TOT - W_GREEN;
-    const int Y0 = eng.config->mainscreenOffsetY +
-                   ((pos.y + 1) * cellDims.y) - 2;
-    const int X0_GREEN = pos.x * cellDims.x + 1;
-    const int X0_RED = X0_GREEN + W_GREEN;
+    const int W_RED     = W_BAR_TOT - W_GREEN;
+    const int Y0        = eng.config->mapPixelOffsetH +
+                          ((pos.y + 1) * cellDims.y) - 2;
+    const int X0_GREEN  = pos.x * cellDims.x + 1;
+    const int X0_RED    = X0_GREEN + W_GREEN;
 
     if(W_GREEN > 0) {
       drawLineHor(Pos(X0_GREEN, Y0), W_GREEN, clrGreenLgt);
