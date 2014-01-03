@@ -10,6 +10,7 @@
 #include "ItemPotion.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
+#include "PlayerSpellsHandler.h"
 
 using namespace std;
 
@@ -88,13 +89,13 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
     } break;
 
     case bgRogue: {
-      s = "Attempts to hide when standing still (press '5' or '.')";
+      s = "Has an arcane ability to hide from monsters (press [x])";
       linesRef.push_back(s);
       linesRef.push_back("");
       s = "+10% hit chance with ranged attacks vs unaware targets";
       linesRef.push_back(s);
       linesRef.push_back("");
-      s = "Takes no shock from seeing monsters who are unaware";
+      s = "Takes no shock from seeing monsters while they are unaware";
       linesRef.push_back(s);
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
@@ -107,6 +108,8 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
     } break;
 
     case bgSoldier: {
+      linesRef.push_back("Starts with more combat equipment");
+      linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
@@ -177,14 +180,15 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitMythologist: {
-      strRef  = "50% less shock taken from observing strange creatures, for ";
-      strRef += "casting spells and using and identifying strange items ";
+      strRef  = "50% less shock taken from seeing terrifying creatures, ";
+      strRef += "for casting spells and using and identifying strange items ";
       strRef += "(e.g. potions)";
     } break;
 
     case traitSelfPossessed: {
       strRef  = "Passive shock received over time is reduced by 75% (does ";
-      strRef += "not affect shock from seeing monsters, using magic, etc)";
+      strRef += "not affect shock from seeing terrifying creatures, ";
+      strRef += "using magic, etc)";
     } break;
 
     case traitTough: {
@@ -281,8 +285,10 @@ void PlayerBonHandler::getTraitDescr(
 }
 
 void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
-                                       vector<Trait_t>& traitsRef) const {
+                                       vector<Trait_t>& traitsRef,
+                                       Bg_t& bgRef) const {
   traitsRef.resize(0);
+  bgRef = endOfBgs;
 
   //TODO Add background prereqs
   //TODO Add CLVL prereqs
@@ -308,6 +314,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitMasterMarksman: {
       traitsRef.push_back(traitExpertMeleeFighter);
+      bgRef = bgSoldier;
     } break;
 
     case traitSteadyAimer: {
@@ -327,14 +334,17 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitCourageous: {
       traitsRef.push_back(traitCoolHeaded);
+      bgRef = bgSoldier;
     } break;
 
     case traitMythologist: {
       traitsRef.push_back(traitCoolHeaded);
+      bgRef = bgOccultist;
     } break;
 
     case traitSelfPossessed: {
       traitsRef.push_back(traitCoolHeaded);
+      bgRef = bgRogue;
     } break;
 
     case traitTough: {
@@ -446,7 +456,8 @@ void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
     if(hasTrait(trait) == false) {
 
       vector<Trait_t> traitPrereqs;
-      getTraitPrereqs(Trait_t(i), traitPrereqs);
+      Bg_t bgPrereq = endOfBgs;
+      getTraitPrereqs(Trait_t(i), traitPrereqs, bgPrereq);
 
       bool isPickable = true;
       for(Trait_t prereq : traitPrereqs) {
@@ -457,7 +468,7 @@ void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
         }
       }
 
-      //TODO Check player background and CLVL prereqs
+      isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == endOfBgs);
 
       if(isPickable) {
         traitsRef.push_back(Trait_t(i));
@@ -490,6 +501,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
     } break;
 
     case bgRogue: {
+      eng.playerSpellsHandler->learnSpellIfNotKnown(spell_rogueHide);
       pickTrait(traitObservant);
       pickTrait(traitStealthy);
     } break;

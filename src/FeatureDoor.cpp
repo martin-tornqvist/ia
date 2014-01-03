@@ -118,7 +118,7 @@ SDL_Color Door::getColor() const {
       return mimicFeature_->color;
     }
   }
-  return material_ == doorMaterial_metal ? clrGray : clrBrownDark;
+  return material_ == doorMaterial_metal ? clrGray : clrBrownDrk;
 }
 
 char Door::getGlyph() const {

@@ -30,6 +30,8 @@ enum Spell_t {
   spell_sacrificeLife,
   spell_sacrificeSpirit,
 
+  spell_rogueHide,
+
   //Monsters only
   spell_disease,
   spell_summonRandom,
@@ -63,8 +65,12 @@ public:
   virtual ~Spell() {}
   SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC,
                         Engine& eng);
-  virtual bool isGoodForMonsterToCastNow(Monster* const monster,
-                                         Engine& eng) = 0;
+  virtual bool isGoodForMonsterToCastNow(
+    Monster* const monster, Engine& eng) {
+    (void)monster;
+    (void)eng;
+    return false;
+  }
   virtual bool isLearnableForMonsters() const = 0;
   virtual bool isLearnableForPlayer() const = 0;
   virtual string getName() const = 0;
@@ -83,176 +89,136 @@ class SpellAzathothsWrath: public Spell {
 public:
   SpellAzathothsWrath() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Azathoths Wrath";}
-  Spell_t getId()               const {return spell_azathothsWrath;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Azathoths Wrath";}
+  Spell_t getId()               const override {return spell_azathothsWrath;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellMayhem: public Spell {
 public:
   SpellMayhem() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Mayhem";}
-  Spell_t getId()               const {return spell_mayhem;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Mayhem";}
+  Spell_t getId()               const override {return spell_mayhem;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 17;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 11;}
 };
 
 class SpellPestilence: public Spell {
 public:
   SpellPestilence() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Pestilence";}
-  Spell_t getId()               const {return spell_pestilence;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Pestilence";}
+  Spell_t getId()               const override {return spell_pestilence;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 10;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 4;}
 };
 
 class SpellDetectItems: public Spell {
 public:
   SpellDetectItems() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Detect Items";}
-  Spell_t getId()               const {return spell_detectItems;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Detect Items";}
+  Spell_t getId()               const override {return spell_detectItems;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 11;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 5;}
 };
 
 class SpellDetectTraps: public Spell {
 public:
   SpellDetectTraps() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Detect Traps";}
-  Spell_t getId()               const {return spell_detectTraps;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Detect Traps";}
+  Spell_t getId()               const override {return spell_detectTraps;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 11;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 5;}
 };
 
 class SpellClairvoyance: public Spell {
 public:
   SpellClairvoyance() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Clairvoyance";}
-  Spell_t getId()               const {return spell_clairvoyance;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Clairvoyance";}
+  Spell_t getId()               const override {return spell_clairvoyance;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 15;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 9;}
 };
 
 class SpellOpening: public Spell {
 public:
   SpellOpening() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Opening";}
-  Spell_t getId()               const {return spell_opening;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Opening";}
+  Spell_t getId()               const override {return spell_opening;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 15;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 9;}
 };
 
 class SpellSacrificeLife: public Spell {
 public:
   SpellSacrificeLife() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Sacrifice Life Force";}
-  Spell_t getId()               const {return spell_sacrificeLife;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Sacrifice Life Force";}
+  Spell_t getId()               const override {return spell_sacrificeLife;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellSacrificeSpirit: public Spell {
 public:
   SpellSacrificeSpirit() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
-  }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Sacrifice Spirit";}
-  Spell_t getId()               const {return spell_sacrificeSpirit;}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Sacrifice Spirit";}
+  Spell_t getId()               const override {return spell_sacrificeSpirit;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 4;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI - 2;}
+};
+
+class SpellRogueHide: public Spell {
+public:
+  SpellRogueHide() : Spell() {}
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Hide [name?]";}
+  Spell_t getId()               const override {return spell_rogueHide;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI - 1;}
 };
 
 class SpellMthPower: public Spell {
 public:
   SpellMthPower() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) {
-    (void)monster;
-    (void)eng;
-    return false;
+  bool isLearnableForMonsters() const override {return false;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {
+    return "Thaumaturgic Alteration";
   }
-  bool isLearnableForMonsters() const {return false;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Thaumaturgic Alteration";}
-  Spell_t getId()               const {return spell_mthPower;}
+  Spell_t getId()               const override {return spell_mthPower;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 10;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 4;}
 
   bool doSpecialAction(Engine& eng) const;
   void castRandomOtherSpell(Engine& eng) const;
@@ -262,56 +228,56 @@ class SpellBless: public Spell {
 public:
   SpellBless() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Bless";}
-  Spell_t getId()               const {return spell_bless;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Bless";}
+  Spell_t getId()               const override {return spell_bless;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 17;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 11;}
 };
 
 class SpellKnockBack: public Spell {
 public:
   SpellKnockBack() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return false;}
-  string getName()              const {return "Knockback";}
-  Spell_t getId()               const {return spell_knockBack;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return false;}
+  string getName()              const override {return "Knockback";}
+  Spell_t getId()               const override {return spell_knockBack;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellTeleport: public Spell {
 public:
   SpellTeleport() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Teleport";}
-  Spell_t getId()               const {return spell_teleport;}
-  int getSpecificMaxSpiCost()   const {return 8;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Teleport";}
+  Spell_t getId()               const override {return spell_teleport;}
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
 };
 
 class SpellEnfeeble: public Spell {
 public:
   SpellEnfeeble() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return true;}
-  string getName()              const {return "Enfeeble";}
-  Spell_t getId()               const {return spell_enfeeble;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return true;}
+  string getName()              const override {return "Enfeeble";}
+  Spell_t getId()               const override {return spell_enfeeble;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 
   PropId_t getPropId(Engine& eng) const;
 };
@@ -320,42 +286,42 @@ class SpellDisease: public Spell {
 public:
   SpellDisease() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return false;}
-  string getName()              const {return "Disease";}
-  Spell_t getId()               const {return spell_disease;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return false;}
+  string getName()              const override {return "Disease";}
+  Spell_t getId()               const override {return spell_disease;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellSummonRandom: public Spell {
 public:
   SpellSummonRandom() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return false;}
-  string getName()              const {return "Summon monster";}
-  Spell_t getId()               const {return spell_summonRandom;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return false;}
+  string getName()              const override {return "Summon monster";}
+  Spell_t getId()               const override {return spell_summonRandom;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellHealSelf: public Spell {
 public:
   SpellHealSelf() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng);
-  bool isLearnableForMonsters() const {return true;}
-  bool isLearnableForPlayer()   const {return false;}
-  string getName()              const {return "Healing";}
-  Spell_t getId()               const {return spell_healSelf;}
+                                 Engine& eng) override;
+  bool isLearnableForMonsters() const override {return true;}
+  bool isLearnableForPlayer()   const override {return false;}
+  string getName()              const override {return "Healing";}
+  Spell_t getId()               const override {return spell_healSelf;}
 private:
-  SpellCastRetData specificCast(Actor* const caster, Engine& eng);
-  int getSpecificMaxSpiCost()   const {return 8;}
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 #endif

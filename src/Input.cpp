@@ -128,9 +128,9 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng.player->deadState == actorDeadState_alive) {
       clearLogMessages();
 
-      if(eng.playerBonHandler->getBg() == bgRogue) {
-        eng.hide->playerTryHide();
-      }
+//      if(eng.playerBonHandler->getBg() == bgRogue) {
+//        eng.hide->playerTryHide();
+//      }
 
       eng.player->moveDir(dirCenter);
 

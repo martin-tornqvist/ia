@@ -227,7 +227,7 @@ public:
     addFalse("Slimy green", clrGreen);
     addFalse("Green", clrGreenLgt);
     addFalse("Fiery", clrRedLgt);
-    addFalse("Murky", clrBrownDark);
+    addFalse("Murky", clrBrownDrk);
     addFalse("Muddy", clrBrown);
     addFalse("Pink", clrMagentaLgt);
     addFalse("Watery", clrBlueLgt);

@@ -113,7 +113,7 @@ void ActorDataHandler::initDataList() {
   d.bodyType = bodyType_normal;
   d.id = actor_player;
   d.hp = 16;
-  d.spi = 6;
+  d.spi = PLAYER_START_SPI;
   d.speed = actorSpeed_normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
@@ -493,7 +493,7 @@ void ActorDataHandler::initDataList() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_ratThing;
   d.hp = 10;
   d.dmgMelee = 4;
@@ -1272,7 +1272,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardLeader] = true;
   d.speed = actorSpeed_fastest;
   d.glyph = 'B';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_byakhee;
   d.hp = 14;
   d.spi = 20;

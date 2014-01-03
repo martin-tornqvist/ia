@@ -44,10 +44,8 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   eng.renderer->clearScreen();
   eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  string title = "Choose your background";
-
-  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 1),
-                                 clrWhite, clrBlack, true);
+  eng.renderer->drawTextCentered("Choose your background", panel_screen,
+                                 Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -56,7 +54,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
-  const int Y0_BGS = 3;
+  const int Y0_BGS = 2;
 
   int y = Y0_BGS;
 
@@ -72,8 +70,8 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
     const bool IS_MARKED = bg == markedBg;
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    eng.renderer->drawTextCentered(
-      name, panel_screen, Pos(MAP_W_HALF, y), drwClr, drwClrBg);
+    eng.renderer->drawTextCentered(name, panel_screen, Pos(MAP_W_HALF, y),
+                                   drwClr, drwClrBg);
     y++;
   }
   y++;
@@ -174,7 +172,7 @@ void PlayerCreateCharacter::drawPickTrait(
     if(CUR_LEN > lenOfLongestInCol2) {lenOfLongestInCol2 = CUR_LEN;}
   }
 
-  const int MARGIN_W        = 17;
+  const int MARGIN_W        = 19;
   const int X_COL_ONE       = MARGIN_W;
   const int X_COL_TWO_RIGHT = MAP_W - MARGIN_W - 1;
   const int X_COL_TWO       = X_COL_TWO_RIGHT - lenOfLongestInCol2 + 1;
@@ -183,7 +181,7 @@ void PlayerCreateCharacter::drawPickTrait(
                  "Which additional trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
-  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 1),
+  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 0),
                                  clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -194,7 +192,7 @@ void PlayerCreateCharacter::drawPickTrait(
   const SDL_Color& clrInactiveBg  = clrBlack;
 
   //------------------------------------------------------------- TRAITS
-  const int Y0_TRAITS = 3;
+  const int Y0_TRAITS = 2;
   int y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_1; i++) {
     const Trait_t trait = traits1.at(i);
@@ -228,38 +226,49 @@ void PlayerCreateCharacter::drawPickTrait(
 
   //------------------------------------------------------------- DESCRIPTION
   const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
+  const int X0_DESCR = X_COL_ONE;
   y = Y0_DESCR;
   const Trait_t markedTrait =
     browserPos.x == 0 ? traits1.at(browserPos.y) :
     traits2.at(browserPos.y);
-  string descr;
+  string descr = "";
   eng.playerBonHandler->getTraitDescr(markedTrait, descr);
   const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
   vector<string> descrLines;
   eng.textFormatting->lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
-    eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+    eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
     y++;
   }
 
   //------------------------------------------------------------- PREREQUISITES
   const int Y0_PREREQS = 17;
   y = Y0_PREREQS;
-  vector<Trait_t> prereqsForCurTrait;
-  eng.playerBonHandler->getTraitPrereqs(markedTrait, prereqsForCurTrait);
-  if(prereqsForCurTrait.empty() == false) {
+  vector<Trait_t> traitPrereqs;
+  Bg_t bgPrereq = endOfBgs;
+  eng.playerBonHandler->getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
+  if(traitPrereqs.empty() == false || bgPrereq != endOfBgs) {
+    eng.renderer->drawText("This trait had the following prerequisite(s):",
+                           panel_screen, Pos(X0_DESCR, y), clrWhite);
+    y++;
+
     string prereqStr = "";
-    for(Trait_t prereqTrait : prereqsForCurTrait) {
+
+    if(bgPrereq != endOfBgs) {
+      eng.playerBonHandler->getBgTitle(bgPrereq, prereqStr);
+    }
+
+    for(Trait_t prereqTrait : traitPrereqs) {
       string prereqTitle = "";
       eng.playerBonHandler->getTraitTitle(prereqTrait, prereqTitle);
       prereqStr += (prereqStr.empty() ? "" : ", ") + prereqTitle;
     }
-    prereqStr = "This trait had the following prerequisite(s): " + prereqStr;
+
     vector<string> prereqLines;
     eng.textFormatting->lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string & str : prereqLines) {
-      eng.renderer->drawText(str, panel_screen, Pos(X_COL_ONE, y), clrWhite);
+      eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
   }
@@ -304,17 +313,17 @@ void PlayerEnterName::draw(const string& currentString) const {
   eng.renderer->clearScreen();
   eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  const string title = "What is your name?";
-  eng.renderer->drawTextCentered(
-    title, panel_screen, Pos(MAP_W_HALF, 1), clrWhite);
+  eng.renderer->drawTextCentered("What is your name?", panel_screen,
+                                 Pos(MAP_W_HALF, 0), clrWhite);
+  const int Y_NAME = 2;
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
     currentString;
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   eng.renderer->drawText(
-    NAME_STR, panel_screen, Pos(NAME_X0, 3), clrNosferatuTealLgt);
-  Rect boxRect(Pos(NAME_X0 - 1, 2), Pos(NAME_X1 + 1, 4));
+    NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME), clrNosferatuTealLgt);
+  Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
   eng.renderer->drawPopupBox(boxRect, panel_screen);
   eng.renderer->updateScreen();
 }

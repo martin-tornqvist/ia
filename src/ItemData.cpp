@@ -1244,7 +1244,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LEVEL;
   d->isStackable = false;
   d->glyph = '~';
-  d->color = clrBrownDark;
+  d->color = clrBrownDrk;
   d->tile = tile_medicalBag;
 //  d->nativeRooms.resize(0);
   dataList[d->id] = d;

@@ -227,7 +227,7 @@ private:
   }
   void specificTrigger(Actor& actor,
                            const AbilityRollResult_t dodgeResult);
-  SDL_Color getSpecificColor() const {return clrBrownDark;}
+  SDL_Color getSpecificColor() const {return clrBrownDrk;}
   string getSpecificTitle() const {return "Monster summoning trap";}
   char getSpecificGlyph() const {return '^';}
   bool isMagical() const {return true;}

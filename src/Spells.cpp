@@ -49,6 +49,7 @@ Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
     case spell_opening:             return new SpellOpening;            break;
     case spell_sacrificeLife:       return new SpellSacrificeLife;      break;
     case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;    break;
+    case spell_rogueHide:           return new SpellRogueHide;          break;
     case spell_mthPower:            return new SpellMthPower;           break;
     case spell_bless:               return new SpellBless;              break;
 
@@ -461,6 +462,23 @@ SpellCastRetData SpellSacrificeSpirit::specificCast(
     return SpellCastRetData(true);
   }
   return SpellCastRetData(false);
+}
+
+//------------------------------------------------------------ ROGUE HIDE
+SpellCastRetData SpellRogueHide::specificCast(
+  Actor* const caster, Engine& eng) {
+
+  eng.log->addMsg("I am unseen.");
+
+  const int NR_ACTORS = eng.gameTime->getNrActors();
+  for(int i = 0; i < NR_ACTORS; i++) {
+    Actor* const actor = &eng.gameTime->getActorAtElement(i);
+    if(actor != eng.player) {
+      Monster* const monster = dynamic_cast<Monster*>(actor);
+      monster->playerAwarenessCounter = 0;
+    }
+  }
+  return SpellCastRetData(true);
 }
 
 //------------------------------------------------------------ MTH POWER

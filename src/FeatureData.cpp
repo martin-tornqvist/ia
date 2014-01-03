@@ -88,7 +88,7 @@ void FeatureDataHandler::initDataList() {
   d.name_a = "a tree";
   d.name_the = "the tree";
   d.glyph = '|';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_tree;
   d.isBodyTypePassable[bodyType_normal] = false;
   d.isBodyTypePassable[bodyType_ethereal] = true;
@@ -126,7 +126,7 @@ void FeatureDataHandler::initDataList() {
   d.name_the = "the withered grass";
   d.glyph = '.';
   d.tile = tile_floor;
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = true;
@@ -157,7 +157,7 @@ void FeatureDataHandler::initDataList() {
   d.name_a = "a withered shrub";
   d.name_the = "the withered shrub";
   d.glyph = '"';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_bush;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
@@ -278,7 +278,7 @@ void FeatureDataHandler::initDataList() {
   d.name_a = "shallow mud";
   d.name_the = "the shallow mud";
   d.glyph = '~';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_water1;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
@@ -508,7 +508,7 @@ void FeatureDataHandler::initDataList() {
   d.name_the = "the chest";
   d.spawnType = featureSpawnType_other;
   d.glyph = '+';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_chestClosed;
   d.isBodyTypePassable[bodyType_normal] = false;
   d.isProjectilesPassable = true;
@@ -527,7 +527,7 @@ void FeatureDataHandler::initDataList() {
   d.name_the = "the cabinet";
   d.spawnType = featureSpawnType_other;
   d.glyph = '7';
-  d.color = clrBrownDark;
+  d.color = clrBrownDrk;
   d.tile = tile_cabinetClosd;
   d.isBodyTypePassable[bodyType_normal] = false;
   d.isBodyTypePassable[bodyType_ooze] = false;

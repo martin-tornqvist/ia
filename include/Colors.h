@@ -40,7 +40,7 @@ const SDL_Color clrNosferatuTealLgt   = { 88, 226, 228, 0};
 const SDL_Color clrNosferatuTealDrk   = { 20,  54,  51, 0};
 //===========================================================
 
-const SDL_Color clrBrownDark          = { 96,  64,  32, 0};
+const SDL_Color clrBrownDrk          = { 96,  64,  32, 0};
 const SDL_Color clrBrownGray          = { 92,  84,  78, 0};
 
 const SDL_Color clrMessageGood        = clrGreenLgt;

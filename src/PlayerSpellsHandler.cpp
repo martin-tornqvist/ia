@@ -59,14 +59,14 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   endLetter[0] += char(NR_SPELLS - 1);
 
   const string label =
-    "Choose a memorized power to evoke [a-" + endLetter + "]" +
+    "Choose a power to evoke [a-" + endLetter + "]" +
     " | Space/esc to exit";
-  eng.renderer->drawText(label, panel_screen, Pos(1, 1), clrWhiteHigh);
+  eng.renderer->drawText(label, panel_screen, Pos(0, 0), clrWhiteHigh);
 
-  int currentListPos = 0;
+  int y = 1;
 
   for(int i = 0; i < NR_SPELLS; i++) {
-    const char CURRENT_KEY = 'a' + currentListPos;
+    const char CURRENT_KEY = 'a' + i;
     const SDL_Color clr =
       browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
     Spell* const spell = learnedSpells.at(i);
@@ -75,18 +75,16 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str[0] = CURRENT_KEY;
     str += ") " + name;
 
-    eng.renderer->drawText(str, panel_map, Pos(1, currentListPos), clr);
+    eng.renderer->drawText(str, panel_screen, Pos(0, y), clr);
 
     string fill;
     fill.resize(0);
     const unsigned int FILL_SIZE = 28 - str.size();
-    for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {
-      fill.push_back('.');
-    }
+    for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fill.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     eng.renderer->drawText(
-      fill, panel_map, Pos(1 + str.size(), currentListPos), fillClr);
+      fill, panel_screen, Pos(str.size(), y), fillClr);
     const int x = 28;
 
     const Range spiCost = spell->getSpiCost(false, eng.player, eng);
@@ -94,8 +92,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str = "SPI:";
     str += spiCost.upper == 1 ? "1" :
            (toString(spiCost.lower) +  "-" + toString(spiCost.upper));
-    eng.renderer->drawText(str, panel_map, Pos(x, currentListPos), clrWhite);
-    currentListPos++;
+    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+    y++;
   }
 
   eng.renderer->updateScreen();

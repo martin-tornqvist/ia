@@ -37,6 +37,7 @@ const int AUDIO_ALLOCATED_CHANNELS = 16;
 const int DELAY_PLAYER_WAITING        = 0;
 const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
 
+const int PLAYER_START_SPI                = 6;
 const int SHOCK_TAKEN_FROM_CASTING_SPELLS = 10;
 const int CAST_FROM_MEMORY_MTH_BON_DIV    = 15;
 
