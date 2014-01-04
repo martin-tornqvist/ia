@@ -1,5 +1,14 @@
-CC=g++
-BUILD=release
+#
+# When calling this makefile, the "BUILD" variable can be set to either
+# "release", or "debug", e.g.:
+#
+# > make BUILD=debug
+#
+# Running "make" alone will build in release mode
+#
+
+CXX?=g++
+BUILD?=release
 
 # Directiories
 SRC_DIR=src
@@ -15,7 +24,8 @@ INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
 #Flags
 CXXFLAGS_release=-O2
 CXXFLAGS_debug=-O0 -g
-CXXFLAGS=-Wall -Wextra $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
+CXXFLAGS=-std=c++11 -m32 -march=i686 -Wall -Wextra $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
+#LDFLAGS=-L/usr/lib/i386-linux-gnu -lSDL -lSDL_image -lSDL_mixer
 LDFLAGS=$(shell sdl-config --libs) -lSDL_image -lSDL_mixer
 
 # Output and sources
@@ -35,7 +45,7 @@ CAT=cat
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(LDFLAGS) $^ -o $@
+	$(CXX) $^ -o $@ $(LDFLAGS)
 	$(RM) $(TARGET_DIR)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
