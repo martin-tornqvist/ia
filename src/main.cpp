@@ -20,8 +20,6 @@
 #include "Audio.h"
 #include "Bot.h"
 
-
-//#undef main
 int main(int argc, char* argv[]) {
   trace << "main()..." << endl;
 

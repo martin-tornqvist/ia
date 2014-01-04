@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-#include "SDL/SDL_video.h"
+#include <SDL_video.h>
 
 #include "Panel.h"
 #include "CommonData.h"

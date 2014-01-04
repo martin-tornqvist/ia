@@ -1,5 +1,7 @@
 #include "ItemScroll.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 
 #include "ActorPlayer.h"
@@ -29,10 +31,10 @@ const string Scroll::getRealTypeName() {
     case spell_summonRandom:        return "";                        break;
     case spell_healSelf:            return "";                        break;
     case spell_knockBack:           return "";                        break;
+    case spell_rogueHide:           return "";                        break;
     case endOfSpells: {} break;
   }
-  trace << "[WARNING] No spell found for scroll, ";
-  trace << "in Scroll::getRealTypeName()" << endl;
+  assert(false && "No spell found for scroll");
   return "";
 }
 

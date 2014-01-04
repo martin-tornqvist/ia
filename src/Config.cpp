@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "SDL/SDL_image.h"
+#include <SDL_image.h>
 
 #include "Engine.h"
 

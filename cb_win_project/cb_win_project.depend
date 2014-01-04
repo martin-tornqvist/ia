@@ -11703,10 +11703,10 @@
 	"MapParsing.h"
 	"LineCalc.h"
 
-1387321677 source:d:\dev\ia.git\src\audio.cpp
+1388835821 source:d:\dev\ia.git\src\audio.cpp
 	"Audio.h"
 	<time.h>
-	"SDL/SDL_mixer.h"
+	<SDL_mixer.h>
 	"Engine.h"
 	"Map.h"
 	"Renderer.h"
@@ -11849,11 +11849,11 @@
 1382910266 d:\dev\ia.git\src\close.h
 	"CommonData.h"
 
-1388616939 source:d:\dev\ia.git\src\config.cpp
+1388835821 source:d:\dev\ia.git\src\config.cpp
 	"Config.h"
 	<fstream>
 	<iostream>
-	"SDL/SDL_image.h"
+	<SDL_image.h>
 	"Engine.h"
 	"Converters.h"
 	"MenuInputHandler.h"
@@ -12549,8 +12549,9 @@
 	"DungeonClimb.h"
 	"MapParsing.h"
 
-1387715379 source:d:\dev\ia.git\src\itemscroll.cpp
+1388836140 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
+	<assert.h>
 	"Engine.h"
 	"ActorPlayer.h"
 	"Map.h"
@@ -12618,7 +12619,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1388778141 source:d:\dev\ia.git\src\main.cpp
+1388835720 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12829,7 +12830,7 @@
 	"Inventory.h"
 	"PlayerSpellsHandler.h"
 
-1388783755 source:d:\dev\ia.git\src\playercreatecharacter.cpp
+1388784324 source:d:\dev\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -13189,11 +13190,11 @@
 	"Config.h"
 	"Art.h"
 
-1388617389 source:d:\dev\ia.git\src\renderer.cpp
+1388835821 source:d:\dev\ia.git\src\renderer.cpp
 	"Renderer.h"
 	<vector>
 	<iostream>
-	"SDL/SDL_image.h"
+	<SDL_image.h>
 	"Engine.h"
 	"Item.h"
 	"CharacterLines.h"
@@ -13852,8 +13853,8 @@
 	"Colors.h"
 	"Art.h"
 
-1388784073 d:\dev\ia.git\include\colors.h
-	"SDL/SDL_video.h"
+1388835985 d:\dev\ia.git\include\colors.h
+	<SDL_video.h>
 
 1385502710 d:\dev\ia.git\include\art.h
 
@@ -14337,29 +14338,29 @@
 	"Item.h"
 	"Converters.h"
 
-1388586131 d:\dev\ia.git\include\renderer.h
+1388835985 d:\dev\ia.git\include\renderer.h
 	<vector>
 	<iostream>
-	"SDL/SDL_video.h"
+	<SDL_video.h>
 	"Panel.h"
 	"CommonData.h"
 	"GameTime.h"
 	"Config.h"
 	"Art.h"
 
-1386706106 d:\dev\ia.git\include\audio.h
-	"SDL/SDL_mixer.h"
+1388835821 d:\dev\ia.git\include\audio.h
+	<SDL_mixer.h>
 	"CommonTypes.h"
 	"AudioIds.h"
 
-1386706106 d:\dev\ia.git\include\input.h
-	"SDL/SDL.h"
+1388835764 d:\dev\ia.git\include\input.h
+	<SDL.h>
 	"CommonData.h"
 
-1387218680 d:\dev\ia.git\include\sdlwrapper.h
-	"SDL/SDL.h"
-	"SDL/SDL_image.h"
-	"SDL/SDL_mixer.h"
+1388835821 d:\dev\ia.git\include\sdlwrapper.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
 
 1388583443 d:\dev\ia.git\include\mapgen.h
 	"CommonTypes.h"
@@ -17008,4 +17009,212 @@
 	"ActorPlayer.h"
 	"ActorMonster.h"
 	"Log.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_config.h
+	"SDL_platform.h"
+	"SDL_config_dreamcast.h"
+	"SDL_config_macos.h"
+	"SDL_config_macosx.h"
+	"SDL_config_symbian.h"
+	"SDL_config_win32.h"
+	"SDL_config_os2.h"
+	"SDL_config_minimal.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_platform.h
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_config_win32.h
+	"SDL_platform.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\begin_code.h
+
+1382910175 d:\dev\ia.git\api\sdl\include\close_code.h
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1385502709 d:\dev\ia.git\api\sdl\include\sdl_mixer.h
+	"SDL_types.h"
+	"SDL_rwops.h"
+	"SDL_audio.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_types.h
+	"SDL_stdinc.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_keysym.h
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1382910175 d:\dev\ia.git\api\sdl\include\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
 

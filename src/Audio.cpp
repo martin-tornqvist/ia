@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-#include "SDL/SDL_mixer.h"
+#include <SDL_mixer.h>
 
 #include "Engine.h"
 #include "Map.h"

@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-#include "SDL/SDL_image.h"
+#include <SDL_image.h>
 
 #include "Engine.h"
 #include "Item.h"

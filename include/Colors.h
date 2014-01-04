@@ -1,7 +1,7 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#include "SDL/SDL_video.h"
+#include <SDL_video.h>
 
 //Standard terminal colors (somewhat modified...)
 //===========================================================
