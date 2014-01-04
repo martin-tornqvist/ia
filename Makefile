@@ -13,9 +13,9 @@ INC_DIR_release=$(INC_DIR)/releaseModeIncl
 INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
 
 #Flags
-CFLAGS_release=-O2
-CFLAGS_debug=-O0 -g
-CFLAGS=-Wall -Wextra $(shell sdl-config --cflags) $(CFLAGS_$(BUILD))
+CXXFLAGS_release=-O2
+CXXFLAGS_debug=-O0 -g
+CXXFLAGS=-Wall -Wextra $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
 LDFLAGS=$(shell sdl-config --libs) -lSDL_image -lSDL_mixer
 
 # Output and sources
@@ -35,14 +35,14 @@ CAT=cat
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CXX) $(LDFLAGS) $^ -o $@
 	$(RM) $(TARGET_DIR)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
 %.o: %.cpp
-	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
 
 # Optional auto dependency tracking
 -include depends.mk
@@ -50,7 +50,7 @@ $(EXECUTABLE): $(OBJECTS)
 depends: $(DEPENDS)
 
 %.d:
-	$(CC) -MM $(CFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
+	$(CXX) -MM $(CXXFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
 	$(CAT) depends.tmp >> depends.mk
 	$(RM) depends.tmp
 
