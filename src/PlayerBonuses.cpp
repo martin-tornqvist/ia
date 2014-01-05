@@ -189,8 +189,8 @@ void PlayerBonHandler::getTraitDescr(
 
     case traitWarlock: {
       strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
-      strRef += "has a chance to make you \"Charged\" on the next turn, which ";
-      strRef += "makes your spells do maximum damage";
+      strRef += "can make you \"Charged\" for one turn, causing attack spells ";
+      strRef += "to do maximum damage";
     } break;
 
     case traitSeer: {
@@ -357,10 +357,12 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitWarlock: {
+      traitsRef.push_back(traitTough);
       bgRef = bgOccultist;
     } break;
 
     case traitSeer: {
+      traitsRef.push_back(traitObservant);
       bgRef = bgOccultist;
     } break;
 
@@ -520,6 +522,28 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
   switch(bg_) {
     case bgOccultist: {
       pickTrait(traitStrongSpirited);
+
+      //Player starts with a scroll of Azathoths Wrath, and one other random
+      //scroll - both are identified
+      Item* scroll = eng.itemFactory->spawnItem(item_scrollOfAzathothsWrath);
+      dynamic_cast<Scroll*>(scroll)->identify(true);
+      eng.player->getInv().putItemInGeneral(scroll);
+
+      while(true) {
+        scroll = eng.itemFactory->spawnRandomScrollOrPotion(true, false);
+
+        Spell_t id = scroll->getData().spellCastFromScroll;
+        Spell* const spell = eng.spellHandler->getSpellFromId(id);
+        const bool IS_AVAIL = spell->isAvailForPlayer();
+        delete spell;
+
+        if(IS_AVAIL && id != spell_pestilence && id != spell_azathothsWrath) {
+          dynamic_cast<Scroll*>(scroll)->identify(true);
+          eng.player->getInv().putItemInGeneral(scroll);
+          break;
+        }
+      }
+
     } break;
 
     case bgRogue: {
@@ -569,33 +593,6 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
       eng.player->getPropHandler().tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true, true);
     } break;
-
-    //    case traitOccultist: {
-    //      const int NR_SCROLLS_TO_START_WITH = 2;
-    //      for(int i = 0; i < NR_SCROLLS_TO_START_WITH; i++) {
-    //        Item* const item =
-    //          eng.itemFactory->spawnRandomScrollOrPotion(true, false);
-    //
-    //        Spell_t spellId = item->getData().spellCastFromScroll;
-    //        Spell* const spell = eng.spellHandler->getSpellFromId(spellId);
-    //        const bool IS_SPELL_LEARNABLE = spell->isLearnableForPlayer();
-    //        delete spell;
-    //
-    //        if(IS_SPELL_LEARNABLE && spellId != spell_pestilence) {
-    //          Scroll* const scroll = dynamic_cast<Scroll*>(item);
-    //          scroll->identify(true);
-    //          eng.player->getInv().putItemInGeneral(scroll);
-    //
-    //          if(item->nrItems == 2) {
-    //            item->nrItems = 1;
-    //            i--;
-    //          }
-    //        } else {
-    //          delete item;
-    //          i--;
-    //        }
-    //      }
-    //    } break;
 
     default: {} break;
   }

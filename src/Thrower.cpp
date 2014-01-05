@@ -146,7 +146,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             eng.sleep(eng.config->delayProjectileDraw * 4);
           }
           const SDL_Color hitMessageClr =
-            actorHere == eng.player ? clrMessageBad : clrMessageGood;
+            actorHere == eng.player ? clrMsgBad : clrMsgGood;
           eng.log->addMsg(
             actorHere->getNameThe() + " is hit.", hitMessageClr);
           actorHere->hit(data->dmg, dmgType_physical, true);

@@ -11185,7 +11185,7 @@
 	"Engine.h"
 	<math.h>
 
-1388617165 source:d:\dev\ia.git\src\actor.cpp
+1388958526 source:d:\dev\ia.git\src\actor.cpp
 	"Actor.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11436,7 +11436,7 @@
 1382910176 d:\dev\ia.git\src\ai_handleinventory.h
 	"Inventory.h"
 
-1388583443 source:d:\dev\ia.git\src\actormonsterspecific.cpp
+1388958526 source:d:\dev\ia.git\src\actormonsterspecific.cpp
 	"ActorMonster.h"
 	<algorithm>
 	"Engine.h"
@@ -11476,7 +11476,7 @@
 	<string>
 	<vector>
 
-1388605390 source:d:\dev\ia.git\src\actorplayer.cpp
+1388963746 source:d:\dev\ia.git\src\actorplayer.cpp
 	"ActorPlayer.h"
 	"Engine.h"
 	"Renderer.h"
@@ -11562,7 +11562,7 @@
 	"PlayerBonuses.h"
 	"MapParsing.h"
 
-1388650401 source:d:\dev\ia.git\src\attackmelee.cpp
+1388958591 source:d:\dev\ia.git\src\attackmelee.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11575,7 +11575,7 @@
 	"Knockback.h"
 	"Log.h"
 
-1388583780 source:d:\dev\ia.git\src\attackranged.cpp
+1388958647 source:d:\dev\ia.git\src\attackranged.cpp
 	"Attack.h"
 	"Engine.h"
 	"GameTime.h"
@@ -11780,7 +11780,7 @@
 	<vector>
 	"CommonData.h"
 
-1388585989 source:d:\dev\ia.git\src\characterdescr.cpp
+1388963913 source:d:\dev\ia.git\src\characterdescr.cpp
 	"CharacterDescr.h"
 	<algorithm>
 	"Engine.h"
@@ -11811,7 +11811,7 @@
 	"Item.h"
 	"Spells.h"
 
-1388585979 source:d:\dev\ia.git\src\characterlines.cpp
+1388958591 source:d:\dev\ia.git\src\characterlines.cpp
 	"CharacterLines.h"
 	"Engine.h"
 	"CommonTypes.h"
@@ -11958,7 +11958,7 @@
 	<vector>
 	"ItemData.h"
 
-1388583402 source:d:\dev\ia.git\src\dungeonmaster.cpp
+1388958591 source:d:\dev\ia.git\src\dungeonmaster.cpp
 	"DungeonMaster.h"
 	"Engine.h"
 	"Highscore.h"
@@ -12125,7 +12125,7 @@
 	"Query.h"
 	"Renderer.h"
 
-1388583444 source:d:\dev\ia.git\src\explosion.cpp
+1388958591 source:d:\dev\ia.git\src\explosion.cpp
 	"Explosion.h"
 	"Engine.h"
 	"FeatureData.h"
@@ -12141,7 +12141,7 @@
 	"Feature.h"
 	"FeatureFactory.h"
 
-1388583443 source:d:\dev\ia.git\src\feature.cpp
+1388958591 source:d:\dev\ia.git\src\feature.cpp
 	"Feature.h"
 	"Engine.h"
 	"Actor.h"
@@ -12171,7 +12171,7 @@
 	"Renderer.h"
 	"MapParsing.h"
 
-1388331624 source:d:\dev\ia.git\src\featureexaminable.cpp
+1388958591 source:d:\dev\ia.git\src\featureexaminable.cpp
 	"FeatureExaminable.h"
 	"Engine.h"
 	"Log.h"
@@ -12271,7 +12271,7 @@
 	"FeatureSmoke.h"
 	"Engine.h"
 
-1387715880 source:d:\dev\ia.git\src\featuretrap.cpp
+1388958689 source:d:\dev\ia.git\src\featuretrap.cpp
 	"FeatureTrap.h"
 	<algorithm>
 	<assert.h>
@@ -12458,7 +12458,7 @@
 	"Item.h"
 	"Converters.h"
 
-1388441252 source:d:\dev\ia.git\src\itemdevice.cpp
+1388958591 source:d:\dev\ia.git\src\itemdevice.cpp
 	"ItemDevice.h"
 	"Engine.h"
 	"ActorPlayer.h"
@@ -12549,7 +12549,7 @@
 	"DungeonClimb.h"
 	"MapParsing.h"
 
-1388836140 source:d:\dev\ia.git\src\itemscroll.cpp
+1388949624 source:d:\dev\ia.git\src\itemscroll.cpp
 	"ItemScroll.h"
 	<assert.h>
 	"Engine.h"
@@ -12579,7 +12579,7 @@
 	"Inventory.h"
 	"Renderer.h"
 
-1388583443 source:d:\dev\ia.git\src\knockback.cpp
+1388958638 source:d:\dev\ia.git\src\knockback.cpp
 	"Knockback.h"
 	"Engine.h"
 	"Attack.h"
@@ -12619,7 +12619,7 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1388835720 source:d:\dev\ia.git\src\main.cpp
+1388958591 source:d:\dev\ia.git\src\main.cpp
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"
@@ -12784,7 +12784,7 @@
 	"ActorPlayer.h"
 	"GameTime.h"
 
-1388441252 source:d:\dev\ia.git\src\marker.cpp
+1388961518 source:d:\dev\ia.git\src\marker.cpp
 	"Marker.h"
 	"Engine.h"
 	"Input.h"
@@ -12817,7 +12817,7 @@
 	<iostream>
 	"Engine.h"
 
-1388933825 source:d:\dev\ia.git\src\playerbonuses.cpp
+1388960543 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<assert.h>
 	"Engine.h"
@@ -12830,7 +12830,7 @@
 	"Inventory.h"
 	"PlayerSpellsHandler.h"
 
-1388928367 source:d:\dev\ia.git\src\playercreatecharacter.cpp
+1388934096 source:d:\dev\ia.git\src\playercreatecharacter.cpp
 	"PlayerCreateCharacter.h"
 	"Engine.h"
 	"Renderer.h"
@@ -12839,7 +12839,7 @@
 	"MenuInputHandler.h"
 	"TextFormatting.h"
 
-1388749717 source:d:\dev\ia.git\src\playerspellshandler.cpp
+1388964530 source:d:\dev\ia.git\src\playerspellshandler.cpp
 	"PlayerSpellsHandler.h"
 	"Engine.h"
 	"ItemScroll.h"
@@ -12916,7 +12916,7 @@
 	"PlayerBonuses.h"
 	"TextFormatting.h"
 
-1388650076 source:d:\dev\ia.git\src\properties.cpp
+1388961760 source:d:\dev\ia.git\src\properties.cpp
 	"Properties.h"
 	<assert.h>
 	<algorithm>
@@ -12981,7 +12981,7 @@
 	"FeatureDoor.h"
 	"Inventory.h"
 
-1388930048 source:d:\dev\ia.git\src\renderinventory.cpp
+1388959243 source:d:\dev\ia.git\src\renderinventory.cpp
 	"RenderInventory.h"
 	"Engine.h"
 	"ItemWeapon.h"
@@ -13032,7 +13032,7 @@
 	"GameTime.h"
 	"MapParsing.h"
 
-1388749983 source:d:\dev\ia.git\src\spells.cpp
+1388963990 source:d:\dev\ia.git\src\spells.cpp
 	"Spells.h"
 	<algorithm>
 	"Engine.h"
@@ -13050,12 +13050,14 @@
 	"ItemArmor.h"
 	"Inventory.h"
 	"MapParsing.h"
+	"LineCalc.h"
+	"SdlWrapper.h"
 
 1388412061 source:d:\dev\ia.git\src\textformatting.cpp
 	"TextFormatting.h"
 	"Engine.h"
 
-1387741182 source:d:\dev\ia.git\src\thrower.cpp
+1388958591 source:d:\dev\ia.git\src\thrower.cpp
 	"Thrower.h"
 	"Engine.h"
 	"Item.h"
@@ -13818,7 +13820,7 @@
 	"Actor.h"
 	"MersenneTwister.h"
 
-1388777156 d:\dev\ia.git\include\commondata.h
+1388963728 d:\dev\ia.git\include\commondata.h
 	<string>
 
 1388612388 d:\dev\ia.git\include\actor.h
@@ -13853,7 +13855,7 @@
 	"Colors.h"
 	"Art.h"
 
-1388835985 d:\dev\ia.git\include\colors.h
+1388958591 d:\dev\ia.git\include\colors.h
 	<SDL_video.h>
 
 1385502710 d:\dev\ia.git\include\art.h
@@ -13882,7 +13884,7 @@
 	"FeatureData.h"
 	"AudioIds.h"
 
-1388777406 d:\dev\ia.git\include\spells.h
+1388958861 d:\dev\ia.git\include\spells.h
 	<vector>
 	"CommonTypes.h"
 	"Properties.h"
@@ -13918,7 +13920,7 @@
 	<ctime>
 	<cmath>
 
-1388583443 d:\dev\ia.git\include\actorplayer.h
+1388961288 d:\dev\ia.git\include\actorplayer.h
 	<math.h>
 	"Actor.h"
 	"CommonData.h"
@@ -14156,7 +14158,7 @@
 1386705953 d:\dev\ia.git\include\itemmedicalbag.h
 	"Item.h"
 
-1386706106 d:\dev\ia.git\include\playerspellshandler.h
+1388964228 d:\dev\ia.git\include\playerspellshandler.h
 	<vector>
 	"MenuBrowser.h"
 	"Spells.h"

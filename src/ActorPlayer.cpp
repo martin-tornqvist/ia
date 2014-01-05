@@ -707,9 +707,7 @@ void Player::onActorTurn() {
     return;
   }
 
-  if(getMth() >= 15) {
-    grantMthPower();
-  }
+  if(getMth() >= MTH_LVL_NEW_PWR) {grantMthPower();}
 
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> SpottedEnemies;
@@ -1171,8 +1169,7 @@ void Player::autoMelee() {
   if(target != NULL) {
     if(eng.basicUtils->isPosAdj(pos, target->pos, false)) {
       if(checkIfSeeActor(*target, NULL)) {
-        moveDir(
-          DirConverter().getDir(target->pos - pos));
+        moveDir(DirConverter().getDir(target->pos - pos));
         return;
       }
     }
@@ -1182,13 +1179,11 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
-        const Actor* const actor =
-          eng.basicUtils->getActorAtPos(pos + Pos(dx, dy));
+        Actor* const actor = eng.basicUtils->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(checkIfSeeActor(*actor, NULL)) {
             target = actor;
-            moveDir(
-              DirConverter().getDir(Pos(dx, dy)));
+            moveDir(DirConverter().getDir(Pos(dx, dy)));
             return;
           }
         }

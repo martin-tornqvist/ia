@@ -90,7 +90,7 @@ void Device::runBadEffect() {
   } else if(RND < 40) {
     eng.log->addMsg(
       "I am hit with a jolt of electricity from the " + name +
-      ".", clrMessageBad, true);
+      ".", clrMsgBad, true);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 2));
     eng.player->hit(eng.dice.range(1, 2), dmgType_electric, false);
@@ -132,9 +132,8 @@ void DeviceSentry::runGoodEffect() {
     const int ELEMENT = eng.dice.range(0, NR_CANDIDATES - 1);
     Actor* const actor = targetCandidates.at(ELEMENT);
     const Pos& pos = actor->pos;
-    eng.log->addMsg(
-      actor->getNameThe() + " is hit by a bolt of lightning!",
-      clrMessageGood, true);
+    eng.log->addMsg(actor->getNameThe() + " is hit by a bolt of lightning!",
+                    clrMsgGood, true);
     eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
       vector<Pos>(1, pos), clrYellow);
     actor->hit(DMG, dmgType_electric, false);

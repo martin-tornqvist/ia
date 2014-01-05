@@ -82,7 +82,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
         otherName = "It";
       }
       eng.log->addMsg(
-        "I dodge an attack from " + otherName + ".", clrMessageGood);
+        "I dodge an attack from " + otherName + ".", clrMsgGood);
     }
   } else if(data.attackResult <= failSmall) {
     //----- BAD AIMING --------
@@ -128,7 +128,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
         }
         eng.log->addMsg(
           "The attack of " + otherName + " passes right through me!",
-          clrMessageGood);
+          clrMsgGood);
       }
     } else {
       //----- ATTACK CONNECTS WITH DEFENDER --------
@@ -155,13 +155,13 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
           const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
           eng.log->addMsg(
             "I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
-            clrMessageGood);
+            clrMsgGood);
         } else {
           const string ATTACK_MOD_STR =
             data.isWeakAttack  ? "feebly "    :
             data.isBackstab    ? "covertly "  : "";
           const SDL_Color clr =
-            data.isBackstab ? clrBlueLgt : clrMessageGood;
+            data.isBackstab ? clrBlueLgt : clrMsgGood;
           const string wpnName_a =
             eng.itemDataHandler->getItemRef(wpn, itemRef_a, true);
           eng.log->addMsg(
@@ -179,7 +179,7 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
         }
 
         eng.log->addMsg(otherName + " " + wpnVerb + dmgPunct,
-                         clrMessageBad, true);
+                         clrMsgBad, true);
       }
     }
   }

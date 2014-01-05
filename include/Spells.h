@@ -37,6 +37,7 @@ enum Spell_t {
   spell_summonRandom,
   spell_healSelf, //TODO Make it heal over time, and avail for player too
   spell_knockBack,
+  spell_miGoHypnosis,
 
   endOfSpells
 };
@@ -71,8 +72,8 @@ public:
     (void)eng;
     return false;
   }
-  virtual bool isLearnableForMonsters() const = 0;
-  virtual bool isLearnableForPlayer() const = 0;
+  virtual bool isAvailForAllMonsters() const = 0;
+  virtual bool isAvailForPlayer() const = 0;
   virtual string getName() const = 0;
   virtual Spell_t getId() const = 0;
 
@@ -90,20 +91,20 @@ public:
   SpellAzathothsWrath() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Azathoths Wrath";}
   Spell_t getId()               const override {return spell_azathothsWrath;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
-  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI - 2;}
 };
 
 class SpellMayhem: public Spell {
 public:
   SpellMayhem() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Mayhem";}
   Spell_t getId()               const override {return spell_mayhem;}
 private:
@@ -114,8 +115,8 @@ private:
 class SpellPestilence: public Spell {
 public:
   SpellPestilence() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Pestilence";}
   Spell_t getId()               const override {return spell_pestilence;}
 private:
@@ -126,8 +127,8 @@ private:
 class SpellDetectItems: public Spell {
 public:
   SpellDetectItems() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Items";}
   Spell_t getId()               const override {return spell_detectItems;}
 private:
@@ -138,8 +139,8 @@ private:
 class SpellDetectTraps: public Spell {
 public:
   SpellDetectTraps() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Traps";}
   Spell_t getId()               const override {return spell_detectTraps;}
 private:
@@ -150,8 +151,8 @@ private:
 class SpellClairvoyance: public Spell {
 public:
   SpellClairvoyance() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Clairvoyance";}
   Spell_t getId()               const override {return spell_clairvoyance;}
 private:
@@ -162,8 +163,8 @@ private:
 class SpellOpening: public Spell {
 public:
   SpellOpening() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Opening";}
   Spell_t getId()               const override {return spell_opening;}
 private:
@@ -174,8 +175,8 @@ private:
 class SpellSacrificeLife: public Spell {
 public:
   SpellSacrificeLife() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Life Force";}
   Spell_t getId()               const override {return spell_sacrificeLife;}
 private:
@@ -186,8 +187,8 @@ private:
 class SpellSacrificeSpirit: public Spell {
 public:
   SpellSacrificeSpirit() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Spirit";}
   Spell_t getId()               const override {return spell_sacrificeSpirit;}
 private:
@@ -198,8 +199,8 @@ private:
 class SpellRogueHide: public Spell {
 public:
   SpellRogueHide() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Hide [name?]";}
   Spell_t getId()               const override {return spell_rogueHide;}
 private:
@@ -210,8 +211,8 @@ private:
 class SpellMthPower: public Spell {
 public:
   SpellMthPower() : Spell() {}
-  bool isLearnableForMonsters() const override {return false;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {
     return "Thaumaturgic Alteration";
   }
@@ -229,8 +230,8 @@ public:
   SpellBless() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Bless";}
   Spell_t getId()               const override {return spell_bless;}
 private:
@@ -243,8 +244,8 @@ public:
   SpellKnockBack() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return false;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Knockback";}
   Spell_t getId()               const override {return spell_knockBack;}
 private:
@@ -257,8 +258,8 @@ public:
   SpellTeleport() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Teleport";}
   Spell_t getId()               const override {return spell_teleport;}
   int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
@@ -271,8 +272,8 @@ public:
   SpellEnfeeble() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return true;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Enfeeble";}
   Spell_t getId()               const override {return spell_enfeeble;}
 private:
@@ -287,8 +288,8 @@ public:
   SpellDisease() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return false;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Disease";}
   Spell_t getId()               const override {return spell_disease;}
 private:
@@ -301,8 +302,8 @@ public:
   SpellSummonRandom() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return false;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Summon monster";}
   Spell_t getId()               const override {return spell_summonRandom;}
 private:
@@ -315,10 +316,24 @@ public:
   SpellHealSelf() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster,
                                  Engine& eng) override;
-  bool isLearnableForMonsters() const override {return true;}
-  bool isLearnableForPlayer()   const override {return false;}
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Healing";}
   Spell_t getId()               const override {return spell_healSelf;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
+};
+
+class SpellMiGoHypnosis: public Spell {
+public:
+  SpellMiGoHypnosis() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine& eng) override;
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
+  string getName()              const override {return "MiGo Hypnosis";}
+  Spell_t getId()               const override {return spell_miGoHypnosis;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
   int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}

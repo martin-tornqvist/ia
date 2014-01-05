@@ -144,7 +144,7 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
 
       if(eng.dice.oneIn(4)) {
-        eng.log->addMsg("I sprain myself.", clrMessageBad);
+        eng.log->addMsg("I sprain myself.", clrMsgBad);
         const int SPRAIN_DMG = eng.dice.range(1, 5);
         actorTrying.hit(SPRAIN_DMG, dmgType_pure, false);
       }

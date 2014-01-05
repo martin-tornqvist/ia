@@ -77,10 +77,10 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
               eng.log->addMsg(
                 defender.getNameThe() + " plummets down the depths.",
-                clrMessageGood);
+                clrMsgGood);
             } else {
               eng.log->addMsg(
-                "I plummet down the depths!", clrMessageBad);
+                "I plummet down the depths!", clrMsgBad);
             }
             defender.die(true, false, false);
             return;

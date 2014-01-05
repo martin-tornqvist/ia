@@ -18,12 +18,14 @@
 #include "ItemArmor.h"
 #include "Inventory.h"
 #include "MapParsing.h"
+#include "LineCalc.h"
+#include "SdlWrapper.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<Spell_t> candidates;
   for(int i = 0; i < endOfSpells; i++) {
     Spell* const spell = getSpellFromId(Spell_t(i));
-    if(spell->isLearnableForMonsters()) {
+    if(spell->isAvailForAllMonsters()) {
       candidates.push_back(Spell_t(i));
     }
     delete spell;
@@ -34,24 +36,25 @@ Spell* SpellHandler::getRandomSpellForMonster() {
 
 Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
   switch(spellId) {
-    case spell_enfeeble:            return new SpellEnfeeble;           break;
-    case spell_disease:             return new SpellDisease;            break;
-    case spell_azathothsWrath:      return new SpellAzathothsWrath;     break;
-    case spell_summonRandom:        return new SpellSummonRandom;       break;
-    case spell_healSelf:            return new SpellHealSelf;           break;
-    case spell_knockBack:           return new SpellKnockBack;          break;
-    case spell_teleport:            return new SpellTeleport;           break;
-    case spell_mayhem:              return new SpellMayhem;             break;
-    case spell_pestilence:          return new SpellPestilence;         break;
-    case spell_detectItems:         return new SpellDetectItems;        break;
-    case spell_detectTraps:         return new SpellDetectTraps;        break;
-    case spell_clairvoyance:        return new SpellClairvoyance;       break;
-    case spell_opening:             return new SpellOpening;            break;
-    case spell_sacrificeLife:       return new SpellSacrificeLife;      break;
-    case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;    break;
-    case spell_rogueHide:           return new SpellRogueHide;          break;
-    case spell_mthPower:            return new SpellMthPower;           break;
-    case spell_bless:               return new SpellBless;              break;
+    case spell_enfeeble:            return new SpellEnfeeble;
+    case spell_disease:             return new SpellDisease;
+    case spell_azathothsWrath:      return new SpellAzathothsWrath;
+    case spell_summonRandom:        return new SpellSummonRandom;
+    case spell_healSelf:            return new SpellHealSelf;
+    case spell_knockBack:           return new SpellKnockBack;
+    case spell_teleport:            return new SpellTeleport;
+    case spell_mayhem:              return new SpellMayhem;
+    case spell_pestilence:          return new SpellPestilence;
+    case spell_detectItems:         return new SpellDetectItems;
+    case spell_detectTraps:         return new SpellDetectTraps;
+    case spell_clairvoyance:        return new SpellClairvoyance;
+    case spell_opening:             return new SpellOpening;
+    case spell_sacrificeLife:       return new SpellSacrificeLife;
+    case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;
+    case spell_rogueHide:           return new SpellRogueHide;
+    case spell_mthPower:            return new SpellMthPower;
+    case spell_bless:               return new SpellBless;
+    case spell_miGoHypnosis:        return new SpellMiGoHypnosis;
 
     case endOfSpells: {} break;
   }
@@ -86,8 +89,8 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
     if(propHandler.allowSee() == false)   {costMax -= 1;}
     if(propHandler.hasProp(propCursed))   {costMax += 3;}
 
-    if(caster == eng.player) {
-      costMax -= eng.player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
+    if(caster == eng.player && eng.player->getMth() >= MTH_LVL_SPELLS_SPI_BON) {
+      costMax--;
     }
   }
 
@@ -96,7 +99,6 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
   return Range(COST_MIN, costMax);
 }
-
 
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine& eng) {
@@ -135,47 +137,61 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
 //------------------------------------------------------------ AZATHOTHS WRATH
 SpellCastRetData SpellAzathothsWrath::specificCast(
   Actor* const caster, Engine& eng) {
-  DiceParam spellDmg(1, 8, 0);
-  if(caster == eng.player) {
-    vector<Actor*> SpottedEnemies;
-    eng.player->getSpottedEnemies(SpottedEnemies);
 
-    if(SpottedEnemies.empty()) {
+  Actor* target = NULL;
+
+  //If player casting, try to use player's current target instead of random
+  const bool IS_PLAYER_CASTING = caster == eng.player;
+  if(IS_PLAYER_CASTING) {
+    if(eng.player->target != NULL) {
+      if(eng.player->checkIfSeeActor(*eng.player->target, NULL)) {
+        target = eng.player->target;
+      }
+    }
+  }
+
+  if(target == NULL) {
+    vector<Actor*> targetCandidates;
+    caster->getSpottedEnemies(targetCandidates);
+    if(targetCandidates.empty()) {
       return SpellCastRetData(false);
     } else {
-      vector<Pos> actorPositions;
-
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        actorPositions.push_back(SpottedEnemies.at(i)->pos);
-      }
-
-      eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-        actorPositions, clrRedLgt);
-
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        const string monsterName = SpottedEnemies.at(i)->getNameThe();
-        eng.log->addMsg(
-          monsterName + " is struck by a roaring blast!", clrMessageGood);
-        SpottedEnemies.at(i)->getPropHandler().tryApplyProp(
-          new PropParalyzed(eng, propTurnsSpecified, 1));
-        SpottedEnemies.at(i)->hit(eng.dice(1, 8), dmgType_physical, false);
-        Sound snd("I hear a roaring blast",
-                  endOfSfx, true, SpottedEnemies.at(i)->pos, true, true);
-        eng.soundEmitter->emitSound(snd);
-      }
-      return SpellCastRetData(true);
+      const int ELEMENT = eng.dice.range(0, targetCandidates.size() - 1);
+      target = targetCandidates.at(ELEMENT);
+      if(IS_PLAYER_CASTING) {eng.player->target = target;}
     }
-  } else {
-    eng.log->addMsg("I am struck by a roaring blast!", clrMessageBad);
-    eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
-      vector<Pos>(1, eng.player->pos), clrRedLgt);
-    eng.player->getPropHandler().tryApplyProp(
-      new PropParalyzed(eng, propTurnsSpecified, 1));
-    eng.player->hit(eng.dice(1, 8), dmgType_physical, false);
-    Sound snd("", endOfSfx, true, eng.player->pos, true, true);
-    eng.soundEmitter->emitSound(snd);
-    return SpellCastRetData(false);
   }
+
+  vector<Pos> line;
+  eng.lineCalc->calcNewLine(caster->pos, target->pos, true, 999, false, line);
+  eng.renderer->drawMapAndInterface();
+  const int LINE_SIZE = line.size();
+  for(int i = 1; i < LINE_SIZE; i++) {
+    const Pos& pos = line.at(i);
+    if(eng.config->isTilesMode) {
+      eng.renderer->drawTile(tile_blastAnimation1, panel_map, pos, clrRedLgt);
+    } else {
+      eng.renderer->drawGlyph('*', panel_map, pos, clrRedLgt);
+    }
+    eng.renderer->updateScreen();
+    eng.sdlWrapper->sleep(eng.config->delayProjectileDraw);
+  }
+
+  eng.renderer->drawBlastAnimationAtPositions(
+    vector<Pos> {target->pos}, clrRedLgt);
+
+  const string msgCmn = " struck by a roaring blast!";
+  if(IS_PLAYER_CASTING) {
+    eng.log->addMsg(target->getNameThe() + " is" + msgCmn, clrMsgGood);
+  } else {
+    eng.log->addMsg("I am" + msgCmn, clrMsgBad);
+  }
+
+  target->getPropHandler().tryApplyProp(
+    new PropParalyzed(eng, propTurnsSpecified, 1));
+  target->hit(eng.dice.range(1, 10), dmgType_physical, true);
+
+  return SpellCastRetData(true);
 }
 
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
@@ -468,6 +484,7 @@ SpellCastRetData SpellSacrificeSpirit::specificCast(
 SpellCastRetData SpellRogueHide::specificCast(
   Actor* const caster, Engine& eng) {
 
+  (void)caster;
   eng.log->addMsg("I am unseen.");
 
   const int NR_ACTORS = eng.gameTime->getNrActors();
@@ -518,7 +535,7 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
       for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
         const string monsterName = SpottedEnemies.at(i)->getNameThe();
         eng.log->addMsg(
-          monsterName + " is crushed by an unseen force!", clrMessageGood);
+          monsterName + " is crushed by an unseen force!", clrMsgGood);
         SpottedEnemies.at(i)->hit(25, dmgType_physical, true);
       }
 
@@ -586,7 +603,7 @@ void SpellMthPower::castRandomOtherSpell(Engine& eng) const {
   for(int i = 0; i < endOfSpells; i++) {
     if(i != spell_mthPower) {
       Spell* const spell = eng.spellHandler->getSpellFromId(Spell_t(i));
-      if(spell->isLearnableForPlayer()) {
+      if(spell->isAvailForPlayer()) {
         spellCandidates.push_back(spell);
       } else {
         delete spell;
@@ -648,7 +665,7 @@ SpellCastRetData SpellKnockBack::specificCast(
   if(caster == eng.player) {
 
   } else {
-    eng.log->addMsg("A force pushes me!", clrMessageBad);
+    eng.log->addMsg("A force pushes me!", clrMsgBad);
     eng.knockBack->tryKnockBack(*(eng.player), caster->pos, false);
   }
   return SpellCastRetData(false);
@@ -870,7 +887,7 @@ SpellCastRetData SpellDisease::specificCast(
     return SpellCastRetData(true);
   } else {
     eng.log->addMsg(
-      "A disease is starting to afflict my body!", clrMessageBad);
+      "A disease is starting to afflict my body!", clrMsgBad);
     eng.player->getPropHandler().tryApplyProp(
       new PropDiseased(eng, propTurnsStandard));
     return SpellCastRetData(false);
@@ -956,9 +973,8 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 
   bool blockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), blockers);
-  const bool IS_PLAYER_SEEN =
-    monster->checkIfSeeActor(*(eng.player), blockers);
-  return IS_PLAYER_SEEN || (eng.dice.percentile() < 5);
+  return monster->checkIfSeeActor(*(eng.player), blockers) ||
+         (eng.dice.oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -972,4 +988,30 @@ bool SpellHealSelf::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   (void)eng;
   return monster->getHp() < monster->getHpMax(true);
+}
+
+//------------------------------------------------------------ MI-GO HYPNOSIS
+SpellCastRetData SpellMiGoHypnosis::specificCast(
+  Actor* const caster, Engine& eng) {
+
+  (void)caster;
+  eng.log->addMsg("There is a sharp droning in my head!");
+
+  if(eng.dice.coinToss()) {
+    eng.player->getPropHandler().tryApplyProp(
+      new PropFainted(eng, propTurnsSpecified, eng.dice.range(2, 10)));
+  } else {
+    eng.log->addMsg("I feel dizzy.");
+  }
+
+  return true;
+}
+
+bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
+  Monster* const monster, Engine& eng) {
+
+  bool blockers[MAP_W][MAP_H];
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  return monster->checkIfSeeActor(*(eng.player), blockers) &&
+         eng.dice.oneIn(4);
 }

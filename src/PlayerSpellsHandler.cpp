@@ -11,16 +11,19 @@
 #include "PlayerBonuses.h"
 
 PlayerSpellsHandler::~PlayerSpellsHandler() {
-  for(unsigned int i = 0; i < learnedSpells.size(); i++) {
-    delete learnedSpells.at(i);
-  }
+  for(Spell * spell : knownSpells) {delete spell;}
 }
 
 void PlayerSpellsHandler::run() {
-  if(learnedSpells.empty()) {
+  if(knownSpells.empty()) {
     eng.log->addMsg("I do not know any spells to invoke.");
   } else {
-    MenuBrowser browser(learnedSpells.size(), 0);
+
+    sort(knownSpells.begin(), knownSpells.end(), [](Spell * s1, Spell * s2) {
+      return s1->getName() < s2->getName();
+    });
+
+    MenuBrowser browser(knownSpells.size(), 0);
 
     eng.renderer->drawMapAndInterface();
 
@@ -42,7 +45,7 @@ void PlayerSpellsHandler::run() {
         case menuAction_selected: {
           eng.log->clearLog();
           eng.renderer->drawMapAndInterface();
-          learnedSpells.at(browser.getPos().y)->cast(eng.player, true, eng);
+          knownSpells.at(browser.getPos().y)->cast(eng.player, true, eng);
           return;
         }
         break;
@@ -54,7 +57,7 @@ void PlayerSpellsHandler::run() {
 }
 
 void PlayerSpellsHandler::draw(MenuBrowser& browser) {
-  const int NR_SPELLS = learnedSpells.size();
+  const int NR_SPELLS = knownSpells.size();
   string endLetter = "a";
   endLetter[0] += char(NR_SPELLS - 1);
 
@@ -69,7 +72,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     const char CURRENT_KEY = 'a' + i;
     const SDL_Color clr =
       browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
-    Spell* const spell = learnedSpells.at(i);
+    Spell* const spell = knownSpells.at(i);
     const string name = spell->getName();
     string str = "a";
     str[0] = CURRENT_KEY;
@@ -100,8 +103,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 }
 
 bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
-  for(unsigned int i = 0; i < learnedSpells.size(); i++) {
-    if(learnedSpells.at(i)->getId() == id) {
+  for(unsigned int i = 0; i < knownSpells.size(); i++) {
+    if(knownSpells.at(i)->getId() == id) {
       return true;
     }
   }
@@ -114,8 +117,8 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(const Spell_t id) {
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
   bool isAlreadyLearned = false;
-  for(unsigned int i = 0; i < learnedSpells.size(); i++) {
-    if(learnedSpells.at(i)->getId() == spell->getId()) {
+  for(Spell* spellCmpr : knownSpells) {
+    if(spellCmpr->getId() == spell->getId()) {
       isAlreadyLearned = true;
       break;
     }
@@ -123,7 +126,7 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
   if(isAlreadyLearned) {
     delete spell;
   } else {
-    learnedSpells.push_back(spell);
+    knownSpells.push_back(spell);
   }
 }
 

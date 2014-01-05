@@ -1031,8 +1031,8 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
                               ("(" + toString(TURNS_LEFT) + ")") : "";
       line.push_back(
         StrAndClr(propName + turnsStr,
-                  alignment == propAlignmentGood ? clrMessageGood :
-                  alignment == propAlignmentBad  ? clrMessageBad :
+                  alignment == propAlignmentGood ? clrMsgGood :
+                  alignment == propAlignmentBad  ? clrMsgBad :
                   clrWhite));
     }
   }
@@ -1210,8 +1210,11 @@ void PropCursed::onStart() {
 
 void PropInfected::onNewTurn() {
   if(eng.dice.oneIn(250)) {
-    owningActor_->getPropHandler().tryApplyProp(
-      new PropDiseased(eng, propTurnsStandard));
+    PropHandler& propHlr = owningActor_->getPropHandler();
+    propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStandard));
+    bool blockers[MAP_W][MAP_H];
+    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    propHlr.endAppliedProp(propInfected, blockers, false);
   }
 }
 
@@ -1232,7 +1235,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   const Pos& pos = owningActor_->pos;
   eng.gore->makeGore(pos);
   eng.gore->makeBlood(pos);
-  eng.actorFactory->summonMonsters(pos, vector<ActorId_t>{actor_zuul}, true);
+  eng.actorFactory->summonMonsters(pos, vector<ActorId_t> {actor_zuul}, true);
 }
 
 void PropPoisoned::onNewTurn() {
@@ -1241,8 +1244,7 @@ void PropPoisoned::onNewTurn() {
   if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
 
     if(owningActor_ == eng.player) {
-      eng.log->addMsg(
-        "I am suffering from the poison!", clrMessageBad, true);
+      eng.log->addMsg("I am suffering from the poison!", clrMsgBad, true);
     } else {
       if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
         eng.log->addMsg(
@@ -1328,12 +1330,11 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   if(dir != dirCenter) {
 
     if(owningActor_ == eng.player) {
-      eng.log->addMsg(
-        "I struggle to tear out the spike!", clrMessageBad);
+      eng.log->addMsg("I struggle to tear out the spike!", clrMsgBad);
     } else {
       if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
-        eng.log->addMsg(
-          owningActor_->getNameThe() +  " struggles in pain!", clrMessageGood);
+        eng.log->addMsg(owningActor_->getNameThe() +  " struggles in pain!",
+                        clrMsgGood);
       }
     }
 

@@ -233,7 +233,7 @@ void Tomb::doAction(const TombAction_t action) {
       const int PARALYZE_ONE_IN_N = 3;
 
       if(eng.dice.oneIn(SPRAIN_ONE_IN_N)) {
-        eng.log->addMsg("I sprain myself.", clrMessageBad);
+        eng.log->addMsg("I sprain myself.", clrMsgBad);
         eng.player->hit(eng.dice.range(1, 5), dmgType_pure, false);
       }
 
@@ -571,7 +571,7 @@ void Chest::doAction(const ChestAction_t action) {
       if(item == NULL) {
         eng.log->addMsg(
           "I attempt to punch the lock open, nearly breaking my hand.",
-          clrMessageBad);
+          clrMsgBad);
         eng.player->hit(1, dmgType_pure, false);
       } else {
         const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
@@ -611,7 +611,7 @@ void Chest::doAction(const ChestAction_t action) {
       const int SPRAIN_ONE_IN_N = 5;
 
       if(eng.dice.oneIn(SPRAIN_ONE_IN_N)) {
-        eng.log->addMsg("I sprain myself.", clrMessageBad);
+        eng.log->addMsg("I sprain myself.", clrMsgBad);
         eng.player->hit(1, dmgType_pure, false);
       }
 

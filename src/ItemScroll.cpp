@@ -72,7 +72,7 @@ void Scroll::tryLearn() {
   if(eng.playerBonHandler->getBg() == bgOccultist) {
     Spell* const spell = getSpell();
     if(
-      spell->isLearnableForPlayer() &&
+      spell->isAvailForPlayer() &&
       eng.playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
       eng.log->addMsg("I learn to cast this incantation by heart!");
       eng.playerSpellsHandler->learnSpellIfNotKnown(spell);

@@ -224,8 +224,8 @@ void CharacterLines::drawInfoLines() {
 //    Prop* const prop = appliedProps.at(i);
 //    const PropAlignment_t alignment = prop->getAlignment();
 //    const SDL_Color statusColor =
-//      alignment == propAlignmentGood ? clrMessageGood :
-//      alignment == propAlignmentBad  ? clrMessageBad  : clrWhite;
+//      alignment == propAlignmentGood ? clrMsgGood :
+//      alignment == propAlignmentBad  ? clrMsgBad  : clrWhite;
 //    string propText = prop->getNameShort();
 //    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
 //      // +1 to offset that the turn is also active on turn 0

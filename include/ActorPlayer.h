@@ -79,7 +79,7 @@ public:
   bool insanityPhobias[endOfInsanityPhobias];
   bool insanityObsessions[endOfInsanityObsessions];
 
-  const Actor* target;
+  Actor* target;
 
   void autoMelee();
 

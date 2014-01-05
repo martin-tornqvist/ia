@@ -164,7 +164,7 @@ void ExplosionMaker::runExplosion(
 
             if(DO_EXPLOSION_DMG) {
               if(&actor == eng.player) {
-                eng.log->addMsg("I am hit by an explosion!", clrMessageBad);
+                eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
               }
               actor.hit(EXPLOSION_DMG_AT_DIST, dmgType_physical, true);
             }

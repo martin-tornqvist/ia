@@ -63,10 +63,8 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
         eng.log->clearLog();
         eng.renderer->drawMapAndInterface();
 
-        const Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
-        if(actor != NULL) {
-          eng.player->target = actor;
-        }
+        Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
+        if(actor != NULL) {eng.player->target = actor;}
 
         Item* const item = eng.player->getInv().getItemInSlot(slot_wielded);
         Weapon* const weapon = dynamic_cast<Weapon*>(item);
@@ -93,10 +91,8 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
         eng.log->addMsg("I should throw this somewhere else.");
       } else {
         eng.renderer->drawMapAndInterface();
-        const Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
-        if(actor != NULL) {
-          eng.player->target = actor;
-        }
+        Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
+        if(actor != NULL) {eng.player->target = actor;}
         eng.thrower->throwItem(*eng.player, pos_, *itemThrown);
         data.didThrowMissile = true;
       }
@@ -192,8 +188,7 @@ void Marker::setPosToClosestEnemyIfVisible() {
     pos_ = eng.basicUtils->getClosestPos(eng.player->pos,
                                           SpottedEnemiesPositions);
 
-    const Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
-    eng.player->target = actor;
+    eng.player->target = eng.basicUtils->getActorAtPos(pos_);
   }
 }
 

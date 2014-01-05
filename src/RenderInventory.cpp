@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Renderer.h"
 
-const int X_POS_WEIGHT = 60;
+const int X_POS_WEIGHT = 62;
 
 RenderInventory::RenderInventory(Engine& engine) : eng(engine) {}
 

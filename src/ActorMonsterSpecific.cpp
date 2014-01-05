@@ -300,7 +300,7 @@ bool Ghost::monsterSpecificOnActorTurn() {
                 ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
-            eng.log->addMsg("I dodge!", clrMessageGood);
+            eng.log->addMsg("I dodge!", clrMsgGood);
           } else {
             eng.player->getPropHandler().tryApplyProp(
               new PropSlowed(eng, propTurnsStandard));
@@ -336,6 +336,7 @@ void MiGo::specificSpawnStartItems() {
   inventory_->putItemInIntrinsics(item);
 
   spellsKnown.push_back(new SpellTeleport);
+  spellsKnown.push_back(new SpellMiGoHypnosis);
   spellsKnown.push_back(new SpellHealSelf);
 
   if(eng.dice.coinToss()) {

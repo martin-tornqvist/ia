@@ -88,13 +88,10 @@ void CharacterDescr::makeLines() {
     lines.push_back(StrAndClr(
                       offset + "+" + toString(MTH) +
                       "% damage against all strange creatures", clrText));
-    const int CASTING_BON =
-      eng.player->getMth() / CAST_FROM_MEMORY_MTH_BON_DIV;
-    if(CASTING_BON > 0) {
+    const bool IS_SPI_BON = eng.player->getMth() >= MTH_LVL_SPELLS_SPI_BON;
+    if(IS_SPI_BON) {
       lines.push_back(StrAndClr(
-                        offset + "-" + toString(CASTING_BON) +
-                        " spirit required to cast spells",
-                        clrText));
+                        offset + "-1 Spirit cost for all spells", clrText));
     }
   }
   lines.push_back(StrAndClr(" ", clrText));

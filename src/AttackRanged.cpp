@@ -408,15 +408,14 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
       }
 
       if(data.currentDefender == eng.player) {
-        eng.log->addMsg("I am hit" + dmgPunctuation, clrMessageBad, true);
+        eng.log->addMsg("I am hit" + dmgPunctuation, clrMsgBad, true);
       } else {
         string otherName = "It";
 
         if(eng.map->cells[defX][defY].isSeenByPlayer)
           otherName = data.currentDefender->getNameThe();
 
-        eng.log->addMsg(
-          otherName + " is hit" + dmgPunctuation, clrMessageGood);
+        eng.log->addMsg(otherName + " is hit" + dmgPunctuation, clrMsgGood);
       }
     }
   }

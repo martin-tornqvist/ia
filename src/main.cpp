@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
           dynamic_cast<Player*>(eng->player)->waitTurnsLeft = -1;
           eng->log->addMsg(
             "=== I AM DEAD === (press any key to view postmortem information)",
-            clrMessageBad);
+            clrMsgBad);
           eng->renderer->drawMapAndInterface();
           eng->query->waitForKeyPress();
           eng->highScore->gameOver(false);

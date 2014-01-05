@@ -96,8 +96,8 @@ void Trap::bump(Actor& actorBumping) {
       if(result >= successSmall) {
         if(isHidden_ == false) {
           if(ACTOR_CAN_SEE) {
-            actorBumping.eng.log->addMsg(
-              "I avoid a " + trapName + ".", clrMessageGood);
+            actorBumping.eng.log->addMsg("I avoid a " + trapName + ".",
+                                         clrMsgGood);
           }
         }
       } else {
@@ -270,11 +270,11 @@ void TrapDart::specificTrigger(Actor& actor,
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg("I dodge a dart!", clrMessageGood);
+        eng.log->addMsg("I dodge a dart!", clrMsgGood);
       } else {
         eng.log->addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
-          clrMessageGood);
+          clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
@@ -287,11 +287,11 @@ void TrapDart::specificTrigger(Actor& actor,
     if(eng.dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("A dart barely misses me!", clrMessageGood);
+          eng.log->addMsg("A dart barely misses me!", clrMsgGood);
         } else {
           eng.log->addMsg(
             "A mechanism triggers, I hear something barely missing me!",
-            clrMessageGood);
+            clrMsgGood);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
         eng.log->addMsg("A dart barely misses " + actorName + "!");
@@ -300,14 +300,14 @@ void TrapDart::specificTrigger(Actor& actor,
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("I am hit by a dart!", clrMessageBad);
+          eng.log->addMsg("I am hit by a dart!", clrMsgBad);
         } else {
           eng.log->addMsg(
             "A mechanism triggers, I feel a needle piercing my skin!",
-            clrMessageBad);
+            clrMsgBad);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(actorName + " is hit by a dart!", clrMessageGood);
+        eng.log->addMsg(actorName + " is hit by a dart!", clrMsgGood);
       }
 
       const int DMG = eng.dice(1, 8);
@@ -343,11 +343,11 @@ void TrapSpear::specificTrigger(Actor& actor,
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg("I dodge a spear!", clrMessageGood);
+        eng.log->addMsg("I dodge a spear!", clrMsgGood);
       } else {
         eng.log->addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
-          clrMessageGood);
+          clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
@@ -360,11 +360,11 @@ void TrapSpear::specificTrigger(Actor& actor,
     if(eng.dice.percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("A spear barely misses me!", clrMessageGood);
+          eng.log->addMsg("A spear barely misses me!", clrMsgGood);
         } else {
           eng.log->addMsg(
             "A mechanism triggers, I hear a *swoosh*!",
-            clrMessageGood);
+            clrMsgGood);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
@@ -375,16 +375,15 @@ void TrapSpear::specificTrigger(Actor& actor,
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("I am hit by a spear!", clrMessageBad);
+          eng.log->addMsg("I am hit by a spear!", clrMsgBad);
         } else {
           eng.log->addMsg(
             "A mechanism triggers, something sharp pierces my skin!",
-            clrMessageBad);
+            clrMsgBad);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
-          eng.log->addMsg(
-            actorName + " is hit by a spear!", clrMessageGood);
+          eng.log->addMsg(actorName + " is hit by a spear!", clrMsgGood);
         }
       }
 
@@ -504,9 +503,9 @@ void TrapBlindingFlash::specificTrigger(Actor& actor,
       if(CAN_SEE) {
         eng.log->addMsg(
           "I cover my eyes just in time to avoid an intense flash!",
-          clrMessageGood);
+          clrMsgGood);
       } else {
-        eng.log->addMsg("I feel a mechanism trigger!", clrMessageGood);
+        eng.log->addMsg("I feel a mechanism trigger!", clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {

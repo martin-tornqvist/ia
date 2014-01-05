@@ -23,12 +23,10 @@ public:
 
   void run();
 
-  inline unsigned int getNrSpells() const {
-    return learnedSpells.size();
-  }
+  inline unsigned int getNrSpells() const {return knownSpells.size();}
 
   inline Spell* getSpellAt(const unsigned int ELEMENT) const {
-    return learnedSpells.at(ELEMENT);
+    return knownSpells.at(ELEMENT);
   }
 
   void learnSpellIfNotKnown(Spell* const spell);
@@ -38,7 +36,7 @@ public:
 private:
   void draw(MenuBrowser& browser);
 
-  vector<Spell*> learnedSpells;
+  vector<Spell*> knownSpells;
 
   Engine& eng;
 };

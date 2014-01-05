@@ -237,7 +237,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
   if(ALLOW_MESSAGES) {
     if(isHpGained) {
       if(this == eng.player) {
-        eng.log->addMsg("I feel healthier!", clrMessageGood);
+        eng.log->addMsg("I feel healthier!", clrMsgGood);
       } else {
         if(eng.player->checkIfSeeActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks healthier.");
@@ -281,7 +281,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
   if(ALLOW_MESSAGES) {
     if(isSpiGained) {
       if(this == eng.player) {
-        eng.log->addMsg("I feel more spirited!", clrMessageGood);
+        eng.log->addMsg("I feel more spirited!", clrMsgGood);
       } else {
         if(eng.player->checkIfSeeActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks more spirited.");
