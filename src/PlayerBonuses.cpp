@@ -42,6 +42,8 @@ void PlayerBonHandler::getTraitTitle(
     case traitCourageous:           strRef = "Courageous";              break;
     case traitSelfPossessed:        strRef = "Self-possessed";          break;
     case traitMythologist:          strRef = "Mythologist";             break;
+    case traitWarlock:              strRef = "Warlock";                 break;
+    case traitSeer:                 strRef = "Seer";                    break;
     case traitDexterous:            strRef = "Dexterous";               break;
     case traitLithe:                strRef = "Lithe";                   break;
     case traitMobile:               strRef = "Mobile";                  break;
@@ -183,6 +185,18 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "50% less shock taken from seeing terrifying creatures, ";
       strRef += "for casting spells and using and identifying strange items ";
       strRef += "(e.g. potions)";
+    } break;
+
+    case traitWarlock: {
+      strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
+      strRef += "has a chance to make you \"Charged\" on the next turn, which ";
+      strRef += "makes your spells do maximum damage";
+    } break;
+
+    case traitSeer: {
+      strRef  = "The spell \"Clairvoyance\" has double duration, and ";
+      strRef += "detection spells have increased range - spirit costs for ";
+      strRef += "these spells are reduced";
     } break;
 
     case traitSelfPossessed: {
@@ -339,6 +353,14 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitMythologist: {
       traitsRef.push_back(traitCoolHeaded);
+      bgRef = bgOccultist;
+    } break;
+
+    case traitWarlock: {
+      bgRef = bgOccultist;
+    } break;
+
+    case traitSeer: {
       bgRef = bgOccultist;
     } break;
 

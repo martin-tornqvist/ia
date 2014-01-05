@@ -33,6 +33,8 @@ enum Trait_t {
   traitMobile,
   traitLithe,
   traitMythologist,
+  traitWarlock,
+  traitSeer,
   traitObservant,
   traitVigilant,
   traitTreasureHunter,

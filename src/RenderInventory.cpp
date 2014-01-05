@@ -7,9 +7,9 @@
 #include "Log.h"
 #include "Renderer.h"
 
-RenderInventory::RenderInventory(Engine& engine) :
-  eng(engine), X_POS_LEFT(1), X_POS_WEIGHT(X_POS_LEFT + 60) {
-}
+const int X_POS_WEIGHT = 60;
+
+RenderInventory::RenderInventory(Engine& engine) : eng(engine) {}
 
 void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
                                const int X_NEW, const int Y,
@@ -24,7 +24,7 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
 
 void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     const vector<InventorySlotButton>& invSlotButtons) {
-  Pos pos(X_POS_LEFT, 0);
+  Pos pos(0, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
@@ -35,7 +35,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
 
-  const int X_POS_ITEM_NAME = X_POS_LEFT + 14;
+  const int X_POS_ITEM_NAME = 15;
 
   pos.y++;
 
@@ -45,7 +45,7 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
     str.at(0) = 'a' + i;
     InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
     str += slot->interfaceName;
-    pos.x = X_POS_LEFT;
+    pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x = X_POS_ITEM_NAME;
@@ -83,11 +83,11 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 
   str = "x) Browse backpack";
   str.at(0) = invSlotButtons.back().key + 1;
-  pos.x = X_POS_LEFT;
+  pos.x = 0;
   pos.y += 1;
   const bool IS_CUR_POS = browser.getPos().y == int(invSlotButtons.size());
   eng.renderer->drawText(str, panel_screen, pos,
-                          IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
+                         IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
 
   eng.renderer->updateScreen();
 }
@@ -95,19 +95,16 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
 void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     const vector<unsigned int>& genInvIndexes) {
 
-  Pos pos(X_POS_LEFT, 0);
-
-//  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  eng.renderer->coverArea(panel_screen, Pos(0, 1),
-                           Pos(MAP_W, NR_ITEMS + 1));
 
-  const bool HAS_ANY_ITEM = genInvIndexes.empty() == false;
+  eng.renderer->coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_ITEMS + 1));
 
-  string str =
-    HAS_ANY_ITEM ? "Browsing backpack. | shift+select to drop" :
-    "I carry no items.";
+  string str = NR_ITEMS > 0 ?
+               "Browsing backpack. | shift+select to drop" :
+               "I carry no items.";
   str += " | space/esc to exit";
+
+  Pos pos(0, 0);
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
@@ -122,10 +119,10 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
                                     item->getInterfaceClr();
     str = "x) ";
     str.at(0) = 'a' + i;
-    pos.x = X_POS_LEFT;
+    pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false);
     eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
@@ -142,7 +139,7 @@ void RenderInventory::drawEquipMode(
   const MenuBrowser& browser, const SlotTypes_t slotToEquip,
   const vector<unsigned int>& genInvIndexes) {
 
-  Pos pos(X_POS_LEFT, 0);
+  Pos pos(0, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
@@ -183,10 +180,10 @@ void RenderInventory::drawEquipMode(
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     str = "x) ";
     str.at(0) = 'a' + i;
-    pos.x = X_POS_LEFT;
+    pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
@@ -217,9 +214,9 @@ void RenderInventory::drawEquipMode(
 
 void RenderInventory::drawUseMode(const MenuBrowser& browser,
                                   const vector<unsigned int>& genInvIndexes) {
-  const int X_POS_CMD = X_POS_LEFT + 11;
+  const int X_POS_CMD = 11;
 
-  Pos pos(X_POS_LEFT, 0);
+  Pos pos(0, 0);
 
 //  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
@@ -256,7 +253,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
       isNewLabel = label != labelPrev;
     }
     if(isNewLabel) {
-      pos.x = X_POS_LEFT;
+      pos.x = 0;
       eng.renderer->drawText(label, panel_screen, pos, clrYellow);
     }
 
@@ -266,7 +263,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     pos.x = X_POS_CMD;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     str = eng.itemDataHandler->getItemRef(*item, itemRef_plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {

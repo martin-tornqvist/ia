@@ -32,12 +32,10 @@ private:
     return *this;
   }
 
-  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y, const SDL_Color& clr);
+  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW,
+                const int Y, const SDL_Color& clr);
 
   Engine& eng;
-
-  const int X_POS_LEFT;
-  const int X_POS_WEIGHT;
 
   friend class Examine;
 };

@@ -79,7 +79,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   const int BGS_BOX_W_HALF = 6;
   Rect boxRect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
                Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
-  eng.renderer->drawPopupBox(boxRect, panel_screen);
+  eng.renderer->drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int MARGIN_W_DESCR  = 12;
@@ -222,7 +222,7 @@ void PlayerCreateCharacter::drawPickTrait(
   Rect boxRect(
     Pos(MARGIN_W - 2, Y0_TRAITS - 1),
     Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
-  eng.renderer->drawPopupBox(boxRect, panel_screen);
+  eng.renderer->drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
@@ -324,7 +324,7 @@ void PlayerEnterName::draw(const string& currentString) const {
   eng.renderer->drawText(
     NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME), clrNosferatuTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-  eng.renderer->drawPopupBox(boxRect, panel_screen);
+  eng.renderer->drawPopupBox(boxRect);
   eng.renderer->updateScreen();
 }
 
