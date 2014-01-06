@@ -82,7 +82,7 @@ void ExplosionMaker::runExplosion(
   Prop* const prop, const bool OVERRIDE_EXPLOSION_RENDERING,
   const SDL_Color colorOverride) {
 
-  BasicData data(origin, width, height);
+  BasicData data(origin, w, h);
 
   //Set up explosion reach array
   bool blockers[MAP_W][MAP_H];
@@ -203,7 +203,7 @@ void ExplosionMaker::runExplosion(
 
 void ExplosionMaker::runSmokeExplosion(const Pos& origin,
                                        const bool SMALL_RADIUS) {
-  const int RADIUS = SMALL_RADIUS == true ? 3 : width;
+  const int RADIUS = SMALL_RADIUS == true ? 3 : w;
   BasicData data(origin, RADIUS, RADIUS);
 
   //Set up explosion reach array

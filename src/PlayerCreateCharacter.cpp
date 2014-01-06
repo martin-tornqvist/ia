@@ -49,8 +49,8 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosferatuTealLgt;
-  const SDL_Color& clrInactive    = clrNosferatuTealDrk;
+  const SDL_Color& clrActive      = clrNosfTealLgt;
+  const SDL_Color& clrInactive    = clrNosfTealDrk;
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
@@ -186,8 +186,8 @@ void PlayerCreateCharacter::drawPickTrait(
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosferatuTealLgt;
-  const SDL_Color& clrInactive    = clrNosferatuTealDrk;
+  const SDL_Color& clrActive      = clrNosfTealLgt;
+  const SDL_Color& clrInactive    = clrNosfTealDrk;
   const SDL_Color& clrActiveBg    = clrBlack;
   const SDL_Color& clrInactiveBg  = clrBlack;
 
@@ -321,8 +321,8 @@ void PlayerEnterName::draw(const string& currentString) const {
     currentString;
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
-  eng.renderer->drawText(
-    NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME), clrNosferatuTealLgt);
+  eng.renderer->drawText(NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME),
+                         clrNosfTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
   eng.renderer->drawPopupBox(boxRect);
   eng.renderer->updateScreen();

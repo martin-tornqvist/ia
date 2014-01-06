@@ -98,8 +98,8 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   }
 
   trace << "MainMenu: Drawing main menu" << endl;
-  SDL_Color clrActive     = clrNosferatuTealLgt;
-  SDL_Color clrInactive   = clrNosferatuTealDrk;
+  SDL_Color clrActive     = clrNosfTealLgt;
+  SDL_Color clrInactive   = clrNosfTealDrk;
   SDL_Color clrActiveBg   = clrBlack;
   SDL_Color clrInactiveBg = clrBlack;
 

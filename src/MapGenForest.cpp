@@ -194,7 +194,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
     bool vision[MAP_W][MAP_H];
 
-    const int SEARCH_RADI = FOV_STANDARD_RADI_INT - 2;
+    const int SEARCH_RADI = FOV_STD_RADI_INT - 2;
     const int TRY_PLACE_EVERY_N_STEP = 2;
 
     vector<Pos> gravePositions;

@@ -397,7 +397,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
             CellPredBlocksBodyType(bodyType_flying, true, eng), blockers);
 
           const int SPAWN_AFTER_X =
-            eng.player->pos.x + FOV_STANDARD_RADI_INT + 1;
+            eng.player->pos.x + FOV_STD_RADI_INT + 1;
           for(int y = 0; y  < MAP_H; y++) {
             for(int x = 0; x <= SPAWN_AFTER_X; x++) {
               blockers[x][y] = true;

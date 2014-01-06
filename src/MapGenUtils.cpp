@@ -296,8 +296,8 @@ void MapGen::makePathByRandomWalk(
 }
 
 void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
-  for(int dy = 0; dy < t->height; dy++) {
-    for(int dx = 0; dx < t->width; dx++) {
+  for(int dy = 0; dy < t->h; dy++) {
+    for(int dx = 0; dx < t->w; dx++) {
       const Feature_t featureId = t->featureVector[dy][dx];
       if(featureId != feature_empty) {
         eng.featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));

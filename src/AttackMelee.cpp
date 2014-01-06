@@ -22,21 +22,21 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   if(data.isEtherealDefenderMissed == false) {
     if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
       const bool IS_DEFENDER_KILLED =
-        data.currentDefender->hit(data.dmg, wpn.getData().meleeDmgType, true);
+        data.curDefender->hit(data.dmg, wpn.getData().meleeDmgType, true);
 
       if(IS_DEFENDER_KILLED == false) {
-        data.currentDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
+        data.curDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
       if(data.attackResult >= successNormal) {
-        if(data.currentDefender->getData().canBleed == true) {
-          eng.gore->makeBlood(data.currentDefender->pos);
+        if(data.curDefender->getData().canBleed == true) {
+          eng.gore->makeBlood(data.curDefender->pos);
         }
       }
       if(IS_DEFENDER_KILLED == false) {
         if(wpn.getData().meleeCausesKnockBack) {
           if(data.attackResult > successSmall) {
             eng.knockBack->tryKnockBack(
-              *(data.currentDefender), data.attacker->pos, false);
+              *(data.curDefender), data.attacker->pos, false);
           }
         }
       }
@@ -44,18 +44,18 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       if(
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
-        Sound snd("", endOfSfx, true, data.currentDefender->pos, false, true);
+        Sound snd("", endOfSfx, true, data.curDefender->pos, false, true);
         eng.soundEmitter->emitSound(snd);
       }
     }
   }
 
-  if(data.currentDefender == eng.player) {
+  if(data.curDefender == eng.player) {
     if(data.attackResult >= failSmall) {
       dynamic_cast<Monster*>(data.attacker)->isStealth = false;
     }
   } else {
-    Monster* const monster = dynamic_cast<Monster*>(data.currentDefender);
+    Monster* const monster = dynamic_cast<Monster*>(data.curDefender);
     monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
   }
   eng.gameTime->actorDidAct();
@@ -69,8 +69,8 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
     if(data.attacker == eng.player) {
-      if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
-        otherName = data.currentDefender->getNameThe();
+      if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+        otherName = data.curDefender->getNameThe();
       } else {
         otherName = "It ";
       }
@@ -113,8 +113,8 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
     if(data.isEtherealDefenderMissed) {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
       if(data.attacker == eng.player) {
-        if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
-          otherName = data.currentDefender->getNameThe();
+        if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+          otherName = data.curDefender->getNameThe();
         } else {
           otherName = "It ";
         }
@@ -145,8 +145,8 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
       if(data.attacker == eng.player) {
         const string wpnVerb = wpn.getData().meleeAttackMessages.player;
 
-        if(eng.player->checkIfSeeActor(*data.currentDefender, NULL)) {
-          otherName = data.currentDefender->getNameThe();
+        if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+          otherName = data.curDefender->getNameThe();
         } else {
           otherName = "it";
         }

@@ -18,7 +18,7 @@ class Weapon;
 class AttackData {
 public:
   Actor* attacker;
-  Actor* currentDefender;
+  Actor* curDefender;
   AbilityRollResult_t attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
@@ -47,7 +47,7 @@ public:
                    ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
-  ActorSizes_t  currentDefenderSize;
+  ActorSizes_t  curDefenderSize;
   string        verbPlayerAttacks;
   string        verbOtherAttacks;
 };
@@ -59,7 +59,7 @@ public:
                     ActorSizes_t intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSizes_t  intendedAimLevel;
-  ActorSizes_t  currentDefenderSize;
+  ActorSizes_t  curDefenderSize;
 };
 
 struct Projectile {

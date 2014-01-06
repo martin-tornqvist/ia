@@ -14,7 +14,7 @@ void Fov::checkOneCellOfMany(
 
   const Pos deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
   const vector<Pos>* pathDeltas =
-    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
   if(pathDeltas == NULL) {
     return;
@@ -63,13 +63,13 @@ bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
 
   if(
     eng.basicUtils->chebyshevDist(origin, cellToCheck) >
-    FOV_STANDARD_RADI_INT) {
+    FOV_STD_RADI_INT) {
     return false;
   }
 
   const Pos deltaToTarget(cellToCheck - origin);
   const vector<Pos>* pathDeltas =
-    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
   if(pathDeltas == NULL) {
     return false;
@@ -119,13 +119,13 @@ void Fov::runFovOnArray(const bool obstructions[MAP_W][MAP_H],
 
   values[origin.x][origin.y] = true;
 
-  const int checkX_end = min(MAP_W - 1, origin.x + FOV_STANDARD_RADI_INT);
-  const int checkY_end = min(MAP_H - 1, origin.y + FOV_STANDARD_RADI_INT);
+  const int checkX_end = min(MAP_W - 1, origin.x + FOV_STD_RADI_INT);
+  const int checkY_end = min(MAP_H - 1, origin.y + FOV_STD_RADI_INT);
 
-  int checkX = max(0, origin.x - FOV_STANDARD_RADI_INT);
+  int checkX = max(0, origin.x - FOV_STD_RADI_INT);
 
   while(checkX <= checkX_end) {
-    int checkY = max(0, origin.y - FOV_STANDARD_RADI_INT);
+    int checkY = max(0, origin.y - FOV_STD_RADI_INT);
 
     while(checkY <= checkY_end) {
       checkOneCellOfMany(obstructions, Pos(checkX, checkY), origin, values,
@@ -151,7 +151,7 @@ void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
   eng.map->cells[origin.x][origin.y].isSeenByPlayer = true;
   visionTmp[origin.x][origin.y] = true;
 
-  const int R = FOV_STANDARD_RADI_INT;
+  const int R = FOV_STD_RADI_INT;
   const int X0 = getConstrInRange(0, origin.x - R, MAP_W - 1);
   const int Y0 = getConstrInRange(0, origin.y - R, MAP_H - 1);
   const int X1 = getConstrInRange(0, origin.x + R, MAP_W - 1);

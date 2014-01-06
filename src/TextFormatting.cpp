@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 
-void TextFormatting::lineToLines(string line, const int MAX_WIDTH,
+void TextFormatting::lineToLines(string line, const int MAX_W,
                                  vector<string>& linesRef) const {
   linesRef.resize(0);
 
@@ -17,7 +17,7 @@ void TextFormatting::lineToLines(string line, const int MAX_WIDTH,
   }
 
   while(curWord.empty() == false) {
-    if(isWordFit(linesRef.at(curRow), curWord, MAX_WIDTH) == false) {
+    if(isWordFit(linesRef.at(curRow), curWord, MAX_W) == false) {
       //Current word did not fit on current line, make a new line
       curRow++;
       linesRef.resize(curRow + 1);
@@ -60,9 +60,9 @@ void TextFormatting::readAndRemoveNextWord(
 }
 
 bool TextFormatting::isWordFit(string& currentString, const string& wordToFit,
-                               const unsigned int MAX_WIDTH) const {
+                               const unsigned int MAX_W) const {
 
-  return currentString.size() + wordToFit.size() + 1 <= MAX_WIDTH;
+  return currentString.size() + wordToFit.size() + 1 <= MAX_W;
 }
 
 void TextFormatting::getSpaceSeparatedList(

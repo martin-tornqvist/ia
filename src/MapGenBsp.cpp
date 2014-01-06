@@ -729,13 +729,13 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //void MapGenBsp::makeRiver(Region* regions[3][3]) {
 //  (void)regions;
 //
-//  const int WIDTH = eng.dice.range(4, 12);
+//  const int W = eng.dice.range(4, 12);
 //  const int START_X_OFFSET_MAX = 5;
 //  const int X_POS_START = MAP_W/2 + eng.dice.range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
 //
 //  Pos leftPos(X_POS_START, 0);
-//  while(eng.basicUtils->isPosInsideMap(leftPos) && eng.basicUtils->isPosInsideMap(leftPos + Pos(WIDTH,0))) {
-//    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(WIDTH, 0)), feature_deepWater);
+//  while(eng.basicUtils->isPosInsideMap(leftPos) && eng.basicUtils->isPosInsideMap(leftPos + Pos(W,0))) {
+//    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(W, 0)), feature_deepWater);
 //    leftPos += Pos(eng.dice.range(-1,1), 1);
 //  }
 //}

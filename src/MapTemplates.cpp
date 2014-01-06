@@ -111,8 +111,8 @@ MapTemplate MapTemplateHandler::stringToTemplate(const string str, const vector<
   }
 
   result.featureVector.swap(resultVector);
-  result.width  = result.featureVector.at(0).size();
-  result.height = result.featureVector.size();
+  result.w  = result.featureVector.at(0).size();
+  result.h = result.featureVector.size();
 
   return result;
 }

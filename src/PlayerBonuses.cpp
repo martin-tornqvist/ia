@@ -94,10 +94,10 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
       s = "Has an arcane ability to hide from monsters (press [x])";
       linesRef.push_back(s);
       linesRef.push_back("");
-      s = "+10% hit chance with ranged attacks vs unaware targets";
+      s = "+25% hit chance with ranged attacks vs unaware targets";
       linesRef.push_back(s);
       linesRef.push_back("");
-      s = "Takes no shock from seeing monsters while they are unaware";
+      s = "Takes no shock from seeing monsters if they are unaware";
       linesRef.push_back(s);
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
@@ -170,7 +170,8 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitDemolitionExpert: {
-      strRef = "Increased area of effect from Dynamite and Molotov Cocktails";
+      strRef =  "Increased area of effect from Dynamite and Molotov ";
+      strRef += "Cocktails, you occasionally light explosives instantly";
     } break;
 
     case traitCoolHeaded: {
@@ -275,11 +276,11 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitStrongSpirited: {
-      strRef  = "+2 Spirit Points, increased Spirit Point regeneration rate";
+      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
     case traitMightySpirited: {
-      strRef  = "+2 Spirit Points, increased Spirit Point regeneration rate";
+      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
     case traitStealthy: {
@@ -522,6 +523,8 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
   switch(bg_) {
     case bgOccultist: {
       pickTrait(traitStrongSpirited);
+
+      eng.player->changeMaxHp(-2, false);
 
       //Player starts with a scroll of Azathoths Wrath, and one other random
       //scroll - both are identified

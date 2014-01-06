@@ -181,7 +181,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, keyRepeatDelay, true);
+                       clrNosfTealLgt, 1, 3, keyRepeatDelay, true);
       if(NR != -1) {
         keyRepeatDelay = NR;
         eng.input->setKeyRepeatDelays();
@@ -192,7 +192,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, keyRepeatInterval, true);
+                       clrNosfTealLgt, 1, 3, keyRepeatInterval, true);
       if(NR != -1) {
         keyRepeatInterval = NR;
         eng.input->setKeyRepeatDelays();
@@ -203,7 +203,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayProjectileDraw, true);
+                       clrNosfTealLgt, 1, 3, delayProjectileDraw, true);
       if(NR != -1) {
         delayProjectileDraw = NR;
       }
@@ -213,7 +213,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayShotgun, true);
+                       clrNosfTealLgt, 1, 3, delayShotgun, true);
       if(NR != -1) {
         delayShotgun = NR;
       }
@@ -223,7 +223,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
-                       clrNosferatuTealLgt, 1, 3, delayExplosion, true);
+                       clrNosfTealLgt, 1, 3, delayExplosion, true);
       if(NR != -1) {
         delayExplosion = NR;
       }
@@ -242,8 +242,8 @@ void Config::draw(const MenuBrowser* const browser,
                   const int OPTION_VALUES_X_POS,
                   const int OPTIONS_Y_POS) {
 
-  const SDL_Color clrActive     = clrNosferatuTealLgt;
-  const SDL_Color clrInactive   = clrNosferatuTealDrk;
+  const SDL_Color clrActive     = clrNosfTealLgt;
+  const SDL_Color clrInactive   = clrNosfTealDrk;
 
   eng.renderer->clearScreen();
 
@@ -476,28 +476,28 @@ void Config::parseFontNameAndSetCellDims() {
     ch = fontName.at(0);
   }
 
-  string widthStr = "";
+  string wStr = "";
   while(ch != 'x') {
     fontName.erase(fontName.begin());
-    widthStr += ch;
+    wStr += ch;
     ch = fontName.at(0);
   }
 
   fontName.erase(fontName.begin());
   ch = fontName.at(0);
 
-  string heightStr = "";
+  string hStr = "";
   while(ch != '_' && ch != '.') {
     fontName.erase(fontName.begin());
-    heightStr += ch;
+    hStr += ch;
     ch = fontName.at(0);
   }
 
   trace << "Config: Parsed font image name, found dims: ";
-  trace << widthStr << "x" << heightStr << endl;
+  trace << wStr << "x" << hStr << endl;
 
-  cellW = toInt(widthStr)  * fontScale;
-  cellH = toInt(heightStr) * fontScale;
+  cellW = toInt(wStr)  * fontScale;
+  cellH = toInt(hStr) * fontScale;
   trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 

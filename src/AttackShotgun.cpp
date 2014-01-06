@@ -92,7 +92,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           printProjectileAtActorMessages(*data, true);
 
           //Damage
-          data->currentDefender->hit(
+          data->curDefender->hit(
             data->dmg, wpn.getData().rangedDmgType, true);
 
           nrActorsHit++;
@@ -104,7 +104,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           //or at floor level but beyond the current position, the shot will
           //continue one cell.
           const bool IS_TARGET_KILLED =
-            data->currentDefender->deadState != actorDeadState_alive;
+            data->curDefender->deadState != actorDeadState_alive;
           if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
             monsterKilledInElement = i;
           }

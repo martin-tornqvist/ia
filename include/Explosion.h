@@ -16,7 +16,7 @@ class Engine;
 class ExplosionMaker {
 public:
   ExplosionMaker(Engine& engine) :
-    width(5), height(5), eng(engine) {
+    w(5), h(5), eng(engine) {
   }
 
   ExplosionMaker& operator=(const ExplosionMaker& other) {
@@ -36,13 +36,13 @@ public:
 
 private:
 
-  const int width;
-  const int height;
+  const int w;
+  const int h;
 
   struct BasicData {
-    BasicData(const Pos& origin, const int width, const int height) :
-      x0(origin.x - (width - 1) / 2), y0(origin.y - (height - 1) / 2),
-      x1(origin.x + (width - 1) / 2), y1(origin.y + (height - 1) / 2) {
+    BasicData(const Pos& origin, const int w, const int h) :
+      x0(origin.x - (w - 1) / 2), y0(origin.y - (h - 1) / 2),
+      x1(origin.x + (w - 1) / 2), y1(origin.y + (h - 1) / 2) {
     }
 
     BasicData& operator=(const BasicData& other) {

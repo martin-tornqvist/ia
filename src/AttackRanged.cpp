@@ -138,14 +138,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //HIT ACTOR?
         if(
-          curProj->attackData->currentDefender != NULL &&
+          curProj->attackData->curDefender != NULL &&
           curProj->isObstructed == false &&
           curProj->attackData->isEtherealDefenderMissed == false) {
 
           const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
           if(
-            curProj->attackData->currentDefenderSize >= actorSize_humanoid ||
+            curProj->attackData->curDefenderSize >= actorSize_humanoid ||
             IS_ACTOR_AIMED_FOR) {
 
             if(curProj->attackData->attackResult >= successSmall) {
@@ -172,16 +172,16 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
               curProj->isDoneRendering = true;
               curProj->isObstructed = true;
-              curProj->actorHit = curProj->attackData->currentDefender;
+              curProj->actorHit = curProj->attackData->curDefender;
               curProj->obstructedInElement = projectilePathElement;
 
-              const bool DIED = curProj->attackData->currentDefender->hit(
+              const bool DIED = curProj->attackData->curDefender->hit(
                                   curProj->attackData->dmg,
                                   wpn.getData().rangedDmgType, true);
               if(DIED == false) {
                 // Aply weapon hit properties
                 PropHandler& defenderPropHandler =
-                  curProj->attackData->currentDefender->getPropHandler();
+                  curProj->attackData->curDefender->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
                 // Knock-back?
@@ -190,7 +190,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                   if(curData->attackResult >= successSmall) {
                     const bool IS_SPIKE_GUN = wpn.getData().id == item_spikeGun;
                     eng.knockBack->tryKnockBack(
-                      *(curData->currentDefender), curData->attacker->pos,
+                      *(curData->curDefender), curData->attacker->pos,
                       IS_SPIKE_GUN);
                   }
                 }
@@ -392,8 +392,8 @@ void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
 void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
     const bool IS_HIT) const {
   //Only print messages if player can see the cell
-  const int defX = data.currentDefender->pos.x;
-  const int defY = data.currentDefender->pos.y;
+  const int defX = data.curDefender->pos.x;
+  const int defY = data.curDefender->pos.y;
   if(eng.map->cells[defX][defY].isSeenByPlayer) {
 
     //Punctuation or exclamation marks depending on attack strength
@@ -407,13 +407,13 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
           dmgPunctuation;
       }
 
-      if(data.currentDefender == eng.player) {
+      if(data.curDefender == eng.player) {
         eng.log->addMsg("I am hit" + dmgPunctuation, clrMsgBad, true);
       } else {
         string otherName = "It";
 
         if(eng.map->cells[defX][defY].isSeenByPlayer)
-          otherName = data.currentDefender->getNameThe();
+          otherName = data.curDefender->getNameThe();
 
         eng.log->addMsg(otherName + " is hit" + dmgPunctuation, clrMsgGood);
       }

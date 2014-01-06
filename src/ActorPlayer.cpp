@@ -1238,7 +1238,7 @@ void Player::specificAddLight(
   if(isUsingLightGivingItem) {
     bool myLight[MAP_W][MAP_H];
     eng.basicUtils->resetArray(myLight, false);
-    const int RADI = FOV_STANDARD_RADI_INT; //LitFlare::getLightRadius();
+    const int RADI = FOV_STD_RADI_INT; //LitFlare::getLightRadius();
     Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos x1y1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
@@ -1276,7 +1276,7 @@ void Player::updateFov() {
   }
 
   if(propHandler_->hasProp(propClairvoyant)) {
-    const int FLOODFILL_TRAVEL_LIMIT = FOV_STANDARD_RADI_INT + 2;
+    const int FLOODFILL_TRAVEL_LIMIT = FOV_STD_RADI_INT + 2;
 
     const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
     const int Y0 = max(0, pos.y - FLOODFILL_TRAVEL_LIMIT);

@@ -61,7 +61,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
-  const int MIN_DIST_TO_PLAYER = FOV_STANDARD_RADI_INT + 3;
+  const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
   const Pos& playerPos = eng.player->pos;
   const int X0 = max(0, playerPos.x - MIN_DIST_TO_PLAYER);
@@ -108,7 +108,7 @@ void PopulateMonsters::populateCaveLevel() const {
 
   bool blockers[MAP_W][MAP_H];
 
-  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 2;
+  const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
@@ -150,7 +150,7 @@ void PopulateMonsters::populateIntroLevel() {
 
   bool blockers[MAP_W][MAP_H];
 
-  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 3;
+  const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
@@ -194,7 +194,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
 
   bool blockers[MAP_W][MAP_H];
 
-  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT - 2;
+  const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
 
   MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
                    blockers);
@@ -488,7 +488,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  vector<Pos> freeCells;
 //  eng.mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
-//  const int MIN_DIST_FROM_PLAYER = eng.map->getDlvl() == 0 ? FOV_STANDARD_RADI_INT + 1 : FOV_STANDARD_RADI_INT - 1;
+//  const int MIN_DIST_FROM_PLAYER = eng.map->getDlvl() == 0 ? FOV_STD_RADI_INT + 1 : FOV_STD_RADI_INT - 1;
 //
 //  unsigned int i = 0;
 //  bool increaseIndex = true;
@@ -554,7 +554,7 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //  vector<Pos> freeCells;
 //  eng.mapTests->makeBoolVectorFromMapArray(blockers, freeCells);
 //
-//  const int MIN_DIST_FROM_PLAYER = FOV_STANDARD_RADI_INT + 4;
+//  const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 4;
 //
 //  if(freeCells.size() > 0) {
 //    bool done = false;

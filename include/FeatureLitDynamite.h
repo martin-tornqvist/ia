@@ -32,7 +32,7 @@ public:
   void addLight(bool light[MAP_W][MAP_H]) const;
 
 //  static int getLightRadius() {
-//    return FOV_STANDARD_RADI_INT;
+//    return FOV_STD_RADI_INT;
 //  }
 
 private:

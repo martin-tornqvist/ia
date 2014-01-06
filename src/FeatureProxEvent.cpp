@@ -75,28 +75,33 @@ void ProxEventWallCrumble::playerIsNear() {
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
     ActorId_t monsterType = actor_zombie;
-    const int RND = eng.dice.range(0, 4);
+    const int RND = eng.dice.range(1, 5);
     switch(RND) {
-      case 0: {
+      case 1: {
         monsterType = actor_zombie;
         nrMonsterLimitExceptAdjToEntry = 4;
       } break;
-      case 1: {
+
+      case 2: {
         monsterType = actor_zombieAxe;
         nrMonsterLimitExceptAdjToEntry = 3;
       } break;
-      case 2: {
+
+      case 3: {
         monsterType = actor_bloatedZombie;
         nrMonsterLimitExceptAdjToEntry = 1;
       } break;
-      case 3: {
+
+      case 4: {
         monsterType = actor_rat;
         nrMonsterLimitExceptAdjToEntry = 30;
       } break;
-      case 4: {
+
+      case 5: {
         monsterType = actor_ratThing;
         nrMonsterLimitExceptAdjToEntry = 20;
       } break;
+
       default: {} break;
     }
     int nrMonstersSpawned = 0;

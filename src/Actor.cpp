@@ -87,10 +87,10 @@ bool Actor::checkIfSeeActor(
       return false;
     }
 
-    if(pos.x - other.pos.x > FOV_STANDARD_RADI_INT) return false;
-    if(other.pos.x - pos.x > FOV_STANDARD_RADI_INT) return false;
-    if(other.pos.y - pos.y > FOV_STANDARD_RADI_INT) return false;
-    if(pos.y - other.pos.y > FOV_STANDARD_RADI_INT) return false;
+    if(pos.x - other.pos.x > FOV_STD_RADI_INT) return false;
+    if(other.pos.x - pos.x > FOV_STD_RADI_INT) return false;
+    if(other.pos.y - pos.y > FOV_STD_RADI_INT) return false;
+    if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
 
     if(visionBlockingCells != NULL) {
       const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;

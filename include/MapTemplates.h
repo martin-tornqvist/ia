@@ -26,7 +26,7 @@ struct MapTemplate {
   vector<vector<Feature_t> > featureVector;
 
   MapTemplateId_t templateId;
-  int width, height;
+  int w, h;
 };
 
 class MapTemplateHandler {

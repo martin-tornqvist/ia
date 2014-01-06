@@ -142,26 +142,26 @@ TEST(FormatText) {
   Engine eng;
   TextFormatting t;
   string str = "one two three four";
-  int lineMaxWidth = 100;
+  int lineMaxW = 100;
   vector<string> formattedLines;
-  t.lineToLines(str, lineMaxWidth, formattedLines);
+  t.lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL(str, formattedLines.at(0));
   CHECK_EQUAL(int(formattedLines.size()), 1);
 
-  lineMaxWidth = 13;
-  t.lineToLines(str, lineMaxWidth, formattedLines);
+  lineMaxW = 13;
+  t.lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two three", formattedLines.at(0));
   CHECK_EQUAL("four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
 
-  lineMaxWidth = 15;
-  t.lineToLines(str, lineMaxWidth, formattedLines);
+  lineMaxW = 15;
+  t.lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two three", formattedLines.at(0));
   CHECK_EQUAL("four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
 
-  lineMaxWidth = 11;
-  t.lineToLines(str, lineMaxWidth, formattedLines);
+  lineMaxW = 11;
+  t.lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two", formattedLines.at(0));
   CHECK_EQUAL("three four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
@@ -249,7 +249,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 
   //Test precalculated FOV line offsets
   const vector<Pos>* deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, 1));
@@ -257,7 +257,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, 3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, 1));
@@ -265,7 +265,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(-3, 3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, -1));
@@ -273,7 +273,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, -3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STANDARD_RADI_DB);
+    eng.lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, -1));
@@ -303,7 +303,7 @@ TEST_FIXTURE(BasicFixture, Fov) {
 
   eng.fov->runPlayerFov(blockers, eng.player->pos);
 
-  const int R = FOV_STANDARD_RADI_INT;
+  const int R = FOV_STD_RADI_INT;
 
   CHECK(eng.map->cells[X    ][Y    ].isSeenByPlayer);
   CHECK(eng.map->cells[X + 1][Y    ].isSeenByPlayer);

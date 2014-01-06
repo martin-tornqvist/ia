@@ -211,7 +211,7 @@ SpellCastRetData SpellMayhem::specificCast(
   const Pos& playerPos = eng.player->pos;
 
   const int NR_OF_SWEEPS  = 5;
-  const int AREA_RADI     = FOV_STANDARD_RADI_INT + 1;
+  const int AREA_RADI     = FOV_STD_RADI_INT + 1;
 
   const int X0 = max(1, playerPos.x - AREA_RADI);
   const int Y0 = max(1, playerPos.y - AREA_RADI);
@@ -323,7 +323,7 @@ SpellCastRetData SpellDetectItems::specificCast(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
-  const int RADI    = FOV_STANDARD_RADI_INT + 3;
+  const int RADI    = FOV_STD_RADI_INT + 3;
   const int ORIG_X  = eng.player->pos.x;
   const int ORIG_Y  = eng.player->pos.y;
   const int X0      = max(0, ORIG_X - RADI);
@@ -908,7 +908,7 @@ SpellCastRetData SpellSummonRandom::specificCast(
   Pos summonPos(caster->pos);
 
   vector<Pos> freePositionsSeenByPlayer;
-  const int RADI = FOV_STANDARD_RADI_INT;
+  const int RADI = FOV_STD_RADI_INT;
   const Pos playerPos(eng.player->pos);
   const int X0 = max(0, playerPos.x - RADI);
   const int Y0 = max(0, playerPos.y - RADI);

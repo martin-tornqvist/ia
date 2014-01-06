@@ -67,9 +67,9 @@ void CharacterLines::drawInfoLines() {
 
   Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
 
-  const SDL_Color clrGenDrk = clrNosferatuTealDrk;
-  const SDL_Color clrGenLgt = clrNosferatuTealLgt;
-  const SDL_Color clrGenMed = clrNosferatuTeal;
+  const SDL_Color clrGenDrk = clrNosfTealDrk;
+  const SDL_Color clrGenLgt = clrNosfTealLgt;
+  const SDL_Color clrGenMed = clrNosfTeal;
 
   //Name
 //  str = player->getNameA();
