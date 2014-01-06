@@ -14,24 +14,25 @@
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
-    case spell_azathothsWrath:      return "Azathoths Wrath";         break;
-    case spell_enfeeble:            return "Enfeeblement";            break;
-    case spell_teleport:            return "Teleportation";           break;
-    case spell_bless:               return "Blessing";                break;
-    case spell_mayhem:              return "Mayhem";                  break;
-    case spell_pestilence:          return "Pestilence";              break;
-    case spell_detectItems:         return "Detect Items";            break;
-    case spell_detectTraps:         return "Detect Traps";            break;
-    case spell_clairvoyance:        return "Clairvoyance";            break;
-    case spell_opening:             return "Opening";                 break;
-    case spell_mthPower:            return "Thaumaturgic Alteration"; break;
-    case spell_sacrificeLife:       return "Sacrifice Life Force";    break;
-    case spell_sacrificeSpirit:     return "Sacrifice Spirit";        break;
-    case spell_disease:             return "";                        break;
-    case spell_summonRandom:        return "";                        break;
-    case spell_healSelf:            return "";                        break;
-    case spell_knockBack:           return "";                        break;
-    case spell_rogueHide:           return "";                        break;
+    case spell_azathothsWrath:      return "Azathoths Wrath";
+    case spell_enfeeble:            return "Enfeeblement";
+    case spell_teleport:            return "Teleportation";
+    case spell_bless:               return "Blessing";
+    case spell_mayhem:              return "Mayhem";
+    case spell_pestilence:          return "Pestilence";
+    case spell_detectItems:         return "Detect Items";
+    case spell_detectTraps:         return "Detect Traps";
+    case spell_clairvoyance:        return "Clairvoyance";
+    case spell_opening:             return "Opening";
+    case spell_mthPower:            return "Thaumaturgic Alteration";
+    case spell_sacrificeLife:       return "Sacrifice Life Force";
+    case spell_sacrificeSpirit:     return "Sacrifice Spirit";
+    case spell_disease:             return "";
+    case spell_summonRandom:        return "";
+    case spell_healSelf:            return "";
+    case spell_knockBack:           return "";
+    case spell_rogueHide:           return "";
+    case spell_miGoHypnosis:        return "";
     case endOfSpells: {} break;
   }
   assert(false && "No spell found for scroll");
@@ -208,7 +209,7 @@ void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void ScrollNameHandler::setParametersFromSaveLines(vector<string>& lines) {
+void ScrollNameHandler::setParamsFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     if(eng.itemDataHandler->dataList[i]->isScroll) {
       eng.itemDataHandler->dataList[i]->name.name = lines.front();

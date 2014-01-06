@@ -35,7 +35,7 @@ public:
   virtual void itemSpecificAddSaveLines(vector<string>& lines) {
     (void)lines;
   }
-  virtual void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  virtual void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
     (void)lines;
   }
 

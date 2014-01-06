@@ -278,7 +278,7 @@ public:
   bool isWeaponStronger(const ItemData& data1, const ItemData& data2,
                         const bool IS_MELEE);
   void addSaveLines(vector<string>& lines) const;
-  void setParametersFromSaveLines(vector<string>& lines);
+  void setParamsFromSaveLines(vector<string>& lines);
 
 private:
   void initDataList();

@@ -20,13 +20,13 @@ public:
   void newTurnInInventory();
 
   void itemSpecificAddSaveLines(vector<string>& lines);
-  void itemSpecificSetParametersFromSaveLines(vector<string>& lines);
+  void itemSpecificSetParamsFromSaveLines(vector<string>& lines);
 
   void identify(const bool IS_SILENT_IDENTIFY);
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
-  virtual void deviceSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  virtual void deviceSpecificSetParamsFromSaveLines(vector<string>& lines) {
     (void)lines;
   }
 

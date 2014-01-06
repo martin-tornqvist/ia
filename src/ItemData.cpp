@@ -1260,7 +1260,7 @@ void ItemDataHandler::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void ItemDataHandler::setParametersFromSaveLines(vector<string>& lines) {
+void ItemDataHandler::setParamsFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     dataList[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());

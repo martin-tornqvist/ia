@@ -74,7 +74,7 @@ public:
   int flareFuseTurns;
 
   void addSaveLines(vector<string>& lines) const;
-  void setParametersFromSaveLines(vector<string>& lines);
+  void setParamsFromSaveLines(vector<string>& lines);
 
   bool insanityPhobias[endOfInsanityPhobias];
   bool insanityObsessions[endOfInsanityObsessions];

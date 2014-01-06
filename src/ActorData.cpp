@@ -54,6 +54,25 @@ void ActorData::reset() {
   aggroSfxMonsterHidden = endOfSfx;
 }
 
+void ActorDataHandler::addSaveLines(vector<string>& lines) const {
+  for(unsigned int i = 1; i < endOfActorIds; i++) {
+    lines.push_back(toString(dataList[i].nrLeftAllowedToSpawn));
+    lines.push_back(toString(dataList[i].nrOfKills));
+  }
+}
+
+void ActorDataHandler::setParamsFromSaveLines(vector<string>& lines) {
+  for(unsigned int i = 1; i < endOfActorIds; i++) {
+    ActorData& d = dataList[i];
+    const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
+    lines.erase(lines.begin());
+    const int NR_KILLS = toInt(lines.front());
+    lines.erase(lines.begin());
+    d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
+    d.nrOfKills = NR_KILLS;
+  }
+}
+
 void ActorDataHandler::addData(ActorData& d) {
   dataList[d.id] = d;
   d.description.resize(0);
@@ -1164,6 +1183,7 @@ void ActorDataHandler::initDataList() {
   d.spi = 8;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 25);
+  d.abilityVals.setVal(ability_dodgeAttack, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 15;
   d.canSeeInDarkness = true;

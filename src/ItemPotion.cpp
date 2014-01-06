@@ -359,7 +359,7 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void PotionNameHandler::setParametersFromSaveLines(vector<string>& lines) {
+void PotionNameHandler::setParamsFromSaveLines(vector<string>& lines) {
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     ItemData* const d = eng.itemDataHandler->dataList[i];
     if(d->isPotion) {

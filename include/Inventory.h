@@ -132,7 +132,7 @@ public:
   void getAllItems(vector<Item*>& itemList) const;
 
   void addSaveLines(vector<string>& lines) const;
-  void setParametersFromSaveLines(
+  void setParamsFromSaveLines(
     vector<string>& lines, Engine& engine);
 
 private:

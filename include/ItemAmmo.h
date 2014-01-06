@@ -32,7 +32,7 @@ public:
     lines.push_back(toString(data_->ammoContainedInClip));
   }
 
-  void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
     data_->ammoContainedInClip = toInt(lines.front());
     lines.erase(lines.begin());
   }

@@ -85,7 +85,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Inventory::setParametersFromSaveLines(
+void Inventory::setParamsFromSaveLines(
   vector<string>& lines, Engine& engine) {
 
   for(unsigned int i = 0; i < slots_.size(); i++) {
@@ -102,7 +102,7 @@ void Inventory::setParametersFromSaveLines(
       item = engine.itemFactory->spawnItem(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
-      item->itemSpecificSetParametersFromSaveLines(lines);
+      item->itemSpecificSetParamsFromSaveLines(lines);
 
       slots_.at(i).item = item;
     }
@@ -120,7 +120,7 @@ void Inventory::setParametersFromSaveLines(
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
-    item->itemSpecificSetParametersFromSaveLines(lines);
+    item->itemSpecificSetParamsFromSaveLines(lines);
     general_.push_back(item);
   }
 }

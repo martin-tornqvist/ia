@@ -30,7 +30,7 @@ public:
   void itemSpecificAddSaveLines(vector<string>& lines) {
     lines.push_back(toString(nrSupplies_));
   }
-  void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
     nrSupplies_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

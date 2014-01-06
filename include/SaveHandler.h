@@ -21,7 +21,7 @@ public:
 
 private:
   void collectLinesFromGame(vector<string>& lines);
-  void setGameParametersFromLines(vector<string>& lines) const;
+  void setGameParamsFromLines(vector<string>& lines) const;
   void readFile(vector<string>& lines);
   void writeFile(const vector<string>& lines) const;
 

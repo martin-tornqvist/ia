@@ -34,6 +34,7 @@ enum Trait_t {
   traitLithe,
   traitMythologist,
   traitWarlock,
+  traitBloodSorcerer,
   traitSeer,
   traitObservant,
   traitVigilant,
@@ -61,11 +62,11 @@ public:
 
   void addSaveLines(vector<string>& lines) {
     lines.push_back(toString(bg_));
-
+    lines.push_back(toString(traitsPicked_.size()));
     for(Trait_t t : traitsPicked_) {lines.push_back(toString(t));}
   }
 
-  void setParametersFromSaveLines(vector<string>& lines) {
+  void setParamsFromSaveLines(vector<string>& lines) {
     bg_ = Bg_t(toInt(lines.front()));
     lines.erase(lines.begin());
 

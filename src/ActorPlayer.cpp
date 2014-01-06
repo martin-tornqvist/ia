@@ -149,7 +149,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Player::setParametersFromSaveLines(vector<string>& lines) {
+void Player::setParamsFromSaveLines(vector<string>& lines) {
   const int NR_STATUS_EFFECTS = toInt(lines.front());
   lines.erase(lines.begin());
   for(int i = 0; i < NR_STATUS_EFFECTS; i++) {

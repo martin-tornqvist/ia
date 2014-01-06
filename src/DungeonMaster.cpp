@@ -39,7 +39,7 @@ void DungeonMaster::playerGainLvl() {
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
 
-  const int BON_EVERY_N_LVL = 3;
+  const int BON_EVERY_N_LVL = 2;
   if(clvl % BON_EVERY_N_LVL == 0) {
     eng.player->changeMaxSpi(1, true);
 
@@ -81,7 +81,7 @@ void DungeonMaster::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(timeStarted.second_));
 }
 
-void DungeonMaster::setParametersFromSaveLines(vector<string>& lines) {
+void DungeonMaster::setParamsFromSaveLines(vector<string>& lines) {
   clvl = toInt(lines.front());
   lines.erase(lines.begin());
   xp = toInt(lines.front());
@@ -132,7 +132,8 @@ void DungeonMaster::winGame() {
                                      Pos(MAP_W_HALF, Y0 + ii),
                                      clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
-        const string CMD_LABEL = "Space/Esc to record high-score and return to main menu";
+        const string CMD_LABEL =
+          "Space/Esc to record high-score and return to main menu";
         eng.renderer->drawTextCentered(
           CMD_LABEL, panel_screen,
           Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),

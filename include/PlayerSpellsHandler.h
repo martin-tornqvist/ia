@@ -33,6 +33,10 @@ public:
   void learnSpellIfNotKnown(const Spell_t id);
 
   bool isSpellLearned(const Spell_t id);
+
+  void addSaveLines(vector<string>& lines) const;
+
+  void setParamsFromSaveLines(vector<string>& lines);
 private:
   void draw(MenuBrowser& browser);
 

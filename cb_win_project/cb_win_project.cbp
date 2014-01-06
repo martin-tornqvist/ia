@@ -20,6 +20,7 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add directory="../include/debugModeIncl" />
+					<Add directory="../include" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -49,15 +50,13 @@
 					<Add option="-g" />
 					<Add directory="../test/UnitTest++/src" />
 					<Add directory="../test/include/stubs" />
-					<Add directory="../include/releaseModeIncl" />
+					<Add directory="../include/debugModeIncl" />
+					<Add directory="../include" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
 					<Add library="..\test\UnitTest++\bin\libUnitTest++.a" />
 				</Linker>
-				<ExtraCommands>
-					<Add after="cmd /c cd $TARGET_OUTPUT_DIR &amp; $TARGET_OUTPUT_BASENAME" />
-				</ExtraCommands>
 			</Target>
 			<Target title="Release">
 				<Option platforms="Windows;" />
@@ -68,6 +67,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="../include" />
 					<Add directory="../include/releaseModeIncl" />
 				</Compiler>
 				<Linker>
@@ -109,7 +109,6 @@
 			<Add option="-Wall" />
 			<Add option="-Wno-long-long" />
 			<Add directory="../API/SDL/include" />
-			<Add directory="../include" />
 		</Compiler>
 		<Linker>
 			<Add option="-lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer" />

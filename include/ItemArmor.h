@@ -21,7 +21,7 @@ public:
     lines.push_back(toString(dur_));
   }
 
-  void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
     dur_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

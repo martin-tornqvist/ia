@@ -188,8 +188,11 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
   }
 
   target->getPropHandler().tryApplyProp(
-    new PropParalyzed(eng, propTurnsSpecified, 1));
-  target->hit(eng.dice.range(1, 10), dmgType_physical, true);
+    new PropParalyzed(eng, propTurnsSpecified, 2));
+  target->hit(eng.dice.range(3, 10), dmgType_physical, true);
+
+  Sound snd("", endOfSfx, true, target->pos, true, true);
+  eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
 }
@@ -211,7 +214,7 @@ SpellCastRetData SpellMayhem::specificCast(
   const Pos& playerPos = eng.player->pos;
 
   const int NR_OF_SWEEPS  = 5;
-  const int AREA_RADI     = FOV_STD_RADI_INT + 1;
+  const int AREA_RADI     = FOV_STD_RADI_INT;
 
   const int X0 = max(1, playerPos.x - AREA_RADI);
   const int Y0 = max(1, playerPos.y - AREA_RADI);

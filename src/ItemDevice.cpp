@@ -104,10 +104,10 @@ void Device::itemSpecificAddSaveLines(vector<string>& lines) {
   deviceSpecificAddSaveLines(lines);
 }
 
-void Device::itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+void Device::itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
   isActivated_ = lines.back() == "1";
   lines.erase(lines.begin());
-  deviceSpecificSetParametersFromSaveLines(lines);
+  deviceSpecificSetParamsFromSaveLines(lines);
 }
 
 void Device::identify(const bool IS_SILENT_IDENTIFY) {

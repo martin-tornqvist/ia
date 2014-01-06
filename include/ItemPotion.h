@@ -246,7 +246,7 @@ public:
   void setColorAndFalseName(ItemData* d);
 
   void addSaveLines(vector<string>& lines) const;
-  void setParametersFromSaveLines(vector<string>& lines);
+  void setParamsFromSaveLines(vector<string>& lines);
 
 private:
   vector<StrAndClr> m_falseNames;

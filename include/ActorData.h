@@ -18,7 +18,8 @@ enum ActorId_t {
   actor_cultist, actor_cultistTeslaCannon, actor_cultistSpikeGun,
   actor_cultistPriest,
   actor_rat, actor_ratThing,
-  actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider, actor_lengSpider,
+  actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider,
+  actor_lengSpider,
   actor_miGo,
   actor_ghoul, actor_shadow,
   actor_wolf, actor_fireHound, actor_frostHound, actor_zuul,
@@ -32,7 +33,8 @@ enum ActorId_t {
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
   actor_dustVortex, actor_fireVortex, actor_frostVortex,
-  actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison, actor_colourOutOfSpace,
+  actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
+  actor_colourOutOfSpace,
   actor_huntingHorror,
 
   endOfActorIds
@@ -145,21 +147,9 @@ public:
 
   ActorData dataList[endOfActorIds];
 
-  void addSaveLines(vector<string>& lines) const {
-    for(unsigned int i = 0; i < endOfActorIds; i++) {
-      lines.push_back(toString(dataList[i].nrLeftAllowedToSpawn));
-      lines.push_back(toString(dataList[i].nrOfKills));
-    }
-  }
+  void addSaveLines(vector<string>& lines) const;
 
-  void setParametersFromSaveLines(vector<string>& lines) {
-    for(unsigned int i = 0; i < endOfActorIds; i++) {
-      dataList[i].nrLeftAllowedToSpawn = toInt(lines.front());
-      lines.erase(lines.begin());
-      dataList[i].nrOfKills = toInt(lines.front());
-      lines.erase(lines.begin());
-    }
-  }
+  void setParamsFromSaveLines(vector<string>& lines);
 
 private:
   void initDataList();

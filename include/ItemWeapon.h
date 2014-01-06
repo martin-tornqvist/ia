@@ -46,7 +46,7 @@ public:
     lines.push_back(toString(nrAmmoLoaded));
   }
 
-  void itemSpecificSetParametersFromSaveLines(vector<string>& lines) {
+  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
     meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
     nrAmmoLoaded = toInt(lines.front());

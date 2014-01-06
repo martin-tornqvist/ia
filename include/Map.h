@@ -57,7 +57,7 @@ public:
     lines.push_back(toString(dlvl_));
   }
 
-  void setParametersFromSaveLines(vector<string>& lines) {
+  void setParamsFromSaveLines(vector<string>& lines) {
     dlvl_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

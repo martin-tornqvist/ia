@@ -43,6 +43,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitSelfPossessed:        strRef = "Self-possessed";          break;
     case traitMythologist:          strRef = "Mythologist";             break;
     case traitWarlock:              strRef = "Warlock";                 break;
+    case traitBloodSorcerer:        strRef = "Blood Sorcerer";          break;
     case traitSeer:                 strRef = "Seer";                    break;
     case traitDexterous:            strRef = "Dexterous";               break;
     case traitLithe:                strRef = "Lithe";                   break;
@@ -183,8 +184,8 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitMythologist: {
-      strRef  = "50% less shock taken from seeing terrifying creatures, ";
-      strRef += "for casting spells and using and identifying strange items ";
+      strRef  = "-50% shock taken from seeing terrifying creatures, for ";
+      strRef += "casting spells and for using and identifying strange items ";
       strRef += "(e.g. potions)";
     } break;
 
@@ -192,6 +193,11 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
       strRef += "can make you \"Charged\" for one turn, causing attack spells ";
       strRef += "to do maximum damage";
+    } break;
+
+    case traitBloodSorcerer: {
+      strRef  = "-1 Spirit cost for all spells, casting a spell drains 2 ";
+      strRef += "Hit points";
     } break;
 
     case traitSeer: {
@@ -358,6 +364,12 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitWarlock: {
+      traitsRef.push_back(traitTough);
+      bgRef = bgOccultist;
+    } break;
+
+   case traitBloodSorcerer: {
+      traitsRef.push_back(traitFearless);
       traitsRef.push_back(traitTough);
       bgRef = bgOccultist;
     } break;

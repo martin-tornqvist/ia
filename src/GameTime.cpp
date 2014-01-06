@@ -22,7 +22,7 @@ void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(turn_));
 }
 
-void GameTime::setParametersFromSaveLines(vector<string>& lines) {
+void GameTime::setParamsFromSaveLines(vector<string>& lines) {
   turn_ = toInt(lines.front());
   lines.erase(lines.begin());
 }
@@ -179,10 +179,10 @@ void GameTime::runStandardTurnEvents() {
       //Regen Spi
       if(actor == eng.player) {
         if(eng.playerBonHandler->hasTrait(traitStrongSpirited)) {
-          regenSpiEveryNTurns -= 3;
+          regenSpiEveryNTurns -= 2;
         }
         if(eng.playerBonHandler->hasTrait(traitMightySpirited)) {
-          regenSpiEveryNTurns -= 3;
+          regenSpiEveryNTurns -= 2;
         }
       }
 

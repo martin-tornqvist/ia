@@ -33,7 +33,7 @@ public:
 
   void addSaveLines(vector<string>& lines) const;
 
-  void setParametersFromSaveLines(vector<string>& lines);
+  void setParamsFromSaveLines(vector<string>& lines);
 
   void insertActorInLoop(Actor* actor);
 

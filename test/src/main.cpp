@@ -20,6 +20,7 @@
 #include "SaveHandler.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
+#include "PlayerBonuses.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -419,6 +420,10 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.itemDataHandler->dataList[item_scrollOfTeleportation]->isTried = true;
   eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
 
+  //Bonus
+  eng.playerBonHandler->pickBg(bgRogue);
+  eng.playerBonHandler->traitsPicked_.push_back(traitHealer);
+
   //Player inventory
   Inventory& inv = eng.player->getInv();
   inv.moveItemToGeneral(inv.getSlot(slot_wielded));
@@ -460,6 +465,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfOpening]->isTried);
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isTried);
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isIdentified);
+
+  //Bonus
+  CHECK_EQUAL(bgRogue, eng.playerBonHandler->getBg());
+  CHECK(eng.playerBonHandler->hasTrait(traitHealer));
+  CHECK_EQUAL(false, eng.playerBonHandler->hasTrait(traitSharpShooter));
+  eng.playerBonHandler->traitsPicked_.push_back(traitHealer);
 
   //Player inventory
   Inventory& inv = eng.player->getInv();

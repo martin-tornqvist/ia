@@ -102,12 +102,24 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   eng.renderer->updateScreen();
 }
 
-bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
-  for(unsigned int i = 0; i < knownSpells.size(); i++) {
-    if(knownSpells.at(i)->getId() == id) {
-      return true;
-    }
+void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {
+  lines.push_back(toString(knownSpells.size()));
+  for(Spell * s : knownSpells) {lines.push_back(toString(s->getId()));}
+}
+
+void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {
+  const int NR_SPELLS = toInt(lines.front());
+  lines.erase(lines.begin());
+
+  for(int i = 0; i < NR_SPELLS; i++) {
+    const int ID = toInt(lines.front());
+    lines.erase(lines.begin());
+    knownSpells.push_back(eng.spellHandler->getSpellFromId(Spell_t(ID)));
   }
+}
+
+bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
+  for(Spell * s : knownSpells) {if(s->getId() == id) {return true;}}
   return false;
 }
 
@@ -117,7 +129,7 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(const Spell_t id) {
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
   bool isAlreadyLearned = false;
-  for(Spell* spellCmpr : knownSpells) {
+  for(Spell * spellCmpr : knownSpells) {
     if(spellCmpr->getId() == spell->getId()) {
       isAlreadyLearned = true;
       break;
@@ -129,4 +141,3 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
     knownSpells.push_back(spell);
   }
 }
-
