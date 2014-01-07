@@ -44,6 +44,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitMythologist:          strRef = "Mythologist";             break;
     case traitWarlock:              strRef = "Warlock";                 break;
     case traitBloodSorcerer:        strRef = "Blood Sorcerer";          break;
+    case traitSpiritCannibal:       strRef = "Spirit Cannibal";         break;
     case traitSeer:                 strRef = "Seer";                    break;
     case traitDexterous:            strRef = "Dexterous";               break;
     case traitLithe:                strRef = "Lithe";                   break;
@@ -198,6 +199,12 @@ void PlayerBonHandler::getTraitDescr(
     case traitBloodSorcerer: {
       strRef  = "-1 Spirit cost for all spells, casting a spell drains 2 ";
       strRef += "Hit points";
+    } break;
+
+    case traitSpiritCannibal: {
+      strRef  = "For every life you take, you gain 1 Spirit Point by ";
+      strRef += "absorbing a part of that creatures spirit (does not work ";
+      strRef += "on insignificant creatures like a small spider or a rat)";
     } break;
 
     case traitSeer: {
@@ -364,17 +371,25 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitWarlock: {
+      traitsRef.push_back(traitMythologist);
+      traitsRef.push_back(traitFearless);
+      bgRef = bgOccultist;
+    } break;
+
+    case traitBloodSorcerer: {
+      traitsRef.push_back(traitMythologist);
       traitsRef.push_back(traitTough);
       bgRef = bgOccultist;
     } break;
 
-   case traitBloodSorcerer: {
-      traitsRef.push_back(traitFearless);
-      traitsRef.push_back(traitTough);
+    case traitSpiritCannibal: {
+      traitsRef.push_back(traitMythologist);
+      traitsRef.push_back(traitMightySpirited);
       bgRef = bgOccultist;
     } break;
 
     case traitSeer: {
+      traitsRef.push_back(traitMythologist);
       traitsRef.push_back(traitObservant);
       bgRef = bgOccultist;
     } break;
@@ -540,7 +555,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
 
       //Player starts with a scroll of Azathoths Wrath, and one other random
       //scroll - both are identified
-      Item* scroll = eng.itemFactory->spawnItem(item_scrollOfAzathothsWrath);
+      Item* scroll = eng.itemFactory->spawnItem(item_scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
       eng.player->getInv().putItemInGeneral(scroll);
 

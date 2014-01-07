@@ -42,9 +42,7 @@ void DungeonMaster::playerGainLvl() {
   const int BON_EVERY_N_LVL = 2;
   if(clvl % BON_EVERY_N_LVL == 0) {
     eng.player->changeMaxSpi(1, true);
-
-    eng.player->incrMth(2);
-    eng.log->addMsg("I feel more knowledgeable!");
+    eng.player->incrMth(2, true);
   }
 }
 

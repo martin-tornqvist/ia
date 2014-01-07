@@ -562,7 +562,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------------MTH CHEAT
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
-      eng.player->incrMth(8);
+      eng.player->incrMth(8, false);
       clearEvents();
     }
     return;

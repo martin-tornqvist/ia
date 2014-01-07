@@ -14,6 +14,7 @@
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
+    case spell_darkbolt:            return "Darkbolt";
     case spell_azathothsWrath:      return "Azathoths Wrath";
     case spell_enfeeble:            return "Enfeeblement";
     case spell_teleport:            return "Teleportation";

@@ -35,6 +35,7 @@ enum Trait_t {
   traitMythologist,
   traitWarlock,
   traitBloodSorcerer,
+  traitSpiritCannibal,
   traitSeer,
   traitObservant,
   traitVigilant,

@@ -287,9 +287,12 @@ void Player::restoreShock(const int amountRestored,
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
-void Player::incrMth(const int VAL) {
+void Player::incrMth(const int VAL, const bool IS_MSG_ALLOWED) {
   mth = max(0, min(100, mth + VAL));
   insanity_ = max(0, min(100, insanity_ + VAL / 2));
+  if(IS_MSG_ALLOWED) {
+    eng.log->addMsg("I feel more insightful!");
+  }
 }
 
 void Player::incrInsanity() {

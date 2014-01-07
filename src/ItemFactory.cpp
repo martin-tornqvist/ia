@@ -117,6 +117,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_scrollOfDetectTraps:      item = new Scroll(d, eng); break;
     case item_scrollOfBlessing:         item = new Scroll(d, eng); break;
     case item_scrollOfClairvoyance:     item = new Scroll(d, eng); break;
+    case item_scrollOfDarkbolt:         item = new Scroll(d, eng); break;
     case item_scrollOfAzathothsWrath:   item = new Scroll(d, eng); break;
     case item_scrollOfOpening:          item = new Scroll(d, eng); break;
     case item_scrollOfSacrificeLife:    item = new Scroll(d, eng); break;

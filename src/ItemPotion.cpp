@@ -268,7 +268,7 @@ void PotionOfInsight::specificQuaff(Actor* const actor) {
   vector<Item*> itemIdentifyCandidates;
 
   vector<InventorySlot>& slots = inv.getSlots();
-  for(InventorySlot& slot : slots) {
+  for(InventorySlot & slot : slots) {
     Item* const item = slot.item;
     if(item) {
       const ItemData& d = item->getData();
@@ -278,7 +278,7 @@ void PotionOfInsight::specificQuaff(Actor* const actor) {
     }
   }
   vector<Item*>& general = inv.getGeneral();
-  for(Item* item : general) {
+  for(Item * item : general) {
     if(item->getData().id != item_potionOfInsight) {
       const ItemData& d = item->getData();
       if(d.isIdentified == false) {
@@ -305,8 +305,7 @@ void PotionOfInsight::specificQuaff(Actor* const actor) {
     eng.log->addMsg("It is identified as " + itemNameAfter + "!");
   }
 
-  eng.log->addMsg("I feel more insightful about mystic powers!");
-  eng.player->incrMth(4);
+  eng.player->incrMth(4, true);
   identify(false);
 }
 

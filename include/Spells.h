@@ -14,6 +14,7 @@ class Monster;
 
 enum Spell_t {
   //Player and monster available spells
+  spell_darkbolt,
   spell_azathothsWrath,
   spell_enfeeble,
   spell_teleport,
@@ -86,6 +87,20 @@ protected:
   virtual int getSpecificMaxSpiCost() const = 0;
 };
 
+class SpellDarkbolt: public Spell {
+public:
+  SpellDarkbolt() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster,
+                                 Engine& eng) override;
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
+  string getName()              const override {return "Darkbolt";}
+  Spell_t getId()               const override {return spell_darkbolt;}
+private:
+  SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI - 2;}
+};
+
 class SpellAzathothsWrath: public Spell {
 public:
   SpellAzathothsWrath() : Spell() {}
@@ -97,7 +112,7 @@ public:
   Spell_t getId()               const override {return spell_azathothsWrath;}
 private:
   SpellCastRetData specificCast(Actor* const caster, Engine& eng) override;
-  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI - 2;}
+  int getSpecificMaxSpiCost()   const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellMayhem: public Spell {

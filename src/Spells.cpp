@@ -38,6 +38,7 @@ Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
   switch(spellId) {
     case spell_enfeeble:            return new SpellEnfeeble;
     case spell_disease:             return new SpellDisease;
+    case spell_darkbolt:            return new SpellDarkbolt;
     case spell_azathothsWrath:      return new SpellAzathothsWrath;
     case spell_summonRandom:        return new SpellSummonRandom;
     case spell_healSelf:            return new SpellHealSelf;
@@ -134,8 +135,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
   return SpellCastRetData(false);
 }
 
-//------------------------------------------------------------ AZATHOTHS WRATH
-SpellCastRetData SpellAzathothsWrath::specificCast(
+//------------------------------------------------------------ DARKBOLT
+SpellCastRetData SpellDarkbolt::specificCast(
   Actor* const caster, Engine& eng) {
 
   Actor* target = NULL;
@@ -169,18 +170,18 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
   for(int i = 1; i < LINE_SIZE; i++) {
     const Pos& pos = line.at(i);
     if(eng.config->isTilesMode) {
-      eng.renderer->drawTile(tile_blastAnimation1, panel_map, pos, clrRedLgt);
+      eng.renderer->drawTile(tile_blastAnimation1, panel_map, pos, clrMagenta);
     } else {
-      eng.renderer->drawGlyph('*', panel_map, pos, clrRedLgt);
+      eng.renderer->drawGlyph('*', panel_map, pos, clrMagenta);
     }
     eng.renderer->updateScreen();
     eng.sdlWrapper->sleep(eng.config->delayProjectileDraw);
   }
 
   eng.renderer->drawBlastAnimationAtPositions(
-    vector<Pos> {target->pos}, clrRedLgt);
+    vector<Pos> {target->pos}, clrMagenta);
 
-  const string msgCmn = " struck by a roaring blast!";
+  const string msgCmn = " struck by a blast!";
   if(IS_PLAYER_CASTING) {
     eng.log->addMsg(target->getNameThe() + " is" + msgCmn, clrMsgGood);
   } else {
@@ -191,10 +192,61 @@ SpellCastRetData SpellAzathothsWrath::specificCast(
     new PropParalyzed(eng, propTurnsSpecified, 2));
   target->hit(eng.dice.range(3, 10), dmgType_physical, true);
 
-  Sound snd("", endOfSfx, true, target->pos, true, true);
+  Sound snd("", endOfSfx, true, target->pos, false, true);
   eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
+}
+
+bool SpellDarkbolt::isGoodForMonsterToCastNow(
+  Monster* const monster, Engine& eng) {
+  bool blockers[MAP_W][MAP_H];
+  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  return monster->checkIfSeeActor(*(eng.player), blockers);
+}
+
+//------------------------------------------------------------ AZATHOTHS WRATH
+SpellCastRetData SpellAzathothsWrath::specificCast(
+  Actor* const caster, Engine& eng) {
+
+  DiceParam spellDmg(1, 8, 0);
+
+  const string msgEnd = "struck by a roaring blast!";
+
+  if(caster == eng.player) {
+    vector<Actor*> targets;
+    eng.player->getSpottedEnemies(targets);
+
+    if(targets.empty()) {
+      return SpellCastRetData(false);
+    } else {
+      vector<Pos> actorPositions; actorPositions.resize(0);
+      for(Actor * a : targets) {actorPositions.push_back(a->pos);}
+
+      eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+        actorPositions, clrRedLgt);
+
+      for(Actor * actor : targets) {
+        eng.log->addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
+        actor->getPropHandler().tryApplyProp(
+          new PropParalyzed(eng, propTurnsSpecified, 2));
+        actor->hit(eng.dice(spellDmg), dmgType_physical, false);
+        Sound snd("", endOfSfx, true, actor->pos, true, true);
+        eng.soundEmitter->emitSound(snd);
+      }
+      return SpellCastRetData(true);
+    }
+  } else {
+    eng.log->addMsg("I am " + msgEnd, clrMsgBad);
+    eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      vector<Pos> {eng.player->pos}, clrRedLgt);
+    eng.player->getPropHandler().tryApplyProp(
+      new PropParalyzed(eng, propTurnsSpecified, 1));
+    eng.player->hit(eng.dice(spellDmg), dmgType_physical, false);
+    Sound snd("", endOfSfx, true, eng.player->pos, true, true);
+    eng.soundEmitter->emitSound(snd);
+  }
+  return SpellCastRetData(false);
 }
 
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
@@ -305,7 +357,7 @@ SpellCastRetData SpellPestilence::specificCast(
   eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
     positions, clrMagenta);
 
-  for(unsigned int i = 0; i < positions.size(); i++) {
+  for(Pos & pos : positions) {
     monsterId = actor_rat;
     if(dice(1, 3) == 1) {
       if(dice.coinToss()) {
@@ -314,7 +366,7 @@ SpellCastRetData SpellPestilence::specificCast(
         monsterId = dice.coinToss() ? actor_whiteSpider : actor_redSpider;
       }
     }
-    eng.actorFactory->spawnActor(monsterId, positions.at(i));
+    eng.actorFactory->spawnActor(monsterId, pos);
   }
 
   eng.log->addMsg("Disgusting critters appear around me!");
@@ -520,26 +572,24 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
 
   if(eng.dice.coinToss()) {
 
-    vector<Actor*> SpottedEnemies;
-    eng.player->getSpottedEnemies(SpottedEnemies);
+    vector<Actor*> targets;
+    eng.player->getSpottedEnemies(targets);
 
     const int MTH = eng.player->getMth();
 
     //Slay enemies
-    if(eng.dice.oneIn(2) && MTH >= 35 && SpottedEnemies.empty() == false) {
+    if(eng.dice.oneIn(2) && MTH >= 35 && targets.empty() == false) {
       vector<Pos> actorPositions;
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        actorPositions.push_back(SpottedEnemies.at(i)->pos);
-      }
+      for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
       eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
         actorPositions, clrYellow);
 
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        const string monsterName = SpottedEnemies.at(i)->getNameThe();
+      for(Actor * actor : targets) {
         eng.log->addMsg(
-          monsterName + " is crushed by an unseen force!", clrMsgGood);
-        SpottedEnemies.at(i)->hit(25, dmgType_physical, true);
+          actor->getNameThe() + " is crushed by an unseen force!",
+          clrMsgGood);
+        actor->hit(25, dmgType_physical, true);
       }
 
       eng.renderer->drawMapAndInterface(true);
@@ -688,27 +738,24 @@ SpellCastRetData SpellEnfeeble::specificCast(
   const PropId_t propId = getPropId(eng);
 
   if(caster == eng.player) {
-    vector<Actor*> SpottedEnemies;
-    eng.player->getSpottedEnemies(SpottedEnemies);
+    vector<Actor*> targets;
+    eng.player->getSpottedEnemies(targets);
 
-    if(SpottedEnemies.empty()) {
+    if(targets.empty()) {
       return SpellCastRetData(false);
     } else {
       vector<Pos> actorPositions;
       actorPositions.resize(0);
 
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        actorPositions.push_back(SpottedEnemies.at(i)->pos);
-      }
+      for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
       eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        PropHandler& propHandler = SpottedEnemies.at(i)->getPropHandler();
-        Prop* const prop = propHandler.makePropFromId(
-                             propId, propTurnsStandard);
-        propHandler.tryApplyProp(prop);
+      for(Actor * actor : targets) {
+        PropHandler& propHlr = actor->getPropHandler();
+        Prop* const prop = propHlr.makePropFromId(propId, propTurnsStandard);
+        propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
     }

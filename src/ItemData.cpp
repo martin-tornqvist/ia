@@ -1090,6 +1090,11 @@ void ItemDataHandler::initDataList() {
   d->spellCastFromScroll = spell_clairvoyance;
   dataList[d->id] = d;
 
+  d = new ItemData(item_scrollOfDarkbolt);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = spell_darkbolt;
+  dataList[d->id] = d;
+
   d = new ItemData(item_scrollOfAzathothsWrath);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_azathothsWrath;

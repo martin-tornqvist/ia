@@ -61,7 +61,7 @@ public:
   int getShockTotal() {return int(floor(shock_ + shockTemp_));}
   int getShockTmp() {return shockTemp_;}
   int getInsanity() const {return min(100, insanity_);}
-  void incrMth(const int VAL);
+  void incrMth(const int VAL, const bool IS_MSG_ALLOWED);
   int getMth() const {return mth;}
   void setTempShockFromFeatures();
 
