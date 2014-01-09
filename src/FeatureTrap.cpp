@@ -425,7 +425,7 @@ void TrapGasConfusion::specificTrigger(Actor& actor,
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, endOfSfx, false, new PropConfused(eng, propTurnsStd), true,
+    pos_, eng, 0, endOfSfx, false, new PropConfused(eng, propTurnsStd), true,
     getSpecificColor());
   traceVerbose << "TrapGasConfusion::specificTrigger() [DONE]" << endl;
 }
@@ -454,7 +454,7 @@ void TrapGasParalyzation::specificTrigger(Actor& actor,
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, endOfSfx, false, new PropParalyzed(eng, propTurnsStd),
+    pos_, eng, 0, endOfSfx, false, new PropParalyzed(eng, propTurnsStd),
     true, getSpecificColor());
   traceVerbose << "TrapGasParalyzation::specificTrigger() [DONE]" << endl;
 }
@@ -483,7 +483,7 @@ void TrapGasFear::specificTrigger(Actor& actor,
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, endOfSfx, false, new PropTerrified(eng, propTurnsStd),
+    pos_, eng, 0, endOfSfx, false, new PropTerrified(eng, propTurnsStd),
     true, getSpecificColor());
   traceVerbose << "TrapGasFear::specificTrigger() [DONE]" << endl;
 }

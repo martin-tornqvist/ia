@@ -82,12 +82,12 @@ void getPositionsReached(const Rect& area, const Pos& origin, const int RADI,
 } //Namespace
 
 namespace Explosion {
-void runExplosionAt(const Pos& origin, Engine& eng, const Sfx_t sfx,
-                    const bool SHOULD_DO_EXPLOSION_DMG, Prop* const prop,
-                    const bool SHOULD_OVERRIDE_CLR,
+void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
+                    const Sfx_t sfx, const bool SHOULD_DO_EXPLOSION_DMG,
+                    Prop* const prop, const bool SHOULD_OVERRIDE_CLR,
                     const SDL_Color& clrOverride) {
   Rect area;
-  const int RADI = 2; //TODO Parameter
+  const int RADI = 2 + RADI_CHANGE; //2 is default radius
   getArea(origin, RADI, area);
 
   vector< vector<Pos> > posLists;

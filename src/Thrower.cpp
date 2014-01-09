@@ -16,6 +16,7 @@
 #include "ItemFactory.h"
 #include "Attack.h"
 #include "LineCalc.h"
+#include "PlayerBonuses.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
@@ -74,8 +75,11 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     eng.renderer->drawMapAndInterface();
   } else {
     eng.log->addMsg("I throw a lit Molotov Cocktail.");
+    const int EXPL_RADI_CHANGE =
+      eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      Explosion::runExplosionAt(path.back(), eng, sfxExplosionMolotov, false,
+      Explosion::runExplosionAt(path.back(), eng, EXPL_RADI_CHANGE,
+                                sfxExplosionMolotov, false,
                                 new PropBurning(eng, propTurnsStd));
     }
   }

@@ -1555,7 +1555,7 @@ void PropParalyzed::onStart() {
       player->updateColor();
       eng.log->addMsg("The lit Molotov Cocktail falls from my hands!");
       Explosion::runExplosionAt(
-        player->pos, eng, sfxExplosionMolotov, false,
+        player->pos, eng, 0, sfxExplosionMolotov, false,
         new PropBurning(eng, propTurnsStd));
     }
   }

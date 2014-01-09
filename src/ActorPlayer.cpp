@@ -759,12 +759,12 @@ void Player::specificOnStandardTurn() {
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;
     if(dynamiteFuseTurns > 0) {
-      string fuseMessage = "***F";
+      string fuseMsg = "***F";
       for(int i = 0; i < dynamiteFuseTurns; i++) {
-        fuseMessage += "Z";
+        fuseMsg += "Z";
       }
-      fuseMessage += "***";
-      eng.log->addMsg(fuseMessage, clrYellow);
+      fuseMsg += "***";
+      eng.log->addMsg(fuseMsg, clrYellow);
     }
   }
   if(dynamiteFuseTurns == 0) {
@@ -782,7 +782,7 @@ void Player::specificOnStandardTurn() {
     eng.log->addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
-    Explosion::runExplosionAt(pos, eng, sfxExplosionMolotov, false,
+    Explosion::runExplosionAt(pos, eng, 0, sfxExplosionMolotov, false,
                               new PropBurning(eng, propTurnsStd));
   }
 

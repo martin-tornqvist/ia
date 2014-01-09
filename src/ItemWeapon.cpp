@@ -27,5 +27,5 @@ void Incinerator::weaponSpecific_projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
   Explosion::runExplosionAt(
-    pos, eng, sfxExplosion, true, new PropBurning(eng, propTurnsStd));
+    pos, eng, 0, sfxExplosion, true, new PropBurning(eng, propTurnsStd));
 }

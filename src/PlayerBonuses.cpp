@@ -172,8 +172,8 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitDemolitionExpert: {
-      strRef =  "Increased area of effect from Dynamite and Molotov ";
-      strRef += "Cocktails, you occasionally light explosives instantly";
+      strRef  =  "+1 radius for explosives (be careful), you occasionally ";
+      strRef += "light explosives instantly";
     } break;
 
     case traitCoolHeaded: {

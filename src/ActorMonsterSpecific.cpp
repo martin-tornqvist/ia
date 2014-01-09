@@ -252,8 +252,9 @@ bool Vortex::monsterSpecificOnActorTurn() {
 }
 
 void DustVortex::onMonsterDeath() {
-  Explosion::runExplosionAt(pos, eng, endOfSfx, false,
-                            new PropBlind(eng, propTurnsStd), true, clrGray);
+  Explosion::runExplosionAt(
+    pos, eng, 0, endOfSfx, false, new PropBlind(eng, propTurnsStd), true,
+    clrGray);
 }
 
 void DustVortex::specificSpawnStartItems() {
@@ -262,9 +263,9 @@ void DustVortex::specificSpawnStartItems() {
 }
 
 void FireVortex::onMonsterDeath() {
-  Explosion::runExplosionAt(pos, eng, endOfSfx, false,
-                            new PropBurning(eng, propTurnsStd),
-                            true, clrRedLgt);
+  Explosion::runExplosionAt(
+    pos, eng, 0, endOfSfx, false, new PropBurning(eng, propTurnsStd), true,
+    clrRedLgt);
 }
 
 void FireVortex::specificSpawnStartItems() {
