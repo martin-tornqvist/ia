@@ -1,11 +1,11 @@
 #ifndef FOV_H
 #define FOV_H
 
-#include "Map.h"
-
 #include "CommonData.h"
+#include "CommonTypes.h"
 
 class Actor;
+class Engine;
 
 class Fov {
 public:

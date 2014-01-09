@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "CommonTypes.h"
 #include "LineCalc.h"
+#include "Map.h"
 
 void Fov::checkOneCellOfMany(
   const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
