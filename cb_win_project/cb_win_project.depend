@@ -12298,13 +12298,14 @@
 	"Engine.h"
 	"Map.h"
 
-1389008248 source:d:\dev\ia.git\src\fov.cpp
+1389303695 source:d:\dev\ia.git\src\fov.cpp
 	"Fov.h"
 	<math.h>
 	<iostream>
 	"Engine.h"
 	"CommonTypes.h"
 	"LineCalc.h"
+	"Map.h"
 
 1384977799 source:d:\dev\ia.git\src\fovprecalc.cpp
 	"FovPreCalc.h"
@@ -12622,7 +12623,8 @@
 	"GameTime.h"
 	"Renderer.h"
 
-1388958591 source:d:\dev\ia.git\src\main.cpp
+1389304053 source:d:\dev\ia.git\src\main.cpp
+	<SDL.h>
 	"Engine.h"
 	"MainMenu.h"
 	"Renderer.h"

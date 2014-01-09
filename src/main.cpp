@@ -1,3 +1,5 @@
+#include <SDL.h>
+
 #include "Engine.h"
 
 #include "MainMenu.h"
