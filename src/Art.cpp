@@ -203,8 +203,8 @@ Pos Art::getColumnAndRowTile(const Tile_t tile) {
     case tile_water2: return Pos(8, 7); break;
     case tile_trapGeneral: return Pos(17, 5); break;
     case tile_cocoon: return Pos(10, 7); break;
-    case tile_blastAnimation1: return Pos(11, 7); break;
-    case tile_blastAnimation2: return Pos(12, 7); break;
+    case tile_blast1: return Pos(11, 7); break;
+    case tile_blast2: return Pos(12, 7); break;
     case tile_corpse: return Pos(13, 7); break;
     case tile_corpse2: return Pos(14, 7); break;
     case tile_projectileStandardFrontSlash: return Pos(15, 7); break;

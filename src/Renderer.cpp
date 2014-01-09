@@ -340,7 +340,7 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
                               pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
         if(eng.config->isTilesMode) {
-          drawTile(tile_blastAnimation1, panel_map, pos, color, clrBlack);
+          drawTile(tile_blast1, panel_map, pos, color, clrBlack);
         } else {
           drawGlyph('*', panel_map, pos, color, true, clrBlack);
         }
@@ -366,7 +366,7 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
                               pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
         if(eng.config->isTilesMode) {
-          drawTile(tile_blastAnimation2, panel_map, pos, color, clrBlack);
+          drawTile(tile_blast2, panel_map, pos, color, clrBlack);
         } else {
           drawGlyph('*', panel_map, pos, color, true, clrBlack);
         }
@@ -389,7 +389,7 @@ void Renderer::drawBlastAnimationAtPositions(
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
     if(eng.config->isTilesMode) {
-      drawTile(tile_blastAnimation1, panel_map, pos, color, clrBlack);
+      drawTile(tile_blast1, panel_map, pos, color, clrBlack);
     } else {
       drawGlyph('*', panel_map, pos, color, true, clrBlack);
     }
@@ -400,7 +400,7 @@ void Renderer::drawBlastAnimationAtPositions(
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
     if(eng.config->isTilesMode) {
-      drawTile(tile_blastAnimation2, panel_map, pos, color, clrBlack);
+      drawTile(tile_blast2, panel_map, pos, color, clrBlack);
     } else {
       drawGlyph('*', panel_map, pos, color, true, clrBlack);
     }

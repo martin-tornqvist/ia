@@ -25,7 +25,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   vector<Pos> path;
   eng.lineCalc->calcNewLine(eng.player->pos, aimCell, true,
-                             THROWING_RANGE_LIMIT, false, path);
+                            THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -75,9 +75,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   } else {
     eng.log->addMsg("I throw a lit Molotov Cocktail.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng.explosionMaker->runExplosion(
-        path.back(), sfxExplosionMolotov, false,
-        new PropBurning(eng, propTurnsStandard));
+      Explosion::runExplosionAt(path.back(), eng, sfxExplosionMolotov, false,
+                                new PropBurning(eng, propTurnsStd));
     }
   }
 
@@ -93,7 +92,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
   vector<Pos> path;
   eng.lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
-                             THROWING_RANGE_LIMIT, false, path);
+                            THROWING_RANGE_LIMIT, false, path);
 
   const ItemData& itemThrownData = itemThrown.getData();
 
@@ -141,7 +140,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           data->isEtherealDefenderMissed == false) {
           if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
             eng.renderer->drawGlyph('*', panel_map,
-                                     curPos, clrRedLgt);
+                                    curPos, clrRedLgt);
             eng.renderer->updateScreen();
             eng.sleep(eng.config->delayProjectileDraw * 4);
           }

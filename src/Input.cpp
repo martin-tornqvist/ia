@@ -594,7 +594,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_F9) {
     if(IS_DEBUG_MODE) {
       eng.player->getPropHandler().tryApplyProp(
-        new PropInfected(eng, propTurnsStandard));
+        new PropInfected(eng, propTurnsStd));
       clearEvents();
     }
     return;

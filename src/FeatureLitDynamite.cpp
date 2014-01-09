@@ -8,7 +8,7 @@
 void LitDynamite::newTurn() {
   turnsLeftToExplosion_--;
   if(turnsLeftToExplosion_ <= 0) {
-    eng.explosionMaker->runExplosion(pos_);
+    Explosion::runExplosionAt(pos_, eng);
     eng.gameTime->eraseFeatureMob(this, true);
   }
 }

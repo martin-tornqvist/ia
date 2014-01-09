@@ -59,7 +59,7 @@ void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfBlindness::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropBlind(eng, propTurnsStandard));
+    new PropBlind(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
@@ -72,7 +72,7 @@ void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfParalyzation::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropParalyzed(eng, propTurnsStandard));
+    new PropParalyzed(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
@@ -89,7 +89,7 @@ void PotionOfParalyzation::specificCollide(
 
 void PotionOfDisease::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropDiseased(eng, propTurnsStandard));
+    new PropDiseased(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
@@ -97,7 +97,7 @@ void PotionOfDisease::specificQuaff(Actor* const actor) {
 
 void PotionOfConfusion::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropConfused(eng, propTurnsStandard));
+    new PropConfused(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
@@ -113,7 +113,7 @@ void PotionOfConfusion::specificCollide(
 
 void PotionOfFrenzy::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropFrenzied(eng, propTurnsStandard));
+    new PropFrenzied(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
   }
@@ -129,7 +129,7 @@ void PotionOfFrenzy::specificCollide(const Pos& pos, Actor* const actor) {
 void PotionOfFortitude::specificQuaff(Actor* const actor) {
   PropHandler& propHandler = actor->getPropHandler();
 
-  PropRFear*      const rFear   = new PropRFear(eng, propTurnsStandard);
+  PropRFear*      const rFear   = new PropRFear(eng, propTurnsStd);
   PropRConfusion* const rConf   = new PropRConfusion(
     eng, propTurnsSpecified, rFear->turnsLeft_);
   PropRSleep*     const rSleep  = new PropRSleep(
@@ -180,7 +180,7 @@ void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfPoison::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropPoisoned(eng, propTurnsStandard));
+    new PropPoisoned(eng, propTurnsStd));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -196,7 +196,7 @@ void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfRFire::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropRFire(eng, propTurnsStandard));
+    new PropRFire(eng, propTurnsStd));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -230,7 +230,7 @@ void PotionOfAntidote::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfRElec::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropRElec(eng, propTurnsStandard));
+    new PropRElec(eng, propTurnsStd));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);
@@ -246,7 +246,7 @@ void PotionOfRElec::specificCollide(const Pos& pos, Actor* const actor) {
 
 void PotionOfRAcid::specificQuaff(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropRAcid(eng, propTurnsStandard));
+    new PropRAcid(eng, propTurnsStd));
 
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
     identify(false);

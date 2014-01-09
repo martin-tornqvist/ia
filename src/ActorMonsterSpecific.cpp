@@ -182,7 +182,7 @@ void Zuul::specificPlace() {
     deadState = actorDeadState_mangled;
     vector<Monster*> monsters;
     eng.actorFactory->summonMonsters(
-      pos, vector<ActorId_t>{actor_cultistPriest}, false, NULL, &monsters);
+      pos, vector<ActorId_t> {actor_cultistPriest}, false, NULL, &monsters);
     if(monsters.empty() == false) {
       Monster* const monster = monsters.at(0);
       PropHandler& propHandler = monster->getPropHandler();
@@ -252,9 +252,8 @@ bool Vortex::monsterSpecificOnActorTurn() {
 }
 
 void DustVortex::onMonsterDeath() {
-  eng.explosionMaker->runExplosion(
-    pos, endOfSfx, false, new PropBlind(eng, propTurnsStandard),
-    true, clrGray);
+  Explosion::runExplosionAt(pos, eng, endOfSfx, false,
+                            new PropBlind(eng, propTurnsStd), true, clrGray);
 }
 
 void DustVortex::specificSpawnStartItems() {
@@ -263,9 +262,9 @@ void DustVortex::specificSpawnStartItems() {
 }
 
 void FireVortex::onMonsterDeath() {
-  eng.explosionMaker->runExplosion(
-    pos, endOfSfx, false, new PropBurning(eng, propTurnsStandard),
-    true, clrRedLgt);
+  Explosion::runExplosionAt(pos, eng, endOfSfx, false,
+                            new PropBurning(eng, propTurnsStd),
+                            true, clrRedLgt);
 }
 
 void FireVortex::specificSpawnStartItems() {
@@ -303,7 +302,7 @@ bool Ghost::monsterSpecificOnActorTurn() {
             eng.log->addMsg("I dodge!", clrMsgGood);
           } else {
             eng.player->getPropHandler().tryApplyProp(
-              new PropSlowed(eng, propTurnsStandard));
+              new PropSlowed(eng, propTurnsStd));
           }
           eng.gameTime->actorDidAct();
           return true;
@@ -416,7 +415,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_giantLocust,
-                                              freeCells.at(0));
+                                             freeCells.at(0));
               Monster* const monster = dynamic_cast<Monster*>(actor);
               monster->playerAwarenessCounter = 999;
               monster->leader = this;
@@ -479,7 +478,7 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
 
           vector<Pos> line;
           eng.lineCalc->calcNewLine(pos, eng.player->pos, true, 9999,
-                                     false, line);
+                                    false, line);
 
           const int LINE_SIZE = line.size();
           for(int i = 0; i < LINE_SIZE; i++) {
@@ -556,7 +555,7 @@ void ColourOutOfSpace::specificOnStandardTurn() {
 
   if(eng.player->checkIfSeeActor(*this, NULL)) {
     eng.player->getPropHandler().tryApplyProp(
-      new PropConfused(eng, propTurnsStandard));
+      new PropConfused(eng, propTurnsStd));
   }
 }
 

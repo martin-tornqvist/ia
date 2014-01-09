@@ -59,7 +59,7 @@ enum PropId_t {
 enum PropTurnMode_t {propTurnModeStandard, propTurnModeActor};
 
 enum PropTurns_t {
-  propTurnsSpecified, propTurnsIndefinite, propTurnsStandard
+  propTurnsSpecified, propTurnsIndefinite, propTurnsStd
 };
 
 enum PropMsg_t {

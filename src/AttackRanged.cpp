@@ -152,10 +152,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
                 if(eng.config->isTilesMode) {
-                  curProj->setTile(tile_blastAnimation1, clrRedLgt);
+                  curProj->setTile(tile_blast1, clrRedLgt);
                   eng.renderer->drawProjectiles(projectiles);
                   eng.sleep(DELAY / 2);
-                  curProj->setTile(tile_blastAnimation2, clrRedLgt);
+                  curProj->setTile(tile_blast2, clrRedLgt);
                   eng.renderer->drawProjectiles(projectiles);
                   eng.sleep(DELAY / 2);
                 } else {
@@ -230,10 +230,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
             if(eng.config->isTilesMode) {
-              curProj->setTile(tile_blastAnimation1, clrYellow);
+              curProj->setTile(tile_blast1, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
-              curProj->setTile(tile_blastAnimation2, clrYellow);
+              curProj->setTile(tile_blast2, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
             } else {
@@ -261,10 +261,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
             if(eng.config->isTilesMode) {
-              curProj->setTile(tile_blastAnimation1, clrYellow);
+              curProj->setTile(tile_blast1, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
-              curProj->setTile(tile_blastAnimation2, clrYellow);
+              curProj->setTile(tile_blast2, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
             } else {

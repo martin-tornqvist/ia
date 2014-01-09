@@ -368,7 +368,7 @@ void Player::incrInsanity() {
           eng.popup->showMessage(msg, true, "Fainting!",
                                  sfxInsanityRising);
           propHandler_->tryApplyProp(
-            new PropFainted(eng, propTurnsStandard));
+            new PropFainted(eng, propTurnsStd));
           return;
         } break;
 
@@ -546,7 +546,7 @@ void Player::incrInsanity() {
           eng.popup->showMessage(msg, true, "Confusion!", sfxInsanityRising);
 
           propHandler_->tryApplyProp(
-            new PropConfused(eng, propTurnsStandard));
+            new PropConfused(eng, propTurnsStd));
 
           return;
         } break;
@@ -769,7 +769,7 @@ void Player::specificOnStandardTurn() {
   }
   if(dynamiteFuseTurns == 0) {
     eng.log->addMsg("The dynamite explodes in my hands!");
-    eng.explosionMaker->runExplosion(pos);
+    Explosion::runExplosionAt(pos, eng);
     updateColor();
     dynamiteFuseTurns = -1;
   }
@@ -782,9 +782,8 @@ void Player::specificOnStandardTurn() {
     eng.log->addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
-    eng.explosionMaker->runExplosion(
-      pos, sfxExplosionMolotov, false,
-      new PropBurning(eng, propTurnsStandard));
+    Explosion::runExplosionAt(pos, eng, sfxExplosionMolotov, false,
+                              new PropBurning(eng, propTurnsStd));
   }
 
   //Flare

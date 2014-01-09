@@ -170,7 +170,7 @@ SpellCastRetData SpellDarkbolt::specificCast(
   for(int i = 1; i < LINE_SIZE; i++) {
     const Pos& pos = line.at(i);
     if(eng.config->isTilesMode) {
-      eng.renderer->drawTile(tile_blastAnimation1, panel_map, pos, clrMagenta);
+      eng.renderer->drawTile(tile_blast1, panel_map, pos, clrMagenta);
     } else {
       eng.renderer->drawGlyph('*', panel_map, pos, clrMagenta);
     }
@@ -316,7 +316,7 @@ SpellCastRetData SpellMayhem::specificCast(
     if(&actor != eng.player) {
       if(eng.player->checkIfSeeActor(actor, NULL)) {
         actor.getPropHandler().tryApplyProp(
-          new PropBurning(eng, propTurnsStandard));
+          new PropBurning(eng, propTurnsStd));
       }
     }
   }
@@ -459,7 +459,7 @@ SpellCastRetData SpellClairvoyance::specificCast(
   Actor* const caster, Engine& eng) {
   (void)caster;
   eng.player->getPropHandler().tryApplyProp(
-    new PropClairvoyant(eng, propTurnsStandard), true, false);
+    new PropClairvoyant(eng, propTurnsStd), true, false);
   return SpellCastRetData(true);
 }
 
@@ -677,7 +677,7 @@ SpellCastRetData SpellBless::specificCast(
   Actor* const caster, Engine& eng) {
 
   caster->getPropHandler().tryApplyProp(
-    new PropBlessed(eng, propTurnsStandard));
+    new PropBlessed(eng, propTurnsStd));
 
   return SpellCastRetData(true);
 }
@@ -754,7 +754,7 @@ SpellCastRetData SpellEnfeeble::specificCast(
 
       for(Actor * actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
-        Prop* const prop = propHlr.makePropFromId(propId, propTurnsStandard);
+        Prop* const prop = propHlr.makePropFromId(propId, propTurnsStd);
         propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
@@ -765,7 +765,7 @@ SpellCastRetData SpellEnfeeble::specificCast(
 
     PropHandler& propHandler = eng.player->getPropHandler();
     Prop* const prop = propHandler.makePropFromId(
-                         propId, propTurnsStandard);
+                         propId, propTurnsStd);
     propHandler.tryApplyProp(prop);
 
     return SpellCastRetData(false);
@@ -939,7 +939,7 @@ SpellCastRetData SpellDisease::specificCast(
     eng.log->addMsg(
       "A disease is starting to afflict my body!", clrMsgBad);
     eng.player->getPropHandler().tryApplyProp(
-      new PropDiseased(eng, propTurnsStandard));
+      new PropDiseased(eng, propTurnsStd));
     return SpellCastRetData(false);
   }
 }

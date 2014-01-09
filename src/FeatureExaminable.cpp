@@ -215,7 +215,7 @@ void Tomb::doAction(const TombAction_t action) {
       } else {
         eng.log->addMsg("I make a misstake, the curse is doubled!");
         PropCursed* const curse =
-          new PropCursed(eng, propTurnsStandard);
+          new PropCursed(eng, propTurnsStd);
         curse->turnsLeft_ *= 2;
         propHandler.tryApplyProp(curse, true);
       }
@@ -320,7 +320,7 @@ void Tomb::triggerTrap() {
 
     case tombTrait_forebodingCarvedSigns: {
       eng.player->getPropHandler().tryApplyProp(
-        new PropCursed(eng, propTurnsStandard));
+        new PropCursed(eng, propTurnsStd));
     } break;
 
     case tombTrait_stench: {
@@ -330,17 +330,17 @@ void Tomb::triggerTrap() {
         SDL_Color fumeClr = clrMagenta;
         const int RND = eng.dice.percentile();
         if(RND < 20) {
-          prop = new PropPoisoned(eng, propTurnsStandard);
+          prop = new PropPoisoned(eng, propTurnsStd);
           fumeClr = clrGreenLgt;
         } else if(RND < 40) {
-          prop = new PropDiseased(eng, propTurnsStandard);
+          prop = new PropDiseased(eng, propTurnsStd);
           fumeClr = clrGreen;
         } else {
-          prop = new PropParalyzed(eng, propTurnsStandard);
+          prop = new PropParalyzed(eng, propTurnsStd);
           prop->turnsLeft_ *= 2;
         }
-        eng.explosionMaker->runExplosion(
-          pos_, endOfSfx, false, prop, true, fumeClr);
+        Explosion::runExplosionAt(
+          pos_, eng, endOfSfx, false, prop, true, fumeClr);
       } else {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
@@ -736,7 +736,7 @@ void Chest::triggerTrap() {
       eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
       eng.dice.oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
-      eng.explosionMaker->runExplosion(pos_, sfxExplosion, true);
+      Explosion::runExplosionAt(pos_, eng, sfxExplosion, true);
       if(eng.player->deadState == actorDeadState_alive) {
         eng.featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
@@ -746,17 +746,17 @@ void Chest::triggerTrap() {
       SDL_Color fumeClr = clrMagenta;
       const int RND = eng.dice.percentile();
       if(RND < 20) {
-        prop = new PropPoisoned(eng, propTurnsStandard);
+        prop = new PropPoisoned(eng, propTurnsStd);
         fumeClr = clrGreenLgt;
       } else if(RND < 40) {
-        prop = new PropDiseased(eng, propTurnsStandard);
+        prop = new PropDiseased(eng, propTurnsStd);
         fumeClr = clrGreen;
       } else {
-        prop = new PropParalyzed(eng, propTurnsStandard);
+        prop = new PropParalyzed(eng, propTurnsStd);
         prop->turnsLeft_ *= 2;
       }
-      eng.explosionMaker->runExplosion(
-        pos_, endOfSfx, false, prop, true, fumeClr);
+      Explosion::runExplosionAt(
+        pos_, eng, endOfSfx, false, prop, true, fumeClr);
     }
   }
 }
@@ -811,12 +811,12 @@ void Fountain::drink() {
 
     case fountainTypeBlessed: {
       propHandler.tryApplyProp(
-        new PropBlessed(eng, propTurnsStandard));
+        new PropBlessed(eng, propTurnsStd));
     } break;
 
     case fountainTypeCursed: {
       propHandler.tryApplyProp(
-        new PropCursed(eng, propTurnsStandard));
+        new PropCursed(eng, propTurnsStd));
     } break;
 
     case fountainTypeSpirited: {
@@ -829,17 +829,17 @@ void Fountain::drink() {
 
     case fountainTypeDiseased: {
       propHandler.tryApplyProp(
-        new PropDiseased(eng, propTurnsStandard));
+        new PropDiseased(eng, propTurnsStd));
     } break;
 
     case fountainTypePoisoned: {
       propHandler.tryApplyProp(
-        new PropPoisoned(eng, propTurnsStandard));
+        new PropPoisoned(eng, propTurnsStd));
     } break;
 
     case fountainTypeFrenzy: {
       propHandler.tryApplyProp(
-        new PropFrenzied(eng, propTurnsStandard));
+        new PropFrenzied(eng, propTurnsStd));
     } break;
 
     case endOfFountainTypes: {} break;

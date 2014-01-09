@@ -1188,7 +1188,7 @@ Prop::Prop(PropId_t id, Engine& engine, PropTurns_t turnsInit, int turns) :
   turnsLeft_(turns), owningActor_(NULL), id_(id), eng(engine),
   data_(&(engine.propDataHandler->dataList[id])) {
 
-  if(turnsInit == propTurnsStandard) {
+  if(turnsInit == propTurnsStd) {
     turnsLeft_ = eng.dice.range(data_->stdRndTurns);
   }
   if(turnsInit == propTurnsIndefinite) {
@@ -1211,7 +1211,7 @@ void PropCursed::onStart() {
 void PropInfected::onNewTurn() {
   if(eng.dice.oneIn(250)) {
     PropHandler& propHlr = owningActor_->getPropHandler();
-    propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStandard));
+    propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStd));
     bool blockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksVision(eng), blockers);
     propHlr.endAppliedProp(propInfected, blockers, false);
@@ -1470,7 +1470,7 @@ void PropFrenzied::onStart() {
 
 void PropFrenzied::onEnd() {
   owningActor_->getPropHandler().tryApplyProp(
-    new PropWeakened(eng, propTurnsStandard));
+    new PropWeakened(eng, propTurnsStd));
 }
 
 bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
@@ -1554,9 +1554,9 @@ void PropParalyzed::onStart() {
       player->molotovFuseTurns = -1;
       player->updateColor();
       eng.log->addMsg("The lit Molotov Cocktail falls from my hands!");
-      eng.explosionMaker->runExplosion(
-        player->pos, sfxExplosionMolotov, false,
-        new PropBurning(eng, propTurnsStandard));
+      Explosion::runExplosionAt(
+        player->pos, eng, sfxExplosionMolotov, false,
+        new PropBurning(eng, propTurnsStd));
     }
   }
 }
@@ -1589,7 +1589,7 @@ void PropFlared::onNewTurn() {
     bool visionBlockers[MAP_W][MAP_H];
     MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
     owningActor_->getPropHandler().tryApplyProp(
-      new PropBurning(eng, propTurnsStandard));
+      new PropBurning(eng, propTurnsStd));
     owningActor_->getPropHandler().endAppliedProp(
       propFlared, visionBlockers);
   }

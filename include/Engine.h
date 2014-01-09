@@ -55,7 +55,6 @@ class Bot;
 class FeatureFactory;
 class Art;
 class Marker;
-class ExplosionMaker;
 class Thrower;
 class Reload;
 class BasicUtils;
@@ -154,7 +153,6 @@ public:
   FeatureFactory* featureFactory;
   Art* art;
   Marker* marker;
-  ExplosionMaker* explosionMaker;
   Thrower* thrower;
   Reload* reload;
   BasicUtils* basicUtils;

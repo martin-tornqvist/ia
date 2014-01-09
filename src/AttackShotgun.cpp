@@ -79,8 +79,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
             eng.renderer->drawMapAndInterface(false);
             eng.renderer->coverCellInMap(curPos);
             if(eng.config->isTilesMode) {
-              eng.renderer->drawTile(
-                tile_blastAnimation2, panel_map, curPos, clrRedLgt);
+              eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrRedLgt);
             } else {
               eng.renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
             }
@@ -128,8 +127,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         eng.renderer->drawMapAndInterface(false);
         eng.renderer->coverCellInMap(curPos);
         if(eng.config->isTilesMode) {
-          eng.renderer->drawTile(
-            tile_blastAnimation2, panel_map, curPos, clrYellow);
+          eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrYellow);
         } else {
           eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }
@@ -142,16 +140,14 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
-      Sound snd("I hear a ricochet.",
-                sfxRicochet, true, curPos, false, true);
+      Sound snd("I hear a ricochet.", sfxRicochet, true, curPos, false, true);
       eng.soundEmitter->emitSound(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         eng.renderer->drawMapAndInterface(false);
         eng.renderer->coverCellInMap(curPos);
         if(eng.config->isTilesMode) {
-          eng.renderer->drawTile(
-            tile_blastAnimation2, panel_map, curPos, clrYellow);
+          eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrYellow);
         } else {
           eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
         }

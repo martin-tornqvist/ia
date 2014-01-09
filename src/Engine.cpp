@@ -26,7 +26,6 @@
 #include "Map.h"
 #include "DungeonClimb.h"
 #include "DungeonMaster.h"
-#include "Explosion.h"
 #include "Examine.h"
 #include "FeatureFactory.h"
 #include "Fov.h"
@@ -172,7 +171,6 @@ void Engine::initGame() {
   mainMenu = new MainMenu(*this);
   bot = new Bot(*this);
   art = new Art;
-  explosionMaker = new ExplosionMaker(*this);
   thrower = new Thrower(*this);
   reload = new Reload(*this);
   playerVisualMemory = new PlayerVisualMemory(*this);
@@ -240,7 +238,6 @@ void Engine::cleanupGame() {
   delete abilityRoll;
   delete featureFactory;
   delete art;
-  delete explosionMaker;
   delete thrower;
   delete reload;
   delete basicUtils;

@@ -26,6 +26,6 @@ void Weapon::setRandomMeleePlus() {
 void Incinerator::weaponSpecific_projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
-  eng.explosionMaker->runExplosion(
-    pos, sfxExplosion, true, new PropBurning(eng, propTurnsStandard));
+  Explosion::runExplosionAt(
+    pos, eng, sfxExplosion, true, new PropBurning(eng, propTurnsStd));
 }

@@ -317,7 +317,7 @@ void TrapDart::specificTrigger(Actor& actor,
           eng.log->addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(eng, propTurnsStandard));
+          new PropPoisoned(eng, propTurnsStd));
       }
     }
   }
@@ -394,7 +394,7 @@ void TrapSpear::specificTrigger(Actor& actor,
           eng.log->addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(eng, propTurnsStandard));
+          new PropPoisoned(eng, propTurnsStd));
       }
     }
   }
@@ -424,8 +424,8 @@ void TrapGasConfusion::specificTrigger(Actor& actor,
     }
   }
 
-  eng.explosionMaker->runExplosion(
-    pos_, endOfSfx, false, new PropConfused(eng, propTurnsStandard), true,
+  Explosion::runExplosionAt(
+    pos_, eng, endOfSfx, false, new PropConfused(eng, propTurnsStd), true,
     getSpecificColor());
   traceVerbose << "TrapGasConfusion::specificTrigger() [DONE]" << endl;
 }
@@ -453,8 +453,8 @@ void TrapGasParalyzation::specificTrigger(Actor& actor,
     }
   }
 
-  eng.explosionMaker-> runExplosion(
-    pos_, endOfSfx, false, new PropParalyzed(eng, propTurnsStandard),
+  Explosion::runExplosionAt(
+    pos_, eng, endOfSfx, false, new PropParalyzed(eng, propTurnsStd),
     true, getSpecificColor());
   traceVerbose << "TrapGasParalyzation::specificTrigger() [DONE]" << endl;
 }
@@ -482,8 +482,8 @@ void TrapGasFear::specificTrigger(Actor& actor,
     }
   }
 
-  eng.explosionMaker-> runExplosion(
-    pos_, endOfSfx, false, new PropTerrified(eng, propTurnsStandard),
+  Explosion::runExplosionAt(
+    pos_, eng, endOfSfx, false, new PropTerrified(eng, propTurnsStd),
     true, getSpecificColor());
   traceVerbose << "TrapGasFear::specificTrigger() [DONE]" << endl;
 }
@@ -519,7 +519,7 @@ void TrapBlindingFlash::specificTrigger(Actor& actor,
         eng.log->addMsg(
           "A sharp flash of light pierces my eyes!", clrWhite);
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(eng, propTurnsStandard));
+          new PropBlind(eng, propTurnsStd));
       } else {
         eng.log->addMsg("I feel a mechanism trigger!", clrWhite);
       }
@@ -528,7 +528,7 @@ void TrapBlindingFlash::specificTrigger(Actor& actor,
         eng.log->addMsg(
           actorName + " is hit by a flash of blinding light!");
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(eng, propTurnsStandard));
+          new PropBlind(eng, propTurnsStd));
       }
     }
   }
@@ -648,7 +648,7 @@ void TrapSmoke::specificTrigger(Actor& actor,
     }
   }
 
-  eng.explosionMaker->runSmokeExplosion(pos_);
+  Explosion::runSmokeExplosionAt(pos_, eng);
   traceVerbose << "TrapSmoke::specificTrigger() [DONE]" << endl;
 }
 
