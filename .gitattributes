@@ -1,1 +1,3 @@
-cb_win_project/* -diff
+cb_win_project/* -text -diff
+cb_win_project.depend -text -diff
+cb_win_project.cbp -text -diff
