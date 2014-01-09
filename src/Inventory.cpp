@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Item.h"
 #include "ItemWeapon.h"
 #include "Engine.h"
 #include "ItemDrop.h"
@@ -62,6 +63,12 @@ Inventory::Inventory(bool humanoid) {
     //    invSlot.interfaceName = "Right ring";
     //    slots_.push_back(invSlot);
   }
+}
+
+Inventory::~Inventory() {
+  for(InventorySlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
+  for(Item * item : general_)         {delete item;}
+  for(Item * item : intrinsics_)      {delete item;}
 }
 
 void Inventory::addSaveLines(vector<string>& lines) const {

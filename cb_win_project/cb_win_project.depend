@@ -12380,9 +12380,10 @@
 	"SdlWrapper.h"
 	"Hide.h"
 
-1389038289 source:d:\dev\ia.git\src\inventory.cpp
+1389303388 source:d:\dev\ia.git\src\inventory.cpp
 	"Inventory.h"
 	<algorithm>
+	"Item.h"
 	"ItemWeapon.h"
 	"Engine.h"
 	"ItemDrop.h"
@@ -12819,7 +12820,7 @@
 	<iostream>
 	"Engine.h"
 
-1389300812 source:d:\dev\ia.git\src\playerbonuses.cpp
+1389301243 source:d:\dev\ia.git\src\playerbonuses.cpp
 	"PlayerBonuses.h"
 	<assert.h>
 	"Engine.h"
@@ -14036,12 +14037,11 @@
 	"CommonTypes.h"
 	"PlayerBonuses.h"
 
-1389038289 d:\dev\ia.git\include\inventory.h
+1389303380 d:\dev\ia.git\include\inventory.h
 	<vector>
 	<string>
 	<iostream>
 	"ItemData.h"
-	"Item.h"
 
 1386706106 d:\dev\ia.git\include\actorfactory.h
 	<vector>

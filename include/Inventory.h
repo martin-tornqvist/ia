@@ -6,7 +6,6 @@
 #include <iostream>
 
 #include "ItemData.h"
-#include "Item.h"
 
 using namespace std;
 
@@ -50,11 +49,7 @@ class Inventory {
 public:
   Inventory(bool humanoid);
 
-  ~Inventory() {
-    for(InventorySlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
-    for(Item * item : general_)         {delete item;}
-    for(Item * item : intrinsics_)      {delete item;}
-  }
+  ~Inventory();
 
   void dropAllNonIntrinsic(
     const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
