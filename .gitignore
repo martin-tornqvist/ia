@@ -8,3 +8,5 @@ test/obj
 *.patch
 CppCheckResults.xml
 *.mk
+*.layout
+*.layout.orig
