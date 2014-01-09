@@ -55,14 +55,15 @@ void Renderer::initAndClearPrev() {
   const string title = "IA " + gameVersionStr;
   SDL_WM_SetCaption(title.data(), NULL);
 
+  const int W = eng.config->screenPixelW;
+  const int H = eng.config->screenPixelH;
   if(eng.config->isFullscreen) {
-    screenSurface_ = SDL_SetVideoMode(
-                       eng.config->screenPixelW, eng.config->screenPixelH,
-                       SCREEN_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
-  } else {
-    screenSurface_ = SDL_SetVideoMode(
-                       eng.config->screenPixelW, eng.config->screenPixelH,
-                       SCREEN_BPP, SDL_SWSURFACE);
+    screenSurface_ =
+      SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+  }
+  if(eng.config->isFullscreen == false || screenSurface_ == NULL) {
+    screenSurface_ =
+      SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
   if(screenSurface_ == NULL) {
