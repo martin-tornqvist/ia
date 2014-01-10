@@ -10,3 +10,4 @@ CppCheckResults.xml
 *.mk
 *.layout
 *.layout.orig
+*.depend
