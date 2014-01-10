@@ -22,6 +22,9 @@
 #include "Audio.h"
 #include "Bot.h"
 
+#ifdef _WIN32
+#undef main
+#endif
 int main(int argc, char* argv[]) {
   trace << "main()..." << endl;
 
