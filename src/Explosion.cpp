@@ -12,9 +12,9 @@
 #include "ActorPlayer.h"
 
 namespace {
-void draw(const vector< vector<Pos> >& posLists, Engine& eng,
-          const bool SHOULD_OVERRIDE_CLR, const SDL_Color& clrOverride) {
-
+void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
+          const bool SHOULD_OVERRIDE_CLR, const SDL_Color& clrOverride,
+          Engine& eng) {
   eng.renderer->drawMapAndInterface();
 
   const SDL_Color& clrInner = SHOULD_OVERRIDE_CLR ? clrOverride : clrYellow;
@@ -22,6 +22,8 @@ void draw(const vector< vector<Pos> >& posLists, Engine& eng,
 
   const bool IS_TILES     = eng.config->isTilesMode;
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
+
+  bool isAnyCellSeenByPlayer = false;
 
   for(int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++) {
 
@@ -32,7 +34,10 @@ void draw(const vector< vector<Pos> >& posLists, Engine& eng,
       const SDL_Color& clr = iOuter == NR_OUTER - 1 ? clrOuter : clrInner;
       const vector<Pos>& inner = posLists.at(iOuter);
       for(const Pos & pos : inner) {
-        if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
+        if(
+          eng.map->cells[pos.x][pos.y].isSeenByPlayer &&
+          blockers[pos.x][pos.y] == false) {
+          isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
             eng.renderer->drawTile(tile, panel_map, pos, clr, clrBlack);
           } else {
@@ -41,30 +46,28 @@ void draw(const vector< vector<Pos> >& posLists, Engine& eng,
         }
       }
     }
-    eng.renderer->updateScreen();
-    eng.sdlWrapper->sleep(eng.config->delayExplosion / NR_ANIM_STEPS);
+    if(isAnyCellSeenByPlayer) {
+      eng.renderer->updateScreen();
+      eng.sdlWrapper->sleep(eng.config->delayExplosion / NR_ANIM_STEPS);
+    }
   }
 }
 
 void getArea(const Pos& c, const int RADI, Rect& rectRef) {
-  rectRef = Rect(Pos(max(c.x - RADI, 1), min(c.y - RADI, MAP_W - 2)),
-                 Pos(max(c.x + RADI, 1), min(c.y + RADI, MAP_H - 2)));
+  rectRef = Rect(Pos(max(c.x - RADI, 1),         max(c.y - RADI, 1)),
+                 Pos(min(c.x + RADI, MAP_W - 2), min(c.y + RADI, MAP_H - 2)));
 }
 
-void getPositionsReached(const Rect& area, const Pos& origin, const int RADI,
-                         Engine& eng, vector< vector<Pos> >& posListRef) {
-  bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
-
-  posListRef.resize(RADI + 1);
-
+void getPositionsReached(const Rect& area, const Pos& origin,
+                         bool blockers[MAP_W][MAP_H], Engine& eng,
+                         vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       const Pos pos(x, y);
-      const int DIST_TO_CENTER = eng.basicUtils->chebyshevDist(pos, origin);
+      const int DIST = eng.basicUtils->chebyshevDist(pos, origin);
       bool isReached = true;
-      if(DIST_TO_CENTER > 1) {
+      if(DIST > 1) {
         eng.lineCalc->calcNewLine(origin, pos, true, 999, false, line);
         for(Pos & posCheckBlock : line) {
           if(blockers[posCheckBlock.x][posCheckBlock.y]) {
@@ -74,7 +77,8 @@ void getPositionsReached(const Rect& area, const Pos& origin, const int RADI,
         }
       }
       if(isReached) {
-        posListRef.at(DIST_TO_CENTER).push_back(pos);
+        if(int(posListRef.size()) <= DIST) {posListRef.resize(DIST + 1);}
+        posListRef.at(DIST).push_back(pos);
       }
     }
   }
@@ -90,14 +94,17 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   const int RADI = 2 + RADI_CHANGE; //2 is default radius
   getArea(origin, RADI, area);
 
+  bool blockers[MAP_W][MAP_H];
+  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
+
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, RADI, eng, posLists);
+  getPositionsReached(area, origin, blockers, eng, posLists);
 
   Sound snd("I hear an explosion!", sfx, true, origin,
             SHOULD_DO_EXPLOSION_DMG, true);
   eng.soundEmitter->emitSound(snd);
 
-  draw(posLists, eng, SHOULD_OVERRIDE_CLR, clrOverride);
+  draw(posLists, blockers, SHOULD_OVERRIDE_CLR, clrOverride, eng);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -152,7 +159,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
 
-  if(prop != NULL) { delete prop;}
+  if(prop != NULL) {delete prop;}
 }
 
 void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
@@ -164,7 +171,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, RADI, eng, posLists);
+  getPositionsReached(area, origin, blockers, eng, posLists);
 
   //TODO Sound message?
   Sound snd("", endOfSfx, true, origin, false, true);
