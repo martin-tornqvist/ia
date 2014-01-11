@@ -83,7 +83,7 @@ void Postmortem::makeInfoLines() {
     postmortemLines.push_back(StrAndClr("   * None", clrInfo));
   } else {
     vector<string> abilitiesLines;
-    eng.textFormatting->lineToLines(abilitiesLine, 60, abilitiesLines);
+    TextFormatting::lineToLines(abilitiesLine, 60, abilitiesLines);
     for(unsigned int i = 0; i < abilitiesLines.size(); i++) {
       postmortemLines.push_back(
         StrAndClr("   " + abilitiesLines.at(i), clrInfo));

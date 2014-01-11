@@ -12,7 +12,7 @@ void Manual::readFile() {
   string curLine;
   ifstream file("manual.txt");
 
-  vector<string> formated;
+  vector<string> formatted;
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
@@ -27,9 +27,9 @@ void Manual::readFile() {
           }
         }
         if(shouldFormatLine) {
-          eng.textFormatting->lineToLines(curLine, MAP_W - 2, formated);
-          for(unsigned int i = 0; i < formated.size(); i++) {
-            lines.push_back(formated.at(i));
+          TextFormatting::lineToLines(curLine, MAP_W - 2, formatted);
+          for(unsigned int i = 0; i < formatted.size(); i++) {
+            lines.push_back(formatted.at(i));
           }
         } else {
           curLine.erase(curLine.begin());

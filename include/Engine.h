@@ -75,7 +75,6 @@ class Bash;
 class Close;
 class Look;
 class AutoDescribeActor;
-class TextFormatting;
 class Config;
 class AbilityRoll;
 class PlayerBonHandler;
@@ -174,7 +173,6 @@ public:
   Close* close;
   Look* look;
   AutoDescribeActor* autoDescribeActor;
-  TextFormatting* textFormatting;
   Config* config;
   AbilityRoll* abilityRoll;
   PlayerBonHandler* playerBonHandler;

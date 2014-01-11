@@ -74,7 +74,6 @@
 #include "Sound.h"
 #include "Spells.h"
 #include "Properties.h"
-#include "TextFormatting.h"
 #include "Thrower.h"
 #include "MenuInputHandler.h"
 #include "SdlWrapper.h"
@@ -186,7 +185,6 @@ void Engine::initGame() {
   close = new Close(*this);
   look = new Look(*this);
   autoDescribeActor = new AutoDescribeActor(*this);
-  textFormatting = new TextFormatting();
   spellHandler = new SpellHandler(*this);
   postmortem = new Postmortem(*this);
   highScore = new HighScore(*this);
@@ -257,7 +255,6 @@ void Engine::cleanupGame() {
   delete close;
   delete look;
   delete autoDescribeActor;
-  delete textFormatting;
   delete spellHandler;
   delete postmortem;
   delete highScore;

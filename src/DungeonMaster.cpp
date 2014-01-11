@@ -115,7 +115,7 @@ void DungeonMaster::winGame() {
   winMessage += "The destinies of all things on earth, living and dead, are mine. ";
 
   vector<string> winMessageLines;
-  eng.textFormatting->lineToLines(winMessage, 68, winMessageLines);
+  TextFormatting::lineToLines(winMessage, 68, winMessageLines);
 
   eng.renderer->coverPanel(panel_screen);
   eng.renderer->updateScreen();

@@ -255,7 +255,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
       const string name = curHighscore.getName();
       vector<string> dateStrVector;
       dateStrVector.resize(0);
-      eng.textFormatting->getSpaceSeparatedList(curHighscore.getDateAndTime(),
+      TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
           dateStrVector);
       const string date = dateStrVector.at(0);
       const string score = toString(curHighscore.getScore());

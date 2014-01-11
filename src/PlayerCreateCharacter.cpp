@@ -90,7 +90,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg_t>& bgs,
   eng.playerBonHandler->getBgDescr(markedBg, rawDescrLines);
   for(string & rawLine : rawDescrLines) {
     vector<string> formattedLines;
-    eng.textFormatting->lineToLines(rawLine, MAX_W_DESCR, formattedLines);
+    TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
     for(string & line : formattedLines) {
       eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
@@ -235,7 +235,7 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.playerBonHandler->getTraitDescr(markedTrait, descr);
   const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
   vector<string> descrLines;
-  eng.textFormatting->lineToLines(
+  TextFormatting::lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
     eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
@@ -266,7 +266,7 @@ void PlayerCreateCharacter::drawPickTrait(
     }
 
     vector<string> prereqLines;
-    eng.textFormatting->lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
+    TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string & str : prereqLines) {
       eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
@@ -282,7 +282,7 @@ void PlayerCreateCharacter::drawPickTrait(
   if(pickedStr != "") {
     pickedStr = "Trait(s) gained: " + pickedStr;
     vector<string> pickedLines;
-    eng.textFormatting->lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
+    TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string & str : pickedLines) {
       eng.renderer->drawText(
         str, panel_screen, Pos(X0_PREV_PICKS, y), clrWhite);

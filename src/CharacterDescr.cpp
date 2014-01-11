@@ -187,7 +187,7 @@ void CharacterDescr::makeLines() {
       string descr = "";
       eng.playerBonHandler->getTraitDescr(trait, descr);
       vector<string> descrLines;
-      eng.textFormatting->lineToLines(descr, MAX_W_DESCR, descrLines);
+      TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
       for(string & descrLine : descrLines) {
         lines.push_back(StrAndClr(offset + descrLine, clrTextDark));
       }

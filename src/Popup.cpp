@@ -36,7 +36,7 @@ void Popup::showMessage(const string& message,
   if(DRAW_MAP_AND_INTERFACE) {eng.renderer->drawMapAndInterface(false);}
 
   vector<string> lines;
-  eng.textFormatting->lineToLines(message, TEXT_W, lines);
+  TextFormatting::lineToLines(message, TEXT_W, lines);
   const int TEXT_H =  int(lines.size()) + 3;
 
   int y = printBoxAndReturnTitleYPos(TEXT_H);
@@ -79,7 +79,7 @@ int Popup::showMultiChoiceMessage(const string& message,
                                   const string& title, const Sfx_t sfx) const {
 
   vector<string> lines;
-  eng.textFormatting->lineToLines(message, TEXT_W, lines);
+  TextFormatting::lineToLines(message, TEXT_W, lines);
   const int NR_MSG_LINES  = int(lines.size());
   const int NR_CHOICES    = int(choices.size());
 

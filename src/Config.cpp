@@ -14,6 +14,7 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "Audio.h"
+#include "TextFormatting.h"
 
 using namespace std;
 
@@ -23,12 +24,13 @@ Config::Config(Engine& engine) :
   eng(engine) {
 
   fontImageNames.resize(0);
-  fontImageNames.push_back("images/8x12.png");
+  fontImageNames.push_back("images/8x12_DOS.png");
   fontImageNames.push_back("images/11x19.png");
-  fontImageNames.push_back("images/11x22_uw_ttyp0.png");
-  fontImageNames.push_back("images/12x24_terminus.png");
-  fontImageNames.push_back("images/16x24_clean_v1.png");
-  fontImageNames.push_back("images/16x24_clean_v2.png");
+  fontImageNames.push_back("images/11x22.png");
+  fontImageNames.push_back("images/12x24.png");
+  fontImageNames.push_back("images/16x24_v1.png");
+  fontImageNames.push_back("images/16x24_v2.png");
+  fontImageNames.push_back("images/16x24_DOS.png");
   fontImageNames.push_back("images/16x24_typewriter.png");
 
   setDefaultVariables();
@@ -90,15 +92,8 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
 
     case 1: {
       isTilesMode = !isTilesMode;
-      if(isTilesMode) {
-        if(cellW == 8 && cellH == 12) {
-          fontScale = 2;
-        } else {
-          if(cellW != 16 || cellH != 24) {
-            fontScale = 1;
-            fontBig = "images/16x24_clean_v1.png";
-          }
-        }
+      if(isTilesMode && (cellW != 16 || cellH != 24)) {
+        fontBig = "images/16x24_v1.png";
       }
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -106,10 +101,6 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
     } break;
 
     case 2: {
-      if(isTilesMode) {
-        fontScale = 1;
-      }
-
       for(unsigned int i = 0; i < fontImageNames.size(); i++) {
         if(fontBig == fontImageNames.at(i)) {
           fontBig = i == fontImageNames.size() - 1 ?
@@ -121,11 +112,6 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       parseFontNameAndSetCellDims();
 
       if(isTilesMode) {
-        if(cellW == 8 && cellH == 12) {
-          fontScale = 2;
-          parseFontNameAndSetCellDims();
-        }
-
         while(cellW != 16 || cellH != 24) {
           for(unsigned int i = 0; i < fontImageNames.size(); i++) {
             if(fontBig == fontImageNames.at(i)) {
@@ -139,21 +125,6 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
         }
       }
 
-      setCellDimDependentVariables();
-      eng.renderer->initAndClearPrev();
-    } break;
-
-    case 3: {
-      if(fontScale == 1) {
-        if(isTilesMode == false) {
-          fontScale = 2;
-        }
-      } else {
-        if(isTilesMode == false) {
-          fontScale = 1;
-        }
-      }
-      parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
       eng.renderer->initAndClearPrev();
     } break;
@@ -256,6 +227,7 @@ void Config::draw(const MenuBrowser* const browser,
   string str = "";
 
   eng.renderer->drawText("-Options-", panel_screen, Pos(X0, Y0 - 1), clrWhite);
+
   eng.renderer->drawText("Play audio", panel_screen, Pos(X0, Y0 + optionNr),
                          browser->getPos().y == optionNr ?
                          clrActive : clrInactive);
@@ -286,19 +258,11 @@ void Config::draw(const MenuBrowser* const browser,
   eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
                          browser->getPos().y == optionNr ?
                          clrActive : clrInactive);
-  eng.renderer->drawText(fontBig, panel_screen, Pos(X1, Y0 + optionNr),
-                         browser->getPos().y == optionNr ?
-                         clrActive : clrInactive);
-  optionNr++;
-
-  eng.renderer->drawText("Scale font 2x", panel_screen, Pos(X0, Y0 + optionNr),
-                         browser->getPos().y == optionNr ?
-                         clrActive : clrInactive);
-  eng.renderer->drawText(":", panel_screen, Pos(X1 - 2, Y0 + optionNr),
-                         browser->getPos().y == optionNr ?
-                         clrActive : clrInactive);
-  str = fontScale == 2 ? "Yes" : "No";
-  eng.renderer->drawText(str, panel_screen, Pos(X1, Y0 + optionNr),
+  string fontDispName;
+  TextFormatting::replaceAll(fontBig,       "images/",  "",   fontDispName);
+  TextFormatting::replaceAll(fontDispName,  "_",        " ",  fontDispName);
+  TextFormatting::replaceAll(fontDispName,  ".png",     "",   fontDispName);
+  eng.renderer->drawText(fontDispName, panel_screen, Pos(X1, Y0 + optionNr),
                          browser->getPos().y == optionNr ?
                          clrActive : clrInactive);
   optionNr++;
@@ -496,8 +460,8 @@ void Config::parseFontNameAndSetCellDims() {
   trace << "Config: Parsed font image name, found dims: ";
   trace << wStr << "x" << hStr << endl;
 
-  cellW = toInt(wStr)  * fontScale;
-  cellH = toInt(hStr) * fontScale;
+  cellW = toInt(wStr);
+  cellH = toInt(hStr);
   trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
@@ -505,8 +469,7 @@ void Config::setDefaultVariables() {
   trace << "Config::setDefaultVariables()..." << endl;
   isAudioEnabled = true;
   isTilesMode = true;
-  fontBig = "images/16x24_clean_v2.png";
-  fontScale = 1;
+  fontBig = "images/16x24_v1.png";
   parseFontNameAndSetCellDims();
   isFullscreen = false;
   isTilesWallSymbolFullSquare = false;
@@ -527,7 +490,6 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
   lines.resize(0);
   lines.push_back(isAudioEnabled == false ? "0" : "1");
   lines.push_back(isTilesMode == false ? "0" : "1");
-  lines.push_back(toString(fontScale));
   lines.push_back(fontBig);
   lines.push_back(isFullscreen == false ? "0" : "1");
   lines.push_back(isTilesWallSymbolFullSquare == false ? "0" : "1");
@@ -573,14 +535,10 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   } else {
     isTilesMode = true;
     if(cellW != 16 || cellH != 24) {
-      fontBig = "images/16x24_clean_v1.png";
+      fontBig = "images/16x24_v1.png";
       parseFontNameAndSetCellDims();
     }
   }
-  lines.erase(lines.begin());
-
-  curLine = lines.front();
-  fontScale = toInt(curLine);
   lines.erase(lines.begin());
 
   curLine = lines.front();

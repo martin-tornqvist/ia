@@ -2,8 +2,39 @@
 
 #include "Engine.h"
 
-void TextFormatting::lineToLines(string line, const int MAX_W,
-                                 vector<string>& linesRef) const {
+using namespace std;
+
+namespace {
+//Reads and removes the first word of the string.
+//It reads until ' ' or end of string. The ' '-char is also removed.
+void readAndRemoveNextWord(string& line, string& nextWordToMake) {
+  nextWordToMake = "";
+
+  //Build a word until parameter string is empty,
+  //or a a space character is found.
+  for(int i = 0; i < int(line.size()); i++) {
+    const char CURRENT_CHARACTER = line.at(0);
+
+    line.erase(line.begin());
+
+    if(CURRENT_CHARACTER == ' ') {
+      return;
+    } else {
+      nextWordToMake += CURRENT_CHARACTER;
+    }
+
+    i--;
+  }
+}
+
+bool isWordFit(const string& currentString, const string& wordToFit,
+               const int MAX_W) {
+  return int(currentString.size() + wordToFit.size() + 1) <= MAX_W;
+}
+} //namespace
+
+namespace TextFormatting {
+void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
   linesRef.resize(0);
 
   int curRow = 0;
@@ -36,50 +67,29 @@ void TextFormatting::lineToLines(string line, const int MAX_W,
   }
 }
 
-//Reads and removes the first word of the string.
-//It reads until ' ' or end of string. The ' '-char is also removed.
-void TextFormatting::readAndRemoveNextWord(
-  string& line, string& nextWordToMake) const {
-  nextWordToMake = "";
-
-  //Build a word until parameter string is empty,
-  //or a a space character is found.
-  for(int i = 0; i < int(line.size()); i++) {
-    const char CURRENT_CHARACTER = line.at(0);
-
-    line.erase(line.begin());
-
-    if(CURRENT_CHARACTER == ' ') {
-      return;
-    } else {
-      nextWordToMake += CURRENT_CHARACTER;
-    }
-
-    i--;
-  }
-}
-
-bool TextFormatting::isWordFit(string& currentString, const string& wordToFit,
-                               const unsigned int MAX_W) const {
-
-  return currentString.size() + wordToFit.size() + 1 <= MAX_W;
-}
-
-void TextFormatting::getSpaceSeparatedList(
-  string line, vector<string>& linesRef) const {
-
+void getSpaceSeparatedList(const string& line, vector<string>& linesRef) {
   string curLine = "";
-
-  for(unsigned int i = 0; i < line.size(); i++) {
-    char character = line.at(i);
-    if(character == ' ') {
+  for(char c : line) {
+    if(c == ' ') {
       linesRef.push_back(curLine);
       curLine = "";
     } else {
-      curLine += character;
+      curLine += c;
     }
   }
 }
 
+void replaceAll(const std::string& line, const std::string& from,
+                const std::string& to, std::string& resultRef) {
+  if(from.empty()) {return;}
 
+  resultRef = line;
 
+  unsigned int startPos = 0;
+  while((startPos = resultRef.find(from, startPos)) != std::string::npos) {
+    resultRef.replace(startPos, from.length(), to);
+    //In case 'to' contains 'from', like replacing 'x' with 'yx'
+    startPos += to.length();
+  }
+}
+} //TextFormatting

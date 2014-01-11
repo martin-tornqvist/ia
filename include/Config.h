@@ -37,7 +37,6 @@ public:
   bool          isBotPlaying;
   bool          isAudioEnabled;
   bool          isTilesMode;
-  int           fontScale;
   int           cellW, cellH;
 
   void runOptionsMenu();

@@ -14,19 +14,15 @@ void Credits::readFile() {
   string curLine;
   ifstream file("credits.txt");
 
-  vector<string> formatedLines;
+  vector<string> formattedLines;
 
   if(file.is_open()) {
     while(getline(file, curLine)) {
       if(curLine.empty()) {
         lines.push_back(curLine);
       } else {
-        eng.textFormatting->lineToLines(
-          curLine, MAP_W - 2, formatedLines);
-
-        for(unsigned int i = 0; i < formatedLines.size(); i++) {
-          lines.push_back(formatedLines.at(i));
-        }
+        TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
+        for(string & line : formattedLines) {lines.push_back(line);}
       }
     }
   }

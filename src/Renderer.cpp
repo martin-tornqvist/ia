@@ -175,7 +175,7 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
   const int CELL_W = eng.config->cellW;
   const int CELL_H = eng.config->cellH;
 
-  const int SCALE = eng.config->fontScale;
+  const int SCALE = 1;
 
   const int CELL_W_SHEET = CELL_W / SCALE;
   const int CELL_H_SHEET = CELL_H / SCALE;
@@ -201,9 +201,9 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
           }
         }
       }
-      screenX++;
+      screenX += SCALE;
     }
-    screenY++;
+    screenY += SCALE;
   }
 
   SDL_UnlockSurface(screenSurface_);
@@ -435,21 +435,6 @@ void Renderer::drawTile(const Tile_t tile, const Panel_t panel, const Pos& pos,
   putPixelsOnScreenForTile(tile, pixelPos, clr);
 }
 
-//void Renderer::drawGlyphInMap(const char GLYPH, const int X, const int Y,
-//                              const SDL_Color& clr, const bool DRAW_BG_CLR,
-//                              const SDL_Color& bgClr) {
-//  const Pos cellDims(eng.config->cellW, eng.config->cellH);
-//  const Pos pixelPos(pos.x * cellDims.x, pos.y * cellDims.y);
-//  const int PIXEL_X = X * cellW;
-//  const int PIXEL_Y = Y * cellH + eng.config->mainscreenOffsetY;
-//
-//  if(DRAW_BG_CLR) {
-//    drawRectangleSolid(PIXEL_X, PIXEL_Y, cellW, cellH, bgClr);
-//  }
-//
-//  putPixelsOnScreenForGlyph(GLYPH, PIXEL_X, PIXEL_Y, clr);
-//}
-
 void Renderer::drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
                                 const SDL_Color& clr, const bool DRAW_BG_CLR,
                                 const SDL_Color& bgClr) {
@@ -591,9 +576,9 @@ void Renderer::coverCellInMap(const Pos& pos) {
 
 void Renderer::drawLineHor(const Pos& pixelPos, const int W,
                            const SDL_Color& clr) {
-  const Pos offset(0, 1 - eng.config->fontScale);
-  drawRectangleSolid(
-    pixelPos + offset, Pos(W, 2 * eng.config->fontScale), clr);
+  const int SCALE = 1;
+  const Pos offset(0, 1 - SCALE);
+  drawRectangleSolid(pixelPos + offset, Pos(W, 2 * SCALE), clr);
 }
 
 void Renderer::drawLineVer(const Pos& pixelPos, const int H,
@@ -643,10 +628,6 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
 void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
                             const SDL_Color& clr) {
   const bool IS_TILES = eng.config->isTilesMode;
-
-//   eng.renderer->drawGlyph('#', panel_map, pos, clrBox);
-//eng.renderer->drawGlyph('=', panel_map, pos, clrBox);
-//eng.renderer->drawGlyph('|', panel_map, pos, clrBox);
 
   //Vertical bars
   const int Y0_VERT = border.x0y0.y + 1;

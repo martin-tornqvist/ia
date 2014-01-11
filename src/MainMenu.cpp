@@ -90,7 +90,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   quoteClr.b /= 7;
 
   vector<string> quoteLines;
-  eng.textFormatting->lineToLines(quote, 28, quoteLines);
+  TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
   for(string & quoteLine : quoteLines) {
     eng.renderer->drawTextCentered(quoteLine, panel_screen, quotePos, quoteClr);

@@ -83,7 +83,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
     }
   }
 }
-} //Namespace
+} //namespace
 
 namespace Explosion {
 void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
