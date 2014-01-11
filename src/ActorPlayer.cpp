@@ -811,9 +811,16 @@ void Player::specificOnStandardTurn() {
   //Shock from seen monsters
   vector<Actor*> SpottedEnemies;
   getSpottedEnemies(SpottedEnemies);
-  double shockFromMonstersCurrentPlayerTurn = 0.0;
+  double shockFromMonstersCurPlayerTurn = 0.0;
+  const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
   for(Actor * actor : SpottedEnemies) {
     Monster* monster = dynamic_cast<Monster*>(actor);
+
+    //Rogues takes no shock from unaware monsters
+    if(IS_ROGUE && monster->playerAwarenessCounter <= 0) {
+      continue;
+    }
+
     const ActorData& data = monster->getData();
     if(data.monsterShockLevel != monsterShockLevel_none) {
       switch(data.monsterShockLevel) {
@@ -836,9 +843,9 @@ void Player::specificOnStandardTurn() {
         } break;
         default: {} break;
       }
-      if(shockFromMonstersCurrentPlayerTurn < 3.0) {
+      if(shockFromMonstersCurPlayerTurn < 3.0) {
         incrShock(int(floor(monster->shockCausedCurrent)));
-        shockFromMonstersCurrentPlayerTurn += monster->shockCausedCurrent;
+        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent;
       }
     }
   }

@@ -1116,8 +1116,7 @@ void Renderer::drawTiles() {
 
       Pos pos(x, y);
       if(tempDrw.tile != tile_empty) {
-        drawTile(tempDrw.tile, panel_map, pos, tempDrw.color,
-                 tempDrw.colorBg);
+        drawTile(tempDrw.tile, panel_map, pos, tempDrw.color, tempDrw.colorBg);
 
         if(tempDrw.lifebarLength != -1) {
           drawLifeBar(pos, tempDrw.lifebarLength);
