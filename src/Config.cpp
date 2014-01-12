@@ -506,14 +506,14 @@ void Config::collectLinesFromVariables(vector<string>& lines) {
 }
 
 void Config::toggleFullscreen() {
-//  SDL_Surface* screenCpy = SDL_DisplayFormat(eng.renderer->screenSurface_);
+  SDL_Surface* screenCpy = SDL_DisplayFormat(eng.renderer->screenSurface_);
 
   isFullscreen = !isFullscreen;
   parseFontNameAndSetCellDims();
   setCellDimDependentVariables();
   eng.renderer->initAndClearPrev();
 
-//  eng.renderer->applySurface(Pos(0, 0), screenCpy, NULL);
+  eng.renderer->applySurface(Pos(0, 0), screenCpy, NULL);
   eng.renderer->updateScreen();
 
   vector<string> lines;
