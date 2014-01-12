@@ -209,6 +209,8 @@ RangedAttackData::RangedAttackData(
                        SIZE_MOD   +
                        unawareDefMod);
 
+    constrInRange(5, hitChanceTot, 99);
+
     attackResult = eng.abilityRoll->roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
@@ -220,10 +222,21 @@ RangedAttackData::RangedAttackData(
         }
       }
 
+      bool playerAimX3 = false;
+      if(attacker == eng.player) {
+        const Prop* const prop =
+          attacker->getPropHandler().getAppliedProp(propAiming);
+        if(prop != NULL) {
+          playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
+        }
+      }
+
       dmgRolls  = wpn_.getData().rangedDmg.rolls;
       dmgSides  = wpn_.getData().rangedDmg.sides;
       dmgPlus   = wpn_.getData().rangedDmg.plus;
-      dmgRoll   = eng.dice(dmgRolls, dmgSides);
+
+      dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
+                  eng.dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }
@@ -293,10 +306,22 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
 
     if(attackResult >= successSmall) {
       trace << "MissileAttackData: Attack roll succeeded" << endl;
+
+      bool playerAimX3 = false;
+      if(attacker == eng.player) {
+        const Prop* const prop =
+          attacker->getPropHandler().getAppliedProp(propAiming);
+        if(prop != NULL) {
+          playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
+        }
+      }
+
       dmgRolls  = item_.getData().missileDmg.rolls;
       dmgSides  = item_.getData().missileDmg.sides;
       dmgPlus   = item_.getData().missileDmg.plus;
-      dmgRoll   = eng.dice(dmgRolls, dmgSides);
+
+      dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
+                  eng.dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }

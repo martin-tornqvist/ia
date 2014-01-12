@@ -40,8 +40,7 @@ public:
     eng(engine) {
   }
 
-  //Returns true if a message is printed (redraws and updates everything)
-  bool markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
+  void markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                    const Item* const itemThrown);
   void printExtraActorDescription(const Pos& pos) const;
 

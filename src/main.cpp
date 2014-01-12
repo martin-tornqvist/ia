@@ -115,7 +115,6 @@ int main(int argc, char* argv[]) {
             actor->onActorTurn();
           } else {
             if(actor == eng->player) {
-              eng->renderer->drawMapAndInterface();
               eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
             eng->gameTime->actorDidAct();

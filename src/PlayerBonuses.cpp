@@ -162,13 +162,13 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSteadyAimer: {
-      strRef  = "Standing still gives ranged attacks +10% ";
-      strRef += "hit chance on the following turn";
+      strRef  = "Standing still gives ranged attacks +10% hit chance on the ";
+      strRef += "following turn";
     } break;
 
     case traitSharpShooter: {
-      strRef  = "Standing still for three turns gives ranged attacks ";
-      strRef += "maximum hit chance and damage on the following turn";
+      strRef  = "Standing still for three turns gives ranged attacks maximum ";
+      strRef += "hit chance and damage on the following turn";
     } break;
 
     case traitDemolitionExpert: {
@@ -351,7 +351,6 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitSharpShooter: {
       traitsRef.push_back(traitSteadyAimer);
-      traitsRef.push_back(traitExpertMarksman);
     } break;
 
     case traitDemolitionExpert: {

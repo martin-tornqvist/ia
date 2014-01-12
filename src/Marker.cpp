@@ -114,17 +114,14 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
 }
 
 void Marker::draw(const MarkerTask_t markerTask) const {
+  eng.renderer->drawMapAndInterface(false);
+
   vector<Pos> trail;
-//  trail.resize(0);
 
   int effectiveRange = -1;
 
-//  if(markerTask == markerTask_spellAzathothsBlast) {
-//    trail.push_back(Pos(pos_.x, pos_.y));
-//  } else {
   const Pos playerPos = eng.player->pos;
   eng.lineCalc->calcNewLine(playerPos, pos_, true, 9999, false, trail);
-//  }
 
   if(markerTask == markerTask_aimRangedWeapon) {
     Item* const item =
@@ -134,6 +131,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
   }
 
   eng.renderer->drawMarker(trail, effectiveRange);
+  eng.renderer->updateScreen();
 }
 
 MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
@@ -154,10 +152,6 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
     }
   }
 
-  eng.log->clearLog();
-
-  eng.renderer->drawMapAndInterface(false);
-
   if(
     markerTask == markerTask_look ||
     markerTask == markerTask_aimRangedWeapon ||
@@ -166,7 +160,6 @@ MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
   }
 
   draw(markerTask);
-  eng.renderer->updateScreen();
 
   isDone_ = false;
   while(isDone_ == false) {
@@ -186,7 +179,7 @@ void Marker::setPosToClosestEnemyIfVisible() {
   //If player sees enemies, suggest one for targeting
   if(SpottedEnemiesPositions.empty() == false) {
     pos_ = eng.basicUtils->getClosestPos(eng.player->pos,
-                                          SpottedEnemiesPositions);
+                                         SpottedEnemiesPositions);
 
     eng.player->target = eng.basicUtils->getActorAtPos(pos_);
   }
@@ -221,8 +214,6 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
     isMoved = true;
   }
 
-  eng.renderer->drawMapAndInterface(false);
-
   if(isMoved) {
     if(
       markerTask == markerTask_look             ||
@@ -233,8 +224,6 @@ void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
   }
 
   draw(markerTask);
-  eng.renderer->updateScreen();
-
 }
 
 void Marker::done() {

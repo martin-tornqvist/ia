@@ -94,15 +94,6 @@ void CharacterLines::drawInfoLines() {
   eng.renderer->drawText(str, panel_char, pos, clrBlueLgt);
   pos.x += str.length() + 1;
 
-  //Wounds
-//  const string wnd = "0"; //toString(player->getNrWounds());
-//  const string wndMax = "5"; //toString(player->getWndMax());
-//  eng.renderer->drawText("WND:", panel_char, pos, clrGenDrk);
-//  pos.x += 4;
-//  str = wnd + "/" + wndMax;
-//  eng.renderer->drawText(str, panel_char, pos, clrRedLgt);
-//  pos.x += str.length() + 1;
-
   //Sanity
   const int SHOCK = player->getShockTotal();
   const int INS = player->getInsanity();

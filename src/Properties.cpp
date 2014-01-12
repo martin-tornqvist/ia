@@ -540,10 +540,10 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propStill;
+  d.id = propAiming;
   d.stdRndTurns = Range(1, 1);
-  d.name = "Still";
-  d.nameShort = "Still";
+  d.name = "Aiming";
+  d.nameShort = "Aiming";
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -651,7 +651,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propPoisoned:          return new PropPoisoned(eng, turnsInit, NR_TURNS);
     case propFainted:           return new PropFainted(eng, turnsInit, NR_TURNS);
     case propFrenzied:          return new PropFrenzied(eng, turnsInit, NR_TURNS);
-    case propStill:             return new PropStill(eng, turnsInit, NR_TURNS);
+    case propAiming:             return new PropAiming(eng, turnsInit, NR_TURNS);
     case propDisabledAttack:    return new PropDisabledAttack(eng, turnsInit, NR_TURNS);
     case propDisabledMelee:     return new PropDisabledMelee(eng, turnsInit, NR_TURNS);
     case propDisabledRanged:    return new PropDisabledRanged(eng, turnsInit, NR_TURNS);

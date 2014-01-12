@@ -17,6 +17,7 @@
 #include "PlayerBonuses.h"
 #include "Audio.h"
 #include "MapParsing.h"
+#include "Renderer.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(turn_));
@@ -71,18 +72,19 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
 
   Actor* currentActor = getCurrentActor();
 
-  //Tick properties running on actor turns
-  currentActor->getPropHandler().tick(propTurnModeActor, NULL);
-
   if(currentActor == eng.player) {
-    eng.playerVisualMemory->updateVisualMemory();
     eng.player->updateFov();
+    eng.renderer->drawMapAndInterface();
+    eng.playerVisualMemory->updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
     if(monster->playerAwarenessCounter > 0) {
       monster->playerAwarenessCounter -= 1;
     }
   }
+
+  //Tick properties running on actor turns
+  currentActor->getPropHandler().tick(propTurnModeActor, NULL);
 
   if(IS_FREE_TURN == false) {
     TurnType_t currentTurnType = TurnType_t(currentTurnTypePos_);

@@ -128,21 +128,25 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     if(eng.player->deadState == actorDeadState_alive) {
       clearLogMessages();
 
-//      if(eng.playerBonHandler->getBg() == bgRogue) {
-//        eng.hide->playerTryHide();
-//      }
-
-      eng.player->moveDir(dirCenter);
-
       PlayerBonHandler& bonHlr = *eng.playerBonHandler;
-      int nrTurnsStill =
-        bonHlr.hasTrait(traitSharpShooter)  ? 3 :
-        bonHlr.hasTrait(traitSteadyAimer)   ? 1 : 0;
-      if(nrTurnsStill > 0) {
+      if(bonHlr.hasTrait(traitSteadyAimer)) {
         PropHandler& propHlr = eng.player->getPropHandler();
-        propHlr.tryApplyProp(
-          new PropStill(eng, propTurnsSpecified, nrTurnsStill));
+
+        int nrTurnsAimingOld = 0;
+
+        if(bonHlr.hasTrait(traitSharpShooter)) {
+          Prop* const propAimingOld = propHlr.getAppliedProp(propAiming);
+          if(propAimingOld != NULL) {
+            nrTurnsAimingOld =
+              dynamic_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
+          }
+        }
+
+        PropAiming* const aiming = new PropAiming(eng, propTurnsSpecified, 1);
+        aiming->nrTurnsAiming += nrTurnsAimingOld;
+        propHlr.tryApplyProp(aiming);
       }
+      eng.player->moveDir(dirCenter);
     }
     clearEvents();
     return;

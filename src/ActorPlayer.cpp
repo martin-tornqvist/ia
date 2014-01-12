@@ -1167,10 +1167,6 @@ void Player::moveDir(Dir_t dir) {
       eng.gameTime->actorDidAct(isFreeTurn);
       return;
     }
-
-    eng.gameTime->updateLightMap();
-    updateFov();
-    eng.renderer->drawMapAndInterface();
   }
 }
 

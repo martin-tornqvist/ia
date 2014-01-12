@@ -273,22 +273,20 @@ void Renderer::drawMainMenuLogo(const int Y_POS) {
 void Renderer::drawMarker(const vector<Pos>& trail,
                           const int EFFECTIVE_RANGE) {
   if(trail.size() > 2) {
-    for(unsigned int i = 1; i < trail.size() - 1; i++) {
-      coverCellInMap(trail.at(i));
+    for(size_t i = 1; i < trail.size(); i++) {
+      const Pos& pos = trail.at(i);
+      coverCellInMap(pos);
 
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST =
-          eng.basicUtils->chebyshevDist(trail.at(0), trail.at(i));
-        if(CHEB_DIST > EFFECTIVE_RANGE) {
-          clr = clrYellow;
-        }
+        const int CHEB_DIST = eng.basicUtils->chebyshevDist(trail.at(0), pos);
+        if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(eng.config->isTilesMode) {
-        drawTile(tile_aimMarkerTrail, panel_map, trail.at(i), clr);
+        drawTile(tile_aimMarkerTrail, panel_map, pos, clr, clrBlack);
       } else {
-        drawGlyph('*', panel_map, trail.at(i), clr);
+        drawGlyph('*', panel_map, pos, clr, true, clrBlack);
       }
     }
   }
@@ -306,12 +304,10 @@ void Renderer::drawMarker(const vector<Pos>& trail,
     }
   }
 
-  coverCellInMap(headPos);
-
   if(eng.config->isTilesMode) {
-    drawTile(tile_aimMarkerHead, panel_map, headPos, clr);
+    drawTile(tile_aimMarkerHead, panel_map, headPos, clr, clrBlack);
   } else {
-    drawGlyph('X', panel_map, headPos, clr);
+    drawGlyph('X', panel_map, headPos, clr, true, clrBlack);
   }
 }
 
@@ -570,8 +566,8 @@ void Renderer::coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims) {
 
 void Renderer::coverCellInMap(const Pos& pos) {
   const Pos cellDims(eng.config->cellW, eng.config->cellH);
-  const Pos offset = Pos(0, eng.config->mapPixelOffsetH);
-  coverAreaPixel((pos + offset) * cellDims, cellDims);
+  Pos pixelPos = getPixelPosForCellInPanel(panel_map, pos);
+  coverAreaPixel(pixelPos, cellDims);
 }
 
 void Renderer::drawLineHor(const Pos& pixelPos, const int W,

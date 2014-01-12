@@ -43,7 +43,7 @@ enum PropId_t {
   propClairvoyant,
   propBlessed,
   propCursed,
-  propStill,
+  propAiming,
   propWound,
   propPossessedByZuul,
 
@@ -177,8 +177,8 @@ public:
   Prop* makePropFromId(const PropId_t id, PropTurns_t turnsInit,
                        const int NR_TURNS = -1) const;
 
-  bool tryResistDmg(
-    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const;
+  bool tryResistDmg(const DmgTypes_t dmgType,
+                    const bool ALLOW_MESSAGE_WHEN_TRUE) const;
 
 private:
   void getPropsFromSource(vector<Prop*>& propList,
@@ -389,21 +389,27 @@ public:
   void onNewTurn() override;
 };
 
-class PropStill: public Prop {
+class PropAiming: public Prop {
 public:
-  PropStill(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
-    Prop(propStill, engine, turnsInit, turns) {}
+  PropAiming(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propAiming, engine, turnsInit, turns), nrTurnsAiming(1) {}
 
-  ~PropStill() override {}
+  ~PropAiming() override {}
 
   PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
 
-  void onMore() override {}
+  string getNameShort() const override {
+    return data_->nameShort + (nrTurnsAiming >= 3 ? "(3)" : "");
+  }
 
   int getAbilityMod(const Abilities_t ability) const override {
-    if(ability == ability_accuracyRanged) return 10;
+    if(ability == ability_accuracyRanged) return nrTurnsAiming >= 3 ? 999 : 10;
     return 0;
   }
+
+  bool isMaxRangedDmg() const {return nrTurnsAiming >= 3;}
+
+  int nrTurnsAiming;
 };
 
 class PropBlind: public Prop {

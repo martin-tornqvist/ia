@@ -87,11 +87,7 @@ public:
   void makeActorArray(Actor* a[MAP_W][MAP_H]);
 
   inline bool isPosInsideMap(const Pos& pos) const {
-    if(
-      pos.x < 0 || pos.y < 0 || pos.x >= MAP_W || pos.y >= MAP_H) {
-      return false;
-    }
-    return true;
+    return pos.x >= 0 && pos.y >= 0 && pos.x < MAP_W && pos.y < MAP_H;
   }
 
   inline bool isPosInside(const Pos& pos, const Rect& area) const {

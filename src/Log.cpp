@@ -45,8 +45,6 @@ void Log::addMsg(const string& text, const SDL_Color color,
                  const bool INTERRUPT_PLAYER_ACTIONS,
                  const bool FORCE_MORE_PROMPT) {
 
-  eng.renderer->drawMapAndInterface(true);
-
   bool repeated = false;
 
   //New message equal to previous?
@@ -88,8 +86,6 @@ void Log::addMsg(const string& text, const SDL_Color color,
     eng.query->waitForKeyPress();
     clearLog();
   }
-
-  drawLog(true);
 
   //Messages may stop long actions like first aid and auto travel.
   if(INTERRUPT_PLAYER_ACTIONS) {

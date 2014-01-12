@@ -25,11 +25,8 @@ Entity::Entity(FeatureStatic* feature_) :
   feature(dynamic_cast<Feature*>(feature_)),
   entityType(entityFeatureStatic) {}
 
-bool Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
+void Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
                        const Item* const itemThrown) {
-
-  bool isMsgPrinted = false;
-
   const bool IS_VISION = eng.map->cells[pos.x][pos.y].isSeenByPlayer;
 
   eng.log->clearLog();
@@ -53,7 +50,6 @@ bool Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
         describeBriefItem(*entityDescribed.item);
         break;
     }
-    isMsgPrinted = true;
   }
 
   if(pos != eng.player->pos) {
@@ -63,17 +59,14 @@ bool Look::markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
       } else {
         eng.log->addMsg("f to fire");
       }
-      isMsgPrinted = true;
     } else if(markerTask == markerTask_aimThrownWeapon) {
       if(IS_VISION) {
         eng.log->addMsg("| t to throw");
       } else {
         eng.log->addMsg("t to throw");
       }
-      isMsgPrinted = true;
     }
   }
-  return isMsgPrinted;
 }
 
 void Look::describeBriefActor(const Actor& actor,
