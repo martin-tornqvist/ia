@@ -34,23 +34,23 @@ void PlayerSpellsHandler::run() {
       switch(action) {
         case menuAction_browsed: {
           draw(browser);
-        }
-        break;
-        case menuAction_canceled: {
+        } break;
+
+        case menuAction_esc:
+        case menuAction_space: {
           eng.log->clearLog();
           eng.renderer->drawMapAndInterface();
           return;
-        }
-        break;
+        } break;
+
         case menuAction_selected: {
           eng.log->clearLog();
           eng.renderer->drawMapAndInterface();
           knownSpells.at(browser.getPos().y)->cast(eng.player, true, eng);
           return;
-        }
-        break;
-        default:
-        {} break;
+        } break;
+
+        default: {} break;
       }
     }
   }

@@ -61,7 +61,8 @@ void Config::runOptionsMenu() {
         draw(&browser, OPTION_VALUES_X_POS, OPTIONS_Y_POS);
       } break;
 
-      case menuAction_canceled: {
+      case menuAction_esc:
+      case menuAction_space: {
         //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
         eng.featureDataHandler->initDataList();

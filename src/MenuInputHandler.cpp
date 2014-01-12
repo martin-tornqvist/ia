@@ -24,8 +24,10 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
       if(d.isShiftHeld_) {
         d.key_ = d.key_ - 'a' + 'A';
       }
-    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-      return menuAction_canceled;
+    } else if(d.sdlKey_ == SDLK_SPACE) {
+      return menuAction_space;
+    } else if(d.sdlKey_ == SDLK_ESCAPE) {
+      return menuAction_esc;
     }
 
     const int SIZE_OF_FIRST_LIST = browser.getNrOfItemsInFirstList();
@@ -44,6 +46,6 @@ MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
       return menuAction_selectedWithShift;
     }
   }
-  return menuAction_canceled;
+  return menuAction_esc;
 }
 

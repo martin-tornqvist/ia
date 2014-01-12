@@ -103,7 +103,15 @@ int Popup::showMultiChoiceMessage(const string& message,
           TEXT_H, title);
       } break;
 
-      case menuAction_canceled: {} break;
+      case menuAction_esc:
+      case menuAction_space: {
+        if(DRAW_MAP_AND_INTERFACE) {
+          eng.renderer->drawMapAndInterface();
+        }
+        return NR_CHOICES - 1;
+      } break;
+
+      case menuAction_selectedWithShift: {} break;
 
       case menuAction_selected: {
         if(DRAW_MAP_AND_INTERFACE) {
@@ -111,8 +119,6 @@ int Popup::showMultiChoiceMessage(const string& message,
         }
         return browser.getPos().y;
       } break;
-
-      case menuAction_selectedWithShift: {} break;
     }
   }
 }

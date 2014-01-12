@@ -639,7 +639,10 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
     eng.sleep(1);
 
     while(SDL_PollEvent(&event_)) {
-      if(event_.type == SDL_KEYDOWN) {
+      //Closing the window sends escape key event
+      if(event_.type == SDL_QUIT) {
+        return KeyboardReadReturnData(SDLK_ESCAPE);
+      } else if(event_.type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33

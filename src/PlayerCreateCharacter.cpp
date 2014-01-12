@@ -27,7 +27,10 @@ void PlayerCreateCharacter::pickBg() const {
       const MenuAction_t action = eng.menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {drawPickBg(bgs, browser);} break;
-        case menuAction_canceled: {} break;
+
+        case menuAction_esc:
+        case menuAction_space: {} break;
+
         case menuAction_selected: {
           eng.playerBonHandler->pickBg(bgs.at(browser.getPos().y));
           return;
@@ -135,7 +138,8 @@ void PlayerCreateCharacter::pickNewTrait(
             drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
           } break;
 
-          case menuAction_canceled: {} break;
+          case menuAction_esc:
+          case menuAction_space: {} break;
 
           case menuAction_selected: {
             const Pos pos = browser.getPos();

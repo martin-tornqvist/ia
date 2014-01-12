@@ -187,12 +187,19 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
   bool proceed = false;
   while(proceed == false) {
     const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+
     switch(action) {
       case menuAction_browsed: {
         draw(browser);
       } break;
 
-      case menuAction_canceled: {} break;
+      case menuAction_esc: {
+        proceed = true;
+        quit    = true;
+      } break;
+
+      case menuAction_space:
+      case menuAction_selectedWithShift: {} break;
 
       case menuAction_selected: {
         if(browser.isPosAtKey('a')) {
@@ -231,7 +238,7 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
         }
         if(browser.isPosAtKey('g')) {
           proceed = true;
-          quit = true;
+          quit    = true;
         }
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
@@ -240,9 +247,6 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
           }
         }
       } break;
-
-      default: {} break;
-
     }
   }
   return gameEntry_new;

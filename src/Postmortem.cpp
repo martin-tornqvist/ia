@@ -35,11 +35,11 @@ void Postmortem::makeInfoLines() {
 
   postmortemLines.push_back(
     StrAndClr("   * Explored to the depth of dungeon level " +
-                 toString(eng.map->getDlvl()), clrInfo));
+              toString(eng.map->getDlvl()), clrInfo));
   postmortemLines.push_back(
     StrAndClr("   * Was " +
-                 toString(min(100, eng.player->getInsanity())) +
-                 "% insane", clrInfo));
+              toString(min(100, eng.player->getInsanity())) +
+              "% insane", clrInfo));
 
   //TODO Make some sort of insanity class or something where this info is stored,
   //this is ugly as hell
@@ -278,11 +278,16 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
     switch(action) {
       case menuAction_browsed: {
         renderMenu(browser);
-      }
-      break;
-      case menuAction_canceled: {
-      }
-      break;
+      } break;
+
+      case menuAction_esc: {
+        *quitGame = true;
+        done      = true;
+      } break;
+
+      case menuAction_space:
+      case menuAction_selectedWithShift: {} break;
+
       case menuAction_selected: {
         if(browser.isPosAtKey('a')) {
           runInfo();
@@ -301,12 +306,9 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
         }
         if(browser.isPosAtKey('e')) {
           *quitGame = true;
-          done = true;
+          done      = true;
         }
-      }
-      break;
-      case menuAction_selectedWithShift:
-      {} break;
+      } break;
     }
   }
 }

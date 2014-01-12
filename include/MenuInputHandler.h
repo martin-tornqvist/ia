@@ -14,7 +14,8 @@ enum MenuAction_t {
   menuAction_browsed,
   menuAction_selected,
   menuAction_selectedWithShift,
-  menuAction_canceled
+  menuAction_space,
+  menuAction_esc,
 };
 
 class MenuInputHandler {

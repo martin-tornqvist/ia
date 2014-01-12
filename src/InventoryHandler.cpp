@@ -143,8 +143,8 @@ void InventoryHandler::runSlotsScreen() {
     switch(action) {
       case menuAction_browsed: {
         eng.renderInventory->drawBrowseSlotsMode(browser, equipmentSlotButtons);
-      }
-      break;
+      } break;
+
       case menuAction_selectedWithShift: {
         if(runDropScreen(browser.getPos().y)) {
           screenToOpenAfterDrop = inventoryScreen_slots;
@@ -153,8 +153,8 @@ void InventoryHandler::runSlotsScreen() {
         }
         eng.renderInventory->drawBrowseSlotsMode(
           browser, equipmentSlotButtons);
-      }
-      break;
+      } break;
+
       case menuAction_selected: {
         const char charIndex = 'a' + browser.getPos().y;
         if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
@@ -195,13 +195,13 @@ void InventoryHandler::runSlotsScreen() {
           runBrowseInventoryMode();
           return;
         }
-      }
-      break;
-      case menuAction_canceled: {
+      } break;
+
+      case menuAction_esc:
+      case menuAction_space: {
         eng.renderer->drawMapAndInterface();
         return;
-      }
-      break;
+      } break;
     }
   }
 }
@@ -226,15 +226,15 @@ bool InventoryHandler::runUseScreen() {
     switch(action) {
       case menuAction_browsed: {
         eng.renderInventory->drawUseMode(browser, generalItemsToShow);
-      }
-      break;
+      } break;
+
       case menuAction_selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         activateDefault(INV_ELEM);
         eng.renderer->drawMapAndInterface();
         return true;
-      }
-      break;
+      } break;
+
       case menuAction_selectedWithShift: {
         const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
         if(
@@ -245,13 +245,13 @@ bool InventoryHandler::runUseScreen() {
           return true;
         }
         eng.renderInventory->drawUseMode(browser, generalItemsToShow);
-      }
-      break;
-      case menuAction_canceled: {
+      } break;
+
+      case menuAction_esc:
+      case menuAction_space: {
         eng.renderer->drawMapAndInterface();
         return false;
-      }
-      break;
+      } break;
     }
   }
 }
@@ -339,7 +339,8 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
           browser, slotToEquip->id, generalItemsToShow);
       } break;
 
-      case menuAction_canceled: {return false;} break;
+      case menuAction_esc:
+      case menuAction_space: {return false;} break;
     }
   }
 }
@@ -382,7 +383,8 @@ void InventoryHandler::runBrowseInventoryMode() {
           browser, generalItemsToShow);
       } break;
 
-      case menuAction_canceled: {
+      case menuAction_esc:
+      case menuAction_space: {
         return;
       } break;
     }
