@@ -5,6 +5,7 @@
 using namespace std;
 
 namespace {
+
 //Reads and removes the first word of the string.
 //It reads until ' ' or end of string. The ' '-char is also removed.
 void readAndRemoveNextWord(string& line, string& nextWordToMake) {
@@ -31,9 +32,12 @@ bool isWordFit(const string& currentString, const string& wordToFit,
                const int MAX_W) {
   return int(currentString.size() + wordToFit.size() + 1) <= MAX_W;
 }
+
 } //namespace
 
+
 namespace TextFormatting {
+
 void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
   linesRef.resize(0);
 
@@ -92,4 +96,6 @@ void replaceAll(const std::string& line, const std::string& from,
     startPos += to.length();
   }
 }
+
 } //TextFormatting
+

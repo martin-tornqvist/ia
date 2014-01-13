@@ -12,6 +12,7 @@ class Engine;
 class Prop;
 
 namespace Explosion {
+
 void runExplosionAt(
   const Pos& origin,
   Engine& eng,
@@ -23,6 +24,7 @@ void runExplosionAt(
   const SDL_Color& clrOverride        = clrBlack);
 
 void runSmokeExplosionAt(const Pos& origin, Engine& eng);
+
 } //Explosion
 
 #endif

@@ -5,9 +5,11 @@
 
 class AI_setSpecialBlockedCells {
 public:
-  static void learn(
-    Monster& monster, bool a[MAP_W][MAP_H], Engine& eng) {
-    eng.basicUtils->resetArray(a, false);
+  static void learn(Monster& monster, bool a[MAP_W][MAP_H], Engine& eng) {
+    (void)monster;
+    (void)a;
+    (void)eng;
+//    eng.basicUtils->resetArray(a, false);
   }
 private:
 };

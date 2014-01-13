@@ -12,6 +12,7 @@
 #include "ActorPlayer.h"
 
 namespace {
+
 void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
           const bool SHOULD_OVERRIDE_CLR, const SDL_Color& clrOverride,
           Engine& eng) {
@@ -83,15 +84,18 @@ void getPositionsReached(const Rect& area, const Pos& origin,
     }
   }
 }
+
 } //namespace
 
+
 namespace Explosion {
+
 void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
                     const Sfx_t sfx, const bool SHOULD_DO_EXPLOSION_DMG,
                     Prop* const prop, const bool SHOULD_OVERRIDE_CLR,
                     const SDL_Color& clrOverride) {
   Rect area;
-  const int RADI = 2 + RADI_CHANGE; //2 is default radius
+  const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
@@ -164,7 +168,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
 
 void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   Rect area;
-  const int RADI = 2; //TODO Parameter
+  const int RADI = EXPLOSION_STD_RADI;
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
@@ -187,4 +191,6 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
 }
+
 } //Explosion
+

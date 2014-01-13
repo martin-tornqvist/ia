@@ -94,7 +94,6 @@ class Examine;
 class PlayerCreateCharacter;
 class RoomThemeMaker;
 class DebugModeStatPrinter;
-class Disarm;
 class Gods;
 class Credits;
 class PropDataHandler;
@@ -191,7 +190,6 @@ public:
   PlayerCreateCharacter* playerCreateCharacter;
   RoomThemeMaker* roomThemeMaker;
   DebugModeStatPrinter* debugModeStatPrinter;
-  Disarm* disarm;
   Gods* gods;
   Credits* credits;
   PropDataHandler* propDataHandler;

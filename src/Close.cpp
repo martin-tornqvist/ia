@@ -13,7 +13,7 @@
 
 void Close::playerClose() const {
   eng.log->clearLog();
-  eng.log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
+  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   eng.renderer->drawMapAndInterface();
   Pos closePos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();

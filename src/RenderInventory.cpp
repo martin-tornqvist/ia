@@ -170,7 +170,7 @@ void RenderInventory::drawEquipMode(
   if(IS_ANY_ITEM_AVAILABLE) {
     str += " | shift+select to drop";
   }
-  str += " | space/esc to cancel";
+  str += cancelInfoStr;
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
@@ -227,7 +227,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   string str =
     IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" :
     "I carry no item to use.";
-  str += " | space/esc to cancel";
+  str += cancelInfoStr;
 
   eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;

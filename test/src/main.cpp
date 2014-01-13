@@ -21,6 +21,7 @@
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
 #include "PlayerBonuses.h"
+#include "Explosion.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -140,29 +141,27 @@ TEST(Directions) {
 }
 
 TEST(FormatText) {
-  Engine eng;
-  TextFormatting t;
   string str = "one two three four";
   int lineMaxW = 100;
   vector<string> formattedLines;
-  t.lineToLines(str, lineMaxW, formattedLines);
+  TextFormatting::lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL(str, formattedLines.at(0));
   CHECK_EQUAL(int(formattedLines.size()), 1);
 
   lineMaxW = 13;
-  t.lineToLines(str, lineMaxW, formattedLines);
+  TextFormatting::lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two three", formattedLines.at(0));
   CHECK_EQUAL("four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
 
   lineMaxW = 15;
-  t.lineToLines(str, lineMaxW, formattedLines);
+  TextFormatting::lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two three", formattedLines.at(0));
   CHECK_EQUAL("four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
 
   lineMaxW = 11;
-  t.lineToLines(str, lineMaxW, formattedLines);
+  TextFormatting::lineToLines(str, lineMaxW, formattedLines);
   CHECK_EQUAL("one two", formattedLines.at(0));
   CHECK_EQUAL("three four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
@@ -343,6 +342,66 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   CHECK(eng.map->cells[5][9].item != NULL);
 }
 
+TEST_FIXTURE(BasicFixture, Explosions) {
+  const int X0 = 5;
+  const int Y0 = 7;
+
+  const Feature_t wallId  = feature_stoneWall;
+  const Feature_t floorId = feature_stoneFloor;
+
+  eng.featureFactory->spawnFeatureAt(floorId, Pos(X0, Y0));
+
+  //Check wall destruction
+  for(int i = 0; i < 2; i++) {
+    Explosion::runExplosionAt(Pos(X0, Y0), eng);
+
+    //Cells around the center, at a distance of 1, should be destroyed
+    int r = 1;
+    CHECK(eng.map->cells[X0 + r][Y0    ].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0 - r][Y0    ].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0    ][Y0 + r].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0    ][Y0 - r].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0 + r][Y0 + r].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0 + r][Y0 - r].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0 - r][Y0 + r].featureStatic->getId() != wallId);
+    CHECK(eng.map->cells[X0 - r][Y0 - r].featureStatic->getId() != wallId);
+
+    //Cells around the center, at a distance of 2, should NOT be destroyed
+    r = 2;
+    CHECK(eng.map->cells[X0 + r][Y0    ].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0 - r][Y0    ].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0    ][Y0 + r].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0    ][Y0 - r].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0 + r][Y0 + r].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0 + r][Y0 - r].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0 - r][Y0 + r].featureStatic->getId() == wallId);
+    CHECK(eng.map->cells[X0 - r][Y0 - r].featureStatic->getId() == wallId);
+  }
+
+  //Check that the explosion can handle the map edge (e.g. that it does not
+  //destroy the edge wall, or go outside the map - possibly causing a crash)
+
+  //North-west edge
+  int x = 1;
+  int y = 1;
+  eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
+  Explosion::runExplosionAt(Pos(x, y), eng);
+  CHECK(eng.map->cells[x + 1][y    ].featureStatic->getId() != wallId);
+  CHECK(eng.map->cells[x    ][y + 1].featureStatic->getId() != wallId);
+  CHECK(eng.map->cells[x - 1][y    ].featureStatic->getId() == wallId);
+  CHECK(eng.map->cells[x    ][y - 1].featureStatic->getId() == wallId);
+
+  //South-east edge
+  x = MAP_W - 2;
+  y = MAP_H - 2;
+  eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
+  Explosion::runExplosionAt(Pos(x, y), eng);
+  CHECK(eng.map->cells[x - 1][y    ].featureStatic->getId() != wallId);
+  CHECK(eng.map->cells[x    ][y - 1].featureStatic->getId() != wallId);
+  CHECK(eng.map->cells[x + 1][y    ].featureStatic->getId() == wallId);
+  CHECK(eng.map->cells[x    ][y + 1].featureStatic->getId() == wallId);
+}
+
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   //-----------------------------------------------------------------
   // Test that-
@@ -398,7 +457,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     } else if(monster->pos == posL) {
       const Feature_t featureId =
         eng.map->cells[posR.x][posR.y].featureStatic->getId();
-      if(featureId == feature_trashedSpiderWeb) {
+      if(featureId == feature_stoneFloor) {
         isTestedLooseWebDestroyed = true;
       } else {
         isTestedLooseWebIntact = true;

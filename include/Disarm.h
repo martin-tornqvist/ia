@@ -3,16 +3,10 @@
 
 class Engine;
 
-class Disarm {
-public:
-  Disarm(Engine& engine) : eng(engine) {
+namespace Disarm {
 
-  }
+void playerDisarm(Engine& eng);
 
-  void playerDisarm() const;
-
-private:
-  Engine& eng;
-};
+} //Disarm
 
 #endif

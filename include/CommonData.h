@@ -3,7 +3,7 @@
 
 #include <string>
 
-const unsigned int PLAYER_NAME_MAX_LENGTH   = 12;
+const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
 
 const std::string gameVersionStr = "v16.0 BETA";
 
@@ -56,10 +56,13 @@ const double  FOV_MAX_W_DB      = double(FOV_MAX_W_INT);
 const int THROWING_RANGE_LIMIT  = FOV_STD_RADI_INT + 3;
 
 const int DYNAMITE_FUSE_TURNS = 5;
+const int EXPLOSION_STD_RADI  = 2;
 
 const int NR_MG_PROJECTILES                       = 5;
 const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES    = 2;
 
 const int CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP = 50;
+
+const std::string cancelInfoStr = " | space/esc to cancel";
 
 #endif

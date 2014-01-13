@@ -10,7 +10,7 @@
 #include "Renderer.h"
 
 void Examine::playerExamine() const {
-  eng.log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
+  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   eng.renderer->drawMapAndInterface();
   Pos examineInPos = eng.player->pos + eng.query->dir();
   eng.log->clearLog();

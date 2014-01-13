@@ -27,7 +27,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
       const int KNOCK_BACK_RANGE = 2;
 
-      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
+//      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
 
       for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
 

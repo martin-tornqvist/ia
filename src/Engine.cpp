@@ -22,7 +22,6 @@
 #include "Close.h"
 #include "Credits.h"
 #include "DebugModeStatPrinter.h"
-#include "Disarm.h"
 #include "Map.h"
 #include "DungeonClimb.h"
 #include "DungeonMaster.h"
@@ -197,7 +196,6 @@ void Engine::initGame() {
   examine = new Examine(*this);
   characterDescr = new CharacterDescr(*this);
   debugModeStatPrinter = new DebugModeStatPrinter(*this);
-  disarm = new Disarm(*this);
   gods = new Gods(*this);
   credits = new Credits(*this);
   hide = new Hide(*this);
@@ -268,7 +266,6 @@ void Engine::cleanupGame() {
   delete characterDescr;
   delete roomThemeMaker;
   delete debugModeStatPrinter;
-  delete disarm;
   delete gods;
   delete credits;
   delete propDataHandler;

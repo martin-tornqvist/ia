@@ -187,6 +187,10 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
   eng.renderer->drawMapAndInterface();
 }
 
+void FeatureStatic::playerTryDisarm() {
+  eng.log->addMsg("I find nothing there to disarm.");
+}
+
 void FeatureStatic::setGoreIfPossible() {
   if(data_->canHaveGore) {
     const int ROLL_GLYPH = eng.dice(1, 4);

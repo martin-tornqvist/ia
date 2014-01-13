@@ -20,6 +20,7 @@
 #include "ActorFactory.h"
 #include "Renderer.h"
 
+//------------------------------------------------------------- TRAP
 Trap::Trap(Feature_t id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
   isHidden_(true) {
@@ -42,26 +43,36 @@ Trap::~Trap() {
 
 void Trap::setSpecificTrapFromId(const Trap_t id) {
   switch(id) {
-    case trap_dart:           specificTrap_ = new TrapDart(pos_, eng);            break;
-    case trap_spear:          specificTrap_ = new TrapSpear(pos_, eng);           break;
-    case trap_gasConfusion:   specificTrap_ = new TrapGasConfusion(pos_, eng);    break;
-    case trap_gasParalyze:    specificTrap_ = new TrapGasParalyzation(pos_, eng); break;
-    case trap_gasFear:        specificTrap_ = new TrapGasFear(pos_, eng);         break;
-    case trap_blinding:       specificTrap_ = new TrapBlindingFlash(pos_, eng);   break;
-    case trap_teleport:       specificTrap_ = new TrapTeleport(pos_, eng);        break;
-    case trap_summonMonster:  specificTrap_ = new TrapSummonMonster(pos_, eng);   break;
-    case trap_smoke:          specificTrap_ = new TrapSmoke(pos_, eng);           break;
-    case trap_alarm:          specificTrap_ = new TrapAlarm(pos_, eng);           break;
-    case trap_spiderWeb:      specificTrap_ = new TrapSpiderWeb(pos_, eng);       break;
-    default:                  specificTrap_ = NULL;                               break;
+    case trap_dart:
+      specificTrap_ = new TrapDart(pos_, eng); break;
+    case trap_spear:
+      specificTrap_ = new TrapSpear(pos_, eng); break;
+    case trap_gasConfusion:
+      specificTrap_ = new TrapGasConfusion(pos_, eng); break;
+    case trap_gasParalyze:
+      specificTrap_ = new TrapGasParalyzation(pos_, eng); break;
+    case trap_gasFear:
+      specificTrap_ = new TrapGasFear(pos_, eng); break;
+    case trap_blinding:
+      specificTrap_ = new TrapBlindingFlash(pos_, eng);   break;
+    case trap_teleport:
+      specificTrap_ = new TrapTeleport(pos_, eng); break;
+    case trap_summonMonster:
+      specificTrap_ = new TrapSummonMonster(pos_, eng); break;
+    case trap_smoke:
+      specificTrap_ = new TrapSmoke(pos_, eng); break;
+    case trap_alarm:
+      specificTrap_ = new TrapAlarm(pos_, eng); break;
+    case trap_spiderWeb:
+      specificTrap_ = new TrapSpiderWeb(pos_, eng); break;
+    default:
+      specificTrap_ = NULL; break;
   }
 }
 
 Trap_t Trap::getTrapType() const {return specificTrap_->trapType_;}
 
 bool Trap::isMagical() const {return specificTrap_->isMagical();}
-
-bool Trap::isDisarmable() const {return specificTrap_->isDisarmable();}
 
 void Trap::triggerOnPurpose(Actor& actorTriggering) {
   const AbilityRollResult_t DODGE_RESULT = failSmall;
@@ -79,7 +90,7 @@ void Trap::bump(Actor& actorBumping) {
     const bool IS_PLAYER = &actorBumping == actorBumping.eng.player;
     const bool ACTOR_CAN_SEE = actorBumping.getPropHandler().allowSee();
     AbilityValues& abilities = actorBumping.getData().abilityVals;
-    const int DODGE_SKILL_VALUE =
+    const int DODGE_SKILL =
       abilities.getVal(ability_dodgeTrap, true, actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
@@ -87,17 +98,16 @@ void Trap::bump(Actor& actorBumping) {
 
     if(IS_PLAYER) {
       trace << "Trap: Player bumping" << endl;
-      const int CHANCE_TO_AVOID =
-        isHidden_ == true ? 10 :
-        (BASE_CHANCE_TO_AVOID + DODGE_SKILL_VALUE);
+      const int CHANCE_TO_AVOID = isHidden_ == true ? 10 :
+                                  (BASE_CHANCE_TO_AVOID + DODGE_SKILL);
       const AbilityRollResult_t result =
         actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
 
       if(result >= successSmall) {
         if(isHidden_ == false) {
           if(ACTOR_CAN_SEE) {
-            actorBumping.eng.log->addMsg("I avoid a " + trapName + ".",
-                                         clrMsgGood);
+            actorBumping.eng.log->addMsg(
+              "I avoid a " + trapName + ".", clrMsgGood);
           }
         }
       } else {
@@ -116,7 +126,7 @@ void Trap::bump(Actor& actorBumping) {
             actorBumping.eng.player->checkIfSeeActor(actorBumping, NULL);
 
           const int CHANCE_TO_AVOID =
-            BASE_CHANCE_TO_AVOID + d.canDodge ? DODGE_SKILL_VALUE : 0;
+            BASE_CHANCE_TO_AVOID + d.canDodge ? DODGE_SKILL : 0;
           const AbilityRollResult_t result =
             actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
 
@@ -136,6 +146,36 @@ void Trap::bump(Actor& actorBumping) {
   trace << "Trap::bump() [DONE]" << endl;
 }
 
+void Trap::playerTryDisarm() {
+  PropHandler& propHlr  = eng.player->getPropHandler();
+  const bool IS_BLESSED = propHlr.hasProp(propBlessed);
+  const bool IS_CURSED  = propHlr.hasProp(propCursed);
+
+  const int DENOMINATOR = 10;
+
+  int numerator;
+  if(IS_BLESSED)  numerator += 3;
+  if(IS_CURSED)   numerator -= 3;
+
+  constrInRange(1, numerator, DENOMINATOR - 1);
+
+  const bool IS_DISARMED = eng.dice.fraction(numerator, DENOMINATOR);
+  if(IS_DISARMED) {
+    eng.log->addMsg("I disarm a trap.");
+  } else {
+    eng.log->addMsg("I fail to disarm a trap.");
+    const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
+    if(eng.dice.oneIn(TRIGGER_ONE_IN_N)) {
+    trigger(*eng.player);
+    }
+  }
+  eng.gameTime->actorDidAct();
+
+  if(IS_DISARMED) {
+    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
+  }
+}
+
 void Trap::trigger(Actor& actor) {
   trace << "Trap::trigger()..." << endl;
 
@@ -147,16 +187,16 @@ void Trap::trigger(Actor& actor) {
   trace << "Trap: Actor triggering is ";
   trace << d.name_a << endl;
 
-  const int DODGE_SKILL_VALUE =
+  const int DODGE_SKILL =
     d.abilityVals.getVal(ability_dodgeTrap, true, actor);
 
   trace << "Trap: Actor dodge skill is ";
-  trace << DODGE_SKILL_VALUE << endl;
+  trace << DODGE_SKILL << endl;
 
   if(&actor == eng.player) {
     traceVerbose << "Trap: Player triggering trap" << endl;
     const AbilityRollResult_t DODGE_RESULT =
-      eng.abilityRoll->roll(DODGE_SKILL_VALUE);
+      eng.abilityRoll->roll(DODGE_SKILL);
     reveal(false);
     traceVerbose << "Trap: Calling specificTrigger" << endl;
     specificTrap_->specificTrigger(actor, DODGE_RESULT);
@@ -165,7 +205,7 @@ void Trap::trigger(Actor& actor) {
     const bool IS_ACTOR_SEEN_BY_PLAYER =
       eng.player->checkIfSeeActor(actor, NULL);
     const AbilityRollResult_t dodgeResult =
-      d.canDodge ? eng.abilityRoll->roll(DODGE_SKILL_VALUE) : failNormal;
+      d.canDodge ? eng.abilityRoll->roll(DODGE_SKILL) : failNormal;
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
     }
@@ -251,15 +291,16 @@ MaterialType_t Trap::getMaterialType() const {
   return isHidden_ ? mimicFeature_->materialType : data_->materialType;
 }
 
-//================================================ SPECIFIC TRAPS
+//------------------------------------------------------------- SPECIFIC TRAPS
 TrapDart::TrapDart(Pos pos, Engine& engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
   isPoisoned =
     eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
 }
 
-void TrapDart::specificTrigger(Actor& actor,
-                               const AbilityRollResult_t dodgeResult) {
+void TrapDart::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapDart::specificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
@@ -330,8 +371,9 @@ TrapSpear::TrapSpear(Pos pos, Engine& engine) :
     eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
 }
 
-void TrapSpear::specificTrigger(Actor& actor,
-                                const AbilityRollResult_t dodgeResult) {
+void TrapSpear::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapSpear::specificTrigger()..." << endl;
 
   const bool IS_PLAYER = &actor == eng.player;
@@ -401,8 +443,9 @@ void TrapSpear::specificTrigger(Actor& actor,
   traceVerbose << "TrapSpear::specificTrigger()..." << endl;
 }
 
-void TrapGasConfusion::specificTrigger(Actor& actor,
-                                       const AbilityRollResult_t dodgeResult) {
+void TrapGasConfusion::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapGasConfusion::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -430,8 +473,9 @@ void TrapGasConfusion::specificTrigger(Actor& actor,
   traceVerbose << "TrapGasConfusion::specificTrigger() [DONE]" << endl;
 }
 
-void TrapGasParalyzation::specificTrigger(Actor& actor,
-    const AbilityRollResult_t dodgeResult) {
+void TrapGasParalyzation::specificTrigger(
+  Actor& actor,  const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapGasParalyzation::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -461,6 +505,7 @@ void TrapGasParalyzation::specificTrigger(Actor& actor,
 
 void TrapGasFear::specificTrigger(Actor& actor,
                                   const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapGasFear::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -488,8 +533,9 @@ void TrapGasFear::specificTrigger(Actor& actor,
   traceVerbose << "TrapGasFear::specificTrigger() [DONE]" << endl;
 }
 
-void TrapBlindingFlash::specificTrigger(Actor& actor,
-                                        const AbilityRollResult_t dodgeResult) {
+void TrapBlindingFlash::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapBlindingFlash::specificTrigger()..." << endl;
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
@@ -535,8 +581,9 @@ void TrapBlindingFlash::specificTrigger(Actor& actor,
   traceVerbose << "TrapBlindingFlash::specificTrigger() [DONE]" << endl;
 }
 
-void TrapTeleport::specificTrigger(Actor& actor,
-                                   const AbilityRollResult_t dodgeResult) {
+void TrapTeleport::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapTeleport::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -565,8 +612,9 @@ void TrapTeleport::specificTrigger(Actor& actor,
   traceVerbose << "TrapTeleport::specificTrigger() [DONE]" << endl;
 }
 
-void TrapSummonMonster::specificTrigger(Actor& actor,
-                                        const AbilityRollResult_t dodgeResult) {
+void TrapSummonMonster::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapSummonMonster::specificTrigger()..." << endl;
 
   (void)dodgeResult;
@@ -624,8 +672,9 @@ void TrapSummonMonster::specificTrigger(Actor& actor,
   traceVerbose << "TrapSummonMonster::specificTrigger() [DONE]" << endl;
 }
 
-void TrapSmoke::specificTrigger(Actor& actor,
-                                const AbilityRollResult_t dodgeResult) {
+void TrapSmoke::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapSmoke::specificTrigger()..." << endl;
   (void)dodgeResult;
 
@@ -652,24 +701,17 @@ void TrapSmoke::specificTrigger(Actor& actor,
   traceVerbose << "TrapSmoke::specificTrigger() [DONE]" << endl;
 }
 
-void TrapAlarm::specificTrigger(Actor& actor,
-                                const AbilityRollResult_t dodgeResult) {
+void TrapAlarm::specificTrigger(
+  Actor& actor, const AbilityRollResult_t dodgeResult) {
+
   traceVerbose << "TrapAlarm::specificTrigger() ..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER            = &actor == eng.player;
   const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
-  const string actorName = actor.getNameThe();
+  const string actorName          = actor.getNameThe();
 
-  if(IS_PLAYER) {
-    eng.log->addMsg("An alarm sounds!");
-  } else {
-    if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg("Suddenly the air around " + actorName +
-                      " is thick with smoke!");
-    } else {
-    }
-  }
+  eng.log->addMsg("An alarm sounds!");
 
   Sound snd("I hear an alarm sounding!",
             endOfSfx, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true);
@@ -706,7 +748,7 @@ void TrapSpiderWeb::specificTrigger(
         eng.log->addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
-      eng.featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
+      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
     } else {
       if(CAN_SEE) {
         eng.log->addMsg("I am entangled in a spider web!");
@@ -760,7 +802,7 @@ Dir_t TrapSpiderWeb::specificTrapActorTryLeave(Actor& actor, const Dir_t dir) {
           (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
           eng.log->addMsg("The web is destroyed.");
         }
-        eng.featureFactory->spawnFeatureAt(feature_trashedSpiderWeb, pos_);
+        eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
       }
     } else {
       if(IS_PLAYER) {

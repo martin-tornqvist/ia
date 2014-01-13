@@ -55,7 +55,6 @@ enum Feature_t {
   feature_litDynamite,
   feature_litFlare,
   feature_trap,
-  feature_trashedSpiderWeb,
   feature_gore,
   feature_smoke,
   feature_proxEventWallCrumble,

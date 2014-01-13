@@ -20,7 +20,7 @@ void JamWithSpike::playerJam() const {
     return;
   }
 
-  eng.log->addMsg("Which direction? | space/esc to cancel", clrWhiteHigh);
+  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   eng.renderer->drawMapAndInterface();
   const Pos jamPos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();

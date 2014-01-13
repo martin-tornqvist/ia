@@ -99,6 +99,8 @@ public:
   void tryBash(Actor& actorTrying);
   virtual void specificTryBash(Actor& actorTrying) {(void)actorTrying;}
 
+  virtual void playerTryDisarm();
+
   virtual bool openFeature() { return false;}
 
 protected:

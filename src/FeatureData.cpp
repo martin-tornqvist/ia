@@ -695,21 +695,6 @@ void FeatureDataHandler::initDataList() {
   d.featuresOnDestroyed.push_back(feature_rubbleLow);
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_trashedSpiderWeb;
-  d.name_a = "a trashed spider web";
-  d.name_the = "the trashed spider web";
-  d.glyph = '.';
-  d.color = clrWhite;
-  d.tile = tile_floor;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
-  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = feature_trap;
   d.spawnType = featureSpawnType_other;
   d.isProjectilesPassable = true;
