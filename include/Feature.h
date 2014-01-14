@@ -97,7 +97,7 @@ public:
   }
 
   void tryBash(Actor& actorTrying);
-  virtual void specificTryBash(Actor& actorTrying) {(void)actorTrying;}
+  virtual void tryBash_(Actor& actorTrying) {(void)actorTrying;}
 
   virtual void playerTryDisarm();
 

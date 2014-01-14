@@ -78,7 +78,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     } else {
       lines.push_back(toString(item->getData().id));
       lines.push_back(toString(item->nrItems));
-      item->itemSpecificAddSaveLines(lines);
+      item->addSaveLines_(lines);
     }
   }
 
@@ -87,7 +87,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     Item* const item = general_.at(i);
     lines.push_back(toString(item->getData().id));
     lines.push_back(toString(item->nrItems));
-    item->itemSpecificAddSaveLines(lines);
+    item->addSaveLines_(lines);
   }
 }
 
@@ -108,8 +108,7 @@ void Inventory::setParamsFromSaveLines(
       item = engine.itemFactory->spawnItem(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
-      item->itemSpecificSetParamsFromSaveLines(lines);
-
+      item->setParamsFromSaveLines_(lines);
       slots_.at(i).item = item;
     }
   }
@@ -126,7 +125,7 @@ void Inventory::setParamsFromSaveLines(
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
-    item->itemSpecificSetParamsFromSaveLines(lines);
+    item->setParamsFromSaveLines_(lines);
     general_.push_back(item);
   }
 }

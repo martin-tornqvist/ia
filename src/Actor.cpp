@@ -158,9 +158,9 @@ void Actor::place(const Pos& pos_, ActorData& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(this != eng.player) {specificSpawnStartItems();}
+  if(this != eng.player) {spawnStartItems();}
 
-  specificPlace();
+  place_();
 
   updateColor();
 }
@@ -395,7 +395,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
 
   propHandler_->onHit();
 
-  specificHit(dmg, ALLOW_WOUNDS);
+  hit_(dmg, ALLOW_WOUNDS);
 
   //Damage to corpses
   if(deadState != actorDeadState_alive) {
@@ -421,7 +421,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
     (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
     die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
-    specificDie();
+    die_();
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
@@ -562,5 +562,5 @@ void Actor::addLight(bool light[MAP_W][MAP_H]) const {
     }
   }
 
-  specificAddLight(light);
+  addLight_(light);
 }

@@ -39,7 +39,7 @@ Player::Player(Engine& engine) :
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
   mth(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {}
 
-void Player::specificSpawnStartItems() {
+void Player::spawnStartItems() {
   data_->abilityVals.reset();
 
   for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
@@ -202,7 +202,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Player::specificHit(const int DMG, const bool ALLOW_WOUNDS) {
+void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
   interruptActions();
 
   //Hit aborts first aid
@@ -765,7 +765,7 @@ void Player::onActorTurn() {
   }
 }
 
-void Player::specificOnStandardTurn() {
+void Player::onStandardTurn_() {
   // Dynamite
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;
@@ -1237,7 +1237,7 @@ void Player::punch(Actor& actorToPunch) {
   delete punchWeapon;
 }
 
-void Player::specificAddLight(
+void Player::addLight_(
   bool light[MAP_W][MAP_H]) const {
 
   bool isUsingLightGivingItem = flareFuseTurns > 0;

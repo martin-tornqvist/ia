@@ -258,7 +258,7 @@ bool Door::trySpike(Actor* actorTrying) {
   return true;
 }
 
-void Door::specificTryBash(Actor& actorTrying) {
+void Door::tryBash_(Actor& actorTrying) {
   trace << "Door::tryBash()..." << endl;
 
   if(isOpen_ == false) {

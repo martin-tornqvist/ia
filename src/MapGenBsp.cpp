@@ -22,8 +22,8 @@
 #endif // DEMO_MODE
 
 //============================================================= MAPBUILD-BSP
-bool MapGenBsp::specificRun() {
-  trace << "MapGenBsp::specificRun()..." << endl;
+bool MapGenBsp::run_() {
+  trace << "MapGenBsp::run_()..." << endl;
 
   eng.map->resetMap();
 
@@ -220,7 +220,7 @@ bool MapGenBsp::specificRun() {
     }
   }
 #endif // DEMO_MODE
-  trace << "MapGenBsp::specificRun() [DONE]" << endl;
+  trace << "MapGenBsp::run_() [DONE]" << endl;
   return true;
 }
 

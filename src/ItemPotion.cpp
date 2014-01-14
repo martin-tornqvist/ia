@@ -15,7 +15,7 @@
 #include "DungeonClimb.h"
 #include "MapParsing.h"
 
-void PotionOfHealing::specificQuaff(Actor* const actor) {
+void PotionOfHealing::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
 
   //TODO What about wounds?
@@ -31,14 +31,12 @@ void PotionOfHealing::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfHealing::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfHealing::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfSpirit::specificQuaff(Actor* const actor) {
+void PotionOfSpirit::quaff_(Actor* const actor) {
   //Attempt to restore spirit. If no hp was healed (already at full hp),
   //boost the hp instead.
   if(actor->restoreSpi(eng.dice(2, 6) + 12, true) == false) {
@@ -50,14 +48,12 @@ void PotionOfSpirit::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfSpirit::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfSpirit::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfBlindness::specificQuaff(Actor* const actor) {
+void PotionOfBlindness::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropBlind(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -65,12 +61,12 @@ void PotionOfBlindness::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfBlindness::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfBlindness::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {specificQuaff(actor);}
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfParalyzation::specificQuaff(Actor* const actor) {
+void PotionOfParalyzation::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropParalyzed(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -78,16 +74,13 @@ void PotionOfParalyzation::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfParalyzation::specificCollide(
-  const Pos& pos, Actor* const actor) {
+void PotionOfParalyzation::collide_(const Pos& pos, Actor* const actor) {
 
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfDisease::specificQuaff(Actor* const actor) {
+void PotionOfDisease::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropDiseased(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -95,7 +88,7 @@ void PotionOfDisease::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfConfusion::specificQuaff(Actor* const actor) {
+void PotionOfConfusion::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropConfused(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -103,15 +96,12 @@ void PotionOfConfusion::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfConfusion::specificCollide(
-  const Pos& pos, Actor* const actor) {
+void PotionOfConfusion::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfFrenzy::specificQuaff(Actor* const actor) {
+void PotionOfFrenzy::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropFrenzied(eng, propTurnsStd));
   if(eng.player->checkIfSeeActor(*actor, NULL)) {
@@ -119,14 +109,12 @@ void PotionOfFrenzy::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfFrenzy::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfFrenzy::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfFortitude::specificQuaff(Actor* const actor) {
+void PotionOfFortitude::quaff_(Actor* const actor) {
   PropHandler& propHandler = actor->getPropHandler();
 
   PropRFear*      const rFear   = new PropRFear(eng, propTurnsStd);
@@ -171,14 +159,12 @@ void PotionOfFortitude::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfFortitude::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfFortitude::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfPoison::specificQuaff(Actor* const actor) {
+void PotionOfPoison::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropPoisoned(eng, propTurnsStd));
 
@@ -187,14 +173,12 @@ void PotionOfPoison::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfPoison::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfPoison::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfRFire::specificQuaff(Actor* const actor) {
+void PotionOfRFire::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRFire(eng, propTurnsStd));
 
@@ -203,14 +187,12 @@ void PotionOfRFire::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfRFire::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfRFire::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfAntidote::specificQuaff(Actor* const actor) {
+void PotionOfAntidote::quaff_(Actor* const actor) {
   bool visionBlockers[MAP_W][MAP_H];
   MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
   const bool IS_POISON_ENDED =
@@ -221,14 +203,12 @@ void PotionOfAntidote::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfAntidote::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfAntidote::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfRElec::specificQuaff(Actor* const actor) {
+void PotionOfRElec::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRElec(eng, propTurnsStd));
 
@@ -237,14 +217,12 @@ void PotionOfRElec::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfRElec::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfRElec::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfRAcid::specificQuaff(Actor* const actor) {
+void PotionOfRAcid::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRAcid(eng, propTurnsStd));
 
@@ -253,14 +231,12 @@ void PotionOfRAcid::specificQuaff(Actor* const actor) {
   }
 }
 
-void PotionOfRAcid::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfRAcid::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionOfInsight::specificQuaff(Actor* const actor) {
+void PotionOfInsight::quaff_(Actor* const actor) {
   (void)actor;
 
   Inventory& inv = eng.player->getInv();
@@ -309,7 +285,7 @@ void PotionOfInsight::specificQuaff(Actor* const actor) {
   identify(false);
 }
 
-void PotionOfDescent::specificQuaff(Actor* const actor) {
+void PotionOfDescent::quaff_(Actor* const actor) {
   (void)actor;
   if(eng.map->getDlvl() < LAST_CAVERN_LEVEL) {
     eng.dungeonClimb->travelDown(1);
@@ -321,11 +297,9 @@ void PotionOfDescent::specificQuaff(Actor* const actor) {
   identify(false);
 }
 
-void PotionOfDescent::specificCollide(const Pos& pos, Actor* const actor) {
+void PotionOfDescent::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {
-    specificQuaff(actor);
-  }
+  if(actor != NULL) {quaff_(actor);}
 }
 
 void PotionNameHandler::setColorAndFalseName(ItemData* d) {
@@ -425,7 +399,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
     //If the blow from the bottle didn't kill the actor, apply what's inside
     if(actor != NULL) {
       if(actor->deadState == actorDeadState_alive) {
-        specificCollide(pos, actor);
+        collide_(pos, actor);
         if(
           actor->deadState == actorDeadState_alive &&
           data_->isIdentified == false && PLAYER_SEE_CELL) {
@@ -452,7 +426,7 @@ void Potion::quaff(Actor* const actor) {
 
   }
 
-  specificQuaff(actor);
+  quaff_(actor);
 
   if(eng.player->deadState == actorDeadState_alive) {
     eng.gameTime->actorDidAct();

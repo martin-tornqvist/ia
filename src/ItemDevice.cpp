@@ -34,12 +34,12 @@ bool Device::toggle() {
   if(isActivated_) {
     isActivated_ = false;
     nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
-    specificToggle();
+    toggle_();
   } else {
     isActivated_ = true;
     nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
     nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
-    specificToggle();
+    toggle_();
     const string message = getSpecificActivateMessage();
     if(message.empty() == false) {
       eng.log->addMsg(message);
@@ -66,7 +66,7 @@ int Device::getRandomNrTurnsToNextBadEffect() const {
 void Device::newTurnInInventory() {
   if(isActivated_) {
 
-    specificnewTurnInInventory();
+    newTurnInInventory_();
 
     if(--nrTurnsToNextGoodEffect_ <= 0) {
       nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
@@ -99,12 +99,12 @@ void Device::runBadEffect() {
   }
 }
 
-void Device::itemSpecificAddSaveLines(vector<string>& lines) {
+void Device::addSaveLines_(vector<string>& lines) {
   lines.push_back(isActivated_ ? "1" : "0");
   deviceSpecificAddSaveLines(lines);
 }
 
-void Device::itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
+void Device::setParamsFromSaveLines_(vector<string>& lines) {
   isActivated_ = lines.back() == "1";
   lines.erase(lines.begin());
   deviceSpecificSetParamsFromSaveLines(lines);
@@ -194,7 +194,7 @@ void DeviceTranslocator::runGoodEffect() {
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceElectricLantern::specificnewTurnInInventory() {
+void DeviceElectricLantern::newTurnInInventory_() {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
@@ -210,7 +210,7 @@ void DeviceElectricLantern::printToggleMessage() {
   eng.log->addMsg(toggleStr + " an Electric Lantern.");
 }
 
-void DeviceElectricLantern::specificToggle() {
+void DeviceElectricLantern::toggle_() {
   eng.audio->play(sfxElectricLantern);
   eng.gameTime->updateLightMap();
   eng.player->updateFov();

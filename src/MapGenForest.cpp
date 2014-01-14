@@ -264,7 +264,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
   }
 }
 
-bool MapGenIntroForest::specificRun() {
+bool MapGenIntroForest::run_() {
   int grass = 0;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {

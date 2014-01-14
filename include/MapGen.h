@@ -62,10 +62,10 @@ public:
   MapGen(Engine& engine) : eng(engine) {}
   ~MapGen() {}
 
-  inline bool run() {return specificRun();}
+  inline bool run() {return run_();}
 
 protected:
-  virtual bool specificRun() = 0;
+  virtual bool run_() = 0;
 
   void buildFromTemplate(const Pos pos, MapTemplate* t);
   void buildFromTemplate(const Pos pos, MapTemplateId_t templateId);
@@ -93,7 +93,7 @@ public:
   virtual ~MapGenBsp() {}
 
 private:
-  bool specificRun();
+  bool run_();
 
   void coverAreaWithFeature(const Rect& area, const Feature_t feature);
 
@@ -197,7 +197,7 @@ public:
   ~MapGenIntroForest() {}
 
 private:
-  bool specificRun();
+  bool run_();
 
   void buildForestLimit();
   void buildForestOuterTreeline();
@@ -211,7 +211,7 @@ public:
   ~MapGenEgyptTomb() {}
 
 private:
-  bool specificRun();
+  bool run_();
 };
 
 class MapGenCaveLvl : public MapGen {
@@ -220,7 +220,7 @@ public:
   ~MapGenCaveLvl() {}
 
 private:
-  bool specificRun();
+  bool run_();
 };
 
 class MapGenTrapezohedronLvl : public MapGen {
@@ -229,7 +229,7 @@ public:
   ~MapGenTrapezohedronLvl() {}
 
 private:
-  bool specificRun();
+  bool run_();
 };
 
 #endif

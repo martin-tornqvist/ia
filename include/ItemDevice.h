@@ -19,8 +19,8 @@ public:
 
   void newTurnInInventory();
 
-  void itemSpecificAddSaveLines(vector<string>& lines);
-  void itemSpecificSetParamsFromSaveLines(vector<string>& lines);
+  void addSaveLines_(vector<string>& lines);
+  void setParamsFromSaveLines_(vector<string>& lines);
 
   void identify(const bool IS_SILENT_IDENTIFY);
 
@@ -40,9 +40,9 @@ protected:
   virtual void runGoodEffect() {}
   virtual void runBadEffect();
 
-  virtual void specificToggle() {}
+  virtual void toggle_() {}
 
-  virtual void specificnewTurnInInventory() {}
+  virtual void newTurnInInventory_() {}
 
   virtual void printToggleMessage();
 
@@ -112,11 +112,11 @@ public:
 private:
   void printToggleMessage() override;
 
-  void specificnewTurnInInventory() override;
+  void newTurnInInventory_() override;
 
   void runBadEffect() override;
 
-  void specificToggle() override;
+  void toggle_() override;
 
   int malfunctCooldown_;
 };

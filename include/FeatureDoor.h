@@ -35,7 +35,7 @@ public:
   char getGlyph()                                     const override;
   Tile_t getTile()                                    const override;
 
-  void specificTryBash(Actor& actorTrying) override;
+  void tryBash_(Actor& actorTrying) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);

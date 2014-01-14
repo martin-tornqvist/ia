@@ -32,12 +32,8 @@ public:
     (void)IS_SILENT_IDENTIFY;
   }
 
-  virtual void itemSpecificAddSaveLines(vector<string>& lines) {
-    (void)lines;
-  }
-  virtual void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
-    (void)lines;
-  }
+  virtual void addSaveLines_(vector<string>& lines)           {(void)lines;}
+  virtual void setParamsFromSaveLines_(vector<string>& lines) {(void)lines;}
 
   int getWeight() const {return data_->itemWeight * nrItems;}
 

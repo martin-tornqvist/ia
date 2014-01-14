@@ -27,10 +27,10 @@ public:
 
   virtual SDL_Color getInterfaceClr() const {return clrGreen;}
 
-  void itemSpecificAddSaveLines(vector<string>& lines) {
+  void addSaveLines_(vector<string>& lines) {
     lines.push_back(toString(nrSupplies_));
   }
-  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
+  void setParamsFromSaveLines_(vector<string>& lines) {
     nrSupplies_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

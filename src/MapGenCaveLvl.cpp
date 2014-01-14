@@ -13,7 +13,7 @@
 #include "PopulateMonsters.h"
 #include "MapParsing.h"
 
-bool MapGenCaveLvl::specificRun() {
+bool MapGenCaveLvl::run_() {
   eng.map->resetMap();
 
   for(int y = 0; y < MAP_H; y++) {

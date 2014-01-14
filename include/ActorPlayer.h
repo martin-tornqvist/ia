@@ -42,13 +42,11 @@ public:
 
   void moveDir(Dir_t dir);
 
-  void specific_init() {}
-
-  void specificSpawnStartItems() override;
+  void spawnStartItems() override;
 
   void onActorTurn();
 
-  void specificOnStandardTurn();
+  void onStandardTurn_();
 
   void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                  const Dir_t dirToOrigin,
@@ -96,7 +94,7 @@ public:
 
   void updateColor();
 
-  void specificAddLight(bool light[MAP_W][MAP_H]) const;
+  void addLight_(bool light[MAP_W][MAP_H]) const;
 
   void grantMthPower() const;
 
@@ -108,7 +106,7 @@ private:
   void incrInsanity();
 //  void tryIdentifyItems();
   void testPhobias();
-  void specificHit(const int DMG, const bool ALLOW_WOUNDS);
+  void hit_(const int DMG, const bool ALLOW_WOUNDS);
   void FOVhack();
   void interruptActions();
   bool isStandingInOpenSpace() const;

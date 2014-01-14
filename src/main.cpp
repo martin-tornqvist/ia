@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
           eng->bot->init();
         }
         eng->playerCreateCharacter->createCharacter();
-        eng->player->specificSpawnStartItems();
+        eng->player->spawnStartItems();
 
         eng->gameTime->insertActorInLoop(eng->player);
 

@@ -192,7 +192,7 @@ void GameTime::runStandardTurnEvents() {
         actor->restoreSpi(1, false);
       }
 
-      actor->specificOnStandardTurn();
+      actor->onStandardTurn_();
     }
 
     //Delete dead, mangled actors

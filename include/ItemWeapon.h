@@ -41,12 +41,12 @@ public:
     return *ammoData_;
   }
 
-  void itemSpecificAddSaveLines(vector<string>& lines) {
+  void addSaveLines_(vector<string>& lines) {
     lines.push_back(toString(meleeDmgPlus));
     lines.push_back(toString(nrAmmoLoaded));
   }
 
-  void itemSpecificSetParamsFromSaveLines(vector<string>& lines) {
+  void setParamsFromSaveLines_(vector<string>& lines) {
     meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
     nrAmmoLoaded = toInt(lines.front());

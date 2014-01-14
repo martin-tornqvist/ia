@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "FeatureWall.h"
 
-bool MapGenEgyptTomb::specificRun() {
+bool MapGenEgyptTomb::run_() {
   eng.map->resetMap();
 
   buildFromTemplate(Pos(0, 0), mapTemplate_pharaohsChamber);

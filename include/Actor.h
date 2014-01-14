@@ -34,7 +34,7 @@ public:
   bool isSpottingHiddenActor(Actor& actor);
 
   void place(const Pos& pos_, ActorData& data);
-  virtual void specificPlace() {}
+  virtual void place_() {}
 
   bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);
@@ -52,7 +52,7 @@ public:
            const bool ALLOW_DROP_ITEMS);
 
   virtual void onActorTurn() {}
-  virtual void specificOnStandardTurn() {}
+  virtual void onStandardTurn_() {}
 
   virtual void moveDir(Dir_t dir) = 0;
 
@@ -83,7 +83,7 @@ public:
 
   void addLight(bool light[MAP_W][MAP_H]) const;
 
-  virtual void specificAddLight(
+  virtual void addLight_(
     bool light[MAP_W][MAP_H]) const {
     (void)light;
   }
@@ -104,12 +104,12 @@ protected:
   friend class Flare;
   friend class PropDiseased;
 
-  virtual void specificDie() {}
-  virtual void specificHit(const int DMG, const bool ALLOW_WOUNDS) {
+  virtual void die_() {}
+  virtual void hit_(const int DMG, const bool ALLOW_WOUNDS) {
     (void)DMG;
     (void)ALLOW_WOUNDS;
   }
-  virtual void specificSpawnStartItems() = 0;
+  virtual void spawnStartItems() = 0;
 
   virtual void onMonsterHit(int& dmg) {(void)dmg;}
   virtual void onMonsterDeath() {}

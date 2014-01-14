@@ -8,7 +8,7 @@
 #include "FeatureWall.h"
 #include "MapParsing.h"
 
-bool MapGenTrapezohedronLvl::specificRun() {
+bool MapGenTrapezohedronLvl::run_() {
   eng.map->resetMap();
 
   for(int y = 0; y < MAP_H; y++) {

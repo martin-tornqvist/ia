@@ -179,7 +179,7 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
   Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, false, IS_PLAYER);
   eng.soundEmitter->emitSound(snd);
 
-  specificTryBash(actorTrying);
+  tryBash_(actorTrying);
 
   eng.gameTime->actorDidAct();
 

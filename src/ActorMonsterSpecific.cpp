@@ -73,7 +73,7 @@ string Cultist::getCultistPhrase(Engine& engine) {
            engine.dice.range(0, phraseCandidates.size() - 1));
 }
 
-void Cultist::specificSpawnStartItems() {
+void Cultist::spawnStartItems() {
   const int DLVL = eng.map->getDlvl();
 
   const int PISTOL = 6;
@@ -118,7 +118,7 @@ void Cultist::specificSpawnStartItems() {
   }
 }
 
-void CultistTeslaCannon::specificSpawnStartItems() {
+void CultistTeslaCannon::spawnStartItems() {
   Item* item = eng.itemFactory->spawnItem(item_teslaCannon);
   inventory_->putItemInSlot(slot_wielded, item, true);
 
@@ -135,7 +135,7 @@ void CultistTeslaCannon::specificSpawnStartItems() {
   }
 }
 
-void CultistSpikeGun::specificSpawnStartItems() {
+void CultistSpikeGun::spawnStartItems() {
   inventory_->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(item_spikeGun), true);
   Item* item = eng.itemFactory->spawnItem(item_ironSpike);
@@ -143,7 +143,7 @@ void CultistSpikeGun::specificSpawnStartItems() {
   inventory_->putItemInGeneral(item);
 }
 
-void CultistPriest::specificSpawnStartItems() {
+void CultistPriest::spawnStartItems() {
   Item* item = eng.itemFactory->spawnItem(item_dagger);
   dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
   inventory_->putItemInSlot(slot_wielded, item, true);
@@ -161,21 +161,21 @@ void CultistPriest::specificSpawnStartItems() {
   }
 }
 
-void FireHound::specificSpawnStartItems() {
+void FireHound::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_fireHoundBreath));
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_fireHoundBite));
 }
 
-void FrostHound::specificSpawnStartItems() {
+void FrostHound::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_frostHoundBreath));
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_frostHoundBite));
 }
 
-void Zuul::specificPlace() {
+void Zuul::place_() {
   if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects, such as
     //player getting XP.
@@ -193,7 +193,7 @@ void Zuul::specificPlace() {
   }
 }
 
-void Zuul::specificSpawnStartItems() {
+void Zuul::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_zuulBite));
 }
@@ -257,7 +257,7 @@ void DustVortex::onMonsterDeath() {
     clrGray);
 }
 
-void DustVortex::specificSpawnStartItems() {
+void DustVortex::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_dustVortexEngulf));
 }
@@ -268,7 +268,7 @@ void FireVortex::onMonsterDeath() {
     clrRedLgt);
 }
 
-void FireVortex::specificSpawnStartItems() {
+void FireVortex::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_fireVortexEngulf));
 }
@@ -277,7 +277,7 @@ void FrostVortex::onMonsterDeath() {
   //TODO Add explosion with cold damage
 }
 
-void FrostVortex::specificSpawnStartItems() {
+void FrostVortex::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_frostVortexEngulf));
 }
@@ -314,24 +314,24 @@ bool Ghost::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void Ghost::specificSpawnStartItems() {
+void Ghost::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_ghostClaw));
 }
 
-void Phantasm::specificSpawnStartItems() {
+void Phantasm::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_phantasmSickle));
 }
 
-void Wraith::specificSpawnStartItems() {
+void Wraith::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_wraithClaw));
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
 
-void MiGo::specificSpawnStartItems() {
+void MiGo::spawnStartItems() {
   Item* item = eng.itemFactory->spawnItem(item_miGoElectricGun);
   inventory_->putItemInIntrinsics(item);
 
@@ -344,7 +344,7 @@ void MiGo::specificSpawnStartItems() {
   }
 }
 
-void Rat::specificSpawnStartItems() {
+void Rat::spawnStartItems() {
   Item* item = NULL;
   if(eng.dice.percentile() < 15) {
     item = eng.itemFactory->spawnItem(item_ratBiteDiseased);
@@ -354,22 +354,22 @@ void Rat::specificSpawnStartItems() {
   inventory_->putItemInIntrinsics(item);
 }
 
-void RatThing::specificSpawnStartItems() {
+void RatThing::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_ratThingBite));
 }
 
-void Shadow::specificSpawnStartItems() {
+void Shadow::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_shadowClaw));
 }
 
-void Ghoul::specificSpawnStartItems() {
+void Ghoul::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_ghoulClaw));
 }
 
-void Mummy::specificSpawnStartItems() {
+void Mummy::spawnStartItems() {
   inventory_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
 
   for(int i = eng.dice.range(1, 3); i > 0; i--) {
@@ -377,7 +377,7 @@ void Mummy::specificSpawnStartItems() {
   }
 }
 
-void MummyUnique::specificSpawnStartItems() {
+void MummyUnique::spawnStartItems() {
   inventory_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
@@ -437,29 +437,29 @@ bool Khephren::monsterSpecificOnActorTurn() {
 
 
 
-void DeepOne::specificSpawnStartItems() {
+void DeepOne::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_deepOneJavelinAttack));
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_deepOneSpearAttack));
 }
 
-void GiantBat::specificSpawnStartItems() {
+void GiantBat::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_giantBatBite));
 }
 
-void Byakhee::specificSpawnStartItems() {
+void Byakhee::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_byakheeClaw));
 }
 
-void GiantMantis::specificSpawnStartItems() {
+void GiantMantis::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_giantMantisClaw));
 }
 
-void HuntingHorror::specificSpawnStartItems() {
+void HuntingHorror::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_huntingHorrorBite));
 }
@@ -506,7 +506,7 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void KeziahMason::specificSpawnStartItems() {
+void KeziahMason::spawnStartItems() {
   spellsKnown.push_back(new SpellTeleport);
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonRandom);
@@ -514,31 +514,31 @@ void KeziahMason::specificSpawnStartItems() {
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
 
-void Ooze::specificOnStandardTurn() {
+void Ooze::onStandardTurn_() {
   restoreHp(1, false);
 }
 
-void OozeBlack::specificSpawnStartItems() {
+void OozeBlack::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_oozeBlackSpewPus));
 }
 
-void OozeClear::specificSpawnStartItems() {
+void OozeClear::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_oozeClearSpewPus));
 }
 
-void OozePutrid::specificSpawnStartItems() {
+void OozePutrid::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_oozePutridSpewPus));
 }
 
-void OozePoison::specificSpawnStartItems() {
+void OozePoison::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_oozePoisonSpewPus));
 }
 
-void ColourOutOfSpace::specificSpawnStartItems() {
+void ColourOutOfSpace::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_colourOutOfSpaceTouch));
 }
@@ -547,7 +547,7 @@ const SDL_Color& ColourOutOfSpace::getColor() {
   return currentColor;
 }
 
-void ColourOutOfSpace::specificOnStandardTurn() {
+void ColourOutOfSpace::onStandardTurn_() {
   currentColor.r = eng.dice.range(40, 255);
   currentColor.g = eng.dice.range(40, 255);
   currentColor.b = eng.dice.range(40, 255);
@@ -564,32 +564,32 @@ bool Spider::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void GreenSpider::specificSpawnStartItems() {
+void GreenSpider::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_greenSpiderBite));
 }
 
-void WhiteSpider::specificSpawnStartItems() {
+void WhiteSpider::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_whiteSpiderBite));
 }
 
-void RedSpider::specificSpawnStartItems() {
+void RedSpider::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_redSpiderBite));
 }
 
-void ShadowSpider::specificSpawnStartItems() {
+void ShadowSpider::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_shadowSpiderBite));
 }
 
-void LengSpider::specificSpawnStartItems() {
+void LengSpider::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_lengSpiderBite));
 }
 
-void Wolf::specificSpawnStartItems() {
+void Wolf::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_wolfBite));
 }
@@ -625,7 +625,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void WormMass::specificSpawnStartItems() {
+void WormMass::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_wormMassBite));
 }
@@ -661,7 +661,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void GiantLocust::specificSpawnStartItems() {
+void GiantLocust::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_giantLocustBite));
 }
@@ -671,7 +671,7 @@ bool LordOfShadows::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void LordOfShadows::specificSpawnStartItems() {
+void LordOfShadows::spawnStartItems() {
 
 }
 
@@ -716,7 +716,7 @@ bool LordOfSpiders::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void LordOfSpiders::specificSpawnStartItems() {
+void LordOfSpiders::spawnStartItems() {
 
 }
 
@@ -725,7 +725,7 @@ bool LordOfSpirits::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void LordOfSpirits::specificSpawnStartItems() {
+void LordOfSpirits::spawnStartItems() {
 
 }
 
@@ -734,7 +734,7 @@ bool LordOfPestilence::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void LordOfPestilence::specificSpawnStartItems() {
+void LordOfPestilence::spawnStartItems() {
 
 }
 
@@ -816,7 +816,7 @@ bool Zombie::tryResurrect() {
   return false;
 }
 
-void Zombie::specificDie() {
+void Zombie::die_() {
   //If resurrected once and has corpse, blow up the corpse
   if(hasResurrected && deadState == actorDeadState_corpse) {
     deadState = actorDeadState_mangled;
@@ -825,7 +825,7 @@ void Zombie::specificDie() {
   }
 }
 
-void ZombieClaw::specificSpawnStartItems() {
+void ZombieClaw::spawnStartItems() {
   Item* item = NULL;
   if(eng.dice.percentile() < 20) {
     item = eng.itemFactory->spawnItem(item_zombieClawDiseased);
@@ -835,11 +835,11 @@ void ZombieClaw::specificSpawnStartItems() {
   inventory_->putItemInIntrinsics(item);
 }
 
-void ZombieAxe::specificSpawnStartItems() {
+void ZombieAxe::spawnStartItems() {
   inventory_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_zombieAxe));
 }
 
-void BloatedZombie::specificSpawnStartItems() {
+void BloatedZombie::spawnStartItems() {
   inventory_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_bloatedZombiePunch));
   inventory_->putItemInIntrinsics(
