@@ -65,15 +65,15 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
       switch(curAction_) {
         case medicalBagAction_sanitizeInfection: {
-          eng.log->addMsg("I start to sanitize an infection.");
+          eng.log->addMsg("I start to sanitize an infection...");
         } break;
 
         case medicalBagAction_takeMorphine: {
-          eng.log->addMsg("I start to take Morphine.");
+          eng.log->addMsg("I start to take Morphine...");
         } break;
 
         case medicalBagAction_treatWound: {
-          eng.log->addMsg("I start to treat a wound.");
+          eng.log->addMsg("I start to treat a wound...");
         } break;
 
         case endOfMedicalBagActions: {} break;

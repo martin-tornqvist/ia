@@ -80,22 +80,30 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
     eng.renderer->drawText(str, panel_screen, Pos(0, y), clr);
 
-    string fill;
-    fill.resize(0);
+    string fillStr = "";
     const unsigned int FILL_SIZE = 28 - str.size();
-    for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fill.push_back('.');}
+    for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     eng.renderer->drawText(
-      fill, panel_screen, Pos(str.size(), y), fillClr);
-    const int x = 28;
+      fillStr, panel_screen, Pos(str.size(), y), fillClr);
 
-    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
-
+    int x = 28;
     str = "SPI:";
-    str += spiCost.upper == 1 ? "1" :
-           (toString(spiCost.lower) +  "-" + toString(spiCost.upper));
+    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
+    const string lowerStr = toString(spiCost.lower);
+    const string upperStr = toString(spiCost.upper);
+    str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
     eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+
+    x += 11;
+    str = "SHOCK:";
+    const int BASE_SHOCK = spell->getShockFromIntrCast();
+    const double SHOCK_DB =
+      eng.player->getShockTakenAfterMods(BASE_SHOCK, shockSrc_intrSpell);
+    str += toString(SHOCK_DB) + "%";
+    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+
     y++;
   }
 

@@ -248,25 +248,36 @@ int Player::getShockResistance() const {
   if(eng.playerBonHandler->hasTrait(traitCoolHeaded)) {
     ret += 20;
   }
+  if(eng.playerBonHandler->hasTrait(traitCourageous)) {
+    ret += 30;
+  }
   return min(100, max(0, ret));
 }
 
-void Player::incrShock(const int VAL) {
-  const double SHOCK_RES_DB = double(getShockResistance());
-  const double VAL_DB = double(VAL);
-  const double VAL_AFTER_SHOCK_RES =
-    (VAL_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
-  shock_ = min(100.0, shock_ + max(0.0, VAL_AFTER_SHOCK_RES));
+double Player::getShockTakenAfterMods(const int BASE_SHOCK,
+                                      const ShockSrc_t shockSource) const {
+  (void)shockSource;
+
+  const double SHOCK_RES_DB   = double(getShockResistance());
+  const double BASE_SHOCK_DB  = double(BASE_SHOCK);
+  return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
 }
 
-void Player::incrShock(const ShockValues_t shockValue) {
+void Player::incrShock(const int SHOCK, ShockSrc_t shockSource) {
+  const double SHOCK_AFTER_MODS = getShockTakenAfterMods(SHOCK, shockSource);
+  shock_ = min(100.0, shock_ + max(0.0, SHOCK_AFTER_MODS));
+}
+
+void Player::incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc) {
+  int baseShock = 0;
   switch(shockValue) {
-    case shockValue_none:   {incrShock(0);} break;
-    case shockValue_mild:   {incrShock(2);} break;
-    case shockValue_some:   {incrShock(4);} break;
-    case shockValue_heavy:  {incrShock(12);} break;
+    case shockValue_none:   baseShock = 0;  break;
+    case shockValue_mild:   baseShock = 2;  break;
+    case shockValue_some:   baseShock = 4;  break;
+    case shockValue_heavy:  baseShock = 12; break;
     default: {} break;
   }
+  incrShock(baseShock, shockSrc);
 }
 
 void Player::restoreShock(const int amountRestored,
@@ -1135,9 +1146,14 @@ void Player::moveDir(Dir_t dir) {
 
         pos = dest;
 
-        PlayerBonHandler* const bon = eng.playerBonHandler;
-        if(bon->hasTrait(traitDexterous)) {
-          const int FREE_MOVE_EVERY_N_TURN = 4;
+        PlayerBonHandler* const bonHlr = eng.playerBonHandler;
+
+        const int FREE_MOVE_EVERY_N_TURN =
+          bonHlr->hasTrait(traitMobile)     ? 2 :
+          bonHlr->hasTrait(traitLithe)      ? 4 :
+          bonHlr->hasTrait(traitDexterous)  ? 5 : 0;
+
+        if(FREE_MOVE_EVERY_N_TURN > 0) {
           if(nrMovesUntilFreeAction == -1) {
             nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
           } else if(nrMovesUntilFreeAction == 0) {

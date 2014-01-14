@@ -84,7 +84,7 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
     case bgOccultist: {
       linesRef.push_back("Can memorize spells cast from manuscripts");
       linesRef.push_back("");
-      linesRef.push_back("-2 Hit Point penalty");
+      linesRef.push_back("-2 Hit Points");
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
@@ -188,35 +188,41 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "-50% shock taken from seeing terrifying creatures, for ";
       strRef += "casting spells and for using and identifying strange items ";
       strRef += "(e.g. potions)";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitWarlock: {
       strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
       strRef += "can make you \"Charged\" for one turn, causing attack spells ";
       strRef += "to do maximum damage";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitBloodSorcerer: {
       strRef  = "-1 Spirit cost for all spells, casting a spell drains 2 ";
       strRef += "Hit points";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSpiritCannibal: {
-      strRef  = "For every life you take, you gain 1 Spirit Point by ";
+      strRef += "For every life you take, you gain 1 Spirit Point by ";
       strRef += "absorbing a part of that creatures spirit (does not work ";
       strRef += "on insignificant creatures like a small spider or a rat)";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSeer: {
       strRef  = "The spell \"Clairvoyance\" has double duration, and ";
       strRef += "detection spells have increased range - spirit costs for ";
       strRef += "these spells are reduced";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSelfPossessed: {
       strRef  = "Passive shock received over time is reduced by 75% (does ";
       strRef += "not affect shock from seeing terrifying creatures, ";
       strRef += "using magic, etc)";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitTough: {
@@ -239,10 +245,11 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "Increased chance of success when bashing doors, breaking ";
       strRef += "a door is a free turn, any creature adjacent to the door ";
       strRef += "on the opposite side is damaged and stunned";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitDexterous: {
-      strRef  = "+25% chance to evade attacks and traps, ";
+      strRef  = "+20% chance to evade attacks and traps, ";
       strRef += "every fifth move is a free action";
     } break;
 
@@ -279,8 +286,9 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSurvivalist: {
-      strRef  = "Increased Hit Point regeneration rate, reduced penalties ";
-      strRef += "from wounds and disease";
+      strRef  = "Increased Hit Point regeneration rate, negative effects ";
+      strRef += "from wounds and disease reduced by 50%";
+      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSelfAware: {

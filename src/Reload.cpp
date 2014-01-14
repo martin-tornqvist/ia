@@ -25,7 +25,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   const string ammoCurrent  = wpn == NULL ? "" : toString(wpn->nrAmmoLoaded);
   const bool IS_PLAYER      = &actorReloading == eng.player;
 
-  string ammoName = " ";
+  string ammoName = "";
   bool isClip = false;
 
   if(ammo != NULL) {
@@ -82,7 +82,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
 
     case reloadResult_fumble: {
       if(IS_PLAYER) {
-        eng.log->addMsg("I fumble with the " + ammoName + ".");
+        eng.log->addMsg("I fumble with " + ammoName + ".");
       } else {
         if(eng.player->checkIfSeeActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + " fumbles with " + ammoName + ".");

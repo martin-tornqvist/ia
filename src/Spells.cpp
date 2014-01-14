@@ -66,7 +66,7 @@ Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
 
 Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                         Engine& eng) const {
-  int costMax = getSpecificMaxSpiCost();
+  int costMax = getMaxSpiCost_();
 
   if(IS_BASE_COST_ONLY == false) {
     const int X0 = max(0, caster->pos.x - 1);
@@ -101,13 +101,17 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
   return Range(COST_MIN, costMax);
 }
 
+int Spell::getShockFromIntrCast() const {
+  return getShockFromIntrCast_();
+}
+
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine& eng) {
   trace << "Spell::cast()..." << endl;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
-      eng.player->incrShock(SHOCK_TAKEN_FROM_CASTING_SPELLS);
+      eng.player->incrShock(getShockFromIntrCast());
     } else {
       trace << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);
@@ -124,7 +128,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     }
     SpellCastRetData ret(false);
     if(caster->deadState == actorDeadState_alive) {
-      ret = specificCast(caster, eng);
+      ret = cast_(caster, eng);
     }
 
     eng.gameTime->actorDidAct();
@@ -136,7 +140,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
 }
 
 //------------------------------------------------------------ DARKBOLT
-SpellCastRetData SpellDarkbolt::specificCast(
+SpellCastRetData SpellDarkbolt::cast_(
   Actor* const caster, Engine& eng) {
 
   Actor* target = NULL;
@@ -206,7 +210,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
-SpellCastRetData SpellAzathothsWrath::specificCast(
+SpellCastRetData SpellAzathothsWrath::cast_(
   Actor* const caster, Engine& eng) {
 
   DiceParam spellDmg(1, 8, 0);
@@ -257,7 +261,7 @@ bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ MAYHEM
-SpellCastRetData SpellMayhem::specificCast(
+SpellCastRetData SpellMayhem::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
@@ -328,7 +332,7 @@ SpellCastRetData SpellMayhem::specificCast(
 }
 
 //------------------------------------------------------------ PESTILENCE
-SpellCastRetData SpellPestilence::specificCast(
+SpellCastRetData SpellPestilence::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
   bool blockers[MAP_W][MAP_H];
@@ -374,7 +378,7 @@ SpellCastRetData SpellPestilence::specificCast(
 }
 
 //------------------------------------------------------------ DETECT ITEMS
-SpellCastRetData SpellDetectItems::specificCast(
+SpellCastRetData SpellDetectItems::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
@@ -417,7 +421,7 @@ SpellCastRetData SpellDetectItems::specificCast(
 }
 
 //------------------------------------------------------------ DETECT TRAPS
-SpellCastRetData SpellDetectTraps::specificCast(
+SpellCastRetData SpellDetectTraps::cast_(
   Actor* const caster, Engine& eng) {
 
   (void)caster;
@@ -455,7 +459,7 @@ SpellCastRetData SpellDetectTraps::specificCast(
 }
 
 //------------------------------------------------------------ CLAIRVOYANCE
-SpellCastRetData SpellClairvoyance::specificCast(
+SpellCastRetData SpellClairvoyance::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
   eng.player->getPropHandler().tryApplyProp(
@@ -464,7 +468,7 @@ SpellCastRetData SpellClairvoyance::specificCast(
 }
 
 //------------------------------------------------------------ OPENING
-SpellCastRetData SpellOpening::specificCast(
+SpellCastRetData SpellOpening::cast_(
   Actor* const caster, Engine& eng) {
 
   (void)caster;
@@ -500,7 +504,7 @@ SpellCastRetData SpellOpening::specificCast(
 }
 
 //------------------------------------------------------------ SACRIFICE LIFE
-SpellCastRetData SpellSacrificeLife::specificCast(
+SpellCastRetData SpellSacrificeLife::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
@@ -518,7 +522,7 @@ SpellCastRetData SpellSacrificeLife::specificCast(
 }
 
 //------------------------------------------------------------ SACRIFICE SPIRIT
-SpellCastRetData SpellSacrificeSpirit::specificCast(
+SpellCastRetData SpellSacrificeSpirit::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
@@ -536,7 +540,7 @@ SpellCastRetData SpellSacrificeSpirit::specificCast(
 }
 
 //------------------------------------------------------------ ROGUE HIDE
-SpellCastRetData SpellRogueHide::specificCast(
+SpellCastRetData SpellRogueHide::cast_(
   Actor* const caster, Engine& eng) {
 
   (void)caster;
@@ -554,7 +558,7 @@ SpellCastRetData SpellRogueHide::specificCast(
 }
 
 //------------------------------------------------------------ MTH POWER
-SpellCastRetData SpellMthPower::specificCast(
+SpellCastRetData SpellMthPower::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
 
@@ -673,7 +677,7 @@ void SpellMthPower::castRandomOtherSpell(Engine& eng) const {
 }
 
 //------------------------------------------------------------ BLESS
-SpellCastRetData SpellBless::specificCast(
+SpellCastRetData SpellBless::cast_(
   Actor* const caster, Engine& eng) {
 
   caster->getPropHandler().tryApplyProp(
@@ -689,7 +693,7 @@ bool SpellBless::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ TELEPORT
-SpellCastRetData SpellTeleport::specificCast(
+SpellCastRetData SpellTeleport::cast_(
   Actor* const caster, Engine& eng) {
 
   if(caster != eng.player) {
@@ -713,7 +717,7 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ KNOCKBACK
-SpellCastRetData SpellKnockBack::specificCast(
+SpellCastRetData SpellKnockBack::cast_(
   Actor* const caster, Engine& eng) {
   if(caster == eng.player) {
 
@@ -732,7 +736,7 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ ENFEEBLE
-SpellCastRetData SpellEnfeeble::specificCast(
+SpellCastRetData SpellEnfeeble::cast_(
   Actor* const caster, Engine& eng) {
 
   const PropId_t propId = getPropId(eng);
@@ -791,147 +795,8 @@ PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
   return endOfPropIds;
 }
 
-//------------------------------------------------------------ CONFUSE
-//SpellCastRetData SpellConfuse::specificCast(Actor* const caster, Engine& eng) {
-//  Actor* actor = eng.basicUtils->getActorAtPos(d.targetCell_);
-//
-//  if(actor != NULL) {
-//
-//    if(actor == eng.player) {
-//      eng.log->addMsg("My mind is reeling!");
-//    }
-//
-//    actor->getPropHandler().tryApplyProp(new StatusConfused(eng));
-//  }
-//}
-//
-//void SpellConfuse::specificMonsterCast(
-//  Monster* const monster, Engine& eng) {
-//  specificCast(SpellCastData(monster, eng.player->pos), eng);
-//}
-//
-//bool SpellConfuse::isGoodForMonsterToCastNow(
-//  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_W][MAP_H];
-//  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
-//  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
-//    return engine.player->getPropHandler().allowSee();
-//  }
-//  return false;
-//}
-
-//------------------------------------------------------------ WEAKNESS
-//SpellCastRetData SpellWeakness::specificCast(Actor* const caster, Engine& eng) {
-//  Actor* actor = eng.basicUtils->getActorAtPos(d.targetCell_);
-//
-//  if(actor != NULL) {
-//
-//    if(actor == eng.player) {
-//      eng.log->addMsg("Something is draining me physically!");
-//    }
-//
-//    actor->getPropHandler().tryApplyProp(new StatusWeak(eng));
-//  }
-//}
-//
-//void SpellWeakness::specificMonsterCast(
-//  Monster* const monster, Engine& eng) {
-//  specificCast(SpellCastData(monster, eng.player->pos), eng);
-//}
-//
-//bool SpellWeakness::isGoodForMonsterToCastNow(
-//  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_W][MAP_H];
-//  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
-//  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
-//    return engine.player->getPropHandler().allowSee();
-//  }
-//  return false;
-//}
-
-//------------------------------------------------------------ BLIND
-//SpellCastRetData SpellBlind::specificCast(Actor* const caster, Engine& eng) {
-//  Actor* actor = eng.basicUtils->getActorAtPos(d.targetCell_);
-//
-//  if(actor != NULL) {
-//
-//    if(actor == eng.player) {
-//      eng.log->addMsg("Scales starts to grow over my eyes!");
-//    }
-//
-//    actor->getPropHandler().tryApplyProp(new PropBlind(eng.dice(3, 6)));
-//  }
-//}
-//
-//void SpellBlind::specificMonsterCast(
-//  Monster* const monster, Engine& eng) {
-//  specificCast(SpellCastData(monster, eng.player->pos), eng);
-//}
-//
-//bool SpellBlind::isGoodForMonsterToCastNow(
-//  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_W][MAP_H];
-//  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
-//  if(monster->checkIfSeeActor(*(engine.player), blockers)) {
-//    return engine.player->getPropHandler().allowSee() ;
-//  }
-//  return false;
-//}
-
-//------------------------------------------------------------ FEAR
-//SpellCastRetData SpellFear::specificCast(Actor* const caster, Engine& eng) {
-//  Actor* actor = eng.basicUtils->getActorAtPos(d.targetCell_);
-//
-//  if(actor != NULL) {
-//
-//    if(actor == eng.player) {
-//      eng.log->addMsg("My mind is besieged by terror.");
-//    }
-//
-//    actor->getPropHandler().tryApplyProp(new PropTerrified(eng.dice(3, 6)));
-//  }
-//}
-//
-//void SpellFear::specificMonsterCast(
-//  Monster* const monster, Engine& eng) {
-//  specificCast(SpellCastData(monster, eng.player->pos), eng);
-//}
-//
-//bool SpellFear::isGoodForMonsterToCastNow(
-//  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_W][MAP_H];
-//  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
-//  return monster->checkIfSeeActor(*(engine.player), blockers);
-//}
-
-//------------------------------------------------------------ SLOW
-//SpellCastRetData SpellSlow::specificCast(Actor* const caster, Engine& eng) {
-//  Actor* actor = eng.basicUtils->getActorAtPos(d.targetCell_);
-//
-//  if(actor != NULL) {
-//
-//    if(actor == eng.player) {
-//      eng.log->addMsg("I start to feel bogged down.");
-//    }
-//
-//    actor->getPropHandler().tryApplyProp(new StatusSlowed(eng.dice(3, 6)));
-//  }
-//}
-//
-//void SpellSlow::specificMonsterCast(
-//  Monster* const monster, Engine& eng) {
-//  specificCast(SpellCastData(monster, eng.player->pos), eng);
-//}
-//
-//bool SpellSlow::isGoodForMonsterToCastNow(
-//  Monster* const monster, Engine& eng) {
-//  bool blockers[MAP_W][MAP_H];
-//  engine.mapTests->makeVisionBlockerArray(monster->pos, blockers);
-//  return monster->checkIfSeeActor(*(engine.player), blockers);
-//}
-
 //------------------------------------------------------------ DISEASE
-SpellCastRetData SpellDisease::specificCast(
+SpellCastRetData SpellDisease::cast_(
   Actor* const caster, Engine& eng) {
   if(caster == eng.player) {
     return SpellCastRetData(true);
@@ -952,7 +817,7 @@ bool SpellDisease::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ SUMMON RANDOM
-SpellCastRetData SpellSummonRandom::specificCast(
+SpellCastRetData SpellSummonRandom::cast_(
   Actor* const caster, Engine& eng) {
 
   Pos summonPos(caster->pos);
@@ -1028,7 +893,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ HEAL SELF
-SpellCastRetData SpellHealSelf::specificCast(
+SpellCastRetData SpellHealSelf::cast_(
   Actor* const caster, Engine& eng) {
   (void)eng;
   return SpellCastRetData(caster->restoreHp(999, true));
@@ -1041,7 +906,7 @@ bool SpellHealSelf::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ MI-GO HYPNOSIS
-SpellCastRetData SpellMiGoHypnosis::specificCast(
+SpellCastRetData SpellMiGoHypnosis::cast_(
   Actor* const caster, Engine& eng) {
 
   (void)caster;

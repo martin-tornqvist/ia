@@ -38,7 +38,6 @@ const int DELAY_PLAYER_WAITING        = 0;
 const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
 
 const int PLAYER_START_SPI                = 6;
-const int SHOCK_TAKEN_FROM_CASTING_SPELLS = 10;
 const int MTH_LVL_SPELLS_SPI_BON          = 20;
 const int MTH_LVL_NEW_PWR                 = 15;
 

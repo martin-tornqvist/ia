@@ -42,6 +42,7 @@ int AbilityValues::getVal(const Abilities_t ability,
       case ability_dodgeTrap: {
         val += 5;
         if(bonHlr.hasTrait(traitDexterous)) val += 20;
+        if(bonHlr.hasTrait(traitLithe))     val += 20;
       } break;
 
       case ability_dodgeAttack: {
