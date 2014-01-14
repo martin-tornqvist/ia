@@ -151,22 +151,23 @@ void Trap::playerTryDisarm() {
   const bool IS_BLESSED = propHlr.hasProp(propBlessed);
   const bool IS_CURSED  = propHlr.hasProp(propCursed);
 
-  const int DENOMINATOR = 10;
+  int       disarmNumerator     = 5;
+  const int DISARM_DENOMINATOR  = 10;
 
-  int numerator;
-  if(IS_BLESSED)  numerator += 3;
-  if(IS_CURSED)   numerator -= 3;
+  if(IS_BLESSED)  disarmNumerator += 3;
+  if(IS_CURSED)   disarmNumerator -= 3;
 
-  constrInRange(1, numerator, DENOMINATOR - 1);
+  constrInRange(1, disarmNumerator, DISARM_DENOMINATOR - 1);
 
-  const bool IS_DISARMED = eng.dice.fraction(numerator, DENOMINATOR);
+  const bool IS_DISARMED =
+    eng.dice.fraction(disarmNumerator, DISARM_DENOMINATOR);
   if(IS_DISARMED) {
     eng.log->addMsg("I disarm a trap.");
   } else {
     eng.log->addMsg("I fail to disarm a trap.");
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(eng.dice.oneIn(TRIGGER_ONE_IN_N)) {
-    trigger(*eng.player);
+      trigger(*eng.player);
     }
   }
   eng.gameTime->actorDidAct();

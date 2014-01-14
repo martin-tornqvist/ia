@@ -20,28 +20,27 @@ Inventory::Inventory(bool humanoid) {
 
   if(humanoid) {
     invSlot.id = slot_wielded;
-    invSlot.interfaceName = "Wielding";
-    invSlot.allowWieldedWeapon = true;
+    invSlot.interfaceName       = "Wielding";
+    invSlot.allowWieldedWeapon  = true;
     slots_.push_back(invSlot);
-    invSlot.allowWieldedWeapon = false;
+    invSlot.reset();
 
     invSlot.id = slot_wieldedAlt;
-    invSlot.interfaceName = "Prepared";
-    invSlot.allowWieldedWeapon = true;
+    invSlot.interfaceName       = "Prepared";
+    invSlot.allowWieldedWeapon  = true;
     slots_.push_back(invSlot);
-    invSlot.allowWieldedWeapon = false;
+    invSlot.reset();
 
     invSlot.id = slot_missiles;
-    invSlot.interfaceName = "Missiles";
-    invSlot.allowMissile = true;
+    invSlot.interfaceName       = "Missiles";
+    invSlot.allowMissile        = true;
     slots_.push_back(invSlot);
-    invSlot.allowMissile = false;
+    invSlot.reset();
 
     invSlot.id = slot_armorBody;
-    invSlot.interfaceName = "On body";
-    invSlot.allowArmor = true;
+    invSlot.interfaceName       = "On body";
+    invSlot.allowArmor          = true;
     slots_.push_back(invSlot);
-    invSlot.allowArmor = false;
 
     //    invSlot.id = slot_cloak;
     //    invSlot.interfaceName = "Cloak";

@@ -23,14 +23,18 @@ enum SlotTypes_t {
 };
 
 struct InventorySlot {
-  InventorySlot() :
-    allowWieldedWeapon(false),
-    allowMissile(false),
-    allowArmor(false),
-    allowCloak(false),
-    allowAmulet(false),
-    allowRing(false),
-    item(NULL) {
+  InventorySlot() {reset();}
+
+  void reset() {
+    allowWieldedWeapon  = false;
+    allowMissile        = false;
+    allowArmor          = false;
+    allowCloak          = false;
+    allowAmulet         = false;
+    allowRing           = false;
+    interfaceName       = "";
+    id                  = slot_wielded;
+    item                = NULL;
   }
   bool allowWieldedWeapon;
   bool allowMissile;

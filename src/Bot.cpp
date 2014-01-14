@@ -24,10 +24,6 @@ void Bot::init() {
 }
 
 void Bot::act() {
-  const int PLAY_TO_DLVL = LAST_CAVERN_LEVEL;
-  const int NR_OF_RUNS = 500;
-  int runCount = 1;
-
   //=======================================================================
   // TESTS
   //=======================================================================
@@ -79,17 +75,9 @@ void Bot::act() {
   const FeatureStatic* const featureHere =
     eng.map->cells[pos.x][pos.y].featureStatic;
   if(featureHere->getId() == feature_stairsDown) {
-    if(eng.map->getDlvl() >= PLAY_TO_DLVL) {
-      trace << "Bot: Run " << runCount << " finished" << endl;
-      runCount++;
-      if(runCount >= NR_OF_RUNS) {
-        trace << "Bot: All runs finished, stopping" << endl;
-        eng.config->isBotPlaying = false;
-        return;
-      } else {
-        trace << "Bot: Starting new run on first dungeon level" << endl;
-        eng.map->dlvl_ = 0;
-      }
+    if(eng.map->getDlvl() >= LAST_CAVERN_LEVEL) {
+      trace << "Bot: Starting new run on first dungeon level" << endl;
+      eng.map->dlvl_ = 0;
     }
     eng.input->handleKeyPress(KeyboardReadReturnData('>'));
     return;

@@ -245,12 +245,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         Item* const item =
           eng.player->getInv().getItemInSlot(slot_wielded);
 
-        Weapon* wpn = NULL;
-
         if(item == NULL) {
           eng.log->addMsg("I am not wielding a weapon.");
         } else {
-          wpn = dynamic_cast<Weapon*>(item);
+          Weapon* wpn = dynamic_cast<Weapon*>(item);
           if(
             wpn->nrAmmoLoaded >= 1 ||
             wpn->getData().rangedHasInfiniteAmmo

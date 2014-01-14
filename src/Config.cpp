@@ -524,9 +524,8 @@ void Config::toggleFullscreen() {
 
 void Config::setAllVariablesFromLines(vector<string>& lines) {
   trace << "Config::setAllVariablesFromLines()..." << endl;
-  string curLine = "";
 
-  curLine = lines.front();
+  string curLine = lines.front();
   isAudioEnabled = curLine == "0" ? false : true;
   lines.erase(lines.begin());
 

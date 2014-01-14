@@ -7,7 +7,7 @@
 #include "Config.h"
 
 class Engine;
-class Cell;
+struct Cell;
 class FeatureMob;
 class Actor;
 

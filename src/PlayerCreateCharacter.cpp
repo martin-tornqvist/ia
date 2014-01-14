@@ -279,7 +279,6 @@ void PlayerCreateCharacter::drawPickTrait(
 
   //------------------------------------------------------------- PREVIOUS
   y = Y0_PREREQS + 4;
-  const int X0_PREV_PICKS     = 1;
   const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
   string pickedStr = "";
   eng.playerBonHandler->getAllPickedTraitsTitlesLine(pickedStr);
@@ -289,7 +288,7 @@ void PlayerCreateCharacter::drawPickTrait(
     TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string & str : pickedLines) {
       eng.renderer->drawText(
-        str, panel_screen, Pos(X0_PREV_PICKS, y), clrWhite);
+        str, panel_screen, Pos(1, y), clrWhite);
       y++;
     }
   }
