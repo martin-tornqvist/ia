@@ -1306,7 +1306,7 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed humand beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
+  d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed human beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonsterSeen = sfxFlappingWings;
   d.aggroSfxMonsterHidden = sfxFlappingWings;
