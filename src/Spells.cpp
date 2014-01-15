@@ -111,7 +111,10 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
-      eng.player->incrShock(getShockFromIntrCast());
+      const ShockSrc_t shockSrc = IS_INTRINSIC ?
+                                  shockSrc_castIntrSpell :
+                                  shockSrc_useStrangeItem;
+      eng.player->incrShock(getShockFromIntrCast(), shockSrc);
     } else {
       trace << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);

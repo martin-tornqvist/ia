@@ -412,7 +412,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
           const unsigned int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng.log->addMsg("Khephren calls a plague of Locusts!");
-            eng.player->incrShock(shockValue_heavy);
+            eng.player->incrShock(shockValue_heavy, shockSrc_misc);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_giantLocust,
@@ -776,7 +776,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
           eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
           eng.renderer->drawMapAndInterface();
           hasSummonedTombLegions = true;
-          eng.player->incrShock(shockValue_heavy);
+          eng.player->incrShock(shockValue_heavy, shockSrc_misc);
           eng.gameTime->actorDidAct();
           return true;
         }
@@ -803,7 +803,7 @@ bool Zombie::tryResurrect() {
           if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
             eng.log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
-            eng.player->incrShock(shockValue_some);
+            eng.player->incrShock(shockValue_some, shockSrc_misc);
           }
 
           playerAwarenessCounter = data_->nrTurnsAwarePlayer * 2;

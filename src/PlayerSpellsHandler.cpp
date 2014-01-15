@@ -96,13 +96,13 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
     eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
 
-    x += 11;
-    str = "SHOCK:";
-    const int BASE_SHOCK = spell->getShockFromIntrCast();
-    const double SHOCK_DB =
-      eng.player->getShockTakenAfterMods(BASE_SHOCK, shockSrc_intrSpell);
-    str += toString(SHOCK_DB) + "%";
-    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+//    x += 11;
+//    str = "SHOCK:";
+//    const int BASE_SHOCK = spell->getShockFromIntrCast();
+//    const double SHOCK_DB =
+//      eng.player->getShockTakenAfterMods(BASE_SHOCK, shockSrc_castIntrSpell);
+//    str += toString(ceil(SHOCK_DB) + "%";
+//    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
 
     y++;
   }

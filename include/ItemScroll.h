@@ -23,7 +23,7 @@ public:
 
   const string getRealTypeName();
 
-  void identify(const bool IS_SILENT_IDENTIFY);
+  void identify(const bool IS_SILENT_IDENTIFY) override;
 
   Spell* getSpell();
 protected:

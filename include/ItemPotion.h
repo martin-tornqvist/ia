@@ -25,7 +25,7 @@ public:
 
   void collide(const Pos& pos, Actor* actor);
 
-  void identify(const bool IS_SILENT_IDENTIFY);
+  void identify(const bool IS_SILENT_IDENTIFY) override;
 
 protected:
   virtual void collide_(const Pos& pos, Actor* const actor) = 0;

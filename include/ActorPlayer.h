@@ -26,8 +26,12 @@ enum InsanityObsession_t {
 };
 
 enum ShockSrc_t {
-  shockSrc_intrSpell,
-  shockSrc_misc
+  shockSrc_seeMonster,
+  shockSrc_useStrangeItem,
+  shockSrc_castIntrSpell,
+  shockSrc_time,
+  shockSrc_misc,
+  endOfShockSrc
 };
 
 class Monster;
@@ -57,19 +61,17 @@ public:
   MedicalBag* activeMedicalBag;
   int waitTurnsLeft;
 
-  void incrShock(const ShockValues_t shockValue,
-                 ShockSrc_t shockSrc = shockSrc_misc);
-  void incrShock(const int SHOCK, ShockSrc_t shockSrc = shockSrc_misc);
+  void incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc);
+  void incrShock(const int SHOCK, ShockSrc_t shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
   int getShockTotal() {return int(floor(shock_ + shockTemp_));}
-  int getShockTmp() {return shockTemp_;}
   int getInsanity() const {return min(100, insanity_);}
   void incrMth(const int VAL, const bool IS_MSG_ALLOWED);
   int getMth() const {return mth;}
   void setTempShockFromFeatures();
 
-  int getShockResistance() const;
+  int getShockResistance(const ShockSrc_t shockSrc) const;
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc_t shockSrc) const;
 

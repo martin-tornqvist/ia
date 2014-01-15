@@ -84,7 +84,11 @@ void PlayerBonHandler::getBgDescr(const Bg_t id,
     case bgOccultist: {
       linesRef.push_back("Can memorize spells cast from manuscripts");
       linesRef.push_back("");
+      linesRef.push_back("Starts with some manuscripts and potions");
+      linesRef.push_back("");
       linesRef.push_back("-2 Hit Points");
+      linesRef.push_back("");
+      linesRef.push_back("-10% hit chance with melee and ranged attacks");
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
@@ -184,11 +188,15 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "+30% shock resistance";
     } break;
 
+    case traitSelfPossessed: {
+      strRef  = "-50% passive shock received over time (does not affect ";
+      strRef += "shock from seeing terrifying creatures, using magic, etc)";
+    } break;
+
     case traitMythologist: {
       strRef  = "-50% shock taken from seeing terrifying creatures, for ";
       strRef += "casting spells and for using and identifying strange items ";
       strRef += "(e.g. potions)";
-      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitWarlock: {
@@ -215,13 +223,6 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "The spell \"Clairvoyance\" has double duration, and ";
       strRef += "detection spells have increased range - spirit costs for ";
       strRef += "these spells are reduced";
-      strRef += "[UNIMPLEMENTED]";
-    } break;
-
-    case traitSelfPossessed: {
-      strRef  = "Passive shock received over time is reduced by 75% (does ";
-      strRef += "not affect shock from seeing terrifying creatures, ";
-      strRef += "using magic, etc)";
       strRef += "[UNIMPLEMENTED]";
     } break;
 
@@ -560,12 +561,11 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
 
       eng.player->changeMaxHp(-2, false);
 
-      //Player starts with a scroll of Azathoths Wrath, and one other random
-      //scroll - both are identified
+      //Player starts with a scroll of Darkbolt, and one other random srcoll
+      //Both are identified
       Item* scroll = eng.itemFactory->spawnItem(item_scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
       eng.player->getInv().putItemInGeneral(scroll);
-
       while(true) {
         scroll = eng.itemFactory->spawnRandomScrollOrPotion(true, false);
 
@@ -574,11 +574,20 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
 
-        if(IS_AVAIL && id != spell_pestilence && id != spell_azathothsWrath) {
+        if(IS_AVAIL && id != spell_pestilence && id != spell_darkbolt) {
           dynamic_cast<Scroll*>(scroll)->identify(true);
           eng.player->getInv().putItemInGeneral(scroll);
           break;
         }
+      }
+
+      //Potions
+      const int NR_POTIONS = 3;
+      for(int i = 0; i < NR_POTIONS; i++) {
+        Item* const potion =
+          eng.itemFactory->spawnRandomScrollOrPotion(false, true);
+        dynamic_cast<Potion*>(potion)->identify(true);
+        eng.player->getInv().putItemInGeneral(potion);
       }
 
     } break;

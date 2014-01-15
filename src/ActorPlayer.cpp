@@ -216,7 +216,7 @@ void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
       shock_ = max(0.0, shock_ - 5.0);
     }
   } else {
-    incrShock(1);
+    incrShock(1, shockSrc_misc);
   }
 
   if(ALLOW_WOUNDS && eng.config->isBotPlaying == false) {
@@ -240,32 +240,62 @@ int Player::getCarryWeightLimit() const {
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
-int Player::getShockResistance() const {
-  int ret = 0;
+int Player::getShockResistance(const ShockSrc_t shockSrc) const {
+  int res = 0;
   if(eng.playerBonHandler->hasTrait(traitFearless)) {
-    ret += 5;
+    res += 5;
   }
   if(eng.playerBonHandler->hasTrait(traitCoolHeaded)) {
-    ret += 20;
+    res += 20;
   }
   if(eng.playerBonHandler->hasTrait(traitCourageous)) {
-    ret += 30;
+    res += 30;
   }
-  return min(100, max(0, ret));
+
+  const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
+
+  switch(shockSrc) {
+    case shockSrc_time: {
+      if(bonHlr.hasTrait(traitSelfPossessed)) {
+        res += 50;
+      }
+    } break;
+
+    case shockSrc_castIntrSpell: {
+      if(bonHlr.hasTrait(traitMythologist)) {
+        res += 50;
+      }
+    } break;
+
+    case shockSrc_seeMonster: {
+      if(bonHlr.hasTrait(traitMythologist)) {
+        res += 50;
+      }
+    } break;
+
+    case shockSrc_useStrangeItem: {
+      if(bonHlr.hasTrait(traitMythologist)) {
+        res += 50;
+      }
+    } break;
+
+    case shockSrc_misc:
+    case endOfShockSrc: {} break;
+  }
+
+  return getConstrInRange(0, res, 100);
 }
 
 double Player::getShockTakenAfterMods(const int BASE_SHOCK,
-                                      const ShockSrc_t shockSource) const {
-  (void)shockSource;
-
-  const double SHOCK_RES_DB   = double(getShockResistance());
+                                      const ShockSrc_t shockSrc) const {
+  const double SHOCK_RES_DB   = double(getShockResistance(shockSrc));
   const double BASE_SHOCK_DB  = double(BASE_SHOCK);
   return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
 }
 
-void Player::incrShock(const int SHOCK, ShockSrc_t shockSource) {
-  const double SHOCK_AFTER_MODS = getShockTakenAfterMods(SHOCK, shockSource);
-  shock_ = min(100.0, shock_ + max(0.0, SHOCK_AFTER_MODS));
+void Player::incrShock(const int SHOCK, ShockSrc_t shockSrc) {
+  shock_ += getShockTakenAfterMods(SHOCK, shockSrc);
+  constrInRange(0.0f, shock_, 100.0f);
 }
 
 void Player::incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc) {
@@ -855,7 +885,7 @@ void Player::onStandardTurn_() {
         default: {} break;
       }
       if(shockFromMonstersCurPlayerTurn < 3.0) {
-        incrShock(int(floor(monster->shockCausedCurrent)));
+        incrShock(int(floor(monster->shockCausedCurrent)), shockSrc_seeMonster);
         shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent;
       }
     }
@@ -865,17 +895,17 @@ void Player::onStandardTurn_() {
   const int TURN = eng.gameTime->getTurn();
   const int LOSE_N_TURN = 14;
   if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
-    if(eng.dice(1, 1000) <= 2) {
+    if(eng.dice.oneIn(750)) {
       if(eng.dice.coinToss()) {
         eng.popup->showMessage("I have a bad feeling about this...", true);
       } else {
         eng.popup->showMessage("A chill runs down my spine...", true);
       }
-      incrShock(shockValue_heavy);
+      incrShock(shockValue_heavy, shockSrc_misc);
       eng.renderer->drawMapAndInterface();
     } else {
       if(eng.map->getDlvl() != 0) {
-        incrShock(1);
+        incrShock(1, shockSrc_time);
       }
     }
   }

@@ -22,7 +22,7 @@ public:
   void addSaveLines_(vector<string>& lines);
   void setParamsFromSaveLines_(vector<string>& lines);
 
-  void identify(const bool IS_SILENT_IDENTIFY);
+  void identify(const bool IS_SILENT_IDENTIFY) override;
 
 protected:
   virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}

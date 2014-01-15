@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "CommonTypes.h"
+#include "ActorPlayer.h"
 
 class Engine;
 
@@ -12,6 +13,8 @@ public:
   CharacterDescr(Engine& engine) : eng(engine) {}
   void run();
 private:
+  void getShockResSrcTitle(const ShockSrc_t shockSrc, string& strRef);
+
   void drawInterface();
   void makeLines();
   vector<StrAndClr> lines;

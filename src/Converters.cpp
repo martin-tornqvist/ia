@@ -17,7 +17,7 @@ int toInt(std::string in) {
   return _nr;
 }
 
-//The following two functions will first raise val to at least MIN,
+//The following functions will first raise val to at least MIN,
 //then lower val to at most MAX
 void constrInRange(const int MIN, int& val, const int MAX) {
   if(MAX >= MIN) {
@@ -25,7 +25,20 @@ void constrInRange(const int MIN, int& val, const int MAX) {
   }
 }
 
+void constrInRange(const double MIN, double& val, const double MAX) {
+  if(MAX > MIN) {
+    val = std::min(MAX, std::max(val, MIN));
+  }
+}
+
 int getConstrInRange(const int MIN, const int VAL, const int MAX) {
+  if(MAX < MIN) {
+    return -1;
+  }
+  return std::min(MAX, std::max(VAL, MIN));
+}
+
+int getConstrInRange(const double MIN, const double VAL, const double MAX) {
   if(MAX < MIN) {
     return -1;
   }

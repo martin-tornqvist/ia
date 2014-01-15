@@ -366,7 +366,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 
     if(IS_SILENT_IDENTIFY == false) {
       eng.log->addMsg("It was a " + REAL_NAME + ".");
-      eng.player->incrShock(shockValue_heavy);
+      eng.player->incrShock(shockValue_heavy, shockSrc_useStrangeItem);
     }
 
     data_->isIdentified = true;
@@ -421,9 +421,7 @@ void Potion::quaff(Actor* const actor) {
     } else {
       eng.log->addMsg("I drink an unknown " + data_->name.name + "...");
     }
-
-    eng.player->incrShock(shockValue_heavy);
-
+    eng.player->incrShock(shockValue_heavy, shockSrc_useStrangeItem);
   }
 
   quaff_(actor);

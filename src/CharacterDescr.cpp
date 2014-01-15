@@ -18,13 +18,13 @@ void CharacterDescr::makeLines() {
   lines.resize(0);
 
   const string offset = "   ";
-  const SDL_Color clrHeader = clrWhiteHigh;
-  const SDL_Color clrText = clrWhite;
+  const SDL_Color clrHeading  = clrWhiteHigh;
+  const SDL_Color clrText     = clrWhite;
   const SDL_Color clrTextDark = clrGray;
 
   const AbilityValues& abilities = eng.player->getData().abilityVals;
 
-  lines.push_back(StrAndClr("Combat skills", clrHeader));
+  lines.push_back(StrAndClr("Combat skills", clrHeading));
   const int BASE_MELEE =
     min(100, abilities.getVal(ability_accuracyMelee, true, *(eng.player)));
   const int BASE_RANGED =
@@ -56,31 +56,45 @@ void CharacterDescr::makeLines() {
     }
   }
   lines.push_back(StrAndClr(
-                    offset + "Melee           : " +
+                    offset + "Melee    : " +
                     toString(BASE_MELEE) + "%", clrText));
   lines.push_back(StrAndClr(
-                    offset + "Ranged          : " +
+                    offset + "Ranged   : " +
                     toString(BASE_RANGED) + "%", clrText));
   lines.push_back(StrAndClr(
-                    offset + "Dodging         : " +
+                    offset + "Dodging  : " +
                     toString(BASE_DODGE_ATTACKS) + "%", clrText));
   lines.push_back(StrAndClr(
-                    offset + "Kicking         : " +
+                    offset + "Kicking  : " +
                     kickStr, clrText));
   lines.push_back(StrAndClr(
-                    offset + "Punching        : " +
+                    offset + "Punching : " +
                     punchStr, clrText));
   lines.push_back(StrAndClr(" ", clrText));
 
-
-  const int SHOCK_RESISTANCE = eng.player->getShockResistance();
-  lines.push_back(StrAndClr(
-                    "Shock resistance : " +
-                    toString(SHOCK_RESISTANCE) + "%", clrHeader));
+  lines.push_back(StrAndClr("Shock resistances", clrHeading));
+  vector<string> shockResTitles;
+  int lenOfLongestShockResTitle = 0;
+  for(int i = 0; i < endOfShockSrc; i++) {
+    string shockResTitle = "";
+    getShockResSrcTitle(ShockSrc_t(i), shockResTitle);
+    shockResTitles.push_back(shockResTitle);
+    const int CUR_LEN = shockResTitle.size();
+    if(CUR_LEN > lenOfLongestShockResTitle) {
+      lenOfLongestShockResTitle = CUR_LEN;
+    }
+  }
+  for(int i = 0; i < endOfShockSrc; i++) {
+    string& curTitle = shockResTitles.at(i);
+    curTitle.resize(lenOfLongestShockResTitle, ' ');
+    const int SHOCK_RESISTANCE = eng.player->getShockResistance(ShockSrc_t(i));
+    string str = offset + curTitle + " : " + toString(SHOCK_RESISTANCE) + "%";
+    lines.push_back(StrAndClr(str, clrText));
+  }
   lines.push_back(StrAndClr(" ", clrText));
 
 
-  lines.push_back(StrAndClr("Mythos knowledge effects", clrHeader));
+  lines.push_back(StrAndClr("Mythos knowledge effects", clrHeading));
   const int MTH = eng.player->getMth();
   if(MTH == 0) {
     lines.push_back(StrAndClr(offset + "No effects", clrText));
@@ -97,7 +111,7 @@ void CharacterDescr::makeLines() {
   lines.push_back(StrAndClr(" ", clrText));
 
 
-  lines.push_back(StrAndClr("Mental conditions", clrHeader));
+  lines.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
   if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
     lines.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
@@ -125,7 +139,7 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Potion knowledge", clrHeader));
+  lines.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
   for(unsigned int i = 1; i < endOfItemIds; i++) {
@@ -162,7 +176,7 @@ void CharacterDescr::makeLines() {
   lines.push_back(StrAndClr(" ", clrText));
 
 
-  lines.push_back(StrAndClr("Manuscript knowledge", clrHeader));
+  lines.push_back(StrAndClr("Manuscript knowledge", clrHeading));
   if(manuscriptList.size() == 0) {
     lines.push_back(StrAndClr(offset + "No known manuscripts", clrText));
   } else {
@@ -171,7 +185,7 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Traits gained", clrHeader));
+  lines.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
   vector<Trait_t>& traits = eng.playerBonHandler->traitsPicked_;
   if(traits.empty()) {
@@ -193,6 +207,20 @@ void CharacterDescr::makeLines() {
       }
       lines.push_back(StrAndClr(" ", clrText));
     }
+  }
+}
+
+void CharacterDescr::getShockResSrcTitle(
+  const ShockSrc_t shockSrc, string& strRef) {
+
+  strRef = "";
+  switch(shockSrc) {
+    case shockSrc_time:           strRef = "Time";                    break;
+    case shockSrc_castIntrSpell:  strRef = "Casting learned spells";  break;
+    case shockSrc_seeMonster:     strRef = "Seeing monsters";         break;
+    case shockSrc_useStrangeItem: strRef = "Using strange items";     break;
+    case shockSrc_misc:           strRef = "Other";                   break;
+    case endOfShockSrc: {} break;
   }
 }
 
