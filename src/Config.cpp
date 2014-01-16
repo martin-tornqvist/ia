@@ -130,26 +130,26 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       eng.renderer->initAndClearPrev();
     } break;
 
-    case 4: {
+    case 3: {
       isFullscreen = !isFullscreen;
       eng.renderer->initAndClearPrev();
     } break;
 
-    case 5: {
+    case 4: {
       isTilesWallSymbolFullSquare = !isTilesWallSymbolFullSquare;
     } break;
 
-    case 6: {
+    case 5: {
       isAsciiWallSymbolFullSquare = !isAsciiWallSymbolFullSquare;
     } break;
 
-    case 7: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
+    case 6: {isIntroLevelSkipped = !isIntroLevelSkipped;} break;
 
-    case 8: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
+    case 7: {useRangedWpnMeleeePrompt = !useRangedWpnMeleeePrompt;} break;
 
-    case 9: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
+    case 8: {useRangedWpnAutoReload = !useRangedWpnAutoReload;} break;
 
-    case 10: {
+    case 9: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -160,7 +160,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 11: {
+    case 10: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -171,7 +171,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 12: {
+    case 11: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -181,7 +181,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 13: {
+    case 12: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -191,7 +191,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 14: {
+    case 13: {
       const int NR = eng.query->number(
                        Pos(OPTION_VALUES_X_POS,
                            OPTIONS_Y_POS + browser->getPos().y),
@@ -201,7 +201,7 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
       }
     } break;
 
-    case 15: {
+    case 14: {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();

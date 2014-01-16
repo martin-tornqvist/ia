@@ -89,7 +89,7 @@ void replaceAll(const std::string& line, const std::string& from,
 
   resultRef = line;
 
-  unsigned int startPos = 0;
+  size_t startPos = 0;
   while((startPos = resultRef.find(from, startPos)) != std::string::npos) {
     resultRef.replace(startPos, from.length(), to);
     //In case 'to' contains 'from', like replacing 'x' with 'yx'
