@@ -72,10 +72,6 @@ int main(int argc, char* argv[]) {
         eng->dungeonMaster->setTimeStartedToNow();
         const TimeData& t = eng->dungeonMaster->getTimeStarted();
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
-
-//        if(IS_DEBUG_MODE) {
-//          eng->debugModeStatPrinter->run();
-//        }
       }
 
       eng->audio->fadeOutChannel(introMusChannel);

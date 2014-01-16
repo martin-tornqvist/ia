@@ -65,10 +65,20 @@ public:
   void incrShock(const int SHOCK, ShockSrc_t shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
-  int getShockTotal() {return int(floor(shock_ + shockTemp_));}
-  int getInsanity() const {return min(100, insanity_);}
+  inline int getShockTotal()  const {return int(floor(shock_ + shockTemp_));}
+  inline int getInsanity()    const {return min(100, insanity_);}
+
+  //The following is used for determining if '!'-marks should be drawn on the
+  //player map symbol
+  inline double getPermShockTakenCurTurn() const {
+    return permShockTakenCurTurn_;
+  }
+  void resetPermShockTakenCurTurn() {
+    permShockTakenCurTurn_ = 0.0;
+  }
+
   void incrMth(const int VAL, const bool IS_MSG_ALLOWED);
-  int getMth() const {return mth;}
+  inline int getMth() const {return mth_;}
   void setTempShockFromFeatures();
 
   int getShockResistance(const ShockSrc_t shockSrc) const;
@@ -115,11 +125,11 @@ private:
   bool isStandingInCrampedSpace() const;
 
   int insanity_;
-  double shock_, shockTemp_;
+  double shock_, shockTemp_, permShockTakenCurTurn_;
 
-  int mth;
+  int mth_;
 
-  int nrMovesUntilFreeAction;
+  int nrMovesUntilFreeAction_;
 
   const int carryWeightBase;
 };

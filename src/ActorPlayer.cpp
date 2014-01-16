@@ -34,10 +34,11 @@
 #include "MapParsing.h"
 
 Player::Player(Engine& engine) :
-  Actor(engine), activeMedicalBag(NULL), waitTurnsLeft(-1), dynamiteFuseTurns(-1),
-  molotovFuseTurns(-1), flareFuseTurns(-1),
+  Actor(engine), activeMedicalBag(NULL), waitTurnsLeft(-1),
+  dynamiteFuseTurns(-1), molotovFuseTurns(-1), flareFuseTurns(-1),
   target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  mth(0), nrMovesUntilFreeAction(-1), carryWeightBase(450) {}
+  permShockTakenCurTurn_(0.0), mth_(0), nrMovesUntilFreeAction_(-1),
+  carryWeightBase(450) {}
 
 void Player::spawnStartItems() {
   data_->abilityVals.reset();
@@ -126,7 +127,7 @@ void Player::addSaveLines(vector<string>& lines) const {
 
   lines.push_back(toString(insanity_));
   lines.push_back(toString(int(shock_)));
-  lines.push_back(toString(mth));
+  lines.push_back(toString(mth_));
   lines.push_back(toString(hp_));
   lines.push_back(toString(hpMax_));
   lines.push_back(toString(spi_));
@@ -166,7 +167,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   lines.erase(lines.begin());
   shock_ = double(toInt(lines.front()));
   lines.erase(lines.begin());
-  mth = toInt(lines.front());
+  mth_ = toInt(lines.front());
   lines.erase(lines.begin());
   hp_ = toInt(lines.front());
   lines.erase(lines.begin());
@@ -294,7 +295,11 @@ double Player::getShockTakenAfterMods(const int BASE_SHOCK,
 }
 
 void Player::incrShock(const int SHOCK, ShockSrc_t shockSrc) {
-  shock_ += getShockTakenAfterMods(SHOCK, shockSrc);
+  const double SHOCK_AFTER_MODS = getShockTakenAfterMods(SHOCK, shockSrc);
+
+  shock_                  += SHOCK_AFTER_MODS;
+  permShockTakenCurTurn_  += SHOCK_AFTER_MODS;
+
   constrInRange(0.0f, shock_, 100.0f);
 }
 
@@ -329,7 +334,7 @@ void Player::restoreShock(const int amountRestored,
 }
 
 void Player::incrMth(const int VAL, const bool IS_MSG_ALLOWED) {
-  mth = max(0, min(100, mth + VAL));
+  mth_ = max(0, min(100, mth_ + VAL));
   insanity_ = max(0, min(100, insanity_ + VAL / 2));
   if(IS_MSG_ALLOWED) {
     eng.log->addMsg("I feel more insightful!");
@@ -346,7 +351,7 @@ void Player::incrInsanity() {
     insanity_ += INS_INCR;
   }
 
-  mth = min(100, mth + INS_INCR / 2);
+  mth_ = min(100, mth_ + INS_INCR / 2);
 
   restoreShock(70, false);
 
@@ -742,10 +747,12 @@ void Player::updateColor() {
 }
 
 void Player::onActorTurn() {
-  shockTemp_ = 0;
+  shockTemp_ = 0.0;
   setTempShockFromFeatures();
 
   eng.renderer->drawMapAndInterface();
+
+  resetPermShockTakenCurTurn();
 
   if(deadState != actorDeadState_alive) {
     return;
@@ -1184,13 +1191,13 @@ void Player::moveDir(Dir_t dir) {
           bonHlr->hasTrait(traitDexterous)  ? 5 : 0;
 
         if(FREE_MOVE_EVERY_N_TURN > 0) {
-          if(nrMovesUntilFreeAction == -1) {
-            nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 2;
-          } else if(nrMovesUntilFreeAction == 0) {
-            nrMovesUntilFreeAction = FREE_MOVE_EVERY_N_TURN - 1;
+          if(nrMovesUntilFreeAction_ == -1) {
+            nrMovesUntilFreeAction_ = FREE_MOVE_EVERY_N_TURN - 2;
+          } else if(nrMovesUntilFreeAction_ == 0) {
+            nrMovesUntilFreeAction_ = FREE_MOVE_EVERY_N_TURN - 1;
             isFreeTurn = true;
           } else {
-            nrMovesUntilFreeAction--;
+            nrMovesUntilFreeAction_--;
           }
         }
 

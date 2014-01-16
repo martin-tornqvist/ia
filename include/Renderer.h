@@ -59,13 +59,13 @@ public:
   void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
 
   void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
-                          const SDL_Color& clr);
+                          const SDL_Color& clr) const;
 
   void drawLineHor(const Pos& pixelPos, const int W,
-                          const SDL_Color& clr);
+                   const SDL_Color& clr) const;
 
   void drawLineVer(const Pos& pixelPos, const int H,
-                        const SDL_Color& clr);
+                   const SDL_Color& clr) const;
 
   void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
 
@@ -111,6 +111,9 @@ private:
 
   int getLifebarLength(const Actor& actor) const;
   void drawLifeBar(const Pos& pos, const int LENGTH);
+
+  void drawExclMarkAt(const Pos& pixelPos) const;
+  void drawPlayerShockExclMarks() const;
 
   void putPixelsOnScreenForTile(const Tile_t tile, const Pos& pixelPos,
                                 const SDL_Color& clr);

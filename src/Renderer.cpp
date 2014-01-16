@@ -571,19 +571,19 @@ void Renderer::coverCellInMap(const Pos& pos) {
 }
 
 void Renderer::drawLineHor(const Pos& pixelPos, const int W,
-                           const SDL_Color& clr) {
+                           const SDL_Color& clr) const {
   const int SCALE = 1;
   const Pos offset(0, 1 - SCALE);
   drawRectangleSolid(pixelPos + offset, Pos(W, 2 * SCALE), clr);
 }
 
 void Renderer::drawLineVer(const Pos& pixelPos, const int H,
-                           const SDL_Color& clr) {
+                           const SDL_Color& clr) const {
   drawRectangleSolid(pixelPos, Pos(1, H), clr);
 }
 
 void Renderer::drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
-                                  const SDL_Color& clr) {
+                                  const SDL_Color& clr) const {
   SDL_Rect sdlRect = {(Sint16)pixelPos.x, (Sint16)pixelPos.y,
                       (Uint16)pixelDims.x, (Uint16)pixelDims.y
                      };
@@ -713,16 +713,37 @@ void Renderer::drawLifeBar(const Pos& pos, const int LENGTH) {
     const int W_GREEN   = LENGTH;
     const int W_BAR_TOT = cellDims.x - 2;
     const int W_RED     = W_BAR_TOT - W_GREEN;
-    const int Y0        = eng.config->mapPixelOffsetH +
-                          ((pos.y + 1) * cellDims.y) - 2;
-    const int X0_GREEN  = pos.x * cellDims.x + 1;
+    const Pos pixelPos =
+      getPixelPosForCellInPanel(panel_map, pos + Pos(0, 1)) - Pos(0, 2);
+    const int X0_GREEN  = pixelPos.x + 1;
     const int X0_RED    = X0_GREEN + W_GREEN;
 
     if(W_GREEN > 0) {
-      drawLineHor(Pos(X0_GREEN, Y0), W_GREEN, clrGreenLgt);
+      drawLineHor(Pos(X0_GREEN, pixelPos.y), W_GREEN, clrGreenLgt);
     }
     if(W_RED > 0) {
-      drawLineHor(Pos(X0_RED, Y0), W_RED, clrRedLgt);
+      drawLineHor(Pos(X0_RED, pixelPos.y), W_RED, clrRedLgt);
+    }
+  }
+}
+
+void Renderer::drawExclMarkAt(const Pos& pixelPos) const {
+  drawRectangleSolid(pixelPos,  Pos(3, 12),     clrBlack);
+  drawLineVer(pixelPos +        Pos(1,  1), 6,  clrMagentaLgt);
+  drawLineVer(pixelPos +        Pos(1,  9), 2,  clrMagentaLgt);
+}
+
+void Renderer::drawPlayerShockExclMarks() const {
+  const double SHOCK  = eng.player->getPermShockTakenCurTurn();
+  const int NR_EXCL   = SHOCK > 9 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
+
+  if(NR_EXCL > 0) {
+    const Pos& playerPos = eng.player->pos;
+    const Pos pixelPosRight =
+      getPixelPosForCellInPanel(panel_map, playerPos);
+
+    for(int i = 0; i < NR_EXCL; i++) {
+      drawExclMarkAt(pixelPosRight + Pos(i * 3, 0));
     }
   }
 }
@@ -776,7 +797,7 @@ void Renderer::drawAscii() {
     if(
       actor.deadState == actorDeadState_corpse &&
       actor.getData().glyph != ' ' &&
-      eng.map->cells[xPos][yPos].isSeenByPlayer) {
+    eng.map->cells[xPos][yPos].isSeenByPlayer) {
       currentDrw = &renderArrayAscii[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->glyph = actor.getGlyph();
@@ -827,7 +848,7 @@ void Renderer::drawAscii() {
       if(
         actor.deadState == actorDeadState_alive &&
         actor.getGlyph() != ' ' &&
-        eng.player->checkIfSeeActor(actor, NULL)) {
+      eng.player->checkIfSeeActor(actor, NULL)) {
         currentDrw = &renderArrayAscii[xPos][yPos];
         currentDrw->color = actor.getColor();
         currentDrw->glyph = actor.getGlyph();
@@ -893,6 +914,7 @@ void Renderer::drawAscii() {
   if(LIFE_BAR_LENGTH != -1) {
     drawLifeBar(eng.player->pos, LIFE_BAR_LENGTH);
   }
+  drawPlayerShockExclMarks();
 }
 
 void Renderer::drawTiles() {
@@ -948,7 +970,7 @@ void Renderer::drawTiles() {
     if(
       actor.deadState == actorDeadState_corpse &&
       actor.getTile() != ' ' &&
-      eng.map->cells[xPos][yPos].isSeenByPlayer) {
+    eng.map->cells[xPos][yPos].isSeenByPlayer) {
       currentDrw = &renderArrayTiles[xPos][yPos];
       currentDrw->color = clrRed;
       currentDrw->tile = actor.getTile();
@@ -996,7 +1018,7 @@ void Renderer::drawTiles() {
       if(
         actor.deadState == actorDeadState_alive &&
         actor.getTile() != tile_empty &&
-        eng.player->checkIfSeeActor(actor, NULL)) {
+      eng.player->checkIfSeeActor(actor, NULL)) {
         currentDrw = &(renderArrayTiles[actor.pos.x][actor.pos.y]);
         currentDrw->isLivingActorSeenHere = true;
         currentDrw->color = actor.getColor();
@@ -1066,7 +1088,7 @@ void Renderer::drawTiles() {
           }
           if(
             y < MAP_H - 1 &&
-            (featureId == feature_stoneWall || isHiddenDoor)) {
+          (featureId == feature_stoneWall || isHiddenDoor)) {
             if(eng.map->cells[x][y + 1].isExplored) {
               const bool IS_CELL_BELOW_SEEN =
                 eng.map->cells[x][y + 1].isSeenByPlayer;
@@ -1092,7 +1114,7 @@ void Renderer::drawTiles() {
               if(
                 TILE_BELOW_IS_WALL_FRONT  ||
                 TILE_BELOW_IS_WALL_TOP    ||
-                tileBelowIsRevealedDoor) {
+              tileBelowIsRevealedDoor) {
                 if(featureId == feature_stoneWall) {
                   const Wall* const wall = dynamic_cast<const Wall*>(f);
                   tempDrw.tile = wall->getTopWallTile();
@@ -1133,5 +1155,6 @@ void Renderer::drawTiles() {
   if(LIFE_BAR_LENGTH != -1) {
     drawLifeBar(eng.player->pos, LIFE_BAR_LENGTH);
   }
+  drawPlayerShockExclMarks();
 }
 
