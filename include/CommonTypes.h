@@ -25,7 +25,10 @@ enum DmgTypes_t {
 };
 
 enum ShockValues_t {
-  shockValue_none, shockValue_mild, shockValue_some, shockValue_heavy
+  shockValue_none   = 0,
+  shockValue_mild   = 2,
+  shockValue_some   = 4,
+  shockValue_heavy  = 12
 };
 
 enum MarkerTask_t {

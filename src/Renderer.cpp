@@ -735,7 +735,7 @@ void Renderer::drawExclMarkAt(const Pos& pixelPos) const {
 
 void Renderer::drawPlayerShockExclMarks() const {
   const double SHOCK  = eng.player->getPermShockTakenCurTurn();
-  const int NR_EXCL   = SHOCK > 9 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
+  const int NR_EXCL   = SHOCK > 8 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
 
   if(NR_EXCL > 0) {
     const Pos& playerPos = eng.player->pos;

@@ -304,15 +304,7 @@ void Player::incrShock(const int SHOCK, ShockSrc_t shockSrc) {
 }
 
 void Player::incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc) {
-  int baseShock = 0;
-  switch(shockValue) {
-    case shockValue_none:   baseShock = 0;  break;
-    case shockValue_mild:   baseShock = 2;  break;
-    case shockValue_some:   baseShock = 4;  break;
-    case shockValue_heavy:  baseShock = 12; break;
-    default: {} break;
-  }
-  incrShock(baseShock, shockSrc);
+  incrShock(int(shockValue), shockSrc);
 }
 
 void Player::restoreShock(const int amountRestored,
