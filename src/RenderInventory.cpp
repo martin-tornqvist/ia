@@ -9,11 +9,11 @@
 
 const int X_POS_WEIGHT = 62;
 
-RenderInventory::RenderInventory(Engine& engine) : eng(engine) {}
+namespace {
 
-void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
-                               const int X_NEW, const int Y,
-                               const SDL_Color& clr) {
+void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y,
+              const SDL_Color& clr, Engine& eng) {
+
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
@@ -22,14 +22,26 @@ void RenderInventory::drawDots(const int X_PREV, const int W_PREV,
   eng.renderer->drawText(dots, panel_screen, Pos(X_DOTS, Y), realColorDots);
 }
 
-void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
-    const vector<InventorySlotButton>& invSlotButtons) {
+void drawItemSymbol(const Item& item, const Pos& pos, Engine& eng) {
+  const SDL_Color itemClr = item.getColor();
+  if(eng.config->isTilesMode) {
+    eng.renderer->drawTile(item.getTile(), panel_screen, pos, itemClr);
+  } else {
+    eng.renderer->drawGlyph(item.getGlyph(), panel_screen, pos, itemClr);
+  }
+}
+
+} //Namespace
+
+namespace RenderInventory {
+
+void drawBrowseSlots(const MenuBrowser& browser,
+                     const vector<InventorySlotButton>& invSlotButtons,
+                     Engine& eng) {
   Pos pos(0, 0);
 
-//  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
+  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
 
   string str =
     "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
@@ -72,10 +84,12 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
       str += eng.itemDataHandler->getItemInterfaceRef(
                *item, false, attackMode);
       eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-      drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+      drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
       eng.renderer->drawText(
         item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y),
         clrGray);
+
+      drawItemSymbol(*item, pos + Pos(1, 0), eng);
     }
 
     pos.y++;
@@ -92,8 +106,9 @@ void RenderInventory::drawBrowseSlotsMode(const MenuBrowser& browser,
   eng.renderer->updateScreen();
 }
 
-void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
-    const vector<unsigned int>& genInvIndexes) {
+void drawBrowseInventory(const MenuBrowser& browser,
+                         const vector<unsigned int>& genInvIndexes,
+                         Engine& eng) {
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
 
@@ -122,11 +137,14 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
     pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
+    pos.x += 2;
+
+    drawItemSymbol(*item, pos, eng);
+    pos.x++;
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false);
     eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
     eng.renderer->drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
@@ -135,13 +153,11 @@ void RenderInventory::drawBrowseInventoryMode(const MenuBrowser& browser,
   eng.renderer->updateScreen();
 }
 
-void RenderInventory::drawEquipMode(
-  const MenuBrowser& browser, const SlotTypes_t slotToEquip,
-  const vector<unsigned int>& genInvIndexes) {
+void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
+               const vector<unsigned int>& genInvIndexes, Engine& eng) {
 
   Pos pos(0, 0);
 
-//  eng.renderer->clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
   eng.renderer->coverArea(
     panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
@@ -183,9 +199,12 @@ void RenderInventory::drawEquipMode(
     pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
+    pos.x += 2;
 
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
+
+    drawItemSymbol(*item, pos, eng);
+    pos.x++;
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
@@ -203,7 +222,7 @@ void RenderInventory::drawEquipMode(
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
     eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
     eng.renderer->drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
@@ -212,8 +231,8 @@ void RenderInventory::drawEquipMode(
   eng.renderer->updateScreen();
 }
 
-void RenderInventory::drawUseMode(const MenuBrowser& browser,
-                                  const vector<unsigned int>& genInvIndexes) {
+void drawUse(const MenuBrowser& browser,
+             const vector<unsigned int>& genInvIndexes, Engine& eng) {
   const int X_POS_CMD = 11;
 
   Pos pos(0, 0);
@@ -263,7 +282,11 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     pos.x = X_POS_CMD;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
+    pos.x += 2;
+
+    //Draw item symbol
+    drawItemSymbol(*item, pos, eng);
+    pos.x++;
 
     str = eng.itemDataHandler->getItemRef(*item, itemRef_plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {
@@ -271,7 +294,7 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
     }
 
     eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
     eng.renderer->drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
@@ -280,3 +303,4 @@ void RenderInventory::drawUseMode(const MenuBrowser& browser,
   eng.renderer->updateScreen();
 }
 
+} //RenderInventory

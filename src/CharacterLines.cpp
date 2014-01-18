@@ -17,7 +17,9 @@
 
 using namespace std;
 
-void CharacterLines::drawLocationInfo() {
+namespace CharacterLines {
+
+void drawLocationInfo(Engine& eng) {
   Player* const player = eng.player;
 
   if(player->getPropHandler().allowSee()) {
@@ -57,7 +59,7 @@ void CharacterLines::drawLocationInfo() {
   }
 }
 
-void CharacterLines::drawInfoLines() {
+void drawInfoLines(Engine& eng) {
   Player* const player = eng.player;
 
   eng.renderer->coverPanel(panel_char);
@@ -117,8 +119,7 @@ void CharacterLines::drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Wielded weapon
-  pos.x += 6;
-  //Store x position, because missile wpn info will be directly beaneath wielded wpn info
+  pos.x += 5;
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = player->getInv().getItemInSlot(slot_wielded);
@@ -126,6 +127,16 @@ void CharacterLines::drawInfoLines() {
     eng.renderer->drawText(
       "Unarmed", panel_char, pos, clrGenMed);
   } else {
+    const SDL_Color itemClr = itemWielded->getColor();
+    if(eng.config->isTilesMode) {
+      eng.renderer->drawTile(
+        itemWielded->getTile(), panel_char, pos, itemClr);
+    } else {
+      eng.renderer->drawGlyph(
+        itemWielded->getGlyph(), panel_char, pos, itemClr);
+    }
+    pos.x++;
+
     str = eng.itemDataHandler->getItemInterfaceRef(*itemWielded, false);
     eng.renderer->drawText(str, panel_char, pos, clrGenMed);
     pos.x += str.length() + 1;
@@ -187,6 +198,16 @@ void CharacterLines::drawInfoLines() {
   if(itemMissiles == NULL) {
     eng.renderer->drawText("No missile weapon", panel_char, pos, clrGenMed);
   } else {
+    const SDL_Color itemClr = itemMissiles->getColor();
+    if(eng.config->isTilesMode) {
+      eng.renderer->drawTile(
+        itemMissiles->getTile(), panel_char, pos, itemClr);
+    } else {
+      eng.renderer->drawGlyph(
+        itemMissiles->getGlyph(), panel_char, pos, itemClr);
+    }
+    pos.x++;
+
     str = eng.itemDataHandler->getItemInterfaceRef(
             *itemMissiles, false, primaryAttackMode_missile);
     eng.renderer->drawText(str, panel_char, pos, clrGenMed);
@@ -232,3 +253,4 @@ void CharacterLines::drawInfoLines() {
   eng.renderer->drawText(str, panel_char, pos, clrGenMed);
 }
 
+} //CharacterLines

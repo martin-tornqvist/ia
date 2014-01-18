@@ -297,7 +297,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'i') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      eng.inventoryHandler->runBrowseInventoryMode();
+      eng.inventoryHandler->runBrowseInventory();
     }
     clearEvents();
     return;

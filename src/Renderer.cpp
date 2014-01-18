@@ -682,19 +682,13 @@ void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
 void Renderer::drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
   clearScreen();
 
-  if(eng.config->isTilesMode) {
-    drawTiles();
-  } else {
-    drawAscii();
-  }
+  eng.config->isTilesMode ? drawTiles() : drawAscii();
 
-  eng.characterLines->drawInfoLines();
-  eng.characterLines->drawLocationInfo();
+  CharacterLines::drawInfoLines(eng);
+  CharacterLines::drawLocationInfo(eng);
   eng.log->drawLog(false);
 
-  if(SHOULD_UPDATE_SCREEN) {
-    updateScreen();
-  }
+  if(SHOULD_UPDATE_SCREEN) {updateScreen();}
 }
 
 int Renderer::getLifebarLength(const Actor& actor) const {

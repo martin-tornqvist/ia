@@ -470,7 +470,7 @@ void Config::setDefaultVariables() {
   trace << "Config::setDefaultVariables()..." << endl;
   isAudioEnabled = true;
   isTilesMode = true;
-  fontBig = "images/16x24_v1.png";
+  fontBig = "images/16x24_v2.png";
   parseFontNameAndSetCellDims();
   isFullscreen = false;
   isTilesWallSymbolFullSquare = false;

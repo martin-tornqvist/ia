@@ -25,7 +25,7 @@ public:
   void runSlotsScreen();
   bool runUseScreen();
 
-  void runBrowseInventoryMode();
+  void runBrowseInventory();
   bool runEquipScreen(InventorySlot* const slotToEquip);
 
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);

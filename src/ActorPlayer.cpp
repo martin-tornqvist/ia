@@ -761,7 +761,7 @@ void Player::onActorTurn() {
     if(invScreen != endOfInventoryScreens) {
       switch(invScreen) {
         case inventoryScreen_backpack: {
-          eng.inventoryHandler->runBrowseInventoryMode();
+          eng.inventoryHandler->runBrowseInventory();
         } break;
 
         case inventoryScreen_use: {

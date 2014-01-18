@@ -3,18 +3,14 @@
 
 class Engine;
 
-class CharacterLines {
-public:
-  CharacterLines(Engine& engine) : eng(engine) {}
+namespace CharacterLines {
 
-private:
-  friend class Renderer;
-  void drawInfoLines();
+void drawInfoLines(Engine& eng);
 
-  void drawLocationInfo();
+void drawLocationInfo(Engine& eng);
 
-  Engine& eng;
-};
+} //Characterlines
+
 
 #endif
 

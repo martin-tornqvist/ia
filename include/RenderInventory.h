@@ -8,36 +8,22 @@
 
 class Engine;
 
-class RenderInventory {
-public:
-  RenderInventory(Engine& engine);
+namespace RenderInventory {
 
-  void drawBrowseSlotsMode(const MenuBrowser& browser,
-                           const vector<InventorySlotButton>& invSlotButtons);
+void drawBrowseSlots(const MenuBrowser& browser,
+                     const vector<InventorySlotButton>& invSlotButtons,
+                     Engine& eng);
 
-  void drawBrowseInventoryMode(const MenuBrowser& browser,
-                               const vector<unsigned int>& genInvIndexes);
+void drawBrowseInventory(const MenuBrowser& browser,
+                         const vector<unsigned int>& genInvIndexes,
+                         Engine& eng);
 
-  void drawEquipMode(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
-                     const vector<unsigned int>& genInvIndexes);
+void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
+               const vector<unsigned int>& genInvIndexes, Engine& eng);
 
-  void drawUseMode(const MenuBrowser& browser,
-                   const vector<unsigned int>& genInvIndexes);
+void drawUse(const MenuBrowser& browser,
+             const vector<unsigned int>& genInvIndexes, Engine& eng);
 
-//  void drawDropMode(const Item* const itemToDrop);
-
-private:
-  RenderInventory& operator=(const RenderInventory& other) {
-    (void)other;
-    return *this;
-  }
-
-  void drawDots(const int X_PREV, const int W_PREV, const int X_NEW,
-                const int Y, const SDL_Color& clr);
-
-  Engine& eng;
-
-  friend class Examine;
-};
+} //RenderInventory
 
 #endif

@@ -32,7 +32,6 @@
 #include "Gods.h"
 #include "Hide.h"
 #include "Highscore.h"
-#include "CharacterLines.h"
 #include "Input.h"
 #include "InventoryHandler.h"
 #include "InventoryIndexes.h"
@@ -67,7 +66,6 @@
 #include "Query.h"
 #include "Reload.h"
 #include "Renderer.h"
-#include "RenderInventory.h"
 #include "RoomTheme.h"
 #include "SaveHandler.h"
 #include "Sound.h"
@@ -165,7 +163,6 @@ void Engine::initGame() {
   itemDrop = new ItemDrop(*this);
   itemPickup = new ItemPickup(*this);
   attack = new Attack(*this);
-  characterLines = new CharacterLines(*this);
   mainMenu = new MainMenu(*this);
   bot = new Bot(*this);
   art = new Art;
@@ -177,7 +174,6 @@ void Engine::initGame() {
   populateItems = new PopulateItems(*this);
   populateMonsters = new PopulateMonsters(*this);
   populateTraps = new PopulateTraps(*this);
-  renderInventory = new RenderInventory(*this);
   inventoryIndexes = new InventoryIndexes;
   query = new Query(*this);
   bash = new Bash(*this);
@@ -226,7 +222,6 @@ void Engine::cleanupGame() {
   delete itemPickup;
   delete inventoryHandler;
   delete attack;
-  delete characterLines;
   delete gameTime;
   delete mainMenu;
   delete itemFactory;
@@ -243,7 +238,6 @@ void Engine::cleanupGame() {
   delete populateItems;
   delete populateMonsters;
   delete populateTraps;
-  delete renderInventory;
   delete inventoryIndexes;
   delete query;
   delete actorDataHandler;
