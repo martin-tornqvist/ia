@@ -13,7 +13,7 @@ bool MapGenEgyptTomb::run_() {
 
   buildFromTemplate(Pos(0, 0), mapTemplate_pharaohsChamber);
 
-  eng.player->pos = Pos(40, 13);
+  eng.player->pos = Pos(40, 11);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -27,26 +27,26 @@ bool MapGenEgyptTomb::run_() {
   if(eng.dice.coinToss()) {
     eng.featureFactory->spawnFeatureAt(feature_stairsDown, Pos(4, 2), NULL);
   } else {
-    eng.featureFactory->spawnFeatureAt(feature_stairsDown, Pos(4, 23), NULL);
+    eng.featureFactory->spawnFeatureAt(feature_stairsDown, Pos(4, 19), NULL);
   }
 
 
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
+      actor_mummy, Pos(12, 10)))->isRoamingAllowed = false;
+  dynamic_cast<Monster*>(
+    eng.actorFactory->spawnActor(
+      actor_khephren, Pos(11, 11)))->isRoamingAllowed = false;
+  dynamic_cast<Monster*>(
+    eng.actorFactory->spawnActor(
       actor_mummy, Pos(12, 12)))->isRoamingAllowed = false;
-  dynamic_cast<Monster*>(
-    eng.actorFactory->spawnActor(
-      actor_khephren, Pos(11, 13)))->isRoamingAllowed = false;
-  dynamic_cast<Monster*>(
-    eng.actorFactory->spawnActor(
-      actor_mummy, Pos(12, 14)))->isRoamingAllowed = false;
 
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_cultist, Pos(17, 11)))->isRoamingAllowed = false;
+      actor_cultist, Pos(17, 10)))->isRoamingAllowed = false;
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_cultist, Pos(17, 15)))->isRoamingAllowed = false;
+      actor_cultist, Pos(17, 12)))->isRoamingAllowed = false;
 
   return true;
 }
