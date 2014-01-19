@@ -72,7 +72,8 @@ void ItemPickup::tryPick() {
 bool ItemPickup::isInvFull(Inventory& inv, Item& item) const {
   //If item can be stacked, the inventory is not considered full.
   if(inv.getElementToStackItem(&item) != -1) {return false;}
-  return inv.getGeneral().size() + 'a' - 1 >= 'z';
+  const int INV_SIZE = inv.getGeneral().size();
+  return INV_SIZE >= (SCREEN_H - 1);
 }
 
 void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {

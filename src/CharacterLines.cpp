@@ -119,7 +119,7 @@ void drawInfoLines(Engine& eng) {
   pos.x += str.length() + 1;
 
   //Wielded weapon
-  pos.x += 5;
+  pos.x += 6;
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = player->getInv().getItemInSlot(slot_wielded);
@@ -135,7 +135,7 @@ void drawInfoLines(Engine& eng) {
       eng.renderer->drawGlyph(
         itemWielded->getGlyph(), panel_char, pos, itemClr);
     }
-    pos.x++;
+    pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(*itemWielded, false);
     eng.renderer->drawText(str, panel_char, pos, clrGenMed);
@@ -206,7 +206,7 @@ void drawInfoLines(Engine& eng) {
       eng.renderer->drawGlyph(
         itemMissiles->getGlyph(), panel_char, pos, itemClr);
     }
-    pos.x++;
+    pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(
             *itemMissiles, false, primaryAttackMode_missile);

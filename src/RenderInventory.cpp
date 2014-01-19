@@ -61,13 +61,15 @@ void drawBrowseSlots(const MenuBrowser& browser,
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x = X_POS_ITEM_NAME;
-    str = ": ";
     Item* const item = slot->item;
     if(item == NULL) {
-      str += "<empty>";
+      pos.x += 2;
       eng.renderer->drawText(
-        str, panel_screen, pos, IS_CUR_POS ? clrWhite : clrRedLgt);
+        "<empty>", panel_screen, pos, IS_CUR_POS ? clrWhite : clrRedLgt);
     } else {
+      drawItemSymbol(*item, pos, eng);
+      pos.x += 2;
+
       const SDL_Color itemInterfClr =
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
@@ -81,15 +83,13 @@ void drawBrowseSlots(const MenuBrowser& browser,
         attackMode = primaryAttackMode_missile;
       }
 
-      str += eng.itemDataHandler->getItemInterfaceRef(
-               *item, false, attackMode);
+      str = eng.itemDataHandler->getItemInterfaceRef(
+              *item, false, attackMode);
       eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
       drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
       eng.renderer->drawText(
         item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y),
         clrGray);
-
-      drawItemSymbol(*item, pos + Pos(1, 0), eng);
     }
 
     pos.y++;
@@ -137,10 +137,10 @@ void drawBrowseInventory(const MenuBrowser& browser,
     pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     drawItemSymbol(*item, pos, eng);
-    pos.x++;
+    pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false);
     eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
@@ -199,12 +199,12 @@ void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
     pos.x = 0;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     drawItemSymbol(*item, pos, eng);
-    pos.x++;
+    pos.x += 2;
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
@@ -233,8 +233,6 @@ void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
 
 void drawUse(const MenuBrowser& browser,
              const vector<unsigned int>& genInvIndexes, Engine& eng) {
-  const int X_POS_CMD = 11;
-
   Pos pos(0, 0);
 
 //  eng.renderer->clearScreen();
@@ -276,17 +274,16 @@ void drawUse(const MenuBrowser& browser,
       eng.renderer->drawText(label, panel_screen, pos, clrYellow);
     }
 
-    pos.x = X_POS_CMD;
+    pos.x = 10;
     str = "x) ";
     str.at(0) = 'a' + i;
-    pos.x = X_POS_CMD;
     eng.renderer->drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 2;
+    pos.x += 3;
 
     //Draw item symbol
     drawItemSymbol(*item, pos, eng);
-    pos.x++;
+    pos.x += 2;
 
     str = eng.itemDataHandler->getItemRef(*item, itemRef_plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {
