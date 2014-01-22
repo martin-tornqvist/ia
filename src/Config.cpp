@@ -418,6 +418,13 @@ void Config::draw(const MenuBrowser* const browser,
   eng.renderer->drawText(str, panel_screen, Pos(X0, Y0 + optionNr + 4),
                          clrWhite);
 
+  str = "Tile set requires resolution 1280x720 or higher. Using ASCII mode for smaller";
+  eng.renderer->drawText(str, panel_screen, Pos(X0, SCREEN_H - 2),
+                         clrGray);
+  str = "resolutions is recommended (fonts of different size are available).";
+  eng.renderer->drawText(str, panel_screen, Pos(X0, SCREEN_H - 1),
+                         clrGray);
+
   eng.renderer->updateScreen();
 }
 
@@ -474,7 +481,7 @@ void Config::setDefaultVariables() {
   parseFontNameAndSetCellDims();
   isFullscreen = false;
   isTilesWallSymbolFullSquare = false;
-  isAsciiWallSymbolFullSquare = false;
+  isAsciiWallSymbolFullSquare = true;
   isIntroLevelSkipped = false;
   useRangedWpnMeleeePrompt = true;
   useRangedWpnAutoReload = false;
