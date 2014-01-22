@@ -1239,7 +1239,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
 }
 
 void PropPoisoned::onNewTurn() {
-  const int DMG_N_TURN = 4;
+  const int DMG_N_TURN = 3;
   const int TURN = eng.gameTime->getTurn();
   if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
 

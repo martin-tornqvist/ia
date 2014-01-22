@@ -391,7 +391,8 @@ void Tomb::triggerTrap(Actor& actor) {
 //--------------------------------------------------------- CHEST
 Chest::Chest(Feature_t id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
-  isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false) {
+  isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
+  material(ChestMtrl_t(engine.dice.range(0, endOfChestMaterial - 1))) {
 
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
@@ -402,7 +403,7 @@ Chest::Chest(Feature_t id, Pos pos, Engine& engine) :
     feature_chest, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   if(itemContainer_.items_.empty() == false) {
-    isLocked_   = eng.dice.fraction(8, 10);
+    isLocked_   = eng.dice.fraction(6, 10);
     isTrapped_  = eng.dice.fraction(6, 10);
   }
 }
@@ -454,35 +455,42 @@ bool Chest::open() {
 void Chest::bash(Actor& actorTrying) {
   (void)actorTrying;
 
-  PropHandler& propHlr = eng.player->getPropHandler();
-  PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-
-  if(propHlr.hasProp(propWeakened)) {
-    trySprainPlayer();
-    eng.log->addMsg("It seems futile.");
+  if(itemContainer_.items_.empty() && isContentKnown_) {
+    eng.log->addMsg("The chest is empty.");
   } else {
 
-    const bool IS_CURSED    = propHlr.hasProp(propCursed);
-    const bool IS_BLESSED   = propHlr.hasProp(propBlessed);
+    eng.log->addMsg("I kick the lid.");
 
-    if(IS_BLESSED == false && (IS_CURSED || eng.dice.oneIn(3))) {
-      itemContainer_.destroySingleFragile(eng);
-    }
+    PropHandler& propHlr = eng.player->getPropHandler();
+    PlayerBonHandler* const bonHlr = eng.playerBonHandler;
 
-    const bool IS_TOUGH     = bonHlr->hasTrait(traitTough);
-    const bool IS_RUGGED    = bonHlr->hasTrait(traitRugged);
-
-    const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
-
-    if(eng.dice.oneIn(OPEN_ONE_IN_N)) {
-      eng.log->addMsg("I kick the lid open!");
-      open();
-    } else {
-      eng.log->addMsg("The lock resists.");
+    if(propHlr.hasProp(propWeakened) || material == chestMtrl_iron) {
       trySprainPlayer();
+      eng.log->addMsg("It seems futile.");
+    } else {
+
+      const bool IS_CURSED    = propHlr.hasProp(propCursed);
+      const bool IS_BLESSED   = propHlr.hasProp(propBlessed);
+
+      if(IS_BLESSED == false && (IS_CURSED || eng.dice.oneIn(3))) {
+        itemContainer_.destroySingleFragile(eng);
+      }
+
+      const bool IS_TOUGH     = bonHlr->hasTrait(traitTough);
+      const bool IS_RUGGED    = bonHlr->hasTrait(traitRugged);
+
+      const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
+
+      if(eng.dice.oneIn(OPEN_ONE_IN_N)) {
+        eng.log->addMsg("I kick the lid open!");
+        open();
+      } else {
+        eng.log->addMsg("The lock resists.");
+        trySprainPlayer();
+      }
     }
+    eng.gameTime->actorDidAct();
   }
-  eng.gameTime->actorDidAct();
 
   //TODO Force lock with weapon - remove or reimplement - how?
 //      Inventory& inv    = eng.player->getInv();

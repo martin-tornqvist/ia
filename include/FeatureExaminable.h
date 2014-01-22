@@ -64,6 +64,12 @@ private:
   TombTraits_t trait_;
 };
 
+enum ChestMtrl_t {
+  chestMtrl_wood,
+  chestMtrl_iron,
+  endOfChestMaterial
+};
+
 class Chest: public FeatureStatic {
 public:
   ~Chest() {}
@@ -73,6 +79,17 @@ public:
   void examine()                  override;
   void bash(Actor& actorTrying)   override;
   void disarm()                   override;
+
+  SDL_Color getColor() const override {
+    return material == chestMtrl_wood ? clrBrownDrk : clrGray;
+  }
+
+  string getDescr(const bool DEFINITE_ARTICLE) const override {
+    const string a = DEFINITE_ARTICLE ?
+                     "the " : (material == chestMtrl_wood ? "a " : "an ");
+
+    return a + (material == chestMtrl_wood ? "wooden " : "iron ") + "chest";
+  }
 
 private:
   friend class FeatureFactory;
@@ -86,6 +103,7 @@ private:
 
   bool isContentKnown_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
+  ChestMtrl_t material;
 };
 
 class Cabinet: public FeatureStatic {
