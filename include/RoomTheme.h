@@ -9,7 +9,7 @@
 using namespace std;
 
 class Engine;
-class FeatureData;
+struct FeatureData;
 
 enum RoomTheme_t {
   roomTheme_plain,
