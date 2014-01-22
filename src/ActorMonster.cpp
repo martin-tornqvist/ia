@@ -231,13 +231,15 @@ void Monster::moveDir(Dir_t dir) {
 
   assert(eng.basicUtils->isPosInsideMap(targetCell));
 
-  pos = targetCell;
+  if(dir != dirCenter) {
+    pos = targetCell;
 
-  // Bump features in target cell (i.e. to trigger traps)
-  vector<FeatureMob*> featureMobs;
-  eng.gameTime->getFeatureMobsAtPos(pos, featureMobs);
-  for(FeatureMob * m : featureMobs) {m->bump(*this);}
-  eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
+    //Bump features in target cell (i.e. to trigger traps)
+    vector<FeatureMob*> featureMobs;
+    eng.gameTime->getFeatureMobsAtPos(pos, featureMobs);
+    for(FeatureMob * m : featureMobs) {m->bump(*this);}
+    eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
+  }
 
   eng.gameTime->actorDidAct();
 }

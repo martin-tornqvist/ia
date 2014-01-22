@@ -26,6 +26,8 @@ void JamWithSpike::playerJam() const {
   eng.log->clearLog();
 
   playerJamFeature(eng.map->cells[jamPos.x][jamPos.y].featureStatic);
+
+  eng.renderer->drawMapAndInterface();
 }
 
 void JamWithSpike::playerJamFeature(Feature* const feature) const {
@@ -40,7 +42,8 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
       jamableObjectFound = true;
 
       eng.player->getInv().decrItemTypeInGeneral(item_ironSpike);
-      const int SPIKES_LEFT = eng.player->getInv().getItemStackSizeInGeneral(item_ironSpike);
+      const int SPIKES_LEFT =
+        eng.player->getInv().getItemStackSizeInGeneral(item_ironSpike);
       if(SPIKES_LEFT == 0) {
         eng.log->addMsg("I have no iron spikes left.");
       } else {

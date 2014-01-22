@@ -111,7 +111,7 @@ void Trap::bump(Actor& actorBumping) {
           }
         }
       } else {
-        trigger(actorBumping);
+        triggerTrap(actorBumping);
       }
     } else {
       if(d.actorSize == actorSize_humanoid && d.isSpider == false) {
@@ -137,7 +137,7 @@ void Trap::bump(Actor& actorBumping) {
                 actorName + " avoids a " + trapName + ".");
             }
           } else {
-            trigger(actorBumping);
+            triggerTrap(actorBumping);
           }
         }
       }
@@ -146,7 +146,7 @@ void Trap::bump(Actor& actorBumping) {
   trace << "Trap::bump() [DONE]" << endl;
 }
 
-void Trap::playerTryDisarm() {
+void Trap::disarm() {
   PropHandler& propHlr  = eng.player->getPropHandler();
   const bool IS_BLESSED = propHlr.hasProp(propBlessed);
   const bool IS_CURSED  = propHlr.hasProp(propCursed);
@@ -167,7 +167,7 @@ void Trap::playerTryDisarm() {
     eng.log->addMsg("I fail to disarm a trap.");
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(eng.dice.oneIn(TRIGGER_ONE_IN_N)) {
-      trigger(*eng.player);
+      triggerTrap(*eng.player);
     }
   }
   eng.gameTime->actorDidAct();
@@ -177,7 +177,7 @@ void Trap::playerTryDisarm() {
   }
 }
 
-void Trap::trigger(Actor& actor) {
+void Trap::triggerTrap(Actor& actor) {
   trace << "Trap::trigger()..." << endl;
 
   trace << "Trap: Specific trap is ";

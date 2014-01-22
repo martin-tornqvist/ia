@@ -12,7 +12,7 @@ public:
   SDL_Color getColor() const;
   Tile_t getTile() const;
 
-  void examine();
+  void examine() override;
 
 protected:
   friend class FeatureFactory;

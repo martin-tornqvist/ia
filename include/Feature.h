@@ -47,7 +47,6 @@ public:
   Feature_t getId() const;
   virtual int getDodgeModifier() const;
   int getShockWhenAdjacent() const;
-  virtual void examine();
   virtual MaterialType_t getMaterialType() const;
 protected:
   friend class Map;
@@ -96,12 +95,11 @@ public:
     hasBlood_ = false;
   }
 
-  void tryBash(Actor& actorTrying);
-  virtual void tryBash_(Actor& actorTrying) {(void)actorTrying;}
-
-  virtual void playerTryDisarm();
-
-  virtual bool openFeature() { return false;}
+  virtual void bash(Actor& actorTrying);
+  virtual void bash_(Actor& actorTrying)  {(void)actorTrying;}
+  virtual bool open()                     {return false;}
+  virtual void disarm();
+  virtual void examine();
 
 protected:
   friend class FeatureFactory;
@@ -111,6 +109,8 @@ protected:
     Feature(id, pos, engine), goreTile_(tile_empty), goreGlyph_(' ') {
     (void)spawnData;
   }
+
+  virtual void triggerTrap(Actor& actor) {(void)actor;}
 
   Tile_t goreTile_;
   char goreGlyph_;

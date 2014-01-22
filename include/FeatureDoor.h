@@ -35,7 +35,7 @@ public:
   char getGlyph()                                     const override;
   Tile_t getTile()                                    const override;
 
-  void tryBash_(Actor& actorTrying) override;
+  void bash_(Actor& actorTrying) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
@@ -57,7 +57,7 @@ public:
 
   void setToSecret() {isOpen_ = isSecret_ = false;}
 
-  virtual bool openFeature();
+  virtual bool open() override;
 
   static bool isTileAnyDoor(const Tile_t tile) {
     return

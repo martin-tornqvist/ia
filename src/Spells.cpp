@@ -481,7 +481,7 @@ SpellCastRetData SpellOpening::cast_(
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
       if(eng.map->cells[x][y].isSeenByPlayer) {
-        if(eng.map->cells[x][y].featureStatic->openFeature()) {
+        if(eng.map->cells[x][y].featureStatic->open()) {
           featuresOpenedPositions.push_back(Pos(x, y));
         }
       }
@@ -494,12 +494,6 @@ SpellCastRetData SpellOpening::cast_(
     eng.renderer->drawBlastAnimationAtPositions(
       featuresOpenedPositions, clrWhite);
     eng.renderer->drawMapAndInterface();
-//    if(featuresOpenedPositions.size() == 1) {
-//      eng.log->addMsg("An object was opened.");
-//    }
-//    if(featuresOpenedPositions.size() > 1) {
-//      eng.log->addMsg("Some objects were opened.");
-//    }
     return SpellCastRetData(true);
   } else {
     return SpellCastRetData(false);

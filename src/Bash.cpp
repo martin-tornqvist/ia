@@ -15,7 +15,7 @@ void Bash::playerBash() const {
   trace << "Bash::playerBash()" << endl;
 
   eng.log->clearLog();
-  eng.log->addMsg("Which direction? | space/esc cancel", clrWhiteHigh);
+  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   eng.renderer->drawMapAndInterface();
   Pos bashPos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();
@@ -27,7 +27,7 @@ void Bash::playerBash() const {
       trace << "Bash: No actor at bash pos, ";
       trace << "attempting to bash feature instead" << endl;
       Cell& cell = eng.map->cells[bashPos.x][bashPos.y];
-      cell.featureStatic->tryBash(*eng.player);
+      cell.featureStatic->bash(*eng.player);
     }  else {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(eng.player->getPropHandler().allowAttackMelee(true)) {

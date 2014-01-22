@@ -21,6 +21,8 @@ void Close::playerClose() const {
   if(closePos != eng.player->pos) {
     playerCloseFeature(eng.map->cells[closePos.x][closePos.y].featureStatic);
   }
+
+  eng.renderer->drawMapAndInterface();
 }
 
 void Close::playerCloseFeature(Feature* const feature) const {

@@ -31,11 +31,12 @@ class Trap: public FeatureStatic {
 public:
   ~Trap();
 
-  void  bump(Actor& actorBumping);
+  void  bump(Actor& actorBumping) override;
   SDL_Color getColor()                          const override;
   char getGlyph()                               const override;
   Tile_t getTile()                              const override;
   string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  void disarm()                                 override;
   bool canHaveCorpse()  const override {return isHidden_;}
   bool canHaveBlood()   const override {return isHidden_;}
   bool canHaveGore()    const override {return isHidden_;}
@@ -57,13 +58,11 @@ public:
 
   const SpecificTrapBase* getSpecificTrap() const {return specificTrap_;}
 
-  void trigger(Actor& actor);
-
-  void playerTryDisarm() override;
-
 protected:
   friend class FeatureFactory;
   Trap(Feature_t id, Pos pos, Engine& engine, TrapSpawnData* spawnData);
+
+  void triggerTrap(Actor& actor) override;
 
   void setSpecificTrapFromId(const Trap_t id);
 

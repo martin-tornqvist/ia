@@ -166,13 +166,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.key_ == 'a') {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.player->getPropHandler().allowSee()) {
-        eng.examine->playerExamine();
-        eng.renderer->drawMapAndInterface();
-      } else {
-        eng.log->addMsg("Not while blind.");
-        eng.renderer->drawMapAndInterface();
-      }
+      eng.examine->playerExamine();
     }
     clearEvents();
     return;
@@ -201,7 +195,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
       eng.close->playerClose();
-      eng.renderer->drawMapAndInterface();
     }
     clearEvents();
     return;
@@ -211,7 +204,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
       eng.jamWithSpike->playerJam();
-      eng.renderer->drawMapAndInterface();
     }
     clearEvents();
     return;
@@ -221,7 +213,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearLogMessages();
     if(eng.player->deadState == actorDeadState_alive) {
       Disarm::playerDisarm(eng);
-      eng.renderer->drawMapAndInterface();
     }
     clearEvents();
     return;
@@ -426,7 +417,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(eng.player->getPropHandler().allowSee()) {
         eng.marker->run(markerTask_look, NULL);
       } else {
-        eng.log->addMsg("I am blind.");
+        eng.log->addMsg("Not while blind.");
       }
     }
     clearEvents();

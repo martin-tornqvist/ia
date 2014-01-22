@@ -93,7 +93,7 @@ void Bot::act() {
         Door* const door = dynamic_cast<Door*>(f);
         door->reveal(false);
         if(door->isStuck()) {
-          f->tryBash(*eng.player);
+          f->bash(*eng.player);
           return;
         }
       }

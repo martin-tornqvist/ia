@@ -29,11 +29,11 @@ public:
               door->tryOpen(monster);
               return true;
             } else if(monster->getData().canBashDoors) {
-              door->tryBash(*monster);
+              door->bash(*monster);
               return true;
             }
           } else if(monster->getData().canBashDoors) {
-            door->tryBash(*monster);
+            door->bash(*monster);
             return true;
           }
         }

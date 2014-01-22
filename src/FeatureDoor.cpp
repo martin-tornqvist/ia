@@ -258,8 +258,8 @@ bool Door::trySpike(Actor* actorTrying) {
   return true;
 }
 
-void Door::tryBash_(Actor& actorTrying) {
-  trace << "Door::tryBash()..." << endl;
+void Door::bash_(Actor& actorTrying) {
+  trace << "Door::bash()..." << endl;
 
   if(isOpen_ == false) {
 
@@ -321,7 +321,7 @@ void Door::tryBash_(Actor& actorTrying) {
       }
     }
   }
-  trace << "Door::tryBash() [DONE]" << endl;
+  trace << "Door::bash() [DONE]" << endl;
 }
 
 void Door::tryClose(Actor* actorTrying) {
@@ -538,7 +538,7 @@ void Door::tryOpen(Actor* actorTrying) {
   }
 }
 
-bool Door::openFeature() {
+bool Door::open() {
   isOpen_ = true;
   return true;
 }

@@ -5,10 +5,9 @@
 
 class FeatureLiquidShallow: public FeatureStatic {
 public:
-  ~FeatureLiquidShallow() {
-  }
+  ~FeatureLiquidShallow() {}
 
-  void bump(Actor& actorBumping);
+  void bump(Actor& actorBumping) override;
 
 protected:
   friend class FeatureFactory;
@@ -17,10 +16,9 @@ protected:
 
 class FeatureLiquidDeep: public FeatureStatic {
 public:
-  ~FeatureLiquidDeep() {
-  }
+  ~FeatureLiquidDeep() {}
 
-  void bump(Actor& actorBumping);
+  void bump(Actor& actorBumping) override;
 
 protected:
   friend class FeatureFactory;

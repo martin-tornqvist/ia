@@ -10,9 +10,21 @@
 #include "Renderer.h"
 
 void Examine::playerExamine() const {
-  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  //TODO It would probably be more fun if examine were allowed while blind,
+  //with some potentially horrible results
+  if(eng.player->getPropHandler().allowSee()) {
+    eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+    eng.renderer->drawMapAndInterface();
+
+    Pos examinePos = eng.player->pos + eng.query->dir();
+
+    eng.log->clearLog();
+
+    if(examinePos != eng.player->pos) {
+      eng.map->cells[examinePos.x][examinePos.y].featureStatic->examine();
+    }
+  } else {
+    eng.log->addMsg("Not while blind.");
+  }
   eng.renderer->drawMapAndInterface();
-  Pos examineInPos = eng.player->pos + eng.query->dir();
-  eng.log->clearLog();
-  eng.map->cells[examineInPos.x][examineInPos.y].featureStatic->examine();
 }

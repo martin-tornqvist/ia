@@ -125,12 +125,16 @@ MaterialType_t Feature::getMaterialType() const {
   return data_->materialType;
 }
 
-void Feature::examine() {
+//---------------------------------------------------------- STATIC FEATURE
+void FeatureStatic::examine() {
   eng.log->addMsg("I find nothing specific there to examine or use.");
 }
 
-//---------------------------------------------------------- STATIC FEATURE
-void FeatureStatic::tryBash(Actor& actorTrying) {
+void FeatureStatic::disarm() {
+  eng.log->addMsg("I find nothing there to disarm.");
+}
+
+void FeatureStatic::bash(Actor& actorTrying) {
 
   const bool IS_PLAYER = &actorTrying == eng.player;
 
@@ -179,16 +183,12 @@ void FeatureStatic::tryBash(Actor& actorTrying) {
   Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, false, IS_PLAYER);
   eng.soundEmitter->emitSound(snd);
 
-  tryBash_(actorTrying);
+  bash_(actorTrying);
 
   eng.gameTime->actorDidAct();
 
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
-}
-
-void FeatureStatic::playerTryDisarm() {
-  eng.log->addMsg("I find nothing there to disarm.");
 }
 
 void FeatureStatic::setGoreIfPossible() {
