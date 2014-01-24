@@ -11,6 +11,8 @@ public:
 
   void setInscription(const string& str) {inscription_ = str;}
 
+  void bump(Actor& actorBumping) override;
+
 private:
   string inscription_;
 
