@@ -12,7 +12,7 @@
 using namespace std;
 
 class Engine;
-class FeatureData;
+struct FeatureData;
 
 enum FeatureSpawnData_t {
   featureSpawnData_dynamite,

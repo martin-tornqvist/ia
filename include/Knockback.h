@@ -5,7 +5,7 @@
 
 class Engine;
 class Actor;
-struct AttackData;
+class AttackData;
 
 class KnockBack {
 public:
