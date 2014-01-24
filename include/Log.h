@@ -7,6 +7,7 @@
 
 #include "Colors.h"
 #include "Converters.h"
+#include "CommonTypes.h"
 
 using namespace std;
 
@@ -17,9 +18,9 @@ public:
   Log(Engine& engine) :
     eng(engine) {clearLog();}
 
-  void addMsg(const string& text, const SDL_Color = clrWhite,
+  void addMsg(const string& text, const SDL_Color& clr = clrWhite,
               const bool INTERRUPT_PLAYER_ACTIONS = false,
-              const bool FORCE_MORE_PROMPT = false);
+              const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 
   void drawLog(const bool SHOULD_UPDATE_SCREEN) const;
 
@@ -28,48 +29,63 @@ public:
   void clearLog();
 
   void addLineToHistory(const string& lineToAdd) {
-    vector<Message> historyLine;
-    historyLine.push_back(Message(lineToAdd, clrWhite));
+    vector<Msg> historyLine;
+    historyLine.push_back(Msg(lineToAdd, clrWhite, 0));
     history.push_back(historyLine);
   }
 
 private:
-  struct Message {
-    Message(const string& text, const SDL_Color color) :
-      str(text), clr(color), repeats(1), strRepeats("") {
+  class Msg {
+  public:
+    Msg(const string& text, const SDL_Color& clr, const int X_POS) :
+      clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
+      nr_(1) {}
+
+    Msg() : Msg("", clrWhite, 0) {}
+
+    inline void getStrWithRepeats(string& strRef) const {
+      strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
     }
 
-    Message() {}
+    inline void getStrRaw(string& strRef) const {strRef = str_;}
 
-    void addRepeat() {
-      repeats++;
-      strRepeats = "(x";
-      strRepeats += toString(repeats);
-      strRepeats += ")";
+    void incrRepeat() {
+      nr_++;
+      repeatsStr_ = "(x" + toString(nr_) + ")";
     }
 
-    string str;
-    SDL_Color clr;
-    int repeats;
-    string strRepeats;
+    SDL_Color clr_;
+    int xPos_;
+
+  private:
+    string str_;
+    string repeatsStr_;
+    int nr_;
   };
 
-  void drawHistoryInterface(const int topLine, const int bottomLine) const;
+  inline int getXAfterMsg(const Msg* const msg) {
+    if(msg == NULL) {
+      return 0;
+    } else {
+      string str = "";
+      msg->getStrWithRepeats(str);
+      return msg->xPos_ + str.size() + 1;
+    }
+  }
 
-  //Used by normal log, and history viewer
-  void drawLine(const vector<Message>& lineToDraw, const int yCell) const;
+  void promptAndClearLog();
 
-  vector<Message> line;
+  void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) const;
 
-  //Returns the x cell position that a message should start on.
-  //May be one higher than highest message index.
-  int findCurXpos(const vector<Message>& line,
-                  const unsigned int messageNr) const;
+  //Used by normal log and history viewer
+  void drawLine(const vector<Msg>& lineToDraw, const int Y_POS) const;
+
+  vector<Msg> lines[2];
 
   const Engine& eng;
 
   friend class Postmortem;
-  vector<vector<Message> > history;
+  vector< vector<Msg> > history;
 };
 
 #endif

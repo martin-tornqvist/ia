@@ -16,7 +16,6 @@ public:
 
 private:
   void readFile();
-  void drawInterface();
 
   vector<string> lines;
   Engine& eng;

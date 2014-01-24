@@ -61,71 +61,65 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
   eng.renderer->clearScreen();
 
-  if(entries.empty()) {
-    const int X0 = 1;
-    const int Y0 = 4;
-    eng.renderer->drawText(
-      "No High Score entries found | space/esc to exit ",
-      panel_screen, Pos(X0, Y0), clrWhite);
-  } else {
-    const string decorationLine(MAP_W - 2, '-');
+  const int X_LABEL = 3;
 
-    eng.renderer->drawText(
-      decorationLine, panel_char, Pos(0, 2), clrWhite);
-    eng.renderer->drawText(
-      " 2/8, down/up to navigate | space/esc to exit ",
-      panel_char, Pos(3, 2), clrWhite);
+  const string decorationLine(MAP_W, '-');
 
-    int yPos = 0;
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-    eng.renderer->drawText(
-      decorationLine, panel_screen, Pos(1, yPos), clrWhite);
-    eng.renderer->drawText(
-      " Displaying High Scores ", panel_screen, Pos(3, yPos), clrWhite);
+  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+                         clrGray);
+
+  eng.renderer->drawText(" Displaying High Scores ", panel_screen,
+                         Pos(X_LABEL, 0), clrGray);
+
+  int yPos = 1;
+
+  eng.renderer->drawText(
+    "Ended",    panel_screen, Pos(X_POS_DATE,     yPos), clrGray);
+  eng.renderer->drawText(
+    "Name",     panel_screen, Pos(X_POS_NAME,     yPos), clrGray);
+  eng.renderer->drawText(
+    "Score",    panel_screen, Pos(X_POS_SCORE,    yPos), clrGray);
+  eng.renderer->drawText(
+    "Level",    panel_screen, Pos(X_POS_LVL,      yPos), clrGray);
+  eng.renderer->drawText(
+    "Depth",    panel_screen, Pos(X_POS_DLVL,     yPos), clrGray);
+  eng.renderer->drawText(
+    "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
+
+  yPos++;
+
+  const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
+
+  for(
+    int i = TOP_ELEMENT;
+    i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
+    i++) {
+    const string dateAndTime  = entries.at(i).getDateAndTime();
+    const string name         = entries.at(i).getName();
+    const string score        = toString(entries.at(i).getScore());
+    const string lvl          = toString(entries.at(i).getLvl());
+    const string dlvl         = toString(entries.at(i).getDlvl());
+    const string ins          = toString(entries.at(i).getInsanity());
+
+    const SDL_Color& clr = clrNosfTeal;
+    eng.renderer->drawText(
+      dateAndTime, panel_screen, Pos(X_POS_DATE,      yPos), clr);
+    eng.renderer->drawText(
+      name,        panel_screen, Pos(X_POS_NAME,      yPos), clr);
+    eng.renderer->drawText(
+      score,       panel_screen, Pos(X_POS_SCORE,     yPos), clr);
+    eng.renderer->drawText(
+      lvl,         panel_screen, Pos(X_POS_LVL,       yPos), clr);
+    eng.renderer->drawText(
+      dlvl,        panel_screen, Pos(X_POS_DLVL,      yPos), clr);
+    eng.renderer->drawText(
+      ins + "%",   panel_screen, Pos(X_POS_INSANITY,  yPos), clr);
     yPos++;
-
-    eng.renderer->drawText(
-      "Ended", panel_screen, Pos(X_POS_DATE, yPos), clrGray);
-    eng.renderer->drawText(
-      "Name", panel_screen, Pos(X_POS_NAME, yPos), clrGray);
-    eng.renderer->drawText(
-      "Score", panel_screen, Pos(X_POS_SCORE, yPos), clrGray);
-    eng.renderer->drawText(
-      "Level", panel_screen, Pos(X_POS_LVL, yPos), clrGray);
-    eng.renderer->drawText(
-      "Depth", panel_screen, Pos(X_POS_DLVL, yPos), clrGray);
-    eng.renderer->drawText(
-      "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
-
-    yPos++;
-
-    for(
-      int i = TOP_ELEMENT;
-      i < int(entries.size()) && (i - TOP_ELEMENT) < MAP_H;
-      i++) {
-      const string dateAndTime  = entries.at(i).getDateAndTime();
-      const string name         = entries.at(i).getName();
-      const string score        = toString(entries.at(i).getScore());
-      const string lvl          = toString(entries.at(i).getLvl());
-      const string dlvl         = toString(entries.at(i).getDlvl());
-      const string ins          = toString(entries.at(i).getInsanity());
-
-      const SDL_Color& clr = clrNosfTeal;
-      eng.renderer->drawText(
-        dateAndTime, panel_screen, Pos(X_POS_DATE, yPos), clr);
-      eng.renderer->drawText(
-        name, panel_screen, Pos(X_POS_NAME, yPos), clr);
-      eng.renderer->drawText(
-        score, panel_screen, Pos(X_POS_SCORE, yPos), clr);
-      eng.renderer->drawText(
-        lvl, panel_screen, Pos(X_POS_LVL, yPos), clr);
-      eng.renderer->drawText(
-        dlvl, panel_screen, Pos(X_POS_DLVL, yPos), clr);
-      eng.renderer->drawText(
-        ins + "%", panel_screen, Pos(X_POS_INSANITY, yPos), clr);
-      yPos++;
-    }
   }
 
   eng.renderer->updateScreen();
@@ -144,30 +138,32 @@ void HighScore::runHighScoreScreen() {
 
   sortEntries(entries);
 
-  int topElement = 0;
-  renderHighScoreScreen(entries, topElement);
+  int topNr = 0;
+  renderHighScoreScreen(entries, topNr);
+
+  const int LINE_JUMP           = 3;
+  const int NR_LINES_TOT        = entries.size();
+  const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
 
   //Read keys
-  bool done = false;
-  while(done == false) {
+  while(true) {
+    renderHighScoreScreen(entries, topNr);
+
     const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement =
-        min(topElement + int(MAP_H / 5),
-            int(entries.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      renderHighScoreScreen(entries, topElement);
+      topNr += LINE_JUMP;
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+        topNr = 0;
+      } else {
+        topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
+      }
     }
     if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement =
-        min(topElement - int(MAP_H / 5),
-            int(entries.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      renderHighScoreScreen(entries, topElement);
+      topNr = max(0, topNr - LINE_JUMP);
     }
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-      done = true;
+      break;
     }
   }
 }

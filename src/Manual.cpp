@@ -43,76 +43,54 @@ void Manual::readFile() {
 }
 
 void Manual::drawManualInterface() {
-  const string decorationLine(MAP_W - 2, '-');
+  const string decorationLine(MAP_W, '-');
 
-  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, 2));
-  eng.renderer->drawText(decorationLine, panel_screen,
-                          Pos(1, 1), clrWhite);
+  const int X_LABEL = 3;
 
-  eng.renderer->drawText(" Displaying manual ", panel_screen,
-                          Pos(3, 1), clrWhite);
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-  eng.renderer->drawText(decorationLine, panel_screen,
-                          Pos(1, SCREEN_H - 1), clrWhite);
+  eng.renderer->drawText(" Displaying manual ", panel_screen, Pos(X_LABEL, 0),
+                         clrGray);
+
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+                         clrGray);
 
   eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                          panel_screen, Pos(3, SCREEN_H - 1), clrWhite);
+                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 void Manual::run() {
-  eng.renderer->clearScreen();
+  const int LINE_JUMP           = 3;
+  const int NR_LINES_TOT        = lines.size();
+  const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
-  string str;
+  int topNr = 0;
+  int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  int topElement = 0;
-  int btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
+  while(true) {
+    eng.renderer->clearScreen();
+    drawManualInterface();
+    int yPos = 1;
+    for(int i = topNr; i <= btmNr; i++) {
+      eng.renderer->drawText(lines.at(i), panel_screen, Pos(0, yPos++),
+                             clrWhite);
+    }
+    eng.renderer->updateScreen();
 
-  drawManualInterface();
-
-  Pos pos(1, 2);
-
-  for(int i = topElement; i <= btmElement; i++) {
-    eng.renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
-    pos.y++;
-  }
-
-  eng.renderer->updateScreen();
-
-  //Read keys
-  bool done = false;
-  while(done == false) {
     const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
-      topElement = min(topElement + 3, int(lines.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
-      eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                               Pos(MAP_W, MAP_H));
-      drawManualInterface();
-      pos.y = 2;
-      for(int i = topElement; i <= btmElement; i++) {
-        eng.renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
-        pos.y++;
+      topNr += LINE_JUMP;
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+        topNr = 0;
+      } else {
+        topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-      eng.renderer->updateScreen();
     } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
-      topElement = min(topElement - 3, int(lines.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      btmElement = min(topElement + MAP_H - 1, int(lines.size()) - 1);
-      eng.renderer->coverArea(panel_screen, Pos(0, 2),
-                               Pos(MAP_W, MAP_H));
-      drawManualInterface();
-      pos.y = 2;
-      for(int i = topElement; i <= btmElement; i++) {
-        eng.renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
-        pos.y++;
-      }
-      eng.renderer->updateScreen();
+      topNr = max(0, topNr - LINE_JUMP);
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-      done = true;
+      break;
     }
+    btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
-
-  eng.renderer->coverPanel(panel_screen);
 }

@@ -30,47 +30,38 @@ void Credits::readFile() {
   file.close();
 }
 
-void Credits::drawInterface() {
-  const string decorationLine(MAP_W - 2, '-');
-
-  eng.renderer->coverArea(
-    panel_screen, Pos(0, 1), Pos(MAP_W, 2));
-
-  eng.renderer->drawText(
-    decorationLine, panel_screen, Pos(1, 1), clrWhite);
-
-  eng.renderer->drawText(
-    " Displaying credits.txt ", panel_screen, Pos(3, 1), clrWhite);
-
-  eng.renderer->drawText(
-    decorationLine, panel_char, Pos(1, 1), clrWhite);
-
-  eng.renderer->drawText(
-    " space/esc to exit ", panel_char, Pos(3, 1), clrWhite);
-}
-
 void Credits::run() {
   eng.renderer->clearScreen();
 
   string str;
 
-  drawInterface();
+  const string decorationLine(MAP_W, '-');
 
-  Pos pos(1, 2);
-  for(unsigned int i = 0; i < lines.size(); i++) {
-    eng.renderer->drawText(lines.at(i), panel_screen, pos, clrWhite);
-    pos.y++;
+  const int X_LABEL = 3;
+
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+
+  eng.renderer->drawText(" Displaying credits.txt ", panel_screen,
+                         Pos(X_LABEL, 0), clrGray);
+
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+                         clrGray);
+
+  eng.renderer->drawText(" space/esc to exit ", panel_screen,
+                         Pos(X_LABEL, SCREEN_H - 1), clrGray);
+
+  int yPos = 1;
+  for(string & line : lines) {
+    eng.renderer->drawText(line, panel_screen, Pos(0, yPos++), clrWhite);
   }
 
   eng.renderer->updateScreen();
 
   //Read keys
-  bool done = false;
-  while(done == false) {
+  while(true) {
     const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-      done = true;
+      break;
     }
   }
-  eng.renderer->coverPanel(panel_screen);
 }

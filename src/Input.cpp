@@ -576,6 +576,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   else if(d.sdlKey_ == SDLK_F8) {
     if(IS_DEBUG_MODE) {
       eng.player->teleport(false);
+      eng.log->clearLog();
       clearEvents();
     }
     return;

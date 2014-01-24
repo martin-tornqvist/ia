@@ -18,9 +18,7 @@
 
 void Postmortem::run(bool* const quitGame) {
   makeInfoLines();
-
   makeMemorialFile();
-
   readKeysMenu(quitGame);
 }
 
@@ -140,7 +138,9 @@ void Postmortem::makeInfoLines() {
   for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
     string row = "";
     for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {
-      row += eng.log->history.at(i).at(ii).str + " ";
+      string msgStr = "";
+      eng.log->history.at(i).at(ii).getStrWithRepeats(msgStr);
+      row += msgStr + " ";
     }
     postmortemLines.push_back(StrAndClr("   " + row, clrInfo));
   }
@@ -192,55 +192,61 @@ void Postmortem::makeInfoLines() {
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
-  eng.renderer->coverPanel(panel_screen);
-  const string decorationLine(MAP_W - 2, '-');
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(1, 1), clrWhite);
-  eng.renderer->drawText(
-    " Displaying postmortem information ", panel_screen, Pos(3, 1), clrWhite);
-  eng.renderer->drawText(
-    decorationLine, panel_char, Pos(1, 1), clrWhite);
-  eng.renderer->drawText(
-    " 2/8, down/up to navigate | space/esc to exit  ",
-    panel_char, Pos(3, 1), clrWhite);
-  int x = 0;
-  int y = 0;
-  const int NR = int(postmortemLines.size());
+  eng.renderer->clearScreen();
 
-  for(int i = TOP_ELEMENT; i < NR && (i - TOP_ELEMENT) <= MAP_H; i++) {
+  const string decorationLine(MAP_W, '-');
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+
+  const int X_LABEL = 3;
+
+  eng.renderer->drawText(" Displaying postmortem information ", panel_screen,
+                         Pos(X_LABEL, 0), clrGray);
+
+  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+                         clrGray);
+
+  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit  ",
+                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+
+  const int NR_LINES_TOT = int(postmortemLines.size());
+  const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+  int yPos = 1;
+
+  for(
+    int i = TOP_ELEMENT;
+    i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
+    i++) {
     eng.renderer->drawText(
-      postmortemLines.at(i).str, panel_map, Pos(x, y),
+      postmortemLines.at(i).str, panel_screen, Pos(0, yPos++),
       postmortemLines.at(i).clr);
-    y++;
   }
 
   eng.renderer->updateScreen();
 }
 
 void Postmortem::runInfo() {
-  int topElement = 0;
-  renderInfo(topElement);
+  const int LINE_JUMP           = 3;
+  const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+  const int NR_LINES_TOT        = postmortemLines.size();
 
-  const int SCROLL_LINES = 3;
+  int topNr = 0;
 
-  //Read keys
-  bool done = false;
-  while(done == false) {
+  while(true) {
+    renderInfo(topNr);
+
     const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
-      topElement = min(
-                     topElement + SCROLL_LINES,
-                     int(postmortemLines.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      renderInfo(topElement);
+      topNr += LINE_JUMP;
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+        topNr = 0;
+      } else {
+        topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
+      }
     } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
-      topElement = min(
-                     topElement - SCROLL_LINES,
-                     int(postmortemLines.size()) - int(MAP_H));
-      topElement = max(0, topElement);
-      renderInfo(topElement);
+      topNr = max(0, topNr - LINE_JUMP);
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-      done = true;
+      break;
     }
   }
 }
