@@ -350,7 +350,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitMasterMarksman: {
-      traitsRef.push_back(traitExpertMeleeFighter);
+      traitsRef.push_back(traitExpertMarksman);
       bgRef = bgSoldier;
     } break;
 
