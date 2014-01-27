@@ -58,7 +58,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
@@ -109,7 +109,7 @@ void PopulateMonsters::populateCaveLevel() const {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const Pos& playerPos = eng.player->pos;
@@ -151,7 +151,7 @@ void PopulateMonsters::populateIntroLevel() {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const Pos& playerPos = eng.player->pos;
@@ -196,7 +196,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
 
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const Pos& playerPos = eng.player->pos;

@@ -33,7 +33,7 @@ void Bash::playerBash() const {
       if(eng.player->getPropHandler().allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
         trace << "Bash: Player can see actor" << endl;
         eng.player->kick(*actor);

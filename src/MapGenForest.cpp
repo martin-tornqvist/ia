@@ -12,7 +12,6 @@
 #include "Map.h"
 #include "Highscore.h"
 #include "Fov.h"
-#include "FeatureGrave.h"
 #include "TextFormatting.h"
 #include "PopulateMonsters.h"
 #include "MapParsing.h"
@@ -151,10 +150,10 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     buildFromTemplate(churchPos, mapTemplate_church);
 
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+    MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                      blockers);
 
-    eng.pathFinder->run(eng.player->pos, stairsPos, blockers, path);
+    PathFind::run(eng.player->pos, stairsPos, blockers, path, eng);
 
     eng.featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
 
@@ -189,7 +188,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+    MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                      blockers);
 
     bool vision[MAP_W][MAP_H];

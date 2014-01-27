@@ -99,7 +99,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
+  MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
 
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
@@ -172,7 +172,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
+  MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
 
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);

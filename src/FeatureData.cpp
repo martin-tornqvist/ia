@@ -11,9 +11,7 @@ void FeatureDataHandler::resetData(FeatureData& d) {
   d.tile = tile_empty;
   d.color = clrYellow;
   d.colorBg = clrBlack;
-  for(unsigned int i = 0; i < endOfActorBodyTypes; i++) {
-    d.isBodyTypePassable[i] = true;
-  }
+  for(int i = 0; i < endOfBodyTypes; i++) {d.canBodyTypePass[i] = true;}
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.isSmokePassable = true;
@@ -67,10 +65,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = eng.config->isAsciiWallSymbolFullSquare == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_wallTop;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.isSmokePassable = false;
@@ -90,10 +88,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrBrownDrk;
   d.tile = tile_tree;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -185,11 +183,13 @@ void FeatureDataHandler::initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_stairsDown;
+  d.spawnType = featureSpawnType_other;
   d.name_a = "a downward staircase";
   d.name_the = "the downward staircase";
   d.glyph = '>';
   d.color = clrWhiteHigh;
   d.tile = tile_stairsDown;
+  for(int i = 0; i < endOfBodyTypes; i++) {d.canBodyTypePass[i] = false;}
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -257,10 +257,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '~';
   d.color = clrBlue;
   d.tile = tile_water1;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = true;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = true;
+  d.canBodyTypePass[bodyType_ethereal] = true;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -315,10 +315,10 @@ void FeatureDataHandler::initDataList() {
   d.name_the = "the chasm";
   d.glyph = ' ';
   d.color = clrBlack;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -355,10 +355,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '&';
   d.color = clrWhite;
   d.tile = tile_graveStone;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -375,10 +375,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '[';
   d.color = clrBrown;
   d.tile = tile_churchBench;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = true;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = true;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -410,10 +410,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 8;
   d.color = dataList[feature_stoneWall].color;
   d.tile = tile_rubbleHigh;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = false;
-  d.isBodyTypePassable[bodyType_ooze] = true;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = false;
+  d.canBodyTypePass[bodyType_ooze] = true;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.isSmokePassable = false;
@@ -449,8 +449,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 5;
   d.color = clrWhite;
   d.tile = tile_witchOrWarlock;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -469,8 +469,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 'M';
   d.color = clrWhite;
   d.tile = tile_ghoul;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -490,7 +490,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '8';
   d.color = clrWhite;
   d.tile = tile_cocoon;
-  d.isBodyTypePassable[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -510,7 +510,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '+';
   d.color = clrBrownDrk;
   d.tile = tile_chestClosed;
-  d.isBodyTypePassable[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -529,8 +529,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '7';
   d.color = clrBrownDrk;
   d.tile = tile_cabinetClosd;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -549,7 +549,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '%';
   d.color = clrWhiteHigh;
   d.tile = tile_fountain;
-  d.isBodyTypePassable[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -568,8 +568,8 @@ void FeatureDataHandler::initDataList() {
 //  d.glyph = '1';
 //  d.color = clrGray;
 //  d.tile = tile_pillarCarved;
-//  d.isBodyTypePassable[bodyType_normal] = false;
-//  d.isBodyTypePassable[bodyType_ooze] = false;
+//  d.canBodyTypePass[bodyType_normal] = false;
+//  d.canBodyTypePass[bodyType_ooze] = false;
 //  d.isProjectilesPassable = false;
 //  d.isVisionPassable = false;
 //  d.canHaveBlood = false;
@@ -586,8 +586,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrGray;
   d.tile = tile_pillar;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -606,8 +606,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrGray;
   d.tile = tile_pillarBroken;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
@@ -646,10 +646,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '&';
   d.color = clrGray;
   d.tile = tile_tomb;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;
@@ -668,10 +668,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '^';
   d.color = clrGray;
   d.tile = tile_pit;
-  d.isBodyTypePassable[bodyType_normal] = false;
-  d.isBodyTypePassable[bodyType_ethereal] = true;
-  d.isBodyTypePassable[bodyType_flying] = true;
-  d.isBodyTypePassable[bodyType_ooze] = false;
+  d.canBodyTypePass[bodyType_normal] = false;
+  d.canBodyTypePass[bodyType_ethereal] = true;
+  d.canBodyTypePass[bodyType_flying] = true;
+  d.canBodyTypePass[bodyType_ooze] = false;
   d.isProjectilesPassable = true;
   d.isVisionPassable = true;
   d.canHaveBlood = false;

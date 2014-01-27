@@ -583,14 +583,199 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
     room1, room2, dirRight);
 }
 
-//TEST_FIXTURE(BasicFixture, MakeBspMap) {
-//  MapGenBsp mapGen(eng.;
-//  for(int i = 0; i < 1000; i++) {
-//    eng.player->pos = Pos(eng.dice.range(1, MAP_W - 1),
-//                           eng.dice.range(1, MAP_H - 1));
-//    mapGen.run();
+//TODO This would benefit a lot from modifying the map through some
+//template parameter instead. Perhaps adapt the map template functionality
+//to allow easily creating structures with string parameters, e.g.:
+//
+//MapTemplate::build(Pos(1, 1), vector<string>("#...#"));
+//
+//It would be neat if this also had functionality for automatically rotate
+//or flip structures, e.g.:
+//MapTemplate::build(Pos(1, 1), templateRotate90, templateNoFlip,
+//                   vector<string>("#...#"));
+//Where templateRotate90 and templateNoFlip would be enums
+//TEST_FIXTURE(BasicFixture, CellPredCorridor) {
+//  // #####
+//  // #...#
+//  // #####
+//  for(int x = 3; x <= 5; x++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
 //  }
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[2][7]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[3][7]));
+//  CHECK_EQUAL(true,  CellPred::Corridor(eng).check(eng.map->cells[4][7]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[5][7]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[6][7]));
+//
+//  // #####
+//  // #.#.#
+//  // #####
+//  eng.featureFactory->spawnFeatureAt(feature_stoneWall,  Pos(4, 7));
+//  CHECK_EQUAL(false,  CellPred::Corridor(eng).check(eng.map->cells[4][7]));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 7));
+//
+//  //  ###
+//  // ##.##
+//  // #...#
+//  // ##.##
+//  //  ###
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[4][7]));
+//
+//  // ###
+//  // #.#
+//  // #.#
+//  // #.#
+//  // ###
+//  for(int y = 6; y <= 8; y++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
+//  }
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[20][5]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[20][6]));
+//  CHECK_EQUAL(true,  CellPred::Corridor(eng).check(eng.map->cells[20][7]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[20][8]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[20][9]));
+//
+//  // ###
+//  // #.#
+//  // ###
+//  // #.#
+//  // ###
+//  eng.featureFactory->spawnFeatureAt(feature_stoneWall,  Pos(20, 7));
+//  CHECK_EQUAL(false,  CellPred::Corridor(eng).check(eng.map->cells[20][7]));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 7));
+//
+//  //  ###
+//  // ##.##
+//  // #...#
+//  // ##.##
+//  //  ###
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[20][8]));
+//
+//  // ...
+//  // #.#
+//  // ...
+//  for(int x = 30; x <= 32; x++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 9));
+//  }
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(31, 8));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[31][7]));
+//  CHECK_EQUAL(true,  CellPred::Corridor(eng).check(eng.map->cells[31][8]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[31][9]));
+//
+//  // .#.
+//  // ...
+//  // .#.
+//  for(int y = 17; y <= 19; y++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(30, y));
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(32, y));
+//  }
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(31, 18));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[30][18]));
+//  CHECK_EQUAL(true,  CellPred::Corridor(eng).check(eng.map->cells[31][18]));
+//  CHECK_EQUAL(false, CellPred::Corridor(eng).check(eng.map->cells[32][18]));
 //}
+
+//TODO See comment above CellPredCorridor test
+TEST_FIXTURE(BasicFixture, CellPredNook) {
+  // #####
+  // #...#
+  // #####
+  for(int x = 3; x <= 5; x++) {
+    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
+  }
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[2][7]));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[4][7]));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[5][7]));
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[6][7]));
+
+  // ##.
+  // #..
+  // ##.
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
+
+  // ###
+  // #.#
+  // #.#
+  // #.#
+  // ###
+  for(int y = 6; y <= 8; y++) {
+    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
+  }
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][5]));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][7]));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][8]));
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][9]));
+
+  // ###
+  // #.#
+  // ...
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
+  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
+
+  // ###
+  // #.#
+  // ###
+  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 12));
+  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][12]));
+}
+
+TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
+  bool in[MAP_W][MAP_H];
+  bool out[MAP_W][MAP_H];
+
+  eng.basicUtils->resetArray(in, false); //Make sure all values are 0
+
+  in[20][10] = true;
+
+  MapParse::getCellsWithinDistOfOthers(in, out, Range(0, 1));
+  CHECK_EQUAL(false, out[18][10]);
+  CHECK_EQUAL(true,  out[19][10]);
+  CHECK_EQUAL(false, out[20][ 8]);
+  CHECK_EQUAL(true,  out[20][ 9]);
+  CHECK_EQUAL(true,  out[20][10]);
+  CHECK_EQUAL(true,  out[20][11]);
+  CHECK_EQUAL(true,  out[21][11]);
+
+  MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
+  CHECK_EQUAL(true,  out[19][10]);
+  CHECK_EQUAL(false, out[20][10]);
+  CHECK_EQUAL(true,  out[21][11]);
+
+  MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 5));
+  CHECK_EQUAL(true,  out[23][10]);
+  CHECK_EQUAL(true,  out[24][10]);
+  CHECK_EQUAL(true,  out[25][10]);
+  CHECK_EQUAL(true,  out[25][ 9]);
+  CHECK_EQUAL(true,  out[25][11]);
+  CHECK_EQUAL(false, out[26][10]);
+  CHECK_EQUAL(true,  out[16][10]);
+  CHECK_EQUAL(true,  out[15][10]);
+  CHECK_EQUAL(true,  out[15][ 9]);
+  CHECK_EQUAL(true,  out[15][11]);
+  CHECK_EQUAL(false, out[14][10]);
+
+  in[23][10] = true;
+
+  MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
+  CHECK_EQUAL(false, out[18][10]);
+  CHECK_EQUAL(true,  out[19][10]);
+  CHECK_EQUAL(false, out[20][10]);
+  CHECK_EQUAL(true,  out[21][10]);
+  CHECK_EQUAL(true,  out[22][10]);
+  CHECK_EQUAL(false, out[23][10]);
+  CHECK_EQUAL(true,  out[24][10]);
+  CHECK_EQUAL(false, out[25][10]);
+}
 
 int main() {
   trace << "Running all tests" << endl;

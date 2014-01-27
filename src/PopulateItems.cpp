@@ -9,7 +9,7 @@
 
 void PopulateItems::spawnItems() {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksItems(eng), blockers);
+  MapParse::parse(CellPred::BlocksItems(eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
 

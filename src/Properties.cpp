@@ -792,7 +792,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   if(DISABLE_REDRAW == false) {
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    MapParse::parse(CellPred::BlocksVision(eng), blockers);
     playerSeeOwner = eng.player->checkIfSeeActor(*owningActor_, blockers);
   }
 
@@ -1172,7 +1172,7 @@ bool PropHandler::changeActorClr(SDL_Color& clr) const {
 
 void PropHandler::endAppliedPropsByMagicHealing() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   for(unsigned int i = 0; i < propList.size(); i++) {
@@ -1198,13 +1198,13 @@ Prop::Prop(PropId_t id, Engine& engine, PropTurns_t turnsInit, int turns) :
 
 void PropBlessed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propCursed, visionBlockers);
 }
 
 void PropCursed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBlessed, visionBlockers);
 }
 
@@ -1213,7 +1213,7 @@ void PropInfected::onNewTurn() {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStd));
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    MapParse::parse(CellPred::BlocksVision(eng), blockers);
     propHlr.endAppliedProp(propInfected, blockers, false);
   }
 }
@@ -1307,7 +1307,7 @@ void PropWound::healOneWound() {
     eng.log->addMsg("A wound is healed!");
   } else {
     bool visionBlockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
     owningActor_->getPropHandler().endAppliedProp(
       propWound, visionBlockers);
   }
@@ -1397,8 +1397,8 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   if(dir != dirCenter) {
 
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(
-      CellPredBlocksBodyType(owningActor_->getBodyType(), true, eng),
+    MapParse::parse(
+      CellPred::BlocksBodyType(owningActor_->getBodyType(), true, eng),
       blockers);
 
     if(eng.dice.oneIn(8)) {
@@ -1437,8 +1437,8 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   const Pos& closestEnemyPos = SpottedEnemiesPositions.at(0);
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(
-    CellPredBlocksBodyType(owningActor_->getBodyType(), false, eng), blockers);
+  MapParse::parse(
+    CellPred::BlocksBodyType(owningActor_->getBodyType(), false, eng), blockers);
 
   vector<Pos> line;
   eng.lineCalc->calcNewLine(actorPos, closestEnemyPos, true, 999, false, line);
@@ -1461,7 +1461,7 @@ bool PropFrenzied::tryResistOtherProp(const PropId_t id) const {
 
 void PropFrenzied::onStart() {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   owningActor_->getPropHandler().endAppliedProp(propBurning,   blockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockers);
@@ -1507,7 +1507,7 @@ bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 void PropBlind::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(
     propClairvoyant, visionBlockers);
 }
@@ -1563,7 +1563,7 @@ void PropParalyzed::onStart() {
 
 void PropFainted::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(
     propClairvoyant, visionBlockers);
 }
@@ -1578,7 +1578,7 @@ bool PropClairvoyant::shouldUpdatePlayerVisualWhenStartOrEnd() const {
 
 void PropClairvoyant::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBlind, visionBlockers);
 }
 
@@ -1587,7 +1587,7 @@ void PropFlared::onNewTurn() {
 
   if(turnsLeft_ == 0) {
     bool visionBlockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
     owningActor_->getPropHandler().tryApplyProp(
       new PropBurning(eng, propTurnsStd));
     owningActor_->getPropHandler().endAppliedProp(
@@ -1649,7 +1649,7 @@ bool PropRConfusion::tryResistOtherProp(const PropId_t id) const {
 
 void PropRConfusion::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused, visionBlockers);
 }
 
@@ -1659,7 +1659,7 @@ bool PropRFear::tryResistOtherProp(const PropId_t id) const {
 
 void PropRFear::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, visionBlockers);
 }
 
@@ -1669,7 +1669,7 @@ bool PropRFire::tryResistOtherProp(const PropId_t id) const {
 
 void PropRFire::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBurning, visionBlockers);
 }
 
@@ -1695,7 +1695,7 @@ bool PropRPoison::tryResistOtherProp(const PropId_t id) const {
 
 void PropRPoison::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 }
 
@@ -1705,7 +1705,7 @@ bool PropRSleep::tryResistOtherProp(const PropId_t id) const {
 
 void PropRSleep::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propFainted, visionBlockers);
 }
 

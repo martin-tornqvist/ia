@@ -117,8 +117,8 @@ void ActorFactory::summonMonsters(
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(
-    CellPredBlocksBodyType(bodyType_normal, true, eng), blockers);
+  MapParse::parse(
+    CellPred::BlocksBodyType(bodyType_normal, true, eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));

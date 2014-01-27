@@ -139,7 +139,7 @@ void MedicalBag::finishCurAction() {
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
       bool visionBlockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+      MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
       eng.player->getPropHandler().endAppliedProp(
         propInfected, visionBlockers);
     } break;

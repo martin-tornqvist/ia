@@ -9,7 +9,7 @@ public:
   static bool action(Monster& monster, const Pos& lairCell, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(engine), blockers);
+      MapParse::parse(CellPred::BlocksVision(engine), blockers);
       const bool HAS_LOS_TO_LAIR =
         engine.fov->checkCell(blockers, lairCell, monster.pos, true);
 
@@ -20,7 +20,7 @@ public:
         delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
         const Pos newPos = monster.pos + delta;
 
-        MapParser::parse(CellPredBlocksVision(engine), blockers);
+        MapParse::parse(CellPred::BlocksVision(engine), blockers);
         if(blockers[newPos.x][newPos.y]) {
           return false;
         } else {

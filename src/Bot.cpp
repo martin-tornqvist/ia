@@ -172,7 +172,7 @@ void Bot::findPathToNextStairs() {
 
   bool blockers[MAP_W][MAP_H];
   const BodyType_t playerBodyType = eng.player->getBodyType();
-  MapParser::parse(CellPredBlocksBodyType(playerBodyType, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(playerBodyType, false, eng),
                    blockers);
 
   //Consider all doors passable
@@ -184,7 +184,7 @@ void Bot::findPathToNextStairs() {
       }
     }
   }
-  eng.pathFinder->run(eng.player->pos, stairPos, blockers, currentPath_);
+  PathFind::run(eng.player->pos, stairPos, blockers, currentPath_, eng);
 //  assert(currentPath_.size() > 0);
 }
 

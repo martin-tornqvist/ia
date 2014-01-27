@@ -773,7 +773,7 @@ void Renderer::drawAscii() {
           currentDrw->color = clrRed;
         }
         if(eng.map->cells[x][y].isLight) {
-          if(f->isBodyTypePassable(bodyType_normal)) {
+          if(f->canBodyTypePass(bodyType_normal)) {
             currentDrw->isMarkedAsLit = true;
           }
         }
@@ -946,7 +946,7 @@ void Renderer::drawTiles() {
           currentDrw->color = clrRed;
         }
         if(eng.map->cells[x][y].isLight) {
-          if(f->isBodyTypePassable(bodyType_normal)) {
+          if(f->canBodyTypePass(bodyType_normal)) {
             currentDrw->isMarkedAsLit = true;
           }
         }

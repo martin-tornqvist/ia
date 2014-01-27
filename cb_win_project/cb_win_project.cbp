@@ -166,7 +166,6 @@
 		<Unit filename="../include/FeatureDoor.h" />
 		<Unit filename="../include/FeatureExaminable.h" />
 		<Unit filename="../include/FeatureFactory.h" />
-		<Unit filename="../include/FeatureGrave.h" />
 		<Unit filename="../include/FeatureLever.h" />
 		<Unit filename="../include/FeatureLiquid.h" />
 		<Unit filename="../include/FeatureLitDynamite.h" />
@@ -275,7 +274,6 @@
 		<Unit filename="../src/FeatureDoor.cpp" />
 		<Unit filename="../src/FeatureExaminable.cpp" />
 		<Unit filename="../src/FeatureFactory.cpp" />
-		<Unit filename="../src/FeatureGrave.cpp" />
 		<Unit filename="../src/FeatureLever.cpp" />
 		<Unit filename="../src/FeatureLiquid.cpp" />
 		<Unit filename="../src/FeatureLitDynamite.cpp" />

@@ -13,7 +13,6 @@
 #include "Map.h"
 #include "FeatureExaminable.h"
 #include "FeatureLiquid.h"
-#include "FeatureGrave.h"
 #include "FeatureWall.h"
 
 #ifdef DEMO_MODE
@@ -175,6 +174,12 @@ Feature* FeatureFactory::spawnFeatureAt(const Feature_t id, const Pos pos,
       Grave* grave = new Grave(id, pos, eng);
       replaceStaticFeatureAt(grave, pos);
       return grave;
+    }
+    case feature_stairsDown: {
+      assert(spawnData == NULL);
+      Stairs* stairs = new Stairs(id, pos, eng);
+      replaceStaticFeatureAt(stairs, pos);
+      return stairs;
     }
     case feature_stoneWall: {
       assert(spawnData == NULL);

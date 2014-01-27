@@ -194,7 +194,7 @@ void PotionOfRFire::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionOfAntidote::quaff_(Actor* const actor) {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   const bool IS_POISON_ENDED =
     actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 

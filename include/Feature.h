@@ -25,7 +25,7 @@ public:
 
   virtual void bump(Actor& actorBumping);
   virtual void newTurn();
-  virtual bool isBodyTypePassable(const BodyType_t bodyType) const;
+  virtual bool canBodyTypePass(const BodyType_t bodyType) const;
   virtual bool isVisionPassable() const;
   virtual bool isProjectilesPassable() const;
   virtual bool isSmokePassable() const;
@@ -114,6 +114,36 @@ protected:
 
   Tile_t goreTile_;
   char goreGlyph_;
+};
+
+class Grave: public FeatureStatic {
+public:
+  ~Grave() {}
+
+  string getDescr(const bool DEFINITE_ARTICLE) const override;
+
+  void setInscription(const string& str) {inscription_ = str;}
+
+  void bump(Actor& actorBumping) override;
+
+private:
+  string inscription_;
+
+  friend class FeatureFactory;
+  Grave(Feature_t id, Pos pos, Engine& engine) :
+    FeatureStatic(id, pos, engine) {}
+};
+
+class Stairs: public FeatureStatic {
+public:
+  ~Stairs() {}
+
+  void bump(Actor& actorBumping) override;
+
+private:
+  friend class FeatureFactory;
+  Stairs(Feature_t id, Pos pos, Engine& engine) :
+    FeatureStatic(id, pos, engine) {}
 };
 
 #endif

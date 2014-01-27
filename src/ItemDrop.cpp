@@ -53,7 +53,7 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(eng), blockers);
+      MapParse::parse(CellPred::BlocksVision(eng), blockers);
       if(eng.player->checkIfSeeActor(*curActor, blockers)) {
         eng.log->addMsg(
           "I see " + curActor->getNameThe() + " drop " + itemRef + ".");

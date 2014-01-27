@@ -208,7 +208,7 @@ SpellCastRetData SpellDarkbolt::cast_(
 bool SpellDarkbolt::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
@@ -259,7 +259,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
@@ -289,7 +289,7 @@ SpellCastRetData SpellMayhem::cast_(
           for(int dx = -1; dx <= 1; dx++) {
             const FeatureStatic* const f =
               eng.map->cells[x + dx][y + dy].featureStatic;
-            if(f->isBodyTypePassable(bodyType_normal)) {
+            if(f->canBodyTypePass(bodyType_normal)) {
               isAdjToWalkableCell = true;
             }
           }
@@ -339,7 +339,7 @@ SpellCastRetData SpellPestilence::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   const int RADI = 4;
@@ -602,7 +602,7 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
       eng.dice.oneIn(3) &&
       eng.player->getHp() < eng.player->getHpMax(true)) {
       bool visionBlockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+      MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
       eng.player->getPropHandler().endAppliedProp(
         propDiseased, visionBlockers);
       eng.player->restoreHp(999, true);
@@ -707,7 +707,7 @@ SpellCastRetData SpellTeleport::cast_(
 bool SpellTeleport::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers) &&
          monster->getHp() <= (monster->getHpMax(true) / 2) &&
          eng.dice.coinToss();
@@ -728,7 +728,7 @@ SpellCastRetData SpellKnockBack::cast_(
 bool SpellKnockBack::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
@@ -776,7 +776,7 @@ SpellCastRetData SpellEnfeeble::cast_(
 bool SpellEnfeeble::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
@@ -809,7 +809,7 @@ SpellCastRetData SpellDisease::cast_(
 bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
@@ -835,7 +835,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
                    blockers);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
@@ -884,7 +884,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers) ||
          (eng.dice.oneIn(20));
 }
@@ -923,7 +923,7 @@ bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->checkIfSeeActor(*(eng.player), blockers) &&
          eng.dice.oneIn(4);
 }

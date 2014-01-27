@@ -12,7 +12,7 @@ public:
     if(monster.deadState == actorDeadState_alive) {
 
       bool visionBlockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(engine), visionBlockers);
+      MapParse::parse(CellPred::BlocksVision(engine), visionBlockers);
 
       if(monster.checkIfSeeActor(*engine.player, visionBlockers)) {
         const int NR_ACTORS = engine.gameTime->getNrActors();
@@ -124,8 +124,8 @@ private:
     const int OLD_Y = self.pos.y;
 
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(
-      CellPredBlocksBodyType(self.getBodyType(), true, eng), blockers);
+    MapParse::parse(
+      CellPred::BlocksBodyType(self.getBodyType(), true, eng), blockers);
 
     for(int x = -1; x <= 1; x++) {
       for(int y = -1; y <= 1; y++) {

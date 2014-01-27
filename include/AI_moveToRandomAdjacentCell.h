@@ -15,8 +15,8 @@ public:
         monster.playerAwarenessCounter > 0) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(
-          CellPredBlocksBodyType(monster.getBodyType(), true, engine),
+        MapParse::parse(
+          CellPred::BlocksBodyType(monster.getBodyType(), true, engine),
           blockers);
 
         const Pos offset =

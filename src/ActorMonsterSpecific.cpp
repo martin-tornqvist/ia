@@ -228,7 +228,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
             trace << "Vortex: Player position: ";
             trace << playerPos.x << "," << playerPos.y << ")" << endl;
             bool visionBlockers[MAP_W][MAP_H];
-            MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+            MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
             if(checkIfSeeActor(*(eng.player), visionBlockers)) {
               trace << "Vortex: I am seeing the player" << endl;
               if(eng.player->checkIfSeeActor(*this, NULL)) {
@@ -290,7 +290,7 @@ bool Ghost::monsterSpecificOnActorTurn() {
         if(eng.dice.percentile() < 30) {
 
           bool blockers[MAP_W][MAP_H];
-          MapParser::parse(CellPredBlocksVision(eng), blockers);
+          MapParse::parse(CellPred::BlocksVision(eng), blockers);
           const bool PLAYER_SEES_ME =
             eng.player->checkIfSeeActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
@@ -390,11 +390,11 @@ bool Khephren::monsterSpecificOnActorTurn() {
       if(hasSummonedLocusts == false) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
         if(checkIfSeeActor(*(eng.player), blockers)) {
-          MapParser::parse(
-            CellPredBlocksBodyType(bodyType_flying, true, eng), blockers);
+          MapParse::parse(
+            CellPred::BlocksBodyType(bodyType_flying, true, eng), blockers);
 
           const int SPAWN_AFTER_X =
             eng.player->pos.x + FOV_STD_RADI_INT + 1;
@@ -470,12 +470,12 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
       if(hasSummonedJenkin == false) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
         if(checkIfSeeActor(*(eng.player), blockers)) {
 
-          MapParser::parse(
-            CellPredBlocksBodyType(bodyType_normal, true, eng), blockers);
+          MapParse::parse(
+            CellPred::BlocksBodyType(bodyType_normal, true, eng), blockers);
 
           vector<Pos> line;
           eng.lineCalc->calcNewLine(pos, eng.player->pos, true, 9999,
@@ -600,7 +600,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng),
+        MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng),
                          blockers);
 
         Pos spawnPos;
@@ -636,7 +636,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng),
+        MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng),
                          blockers);
 
         Pos spawnPos;
@@ -752,7 +752,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
       if(hasSummonedTombLegions == false) {
 
         bool visionBlockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+        MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
         if(checkIfSeeActor(*(eng.player), visionBlockers)) {
           eng.log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");

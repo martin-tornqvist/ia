@@ -87,13 +87,13 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
   material_ = doorMaterial_wood;
 }
 
-bool Door::isBodyTypePassable(const BodyType_t bodyType) const {
+bool Door::canBodyTypePass(const BodyType_t bodyType) const {
   switch(bodyType) {
     case bodyType_normal:     return isOpen_;   break;
     case bodyType_ethereal:   return true;      break;
     case bodyType_ooze:       return true;      break;
     case bodyType_flying:     return isOpen_;   break;
-    case endOfActorBodyTypes: return isOpen_;   break;
+    case endOfBodyTypes: return isOpen_;   break;
   }
   return false;
 }
@@ -309,7 +309,7 @@ void Door::bash_(Actor& actorTrying) {
         }
       } else {
         bool blockers[MAP_W][MAP_H];
-        MapParser::parse(CellPredBlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(eng), blockers);
         if(eng.player->checkIfSeeActor(actorTrying, blockers)) {
           eng.log->addMsg("The door crashes open!");
         } else if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
@@ -330,7 +330,7 @@ void Door::tryClose(Actor* actorTrying) {
     actorTrying->getPropHandler().allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = eng.map->playerVision[pos_.x][pos_.y];
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
@@ -372,7 +372,7 @@ void Door::tryClose(Actor* actorTrying) {
   if(isClosable) {
     const Cell& doorCell = eng.map->cells[pos_.x][pos_.y];
     const bool IS_BLOCKED =
-      CellPredBlocksBodyType(bodyType_normal, true, eng).check(doorCell) ||
+      CellPred::BlocksBodyType(bodyType_normal, true, eng).check(doorCell) ||
       doorCell.item != NULL;
     if(IS_BLOCKED) {
       isClosable = false;
@@ -445,7 +445,7 @@ void Door::tryOpen(Actor* actorTrying) {
     actorTrying->getPropHandler().allowSee() == false;
   const bool PLAYER_SEE_DOOR = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : eng.player->checkIfSeeActor(*actorTrying, blockers);

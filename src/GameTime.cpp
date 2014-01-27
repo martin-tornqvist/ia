@@ -162,7 +162,7 @@ void GameTime::runStandardTurnEvents() {
   int loopSize = actors_.size();
 
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
   int regenSpiEveryNTurns = 11;
 

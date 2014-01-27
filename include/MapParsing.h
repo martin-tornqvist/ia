@@ -5,46 +5,41 @@
 
 #include "CommonTypes.h"
 #include "Config.h"
+#include "FeatureData.h"
 
 class Engine;
 struct Cell;
 class FeatureMob;
 class Actor;
 
-enum CellPredCheckEntity_t {
-  cellPredCheckEntityActor,
-  cellPredCheckEntityFeatureStatic,
-  cellPredCheckEntityFeatureMob
-};
+namespace CellPred {
 
 class CellPred {
 public:
-  virtual bool isCheckingCells()          const = 0;
-  virtual bool isCheckingMobFeatures()    const = 0;
-  virtual bool isCheckingActors()         const = 0;
-  virtual bool check(const Cell& c)       const = 0;
-  virtual bool check(const FeatureMob& f) const = 0;
-  virtual bool check(const Actor& a)      const = 0;
+  virtual bool isCheckingCells()          const {return false;}
+  virtual bool isCheckingMobFeatures()    const {return false;}
+  virtual bool isCheckingActors()         const {return false;}
+  virtual bool check(const Cell& c)       const {(void)c; return false;}
+  virtual bool check(const FeatureMob& f) const {(void)f; return false;}
+  virtual bool check(const Actor& a)      const {(void)a; return false;}
   const Engine& eng;
 protected:
   CellPred(Engine& engine) : eng(engine) {}
+  bool canWalkAt(const int X, const int Y) const;
 };
 
-class CellPredBlocksVision : public CellPred {
+class BlocksVision : public CellPred {
 public:
-  CellPredBlocksVision(Engine& engine) : CellPred(engine) {}
+  BlocksVision(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
-  bool isCheckingActors()         const override {return false;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
-  bool check(const Actor& a)      const override {(void)a; return false;}
 };
 
-class CellPredBlocksBodyType : public CellPred {
+class BlocksBodyType : public CellPred {
 public:
-  CellPredBlocksBodyType(BodyType_t bodyType, bool isActorsBlocking,
-                         Engine& engine) :
+  BlocksBodyType(BodyType_t bodyType, bool isActorsBlocking, Engine& engine) :
     CellPred(engine), bodyType_(bodyType),
     IS_ACTORS_BLOCKING_(isActorsBlocking) {}
   bool isCheckingCells()          const override {return true;}
@@ -57,87 +52,111 @@ public:
   const bool IS_ACTORS_BLOCKING_;
 };
 
-class CellPredBlocksProjectiles : public CellPred {
+class BlocksProjectiles : public CellPred {
 public:
-  CellPredBlocksProjectiles(Engine& engine) : CellPred(engine) {}
+  BlocksProjectiles(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
-  bool isCheckingActors()         const override {return false;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
-  bool check(const Actor& a)      const override {(void)a; return false;}
 };
 
-class CellPredLivingActorsAdjToPos : public CellPred {
+class LivingActorsAdjToPos : public CellPred {
 public:
-  CellPredLivingActorsAdjToPos(const Pos& pos, Engine& engine) :
+  LivingActorsAdjToPos(const Pos& pos, Engine& engine) :
     CellPred(engine), pos_(pos) {}
-  bool isCheckingCells()          const override {return false;}
-  bool isCheckingMobFeatures()    const override {return false;}
   bool isCheckingActors()         const override {return true;}
-  bool check(const Cell& c)       const override {(void)c; return false;}
-  bool check(const FeatureMob& f) const override {(void)f; return false;}
   bool check(const Actor& a)      const override;
   const Pos& pos_;
 };
 
-class CellPredBlocksItems : public CellPred {
+class BlocksItems : public CellPred {
 public:
-  CellPredBlocksItems(Engine& engine) : CellPred(engine) {}
+  BlocksItems(Engine& engine) : CellPred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
-  bool isCheckingActors()         const override {return false;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
-  bool check(const Actor& a)      const override {(void)a; return false;}
 };
+
+//class Corridor : public CellPred {
+//public:
+//  Corridor(Engine& engine) : CellPred(engine) {}
+//  bool isCheckingCells()          const override {return true;}
+//  bool check(const Cell& c)       const override;
+//};
+
+// E.g. ##
+//      #.
+//      ##
+class Nook : public CellPred {
+public:
+  Nook(Engine& engine) : CellPred(engine) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+};
+
+class IsAnyOfFeatures : public CellPred {
+public:
+  IsAnyOfFeatures(Engine& engine, const vector<Feature_t>& features) :
+    CellPred(engine), features_(features) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  vector<Feature_t> features_;
+};
+
+class AllAdjIsAnyOfFeatures : public CellPred {
+public:
+  AllAdjIsAnyOfFeatures(Engine& engine, const vector<Feature_t>& features) :
+    CellPred(engine), features_(features) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  vector<Feature_t> features_;
+};
+
+} //CellPred
 
 enum MapParseWriteRule {
   mapParseWriteAlways, mapParseWriteOnlyTrue
 };
 
-class MapParser {
-public:
-  MapParser() {};
+namespace MapParse {
 
-  static void parse(const CellPred& predicate,
-                    bool arrayOut[MAP_W][MAP_H],
-                    const MapParseWriteRule writeRule = mapParseWriteAlways);
-};
+void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
+           const MapParseWriteRule writeRule = mapParseWriteAlways);
 
-//Function object for sorting stl containers by distance to origin
+void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
+                                bool out[MAP_W][MAP_H],
+                                const Range& distIntervall);
+
+void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
+
+} //MapParse
+
+//Function object for sorting STL containers by distance to origin
 struct IsCloserToOrigin {
 public:
-  IsCloserToOrigin(const Pos& c, const Engine& engine) :
-    c_(c), eng(engine) {
-  }
+  IsCloserToOrigin(const Pos& c, const Engine& engine) : c_(c), eng(engine) {}
   bool operator()(const Pos& c1, const Pos& c2);
   Pos c_;
   const Engine& eng;
 };
 
-class FloodFill {
-public:
-  FloodFill(Engine& engine) : eng(engine) {}
+namespace FloodFill {
 
-  void run(
-    const Pos& origin, bool blockers[MAP_W][MAP_H],
-    int values[MAP_W][MAP_H], int travelLimit,
-    const Pos& target);
+void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
+         int values[MAP_W][MAP_H], int travelLimit, const Pos& target,
+         Engine& eng);
 
-private:
-  Engine& eng;
-};
+} //FloodFill
 
-class PathFinder {
-public:
-  PathFinder(Engine& engine) : eng(engine) {}
+namespace PathFind {
 
-  void run(const Pos& origin, const Pos& target,
-           bool blockers[MAP_W][MAP_H],
-           vector<Pos>& vectorRef) const;
-private:
-  Engine& eng;
-};
+void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
+         vector<Pos>& vectorRef, Engine& eng);
+
+} //PathFind
 
 #endif

@@ -109,7 +109,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
   bool visionBlockers[MAP_W][MAP_H];
 
   if(IS_SELF_PLAYER == false) {
-    MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   }
 
   const int NR_ACTORS = eng.gameTime->getNrActors();
@@ -169,7 +169,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(getBodyType(), true, eng), blockers);
+  MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos CELL = freeCells.at(eng.dice(1, freeCells.size()) - 1);

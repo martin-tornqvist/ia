@@ -33,7 +33,6 @@ class ItemDataHandler;
 class Map;
 class Log;
 class Phrases;
-class PathFinder;
 class Fov;
 class MapPatterns;
 class SoundEmitter;
@@ -96,7 +95,6 @@ class Gods;
 class Credits;
 class PropDataHandler;
 class SdlWrapper;
-class FloodFill;
 class Hide;
 
 class Player;
@@ -127,7 +125,6 @@ public:
   Map* map;
   Log* log;
   Phrases* phrases;
-  PathFinder* pathFinder;
   Fov* fov;
   MapPatterns* mapPatterns;
   SoundEmitter* soundEmitter;
@@ -190,7 +187,6 @@ public:
   Credits* credits;
   PropDataHandler* propDataHandler;
   SdlWrapper* sdlWrapper;
-  FloodFill* floodFill;
   Hide* hide;
 
   Player* player;

@@ -12,7 +12,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(
   const vector<Room*>& rooms) const {
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
   //Put traps in non-plain rooms

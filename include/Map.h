@@ -19,7 +19,7 @@ class FeatureStatic;
 
 struct Cell {
   Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
-    isDark(false), item(NULL), featureStatic(NULL) {
+    isDark(false), item(NULL), featureStatic(NULL), pos(Pos(-1, -1)) {
     playerVisualMemoryAscii.clear();
     playerVisualMemoryTiles.clear();
   }
@@ -34,6 +34,7 @@ struct Cell {
   FeatureStatic* featureStatic;
   CellRenderDataAscii playerVisualMemoryAscii;
   CellRenderDataTiles playerVisualMemoryTiles;
+  Pos pos;
 };
 
 class Map {

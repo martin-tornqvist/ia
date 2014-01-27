@@ -54,10 +54,10 @@ bool MapGenCaveLvl::run_() {
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
+                  blockers);
   int floodFill[MAP_W][MAP_H];
-  eng.floodFill->run(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
+  FloodFill::run(playerPos, blockers, floodFill, 99999, Pos(-1, -1), eng);
   vector<PosAndVal> floodFillVector;
   for(unsigned int y = 1; y < MAP_H - 1; y++) {
     for(unsigned int x = 1; x < MAP_W - 1; x++) {
@@ -71,7 +71,7 @@ bool MapGenCaveLvl::run_() {
   std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
   const unsigned int STAIR_ELEMENT =
     eng.dice.range((floodFillVector.size() * 4) / 5,
-                    floodFillVector.size() - 1);
+                   floodFillVector.size() - 1);
   eng.featureFactory->spawnFeatureAt(
     feature_stairsDown, floodFillVector.at(STAIR_ELEMENT).pos);
   eng.populateMonsters->populateCaveLevel();

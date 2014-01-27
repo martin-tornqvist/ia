@@ -15,7 +15,7 @@ public:
         for(int y = 1; y < MAP_H - 1; y++) {
           for(int x = 1; x < MAP_W - 1; x++) {
             const Feature* const f = engine.map->cells[x][y].featureStatic;
-            if(f->isBodyTypePassable(monster.getBodyType()) == false) {
+            if(f->canBodyTypePass(monster.getBodyType()) == false) {
 
               if(f->getId() == feature_door) {
 
@@ -37,11 +37,10 @@ public:
         }
 
         //Append living adjacent actors to the blocking array
-        MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
-                         blockers, mapParseWriteOnlyTrue);
+        MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
+                        blockers, mapParseWriteOnlyTrue);
 
-        engine.pathFinder->run(
-          monster.pos, engine.player->pos, blockers, path);
+        PathFind::run(monster.pos, engine.player->pos, blockers, path, engine);
       } else {
         path.resize(0);
       }

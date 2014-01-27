@@ -278,7 +278,7 @@ bool Monster::tryAttack(Actor& defender) {
     if(playerAwarenessCounter > 0 || leader == eng.player) {
 
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(eng), blockers);
+      MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
       if(checkIfSeeActor(*eng.player, blockers)) {
         AttackOpport opport = getAttackOpport(defender);

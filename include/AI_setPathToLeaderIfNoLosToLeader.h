@@ -12,7 +12,7 @@ public:
       if(leader != NULL) {
         if(leader->deadState == actorDeadState_alive) {
           bool blockers[MAP_W][MAP_H];
-          MapParser::parse(CellPredBlocksVision(engine), blockers);
+          MapParse::parse(CellPred::BlocksVision(engine), blockers);
 
           if(
             engine.fov->checkCell(
@@ -21,13 +21,13 @@ public:
             return;
           }
 
-          MapParser::parse(
-            CellPredBlocksBodyType(monster.getBodyType(), false, engine),
-            blockers);
-          MapParser::parse(CellPredLivingActorsAdjToPos(monster.pos, engine),
-                           blockers, mapParseWriteOnlyTrue);
-          engine.pathFinder->run(
-            monster.pos, leader->pos, blockers, path);
+          MapParse::parse(CellPred::BlocksBodyType(monster.getBodyType(), false,
+                                                 engine), blockers);
+
+          MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
+                          blockers, mapParseWriteOnlyTrue);
+
+          PathFind::run(monster.pos, leader->pos, blockers, path, engine);
           return;
         }
       }

@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "GameTime.h"
+#include "DungeonClimb.h"
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(Feature_t id, Pos pos, Engine& engine,
@@ -17,7 +18,7 @@ Feature::Feature(Feature_t id, Pos pos, Engine& engine,
 }
 
 void Feature::bump(Actor& actorBumping) {
-  if(isBodyTypePassable(actorBumping.getBodyType()) == false) {
+  if(canBodyTypePass(actorBumping.getBodyType()) == false) {
     if(&actorBumping == eng.player) {
       if(eng.player->getPropHandler().allowSee()) {
         eng.log->addMsg(data_->messageOnPlayerBlocked);
@@ -36,8 +37,8 @@ void Feature::newTurn() {
 
 }
 
-bool Feature::isBodyTypePassable(const BodyType_t bodyType) const {
-  return data_->isBodyTypePassable[bodyType];
+bool Feature::canBodyTypePass(const BodyType_t bodyType) const {
+  return data_->canBodyTypePass[bodyType];
 }
 
 bool Feature::isVisionPassable() const {
@@ -142,7 +143,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   if(IS_PLAYER) {
     const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
-    const bool IS_BLOCKING = isBodyTypePassable(bodyType_normal) == false;
+    const bool IS_BLOCKING = canBodyTypePass(bodyType_normal) == false;
     if(IS_BLOCKING) {
       eng.log->addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
@@ -165,7 +166,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
     }
   } else {
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    MapParse::parse(CellPred::BlocksVision(eng), blockers);
     const bool PLAYER_SEE_TRYER =
       eng.player->checkIfSeeActor(actorTrying, blockers);
 
@@ -195,56 +196,22 @@ void FeatureStatic::setGoreIfPossible() {
   if(data_->canHaveGore) {
     const int ROLL_GLYPH = eng.dice(1, 4);
     switch(ROLL_GLYPH) {
-      case 1: {
-        goreGlyph_ = ',';
-      } break;
-
-      case 2: {
-        goreGlyph_ = '`';
-      } break;
-
-      case 3: {
-        goreGlyph_ = 39;
-      } break;
-
-      case 4: {
-        goreGlyph_ = ';';
-      } break;
+      case 1: {goreGlyph_ = ',';} break;
+      case 2: {goreGlyph_ = '`';} break;
+      case 3: {goreGlyph_ = 39;}  break;
+      case 4: {goreGlyph_ = ';';} break;
     }
 
     const int ROLL_TILE = eng.dice(1, 8);
     switch(ROLL_TILE) {
-      case 1: {
-        goreTile_ = tile_gore1;
-      } break;
-
-      case 2: {
-        goreTile_ = tile_gore2;
-      } break;
-
-      case 3: {
-        goreTile_ = tile_gore3;
-      } break;
-
-      case 4: {
-        goreTile_ = tile_gore4;
-      } break;
-
-      case 5: {
-        goreTile_ = tile_gore5;
-      } break;
-
-      case 6: {
-        goreTile_ = tile_gore6;
-      } break;
-
-      case 7: {
-        goreTile_ = tile_gore7;
-      } break;
-
-      case 8: {
-        goreTile_ = tile_gore8;
-      } break;
+      case 1: {goreTile_ = tile_gore1;} break;
+      case 2: {goreTile_ = tile_gore2;} break;
+      case 3: {goreTile_ = tile_gore3;} break;
+      case 4: {goreTile_ = tile_gore4;} break;
+      case 5: {goreTile_ = tile_gore5;} break;
+      case 6: {goreTile_ = tile_gore6;} break;
+      case 7: {goreTile_ = tile_gore7;} break;
+      case 8: {goreTile_ = tile_gore8;} break;
     }
   }
 }
@@ -254,5 +221,28 @@ string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
   } else {
     return DEFINITE_ARTICLE ? "the blood and gore" : "blood and gore";
+  }
+}
+
+//---------------------------------------------------------- GRAVE
+string Grave::getDescr(const bool DEFINITE_ARTICLE) const {
+  return (DEFINITE_ARTICLE ?
+          data_->name_the :
+          data_->name_a) + "; " + inscription_;
+}
+
+void Grave::bump(Actor& actorBumping) {
+  if(&actorBumping == eng.player) {
+    eng.log->addMsg(inscription_);
+  }
+}
+
+//---------------------------------------------------------- STAIRS
+void Stairs::bump(Actor& actorBumping) {
+  if(&actorBumping == eng.player) {
+    eng.player->pos = pos_;
+    eng.log->clearLog();
+    trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
+    eng.dungeonClimb->tryUseDownStairs();
   }
 }

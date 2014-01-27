@@ -239,7 +239,7 @@ void MapGen::makeStraightPathByPathfinder(
   bool blockers[MAP_W][MAP_H];
   eng.basicUtils->resetArray(blockers, false);
   vector<Pos> path;
-  eng.pathFinder->run(origin, target, blockers, path);
+  PathFind::run(origin, target, blockers, path, eng);
   const int PATH_SIZE = path.size();
   for(int i = 0; i < PATH_SIZE; i++) {
     const Pos c = path.at(i);

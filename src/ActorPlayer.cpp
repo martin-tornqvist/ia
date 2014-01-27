@@ -618,7 +618,7 @@ void Player::setTempShockFromFeatures() {
 
 bool Player::isStandingInOpenSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
@@ -633,7 +633,7 @@ bool Player::isStandingInOpenSpace() const {
 
 bool Player::isStandingInCrampedSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
@@ -1151,14 +1151,14 @@ void Player::moveDir(Dir_t dir) {
       //Blocking mobile or static features?
       Cell& cell = eng.map->cells[dest.x][dest.y];
       bool isFeaturesAllowMove =
-        cell.featureStatic->isBodyTypePassable(getBodyType());
+        cell.featureStatic->canBodyTypePass(getBodyType());
 
       vector<FeatureMob*> featureMobs;
       eng.gameTime->getFeatureMobsAtPos(dest, featureMobs);
 
       if(isFeaturesAllowMove) {
         for(FeatureMob * m : featureMobs) {
-          if(m->isBodyTypePassable(getBodyType()) == false) {
+          if(m->canBodyTypePass(getBodyType()) == false) {
             isFeaturesAllowMove = false;
             break;
           }
@@ -1320,7 +1320,7 @@ void Player::updateFov() {
 
   if(propHandler_->allowSee()) {
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksVision(eng), blockers);
+    MapParse::parse(CellPred::BlocksVision(eng), blockers);
     eng.fov->runPlayerFov(blockers, pos);
     eng.map->cells[pos.x][pos.y].isSeenByPlayer = true;
   }
@@ -1334,7 +1334,7 @@ void Player::updateFov() {
     const int Y1 = min(MAP_H - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
 
     bool blockers[MAP_W][MAP_H];
-    MapParser::parse(CellPredBlocksBodyType(bodyType_flying, false, eng),
+    MapParse::parse(CellPred::BlocksBodyType(bodyType_flying, false, eng),
                      blockers);
 
     for(int y = Y0; y <= Y1; y++) {
@@ -1346,8 +1346,8 @@ void Player::updateFov() {
     }
 
     int floodFillValues[MAP_W][MAP_H];
-    eng.floodFill->run(
-      pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT, Pos(-1, -1));
+    FloodFill::run(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT,
+                   Pos(-1, -1), eng);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1380,10 +1380,10 @@ void Player::updateFov() {
 
 void Player::FOVhack() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
   for(int y = 0; y < MAP_H; y++) {

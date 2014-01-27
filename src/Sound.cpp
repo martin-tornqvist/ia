@@ -24,13 +24,13 @@ void SoundEmitter::emitSound(Sound snd) {
     for(int x = MAP_W - 1; x >= 0; x--) {
       f = eng.map->cells[x][y].featureStatic;
       const bool SOUND_CAN_PASS_CELL =
-        f->isBodyTypePassable(bodyType_ooze) || f->isBottomless();
+        f->canBodyTypePass(bodyType_ooze) || f->isBottomless();
       blockers[x][y] = SOUND_CAN_PASS_CELL == false;
     }
   }
   int floodFill[MAP_W][MAP_H];
   const Pos& origin = snd.getOrigin();
-  eng.floodFill->run(origin, blockers, floodFill, 999, Pos(-1, -1));
+  FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1), eng);
   floodFill[origin.x][origin.y] = 0;
 
   const int NR_ACTORS = eng.gameTime->getNrActors();

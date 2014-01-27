@@ -5,26 +5,26 @@
 
 class AI_setPathToLairIfNoLosToLair {
 public:
-  static void learn(Monster& monster, vector<Pos>& path,
-                    const Pos& lairCell, Engine& engine) {
+  static void learn(Monster& monster, vector<Pos>& path, const Pos& lairCell,
+                    Engine& eng) {
 
     if(monster.deadState == actorDeadState_alive) {
 
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksVision(engine), blockers);
+      MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
-      if(engine.fov->checkCell(blockers, lairCell, monster.pos, true)) {
+      if(eng.fov->checkCell(blockers, lairCell, monster.pos, true)) {
         path.resize(0);
         return;
       }
 
-      MapParser::parse(
-        CellPredBlocksBodyType(monster.getBodyType(), false, engine),
-        blockers);
-      MapParser::parse(
-        CellPredLivingActorsAdjToPos(monster.pos, engine),
-        blockers, mapParseWriteOnlyTrue);
-      engine.pathFinder->run(monster.pos, lairCell, blockers, path);
+      MapParse::parse(
+        CellPred::BlocksBodyType(monster.getBodyType(), false, eng), blockers);
+
+      MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, eng),
+                      blockers, mapParseWriteOnlyTrue);
+
+      PathFind::run(monster.pos, lairCell, blockers, path, eng);
       return;
     }
 

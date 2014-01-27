@@ -150,10 +150,8 @@ void Engine::initGame() {
   map = new Map(*this);
 
   // ------- INITIALIZATIONS WHERE ORDER IS NOT IMPORTANT -------
-  floodFill = new FloodFill(*this);
   marker = new Marker(*this);
   log = new Log(*this);
-  pathFinder = new PathFinder(*this);
   fov = new Fov(*this);
   soundEmitter = new SoundEmitter(*this);
   dungeonMaster = new DungeonMaster(*this);
@@ -208,7 +206,6 @@ void Engine::cleanupGame() {
   delete playerVisualMemory;
   delete itemDataHandler;
   delete log;
-  delete pathFinder;
   delete fov;
   delete mapPatterns;
   delete soundEmitter;
@@ -263,7 +260,6 @@ void Engine::cleanupGame() {
   delete gods;
   delete credits;
   delete propDataHandler;
-  delete floodFill;
   delete hide;
 
   delete marker;

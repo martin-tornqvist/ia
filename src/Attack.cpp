@@ -164,7 +164,7 @@ RangedAttackData::RangedAttackData(
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
+      MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }
@@ -257,7 +257,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParser::parse(CellPredBlocksProjectiles(eng), blockers);
+      MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }

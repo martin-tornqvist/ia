@@ -146,6 +146,7 @@ private:
 
   void decorate();
 
+  void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const;
   Pos placeStairs();
 
 //  void makeLevers();
@@ -158,8 +159,6 @@ private:
 
 //  vector<Room*> rooms_;
   void deleteAndRemoveRoomFromList(Room* const room);
-
-  bool forbiddenStairCellsGlobal[MAP_W][MAP_H];
 };
 
 struct Region {

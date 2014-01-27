@@ -143,7 +143,7 @@ bool RoomThemeMaker::isThemeAllowed(
 
 void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
 
 //  if(room.roomTheme == roomTheme_dungeon) {}
@@ -478,7 +478,7 @@ void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker: Trying to set non-plain themes ";
   trace << "for some rooms" << endl;
   bool blockers[MAP_W][MAP_H];
-  MapParser::parse(CellPredBlocksBodyType(bodyType_normal, false, eng),
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
                    blockers);
   const int NR_TRIES_TO_ASSIGN = 100;
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {

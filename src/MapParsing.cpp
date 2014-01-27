@@ -8,53 +8,160 @@
 #include "GameTime.h"
 
 //------------------------------------------------------------ CELL PREDICATES
-bool CellPredBlocksVision::check(const Cell& c)  const {
+namespace CellPred {
+
+bool CellPred::canWalkAt(const int X, const int Y) const {
+  return eng.map->cells[X][Y].featureStatic->canBodyTypePass(bodyType_normal);
+}
+
+bool BlocksVision::check(const Cell& c)  const {
   return c.featureStatic->isVisionPassable() == false;
 }
 
-bool CellPredBlocksVision::check(const FeatureMob& f) const {
+bool BlocksVision::check(const FeatureMob& f) const {
   return f.isVisionPassable() == false;
 }
 
-bool CellPredBlocksBodyType::check(const Cell& c) const {
-  return c.featureStatic->isBodyTypePassable(bodyType_) == false;
+bool BlocksBodyType::check(const Cell& c) const {
+  return c.featureStatic->canBodyTypePass(bodyType_) == false;
 }
 
-bool CellPredBlocksBodyType::check(const FeatureMob& f) const {
-  return f.isBodyTypePassable(bodyType_) == false;
+bool BlocksBodyType::check(const FeatureMob& f) const {
+  return f.canBodyTypePass(bodyType_) == false;
 }
 
-bool CellPredBlocksBodyType::check(const Actor& a) const {
+bool BlocksBodyType::check(const Actor& a) const {
   return a.deadState == actorDeadState_alive;
 }
 
-bool CellPredBlocksProjectiles::check(const Cell& c)  const {
+bool BlocksProjectiles::check(const Cell& c)  const {
   return c.featureStatic->isProjectilesPassable() == false;
 }
 
-bool CellPredBlocksProjectiles::check(const FeatureMob& f)  const {
+bool BlocksProjectiles::check(const FeatureMob& f)  const {
   return f.isProjectilesPassable() == false;
 }
 
-bool CellPredLivingActorsAdjToPos::check(const Actor& a) const {
+bool LivingActorsAdjToPos::check(const Actor& a) const {
   if(a.deadState != actorDeadState_alive) {
     return false;
   }
   return eng.basicUtils->isPosAdj(pos_, a.pos, true);
 }
 
-bool CellPredBlocksItems::check(const Cell& c)  const {
+bool BlocksItems::check(const Cell& c)  const {
   return c.featureStatic->canHaveItem() == false;
 }
 
-bool CellPredBlocksItems::check(const FeatureMob& f) const {
+bool BlocksItems::check(const FeatureMob& f) const {
   return f.canHaveItem() == false;
 }
 
-//------------------------------------------------------------ MAP PARSER
-void MapParser::parse(
-  const CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
-  const MapParseWriteRule writeRule) {
+//bool Corridor::check(const Cell& c) const {
+//  const int X = c.pos.x;
+//  const int Y = c.pos.y;
+//
+//  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+//
+//  const bool IS_HOR_COR = canWalkAt(X,     Y - 1) == false &&
+//                          canWalkAt(X,     Y)              &&
+//                          canWalkAt(X,     Y + 1) == false &&
+//                          canWalkAt(X - 1, Y)              &&
+//                          canWalkAt(X + 1, Y);
+//
+//  const bool IS_VER_COR = canWalkAt(X - 1, Y) == false &&
+//                          canWalkAt(X,     Y)          &&
+//                          canWalkAt(X + 1, Y) == false &&
+//                          canWalkAt(X,     Y - 1)      &&
+//                          canWalkAt(X,     Y + 1);
+//
+//  return IS_HOR_COR != IS_VER_COR;
+//}
+
+bool Nook::check(const Cell& c) const {
+  const int X = c.pos.x;
+  const int Y = c.pos.y;
+
+  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+
+  const bool C  = canWalkAt(X    , Y);
+  const bool E  = canWalkAt(X + 1, Y);
+  const bool W  = canWalkAt(X - 1, Y);
+  const bool N  = canWalkAt(X,     Y - 1);
+  const bool S  = canWalkAt(X,     Y + 1);
+  const bool NE = canWalkAt(X + 1, Y - 1);
+  const bool NW = canWalkAt(X - 1, Y - 1);
+  const bool SE = canWalkAt(X + 1, Y + 1);
+  const bool SW = canWalkAt(X - 1, Y + 1);
+
+  if(C == false) {return false;}
+
+  //Horizontal nook
+  if(N == false && S == false) {
+    // ##
+    // #..
+    // ##
+    if(NW == false && W == false && SW == false && E) {return true;}
+
+    //  ##
+    // ..#
+    //  ##
+    if(NE == false && E == false && SE == false && W) {return true;}
+  }
+
+  //Vertical nook
+  if(E == false && W == false) {
+    // ###
+    // #.#
+    //  .
+    if(NW == false && N == false && NE == false && S) {return true;}
+
+    //  .
+    // #.#
+    // ###
+    if(SW == false && S == false && SE == false && N) {return true;}
+  }
+  return false;
+}
+
+bool IsAnyOfFeatures::check(const Cell& c) const {
+  for(Feature_t f : features_) {if(f == c.featureStatic->getId()) return true;}
+  return false;
+}
+
+bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
+  const int X = c.pos.x;
+  const int Y = c.pos.y;
+
+  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      const Feature_t curId =
+        eng.map->cells[X + dx][Y + dy].featureStatic->getId();
+
+      bool isMatch = false;
+      for(Feature_t f : features_) {
+        if(f == curId) {
+          isMatch = true;
+          break;
+        }
+      }
+
+      if(isMatch == false) return false;
+    }
+  }
+
+  return true;
+}
+
+} //CellPred
+
+//------------------------------------------------------------ MAP PARSE
+namespace MapParse {
+
+void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
+           const MapParseWriteRule writeRule) {
 
   assert(predicate.isCheckingCells()       == true ||
          predicate.isCheckingMobFeatures() == true ||
@@ -67,7 +174,7 @@ void MapParser::parse(
   if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        const Cell& c       = eng.map->cells[x][y];
+        const Cell& c = eng.map->cells[x][y];
         const bool IS_MATCH = predicate.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {
           arrayOut[x][y] = IS_MATCH;
@@ -80,7 +187,7 @@ void MapParser::parse(
     const int NR_MOB_FEATURES = eng.gameTime->getNrFeatureMobs();
     for(int i = 0; i < NR_MOB_FEATURES; i++) {
       const FeatureMob& f = eng.gameTime->getFeatureMobAtElement(i);
-      const Pos& p        = f.getPos();
+      const Pos& p = f.getPos();
       const bool IS_MATCH = predicate.check(f);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = arrayOut[p.x][p.y];
@@ -92,8 +199,8 @@ void MapParser::parse(
   if(predicate.isCheckingActors()) {
     const int NR_ACTORS = eng.gameTime->getNrActors();
     for(int i = 0; i < NR_ACTORS; i++) {
-      const Actor& a      = eng.gameTime->getActorAtElement(i);
-      const Pos& p        = a.pos;
+      const Actor& a  = eng.gameTime->getActorAtElement(i);
+      const Pos& p    = a.pos;
       const bool IS_MATCH = predicate.check(a);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = arrayOut[p.x][p.y];
@@ -103,6 +210,54 @@ void MapParser::parse(
   }
 }
 
+void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
+                                bool out[MAP_W][MAP_H],
+                                const Range& distIntervall) {
+
+  assert(in != out);
+
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      out[x][y] = false;
+    }
+  }
+
+  for(int yOuter = 0; yOuter < MAP_H; yOuter++) {
+    for(int xOuter = 0; xOuter < MAP_W; xOuter++) {
+      if(out[xOuter][yOuter] == false) {
+        for(int d = distIntervall.lower; d <= distIntervall.upper; d++) {
+          Pos x0y0(max(0,         xOuter - d), max(0,         yOuter - d));
+          Pos x1y1(min(MAP_W - 1, xOuter + d), min(MAP_H - 1, yOuter + d));
+
+          for(int x = x0y0.x; x <= x1y1.x; x++) {
+            if(in[x][x0y0.y] || in[x][x1y1.y]) {
+              out[xOuter][yOuter] = true;
+              break;
+            }
+          }
+          for(int y = x0y0.y; y <= x1y1.y; y++) {
+            if(in[x0y0.x][y] || in[x1y1.x][y]) {
+              out[xOuter][yOuter] = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      if(append[x][y]) base[x][y] = true;
+    }
+  }
+}
+
+} //MapParse
+
+//------------------------------------------------------------ FUNCT OBJECT
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
   const int chebDist1 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
   const int chebDist2 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
@@ -110,9 +265,11 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 }
 
 //------------------------------------------------------------ FLOOD FILL
-void FloodFill::run(
-  const Pos& origin, bool blockers[MAP_W][MAP_H],
-  int values[MAP_W][MAP_H], int travelLimit, const Pos& target) {
+namespace FloodFill {
+
+void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
+         int values[MAP_W][MAP_H], int travelLimit, const Pos& target,
+         Engine& eng) {
 
   eng.basicUtils->resetArray(values);
 
@@ -193,15 +350,17 @@ void FloodFill::run(
   }
 }
 
+} //FloodFill
+
 //------------------------------------------------------------ PATHFINDER
-void PathFinder::run(const Pos& origin, const Pos& target,
-                     bool blockers[MAP_W][MAP_H],
-                     vector<Pos>& vectorRef) const {
+namespace PathFind {
+void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
+         vector<Pos>& vectorRef, Engine& eng) {
 
   vectorRef.resize(0);
 
   int floodValues[MAP_W][MAP_H];
-  eng.floodFill->run(origin, blockers, floodValues, 1000, target);
+  FloodFill::run(origin, blockers, floodValues, 1000, target, eng);
 
   bool pathExists = floodValues[target.x][target.y] != 0;
 
@@ -248,4 +407,6 @@ void PathFinder::run(const Pos& origin, const Pos& target,
     }
   }
 }
+
+} //PathFind
 

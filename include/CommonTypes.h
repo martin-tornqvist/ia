@@ -15,7 +15,7 @@ enum BodyType_t {
   bodyType_flying,
   bodyType_ethereal,
   bodyType_ooze,
-  endOfActorBodyTypes
+  endOfBodyTypes
 };
 
 enum DmgTypes_t {

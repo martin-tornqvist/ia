@@ -95,7 +95,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
 void Map::resetMap() {
   eng.actorFactory->deleteAllMonsters();
 
-  for(Room* room : rooms) {delete room;}
+  for(Room * room : rooms) {delete room;}
 
   rooms.resize(0);
 
@@ -109,6 +109,8 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
     for(int x = 0; x < MAP_W; x++) {
 
       cells[x][y].clear();
+
+      cells[x][y].pos = Pos(x, y);
 
       if(MAKE_STONE_WALLS) {
         eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));

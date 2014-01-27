@@ -23,7 +23,7 @@ public:
         engine.map->cells[p.x][p.y].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
-        if(door->isBodyTypePassable(monster->getBodyType()) == false) {
+        if(door->canBodyTypePass(monster->getBodyType()) == false) {
           if(door->isStuck() == false) {
             if(monster->getData().canOpenDoors) {
               door->tryOpen(monster);

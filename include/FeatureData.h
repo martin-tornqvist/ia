@@ -74,7 +74,8 @@ enum MaterialType_t {
 
 struct ThemedFeatureSpawnRules {
 public:
-  ThemedFeatureSpawnRules() : maxNrInRoom_(-1), placementRule_(placementRule_nextToWalls) {
+  ThemedFeatureSpawnRules() :
+    maxNrInRoom_(-1), placementRule_(placementRule_nextToWalls) {
     themesBelongingTo_.resize(0);
   }
 
@@ -138,7 +139,7 @@ struct FeatureData {
   SDL_Color color;
   SDL_Color colorBg;
   Tile_t tile;
-  bool isBodyTypePassable[endOfActorBodyTypes];
+  bool canBodyTypePass[endOfBodyTypes];
   bool isProjectilesPassable;
   bool isVisionPassable;
   bool isSmokePassable;
