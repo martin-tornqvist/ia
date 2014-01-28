@@ -21,8 +21,7 @@ public:
   void act();
 
 private:
-  void findPathToNextStairs();
-  Pos findNextStairs();
+  void findPathToStairs();
   bool walkToAdjacentCell(const Pos& cellToGoTo);
 
   vector<Pos> currentPath_;

@@ -159,15 +159,7 @@ bool MapGenBsp::run_() {
   eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 
-  trace << "MapGenBsp: Moving player to nearest floor cell" << endl;
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
-  vector<Pos> freeCells;
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
-  sort(freeCells.begin(), freeCells.end(),
-       IsCloserToOrigin(eng.player->pos, eng));
-  eng.player->pos = freeCells.front();
+  movePlayerToNearestAllowedPos();
 
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
   eng.roomThemeMaker->run();
@@ -176,14 +168,7 @@ bool MapGenBsp::run_() {
   eng.sdlWrapper->sleep(3000);
 #endif // DEMO_MODE
 
-  trace << "MapGenBsp: Moving player to nearest floor cell again ";
-  trace << "after room theme maker" << endl;
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
-  sort(freeCells.begin(), freeCells.end(),
-       IsCloserToOrigin(eng.player->pos, eng));
-  eng.player->pos = freeCells.front();
+  movePlayerToNearestAllowedPos();
 
   const Pos stairsPos = placeStairs();
   if(stairsPos.x == -1) {return false;}
@@ -784,6 +769,27 @@ Pos MapGenBsp::placeStairs() {
 
   trace << "MapGenBsp::placeStairs()[DONE]" << endl;
   return stairsPos;
+}
+
+void MapGenBsp::movePlayerToNearestAllowedPos() {
+  trace << "MapGenBsp::movePlayerToNearestAllowedPos()..." << endl;
+
+  bool allowedCells[MAP_W][MAP_H];
+  getAllowedStairCells(allowedCells);
+
+  vector<Pos> allowedCellsList;
+  eng.basicUtils->makeVectorFromBoolMap(true, allowedCells, allowedCellsList);
+
+  assert(allowedCellsList.empty() == false);
+
+  trace << "MapGenBsp: Sorting the allowed cells vector ";
+  trace << "(" << allowedCellsList.size() << " cells)" << endl;
+  IsCloserToOrigin isCloserToOrigin(eng.player->pos, eng);
+  sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
+
+  eng.player->pos = allowedCellsList.front();
+
+  trace << "MapGenBsp::movePlayerToNearestAllowedPos() [DONE]" << endl;
 }
 
 void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {

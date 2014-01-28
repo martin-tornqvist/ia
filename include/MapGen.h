@@ -148,6 +148,7 @@ private:
 
   void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const;
   Pos placeStairs();
+  void movePlayerToNearestAllowedPos();
 
 //  void makeLevers();
 //  void spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door);

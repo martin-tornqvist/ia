@@ -79,7 +79,6 @@ void Bot::act() {
       trace << "Bot: Starting new run on first dungeon level" << endl;
       eng.map->dlvl_ = 0;
     }
-    eng.input->handleKeyPress(KeyboardReadReturnData('>'));
     return;
   }
 
@@ -107,7 +106,7 @@ void Bot::act() {
     }
   }
 
-  findPathToNextStairs();
+  findPathToStairs();
 
   const Pos nextCell = currentPath_.back();
 
@@ -140,7 +139,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   if(xRel ==  1 && yRel ==  1) {key = '3';}
 
   //Occasionally randomize movement
-  if(eng.dice.oneIn(2)) {
+  if(eng.dice.oneIn(3)) {
     key = '0' + eng.dice.range(1, 9);
   }
 
@@ -151,39 +150,31 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   return playerCell == cellToGoTo;
 }
 
-Pos Bot::findNextStairs() {
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
-      FeatureStatic* f = eng.map->cells[x][y].featureStatic;
-      if(f->getId() == feature_stairsDown) {
-        return Pos(x, y);
-      }
-    }
-  }
-  trace << "[WARNING] Could not find stairs Pos, in Bot::findNextStairs()";
-  trace << endl;
-  return Pos(-1, -1);
-}
-
-void Bot::findPathToNextStairs() {
+void Bot::findPathToStairs() {
   currentPath_.resize(0);
 
-  const Pos stairPos = findNextStairs();
-
   bool blockers[MAP_W][MAP_H];
-  const BodyType_t playerBodyType = eng.player->getBodyType();
-  MapParse::parse(CellPred::BlocksBodyType(playerBodyType, false, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
+                  blockers);
 
-  //Consider all doors passable
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
-      FeatureStatic* f = eng.map->cells[x][y].featureStatic;
-      if(f->getId() == feature_door) {
+  vector<Pos> bla;
+  eng.basicUtils->makeVectorFromBoolMap(false, blockers, bla);
+
+  Pos stairPos(-1, -1);
+
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
+      const Feature_t curId = eng.map->cells[x][y].featureStatic->getId();
+      if(curId == feature_stairsDown) {
+        blockers[x][y] = false;
+        stairPos.set(x, y);
+      } else if(curId == feature_door) {
         blockers[x][y] = false;
       }
     }
   }
+  assert(stairPos != Pos(-1, -1));
+
   PathFind::run(eng.player->pos, stairPos, blockers, currentPath_, eng);
 //  assert(currentPath_.size() > 0);
 }
