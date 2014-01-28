@@ -651,7 +651,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propPoisoned:          return new PropPoisoned(eng, turnsInit, NR_TURNS);
     case propFainted:           return new PropFainted(eng, turnsInit, NR_TURNS);
     case propFrenzied:          return new PropFrenzied(eng, turnsInit, NR_TURNS);
-    case propAiming:             return new PropAiming(eng, turnsInit, NR_TURNS);
+    case propAiming:            return new PropAiming(eng, turnsInit, NR_TURNS);
     case propDisabledAttack:    return new PropDisabledAttack(eng, turnsInit, NR_TURNS);
     case propDisabledMelee:     return new PropDisabledMelee(eng, turnsInit, NR_TURNS);
     case propDisabledRanged:    return new PropDisabledRanged(eng, turnsInit, NR_TURNS);
@@ -784,17 +784,10 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     }
   }
 
-  prop->owningActor_ = owningActor_;
+  prop->owningActor_    = owningActor_;
 
-  const bool IS_PLAYER = owningActor_ == eng.player;
-
-  bool playerSeeOwner = false;
-
-  if(DISABLE_REDRAW == false) {
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), blockers);
-    playerSeeOwner = eng.player->checkIfSeeActor(*owningActor_, blockers);
-  }
+  const bool IS_PLAYER  = owningActor_ == eng.player;
+  bool playerSeeOwner   = eng.player->checkIfSeeActor(*owningActor_, NULL);
 
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
@@ -825,19 +818,21 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //This point reached means nothing is blocking the property.
 
   //Actor already has property appplied?
-  const unsigned int NR_APPLIED_PROPS = appliedProps_.size();
-  for(unsigned int i = 0; i < NR_APPLIED_PROPS; i++) {
-    if(prop->getId() == appliedProps_.at(i)->getId()) {
+  for(Prop * oldProp : appliedProps_) {
+    if(prop->getId() == oldProp->getId()) {
 
       if(prop->allowApplyMoreWhileActive() == false) {
         delete prop;
         return;
       }
 
-      const int TURNS_LEFT_OLD = appliedProps_.at(i)->turnsLeft_;
+      const int TURNS_LEFT_OLD = oldProp->turnsLeft_;
       const int TURNS_LEFT_NEW = prop->turnsLeft_;
 
-      if(TURNS_LEFT_NEW >= TURNS_LEFT_OLD && NO_MESSAGES == false) {
+      if(
+        TURNS_LEFT_OLD != -1 &&
+        TURNS_LEFT_NEW >= TURNS_LEFT_OLD &&
+        NO_MESSAGES == false) {
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnMorePlayer, msg);
@@ -855,9 +850,10 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
         }
       }
 
-      appliedProps_.at(i)->onMore();
-      appliedProps_.at(i)->turnsLeft_ = max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
+      oldProp->onMore();
 
+      oldProp->turnsLeft_ = (TURNS_LEFT_OLD < 0 || TURNS_LEFT_NEW < 0) ? -1 :
+                            max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
       delete prop;
       return;
     }
@@ -928,9 +924,7 @@ bool PropHandler::endAppliedProp(
       break;
     }
   }
-  if(index == -1) {
-    return false;
-  }
+  if(index == -1) {return false;}
 
   appliedProps_.erase(appliedProps_.begin() + index);
 
@@ -1500,7 +1494,7 @@ void PropBurning::onNewTurn() {
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
-    eng.log->addMsg("I cannot read while I'm burning.");
+    eng.log->addMsg("Not while burning.");
   }
   return false;
 }

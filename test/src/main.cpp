@@ -486,8 +486,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Player inventory
   Inventory& inv = eng.player->getInv();
   inv.moveItemToGeneral(inv.getSlot(slot_wielded));
-  inv.putItemInSlot(
-    slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
+  inv.putItemInSlot(slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
 
   //Player
   ActorData& def = eng.player->getData();
@@ -504,6 +503,11 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Learned spells
   eng.playerSpellsHandler->learnSpellIfNotKnown(spell_bless);
   eng.playerSpellsHandler->learnSpellIfNotKnown(spell_enfeeble);
+
+  //Properties
+  PropHandler& propHlr = eng.player->getPropHandler();
+  propHlr.tryApplyProp(new PropRConfusion(eng, propTurnsIndefinite));
+  propHlr.tryApplyProp(new PropRAcid(eng, propTurnsSpecified, 3));
 
   eng.saveHandler->save();
   CHECK(eng.saveHandler->isSaveAvailable());
@@ -533,8 +537,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Player inventory
   Inventory& inv = eng.player->getInv();
-  CHECK_EQUAL(
-    item_teslaCannon, inv.getItemInSlot(slot_wielded)->getData().id);
+  CHECK_EQUAL(item_teslaCannon, inv.getItemInSlot(slot_wielded)->getData().id);
 
   //Player
   ActorData& def = eng.player->getData();
@@ -555,6 +558,15 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK(spHlr.isSpellLearned(spell_bless));
   CHECK(spHlr.isSpellLearned(spell_enfeeble));
   CHECK_EQUAL(false, spHlr.isSpellLearned(spell_mayhem));
+
+  //Properties
+  PropHandler& propHlr = eng.player->getPropHandler();
+  Prop* prop = propHlr.getAppliedProp(propRConfusion);
+  CHECK(prop != NULL);
+  CHECK(prop->turnsLeft_ == -1);
+  prop = propHlr.getAppliedProp(propRAcid);
+  CHECK(prop != NULL);
+  CHECK(prop->turnsLeft_ == 3);
 
   //Game time
   CHECK_EQUAL(0, eng.gameTime->getTurn());

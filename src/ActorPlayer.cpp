@@ -116,13 +116,10 @@ void Player::spawnStartItems() {
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
-  const int NR_STATUS_EFFECTS = propHandler_->appliedProps_.size();
-  lines.push_back(toString(NR_STATUS_EFFECTS));
-  for(int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    lines.push_back(
-      toString(propHandler_->appliedProps_.at(i)->getId()));
-    lines.push_back(
-      toString(propHandler_->appliedProps_.at(i)->getId()));
+  lines.push_back(toString(propHandler_->appliedProps_.size()));
+  for(Prop * prop : propHandler_->appliedProps_) {
+    lines.push_back(toString(prop->getId()));
+    lines.push_back(toString(prop->turnsLeft_));
   }
 
   lines.push_back(toString(insanity_));
@@ -151,15 +148,15 @@ void Player::addSaveLines(vector<string>& lines) const {
 }
 
 void Player::setParamsFromSaveLines(vector<string>& lines) {
-  const int NR_STATUS_EFFECTS = toInt(lines.front());
+  const int NR_PROPS = toInt(lines.front());
   lines.erase(lines.begin());
-  for(int i = 0; i < NR_STATUS_EFFECTS; i++) {
-    const PropId_t id = (PropId_t)(toInt(lines.front()));
+  for(int i = 0; i < NR_PROPS; i++) {
+    const PropId_t id = PropId_t(toInt(lines.front()));
     lines.erase(lines.begin());
-    const int TURNS = toInt(lines.front());
+    const int NR_TURNS = toInt(lines.front());
     lines.erase(lines.begin());
-    Prop* const prop =
-      propHandler_->makePropFromId(id, propTurnsSpecified, TURNS);
+    Prop* const prop = propHandler_->makePropFromId(
+                         id, propTurnsSpecified, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true);
   }
 
@@ -619,7 +616,7 @@ void Player::setTempShockFromFeatures() {
 bool Player::isStandingInOpenSpace() const {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                   blockers);
+                  blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
       if(blockers[x][y]) {
@@ -634,7 +631,7 @@ bool Player::isStandingInOpenSpace() const {
 bool Player::isStandingInCrampedSpace() const {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                   blockers);
+                  blockers);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
@@ -1335,7 +1332,7 @@ void Player::updateFov() {
 
     bool blockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksBodyType(bodyType_flying, false, eng),
-                     blockers);
+                    blockers);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1384,7 +1381,7 @@ void Player::FOVhack() {
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                   blockers);
+                  blockers);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
