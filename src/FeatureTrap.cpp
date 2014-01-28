@@ -125,8 +125,8 @@ void Trap::bump(Actor& actorBumping) {
           const bool IS_ACTOR_SEEN_BY_PLAYER =
             actorBumping.eng.player->checkIfSeeActor(actorBumping, NULL);
 
-          const int CHANCE_TO_AVOID =
-            BASE_CHANCE_TO_AVOID + d.canDodge ? DODGE_SKILL : 0;
+          const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID +
+                                      (d.canDodge ? DODGE_SKILL : 0);
           const AbilityRollResult_t result =
             actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
 
