@@ -1879,7 +1879,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGray;
   d.tile = tile_ooze;
-  d.hp = 10;
+  d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 34);
@@ -1927,7 +1927,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrWhiteHigh;
   d.tile = tile_ooze;
-  d.hp = 13;
+  d.hp = 6;
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
@@ -1976,7 +1976,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGreen;
   d.tile = tile_ooze;
-  d.hp = 19;
+  d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 5;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
@@ -2024,7 +2024,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
-  d.hp = 27;
+  d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 40);
