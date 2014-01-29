@@ -61,8 +61,9 @@ void PlayerBonHandler::getTraitTitle(
     case traitRapidRecoverer:       strRef = "Rapid Recoverer";         break;
     case traitSurvivalist:          strRef = "Survivalist";             break;
     case traitSelfAware:            strRef = "Self-aware";              break;
-    case traitStrongSpirited:       strRef = "Strong-spirited";         break;
-    case traitMightySpirited:       strRef = "Mighty-spirited";         break;
+    case traitPotentSpirit:         strRef = "Potent Spirit";           break;
+    case traitStrongSpirit:         strRef = "Strong Spirit";           break;
+    case traitMightySpirit:         strRef = "Mighty Spirit";           break;
     case traitStealthy:             strRef = "Stealthy";                break;
     case traitImperceptible:        strRef = "Imperceptible";           break;
     case traitStrongBacked:         strRef = "Strong-backed";           break;
@@ -93,8 +94,8 @@ void PlayerBonHandler::getBgDescr(
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
-      getTraitTitle(traitStrongSpirited, s);      linesRef.push_back("* " + s);
-      getTraitDescr(traitStrongSpirited, s);      linesRef.push_back(s);
+      getTraitTitle(traitPotentSpirit, s); linesRef.push_back("* " + s);
+      getTraitDescr(traitPotentSpirit, s); linesRef.push_back(s);
     } break;
 
     case bgRogue: {
@@ -298,11 +299,15 @@ void PlayerBonHandler::getTraitDescr(
       strRef += "for status effects are displayed";
     } break;
 
-    case traitStrongSpirited: {
+    case traitPotentSpirit: {
       strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
-    case traitMightySpirited: {
+    case traitStrongSpirit: {
+      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
+    } break;
+
+    case traitMightySpirit: {
       strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
@@ -393,7 +398,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitSpiritCannibal: {
       traitsRef.push_back(traitMythologist);
-      traitsRef.push_back(traitMightySpirited);
+      traitsRef.push_back(traitStrongSpirit);
       bgRef = bgOccultist;
     } break;
 
@@ -421,6 +426,7 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
     case traitBreachExpert: {
       traitsRef.push_back(traitTough);
+      bgRef = bgSoldier;
     } break;
 
     case traitDexterous: {
@@ -458,15 +464,20 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitSelfAware: {
-      traitsRef.push_back(traitStrongSpirited);
+      traitsRef.push_back(traitPotentSpirit);
       traitsRef.push_back(traitObservant);
     } break;
 
-    case traitStrongSpirited: {
+    case traitPotentSpirit: {
     } break;
 
-    case traitMightySpirited: {
-      traitsRef.push_back(traitStrongSpirited);
+    case traitStrongSpirit: {
+      traitsRef.push_back(traitPotentSpirit);
+    } break;
+
+    case traitMightySpirit: {
+      traitsRef.push_back(traitStrongSpirit);
+      bgRef = bgOccultist;
     } break;
 
     case traitStealthy: {
@@ -558,7 +569,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
 
   switch(bg_) {
     case bgOccultist: {
-      pickTrait(traitStrongSpirited);
+      pickTrait(traitPotentSpirit);
 
       eng.player->changeMaxHp(-2, false);
 
@@ -623,11 +634,15 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
       eng.player->changeMaxHp(2, false);
     } break;
 
-    case traitStrongSpirited: {
+    case traitPotentSpirit: {
       eng.player->changeMaxSpi(2, false);
     } break;
 
-    case traitMightySpirited: {
+    case traitStrongSpirit: {
+      eng.player->changeMaxSpi(2, false);
+    } break;
+
+    case traitMightySpirit: {
       eng.player->changeMaxSpi(2, false);
     } break;
 

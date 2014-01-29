@@ -164,7 +164,7 @@ void GameTime::runStandardTurnEvents() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
-  int regenSpiEveryNTurns = 11;
+  int regenSpiEveryNTurns = 12;
 
   for(int i = 0; i < loopSize; i++) {
     actor = actors_.at(i);
@@ -180,10 +180,13 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == actorDeadState_alive) {
       //Regen Spi
       if(actor == eng.player) {
-        if(eng.playerBonHandler->hasTrait(traitStrongSpirited)) {
+        if(eng.playerBonHandler->hasTrait(traitPotentSpirit)) {
           regenSpiEveryNTurns -= 2;
         }
-        if(eng.playerBonHandler->hasTrait(traitMightySpirited)) {
+        if(eng.playerBonHandler->hasTrait(traitStrongSpirit)) {
+          regenSpiEveryNTurns -= 2;
+        }
+        if(eng.playerBonHandler->hasTrait(traitMightySpirit)) {
           regenSpiEveryNTurns -= 2;
         }
       }
