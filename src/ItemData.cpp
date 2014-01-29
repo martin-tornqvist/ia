@@ -888,6 +888,13 @@ void ItemDataHandler::initDataList() {
   d->rangedSoundIsLoud = true;
   dataList[d->id] = d;
 
+  d = new ItemData(item_polypTentacle);
+  resetData(d, itemData_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "grips me with a tentacle");
+  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecified, 1);
+  setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_flyingPolyp]);
+  dataList[d->id] = d;
+
   d = new ItemData(item_ghoulClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");

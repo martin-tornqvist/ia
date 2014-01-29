@@ -390,6 +390,13 @@ public:
   void spawnStartItems() override;
 };
 
+class FlyingPolyp: public Monster {
+public:
+  FlyingPolyp(Engine& engine) : Monster(engine) {}
+  ~FlyingPolyp() {}
+  void spawnStartItems() override;
+};
+
 class Ghoul: public Monster {
 public:
   Ghoul(Engine& engine) : Monster(engine) {}

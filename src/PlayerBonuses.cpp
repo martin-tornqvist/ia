@@ -75,8 +75,9 @@ void PlayerBonHandler::getTraitTitle(
   }
 }
 
-void PlayerBonHandler::getBgDescr(const Bg_t id,
-                                  vector<string>& linesRef) const {
+void PlayerBonHandler::getBgDescr(
+  const Bg_t id, vector<string>& linesRef) const {
+
   linesRef.resize(0);
   string s = "";
 
@@ -213,7 +214,7 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSpiritCannibal: {
-      strRef += "For every life you take, you gain 1 Spirit Point by ";
+      strRef  = "For every life you take, you gain 1 Spirit Point by ";
       strRef += "absorbing a part of that creatures spirit (does not work ";
       strRef += "on insignificant creatures like a small spider or a rat)";
       strRef += "[UNIMPLEMENTED]";

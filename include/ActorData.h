@@ -21,7 +21,9 @@ enum ActorId_t {
   actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider,
   actor_lengSpider,
   actor_miGo,
-  actor_ghoul, actor_shadow,
+  actor_flyingPolyp,
+  actor_ghoul,
+  actor_shadow,
   actor_wolf, actor_fireHound, actor_frostHound, actor_zuul,
   actor_ghost, actor_phantasm, actor_wraith,
   actor_giantBat, actor_byakhee,
@@ -127,7 +129,6 @@ public:
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
-  bool canDodge;
   vector<RoomTheme_t> nativeRooms;
   string description;
   string aggroTextMonsterSeen;

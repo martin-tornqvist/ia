@@ -26,6 +26,26 @@ using namespace std;
 void PropDataHandler::initDataList() {
   PropData d;
 
+  d.id = propRPhys;
+  d.stdRndTurns = Range(40, 60);
+  d.name = "Physical Resistance";
+  d.nameShort = "RPhys";
+  d.msg[propMsgOnStartPlayer] = "I feel resistant to physical harm.";
+  d.msg[propMsgOnStartMonster] = "looks resistant to physical harm.";
+  d.msg[propMsgOnEndPlayer] = "I feel vulnerable to physical harm.";
+  d.msg[propMsgOnEndMonster] = "looks vulnerable to physical harm.";
+  d.msg[propMsgOnMorePlayer] = "I feel more resistant to physical harm.";
+  d.msg[propMsgOnMoreMonster] = "looks more resistant to physical harm.";
+  d.msg[propMsgOnResPlayer] = "";
+  d.msg[propMsgOnResMonster] = "";
+  d.isMakingMonsterAware = false;
+  d.allowDisplayTurns = true;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestingOnBot = true;
+  d.alignment = propAlignmentGood;
+  addPropData(d);
+
   d.id = propRFire;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fire resistance";
@@ -663,6 +683,7 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propRConfusion:        return new PropRConfusion(eng, turnsInit, NR_TURNS);
     case propRElec:             return new PropRElec(eng, turnsInit, NR_TURNS);
     case propRFear:             return new PropRFear(eng, turnsInit, NR_TURNS);
+    case propRPhys:             return new PropRPhys(eng, turnsInit, NR_TURNS);
     case propRFire:             return new PropRFire(eng, turnsInit, NR_TURNS);
     case propRPoison:           return new PropRPoison(eng, turnsInit, NR_TURNS);
     case propRSleep:            return new PropRSleep(eng, turnsInit, NR_TURNS);
@@ -1456,7 +1477,6 @@ bool PropFrenzied::tryResistOtherProp(const PropId_t id) const {
 void PropFrenzied::onStart() {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
-  owningActor_->getPropHandler().endAppliedProp(propBurning,   blockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockers);
   owningActor_->getPropHandler().endAppliedProp(propWeakened,  blockers);
@@ -1655,6 +1675,31 @@ void PropRFear::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, visionBlockers);
+}
+
+bool PropRPhys::tryResistOtherProp(const PropId_t id) const {
+  (void)id;
+  return false;
+}
+
+void PropRPhys::onStart() {
+  return;
+}
+
+bool PropRPhys::tryResistDmg(
+  const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+
+  if(dmgType == dmgType_physical) {
+    if(ALLOW_MESSAGE_WHEN_TRUE) {
+      if(owningActor_ == eng.player) {
+        eng.log->addMsg("I resist harm.");
+      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+        eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
+      }
+    }
+    return true;
+  }
+  return false;
 }
 
 bool PropRFire::tryResistOtherProp(const PropId_t id) const {

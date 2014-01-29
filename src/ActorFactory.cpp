@@ -14,65 +14,58 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
-    case actor_zombie:              return new ZombieClaw(eng); break;
-    case actor_zombieAxe:           return new ZombieAxe(eng); break;
-    case actor_bloatedZombie:       return new BloatedZombie(eng); break;
-    case actor_majorClaphamLee:     return new MajorClaphamLee(eng); break;
-    case actor_deanHalsey:          return new DeanHalsey(eng); break;
-    case actor_rat:                 return new Rat(eng); break;
-    case actor_ratThing:            return new RatThing(eng); break;
-    case actor_brownJenkin:         return new BrownJenkin(eng); break;
-    case actor_greenSpider:         return new GreenSpider(eng); break;
-    case actor_redSpider:           return new RedSpider(eng); break;
-    case actor_whiteSpider:         return new WhiteSpider(eng); break;
-    case actor_shadowSpider:        return new ShadowSpider(eng); break;
-    case actor_lengSpider:          return new LengSpider(eng); break;
-    case actor_fireHound:           return new FireHound(eng); break;
-    case actor_frostHound:          return new FrostHound(eng); break;
-    case actor_zuul:                return new Zuul(eng); break;
-    case actor_ghost:               return new Ghost(eng); break;
-    case actor_wraith:              return new Wraith(eng); break;
-    case actor_phantasm:            return new Phantasm(eng); break;
-    case actor_giantBat:            return new GiantBat(eng); break;
-    case actor_cultist:             return new Cultist(eng); break;
-    case actor_cultistTeslaCannon:  return new CultistTeslaCannon(eng); break;
-    case actor_cultistSpikeGun:     return new CultistSpikeGun(eng); break;
-    case actor_cultistPriest:       return new CultistPriest(eng); break;
-    case actor_keziahMason:         return new KeziahMason(eng); break;
-    case actor_wolf:                return new Wolf(eng); break;
-    case actor_miGo:                return new MiGo(eng); break;
-    case actor_ghoul:               return new Ghoul(eng); break;
-    case actor_shadow:              return new Shadow(eng); break;
-    case actor_byakhee:             return new Byakhee(eng); break;
-    case actor_giantMantis:         return new GiantMantis(eng); break;
-    case actor_giantLocust:         return new GiantLocust(eng); break;
-    case actor_mummy:               return new Mummy(eng); break;
-    case actor_khephren:            return new Khephren(eng); break;
-    case actor_nitokris:            return new MummyUnique(eng); break;
-    case actor_deepOne:             return new DeepOne(eng); break;
-    case actor_wormMass:            return new WormMass(eng); break;
-    case actor_dustVortex:          return new DustVortex(eng); break;
-    case actor_fireVortex:          return new FireVortex(eng); break;
-    case actor_frostVortex:         return new FrostVortex(eng); break;
-    case actor_oozeBlack:           return new OozeBlack(eng); break;
-    case actor_colourOutOfSpace:    return new ColourOutOfSpace(eng); break;
-    case actor_oozeClear:           return new OozeClear(eng); break;
-    case actor_oozePutrid:          return new OozePutrid(eng); break;
-    case actor_oozePoison:          return new OozePoison(eng); break;
-    case actor_huntingHorror:       return new HuntingHorror(eng); break;
+    case actor_zombie:              return new ZombieClaw(eng);
+    case actor_zombieAxe:           return new ZombieAxe(eng);
+    case actor_bloatedZombie:       return new BloatedZombie(eng);
+    case actor_majorClaphamLee:     return new MajorClaphamLee(eng);
+    case actor_deanHalsey:          return new DeanHalsey(eng);
+    case actor_rat:                 return new Rat(eng);
+    case actor_ratThing:            return new RatThing(eng);
+    case actor_brownJenkin:         return new BrownJenkin(eng);
+    case actor_greenSpider:         return new GreenSpider(eng);
+    case actor_redSpider:           return new RedSpider(eng);
+    case actor_whiteSpider:         return new WhiteSpider(eng);
+    case actor_shadowSpider:        return new ShadowSpider(eng);
+    case actor_lengSpider:          return new LengSpider(eng);
+    case actor_fireHound:           return new FireHound(eng);
+    case actor_frostHound:          return new FrostHound(eng);
+    case actor_zuul:                return new Zuul(eng);
+    case actor_ghost:               return new Ghost(eng);
+    case actor_wraith:              return new Wraith(eng);
+    case actor_phantasm:            return new Phantasm(eng);
+    case actor_giantBat:            return new GiantBat(eng);
+    case actor_cultist:             return new Cultist(eng);
+    case actor_cultistTeslaCannon:  return new CultistTeslaCannon(eng);
+    case actor_cultistSpikeGun:     return new CultistSpikeGun(eng);
+    case actor_cultistPriest:       return new CultistPriest(eng);
+    case actor_keziahMason:         return new KeziahMason(eng);
+    case actor_wolf:                return new Wolf(eng);
+    case actor_flyingPolyp:         return new FlyingPolyp(eng);
+    case actor_miGo:                return new MiGo(eng);
+    case actor_ghoul:               return new Ghoul(eng);
+    case actor_shadow:              return new Shadow(eng);
+    case actor_byakhee:             return new Byakhee(eng);
+    case actor_giantMantis:         return new GiantMantis(eng);
+    case actor_giantLocust:         return new GiantLocust(eng);
+    case actor_mummy:               return new Mummy(eng);
+    case actor_khephren:            return new Khephren(eng);
+    case actor_nitokris:            return new MummyUnique(eng);
+    case actor_deepOne:             return new DeepOne(eng);
+    case actor_wormMass:            return new WormMass(eng);
+    case actor_dustVortex:          return new DustVortex(eng);
+    case actor_fireVortex:          return new FireVortex(eng);
+    case actor_frostVortex:         return new FrostVortex(eng);
+    case actor_oozeBlack:           return new OozeBlack(eng);
+    case actor_colourOutOfSpace:    return new ColourOutOfSpace(eng);
+    case actor_oozeClear:           return new OozeClear(eng);
+    case actor_oozePutrid:          return new OozePutrid(eng);
+    case actor_oozePoison:          return new OozePoison(eng);
+    case actor_huntingHorror:       return new HuntingHorror(eng);
 
-//  case actor_lordOfPestilence:
-//    return new LordOfPestilence;
-//    break;
-//  case actor_lordOfShadows:
-//    return new LordOfShadows;
-//    break;
-//  case actor_lordOfSpiders:
-//    return new LordOfSpiders;
-//    break;
-//  case actor_lordOfSpirits:
-//    return new LordOfSpirits;
-//    break;
+//  case actor_lordOfPestilence: return new LordOfPestilence;
+//  case actor_lordOfShadows:    return new LordOfShadows;
+//  case actor_lordOfSpiders:    return new LordOfSpiders;
+//  case actor_lordOfSpirits:    return new LordOfSpirits;
 
     case actor_empty:
     case actor_player:

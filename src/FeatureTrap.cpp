@@ -125,8 +125,7 @@ void Trap::bump(Actor& actorBumping) {
           const bool IS_ACTOR_SEEN_BY_PLAYER =
             actorBumping.eng.player->checkIfSeeActor(actorBumping, NULL);
 
-          const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID +
-                                      (d.canDodge ? DODGE_SKILL : 0);
+          const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
           const AbilityRollResult_t result =
             actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
 
@@ -205,8 +204,7 @@ void Trap::triggerTrap(Actor& actor) {
     traceVerbose << "Trap: Monster triggering trap" << endl;
     const bool IS_ACTOR_SEEN_BY_PLAYER =
       eng.player->checkIfSeeActor(actor, NULL);
-    const AbilityRollResult_t dodgeResult =
-      d.canDodge ? eng.abilityRoll->roll(DODGE_SKILL) : failNormal;
+    const AbilityRollResult_t dodgeResult = eng.abilityRoll->roll(DODGE_SKILL);
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
     }

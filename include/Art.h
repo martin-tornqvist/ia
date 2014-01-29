@@ -39,6 +39,7 @@ enum Tile_t {
   tile_byakhee,
   tile_massOfWorms,
   tile_ooze,
+  tile_polyp,
   tile_vortex,
   tile_ghost,
   tile_wraith,

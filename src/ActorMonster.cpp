@@ -345,13 +345,13 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       eng.basicUtils->isPosAdj(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
-    const unsigned nrOfIntrinsics = inventory_->getIntrinsicsSize();
+    const unsigned nrOfIntrinsics = inv_->getIntrinsicsSize();
     if(opport.isMelee) {
       if(propHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
+          dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));
         if(weapon != NULL) {
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
@@ -360,7 +360,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Intrinsic melee attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
-          weapon = dynamic_cast<Weapon*>(inventory_->getIntrinsicInElement(i));
+          weapon = dynamic_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
@@ -372,7 +372,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         propHandler_->hasProp(propBurning) == false) {
         //Ranged weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inventory_->getItemInSlot(slot_wielded));
+          dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));
 
         if(weapon != NULL) {
           if(weapon->getData().isRangedWeapon == true) {
@@ -382,7 +382,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
             if(
               weapon->nrAmmoLoaded == 0 &&
               weapon->getData().rangedHasInfiniteAmmo == false) {
-              if(inventory_->hasAmmoForFirearmInInventory()) {
+              if(inv_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;
               }
             }
@@ -391,7 +391,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Intrinsic ranged attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
-          weapon = dynamic_cast<Weapon*>(inventory_->getIntrinsicInElement(i));
+          weapon = dynamic_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isRangedWeapon) {
             opport.weapons.push_back(weapon);
           }

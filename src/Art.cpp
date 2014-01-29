@@ -148,6 +148,7 @@ Pos Art::getColumnAndRowTile(const Tile_t tile) {
     case tile_byakhee: return Pos(8, 2); break;
     case tile_massOfWorms: return Pos(9, 2); break;
     case tile_ooze: return Pos(10, 2); break;
+    case tile_polyp: return Pos(7, 5); break;
     case tile_vortex: return Pos(5, 5); break;
     case tile_ghost: return Pos(12, 2); break;
     case tile_wraith: return Pos(13, 2); break;

@@ -447,9 +447,8 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     monster->pos = posL;
     monster->moveDir(dirRight);
     CHECK(monster->pos == posR);
-    monster->moveDir(dirLeft);    //Move left to try to break loose
-    CHECK(monster->pos == posR);  //Even if loose, monster is stuck this move
-    monster->moveDir(dirLeft);    //Move left again to actually move if free
+    monster->moveDir(dirLeft);
+    monster->moveDir(dirLeft);
 
     //Check conditions
     if(monster->pos == posR) {

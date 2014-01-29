@@ -111,6 +111,7 @@ enum ItemId_t {
   item_phantasmSickle,
   item_wraithClaw,
   item_miGoElectricGun,
+  item_polypTentacle,
   item_mummyMaul,
   item_deepOneSpearAttack,
   item_deepOneJavelinAttack,

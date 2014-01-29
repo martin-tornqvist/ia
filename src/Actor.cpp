@@ -33,11 +33,11 @@ Actor::Actor(Engine& engine) :
   lairCell_(),
   propHandler_(NULL),
   data_(NULL),
-  inventory_(NULL) {}
+  inv_(NULL) {}
 
 Actor::~Actor() {
   delete propHandler_;
-  delete inventory_;
+  delete inv_;
 }
 
 bool Actor::isSpottingHiddenActor(Actor& other) {
@@ -148,7 +148,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
 void Actor::place(const Pos& pos_, ActorData& data) {
   pos             = pos_;
   data_           = &data;
-  inventory_      = new Inventory(data_->isHumanoid);
+  inv_      = new Inventory(data_->isHumanoid);
   propHandler_    = new PropHandler(this, eng);
   deadState       = actorDeadState_alive;
   clr_            = data_->color;
@@ -372,7 +372,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
   //Filter damage through worn armor
   if(isHumanoid()) {
     Armor* armor =
-      dynamic_cast<Armor*>(inventory_->getItemInSlot(slot_armorBody));
+      dynamic_cast<Armor*>(inv_->getItemInSlot(slot_armorBody));
     if(armor != NULL) {
       traceVerbose << "Actor: Has armor, running hit on armor" << endl;
 
@@ -388,7 +388,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
         }
         delete armor;
         armor = NULL;
-        inventory_->getSlot(slot_armorBody)->item = NULL;
+        inv_->getSlot(slot_armorBody)->item = NULL;
       }
     }
   }

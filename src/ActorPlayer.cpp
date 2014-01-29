@@ -66,52 +66,52 @@ void Player::spawnStartItems() {
     default:  weaponId = item_dagger;   break;
   }
 
-  inventory_->putItemInSlot(
+  inv_->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(weaponId), true, true);
 
-  inventory_->putItemInSlot(
+  inv_->putItemInSlot(
     slot_wieldedAlt, eng.itemFactory->spawnItem(item_pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
-    inventory_->putItemInGeneral(eng.itemFactory->spawnItem(item_pistolClip));
+    inv_->putItemInGeneral(eng.itemFactory->spawnItem(item_pistolClip));
   }
 
   //TODO Remove:
   //--------------------------------------------------------------------------
-//  inventory_->putItemInGeneral(
+//  inv_->putItemInGeneral(
 //    eng.itemFactory->spawnItem(item_machineGun));
 //  for(int i = 0; i < 2; i++) {
-//    inventory_->putItemInGeneral(
+//    inv_->putItemInGeneral(
 //      eng.itemFactory->spawnItem(item_drumOfBullets));
 //  }
-//  inventory_->putItemInGeneral(
+//  inv_->putItemInGeneral(
 //    eng.itemFactory->spawnItem(item_sawedOff));
-//  inventory_->putItemInGeneral(
+//  inv_->putItemInGeneral(
 //    eng.itemFactory->spawnItem(item_pumpShotgun));
-//  inventory_->putItemInGeneral(
+//  inv_->putItemInGeneral(
 //    eng.itemFactory->spawnItem(item_shotgunShell, 80));
   //--------------------------------------------------------------------------
 
-  inventory_->putItemInGeneral(
+  inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
-  inventory_->putItemInGeneral(
+  inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
 
   if(NR_THROWING_KNIVES > 0) {
-    inventory_->putItemInSlot(
+    inv_->putItemInSlot(
       slot_missiles,
       eng.itemFactory->spawnItem(item_throwingKnife, NR_THROWING_KNIVES),
       true, true);
   }
 
-  inventory_->putItemInSlot(
+  inv_->putItemInSlot(
     slot_armorBody,
     eng.itemFactory->spawnItem(item_armorLeatherJacket),
     true, true);
 
-  inventory_->putItemInGeneral(
+  inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(item_deviceElectricLantern));
-  inventory_->putItemInGeneral(
+  inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(item_medicalBag));
 }
 
@@ -1110,7 +1110,7 @@ void Player::moveDir(Dir_t dir) {
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
-          Item* const item = inventory_->getItemInSlot(slot_wielded);
+          Item* const item = inv_->getItemInSlot(slot_wielded);
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
@@ -1164,7 +1164,7 @@ void Player::moveDir(Dir_t dir) {
 
       if(isFeaturesAllowMove) {
         // Encumbered?
-        if(inventory_->getTotalItemWeight() >= getCarryWeightLimit()) {
+        if(inv_->getTotalItemWeight() >= getCarryWeightLimit()) {
           eng.log->addMsg("I am too encumbered to move!");
           eng.renderer->drawMapAndInterface();
           return;
@@ -1269,7 +1269,7 @@ void Player::addLight_(
   bool isUsingLightGivingItem = flareFuseTurns > 0;
 
   if(isUsingLightGivingItem == false) {
-    vector<Item*>& generalItems = inventory_->getGeneral();
+    vector<Item*>& generalItems = inv_->getGeneral();
     for(Item * const item : generalItems) {
       if(item->getData().id == item_deviceElectricLantern) {
         DeviceElectricLantern* const lantern =

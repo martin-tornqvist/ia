@@ -25,7 +25,7 @@ public:
 
   inline PropHandler& getPropHandler()  {return *propHandler_;}
   inline ActorData&   getData()         {return *data_;}
-  inline Inventory&   getInv()          {return *inventory_;}
+  inline Inventory&   getInv()          {return *inv_;}
 
   //This function is not concerned with whether the parameter actor is within
   //FOV, or if the actor is actually hidden or not. It merely tests the sneak
@@ -124,7 +124,7 @@ protected:
 
   PropHandler*  propHandler_;
   ActorData*    data_;
-  Inventory*    inventory_;
+  Inventory*    inv_;
 };
 
 #endif

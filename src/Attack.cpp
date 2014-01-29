@@ -43,7 +43,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   }
 
   isDefenderDodging = false;
-  if(isDefenderAware && curDefender->getData().canDodge) {
+  if(isDefenderAware) {
     const int DEFENDER_DODGE_SKILL =
       curDefender->getData().abilityVals.getVal(
         ability_dodgeAttack, true, *curDefender);

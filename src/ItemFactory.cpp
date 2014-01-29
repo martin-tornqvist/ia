@@ -90,6 +90,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_ghostClaw:                item = new Weapon(d, ammoD, eng); break;
     case item_phantasmSickle:           item = new Weapon(d, ammoD, eng); break;
     case item_wraithClaw:               item = new Weapon(d, ammoD, eng); break;
+    case item_polypTentacle:            item = new Weapon(d, ammoD, eng); break;
     case item_miGoElectricGun:          item = new Weapon(d, ammoD, eng); break;
     case item_ghoulClaw:                item = new Weapon(d, ammoD, eng); break;
     case item_shadowClaw:               item = new Weapon(d, ammoD, eng); break;

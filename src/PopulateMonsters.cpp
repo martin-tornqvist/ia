@@ -405,18 +405,12 @@ void PopulateMonsters::makeSortedFreeCellsVector(
 
 int PopulateMonsters::getRandomOutOfDepth() const {
   const int DLVL = eng.map->getDlvl();
-  if(DLVL == 0) {
-    return 0;
-  }
 
-  const int RND = eng.dice.range(1, 100);
+  if(DLVL == 0) {return 0;}
 
-  if(RND <= 8 && DLVL > 1) {
-    return 6;
-  }
-  if(RND <= 25) {
-    return 3;
-  }
+  if(eng.dice.oneIn(40) && DLVL > 1)  {return 5;}
+
+  if(eng.dice.oneIn(5))               {return 3;}
 
   return 0;
 }

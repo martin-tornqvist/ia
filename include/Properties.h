@@ -16,6 +16,7 @@ class Actor;
 class Weapon;
 
 enum PropId_t {
+  propRPhys,
   propRFire,
   propRCold,
   propRPoison,
@@ -34,8 +35,6 @@ enum PropId_t {
   propConfused,
   propStunned,
   propSlowed,
-  propFlared,
-  propNailed,
   propInfected,
   propDiseased,
   propWeakened,
@@ -43,15 +42,19 @@ enum PropId_t {
   propClairvoyant,
   propBlessed,
   propCursed,
-  propAiming,
-  propWound,
-  propPossessedByZuul,
 
   //The following are used for AI control
   propWaiting,
   propDisabledAttack,
   propDisabledMelee,
   propDisabledRanged,
+
+  //Special (mostly for aiding other game mechanics)
+  propPossessedByZuul,
+  propWound,
+  propAiming,
+  propNailed,
+  propFlared,
 
   endOfPropIds
 };
@@ -624,6 +627,8 @@ public:
 
   ~PropParalyzed() override {}
 
+  PropTurnMode_t getTurnMode() const override {return propTurnModeActor;}
+
   void onStart() override;
 
   bool allowAct() const override {return false;}
@@ -760,6 +765,20 @@ public:
   void onStart() override;
 
   bool tryResistOtherProp(const PropId_t id) const override;
+};
+
+class PropRPhys: public Prop {
+public:
+  PropRPhys(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propRPhys, engine, turnsInit, turns) {}
+  ~PropRPhys() override {}
+
+  void onStart() override;
+
+  bool tryResistOtherProp(const PropId_t id) const override;
+
+  bool tryResistDmg(const DmgTypes_t dmgType,
+                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
 };
 
 class PropRFire: public Prop {
