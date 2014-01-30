@@ -1447,6 +1447,7 @@ void ActorDataHandler::initDataList() {
   d.spi = 20;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 60);
+  d.abilityVals.setVal(ability_stealth, 90);
   d.intrProps[propRPhys] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRFear] = true;
