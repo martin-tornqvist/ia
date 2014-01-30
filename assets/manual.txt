@@ -11,10 +11,10 @@
 ------------------------------------------------
    @    Display character description
    TAB  Melee attack adjacent monster
-   >    Descend staircase
    a    Examine something on the map
    b    Bash door or kick monster
    c    Close door
+   d    Disarm trap
    e    Use item or throw held explosive
    f    Aim/fire wielded firearm
    g    Pick up item
