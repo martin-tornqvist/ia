@@ -1074,15 +1074,12 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const string& msg = snd.getMsg();
   const bool IS_MSG_EMPTY = msg.empty();
 
-  if(IS_MSG_EMPTY == false) {
-    eng.log->addMsg(msg, clrWhite, true);
-  }
+  if(IS_MSG_EMPTY == false) {eng.log->addMsg(msg, clrWhite);}
 
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
   if(IS_MSG_EMPTY == false || IS_ORIGIN_SEEN_BY_PLAYER) {
-    eng.audio->playFromDir(
-      sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
+    eng.audio->playFromDir(sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
   }
 }
 

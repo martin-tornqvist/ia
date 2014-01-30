@@ -1882,7 +1882,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 34);
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.spawnMinDLVL = 3;
@@ -1930,7 +1930,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 6;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.abilityVals.setVal(ability_stealth, 90);
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -2027,8 +2027,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 7;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.spawnMinDLVL = 9;
