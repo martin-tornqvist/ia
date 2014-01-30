@@ -350,7 +350,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       vector<Actor*> SpottedEnemies;
       eng.player->getSpottedEnemies(SpottedEnemies);
       if(SpottedEnemies.empty()) {
-        const int TURNS_TO_APPLY = 10;
+        const int TURNS_TO_APPLY = 5;
         const string TURNS_STR = toString(TURNS_TO_APPLY);
         eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
         eng.player->waitTurnsLeft = TURNS_TO_APPLY - 1;

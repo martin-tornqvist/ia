@@ -34,7 +34,6 @@ const int LAST_ROOM_AND_CORRIDOR_LEVEL  = FIRST_CAVERN_LEVEL - 2;
 
 const int AUDIO_ALLOCATED_CHANNELS = 16;
 
-const int DELAY_PLAYER_WAITING        = 0;
 const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
 
 const int PLAYER_START_SPI                = 6;

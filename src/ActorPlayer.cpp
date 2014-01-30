@@ -1022,18 +1022,10 @@ void Player::onStandardTurn_() {
   }
 
   if(activeMedicalBag != NULL) {
-    eng.renderer->drawMapAndInterface();
-    if(DELAY_PLAYER_WAITING > 0) {
-      eng.sleep(DELAY_PLAYER_WAITING);
-    }
     activeMedicalBag->continueAction();
   }
 
   if(waitTurnsLeft > 0) {
-    eng.renderer->drawMapAndInterface();
-    if(DELAY_PLAYER_WAITING > 0) {
-      eng.sleep(DELAY_PLAYER_WAITING);
-    }
     waitTurnsLeft--;
     eng.gameTime->actorDidAct();
   }
