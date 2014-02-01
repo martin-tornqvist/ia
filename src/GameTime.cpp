@@ -110,9 +110,11 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
       }
 
       currentActor = getCurrentActor();
+      vector<PropId_t> props;
+      currentActor->getPropHandler().getAllActivePropIds(props);
 
       const bool IS_SLOWED =
-        currentActor->getPropHandler().hasProp(propSlowed);
+        find(props.begin(), props.end(), propSlowed) != props.end();
       const ActorSpeed_t defSpeed = currentActor->getData().speed;
       const ActorSpeed_t realSpeed =
         IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?

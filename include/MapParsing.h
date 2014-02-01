@@ -25,7 +25,7 @@ public:
   const Engine& eng;
 protected:
   CellPred(Engine& engine) : eng(engine) {}
-  bool canWalkAt(const int X, const int Y) const;
+//  bool canWalkAt(const int X, const int Y) const;
 };
 
 class BlocksVision : public CellPred {
@@ -37,19 +37,34 @@ public:
   bool check(const FeatureMob& f) const override;
 };
 
-class BlocksBodyType : public CellPred {
+class BlocksMoveCmn : public CellPred {
 public:
-  BlocksBodyType(BodyType_t bodyType, bool isActorsBlocking, Engine& engine) :
-    CellPred(engine), bodyType_(bodyType),
-    IS_ACTORS_BLOCKING_(isActorsBlocking) {}
+  BlocksMoveCmn(bool isActorsBlocking, Engine& engine) :
+    CellPred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
+
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
   bool check(const Actor& a)      const override;
-  const BodyType_t bodyType_;
+private:
   const bool IS_ACTORS_BLOCKING_;
+};
+
+class BlocksActor : public CellPred {
+public:
+  BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine);
+
+  bool isCheckingCells()          const override {return true;}
+  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
+  bool check(const Cell& c)       const override;
+  bool check(const FeatureMob& f) const override;
+  bool check(const Actor& a)      const override;
+private:
+  const bool IS_ACTORS_BLOCKING_;
+  vector<PropId_t> actorsProps_;
 };
 
 class BlocksProjectiles : public CellPred {
@@ -89,12 +104,12 @@ public:
 // E.g. ##
 //      #.
 //      ##
-class Nook : public CellPred {
-public:
-  Nook(Engine& engine) : CellPred(engine) {}
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
-};
+//class Nook : public CellPred {
+//public:
+//  Nook(Engine& engine) : CellPred(engine) {}
+//  bool isCheckingCells()          const override {return true;}
+//  bool check(const Cell& c)       const override;
+//};
 
 class IsAnyOfFeatures : public CellPred {
 public:

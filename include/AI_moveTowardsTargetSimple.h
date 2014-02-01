@@ -18,9 +18,8 @@ public:
           offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);
           offset.y = offset.y == 0 ? 0 : (offset.y > 0 ? 1 : -1);
           bool blockers[MAP_W][MAP_H];
-          MapParse::parse(
-            CellPred::BlocksBodyType(monster.getBodyType(), true, engine),
-            blockers);
+          MapParse::parse(CellPred::BlocksActor(monster, true, engine),
+                          blockers);
           const Pos newPos(monster.pos + offset);
           if(blockers[newPos.x][newPos.y] == false) {
             monster.moveDir(DirConverter().getDir(offset));

@@ -28,8 +28,7 @@ bool MapGenTrapezohedronLvl::run_() {
     feature_caveFloor, false, true);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
   vector<Pos> spawnCandidates;
   spawnCandidates.resize(0);
   for(int y = 0; y < MAP_H; y++) {

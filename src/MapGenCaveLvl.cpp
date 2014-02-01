@@ -54,8 +54,7 @@ bool MapGenCaveLvl::run_() {
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(playerPos, blockers, floodFill, 99999, Pos(-1, -1), eng);
   vector<PosAndVal> floodFillVector;

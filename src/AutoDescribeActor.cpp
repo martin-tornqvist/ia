@@ -25,9 +25,9 @@ string AutoDescribeActor::getNormalGroupSizeStr(const ActorData& def) const {
 
   return
     s == monsterGroupSize_alone ? "alone" :
-    s == monsterGroupSize_few ? "in groups of a few" :
-    s == monsterGroupSize_group ? "in groups" :
-    s == monsterGroupSize_horde ? "in hordes" :
+    s == monsterGroupSizeFew ? "in groups of a few" :
+    s == monsterGroupSizeGroup ? "in groups" :
+    s == monsterGroupSizeHorde ? "in hordes" :
     "in swarms";
 }
 

@@ -9,6 +9,7 @@
 #include "CommonData.h"
 #include "RoomTheme.h"
 #include "MapPatterns.h"
+#include "Properties.h"
 
 using namespace std;
 
@@ -132,6 +133,31 @@ private:
   vector<RoomTheme_t> themesBelongingTo_;
 };
 
+class Actor;
+
+class MoveRules {
+public:
+  MoveRules() {reset();}
+
+  ~MoveRules() {}
+
+  void reset() {
+    canMoveCmn_ = false;
+    for(int i = 0; i < endOfPropIds; i++) {canMoveIfHaveProp_[i] = false;}
+  }
+
+  void setPropCanMove(const PropId_t id) {canMoveIfHaveProp_[id] = true;}
+  void setCanMoveCmn() {canMoveCmn_ = true;}
+
+  bool canMoveCmn() const {return canMoveCmn_;}
+
+  bool canMove(const vector<PropId_t>& actorsProps) const;
+
+private:
+  bool canMoveCmn_;
+  bool canMoveIfHaveProp_[endOfPropIds];
+};
+
 struct FeatureData {
   Feature_t id;
   FeatureSpawnType_t spawnType;
@@ -139,8 +165,9 @@ struct FeatureData {
   SDL_Color color;
   SDL_Color colorBg;
   Tile_t tile;
-  bool canBodyTypePass[endOfBodyTypes];
-  bool isProjectilesPassable;
+  MoveRules moveRules;
+  bool isSoundPassable;
+  bool isProjectilePassable;
   bool isVisionPassable;
   bool isSmokePassable;
   bool canHaveBlood;

@@ -25,10 +25,11 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    const PropHandler& propHandler = eng.player->getPropHandler();
+    vector<PropId_t> props;
+    eng.player->getPropHandler().getAllActivePropIds(props);
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
-        if(propHandler.hasProp(propInfected) == false) {
+        if(find(props.begin(), props.end(), propInfected) == props.end()) {
           eng.log->addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -42,7 +43,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
       } break;
 
       case medicalBagAction_treatWound: {
-        if(propHandler.hasProp(propWound) == false) {
+        if(find(props.begin(), props.end(), propWound) == props.end()) {
           eng.log->addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }

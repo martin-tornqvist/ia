@@ -122,6 +122,7 @@ int main(int argc, char* argv[]) {
             "=== I AM DEAD === (press any key to view postmortem information)",
             clrMsgBad);
           eng->renderer->drawMapAndInterface();
+          eng->log->clearLog();
           eng->query->waitForKeyPress();
           eng->highScore->gameOver(false);
           eng->postmortem->run(&quitGame);

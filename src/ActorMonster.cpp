@@ -1,6 +1,7 @@
 #include "ActorMonster.h"
 
 #include <assert.h>
+#include <vector>
 
 #include "Engine.h"
 
@@ -12,6 +13,7 @@
 #include "Reload.h"
 #include "Inventory.h"
 #include "FeatureTrap.h"
+#include "Properties.h"
 
 #include "AI_setSpecialBlockedCells.h"
 #include "AI_handleClosedBlockingDoor.h"
@@ -26,6 +28,8 @@
 #include "AI_moveToRandomAdjacentCell.h"
 #include "AI_castRandomSpell.h"
 #include "AI_handleInventory.h"
+
+using namespace std;
 
 Monster::Monster(Engine& engine) :
   Actor(engine), playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
@@ -162,7 +166,7 @@ void Monster::onActorTurn() {
   }
 
   if(leader != eng.player) {
-    if(AI_handleClosedBlockingDoor::action(this, path, eng)) {
+    if(AI_handleClosedBlockingDoor::action(*this, path, eng)) {
       return;
     }
   }
@@ -367,9 +371,11 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
       }
     } else {
+      vector<PropId_t> props;
+      propHandler_->getAllActivePropIds(props);
       if(
         propHandler_->allowAttackRanged(false) &&
-        propHandler_->hasProp(propBurning) == false) {
+        find(props.begin(), props.end(), propBurning) != props.end()) {
         //Ranged weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));

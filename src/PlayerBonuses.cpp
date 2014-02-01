@@ -648,12 +648,12 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 
     case traitSelfAware: {
       eng.player->getPropHandler().tryApplyProp(
-        new PropRConfusion(eng, propTurnsIndefinite), true, true, true, true);
+        new PropRConfusion(eng, propTurnsIndefinite), true, true, true, false);
     } break;
 
     case traitFearless: {
       eng.player->getPropHandler().tryApplyProp(
-        new PropRFear(eng, propTurnsIndefinite), true, true, true, true);
+        new PropRFear(eng, propTurnsIndefinite), true, true, true, false);
     } break;
 
     default: {} break;

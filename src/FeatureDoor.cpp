@@ -87,22 +87,27 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
   material_ = doorMaterial_wood;
 }
 
-bool Door::canBodyTypePass(const BodyType_t bodyType) const {
-  switch(bodyType) {
-    case bodyType_normal:     return isOpen_;   break;
-    case bodyType_ethereal:   return true;      break;
-    case bodyType_ooze:       return true;      break;
-    case bodyType_flying:     return isOpen_;   break;
-    case endOfBodyTypes: return isOpen_;   break;
+bool Door::canMoveCmn() const {
+  return isOpen_;
+}
+
+bool Door::canMove(const vector<PropId_t>& actorsProps) const {
+  if(isOpen_) return true;
+
+  for(PropId_t propId : actorsProps) {
+    if(propId == propEthereal || propId == propOoze) {
+      return true;
+    }
   }
-  return false;
+
+  return isOpen_;
 }
 
 bool Door::isVisionPassable() const {
   return isOpen_;
 }
 
-bool Door::isProjectilesPassable() const {
+bool Door::isProjectilePassable() const {
   return isOpen_;
 }
 
@@ -267,9 +272,12 @@ void Door::bash_(Actor& actorTrying) {
 
     int skillValueBash = 0;
 
-    bool isBasherWeak = actorTrying.getPropHandler().hasProp(propWeakened);
+    vector<PropId_t> props;
+    actorTrying.getPropHandler().getAllActivePropIds(props);
+    const bool IS_BASHER_WEAK =
+      find(props.begin(), props.end(), propWeakened) != props.end();
 
-    if(isBasherWeak == false) {
+    if(IS_BASHER_WEAK == false) {
       if(IS_PLAYER) {
         const int BON =
           eng.playerBonHandler->hasTrait(traitTough) ? 20 : 0;
@@ -279,12 +287,12 @@ void Door::bash_(Actor& actorTrying) {
       }
     }
     const bool IS_DOOR_SMASHED =
-      (material_ == doorMaterial_metal || isBasherWeak) ? false :
+      (material_ == doorMaterial_metal || IS_BASHER_WEAK) ? false :
       eng.dice.percentile() < skillValueBash;
 
     if(
       IS_PLAYER && isSecret_ == false &&
-      (material_ == doorMaterial_metal || isBasherWeak)) {
+      (material_ == doorMaterial_metal || IS_BASHER_WEAK)) {
       eng.log->addMsg("It seems futile.");
     }
 
@@ -372,7 +380,7 @@ void Door::tryClose(Actor* actorTrying) {
   if(isClosable) {
     const Cell& doorCell = eng.map->cells[pos_.x][pos_.y];
     const bool IS_BLOCKED =
-      CellPred::BlocksBodyType(bodyType_normal, true, eng).check(doorCell) ||
+      CellPred::BlocksMoveCmn(true, eng).check(doorCell) ||
       doorCell.item != NULL;
     if(IS_BLOCKED) {
       isClosable = false;

@@ -86,7 +86,13 @@ void Trap::bump(Actor& actorBumping) {
 
   trace << "Trap: Name of actor bumping: \"" << d.name_a << "\"" << endl;
 
-  if(d.bodyType == bodyType_normal) {
+
+  vector<PropId_t> props;
+  actorBumping.getPropHandler().getAllActivePropIds(props);
+
+  if(
+    find(props.begin(), props.end(), propEthereal)  == props.end() &&
+    find(props.begin(), props.end(), propFlying)    == props.end()) {
     const bool IS_PLAYER = &actorBumping == actorBumping.eng.player;
     const bool ACTOR_CAN_SEE = actorBumping.getPropHandler().allowSee();
     AbilityValues& abilities = actorBumping.getData().abilityVals;
@@ -146,9 +152,14 @@ void Trap::bump(Actor& actorBumping) {
 }
 
 void Trap::disarm() {
-  PropHandler& propHlr  = eng.player->getPropHandler();
-  const bool IS_BLESSED = propHlr.hasProp(propBlessed);
-  const bool IS_CURSED  = propHlr.hasProp(propCursed);
+  vector<PropId_t> props;
+  eng.player->getPropHandler().getAllActivePropIds(props);
+
+
+  const bool IS_BLESSED =
+    find(props.begin(), props.end(), propBlessed) != props.end();
+  const bool IS_CURSED =
+    find(props.begin(), props.end(), propCursed)  != props.end();
 
   int       disarmNumerator     = 5;
   const int DISARM_DENOMINATOR  = 10;

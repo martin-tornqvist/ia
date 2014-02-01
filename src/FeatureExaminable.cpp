@@ -149,7 +149,10 @@ void Tomb::bump(Actor& actorBumping) {
     } else {
       eng.log->addMsg("I attempt to push the lid.");
 
-      if(eng.player->getPropHandler().hasProp(propWeakened)) {
+      vector<PropId_t> props;
+      eng.player->getPropHandler().getAllActivePropIds(props);
+
+      if(find(props.begin(), props.end(), propWeakened) != props.end()) {
         trySprainPlayer();
         eng.log->addMsg("It seems futile.");
       } else {
@@ -215,7 +218,10 @@ bool Tomb::open() {
 }
 
 void Tomb::examine() {
-  if(eng.player->getPropHandler().hasProp(propConfused)) {
+  vector<PropId_t> props;
+  eng.player->getPropHandler().getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propConfused) != props.end()) {
     eng.log->addMsg("I start to search the tomb...");
     eng.log->addMsg("but I cannot grasp the purpose.");
     eng.gameTime->actorDidAct();
@@ -366,8 +372,8 @@ void Tomb::triggerTrap(Actor& actor) {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
           if(
-            d.bodyType == bodyType_ooze &&
-            d.isAutoSpawnAllowed &&
+            d.intrProps[propOoze] &&
+            d.isAutoSpawnAllowed  &&
             d.isUnique == false) {
             actorCandidates.push_back(static_cast<ActorId_t>(i));
           }
@@ -464,13 +470,20 @@ void Chest::bash(Actor& actorTrying) {
     PropHandler& propHlr = eng.player->getPropHandler();
     PlayerBonHandler* const bonHlr = eng.playerBonHandler;
 
-    if(propHlr.hasProp(propWeakened) || material == chestMtrl_iron) {
+    vector<PropId_t> props;
+    eng.player->getPropHandler().getAllActivePropIds(props);
+
+    if(
+      find(props.begin(), props.end(), propWeakened) != props.end() ||
+      material == chestMtrl_iron) {
       trySprainPlayer();
       eng.log->addMsg("It seems futile.");
     } else {
 
-      const bool IS_CURSED    = propHlr.hasProp(propCursed);
-      const bool IS_BLESSED   = propHlr.hasProp(propBlessed);
+      const bool IS_CURSED =
+        find(props.begin(), props.end(), propCursed)  != props.end();
+      const bool IS_BLESSED =
+        find(props.begin(), props.end(), propBlessed) != props.end();
 
       if(IS_BLESSED == false && (IS_CURSED || eng.dice.oneIn(3))) {
         itemContainer_.destroySingleFragile(eng);
@@ -536,7 +549,10 @@ void Chest::bash(Actor& actorTrying) {
 }
 
 void Chest::examine() {
-  if(eng.player->getPropHandler().hasProp(propConfused)) {
+  vector<PropId_t> props;
+  eng.player->getPropHandler().getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propConfused) != props.end()) {
     eng.log->addMsg("I start to search the chest...");
     eng.log->addMsg("but I cannot grasp the purpose.");
     eng.gameTime->actorDidAct();

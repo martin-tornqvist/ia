@@ -15,9 +15,7 @@ public:
         monster.playerAwarenessCounter > 0) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(
-          CellPred::BlocksBodyType(monster.getBodyType(), true, engine),
-          blockers);
+        MapParse::parse(CellPred::BlocksActor(monster, true, engine), blockers);
 
         const Pos offset =
           getOffsetToRandomAdjacentFreeCell(monster, blockers, engine);

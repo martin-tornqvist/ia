@@ -77,45 +77,57 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       isAttackerAware = monster->playerAwarenessCounter > 0;
     }
 
-    bool isDefenderHeldByWeb = false;
-    const FeatureStatic* const f =
-      eng.map->cells[defPos.x][defPos.y].featureStatic;
-    if(f->getId() == feature_trap) {
-      const Trap* const t = dynamic_cast<const Trap*>(f);
-      if(t->getTrapType() == trap_spiderWeb) {
-        const TrapSpiderWeb* const web =
-          dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
-        if(web->isHolding()) {
-          isDefenderHeldByWeb = true;
+    PropHandler& defPropHlr = curDefender->getPropHandler();
+    vector<PropId_t> defProps;
+    defPropHlr.getAllActivePropIds(defProps);
+
+    if(isAttackerAware) {
+      bool isBigBon   = false;
+      bool isSmallBon = false;
+
+      const FeatureStatic* const f =
+        eng.map->cells[defPos.x][defPos.y].featureStatic;
+      if(f->getId() == feature_trap) {
+        const Trap* const t = dynamic_cast<const Trap*>(f);
+        if(t->getTrapType() == trap_spiderWeb) {
+          const TrapSpiderWeb* const web =
+            dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
+          if(web->isHolding()) {
+            isBigBon = true;
+          }
         }
       }
-    }
-    if(isAttackerAware) {
-      PropHandler& defenderPropHandler = curDefender->getPropHandler();
-      if(
-        (isDefenderAware == false ||
-         isDefenderHeldByWeb ||
-         defenderPropHandler.hasProp(propParalysed)  ||
-         defenderPropHandler.hasProp(propNailed)     ||
-         defenderPropHandler.hasProp(propFainted))) {
-        hitChanceTot += 50;
+
+      for(PropId_t propId : defProps) {
+        if(
+          propId == propParalysed  ||
+          propId == propNailed     ||
+          propId == propFainted) {
+          isBigBon = true;
+          break;
+        }
+        if(
+          propId == propBlind     ||
+          propId == propConfused  ||
+          propId == propSlowed    ||
+          propId == propBurning) {
+          isSmallBon = true;
+        }
       }
-      if(
-        defenderPropHandler.allowSee() == false    ||
-        defenderPropHandler.hasProp(propConfused)  ||
-        defenderPropHandler.hasProp(propSlowed)    ||
-        defenderPropHandler.hasProp(propBurning)) {
-        hitChanceTot += 20;
+      if(isBigBon == false && isSmallBon == false) {
+        if(defPropHlr.allowSee() == false) {
+          isSmallBon = true;
+        }
       }
+
+      hitChanceTot += isBigBon ? 50 : isSmallBon ? 20 : 0;
     }
 
     attackResult = eng.abilityRoll->roll(hitChanceTot);
 
     //Ethereal target missed?
-    if(curDefender->getBodyType() == bodyType_ethereal) {
-      if(eng.dice.fraction(2, 3)) {
-        isEtherealDefenderMissed = true;
-      }
+    if(find(defProps.begin(), defProps.end(), propEthereal) != defProps.end()) {
+      isEtherealDefenderMissed = eng.dice.fraction(2, 3);
     }
 
     //--------------------------------------- DETERMINE DAMAGE
@@ -123,8 +135,11 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     dmgSides  = wpn_.getData().meleeDmg.second;
     dmgPlus   = wpn_.meleeDmgPlus;
 
+    vector<PropId_t> attProps;
+    attacker->getPropHandler().getAllActivePropIds(attProps);
+
     isWeakAttack = false;
-    if(attacker->getPropHandler().hasProp(propWeakened)) {
+    if(find(attProps.begin(), attProps.end(), propWeakened) != attProps.end()) {
       //Weak attack (min damage)
       dmgRoll = dmgRolls;
       dmg = dmgRoll + dmgPlus;
@@ -216,10 +231,11 @@ RangedAttackData::RangedAttackData(
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
 
-      if(curDefender->getBodyType() == bodyType_ethereal) {
-        if(eng.dice.fraction(2, 3)) {
-          isEtherealDefenderMissed = true;
-        }
+      vector<PropId_t> props;
+      curDefender->getPropHandler().getAllActivePropIds(props);
+
+      if(find(props.begin(), props.end(), propEthereal) != props.end()) {
+        isEtherealDefenderMissed = eng.dice.fraction(2, 3);
       }
 
       bool playerAimX3 = false;

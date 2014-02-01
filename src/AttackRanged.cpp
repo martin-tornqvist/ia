@@ -207,13 +207,13 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           unsigned int featMobIndex = 0;
           featMobIndex < featureMobs.size();
           featMobIndex++) {
-          if(featureMobs.at(featMobIndex)->isProjectilesPassable() == false) {
+          if(featureMobs.at(featMobIndex)->isProjectilePassable() == false) {
             featureBlockingShot = featureMobs.at(featMobIndex);
           }
         }
         FeatureStatic* featureStatic =
           eng.map->cells[curProj->pos.x][curProj->pos.y].featureStatic;
-        if(featureStatic->isProjectilesPassable() == false) {
+        if(featureStatic->isProjectilePassable() == false) {
           featureBlockingShot = featureStatic;
         }
 

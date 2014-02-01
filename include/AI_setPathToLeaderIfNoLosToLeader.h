@@ -21,8 +21,8 @@ public:
             return;
           }
 
-          MapParse::parse(CellPred::BlocksBodyType(monster.getBodyType(), false,
-                                                 engine), blockers);
+          MapParse::parse(CellPred::BlocksActor(monster, false, engine),
+                          blockers);
 
           MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
                           blockers, mapParseWriteOnlyTrue);

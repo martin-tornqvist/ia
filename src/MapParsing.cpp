@@ -10,9 +10,9 @@
 //------------------------------------------------------------ CELL PREDICATES
 namespace CellPred {
 
-bool CellPred::canWalkAt(const int X, const int Y) const {
-  return eng.map->cells[X][Y].featureStatic->canBodyTypePass(bodyType_normal);
-}
+//bool CellPred::canWalkAt(const int X, const int Y) const {
+//  return eng.map->cells[X][Y].featureStatic-> canMoveCmn();
+//}
 
 bool BlocksVision::check(const Cell& c)  const {
   return c.featureStatic->isVisionPassable() == false;
@@ -22,24 +22,41 @@ bool BlocksVision::check(const FeatureMob& f) const {
   return f.isVisionPassable() == false;
 }
 
-bool BlocksBodyType::check(const Cell& c) const {
-  return c.featureStatic->canBodyTypePass(bodyType_) == false;
+bool BlocksMoveCmn::check(const Cell& c) const {
+  return c.featureStatic->canMoveCmn() == false;
 }
 
-bool BlocksBodyType::check(const FeatureMob& f) const {
-  return f.canBodyTypePass(bodyType_) == false;
+bool BlocksMoveCmn::check(const FeatureMob& f) const {
+  return f.canMoveCmn() == false;
 }
 
-bool BlocksBodyType::check(const Actor& a) const {
+bool BlocksMoveCmn::check(const Actor& a) const {
+  return a.deadState == actorDeadState_alive;
+}
+
+BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine) :
+  CellPred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {
+  actor.getPropHandler().getAllActivePropIds(actorsProps_);
+}
+
+bool BlocksActor::check(const Cell& c) const {
+  return c.featureStatic->canMove(actorsProps_) == false;
+}
+
+bool BlocksActor::check(const FeatureMob& f) const {
+  return f.canMove(actorsProps_) == false;
+}
+
+bool BlocksActor::check(const Actor& a) const {
   return a.deadState == actorDeadState_alive;
 }
 
 bool BlocksProjectiles::check(const Cell& c)  const {
-  return c.featureStatic->isProjectilesPassable() == false;
+  return c.featureStatic->isProjectilePassable() == false;
 }
 
 bool BlocksProjectiles::check(const FeatureMob& f)  const {
-  return f.isProjectilesPassable() == false;
+  return f.isProjectilePassable() == false;
 }
 
 bool LivingActorsAdjToPos::check(const Actor& a) const {
@@ -78,51 +95,51 @@ bool BlocksItems::check(const FeatureMob& f) const {
 //  return IS_HOR_COR != IS_VER_COR;
 //}
 
-bool Nook::check(const Cell& c) const {
-  const int X = c.pos.x;
-  const int Y = c.pos.y;
-
-  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
-
-  const bool C  = canWalkAt(X    , Y);
-  const bool E  = canWalkAt(X + 1, Y);
-  const bool W  = canWalkAt(X - 1, Y);
-  const bool N  = canWalkAt(X,     Y - 1);
-  const bool S  = canWalkAt(X,     Y + 1);
-  const bool NE = canWalkAt(X + 1, Y - 1);
-  const bool NW = canWalkAt(X - 1, Y - 1);
-  const bool SE = canWalkAt(X + 1, Y + 1);
-  const bool SW = canWalkAt(X - 1, Y + 1);
-
-  if(C == false) {return false;}
-
-  //Horizontal nook
-  if(N == false && S == false) {
-    // ##
-    // #..
-    // ##
-    if(NW == false && W == false && SW == false && E) {return true;}
-
-    //  ##
-    // ..#
-    //  ##
-    if(NE == false && E == false && SE == false && W) {return true;}
-  }
-
-  //Vertical nook
-  if(E == false && W == false) {
-    // ###
-    // #.#
-    //  .
-    if(NW == false && N == false && NE == false && S) {return true;}
-
-    //  .
-    // #.#
-    // ###
-    if(SW == false && S == false && SE == false && N) {return true;}
-  }
-  return false;
-}
+//bool Nook::check(const Cell& c) const {
+//  const int X = c.pos.x;
+//  const int Y = c.pos.y;
+//
+//  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+//
+//  const bool C  = canWalkAt(X    , Y);
+//  const bool E  = canWalkAt(X + 1, Y);
+//  const bool W  = canWalkAt(X - 1, Y);
+//  const bool N  = canWalkAt(X,     Y - 1);
+//  const bool S  = canWalkAt(X,     Y + 1);
+//  const bool NE = canWalkAt(X + 1, Y - 1);
+//  const bool NW = canWalkAt(X - 1, Y - 1);
+//  const bool SE = canWalkAt(X + 1, Y + 1);
+//  const bool SW = canWalkAt(X - 1, Y + 1);
+//
+//  if(C == false) {return false;}
+//
+//  //Horizontal nook
+//  if(N == false && S == false) {
+//    // ##
+//    // #..
+//    // ##
+//    if(NW == false && W == false && SW == false && E) {return true;}
+//
+//    //  ##
+//    // ..#
+//    //  ##
+//    if(NE == false && E == false && SE == false && W) {return true;}
+//  }
+//
+//  //Vertical nook
+//  if(E == false && W == false) {
+//    // ###
+//    // #.#
+//    //  .
+//    if(NW == false && N == false && NE == false && S) {return true;}
+//
+//    //  .
+//    // #.#
+//    // ###
+//    if(SW == false && S == false && SE == false && N) {return true;}
+//  }
+//  return false;
+//}
 
 bool IsAnyOfFeatures::check(const Cell& c) const {
   for(Feature_t f : features_) {if(f == c.featureStatic->getId()) return true;}

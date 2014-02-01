@@ -33,7 +33,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     const Pos curPos = path.at(i);
     const Feature* featureHere =
       eng.map->cells[curPos.x][curPos.y].featureStatic;
-    if(featureHere->isProjectilesPassable() == false) {
+    if(featureHere->isProjectilePassable() == false) {
       path.resize(i);
       break;
     }
@@ -179,7 +179,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     const Feature* featureHere =
       eng.map->cells[curPos.x][curPos.y].featureStatic;
-    if(featureHere->isProjectilesPassable() == false) {
+    if(featureHere->isProjectilePassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
     }

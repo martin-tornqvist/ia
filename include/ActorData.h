@@ -31,12 +31,16 @@ enum ActorId_t {
   actor_mummy, actor_khephren, actor_nitokris,
   actor_deepOne,
   actor_keziahMason, actor_brownJenkin,
-//  actor_lordOfPestilence, actor_lordOfShadows, actor_lordOfSpiders, actor_lordOfSpirits,
+//  actor_lordOfPestilence,
+//  actor_lordOfShadows,
+//  actor_lordOfSpiders,
+//  actor_lordOfSpirits,
   actor_majorClaphamLee, actor_deanHalsey,
   actor_wormMass,
   actor_dustVortex, actor_fireVortex, actor_frostVortex,
   actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
   actor_colourOutOfSpace,
+  actor_chthonian,
   actor_huntingHorror,
 
   endOfActorIds
@@ -44,10 +48,10 @@ enum ActorId_t {
 
 enum MonsterGroupSize_t {
   monsterGroupSize_alone,
-  monsterGroupSize_few,
-  monsterGroupSize_group,
-  monsterGroupSize_horde,
-  monsterGroupSize_swarm
+  monsterGroupSizeFew,
+  monsterGroupSizeGroup,
+  monsterGroupSizeHorde,
+  monsterGroupSizeSwarm
 };
 
 enum ActorSpeed_t {
@@ -98,7 +102,6 @@ public:
   void reset();
 
   ActorId_t id;
-  BodyType_t bodyType;
   string name_a;
   string name_the;
   Tile_t tile;

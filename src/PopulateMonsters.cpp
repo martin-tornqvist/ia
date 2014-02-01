@@ -58,8 +58,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
@@ -109,8 +108,7 @@ void PopulateMonsters::populateCaveLevel() const {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   const Pos& playerPos = eng.player->pos;
 
@@ -151,8 +149,7 @@ void PopulateMonsters::populateIntroLevel() {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   const Pos& playerPos = eng.player->pos;
 
@@ -196,8 +193,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
 
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   const Pos& playerPos = eng.player->pos;
 
@@ -351,10 +347,10 @@ void PopulateMonsters::spawnGroupAt(
   int maxNrInGroup = 1;
 
   switch(d.groupSize) {
-    case monsterGroupSize_few:    {maxNrInGroup = eng.dice.range(1, 2);}    break;
-    case monsterGroupSize_group:  {maxNrInGroup = eng.dice.range(3, 4);}    break;
-    case monsterGroupSize_horde:  {maxNrInGroup = eng.dice.range(6, 7);}    break;
-    case monsterGroupSize_swarm:  {maxNrInGroup = eng.dice.range(12, 15);}  break;
+    case monsterGroupSizeFew:    maxNrInGroup = eng.dice.range(1, 2);    break;
+    case monsterGroupSizeGroup:  maxNrInGroup = eng.dice.range(3, 4);    break;
+    case monsterGroupSizeHorde:  maxNrInGroup = eng.dice.range(6, 7);    break;
+    case monsterGroupSizeSwarm:  maxNrInGroup = eng.dice.range(10, 12);  break;
     default: {} break;
   }
 
@@ -439,15 +435,15 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 //
 //      const ActorData* const d = originActor->getData();
 //      switch(d->groupSize) {
-//      case monsterGroupSize_few: {
+//      case monsterGroupSizeFew: {
 //        extraSpawns = eng.dice.range(0, 2);
 //      }
 //      break;
-//      case monsterGroupSize_group: {
+//      case monsterGroupSizeGroup: {
 //        extraSpawns = eng.dice.range(2, 5);
 //      }
 //      break;
-//      case monsterGroupSize_horde: {
+//      case monsterGroupSizeHorde: {
 //        extraSpawns = eng.dice.range(7, 13);
 //      }
 //      break;

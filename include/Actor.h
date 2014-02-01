@@ -79,7 +79,6 @@ public:
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getColor() {return clr_;}
   inline const Tile_t& getTile() const {return tile_;}
-  inline BodyType_t getBodyType() const {return data_->bodyType;}
 
   void addLight(bool light[MAP_W][MAP_H]) const;
 

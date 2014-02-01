@@ -169,7 +169,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng), blockers);
+  MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos CELL = freeCells.at(eng.dice(1, freeCells.size()) - 1);
@@ -348,9 +348,12 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
   traceVerbose << "Actor::hit()..." << endl;
   traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
+  vector<PropId_t> props;
+  propHandler_->getAllActivePropIds(props);
+
   if(
     dmgType == dmgType_light &&
-    propHandler_->hasProp(propLightSensitive) == false) {
+    find(props.begin(), props.end(), propLightSensitive) != props.end()) {
     return false;
   }
 
@@ -554,7 +557,10 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 }
 
 void Actor::addLight(bool light[MAP_W][MAP_H]) const {
-  if(propHandler_->hasProp(propBurning)) {
+  vector<PropId_t> props;
+  propHandler_->getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propBurning) != props.end()) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         light[pos.x + dx][pos.y + dy] = true;

@@ -84,11 +84,20 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
       }
     }
 
-    PropHandler& propHandler = caster->getPropHandler();
+    PropHandler& propHlr = caster->getPropHandler();
 
-    if(propHandler.hasProp(propBlessed))  {costMax -= 1;}
-    if(propHandler.allowSee() == false)   {costMax -= 1;}
-    if(propHandler.hasProp(propCursed))   {costMax += 3;}
+    vector<PropId_t> props;
+    propHlr.getAllActivePropIds(props);
+
+    if(propHlr.allowSee() == false)   {costMax -= 1;}
+
+    if(find(props.begin(), props.end(), propBlessed) != props.end()) {
+      costMax -= 1;
+    }
+
+    if(find(props.begin(), props.end(), propCursed) != props.end()) {
+      costMax += 3;
+    }
 
     if(caster == eng.player && eng.player->getMth() >= MTH_LVL_SPELLS_SPI_BON) {
       costMax--;
@@ -289,7 +298,7 @@ SpellCastRetData SpellMayhem::cast_(
           for(int dx = -1; dx <= 1; dx++) {
             const FeatureStatic* const f =
               eng.map->cells[x + dx][y + dy].featureStatic;
-            if(f->canBodyTypePass(bodyType_normal)) {
+            if(f->canMoveCmn()) {
               isAdjToWalkableCell = true;
             }
           }
@@ -339,8 +348,7 @@ SpellCastRetData SpellPestilence::cast_(
   Actor* const caster, Engine& eng) {
   (void)caster;
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   const int RADI = 4;
   const int x0 = max(0, eng.player->pos.x - RADI);
@@ -686,7 +694,9 @@ SpellCastRetData SpellBless::cast_(
 bool SpellBless::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   (void)eng;
-  return monster->getPropHandler().hasProp(propBlessed) == false;
+
+  vector<PropId_t> props;
+  return find(props.begin(), props.end(), propBlessed) == props.end();
 }
 
 //------------------------------------------------------------ TELEPORT
@@ -835,8 +845,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                   blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
     const Pos pos(freePositionsSeenByPlayer.at(i));

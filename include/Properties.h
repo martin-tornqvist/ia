@@ -43,6 +43,12 @@ enum PropId_t {
   propBlessed,
   propCursed,
 
+  //Properties affecting the actors body, or way of moving around
+  propFlying,
+  propEthereal,
+  propOoze,
+  propBurrowing,
+
   //The following are used for AI control
   propWaiting,
   propDisabledAttack,
@@ -81,7 +87,11 @@ enum PropAlignment_t {
   propAlignmentGood, propAlignmentBad, propAlignmentNeutral
 };
 
-enum PropSrc_t {propSrcApplied, propSrcInv, propSrcAppliedAndInv};
+enum PropSrc_t {
+  propSrcApplied,
+  propSrcInv,
+  propSrcAppliedAndInv
+};
 
 struct PropData {
   PropData() :
@@ -127,7 +137,7 @@ private:
 
 class Prop;
 
-// Each actor has an instance of this
+//Each actor has an instance of this
 class PropHandler {
 public:
   PropHandler(Actor* owningActor, Engine& engine);
@@ -155,7 +165,7 @@ public:
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const Abilities_t ability) const;
 
-  bool hasProp(const PropId_t id) const;
+  void getAllActivePropIds(vector<PropId_t>& idVectorRef) const;
 
   Prop* getAppliedProp(const PropId_t id) const;
 
@@ -181,17 +191,13 @@ public:
                        const int NR_TURNS = -1) const;
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const;
+                    const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
   void getPropsFromSource(vector<Prop*>& propList,
                           const PropSrc_t source) const;
 
-  bool hasProp(const PropId_t id,
-               const vector<Prop*> propList) const;
-
-  bool tryResistProp(const PropId_t id,
-                     const vector<Prop*>& propList) const;
+  bool tryResistProp(const PropId_t id, const vector<Prop*>& propList) const;
 
   Actor* owningActor_;
   Engine& eng;
@@ -270,9 +276,9 @@ public:
     return false;
   }
   virtual bool tryResistDmg(
-    const DmgTypes_t dmgType, const bool ALLOW_MESSAGE_WHEN_TRUE) const {
+    const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
     (void)dmgType;
-    (void)ALLOW_MESSAGE_WHEN_TRUE;
+    (void)ALLOW_MSG_WHEN_TRUE;
     return false;
   }
 
@@ -366,6 +372,36 @@ public:
   }
 
   void onStart() override;
+};
+
+class PropFlying: public Prop {
+public:
+  PropFlying(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propFlying, engine, turnsInit, turns) {}
+  ~PropFlying() override {}
+};
+
+class PropEthereal: public Prop {
+public:
+  PropEthereal(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propEthereal, engine, turnsInit, turns) {}
+  ~PropEthereal() override {}
+};
+
+class PropOoze: public Prop {
+public:
+  PropOoze(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propOoze, engine, turnsInit, turns) {}
+  ~PropOoze() override {}
+};
+
+class PropBurrowing: public Prop {
+public:
+  PropBurrowing(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
+    Prop(propBurrowing, engine, turnsInit, turns) {}
+  ~PropBurrowing() override {}
+
+  void onNewTurn() override;
 };
 
 class PropPossessedByZuul: public Prop {
@@ -722,7 +758,7 @@ public:
   ~PropRAcid() override {}
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
+                    const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRCold: public Prop {
@@ -732,7 +768,7 @@ public:
   ~PropRCold() override {}
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
+                    const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRConfusion: public Prop {
@@ -753,7 +789,7 @@ public:
   ~PropRElec() override {}
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
+                    const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRFear: public Prop {
@@ -778,7 +814,7 @@ public:
   bool tryResistOtherProp(const PropId_t id) const override;
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
+                    const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRFire: public Prop {
@@ -792,7 +828,7 @@ public:
   bool tryResistOtherProp(const PropId_t id) const override;
 
   bool tryResistDmg(const DmgTypes_t dmgType,
-                    const bool ALLOW_MESSAGE_WHEN_TRUE) const override;
+                    const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRPoison: public Prop {

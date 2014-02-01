@@ -18,8 +18,7 @@ public:
         return;
       }
 
-      MapParse::parse(
-        CellPred::BlocksBodyType(monster.getBodyType(), false, eng), blockers);
+      MapParse::parse(CellPred::BlocksActor(monster, false, eng), blockers);
 
       MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, eng),
                       blockers, mapParseWriteOnlyTrue);

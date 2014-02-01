@@ -69,6 +69,7 @@ enum Tile_t {
   tile_lockpick,
   tile_huntingHorror,
   tile_spiderLeng,
+  tile_chthonian,
   tile_migo,
   tile_floor,
   tile_aimMarkerHead,

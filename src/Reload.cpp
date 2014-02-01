@@ -131,10 +131,15 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
         item = general.at(i);
 
         if(item->getData().id == ammoType) {
+          PropHandler& propHlr = actorReloading.getPropHandler();
+
+          vector<PropId_t> props;
+          propHlr.getAllActivePropIds(props);
+
           const bool IS_RELOADER_BLIND =
             actorReloading.getPropHandler().allowSee() == false;
           const bool IS_REALOADER_TERRIFIED =
-            actorReloading.getPropHandler().hasProp(propTerrified);
+            find(props.begin(), props.end(), propTerrified) != props.end();
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 

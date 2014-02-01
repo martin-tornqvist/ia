@@ -1,5 +1,7 @@
 #include "Knockback.h"
 
+#include <algorithm>
+
 #include "Engine.h"
 #include "Attack.h"
 #include "ActorPlayer.h"
@@ -18,10 +20,13 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
   if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
     if(defender.getData().actorSize <= actorSize_giant) {
 
-      const BodyType_t defenderBodyType = defender.getBodyType();
-      const bool WALKTYPE_CAN_BE_KNOCKED_BACK =
-        defenderBodyType != bodyType_ethereal &&
-        defenderBodyType != bodyType_ooze;
+      vector<PropId_t> props;
+      defender.getPropHandler().getAllActivePropIds(props);
+
+
+      const bool ACTOR_CAN_BE_KNOCKED_BACK =
+        find(props.begin(), props.end(), propEthereal)  == props.end() &&
+        find(props.begin(), props.end(), propOoze)      == props.end();
 
       const Pos delta = (defender.pos - attackedFromPos).getSigns();
 
@@ -34,14 +39,13 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         const Pos newPos = defender.pos + delta;
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(
-          CellPred::BlocksBodyType(defender.getBodyType(), true, eng), blockers);
+        MapParse::parse(CellPred::BlocksActor(defender, true, eng), blockers);
         const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
           eng.map->cells[newPos.x][newPos.y].featureStatic->isBottomless();
 
         if(
-          (WALKTYPE_CAN_BE_KNOCKED_BACK) &&
+          (ACTOR_CAN_BE_KNOCKED_BACK) &&
           (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
 
           bool visionBlockers[MAP_W][MAP_H];

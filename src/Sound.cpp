@@ -20,12 +20,10 @@ bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
 void SoundEmitter::emitSound(Sound snd) {
   bool blockers[MAP_W][MAP_H];
   FeatureStatic* f = NULL;
-  for(int y = MAP_H - 1; y >= 0; y--) {
-    for(int x = MAP_W - 1; x >= 0; x--) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
       f = eng.map->cells[x][y].featureStatic;
-      const bool SOUND_CAN_PASS_CELL =
-        f->canBodyTypePass(bodyType_ooze) || f->isBottomless();
-      blockers[x][y] = SOUND_CAN_PASS_CELL == false;
+      blockers[x][y] = f->isSoundPassable() == false;
     }
   }
   int floodFill[MAP_W][MAP_H];
@@ -74,7 +72,7 @@ void SoundEmitter::emitSound(Sound snd) {
           (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 
         eng.player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
-                               dirToOrigin, PERCENT_DISTANCE);
+                              dirToOrigin, PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(&actor);
         monster->hearSound(snd);

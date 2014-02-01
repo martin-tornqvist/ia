@@ -32,6 +32,7 @@
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"
+#include "Properties.h"
 
 Player::Player(Engine& engine) :
   Actor(engine), activeMedicalBag(NULL), waitTurnsLeft(-1),
@@ -231,7 +232,12 @@ int Player::getCarryWeightLimit() const {
   PlayerBonHandler* const bon = eng.playerBonHandler;
   const bool IS_TOUGH         = bon->hasTrait(traitTough);
   const bool IS_STRONG_BACKED = bon->hasTrait(traitStrongBacked);
-  const bool IS_WEAKENED      = propHandler_->hasProp(propWeakened);
+
+  vector<PropId_t> props;
+  propHandler_->getAllActivePropIds(props);
+  const bool IS_WEAKENED =
+    find(props.begin(), props.end(), propWeakened) != props.end();
+
   const int CARRY_WEIGHT_MOD =
     IS_TOUGH * 10 + IS_STRONG_BACKED * 30 - IS_WEAKENED * 15;
 
@@ -402,8 +408,7 @@ void Player::incrInsanity() {
           msg += "I struggle to not fall into a stupor.";
           eng.popup->showMessage(msg, true, "Fainting!",
                                  sfxInsanityRising);
-          propHandler_->tryApplyProp(
-            new PropFainted(eng, propTurnsStd));
+          propHandler_->tryApplyProp(new PropFainted(eng, propTurnsStd));
           return;
         } break;
 
@@ -417,7 +422,10 @@ void Player::incrInsanity() {
         } break;
 
         case 5: {
-          if(getPropHandler().hasProp(propRFear) == false) {
+          vector<PropId_t> props;
+          propHandler_->getAllActivePropIds(props);
+
+          if(find(props.begin(), props.end(), propRFear) != props.end()) {
 
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
@@ -580,8 +588,7 @@ void Player::incrInsanity() {
           msg += "where I am, or what I'm doing.";
           eng.popup->showMessage(msg, true, "Confusion!", sfxInsanityRising);
 
-          propHandler_->tryApplyProp(
-            new PropConfused(eng, propTurnsStd));
+          propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStd));
 
           return;
         } break;
@@ -615,8 +622,7 @@ void Player::setTempShockFromFeatures() {
 
 bool Player::isStandingInOpenSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
       if(blockers[x][y]) {
@@ -630,8 +636,7 @@ bool Player::isStandingInOpenSpace() const {
 
 bool Player::isStandingInCrampedSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
@@ -956,8 +961,11 @@ void Player::onStandardTurn_() {
     spi_--;
   }
 
+  vector<PropId_t> props;
+  propHandler_->getAllActivePropIds(props);
+
   if(activeMedicalBag == NULL) {
-    if(propHandler_->hasProp(propPoisoned) == false) {
+    if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
       Prop* const propWnd = propHandler_->getAppliedProp(propWound);
       if(propWnd != NULL) {
@@ -978,7 +986,7 @@ void Player::onStandardTurn_() {
 
     if(
       propHandler_->allowSee() &&
-      propHandler_->hasProp(propConfused) == false) {
+      find(props.begin(), props.end(), propConfused) == props.end()) {
       int x0 = pos.x - 1;
       int y0 = pos.y - 1;
       int x1 = pos.x + 1;
@@ -1135,16 +1143,17 @@ void Player::moveDir(Dir_t dir) {
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or static features?
+      vector<PropId_t> props;
+      getPropHandler().getAllActivePropIds(props);
       Cell& cell = eng.map->cells[dest.x][dest.y];
-      bool isFeaturesAllowMove =
-        cell.featureStatic->canBodyTypePass(getBodyType());
+      bool isFeaturesAllowMove = cell.featureStatic->canMove(props);
 
       vector<FeatureMob*> featureMobs;
       eng.gameTime->getFeatureMobsAtPos(dest, featureMobs);
 
       if(isFeaturesAllowMove) {
         for(FeatureMob * m : featureMobs) {
-          if(m->canBodyTypePass(getBodyType()) == false) {
+          if(m->canMove(props) == false) {
             isFeaturesAllowMove = false;
             break;
           }
@@ -1311,7 +1320,10 @@ void Player::updateFov() {
     eng.map->cells[pos.x][pos.y].isSeenByPlayer = true;
   }
 
-  if(propHandler_->hasProp(propClairvoyant)) {
+  vector<PropId_t> props;
+  eng.player->getPropHandler().getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propClairvoyant) != props.end()) {
     const int FLOODFILL_TRAVEL_LIMIT = FOV_STD_RADI_INT + 2;
 
     const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
@@ -1320,8 +1332,7 @@ void Player::updateFov() {
     const int Y1 = min(MAP_H - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
 
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksBodyType(bodyType_flying, false, eng),
-                    blockers);
+    MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
@@ -1369,8 +1380,7 @@ void Player::FOVhack() {
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {

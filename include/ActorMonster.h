@@ -369,6 +369,13 @@ public:
   void spawnStartItems() override;
 };
 
+class Chthonian: public Monster {
+public:
+  Chthonian(Engine& engine) : Monster(engine) {}
+  ~Chthonian() {}
+  void spawnStartItems() override;
+};
+
 class HuntingHorror: public GiantBat {
 public:
   HuntingHorror(Engine& engine) : GiantBat(engine) {}

@@ -150,8 +150,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     buildFromTemplate(churchPos, mapTemplate_church);
 
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                     blockers);
+    MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
     PathFind::run(eng.player->pos, stairsPos, blockers, path, eng);
 
@@ -188,8 +187,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                     blockers);
+    MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
     bool vision[MAP_W][MAP_H];
 

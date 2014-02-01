@@ -60,6 +60,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
     case actor_oozeClear:           return new OozeClear(eng);
     case actor_oozePutrid:          return new OozePutrid(eng);
     case actor_oozePoison:          return new OozePoison(eng);
+    case actor_chthonian:           return new Chthonian(eng);
     case actor_huntingHorror:       return new HuntingHorror(eng);
 
 //  case actor_lordOfPestilence: return new LordOfPestilence;
@@ -110,8 +111,7 @@ void ActorFactory::summonMonsters(
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(
-    CellPred::BlocksBodyType(bodyType_normal, true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
   vector<Pos> freeCells;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));

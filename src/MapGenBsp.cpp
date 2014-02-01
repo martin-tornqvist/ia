@@ -643,8 +643,7 @@ void MapGenBsp::buildRoomsInRooms() {
 
 void MapGenBsp::postProcessFillDeadEnds() {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   //Find an origin with no adjacent walls, to ensure we don't start in a dead end
   Pos origin;
@@ -797,8 +796,7 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
 
   bool blockers[MAP_W][MAP_H];
 
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, true, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -960,8 +958,7 @@ bool MapGenBsp::isAllRoomsConnected() {
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(c, blockers, floodFill, 99999, Pos(-1, -1), eng);
   for(int y = 1; y < MAP_H - 1; y++) {
@@ -1278,8 +1275,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
         if(mainRoom != NULL) {
 
           bool cellsWithFloor[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                          cellsWithFloor);
+          MapParse::parse(CellPred::BlocksMoveCmn(false, eng), cellsWithFloor);
 
           eng.basicUtils->reverseBoolArray(cellsWithFloor);
 

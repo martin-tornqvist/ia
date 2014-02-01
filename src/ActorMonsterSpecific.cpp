@@ -397,8 +397,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
         MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
         if(checkIfSeeActor(*(eng.player), blockers)) {
-          MapParse::parse(
-            CellPred::BlocksBodyType(bodyType_flying, true, eng), blockers);
+          MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
           const int SPAWN_AFTER_X =
             eng.player->pos.x + FOV_STD_RADI_INT + 1;
@@ -463,6 +462,11 @@ void GiantMantis::spawnStartItems() {
     eng.itemFactory->spawnItem(item_giantMantisClaw));
 }
 
+void Chthonian::spawnStartItems() {
+//  inv_->putItemInIntrinsics(
+//    eng.itemFactory->spawnItem(item_huntingHorrorBite));
+}
+
 void HuntingHorror::spawnStartItems() {
   inv_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_huntingHorrorBite));
@@ -478,8 +482,7 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
 
         if(checkIfSeeActor(*(eng.player), blockers)) {
 
-          MapParse::parse(
-            CellPred::BlocksBodyType(bodyType_normal, true, eng), blockers);
+          MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
           vector<Pos> line;
           eng.lineCalc->calcNewLine(pos, eng.player->pos, true, 9999,
@@ -604,8 +607,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng),
-                        blockers);
+        MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -640,8 +642,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksBodyType(getBodyType(), true, eng),
-                        blockers);
+        MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {

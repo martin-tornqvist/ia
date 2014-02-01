@@ -1,6 +1,8 @@
 #include "Bot.h"
 
 #include <assert.h>
+#include <algorithm>
+#include <vector>
 
 #include "Engine.h"
 
@@ -19,6 +21,8 @@
 #include "ActorMonster.h"
 #include "MapParsing.h"
 
+using namespace std;
+
 void Bot::init() {
   currentPath_.resize(0);
 }
@@ -36,14 +40,17 @@ void Bot::act() {
 
   PropHandler& propHandler = eng.player->getPropHandler();
 
-  //Occasionally apply RFear
-  //(Helps avoiding getting stuck on fear-causing monsters too long)
+  //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
   if(eng.dice.oneIn(7)) {
     propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
   }
 
+  //Occasionally teleport (to avoid getting stuck)
+  if(eng.dice.oneIn(200)) {
+    eng.player->teleport(false);
+  }
+
   //Ocassionally send a TAB command to attack nearby monsters
-  //(Helps avoiding getting stuck around monsters too long)
   if(eng.dice.coinToss()) {
     eng.input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
     return;
@@ -100,7 +107,10 @@ void Bot::act() {
   }
 
   //If we are terrified, wait in place
-  if(eng.player->getPropHandler().hasProp(propTerrified)) {
+  vector<PropId_t> props;
+  eng.player->getPropHandler().getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propTerrified) != props.end()) {
     if(walkToAdjacentCell(playerPos)) {
       return;
     }
@@ -154,8 +164,7 @@ void Bot::findPathToStairs() {
   currentPath_.resize(0);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksBodyType(bodyType_normal, false, eng),
-                  blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   vector<Pos> bla;
   eng.basicUtils->makeVectorFromBoolMap(false, blockers, bla);

@@ -26,14 +26,15 @@ class Door: public FeatureStatic {
 public:
   ~Door() override {}
 
-  void bump(Actor& actorBumping)                      override;
-  bool canBodyTypePass(const BodyType_t bodyType)  const override;
-  bool isVisionPassable()                             const override;
-  bool isProjectilesPassable()                        const override;
-  bool isSmokePassable()                              const override;
-  SDL_Color getColor()                                const override;
-  char getGlyph()                                     const override;
-  Tile_t getTile()                                    const override;
+  void bump(Actor& actorBumping)      override;
+  virtual bool canMoveCmn()           const override;
+  virtual bool canMove(const vector<PropId_t>& actorsProps) const override;
+  bool isVisionPassable()             const override;
+  bool isProjectilePassable()         const override;
+  bool isSmokePassable()              const override;
+  SDL_Color getColor()                const override;
+  char getGlyph()                     const override;
+  Tile_t getTile()                    const override;
 
   void bash_(Actor& actorTrying) override;
 

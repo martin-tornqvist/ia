@@ -124,8 +124,7 @@ private:
     const int OLD_Y = self.pos.y;
 
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(
-      CellPred::BlocksBodyType(self.getBodyType(), true, eng), blockers);
+    MapParse::parse(CellPred::BlocksActor(self, true, eng), blockers);
 
     for(int x = -1; x <= 1; x++) {
       for(int y = -1; y <= 1; y++) {

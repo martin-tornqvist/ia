@@ -614,7 +614,9 @@ InventorySlot* Inventory::getSlot(SlotTypes_t slotName) {
   return slot;
 }
 
-void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied, bool putInGeneral_ifSlotNotFound) {
+void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item,
+                              bool putInGeneral_ifOccupied,
+                              bool putInGeneral_ifSlotNotFound) {
   bool hasSlot = false;
 
   for(unsigned int i = 0; i < slots_.size(); i++) {
@@ -701,16 +703,15 @@ void Inventory::sortGeneralInventory(Engine& engine) {
 
 void Inventory::getAllItems(vector<Item*>& itemList) const {
   itemList.resize(0);
-  const int NR_SLOTS = slots_.size();
-  for(int i = 0; i < NR_SLOTS; i++) {
-    Item* const item = slots_.at(i).item;
+  itemList.reserve(slots_.size() + general_.size());
+
+  for(const InventorySlot& slot : slots_) {
+    Item* const item = slot.item;
     if(item != NULL) {
       itemList.push_back(item);
     }
   }
-  const int NR_GEN = general_.size();
-  for(int i = 0; i < NR_GEN; i++) {
-    itemList.push_back(general_.at(i));
-  }
+
+  for(Item * item : general_) {itemList.push_back(item);}
 }
 

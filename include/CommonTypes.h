@@ -10,14 +10,6 @@ using namespace std;
 
 enum Font_t {font_interface, font_big};
 
-enum BodyType_t {
-  bodyType_normal,
-  bodyType_flying,
-  bodyType_ethereal,
-  bodyType_ooze,
-  endOfBodyTypes
-};
-
 enum DmgTypes_t {
   dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid,
   dmgType_electric, dmgType_spirit, dmgType_light, dmgType_pure,

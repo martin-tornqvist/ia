@@ -18,7 +18,10 @@ Feature::Feature(Feature_t id, Pos pos, Engine& engine,
 }
 
 void Feature::bump(Actor& actorBumping) {
-  if(canBodyTypePass(actorBumping.getBodyType()) == false) {
+  vector<PropId_t> props;
+  actorBumping.getPropHandler().getAllActivePropIds(props);
+
+  if(canMove(props) == false) {
     if(&actorBumping == eng.player) {
       if(eng.player->getPropHandler().allowSee()) {
         eng.log->addMsg(data_->messageOnPlayerBlocked);
@@ -37,16 +40,24 @@ void Feature::newTurn() {
 
 }
 
-bool Feature::canBodyTypePass(const BodyType_t bodyType) const {
-  return data_->canBodyTypePass[bodyType];
+bool Feature::canMoveCmn() const {
+  return data_->moveRules.canMoveCmn();
+}
+
+bool Feature::canMove(const vector<PropId_t>& actorsProps) const {
+  return data_->moveRules.canMove(actorsProps);
+}
+
+bool Feature::isSoundPassable() const {
+  return data_->isSoundPassable;
 }
 
 bool Feature::isVisionPassable() const {
   return data_->isVisionPassable;
 }
 
-bool Feature::isProjectilesPassable() const {
-  return data_->isProjectilesPassable;
+bool Feature::isProjectilePassable() const {
+  return data_->isProjectilePassable;
 }
 
 bool Feature::isSmokePassable() const {
@@ -143,7 +154,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   if(IS_PLAYER) {
     const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
-    const bool IS_BLOCKING = canBodyTypePass(bodyType_normal) == false;
+    const bool IS_BLOCKING = canMoveCmn() == false;
     if(IS_BLOCKING) {
       eng.log->addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");

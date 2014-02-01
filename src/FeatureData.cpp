@@ -3,6 +3,16 @@
 
 #include "Engine.h"
 #include "Colors.h"
+#include "Actor.h"
+
+bool MoveRules::canMove(const vector<PropId_t>& actorsProps) const {
+  if(canMoveCmn_) return true;
+
+  //If not allowing normal move, check if any property overrides this
+  for(PropId_t id : actorsProps) {if(canMoveIfHaveProp_[id]) return true;}
+
+  return false;
+}
 
 void FeatureDataHandler::resetData(FeatureData& d) {
   d.id = feature_empty;
@@ -11,8 +21,9 @@ void FeatureDataHandler::resetData(FeatureData& d) {
   d.tile = tile_empty;
   d.color = clrYellow;
   d.colorBg = clrBlack;
-  for(int i = 0; i < endOfBodyTypes; i++) {d.canBodyTypePass[i] = true;}
-  d.isProjectilesPassable = true;
+  d.moveRules.reset();
+  d.isSoundPassable = true;
+  d.isProjectilePassable = true;
   d.isVisionPassable = true;
   d.isSmokePassable = true;
   d.canHaveBlood = true;
@@ -49,13 +60,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.color = clrGray;
   d.tile = tile_floor;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_stoneWall;
@@ -65,14 +70,12 @@ void FeatureDataHandler::initDataList() {
   d.glyph = eng.config->isAsciiWallSymbolFullSquare == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_wallTop;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propBurrowing);
+  d.isSoundPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.isSmokePassable = false;
-  d.canHaveBlood = true;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
@@ -88,11 +91,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrBrownDrk;
   d.tile = tile_tree;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
+  d.isSoundPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -109,13 +111,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.tile = tile_floor;
   d.color = clrGreen;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -125,13 +121,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.tile = tile_floor;
   d.color = clrBrownDrk;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -141,13 +131,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '"';
   d.color = clrGreen;
   d.tile = tile_bush;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -157,13 +141,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '"';
   d.color = clrBrownDrk;
   d.tile = tile_bush;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -173,13 +151,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.tile = tile_floor;
   d.color = clrGray;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_stairsDown;
@@ -189,9 +162,6 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '>';
   d.color = clrWhiteHigh;
   d.tile = tile_stairsDown;
-  for(int i = 0; i < endOfBodyTypes; i++) {d.canBodyTypePass[i] = false;}
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -206,8 +176,6 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '%';
   d.color = clrWhite;
   d.tile = tile_leverLeft;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -221,8 +189,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '0';
   d.color = clrYellow;
   d.tile = tile_brazier;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -239,13 +206,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '~';
   d.color = clrBlueLgt;
   d.tile = tile_water1;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveCorpse = true;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   d.dodgeModifier = -10;
   d.materialType = materialType_fluid;
   addToListAndReset(d);
@@ -257,17 +221,12 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '~';
   d.color = clrBlue;
   d.tile = tile_water1;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = true;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(propOoze);
+  d.moveRules.setPropCanMove(propEthereal);
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveCorpse = true;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   d.dodgeModifier = -10;
   d.shockWhenAdjacent = 8;
   d.materialType = materialType_fluid;
@@ -280,13 +239,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '~';
   d.color = clrBrownDrk;
   d.tile = tile_water1;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveCorpse = true;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   d.dodgeModifier = -20;
   d.materialType = materialType_fluid;
   addToListAndReset(d);
@@ -298,13 +254,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '~';
   d.color = clrRed;
   d.tile = tile_water1;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveCorpse = true;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   d.dodgeModifier = -10;
   d.shockWhenAdjacent = 3;
   d.materialType = materialType_fluid;
@@ -315,17 +268,12 @@ void FeatureDataHandler::initDataList() {
   d.name_the = "the chasm";
   d.glyph = ' ';
   d.color = clrBlack;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
   d.isBottomless = true;
   d.messageOnPlayerBlocked = "A chasm lies in my way.";
   d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a chasm.";
@@ -339,13 +287,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.color = clrGray;
   d.tile = tile_floor;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveItem = true;
-  d.canHaveStaticFeature = true;
+  d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_gravestone;
@@ -355,12 +297,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '&';
   d.color = clrWhite;
   d.tile = tile_graveStone;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -375,11 +313,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '[';
   d.color = clrBrown;
   d.tile = tile_churchBench;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = true;
-  d.isProjectilesPassable = false;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(propOoze);
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -394,13 +331,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '.';
   d.color = clrRed;
   d.tile = tile_floor;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = true;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
   d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -410,11 +342,10 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 8;
   d.color = dataList[feature_stoneWall].color;
   d.tile = tile_rubbleHigh;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = false;
-  d.canBodyTypePass[bodyType_ooze] = true;
-  d.isProjectilesPassable = false;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propOoze);
+  d.moveRules.setPropCanMove(propBurrowing);
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.isSmokePassable = false;
   d.canHaveBlood = false;
@@ -431,13 +362,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = ',';
   d.color = dataList[feature_stoneWall].color;
   d.tile = tile_rubbleLow;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
-  d.canHaveBlood = false;
-  d.canHaveGore = true;
-  d.canHaveCorpse = true;
-  d.canHaveStaticFeature = false;
-  d.canHaveItem = true;
+  d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
                                 roomTheme_plain, roomTheme_crypt,
@@ -449,9 +374,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 5;
   d.color = clrWhite;
   d.tile = tile_witchOrWarlock;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -469,9 +392,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = 'M';
   d.color = clrWhite;
   d.tile = tile_ghoul;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -490,8 +411,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '8';
   d.color = clrWhite;
   d.tile = tile_cocoon;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.isProjectilesPassable = true;
+  d.isProjectilePassable = true;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -510,9 +430,6 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '+';
   d.color = clrBrownDrk;
   d.tile = tile_chestClosed;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -529,9 +446,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '7';
   d.color = clrBrownDrk;
   d.tile = tile_cabinetClosd;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -549,8 +464,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '%';
   d.color = clrWhiteHigh;
   d.tile = tile_fountain;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -568,9 +482,8 @@ void FeatureDataHandler::initDataList() {
 //  d.glyph = '1';
 //  d.color = clrGray;
 //  d.tile = tile_pillarCarved;
-//  d.canBodyTypePass[bodyType_normal] = false;
-//  d.canBodyTypePass[bodyType_ooze] = false;
-//  d.isProjectilesPassable = false;
+////  d.canBodyTypePass[bodyType_ooze] = false;
+//  d.isProjectilePassable = false;
 //  d.isVisionPassable = false;
 //  d.canHaveBlood = false;
 //  d.canHaveGore = false;
@@ -586,9 +499,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrGray;
   d.tile = tile_pillar;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -606,9 +517,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '|';
   d.color = clrGray;
   d.tile = tile_pillarBroken;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = false;
+  d.isProjectilePassable = false;
   d.isVisionPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -627,8 +536,6 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '_';
   d.color = clrWhiteHigh;
   d.tile = tile_altar;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -646,12 +553,8 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '&';
   d.color = clrGray;
   d.tile = tile_tomb;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -668,18 +571,14 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '^';
   d.color = clrGray;
   d.tile = tile_pit;
-  d.canBodyTypePass[bodyType_normal] = false;
-  d.canBodyTypePass[bodyType_ethereal] = true;
-  d.canBodyTypePass[bodyType_flying] = true;
-  d.canBodyTypePass[bodyType_ooze] = false;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setPropCanMove(propEthereal);
+  d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.isBottomless = true;
-  d.canHaveItem = true;
+  d.canHaveItem = false;
   d.messageOnPlayerBlocked = "A pit lies in my way.";
   d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a pit.";
   d.shockWhenAdjacent = 5;
@@ -697,8 +596,7 @@ void FeatureDataHandler::initDataList() {
   /*---------------------------------------------*/
   d.id = feature_trap;
   d.spawnType = featureSpawnType_other;
-  d.isProjectilesPassable = true;
-  d.isVisionPassable = true;
+  d.moveRules.setCanMoveCmn();
   d.canHaveStaticFeature = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -709,6 +607,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '/';
   d.color = clrRedLgt;
   d.tile = tile_dynamiteLit;
+  d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -722,6 +621,7 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '/';
   d.color = clrYellow;
   d.tile = tile_flareLit;
+  d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_smoke;
@@ -731,11 +631,13 @@ void FeatureDataHandler::initDataList() {
   d.glyph = '*';
   d.color = clrGray;
   d.tile = tile_smoke;
+  d.moveRules.setCanMoveCmn();
   d.isVisionPassable = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_proxEventWallCrumble;
   d.spawnType = featureSpawnType_other;
+  d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
 }

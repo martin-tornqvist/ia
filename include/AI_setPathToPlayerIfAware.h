@@ -12,10 +12,14 @@ public:
 
         bool blockers[MAP_W][MAP_H];
         engine.basicUtils->resetArray(blockers, false);
+
+        vector<PropId_t> props;
+        monster.getPropHandler().getAllActivePropIds(props);
+
         for(int y = 1; y < MAP_H - 1; y++) {
           for(int x = 1; x < MAP_W - 1; x++) {
             const Feature* const f = engine.map->cells[x][y].featureStatic;
-            if(f->canBodyTypePass(monster.getBodyType()) == false) {
+            if(f->canMove(props) == false) {
 
               if(f->getId() == feature_door) {
 
@@ -48,8 +52,6 @@ public:
       path.resize(0);
     }
   }
-
-private:
 };
 
 #endif

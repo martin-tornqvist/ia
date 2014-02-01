@@ -16,24 +16,26 @@
 
 class AI_handleClosedBlockingDoor {
 public:
-  static bool action(Monster* monster, vector<Pos> path, Engine& engine) {
-    if(monster->deadState == actorDeadState_alive && path.empty() == false) {
+  static bool action(Monster& monster, vector<Pos> path, Engine& engine) {
+    if(monster.deadState == actorDeadState_alive && path.empty() == false) {
       const Pos& p = path.back();
       Feature* const f =
         engine.map->cells[p.x][p.y].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
-        if(door->canBodyTypePass(monster->getBodyType()) == false) {
+        vector<PropId_t> props;
+        monster.getPropHandler().getAllActivePropIds(props);
+        if(door->canMove(props) == false) {
           if(door->isStuck() == false) {
-            if(monster->getData().canOpenDoors) {
-              door->tryOpen(monster);
+            if(monster.getData().canOpenDoors) {
+              door->tryOpen(&monster);
               return true;
-            } else if(monster->getData().canBashDoors) {
-              door->bash(*monster);
+            } else if(monster.getData().canBashDoors) {
+              door->bash(monster);
               return true;
             }
-          } else if(monster->getData().canBashDoors) {
-            door->bash(*monster);
+          } else if(monster.getData().canBashDoors) {
+            door->bash(monster);
             return true;
           }
         }

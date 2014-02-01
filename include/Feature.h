@@ -25,9 +25,11 @@ public:
 
   virtual void bump(Actor& actorBumping);
   virtual void newTurn();
-  virtual bool canBodyTypePass(const BodyType_t bodyType) const;
+  virtual bool canMoveCmn() const;
+  virtual bool canMove(const vector<PropId_t>& actorsProps) const;
+  virtual bool isSoundPassable() const;
   virtual bool isVisionPassable() const;
-  virtual bool isProjectilesPassable() const;
+  virtual bool isProjectilePassable() const;
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
   virtual string getDescr(const bool DEFINITE_ARTICLE) const;

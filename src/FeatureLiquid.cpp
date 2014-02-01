@@ -12,7 +12,14 @@ FeatureLiquidShallow::FeatureLiquidShallow(
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor& actorBumping) {
-  if(actorBumping.getData().bodyType == bodyType_normal) {
+  const PropHandler& propHlr = actorBumping.getPropHandler();
+
+  vector<PropId_t> props;
+  actorBumping.getPropHandler().getAllActivePropIds(props);
+
+  if(
+    find(props.begin(), props.end(), propEthereal)  == props.end() &&
+    find(props.begin(), props.end(), propFlying)    == props.end()) {
 
     actorBumping.getPropHandler().tryApplyProp(
       new PropWaiting(eng, propTurnsStd));
