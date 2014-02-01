@@ -204,7 +204,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
   }
 
   if(pullCooldown <= 0) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       trace << "Vortex: pullCooldown: " << pullCooldown << endl;
       trace << "Vortex: Is player aware" << endl;
       const Pos& playerPos = eng.player->pos;
@@ -284,7 +284,7 @@ void FrostVortex::spawnStartItems() {
 
 bool Ghost::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
 
       if(eng.basicUtils->isPosAdj(pos, eng.player->pos, false)) {
         if(eng.dice.percentile() < 30) {
@@ -390,7 +390,7 @@ void MummyUnique::spawnStartItems() {
 
 bool Khephren::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       if(hasSummonedLocusts == false) {
 
         bool blockers[MAP_W][MAP_H];
@@ -421,7 +421,7 @@ bool Khephren::monsterSpecificOnActorTurn() {
                 eng.actorFactory->spawnActor(actor_giantLocust,
                                              freeCells.at(0));
               Monster* const monster = dynamic_cast<Monster*>(actor);
-              monster->playerAwarenessCounter = 999;
+              monster->awareOfPlayerCounter = 999;
               monster->leader = this;
               freeCells.erase(freeCells.begin());
             }
@@ -474,7 +474,7 @@ void HuntingHorror::spawnStartItems() {
 
 bool KeziahMason::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       if(hasSummonedJenkin == false) {
 
         bool blockers[MAP_W][MAP_H];
@@ -499,7 +499,7 @@ bool KeziahMason::monsterSpecificOnActorTurn() {
               Monster* jenkin = dynamic_cast<Monster*>(actor);
               eng.renderer->drawMapAndInterface();
               hasSummonedJenkin = true;
-              jenkin->playerAwarenessCounter = 999;
+              jenkin->awareOfPlayerCounter = 999;
               jenkin->leader = this;
               eng.gameTime->actorDidAct();
               return true;
@@ -603,7 +603,7 @@ void Wolf::spawnStartItems() {
 
 bool WormMass::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
@@ -619,7 +619,7 @@ bool WormMass::monsterSpecificOnActorTurn() {
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
-              worm->playerAwarenessCounter = playerAwarenessCounter;
+              worm->awareOfPlayerCounter = awareOfPlayerCounter;
               eng.gameTime->actorDidAct();
               return true;
             }
@@ -638,7 +638,7 @@ void WormMass::spawnStartItems() {
 
 bool GiantLocust::monsterSpecificOnActorTurn() {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       if(eng.dice.percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
@@ -654,7 +654,7 @@ bool GiantLocust::monsterSpecificOnActorTurn() {
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
-              locust->playerAwarenessCounter = playerAwarenessCounter;
+              locust->awareOfPlayerCounter = awareOfPlayerCounter;
               eng.gameTime->actorDidAct();
               return true;
             }
@@ -681,7 +681,7 @@ void LordOfShadows::spawnStartItems() {
 }
 
 bool LordOfSpiders::monsterSpecificOnActorTurn() {
-  if(playerAwarenessCounter > 0) {
+  if(awareOfPlayerCounter > 0) {
 
     if(eng.dice.coinToss()) {
 
@@ -753,7 +753,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
   }
 
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0) {
+    if(awareOfPlayerCounter > 0) {
       if(hasSummonedTombLegions == false) {
 
         bool visionBlockers[MAP_W][MAP_H];
@@ -811,7 +811,7 @@ bool Zombie::tryResurrect() {
             eng.player->incrShock(shockValue_some, shockSrc_misc);
           }
 
-          playerAwarenessCounter = data_->nrTurnsAwarePlayer * 2;
+          awareOfPlayerCounter = data_->nrTurnsAwarePlayer * 2;
           eng.gameTime->actorDidAct();
           return true;
         }

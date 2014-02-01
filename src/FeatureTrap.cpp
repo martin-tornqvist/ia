@@ -124,7 +124,7 @@ void Trap::bump(Actor& actorBumping) {
         trace << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(&actorBumping);
         if(
-          monster->playerAwarenessCounter > 0 &&
+          monster->awareOfPlayerCounter > 0 &&
           monster->isStealth == false) {
           trace << "Trap: Monster eligible for triggering trap" << endl;
 

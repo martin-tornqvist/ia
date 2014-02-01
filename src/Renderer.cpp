@@ -855,7 +855,7 @@ void Renderer::drawAscii() {
         if(monster->leader == eng.player) {
           // TODO reimplement allied indicator
         } else {
-          if(monster->playerAwarenessCounter <= 0) {
+          if(monster->awareOfPlayerCounter <= 0) {
             currentDrw->colorBg = clrBlue;
           }
         }
@@ -1026,7 +1026,7 @@ void Renderer::drawTiles() {
         if(monster->leader == eng.player) {
           // TODO implement allied indicator
         } else {
-          if(monster->playerAwarenessCounter <= 0) {
+          if(monster->awareOfPlayerCounter <= 0) {
             currentDrw->colorBg = clrBlue;
           }
         }

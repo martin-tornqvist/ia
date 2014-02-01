@@ -8,7 +8,7 @@ public:
   static bool action(Monster* monsterActing, Engine& engine) {
     if(monsterActing->deadState == actorDeadState_alive) {
       if(
-        monsterActing->playerAwarenessCounter > 0 &&
+        monsterActing->awareOfPlayerCounter > 0 &&
         monsterActing->spellCoolDownCurrent == 0) {
 
         if(monsterActing->getPropHandler().allowRead(false) == false) {

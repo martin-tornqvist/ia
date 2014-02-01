@@ -178,8 +178,9 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitDemolitionExpert: {
-      strRef  =  "+1 radius for explosives (be careful), you occasionally ";
-      strRef += "light explosives instantly";
+      strRef  = "+1 radius for explosives (be careful), you are not harmed ";
+      strRef += "by your own Molotov Cocktails, you occasionally light ";
+      strRef += "explosives instantly";
     } break;
 
     case traitCoolHeaded: {

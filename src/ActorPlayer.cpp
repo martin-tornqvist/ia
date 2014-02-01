@@ -859,7 +859,7 @@ void Player::onStandardTurn_() {
     Monster* monster = dynamic_cast<Monster*>(actor);
 
     //Rogues takes no shock from unaware monsters
-    if(IS_ROGUE && monster->playerAwarenessCounter <= 0) {
+    if(IS_ROGUE && monster->awareOfPlayerCounter <= 0) {
       continue;
     }
 

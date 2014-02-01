@@ -56,7 +56,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     }
   } else {
     Monster* const monster = dynamic_cast<Monster*>(data.curDefender);
-    monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
+    monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
   }
   eng.gameTime->actorDidAct();
 }

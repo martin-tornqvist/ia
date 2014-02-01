@@ -443,7 +443,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     eng.featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
-    monster->playerAwarenessCounter = INT_MAX; // > 0 req. for triggering trap
+    monster->awareOfPlayerCounter = INT_MAX; // > 0 req. for triggering trap
     monster->pos = posL;
     monster->moveDir(dirRight);
     CHECK(monster->pos == posR);

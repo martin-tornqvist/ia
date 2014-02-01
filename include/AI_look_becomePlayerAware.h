@@ -12,7 +12,7 @@ public:
   static bool action(Monster& monster, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
 
-      const bool WAS_AWARE_BEFORE = monster.playerAwarenessCounter > 0;
+      const bool WAS_AWARE_BEFORE = monster.awareOfPlayerCounter > 0;
 
       vector<Actor*> spottedEnemies;
       monster.getSpottedEnemies(spottedEnemies);

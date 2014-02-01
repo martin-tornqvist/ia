@@ -23,7 +23,7 @@ void Hide::playerTryHide() {
     for(int i = 0; i < NR_ACTORS; i++) {
       Actor* const actor = &eng.gameTime->getActorAtElement(i);
       if(actor != eng.player) {
-//        if(dynamic_cast<Monster*>(actor)->playerAwarenessCounter > 0) {
+//        if(dynamic_cast<Monster*>(actor)->awareOfPlayerCounter > 0) {
           actors.push_back(actor);
 //        }
       }
@@ -52,7 +52,7 @@ void Hide::playerTryHide() {
       Actor* const actor = &eng.gameTime->getActorAtElement(i);
       if(actor != eng.player) {
         Monster* const monster = dynamic_cast<Monster*>(actor);
-        monster->playerAwarenessCounter = 0;
+        monster->awareOfPlayerCounter = 0;
       }
     }
 //    eng.log->addMsg("I hide!");

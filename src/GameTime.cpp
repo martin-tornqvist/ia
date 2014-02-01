@@ -78,8 +78,8 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
     eng.playerVisualMemory->updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
-    if(monster->playerAwarenessCounter > 0) {
-      monster->playerAwarenessCounter -= 1;
+    if(monster->awareOfPlayerCounter > 0) {
+      monster->awareOfPlayerCounter -= 1;
     }
   }
 

@@ -877,7 +877,7 @@ bool PropHandler::allowSee() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
 
-  for(Prop* prop : propList) {
+  for(Prop * prop : propList) {
     if(prop->getId() == propClairvoyant) {
       return true;
     }
@@ -1098,7 +1098,7 @@ void PropHandler::tick(const PropTurnMode_t turnMode,
 
       if(owningActor_ != eng.player) {
         if(prop->isMakingMonsterAware()) {
-          dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
+          dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter =
             owningActor_->getData().nrTurnsAwarePlayer;
         }
       }
@@ -1123,7 +1123,7 @@ void PropHandler::tick(const PropTurnMode_t turnMode,
   for(Prop * prop : invProps) {
     if(owningActor_ != eng.player) {
       if(prop->isMakingMonsterAware()) {
-        dynamic_cast<Monster*>(owningActor_)->playerAwarenessCounter =
+        dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter =
           owningActor_->getData().nrTurnsAwarePlayer;
       }
     }
@@ -1613,6 +1613,13 @@ void PropBurning::onNewTurn() {
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+    eng.log->addMsg("Not while burning.");
+  }
+  return false;
+}
+
+bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("Not while burning.");
   }

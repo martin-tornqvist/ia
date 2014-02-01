@@ -467,9 +467,6 @@ void Chest::bash(Actor& actorTrying) {
 
     eng.log->addMsg("I kick the lid.");
 
-    PropHandler& propHlr = eng.player->getPropHandler();
-    PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-
     vector<PropId_t> props;
     eng.player->getPropHandler().getAllActivePropIds(props);
 
@@ -489,6 +486,7 @@ void Chest::bash(Actor& actorTrying) {
         itemContainer_.destroySingleFragile(eng);
       }
 
+      PlayerBonHandler* const bonHlr = eng.playerBonHandler;
       const bool IS_TOUGH     = bonHlr->hasTrait(traitTough);
       const bool IS_RUGGED    = bonHlr->hasTrait(traitRugged);
 

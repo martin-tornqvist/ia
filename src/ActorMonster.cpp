@@ -32,8 +32,8 @@
 using namespace std;
 
 Monster::Monster(Engine& engine) :
-  Actor(engine), playerAwarenessCounter(0), messageMonsterInViewPrinted(false),
-  lastDirTraveled(dirCenter), spellCoolDownCurrent(0),
+  Actor(engine), awareOfPlayerCounter(0), messageMonsterInViewPrinted(false),
+  lastDirTravelled(dirCenter), spellCoolDownCurrent(0),
   isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL),
   waiting_(false), shockCausedCurrent(0.0) {}
 
@@ -49,7 +49,7 @@ void Monster::onActorTurn() {
   waiting_ = !waiting_;
 
   if(waiting_) {
-    if(playerAwarenessCounter <= 0) {
+    if(awareOfPlayerCounter <= 0) {
       eng.gameTime->actorDidAct();
       return;
     }
@@ -63,7 +63,7 @@ void Monster::onActorTurn() {
     spellCoolDownCurrent--;
   }
 
-  if(playerAwarenessCounter > 0) {
+  if(awareOfPlayerCounter > 0) {
     isRoamingAllowed = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
@@ -74,7 +74,7 @@ void Monster::onActorTurn() {
     } else {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng.player) {
-          dynamic_cast<Monster*>(leader)->playerAwarenessCounter =
+          dynamic_cast<Monster*>(leader)->awareOfPlayerCounter =
             leader->getData().nrTurnsAwarePlayer;
         }
       }
@@ -202,7 +202,7 @@ void Monster::onActorTurn() {
 }
 
 void Monster::onMonsterHit(int& dmg) {
-  playerAwarenessCounter = data_->nrTurnsAwarePlayer;
+  awareOfPlayerCounter = data_->nrTurnsAwarePlayer;
 
   if(data_->monsterShockLevel != monsterShockLevel_none) {
     dmg = (dmg * (100 + eng.player->getMth())) / 100;
@@ -229,7 +229,7 @@ void Monster::moveDir(Dir_t dir) {
   }
 
   // Movement direction is stored for AI purposes
-  lastDirTraveled = dir;
+  lastDirTravelled = dir;
 
   const Pos targetCell(pos + DirConverter().getOffset(dir));
 
@@ -269,8 +269,8 @@ void Monster::speakPhrase() {
 
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
-    const int PLAYER_AWARENESS_BEFORE = playerAwarenessCounter;
-    playerAwarenessCounter = data_->nrTurnsAwarePlayer;
+    const int PLAYER_AWARENESS_BEFORE = awareOfPlayerCounter;
+    awareOfPlayerCounter = data_->nrTurnsAwarePlayer;
     if(PLAYER_AWARENESS_BEFORE <= 0 && eng.dice.coinToss()) {
       speakPhrase();
     }
@@ -279,7 +279,7 @@ void Monster::becomeAware() {
 
 bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
-    if(playerAwarenessCounter > 0 || leader == eng.player) {
+    if(awareOfPlayerCounter > 0 || leader == eng.player) {
 
       bool blockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(eng), blockers);
@@ -371,11 +371,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
       }
     } else {
-      vector<PropId_t> props;
-      propHandler_->getAllActivePropIds(props);
-      if(
-        propHandler_->allowAttackRanged(false) &&
-        find(props.begin(), props.end(), propBurning) != props.end()) {
+      if(propHandler_->allowAttackRanged(false)) {
         //Ranged weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));

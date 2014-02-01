@@ -137,7 +137,7 @@ void ActorFactory::summonMonsters(
       monster->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {
-      monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
+      monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
     }
 
     if(eng.player->checkIfSeeActor(*actor, NULL)) {

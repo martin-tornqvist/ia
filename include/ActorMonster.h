@@ -65,11 +65,11 @@ public:
 
   virtual void onStandardTurn_() {}
 
-  int playerAwarenessCounter;
+  int awareOfPlayerCounter;
 
   bool messageMonsterInViewPrinted;
 
-  Dir_t lastDirTraveled;
+  Dir_t lastDirTravelled;
 
   vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;

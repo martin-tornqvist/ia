@@ -35,7 +35,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   bool isDefenderAware = true;
   if(attacker == eng.player) {
     isDefenderAware =
-      dynamic_cast<Monster*>(curDefender)->playerAwarenessCounter > 0;
+      dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter > 0;
   } else {
     isDefenderAware =
       eng.player->checkIfSeeActor(*attacker, NULL) ||
@@ -74,7 +74,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       isAttackerAware = eng.player->checkIfSeeActor(*curDefender, NULL);
     } else {
       Monster* const monster = dynamic_cast<Monster*>(attacker);
-      isAttackerAware = monster->playerAwarenessCounter > 0;
+      isAttackerAware = monster->awareOfPlayerCounter > 0;
     }
 
     PropHandler& defPropHlr = curDefender->getPropHandler();
@@ -211,7 +211,7 @@ RangedAttackData::RangedAttackData(
     int unawareDefMod = 0;
     const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
     if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
-      if(dynamic_cast<Monster*>(curDefender)->playerAwarenessCounter <= 0) {
+      if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter <= 0) {
         unawareDefMod = 25;
       }
     }
@@ -305,7 +305,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     int unawareDefMod = 0;
     const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
     if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
-      if(dynamic_cast<Monster*>(curDefender)->playerAwarenessCounter <= 0) {
+      if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter <= 0) {
         unawareDefMod = 25;
       }
     }

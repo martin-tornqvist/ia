@@ -556,7 +556,7 @@ SpellCastRetData SpellRogueHide::cast_(
     Actor* const actor = &eng.gameTime->getActorAtElement(i);
     if(actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
-      monster->playerAwarenessCounter = 0;
+      monster->awareOfPlayerCounter = 0;
     }
   }
   return SpellCastRetData(true);
@@ -696,6 +696,7 @@ bool SpellBless::isGoodForMonsterToCastNow(
   (void)eng;
 
   vector<PropId_t> props;
+  monster->getPropHandler().getAllActivePropIds(props);
   return find(props.begin(), props.end(), propBlessed) == props.end();
 }
 
@@ -882,7 +883,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   const ActorId_t id = summonCandidates.at(ELEMENT);
   Actor* const actor = eng.actorFactory->spawnActor(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
-  monster->playerAwarenessCounter = monster->getData().nrTurnsAwarePlayer;
+  monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
   if(eng.map->cells[summonPos.x][summonPos.y].isSeenByPlayer) {
     eng.log->addMsg(monster->getNameA() + " appears.");
   }

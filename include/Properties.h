@@ -530,6 +530,8 @@ public:
     return true;
   }
 
+  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+
   void onStart() override;
   void onNewTurn() override;
 };
