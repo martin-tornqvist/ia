@@ -100,6 +100,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
       for(PropId_t propId : defProps) {
         if(
+          isDefenderAware == false ||
           propId == propParalysed  ||
           propId == propNailed     ||
           propId == propFainted) {
