@@ -104,23 +104,11 @@ bool Scroll::read() {
     data_->isTried = true;
     if(spell->cast(eng.player, false, eng).isCastIdenifying) {
       identify(false);
-    } else {
-      failedToLearnRealName();
     }
   }
   delete spell;
 
   return true;
-}
-
-void Scroll::failedToLearnRealName(const string overrideFailString) {
-  if(data_->isIdentified == false) {
-    if(overrideFailString.empty() == false) {
-      eng.log->addMsg(overrideFailString);
-    } else {
-      eng.log->addMsg("Was that supposed to do something?");
-    }
-  }
 }
 
 ScrollNameHandler::ScrollNameHandler(Engine& engine) :

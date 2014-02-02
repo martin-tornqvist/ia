@@ -32,8 +32,6 @@ protected:
 
   virtual void quaff_(Actor* const actor) {(void) actor;}
 
-  void failedToLearnRealName(const string overrideFailString = "");
-
   virtual const string getRealTypeName() {return "[WARNING]";}
 };
 

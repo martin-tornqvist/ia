@@ -430,13 +430,3 @@ void Potion::quaff(Actor* const actor) {
     eng.gameTime->actorDidAct();
   }
 }
-
-void Potion::failedToLearnRealName(const string overrideFailString) {
-  if(data_->isIdentified == false) {
-    if(overrideFailString.empty() == false) {
-      eng.log->addMsg(overrideFailString);
-    } else {
-      eng.log->addMsg("It doesn't seem to affect me.");
-    }
-  }
-}

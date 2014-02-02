@@ -28,8 +28,6 @@ public:
   Spell* getSpell();
 protected:
   void tryLearn();
-
-  void failedToLearnRealName(const string overrideFailString = "");
 };
 
 class ScrollNameHandler {
