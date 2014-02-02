@@ -163,7 +163,7 @@ void Postmortem::makeInfoLines() {
       }
     }
   }
-  eng.renderer->drawAscii(); //To set the glyph array
+  eng.renderer->drawMap(); //To set the glyph array
   for(int y = 0; y < MAP_H; y++) {
     string currentRow = "";
     for(int x = 0; x < MAP_W; x++) {
@@ -171,15 +171,15 @@ void Postmortem::makeInfoLines() {
         currentRow.push_back('@');
       } else {
         if(
-          eng.renderer->renderArrayAscii[x][y].glyph == ' ' &&
+          eng.renderer->renderArray[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           currentRow.push_back('*');
         } else {
-          if(eng.renderer->renderArrayAscii[x][y].glyph ==
+          if(eng.renderer->renderArray[x][y].glyph ==
               eng.featureDataHandler->getData(feature_stoneWall)->glyph) {
             currentRow.push_back('#');
           } else {
-            currentRow.push_back(eng.renderer->renderArrayAscii[x][y].glyph);
+            currentRow.push_back(eng.renderer->renderArray[x][y].glyph);
           }
         }
       }

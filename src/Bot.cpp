@@ -31,10 +31,8 @@ void Bot::act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    const Actor& actor = eng.gameTime->getActorAtElement(i);
-    assert(eng.basicUtils->isPosInsideMap(actor.pos));
+  for(Actor* actor : eng.gameTime->actors_) {
+    assert(eng.basicUtils->isPosInsideMap(actor->pos));
   }
   //=======================================================================
 

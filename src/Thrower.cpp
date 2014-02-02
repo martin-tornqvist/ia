@@ -214,8 +214,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng.player;
       if(isActorHit == false) {
         Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
-                  itemThrownData.landOnHardSurfaceSfx, true, dropPos, false,
-                  IS_ALERTING_MONSTERS);
+                  itemThrownData.landOnHardSurfaceSfx, true, dropPos, NULL,
+                  false, IS_ALERTING_MONSTERS);
         eng.soundEmitter->emitSound(snd);
       }
     }

@@ -59,13 +59,16 @@ public:
 
   void becomeAware();
 
+  void playerBecomeAwareOfMe();
+
   void onActorTurn();
 
   virtual bool monsterSpecificOnActorTurn() {return false;}
 
   virtual void onStandardTurn_() {}
 
-  int awareOfPlayerCounter;
+  int awareOfPlayerCounter_;
+  int playerAwareOfMeCounter_;
 
   bool messageMonsterInViewPrinted;
 

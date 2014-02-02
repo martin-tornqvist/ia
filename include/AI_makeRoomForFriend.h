@@ -15,16 +15,12 @@ public:
       MapParse::parse(CellPred::BlocksVision(engine), visionBlockers);
 
       if(monster.checkIfSeeActor(*engine.player, visionBlockers)) {
-        const int NR_ACTORS = engine.gameTime->getNrActors();
-        Monster* otherMonster = NULL;
-        Actor* actor = NULL;
 
         //Loop through all actors
-        for(int i = 0; i < NR_ACTORS; i++) {
-          actor = &(engine.gameTime->getActorAtElement(i));
+        for(Actor * actor : engine.gameTime->actors_) {
           if(actor != engine.player && actor != &monster) {
             if(actor->deadState == actorDeadState_alive) {
-              otherMonster = dynamic_cast<Monster*>(actor);
+              Monster* otherMonster = dynamic_cast<Monster*>(actor);
 
               bool isOtherAdjWithoutVision =
                 isAdjAndWithoutVision(
@@ -66,10 +62,9 @@ public:
 
                     bool isGoodCandidateFound = true;
 
-                    for(int iii = 0; iii < NR_ACTORS; iii++) {
-                      actor = &(engine.gameTime->getActorAtElement(iii));
-                      if(actor != engine.player && actor != &monster) {
-                        otherMonster = dynamic_cast<Monster*>(actor);
+                    for(Actor * actor2 : engine.gameTime->actors_) {
+                      if(actor2 != engine.player && actor2 != &monster) {
+                        otherMonster = dynamic_cast<Monster*>(actor2);
                         if(
                           otherMonster->checkIfSeeActor(
                             *engine.player, visionBlockers)) {

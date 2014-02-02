@@ -90,8 +90,10 @@ Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
 }
 
 void ActorFactory::deleteAllMonsters() const {
-  for(int i = 0; i < eng.gameTime->getNrActors(); i++) {
-    if(&(eng.gameTime->getActorAtElement(i)) != eng.player) {
+  vector<Actor*>& actors = eng.gameTime->actors_;
+
+  for(size_t i = 0; i < actors.size(); i++) {
+    if(actors.at(i) != eng.player) {
       eng.gameTime->eraseActorInElement(i);
       i--;
     }
@@ -137,7 +139,7 @@ void ActorFactory::summonMonsters(
       monster->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {
-      monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
+      monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
     }
 
     if(eng.player->checkIfSeeActor(*actor, NULL)) {

@@ -104,7 +104,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
 
-  Sound snd("I hear an explosion!", sfx, true, origin,
+  Sound snd("I hear an explosion!", sfx, true, origin, NULL,
             SHOULD_DO_EXPLOSION_DMG, true);
   eng.soundEmitter->emitSound(snd);
 
@@ -178,7 +178,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   getPositionsReached(area, origin, blockers, eng, posLists);
 
   //TODO Sound message?
-  Sound snd("", endOfSfx, true, origin, false, true);
+  Sound snd("", endOfSfx, true, origin, NULL, false, true);
   eng.soundEmitter->emitSound(snd);
 
   for(const vector<Pos>& inner : posLists) {

@@ -201,11 +201,9 @@ void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingMobFeatures()) {
-    const int NR_MOB_FEATURES = eng.gameTime->getNrFeatureMobs();
-    for(int i = 0; i < NR_MOB_FEATURES; i++) {
-      const FeatureMob& f = eng.gameTime->getFeatureMobAtElement(i);
-      const Pos& p = f.getPos();
-      const bool IS_MATCH = predicate.check(f);
+    for(FeatureMob* mob : eng.gameTime->featureMobs_) {
+      const Pos& p = mob->getPos();
+      const bool IS_MATCH = predicate.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = arrayOut[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
@@ -214,11 +212,9 @@ void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingActors()) {
-    const int NR_ACTORS = eng.gameTime->getNrActors();
-    for(int i = 0; i < NR_ACTORS; i++) {
-      const Actor& a  = eng.gameTime->getActorAtElement(i);
-      const Pos& p    = a.pos;
-      const bool IS_MATCH = predicate.check(a);
+    for(Actor* actor : eng.gameTime->actors_) {
+      const Pos& p = actor->pos;
+      const bool IS_MATCH = predicate.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = arrayOut[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
@@ -295,8 +291,8 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
   unsigned int nrElementsToSkip = 0;
   Pos c;
 
-  int currentX = origin.x;
-  int currentY = origin.y;
+  int curX = origin.x;
+  int curY = origin.y;
 
   int currentValue = 0;
 
@@ -312,19 +308,19 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
     for(int dx = -1; dx <= 1; dx++) {
       for(int dy = -1; dy <= 1; dy++) {
         if((dx != 0 || dy != 0)) {
-          const Pos newPos(currentX + dx, currentY + dy);
+          const Pos newPos(curX + dx, curY + dy);
           if(
             blockers[newPos.x][newPos.y] == false &&
-            eng.basicUtils->isPosInside(Pos(newPos.x, newPos.y), bounds) &&
+            eng.basicUtils->isPosInside(newPos, bounds) &&
             values[newPos.x][newPos.y] == 0) {
-            currentValue = values[currentX][currentY];
+            currentValue = values[curX][curY];
 
             if(currentValue < travelLimit) {
               values[newPos.x][newPos.y] = currentValue + 1;
             }
 
             if(isStoppingAtTarget) {
-              if(currentX == target.x - dx && currentY == target.y - dy) {
+              if(curX == target.x - dx && curY == target.y - dy) {
                 isAtTarget = true;
                 dx = 9999;
                 dy = 9999;
@@ -359,8 +355,8 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
         pathExists = false;
       } else {
         c = positions.at(nrElementsToSkip);
-        currentX = c.x;
-        currentY = c.y;
+        curX = c.x;
+        curY = c.y;
         nrElementsToSkip++;
       }
     }
@@ -376,50 +372,55 @@ void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
 
   vectorRef.resize(0);
 
-  int floodValues[MAP_W][MAP_H];
-  FloodFill::run(origin, blockers, floodValues, 1000, target, eng);
+  int vals[MAP_W][MAP_H];
+  FloodFill::run(origin, blockers, vals, 1000, target, eng);
 
-  bool pathExists = floodValues[target.x][target.y] != 0;
+  bool pathExists = vals[target.x][target.y] != 0;
 
   if(pathExists == true) {
     vector<Pos> positions;
     Pos c;
 
-    int currentX = target.x;
-    int currentY = target.y;
+    int curX = target.x;
+    int curY = target.y;
 
     bool done = false;
     while(done == false) {
       //TODO use for-loop instead
       //Starts from 0 instead of -1 so that cardinal directions are tried first
-      int xOffset = 0;
-      while(xOffset <= 1) {
-        int yOffset = 0;
-        while(yOffset <= 1) {
-          if(xOffset != 0 || yOffset != 0) {
-            //TODO increase readability
-            if(currentX + xOffset >= 0 && currentY + yOffset >= 0) {
-              if((floodValues[currentX + xOffset][currentY + yOffset] == floodValues[currentX][currentY] - 1 && floodValues[currentX
-                  + xOffset][currentY + yOffset] != 0) || (currentX + xOffset == origin.x && currentY + yOffset == origin.y)) {
-                c.x = currentX;
-                c.y = currentY;
+      int dX = 0;
+      while(dX <= 1) {
+        int dY = 0;
+        while(dY <= 1) {
+          if(dX != 0 || dY != 0) {
+            const Pos newPos(curX + dX, curY + dY);
+
+            if(newPos.x >= 0 && newPos.y >= 0) {
+              const int VAL_AT_NEW = vals[newPos.x][newPos.y];
+              const int VAL_AT_CUR = vals[curX][curY];
+              if(
+                (VAL_AT_NEW == VAL_AT_CUR - 1 && VAL_AT_NEW != 0) ||
+                (newPos == origin)) {
+
+                c.x = curX;
+                c.y = curY;
                 vectorRef.push_back(c);
 
-                currentX = currentX + xOffset;
-                currentY = currentY + yOffset;
+                curX = curX + dX;
+                curY = curY + dY;
 
-                if(currentX == origin.x && currentY == origin.y) {
+                if(curX == origin.x && curY == origin.y) {
                   done = true;
                 }
 
-                xOffset = 99;
-                yOffset = 99;
+                dX = 99;
+                dY = 99;
               }
             }
           }
-          yOffset = yOffset == 1 ? 2 : yOffset == -1 ? 1 : yOffset == 0 ? -1 : yOffset;
+          dY = dY == 1 ? 2 : dY == -1 ? 1 : dY == 0 ? -1 : dY;
         }
-        xOffset = xOffset == 1 ? 2 : xOffset == -1 ? 1 : xOffset == 0 ? -1 : xOffset;
+        dX = dX == 1 ? 2 : dX == -1 ? 1 : dX == 0 ? -1 : dX;
       }
     }
   }

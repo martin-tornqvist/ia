@@ -61,11 +61,8 @@ public:
 
   void drawMainMenuLogo(const int) {}
 
-  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_W][MAP_H];
-  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_W][MAP_H];
-
-  CellRenderDataAscii renderArrayAscii[MAP_W][MAP_H];
-  CellRenderDataTiles renderArrayTiles[MAP_W][MAP_H];
+  CellRenderData renderArray[MAP_W][MAP_H];
+  CellRenderData renderArrayNoActors[MAP_W][MAP_H];
 
   void drawProjectiles(vector<Projectile*>&) {}
 
@@ -74,7 +71,7 @@ public:
 
   void applySurface(const Pos&, SDL_Surface* const, SDL_Rect* = NULL) {}
 
-  void drawAscii() {}
+  void drawMap() {}
 
   SDL_Surface* screenSurface_;
 };

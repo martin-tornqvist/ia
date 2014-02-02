@@ -33,46 +33,32 @@ enum GameEntry_t {
   gameEntry_load
 };
 
-struct CellRenderDataAscii {
-  CellRenderDataAscii() :
-    color(clrBlack), colorBg(clrBlack), glyph(' '),
-    lifebarLength(-1), isFadeEffectAllowed(true), isMarkedAsLit(false) {
-  }
+struct CellRenderData {
+  CellRenderData() {clear();}
+
   inline void clear() {
-    color = clrBlack;
-    colorBg = clrBlack;
-    glyph = ' ';
-    lifebarLength = -1;
-    isFadeEffectAllowed = true;
-    isMarkedAsLit = false;
+    clr                   = clrBlack;
+    clrBg                 = clrBlack;
+    tile                  = tile_empty;
+    glyph                 = ' ';
+    lifebarLength         = -1;
+    isFadeEffectAllowed   = true;
+    isMarkedAsLit         = false;
+    isLivingActorSeenHere = false;
+    isAwareOfMonsterHere  = false;
   }
-  SDL_Color color;
-  SDL_Color colorBg;
+
+  SDL_Color clr;
+  SDL_Color clrBg;
+  Tile_t tile;
   char glyph;
   int lifebarLength;
-  bool isFadeEffectAllowed, isMarkedAsLit;
+  bool isFadeEffectAllowed;
+  bool isMarkedAsLit;
+  bool isLivingActorSeenHere;
+  bool isAwareOfMonsterHere;
 };
 
-struct CellRenderDataTiles {
-  CellRenderDataTiles() :
-    color(clrBlack), colorBg(clrBlack), tile(tile_empty), lifebarLength(-1),
-    isFadeEffectAllowed(true), isLivingActorSeenHere(false),
-    isMarkedAsLit(false) {
-  }
-  inline void clear() {
-    color = clrBlack;
-    colorBg = clrBlack;
-    tile = tile_empty;
-    lifebarLength = -1;
-    isFadeEffectAllowed = true;
-    isLivingActorSeenHere = isMarkedAsLit = false;
-  }
-  SDL_Color color;
-  SDL_Color colorBg;
-  Tile_t tile;
-  int lifebarLength;
-  bool isFadeEffectAllowed, isLivingActorSeenHere, isMarkedAsLit;
-};
 
 struct StrAndClr {
   StrAndClr() : str(""), clr(clrBlack) {}

@@ -11,7 +11,7 @@ public:
     if(monster.deadState == actorDeadState_alive) {
       if(monster.target != NULL) {
         if(
-          monster.awareOfPlayerCounter > 0 ||
+          monster.awareOfPlayerCounter_ > 0 ||
           monster.leader == engine.player) {
           Pos result;
           Pos offset = monster.target->pos - monster.pos;

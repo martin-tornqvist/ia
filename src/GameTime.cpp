@@ -78,8 +78,8 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
     eng.playerVisualMemory->updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
-    if(monster->awareOfPlayerCounter > 0) {
-      monster->awareOfPlayerCounter -= 1;
+    if(monster->awareOfPlayerCounter_ > 0) {
+      monster->awareOfPlayerCounter_ -= 1;
     }
   }
 
@@ -160,18 +160,22 @@ void GameTime::runStandardTurnEvents() {
 
 //  traceVerbose << "GameTime: Current turn: " << turn_ << endl;
 
-  Actor* actor = NULL;
-  int loopSize = actors_.size();
-
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
   int regenSpiEveryNTurns = 12;
 
-  for(int i = 0; i < loopSize; i++) {
-    actor = actors_.at(i);
+  for(size_t i = 0; i < actors_.size(); i++) {
+    Actor* const actor = actors_.at(i);
 
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
+
+    if(actor != eng.player) {
+      Monster* const monster = dynamic_cast<Monster*>(actor);
+      if(monster->playerAwareOfMeCounter_ > 0) {
+        monster->playerAwareOfMeCounter_--;
+      }
+    }
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
@@ -206,8 +210,7 @@ void GameTime::runStandardTurnEvents() {
       if(eng.player->target == actor) {eng.player->target = NULL;}
       actors_.erase(actors_.begin() + i);
       i--;
-      loopSize--;
-      if((unsigned int)currentActorVectorPos_ >= actors_.size()) {
+      if(currentActorVectorPos_ >= int(actors_.size())) {
         currentActorVectorPos_ = 0;
       }
     }

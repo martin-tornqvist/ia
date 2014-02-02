@@ -122,7 +122,7 @@ void ProxEventWallCrumble::playerIsNear() {
         eng.basicUtils->isPosAdj(pos, pos_, false)) {
         Actor* const actor = eng.actorFactory->spawnActor(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
-        monster->awareOfPlayerCounter =
+        monster->awareOfPlayerCounter_ =
           monster->getData().nrTurnsAwarePlayer;
         nrMonstersSpawned++;
       }

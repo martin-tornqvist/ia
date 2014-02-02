@@ -208,7 +208,7 @@ SpellCastRetData SpellDarkbolt::cast_(
     new PropParalyzed(eng, propTurnsSpecified, 2));
   target->hit(eng.dice.range(3, 10), dmgType_physical, true);
 
-  Sound snd("", endOfSfx, true, target->pos, false, true);
+  Sound snd("", endOfSfx, true, target->pos, NULL, false, true);
   eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
@@ -247,7 +247,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
         actor->hit(eng.dice(spellDmg), dmgType_physical, false);
-        Sound snd("", endOfSfx, true, actor->pos, true, true);
+        Sound snd("", endOfSfx, true, actor->pos, NULL, true, true);
         eng.soundEmitter->emitSound(snd);
       }
       return SpellCastRetData(true);
@@ -259,7 +259,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
     eng.player->hit(eng.dice(spellDmg), dmgType_physical, false);
-    Sound snd("", endOfSfx, true, eng.player->pos, true, true);
+    Sound snd("", endOfSfx, true, eng.player->pos, NULL, true, true);
     eng.soundEmitter->emitSound(snd);
   }
   return SpellCastRetData(false);
@@ -326,18 +326,16 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng.gameTime->getActorAtElement(i);
-    if(&actor != eng.player) {
-      if(eng.player->checkIfSeeActor(actor, NULL)) {
-        actor.getPropHandler().tryApplyProp(
+  for(Actor* actor : eng.gameTime->actors_) {
+    if(actor != eng.player) {
+      if(eng.player->checkIfSeeActor(*actor, NULL)) {
+        actor->getPropHandler().tryApplyProp(
           new PropBurning(eng, propTurnsStd));
       }
     }
   }
 
-  Sound snd("", endOfSfx, true, eng.player->pos, true, true);
+  Sound snd("", endOfSfx, true, eng.player->pos, NULL, true, true);
   eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
@@ -551,12 +549,10 @@ SpellCastRetData SpellRogueHide::cast_(
   (void)caster;
   eng.log->addMsg("I am unseen.");
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = &eng.gameTime->getActorAtElement(i);
+  for(Actor* actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
-      monster->awareOfPlayerCounter = 0;
+      monster->awareOfPlayerCounter_ = 0;
     }
   }
   return SpellCastRetData(true);
@@ -883,7 +879,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   const ActorId_t id = summonCandidates.at(ELEMENT);
   Actor* const actor = eng.actorFactory->spawnActor(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
-  monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
+  monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   if(eng.map->cells[summonPos.x][summonPos.y].isSeenByPlayer) {
     eng.log->addMsg(monster->getNameA() + " appears.");
   }

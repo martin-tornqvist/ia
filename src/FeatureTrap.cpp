@@ -124,7 +124,7 @@ void Trap::bump(Actor& actorBumping) {
         trace << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(&actorBumping);
         if(
-          monster->awareOfPlayerCounter > 0 &&
+          monster->awareOfPlayerCounter_ > 0 &&
           monster->isStealth == false) {
           trace << "Trap: Monster eligible for triggering trap" << endl;
 
@@ -718,7 +718,8 @@ void TrapAlarm::trigger(
   eng.log->addMsg("An alarm sounds!");
 
   Sound snd("I hear an alarm sounding!",
-            endOfSfx, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, true, true);
+            endOfSfx, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, &actor, true,
+            true);
   eng.soundEmitter->emitSound(snd);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
 }

@@ -33,11 +33,9 @@ void BasicUtils::getActorPositions(const vector<Actor*>& actors,
 
 
 Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng.gameTime->getActorAtElement(i);
-    if(actor.pos == pos && actor.deadState == actorDeadState_alive) {
-      return &actor;
+  for(Actor * actor : eng.gameTime->actors_) {
+    if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
+      return actor;
     }
   }
   return NULL;
@@ -46,11 +44,9 @@ Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
 void BasicUtils::makeActorArray(Actor* a[MAP_W][MAP_H]) {
   resetArray(a);
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng.gameTime->getActorAtElement(i);
-    const Pos& p = actor.pos;
-    a[p.x][p.y] = &actor;
+  for(Actor * actor : eng.gameTime->actors_) {
+    const Pos& p = actor->pos;
+    a[p.x][p.y] = actor;
   }
 }
 

@@ -17,10 +17,11 @@ public:
   Sound(
     const string& msg, const Sfx_t sfx,
     const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG, const Pos& origin,
-    const bool IS_LOUD, const bool IS_ALERTING_MONSTER) :
+    Actor* const actorWhoMadeSound, const bool IS_LOUD,
+    const bool IS_ALERTING_MONSTER) :
     msg_(msg), sfx_(sfx),
     isMsgIgnoredIfPlayerSeeOrig_(IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG),
-    origin_(origin), isLoud_(IS_LOUD),
+    origin_(origin), actorWhoMadeSound_(actorWhoMadeSound), isLoud_(IS_LOUD),
     isAlertingMonsters_(IS_ALERTING_MONSTER) {}
 
   Sound() {}
@@ -35,6 +36,7 @@ public:
   }
 
   inline Pos getOrigin() const {return origin_;}
+  inline Actor* getActorWhoMadeSound() const {return actorWhoMadeSound_;}
   inline int isLoud() const {return isLoud_; }
   inline bool getIsAlertingMonsters() const {return isAlertingMonsters_;}
 
@@ -47,6 +49,7 @@ private:
   Sfx_t sfx_;
   bool isMsgIgnoredIfPlayerSeeOrig_;
   Pos origin_;
+  Actor* actorWhoMadeSound_;
   bool isLoud_;
   bool isAlertingMonsters_;
 };

@@ -1962,9 +1962,9 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardLeader] = false;
   d.speed = actorSpeed_sluggish;
   d.glyph = 'W';
-  d.color = clrMagenta;
+  d.color = clrBrownDrk;
   d.tile = tile_chthonian;
-  d.hp = 120;
+  d.hp = 200;
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(ability_accuracyMelee, 60);

@@ -35,10 +35,19 @@
 #include "Properties.h"
 
 Player::Player(Engine& engine) :
-  Actor(engine), activeMedicalBag(NULL), waitTurnsLeft(-1),
-  dynamiteFuseTurns(-1), molotovFuseTurns(-1), flareFuseTurns(-1),
-  target(NULL), insanity_(0), shock_(0.0), shockTemp_(0.0),
-  permShockTakenCurTurn_(0.0), mth_(0), nrMovesUntilFreeAction_(-1),
+  Actor(engine),
+  activeMedicalBag(NULL),
+  waitTurnsLeft(-1),
+  dynamiteFuseTurns(-1),
+  molotovFuseTurns(-1),
+  flareFuseTurns(-1),
+  target(NULL),
+  insanity_(0),
+  shock_(0.0),
+  shockTemp_(0.0),
+  permShockTakenCurTurn_(0.0),
+  mth_(0),
+  nrMovesUntilFreeAction_(-1),
   carryWeightBase(450) {}
 
 void Player::spawnStartItems() {
@@ -382,25 +391,23 @@ void Player::incrInsanity() {
             } else {
               msg += "I scream in terror.";
             }
-            eng.popup->showMessage(msg, true, "Screaming!",
-                                   sfxInsanityRising);
+            eng.popup->showMessage(msg, true, "Screaming!", sfxInsanityRising);
             eng.soundEmitter->emitSound(
-              Sound("", endOfSfx, true, pos, true, true));
+              Sound("", endOfSfx, true, pos, this, true, true));
             return;
           }
         } break;
 
         case 2: {
           msg += "I find myself babbling incoherently.";
-          eng.popup->showMessage(msg, true, "Babbling!",
-                                 sfxInsanityRising);
+          eng.popup->showMessage(msg, true, "Babbling!", sfxInsanityRising);
           const string playerName = getNameThe();
           for(int i = eng.dice.range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng.log->addMsg(playerName + ": " + phrase);
           }
           eng.soundEmitter->emitSound(
-            Sound("", endOfSfx, true, pos, false, true));
+            Sound("", endOfSfx, true, pos, this, false, true));
           return;
         } break;
 
@@ -417,7 +424,7 @@ void Player::incrInsanity() {
           eng.popup->showMessage(msg, true, "HAHAHA!",
                                  sfxInsanityRising);
           eng.soundEmitter->emitSound(
-            Sound("", endOfSfx, true, pos, false, true));
+            Sound("", endOfSfx, true, pos, this, false, true));
           return;
         } break;
 
@@ -755,9 +762,9 @@ void Player::onActorTurn() {
   if(getMth() >= MTH_LVL_NEW_PWR) {grantMthPower();}
 
   //If player dropped item, check if should go back to inventory screen
-  vector<Actor*> SpottedEnemies;
-  getSpottedEnemies(SpottedEnemies);
-  if(SpottedEnemies.empty()) {
+  vector<Actor*> spottedEnemies;
+  getSpottedEnemies(spottedEnemies);
+  if(spottedEnemies.empty()) {
     const InventoryScreen_t invScreen =
       eng.inventoryHandler->screenToOpenAfterDrop;
     if(invScreen != endOfInventoryScreens) {
@@ -850,7 +857,6 @@ void Player::onStandardTurn_() {
     }
   }
 
-  //Shock from seen monsters
   vector<Actor*> SpottedEnemies;
   getSpottedEnemies(SpottedEnemies);
   double shockFromMonstersCurPlayerTurn = 0.0;
@@ -858,8 +864,10 @@ void Player::onStandardTurn_() {
   for(Actor * actor : SpottedEnemies) {
     Monster* monster = dynamic_cast<Monster*>(actor);
 
+    monster->playerBecomeAwareOfMe();
+
     //Rogues takes no shock from unaware monsters
-    if(IS_ROGUE && monster->awareOfPlayerCounter <= 0) {
+    if(IS_ROGUE && monster->awareOfPlayerCounter_ <= 0) {
       continue;
     }
 
@@ -918,9 +926,7 @@ void Player::onStandardTurn_() {
     return;
   }
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = &(eng.gameTime->getActorAtElement(i));
+  for(Actor* actor : eng.gameTime->actors_) {
     if(actor != this) {
       if(actor->deadState == actorDeadState_alive) {
 
@@ -1072,14 +1078,21 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const Sfx_t sfx = snd.getSfx();
 
   const string& msg = snd.getMsg();
-  const bool IS_MSG_EMPTY = msg.empty();
+  const bool HAS_SND_MSG = msg.empty() == false;
 
-  if(IS_MSG_EMPTY == false) {eng.log->addMsg(msg, clrWhite);}
+  if(HAS_SND_MSG) {eng.log->addMsg(msg, clrWhite);}
 
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
-  if(IS_MSG_EMPTY == false || IS_ORIGIN_SEEN_BY_PLAYER) {
+  if(HAS_SND_MSG || IS_ORIGIN_SEEN_BY_PLAYER) {
     eng.audio->playFromDir(sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
+  }
+
+  if(HAS_SND_MSG) {
+    Actor* const actorWhoMadeSnd = snd.getActorWhoMadeSound();
+    if(actorWhoMadeSnd != NULL && actorWhoMadeSnd != this) {
+      dynamic_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
+    }
   }
 }
 

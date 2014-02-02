@@ -256,8 +256,6 @@ bool Door::trySpike(Actor* actorTrying) {
     } else {
       eng.log->addMsg("I jam a door with a spike.");
     }
-    eng.soundEmitter->emitSound(
-      Sound("", endOfSfx, true, Pos(pos_.x, pos_.y), false, IS_PLAYER));
   }
   eng.gameTime->actorDidAct();
   return true;
@@ -304,7 +302,7 @@ void Door::bash_(Actor& actorTrying) {
       isSecret_ = false;
       isOpen_ = true;
       if(IS_PLAYER) {
-        Sound snd("", sfxDoorBreak, true, pos_, false, IS_PLAYER);
+        Sound snd("", sfxDoorBreak, true, pos_, &actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
         if(actorTrying.getPropHandler().allowSee() == false) {
           eng.log->addMsg("I feel a door crashing open!");
@@ -324,7 +322,7 @@ void Door::bash_(Actor& actorTrying) {
           eng.log->addMsg("A door crashes open!");
         }
         Sound snd("I hear a door crashing open!",
-                  sfxDoorBreak, true, pos_, false, IS_PLAYER);
+                  sfxDoorBreak, true, pos_, &actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
       }
     }
@@ -378,11 +376,14 @@ void Door::tryClose(Actor* actorTrying) {
 
   //Blocked?
   if(isClosable) {
-    const Cell& doorCell = eng.map->cells[pos_.x][pos_.y];
-    const bool IS_BLOCKED =
-      CellPred::BlocksMoveCmn(true, eng).check(doorCell) ||
-      doorCell.item != NULL;
-    if(IS_BLOCKED) {
+    bool isblockedByActor = false;
+    for(Actor* actor : eng.gameTime->actors_) {
+      if(actor->pos == pos_) {
+        isblockedByActor = true;
+        break;
+      }
+    }
+    if(isblockedByActor || eng.map->cells[pos_.x][pos_.y].item != NULL) {
       isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
@@ -400,12 +401,12 @@ void Door::tryClose(Actor* actorTrying) {
     if(TRYER_IS_BLIND == false) {
       isOpen_ = false;
       if(IS_PLAYER) {
-        Sound snd("", sfxDoorClose, true, pos_, false, IS_PLAYER);
+        Sound snd("", sfxDoorClose, true, pos_, actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
         eng.log->addMsg("I close the door.");
       } else {
         Sound snd("I hear a door closing.",
-                  sfxDoorClose, true, pos_, false, IS_PLAYER);
+                  sfxDoorClose, true, pos_, actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
         if(PLAYER_SEE_TRYER) {
           eng.log->addMsg(actorTrying->getNameThe() + " closes a door.");
@@ -415,12 +416,13 @@ void Door::tryClose(Actor* actorTrying) {
       if(eng.dice.percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
-          Sound snd("", sfxDoorClose, true, pos_, false, IS_PLAYER);
+          Sound snd("", sfxDoorClose, true, pos_, actorTrying, false,
+                    IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           eng.log->addMsg("I fumble with a door and succeed to close it.");
         } else {
           Sound snd("I hear a door closing.",
-                    sfxDoorClose, true, pos_, false, IS_PLAYER);
+                    sfxDoorClose, true, pos_, actorTrying, false, IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           if(PLAYER_SEE_TRYER) {
             eng.log->addMsg(actorTrying->getNameThe() +
@@ -480,12 +482,12 @@ void Door::tryOpen(Actor* actorTrying) {
       trace << "Door: Tryer can see, opening" << endl;
       isOpen_ = true;
       if(IS_PLAYER) {
-        Sound snd("", sfxDoorOpen, true, pos_, false, IS_PLAYER);
+        Sound snd("", sfxDoorOpen, true, pos_, actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
         eng.log->addMsg("I open the door.");
       } else {
         Sound snd("I hear a door open.",
-                  sfxDoorOpen, true, pos_, false, IS_PLAYER);
+                  sfxDoorOpen, true, pos_, actorTrying, false, IS_PLAYER);
         eng.soundEmitter->emitSound(snd);
         if(PLAYER_SEE_TRYER) {
           eng.log->addMsg(actorTrying->getNameThe() + " opens a door.");
@@ -498,12 +500,12 @@ void Door::tryOpen(Actor* actorTrying) {
         trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {
-          Sound snd("", sfxDoorOpen, true, pos_, false, IS_PLAYER);
+          Sound snd("", sfxDoorOpen, true, pos_, actorTrying, false, IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           eng.log->addMsg("I fumble with a door and succeed to open it.");
         } else {
           Sound snd("I hear something open a door clumsily.",
-                    sfxDoorOpen, true, pos_, false, IS_PLAYER);
+                    sfxDoorOpen, true, pos_, actorTrying, false, IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           if(PLAYER_SEE_TRYER) {
             eng.log->addMsg(actorTrying->getNameThe() +
@@ -515,7 +517,7 @@ void Door::tryOpen(Actor* actorTrying) {
       } else {
         trace << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
-          Sound snd("", endOfSfx, true, pos_, false, IS_PLAYER);
+          Sound snd("", endOfSfx, true, pos_, actorTrying, false, IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           eng.log->addMsg("I fumble blindly with a door and fail to open it.");
         } else {
@@ -524,7 +526,8 @@ void Door::tryOpen(Actor* actorTrying) {
           //and the Sound parameter for muting messages from seen sounds
           //should be off
           Sound snd("I hear something attempting to open a door.",
-                    endOfSfx, true, actorTrying->pos, false, IS_PLAYER);
+                    endOfSfx, true, actorTrying->pos, actorTrying, false,
+                    IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           if(PLAYER_SEE_TRYER) {
             eng.log->addMsg(actorTrying->getNameThe() +

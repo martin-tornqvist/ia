@@ -25,8 +25,7 @@ inline void Cell::clear() {
     item = NULL;
   }
 
-  playerVisualMemoryAscii.clear();
-  playerVisualMemoryTiles.clear();
+  playerVisualMemory.clear();
 }
 
 Map::Map(Engine& engine) : eng(engine), dlvl_(0) {

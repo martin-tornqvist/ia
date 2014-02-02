@@ -12,8 +12,6 @@ FeatureLiquidShallow::FeatureLiquidShallow(
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor& actorBumping) {
-  const PropHandler& propHlr = actorBumping.getPropHandler();
-
   vector<PropId_t> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
@@ -28,11 +26,7 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     //lines are created. This "glop" message masks the problem, but it
     //should be investigated and solved properly. Keep the "glop" message
     //though ;-)
-    const bool IS_PLAYER = &actorBumping == eng.player;
-    if(IS_PLAYER) {
-      eng.log->addMsg("*glop*");
-//      eng.audio->play(sfxGlop);
-    }
+    if(&actorBumping == eng.player) eng.log->addMsg("*glop*");
   }
 }
 

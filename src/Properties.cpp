@@ -1098,7 +1098,7 @@ void PropHandler::tick(const PropTurnMode_t turnMode,
 
       if(owningActor_ != eng.player) {
         if(prop->isMakingMonsterAware()) {
-          dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter =
+          dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
             owningActor_->getData().nrTurnsAwarePlayer;
         }
       }
@@ -1123,7 +1123,7 @@ void PropHandler::tick(const PropTurnMode_t turnMode,
   for(Prop * prop : invProps) {
     if(owningActor_ != eng.player) {
       if(prop->isMakingMonsterAware()) {
-        dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter =
+        dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
           owningActor_->getData().nrTurnsAwarePlayer;
       }
     }

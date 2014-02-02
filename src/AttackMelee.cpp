@@ -44,7 +44,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       if(
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
-        Sound snd("", endOfSfx, true, data.curDefender->pos, false, true);
+        Sound snd("", endOfSfx, true, data.curDefender->pos, NULL, false, true);
         eng.soundEmitter->emitSound(snd);
       }
     }
@@ -56,7 +56,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     }
   } else {
     Monster* const monster = dynamic_cast<Monster*>(data.curDefender);
-    monster->awareOfPlayerCounter = monster->getData().nrTurnsAwarePlayer;
+    monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   }
   eng.gameTime->actorDidAct();
 }

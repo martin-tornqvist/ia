@@ -8,7 +8,7 @@ class AI_setPathToPlayerIfAware {
 public:
   static void learn(Monster& monster, vector<Pos>& path, Engine& engine) {
     if(monster.deadState == actorDeadState_alive) {
-      if(monster.awareOfPlayerCounter > 0) {
+      if(monster.awareOfPlayerCounter_ > 0) {
 
         bool blockers[MAP_W][MAP_H];
         engine.basicUtils->resetArray(blockers, false);

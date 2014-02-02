@@ -11,8 +11,6 @@
 
 void Hide::playerTryHide() {
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-
   bool isHideSucceed = true;
 
   if(eng.dice.oneIn(3)) {
@@ -20,13 +18,8 @@ void Hide::playerTryHide() {
   } else {
     vector<Actor*> actors; actors.resize(0);
 
-    for(int i = 0; i < NR_ACTORS; i++) {
-      Actor* const actor = &eng.gameTime->getActorAtElement(i);
-      if(actor != eng.player) {
-//        if(dynamic_cast<Monster*>(actor)->awareOfPlayerCounter > 0) {
-          actors.push_back(actor);
-//        }
-      }
+    for(Actor * actor : eng.gameTime->actors_) {
+      if(actor != eng.player) {actors.push_back(actor);}
     }
 
     //Cap number of monsters attempting to spot player
@@ -48,16 +41,12 @@ void Hide::playerTryHide() {
   }
 
   if(isHideSucceed) {
-    for(int i = 0; i < NR_ACTORS; i++) {
-      Actor* const actor = &eng.gameTime->getActorAtElement(i);
+    for(Actor * actor : eng.gameTime->actors_) {
       if(actor != eng.player) {
         Monster* const monster = dynamic_cast<Monster*>(actor);
-        monster->awareOfPlayerCounter = 0;
+        monster->awareOfPlayerCounter_ = 0;
       }
     }
-//    eng.log->addMsg("I hide!");
-  } else {
-//    eng.log->addMsg("I fail to hide!");
   }
 
 //  eng.gameTime->actorDidAct();

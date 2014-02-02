@@ -22,17 +22,13 @@ Dir_t getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
     }
   }
 
-  const int NR_ACTORS   = engine.gameTime->getNrActors();
-  const int NR_FEATURES = engine.gameTime->getNrFeatureMobs();
-
-  for(int i = 0; i < NR_ACTORS; i++) {
-    const Pos& pos = engine.gameTime->getActorAtElement(i).pos;
-    blockers[pos.x][pos.y] = true;
+  for(Actor* actor : engine.gameTime->actors_) {
+    const Pos& p = actor->pos;
+    blockers[p.x][p.y] = true;
   }
-  for(int i = 0; i < NR_FEATURES; i++) {
-    const FeatureMob& m = engine.gameTime->getFeatureMobAtElement(i);
-    const Pos& p = m.getPos();
-    blockers[p.x][p.y] = cellPred.check(m);
+  for(FeatureMob* mob : engine.gameTime->featureMobs_) {
+    const Pos& p = mob->getPos();
+    blockers[p.x][p.y] = cellPred.check(*mob);
   }
 
   const Rect areaAllowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
@@ -82,7 +78,7 @@ static bool action(Monster& monster, Engine& engine) {
   if(monster.deadState == actorDeadState_alive) {
     if(
       monster.isRoamingAllowed == true ||
-      monster.awareOfPlayerCounter > 0) {
+      monster.awareOfPlayerCounter_ > 0) {
 
       const Dir_t dir = getDirToRndAdjFreeCell(monster, engine);
       if(dir != dirCenter) {

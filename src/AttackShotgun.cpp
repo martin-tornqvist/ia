@@ -44,7 +44,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
     const Sfx_t sfx = wpn.getData().rangedAttackSfx;
     eng.soundEmitter->emitSound(
-      Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
+      Sound(sndMsg, sfx, true, attacker.pos, &attacker, IS_LOUD, true));
   }
 
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -120,7 +120,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
       Sound snd("I hear a ricochet.",
-                sfxRicochet, true, curPos, false, true);
+                sfxRicochet, true, curPos, NULL, false, true);
       eng.soundEmitter->emitSound(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
@@ -140,7 +140,8 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
-      Sound snd("I hear a ricochet.", sfxRicochet, true, curPos, false, true);
+      Sound snd("I hear a ricochet.", sfxRicochet, true, curPos, NULL,
+                false, true);
       eng.soundEmitter->emitSound(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
@@ -159,4 +160,3 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     }
   }
 }
-

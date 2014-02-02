@@ -159,12 +159,8 @@ Entity Look::getEntityToDescribe(const Pos pos) {
   }
 
   //Describe mob feature
-  const int NR_MOBS = eng.gameTime->getNrFeatureMobs();
-  for(int i = 0; i < NR_MOBS; i++) {
-    FeatureMob& f = eng.gameTime->getFeatureMobAtElement(i);
-    if(f.getPos() == pos) {
-      return Entity(&f);
-    }
+  for(FeatureMob* mob : eng.gameTime->featureMobs_) {
+    if(mob->getPos() == pos) {return Entity(mob);}
   }
 
   //If item there, describe that.

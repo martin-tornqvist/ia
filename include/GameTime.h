@@ -43,16 +43,6 @@ public:
 
   Actor* getCurrentActor();
 
-  inline int getNrActors() const {return actors_.size();}
-
-  inline int getNrFeatureMobs() {return featureMobs_.size();}
-
-  inline Actor& getActorAtElement(const int i) {return *(actors_.at(i));}
-
-  FeatureMob& getFeatureMobAtElement(const int ELEMENT) {
-    return *(featureMobs_.at(ELEMENT));
-  }
-
   void eraseActorInElement(const unsigned int i);
 
   void getFeatureMobsAtPos(const Pos& pos, vector<FeatureMob*>& vectorRef);
@@ -84,10 +74,13 @@ public:
 
   void updateLightMap();
 
+  vector<Actor*> actors_;
+  vector<FeatureMob*> featureMobs_;
+
 private:
-  friend class Renderer;
-  friend class Dungeon;
-  friend class DungeonFeatureFactory;
+//  friend class Renderer;
+//  friend class Dungeon;
+//  friend class DungeonFeatureFactory;
 
   void runStandardTurnEvents();
 
@@ -97,8 +90,6 @@ private:
 
   vector<ActorSpeed_t> turnTypeVector_;
   int currentTurnTypePos_;
-  vector<Actor*> actors_;
-  vector<FeatureMob*> featureMobs_;
   int currentActorVectorPos_;
 
   int turn_;

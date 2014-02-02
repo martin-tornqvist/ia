@@ -192,7 +192,8 @@ void FeatureStatic::bash(Actor& actorTrying) {
   //parameter to ignore the message if source is seen is enabled.
   //This is because the player shoudl receive the ound message even if the
   //bashed object is seen - but never if the bashing actor is seen
-  Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, false, IS_PLAYER);
+  Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, &actorTrying,
+            false, IS_PLAYER);
   eng.soundEmitter->emitSound(snd);
 
   bash_(actorTrying);

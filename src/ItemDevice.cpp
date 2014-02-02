@@ -147,13 +147,11 @@ string DeviceRepeller::getSpecificActivateMessage() {
 
 void DeviceRepeller::runGoodEffect() {
   const Pos& playerPos = eng.player->pos;
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng.gameTime->getActorAtElement(i);
-    if(&actor != eng.player) {
-      const Pos& otherPos = actor.pos;
+  for(Actor* actor : eng.gameTime->actors_) {
+    if(actor != eng.player) {
+      const Pos& otherPos = actor->pos;
       if(eng.basicUtils->isPosAdj(playerPos, otherPos, false)) {
-        eng.knockBack->tryKnockBack(actor, playerPos, false, true);
+        eng.knockBack->tryKnockBack(*actor, playerPos, false, true);
       }
     }
   }

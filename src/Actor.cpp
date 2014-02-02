@@ -112,32 +112,30 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
     MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   }
 
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor& actor = eng.gameTime->getActorAtElement(i);
-    if(&actor != this && actor.deadState == actorDeadState_alive) {
+  for(Actor * actor : eng.gameTime->actors_) {
+    if(actor != this && actor->deadState == actorDeadState_alive) {
 
       if(IS_SELF_PLAYER) {
-        if(dynamic_cast<Monster*>(&actor)->leader != this) {
-          if(checkIfSeeActor(actor, NULL)) {
-            vectorRef.push_back(&actor);
+        if(dynamic_cast<Monster*>(actor)->leader != this) {
+          if(checkIfSeeActor(*actor, NULL)) {
+            vectorRef.push_back(actor);
           }
         }
       } else {
-        const bool IS_OTHER_PLAYER = &actor == eng.player;
+        const bool IS_OTHER_PLAYER = actor == eng.player;
         const bool IS_HOSTILE_TO_PLAYER =
           dynamic_cast<Monster*>(this)->leader != eng.player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
           IS_OTHER_PLAYER ? false :
-          dynamic_cast<Monster*>(&actor)->leader != eng.player;
+          dynamic_cast<Monster*>(actor)->leader != eng.player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
           (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
-          if(checkIfSeeActor(actor, visionBlockers)) {
-            vectorRef.push_back(&actor);
+          if(checkIfSeeActor(*actor, visionBlockers)) {
+            vectorRef.push_back(actor);
           }
         }
       }
@@ -353,7 +351,7 @@ bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
 
   if(
     dmgType == dmgType_light &&
-    find(props.begin(), props.end(), propLightSensitive) != props.end()) {
+    find(props.begin(), props.end(), propLightSensitive) == props.end()) {
     return false;
   }
 
@@ -455,23 +453,13 @@ bool Actor::hitSpi(const int DMG) {
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  const int NR_ACTORS = eng.gameTime->getNrActors();
-  for(int i = 0; i < NR_ACTORS; i++) {
-    Actor* const actor = &(eng.gameTime->getActorAtElement(i));
+  for(Actor* actor : eng.gameTime->actors_) {
     if(actor != this && actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {
         monster->leader = NULL;
       }
     }
-  }
-
-  if(this != eng.player) {
-    if(isHumanoid() == true) {
-      eng.soundEmitter->emitSound(
-        Sound("I hear agonised screaming.", endOfSfx, true, pos, false, false));
-    }
-    dynamic_cast<Monster*>(this)->leader = NULL;
   }
 
   bool diedOnVisibleTrap = false;
@@ -505,6 +493,15 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   deadState =
     (IS_MANGLED || (diedOnVisibleTrap && this != eng.player)) ?
     actorDeadState_mangled : actorDeadState_corpse;
+
+  if(this != eng.player) {
+    if(isHumanoid() == true) {
+      Sound snd(
+        "I hear agonised screaming.", endOfSfx, true, pos, this, false, false);
+      eng.soundEmitter->emitSound(snd);
+    }
+    dynamic_cast<Monster*>(this)->leader = NULL;
+  }
 
   if(ALLOW_DROP_ITEMS) {
     eng.itemDrop->dropAllCharactersItems(this, true);

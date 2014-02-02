@@ -111,7 +111,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(IS_ATTACKER_PLAYER) sndMsg = "";
           const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
           eng.soundEmitter->emitSound(
-            Sound(sndMsg, sfx, true, attacker.pos, IS_LOUD, true));
+            Sound(sndMsg, sfx, true, attacker.pos, &attacker, IS_LOUD, true));
         }
       }
 
@@ -222,8 +222,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->isObstructed = true;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Sound snd("I hear a ricochet.",
-                      sfxRicochet, true, curProj->pos, false, true);
+            Sound snd("I hear a ricochet.", sfxRicochet, true, curProj->pos,
+                      NULL, false, true);
             eng.soundEmitter->emitSound(snd);
           }
 
@@ -253,8 +253,8 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->obstructedInElement = projectilePathElement;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Sound snd("I hear a ricochet.",
-                      sfxRicochet, true, curProj->pos, false, true);
+            Sound snd("I hear a ricochet.", sfxRicochet, true, curProj->pos,
+                      NULL, false, true);
             eng.soundEmitter->emitSound(snd);
           }
 

@@ -32,10 +32,18 @@
 using namespace std;
 
 Monster::Monster(Engine& engine) :
-  Actor(engine), awareOfPlayerCounter(0), messageMonsterInViewPrinted(false),
-  lastDirTravelled(dirCenter), spellCoolDownCurrent(0),
-  isRoamingAllowed(true), isStealth(false), leader(NULL), target(NULL),
-  waiting_(false), shockCausedCurrent(0.0) {}
+  Actor(engine),
+  awareOfPlayerCounter_(0),
+  playerAwareOfMeCounter_(0),
+  messageMonsterInViewPrinted(false),
+  lastDirTravelled(dirCenter),
+  spellCoolDownCurrent(0),
+  isRoamingAllowed(true),
+  isStealth(false),
+  leader(NULL),
+  target(NULL),
+  waiting_(false),
+  shockCausedCurrent(0.0) {}
 
 Monster::~Monster() {
   for(unsigned int i = 0; i < spellsKnown.size(); i++) {
@@ -49,7 +57,7 @@ void Monster::onActorTurn() {
   waiting_ = !waiting_;
 
   if(waiting_) {
-    if(awareOfPlayerCounter <= 0) {
+    if(awareOfPlayerCounter_ <= 0) {
       eng.gameTime->actorDidAct();
       return;
     }
@@ -63,7 +71,7 @@ void Monster::onActorTurn() {
     spellCoolDownCurrent--;
   }
 
-  if(awareOfPlayerCounter > 0) {
+  if(awareOfPlayerCounter_ > 0) {
     isRoamingAllowed = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
@@ -74,7 +82,7 @@ void Monster::onActorTurn() {
     } else {
       if(leader->deadState == actorDeadState_alive) {
         if(leader != eng.player) {
-          dynamic_cast<Monster*>(leader)->awareOfPlayerCounter =
+          dynamic_cast<Monster*>(leader)->awareOfPlayerCounter_ =
             leader->getData().nrTurnsAwarePlayer;
         }
       }
@@ -202,7 +210,7 @@ void Monster::onActorTurn() {
 }
 
 void Monster::onMonsterHit(int& dmg) {
-  awareOfPlayerCounter = data_->nrTurnsAwarePlayer;
+  awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
 
   if(data_->monsterShockLevel != monsterShockLevel_none) {
     dmg = (dmg * (100 + eng.player->getMth())) / 100;
@@ -264,22 +272,26 @@ void Monster::speakPhrase() {
   const Sfx_t sfx = IS_SEEN_BY_PLAYER ?
                     getAggroSfxMonsterSeen() :
                     getAggroSfxMonsterHidden();
-  eng.soundEmitter->emitSound(Sound(msg, sfx, false, pos, false, true));
+  eng.soundEmitter->emitSound(Sound(msg, sfx, false, pos, this, false, true));
 }
 
 void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
-    const int PLAYER_AWARENESS_BEFORE = awareOfPlayerCounter;
-    awareOfPlayerCounter = data_->nrTurnsAwarePlayer;
+    const int PLAYER_AWARENESS_BEFORE = awareOfPlayerCounter_;
+    awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
     if(PLAYER_AWARENESS_BEFORE <= 0 && eng.dice.coinToss()) {
       speakPhrase();
     }
   }
 }
 
+void Monster::playerBecomeAwareOfMe() {
+  playerAwareOfMeCounter_ = eng.dice.range(4, 6);
+}
+
 bool Monster::tryAttack(Actor& defender) {
   if(deadState == actorDeadState_alive) {
-    if(awareOfPlayerCounter > 0 || leader == eng.player) {
+    if(awareOfPlayerCounter_ > 0 || leader == eng.player) {
 
       bool blockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(eng), blockers);

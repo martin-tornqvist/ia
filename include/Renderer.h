@@ -82,11 +82,8 @@ public:
 
   void drawMainMenuLogo(const int Y_POS);
 
-  CellRenderDataAscii renderArrayActorsOmittedAscii[MAP_W][MAP_H];
-  CellRenderDataTiles renderArrayActorsOmittedTiles[MAP_W][MAP_H];
-
-  CellRenderDataAscii renderArrayAscii[MAP_W][MAP_H];
-  CellRenderDataTiles renderArrayTiles[MAP_W][MAP_H];
+  CellRenderData renderArray[MAP_W][MAP_H];
+  CellRenderData renderArrayNoActors[MAP_W][MAP_H];
 
   void drawProjectiles(vector<Projectile*>& projectiles);
 
@@ -135,8 +132,7 @@ private:
 
   void freeAssets();
 
-  void drawAscii();
-  void drawTiles();
+  void drawMap();
 
   Engine& eng;
 
