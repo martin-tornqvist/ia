@@ -78,10 +78,6 @@ public:
   vector<FeatureMob*> featureMobs_;
 
 private:
-//  friend class Renderer;
-//  friend class Dungeon;
-//  friend class DungeonFeatureFactory;
-
   void runStandardTurnEvents();
 
   void runAtomicTurnEvents();

@@ -51,6 +51,9 @@ const int     FOV_MAX_W_INT     = (FOV_MAX_RADI_INT * 2) + 1;
 const double  FOV_MAX_RADI_DB   = double(FOV_MAX_RADI_INT);
 const double  FOV_MAX_W_DB      = double(FOV_MAX_W_INT);
 
+const int SND_DIST_NORMAL = FOV_STD_RADI_INT;
+const int SND_DIST_LOUD   = SND_DIST_NORMAL * 2;
+
 const int THROWING_RANGE_LIMIT  = FOV_STD_RADI_INT + 3;
 
 const int DYNAMITE_FUSE_TURNS = 5;

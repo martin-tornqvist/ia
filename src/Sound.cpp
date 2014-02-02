@@ -13,8 +13,8 @@
 bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
                                        const Sound& snd) const {
   return snd.isLoud() ?
-         RANGE <= NR_STEPS_HEARD_LOUD :
-         RANGE <= NR_STEPS_HEARD_NORMAL;
+         (RANGE <= SND_DIST_LOUD) :
+         (RANGE <= SND_DIST_NORMAL);
 }
 
 void SoundEmitter::emitSound(Sound snd) {
@@ -31,7 +31,7 @@ void SoundEmitter::emitSound(Sound snd) {
   FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1), eng);
   floodFill[origin.x][origin.y] = 0;
 
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
@@ -63,7 +63,7 @@ void SoundEmitter::emitSound(Sound snd) {
         }
 
         const int SND_MAX_DISTANCE =
-          snd.isLoud() ? NR_STEPS_HEARD_LOUD : NR_STEPS_HEARD_NORMAL;
+          snd.isLoud() ? SND_DIST_LOUD : SND_DIST_NORMAL;
         const int PERCENT_DISTANCE =
           (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 

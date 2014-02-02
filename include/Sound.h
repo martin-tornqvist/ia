@@ -56,8 +56,7 @@ private:
 
 class SoundEmitter {
 public:
-  SoundEmitter(Engine& engine) :
-    NR_STEPS_HEARD_NORMAL(10), NR_STEPS_HEARD_LOUD(25), eng(engine) {}
+  SoundEmitter(Engine& engine) : eng(engine) {}
 
   void emitSound(Sound snd);
 
@@ -73,9 +72,6 @@ private:
     const Pos& origin, int floodFill[MAP_W][MAP_H]) const;
 
   bool isSoundHeardAtRange(const int RANGE, const Sound& snd) const;
-
-  const int NR_STEPS_HEARD_NORMAL;
-  const int NR_STEPS_HEARD_LOUD;
 
   Engine& eng;
 };
