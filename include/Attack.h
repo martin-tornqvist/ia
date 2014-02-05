@@ -103,6 +103,12 @@ struct Projectile {
   RangedAttackData* attackData;
 };
 
+enum MeleeHitSize_t {
+  meleeHitSizeSmall,
+  meleeHitSizeMedium,
+  meleeHitSizeHard,
+};
+
 class Attack {
 public:
   Attack(Engine& engine) : eng(engine) {}
@@ -115,7 +121,7 @@ public:
                           const Weapon& wpn);
 
 private:
-  void printMeleeMessages(const MeleeAttackData& data, const Weapon& wpn);
+  void printMeleeMsgAndPlaySfx(const MeleeAttackData& data, const Weapon& wpn);
 
   void printRangedInitiateMessages(const RangedAttackData& data) const;
   void printProjectileAtActorMessages(const RangedAttackData& data,

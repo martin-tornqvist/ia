@@ -35,6 +35,10 @@ void Audio::initAndClearPrev() {
     loadAudioFile(sfxFlappingWings,           "sfx_flappingWings.ogg");
 
     //Weapon and attack sounds
+    loadAudioFile(sfxHitSmall,                "sfx_hitSmall.ogg");
+    loadAudioFile(sfxHitMedium,               "sfx_hitMedium.ogg");
+    loadAudioFile(sfxHitHard,                 "sfx_hitHard.ogg");
+    loadAudioFile(sfxHitSharp,                "sfx_hitSharp.ogg");
     loadAudioFile(sfxPistolFire,              "sfx_pistolFire.ogg");
     loadAudioFile(sfxPistolReload,            "sfx_pistolReload.ogg");
     loadAudioFile(sfxShotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");

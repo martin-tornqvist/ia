@@ -64,7 +64,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
       d->landOnHardSurfaceSfx = endOfSfx;
       d->rangedAttackSfx = endOfSfx;
-      d->meleeAttackSfx = endOfSfx;
+      d->meleeHitSmallSfx = endOfSfx;
+      d->meleeHitMediumSfx = endOfSfx;
+      d->meleeHitHardSfx = endOfSfx;
       d->reloadSfx = endOfSfx;
       d->propAppliedOnRanged = NULL;
       d->isExplosive = false;
@@ -81,6 +83,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->color = clrWhite;
       d->primaryAttackMode = primaryAttackMode_melee;
       d->isMeleeWeapon = true;
+      d->meleeHitSmallSfx = sfxHitSmall;
+      d->meleeHitMediumSfx = sfxHitMedium;
+      d->meleeHitHardSfx = sfxHitHard;
     } break;
 
     case itemData_meleeWpnIntr: {
@@ -88,6 +93,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIntrinsic = true;
       d->spawnStandardMinDLVL = -1;
       d->spawnStandardMaxDLVL = -1;
+      d->meleeHitSmallSfx = sfxHitSmall;
+      d->meleeHitMediumSfx = sfxHitMedium;
+      d->meleeHitHardSfx = sfxHitHard;
     } break;
 
     case itemData_rangedWpn: {
@@ -103,6 +111,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedMissileGlyph = '/';
       d->rangedMissileColor = clrWhite;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->meleeHitSmallSfx = sfxHitSmall;
+      d->meleeHitMediumSfx = sfxHitMedium;
+      d->meleeHitHardSfx = sfxHitHard;
       d->rangedSoundIsLoud = true;
     } break;
 
@@ -531,6 +542,8 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeHitChanceMod = 20;
+  d->meleeHitMediumSfx = sfxHitSharp;
+  d->meleeHitHardSfx = sfxHitSharp;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -548,6 +561,8 @@ void ItemDataHandler::initDataList() {
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = false;
+  d->meleeHitMediumSfx = sfxHitSharp;
+  d->meleeHitHardSfx = sfxHitSharp;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -586,6 +601,8 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeHitChanceMod = 0;
+  d->meleeHitSmallSfx = sfxHitSharp;
+  d->meleeHitMediumSfx = sfxHitSharp;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -598,6 +615,9 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeHitChanceMod = -5;
+  d->meleeHitSmallSfx = sfxHitSmall;
+  d->meleeHitMediumSfx = sfxHitMedium;
+  d->meleeHitHardSfx = sfxHitHard;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
@@ -612,6 +632,8 @@ void ItemDataHandler::initDataList() {
   d->meleeDmg = pair<int, int>(3, 4);
   d->meleeHitChanceMod = -5;
   d->meleeCausesKnockBack = true;
+  d->meleeHitSmallSfx = sfxHitSharp;
+  d->meleeHitMediumSfx = sfxHitSharp;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -686,6 +708,9 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_zombieAxe);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
+  d->meleeHitSmallSfx = sfxHitSmall;
+  d->meleeHitMediumSfx = sfxHitMedium;
+  d->meleeHitHardSfx = sfxHitHard;
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zombieAxe]);
   dataList[d->id] = d;
 
@@ -993,7 +1018,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_huntingHorror]);
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsStd );
+  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsStd);
   dataList[d->id] = d;
 
   d = new ItemData(item_armorLeatherJacket);

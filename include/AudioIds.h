@@ -11,6 +11,10 @@ enum Sfx_t {
   sfxFlappingWings,
 
   //Weapon and attack sounds
+  sfxHitSmall,
+  sfxHitMedium,
+  sfxHitHard,
+  sfxHitSharp,
   sfxPistolFire,
   sfxPistolReload,
   sfxShotgunSawedOffFire,

@@ -11,13 +11,14 @@
 #include "Blood.h"
 #include "Knockback.h"
 #include "Log.h"
+#include "Audio.h"
 
 using namespace std;
 
 void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   MeleeAttackData data(attacker, wpn, defender, eng);
 
-  printMeleeMessages(data, wpn);
+  printMeleeMsgAndPlaySfx(data, wpn);
 
   if(data.isEtherealDefenderMissed == false) {
     if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
@@ -61,8 +62,8 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   eng.gameTime->actorDidAct();
 }
 
-void Attack::printMeleeMessages(const MeleeAttackData& data,
-                                const Weapon& wpn) {
+void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
+                                     const Weapon& wpn) {
   string otherName = "";
 
 
@@ -132,14 +133,23 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
       }
     } else {
       //----- ATTACK CONNECTS WITH DEFENDER --------
-      //Punctuation or exclamation marks depending on attack strength
-      string dmgPunct = ".";
+      //Determine the relative "size" of the hit
+      MeleeHitSize_t hitSize = meleeHitSizeSmall;
       const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
       if(MAX_DMG_ROLL >= 4) {
-        dmgPunct =
-          data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
-          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
-          dmgPunct;
+        if(data.dmgRoll > (MAX_DMG_ROLL * 5) / 6) {
+          hitSize = meleeHitSizeHard;
+        } else if(data.dmgRoll >  MAX_DMG_ROLL / 2) {
+          hitSize = meleeHitSizeMedium;
+        }
+      }
+
+      //Punctuation depends on attack strength
+      string dmgPunct = ".";
+      switch(hitSize) {
+        case meleeHitSizeSmall:                     break;
+        case meleeHitSizeMedium:  dmgPunct = "!";   break;
+        case meleeHitSizeHard:    dmgPunct = "!!!"; break;
       }
 
       if(data.attacker == eng.player) {
@@ -179,8 +189,22 @@ void Attack::printMeleeMessages(const MeleeAttackData& data,
         }
 
         eng.log->addMsg(otherName + " " + wpnVerb + dmgPunct,
-                         clrMsgBad, true);
+                        clrMsgBad, true);
       }
+
+      Sfx_t hitSfx = endOfSfx;
+      switch(hitSize) {
+        case meleeHitSizeSmall: {
+          hitSfx = wpn.getData().meleeHitSmallSfx;
+        } break;
+        case meleeHitSizeMedium: {
+          hitSfx = wpn.getData().meleeHitMediumSfx;
+        } break;
+        case meleeHitSizeHard: {
+          hitSfx = wpn.getData().meleeHitHardSfx;
+        } break;
+      }
+      eng.audio->play(hitSfx);
     }
   }
 }

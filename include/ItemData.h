@@ -244,7 +244,9 @@ public:
   string landOnHardSurfaceSoundMsg;
   Sfx_t landOnHardSurfaceSfx;
   Sfx_t rangedAttackSfx;
-  Sfx_t meleeAttackSfx;
+  Sfx_t meleeHitSmallSfx;
+  Sfx_t meleeHitMediumSfx;
+  Sfx_t meleeHitHardSfx;
   Sfx_t reloadSfx;
   Prop* propAppliedOnRanged;
   vector<RoomTheme_t> nativeRooms;

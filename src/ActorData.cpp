@@ -1975,7 +1975,7 @@ void ActorDataHandler::initDataList() {
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 12;
+  d.nrTurnsAwarePlayer = 5;
   d.isAutoDescriptionAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
