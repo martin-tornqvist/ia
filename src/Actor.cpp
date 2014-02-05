@@ -43,17 +43,21 @@ Actor::~Actor() {
 bool Actor::isSpottingHiddenActor(Actor& other) {
   const Pos& otherPos = other.pos;
 
-  const int OTHER_SNEAK_BASE =
-    other.getData().abilityVals.getVal(ability_stealth, true, other);
+  int playerBon = 0;
+  if(this == eng.player) {
+    playerBon = data_->abilityVals.getVal(ability_searching, true, *this) / 3;
+  }
 
-  const int  DIST              = eng.basicUtils->chebyshevDist(pos, otherPos);
-  const int  DIST_BON          = getConstrInRange(0, (DIST - 1) * 10, 60);
-  const bool IS_LGT            = eng.map->cells[otherPos.x][otherPos.y].isLight;
-  const int  LGT_DIV           = IS_LGT ? 2 : 1;
-  const int  OTHER_SNEAK_SKILL =
-    getConstrInRange(0, (OTHER_SNEAK_BASE + DIST_BON) / LGT_DIV, 90);
+  const int SNEAK_BASE = other.getData().abilityVals.getVal(
+                           ability_stealth, true, other);
 
-  return eng.abilityRoll->roll(OTHER_SNEAK_SKILL) <= failSmall;
+  const int  DIST     = eng.basicUtils->chebyshevDist(pos, otherPos);
+  const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
+  const int  LGT_DIV  = eng.map->cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
+  const int  SKILL =
+    getConstrInRange(0, (SNEAK_BASE + DIST_BON - playerBon) / LGT_DIV, 90);
+
+  return eng.abilityRoll->roll(SKILL) <= failSmall;
 }
 
 int Actor::getHpMax(const bool WITH_MODIFIERS) const {
@@ -453,7 +457,7 @@ bool Actor::hitSpi(const int DMG) {
 void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     if(actor != this && actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {

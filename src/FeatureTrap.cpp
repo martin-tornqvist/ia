@@ -242,7 +242,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTitle();
-      eng.log->addMsg("I spot a " + name + ".");
+      eng.log->addMsg("I spot a " + name + ".", clrWhite, false, true);
     }
   }
   traceVerbose << "Trap::reveal() [DONE]" << endl;
@@ -250,15 +250,11 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
 void Trap::playerTrySpotHidden() {
   if(isHidden_) {
-    if(eng.basicUtils->isPosAdj(pos_, eng.player->pos, false)) {
-      const Abilities_t abilityUsed = ability_searching;
-      const int PLAYER_SKILL =
-        eng.player->getData().abilityVals.getVal(
-          abilityUsed, true, *(eng.player));
+    const int PLAYER_SKILL = eng.player->getData().abilityVals.getVal(
+                               ability_searching, true, *(eng.player));
 
-      if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
-        reveal(true);
-      }
+    if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
+      reveal(true);
     }
   }
 }

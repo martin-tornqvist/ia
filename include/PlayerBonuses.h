@@ -38,6 +38,7 @@ enum Trait_t {
   traitSpiritCannibal,
   traitSeer,
   traitObservant,
+  traitPerceptive,
   traitVigilant,
   traitTreasureHunter,
   traitSelfAware,

@@ -23,6 +23,8 @@ int AbilityValues::getVal(const Abilities_t ability,
     switch(ability) {
       case ability_searching: {
         val += 8;
+        if(bonHlr.hasTrait(traitObservant))   val += 4;
+        if(bonHlr.hasTrait(traitPerceptive))  val += 4;
       } break;
 
       case ability_accuracyMelee: {
@@ -51,7 +53,8 @@ int AbilityValues::getVal(const Abilities_t ability,
 
       case ability_dodgeAttack: {
         val += 10;
-        if(bonHlr.hasTrait(traitDexterous)) val += 25;
+        if(bonHlr.hasTrait(traitDexterous)) val += 20;
+        if(bonHlr.hasTrait(traitLithe))     val += 20;
       } break;
 
       case ability_stealth: {

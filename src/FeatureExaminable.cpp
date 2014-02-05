@@ -245,8 +245,9 @@ void Tomb::examine() {
     }
 
     if(isTraitKnown_ == false && trait_ != endOfTombTraits) {
-      const int FIND_ONE_IN_N =
-        eng.playerBonHandler->hasTrait(traitObservant) ? 2 : 6;
+      const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
+      const int FIND_ONE_IN_N = bonHlr.hasTrait(traitPerceptive) ? 2 :
+                                (bonHlr.hasTrait(traitObservant) ? 3 : 6);
 
       isTraitKnown_ = eng.dice.oneIn(FIND_ONE_IN_N);
     }
@@ -563,7 +564,8 @@ void Chest::examine() {
 
     PlayerBonHandler* const bonHlr = eng.playerBonHandler;
 
-    const int FIND_ONE_IN_N = bonHlr->hasTrait(traitObservant) ? 3 : 6;
+    const int FIND_ONE_IN_N = bonHlr->hasTrait(traitPerceptive) ? 3 :
+                              (bonHlr->hasTrait(traitObservant) ? 4 : 7);
 
     if(isTrapped_ && (isTrapStatusKnown_ || (eng.dice.oneIn(FIND_ONE_IN_N)))) {
       eng.log->addMsg("There appears to be a hidden trap mechanism!");

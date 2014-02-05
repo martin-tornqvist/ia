@@ -54,7 +54,6 @@ public:
   MaterialType_t getMaterialType() const;
 
   void reveal(const bool ALLOW_MESSAGE);
-  void clue();
 
   void setToSecret() {isOpen_ = isSecret_ = false;}
 
@@ -76,14 +75,12 @@ protected:
   const FeatureData* const mimicFeature_;
   int nrSpikes_;
 
-  bool isOpen_, isBroken_, isStuck_, isSecret_,
-       isClued_, isOpenedAndClosedExternally_;
+  bool isOpen_, isBroken_, isStuck_, isSecret_, isOpenedAndClosedExternally_;
 
   DoorMaterial_t material_;
 
   friend class Player;
   void playerTrySpotHidden();
-  void playerTryClueHidden();
 };
 
 #endif

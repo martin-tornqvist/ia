@@ -57,6 +57,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitSteadyAimer:          strRef = "Steady Aimer";            break;
     case traitSharpShooter:         strRef = "Sharpshooter";            break;
     case traitObservant:            strRef = "Observant";               break;
+    case traitPerceptive:           strRef = "Perceptive";              break;
     case traitVigilant:             strRef = "Vigilant";                break;
     case traitRapidRecoverer:       strRef = "Rapid Recoverer";         break;
     case traitSurvivalist:          strRef = "Survivalist";             break;
@@ -253,13 +254,13 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitDexterous: {
-      strRef  = "+20% chance to evade attacks and traps, ";
-      strRef += "every fifth move is a free action";
+      strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
+      strRef += "traps, every fifth move is a free action";
     } break;
 
     case traitLithe: {
-      strRef  = "+20% chance to evade attacks and traps, ";
-      strRef += "every fourth move is a free action";
+      strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
+      strRef += "traps, every fifth move is a free action";
     } break;
 
     case traitMobile: {
@@ -275,9 +276,15 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitObservant: {
-      strRef  = "You occasionally spot clues about hidden passages, ";
-      strRef += "your attentiveness is higher when examining objects ";
-      strRef += "(e.g. when searching a chest for traps)";
+      strRef  = "You can spot hidden traps and doors from two cells away, ";
+      strRef += "you are more likely to spot hidden things and monsters, and ";
+      strRef += "your attentiveness is higher when examining objects";
+    } break;
+
+    case traitPerceptive: {
+      strRef  = "You can spot hidden traps and doors from three cells away, ";
+      strRef += "you are more likely to spot hidden things and monsters, and ";
+      strRef += "your attentiveness is higher when examining objects";
     } break;
 
     case traitVigilant: {
@@ -449,6 +456,10 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
     } break;
 
     case traitObservant: {
+    } break;
+
+    case traitPerceptive: {
+      traitsRef.push_back(traitObservant);
     } break;
 
     case traitVigilant: {

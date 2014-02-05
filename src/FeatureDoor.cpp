@@ -22,8 +22,6 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
 
   isOpenedAndClosedExternally_ = false;
 
-  isClued_ = false;
-
   const int ROLL = eng.dice.percentile();
   const DoorSpawnState_t doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
@@ -117,11 +115,7 @@ bool Door::isSmokePassable() const {
 
 SDL_Color Door::getColor() const {
   if(isSecret_) {
-    if(isClued_) {
-      return clrYellow;
-    } else {
-      return mimicFeature_->color;
-    }
+    return mimicFeature_->color;
   }
   return material_ == doorMaterial_metal ? clrGray : clrBrownDrk;
 }
@@ -200,39 +194,12 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
   }
 }
 
-void Door::clue() {
-  isClued_ = true;
-  if(eng.dice.coinToss()) {
-    eng.log->addMsg("Something seems odd about the wall here...");
-  } else {
-    eng.log->addMsg("I sense a draft here...");
-  }
-  eng.renderer->drawMapAndInterface();
-}
-
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
-    if(
-      eng.basicUtils->isPosAdj(
-        Pos(pos_.x, pos_.y), eng.player->pos, false)) {
-      const int PLAYER_SKILL =
-        eng.player->getData().abilityVals.getVal(
-          ability_searching, true, *(eng.player));
-      if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
-        reveal(true);
-      }
-    }
-  }
-}
-
-void Door::playerTryClueHidden() {
-  if(isSecret_ && isClued_ == false) {
-    const int PLAYER_SKILL =
-      eng.player->getData().abilityVals.getVal(
-        ability_searching, true, *(eng.player));
-    const int BONUS = 10;
-    if(eng.abilityRoll->roll(PLAYER_SKILL + BONUS) >= successSmall) {
-      clue();
+    const int PLAYER_SKILL = eng.player->getData().abilityVals.getVal(
+                               ability_searching, true, *(eng.player));
+    if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
+      reveal(true);
     }
   }
 }
@@ -377,7 +344,7 @@ void Door::tryClose(Actor* actorTrying) {
   //Blocked?
   if(isClosable) {
     bool isblockedByActor = false;
-    for(Actor* actor : eng.gameTime->actors_) {
+    for(Actor * actor : eng.gameTime->actors_) {
       if(actor->pos == pos_) {
         isblockedByActor = true;
         break;

@@ -926,7 +926,7 @@ void Player::onStandardTurn_() {
     return;
   }
 
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     if(actor != this) {
       if(actor->deadState == actorDeadState_alive) {
 
@@ -935,8 +935,8 @@ void Player::onStandardTurn_() {
         if(IS_MONSTER_SEEN) {
           if(monster.messageMonsterInViewPrinted == false) {
             if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
-              eng.log->addMsg(
-                actor->getNameA() + " comes into my view.", clrWhite, true);
+              eng.log->addMsg(actor->getNameA() + " comes into my view.",
+                              clrWhite, true);
             }
             monster.messageMonsterInViewPrinted = true;
           }
@@ -950,8 +950,8 @@ void Player::onStandardTurn_() {
                 monster.isStealth = false;
                 updateFov();
                 eng.renderer->drawMapAndInterface();
-                eng.log->addMsg(
-                  "I spot " + monster.getNameA() + "!", clrWhite, true);
+                eng.log->addMsg("I spot " + monster.getNameA() + "!",
+                                clrWhite, true);
               }
             }
           }
@@ -970,6 +970,8 @@ void Player::onStandardTurn_() {
   vector<PropId_t> props;
   propHandler_->getAllActivePropIds(props);
 
+  const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
+
   if(activeMedicalBag == NULL) {
     if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
@@ -978,8 +980,7 @@ void Player::onStandardTurn_() {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
-      const bool IS_RAPID_REC =
-        eng.playerBonHandler->hasTrait(traitRapidRecoverer);
+      const bool IS_RAPID_REC = bonHlr.hasTrait(traitRapidRecoverer);
 
       const int REGEN_N_TURN = (IS_RAPID_REC ? 6 : 10) + (nrWounds * 5);
 
@@ -993,10 +994,14 @@ void Player::onStandardTurn_() {
     if(
       propHandler_->allowSee() &&
       find(props.begin(), props.end(), propConfused) == props.end()) {
-      int x0 = pos.x - 1;
-      int y0 = pos.y - 1;
-      int x1 = pos.x + 1;
-      int y1 = pos.y + 1;
+
+      const int R = bonHlr.hasTrait(traitPerceptive) ? 3 :
+                    (bonHlr.hasTrait(traitObservant) ? 2 : 1);
+
+      int x0 = max(0, pos.x - R);
+      int y0 = max(0, pos.y - R);
+      int x1 = min(MAP_W - 1, pos.x + R);
+      int y1 = min(MAP_H - 1, pos.y + R);
 
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
@@ -1008,26 +1013,6 @@ void Player::onStandardTurn_() {
             }
             if(f->getId() == feature_door) {
               dynamic_cast<Door*>(f)->playerTrySpotHidden();
-            }
-          }
-        }
-      }
-
-      if(eng.playerBonHandler->hasTrait(traitObservant)) {
-        const int CLUE_RADI = 3;
-        x0 = max(0, pos.x - CLUE_RADI);
-        y0 = max(0, pos.y - CLUE_RADI);
-        x1 = min(MAP_W - 1, pos.x + CLUE_RADI);
-        y1 = max(MAP_H - 1, pos.y + CLUE_RADI);
-
-        for(int y = y0; y <= y1; y++) {
-          for(int x = x0; x <= x1; x++) {
-            if(eng.map->cells[x][y].isSeenByPlayer) {
-              Feature* f = eng.map->cells[x][y].featureStatic;
-              if(f->getId() == feature_door) {
-                Door* door = dynamic_cast<Door*>(f);
-                door->playerTryClueHidden();
-              }
             }
           }
         }
