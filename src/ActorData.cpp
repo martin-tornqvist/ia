@@ -1305,7 +1305,7 @@ void ActorDataHandler::initDataList() {
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 60);
   d.abilityVals.setVal(ability_stealth, 90);
-  d.intrProps[propEthereal] = true;
+//  d.intrProps[propEthereal] = true; //Does not match well with stealth
   d.intrProps[propRPhys] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRFear] = true;
