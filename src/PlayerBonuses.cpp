@@ -606,7 +606,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
       }
 
       //Potions
-      const int NR_POTIONS = 3;
+      const int NR_POTIONS = 2;
       for(int i = 0; i < NR_POTIONS; i++) {
         Item* const potion =
           eng.itemFactory->spawnRandomScrollOrPotion(false, true);

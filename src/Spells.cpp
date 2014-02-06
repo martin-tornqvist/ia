@@ -110,10 +110,6 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
   return Range(COST_MIN, costMax);
 }
 
-int Spell::getShockFromIntrCast() const {
-  return getShockFromIntrCast_();
-}
-
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine& eng) {
   trace << "Spell::cast()..." << endl;
@@ -123,7 +119,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
       const ShockSrc_t shockSrc = IS_INTRINSIC ?
                                   shockSrc_castIntrSpell :
                                   shockSrc_useStrangeItem;
-      eng.player->incrShock(getShockFromIntrCast(), shockSrc);
+      const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
+      eng.player->incrShock(SHOCK_VALUE, shockSrc);
     } else {
       trace << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);
@@ -326,7 +323,7 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
       if(eng.player->checkIfSeeActor(*actor, NULL)) {
         actor->getPropHandler().tryApplyProp(
@@ -549,7 +546,7 @@ SpellCastRetData SpellRogueHide::cast_(
   (void)caster;
   eng.log->addMsg("I am unseen.");
 
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       monster->awareOfPlayerCounter_ = 0;

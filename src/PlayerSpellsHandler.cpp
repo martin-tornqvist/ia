@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"
+#include "Query.h"
 
 PlayerSpellsHandler::~PlayerSpellsHandler() {
   for(Spell * spell : knownSpells) {delete spell;}
@@ -46,7 +47,22 @@ void PlayerSpellsHandler::run() {
         case menuAction_selected: {
           eng.log->clearLog();
           eng.renderer->drawMapAndInterface();
-          knownSpells.at(browser.getPos().y)->cast(eng.player, true, eng);
+
+          Spell* spell = knownSpells.at(browser.getPos().y);
+
+          const Range spiCost = spell->getSpiCost(false, eng.player, eng);
+          if(spiCost.upper >= eng.player->getSpi()) {
+            eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
+                            clrWhiteHigh);
+            eng.renderer->drawMapAndInterface();
+            if(eng.query->yesOrNo() == false) {
+              eng.log->clearLog();
+              eng.renderer->drawMapAndInterface();
+              return;
+            }
+          }
+
+          spell->cast(eng.player, true, eng);
           return;
         } break;
 
@@ -85,8 +101,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    eng.renderer->drawText(
-      fillStr, panel_screen, Pos(str.size(), y), fillClr);
+    eng.renderer->drawText(fillStr, panel_screen, Pos(str.size(), y), fillClr);
 
     int x = 28;
     str = "SPI:";
@@ -96,13 +111,15 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
     eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
 
-//    x += 11;
-//    str = "SHOCK:";
-//    const int BASE_SHOCK = spell->getShockFromIntrCast();
-//    const double SHOCK_DB =
-//      eng.player->getShockTakenAfterMods(BASE_SHOCK, shockSrc_castIntrSpell);
-//    str += toString(ceil(SHOCK_DB) + "%";
-//    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+    x += 10;
+    str = "SHOCK: ";
+    const intrSpellShock_t shockType = spell->getShockTypeIntrCast();
+    switch(shockType) {
+      case intrSpellShockMild:        str += "Mild";       break;
+      case intrSpellShockDisturbing:  str += "Disturbing"; break;
+      case intrSpellShockSevere:      str += "Severe";     break;
+    }
+    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
 
     y++;
   }

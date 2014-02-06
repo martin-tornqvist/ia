@@ -248,7 +248,7 @@ void drawInfoLines(Engine& eng) {
 //  }
 
 // Turn number
-  str = "TRN:" + toString(eng.gameTime->getTurn());
+  str = "T:" + toString(eng.gameTime->getTurn());
   pos.x = MAP_W - str.length() - 1;
   eng.renderer->drawText(str, panel_char, pos, clrGenMed);
 }

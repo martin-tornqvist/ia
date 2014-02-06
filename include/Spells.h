@@ -43,6 +43,12 @@ enum Spell_t {
   endOfSpells
 };
 
+enum intrSpellShock_t {
+  intrSpellShockMild,
+  intrSpellShockDisturbing,
+  intrSpellShockSevere,
+};
+
 class Spell;
 
 class SpellHandler {
@@ -81,12 +87,22 @@ public:
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                    Engine& eng) const;
 
-  int getShockFromIntrCast() const;
+  int getShockValueIntrCast() {
+    const intrSpellShock_t shockType = getShockTypeIntrCast();
+
+    switch(shockType) {
+      case intrSpellShockMild:        return 5;
+      case intrSpellShockDisturbing:  return 10;
+      case intrSpellShockSevere:      return 15;
+    }
+    return -1;
+  }
+
+  virtual intrSpellShock_t getShockTypeIntrCast() const = 0;
 protected:
   virtual SpellCastRetData cast_(Actor* const caster, Engine& eng) = 0;
 
   virtual int getMaxSpiCost_() const = 0;
-  virtual int getShockFromIntrCast_() const = 0;
 };
 
 class SpellDarkbolt: public Spell {
@@ -98,10 +114,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Darkbolt";}
   Spell_t getId()               const override {return spell_darkbolt;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockMild;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 2;}
-  int getShockFromIntrCast_()   const override {return 5;}
 };
 
 class SpellAzathothsWrath: public Spell {
@@ -113,10 +131,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Azathoths Wrath";}
   Spell_t getId()               const override {return spell_azathothsWrath;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellMayhem: public Spell {
@@ -126,10 +146,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Mayhem";}
   Spell_t getId()               const override {return spell_mayhem;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockSevere;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 11;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellPestilence: public Spell {
@@ -139,10 +161,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Pestilence";}
   Spell_t getId()               const override {return spell_pestilence;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellDetectItems: public Spell {
@@ -152,10 +176,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Items";}
   Spell_t getId()               const override {return spell_detectItems;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 5;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellDetectTraps: public Spell {
@@ -165,10 +191,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Traps";}
   Spell_t getId()               const override {return spell_detectTraps;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 5;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellClairvoyance: public Spell {
@@ -178,10 +206,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Clairvoyance";}
   Spell_t getId()               const override {return spell_clairvoyance;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 9;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellOpening: public Spell {
@@ -191,10 +221,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Opening";}
   Spell_t getId()               const override {return spell_opening;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 9;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellSacrificeLife: public Spell {
@@ -204,10 +236,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Life Force";}
   Spell_t getId()               const override {return spell_sacrificeLife;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellSacrificeSpirit: public Spell {
@@ -217,10 +251,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Spirit";}
   Spell_t getId()               const override {return spell_sacrificeSpirit;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellRogueHide: public Spell {
@@ -230,10 +266,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Hide [name?]";}
   Spell_t getId()               const override {return spell_rogueHide;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockMild;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 1;}
-  int getShockFromIntrCast_()   const override {return 5;}
 };
 
 class SpellMthPower: public Spell {
@@ -245,10 +283,12 @@ public:
     return "Thaumaturgic Alteration";
   }
   Spell_t getId()               const override {return spell_mthPower;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
-  int getShockFromIntrCast_()   const override {return 10;}
 
   bool doSpecialAction(Engine& eng) const;
   void castRandomOtherSpell(Engine& eng) const;
@@ -263,10 +303,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Bless";}
   Spell_t getId()               const override {return spell_bless;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 11;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellKnockBack: public Spell {
@@ -278,10 +320,12 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Knockback";}
   Spell_t getId()               const override {return spell_knockBack;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellTeleport: public Spell {
@@ -293,10 +337,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Teleport";}
   Spell_t getId()               const override {return spell_teleport;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellEnfeeble: public Spell {
@@ -308,10 +354,12 @@ public:
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Enfeeble";}
   Spell_t getId()               const override {return spell_enfeeble;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 
   PropId_t getPropId(Engine& eng) const;
 };
@@ -325,10 +373,12 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Disease";}
   Spell_t getId()               const override {return spell_disease;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellSummonRandom: public Spell {
@@ -340,10 +390,12 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Summon monster";}
   Spell_t getId()               const override {return spell_summonRandom;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellHealSelf: public Spell {
@@ -355,10 +407,12 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Healing";}
   Spell_t getId()               const override {return spell_healSelf;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 class SpellMiGoHypnosis: public Spell {
@@ -370,10 +424,12 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "MiGo Hypnosis";}
   Spell_t getId()               const override {return spell_miGoHypnosis;}
+  intrSpellShock_t getShockTypeIntrCast() const override {
+    return intrSpellShockDisturbing;
+  }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-  int getShockFromIntrCast_()   const override {return 10;}
 };
 
 #endif
