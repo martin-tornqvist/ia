@@ -91,8 +91,6 @@ void PlayerBonHandler::getBgDescr(
       linesRef.push_back("");
       linesRef.push_back("-2 Hit Points");
       linesRef.push_back("");
-      linesRef.push_back("-10% hit chance with melee and ranged attacks");
-      linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
       getTraitTitle(traitPotentSpirit, s); linesRef.push_back("* " + s);

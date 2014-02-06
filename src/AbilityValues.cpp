@@ -32,8 +32,6 @@ int AbilityValues::getVal(const Abilities_t ability,
         if(bonHlr.hasTrait(traitAdeptMeleeFighter))   val += 10;
         if(bonHlr.hasTrait(traitExpertMeleeFighter))  val += 10;
         if(bonHlr.hasTrait(traitMasterMeleeFighter))  val += 10;
-
-        if(bonHlr.getBg() == bgOccultist)             val -= 10;
       } break;
 
       case ability_accuracyRanged: {
@@ -41,8 +39,6 @@ int AbilityValues::getVal(const Abilities_t ability,
         if(bonHlr.hasTrait(traitAdeptMarksman))   val += 10;
         if(bonHlr.hasTrait(traitExpertMarksman))  val += 10;
         if(bonHlr.hasTrait(traitMasterMarksman))  val += 10;
-
-        if(bonHlr.getBg() == bgOccultist)         val -= 10;
       } break;
 
       case ability_dodgeTrap: {

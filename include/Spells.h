@@ -91,7 +91,7 @@ public:
     const intrSpellShock_t shockType = getShockTypeIntrCast();
 
     switch(shockType) {
-      case intrSpellShockMild:        return 5;
+      case intrSpellShockMild:        return 4;
       case intrSpellShockDisturbing:  return 10;
       case intrSpellShockSevere:      return 15;
     }

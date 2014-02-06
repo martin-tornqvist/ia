@@ -152,6 +152,8 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   string sndMsg = "";
 
+//  Sfx_t sfx = endOfSfx;
+
   if(IS_PLAYER) {
     const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
     const bool IS_BLOCKING = canMoveCmn() == false;
@@ -176,6 +178,10 @@ void FeatureStatic::bash(Actor& actorTrying) {
       eng.log->addMsg("I kick the air!");
     }
   } else {
+
+//    asdf
+    //TODO Why is this here!!?
+
     bool blockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(eng), blockers);
     const bool PLAYER_SEE_TRYER =
@@ -187,6 +193,9 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
     sndMsg = "I hear a loud banging on a door.";
   }
+
+//  asdf
+  //TODO Why is this here!!?
 
   //The sound emits from the actor instead of the bashed object, and the
   //parameter to ignore the message if source is seen is enabled.
