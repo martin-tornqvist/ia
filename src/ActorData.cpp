@@ -1579,7 +1579,7 @@ void ActorDataHandler::initDataList() {
   d.spi = 1;
   d.dmgMelee = 2;
   d.abilityVals.setVal(ability_accuracyMelee, 20);
-  d.spawnMinDLVL = 4;
+  d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;
@@ -1970,7 +1970,7 @@ void ActorDataHandler::initDataList() {
   d.abilityVals.setVal(ability_accuracyMelee, 60);
   d.intrProps[propBurrowing] = true;
   d.intrProps[propRFear] = true;
-  d.spawnMinDLVL = 1;
+  d.spawnMinDLVL = 12;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
