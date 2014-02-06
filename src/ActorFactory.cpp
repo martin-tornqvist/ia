@@ -147,7 +147,7 @@ void ActorFactory::summonMonsters(
     }
   }
 
-  eng.renderer->drawBlastAnimationAtPositions(positionsToAnimate, clrMagenta);
+  eng.renderer->drawBlastAnimAtPositions(positionsToAnimate, clrMagenta);
 }
 
 

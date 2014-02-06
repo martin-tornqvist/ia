@@ -49,14 +49,14 @@ public:
 
   void drawMarker(const vector<Pos>&, const int = -1) {}
 
-  void drawBlastAnimationAtField(
+  void drawBlastAnimAtField(
     const Pos&, const int, bool [MAP_W][MAP_H],
     const SDL_Color&, const SDL_Color&) {}
 
-  void drawBlastAnimationAtPositions(const vector<Pos>&,
+  void drawBlastAnimAtPositions(const vector<Pos>&,
                                      const SDL_Color&) {}
 
-  void drawBlastAnimationAtPositionsWithPlayerVision(
+  void drawBlastAnimAtPositionsWithPlayerVision(
     const vector<Pos>&, const SDL_Color&) {}
 
   void drawMainMenuLogo(const int) {}

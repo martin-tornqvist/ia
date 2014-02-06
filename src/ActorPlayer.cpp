@@ -1318,41 +1318,6 @@ void Player::updateFov() {
     eng.map->cells[pos.x][pos.y].isSeenByPlayer = true;
   }
 
-  vector<PropId_t> props;
-  eng.player->getPropHandler().getAllActivePropIds(props);
-
-  if(find(props.begin(), props.end(), propClairvoyant) != props.end()) {
-    const int FLOODFILL_TRAVEL_LIMIT = FOV_STD_RADI_INT + 2;
-
-    const int X0 = max(0, pos.x - FLOODFILL_TRAVEL_LIMIT);
-    const int Y0 = max(0, pos.y - FLOODFILL_TRAVEL_LIMIT);
-    const int X1 = min(MAP_W - 1, pos.x + FLOODFILL_TRAVEL_LIMIT);
-    const int Y1 = min(MAP_H - 1, pos.y + FLOODFILL_TRAVEL_LIMIT);
-
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
-
-    for(int y = Y0; y <= Y1; y++) {
-      for(int x = X0; x <= X1; x++) {
-        if(eng.map->cells[x][y].featureStatic->getId() == feature_door) {
-          blockers[x][y] = false;
-        }
-      }
-    }
-
-    int floodFillValues[MAP_W][MAP_H];
-    FloodFill::run(pos, blockers, floodFillValues, FLOODFILL_TRAVEL_LIMIT,
-                   Pos(-1, -1), eng);
-
-    for(int y = Y0; y <= Y1; y++) {
-      for(int x = X0; x <= X1; x++) {
-        if(floodFillValues[x][y]) {
-          eng.map->cells[x][y].isSeenByPlayer = true;
-        }
-      }
-    }
-  }
-
   if(propHandler_->allowSee()) {FOVhack();}
 
   if(eng.isCheatVisionEnabled) {

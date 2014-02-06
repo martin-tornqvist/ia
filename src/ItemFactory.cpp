@@ -116,8 +116,8 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_scrollOfEnfeebleEnemies:  item = new Scroll(d, eng); break;
     case item_scrollOfDetectItems:      item = new Scroll(d, eng); break;
     case item_scrollOfDetectTraps:      item = new Scroll(d, eng); break;
+    case item_scrollOfDetectMonsters:   item = new Scroll(d, eng); break;
     case item_scrollOfBlessing:         item = new Scroll(d, eng); break;
-    case item_scrollOfClairvoyance:     item = new Scroll(d, eng); break;
     case item_scrollOfDarkbolt:         item = new Scroll(d, eng); break;
     case item_scrollOfAzathothsWrath:   item = new Scroll(d, eng); break;
     case item_scrollOfOpening:          item = new Scroll(d, eng); break;
@@ -135,6 +135,7 @@ Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
     case item_potionOfConfusion:        item = new PotionOfConfusion(d, eng); break;
     case item_potionOfPoison:           item = new PotionOfPoison(d, eng); break;
     case item_potionOfInsight:          item = new PotionOfInsight(d, eng); break;
+    case item_potionOfClairvoyance:     item = new PotionOfClairvoyance(d, eng); break;
     case item_potionOfRFire:            item = new PotionOfRFire(d, eng); break;
     case item_potionOfAntidote:         item = new PotionOfAntidote(d, eng); break;
     case item_potionOfDescent:          item = new PotionOfDescent(d, eng); break;

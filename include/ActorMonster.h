@@ -59,7 +59,7 @@ public:
 
   void becomeAware();
 
-  void playerBecomeAwareOfMe();
+  void playerBecomeAwareOfMe(const int DURATION_FACTOR = 1);
 
   void onActorTurn();
 

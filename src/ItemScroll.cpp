@@ -23,7 +23,7 @@ const string Scroll::getRealTypeName() {
     case spell_pestilence:          return "Pestilence";
     case spell_detectItems:         return "Detect Items";
     case spell_detectTraps:         return "Detect Traps";
-    case spell_clairvoyance:        return "Clairvoyance";
+    case spell_detectMonsters:      return "Detect Monsters";
     case spell_opening:             return "Opening";
     case spell_mthPower:            return "Thaumaturgic Alteration";
     case spell_sacrificeLife:       return "Sacrifice Life Force";

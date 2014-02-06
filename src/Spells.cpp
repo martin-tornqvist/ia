@@ -48,7 +48,7 @@ Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
     case spell_pestilence:          return new SpellPestilence;
     case spell_detectItems:         return new SpellDetectItems;
     case spell_detectTraps:         return new SpellDetectTraps;
-    case spell_clairvoyance:        return new SpellClairvoyance;
+    case spell_detectMonsters:      return new SpellDetectMonsters;
     case spell_opening:             return new SpellOpening;
     case spell_sacrificeLife:       return new SpellSacrificeLife;
     case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;
@@ -191,7 +191,7 @@ SpellCastRetData SpellDarkbolt::cast_(
     eng.sdlWrapper->sleep(eng.config->delayProjectileDraw);
   }
 
-  eng.renderer->drawBlastAnimationAtPositions(
+  eng.renderer->drawBlastAnimAtPositions(
     vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
@@ -219,8 +219,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
-SpellCastRetData SpellAzathothsWrath::cast_(
-  Actor* const caster, Engine& eng) {
+SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
 
   DiceParam spellDmg(1, 8, 0);
 
@@ -236,7 +235,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<Pos> actorPositions; actorPositions.resize(0);
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
-      eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrRedLgt);
 
       for(Actor * actor : targets) {
@@ -251,7 +250,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     }
   } else {
     eng.log->addMsg("I am " + msgEnd, clrMsgBad);
-    eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+    eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
@@ -364,7 +363,7 @@ SpellCastRetData SpellPestilence::cast_(
     }
   }
 
-  eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+  eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
     positions, clrMagenta);
 
   for(Pos & pos : positions) {
@@ -411,7 +410,7 @@ SpellCastRetData SpellDetectItems::cast_(
   if(itemsRevealedPositions.empty() == false) {
     eng.renderer->drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimationAtPositions(
+    eng.renderer->drawBlastAnimAtPositions(
       itemsRevealedPositions, clrWhite);
     eng.renderer->drawMapAndInterface();
 
@@ -450,7 +449,7 @@ SpellCastRetData SpellDetectTraps::cast_(
   if(trapsRevealedPositions.empty() == false) {
     eng.renderer->drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimationAtPositions(
+    eng.renderer->drawBlastAnimAtPositions(
       trapsRevealedPositions, clrWhite);
     eng.renderer->drawMapAndInterface();
     if(trapsRevealedPositions.size() == 1) {
@@ -464,12 +463,17 @@ SpellCastRetData SpellDetectTraps::cast_(
   return SpellCastRetData(false);
 }
 
-//------------------------------------------------------------ CLAIRVOYANCE
-SpellCastRetData SpellClairvoyance::cast_(
-  Actor* const caster, Engine& eng) {
+//------------------------------------------------------------ DETECT MONSTERS
+SpellCastRetData SpellDetectMonsters::cast_(Actor* const caster, Engine& eng) {
   (void)caster;
-  eng.player->getPropHandler().tryApplyProp(
-    new PropClairvoyant(eng, propTurnsStd), true, false);
+
+  eng.log->addMsg("I detect monsters.");
+  for(Actor * actor : eng.gameTime->actors_) {
+    if(actor != eng.player) {
+      dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(4);
+    }
+  }
+
   return SpellCastRetData(true);
 }
 
@@ -494,7 +498,7 @@ SpellCastRetData SpellOpening::cast_(
   if(featuresOpenedPositions.empty() == false) {
     eng.renderer->drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimationAtPositions(
+    eng.renderer->drawBlastAnimAtPositions(
       featuresOpenedPositions, clrWhite);
     eng.renderer->drawMapAndInterface();
     return SpellCastRetData(true);
@@ -584,7 +588,7 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
       vector<Pos> actorPositions;
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
-      eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrYellow);
 
       for(Actor * actor : targets) {
@@ -754,7 +758,7 @@ SpellCastRetData SpellEnfeeble::cast_(
 
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
-      eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+      eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
       for(Actor * actor : targets) {
@@ -765,7 +769,7 @@ SpellCastRetData SpellEnfeeble::cast_(
       return SpellCastRetData(true);
     }
   } else {
-    eng.renderer->drawBlastAnimationAtPositionsWithPlayerVision(
+    eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos>(1, eng.player->pos), clrMagenta);
 
     PropHandler& propHandler = eng.player->getPropHandler();

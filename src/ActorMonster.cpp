@@ -285,8 +285,11 @@ void Monster::becomeAware() {
   }
 }
 
-void Monster::playerBecomeAwareOfMe() {
-  playerAwareOfMeCounter_ = eng.dice.range(4, 6);
+void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
+  const int LOWER         = 4 * DURATION_FACTOR;
+  const int UPPER         = 6 * DURATION_FACTOR;
+  const int ROLL          = eng.dice.range(LOWER, UPPER);
+  playerAwareOfMeCounter_ = max(playerAwareOfMeCounter_, ROLL);
 }
 
 bool Monster::tryAttack(Actor& defender) {

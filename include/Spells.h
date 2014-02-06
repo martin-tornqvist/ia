@@ -25,7 +25,7 @@ enum Spell_t {
   spell_pestilence,
   spell_detectItems,
   spell_detectTraps,
-  spell_clairvoyance,
+  spell_detectMonsters,
   spell_opening,
   spell_mthPower,
   spell_sacrificeLife,
@@ -199,19 +199,19 @@ private:
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 5;}
 };
 
-class SpellClairvoyance: public Spell {
+class SpellDetectMonsters: public Spell {
 public:
-  SpellClairvoyance() : Spell() {}
+  SpellDetectMonsters() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Clairvoyance";}
-  Spell_t getId()               const override {return spell_clairvoyance;}
+  string getName()              const override {return "Detect Monsters";}
+  Spell_t getId()               const override {return spell_detectMonsters;}
   intrSpellShock_t getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 9;}
+  int getMaxSpiCost_()          const override {return PLAYER_START_SPI;}
 };
 
 class SpellOpening: public Spell {

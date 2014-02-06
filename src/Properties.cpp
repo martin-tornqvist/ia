@@ -516,19 +516,6 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propClairvoyant;
-  d.stdRndTurns = Range(500, 600);
-  d.name = "Clairvoyant";
-  d.nameShort = "Clairvoyant";
-  d.msg[propMsgOnStartPlayer] = "I see far and beyond!";
-  d.msg[propMsgOnEndPlayer] = "My sight is limited.";
-  d.isMakingMonsterAware = false;
-  d.allowDisplayTurns = true;
-  d.allowApplyMoreWhileActive = true;
-  d.allowTestingOnBot = true;
-  d.alignment = propAlignmentGood;
-  addPropData(d);
-
   d.id = propBlessed;
   d.stdRndTurns = Range(400, 600);
   d.name = "Blessed";
@@ -763,9 +750,6 @@ Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
     case propCursed:
       return new PropCursed(eng, turnsInit, NR_TURNS);
 
-    case propClairvoyant:
-      return new PropClairvoyant(eng, turnsInit, NR_TURNS);
-
     case propRAcid:
       return new PropRAcid(eng, turnsInit, NR_TURNS);
 
@@ -876,12 +860,6 @@ bool PropHandler::tryResistDmg(
 bool PropHandler::allowSee() const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
-
-  for(Prop * prop : propList) {
-    if(prop->getId() == propClairvoyant) {
-      return true;
-    }
-  }
 
   for(Prop * p : propList) {if(p->allowSee() == false) return false;}
   return true;
@@ -1626,13 +1604,6 @@ bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   return false;
 }
 
-void PropBlind::onStart() {
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(
-    propClairvoyant, visionBlockers);
-}
-
 bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const {
   return owningActor_ == eng.player;
 }
@@ -1682,25 +1653,8 @@ void PropParalyzed::onStart() {
   }
 }
 
-void PropFainted::onStart() {
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(
-    propClairvoyant, visionBlockers);
-}
-
 bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
   return owningActor_ == eng.player;
-}
-
-bool PropClairvoyant::shouldUpdatePlayerVisualWhenStartOrEnd() const {
-  return owningActor_ == eng.player;
-}
-
-void PropClairvoyant::onStart() {
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(propBlind, visionBlockers);
 }
 
 void PropFlared::onNewTurn() {

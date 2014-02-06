@@ -1117,11 +1117,6 @@ void ItemDataHandler::initDataList() {
   d->spellCastFromScroll = spell_bless;
   dataList[d->id] = d;
 
-  d = new ItemData(item_scrollOfClairvoyance);
-  resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_clairvoyance;
-  dataList[d->id] = d;
-
   d = new ItemData(item_scrollOfDarkbolt);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_darkbolt;
@@ -1145,6 +1140,11 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_scrollOfSacrificeSpirit);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_sacrificeSpirit;
+  dataList[d->id] = d;
+
+  d = new ItemData(item_scrollOfDetectMonsters);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = spell_detectMonsters;
   dataList[d->id] = d;
 
   d = new ItemData(item_thaumaturgicAlteration);
@@ -1190,6 +1190,10 @@ void ItemDataHandler::initDataList() {
   dataList[d->id] = d;
 
   d = new ItemData(item_potionOfInsight);
+  resetData(d, itemData_potion);
+  dataList[d->id] = d;
+
+  d = new ItemData(item_potionOfClairvoyance);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 

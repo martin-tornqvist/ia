@@ -14,6 +14,7 @@
 #include "Inventory.h"
 #include "DungeonClimb.h"
 #include "MapParsing.h"
+#include "PlayerVisualMemory.h"
 
 void PotionOfHealing::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
@@ -282,6 +283,34 @@ void PotionOfInsight::quaff_(Actor* const actor) {
   }
 
   eng.player->incrMth(4, true);
+  identify(false);
+}
+
+void PotionOfClairvoyance::quaff_(Actor* const actor) {
+  if(actor == eng.player) {
+    eng.log->addMsg("I see far and wide!");
+
+    vector<Pos> animPositions;
+    animPositions.resize(0);
+
+    bool blockers[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(eng), blockers);
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
+        if(blockers[x][y] == false) {
+          eng.map->cells[x][y].isExplored = true;
+          eng.map->cells[x][y].isSeenByPlayer = true;
+          animPositions.push_back(Pos(x, y));
+        }
+      }
+    }
+
+    eng.renderer->drawMapAndInterface(false);
+    eng.playerVisualMemory->updateVisualMemory();
+    eng.player->updateFov();
+
+    eng.renderer->drawBlastAnimAtPositions(animPositions, clrWhite);
+  }
   identify(false);
 }
 

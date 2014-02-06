@@ -39,7 +39,6 @@ enum PropId_t {
   propDiseased,
   propWeakened,
   propFrenzied,
-  propClairvoyant,
   propBlessed,
   propCursed,
 
@@ -460,8 +459,6 @@ public:
 
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
 
-  void onStart() override;
-
   bool allowSee() const override {return false;}
 
   int getAbilityMod(const Abilities_t ability) const override {
@@ -502,18 +499,6 @@ public:
     (void)ability;
     return -10;
   }
-};
-
-class PropClairvoyant: public Prop {
-public:
-  PropClairvoyant(Engine& engine, PropTurns_t turnsInit, int turns = -1) :
-    Prop(propClairvoyant, engine, turnsInit, turns) {}
-
-  ~PropClairvoyant() override {}
-
-  bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
-
-  void onStart() override;
 };
 
 class PropBurning: public Prop {
@@ -694,8 +679,6 @@ public:
   ~PropFainted() override {}
 
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
-
-  void onStart() override;
 
   bool allowAct() const override {return false;}
 

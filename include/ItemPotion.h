@@ -153,6 +153,20 @@ private:
   const string getRealTypeName() {return "Insight";}
 };
 
+class PotionOfClairvoyance: public Potion {
+public:
+  PotionOfClairvoyance(ItemData* const itemData, Engine& engine) :
+    Potion(itemData, engine) {}
+  ~PotionOfClairvoyance() {}
+  void quaff_(Actor* const actor);
+private:
+  void collide_(const Pos& pos, Actor* const actor) {
+    (void)pos;
+    (void)actor;
+  }
+  const string getRealTypeName() {return "Clairvoyance";}
+};
+
 class PotionOfRFire: public Potion {
 public:
   PotionOfRFire(ItemData* const itemData, Engine& engine) :

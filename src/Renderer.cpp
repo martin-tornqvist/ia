@@ -311,10 +311,10 @@ void Renderer::drawMarker(const vector<Pos>& trail,
   }
 }
 
-void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
+void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_W][MAP_H], const SDL_Color& colorInner,
     const SDL_Color& colorOuter) {
-  trace << "Renderer::drawBlastAnimationAtField()..." << endl;
+  trace << "Renderer::drawBlastAnimAtField()..." << endl;
 
   drawMapAndInterface();
 
@@ -374,12 +374,12 @@ void Renderer::drawBlastAnimationAtField(const Pos& center, const int RADIUS,
   if(isAnyBlastRendered) {eng.sleep(eng.config->delayExplosion / 2);}
   drawMapAndInterface();
 
-  trace << "Renderer::drawBlastAnimationAtField() [DONE]" << endl;
+  trace << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
 }
 
-void Renderer::drawBlastAnimationAtPositions(
+void Renderer::drawBlastAnimAtPositions(
   const vector<Pos>& positions, const SDL_Color& color) {
-  trace << "Renderer::drawBlastAnimationAtPositions()..." << endl;
+  trace << "Renderer::drawBlastAnimAtPositions()..." << endl;
 
   drawMapAndInterface();
 
@@ -406,10 +406,10 @@ void Renderer::drawBlastAnimationAtPositions(
   eng.sleep(eng.config->delayExplosion / 2);
   drawMapAndInterface();
 
-  trace << "Renderer::drawBlastAnimationAtPositions() [DONE]" << endl;
+  trace << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;
 }
 
-void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
+void Renderer::drawBlastAnimAtPositionsWithPlayerVision(
   const vector<Pos>& positions, const SDL_Color& clr) {
 
   vector<Pos> positionsWithVision;
@@ -420,7 +420,7 @@ void Renderer::drawBlastAnimationAtPositionsWithPlayerVision(
     }
   }
 
-  eng.renderer->drawBlastAnimationAtPositions(positionsWithVision, clr);
+  eng.renderer->drawBlastAnimAtPositions(positionsWithVision, clr);
 }
 
 void Renderer::drawTile(const Tile_t tile, const Panel_t panel, const Pos& pos,

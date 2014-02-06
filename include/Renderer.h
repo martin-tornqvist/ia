@@ -69,15 +69,15 @@ public:
 
   void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
 
-  void drawBlastAnimationAtField(
+  void drawBlastAnimAtField(
     const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_W][MAP_H],
     const SDL_Color& colorInner, const SDL_Color& colorOuter);
 
-  void drawBlastAnimationAtPositions(const vector<Pos>& positions,
+  void drawBlastAnimAtPositions(const vector<Pos>& positions,
                                      const SDL_Color& color);
 
-  void drawBlastAnimationAtPositionsWithPlayerVision(
+  void drawBlastAnimAtPositionsWithPlayerVision(
     const vector<Pos>& positions, const SDL_Color& clr);
 
   void drawMainMenuLogo(const int Y_POS);
