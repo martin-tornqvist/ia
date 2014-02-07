@@ -264,7 +264,7 @@ public:
   SpellRogueHide() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Hide [name?]";}
+  string getName()              const override {return "Cloud Minds";}
   SpellId getId()               const override {return spell_rogueHide;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockMild;

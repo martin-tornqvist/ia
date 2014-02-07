@@ -98,7 +98,8 @@ void PlayerBonHandler::getBgDescr(
     } break;
 
     case bgRogue: {
-      s = "Has an arcane ability to hide from monsters (press [x])";
+      s =  "Has an arcane ability to cloud the minds of enemies, causing ";
+      s += "them to forget their pursuit (press [x])";
       linesRef.push_back(s);
       linesRef.push_back("");
       s = "+25% hit chance with ranged attacks vs unaware targets";
