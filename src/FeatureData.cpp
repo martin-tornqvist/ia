@@ -5,11 +5,11 @@
 #include "Colors.h"
 #include "Actor.h"
 
-bool MoveRules::canMove(const vector<PropId_t>& actorsProps) const {
+bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
   if(canMoveCmn_) return true;
 
   //If not allowing normal move, check if any property overrides this
-  for(PropId_t id : actorsProps) {if(canMoveIfHaveProp_[id]) return true;}
+  for(PropId id : actorsProps) {if(canMoveIfHaveProp_[id]) return true;}
 
   return false;
 }

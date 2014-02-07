@@ -56,15 +56,15 @@ void Bot::act() {
 
   //Occasionally apply a random property to exercise the prop code
   if(eng.dice.oneIn(10)) {
-    vector<PropId_t> propCandidates;
+    vector<PropId> propCandidates;
     propCandidates.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
       PropData& d = eng.propDataHandler->dataList[i];
       if(d.allowTestingOnBot) {
-        propCandidates.push_back(PropId_t(i));
+        propCandidates.push_back(PropId(i));
       }
     }
-    PropId_t propId =
+    PropId propId =
       propCandidates.at(eng.dice.range(0, propCandidates.size() - 1));
 
     Prop* const prop =
@@ -105,7 +105,7 @@ void Bot::act() {
   }
 
   //If we are terrified, wait in place
-  vector<PropId_t> props;
+  vector<PropId> props;
   eng.player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propTerrified) != props.end()) {
@@ -171,7 +171,7 @@ void Bot::findPathToStairs() {
 
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      const Feature_t curId = eng.map->cells[x][y].featureStatic->getId();
+      const FeatureId curId = eng.map->cells[x][y].featureStatic->getId();
       if(curId == feature_stairsDown) {
         blockers[x][y] = false;
         stairPos.set(x, y);

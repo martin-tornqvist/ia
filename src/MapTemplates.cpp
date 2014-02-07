@@ -73,7 +73,7 @@ void MapTemplateHandler::initTemplates() {
   templates_.push_back(stringToTemplate(templateString, translationVector, mapTemplate_pharaohsChamber));
 }
 
-MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId_t templateId) {
+MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId templateId) {
   for(MapTemplate & t : templates_) {
     if(t.templateId == templateId) return &t;
   }
@@ -82,12 +82,12 @@ MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId_t templateId) {
 
 
 MapTemplate MapTemplateHandler::stringToTemplate(const string str, const vector<CharToIdTranslation>& translations,
-    const MapTemplateId_t templateId) {
+    const MapTemplateId templateId) {
   MapTemplate             result(templateId);
   unsigned int            strPos = 0;
   const unsigned int      strSize = str.size();
-  vector< vector<Feature_t> > resultVector;
-  vector<Feature_t> curInnerVector;
+  vector< vector<FeatureId> > resultVector;
+  vector<FeatureId> curInnerVector;
 
   while(strPos != strSize) {
     //If delim character found push inner vector to outer

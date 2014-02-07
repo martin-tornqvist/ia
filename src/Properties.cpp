@@ -672,13 +672,13 @@ PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
 
   for(unsigned int i = 0; i < endOfPropIds; i++) {
     if(d.intrProps[i]) {
-      Prop* const prop = makePropFromId(PropId_t(i), propTurnsIndefinite);
+      Prop* const prop = makePropFromId(PropId(i), propTurnsIndefinite);
       tryApplyProp(prop, true, true, true, true);
     }
   }
 }
 
-Prop* PropHandler::makePropFromId(const PropId_t id, PropTurns_t turnsInit,
+Prop* PropHandler::makePropFromId(const PropId id, PropTurns turnsInit,
                                   const int NR_TURNS) const {
   switch(id) {
     case propWound:
@@ -805,7 +805,7 @@ PropHandler::~PropHandler() {
 }
 
 void PropHandler::getPropsFromSource(vector<Prop*>& propList,
-                                     const PropSrc_t source) const {
+                                     const PropSrc source) const {
   propList.resize(0);
 
   //Get from applied properties
@@ -828,7 +828,7 @@ void PropHandler::getPropsFromSource(vector<Prop*>& propList,
   }
 }
 
-void PropHandler::getAllActivePropIds(vector<PropId_t>& idVectorRef) const {
+void PropHandler::getAllActivePropIds(vector<PropId>& idVectorRef) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
 
@@ -839,14 +839,14 @@ void PropHandler::getAllActivePropIds(vector<PropId_t>& idVectorRef) const {
 }
 
 bool PropHandler::tryResistProp(
-  const PropId_t id, const vector<Prop*>& propList) const {
+  const PropId id, const vector<Prop*>& propList) const {
 
   for(Prop * p : propList) {if(p->tryResistOtherProp(id)) return true;}
   return false;
 }
 
 bool PropHandler::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
@@ -1011,7 +1011,7 @@ void PropHandler::tryApplyPropFromWpn(
 }
 
 bool PropHandler::endAppliedProp(
-  const PropId_t id,
+  const PropId id,
   const bool visionBlockers[MAP_W][MAP_H],
   const bool RUN_PROP_END_EFFECTS) {
 
@@ -1064,7 +1064,7 @@ void PropHandler::applyActorTurnPropBuffer() {
   actorTurnPropBuffer_.resize(0);
 }
 
-void PropHandler::tick(const PropTurnMode_t turnMode,
+void PropHandler::tick(const PropTurnMode turnMode,
                        const bool visionBlockers[MAP_W][MAP_H]) {
 
   for(unsigned int i = 0; i < appliedProps_.size();) {
@@ -1120,7 +1120,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   for(Prop * prop : propList) {
     const string propName = prop->getNameShort();
     if(propName.empty() == false) {
-      const PropAlignment_t alignment = prop->getAlignment();
+      const PropAlignment alignment = prop->getAlignment();
       const int TURNS_LEFT = prop->turnsLeft_;
       const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
                               ("(" + toString(TURNS_LEFT) + ")") : "";
@@ -1141,7 +1141,7 @@ int PropHandler::getChangedMaxHp(const int HP_MAX) const {
   return newHpMax;
 }
 
-void PropHandler::changeMoveDir(const Pos& actorPos, Dir_t& dir) const {
+void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   for(Prop * prop : propList) {prop->changeMoveDir(actorPos, dir);}
@@ -1243,7 +1243,7 @@ void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   for(Prop * prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
 }
 
-int PropHandler::getAbilityMod(const Abilities_t ability) const {
+int PropHandler::getAbilityMod(const AbilityId ability) const {
   vector<Prop*> propList;
   getPropsFromSource(propList, propSrcAppliedAndInv);
   int modifier = 0;
@@ -1253,7 +1253,7 @@ int PropHandler::getAbilityMod(const Abilities_t ability) const {
   return modifier;
 }
 
-Prop* PropHandler::getAppliedProp(const PropId_t id) const {
+Prop* PropHandler::getAppliedProp(const PropId id) const {
   for(Prop * prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
   return NULL;
 }
@@ -1279,7 +1279,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   }
 }
 
-Prop::Prop(PropId_t id, Engine& engine, PropTurns_t turnsInit, int turns) :
+Prop::Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns) :
   turnsLeft_(turns), owningActor_(NULL), id_(id), eng(engine),
   data_(&(engine.propDataHandler->dataList[id])) {
 
@@ -1330,7 +1330,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   const Pos& pos = owningActor_->pos;
   eng.gore->makeGore(pos);
   eng.gore->makeBlood(pos);
-  eng.actorFactory->summonMonsters(pos, vector<ActorId_t> {actor_zuul}, true);
+  eng.actorFactory->summonMonsters(pos, vector<ActorId> {actor_zuul}, true);
 }
 
 void PropPoisoned::onNewTurn() {
@@ -1368,7 +1368,7 @@ bool PropTerrified::allowAttackRanged(
   return true;
 }
 
-void PropWound::getMsg(const PropMsg_t msgType, string& msgRef) const {
+void PropWound::getMsg(const PropMsgType msgType, string& msgRef) const {
   switch(msgType) {
     case propMsgOnStartPlayer:
       msgRef = data_->msg[propMsgOnStartPlayer];
@@ -1419,7 +1419,7 @@ void PropWound::onMore() {
   }
 }
 
-void PropNailed::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
   (void)actorPos;
 
   if(dir != dirCenter) {
@@ -1488,7 +1488,7 @@ bool PropConfused::allowAttackRanged(
   return true;
 }
 
-void PropConfused::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
   if(dir != dirCenter) {
 
     bool blockers[MAP_W][MAP_H];
@@ -1512,7 +1512,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   }
 }
 
-void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
+void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
   vector<Actor*> SpottedEnemies;
   owningActor_->getSpottedEnemies(SpottedEnemies);
 
@@ -1547,7 +1547,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir_t& dir) {
   }
 }
 
-bool PropFrenzied::tryResistOtherProp(const PropId_t id) const {
+bool PropFrenzied::tryResistOtherProp(const PropId id) const {
   return id == propConfused || id == propFainted ||
          id == propTerrified || id == propWeakened;
 }
@@ -1671,7 +1671,7 @@ void PropFlared::onNewTurn() {
 }
 
 bool PropRAcid::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   if(dmgType == dmgType_acid) {
     if(ALLOW_MSG_WHEN_TRUE) {
@@ -1687,7 +1687,7 @@ bool PropRAcid::tryResistDmg(
 }
 
 bool PropRCold::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   if(dmgType == dmgType_cold) {
     if(ALLOW_MSG_WHEN_TRUE) {
@@ -1703,7 +1703,7 @@ bool PropRCold::tryResistDmg(
 }
 
 bool PropRElec::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   if(dmgType == dmgType_electric) {
     if(ALLOW_MSG_WHEN_TRUE) {
@@ -1718,7 +1718,7 @@ bool PropRElec::tryResistDmg(
   return false;
 }
 
-bool PropRConfusion::tryResistOtherProp(const PropId_t id) const {
+bool PropRConfusion::tryResistOtherProp(const PropId id) const {
   return id == propConfused;
 }
 
@@ -1728,7 +1728,7 @@ void PropRConfusion::onStart() {
   owningActor_->getPropHandler().endAppliedProp(propConfused, visionBlockers);
 }
 
-bool PropRFear::tryResistOtherProp(const PropId_t id) const {
+bool PropRFear::tryResistOtherProp(const PropId id) const {
   return id == propTerrified;
 }
 
@@ -1738,7 +1738,7 @@ void PropRFear::onStart() {
   owningActor_->getPropHandler().endAppliedProp(propTerrified, visionBlockers);
 }
 
-bool PropRPhys::tryResistOtherProp(const PropId_t id) const {
+bool PropRPhys::tryResistOtherProp(const PropId id) const {
   (void)id;
   return false;
 }
@@ -1748,7 +1748,7 @@ void PropRPhys::onStart() {
 }
 
 bool PropRPhys::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   if(dmgType == dmgType_physical) {
     if(ALLOW_MSG_WHEN_TRUE) {
@@ -1763,7 +1763,7 @@ bool PropRPhys::tryResistDmg(
   return false;
 }
 
-bool PropRFire::tryResistOtherProp(const PropId_t id) const {
+bool PropRFire::tryResistOtherProp(const PropId id) const {
   return id == propBurning;
 }
 
@@ -1774,7 +1774,7 @@ void PropRFire::onStart() {
 }
 
 bool PropRFire::tryResistDmg(
-  const DmgTypes_t dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   if(dmgType == dmgType_fire) {
     if(ALLOW_MSG_WHEN_TRUE) {
@@ -1789,7 +1789,7 @@ bool PropRFire::tryResistDmg(
   return false;
 }
 
-bool PropRPoison::tryResistOtherProp(const PropId_t id) const {
+bool PropRPoison::tryResistOtherProp(const PropId id) const {
   return id == propPoisoned;
 }
 
@@ -1799,7 +1799,7 @@ void PropRPoison::onStart() {
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 }
 
-bool PropRSleep::tryResistOtherProp(const PropId_t id) const {
+bool PropRSleep::tryResistOtherProp(const PropId id) const {
   return id == propFainted;
 }
 

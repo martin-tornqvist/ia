@@ -21,13 +21,13 @@ public:
   void pickNewTrait(const bool IS_CHARACTER_CREATION) const;
 
 private:
-  void drawPickTrait(const vector<Trait_t>& traitsColOne,
-                     const vector<Trait_t>& traitsColTwo,
+  void drawPickTrait(const vector<TraitId>& traitsColOne,
+                     const vector<TraitId>& traitsColTwo,
                      const MenuBrowser& browser,
                      const bool IS_CHARACTER_CREATION) const;
 
   void pickBg() const;
-  void drawPickBg(const vector<Bg_t>& bgs,
+  void drawPickBg(const vector<Bg>& bgs,
                   const MenuBrowser& browser) const;
 
   Engine& eng;

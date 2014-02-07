@@ -37,7 +37,7 @@ void DebugModeStatPrinter::run() {
   printLine("SPELL MAX SPI COSTS");
   printLine(separator);
   for(int i = 0; i < endOfSpells; i++) {
-    Spell* const spell = eng.spellHandler->getSpellFromId(Spell_t(i));
+    Spell* const spell = eng.spellHandler->getSpellFromId(SpellId(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');
     Range cost = spell->getSpiCost(true, eng.player, eng);
@@ -97,7 +97,7 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + actor->getNameA() + uniqueStr);
 
     const string xpStr =
-      "XP:" + toString(eng.dungeonMaster->getMonsterXpWorth(d));
+      "XP:" + toString(eng.dungeonMaster->getMonsterTotXpWorth(d));
     printLine(indent2 + xpStr);
 
     string hpStr = "HP:" + toString(d.hp);

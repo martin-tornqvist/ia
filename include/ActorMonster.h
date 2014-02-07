@@ -47,7 +47,7 @@ public:
 
   virtual void place_() {}
 
-  void moveDir(Dir_t dir);
+  void moveDir(Dir dir);
 
   AttackOpport getAttackOpport(Actor& defender);
   BestAttack getBestAttack(const AttackOpport& attackOpport);
@@ -67,17 +67,30 @@ public:
 
   virtual void onStandardTurn_() {}
 
+  virtual string getAggroPhraseMonsterSeen() const {
+    return data_->aggroTextMonsterSeen;
+  }
+  virtual string getAggroPhraseMonsterHidden() const {
+    return data_->aggroTextMonsterHidden;
+  }
+  virtual SfxId getAggroSfxMonsterSeen() const {
+    return data_->aggroSfxMonsterSeen;
+  }
+  virtual SfxId getAggroSfxMonsterHidden() const {
+    return data_->aggroSfxMonsterHidden;
+  }
+
   int awareOfPlayerCounter_;
   int playerAwareOfMeCounter_;
 
   bool messageMonsterInViewPrinted;
 
-  Dir_t lastDirTravelled;
+  Dir lastDirTravelled_;
 
   vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;
 
-  bool isRoamingAllowed;
+  bool isRoamingAllowed_;
 
   bool isStealth;
 
@@ -86,22 +99,11 @@ public:
 
   bool waiting_;
 
-  virtual string getAggroPhraseMonsterSeen() const {
-    return data_->aggroTextMonsterSeen;
-  }
-  virtual string getAggroPhraseMonsterHidden() const {
-    return data_->aggroTextMonsterHidden;
-  }
-  virtual Sfx_t getAggroSfxMonsterSeen() const {
-    return data_->aggroSfxMonsterSeen;
-  }
-  virtual Sfx_t getAggroSfxMonsterHidden() const {
-    return data_->aggroSfxMonsterHidden;
-  }
-
-  double shockCausedCurrent;
-
   void speakPhrase();
+
+  double shockCausedCurrent_;
+
+  bool hasGivenXpForSpotting_;
 
 protected:
   void onMonsterHit(int& dmg);

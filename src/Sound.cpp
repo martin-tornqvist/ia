@@ -48,7 +48,7 @@ void SoundEmitter::emitSound(Sound snd) {
           snd.clearMsg();
         }
 
-        const Dir_t dirToOrigin =
+        const Dir dirToOrigin =
           getPlayerToOriginDir(
             FLOOD_VALUE_AT_ACTOR, origin, floodFill);
 
@@ -77,12 +77,12 @@ void SoundEmitter::emitSound(Sound snd) {
   }
 }
 
-Dir_t SoundEmitter::getPlayerToOriginDir(
+Dir SoundEmitter::getPlayerToOriginDir(
   const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
   int floodFill[MAP_W][MAP_H]) const {
 
   const Pos& playerPos = eng.player->pos;
-  Dir_t sourceDir = endOfDirs;
+  Dir sourceDir = endOfDirs;
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {

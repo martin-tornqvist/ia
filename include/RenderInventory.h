@@ -18,7 +18,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
                          const vector<unsigned int>& genInvIndexes,
                          Engine& eng);
 
-void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
+void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                const vector<unsigned int>& genInvIndexes, Engine& eng);
 
 void drawUse(const MenuBrowser& browser,

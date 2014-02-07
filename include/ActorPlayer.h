@@ -8,7 +8,7 @@
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
-enum InsanityPhobia_t {
+enum InsanityPhobiaId {
   insanityPhobia_rat,
   insanityPhobia_spider,
   insanityPhobia_dog,
@@ -19,13 +19,13 @@ enum InsanityPhobia_t {
   endOfInsanityPhobias
 };
 
-enum InsanityObsession_t {
+enum InsanityObsessionId {
   insanityObsession_sadism,
   insanityObsession_masochism,
   endOfInsanityObsessions
 };
 
-enum ShockSrc_t {
+enum ShockSrc {
   shockSrc_seeMonster,
   shockSrc_useStrangeItem,
   shockSrc_castIntrSpell,
@@ -44,7 +44,7 @@ public:
 
   void updateFov();
 
-  void moveDir(Dir_t dir);
+  void moveDir(Dir dir);
 
   void spawnStartItems() override;
 
@@ -53,7 +53,7 @@ public:
   void onStandardTurn_();
 
   void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
-                 const Dir_t dirToOrigin,
+                 const Dir dirToOrigin,
                  const int PERCENT_AUDIBLE_DISTANCE);
 
   void explosiveThrown();
@@ -61,8 +61,8 @@ public:
   MedicalBag* activeMedicalBag;
   int waitTurnsLeft;
 
-  void incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc);
-  void incrShock(const int SHOCK, ShockSrc_t shockSrc);
+  void incrShock(const ShockValue shockValue, ShockSrc shockSrc);
+  void incrShock(const int SHOCK, ShockSrc shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
   inline int getShockTotal()  const {return int(floor(shock_ + shockTemp_));}
@@ -81,9 +81,9 @@ public:
   inline int getMth() const {return mth_;}
   void setTempShockFromFeatures();
 
-  int getShockResistance(const ShockSrc_t shockSrc) const;
+  int getShockResistance(const ShockSrc shockSrc) const;
   double getShockTakenAfterMods(const int BASE_SHOCK,
-                                const ShockSrc_t shockSrc) const;
+                                const ShockSrc shockSrc) const;
 
   int getCarryWeightLimit() const;
 

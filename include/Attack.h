@@ -19,7 +19,7 @@ class AttackData {
 public:
   Actor* attacker;
   Actor* curDefender;
-  AbilityRollResult_t attackResult;
+  AbilityRollResult attackResult;
   int dmgRolls, dmgSides, dmgPlus;
   int dmgRoll, dmg;
   bool isIntrinsicAttack;
@@ -44,10 +44,10 @@ class RangedAttackData: public AttackData {
 public:
   RangedAttackData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
                    const Pos& curPos_, Engine& engine,
-                   ActorSizes_t intendedAimLevel_ = actorSize_none);
+                   ActorSize intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
-  ActorSizes_t  intendedAimLevel;
-  ActorSizes_t  curDefenderSize;
+  ActorSize  intendedAimLevel;
+  ActorSize  curDefenderSize;
   string        verbPlayerAttacks;
   string        verbOtherAttacks;
 };
@@ -56,10 +56,10 @@ class MissileAttackData: public AttackData {
 public:
   MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
                     const Pos& curPos_, Engine& engine,
-                    ActorSizes_t intendedAimLevel_ = actorSize_none);
+                    ActorSize intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
-  ActorSizes_t  intendedAimLevel;
-  ActorSizes_t  curDefenderSize;
+  ActorSize  intendedAimLevel;
+  ActorSize  curDefenderSize;
 };
 
 struct Projectile {
@@ -81,7 +81,7 @@ struct Projectile {
     attackData = attackData_;
   }
 
-  void setTile(const Tile_t tileToRender, const SDL_Color clrToRender) {
+  void setTile(const Tile tileToRender, const SDL_Color clrToRender) {
     tile = tileToRender;
     clr = clrToRender;
   }
@@ -98,12 +98,12 @@ struct Projectile {
   int obstructedInElement;
   bool isDoneRendering;
   char glyph;
-  Tile_t tile;
+  Tile tile;
   SDL_Color clr;
   RangedAttackData* attackData;
 };
 
-enum MeleeHitSize_t {
+enum MeleeHitSize {
   meleeHitSizeSmall,
   meleeHitSizeMedium,
   meleeHitSizeHard,

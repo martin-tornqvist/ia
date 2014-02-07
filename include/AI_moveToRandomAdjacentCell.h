@@ -7,7 +7,7 @@
 
 namespace {
 
-Dir_t getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
+Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
 
   //This is slightly hacky (a bit too coupled to implementation details),
   //but it optimizes this (very frequently used) function
@@ -34,7 +34,7 @@ Dir_t getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
   const Rect areaAllowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
 
   //First, try the same direction as last travelled
-  const Dir_t lastDirTravelled = monster.lastDirTravelled;
+  const Dir lastDirTravelled = monster.lastDirTravelled_;
   DirConverter dirConv;
   if(lastDirTravelled != dirCenter) {
     const Pos targetCell(monsterPos + dirConv.getOffset(lastDirTravelled));
@@ -46,7 +46,7 @@ Dir_t getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
   }
 
   //Attempt to find a random non-blocked adjacent cell
-  vector<Dir_t> dirCandidates;
+  vector<Dir> dirCandidates;
   dirCandidates.resize(0);
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
@@ -77,10 +77,10 @@ namespace AI_moveToRandomAdjacentCell {
 static bool action(Monster& monster, Engine& engine) {
   if(monster.deadState == actorDeadState_alive) {
     if(
-      monster.isRoamingAllowed == true ||
+      monster.isRoamingAllowed_ == true ||
       monster.awareOfPlayerCounter_ > 0) {
 
-      const Dir_t dir = getDirToRndAdjFreeCell(monster, engine);
+      const Dir dir = getDirToRndAdjFreeCell(monster, engine);
       if(dir != dirCenter) {
         monster.moveDir(dir);
         return true;

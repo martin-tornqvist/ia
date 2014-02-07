@@ -14,9 +14,9 @@ public:
 private:
   void buildCandidateList();
 
-  ItemId_t getFromCandidateList();
+  ItemId getFromCandidateList();
 
-  vector<ItemId_t> candidates;
+  vector<ItemId> candidates;
 
   Engine& eng;
 };

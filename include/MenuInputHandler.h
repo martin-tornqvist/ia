@@ -10,7 +10,7 @@ using namespace std;
 
 class Engine;
 
-enum MenuAction_t {
+enum MenuAction {
   menuAction_browsed,
   menuAction_selected,
   menuAction_selectedWithShift,
@@ -20,7 +20,7 @@ enum MenuAction_t {
 
 class MenuInputHandler {
 public:
-  MenuAction_t getAction(MenuBrowser& browser);
+  MenuAction getAction(MenuBrowser& browser);
 
 private:
   Engine& eng;

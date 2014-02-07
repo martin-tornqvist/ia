@@ -31,7 +31,7 @@ void PlayerSpellsHandler::run() {
     draw(browser);
 
     while(true) {
-      const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+      const MenuAction action = eng.menuInputHandler->getAction(browser);
       switch(action) {
         case menuAction_browsed: {
           draw(browser);
@@ -113,7 +113,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
     x += 10;
     str = "SHOCK: ";
-    const intrSpellShock_t shockType = spell->getShockTypeIntrCast();
+    const IntrSpellShock shockType = spell->getShockTypeIntrCast();
     switch(shockType) {
       case intrSpellShockMild:        str += "Mild";       break;
       case intrSpellShockDisturbing:  str += "Disturbing"; break;
@@ -139,16 +139,16 @@ void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {
   for(int i = 0; i < NR_SPELLS; i++) {
     const int ID = toInt(lines.front());
     lines.erase(lines.begin());
-    knownSpells.push_back(eng.spellHandler->getSpellFromId(Spell_t(ID)));
+    knownSpells.push_back(eng.spellHandler->getSpellFromId(SpellId(ID)));
   }
 }
 
-bool PlayerSpellsHandler::isSpellLearned(const Spell_t id) {
+bool PlayerSpellsHandler::isSpellLearned(const SpellId id) {
   for(Spell * s : knownSpells) {if(s->getId() == id) {return true;}}
   return false;
 }
 
-void PlayerSpellsHandler::learnSpellIfNotKnown(const Spell_t id) {
+void PlayerSpellsHandler::learnSpellIfNotKnown(const SpellId id) {
   learnSpellIfNotKnown(eng.spellHandler->getSpellFromId(id));
 }
 

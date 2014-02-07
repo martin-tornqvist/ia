@@ -20,7 +20,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
   if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
     if(defender.getData().actorSize <= actorSize_giant) {
 
-      vector<PropId_t> props;
+      vector<PropId> props;
       defender.getPropHandler().getAllActivePropIds(props);
 
 

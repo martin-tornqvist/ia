@@ -21,7 +21,7 @@ void AutoDescribeActor::addAutoDescriptionLines(
 }
 
 string AutoDescribeActor::getNormalGroupSizeStr(const ActorData& def) const {
-  const MonsterGroupSize_t s = def.groupSize;
+  const MonsterGroupSize s = def.groupSize;
 
   return
     s == monsterGroupSize_alone ? "alone" :

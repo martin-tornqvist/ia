@@ -10,7 +10,7 @@ using namespace std;
 
 class Engine;
 
-enum PlacementRule_t {
+enum PlacementRule {
   placementRule_nextToWalls,
   placementRule_awayFromWalls,
   placementRule_nextToWallsOrAwayFromWalls
@@ -26,7 +26,7 @@ public:
                           vector<Pos>& awayFromWalls);
 
 private:
-  int getWalkBlockersInDir(const Dir_t dir, const Pos pos);
+  int getWalkBlockersInDir(const Dir dir, const Pos pos);
 
   Engine& eng;
 

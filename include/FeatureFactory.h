@@ -14,7 +14,7 @@ using namespace std;
 class Engine;
 struct FeatureData;
 
-enum FeatureSpawnData_t {
+enum FeatureSpawnDataId {
   featureSpawnData_dynamite,
   featureSpawnData_trap,
   featureSpawnData_door,
@@ -25,17 +25,17 @@ enum FeatureSpawnData_t {
 
 class FeatureSpawnData {
 public:
-  FeatureSpawnData_t getFeatureSpawnDataType() const {
+  FeatureSpawnDataId getFeatureSpawnDataType() const {
     return featureSpawnDataType_;
   }
   virtual ~FeatureSpawnData() {}
 
-  FeatureSpawnData_t getFeatureSpawnDataType() {return featureSpawnDataType_;}
+  FeatureSpawnDataId getFeatureSpawnDataType() {return featureSpawnDataType_;}
 
 protected:
-  FeatureSpawnData(FeatureSpawnData_t featureSpawnDataType) :
+  FeatureSpawnData(FeatureSpawnDataId featureSpawnDataType) :
     featureSpawnDataType_(featureSpawnDataType) {}
-  const FeatureSpawnData_t featureSpawnDataType_;
+  const FeatureSpawnDataId featureSpawnDataType_;
 };
 
 class DynamiteSpawnData: public FeatureSpawnData {
@@ -65,14 +65,14 @@ public:
 
 class TrapSpawnData: public FeatureSpawnData {
 public:
-  TrapSpawnData(const FeatureData* const mimicFeature, Trap_t trapType) :
+  TrapSpawnData(const FeatureData* const mimicFeature, TrapId trapType) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trapType) {}
   TrapSpawnData(const FeatureData* const mimicFeature) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trap_any) {}
   const FeatureData* const mimicFeature_;
-  const Trap_t trapType_;
+  const TrapId trapType_;
 };
 
 class DoorSpawnData: public FeatureSpawnData {
@@ -95,7 +95,7 @@ public:
 
   //Note: Position parameter should NOT be a reference here, because the
   //calling object (e.g. a spider web) might get destroyed.
-  Feature* spawnFeatureAt(const Feature_t id, const Pos pos,
+  Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
                           FeatureSpawnData* spawnData = NULL);
 
 private:

@@ -5,7 +5,7 @@
 
 class Engine;
 
-enum InventoryScreen_t {
+enum InventoryScreenId {
   inventoryScreen_slots,
   inventoryScreen_equip,
   inventoryScreen_use,
@@ -30,7 +30,7 @@ public:
 
   void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
 
-  InventoryScreen_t screenToOpenAfterDrop;
+  InventoryScreenId screenToOpenAfterDrop;
   InventorySlot* equipSlotToOpenAfterDrop;
   int browserPosToSetAfterDrop;
 
@@ -42,7 +42,7 @@ private:
 
   bool runDropScreen(const int GLOBAL_ELEMENT_NR);
 
-  void filterPlayerGeneralSlotButtonsEquip(const SlotTypes_t slotToEquip);
+  void filterPlayerGeneralSlotButtonsEquip(const SlotId slotToEquip);
   void filterPlayerGeneralSlotButtonsUsable();
   void filterPlayerGeneralSlotButtonsShowAll();
 

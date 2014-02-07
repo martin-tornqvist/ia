@@ -346,11 +346,11 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS) {
+bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
   traceVerbose << "Actor::hit()..." << endl;
   traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
-  vector<PropId_t> props;
+  vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
   if(
@@ -501,7 +501,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   if(this != eng.player) {
     if(isHumanoid() == true) {
       Sound snd(
-        "I hear agonised screaming.", endOfSfx, true, pos, this, false, false);
+        "I hear agonised screaming.", endOfSfxId, true, pos, this, false, false);
       eng.soundEmitter->emitSound(snd);
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
@@ -551,14 +551,14 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 
   //Give exp if monster, and count up nr of kills.
   if(this != eng.player) {
-    eng.dungeonMaster->monsterKilled(this);
+    eng.dungeonMaster->onMonsterKilled(*this);
   }
 
   eng.renderer->drawMapAndInterface();
 }
 
 void Actor::addLight(bool light[MAP_W][MAP_H]) const {
-  vector<PropId_t> props;
+  vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propBurning) != props.end()) {

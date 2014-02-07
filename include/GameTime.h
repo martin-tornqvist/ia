@@ -10,7 +10,7 @@ using namespace std;
 
 class Engine;
 
-enum TurnType_t {
+enum TurnType {
   turnType_fast,
   turnType_normal_1,
   turnType_slow,
@@ -84,7 +84,7 @@ private:
 
   bool isSpiRegenThisTurn(const int REGEN_N_TURNS);
 
-  vector<ActorSpeed_t> turnTypeVector_;
+  vector<ActorSpeed> turnTypeVector_;
   int currentTurnTypePos_;
   int currentActorVectorPos_;
 

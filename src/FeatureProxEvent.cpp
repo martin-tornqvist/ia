@@ -74,7 +74,7 @@ void ProxEventWallCrumble::playerIsNear() {
 
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
-    ActorId_t monsterType = actor_zombie;
+    ActorId monsterType = actor_zombie;
     const int RND = eng.dice.range(1, 5);
     switch(RND) {
       case 1: {

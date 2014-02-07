@@ -18,7 +18,7 @@
 #include "Renderer.h"
 
 void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
-                                Item* const ammo, const ReloadResult_t result,
+                                Item* const ammo, const ReloadResult result,
                                 const bool IS_SWIFT_RELOAD) {
   const string actorName    = actorReloading.getNameThe();
   const string ammoCapacity = wpn == NULL ? "" : toString(wpn->ammoCapacity);
@@ -105,7 +105,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   }
 
   Weapon* const wpn     = dynamic_cast<Weapon*>(wpnItem);
-  ReloadResult_t result = reloadResult_noAmmo;
+  ReloadResult result = reloadResult_noAmmo;
   bool isSwiftReload    = false;
 
   if(&actorReloading == eng.player) {
@@ -119,7 +119,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
     printMsgAndPlaySfx(actorReloading, wpn, NULL,
                        reloadResult_wpnNotUsingAmmo, false);
   } else {
-    const ItemId_t ammoType = wpn->getData().rangedAmmoTypeUsed;
+    const ItemId ammoType = wpn->getData().rangedAmmoTypeUsed;
     bool isClip = wpn->clip;
     Item* item = NULL;
 
@@ -133,7 +133,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
         if(item->getData().id == ammoType) {
           PropHandler& propHlr = actorReloading.getPropHandler();
 
-          vector<PropId_t> props;
+          vector<PropId> props;
           propHlr.getAllActivePropIds(props);
 
           const bool IS_RELOADER_BLIND =

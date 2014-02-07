@@ -31,7 +31,7 @@ int Popup::printBoxAndReturnTitleYPos(const int TEXT_H) const {
 
 void Popup::showMessage(const string& message,
                         const bool DRAW_MAP_AND_INTERFACE,
-                        const string& title, const Sfx_t sfx) const {
+                        const string& title, const SfxId sfx) const {
 
   if(DRAW_MAP_AND_INTERFACE) {eng.renderer->drawMapAndInterface(false);}
 
@@ -41,7 +41,7 @@ void Popup::showMessage(const string& message,
 
   int y = printBoxAndReturnTitleYPos(TEXT_H);
 
-  if(sfx != endOfSfx) {eng.audio->play(sfx);}
+  if(sfx != endOfSfxId) {eng.audio->play(sfx);}
 
   if(title.empty() == false) {
     eng.renderer->drawTextCentered(
@@ -76,7 +76,7 @@ void Popup::showMessage(const string& message,
 int Popup::showMultiChoiceMessage(const string& message,
                                   const bool DRAW_MAP_AND_INTERFACE,
                                   const vector<string>& choices,
-                                  const string& title, const Sfx_t sfx) const {
+                                  const string& title, const SfxId sfx) const {
 
   vector<string> lines;
   TextFormatting::lineToLines(message, TEXT_W, lines);
@@ -87,14 +87,14 @@ int Popup::showMultiChoiceMessage(const string& message,
 
   MenuBrowser browser(NR_CHOICES, 0);
 
-  if(sfx != endOfSfx) {eng.audio->play(sfx);}
+  if(sfx != endOfSfxId) {eng.audio->play(sfx);}
 
   multiChoiceMessageDrawingHelper(
     lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
     TEXT_H, title);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
 
     switch(action) {
       case menuAction_browsed: {

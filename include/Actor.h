@@ -36,7 +36,7 @@ public:
   void place(const Pos& pos_, ActorData& data);
   virtual void place_() {}
 
-  bool hit(int dmg, const DmgTypes_t dmgType, const bool ALLOW_WOUNDS);
+  bool hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);
 
   bool restoreHp(const int HP_RESTORED,
@@ -54,7 +54,7 @@ public:
   virtual void onActorTurn() {}
   virtual void onStandardTurn_() {}
 
-  virtual void moveDir(Dir_t dir) = 0;
+  virtual void moveDir(Dir dir) = 0;
 
   virtual void updateColor();
 
@@ -67,7 +67,7 @@ public:
 
   void getSpottedEnemies(vector<Actor*>& vectorRef);
 
-  inline ActorId_t getId()  const {return data_->id;}
+  inline ActorId getId()  const {return data_->id;}
   inline int getHp()        const {return hp_;}
   inline int getSpi()       const {return spi_;}
   int getHpMax(const bool WITH_MODIFIERS) const;
@@ -78,7 +78,7 @@ public:
   inline bool isHumanoid() const {return data_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getColor() {return clr_;}
-  inline const Tile_t& getTile() const {return tile_;}
+  inline const Tile& getTile() const {return tile_;}
 
   void addLight(bool light[MAP_W][MAP_H]) const;
 
@@ -90,7 +90,7 @@ public:
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
   Pos pos;
-  ActorDeadState_t deadState;
+  ActorDeadState deadState;
 
   Engine& eng;
 
@@ -115,7 +115,7 @@ protected:
 
   SDL_Color clr_;
   char glyph_;
-  Tile_t tile_;
+  Tile tile_;
 
   int hp_, hpMax_, spi_, spiMax_;
 

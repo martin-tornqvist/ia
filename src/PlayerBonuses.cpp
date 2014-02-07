@@ -19,7 +19,7 @@ PlayerBonHandler::PlayerBonHandler(Engine& engine) :
   traitsPicked_.resize(0);
 }
 
-void PlayerBonHandler::getBgTitle(const Bg_t id, string& strRef) const {
+void PlayerBonHandler::getBgTitle(const Bg id, string& strRef) const {
   strRef = "[BG TITLE MISSING]";
   switch(id) {
     case bgOccultist: strRef = "Occultist"; break;
@@ -30,7 +30,7 @@ void PlayerBonHandler::getBgTitle(const Bg_t id, string& strRef) const {
 }
 
 void PlayerBonHandler::getTraitTitle(
-  const Trait_t id, string& strRef) const {
+  const TraitId id, string& strRef) const {
 
   strRef = "[TRAIT TITLE MISSING]";
 
@@ -78,7 +78,7 @@ void PlayerBonHandler::getTraitTitle(
 }
 
 void PlayerBonHandler::getBgDescr(
-  const Bg_t id, vector<string>& linesRef) const {
+  const Bg id, vector<string>& linesRef) const {
 
   linesRef.resize(0);
   string s = "";
@@ -87,8 +87,8 @@ void PlayerBonHandler::getBgDescr(
     case bgOccultist: {
       linesRef.push_back("Can memorize spells cast from manuscripts");
       linesRef.push_back("");
-      linesRef.push_back("Starts with some manuscripts and potions");
-      linesRef.push_back("");
+//      linesRef.push_back("Starts with some manuscripts and potions");
+//      linesRef.push_back("");
       linesRef.push_back("-2 Hit Points");
       linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
@@ -117,8 +117,8 @@ void PlayerBonHandler::getBgDescr(
     } break;
 
     case bgSoldier: {
-      linesRef.push_back("Starts with more combat equipment");
-      linesRef.push_back("");
+//      linesRef.push_back("Starts with more combat equipment");
+//      linesRef.push_back("");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back("");
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
@@ -136,7 +136,7 @@ void PlayerBonHandler::getBgDescr(
 }
 
 void PlayerBonHandler::getTraitDescr(
-  const Trait_t id, string& strRef) const {
+  const TraitId id, string& strRef) const {
 
   strRef = "[TRAIT DESCRIPTION MISSING]";
 
@@ -333,9 +333,9 @@ void PlayerBonHandler::getTraitDescr(
   }
 }
 
-void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
-                                       vector<Trait_t>& traitsRef,
-                                       Bg_t& bgRef) const {
+void PlayerBonHandler::getTraitPrereqs(const TraitId id,
+                                       vector<TraitId>& traitsRef,
+                                       Bg& bgRef) const {
   traitsRef.resize(0);
   bgRef = endOfBgs;
 
@@ -507,42 +507,42 @@ void PlayerBonHandler::getTraitPrereqs(const Trait_t id,
 
   //Sort lexicographically
   sort(traitsRef.begin(), traitsRef.end(),
-  [this](const Trait_t & t1, const Trait_t & t2) {
+  [this](const TraitId & t1, const TraitId & t2) {
     string str1 = ""; getTraitTitle(t1, str1);
     string str2 = ""; getTraitTitle(t2, str2);
     return str1 < str2;
   });
 }
 
-void PlayerBonHandler::getPickableBgs(vector<Bg_t>& bgsRef) const {
+void PlayerBonHandler::getPickableBgs(vector<Bg>& bgsRef) const {
   bgsRef.resize(0);
 
-  for(int i = 0; i < endOfBgs; i++) {bgsRef.push_back(Bg_t(i));}
+  for(int i = 0; i < endOfBgs; i++) {bgsRef.push_back(Bg(i));}
 
   //Sort lexicographically
   sort(bgsRef.begin(), bgsRef.end(),
-  [this](const Bg_t & bg1, const Bg_t & bg2) {
+  [this](const Bg & bg1, const Bg & bg2) {
     string str1 = ""; getBgTitle(bg1, str1);
     string str2 = ""; getBgTitle(bg2, str2);
     return str1 < str2;
   });
 }
 
-void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
+void PlayerBonHandler::getPickableTraits(vector<TraitId>& traitsRef) const {
   traitsRef.resize(0);
 
   for(int i = 0; i < endOfTraits; i++) {
 
-    const Trait_t trait = Trait_t(i);
+    const TraitId trait = TraitId(i);
 
     if(hasTrait(trait) == false) {
 
-      vector<Trait_t> traitPrereqs;
-      Bg_t bgPrereq = endOfBgs;
-      getTraitPrereqs(Trait_t(i), traitPrereqs, bgPrereq);
+      vector<TraitId> traitPrereqs;
+      Bg bgPrereq = endOfBgs;
+      getTraitPrereqs(TraitId(i), traitPrereqs, bgPrereq);
 
       bool isPickable = true;
-      for(Trait_t prereq : traitPrereqs) {
+      for(TraitId prereq : traitPrereqs) {
 
         if(hasTrait(prereq) == false) {
           isPickable = false;
@@ -553,7 +553,7 @@ void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
       isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == endOfBgs);
 
       if(isPickable) {
-        traitsRef.push_back(Trait_t(i));
+        traitsRef.push_back(TraitId(i));
       }
     }
   }
@@ -565,14 +565,14 @@ void PlayerBonHandler::getPickableTraits(vector<Trait_t>& traitsRef) const {
 
   //Sort lexicographically
   sort(traitsRef.begin(), traitsRef.end(),
-  [this](const Trait_t & t1, const Trait_t & t2) {
+  [this](const TraitId & t1, const TraitId & t2) {
     string str1 = ""; getTraitTitle(t1, str1);
     string str2 = ""; getTraitTitle(t2, str2);
     return str1 < str2;
   });
 }
 
-void PlayerBonHandler::pickBg(const Bg_t bg) {
+void PlayerBonHandler::pickBg(const Bg bg) {
   assert(bg != endOfBgs);
 
   bg_ = bg;
@@ -591,7 +591,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
       while(true) {
         scroll = eng.itemFactory->spawnRandomScrollOrPotion(true, false);
 
-        Spell_t id = scroll->getData().spellCastFromScroll;
+        SpellId id = scroll->getData().spellCastFromScroll;
         Spell* const spell = eng.spellHandler->getSpellFromId(id);
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
@@ -630,7 +630,7 @@ void PlayerBonHandler::pickBg(const Bg_t bg) {
   }
 }
 
-void PlayerBonHandler::pickTrait(const Trait_t id) {
+void PlayerBonHandler::pickTrait(const TraitId id) {
   assert(id != endOfTraits);
 
   traitsPicked_.push_back(id);
@@ -673,7 +673,7 @@ void PlayerBonHandler::pickTrait(const Trait_t id) {
 void PlayerBonHandler::getAllPickedTraitsTitlesLine(string& strRef) const {
   strRef = "";
 
-  for(Trait_t t : traitsPicked_) {
+  for(TraitId t : traitsPicked_) {
     string title = ""; getTraitTitle(t, title);
     strRef += (strRef.empty() ? "" : ", ") + title;
   }

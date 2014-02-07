@@ -12,7 +12,7 @@ class Engine;
 class Actor;
 class Monster;
 
-enum Spell_t {
+enum SpellId {
   //Player and monster available spells
   spell_darkbolt,
   spell_azathothsWrath,
@@ -43,7 +43,7 @@ enum Spell_t {
   endOfSpells
 };
 
-enum intrSpellShock_t {
+enum IntrSpellShock {
   intrSpellShockMild,
   intrSpellShockDisturbing,
   intrSpellShockSevere,
@@ -55,7 +55,7 @@ class SpellHandler {
 public:
   SpellHandler(Engine& engine) : eng(engine) {}
   Spell* getRandomSpellForMonster();
-  Spell* getSpellFromId(const Spell_t spellId) const;
+  Spell* getSpellFromId(const SpellId spellId) const;
 private:
   Engine& eng;
 };
@@ -82,13 +82,13 @@ public:
   virtual bool isAvailForAllMonsters() const = 0;
   virtual bool isAvailForPlayer() const = 0;
   virtual string getName() const = 0;
-  virtual Spell_t getId() const = 0;
+  virtual SpellId getId() const = 0;
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                    Engine& eng) const;
 
   int getShockValueIntrCast() {
-    const intrSpellShock_t shockType = getShockTypeIntrCast();
+    const IntrSpellShock shockType = getShockTypeIntrCast();
 
     switch(shockType) {
       case intrSpellShockMild:        return 4;
@@ -98,7 +98,7 @@ public:
     return -1;
   }
 
-  virtual intrSpellShock_t getShockTypeIntrCast() const = 0;
+  virtual IntrSpellShock getShockTypeIntrCast() const = 0;
 protected:
   virtual SpellCastRetData cast_(Actor* const caster, Engine& eng) = 0;
 
@@ -113,8 +113,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Darkbolt";}
-  Spell_t getId()               const override {return spell_darkbolt;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_darkbolt;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockMild;
   }
 private:
@@ -130,8 +130,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Azathoths Wrath";}
-  Spell_t getId()               const override {return spell_azathothsWrath;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_azathothsWrath;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -145,8 +145,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Mayhem";}
-  Spell_t getId()               const override {return spell_mayhem;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_mayhem;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockSevere;
   }
 private:
@@ -160,8 +160,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Pestilence";}
-  Spell_t getId()               const override {return spell_pestilence;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_pestilence;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -175,8 +175,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Items";}
-  Spell_t getId()               const override {return spell_detectItems;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_detectItems;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -190,8 +190,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Traps";}
-  Spell_t getId()               const override {return spell_detectTraps;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_detectTraps;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -205,8 +205,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Monsters";}
-  Spell_t getId()               const override {return spell_detectMonsters;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_detectMonsters;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -220,8 +220,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Opening";}
-  Spell_t getId()               const override {return spell_opening;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_opening;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -235,8 +235,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Life Force";}
-  Spell_t getId()               const override {return spell_sacrificeLife;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_sacrificeLife;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -250,8 +250,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Spirit";}
-  Spell_t getId()               const override {return spell_sacrificeSpirit;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_sacrificeSpirit;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -265,8 +265,8 @@ public:
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Hide [name?]";}
-  Spell_t getId()               const override {return spell_rogueHide;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_rogueHide;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockMild;
   }
 private:
@@ -282,8 +282,8 @@ public:
   string getName()              const override {
     return "Thaumaturgic Alteration";
   }
-  Spell_t getId()               const override {return spell_mthPower;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_mthPower;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -302,8 +302,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Bless";}
-  Spell_t getId()               const override {return spell_bless;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_bless;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -319,8 +319,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Knockback";}
-  Spell_t getId()               const override {return spell_knockBack;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_knockBack;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -336,8 +336,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Teleport";}
-  Spell_t getId()               const override {return spell_teleport;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_teleport;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -353,15 +353,15 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Enfeeble";}
-  Spell_t getId()               const override {return spell_enfeeble;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_enfeeble;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 
-  PropId_t getPropId(Engine& eng) const;
+  PropId getPropId(Engine& eng) const;
 };
 
 class SpellDisease: public Spell {
@@ -372,8 +372,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Disease";}
-  Spell_t getId()               const override {return spell_disease;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_disease;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -389,8 +389,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Summon monster";}
-  Spell_t getId()               const override {return spell_summonRandom;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_summonRandom;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -406,8 +406,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Healing";}
-  Spell_t getId()               const override {return spell_healSelf;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_healSelf;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:
@@ -423,8 +423,8 @@ public:
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "MiGo Hypnosis";}
-  Spell_t getId()               const override {return spell_miGoHypnosis;}
-  intrSpellShock_t getShockTypeIntrCast() const override {
+  SpellId getId()               const override {return spell_miGoHypnosis;}
+  IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockDisturbing;
   }
 private:

@@ -22,11 +22,11 @@
 #include "SdlWrapper.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
-  vector<Spell_t> candidates;
+  vector<SpellId> candidates;
   for(int i = 0; i < endOfSpells; i++) {
-    Spell* const spell = getSpellFromId(Spell_t(i));
+    Spell* const spell = getSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
-      candidates.push_back(Spell_t(i));
+      candidates.push_back(SpellId(i));
     }
     delete spell;
   }
@@ -34,7 +34,7 @@ Spell* SpellHandler::getRandomSpellForMonster() {
   return getSpellFromId(candidates.at(ELEMENT));
 }
 
-Spell* SpellHandler::getSpellFromId(const Spell_t spellId) const {
+Spell* SpellHandler::getSpellFromId(const SpellId spellId) const {
   switch(spellId) {
     case spell_enfeeble:            return new SpellEnfeeble;
     case spell_disease:             return new SpellDisease;
@@ -86,7 +86,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
     PropHandler& propHlr = caster->getPropHandler();
 
-    vector<PropId_t> props;
+    vector<PropId> props;
     propHlr.getAllActivePropIds(props);
 
     if(propHlr.allowSee() == false)   {costMax -= 1;}
@@ -116,7 +116,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
-      const ShockSrc_t shockSrc = IS_INTRINSIC ?
+      const ShockSrc shockSrc = IS_INTRINSIC ?
                                   shockSrc_castIntrSpell :
                                   shockSrc_useStrangeItem;
       const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
@@ -205,7 +205,7 @@ SpellCastRetData SpellDarkbolt::cast_(
     new PropParalyzed(eng, propTurnsSpecified, 2));
   target->hit(eng.dice.range(3, 10), dmgType_physical, true);
 
-  Sound snd("", endOfSfx, true, target->pos, NULL, false, true);
+  Sound snd("", endOfSfxId, true, target->pos, NULL, false, true);
   eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
@@ -243,7 +243,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
         actor->hit(eng.dice(spellDmg), dmgType_physical, false);
-        Sound snd("", endOfSfx, true, actor->pos, NULL, true, true);
+        Sound snd("", endOfSfxId, true, actor->pos, NULL, true, true);
         eng.soundEmitter->emitSound(snd);
       }
       return SpellCastRetData(true);
@@ -255,7 +255,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
     eng.player->hit(eng.dice(spellDmg), dmgType_physical, false);
-    Sound snd("", endOfSfx, true, eng.player->pos, NULL, true, true);
+    Sound snd("", endOfSfxId, true, eng.player->pos, NULL, true, true);
     eng.soundEmitter->emitSound(snd);
   }
   return SpellCastRetData(false);
@@ -331,7 +331,7 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  Sound snd("", endOfSfx, true, eng.player->pos, NULL, true, true);
+  Sound snd("", endOfSfxId, true, eng.player->pos, NULL, true, true);
   eng.soundEmitter->emitSound(snd);
 
   return SpellCastRetData(true);
@@ -350,7 +350,7 @@ SpellCastRetData SpellPestilence::cast_(
   const int x1 = min(MAP_W - 1, eng.player->pos.x + RADI);
   const int y1 = min(MAP_H - 1, eng.player->pos.y + RADI);
 
-  ActorId_t monsterId = endOfActorIds;
+  ActorId monsterId = endOfActorIds;
   Dice& dice = eng.dice;
 
   vector<Pos> positions;
@@ -661,7 +661,7 @@ void SpellMthPower::castRandomOtherSpell(Engine& eng) const {
   vector<Spell*> spellCandidates;
   for(int i = 0; i < endOfSpells; i++) {
     if(i != spell_mthPower) {
-      Spell* const spell = eng.spellHandler->getSpellFromId(Spell_t(i));
+      Spell* const spell = eng.spellHandler->getSpellFromId(SpellId(i));
       if(spell->isAvailForPlayer()) {
         spellCandidates.push_back(spell);
       } else {
@@ -692,7 +692,7 @@ bool SpellBless::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   (void)eng;
 
-  vector<PropId_t> props;
+  vector<PropId> props;
   monster->getPropHandler().getAllActivePropIds(props);
   return find(props.begin(), props.end(), propBlessed) == props.end();
 }
@@ -744,7 +744,7 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 SpellCastRetData SpellEnfeeble::cast_(
   Actor* const caster, Engine& eng) {
 
-  const PropId_t propId = getPropId(eng);
+  const PropId propId = getPropId(eng);
 
   if(caster == eng.player) {
     vector<Actor*> targets;
@@ -788,7 +788,7 @@ bool SpellEnfeeble::isGoodForMonsterToCastNow(
   return monster->checkIfSeeActor(*(eng.player), blockers);
 }
 
-PropId_t SpellEnfeeble::getPropId(Engine& eng) const {
+PropId SpellEnfeeble::getPropId(Engine& eng) const {
   const int RND = eng.dice.range(1, 5);
   switch(RND) {
     case 1: {return propConfused;}
@@ -867,17 +867,17 @@ SpellCastRetData SpellSummonRandom::cast_(
     summonPos = freePositionsSeenByPlayer.at(ELEMENT);
   }
 
-  vector<ActorId_t> summonCandidates;
+  vector<ActorId> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorData& data = eng.actorDataHandler->dataList[i];
     if(data.canBeSummoned) {
       if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {
-        summonCandidates.push_back(ActorId_t(i));
+        summonCandidates.push_back(ActorId(i));
       }
     }
   }
   const int ELEMENT = eng.dice.range(1, summonCandidates.size() - 1);
-  const ActorId_t id = summonCandidates.at(ELEMENT);
+  const ActorId id = summonCandidates.at(ELEMENT);
   Actor* const actor = eng.actorFactory->spawnActor(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
   monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;

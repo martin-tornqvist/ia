@@ -35,7 +35,7 @@ void InventoryHandler::activateDefault(
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
-  const SlotTypes_t slotToEquip) {
+  const SlotId slotToEquip) {
 
   vector<Item*>& general = eng.player->getInv().getGeneral();
   generalItemsToShow.resize(0);
@@ -139,7 +139,7 @@ void InventoryHandler::runSlotsScreen() {
   RenderInventory::drawBrowseSlots(browser, equipmentSlotButtons, eng);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         RenderInventory::drawBrowseSlots(browser, equipmentSlotButtons, eng);
@@ -221,7 +221,7 @@ bool InventoryHandler::runUseScreen() {
   RenderInventory::drawUse(browser, generalItemsToShow, eng);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         RenderInventory::drawUse(browser, generalItemsToShow, eng);
@@ -308,7 +308,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
     browser, slotToEquip->id, generalItemsToShow, eng);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         RenderInventory::drawEquip(
@@ -360,7 +360,7 @@ void InventoryHandler::runBrowseInventory() {
   RenderInventory::drawBrowseInventory(browser, generalItemsToShow, eng);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         RenderInventory::drawBrowseInventory(browser, generalItemsToShow, eng);

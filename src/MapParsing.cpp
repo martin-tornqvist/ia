@@ -142,7 +142,7 @@ bool BlocksItems::check(const FeatureMob& f) const {
 //}
 
 bool IsAnyOfFeatures::check(const Cell& c) const {
-  for(Feature_t f : features_) {if(f == c.featureStatic->getId()) return true;}
+  for(FeatureId f : features_) {if(f == c.featureStatic->getId()) return true;}
   return false;
 }
 
@@ -154,11 +154,11 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
-      const Feature_t curId =
+      const FeatureId curId =
         eng.map->cells[X + dx][Y + dy].featureStatic->getId();
 
       bool isMatch = false;
-      for(Feature_t f : features_) {
+      for(FeatureId f : features_) {
         if(f == curId) {
           isMatch = true;
           break;

@@ -15,12 +15,13 @@ public:
   Popup(Engine& engine) : eng(engine) {}
 
   void showMessage(const string& message, const bool DRAW_MAP_AND_INTERFACE,
-                   const string& title = "", const Sfx_t sfx = endOfSfx) const;
+                   const string& title = "",
+                   const SfxId sfx = endOfSfxId) const;
 
   int showMultiChoiceMessage(
     const string& message, const bool DRAW_MAP_AND_INTERFACE,
     const vector<string>& choices, const string& title = "",
-    const Sfx_t sfx = endOfSfx) const;
+    const SfxId sfx = endOfSfxId) const;
 
 private:
   int printBoxAndReturnTitleYPos(const int TEXT_H) const;

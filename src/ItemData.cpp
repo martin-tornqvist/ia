@@ -20,7 +20,7 @@ using namespace std;
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
 void ItemDataHandler::resetData(ItemData* const d,
-                                ItemDataArchetypes_t const archetype) const {
+                                ItemDataArchetypes const archetype) const {
   switch(archetype) {
     case itemData_general: {
       d->itemValue = itemValue_normal;
@@ -62,12 +62,12 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedSoundIsLoud = false;
       d->rangedMakesRicochetSound = false;
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
-      d->landOnHardSurfaceSfx = endOfSfx;
-      d->rangedAttackSfx = endOfSfx;
-      d->meleeHitSmallSfx = endOfSfx;
-      d->meleeHitMediumSfx = endOfSfx;
-      d->meleeHitHardSfx = endOfSfx;
-      d->reloadSfx = endOfSfx;
+      d->landOnHardSurfaceSfx = endOfSfxId;
+      d->rangedAttackSfx = endOfSfxId;
+      d->meleeHitSmallSfx = endOfSfxId;
+      d->meleeHitMediumSfx = endOfSfxId;
+      d->meleeHitHardSfx = endOfSfxId;
+      d->reloadSfx = endOfSfxId;
       d->propAppliedOnRanged = NULL;
       d->isExplosive = false;
       d->armorData = ArmorData();
@@ -233,10 +233,10 @@ void ItemDataHandler::resetData(ItemData* const d,
 }
 
 void ItemDataHandler::addFeatureFoundIn(ItemData* const itemData,
-                                        const Feature_t featureId,
+                                        const FeatureId featureId,
                                         const int CHANCE_TO_INCLUDE) const {
   itemData->featuresCanBeFoundIn.push_back(
-    pair<Feature_t, int>(featureId, CHANCE_TO_INCLUDE));
+    pair<FeatureId, int>(featureId, CHANCE_TO_INCLUDE));
 }
 
 void ItemDataHandler::setDmgFromMonsterData(
@@ -1350,7 +1350,7 @@ bool ItemDataHandler::isWeaponStronger(
 }
 
 string ItemDataHandler::getItemRef(
-  const Item& item, const ItemRef_t itemRefForm,
+  const Item& item, const ItemRefType itemRefForm,
   const bool SKIP_EXTRA_INFO) const {
   const ItemData& d = item.getData();
   string ret = "";
@@ -1407,7 +1407,7 @@ string ItemDataHandler::getItemRef(
 
 string ItemDataHandler::getItemInterfaceRef(
   const Item& item, const bool ADD_A,
-  const PrimaryAttackMode_t attackMode) const {
+  const PrimaryAttackMode attackMode) const {
   const ItemData& d = item.getData();
 
   if(d.isDevice && d.isIdentified == false) {

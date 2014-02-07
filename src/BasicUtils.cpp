@@ -114,7 +114,7 @@ TimeData BasicUtils::getCurrentTime() const {
 }
 
 //------------------------------------------------------ TIME DATA
-string TimeData::getTimeStr(const Time_t lowest,
+string TimeData::getTimeStr(const TimeType lowest,
                             const bool ADD_SEPARATORS) const {
   string ret = toString(year_);
 
@@ -146,7 +146,7 @@ DirConverter::DirConverter() {
   compassDirNames[2][2] = "SE";
 }
 
-Dir_t DirConverter::getDir(const Pos& offset) const {
+Dir DirConverter::getDir(const Pos& offset) const {
   assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
   if(offset.y == -1) {
@@ -171,7 +171,7 @@ Dir_t DirConverter::getDir(const Pos& offset) const {
   return endOfDirs;
 }
 
-Pos DirConverter::getOffset(const Dir_t dir) const {
+Pos DirConverter::getOffset(const Dir dir) const {
   assert(dir != endOfDirs);
 
   switch(dir) {
@@ -226,7 +226,7 @@ void DirConverter::getCompassDirName(
 }
 
 void DirConverter::getCompassDirName(
-  const Dir_t dir, string& strRef) const {
+  const Dir dir, string& strRef) const {
 
   const Pos& offset = getOffset(dir);
   strRef = compassDirNames[offset.x + 1][offset.y + 1];

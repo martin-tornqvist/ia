@@ -64,7 +64,7 @@ public:
   bool check(const Actor& a)      const override;
 private:
   const bool IS_ACTORS_BLOCKING_;
-  vector<PropId_t> actorsProps_;
+  vector<PropId> actorsProps_;
 };
 
 class BlocksProjectiles : public CellPred {
@@ -113,22 +113,22 @@ public:
 
 class IsAnyOfFeatures : public CellPred {
 public:
-  IsAnyOfFeatures(Engine& engine, const vector<Feature_t>& features) :
+  IsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
     CellPred(engine), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
-  vector<Feature_t> features_;
+  vector<FeatureId> features_;
 };
 
 class AllAdjIsAnyOfFeatures : public CellPred {
 public:
-  AllAdjIsAnyOfFeatures(Engine& engine, const vector<Feature_t>& features) :
+  AllAdjIsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
     CellPred(engine), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
-  vector<Feature_t> features_;
+  vector<FeatureId> features_;
 };
 
 } //CellPred

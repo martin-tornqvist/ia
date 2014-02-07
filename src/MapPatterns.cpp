@@ -70,7 +70,7 @@ void MapPatterns::setPositionsInArea(
 }
 
 int MapPatterns::getWalkBlockersInDir(
-  const Dir_t dir, const Pos pos) {
+  const Dir dir, const Pos pos) {
 
   int nrBlockers = 0;
   switch(dir) {

@@ -11,7 +11,7 @@
 #include "Properties.h"
 #include "AudioIds.h"
 
-enum ActorId_t {
+enum ActorId {
   actor_empty, //TODO Is it really necessary to have an "empty"(?) actor?
   actor_player,
   actor_zombie, actor_zombieAxe, actor_bloatedZombie,
@@ -46,7 +46,7 @@ enum ActorId_t {
   endOfActorIds
 };
 
-enum MonsterGroupSize_t {
+enum MonsterGroupSize {
   monsterGroupSize_alone,
   monsterGroupSizeFew,
   monsterGroupSizeGroup,
@@ -54,7 +54,7 @@ enum MonsterGroupSize_t {
   monsterGroupSizeSwarm
 };
 
-enum ActorSpeed_t {
+enum ActorSpeed {
   actorSpeed_sluggish = 0,
   actorSpeed_slow     = 1,
   actorSpeed_normal   = 2,
@@ -62,14 +62,14 @@ enum ActorSpeed_t {
   actorSpeed_fastest  = 4
 };
 
-enum ActorErratic_t {
+enum ActorErraticFreq {
   actorErratic_never    = 0,
   actorErratic_rare     = 8,
   actorErratic_somewhat = 25,
   actorErratic_very     = 50
 };
 
-enum ActorSizes_t {
+enum ActorSize {
   actorSize_none,
   actorSize_floor,
   actorSize_humanoid,
@@ -84,7 +84,7 @@ enum MonsterShockLevel {
   monsterShockLevel_mindShattering  = 4
 };
 
-enum AiBehavior_t {
+enum AiBehaviorId {
   aiLooks,
   aiMakesRoomForFriend,
   aiAttacks,
@@ -92,7 +92,7 @@ enum AiBehavior_t {
   aiMovesTowardTargetWhenVision,
   aiMovesTowardLair,
   aiMovesTowardLeader,
-  endOfAiBehavior
+  endOfAiBehaviorId
 };
 
 struct ActorData {
@@ -101,22 +101,22 @@ public:
 
   void reset();
 
-  ActorId_t id;
+  ActorId id;
   string name_a;
   string name_the;
-  Tile_t tile;
+  Tile tile;
   char glyph;
   SDL_Color color;
-  MonsterGroupSize_t groupSize;
+  MonsterGroupSize groupSize;
   int hp, spi, dmgMelee, dmgRanged;
-  ActorSpeed_t speed;
+  ActorSpeed speed;
   AbilityValues abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-  bool ai[endOfAiBehavior];
+  bool ai[endOfAiBehaviorId];
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;
-  ActorSizes_t actorSize;
+  ActorSize actorSize;
   bool isHumanoid;
   bool isAutoDescriptionAllowed;
   string deathMessageOverride;
@@ -127,17 +127,17 @@ public:
   bool isUnique;
   bool isAutoSpawnAllowed;
   string spellCastMessage;
-  ActorErratic_t erraticMovement;
+  ActorErraticFreq erraticMovement;
   MonsterShockLevel monsterShockLevel;
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
-  vector<RoomTheme_t> nativeRooms;
+  vector<RoomThemeId> nativeRooms;
   string description;
   string aggroTextMonsterSeen;
   string aggroTextMonsterHidden;
-  Sfx_t aggroSfxMonsterSeen;
-  Sfx_t aggroSfxMonsterHidden;
+  SfxId aggroSfxMonsterSeen;
+  SfxId aggroSfxMonsterHidden;
 };
 
 class ActorDataHandler {

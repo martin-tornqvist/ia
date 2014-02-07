@@ -77,7 +77,7 @@ void CharacterDescr::makeLines() {
   int lenOfLongestShockResTitle = 0;
   for(int i = 0; i < endOfShockSrc; i++) {
     string shockResTitle = "";
-    getShockResSrcTitle(ShockSrc_t(i), shockResTitle);
+    getShockResSrcTitle(ShockSrc(i), shockResTitle);
     shockResTitles.push_back(shockResTitle);
     const int CUR_LEN = shockResTitle.size();
     if(CUR_LEN > lenOfLongestShockResTitle) {
@@ -87,7 +87,7 @@ void CharacterDescr::makeLines() {
   for(int i = 0; i < endOfShockSrc; i++) {
     string& curTitle = shockResTitles.at(i);
     curTitle.resize(lenOfLongestShockResTitle, ' ');
-    const int SHOCK_RESISTANCE = eng.player->getShockResistance(ShockSrc_t(i));
+    const int SHOCK_RESISTANCE = eng.player->getShockResistance(ShockSrc(i));
     string str = offset + curTitle + " : " + toString(SHOCK_RESISTANCE) + "%";
     lines.push_back(StrAndClr(str, clrText));
   }
@@ -187,14 +187,14 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
-  vector<Trait_t>& traits = eng.playerBonHandler->traitsPicked_;
+  vector<TraitId>& traits = eng.playerBonHandler->traitsPicked_;
   if(traits.empty()) {
     lines.push_back(StrAndClr(offset + "None", clrText));
     lines.push_back(StrAndClr(" ", clrText));
   } else {
     const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
-    for(Trait_t trait : traits) {
+    for(TraitId trait : traits) {
       string title = "";
       eng.playerBonHandler->getTraitTitle(trait, title);
       lines.push_back(StrAndClr(offset + title, clrText));
@@ -211,7 +211,7 @@ void CharacterDescr::makeLines() {
 }
 
 void CharacterDescr::getShockResSrcTitle(
-  const ShockSrc_t shockSrc, string& strRef) {
+  const ShockSrc shockSrc, string& strRef) {
 
   strRef = "";
   switch(shockSrc) {

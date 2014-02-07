@@ -86,7 +86,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
 
       if(nrAmmoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
         Inventory& playerInv = eng.player->getInv();
-        const ItemId_t ammoType = weapon->getData().rangedAmmoTypeUsed;
+        const ItemId ammoType = weapon->getData().rangedAmmoTypeUsed;
 
         ItemData* const ammoData = eng.itemDataHandler->dataList[ammoType];
 

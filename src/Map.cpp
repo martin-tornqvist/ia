@@ -51,15 +51,15 @@ Map::~Map() {
 void Map::switchToDestroyedFeatAt(const Pos pos) {
   if(eng.basicUtils->isPosInsideMap(pos)) {
 
-    const Feature_t OLD_FEATURE_ID =
+    const FeatureId OLD_FEATURE_ID =
       eng.map->cells[pos.x][pos.y].featureStatic->getId();
 
-    const vector<Feature_t> convertionCandidates =
+    const vector<FeatureId> convertionCandidates =
       eng.featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
     const int SIZE = convertionCandidates.size();
     if(SIZE > 0) {
-      const Feature_t NEW_ID =
+      const FeatureId NEW_ID =
         convertionCandidates.at(eng.dice(1, SIZE) - 1);
 
       eng.featureFactory->spawnFeatureAt(NEW_ID, pos);

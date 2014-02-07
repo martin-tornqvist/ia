@@ -14,7 +14,7 @@ public:
     nrItemsB_(nrItemsB),
     pos_(upLeft_) {}
 
-  void navigate(const Dir_t dir);
+  void navigate(const Dir dir);
   void navigate(const char KEY);
 
   char enter() const;

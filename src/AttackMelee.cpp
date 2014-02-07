@@ -45,7 +45,8 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       if(
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
-        Sound snd("", endOfSfx, true, data.curDefender->pos, NULL, false, true);
+        Sound snd("", endOfSfxId, true, data.curDefender->pos, NULL, false,
+                  true);
         eng.soundEmitter->emitSound(snd);
       }
     }
@@ -134,7 +135,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
     } else {
       //----- ATTACK CONNECTS WITH DEFENDER --------
       //Determine the relative "size" of the hit
-      MeleeHitSize_t hitSize = meleeHitSizeSmall;
+      MeleeHitSize hitSize = meleeHitSizeSmall;
       const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
       if(MAX_DMG_ROLL >= 4) {
         if(data.dmgRoll > (MAX_DMG_ROLL * 5) / 6) {
@@ -192,7 +193,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
                         clrMsgBad, true);
       }
 
-      Sfx_t hitSfx = endOfSfx;
+      SfxId hitSfx = endOfSfxId;
       switch(hitSize) {
         case meleeHitSizeSmall: {
           hitSfx = wpn.getData().meleeHitSmallSfx;

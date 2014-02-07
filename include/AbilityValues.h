@@ -10,7 +10,7 @@ using namespace std;
 class Engine;
 class Actor;
 
-enum Abilities_t {
+enum AbilityId {
   ability_empty,
   ability_searching,
   ability_accuracyRanged,
@@ -18,7 +18,7 @@ enum Abilities_t {
   ability_dodgeTrap,
   ability_dodgeAttack,
   ability_stealth,
-  endOfAbilities
+  endOfAbilityId
 };
 
 //Each actor has an instance of this class
@@ -29,7 +29,7 @@ public:
   }
 
   AbilityValues& operator=(const AbilityValues& other) {
-    for(unsigned int i = 0; i < endOfAbilities; i++) {
+    for(unsigned int i = 0; i < endOfAbilityId; i++) {
       abilityList[i] = other.abilityList[i];
     }
     return *this;
@@ -37,24 +37,24 @@ public:
 
   void reset();
 
-  int getVal(const Abilities_t ability,
+  int getVal(const AbilityId ability,
              const bool IS_AFFECTED_BY_STATUS_EFFECTS,
              Actor& actor) const;
 
-  inline int getRawVal(const Abilities_t ability) {
+  inline int getRawVal(const AbilityId ability) {
     return abilityList[ability];
   }
 
-  void setVal(const Abilities_t ability, const int VAL);
+  void setVal(const AbilityId ability, const int VAL);
 
-  void changeVal(const Abilities_t ability, const int CHANGE);
+  void changeVal(const AbilityId ability, const int CHANGE);
 
   Engine* eng;
 private:
-  int abilityList[endOfAbilities];
+  int abilityList[endOfAbilityId];
 };
 
-enum AbilityRollResult_t {
+enum AbilityRollResult {
   failCritical, failBig, failNormal, failSmall,
   successSmall, successNormal, successBig, successCritical
 };
@@ -63,7 +63,7 @@ enum AbilityRollResult_t {
 class AbilityRoll {
 public:
   AbilityRoll(Engine& engine) : eng(engine) {}
-  AbilityRollResult_t roll(const int TOTAL_SKILL_VALUE) const;
+  AbilityRollResult roll(const int TOTAL_SKILL_VALUE) const;
 
 private:
   Engine& eng;

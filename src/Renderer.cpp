@@ -132,7 +132,7 @@ void Renderer::loadMainMenuLogo() {
 }
 
 
-void Renderer::putPixelsOnScreenForTile(const Tile_t tile, const Pos& pixelPos,
+void Renderer::putPixelsOnScreenForTile(const Tile tile, const Pos& pixelPos,
                                         const SDL_Color& clr) {
   const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
 
@@ -423,7 +423,7 @@ void Renderer::drawBlastAnimAtPositionsWithPlayerVision(
   eng.renderer->drawBlastAnimAtPositions(positionsWithVision, clr);
 }
 
-void Renderer::drawTile(const Tile_t tile, const Panel_t panel, const Pos& pos,
+void Renderer::drawTile(const Tile tile, const PanelId panel, const Pos& pos,
                         const SDL_Color& clr, const SDL_Color& bgClr) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   const Pos cellDims(eng.config->cellW, eng.config->cellH);
@@ -443,7 +443,7 @@ void Renderer::drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
 }
 
 Pos Renderer::getPixelPosForCellInPanel(
-  const Panel_t panel, const Pos& pos) const {
+  const PanelId panel, const Pos& pos) const {
   const Pos cellDims(eng.config->cellW, eng.config->cellH);
 
   switch(panel) {
@@ -466,14 +466,14 @@ Pos Renderer::getPixelPosForCellInPanel(
   return Pos();
 }
 
-void Renderer::drawGlyph(const char GLYPH, const Panel_t panel, const Pos& pos,
+void Renderer::drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
                          const SDL_Color& clr, const bool DRAW_BG_CLR,
                          const SDL_Color& bgClr) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
 }
 
-void Renderer::drawText(const string& str, const Panel_t panel,
+void Renderer::drawText(const string& str, const PanelId panel,
                         const Pos& pos, const SDL_Color& clr,
                         const SDL_Color& bgClr) {
   Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
@@ -495,7 +495,7 @@ void Renderer::drawText(const string& str, const Panel_t panel,
   }
 }
 
-int Renderer::drawTextCentered(const string& str, const Panel_t panel,
+int Renderer::drawTextCentered(const string& str, const PanelId panel,
                                const Pos& pos, const SDL_Color& clr,
                                const SDL_Color& bgClr,
                                const bool IS_PIXEL_POS_ADJ_ALLOWED) {
@@ -531,7 +531,7 @@ int Renderer::drawTextCentered(const string& str, const Panel_t panel,
   return X_POS_LEFT;
 }
 
-void Renderer::coverPanel(const Panel_t panel) {
+void Renderer::coverPanel(const PanelId panel) {
   const Config& conf = *eng.config;
   const int SCREEN_PIXEL_W = conf.screenPixelW;
 
@@ -554,7 +554,7 @@ void Renderer::coverPanel(const Panel_t panel) {
   }
 }
 
-void Renderer::coverArea(const Panel_t panel, const Pos& pos, const Pos& dims) {
+void Renderer::coverArea(const PanelId panel, const Pos& pos, const Pos& dims) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   const Pos cellDims(eng.config->cellW, eng.config->cellH);
   coverAreaPixel(pixelPos, dims * cellDims);
@@ -621,7 +621,7 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
   updateScreen();
 }
 
-void Renderer::drawPopupBox(const Rect& border, const Panel_t panel,
+void Renderer::drawPopupBox(const Rect& border, const PanelId panel,
                             const SDL_Color& clr) {
   const bool IS_TILES = eng.config->isTilesMode;
 
@@ -759,7 +759,7 @@ void Renderer::drawMap() {
 
         const FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
 
-        Tile_t  goreTile  = tile_empty;
+        Tile  goreTile  = tile_empty;
         char    goreGlyph = ' ';
         if(f->canHaveGore()) {
           goreTile  = f->getGoreTile();
@@ -832,7 +832,7 @@ void Renderer::drawMap() {
   for(FeatureMob * mob : eng.gameTime->featureMobs_) {
     xPos = mob->getX();
     yPos = mob->getY();
-    const Tile_t  mobTile   = mob->getTile();
+    const Tile  mobTile   = mob->getTile();
     const char    mobGlyph  = mob->getGlyph();
     if(
       mobTile != tile_empty && mobGlyph != ' ' &&
@@ -923,15 +923,15 @@ void Renderer::drawMap() {
         if(
           tmpDrw.isLivingActorSeenHere == false &&
           tmpDrw.isAwareOfMonsterHere  == false) {
-          const Tile_t tileSeen = renderArrayNoActors[x][y].tile;
-          const Tile_t tileMem  = eng.map->cells[x][y].playerVisualMemory.tile;
+          const Tile tileSeen = renderArrayNoActors[x][y].tile;
+          const Tile tileMem  = eng.map->cells[x][y].playerVisualMemory.tile;
           const bool IS_TILE_WALL =
             eng.map->cells[x][y].isSeenByPlayer ?
             Wall::isTileAnyWallTop(tileSeen) :
             Wall::isTileAnyWallTop(tileMem);
           if(IS_TILE_WALL) {
             const Feature* const f = eng.map->cells[x][y].featureStatic;
-            const Feature_t featureId = f->getId();
+            const FeatureId featureId = f->getId();
             bool isHiddenDoor = false;
             if(featureId == feature_door) {
               isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
@@ -943,10 +943,10 @@ void Renderer::drawMap() {
                 const bool IS_CELL_BELOW_SEEN =
                   eng.map->cells[x][y + 1].isSeenByPlayer;
 
-                const Tile_t tileBelowSeen =
+                const Tile tileBelowSeen =
                   renderArrayNoActors[x][y + 1].tile;
 
-                const Tile_t tileBelowMem =
+                const Tile tileBelowMem =
                   eng.map->cells[x][y + 1].playerVisualMemory.tile;
 
                 const bool TILE_BELOW_IS_WALL_FRONT =
@@ -1014,7 +1014,7 @@ void Renderer::drawMap() {
     isRangedWpn = item->getData().isRangedWeapon;
   }
   if(IS_TILES) {
-    const Tile_t tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
+    const Tile tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
     drawTile(tile, panel_map, pos, eng.player->getColor(), clrBlack);
   } else {
     drawGlyph('@', panel_map, pos, eng.player->getColor(), true, clrBlack);

@@ -11,7 +11,7 @@ using namespace std;
 
 class Engine;
 
-enum SlotTypes_t {
+enum SlotId {
   slot_wielded,
   slot_wieldedAlt,
   slot_missiles,
@@ -43,7 +43,7 @@ struct InventorySlot {
   bool allowAmulet;
   bool allowRing;
   string interfaceName;
-  SlotTypes_t id;
+  SlotId id;
   Item* item;
 };
 
@@ -58,10 +58,10 @@ public:
   void dropAllNonIntrinsic(
     const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
 
-  bool hasItemInSlot(SlotTypes_t slotName) const;
+  bool hasItemInSlot(SlotId slotName) const;
 
   void putItemInSlot(
-    SlotTypes_t slotName, Item* item, bool putInGeneral_ifOccupied = true,
+    SlotId slotName, Item* item, bool putInGeneral_ifOccupied = true,
     bool putInGeneral_ifSlotNotFound = true);
 
   void putItemInGeneral(Item* item);
@@ -81,24 +81,24 @@ public:
 
   void equipGeneralItemAndPossiblyEndTurn(
     const unsigned int GENERAL_INV_ELEMENT,
-    const SlotTypes_t slotToEquip, Engine& engine);
+    const SlotId slotToEquip, Engine& engine);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN, Engine& engine);
 
   bool hasAmmoForFirearmInInventory();
 
-  int getElementWithItemType(const ItemId_t itemId) const;
+  int getElementWithItemType(const ItemId itemId) const;
 
-  Item* getItemInSlot(SlotTypes_t slotName) const;
+  Item* getItemInSlot(SlotId slotName) const;
   Item* getItemInElement(const int GLOBAL_ELEMENT_NR) const;
 
   void removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
 
-  void decrItemInSlot(SlotTypes_t slotName);
+  void decrItemInSlot(SlotId slotName);
 
   void decrItemInGeneral(unsigned element);
 
-  void decrItemTypeInGeneral(const ItemId_t itemId);
+  void decrItemTypeInGeneral(const ItemId itemId);
 
   void deleteItemInGeneralWithElement(const unsigned ELEMENT);
   void removetemInGeneralWithPointer(
@@ -110,15 +110,15 @@ public:
 
   Item* getLastItemInGeneral();
 
-  bool hasItemInGeneral(const ItemId_t id) const;
+  bool hasItemInGeneral(const ItemId id) const;
 
-  int getItemStackSizeInGeneral(const ItemId_t id) const;
+  int getItemStackSizeInGeneral(const ItemId id) const;
 
   bool hasDynamiteInGeneral() const;
 
   void decrDynamiteInGeneral();
 
-  InventorySlot* getSlot(SlotTypes_t slotName);
+  InventorySlot* getSlot(SlotId slotName);
 
   void sortGeneralInventory(Engine& engine);
 

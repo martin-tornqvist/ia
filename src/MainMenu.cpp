@@ -173,7 +173,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   trace << "MainMenu::draw() [DONE]" << endl;
 }
 
-GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
+GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
   trace << "MainMenu::run()" << endl;
 
   quote = getHplQuote();
@@ -186,7 +186,7 @@ GameEntry_t MainMenu::run(bool& quit, int& introMusChannel) {
 
   bool proceed = false;
   while(proceed == false) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
 
     switch(action) {
       case menuAction_browsed: {

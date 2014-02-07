@@ -10,6 +10,7 @@
 #include "Converters.h"
 #include "PlayerCreateCharacter.h"
 #include "BasicUtils.h"
+#include "ActorMonster.h"
 
 class Engine;
 
@@ -20,7 +21,8 @@ public:
   }
   ~DungeonMaster() {}
 
-  void monsterKilled(Actor* monster);
+  void onMonsterKilled(Actor& actor);
+  void onMonsterSpotted(Actor& actor);
 
   void addSaveLines(vector<string>& lines) const;
   void setParamsFromSaveLines(vector<string>& lines);
@@ -30,11 +32,9 @@ public:
   TimeData getTimeStarted() const {return timeStarted;}
   void setTimeStartedToNow();
 
-  void playerGainXp(int XP_GAINED);
-
   void playerLoseXpPercent(const int PERCENT);
 
-  int getMonsterXpWorth(const ActorData& d) const;
+  int getMonsterTotXpWorth(const ActorData& d) const;
 
   inline int getCLvl()  const {return clvl;}
   inline int getXp()    const {return xp;}
@@ -42,6 +42,9 @@ public:
   int getXpToNextLvl() const;
 
 private:
+  friend class Input;
+  void playerGainXp(int XP_GAINED);
+
   void playerGainLvl();
 
   void initXpArray();

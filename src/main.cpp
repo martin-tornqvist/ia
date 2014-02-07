@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     eng->initGame();
 
     int introMusChannel = -1;
-    const GameEntry_t gameEntryType =
+    const GameEntryMode gameEntryType =
       eng->mainMenu->run(quitGame, introMusChannel);
 
     if(quitGame == false) {

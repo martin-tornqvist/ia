@@ -8,11 +8,11 @@
 #include "Audio.h"
 
 FeatureLiquidShallow::FeatureLiquidShallow(
-  Feature_t id, Pos pos, Engine& engine) :
+  FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidShallow::bump(Actor& actorBumping) {
-  vector<PropId_t> props;
+  vector<PropId> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
   if(
@@ -30,7 +30,7 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
   }
 }
 
-FeatureLiquidDeep::FeatureLiquidDeep(Feature_t id, Pos pos, Engine& engine) :
+FeatureLiquidDeep::FeatureLiquidDeep(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine) {}
 
 void FeatureLiquidDeep::bump(Actor& actorBumping) {

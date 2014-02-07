@@ -308,7 +308,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             } else {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  const Feature_t featureId =
+                  const FeatureId featureId =
                     eng.map->cells[x + dx][y + dy].featureStatic->getId();
                   const bool IS_FLOOR =
                     featureId == feature_stoneFloor ||
@@ -725,7 +725,7 @@ void MapGenBsp::getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const {
   //Stairs are only allowed in cells with - and completely surrounded by -
   //stone flooor or cave floor
 
-  vector<Feature_t> featIdsOk {feature_stoneFloor, feature_caveFloor};
+  vector<FeatureId> featIdsOk {feature_stoneFloor, feature_caveFloor};
 
   MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(eng, featIdsOk), cellsToSet);
 
@@ -923,7 +923,7 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
     Region* const r2 = regions[c2.x][c2.y];
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
-      const Dir_t regionDir = c2.x > c1.x ? dirRight :
+      const Dir regionDir = c2.x > c1.x ? dirRight :
                               c2.x < c1.x ? dirLeft :
                               c2.y > c1.y ? dirDown :
                               dirUp;
@@ -1108,7 +1108,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 // The parameter rectangle does not have to go up-left to bottom-right,
 // the method adjusts the order
 void MapGenBsp::coverAreaWithFeature(
-  const Rect& area, const Feature_t feature) {
+  const Rect& area, const FeatureId feature) {
 
   const Pos x0y0 =
     Pos(min(area.x0y0.x, area.x1y1.x), min(area.x0y0.y, area.x1y1.y));
@@ -1137,7 +1137,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
 
   if(ROOM_W >= 4 && ROOM_H >= 4) {
 
-    vector<RoomReshape_t> reshapesToPerform;
+    vector<RoomReshapeType> reshapesToPerform;
     if(eng.dice.percentile() < 75) {
       reshapesToPerform.push_back(roomReshape_trimCorners);
     }
@@ -1218,7 +1218,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
 }
 
 int MapGenBsp::getNrStepsInDirUntilWallFound(
-  Pos c, const Dir_t dir) const {
+  Pos c, const Dir dir) const {
 
   int stepsTaken = 0;
   bool done = false;

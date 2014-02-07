@@ -11,7 +11,7 @@ public:
   void newTurn();
 
 protected:
-  ProxEvent(Feature_t id, Pos pos, Engine& engine) :
+  ProxEvent(FeatureId id, Pos pos, Engine& engine) :
     FeatureMob(id, pos, engine) {}
 
   virtual void playerIsNear() = 0;
@@ -22,7 +22,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  ProxEventWallCrumble(Feature_t id, Pos pos, Engine& engine,
+  ProxEventWallCrumble(FeatureId id, Pos pos, Engine& engine,
                        ProxEventWallCrumbleSpawnData* spawnData) :
     ProxEvent(id, pos, engine), wallCells_(spawnData->wallCells_),
     innerCells_(spawnData->innerCells_) {}

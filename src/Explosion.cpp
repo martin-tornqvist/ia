@@ -28,7 +28,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
 
   for(int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++) {
 
-    const Tile_t tile = iAnim == 0 ? tile_blast1 : tile_blast2;
+    const Tile tile = iAnim == 0 ? tile_blast1 : tile_blast2;
 
     const int NR_OUTER = posLists.size();
     for(int iOuter = 0; iOuter < NR_OUTER; iOuter++) {
@@ -91,7 +91,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
 namespace Explosion {
 
 void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
-                    const Sfx_t sfx, const bool SHOULD_DO_EXPLOSION_DMG,
+                    const SfxId sfx, const bool SHOULD_DO_EXPLOSION_DMG,
                     Prop* const prop, const bool SHOULD_OVERRIDE_CLR,
                     const SDL_Color& clrOverride) {
   Rect area;
@@ -178,7 +178,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   getPositionsReached(area, origin, blockers, eng, posLists);
 
   //TODO Sound message?
-  Sound snd("", endOfSfx, true, origin, NULL, false, true);
+  Sound snd("", endOfSfxId, true, origin, NULL, false, true);
   eng.soundEmitter->emitSound(snd);
 
   for(const vector<Pos>& inner : posLists) {

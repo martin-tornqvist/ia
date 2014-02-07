@@ -102,7 +102,7 @@ void Inventory::setParamsFromSaveLines(
       slots_.at(i).item = NULL;
     }
 
-    const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
+    const ItemId id = static_cast<ItemId>(toInt(lines.front()));
     lines.erase(lines.begin());
     if(id != item_empty) {
       item = engine.itemFactory->spawnItem(id);
@@ -120,7 +120,7 @@ void Inventory::setParamsFromSaveLines(
   const unsigned int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
-    const ItemId_t id = static_cast<ItemId_t>(toInt(lines.front()));
+    const ItemId id = static_cast<ItemId>(toInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
@@ -134,7 +134,7 @@ bool Inventory::hasDynamiteInGeneral() const {
   return hasItemInGeneral(item_dynamite);
 }
 
-bool Inventory::hasItemInGeneral(const ItemId_t id) const {
+bool Inventory::hasItemInGeneral(const ItemId id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id)
       return true;
@@ -143,7 +143,7 @@ bool Inventory::hasItemInGeneral(const ItemId_t id) const {
   return false;
 }
 
-int Inventory::getItemStackSizeInGeneral(const ItemId_t id) const {
+int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id) {
       if(general_.at(i)->getData().isStackable == false) {
@@ -281,7 +281,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
     if(weapon->getData().isRangedWeapon == true) {
 
       //Get weapon ammo type
-      const ItemId_t ammoId = weapon->getData().rangedAmmoTypeUsed;
+      const ItemId ammoId = weapon->getData().rangedAmmoTypeUsed;
 
       //Look for that ammo type in inventory
       for(unsigned int i = 0; i < general_.size(); i++) {
@@ -294,7 +294,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
   return false;
 }
 
-void Inventory::decrItemInSlot(SlotTypes_t slotName) {
+void Inventory::decrItemInSlot(SlotId slotName) {
   Item* item = getItemInSlot(slotName);
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
@@ -356,7 +356,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
   }
 }
 
-void Inventory::decrItemTypeInGeneral(const ItemId_t id) {
+void Inventory::decrItemTypeInGeneral(const ItemId id) {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id) {
       decrItemInGeneral(i);
@@ -391,7 +391,7 @@ void Inventory::moveItemToSlot(
 
 void Inventory::equipGeneralItemAndPossiblyEndTurn(
   const unsigned int GENERAL_INV_ELEMENT,
-  const SlotTypes_t slotToEquip, Engine& engine) {
+  const SlotId slotToEquip, Engine& engine) {
 
   const bool IS_PLAYER = this == &engine.player->getInv();
 
@@ -519,7 +519,7 @@ bool Inventory::moveItemToGeneral(InventorySlot* inventorySlot) {
   }
 }
 
-bool Inventory::hasItemInSlot(SlotTypes_t slotName) const {
+bool Inventory::hasItemInSlot(SlotId slotName) const {
   for(unsigned int i = 0; i < slots_.size(); i++) {
     if(slots_[i].id == slotName) {
       if(slots_[i].item != NULL) {
@@ -544,7 +544,7 @@ void Inventory::removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEM
   }
 }
 
-int Inventory::getElementWithItemType(const ItemId_t id) const {
+int Inventory::getElementWithItemType(const ItemId id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id) {
       return i;
@@ -566,7 +566,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) const {
   return NULL;
 }
 
-Item* Inventory::getItemInSlot(SlotTypes_t slotName) const {
+Item* Inventory::getItemInSlot(SlotId slotName) const {
   if(hasItemInSlot(slotName)) {
     for(unsigned int i = 0; i < slots_.size(); i++) {
       if(slots_[i].id == slotName) {
@@ -603,7 +603,7 @@ Item* Inventory::getLastItemInGeneral() {
   return NULL;
 }
 
-InventorySlot* Inventory::getSlot(SlotTypes_t slotName) {
+InventorySlot* Inventory::getSlot(SlotId slotName) {
   InventorySlot* slot = NULL;
 
   for(unsigned int i = 0; i < slots_.size(); i++) {
@@ -614,7 +614,7 @@ InventorySlot* Inventory::getSlot(SlotTypes_t slotName) {
   return slot;
 }
 
-void Inventory::putItemInSlot(SlotTypes_t slotName, Item* item,
+void Inventory::putItemInSlot(SlotId slotName, Item* item,
                               bool putInGeneral_ifOccupied,
                               bool putInGeneral_ifSlotNotFound) {
   bool hasSlot = false;

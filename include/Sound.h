@@ -15,7 +15,7 @@ class Actor;
 class Sound {
 public:
   Sound(
-    const string& msg, const Sfx_t sfx,
+    const string& msg, const SfxId sfx,
     const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG, const Pos& origin,
     Actor* const actorWhoMadeSound, const bool IS_LOUD,
     const bool IS_ALERTING_MONSTER) :
@@ -28,7 +28,7 @@ public:
   ~Sound() {}
 
   inline const string& getMsg() const {return msg_;}
-  inline Sfx_t getSfx() const {return sfx_;}
+  inline SfxId getSfx() const {return sfx_;}
   inline void clearMsg() {msg_ = "";}
 
   inline bool getIsMsgIgnoredIfPlayerSeeOrigin() const {
@@ -46,7 +46,7 @@ public:
 
 private:
   string msg_;
-  Sfx_t sfx_;
+  SfxId sfx_;
   bool isMsgIgnoredIfPlayerSeeOrig_;
   Pos origin_;
   Actor* actorWhoMadeSound_;
@@ -67,7 +67,7 @@ public:
 private:
   int nrSoundMsgPrintedCurTurn_;
 
-  Dir_t getPlayerToOriginDir(
+  Dir getPlayerToOriginDir(
     const int FLOOD_VALUE_AT_PLAYER,
     const Pos& origin, int floodFill[MAP_W][MAP_H]) const;
 

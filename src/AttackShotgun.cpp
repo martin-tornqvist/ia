@@ -20,7 +20,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   printRangedInitiateMessages(*data);
 
-  const ActorSizes_t intendedAimLevel = data->intendedAimLevel;
+  const ActorSize intendedAimLevel = data->intendedAimLevel;
 
   bool featureBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksProjectiles(eng), featureBlockers);
@@ -42,7 +42,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   if(sndMsg.empty() == false) {
     sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
     const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
-    const Sfx_t sfx = wpn.getData().rangedAttackSfx;
+    const SfxId sfx = wpn.getData().rangedAttackSfx;
     eng.soundEmitter->emitSound(
       Sound(sndMsg, sfx, true, attacker.pos, &attacker, IS_LOUD, true));
   }
@@ -60,7 +60,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     if(actorArray[curPos.x][curPos.y] != NULL) {
 
       //Only attempt hit if aiming at a level that would hit the actor
-      const ActorSizes_t sizeOfActor =
+      const ActorSize sizeOfActor =
         actorArray[curPos.x][curPos.y]->getData().actorSize;
       if(sizeOfActor >= actorSize_humanoid || curPos == aimPos) {
 

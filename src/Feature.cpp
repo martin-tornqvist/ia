@@ -10,7 +10,7 @@
 #include "DungeonClimb.h"
 
 //---------------------------------------------------------- FEATURE
-Feature::Feature(Feature_t id, Pos pos, Engine& engine,
+Feature::Feature(FeatureId id, Pos pos, Engine& engine,
                  FeatureSpawnData* spawnData) :
   pos_(pos), eng(engine), data_(eng.featureDataHandler->getData(id)),
   hasBlood_(false) {
@@ -18,7 +18,7 @@ Feature::Feature(Feature_t id, Pos pos, Engine& engine,
 }
 
 void Feature::bump(Actor& actorBumping) {
-  vector<PropId_t> props;
+  vector<PropId> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
   if(canMove(props) == false) {
@@ -44,7 +44,7 @@ bool Feature::canMoveCmn() const {
   return data_->moveRules.canMoveCmn();
 }
 
-bool Feature::canMove(const vector<PropId_t>& actorsProps) const {
+bool Feature::canMove(const vector<PropId>& actorsProps) const {
   return data_->moveRules.canMove(actorsProps);
 }
 
@@ -72,7 +72,7 @@ string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
 }
 
-void Feature::hit(const int DMG, const DmgTypes_t dmgType) {
+void Feature::hit(const int DMG, const DmgTypes dmgType) {
   (void)DMG;
   (void)dmgType;
 }
@@ -89,7 +89,7 @@ char Feature::getGlyph() const {
   return data_->glyph;
 }
 
-Tile_t Feature::getTile() const {
+Tile Feature::getTile() const {
   return data_->tile;
 }
 
@@ -121,7 +121,7 @@ void Feature::setHasBlood(const bool HAS_BLOOD) {
   hasBlood_ = HAS_BLOOD;
 }
 
-Feature_t Feature::getId() const {
+FeatureId Feature::getId() const {
   return data_->id;
 }
 
@@ -133,7 +133,7 @@ int Feature::getShockWhenAdjacent() const {
   return data_->shockWhenAdjacent;
 }
 
-MaterialType_t Feature::getMaterialType() const {
+MaterialType Feature::getMaterialType() const {
   return data_->materialType;
 }
 
@@ -152,7 +152,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   string sndMsg = "";
 
-//  Sfx_t sfx = endOfSfx;
+//  SfxId sfx = endOfSfxId;
 
   if(IS_PLAYER) {
     const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;

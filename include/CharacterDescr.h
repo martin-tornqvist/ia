@@ -13,7 +13,7 @@ public:
   CharacterDescr(Engine& engine) : eng(engine) {}
   void run();
 private:
-  void getShockResSrcTitle(const ShockSrc_t shockSrc, string& strRef);
+  void getShockResSrcTitle(const ShockSrc shockSrc, string& strRef);
 
   void drawInterface();
   void makeLines();

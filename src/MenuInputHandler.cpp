@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Input.h"
 
-MenuAction_t MenuInputHandler::getAction(MenuBrowser& browser) {
+MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
     KeyboardReadReturnData d = eng.input->readKeysUntilFound();
 

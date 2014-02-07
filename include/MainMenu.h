@@ -10,7 +10,7 @@ class MainMenu {
 public:
   MainMenu(Engine& engine) : quote(""), eng(engine) {}
 
-  GameEntry_t run(bool& quit, int& introMusChannel);
+  GameEntryMode run(bool& quit, int& introMusChannel);
 
 private:
   void draw(const MenuBrowser& browser) const;

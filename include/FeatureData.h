@@ -15,7 +15,7 @@ using namespace std;
 
 class Engine;
 
-enum Feature_t {
+enum FeatureId {
   feature_empty,
   feature_stoneFloor,
   feature_stoneWall,
@@ -62,14 +62,14 @@ enum Feature_t {
 
   feature_pit,
 
-  endOfFeatures
+  endOfFeatureId
 };
 
-enum FeatureSpawnType_t {
+enum FeatureSpawnType {
   featureSpawnType_mob, featureSpawnType_static, featureSpawnType_other
 };
 
-enum MaterialType_t {
+enum MaterialType {
   materialType_empty, materialType_soft, materialType_hard, materialType_fluid
 };
 
@@ -88,11 +88,11 @@ public:
 
   void set(
     const int MAX_NR_IN_ROOM,
-    const PlacementRule_t placementRule,
-    RoomTheme_t theme1 = endOfRoomThemes,
-    RoomTheme_t theme2 = endOfRoomThemes,
-    RoomTheme_t theme3 = endOfRoomThemes,
-    RoomTheme_t theme4 = endOfRoomThemes) {
+    const PlacementRule placementRule,
+    RoomThemeId theme1 = endOfRoomThemes,
+    RoomThemeId theme2 = endOfRoomThemes,
+    RoomThemeId theme3 = endOfRoomThemes,
+    RoomThemeId theme4 = endOfRoomThemes) {
     maxNrInRoom_ = MAX_NR_IN_ROOM;
     placementRule_ = placementRule;
     themesBelongingTo_.resize(0);
@@ -110,7 +110,7 @@ public:
     }
   }
 
-  bool isBelongingToTheme(const RoomTheme_t theme) const {
+  bool isBelongingToTheme(const RoomThemeId theme) const {
     for(unsigned int i = 0; i < themesBelongingTo_.size(); i++) {
       if(themesBelongingTo_.at(i) == theme) {
         return true;
@@ -119,7 +119,7 @@ public:
     return false;
   }
 
-  PlacementRule_t getPlacementRule() const {
+  PlacementRule getPlacementRule() const {
     return placementRule_;
   }
 
@@ -129,8 +129,8 @@ public:
 
 private:
   int maxNrInRoom_;
-  PlacementRule_t placementRule_;
-  vector<RoomTheme_t> themesBelongingTo_;
+  PlacementRule placementRule_;
+  vector<RoomThemeId> themesBelongingTo_;
 };
 
 class Actor;
@@ -146,12 +146,12 @@ public:
     for(int i = 0; i < endOfPropIds; i++) {canMoveIfHaveProp_[i] = false;}
   }
 
-  void setPropCanMove(const PropId_t id) {canMoveIfHaveProp_[id] = true;}
+  void setPropCanMove(const PropId id) {canMoveIfHaveProp_[id] = true;}
   void setCanMoveCmn() {canMoveCmn_ = true;}
 
   bool canMoveCmn() const {return canMoveCmn_;}
 
-  bool canMove(const vector<PropId_t>& actorsProps) const;
+  bool canMove(const vector<PropId>& actorsProps) const;
 
 private:
   bool canMoveCmn_;
@@ -159,12 +159,12 @@ private:
 };
 
 struct FeatureData {
-  Feature_t id;
-  FeatureSpawnType_t spawnType;
+  FeatureId id;
+  FeatureSpawnType spawnType;
   char glyph;
   SDL_Color color;
   SDL_Color colorBg;
-  Tile_t tile;
+  Tile tile;
   MoveRules moveRules;
   bool isSoundPassable;
   bool isProjectilePassable;
@@ -176,7 +176,7 @@ struct FeatureData {
   bool canHaveStaticFeature;
   bool canHaveItem;
   bool isBottomless;
-  MaterialType_t materialType;
+  MaterialType materialType;
   string name_a;
   string name_the;
   string messageOnPlayerBlocked;
@@ -184,7 +184,7 @@ struct FeatureData {
   int dodgeModifier;
   int shockWhenAdjacent;
   ThemedFeatureSpawnRules themedFeatureSpawnRules;
-  vector<Feature_t> featuresOnDestroyed;
+  vector<FeatureId> featuresOnDestroyed;
 };
 
 class FeatureDataHandler {
@@ -193,7 +193,7 @@ public:
 
   ~FeatureDataHandler() {}
 
-  inline const FeatureData* getData(const Feature_t id) const {
+  inline const FeatureData* getData(const FeatureId id) const {
     return &(dataList[id]);
   }
 
@@ -202,7 +202,7 @@ public:
 private:
   void addToListAndReset(FeatureData& d);
 
-  FeatureData dataList[endOfFeatures];
+  FeatureData dataList[endOfFeatureId];
 
   void resetData(FeatureData& d);
 

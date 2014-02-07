@@ -30,9 +30,9 @@ public:
   }
 
   void learnSpellIfNotKnown(Spell* const spell);
-  void learnSpellIfNotKnown(const Spell_t id);
+  void learnSpellIfNotKnown(const SpellId id);
 
-  bool isSpellLearned(const Spell_t id);
+  bool isSpellLearned(const SpellId id);
 
   void addSaveLines(vector<string>& lines) const;
 

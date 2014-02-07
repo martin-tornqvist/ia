@@ -10,7 +10,7 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 
-Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
+Actor* ActorFactory::makeActorFromId(const ActorId id) const {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
@@ -75,7 +75,7 @@ Actor* ActorFactory::makeActorFromId(const ActorId_t id) const {
   return NULL;
 }
 
-Actor* ActorFactory::spawnActor(const ActorId_t id, const Pos& pos) const {
+Actor* ActorFactory::spawnActor(const ActorId id, const Pos& pos) const {
   Actor* const actor = makeActorFromId(id);
 
   actor->place(pos, eng.actorDataHandler->dataList[id]);
@@ -103,7 +103,7 @@ void ActorFactory::deleteAllMonsters() const {
 }
 
 void ActorFactory::summonMonsters(
-  const Pos& origin, const vector<ActorId_t>& monsterIds,
+  const Pos& origin, const vector<ActorId>& monsterIds,
   const bool MAKE_MONSTERS_AWARE,
   Actor* const actorToSetAsLeader,
   vector<Monster*>* monstersRet) const {
@@ -127,7 +127,7 @@ void ActorFactory::summonMonsters(
 
   for(int i = 0; i < NR_TO_SPAWN; i++) {
     const Pos&      pos = freeCells.at(i);
-    const ActorId_t id  = monsterIds.at(i);
+    const ActorId id  = monsterIds.at(i);
 
     Actor*   const actor    = spawnActor(id, pos);
     Monster* const monster  = dynamic_cast<Monster*>(actor);

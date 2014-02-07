@@ -7,7 +7,7 @@ class Actor;
 class Item;
 class Weapon;
 
-enum ReloadResult_t {
+enum ReloadResult {
   reloadResult_success,
   reloadResult_noAmmo,
   reloadResult_notCarryingWpn,
@@ -24,7 +24,7 @@ public:
 
 private:
   void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
-                          Item* const ammo, const ReloadResult_t result,
+                          Item* const ammo, const ReloadResult result,
                           const bool IS_SWIFT_RELOAD);
   Engine& eng;
 };

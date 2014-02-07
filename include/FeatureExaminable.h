@@ -13,7 +13,7 @@ public:
 
   ~ItemContainerFeature();
 
-  void setRandomItemsForFeature(const Feature_t featureId,
+  void setRandomItemsForFeature(const FeatureId featureId,
                                 const int NR_ITEMS_TO_ATTEMPT,
                                 Engine& engine);
 
@@ -24,14 +24,14 @@ public:
   vector<Item*> items_;
 };
 
-enum TombTraits_t {
+enum TombTraits {
   tombTrait_stench,                 //Fumes, Ooze-type monster
   tombTrait_auraOfUnrest,           //Ghost-type monster
   tombTrait_forebodingCarvedSigns,  //Cursed
   endOfTombTraits
 };
 
-enum TombAppearance_t {
+enum TombAppearance {
   tombAppearance_common,
   tombAppearance_impressive,  //Good items
   tombAppearance_marvelous,   //Excellent items
@@ -49,7 +49,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Tomb(Feature_t id, Pos pos, Engine& engine);
+  Tomb(FeatureId id, Pos pos, Engine& engine);
 
   void triggerTrap(Actor& actor) override;
 
@@ -60,11 +60,11 @@ private:
   ItemContainerFeature itemContainer_;
 
   int pushLidOneInN_;
-  TombAppearance_t appearance_;
-  TombTraits_t trait_;
+  TombAppearance appearance_;
+  TombTraits trait_;
 };
 
-enum ChestMtrl_t {
+enum ChestMtrl {
   chestMtrl_wood,
   chestMtrl_iron,
   endOfChestMaterial
@@ -93,7 +93,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Chest(Feature_t id, Pos pos, Engine& engine);
+  Chest(FeatureId id, Pos pos, Engine& engine);
 
   void triggerTrap(Actor& actor) override;
 
@@ -103,7 +103,7 @@ private:
 
   bool isContentKnown_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
-  ChestMtrl_t material;
+  ChestMtrl material;
 };
 
 class Cabinet: public FeatureStatic {
@@ -115,13 +115,13 @@ public:
 
 private:
   friend class FeatureFactory;
-  Cabinet(Feature_t id, Pos pos, Engine& engine);
+  Cabinet(FeatureId id, Pos pos, Engine& engine);
 
   ItemContainerFeature itemContainer_;
   bool isContentKnown_;
 };
 
-enum FountainType_t {
+enum FountainType {
   fountainTypeDry, //This must be kept as first position!
   fountainTypeTepid,
   fountainTypeRefreshing,
@@ -143,9 +143,9 @@ public:
 
 private:
   friend class FeatureFactory;
-  Fountain(Feature_t id, Pos pos, Engine& engine);
+  Fountain(FeatureId id, Pos pos, Engine& engine);
 
-  FountainType_t fountainType;
+  FountainType fountainType;
 };
 
 class Cocoon: public FeatureStatic {
@@ -157,7 +157,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Cocoon(Feature_t id, Pos pos, Engine& engine);
+  Cocoon(FeatureId id, Pos pos, Engine& engine);
 
   void triggerTrap(Actor& actor) override;
 

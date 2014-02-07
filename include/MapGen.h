@@ -11,12 +11,12 @@ using namespace std;
 class Engine;
 struct Region;
 
-enum HorizontalVertical_t {
+enum HorizontalVertical {
   horizontal,
   vertical
 };
 
-enum RoomReshape_t {
+enum RoomReshapeType {
   roomReshape_trimCorners,
   roomReshape_pillarsRandom
 };
@@ -36,7 +36,7 @@ public:
   inline Pos getX0Y0()    const {return dims_.x0y0;}
   inline Pos getX1Y1()    const {return dims_.x1y1;}
 
-  RoomTheme_t roomTheme;
+  RoomThemeId roomTheme;
 
   string roomDescr;
 
@@ -50,7 +50,7 @@ public:
   ~MapGenUtilCorridorBuilder() {}
 
   void buildZCorridorBetweenRooms(
-    const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
+    const Room& room1, const Room& room2, Dir cardinalDirToTravel,
     bool doorPosCandidates[MAP_W][MAP_H] = NULL);
 
 private:
@@ -68,20 +68,20 @@ protected:
   virtual bool run_() = 0;
 
   void buildFromTemplate(const Pos pos, MapTemplate* t);
-  void buildFromTemplate(const Pos pos, MapTemplateId_t templateId);
+  void buildFromTemplate(const Pos pos, MapTemplateId templateId);
 
-  Feature_t backup[MAP_W][MAP_H];
+  FeatureId backup[MAP_W][MAP_H];
   void backupMap();
   void restoreMap();
 
   void makePathByRandomWalk(
-    int originX, int originY, int len, Feature_t featureToMake,
+    int originX, int originY, int len, FeatureId featureToMake,
     const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true,
     const Pos x0y0Lim = Pos(1, 1),
     const Pos x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
 
   void makeStraightPathByPathfinder(
-    const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
+    const Pos origin, const Pos target, FeatureId feature, const bool SMOOTH,
     const bool TUNNEL_THROUGH_ANY_FEATURE);
 
   Engine& eng;
@@ -95,9 +95,9 @@ public:
 private:
   bool run_();
 
-  void coverAreaWithFeature(const Rect& area, const Feature_t feature);
+  void coverAreaWithFeature(const Rect& area, const FeatureId feature);
 
-  int getNrStepsInDirUntilWallFound(Pos c, const Dir_t dir) const;
+  int getNrStepsInDirUntilWallFound(Pos c, const Dir dir) const;
 
   bool isAllRoomsConnected();
 

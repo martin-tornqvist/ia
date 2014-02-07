@@ -37,7 +37,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     projectiles.push_back(p);
   }
 
-  const ActorSizes_t aimLevel =
+  const ActorSize aimLevel =
     projectiles.at(0)->attackData->intendedAimLevel;
 
   const int DELAY = eng.config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
@@ -74,7 +74,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
        projectilePath.at(i).y < origin.y))
       projectileGlyph = '\\';
   }
-  Tile_t projectileTile = wpn.getData().rangedMissileTile;
+  Tile projectileTile = wpn.getData().rangedMissileTile;
   if(projectileTile == tile_projectileStandardFrontSlash) {
     if(projectileGlyph == '-') {
       projectileTile = tile_projectileStandardDash;
@@ -106,7 +106,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       //Emit sound
       if(projectilePathElement == 1) {
         string sndMsg = wpn.getData().rangedSoundMessage;
-        const Sfx_t sfx = wpn.getData().rangedAttackSfx;
+        const SfxId sfx = wpn.getData().rangedAttackSfx;
         if(sndMsg.empty() == false) {
           if(IS_ATTACKER_PLAYER) sndMsg = "";
           const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;

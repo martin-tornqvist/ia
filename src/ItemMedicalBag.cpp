@@ -25,7 +25,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
 
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
-    vector<PropId_t> props;
+    vector<PropId> props;
     eng.player->getPropHandler().getAllActivePropIds(props);
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
@@ -87,11 +87,11 @@ bool MedicalBag::activateDefault(Actor* const actor) {
   return false;
 }
 
-MedicalBagAction_t MedicalBag::playerChooseAction() const {
+MedicalBagAction MedicalBag::playerChooseAction() const {
   vector<string> choiceLabels;
   for(int actionNr = 0; actionNr < endOfMedicalBagActions; actionNr++) {
     string label = "";
-    switch(MedicalBagAction_t(actionNr)) {
+    switch(MedicalBagAction(actionNr)) {
       case medicalBagAction_sanitizeInfection: {
         label = "Sanitize infection";
       } break;
@@ -108,9 +108,9 @@ MedicalBagAction_t MedicalBag::playerChooseAction() const {
     }
 
     const int NR_TURNS_NEEDED =
-      getTotTurnsForAction(MedicalBagAction_t(actionNr));
+      getTotTurnsForAction(MedicalBagAction(actionNr));
     const int NR_SUPPL_NEEDED =
-      getNrSuppliesNeededForAction(MedicalBagAction_t(actionNr));
+      getNrSuppliesNeededForAction(MedicalBagAction(actionNr));
     label += " (" + toString(NR_SUPPL_NEEDED) + " suppl";
     label += "/"  + toString(NR_TURNS_NEEDED) + " turns)";
     choiceLabels.push_back(label);
@@ -120,7 +120,7 @@ MedicalBagAction_t MedicalBag::playerChooseAction() const {
   const string nrSuppliesMsg =
     toString(nrSupplies_) + " medical supplies available.";
 
-  return MedicalBagAction_t(eng.popup->showMultiChoiceMessage(
+  return MedicalBagAction(eng.popup->showMultiChoiceMessage(
                               nrSuppliesMsg, true, choiceLabels,
                               "Use medical bag"));
 }
@@ -159,7 +159,7 @@ void MedicalBag::finishCurAction() {
     case medicalBagAction_takeMorphine: {
       eng.player->restoreHp(999);
       eng.log->addMsg("The morphine takes a toll on my mind.");
-      eng.player->incrShock(shockValue_heavy, shockSrc_misc);
+      eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
     } break;
 
     case endOfMedicalBagActions: {} break;
@@ -182,7 +182,7 @@ void MedicalBag::interrupted() {
   eng.player->activeMedicalBag = NULL;
 }
 
-int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
+int MedicalBag::getTotTurnsForAction(const MedicalBagAction action) const {
   const bool IS_HEALER =
     eng.playerBonHandler->hasTrait(traitHealer);
 
@@ -205,7 +205,7 @@ int MedicalBag::getTotTurnsForAction(const MedicalBagAction_t action) const {
 }
 
 int MedicalBag::getNrSuppliesNeededForAction(
-  const MedicalBagAction_t action) const {
+  const MedicalBagAction action) const {
 
   const bool IS_HEALER =
     eng.playerBonHandler->hasTrait(traitHealer);

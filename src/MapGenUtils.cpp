@@ -10,7 +10,7 @@
 #endif // DEMO_MODE
 
 void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
-  const Room& room1, const Room& room2, Dir_t cardinalDirToTravel,
+  const Room& room1, const Room& room2, Dir cardinalDirToTravel,
   bool doorPosCandidates[MAP_W][MAP_H]) {
 
   //Find all floor in both rooms
@@ -233,7 +233,7 @@ void MapGen::restoreMap() {
 }
 
 void MapGen::makeStraightPathByPathfinder(
-  const Pos origin, const Pos target, Feature_t feature, const bool SMOOTH,
+  const Pos origin, const Pos target, FeatureId feature, const bool SMOOTH,
   const bool TUNNEL_THROUGH_ANY_FEATURE) {
 
   bool blockers[MAP_W][MAP_H];
@@ -255,7 +255,7 @@ void MapGen::makeStraightPathByPathfinder(
 }
 
 void MapGen::makePathByRandomWalk(
-  int originX, int originY, int len, Feature_t featureToMake,
+  int originX, int originY, int len, FeatureId featureToMake,
   const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT,
   const Pos x0y0Lim, const Pos x1y1Lim) {
 
@@ -298,7 +298,7 @@ void MapGen::makePathByRandomWalk(
 void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
   for(int dy = 0; dy < t->h; dy++) {
     for(int dx = 0; dx < t->w; dx++) {
-      const Feature_t featureId = t->featureVector[dy][dx];
+      const FeatureId featureId = t->featureVector[dy][dx];
       if(featureId != feature_empty) {
         eng.featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));
       }
@@ -306,7 +306,7 @@ void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
   }
 }
 
-void MapGen::buildFromTemplate(const Pos pos, MapTemplateId_t templateId) {
+void MapGen::buildFromTemplate(const Pos pos, MapTemplateId templateId) {
   MapTemplate* t = eng.mapTemplateHandler->getTemplate(templateId);
   buildFromTemplate(pos, t);
 }

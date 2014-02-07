@@ -182,7 +182,7 @@ void Zuul::place_() {
     deadState = actorDeadState_mangled;
     vector<Monster*> monsters;
     eng.actorFactory->summonMonsters(
-      pos, vector<ActorId_t> {actor_cultistPriest}, false, NULL, &monsters);
+      pos, vector<ActorId> {actor_cultistPriest}, false, NULL, &monsters);
     if(monsters.empty() == false) {
       Monster* const monster = monsters.at(0);
       PropHandler& propHandler = monster->getPropHandler();
@@ -253,7 +253,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
 
 void DustVortex::onMonsterDeath() {
   Explosion::runExplosionAt(
-    pos, eng, 0, endOfSfx, false, new PropBlind(eng, propTurnsStd), true,
+    pos, eng, 0, endOfSfxId, false, new PropBlind(eng, propTurnsStd), true,
     clrGray);
 }
 
@@ -264,7 +264,7 @@ void DustVortex::spawnStartItems() {
 
 void FireVortex::onMonsterDeath() {
   Explosion::runExplosionAt(
-    pos, eng, 0, endOfSfx, false, new PropBurning(eng, propTurnsStd), true,
+    pos, eng, 0, endOfSfxId, false, new PropBurning(eng, propTurnsStd), true,
     clrRedLgt);
 }
 
@@ -295,7 +295,7 @@ bool Ghost::monsterSpecificOnActorTurn() {
             eng.player->checkIfSeeActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
-          const AbilityRollResult_t rollResult = eng.abilityRoll->roll(
+          const AbilityRollResult rollResult = eng.abilityRoll->roll(
               eng.player->getData().abilityVals.getVal(
                 ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
@@ -415,7 +415,8 @@ bool Khephren::monsterSpecificOnActorTurn() {
           const unsigned int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng.log->addMsg("Khephren calls a plague of Locusts!");
-            eng.player->incrShock(shockValue_heavy, shockSrc_misc);
+            eng.player->incrShock(ShockValue::shockValue_heavy,
+                                  shockSrc_misc);
             for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_giantLocust,
@@ -761,7 +762,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
 
         if(checkIfSeeActor(*(eng.player), visionBlockers)) {
           eng.log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
-          vector<ActorId_t> monsterIds;
+          vector<ActorId> monsterIds;
           monsterIds.resize(0);
 
           monsterIds.push_back(actor_deanHalsey);
@@ -770,7 +771,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
 
           for(int i = 0; i < NR_OF_EXTRA_SPAWNS; i++) {
             const int ZOMBIE_TYPE = eng.dice.range(1, 3);
-            ActorId_t id = actor_zombie;
+            ActorId id = actor_zombie;
             switch(ZOMBIE_TYPE) {
               case 1: id = actor_zombie;        break;
               case 2: id = actor_zombieAxe;     break;
@@ -781,7 +782,7 @@ bool MajorClaphamLee::monsterSpecificOnActorTurn() {
           eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
           eng.renderer->drawMapAndInterface();
           hasSummonedTombLegions = true;
-          eng.player->incrShock(shockValue_heavy, shockSrc_misc);
+          eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
           eng.gameTime->actorDidAct();
           return true;
         }
@@ -808,7 +809,7 @@ bool Zombie::tryResurrect() {
           if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
             eng.log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
-            eng.player->incrShock(shockValue_some, shockSrc_misc);
+            eng.player->incrShock(ShockValue::shockValue_some, shockSrc_misc);
           }
 
           awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer * 2;

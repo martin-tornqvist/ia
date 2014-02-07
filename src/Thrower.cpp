@@ -92,7 +92,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   MissileAttackData* data = new MissileAttackData(
     actorThrowing, itemThrown, targetCell, actorThrowing.pos, eng);
 
-  const ActorSizes_t aimLevel = data->intendedAimLevel;
+  const ActorSize aimLevel = data->intendedAimLevel;
 
   vector<Pos> path;
   eng.lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
@@ -208,7 +208,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     const int DROP_ELEMENT = blockedInElement == -1 ?
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
-    const MaterialType_t materialAtDropPos =
+    const MaterialType materialAtDropPos =
       eng.map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
       const bool IS_ALERTING_MONSTERS = &actorThrowing == eng.player;

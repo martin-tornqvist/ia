@@ -32,29 +32,29 @@ public:
 
   void initAndClearPrev();
 
-  void drawTile(const Tile_t tile, const Panel_t panel, const Pos& pos,
+  void drawTile(const Tile tile, const PanelId panel, const Pos& pos,
                 const SDL_Color& clr,
                 const SDL_Color& bgClr = clrBlack);
 
-  void drawGlyph(const char GLYPH, const Panel_t panel, const Pos& pos,
+  void drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
                  const SDL_Color& clr,
                  const bool DRAW_BG_CLR = true,
                  const SDL_Color& bgClr = clrBlack);
 
-  void drawText(const string& str, const Panel_t panel,
+  void drawText(const string& str, const PanelId panel,
                 const Pos& pos, const SDL_Color& clr,
                 const SDL_Color& bgClr = clrBlack);
 
-  int drawTextCentered(const string& str, const Panel_t panel,
+  int drawTextCentered(const string& str, const PanelId panel,
                        const Pos& pos, const SDL_Color& clr,
                        const SDL_Color& bgClr = clrBlack,
                        const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
   void coverCellInMap(const Pos& pos);
 
-  void coverPanel(const Panel_t panel);
+  void coverPanel(const PanelId panel);
 
-  void coverArea(const Panel_t panel, const Pos& pos, const Pos& dims);
+  void coverArea(const PanelId panel, const Pos& pos, const Pos& dims);
 
   void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
 
@@ -87,7 +87,7 @@ public:
 
   void drawProjectiles(vector<Projectile*>& projectiles);
 
-  void drawPopupBox(const Rect& area, const Panel_t panel = panel_screen,
+  void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
                     const SDL_Color& clr = clrGray);
 
 private:
@@ -104,7 +104,7 @@ private:
   void coverGlyphAtPixel(const Pos& pixelPos);
   void coverTileAtPixel(const Pos& pixelPos);
 
-  Pos getPixelPosForCellInPanel(const Panel_t panel, const Pos& pos) const;
+  Pos getPixelPosForCellInPanel(const PanelId panel, const Pos& pos) const;
 
   int getLifebarLength(const Actor& actor) const;
   void drawLifeBar(const Pos& pos, const int LENGTH);
@@ -112,7 +112,7 @@ private:
   void drawExclMarkAt(const Pos& pixelPos) const;
   void drawPlayerShockExclMarks() const;
 
-  void putPixelsOnScreenForTile(const Tile_t tile, const Pos& pixelPos,
+  void putPixelsOnScreenForTile(const Tile tile, const Pos& pixelPos,
                                 const SDL_Color& clr);
 
   void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,

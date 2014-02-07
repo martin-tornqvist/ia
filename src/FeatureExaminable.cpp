@@ -28,7 +28,7 @@ ItemContainerFeature::~ItemContainerFeature() {
 }
 
 void ItemContainerFeature::setRandomItemsForFeature(
-  const Feature_t featureId,
+  const FeatureId featureId,
   const int NR_ITEMS_TO_ATTEMPT, Engine& engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     delete items_.at(i);
@@ -37,21 +37,21 @@ void ItemContainerFeature::setRandomItemsForFeature(
 
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
-      vector<ItemId_t> itemCandidates;
+      vector<ItemId> itemCandidates;
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         ItemData* const curData = engine.itemDataHandler->dataList[i];
         for(
           unsigned int ii = 0;
           ii < curData->featuresCanBeFoundIn.size();
           ii++) {
-          pair<Feature_t, int> featuresFoundIn =
+          pair<FeatureId, int> featuresFoundIn =
             curData->featuresCanBeFoundIn.at(ii);
           if(featuresFoundIn.first == featureId) {
             if(engine.dice.percentile() < featuresFoundIn.second) {
               if(
                 engine.dice.percentile() <
                 curData->chanceToIncludeInSpawnList) {
-                itemCandidates.push_back(static_cast<ItemId_t>(i));
+                itemCandidates.push_back(static_cast<ItemId>(i));
                 break;
               }
             }
@@ -97,7 +97,7 @@ void ItemContainerFeature::destroySingleFragile(Engine& engine) {
 }
 
 //--------------------------------------------------------- TOMB
-Tomb::Tomb(Feature_t id, Pos pos, Engine& engine) :
+Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
   isTraitKnown_(false), pushLidOneInN_(engine.dice.range(6, 14)),
   appearance_(tombAppearance_common), trait_(endOfTombTraits) {
@@ -114,10 +114,10 @@ Tomb::Tomb(Feature_t id, Pos pos, Engine& engine) :
   //Exterior appearance
   if(engine.dice.oneIn(5)) {
     appearance_ =
-      TombAppearance_t(engine.dice.range(0, endOfTombAppearance - 1));
+      TombAppearance(engine.dice.range(0, endOfTombAppearance - 1));
   } else {
     for(Item * item : itemContainer_.items_) {
-      const ItemValue_t itemValue = item->getData().itemValue;
+      const ItemValue itemValue = item->getData().itemValue;
       if(itemValue == itemValue_majorTreasure) {
         appearance_ = tombAppearance_marvelous;
         break;
@@ -149,7 +149,7 @@ void Tomb::bump(Actor& actorBumping) {
     } else {
       eng.log->addMsg("I attempt to push the lid.");
 
-      vector<PropId_t> props;
+      vector<PropId> props;
       eng.player->getPropHandler().getAllActivePropIds(props);
 
       if(find(props.begin(), props.end(), propWeakened) != props.end()) {
@@ -218,7 +218,7 @@ bool Tomb::open() {
 }
 
 void Tomb::examine() {
-  vector<PropId_t> props;
+  vector<PropId> props;
   eng.player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propConfused) != props.end()) {
@@ -333,14 +333,14 @@ void Tomb::examine() {
 void Tomb::triggerTrap(Actor& actor) {
   (void)actor;
 
-  vector<ActorId_t> actorCandidates;
+  vector<ActorId> actorCandidates;
 
   switch(trait_) {
     case tombTrait_auraOfUnrest: {
       for(int i = 1; i < endOfActorIds; i++) {
         const ActorData& d = eng.actorDataHandler->dataList[i];
         if(d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false) {
-          actorCandidates.push_back(static_cast<ActorId_t>(i));
+          actorCandidates.push_back(static_cast<ActorId>(i));
         }
       }
       eng.log->addMsg("Something rises from the tomb!");
@@ -368,7 +368,7 @@ void Tomb::triggerTrap(Actor& actor) {
           prop->turnsLeft_ *= 2;
         }
         Explosion::runExplosionAt(
-          pos_, eng, 0, endOfSfx, false, prop, true, fumeClr);
+          pos_, eng, 0, endOfSfxId, false, prop, true, fumeClr);
       } else {
         for(unsigned int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
@@ -376,7 +376,7 @@ void Tomb::triggerTrap(Actor& actor) {
             d.intrProps[propOoze] &&
             d.isAutoSpawnAllowed  &&
             d.isUnique == false) {
-            actorCandidates.push_back(static_cast<ActorId_t>(i));
+            actorCandidates.push_back(static_cast<ActorId>(i));
           }
         }
         eng.log->addMsg("Something creeps up from the tomb!");
@@ -389,17 +389,17 @@ void Tomb::triggerTrap(Actor& actor) {
 
   if(actorCandidates.empty() == false) {
     const unsigned int ELEM = eng.dice.range(0, actorCandidates.size() - 1);
-    const ActorId_t actorIdToSpawn = actorCandidates.at(ELEM);
+    const ActorId actorIdToSpawn = actorCandidates.at(ELEM);
     Actor* const monster = eng.actorFactory->spawnActor(actorIdToSpawn, pos_);
     dynamic_cast<Monster*>(monster)->becomeAware();
   }
 }
 
 //--------------------------------------------------------- CHEST
-Chest::Chest(Feature_t id, Pos pos, Engine& engine) :
+Chest::Chest(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
-  material(ChestMtrl_t(engine.dice.range(0, endOfChestMaterial - 1))) {
+  material(ChestMtrl(engine.dice.range(0, endOfChestMaterial - 1))) {
 
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
@@ -468,7 +468,7 @@ void Chest::bash(Actor& actorTrying) {
 
     eng.log->addMsg("I kick the lid.");
 
-    vector<PropId_t> props;
+    vector<PropId> props;
     eng.player->getPropHandler().getAllActivePropIds(props);
 
     if(
@@ -548,7 +548,7 @@ void Chest::bash(Actor& actorTrying) {
 }
 
 void Chest::examine() {
-  vector<PropId_t> props;
+  vector<PropId> props;
   eng.player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propConfused) != props.end()) {
@@ -645,16 +645,16 @@ void Chest::triggerTrap(Actor& actor) {
         prop->turnsLeft_ *= 2;
       }
       Explosion::runExplosionAt(
-        pos_, eng, 0, endOfSfx, false, prop, true, fumeClr);
+        pos_, eng, 0, endOfSfxId, false, prop, true, fumeClr);
     }
   }
 }
 
 //--------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(Feature_t id, Pos pos, Engine& engine) :
+Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), fountainType(fountainTypeTepid) {
 
-  fountainType = FountainType_t(eng.dice.range(1, endOfFountainTypes - 1));
+  fountainType = FountainType(eng.dice.range(1, endOfFountainTypes - 1));
 }
 
 void Fountain::bump(Actor& actorBumping) {
@@ -727,7 +727,7 @@ void Fountain::bump(Actor& actorBumping) {
 
 
 //--------------------------------------------------------- CABINET
-Cabinet::Cabinet(Feature_t id, Pos pos, Engine& engine) :
+Cabinet::Cabinet(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false) {
 
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
@@ -768,7 +768,7 @@ bool Cabinet::open() {
 }
 
 //--------------------------------------------------------- COCOON
-Cocoon::Cocoon(Feature_t id, Pos pos, Engine& engine) :
+Cocoon::Cocoon(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false) {
 
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
@@ -798,10 +798,10 @@ void Cocoon::triggerTrap(Actor& actor) {
 
   if(RND < 15) {
     eng.log->addMsg("There is a half-dissolved human body inside!");
-    eng.player->incrShock(shockValue_heavy, shockSrc_misc);
+    eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
   } else if(RND < 50) {
     trace << "Cocoon: Attempting to spawn spiders" << endl;
-    vector<ActorId_t> spawnCandidates;
+    vector<ActorId> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
       const ActorData& d = eng.actorDataHandler->dataList[i];
       if(d.isSpider && d.actorSize == actorSize_floor &&
@@ -816,9 +816,9 @@ void Cocoon::triggerTrap(Actor& actor) {
       eng.log->addMsg("There are spiders inside!");
       const int NR_SPIDERS = eng.dice.range(2, 5);
       const int ELEMENT = eng.dice.range(0, NR_CANDIDATES - 1);
-      const ActorId_t actorIdToSummon = spawnCandidates.at(ELEMENT);
+      const ActorId actorIdToSummon = spawnCandidates.at(ELEMENT);
       eng.actorFactory->summonMonsters(
-        pos_, vector<ActorId_t>(NR_SPIDERS, actorIdToSummon), true);
+        pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }
   }
 }
@@ -840,21 +840,21 @@ bool Cocoon::open() {
 }
 
 //--------------------------------------------------------- ALTAR
-//Altar::Altar(Feature_t id, Pos pos, Engine& engine) :
+//Altar::Altar(FeatureId id, Pos pos, Engine& engine) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void Altar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- CARVED PILLAR
-//CarvedPillar::CarvedPillar(Feature_t id, Pos pos, Engine& engine) :
+//CarvedPillar::CarvedPillar(FeatureId id, Pos pos, Engine& engine) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void CarvedPillar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- BARREL
-//Barrel::Barrel(Feature_t id, Pos pos, Engine& engine) :
+//Barrel::Barrel(FeatureId id, Pos pos, Engine& engine) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void Barrel::featureSpecific_examine() {

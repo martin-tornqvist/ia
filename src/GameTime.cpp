@@ -87,11 +87,11 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
   currentActor->getPropHandler().tick(propTurnModeActor, NULL);
 
   if(IS_FREE_TURN == false) {
-    TurnType_t currentTurnType = TurnType_t(currentTurnTypePos_);
+    TurnType currentTurnType = TurnType(currentTurnTypePos_);
 
     bool actorWhoCanActThisTurnFound = false;
     while(actorWhoCanActThisTurnFound == false) {
-      currentTurnType = (TurnType_t)(currentTurnTypePos_);
+      currentTurnType = (TurnType)(currentTurnTypePos_);
 
       currentActorVectorPos_++;
 
@@ -110,15 +110,15 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
       }
 
       currentActor = getCurrentActor();
-      vector<PropId_t> props;
+      vector<PropId> props;
       currentActor->getPropHandler().getAllActivePropIds(props);
 
       const bool IS_SLOWED =
         find(props.begin(), props.end(), propSlowed) != props.end();
-      const ActorSpeed_t defSpeed = currentActor->getData().speed;
-      const ActorSpeed_t realSpeed =
+      const ActorSpeed defSpeed = currentActor->getData().speed;
+      const ActorSpeed realSpeed =
         IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
-        defSpeed : ActorSpeed_t(defSpeed - 1);
+        defSpeed : ActorSpeed(defSpeed - 1);
       switch(realSpeed) {
         case actorSpeed_sluggish: {
           actorWhoCanActThisTurnFound =

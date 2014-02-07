@@ -36,14 +36,15 @@ Monster::Monster(Engine& engine) :
   awareOfPlayerCounter_(0),
   playerAwareOfMeCounter_(0),
   messageMonsterInViewPrinted(false),
-  lastDirTravelled(dirCenter),
+  lastDirTravelled_(dirCenter),
   spellCoolDownCurrent(0),
-  isRoamingAllowed(true),
+  isRoamingAllowed_(true),
   isStealth(false),
   leader(NULL),
   target(NULL),
   waiting_(false),
-  shockCausedCurrent(0.0) {}
+  shockCausedCurrent_(0.0),
+  hasGivenXpForSpotting_(false) {}
 
 Monster::~Monster() {
   for(unsigned int i = 0; i < spellsKnown.size(); i++) {
@@ -72,7 +73,7 @@ void Monster::onActorTurn() {
   }
 
   if(awareOfPlayerCounter_ > 0) {
-    isRoamingAllowed = true;
+    isRoamingAllowed_ = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
         if(eng.dice.percentile() < 7) {
@@ -217,7 +218,7 @@ void Monster::onMonsterHit(int& dmg) {
   }
 }
 
-void Monster::moveDir(Dir_t dir) {
+void Monster::moveDir(Dir dir) {
   assert(dir != endOfDirs);
   assert(eng.basicUtils->isPosInsideMap(pos));
 
@@ -237,7 +238,7 @@ void Monster::moveDir(Dir_t dir) {
   }
 
   // Movement direction is stored for AI purposes
-  lastDirTravelled = dir;
+  lastDirTravelled_ = dir;
 
   const Pos targetCell(pos + DirConverter().getOffset(dir));
 
@@ -269,7 +270,7 @@ void Monster::speakPhrase() {
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonsterSeen() :
                      getAggroPhraseMonsterHidden();
-  const Sfx_t sfx = IS_SEEN_BY_PLAYER ?
+  const SfxId sfx = IS_SEEN_BY_PLAYER ?
                     getAggroSfxMonsterSeen() :
                     getAggroSfxMonsterHidden();
   eng.soundEmitter->emitSound(Sound(msg, sfx, false, pos, this, false, true));

@@ -74,7 +74,7 @@ void drawBrowseSlots(const MenuBrowser& browser,
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
       const ItemData& d = item->getData();
-      PrimaryAttackMode_t attackMode = primaryAttackMode_none;
+      PrimaryAttackMode attackMode = primaryAttackMode_none;
       if(slot->id == slot_wielded || slot->id == slot_wieldedAlt) {
         attackMode =
           d.primaryAttackMode == primaryAttackMode_missile ?
@@ -153,7 +153,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
   eng.renderer->updateScreen();
 }
 
-void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
+void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                const vector<unsigned int>& genInvIndexes, Engine& eng) {
 
   Pos pos(0, 0);
@@ -211,7 +211,7 @@ void drawEquip(const MenuBrowser& browser, const SlotTypes_t slotToEquip,
                                     item->getInterfaceClr();
 
     const ItemData& d = item->getData();
-    PrimaryAttackMode_t attackMode = primaryAttackMode_none;
+    PrimaryAttackMode attackMode = primaryAttackMode_none;
     if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
       attackMode =
         d.primaryAttackMode == primaryAttackMode_missile ?

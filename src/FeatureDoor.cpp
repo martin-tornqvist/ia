@@ -16,14 +16,14 @@
 #include "MapParsing.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
+Door::Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
   nrSpikes_(0) {
 
   isOpenedAndClosedExternally_ = false;
 
   const int ROLL = eng.dice.percentile();
-  const DoorSpawnState_t doorState =
+  const DoorSpawnState doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
     ROLL < 40 ? doorSpawnState_secret :
     ROLL < 50 ? doorSpawnState_stuck :
@@ -31,7 +31,7 @@ Door::Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
     ROLL < 75 ? doorSpawnState_open :
     doorSpawnState_closed;
 
-  switch(static_cast<DoorSpawnState_t>(doorState)) {
+  switch(static_cast<DoorSpawnState>(doorState)) {
     case doorSpawnState_broken: {
       isOpen_ = true;
       isBroken_ = true;
@@ -89,10 +89,10 @@ bool Door::canMoveCmn() const {
   return isOpen_;
 }
 
-bool Door::canMove(const vector<PropId_t>& actorsProps) const {
+bool Door::canMove(const vector<PropId>& actorsProps) const {
   if(isOpen_) return true;
 
-  for(PropId_t propId : actorsProps) {
+  for(PropId propId : actorsProps) {
     if(propId == propEthereal || propId == propOoze) {
       return true;
     }
@@ -124,7 +124,7 @@ char Door::getGlyph() const {
   return isSecret_ ? mimicFeature_->glyph : (isOpen_ ? 39 : '+');
 }
 
-Tile_t Door::getTile() const {
+Tile Door::getTile() const {
   if(isSecret_) {
     return mimicFeature_->tile;
   } else {
@@ -136,7 +136,7 @@ Tile_t Door::getTile() const {
   }
 }
 
-MaterialType_t Door::getMaterialType() const {
+MaterialType Door::getMaterialType() const {
   return isSecret_ ? mimicFeature_->materialType : data_->materialType;
 }
 
@@ -237,7 +237,7 @@ void Door::bash_(Actor& actorTrying) {
 
     int skillValueBash = 0;
 
-    vector<PropId_t> props;
+    vector<PropId> props;
     actorTrying.getPropHandler().getAllActivePropIds(props);
     const bool IS_BASHER_WEAK =
       find(props.begin(), props.end(), propWeakened) != props.end();
@@ -484,7 +484,7 @@ void Door::tryOpen(Actor* actorTrying) {
       } else {
         trace << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
-          Sound snd("", endOfSfx, true, pos_, actorTrying, false, IS_PLAYER);
+          Sound snd("", endOfSfxId, true, pos_, actorTrying, false, IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           eng.log->addMsg("I fumble blindly with a door and fail to open it.");
         } else {
@@ -493,7 +493,7 @@ void Door::tryOpen(Actor* actorTrying) {
           //and the Sound parameter for muting messages from seen sounds
           //should be off
           Sound snd("I hear something attempting to open a door.",
-                    endOfSfx, true, actorTrying->pos, actorTrying, false,
+                    endOfSfxId, true, actorTrying->pos, actorTrying, false,
                     IS_PLAYER);
           eng.soundEmitter->emitSound(snd);
           if(PLAYER_SEE_TRYER) {

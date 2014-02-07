@@ -15,7 +15,7 @@
 #include "ItemFactory.h"
 #include "LineCalc.h"
 
-void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
+void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
   const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
 
@@ -113,7 +113,7 @@ void Marker::readKeys(const MarkerTask_t markerTask, MarkerReturnData& data,
   }
 }
 
-void Marker::draw(const MarkerTask_t markerTask) const {
+void Marker::draw(const MarkerTask markerTask) const {
   eng.renderer->drawMapAndInterface(false);
 
   vector<Pos> trail;
@@ -134,7 +134,7 @@ void Marker::draw(const MarkerTask_t markerTask) const {
   eng.renderer->updateScreen();
 }
 
-MarkerReturnData Marker::run(const MarkerTask_t markerTask, Item* itemThrown) {
+MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
   pos_ = eng.player->pos;
 
   MarkerReturnData data;
@@ -205,7 +205,7 @@ bool Marker::setPosToTargetIfVisible() {
   return false;
 }
 
-void Marker::move(const int DX, const int DY, const MarkerTask_t markerTask,
+void Marker::move(const int DX, const int DY, const MarkerTask markerTask,
                   const Item* itemThrown) {
   bool isMoved = false;
   const Pos newPos = pos_ + Pos(DX, DY);

@@ -26,18 +26,18 @@ public:
   virtual void bump(Actor& actorBumping);
   virtual void newTurn();
   virtual bool canMoveCmn() const;
-  virtual bool canMove(const vector<PropId_t>& actorsProps) const;
+  virtual bool canMove(const vector<PropId>& actorsProps) const;
   virtual bool isSoundPassable() const;
   virtual bool isVisionPassable() const;
   virtual bool isProjectilePassable() const;
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
   virtual string getDescr(const bool DEFINITE_ARTICLE) const;
-  virtual void hit(const int DMG, const DmgTypes_t dmgType);
+  virtual void hit(const int DMG, const DmgTypes dmgType);
   virtual SDL_Color getColor() const;
   virtual SDL_Color getColorBg() const;
   virtual char getGlyph() const;
-  virtual Tile_t getTile() const;
+  virtual Tile getTile() const;
   virtual void addLight(bool light[MAP_W][MAP_H]) const;
   virtual bool canHaveCorpse() const;
   virtual bool canHaveStaticFeature() const;
@@ -46,13 +46,13 @@ public:
   virtual bool canHaveItem() const;
   bool hasBlood() const;
   void setHasBlood(const bool HAS_BLOOD);
-  Feature_t getId() const;
+  FeatureId getId() const;
   virtual int getDodgeModifier() const;
   int getShockWhenAdjacent() const;
-  virtual MaterialType_t getMaterialType() const;
+  virtual MaterialType getMaterialType() const;
 protected:
   friend class Map;
-  Feature(Feature_t id, Pos pos, Engine& engine,
+  Feature(FeatureId id, Pos pos, Engine& engine,
           FeatureSpawnData* spawnData = NULL);
 
   Pos pos_;
@@ -72,7 +72,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  FeatureMob(Feature_t id, Pos pos, Engine& engine,
+  FeatureMob(FeatureId id, Pos pos, Engine& engine,
              FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), shouldBeDeleted_(false) {
     (void)spawnData;
@@ -87,7 +87,7 @@ public:
 
   void setGoreIfPossible();
 
-  inline Tile_t getGoreTile() const {return goreTile_;}
+  inline Tile getGoreTile() const {return goreTile_;}
 
   inline char getGoreGlyph()  const {return goreGlyph_;}
 
@@ -106,7 +106,7 @@ public:
 protected:
   friend class FeatureFactory;
   friend class Map;
-  FeatureStatic(Feature_t id, Pos pos, Engine& engine,
+  FeatureStatic(FeatureId id, Pos pos, Engine& engine,
                 FeatureSpawnData* spawnData = NULL) :
     Feature(id, pos, engine), goreTile_(tile_empty), goreGlyph_(' ') {
     (void)spawnData;
@@ -114,7 +114,7 @@ protected:
 
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
-  Tile_t goreTile_;
+  Tile goreTile_;
   char goreGlyph_;
 };
 
@@ -132,7 +132,7 @@ private:
   string inscription_;
 
   friend class FeatureFactory;
-  Grave(Feature_t id, Pos pos, Engine& engine) :
+  Grave(FeatureId id, Pos pos, Engine& engine) :
     FeatureStatic(id, pos, engine) {}
 };
 
@@ -144,7 +144,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Stairs(Feature_t id, Pos pos, Engine& engine) :
+  Stairs(FeatureId id, Pos pos, Engine& engine) :
     FeatureStatic(id, pos, engine) {}
 };
 

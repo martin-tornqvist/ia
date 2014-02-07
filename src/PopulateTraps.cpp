@@ -8,7 +8,7 @@
 #include "MapParsing.h"
 
 void PopulateTraps::populateRoomAndCorridorLevel(
-  RoomTheme_t themeMap[MAP_W][MAP_H],
+  RoomThemeId themeMap[MAP_W][MAP_H],
   const vector<Room*>& rooms) const {
 
   bool blockers[MAP_W][MAP_H];
@@ -17,7 +17,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(
   //Put traps in non-plain rooms
   for(unsigned int i = 0; i < rooms.size(); i++) {
     Room* const room = rooms.at(i);
-    const RoomTheme_t theme = room->roomTheme;
+    const RoomThemeId theme = room->roomTheme;
 
     if(theme != roomTheme_plain) {
 
@@ -65,7 +65,7 @@ void PopulateTraps::populateRoomAndCorridorLevel(
             const unsigned int CANDIDATE_ELEMENT =
               eng.dice.range(0, trapPositionCandidates.size() - 1);
             const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
-            const Trap_t trapType =
+            const TrapId trapType =
               theme == roomTheme_spider ? trap_spiderWeb : trap_any;
             FeatureStatic* const f =
               eng.map->cells[pos.x][pos.y].featureStatic;

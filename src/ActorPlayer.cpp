@@ -66,7 +66,7 @@ void Player::spawnStartItems() {
   int NR_THROWING_KNIVES   = eng.dice.range(7, 12);
 
   const int WEAPON_CHOICE = eng.dice.range(1, 5);
-  ItemId_t weaponId = item_dagger;
+  ItemId weaponId = item_dagger;
   switch(WEAPON_CHOICE) {
     case 1:   weaponId = item_dagger;   break;
     case 2:   weaponId = item_hatchet;  break;
@@ -145,8 +145,8 @@ void Player::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(molotovFuseTurns));
   lines.push_back(toString(flareFuseTurns));
 
-  for(int i = 0; i < endOfAbilities; i++) {
-    lines.push_back(toString(data_->abilityVals.getRawVal(Abilities_t(i))));
+  for(int i = 0; i < endOfAbilityId; i++) {
+    lines.push_back(toString(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
   for(int i = 0; i < endOfInsanityPhobias; i++) {
@@ -161,7 +161,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   const int NR_PROPS = toInt(lines.front());
   lines.erase(lines.begin());
   for(int i = 0; i < NR_PROPS; i++) {
-    const PropId_t id = PropId_t(toInt(lines.front()));
+    const PropId id = PropId(toInt(lines.front()));
     lines.erase(lines.begin());
     const int NR_TURNS = toInt(lines.front());
     lines.erase(lines.begin());
@@ -195,8 +195,8 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   flareFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
 
-  for(int i = 0; i < endOfAbilities; i++) {
-    data_->abilityVals.setVal(Abilities_t(i), toInt(lines.front()));
+  for(int i = 0; i < endOfAbilityId; i++) {
+    data_->abilityVals.setVal(AbilityId(i), toInt(lines.front()));
     lines.erase(lines.begin());
   }
 
@@ -242,7 +242,7 @@ int Player::getCarryWeightLimit() const {
   const bool IS_TOUGH         = bon->hasTrait(traitTough);
   const bool IS_STRONG_BACKED = bon->hasTrait(traitStrongBacked);
 
-  vector<PropId_t> props;
+  vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
   const bool IS_WEAKENED =
     find(props.begin(), props.end(), propWeakened) != props.end();
@@ -253,7 +253,7 @@ int Player::getCarryWeightLimit() const {
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
-int Player::getShockResistance(const ShockSrc_t shockSrc) const {
+int Player::getShockResistance(const ShockSrc shockSrc) const {
   int res = 0;
   if(eng.playerBonHandler->hasTrait(traitFearless)) {
     res += 5;
@@ -269,27 +269,19 @@ int Player::getShockResistance(const ShockSrc_t shockSrc) const {
 
   switch(shockSrc) {
     case shockSrc_time: {
-      if(bonHlr.hasTrait(traitSelfPossessed)) {
-        res += 50;
-      }
+      if(bonHlr.hasTrait(traitSelfPossessed)) {res += 50;}
     } break;
 
     case shockSrc_castIntrSpell: {
-      if(bonHlr.hasTrait(traitMythologist)) {
-        res += 50;
-      }
+      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
     } break;
 
     case shockSrc_seeMonster: {
-      if(bonHlr.hasTrait(traitMythologist)) {
-        res += 50;
-      }
+      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
     } break;
 
     case shockSrc_useStrangeItem: {
-      if(bonHlr.hasTrait(traitMythologist)) {
-        res += 50;
-      }
+      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
     } break;
 
     case shockSrc_misc:
@@ -300,13 +292,13 @@ int Player::getShockResistance(const ShockSrc_t shockSrc) const {
 }
 
 double Player::getShockTakenAfterMods(const int BASE_SHOCK,
-                                      const ShockSrc_t shockSrc) const {
+                                      const ShockSrc shockSrc) const {
   const double SHOCK_RES_DB   = double(getShockResistance(shockSrc));
   const double BASE_SHOCK_DB  = double(BASE_SHOCK);
   return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
 }
 
-void Player::incrShock(const int SHOCK, ShockSrc_t shockSrc) {
+void Player::incrShock(const int SHOCK, ShockSrc shockSrc) {
   const double SHOCK_AFTER_MODS = getShockTakenAfterMods(SHOCK, shockSrc);
 
   shock_                  += SHOCK_AFTER_MODS;
@@ -315,7 +307,7 @@ void Player::incrShock(const int SHOCK, ShockSrc_t shockSrc) {
   constrInRange(0.0f, shock_, 100.0f);
 }
 
-void Player::incrShock(const ShockValues_t shockValue, ShockSrc_t shockSrc) {
+void Player::incrShock(const ShockValue shockValue, ShockSrc shockSrc) {
   incrShock(int(shockValue), shockSrc);
 }
 
@@ -393,7 +385,7 @@ void Player::incrInsanity() {
             }
             eng.popup->showMessage(msg, true, "Screaming!", sfxInsanityRising);
             eng.soundEmitter->emitSound(
-              Sound("", endOfSfx, true, pos, this, true, true));
+              Sound("", endOfSfxId, true, pos, this, true, true));
             return;
           }
         } break;
@@ -407,7 +399,7 @@ void Player::incrInsanity() {
             eng.log->addMsg(playerName + ": " + phrase);
           }
           eng.soundEmitter->emitSound(
-            Sound("", endOfSfx, true, pos, this, false, true));
+            Sound("", endOfSfxId, true, pos, this, false, true));
           return;
         } break;
 
@@ -424,12 +416,12 @@ void Player::incrInsanity() {
           eng.popup->showMessage(msg, true, "HAHAHA!",
                                  sfxInsanityRising);
           eng.soundEmitter->emitSound(
-            Sound("", endOfSfx, true, pos, this, false, true));
+            Sound("", endOfSfxId, true, pos, this, false, true));
           return;
         } break;
 
         case 5: {
-          vector<PropId_t> props;
+          vector<PropId> props;
           propHandler_->getAllActivePropIds(props);
 
           if(find(props.begin(), props.end(), propRFear) != props.end()) {
@@ -538,8 +530,8 @@ void Player::incrInsanity() {
               }
             }
             if(obsessionsActive == 0) {
-              const InsanityObsession_t obsession =
-                (InsanityObsession_t)(eng.dice.range(
+              const InsanityObsessionId obsession =
+                (InsanityObsessionId)(eng.dice.range(
                                         0, endOfInsanityObsessions - 1));
               switch(obsession) {
                 case insanityObsession_masochism: {
@@ -583,7 +575,7 @@ void Player::incrInsanity() {
               eng.dice.range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
             eng.actorFactory->summonMonsters(
-              pos, vector<ActorId_t>(NR_SHADOWS, actor_shadow), true);
+              pos, vector<ActorId>(NR_SHADOWS, actor_shadow), true);
 
             return;
           }
@@ -765,7 +757,7 @@ void Player::onActorTurn() {
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
   if(spottedEnemies.empty()) {
-    const InventoryScreen_t invScreen =
+    const InventoryScreenId invScreen =
       eng.inventoryHandler->screenToOpenAfterDrop;
     if(invScreen != endOfInventoryScreens) {
       switch(invScreen) {
@@ -862,6 +854,8 @@ void Player::onStandardTurn_() {
   double shockFromMonstersCurPlayerTurn = 0.0;
   const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
   for(Actor * actor : SpottedEnemies) {
+    eng.dungeonMaster->onMonsterSpotted(*actor);
+
     Monster* monster = dynamic_cast<Monster*>(actor);
 
     monster->playerBecomeAwareOfMe();
@@ -875,27 +869,28 @@ void Player::onStandardTurn_() {
     if(data.monsterShockLevel != monsterShockLevel_none) {
       switch(data.monsterShockLevel) {
         case monsterShockLevel_unsettling: {
-          monster->shockCausedCurrent += 0.10;
-          monster->shockCausedCurrent =
-            min(monster->shockCausedCurrent + 0.05, 1.0);
+          monster->shockCausedCurrent_ += 0.10;
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.05, 1.0);
         } break;
         case monsterShockLevel_scary: {
-          monster->shockCausedCurrent =
-            min(monster->shockCausedCurrent + 0.15, 1.0);
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.15, 1.0);
         } break;
         case monsterShockLevel_terrifying: {
-          monster->shockCausedCurrent =
-            min(monster->shockCausedCurrent + 0.5, 2.0);
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.5, 2.0);
         } break;
         case monsterShockLevel_mindShattering: {
-          monster->shockCausedCurrent =
-            min(monster->shockCausedCurrent + 0.75, 3.0);
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.75, 3.0);
         } break;
         default: {} break;
       }
       if(shockFromMonstersCurPlayerTurn < 3.0) {
-        incrShock(int(floor(monster->shockCausedCurrent)), shockSrc_seeMonster);
-        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent;
+        incrShock(int(floor(monster->shockCausedCurrent_)),
+                  shockSrc_seeMonster);
+        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
       }
     }
   }
@@ -910,7 +905,7 @@ void Player::onStandardTurn_() {
       } else {
         eng.popup->showMessage("A chill runs down my spine...", true);
       }
-      incrShock(shockValue_heavy, shockSrc_misc);
+      incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
       eng.renderer->drawMapAndInterface();
     } else {
       if(eng.map->getDlvl() != 0) {
@@ -967,7 +962,7 @@ void Player::onStandardTurn_() {
     spi_--;
   }
 
-  vector<PropId_t> props;
+  vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
   const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
@@ -1058,9 +1053,9 @@ void Player::explosiveThrown() {
 }
 
 void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
-                       const Dir_t dirToOrigin,
+                       const Dir dirToOrigin,
                        const int PERCENT_AUDIBLE_DISTANCE) {
-  const Sfx_t sfx = snd.getSfx();
+  const SfxId sfx = snd.getSfx();
 
   const string& msg = snd.getMsg();
   const bool HAS_SND_MSG = msg.empty() == false;
@@ -1081,7 +1076,7 @@ void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   }
 }
 
-void Player::moveDir(Dir_t dir) {
+void Player::moveDir(Dir dir) {
   if(deadState == actorDeadState_alive) {
 
     propHandler_->changeMoveDir(pos, dir);
@@ -1141,7 +1136,7 @@ void Player::moveDir(Dir_t dir) {
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or static features?
-      vector<PropId_t> props;
+      vector<PropId> props;
       getPropHandler().getAllActivePropIds(props);
       Cell& cell = eng.map->cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.featureStatic->canMove(props);

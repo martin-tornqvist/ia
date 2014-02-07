@@ -78,7 +78,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     }
 
     PropHandler& defPropHlr = curDefender->getPropHandler();
-    vector<PropId_t> defProps;
+    vector<PropId> defProps;
     defPropHlr.getAllActivePropIds(defProps);
 
     if(isAttackerAware) {
@@ -98,7 +98,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
         }
       }
 
-      for(PropId_t propId : defProps) {
+      for(PropId propId : defProps) {
         if(
           isDefenderAware == false ||
           propId == propParalysed  ||
@@ -136,7 +136,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     dmgSides  = wpn_.getData().meleeDmg.second;
     dmgPlus   = wpn_.meleeDmgPlus;
 
-    vector<PropId_t> attProps;
+    vector<PropId> attProps;
     attacker->getPropHandler().getAllActivePropIds(attProps);
 
     isWeakAttack = false;
@@ -164,7 +164,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
 RangedAttackData::RangedAttackData(
   Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-  const Pos& curPos_, Engine& engine, ActorSizes_t intendedAimLevel_) :
+  const Pos& curPos_, Engine& engine, ActorSize intendedAimLevel_) :
   AttackData(attacker_, wpn_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
@@ -200,7 +200,7 @@ RangedAttackData::RangedAttackData(
     const int DIST_TO_TGT       = eng.basicUtils->chebyshevDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
-    const ActorSpeed_t defSpeed = curDefender->getData().speed;
+    const ActorSpeed defSpeed = curDefender->getData().speed;
     const int SPEED_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :
@@ -232,7 +232,7 @@ RangedAttackData::RangedAttackData(
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
 
-      vector<PropId_t> props;
+      vector<PropId> props;
       curDefender->getPropHandler().getAllActivePropIds(props);
 
       if(find(props.begin(), props.end(), propEthereal) != props.end()) {
@@ -262,7 +262,7 @@ RangedAttackData::RangedAttackData(
 MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
                                      const Pos& aimPos_, const Pos& curPos_,
                                      Engine& engine,
-                                     ActorSizes_t intendedAimLevel_) :
+                                     ActorSize intendedAimLevel_) :
   AttackData(attacker_, item_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none) {
 
@@ -294,7 +294,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int DIST_TO_TGT       = eng.basicUtils->chebyshevDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
-    const ActorSpeed_t defSpeed = curDefender->getData().speed;
+    const ActorSpeed defSpeed = curDefender->getData().speed;
     const int SPEED_MOD =
       defSpeed == actorSpeed_sluggish ?  20 :
       defSpeed == actorSpeed_slow     ?  10 :

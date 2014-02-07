@@ -8,27 +8,27 @@
 
 using namespace std;
 
-enum Font_t {font_interface, font_big};
+enum FontType {font_interface, font_big};
 
-enum DmgTypes_t {
+enum DmgTypes {
   dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid,
   dmgType_electric, dmgType_spirit, dmgType_light, dmgType_pure,
   endOfDmgTypes
 };
 
-enum ShockValues_t {
+enum class ShockValue {
   shockValue_none   = 0,
   shockValue_mild   = 2,
   shockValue_some   = 4,
   shockValue_heavy  = 12
 };
 
-enum MarkerTask_t {
+enum MarkerTask  {
   markerTask_aimRangedWeapon, markerTask_look,
   markerTask_aimThrownWeapon, markerTask_aimLitExplosive
 };
 
-enum GameEntry_t {
+enum GameEntryMode {
   gameEntry_new,
   gameEntry_load
 };
@@ -50,7 +50,7 @@ struct CellRenderData {
 
   SDL_Color clr;
   SDL_Color clrBg;
-  Tile_t tile;
+  Tile tile;
   char glyph;
   int lifebarLength;
   bool isFadeEffectAllowed;
@@ -221,12 +221,12 @@ public:
   string player, other;
 };
 
-enum SpawnRate_t {
+enum SpawnRate {
   spawnNever, spawnExtremelyRare, spawnVeryRare,
   spawnRare, spawnCommon, spawnVeryCommon
 };
 
-enum Dir_t {
+enum Dir {
   dirDownLeft   = 1,
   dirDown       = 2,
   dirDownRight  = 3,
@@ -239,13 +239,13 @@ enum Dir_t {
   endOfDirs
 };
 
-enum ActorDeadState_t {
+enum ActorDeadState {
   actorDeadState_alive,
   actorDeadState_corpse,
   actorDeadState_mangled
 };
 
-enum Entity_t {
+enum EntityType {
   entityActor,
   entityItem,
   entityFeatureStatic,

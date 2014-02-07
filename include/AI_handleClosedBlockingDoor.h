@@ -23,7 +23,7 @@ public:
         engine.map->cells[p.x][p.y].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
-        vector<PropId_t> props;
+        vector<PropId> props;
         monster.getPropHandler().getAllActivePropIds(props);
         if(door->canMove(props) == false) {
           if(door->isStuck() == false) {

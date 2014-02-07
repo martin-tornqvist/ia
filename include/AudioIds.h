@@ -1,7 +1,7 @@
 #ifndef AUDIO_IDS_H
 #define AUDIO_IDS_H
 
-enum Sfx_t {
+enum SfxId {
   //Monster sounds
   sfxDogSnarl,
   sfxWolfHowl,
@@ -51,7 +51,7 @@ enum Sfx_t {
 
   musCthulhiana_Madness,
 
-  endOfSfx
+  endOfSfxId
 };
 
 #endif

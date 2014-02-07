@@ -11,7 +11,7 @@ using namespace std;
 class Engine;
 struct FeatureData;
 
-enum RoomTheme_t {
+enum RoomThemeId {
   roomTheme_plain,
   roomTheme_human,
   roomTheme_ritual,
@@ -36,13 +36,13 @@ public:
 
 private:
   //This array supports placing items, monsters and traps
-  RoomTheme_t themeMap[MAP_W][MAP_H];
+  RoomThemeId themeMap[MAP_W][MAP_H];
 
   void applyThemeToRoom(Room& room);
 
   int placeThemeFeatures(Room& room);
 
-  int getRandomNrFeaturesForTheme(const RoomTheme_t theme) const;
+  int getRandomNrFeaturesForTheme(const RoomThemeId theme) const;
 
   void makeThemeSpecificRoomModifications(Room& room);
 
@@ -59,10 +59,10 @@ private:
 
   void assignRoomThemes();
 
-  bool isThemeAllowed(const Room* const room, const RoomTheme_t theme,
+  bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
                       const bool blockers[MAP_W][MAP_H]) const;
 
-  bool isThemeExistInMap(const RoomTheme_t theme) const;
+  bool isThemeExistInMap(const RoomThemeId theme) const;
 
   Engine& eng;
 };

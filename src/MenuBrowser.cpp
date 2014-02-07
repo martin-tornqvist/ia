@@ -30,7 +30,7 @@ bool MenuBrowser::isPosAtKey(const char KEY) const {
   return positionAtKey == pos_;
 }
 
-void MenuBrowser::navigate(const Dir_t dir) {
+void MenuBrowser::navigate(const Dir dir) {
   switch(dir) {
     case dirUp: {
       pos_.y--;

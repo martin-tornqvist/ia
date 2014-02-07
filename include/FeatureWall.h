@@ -3,7 +3,7 @@
 
 #include "Feature.h"
 
-enum Wall_t {
+enum WallType {
   wall_common,
   wall_alt1,
   wall_cave,
@@ -19,22 +19,22 @@ public:
   SDL_Color getColor() const;
   char getGlyph() const;
 
-  Tile_t getFrontWallTile() const;
-  Tile_t getTopWallTile() const;
+  Tile getFrontWallTile() const;
+  Tile getTopWallTile() const;
 
   void setRandomNormalWall();
   void setRandomIsMossGrown();
 
-  Wall_t wallType;
+  WallType wallType;
   bool isMossGrown;
 
-  static bool isTileAnyWallFront(const Tile_t tile);
+  static bool isTileAnyWallFront(const Tile tile);
 
-  static bool isTileAnyWallTop(const Tile_t tile);
+  static bool isTileAnyWallTop(const Tile tile);
 
 private:
   friend class FeatureFactory;
-  Wall(Feature_t id, Pos pos, Engine& engine);
+  Wall(FeatureId id, Pos pos, Engine& engine);
 };
 
 #endif

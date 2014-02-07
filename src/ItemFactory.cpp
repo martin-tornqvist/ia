@@ -12,7 +12,7 @@
 #include "ItemDevice.h"
 #include "ItemMedicalBag.h"
 
-Item* ItemFactory::spawnItem(const ItemId_t itemId, const int NR_ITEMS) {
+Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
   Item* item = NULL;
 
   ItemData* const d = eng.itemDataHandler->dataList[itemId];
@@ -196,7 +196,7 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   }
 }
 
-Item* ItemFactory::spawnItemOnMap(const ItemId_t itemId, const Pos& pos) {
+Item* ItemFactory::spawnItemOnMap(const ItemId itemId, const Pos& pos) {
   Item* item = spawnItem(itemId);
   setItemRandomizedProperties(item);
   eng.itemDrop->dropItemOnMap(pos, *item);
@@ -211,7 +211,7 @@ Item* ItemFactory::copyItem(Item* oldItem) {
 
 Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
     const bool ALLOW_POTIONS) {
-  vector<ItemId_t> itemCandidates;
+  vector<ItemId> itemCandidates;
 
   for(unsigned int i = 1; i < endOfItemIds; i++) {
     const ItemData* const d = eng.itemDataHandler->dataList[i];
@@ -219,7 +219,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
       d->isIntrinsic == false &&
       ((d->isScroll && ALLOW_SCROLLS) ||
        (d->isPotion && ALLOW_POTIONS))) {
-      itemCandidates.push_back(static_cast<ItemId_t>(i));
+      itemCandidates.push_back(static_cast<ItemId>(i));
     }
   }
 

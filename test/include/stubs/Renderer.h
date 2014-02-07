@@ -19,25 +19,25 @@ public:
 
   void initAndClearPrev() {}
 
-  void drawTile(const Tile_t, const Panel_t, const Pos&, const SDL_Color&,
+  void drawTile(const Tile, const PanelId, const Pos&, const SDL_Color&,
                 const SDL_Color& = clrBlack) {}
 
-  void drawGlyph(const char, const Panel_t, const Pos&,
+  void drawGlyph(const char, const PanelId, const Pos&,
                  const SDL_Color&, const bool = true,
                  const SDL_Color& = clrBlack) {}
 
-  void drawText(const string&, const Panel_t, const Pos&, const SDL_Color&,
+  void drawText(const string&, const PanelId, const Pos&, const SDL_Color&,
                 const SDL_Color& = clrBlack) {}
 
-  int drawTextCentered(const string&, const Panel_t, const Pos&,
+  int drawTextCentered(const string&, const PanelId, const Pos&,
                        const SDL_Color&, const SDL_Color& = clrBlack,
                        const bool = true) {return 0;}
 
   void coverCellInMap(const Pos&) {}
 
-  void coverPanel(const Panel_t) {}
+  void coverPanel(const PanelId) {}
 
-  void coverArea(const Panel_t, const Pos&, const Pos&) {}
+  void coverArea(const PanelId, const Pos&, const Pos&) {}
 
   void coverAreaPixel(const Pos&, const Pos&) {}
 
@@ -66,7 +66,7 @@ public:
 
   void drawProjectiles(vector<Projectile*>&) {}
 
-  void drawPopupBox(const Rect&, const Panel_t = panel_screen,
+  void drawPopupBox(const Rect&, const PanelId = panel_screen,
                     const SDL_Color& = clrGray) {}
 
   void applySurface(const Pos&, SDL_Surface* const, SDL_Rect* = NULL) {}

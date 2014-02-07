@@ -8,7 +8,7 @@
 #include "BasicUtils.h"
 #include "Properties.h"
 
-int AbilityValues::getVal(const Abilities_t ability,
+int AbilityValues::getVal(const AbilityId ability,
                           const bool IS_AFFECTED_BY_STATUS_EFFECTS,
                           Actor& actor) const {
   int val = abilityList[ability];
@@ -60,7 +60,7 @@ int AbilityValues::getVal(const Abilities_t ability,
       } break;
 
       case ability_empty:
-      case endOfAbilities: {} break;
+      case endOfAbilityId: {} break;
     }
 
     //Searching must be at least 1
@@ -74,7 +74,7 @@ int AbilityValues::getVal(const Abilities_t ability,
   return val;
 }
 
-AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
+AbilityRollResult AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
   const int ROLL = eng.dice.percentile();
 
   const int successCriticalLimit  = int(ceil(float(TOTAL_SKILL_VALUE) / 20.0));
@@ -111,16 +111,16 @@ AbilityRollResult_t AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
 }
 
 void AbilityValues::reset() {
-  for(unsigned int i = 0; i < endOfAbilities; i++) {
+  for(unsigned int i = 0; i < endOfAbilityId; i++) {
     abilityList[i] = 0;
   }
 }
 
-void AbilityValues::setVal(const Abilities_t ability, const int VAL) {
+void AbilityValues::setVal(const AbilityId ability, const int VAL) {
   abilityList[ability] = VAL;
 }
 
-void AbilityValues::changeVal(const Abilities_t ability, const int CHANGE) {
+void AbilityValues::changeVal(const AbilityId ability, const int CHANGE) {
   abilityList[ability] += CHANGE;
 }
 

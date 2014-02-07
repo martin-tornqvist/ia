@@ -27,7 +27,7 @@ void PopulateItems::spawnItems() {
 
   //Spawn randomly from the Pos-vector
   int n = 0;
-  ItemId_t id;
+  ItemId id;
 
   for(int i = 0; i < nrOfSpawns; i++) {
     if(freeCells.size() > 0) {
@@ -61,13 +61,13 @@ void PopulateItems::buildCandidateList() {
       eng.map->getDlvl() <= dataList[i]->spawnStandardMaxDLVL &&
       dataList[i]->isIntrinsic == false) {
       if(eng.dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
-        candidates.push_back(static_cast<ItemId_t>(i));
+        candidates.push_back(static_cast<ItemId>(i));
       }
     }
   }
 }
 
-ItemId_t PopulateItems::getFromCandidateList() {
+ItemId PopulateItems::getFromCandidateList() {
   const int NUMBER_CANDIDATES = int(candidates.size());
   return candidates.at(eng.dice(1, NUMBER_CANDIDATES) - 1);
 }

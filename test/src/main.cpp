@@ -346,8 +346,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  const Feature_t wallId  = feature_stoneWall;
-  const Feature_t floorId = feature_stoneFloor;
+  const FeatureId wallId  = feature_stoneWall;
+  const FeatureId floorId = feature_stoneFloor;
 
   eng.featureFactory->spawnFeatureAt(floorId, Pos(X0, Y0));
 
@@ -434,7 +434,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     Monster* const monster = dynamic_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
-    const Feature_t mimicId =
+    const FeatureId mimicId =
       eng.map->cells[posR.x][posR.x].featureStatic->getId();
     const FeatureData* const mimicData =
       eng.featureDataHandler->getData(mimicId);
@@ -454,7 +454,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     if(monster->pos == posR) {
       isTestedStuck = true;
     } else if(monster->pos == posL) {
-      const Feature_t featureId =
+      const FeatureId featureId =
         eng.map->cells[posR.x][posR.y].featureStatic->getId();
       if(featureId == feature_stoneFloor) {
         isTestedLooseWebDestroyed = true;

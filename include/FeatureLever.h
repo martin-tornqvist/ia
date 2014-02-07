@@ -10,14 +10,14 @@ class FeatureLever: public FeatureStatic {
 public:
   ~FeatureLever() {}
   SDL_Color getColor() const;
-  Tile_t getTile() const;
+  Tile getTile() const;
 
   void examine() override;
 
 protected:
   friend class FeatureFactory;
   friend class MapGenBsp;
-  FeatureLever(Feature_t id, Pos pos, Engine& engine, LeverSpawnData* spawnData);
+  FeatureLever(FeatureId id, Pos pos, Engine& engine, LeverSpawnData* spawnData);
 
   void pull();
 

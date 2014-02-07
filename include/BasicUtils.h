@@ -12,7 +12,7 @@ using namespace std;
 
 class Engine;
 
-enum Time_t {
+enum TimeType {
   time_year,
   time_month,
   time_day,
@@ -30,7 +30,7 @@ struct TimeData {
     year_(year), month_(month), day_(day), hour_(hour), minute_(minute),
     second_(second) {}
 
-  string getTimeStr(const Time_t lowest, const bool ADD_SEPARATORS) const;
+  string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
 
   int year_, month_, day_, hour_, minute_, second_;
 };
@@ -211,14 +211,14 @@ public:
 
   ~DirConverter() {}
 
-  Dir_t getDir(const Pos& offset) const;
+  Dir getDir(const Pos& offset) const;
 
-  Pos getOffset(const Dir_t dir) const;
+  Pos getOffset(const Dir dir) const;
 
   void getCompassDirName(
     const Pos& fromPos, const Pos& toPos, string& strRef) const;
 
-  void getCompassDirName(const Dir_t dir, string& strRef) const;
+  void getCompassDirName(const Dir dir, string& strRef) const;
 
   void getCompassDirName(const Pos& offset, string& strRef) const;
 

@@ -79,7 +79,7 @@ void DungeonClimb::tryUseDownStairs() {
   const int DLVL = eng.map->getDlvl();
   const Pos& playerPos = eng.player->pos;
 
-  const Feature_t featureIdAtPlayer =
+  const FeatureId featureIdAtPlayer =
     eng.map->cells[playerPos.x][playerPos.y].featureStatic->getId();
 
   if(featureIdAtPlayer == feature_stairsDown) {

@@ -54,9 +54,7 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
   }
 }
 
-int RoomThemeMaker::getRandomNrFeaturesForTheme(
-  const RoomTheme_t theme) const {
-
+int RoomThemeMaker::getRandomNrFeaturesForTheme(const RoomThemeId theme) const {
   switch(theme) {
     case roomTheme_plain:     return eng.dice.oneIn(14) ?
                                        2 : eng.dice.oneIn(5) ? 1 : 0;
@@ -72,7 +70,7 @@ int RoomThemeMaker::getRandomNrFeaturesForTheme(
   return -1;
 }
 
-bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
+bool RoomThemeMaker::isThemeExistInMap(const RoomThemeId theme) const {
   vector<Room*>& rooms = eng.map->rooms;
   for(unsigned int i = 0; i < rooms.size(); i++) {
     if(rooms.at(i)->roomTheme == theme) {
@@ -83,7 +81,7 @@ bool RoomThemeMaker::isThemeExistInMap(const RoomTheme_t theme) const {
 }
 
 bool RoomThemeMaker::isThemeAllowed(
-  const Room* const room, const RoomTheme_t theme,
+  const Room* const room, const RoomThemeId theme,
   const bool blockers[MAP_W][MAP_H]) const {
 
   (void)blockers;
@@ -149,7 +147,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   switch(room.roomTheme) {
     case roomTheme_flooded:
     case roomTheme_muddy: {
-      const Feature_t featureId =
+      const FeatureId featureId =
         room.roomTheme == roomTheme_flooded ? feature_shallowWater :
         feature_shallowMud;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
@@ -251,9 +249,9 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
   vector<const FeatureData*> featureDataBelongingToTheme;
   featureDataBelongingToTheme.resize(0);
 
-  for(unsigned int i = 0; i < endOfFeatures; i++) {
+  for(unsigned int i = 0; i < endOfFeatureId; i++) {
     const FeatureData* const d =
-      eng.featureDataHandler->getData((Feature_t)(i));
+      eng.featureDataHandler->getData((FeatureId)(i));
     if(d->themedFeatureSpawnRules.isBelongingToTheme(room.roomTheme)) {
       featureDataBelongingToTheme.push_back(d);
     }
@@ -483,8 +481,8 @@ void RoomThemeMaker::assignRoomThemes() {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
       const int ELEMENT = eng.dice.range(0, NR_ROOMS - 1);
       if(isAssigned.at(ELEMENT) == false) {
-        const RoomTheme_t theme =
-          (RoomTheme_t)(eng.dice.range(1, endOfRoomThemes - 1));
+        const RoomThemeId theme =
+          (RoomThemeId)(eng.dice.range(1, endOfRoomThemes - 1));
         Room* const room = rooms.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blockers)) {

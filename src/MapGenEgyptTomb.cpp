@@ -33,20 +33,20 @@ bool MapGenEgyptTomb::run_() {
 
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_mummy, Pos(12, 10)))->isRoamingAllowed = false;
+      actor_mummy, Pos(12, 10)))->isRoamingAllowed_ = false;
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_khephren, Pos(11, 11)))->isRoamingAllowed = false;
+      actor_khephren, Pos(11, 11)))->isRoamingAllowed_ = false;
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_mummy, Pos(12, 12)))->isRoamingAllowed = false;
+      actor_mummy, Pos(12, 12)))->isRoamingAllowed_ = false;
 
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_cultist, Pos(17, 10)))->isRoamingAllowed = false;
+      actor_cultist, Pos(17, 10)))->isRoamingAllowed_ = false;
   dynamic_cast<Monster*>(
     eng.actorFactory->spawnActor(
-      actor_cultist, Pos(17, 12)))->isRoamingAllowed = false;
+      actor_cultist, Pos(17, 12)))->isRoamingAllowed_ = false;
 
   return true;
 }

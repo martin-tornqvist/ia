@@ -10,7 +10,7 @@
 #include "FeatureData.h"
 #include "AudioIds.h"
 
-enum ItemWeight_t {
+enum ItemWeight {
   itemWeight_none       = 0,
   itemWeight_extraLight = 1,  //Ammo...
   itemWeight_light      = 10, //Dynamite, daggers...
@@ -18,14 +18,14 @@ enum ItemWeight_t {
   itemWeight_heavy      = 120 //Heavy armor, heavy weapons...
 };
 
-enum PrimaryAttackMode_t {
+enum PrimaryAttackMode {
   primaryAttackMode_none,
   primaryAttackMode_melee,
   primaryAttackMode_missile,
   primaryAttackMode_ranged
 };
 
-enum ItemDataArchetypes_t {
+enum ItemDataArchetypes {
   itemData_general,
   itemData_meleeWpn,
   itemData_meleeWpnIntr,
@@ -41,13 +41,13 @@ enum ItemDataArchetypes_t {
   itemData_explosive
 };
 
-enum ItemValue_t {
+enum ItemValue {
   itemValue_normal,
   itemValue_minorTreasure,
   itemValue_majorTreasure
 };
 
-enum ItemId_t {
+enum ItemId {
   item_empty,
 
   item_trapezohedron,
@@ -181,7 +181,7 @@ struct ArmorData {
 
 class ItemData {
 public:
-  ItemData(const ItemId_t itemId) :
+  ItemData(const ItemId itemId) :
     id(itemId), propAppliedOnMelee(NULL), propAppliedOnRanged(NULL) {}
 
   ~ItemData() {
@@ -189,9 +189,9 @@ public:
     if(propAppliedOnRanged != NULL) delete propAppliedOnRanged;
   }
 
-  ItemId_t id;
-  ItemValue_t itemValue;
-  ItemWeight_t itemWeight;
+  ItemId id;
+  ItemValue itemValue;
+  ItemWeight itemWeight;
   int spawnStandardMinDLVL;
   int spawnStandardMaxDLVL;
   int maxStackSizeAtSpawn;
@@ -209,13 +209,13 @@ private:
 public:
   char glyph;
   SDL_Color color;
-  Tile_t tile;
-  PrimaryAttackMode_t primaryAttackMode;
+  Tile tile;
+  PrimaryAttackMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
   bool isArmor, isCloak, isRing, isAmulet;
   bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
   bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
-  Spell_t spellCastFromScroll;
+  SpellId spellCastFromScroll;
   ArmorData armorData;
   int ammoContainedInClip;
   DiceParam missileDmg;
@@ -224,17 +224,17 @@ public:
   int meleeHitChanceMod;
   ItemAttackMessages meleeAttackMessages;
   Prop* propAppliedOnMelee; //TODO This requires deep copy of items
-  DmgTypes_t meleeDmgType;
+  DmgTypes meleeDmgType;
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
   string rangedDmgLabelOverRide;
   int rangedHitChanceMod;
-  ItemId_t rangedAmmoTypeUsed;
-  DmgTypes_t rangedDmgType;
+  ItemId rangedAmmoTypeUsed;
+  DmgTypes rangedDmgType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
-  Tile_t rangedMissileTile;
+  Tile rangedMissileTile;
   SDL_Color rangedMissileColor;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
@@ -243,15 +243,15 @@ public:
   bool rangedSoundIsLoud;
   bool rangedMakesRicochetSound;
   string landOnHardSurfaceSoundMsg;
-  Sfx_t landOnHardSurfaceSfx;
-  Sfx_t rangedAttackSfx;
-  Sfx_t meleeHitSmallSfx;
-  Sfx_t meleeHitMediumSfx;
-  Sfx_t meleeHitHardSfx;
-  Sfx_t reloadSfx;
+  SfxId landOnHardSurfaceSfx;
+  SfxId rangedAttackSfx;
+  SfxId meleeHitSmallSfx;
+  SfxId meleeHitMediumSfx;
+  SfxId meleeHitHardSfx;
+  SfxId reloadSfx;
   Prop* propAppliedOnRanged;
-  vector<RoomTheme_t> nativeRooms;
-  vector< pair<Feature_t, int> > featuresCanBeFoundIn;
+  vector<RoomThemeId> nativeRooms;
+  vector< pair<FeatureId, int> > featuresCanBeFoundIn;
 private:
 };
 
@@ -261,7 +261,7 @@ class Engine;
 class Item;
 struct ActorData;
 
-enum ItemRef_t {itemRef_plain, itemRef_a, itemRef_plural};
+enum ItemRefType {itemRef_plain, itemRef_a, itemRef_plural};
 
 class ItemDataHandler {
 public:
@@ -271,12 +271,12 @@ public:
       delete dataList[i];
   }
 
-  string getItemRef(const Item& item, const ItemRef_t itemRefForm,
+  string getItemRef(const Item& item, const ItemRefType itemRefForm,
                     const bool SKIP_EXTRA_INFO = false) const;
 
   string getItemInterfaceRef(
     const Item& item, const bool ADD_A,
-    const PrimaryAttackMode_t attackMode = primaryAttackMode_none) const;
+    const PrimaryAttackMode attackMode = primaryAttackMode_none) const;
 
   ItemData* dataList[endOfItemIds];
 
@@ -291,9 +291,9 @@ private:
                              const ActorData& actorData) const;
 
   void resetData(ItemData* const d,
-                 ItemDataArchetypes_t const archetype) const;
+                 ItemDataArchetypes const archetype) const;
 
-  void addFeatureFoundIn(ItemData* const itemData, const Feature_t featureId,
+  void addFeatureFoundIn(ItemData* const itemData, const FeatureId featureId,
                          const int CHANCE_TO_INCLUDE = 100) const;
 
   Engine& eng;

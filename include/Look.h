@@ -31,7 +31,7 @@ public:
   Item* item;
   const Feature* feature;
 
-  Entity_t entityType;
+  EntityType entityType;
 };
 
 class Look {
@@ -40,14 +40,14 @@ public:
     eng(engine) {
   }
 
-  void markerAtPos(const Pos& pos, const MarkerTask_t markerTask,
+  void markerAtPos(const Pos& pos, const MarkerTask markerTask,
                    const Item* const itemThrown);
   void printExtraActorDescription(const Pos& pos) const;
 
 private:
   Entity entityDescribed;
 
-  void describeBriefActor(const Actor& actor, const MarkerTask_t markerTask,
+  void describeBriefActor(const Actor& actor, const MarkerTask markerTask,
                           const Item* const itemThrown) const;
   void describeBriefFeatureMob(const Feature& feature) const;
   void describeBriefFeatureStatic(const Feature& feature) const;

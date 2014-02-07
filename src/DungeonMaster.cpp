@@ -17,9 +17,9 @@ void DungeonMaster::initXpArray() {
   }
 }
 
-int DungeonMaster::getMonsterXpWorth(const ActorData& d) const {
-  const double K          = 1.0;  //K regulates player XP rate
-  //Higher -> more XP per monster
+int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
+  //K regulates player XP rate, higher -> more XP per monster
+  const double K          = 1.2;
   const double HP         = d.hp;
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
@@ -145,8 +145,8 @@ void DungeonMaster::winGame() {
   eng.query->waitForEscOrSpace();
 }
 
-void DungeonMaster::monsterKilled(Actor* monster) {
-  ActorData& d = monster->getData();
+void DungeonMaster::onMonsterKilled(Actor& actor) {
+  ActorData& d = actor.getData();
 
   d.nrOfKills += 1;
 
@@ -156,7 +156,19 @@ void DungeonMaster::monsterKilled(Actor* monster) {
     }
   }
 
-  playerGainXp(getMonsterXpWorth(d));
+  const int XP_WORTH_TOT  = getMonsterTotXpWorth(d);
+  Monster* const monster  = dynamic_cast<Monster*>(&actor);
+  const int XP_GAINED     = monster->hasGivenXpForSpotting_ ?
+                            XP_WORTH_TOT / 2 : XP_WORTH_TOT;
+  playerGainXp(XP_GAINED);
+}
+
+void DungeonMaster::onMonsterSpotted(Actor& actor) {
+  Monster* const monster = dynamic_cast<Monster*>(&actor);
+  if(monster->hasGivenXpForSpotting_ == false) {
+    monster->hasGivenXpForSpotting_ = true;
+    playerGainXp(getMonsterTotXpWorth(monster->getData()) / 2);
+  }
 }
 
 void DungeonMaster::setTimeStartedToNow() {

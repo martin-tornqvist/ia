@@ -11,7 +11,7 @@
 Audio::Audio(Engine& engine) :
   curChannel(0), timeAtLastAmb(-1), eng(engine) {
 
-  for(int i = 0; i < endOfSfx; i++) {
+  for(int i = 0; i < endOfSfxId; i++) {
     audioChunks[i] = NULL;
   }
 
@@ -70,7 +70,7 @@ void Audio::initAndClearPrev() {
       const string indexStr = toString(a);
       const string indexStrPadded =
         a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
-      loadAudioFile(Sfx_t(i), "amb_" + indexStrPadded + ".ogg");
+      loadAudioFile(SfxId(i), "amb_" + indexStrPadded + ".ogg");
       a++;
     }
 
@@ -79,7 +79,7 @@ void Audio::initAndClearPrev() {
   }
 }
 
-void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
+void Audio::loadAudioFile(const SfxId sfx, const string& filename) {
   const string fileRelPath = "audio/" + filename;
 
   eng.renderer->clearScreen();
@@ -96,12 +96,12 @@ void Audio::loadAudioFile(const Sfx_t sfx, const string& filename) {
   }
 }
 
-int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
+int Audio::play(const SfxId sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
   if(
     eng.config->isAudioEnabled &&
-    sfx != endOfSfx && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
+    sfx != endOfSfxId && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
     eng.config->isBotPlaying == false) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
@@ -124,7 +124,7 @@ int Audio::play(const Sfx_t sfx, const int VOL_PERCENT_TOT,
   return ret;
 }
 
-void Audio::playFromDir(const Sfx_t sfx, const Dir_t dir,
+void Audio::playFromDir(const SfxId sfx, const Dir dir,
                         const int DISTANCE_PERCENT) {
   if(dir != endOfDirs) {
     //The distance value is scaled down to avoid too much volume degradation
@@ -163,8 +163,8 @@ void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
   }
 }
 
-Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
-  vector<Sfx_t> sfxCandidates;
+SfxId Audio::getAmbSfxSuitableForDlvl() const {
+  vector<SfxId> sfxCandidates;
   sfxCandidates.resize(0);
 
   const int DLVL = eng.map->getDlvl();
@@ -218,7 +218,7 @@ Sfx_t Audio::getAmbSfxSuitableForDlvl() const {
   }
 
   if(sfxCandidates.empty()) {
-    return endOfSfx;
+    return endOfSfxId;
   }
 
   const int ELEMENT = eng.dice.range(0, sfxCandidates.size() - 1);
@@ -230,7 +230,7 @@ void Audio::fadeOutChannel(const int CHANNEL_NR) {
 }
 
 void Audio::freeAssets() {
-  for(int i = 0; i < endOfSfx; i++) {
+  for(int i = 0; i < endOfSfxId; i++) {
     if(audioChunks[i] != NULL) {
       Mix_FreeChunk(audioChunks[i]);
       audioChunks[i] = NULL;

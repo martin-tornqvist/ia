@@ -5,7 +5,7 @@
 
 using namespace std;
 
-enum DoorSpawnState_t {
+enum DoorSpawnState {
   doorSpawnState_open,
   doorSpawnState_closed,
   doorSpawnState_stuck,
@@ -14,7 +14,7 @@ enum DoorSpawnState_t {
   doorSpawnState_secretAndStuck
 };
 
-enum DoorMaterial_t {
+enum DoorMaterial {
   doorMaterial_wood,
   doorMaterial_metal
 };
@@ -28,13 +28,13 @@ public:
 
   void bump(Actor& actorBumping)      override;
   virtual bool canMoveCmn()           const override;
-  virtual bool canMove(const vector<PropId_t>& actorsProps) const override;
+  virtual bool canMove(const vector<PropId>& actorsProps) const override;
   bool isVisionPassable()             const override;
   bool isProjectilePassable()         const override;
   bool isSmokePassable()              const override;
   SDL_Color getColor()                const override;
   char getGlyph()                     const override;
-  Tile_t getTile()                    const override;
+  Tile getTile()                    const override;
 
   void bash_(Actor& actorTrying) override;
 
@@ -51,7 +51,7 @@ public:
 
   string getDescr(const bool DEFINITE_ARTICLE) const override;
 
-  MaterialType_t getMaterialType() const;
+  MaterialType getMaterialType() const;
 
   void reveal(const bool ALLOW_MESSAGE);
 
@@ -59,7 +59,7 @@ public:
 
   virtual bool open() override;
 
-  static bool isTileAnyDoor(const Tile_t tile) {
+  static bool isTileAnyDoor(const Tile tile) {
     return
       tile == tile_doorBroken ||
       tile == tile_doorClosed ||
@@ -70,14 +70,14 @@ protected:
   friend class FeatureFactory;
   friend class MapGenBsp;
   friend class FeatureLever;
-  Door(Feature_t id, Pos pos, Engine& engine, DoorSpawnData* spawnData);
+  Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData);
 
   const FeatureData* const mimicFeature_;
   int nrSpikes_;
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isOpenedAndClosedExternally_;
 
-  DoorMaterial_t material_;
+  DoorMaterial material_;
 
   friend class Player;
   void playerTrySpotHidden();

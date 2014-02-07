@@ -3,7 +3,7 @@
 
 #include "Item.h"
 
-enum MedicalBagAction_t {
+enum MedicalBagAction {
   medicalBagAction_sanitizeInfection,
   medicalBagAction_takeMorphine,
   medicalBagAction_treatWound,
@@ -38,15 +38,15 @@ public:
   inline int getNrSupplies() const {return nrSupplies_;}
 
 protected:
-  MedicalBagAction_t playerChooseAction() const;
+  MedicalBagAction playerChooseAction() const;
 
   int nrSupplies_;
   int nrTurnsLeft_;
-  MedicalBagAction_t curAction_;
+  MedicalBagAction curAction_;
 
-  int getTotTurnsForAction(const MedicalBagAction_t action) const;
+  int getTotTurnsForAction(const MedicalBagAction action) const;
 
-  int getNrSuppliesNeededForAction(const MedicalBagAction_t action) const;
+  int getNrSuppliesNeededForAction(const MedicalBagAction action) const;
 };
 
 #endif

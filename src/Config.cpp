@@ -56,7 +56,7 @@ void Config::runOptionsMenu() {
   draw(&browser, OPTION_VALUES_X_POS);
 
   while(true) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         draw(&browser, OPTION_VALUES_X_POS);

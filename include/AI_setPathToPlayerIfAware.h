@@ -13,7 +13,7 @@ public:
         bool blockers[MAP_W][MAP_H];
         engine.basicUtils->resetArray(blockers, false);
 
-        vector<PropId_t> props;
+        vector<PropId> props;
         monster.getPropHandler().getAllActivePropIds(props);
 
         for(int y = 1; y < MAP_H - 1; y++) {

@@ -280,7 +280,7 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
 
   bool done = false;
   while(done == false) {
-    const MenuAction_t action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
       case menuAction_browsed: {
         renderMenu(browser);

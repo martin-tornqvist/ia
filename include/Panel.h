@@ -3,11 +3,11 @@
 
 #include "CommonTypes.h"
 
-enum Panel_t {panel_screen, panel_map, panel_char, panel_log};
+enum PanelId {panel_screen, panel_map, panel_char, panel_log};
 
 class Panel {
 public:
-  Panel(const Pos& dims, const Pos& offset, Font_t standardFont,
+  Panel(const Pos& dims, const Pos& offset, FontType standardFont,
         const Pos& bigFontDims) :
     dims_(dims), offset_(offset), standardFont_(standardFont),
     bigFontDims_(bigFontDims) {}
@@ -18,7 +18,7 @@ public:
 
   const Pos dims_;
   const Pos offset_;
-  const Font_t standardFont_;
+  const FontType standardFont_;
   const Pos bigFontDims_;
 
 private:

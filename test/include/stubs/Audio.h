@@ -13,9 +13,9 @@ public:
 
   void initAndClearPrev() {}
 
-  int play(const Sfx_t, const int = 100, const int = 50) {return -1;}
+  int play(const SfxId, const int = 100, const int = 50) {return -1;}
 
-  void playFromDir(const Sfx_t, const Dir_t, const int) {}
+  void playFromDir(const SfxId, const Dir, const int) {}
 
   void tryPlayAmb(const int) {}
 };

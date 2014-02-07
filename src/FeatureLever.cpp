@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "ActorPlayer.h"
 
-FeatureLever::FeatureLever(Feature_t id, Pos pos, Engine& engine, LeverSpawnData* spawnData) :
+FeatureLever::FeatureLever(FeatureId id, Pos pos, Engine& engine, LeverSpawnData* spawnData) :
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 
@@ -14,7 +14,7 @@ SDL_Color FeatureLever::getColor() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
-Tile_t FeatureLever::getTile() const {
+Tile FeatureLever::getTile() const {
   return isPositionLeft_ ? tile_leverLeft : tile_leverRight;
 }
 

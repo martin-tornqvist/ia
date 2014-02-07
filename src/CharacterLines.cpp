@@ -234,7 +234,7 @@ void drawInfoLines(Engine& eng) {
 //    player->getPropHandler().appliedProps_;
 //  for(unsigned int i = 0; i < appliedProps.size(); i++) {
 //    Prop* const prop = appliedProps.at(i);
-//    const PropAlignment_t alignment = prop->getAlignment();
+//    const PropAlignment alignment = prop->getAlignment();
 //    const SDL_Color statusColor =
 //      alignment == propAlignmentGood ? clrMsgGood :
 //      alignment == propAlignmentBad  ? clrMsgBad  : clrWhite;
