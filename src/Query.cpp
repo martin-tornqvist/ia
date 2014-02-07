@@ -15,17 +15,27 @@ void Query::waitForKeyPress() const {
   }
 }
 
-bool Query::yesOrNo() const {
+YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
+  if(eng.config->isBotPlaying) {
+    return YesNoAnswer::yes;
+  }
+
   KeyboardReadReturnData d = eng.input->readKeysUntilFound();
   while(
-    d.key_ != 'y' && d.key_ != 'n' &&
-    d.sdlKey_ != SDLK_ESCAPE && d.sdlKey_ != SDLK_SPACE) {
+    d.key_    != 'y'          &&
+    d.key_    != 'n'          &&
+    d.sdlKey_ != SDLK_ESCAPE  &&
+    d.sdlKey_ != SDLK_SPACE   &&
+    (d.key_ != keyForSpecialEvent || keyForSpecialEvent == -1)) {
     d = eng.input->readKeysUntilFound();
   }
-  if(d.key_ == 'y') {
-    return true;
+  if(d.key_ == keyForSpecialEvent && keyForSpecialEvent != -1) {
+    return YesNoAnswer::special;
   }
-  return false;
+  if(d.key_ == 'y') {
+    return YesNoAnswer::yes;
+  }
+  return YesNoAnswer::no;
 }
 
 int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,

@@ -31,71 +31,69 @@ int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
 
-  bool quitToMainMenu = false;
-
-  Engine* const eng = new Engine(&quitToMainMenu);
-  eng->initSdl();
-  eng->initConfig();
-  eng->initRenderer();
-  eng->initAudio();
+  Engine eng;
+  eng.initSdl();
+  eng.initConfig();
+  eng.initRenderer();
+  eng.initAudio();
 
   bool quitGame = false;
   while(quitGame == false) {
-    eng->initGame();
+    eng.initGame();
 
     int introMusChannel = -1;
     const GameEntryMode gameEntryType =
-      eng->mainMenu->run(quitGame, introMusChannel);
+      eng.mainMenu->run(quitGame, introMusChannel);
 
     if(quitGame == false) {
-      quitToMainMenu = false;
+      eng.quitToMainMenu_ = false;
 
       if(gameEntryType == gameEntry_new) {
-        if(eng->config->isBotPlaying) {
-          eng->playerBonHandler->setAllTraitsToPicked();
-          eng->bot->init();
+        if(eng.config->isBotPlaying) {
+          eng.playerBonHandler->setAllTraitsToPicked();
+          eng.bot->init();
         }
-        eng->playerCreateCharacter->createCharacter();
-        eng->player->spawnStartItems();
+        eng.playerCreateCharacter->createCharacter();
+        eng.player->spawnStartItems();
 
-        eng->gameTime->insertActorInLoop(eng->player);
+        eng.gameTime->insertActorInLoop(eng.player);
 
-        if(eng->config->isIntroLevelSkipped == false) {
+        if(eng.config->isIntroLevelSkipped == false) {
           //If intro level is used, build forest.
-          eng->renderer->coverPanel(panel_screen);
-          eng->renderer->updateScreen();
-          MapGenIntroForest(*eng).run();
+          eng.renderer->coverPanel(panel_screen);
+          eng.renderer->updateScreen();
+          MapGenIntroForest(eng).run();
         } else {
           //Else build first dungeon level
-          eng->dungeonClimb->travelDown();
+          eng.dungeonClimb->travelDown();
         }
-        eng->dungeonMaster->setTimeStartedToNow();
-        const TimeData& t = eng->dungeonMaster->getTimeStarted();
+        eng.dungeonMaster->setTimeStartedToNow();
+        const TimeData& t = eng.dungeonMaster->getTimeStarted();
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
-      eng->audio->fadeOutChannel(introMusChannel);
+      eng.audio->fadeOutChannel(introMusChannel);
 
-      eng->player->updateFov();
-      eng->renderer->drawMapAndInterface();
+      eng.player->updateFov();
+      eng.renderer->drawMapAndInterface();
 
       if(gameEntryType == gameEntry_new) {
-        if(eng->config->isIntroLevelSkipped == 0) {
+        if(eng.config->isIntroLevelSkipped == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
           introMessage += "\"Cult of Starry Wisdom\". ";
           introMessage += "I will enter these sprawling catacombs and rob them of treasures and knowledge. ";
           introMessage += "The ultimate prize is an artifact of non-human origin called \"The shining Trapezohedron\" ";
           introMessage += "- a window to all secrets of the universe.";
-          eng->popup->showMessage(introMessage, true, "The story so far...");
+          eng.popup->showMessage(introMessage, true, "The story so far...");
         }
       }
 
       //========== M A I N   L O O P ==========
-      while(quitToMainMenu == false) {
-        if(eng->player->deadState == actorDeadState_alive) {
+      while(eng.quitToMainMenu_ == false) {
+        if(eng.player->deadState == actorDeadState_alive) {
 
-          Actor* const actor = eng->gameTime->getCurrentActor();
+          Actor* const actor = eng.gameTime->getCurrentActor();
 
           //Properties running on the actor's turn are not immediately applied
           //on the actor, but instead placed in a buffer. This is to ensure
@@ -110,34 +108,32 @@ int main(int argc, char* argv[]) {
           if(actor->getPropHandler().allowAct()) {
             actor->onActorTurn();
           } else {
-            if(actor == eng->player) {
-              eng->sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+            if(actor == eng.player) {
+              eng.sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
-            eng->gameTime->actorDidAct();
+            eng.gameTime->actorDidAct();
           }
         } else {
           //Player is dead, run postmortem, then return to main menu
-          dynamic_cast<Player*>(eng->player)->waitTurnsLeft = -1;
-          eng->log->addMsg(
+          dynamic_cast<Player*>(eng.player)->waitTurnsLeft = -1;
+          eng.log->addMsg(
             "=== I AM DEAD === (press any key to view postmortem information)",
             clrMsgBad);
-          eng->renderer->drawMapAndInterface();
-          eng->log->clearLog();
-          eng->query->waitForKeyPress();
-          eng->highScore->gameOver(false);
-          eng->postmortem->run(&quitGame);
-          quitToMainMenu = true;
+          eng.renderer->drawMapAndInterface();
+          eng.log->clearLog();
+          eng.query->waitForKeyPress();
+          eng.highScore->gameOver(false);
+          eng.postmortem->run(&quitGame);
+          eng.quitToMainMenu_ = true;
         }
       }
     }
-    eng->cleanupGame();
+    eng.cleanupGame();
   }
-  eng->cleanupAudio();
-  eng->cleanupRenderer();
-  eng->cleanupConfig();
-  eng->cleanupSdl();
-
-  delete eng;
+  eng.cleanupAudio();
+  eng.cleanupRenderer();
+  eng.cleanupConfig();
+  eng.cleanupSdl();
 
   trace << "main() [DONE]" << endl;
 

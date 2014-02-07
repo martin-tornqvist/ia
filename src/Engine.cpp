@@ -155,7 +155,7 @@ void Engine::initGame() {
   fov = new Fov(*this);
   soundEmitter = new SoundEmitter(*this);
   dungeonMaster = new DungeonMaster(*this);
-  input = new Input(*this, quitToMainMenu_);
+  input = new Input(*this);
   dungeonClimb = new DungeonClimb(*this);
   mapTemplateHandler = new MapTemplateHandler(*this);
   itemDrop = new ItemDrop(*this);

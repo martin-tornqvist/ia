@@ -101,7 +101,7 @@ class Player;
 
 class Engine {
 public:
-  Engine(bool* quitToMainMenu = NULL) : isCheatVisionEnabled(false),
+  Engine(bool* quitToMainMenu = NULL) : isCheatVisionEnabled_(false),
     quitToMainMenu_(quitToMainMenu) {
   }
   ~Engine() {}
@@ -191,10 +191,8 @@ public:
 
   Player* player;
 
-  bool isCheatVisionEnabled;
-
-private:
-  bool* quitToMainMenu_;
+  bool isCheatVisionEnabled_;
+  bool quitToMainMenu_;
 };
 
 #endif

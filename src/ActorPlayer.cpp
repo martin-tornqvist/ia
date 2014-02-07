@@ -1113,7 +1113,7 @@ void Player::moveDir(Dir dir) {
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   eng.renderer->drawMapAndInterface();
-                  if(eng.query->yesOrNo() == false) {
+                  if(eng.query->yesOrNo() == YesNoAnswer::no) {
                     eng.log->clearLog();
                     eng.renderer->drawMapAndInterface();
                     return;
@@ -1193,6 +1193,7 @@ void Player::moveDir(Dir dir) {
 
       //Note: bump() prints block messages.
       for(FeatureMob * m : featureMobs) {m->bump(*this);}
+
       eng.map->cells[dest.x][dest.y].featureStatic->bump(*this);
     }
 
@@ -1315,7 +1316,7 @@ void Player::updateFov() {
 
   if(propHandler_->allowSee()) {FOVhack();}
 
-  if(eng.isCheatVisionEnabled) {
+  if(eng.isCheatVisionEnabled_) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         eng.map->cells[x][y].isSeenByPlayer = true;

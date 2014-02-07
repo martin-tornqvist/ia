@@ -31,8 +31,7 @@
 #include "SdlWrapper.h"
 #include "Hide.h"
 
-Input::Input(Engine& engine, bool* quitToMainMenu) :
-  eng(engine), quitToMainMenu_(quitToMainMenu)  {
+Input::Input(Engine& engine) : eng(engine)  {
   setKeyRepeatDelays();
 }
 
@@ -248,10 +247,10 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(itemAtPlayer != NULL) {
         if(itemAtPlayer->getData().id == item_trapezohedron) {
           eng.dungeonMaster->winGame();
-          *quitToMainMenu_ = true;
+          eng.quitToMainMenu_ = true;
         }
       }
-      if(*quitToMainMenu_ == false) {
+      if(eng.quitToMainMenu_ == false) {
         eng.itemPickup->tryPick();
       }
     }
@@ -453,41 +452,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         "Quit the current game (y/n)? Save and highscore are not kept.",
         clrWhiteHigh);
       eng.renderer->drawMapAndInterface();
-      if(eng.query->yesOrNo()) {
-        *quitToMainMenu_ = true;
+      if(eng.query->yesOrNo() == YesNoAnswer::yes) {
+        eng.quitToMainMenu_ = true;
       } else {
         eng.log->clearLog();
         eng.renderer->drawMapAndInterface();
       }
     } else {
-      *quitToMainMenu_ = true;
-    }
-    clearEvents();
-    return;
-  }
-  //----------------------------------- SAVE AND QUIT
-  else if(d.key_ == 'S') {
-    if(eng.player->deadState == actorDeadState_alive) {
-      const Pos& p = eng.player->pos;
-      const FeatureStatic* const f = eng.map->cells[p.x][p.y].featureStatic;
-      if(f->getId() == feature_stairsDown) {
-        eng.log->clearLog();
-        eng.log->addMsg("Save and quit (y/n)?", clrWhiteHigh);
-        eng.renderer->drawMapAndInterface();
-        if(eng.query->yesOrNo()) {
-          eng.saveHandler->save();
-          *quitToMainMenu_ = true;
-        } else {
-          eng.log->clearLog();
-          eng.renderer->drawMapAndInterface();
-        }
-      } else {
-        eng.log->clearLog();
-        eng.renderer->drawMapAndInterface();
-      }
-    } else {
-      eng.log->addMsg("Saving can only be done on stairs.");
-      eng.renderer->drawMapAndInterface();
+      eng.quitToMainMenu_ = true;
     }
     clearEvents();
     return;
@@ -511,16 +483,16 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   //----------------------------------- VISION CHEAT
   else if(d.sdlKey_ == SDLK_F4) {
     if(IS_DEBUG_MODE) {
-      if(eng.isCheatVisionEnabled) {
+      if(eng.isCheatVisionEnabled_) {
         for(int y = 0; y < MAP_H; y++) {
           for(int x = 0; x < MAP_W; x++) {
             eng.map->cells[x][y].isSeenByPlayer = false;
             eng.map->cells[x][y].isExplored     = false;
           }
         }
-        eng.isCheatVisionEnabled = false;
+        eng.isCheatVisionEnabled_ = false;
       } else {
-        eng.isCheatVisionEnabled = true;
+        eng.isCheatVisionEnabled_ = true;
       }
       eng.player->updateFov();
       eng.renderer->drawMapAndInterface();

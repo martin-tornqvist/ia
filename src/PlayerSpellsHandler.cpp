@@ -55,7 +55,7 @@ void PlayerSpellsHandler::run() {
             eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
                             clrWhiteHigh);
             eng.renderer->drawMapAndInterface();
-            if(eng.query->yesOrNo() == false) {
+            if(eng.query->yesOrNo() == YesNoAnswer::no) {
               eng.log->clearLog();
               eng.renderer->drawMapAndInterface();
               return;

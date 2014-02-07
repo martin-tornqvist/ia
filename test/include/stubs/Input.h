@@ -38,10 +38,6 @@ private:
   friend class Bot;
   void handleKeyPress(const KeyboardReadReturnData&) {}
   void clearLogMessages() {}
-//  SDL_Event event_;
-//  int* dungeonLevel_;
-//  Engine& eng;
-//  bool* quitToMainMenu_;
 };
 
 #endif

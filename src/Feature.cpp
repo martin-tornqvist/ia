@@ -8,6 +8,8 @@
 #include "MapParsing.h"
 #include "GameTime.h"
 #include "DungeonClimb.h"
+#include "Query.h"
+#include "SaveHandler.h"
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(FeatureId id, Pos pos, Engine& engine,
@@ -261,9 +263,25 @@ void Grave::bump(Actor& actorBumping) {
 //---------------------------------------------------------- STAIRS
 void Stairs::bump(Actor& actorBumping) {
   if(&actorBumping == eng.player) {
-    eng.player->pos = pos_;
     eng.log->clearLog();
-    trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
-    eng.dungeonClimb->tryUseDownStairs();
+    eng.log->addMsg("Descend the stairs? (y/n) | s - save and quit");
+    eng.renderer->drawMapAndInterface();
+    YesNoAnswer answer = eng.query->yesOrNo('s');
+    switch(answer) {
+      case YesNoAnswer::yes: {
+        eng.player->pos = pos_;
+        trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
+        eng.dungeonClimb->tryUseDownStairs();
+      } break;
+      case YesNoAnswer::no: {
+        eng.log->clearLog();
+        eng.renderer->drawMapAndInterface();
+      } break;
+      case YesNoAnswer::special: {
+        eng.player->pos = pos_;
+        eng.saveHandler->save();
+        eng.quitToMainMenu_ = true;
+      } break;
+    }
   }
 }

@@ -30,7 +30,7 @@ public:
 
 class Input {
 public:
-  Input(Engine& engine, bool* quitToMainMenu);
+  Input(Engine& engine);
 
   void handleMapModeInputUntilFound();
 
@@ -46,7 +46,6 @@ private:
   SDL_Event event_;
   int* dungeonLevel_;
   Engine& eng;
-  bool* quitToMainMenu_;
 };
 
 #endif

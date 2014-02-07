@@ -5,12 +5,16 @@
 
 class Engine;
 
+enum class YesNoAnswer {
+  yes, no, special
+};
+
 class Query {
 public:
   Query(Engine& engine) : eng(engine) {}
   void waitForKeyPress() const;
 
-  bool yesOrNo() const;
+  YesNoAnswer yesOrNo(char keyForSpecialEvent = -1) const;
 
   Pos dir() const;
 
