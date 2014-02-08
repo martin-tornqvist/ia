@@ -183,8 +183,10 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {
-      eng.featureFactory->spawnFeatureAt(
-        feature_smoke, pos, new SmokeSpawnData(eng.dice.range(17, 22)));
+      if(blockers[pos.x][pos.y] == false) {
+        eng.featureFactory->spawnFeatureAt(
+          feature_smoke, pos, new SmokeSpawnData(eng.dice.range(17, 22)));
+      }
     }
   }
 

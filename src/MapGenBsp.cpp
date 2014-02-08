@@ -15,15 +15,18 @@
 #include "Map.h"
 #include "FeatureWall.h"
 #include "MapParsing.h"
+#include "Renderer.h"
 
 #ifdef DEMO_MODE
-#include "Renderer.h"
 #include "SdlWrapper.h"
 #endif // DEMO_MODE
 
 //============================================================= MAPBUILD-BSP
 bool MapGenBsp::run_() {
   trace << "MapGenBsp::run_()..." << endl;
+
+  eng.renderer->clearScreen();
+  eng.renderer->updateScreen();
 
   eng.map->resetMap();
 
@@ -795,8 +798,9 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   trace << "MapGenBsp::revealAllDoorsBetweenPlayerAndStairs()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  blockers[stairsPos.x][stairsPos.y] = false;
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -809,18 +813,17 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   vector<Pos> path;
   PathFind::run(eng.player->pos, stairsPos, blockers, path, eng);
 
-  trace << "MapGenBsp: Travelling along Pos vector of size " << path.size();
-  trace << " and revealing all doors" << endl;
-  const unsigned int PATH_SIZE = path.size();
-  for(unsigned int i = 0; i < PATH_SIZE; i++) {
-    const Pos& pos = path.at(i);
+  assert(path.empty() == false);
+
+  trace << "MapGenBsp: Travelling along path and revealing all doors" << endl;
+  for(Pos & pos : path) {
     Feature* const feature = eng.map->cells[pos.x][pos.y].featureStatic;
     if(feature->getId() == feature_door) {
       dynamic_cast<Door*>(feature)->reveal(false);
     }
   }
 
-  trace << "MapGenBsp::revealAllDoorsBetweenPlayerAndStairs()[DONE]" << endl;
+  trace << "MapGenBsp::revealAllDoorsBetweenPlayerAndStairs() [DONE]" << endl;
 }
 
 void MapGenBsp::decorate() {
@@ -924,9 +927,9 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
       const Dir regionDir = c2.x > c1.x ? dirRight :
-                              c2.x < c1.x ? dirLeft :
-                              c2.y > c1.y ? dirDown :
-                              dirUp;
+                            c2.x < c1.x ? dirLeft :
+                            c2.y > c1.y ? dirDown :
+                            dirUp;
 
       MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
         *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
