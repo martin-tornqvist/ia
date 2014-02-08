@@ -38,13 +38,14 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   //Emit sound
   const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
-  string sndMsg = wpn.getData().rangedSoundMessage;
+  string sndMsg = wpn.getData().rangedSndMsg;
   if(sndMsg.empty() == false) {
     sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
-    const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
+    const SndVol vol = wpn.getData().rangedSndVol;
     const SfxId sfx = wpn.getData().rangedAttackSfx;
-    eng.soundEmitter->emitSound(
-      Sound(sndMsg, sfx, true, attacker.pos, &attacker, IS_LOUD, true));
+    Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos, &attacker,
+            vol, AlertsMonsters::yes);
+    eng.sndEmitter->emitSnd(snd);
   }
 
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -119,9 +120,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
-      Sound snd("I hear a ricochet.",
-                sfxRicochet, true, curPos, NULL, false, true);
-      eng.soundEmitter->emitSound(snd);
+      Snd snd("I hear a ricochet.", sfxRicochet, IgnoreMsgIfOriginSeen::yes,
+              curPos, NULL, SndVol::low, AlertsMonsters::yes);
+      eng.sndEmitter->emitSnd(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         eng.renderer->drawMapAndInterface(false);
@@ -140,9 +141,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
-      Sound snd("I hear a ricochet.", sfxRicochet, true, curPos, NULL,
-                false, true);
-      eng.soundEmitter->emitSound(snd);
+      Snd snd("I hear a ricochet.", sfxRicochet, IgnoreMsgIfOriginSeen::yes,
+              curPos, NULL, SndVol::low, AlertsMonsters::yes);
+      eng.sndEmitter->emitSnd(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         eng.renderer->drawMapAndInterface(false);

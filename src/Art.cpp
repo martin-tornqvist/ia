@@ -115,7 +115,7 @@ Pos Art::getColumnAndRowGlyph(const char glyph) {
 
 
 
-Pos Art::getColumnAndRowTile(const Tile tile) {
+Pos Art::getColumnAndRowTile(const TileId tile) {
   switch(tile) {
     case tile_playerFirearm: return Pos(0, 0); break;
     case tile_playerMelee: return Pos(1, 0); break;
@@ -257,6 +257,6 @@ Pos Art::getGlyphPoss(const char glyph) {
   return getColumnAndRowGlyph(glyph);
 }
 
-Pos Art::getTilePoss(const Tile tile) {
+Pos Art::getTilePoss(const TileId tile) {
   return getColumnAndRowTile(tile);
 }

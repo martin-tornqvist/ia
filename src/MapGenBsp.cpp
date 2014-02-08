@@ -766,7 +766,7 @@ Pos MapGenBsp::placeStairs() {
 
   trace << "MapGenBsp: Spawning stairs at chosen cell" << endl;
   Feature* f = eng.featureFactory->spawnFeatureAt(
-                 feature_stairsDown, stairsPos);
+                 feature_stairs, stairsPos);
   f->setHasBlood(false);
 
   trace << "MapGenBsp::placeStairs()[DONE]" << endl;

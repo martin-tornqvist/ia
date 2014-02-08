@@ -72,7 +72,7 @@ bool MapGenCaveLvl::run_() {
     eng.dice.range((floodFillVector.size() * 4) / 5,
                    floodFillVector.size() - 1);
   eng.featureFactory->spawnFeatureAt(
-    feature_stairsDown, floodFillVector.at(STAIR_ELEMENT).pos);
+    feature_stairs, floodFillVector.at(STAIR_ELEMENT).pos);
   eng.populateMonsters->populateCaveLevel();
 
   return true;

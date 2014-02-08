@@ -10,6 +10,8 @@
 #include "FeatureData.h"
 #include "AudioIds.h"
 
+enum class SndVol;
+
 enum ItemWeight {
   itemWeight_none       = 0,
   itemWeight_extraLight = 1,  //Ammo...
@@ -209,7 +211,7 @@ private:
 public:
   char glyph;
   SDL_Color color;
-  Tile tile;
+  TileId tile;
   PrimaryAttackMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
   bool isArmor, isCloak, isRing, isAmulet;
@@ -234,13 +236,13 @@ public:
   DmgTypes rangedDmgType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
-  Tile rangedMissileTile;
+  TileId rangedMissileTile;
   SDL_Color rangedMissileColor;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttackMessages rangedAttackMessages;
-  string rangedSoundMessage;
-  bool rangedSoundIsLoud;
+  string rangedSndMsg;
+  SndVol rangedSndVol;
   bool rangedMakesRicochetSound;
   string landOnHardSurfaceSoundMsg;
   SfxId landOnHardSurfaceSfx;

@@ -15,6 +15,7 @@
 #include "ItemPotion.h"
 #include "ActorPlayer.h"
 #include "ItemMedicalBag.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -58,8 +59,8 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedMissileColor = clrWhite;
       d->rangedMissileLeavesTrail = false;
       d->rangedMissileLeavesSmoke = false;
-      d->rangedSoundMessage = "";
-      d->rangedSoundIsLoud = false;
+      d->rangedSndMsg = "";
+      d->rangedSndVol = SndVol::low;
       d->rangedMakesRicochetSound = false;
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
       d->landOnHardSurfaceSfx = endOfSfxId;
@@ -114,7 +115,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->meleeHitSmallSfx = sfxHitSmall;
       d->meleeHitMediumSfx = sfxHitMedium;
       d->meleeHitHardSfx = sfxHitHard;
-      d->rangedSoundIsLoud = true;
+      d->rangedSndVol = SndVol::high;
     } break;
 
     case itemData_rangedWpnIntr: {
@@ -125,7 +126,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->spawnStandardMaxDLVL = -1;
       d->isMeleeWeapon = false;
       d->rangedMissileGlyph = '*';
-      d->rangedSoundIsLoud = false;
+      d->rangedSndVol = SndVol::low;
     } break;
 
     case itemData_missileWeapon: {
@@ -134,7 +135,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isStackable = true;
       d->isMissileWeapon = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-      d->rangedSoundIsLoud = false;
+      d->rangedSndVol = SndVol::low;
     } break;
 
     case itemData_ammo: {
@@ -271,7 +272,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmg = DiceParam(8, 3);
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
-  d->rangedSoundMessage = "I hear a shotgun blast.";
+  d->rangedSndMsg = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunSawedOffFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxShotgunReload;
@@ -290,7 +291,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmg = DiceParam(6, 3);
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
-  d->rangedSoundMessage = "I hear a shotgun blast.";
+  d->rangedSndMsg = "I hear a shotgun blast.";
   d->rangedAttackSfx = sfxShotgunPumpFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxShotgunReload;
@@ -317,7 +318,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmg = DiceParam(1, 3);
   d->rangedAmmoTypeUsed = item_napalmCartridge;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
-  d->rangedSoundMessage = "I hear the blast of a launched missile.";
+  d->rangedSndMsg = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrRedLgt;
   d->spawnStandardMinDLVL = 10;
@@ -350,7 +351,7 @@ void ItemDataHandler::initDataList() {
   d->rangedHitChanceMod = -10;
   d->rangedAmmoTypeUsed = item_drumOfBullets;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
-  d->rangedSoundMessage = "I hear the burst of a machine gun.";
+  d->rangedSndMsg = "I hear the burst of a machine gun.";
   d->rangedAttackSfx = sfxMachineGunFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxMachineGunReload;
@@ -377,7 +378,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_pistolClip;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
-  d->rangedSoundMessage = "I hear a pistol being fired.";
+  d->rangedSndMsg = "I hear a pistol being fired.";
   d->rangedAttackSfx = sfxPistolFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = sfxPistolReload;
@@ -396,7 +397,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_flare;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a flare gun");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
-  d->rangedSoundMessage = "I hear a flare gun being fired.";
+  d->rangedSndMsg = "I hear a flare gun being fired.";
   d->propAppliedOnRanged = new PropFlared(eng, propTurnsStd);
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -424,7 +425,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmgType = dmgType_electric;
   d->rangedAmmoTypeUsed = item_teslaCanister;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
-  d->rangedSoundMessage = "I hear loud electric crackle.";
+  d->rangedSndMsg = "I hear loud electric crackle.";
   d->rangedMissileGlyph = '*';
   d->rangedMissileColor = clrYellow;
   d->spawnStandardMinDLVL = 7;
@@ -457,7 +458,7 @@ void ItemDataHandler::initDataList() {
   d->rangedCausesKnockBack = true;
   d->rangedAmmoTypeUsed = item_ironSpike;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
-  d->rangedSoundMessage = "I hear a very crude gun being fired.";
+  d->rangedSndMsg = "I hear a very crude gun being fired.";
   d->rangedMakesRicochetSound = true;
   d->rangedMissileGlyph = '/';
   d->rangedMissileColor = clrGray;
@@ -727,7 +728,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("", "spits acid pus at me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_bloatedZombie]);
-  d->rangedSoundMessage = "I hear spitting.";
+  d->rangedSndMsg = "I hear spitting.";
   d->rangedMissileColor = clrGreenLgt;
   d->rangedDmgType = dmgType_acid;
   d->rangedMissileGlyph = '*';
@@ -804,7 +805,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_fireHoundBreath);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
-  d->rangedSoundMessage = "I hear a burst of flames.";
+  d->rangedSndMsg = "I hear a burst of flames.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_fireHound]);
   d->propAppliedOnRanged = new PropBurning(eng, propTurnsStd);
   d->rangedMissileColor = clrRedLgt;
@@ -824,7 +825,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_frostHoundBreath);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths frost at me");
-  d->rangedSoundMessage = "I hear a chilling sound.";
+  d->rangedSndMsg = "I hear a chilling sound.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_frostHound]);
   d->rangedMissileColor = clrBlueLgt;
   d->rangedMissileGlyph = '*';
@@ -908,9 +909,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDmgType = dmgType_electric;
   d->propAppliedOnRanged = new PropParalyzed(eng, propTurnsSpecified, 2);
-  d->rangedSoundMessage = "I hear a bolt of electricity.";
+  d->rangedSndMsg = "I hear a bolt of electricity.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_miGo]);
-  d->rangedSoundIsLoud = true;
+  d->rangedSndVol = SndVol::high;
   dataList[d->id] = d;
 
   d = new ItemData(item_polypTentacle);
@@ -965,10 +966,10 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_deepOne]);
-  d->rangedSoundMessage = "";
+  d->rangedSndMsg = "";
   d->rangedMissileColor = clrBrown;
   d->rangedMissileGlyph = '/';
-  d->rangedSoundIsLoud = false;
+  d->rangedSndVol = SndVol::low;
   dataList[d->id] = d;
 
   d = new ItemData(item_deepOneSpearAttack);

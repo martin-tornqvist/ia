@@ -19,7 +19,7 @@ public:
 
   void initAndClearPrev() {}
 
-  void drawTile(const Tile, const PanelId, const Pos&, const SDL_Color&,
+  void drawTile(const TileId, const PanelId, const Pos&, const SDL_Color&,
                 const SDL_Color& = clrBlack) {}
 
   void drawGlyph(const char, const PanelId, const Pos&,

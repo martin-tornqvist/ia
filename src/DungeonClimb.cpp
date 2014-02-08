@@ -82,7 +82,7 @@ void DungeonClimb::tryUseDownStairs() {
   const FeatureId featureIdAtPlayer =
     eng.map->cells[playerPos.x][playerPos.y].featureStatic->getId();
 
-  if(featureIdAtPlayer == feature_stairsDown) {
+  if(featureIdAtPlayer == feature_stairs) {
     trace << "DungeonClimb: Player is on stairs" << endl;
     if(DLVL >= FIRST_CAVERN_LEVEL && DLVL <= LAST_CAVERN_LEVEL) {
       eng.log->addMsg("I climb downwards.");

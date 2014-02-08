@@ -28,7 +28,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
 
   for(int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++) {
 
-    const Tile tile = iAnim == 0 ? tile_blast1 : tile_blast2;
+    const TileId tile = iAnim == 0 ? tile_blast1 : tile_blast2;
 
     const int NR_OUTER = posLists.size();
     for(int iOuter = 0; iOuter < NR_OUTER; iOuter++) {
@@ -104,9 +104,11 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
 
-  Sound snd("I hear an explosion!", sfx, true, origin, NULL,
-            SHOULD_DO_EXPLOSION_DMG, true);
-  eng.soundEmitter->emitSound(snd);
+  SndVol vol = SHOULD_DO_EXPLOSION_DMG ? SndVol::high : SndVol::low;
+
+  Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
+          NULL, vol, AlertsMonsters::yes);
+  eng.sndEmitter->emitSnd(snd);
 
   draw(posLists, blockers, SHOULD_OVERRIDE_CLR, clrOverride, eng);
 
@@ -178,8 +180,9 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   getPositionsReached(area, origin, blockers, eng, posLists);
 
   //TODO Sound message?
-  Sound snd("", endOfSfxId, true, origin, NULL, false, true);
-  eng.soundEmitter->emitSound(snd);
+  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
+          SndVol::low, AlertsMonsters::yes);
+  eng.sndEmitter->emitSnd(snd);
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {

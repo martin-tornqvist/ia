@@ -34,7 +34,7 @@ public:
   void  bump(Actor& actorBumping) override;
   SDL_Color getColor()                          const override;
   char getGlyph()                               const override;
-  Tile getTile()                              const override;
+  TileId getTile()                              const override;
   string getDescr(const bool DEFINITE_ARTICLE)  const override;
   void disarm()                                 override;
   bool canHaveCorpse()  const override {return isHidden_;}
@@ -92,7 +92,7 @@ protected:
   virtual string getTitle()     const = 0;
   virtual SDL_Color getColor()  const = 0;
   virtual char getGlyph()       const = 0;
-  virtual Tile getTile()      const = 0;
+  virtual TileId getTile()      const = 0;
   virtual bool isMagical()      const = 0;
 
   Pos pos_;
@@ -108,7 +108,7 @@ private:
   SDL_Color   getColor()    const override {return clrWhiteHigh;}
   string      getTitle()    const override {return "Dart trap";}
   char        getGlyph()    const override {return '^';}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
   bool        isMagical()   const override {return false;}
   bool        isPoisoned;
 };
@@ -121,7 +121,7 @@ private:
   SDL_Color   getColor()    const override {return clrWhiteHigh;}
   string      getTitle()    const override {return "Spear trap";}
   char        getGlyph()    const override {return '^';}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
   bool        isMagical()   const override {return false;}
   bool isPoisoned;
 };
@@ -136,7 +136,7 @@ private:
   string      getTitle()    const override {return "Gas trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
 };
 
 class TrapGasParalyzation: public SpecificTrapBase {
@@ -150,7 +150,7 @@ private:
   string      getTitle()    const override {return "Gas trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
 };
 
 class TrapGasFear: public SpecificTrapBase {
@@ -163,7 +163,7 @@ private:
   string      getTitle()    const override {return "Gas trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
 };
 
 class TrapBlindingFlash: public SpecificTrapBase {
@@ -176,7 +176,7 @@ private:
   string      getTitle()    const override {return "Blinding trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override {return tile_trapGeneral;}
+  TileId      getTile()     const override {return tile_trapGeneral;}
 };
 
 class TrapTeleport: public SpecificTrapBase {
@@ -190,7 +190,7 @@ private:
   string      getTitle()    const override {return "Teleporter trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return true;}
-  Tile      getTile()     const override {return tile_elderSign;}
+  TileId      getTile()     const override {return tile_elderSign;}
 };
 
 class TrapSummonMonster: public SpecificTrapBase {
@@ -204,7 +204,7 @@ private:
   string      getTitle()    const override {return "Monster summoning trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return true;}
-  Tile      getTile()     const override {return tile_elderSign;}
+  TileId      getTile()     const override {return tile_elderSign;}
 };
 
 class TrapSmoke: public SpecificTrapBase {
@@ -217,7 +217,7 @@ private:
   string      getTitle()    const override {return "Smoke trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override { return tile_trapGeneral;}
+  TileId      getTile()     const override { return tile_trapGeneral;}
 };
 
 class TrapAlarm: public SpecificTrapBase {
@@ -230,7 +230,7 @@ private:
   string      getTitle()    const override {return "Alarm trap";}
   char        getGlyph()    const override {return '^';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override { return tile_trapGeneral;}
+  TileId      getTile()     const override { return tile_trapGeneral;}
 };
 
 
@@ -249,7 +249,7 @@ private:
   string      getTitle()    const override {return "Spider web";}
   char        getGlyph()    const override {return '*';}
   bool        isMagical()   const override {return false;}
-  Tile      getTile()     const override {return tile_spiderWeb;}
+  TileId      getTile()     const override {return tile_spiderWeb;}
 
   bool isHoldingActor;
 };

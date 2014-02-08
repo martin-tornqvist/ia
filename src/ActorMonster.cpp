@@ -257,9 +257,9 @@ void Monster::moveDir(Dir dir) {
   eng.gameTime->actorDidAct();
 }
 
-void Monster::hearSound(const Sound& snd) {
+void Monster::hearSound(const Snd& snd) {
   if(deadState == actorDeadState_alive) {
-    if(snd.getIsAlertingMonsters()) {
+    if(snd.isAlertingMonsters()) {
       becomeAware();
     }
   }
@@ -273,7 +273,8 @@ void Monster::speakPhrase() {
   const SfxId sfx = IS_SEEN_BY_PLAYER ?
                     getAggroSfxMonsterSeen() :
                     getAggroSfxMonsterHidden();
-  eng.soundEmitter->emitSound(Sound(msg, sfx, false, pos, this, false, true));
+  eng.sndEmitter->emitSnd(Snd(msg, sfx, IgnoreMsgIfOriginSeen::no, pos, this,
+                              SndVol::low, AlertsMonsters::yes));
 }
 
 void Monster::becomeAware() {

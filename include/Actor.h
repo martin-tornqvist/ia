@@ -78,7 +78,7 @@ public:
   inline bool isHumanoid() const {return data_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getColor() {return clr_;}
-  inline const Tile& getTile() const {return tile_;}
+  inline const TileId& getTile() const {return tile_;}
 
   void addLight(bool light[MAP_W][MAP_H]) const;
 
@@ -115,7 +115,7 @@ protected:
 
   SDL_Color clr_;
   char glyph_;
-  Tile tile_;
+  TileId tile_;
 
   int hp_, hpMax_, spi_, spiMax_;
 

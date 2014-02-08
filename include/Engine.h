@@ -35,7 +35,7 @@ class Log;
 class Phrases;
 class Fov;
 class MapPatterns;
-class SoundEmitter;
+class SndEmitter;
 class FeatureDataHandler;
 class DungeonMaster;
 class Input;
@@ -127,7 +127,7 @@ public:
   Phrases* phrases;
   Fov* fov;
   MapPatterns* mapPatterns;
-  SoundEmitter* soundEmitter;
+  SndEmitter* sndEmitter;
   FeatureDataHandler* featureDataHandler;
   DungeonMaster* dungeonMaster;
   Input* input;

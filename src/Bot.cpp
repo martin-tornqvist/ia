@@ -79,7 +79,7 @@ void Bot::act() {
   const Pos& pos = eng.player->pos;
   const FeatureStatic* const featureHere =
     eng.map->cells[pos.x][pos.y].featureStatic;
-  if(featureHere->getId() == feature_stairsDown) {
+  if(featureHere->getId() == feature_stairs) {
     if(eng.map->getDlvl() >= LAST_CAVERN_LEVEL) {
       trace << "Bot: Starting new run on first dungeon level" << endl;
       eng.map->dlvl_ = 0;
@@ -172,7 +172,7 @@ void Bot::findPathToStairs() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
       const FeatureId curId = eng.map->cells[x][y].featureStatic->getId();
-      if(curId == feature_stairsDown) {
+      if(curId == feature_stairs) {
         blockers[x][y] = false;
         stairPos.set(x, y);
       } else if(curId == feature_door) {

@@ -384,8 +384,9 @@ void Player::incrInsanity() {
               msg += "I scream in terror.";
             }
             eng.popup->showMessage(msg, true, "Screaming!", sfxInsanityRising);
-            eng.soundEmitter->emitSound(
-              Sound("", endOfSfxId, true, pos, this, true, true));
+            Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+                    SndVol::high, AlertsMonsters::yes);
+            eng.sndEmitter->emitSnd(snd);
             return;
           }
         } break;
@@ -398,8 +399,9 @@ void Player::incrInsanity() {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng.log->addMsg(playerName + ": " + phrase);
           }
-          eng.soundEmitter->emitSound(
-            Sound("", endOfSfxId, true, pos, this, false, true));
+          Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+                  SndVol::low, AlertsMonsters::yes);
+          eng.sndEmitter->emitSnd(snd);
           return;
         } break;
 
@@ -413,10 +415,10 @@ void Player::incrInsanity() {
 
         case 4: {
           msg += "I laugh nervously.";
-          eng.popup->showMessage(msg, true, "HAHAHA!",
-                                 sfxInsanityRising);
-          eng.soundEmitter->emitSound(
-            Sound("", endOfSfxId, true, pos, this, false, true));
+          eng.popup->showMessage(msg, true, "HAHAHA!", sfxInsanityRising);
+          Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+                  SndVol::low, AlertsMonsters::yes);
+          eng.sndEmitter->emitSnd(snd);
           return;
         } break;
 
@@ -1052,7 +1054,7 @@ void Player::explosiveThrown() {
   eng.renderer->drawMapAndInterface();
 }
 
-void Player::hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                        const Dir dirToOrigin,
                        const int PERCENT_AUDIBLE_DISTANCE) {
   const SfxId sfx = snd.getSfx();

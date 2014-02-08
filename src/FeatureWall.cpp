@@ -10,7 +10,7 @@ Wall::Wall(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
 }
 
-bool Wall::isTileAnyWallFront(const Tile tile) {
+bool Wall::isTileAnyWallFront(const TileId tile) {
   return
     tile == tile_wallFront      ||
     tile == tile_wallFrontAlt1  ||
@@ -19,7 +19,7 @@ bool Wall::isTileAnyWallFront(const Tile tile) {
     tile == tile_egyptWallFront;
 }
 
-bool Wall::isTileAnyWallTop(const Tile tile) {
+bool Wall::isTileAnyWallTop(const TileId tile) {
   return
     tile == tile_wallTop      ||
     tile == tile_caveWallTop  ||
@@ -60,7 +60,7 @@ char Wall::getGlyph() const {
   return eng.config->isAsciiWallSymbolFullSquare ? 10 : '#';
 }
 
-Tile Wall::getFrontWallTile() const {
+TileId Wall::getFrontWallTile() const {
   if(eng.config->isTilesWallSymbolFullSquare) {
     switch(wallType) {
       case wall_common:   return tile_wallTop;        break;
@@ -80,7 +80,7 @@ Tile Wall::getFrontWallTile() const {
   }
 }
 
-Tile Wall::getTopWallTile() const {
+TileId Wall::getTopWallTile() const {
   switch(wallType) {
     case wall_common:   return tile_wallTop;        break;
     case wall_alt1:     return tile_wallTop;        break;

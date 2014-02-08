@@ -55,7 +55,7 @@ public:
 
   virtual void spawnStartItems() = 0;
 
-  void hearSound(const Sound& snd);
+  void hearSound(const Snd& snd);
 
   void becomeAware();
 

@@ -14,7 +14,7 @@ SDL_Color FeatureLever::getColor() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
-Tile FeatureLever::getTile() const {
+TileId FeatureLever::getTile() const {
   return isPositionLeft_ ? tile_leverLeft : tile_leverRight;
 }
 

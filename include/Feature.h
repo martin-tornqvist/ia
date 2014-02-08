@@ -37,7 +37,7 @@ public:
   virtual SDL_Color getColor() const;
   virtual SDL_Color getColorBg() const;
   virtual char getGlyph() const;
-  virtual Tile getTile() const;
+  virtual TileId getTile() const;
   virtual void addLight(bool light[MAP_W][MAP_H]) const;
   virtual bool canHaveCorpse() const;
   virtual bool canHaveStaticFeature() const;
@@ -87,7 +87,7 @@ public:
 
   void setGoreIfPossible();
 
-  inline Tile getGoreTile() const {return goreTile_;}
+  inline TileId getGoreTile() const {return goreTile_;}
 
   inline char getGoreGlyph()  const {return goreGlyph_;}
 
@@ -98,8 +98,8 @@ public:
   }
 
   virtual void bash(Actor& actorTrying);
-  virtual void bash_(Actor& actorTrying)  {(void)actorTrying;}
-  virtual bool open()                     {return false;}
+  virtual void bash_(Actor& actorTrying);
+  virtual bool open() {return false;}
   virtual void disarm();
   virtual void examine();
 
@@ -114,7 +114,7 @@ protected:
 
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
-  Tile goreTile_;
+  TileId goreTile_;
   char goreGlyph_;
 };
 

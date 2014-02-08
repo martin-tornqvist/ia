@@ -211,12 +211,15 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     const MaterialType materialAtDropPos =
       eng.map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
-      const bool IS_ALERTING_MONSTERS = &actorThrowing == eng.player;
+      const AlertsMonsters alertsMonsters = &actorThrowing == eng.player ?
+                                            AlertsMonsters::yes :
+                                            AlertsMonsters::no;
       if(isActorHit == false) {
-        Sound snd(itemThrownData.landOnHardSurfaceSoundMsg,
-                  itemThrownData.landOnHardSurfaceSfx, true, dropPos, NULL,
-                  false, IS_ALERTING_MONSTERS);
-        eng.soundEmitter->emitSound(snd);
+        Snd snd(itemThrownData.landOnHardSurfaceSoundMsg,
+                itemThrownData.landOnHardSurfaceSfx,
+                IgnoreMsgIfOriginSeen::yes, dropPos, NULL, SndVol::low,
+                alertsMonsters);
+        eng.sndEmitter->emitSnd(snd);
       }
     }
     eng.itemDrop->dropItemOnMap(dropPos, itemThrown);

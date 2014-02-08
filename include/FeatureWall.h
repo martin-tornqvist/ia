@@ -19,8 +19,8 @@ public:
   SDL_Color getColor() const;
   char getGlyph() const;
 
-  Tile getFrontWallTile() const;
-  Tile getTopWallTile() const;
+  TileId getFrontWallTile() const;
+  TileId getTopWallTile() const;
 
   void setRandomNormalWall();
   void setRandomIsMossGrown();
@@ -28,9 +28,9 @@ public:
   WallType wallType;
   bool isMossGrown;
 
-  static bool isTileAnyWallFront(const Tile tile);
+  static bool isTileAnyWallFront(const TileId tile);
 
-  static bool isTileAnyWallTop(const Tile tile);
+  static bool isTileAnyWallTop(const TileId tile);
 
 private:
   friend class FeatureFactory;

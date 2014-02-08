@@ -74,7 +74,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
        projectilePath.at(i).y < origin.y))
       projectileGlyph = '\\';
   }
-  Tile projectileTile = wpn.getData().rangedMissileTile;
+  TileId projectileTile = wpn.getData().rangedMissileTile;
   if(projectileTile == tile_projectileStandardFrontSlash) {
     if(projectileGlyph == '-') {
       projectileTile = tile_projectileStandardDash;
@@ -105,13 +105,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
       //Emit sound
       if(projectilePathElement == 1) {
-        string sndMsg = wpn.getData().rangedSoundMessage;
+        string sndMsg = wpn.getData().rangedSndMsg;
         const SfxId sfx = wpn.getData().rangedAttackSfx;
         if(sndMsg.empty() == false) {
           if(IS_ATTACKER_PLAYER) sndMsg = "";
-          const bool IS_LOUD = wpn.getData().rangedSoundIsLoud;
-          eng.soundEmitter->emitSound(
-            Sound(sndMsg, sfx, true, attacker.pos, &attacker, IS_LOUD, true));
+          const SndVol vol = wpn.getData().rangedSndVol;
+          Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
+                  &attacker, vol, AlertsMonsters::yes);
+          eng.sndEmitter->emitSnd(snd);
         }
       }
 
@@ -222,9 +223,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->isObstructed = true;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Sound snd("I hear a ricochet.", sfxRicochet, true, curProj->pos,
-                      NULL, false, true);
-            eng.soundEmitter->emitSound(snd);
+            Snd snd("I hear a ricochet.", sfxRicochet,
+                    IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
+                    SndVol::low, AlertsMonsters::yes);
+            eng.sndEmitter->emitSnd(snd);
           }
 
           //RENDER FEATURE HIT
@@ -253,9 +255,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->obstructedInElement = projectilePathElement;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Sound snd("I hear a ricochet.", sfxRicochet, true, curProj->pos,
-                      NULL, false, true);
-            eng.soundEmitter->emitSound(snd);
+            Snd snd("I hear a ricochet.", sfxRicochet,
+                    IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
+                    SndVol::low, AlertsMonsters::yes);
+            eng.sndEmitter->emitSnd(snd);
           }
 
           //RENDER GROUND HITS

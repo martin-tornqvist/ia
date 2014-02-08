@@ -104,7 +104,7 @@ public:
   ActorId id;
   string name_a;
   string name_the;
-  Tile tile;
+  TileId tile;
   char glyph;
   SDL_Color color;
   MonsterGroupSize groupSize;

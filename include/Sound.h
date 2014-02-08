@@ -12,33 +12,41 @@ using namespace std;
 class Engine;
 class Actor;
 
-class Sound {
-public:
-  Sound(
-    const string& msg, const SfxId sfx,
-    const bool IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG, const Pos& origin,
-    Actor* const actorWhoMadeSound, const bool IS_LOUD,
-    const bool IS_ALERTING_MONSTER) :
-    msg_(msg), sfx_(sfx),
-    isMsgIgnoredIfPlayerSeeOrig_(IS_MSG_IGNORED_IF_PLAYER_SEE_ORIG),
-    origin_(origin), actorWhoMadeSound_(actorWhoMadeSound), isLoud_(IS_LOUD),
-    isAlertingMonsters_(IS_ALERTING_MONSTER) {}
+enum class SndVol                 {low, high};
+enum class AlertsMonsters         {no, yes};
+enum class IgnoreMsgIfOriginSeen  {no, yes};
 
-  Sound() {}
-  ~Sound() {}
+class Snd {
+public:
+  Snd(
+    const string& msg,
+    const SfxId sfx,
+    const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
+    const Pos& origin,
+    Actor* const actorWhoMadeSound, const SndVol vol,
+    const AlertsMonsters alertingMonsters) :
+    msg_(msg), sfx_(sfx),
+    isMsgIgnoredIfOriginSeen_(ignoreMsgIfOriginSeen),
+    origin_(origin), actorWhoMadeSound_(actorWhoMadeSound), vol_(vol),
+    isAlertingMonsters_(alertingMonsters) {}
+
+  Snd() {}
+  ~Snd() {}
 
   inline const string& getMsg() const {return msg_;}
   inline SfxId getSfx() const {return sfx_;}
   inline void clearMsg() {msg_ = "";}
 
-  inline bool getIsMsgIgnoredIfPlayerSeeOrigin() const {
-    return isMsgIgnoredIfPlayerSeeOrig_;
+  inline bool isMsgIgnoredIfOriginSeen() const {
+    return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
+  }
+  inline bool isAlertingMonsters() const {
+    return isAlertingMonsters_ == AlertsMonsters::yes;
   }
 
-  inline Pos getOrigin() const {return origin_;}
-  inline Actor* getActorWhoMadeSound() const {return actorWhoMadeSound_;}
-  inline int isLoud() const {return isLoud_; }
-  inline bool getIsAlertingMonsters() const {return isAlertingMonsters_;}
+  inline Pos getOrigin()                const {return origin_;}
+  inline Actor* getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
+  inline int isLoud()                   const {return vol_ == SndVol::high;}
 
   void addString(const string str) {
     msg_ += str;
@@ -47,18 +55,18 @@ public:
 private:
   string msg_;
   SfxId sfx_;
-  bool isMsgIgnoredIfPlayerSeeOrig_;
+  IgnoreMsgIfOriginSeen isMsgIgnoredIfOriginSeen_;
   Pos origin_;
   Actor* actorWhoMadeSound_;
-  bool isLoud_;
-  bool isAlertingMonsters_;
+  SndVol vol_;
+  AlertsMonsters isAlertingMonsters_;
 };
 
-class SoundEmitter {
+class SndEmitter {
 public:
-  SoundEmitter(Engine& engine) : eng(engine) {}
+  SndEmitter(Engine& engine) : eng(engine) {}
 
-  void emitSound(Sound snd);
+  void emitSnd(Snd snd);
 
   void resetNrSoundMsgPrintedCurTurn() {
     nrSoundMsgPrintedCurTurn_ = 0;
@@ -71,7 +79,7 @@ private:
     const int FLOOD_VALUE_AT_PLAYER,
     const Pos& origin, int floodFill[MAP_W][MAP_H]) const;
 
-  bool isSoundHeardAtRange(const int RANGE, const Sound& snd) const;
+  bool isSoundHeardAtRange(const int RANGE, const Snd& snd) const;
 
   Engine& eng;
 };

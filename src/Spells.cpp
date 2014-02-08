@@ -117,8 +117,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
       const ShockSrc shockSrc = IS_INTRINSIC ?
-                                  shockSrc_castIntrSpell :
-                                  shockSrc_useStrangeItem;
+                                shockSrc_castIntrSpell :
+                                shockSrc_useStrangeItem;
       const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
       eng.player->incrShock(SHOCK_VALUE, shockSrc);
     } else {
@@ -205,8 +205,9 @@ SpellCastRetData SpellDarkbolt::cast_(
     new PropParalyzed(eng, propTurnsSpecified, 2));
   target->hit(eng.dice.range(3, 10), dmgType_physical, true);
 
-  Sound snd("", endOfSfxId, true, target->pos, NULL, false, true);
-  eng.soundEmitter->emitSound(snd);
+  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
+          SndVol::low, AlertsMonsters::yes);
+  eng.sndEmitter->emitSnd(snd);
 
   return SpellCastRetData(true);
 }
@@ -243,8 +244,9 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
         actor->hit(eng.dice(spellDmg), dmgType_physical, false);
-        Sound snd("", endOfSfxId, true, actor->pos, NULL, true, true);
-        eng.soundEmitter->emitSound(snd);
+        Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
+                SndVol::high, AlertsMonsters::yes);
+        eng.sndEmitter->emitSnd(snd);
       }
       return SpellCastRetData(true);
     }
@@ -255,8 +257,9 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
     eng.player->hit(eng.dice(spellDmg), dmgType_physical, false);
-    Sound snd("", endOfSfxId, true, eng.player->pos, NULL, true, true);
-    eng.soundEmitter->emitSound(snd);
+    Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
+            SndVol::high, AlertsMonsters::yes);
+    eng.sndEmitter->emitSnd(snd);
   }
   return SpellCastRetData(false);
 }
@@ -331,8 +334,9 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  Sound snd("", endOfSfxId, true, eng.player->pos, NULL, true, true);
-  eng.soundEmitter->emitSound(snd);
+  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
+          SndVol::high, AlertsMonsters::yes);
+  eng.sndEmitter->emitSnd(snd);
 
   return SpellCastRetData(true);
 }
@@ -548,7 +552,7 @@ SpellCastRetData SpellRogueHide::cast_(
   Actor* const caster, Engine& eng) {
 
   (void)caster;
-  eng.log->addMsg("I am unseen.");
+  eng.log->addMsg("I vanish from the minds of my enemies.");
 
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
@@ -618,7 +622,7 @@ bool SpellMthPower::doSpecialAction(Engine& eng) const {
     for(int y = 1; y < MAP_H; y++) {
       for(int x = 1; x < MAP_W; x++) {
         if(
-          eng.map->cells[x][y].featureStatic->getId() == feature_stairsDown &&
+          eng.map->cells[x][y].featureStatic->getId() == feature_stairs &&
           eng.map->cells[x][y].isExplored == false) {
 
           trace << "SpellMthPower: Find stairs" << endl;

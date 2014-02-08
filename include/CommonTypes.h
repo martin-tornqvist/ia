@@ -50,7 +50,7 @@ struct CellRenderData {
 
   SDL_Color clr;
   SDL_Color clrBg;
-  Tile tile;
+  TileId tile;
   char glyph;
   int lifebarLength;
   bool isFadeEffectAllowed;

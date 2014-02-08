@@ -81,7 +81,7 @@ struct Projectile {
     attackData = attackData_;
   }
 
-  void setTile(const Tile tileToRender, const SDL_Color clrToRender) {
+  void setTile(const TileId tileToRender, const SDL_Color clrToRender) {
     tile = tileToRender;
     clr = clrToRender;
   }
@@ -98,7 +98,7 @@ struct Projectile {
   int obstructedInElement;
   bool isDoneRendering;
   char glyph;
-  Tile tile;
+  TileId tile;
   SDL_Color clr;
   RangedAttackData* attackData;
 };

@@ -34,7 +34,7 @@ public:
   bool isSmokePassable()              const override;
   SDL_Color getColor()                const override;
   char getGlyph()                     const override;
-  Tile getTile()                    const override;
+  TileId getTile()                    const override;
 
   void bash_(Actor& actorTrying) override;
 
@@ -59,7 +59,7 @@ public:
 
   virtual bool open() override;
 
-  static bool isTileAnyDoor(const Tile tile) {
+  static bool isTileAnyDoor(const TileId tile) {
     return
       tile == tile_doorBroken ||
       tile == tile_doorClosed ||

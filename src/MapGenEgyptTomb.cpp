@@ -25,9 +25,9 @@ bool MapGenEgyptTomb::run_() {
   }
 
   if(eng.dice.coinToss()) {
-    eng.featureFactory->spawnFeatureAt(feature_stairsDown, Pos(4, 2), NULL);
+    eng.featureFactory->spawnFeatureAt(feature_stairs, Pos(4, 2), NULL);
   } else {
-    eng.featureFactory->spawnFeatureAt(feature_stairsDown, Pos(4, 19), NULL);
+    eng.featureFactory->spawnFeatureAt(feature_stairs, Pos(4, 19), NULL);
   }
 
 

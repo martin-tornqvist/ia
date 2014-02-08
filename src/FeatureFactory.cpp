@@ -175,7 +175,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos pos,
       replaceStaticFeatureAt(grave, pos);
       return grave;
     }
-    case feature_stairsDown: {
+    case feature_stairs: {
       assert(spawnData == NULL);
       Stairs* stairs = new Stairs(id, pos, eng);
       replaceStaticFeatureAt(stairs, pos);

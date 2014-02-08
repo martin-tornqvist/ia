@@ -155,7 +155,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_stairsDown;
+  d.id = feature_stairs;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a downward staircase";
   d.name_the = "the downward staircase";

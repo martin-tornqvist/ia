@@ -52,7 +52,7 @@ public:
 
   void onStandardTurn_();
 
-  void hearSound(const Sound& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+  void hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                  const Dir dirToOrigin,
                  const int PERCENT_AUDIBLE_DISTANCE);
 

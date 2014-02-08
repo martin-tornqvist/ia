@@ -277,7 +277,7 @@ char Trap::getGlyph() const {
          specificTrap_->getGlyph();
 }
 
-Tile Trap::getTile() const {
+TileId Trap::getTile() const {
   return isHidden_ ? mimicFeature_->tile : specificTrap_->getTile();
 }
 
@@ -713,10 +713,13 @@ void TrapAlarm::trigger(
 
   eng.log->addMsg("An alarm sounds!");
 
-  Sound snd("I hear an alarm sounding!",
-            endOfSfxId, IS_PLAYER || CAN_PLAYER_SEE_ACTOR, pos_, &actor, true,
-            true);
-  eng.soundEmitter->emitSound(snd);
+  const IgnoreMsgIfOriginSeen msgIgnore =
+    (IS_PLAYER || CAN_PLAYER_SEE_ACTOR) ?
+    IgnoreMsgIfOriginSeen::no : IgnoreMsgIfOriginSeen::yes;
+
+  Snd snd("I hear an alarm sounding!", endOfSfxId, msgIgnore, pos_, &actor,
+          SndVol::high, AlertsMonsters::yes);
+  eng.sndEmitter->emitSnd(snd);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
 }
 

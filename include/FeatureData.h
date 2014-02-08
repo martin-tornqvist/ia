@@ -25,7 +25,7 @@ enum FeatureId {
   feature_bush,
   feature_bushWithered,
   feature_forestPath,
-  feature_stairsDown,
+  feature_stairs,
   feature_lever,
   feature_brazierGolden,
   feature_caveFloor,
@@ -164,7 +164,7 @@ struct FeatureData {
   char glyph;
   SDL_Color color;
   SDL_Color colorBg;
-  Tile tile;
+  TileId tile;
   MoveRules moveRules;
   bool isSoundPassable;
   bool isProjectilePassable;

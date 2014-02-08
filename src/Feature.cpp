@@ -91,7 +91,7 @@ char Feature::getGlyph() const {
   return data_->glyph;
 }
 
-Tile Feature::getTile() const {
+TileId Feature::getTile() const {
   return data_->tile;
 }
 
@@ -149,16 +149,9 @@ void FeatureStatic::disarm() {
 }
 
 void FeatureStatic::bash(Actor& actorTrying) {
-
-  const bool IS_PLAYER = &actorTrying == eng.player;
-
-  string sndMsg = "";
-
-//  SfxId sfx = endOfSfxId;
-
-  if(IS_PLAYER) {
+  if(&actorTrying == eng.player) {
     const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
-    const bool IS_BLOCKING = canMoveCmn() == false;
+    const bool IS_BLOCKING = canMoveCmn() == false && getId() != feature_stairs;
     if(IS_BLOCKING) {
       eng.log->addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
@@ -179,33 +172,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
     } else {
       eng.log->addMsg("I kick the air!");
     }
-  } else {
-
-//    asdf
-    //TODO Why is this here!!?
-
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), blockers);
-    const bool PLAYER_SEE_TRYER =
-      eng.player->checkIfSeeActor(actorTrying, blockers);
-
-    if(PLAYER_SEE_TRYER) {
-      eng.log->addMsg(actorTrying.getNameThe() + " bashes at a door!");
-    }
-
-    sndMsg = "I hear a loud banging on a door.";
   }
-
-//  asdf
-  //TODO Why is this here!!?
-
-  //The sound emits from the actor instead of the bashed object, and the
-  //parameter to ignore the message if source is seen is enabled.
-  //This is because the player shoudl receive the ound message even if the
-  //bashed object is seen - but never if the bashing actor is seen
-  Sound snd(sndMsg, sfxDoorBang, true, actorTrying.pos, &actorTrying,
-            false, IS_PLAYER);
-  eng.soundEmitter->emitSound(snd);
 
   bash_(actorTrying);
 
@@ -213,6 +180,17 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
+}
+
+void FeatureStatic::bash_(Actor& actorTrying) {
+  //Emitting the sound from the actor instead of the bashed object, because the
+  //sound mesage should be received even if the object is seen
+  const AlertsMonsters alertsMonsters = &actorTrying == eng.player ?
+                                        AlertsMonsters::yes :
+                                        AlertsMonsters::no;
+  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
+          &actorTrying, SndVol::low, alertsMonsters);
+  eng.sndEmitter->emitSnd(snd);
 }
 
 void FeatureStatic::setGoreIfPossible() {

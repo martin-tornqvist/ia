@@ -6,7 +6,7 @@ const int FONT_SHEET_Y_CELLS = 7;
 const int TILE_SHEET_X_CELLS = 19;
 const int TILE_SHEET_Y_CELLS = 11;
 
-enum Tile {
+enum TileId {
   tile_empty,
   tile_playerFirearm,
   tile_playerMelee,
@@ -146,11 +146,11 @@ struct Pos;
 class Art {
 public:
   Pos getGlyphPoss(const char glyph);
-  Pos getTilePoss(const Tile tile);
+  Pos getTilePoss(const TileId tile);
 
 private:
   Pos getColumnAndRowGlyph(const char glyph);
-  Pos getColumnAndRowTile(const Tile tile);
+  Pos getColumnAndRowTile(const TileId tile);
 };
 
 #endif

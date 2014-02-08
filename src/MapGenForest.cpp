@@ -154,7 +154,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
     PathFind::run(eng.player->pos, stairsPos, blockers, path, eng);
 
-    eng.featureFactory->spawnFeatureAt(feature_stairsDown, stairsPos);
+    eng.featureFactory->spawnFeatureAt(feature_stairs, stairsPos);
 
     if(path.size() >= minPathLength && path.size() <= maxPathLength) {
       proceed = true;

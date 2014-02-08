@@ -10,14 +10,14 @@
 #include "GameTime.h"
 #include "MapParsing.h"
 
-bool SoundEmitter::isSoundHeardAtRange(const int RANGE,
-                                       const Sound& snd) const {
+bool SndEmitter::isSoundHeardAtRange(const int RANGE,
+                                     const Snd& snd) const {
   return snd.isLoud() ?
          (RANGE <= SND_DIST_LOUD) :
          (RANGE <= SND_DIST_NORMAL);
 }
 
-void SoundEmitter::emitSound(Sound snd) {
+void SndEmitter::emitSnd(Snd snd) {
   bool blockers[MAP_W][MAP_H];
   FeatureStatic* f = NULL;
   for(int y = 0; y < MAP_H; y++) {
@@ -43,14 +43,12 @@ void SoundEmitter::emitSound(Sound snd) {
         //Various conditions may clear the sound message
         if(
           nrSoundMsgPrintedCurTurn_ >= 1 ||
-          (IS_ORIGIN_SEEN_BY_PLAYER &&
-           snd.getIsMsgIgnoredIfPlayerSeeOrigin())) {
+          (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen())) {
           snd.clearMsg();
         }
 
         const Dir dirToOrigin =
-          getPlayerToOriginDir(
-            FLOOD_VALUE_AT_ACTOR, origin, floodFill);
+          getPlayerToOriginDir(FLOOD_VALUE_AT_ACTOR, origin, floodFill);
 
         if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
@@ -77,7 +75,7 @@ void SoundEmitter::emitSound(Sound snd) {
   }
 }
 
-Dir SoundEmitter::getPlayerToOriginDir(
+Dir SndEmitter::getPlayerToOriginDir(
   const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
   int floodFill[MAP_W][MAP_H]) const {
 

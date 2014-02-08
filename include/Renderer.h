@@ -32,7 +32,7 @@ public:
 
   void initAndClearPrev();
 
-  void drawTile(const Tile tile, const PanelId panel, const Pos& pos,
+  void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
                 const SDL_Color& clr,
                 const SDL_Color& bgClr = clrBlack);
 
@@ -112,7 +112,7 @@ private:
   void drawExclMarkAt(const Pos& pixelPos) const;
   void drawPlayerShockExclMarks() const;
 
-  void putPixelsOnScreenForTile(const Tile tile, const Pos& pixelPos,
+  void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
                                 const SDL_Color& clr);
 
   void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
