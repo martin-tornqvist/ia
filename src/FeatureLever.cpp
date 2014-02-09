@@ -10,7 +10,7 @@ FeatureLever::FeatureLever(FeatureId id, Pos pos, Engine& engine, LeverSpawnData
   FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 
-SDL_Color FeatureLever::getColor() const {
+SDL_Color FeatureLever::getClr() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 

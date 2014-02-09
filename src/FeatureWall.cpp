@@ -49,7 +49,7 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
   assert(false && "Failed to get door description");
 }
 
-SDL_Color Wall::getColor() const {
+SDL_Color Wall::getClr() const {
   if(isMossGrown)             {return clrGreen;}
   if(wallType == wall_cave)   {return clrBrownGray;}
   if(wallType == wall_egypt)  {return clrBrownGray;}

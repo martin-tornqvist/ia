@@ -268,8 +268,8 @@ string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
   }
 }
 
-SDL_Color Trap::getColor() const {
-  return isHidden_ ? mimicFeature_->color : specificTrap_->getColor();
+SDL_Color Trap::getClr() const {
+  return isHidden_ ? mimicFeature_->color : specificTrap_->getClr();
 }
 
 char Trap::getGlyph() const {
@@ -468,7 +468,7 @@ void TrapGasConfusion::trigger(
 
   Explosion::runExplosionAt(
     pos_, eng, 0, endOfSfxId, false, new PropConfused(eng, propTurnsStd), true,
-    getColor());
+    getClr());
   traceVerbose << "TrapGasConfusion::trigger() [DONE]" << endl;
 }
 
@@ -498,7 +498,7 @@ void TrapGasParalyzation::trigger(
 
   Explosion::runExplosionAt(
     pos_, eng, 0, endOfSfxId, false, new PropParalyzed(eng, propTurnsStd),
-    true, getColor());
+    true, getClr());
   traceVerbose << "TrapGasParalyzation::trigger() [DONE]" << endl;
 }
 
@@ -528,7 +528,7 @@ void TrapGasFear::trigger(Actor& actor,
 
   Explosion::runExplosionAt(
     pos_, eng, 0, endOfSfxId, false, new PropTerrified(eng, propTurnsStd),
-    true, getColor());
+    true, getClr());
   traceVerbose << "TrapGasFear::trigger() [DONE]" << endl;
 }
 

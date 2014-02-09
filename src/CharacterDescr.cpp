@@ -149,7 +149,7 @@ void CharacterDescr::makeLines() {
       potionList.push_back(
         StrAndClr(
           offset + eng.itemDataHandler->getItemRef(*item, itemRef_plain),
-          d->color));
+          d->clr));
       delete item;
     } else {
       if(d->isScroll && (d->isTried || d->isIdentified)) {

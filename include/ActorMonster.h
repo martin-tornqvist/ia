@@ -556,7 +556,7 @@ public:
 //  bool monsterSpecificOnActorTurn();
   void onStandardTurn_();
   void spawnStartItems() override;
-  const SDL_Color& getColor();
+  const SDL_Color& getClr();
 private:
   SDL_Color currentColor;
 };

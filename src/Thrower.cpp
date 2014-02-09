@@ -118,7 +118,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   bool isActorHit = false;
 
   const char glyph = itemThrown.getGlyph();
-  const SDL_Color clr = itemThrown.getColor();
+  const SDL_Color clr = itemThrown.getClr();
 
   int chanceToDestroyItem = 0;
 

@@ -32,7 +32,7 @@ public:
   bool isVisionPassable()             const override;
   bool isProjectilePassable()         const override;
   bool isSmokePassable()              const override;
-  SDL_Color getColor()                const override;
+  SDL_Color getClr()                const override;
   char getGlyph()                     const override;
   TileId getTile()                    const override;
 

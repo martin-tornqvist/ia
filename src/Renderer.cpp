@@ -768,8 +768,8 @@ void Renderer::drawMap() {
         if(goreTile == tile_empty) {
           curDrw->tile  = f->getTile();
           curDrw->glyph = f->getGlyph();
-          const SDL_Color& featureClr   = f->getColor();
-          const SDL_Color& featureClrBg = f->getColorBg();
+          const SDL_Color& featureClr   = f->getClr();
+          const SDL_Color& featureClrBg = f->getClrBg();
           curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
           if(eng.basicUtils->isClrEq(featureClrBg, clrBlack) == false) {
             curDrw->clrBg = featureClrBg;
@@ -812,7 +812,7 @@ void Renderer::drawMap() {
         //---------------- INSERT ITEMS INTO ARRAY
         const Item* const item = eng.map->cells[x][y].item;
         if(item != NULL) {
-          curDrw->clr   = item->getColor();
+          curDrw->clr   = item->getClr();
           curDrw->tile  = item->getTile();
           curDrw->glyph = item->getGlyph();
         }
@@ -838,7 +838,7 @@ void Renderer::drawMap() {
       mobTile != tile_empty && mobGlyph != ' ' &&
       eng.map->cells[xPos][yPos].isSeenByPlayer) {
       curDrw = &renderArray[xPos][yPos];
-      curDrw->clr = mob->getColor();
+      curDrw->clr = mob->getClr();
       curDrw->tile  = mobTile;
       curDrw->glyph = mobGlyph;
     }
@@ -862,7 +862,7 @@ void Renderer::drawMap() {
             actor->getTile()  != tile_empty &&
             actor->getGlyph() != ' ') {
 
-            curDrw->clr   = actor->getColor();
+            curDrw->clr   = actor->getClr();
             curDrw->tile  = actor->getTile();
             curDrw->glyph = actor->getGlyph();
 
@@ -1015,9 +1015,9 @@ void Renderer::drawMap() {
   }
   if(IS_TILES) {
     const TileId tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
-    drawTile(tile, panel_map, pos, eng.player->getColor(), clrBlack);
+    drawTile(tile, panel_map, pos, eng.player->getClr(), clrBlack);
   } else {
-    drawGlyph('@', panel_map, pos, eng.player->getColor(), true, clrBlack);
+    drawGlyph('@', panel_map, pos, eng.player->getClr(), true, clrBlack);
   }
   const int LIFE_BAR_LENGTH = getLifebarLength(*eng.player);
   if(LIFE_BAR_LENGTH != -1) {

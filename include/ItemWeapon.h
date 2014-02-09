@@ -53,15 +53,15 @@ public:
     lines.erase(lines.begin());
   }
 
-  SDL_Color getColor() const {
+  SDL_Color getClr() const {
     if(data_->isRangedWeapon && data_->rangedHasInfiniteAmmo == false) {
       if(nrAmmoLoaded == 0) {
-        SDL_Color ret = data_->color;
+        SDL_Color ret = data_->clr;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
         return ret;
       }
     }
-    return data_->color;
+    return data_->clr;
   }
 
   SDL_Color getInterfaceClr() const {return clrGray;}
@@ -166,7 +166,7 @@ private:
 class TeslaCannon: public Weapon {
 public:
   TeslaCannon(ItemData* const itemData, ItemData* const ammoData,
-             Engine& engine) :
+              Engine& engine) :
     Weapon(itemData, ammoData, engine) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;

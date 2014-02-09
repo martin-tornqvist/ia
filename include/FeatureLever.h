@@ -9,7 +9,7 @@ class LeverSpawnData;
 class FeatureLever: public FeatureStatic {
 public:
   ~FeatureLever() {}
-  SDL_Color getColor() const;
+  SDL_Color getClr() const;
   TileId getTile() const;
 
   void examine() override;

@@ -77,7 +77,7 @@ public:
   inline string getNameA() const {return data_->name_a;}
   inline bool isHumanoid() const {return data_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
-  virtual const SDL_Color& getColor() {return clr_;}
+  virtual const SDL_Color& getClr() {return clr_;}
   inline const TileId& getTile() const {return tile_;}
 
   void addLight(bool light[MAP_W][MAP_H]) const;

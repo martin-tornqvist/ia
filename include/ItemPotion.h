@@ -222,48 +222,51 @@ private:
   const string getRealTypeName() {return "Descent";}
 };
 
+struct PotionLook {
+  string namePlain;
+  string nameA;
+  SDL_Color clr;
+};
+
 class PotionNameHandler {
 public:
   PotionNameHandler(Engine& engine) :
     eng(engine) {
-    m_falseNames.resize(0);
+    potionLooks_.resize(0);
 
-    addFalse("Golden", clrYellow);
-    addFalse("Yellow", clrYellow);
-    addFalse("Dark", clrGray);
-    addFalse("Black", clrGray);
-    addFalse("Oily", clrGray);
-    addFalse("Smoky", clrWhite);
-    addFalse("Slimy green", clrGreen);
-    addFalse("Green", clrGreenLgt);
-    addFalse("Fiery", clrRedLgt);
-    addFalse("Murky", clrBrownDrk);
-    addFalse("Muddy", clrBrown);
-    addFalse("Pink", clrMagentaLgt);
-    addFalse("Watery", clrBlueLgt);
-    addFalse("Metallic", clrGray);
-    addFalse("Clear", clrWhiteHigh);
-    addFalse("Misty", clrWhiteHigh);
-    addFalse("Bloody", clrRed);
-    addFalse("Magenta", clrMagenta);
-    addFalse("Clotted", clrGreen);
-    addFalse("Moldy", clrBrown);
-    addFalse("Frothy", clrWhite);
+    potionLooks_.push_back(PotionLook {"Golden",   "a Golden",   clrYellow});
+    potionLooks_.push_back(PotionLook {"Yellow",   "a Yellow",   clrYellow});
+    potionLooks_.push_back(PotionLook {"Dark",     "a Dark",     clrGray});
+    potionLooks_.push_back(PotionLook {"Black",    "a Black",    clrGray});
+    potionLooks_.push_back(PotionLook {"Oily",     "an Oily",    clrGray});
+    potionLooks_.push_back(PotionLook {"Smoky",    "a Smoky",    clrWhite});
+    potionLooks_.push_back(PotionLook {"Slimy",    "a Slimy",    clrGreen});
+    potionLooks_.push_back(PotionLook {"Green",    "a Green",    clrGreenLgt});
+    potionLooks_.push_back(PotionLook {"Fiery",    "a Firey",    clrRedLgt});
+    potionLooks_.push_back(PotionLook {"Murky",    "a Murky",    clrBrownDrk});
+    potionLooks_.push_back(PotionLook {"Muddy",    "a Muddy",    clrBrown});
+    potionLooks_.push_back(PotionLook {"Violet",   "a Violet",   clrViolet});
+    potionLooks_.push_back(PotionLook {"Orange",   "an Orange",  clrOrange});
+    potionLooks_.push_back(PotionLook {"Watery",   "a Watery",   clrBlueLgt});
+    potionLooks_.push_back(PotionLook {"Metallic", "a Metallic", clrGray});
+    potionLooks_.push_back(PotionLook {"Clear",    "a Clear",    clrWhiteHigh});
+    potionLooks_.push_back(PotionLook {"Misty",    "a Misty",    clrWhiteHigh});
+    potionLooks_.push_back(PotionLook {"Bloody",   "a Bloody",   clrRed});
+    potionLooks_.push_back(PotionLook {"Magenta",  "a Magenta",  clrMagenta});
+    potionLooks_.push_back(PotionLook {"Clotted",  "a Clotted",  clrGreen});
+    potionLooks_.push_back(PotionLook {"Moldy",    "a Moldy",    clrBrown});
+    potionLooks_.push_back(PotionLook {"Frothy",   "a Frothy",   clrWhite});
   }
 
-  ~PotionNameHandler() {m_falseNames.resize(0);}
+  ~PotionNameHandler() {potionLooks_.resize(0);}
 
-  void setColorAndFalseName(ItemData* d);
+  void setClrAndFalseName(ItemData* d);
 
   void addSaveLines(vector<string>& lines) const;
   void setParamsFromSaveLines(vector<string>& lines);
 
 private:
-  vector<StrAndClr> m_falseNames;
-
-  void addFalse(const string& str, const SDL_Color clr) {
-    m_falseNames.push_back(StrAndClr(str, clr));
-  }
+  vector<PotionLook> potionLooks_;
 
   Engine& eng;
 };

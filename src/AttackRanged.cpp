@@ -53,7 +53,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   eng.lineCalc->calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
                             projectilePath);
 
-  const SDL_Color projectileColor = wpn.getData().rangedMissileColor;
+  const SDL_Color projectileColor = wpn.getData().rangedMissileClr;
   char projectileGlyph = wpn.getData().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;

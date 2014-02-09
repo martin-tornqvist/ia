@@ -40,6 +40,8 @@ const SDL_Color clrNosfTealLgt        = { 88, 226, 228, 0};
 const SDL_Color clrNosfTealDrk        = { 20,  54,  51, 0};
 //===========================================================
 
+const SDL_Color clrViolet             = {128,   0, 255, 0};
+const SDL_Color clrOrange             = {255, 128,   0, 0};
 const SDL_Color clrBrownDrk           = { 96,  64,  32, 0};
 const SDL_Color clrBrownGray          = { 92,  84,  78, 0};
 

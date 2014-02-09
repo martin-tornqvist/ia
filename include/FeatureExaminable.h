@@ -80,7 +80,7 @@ public:
   void bash(Actor& actorTrying)   override;
   void disarm()                   override;
 
-  SDL_Color getColor() const override {
+  SDL_Color getClr() const override {
     return material == chestMtrl_wood ? clrBrownDrk : clrGray;
   }
 

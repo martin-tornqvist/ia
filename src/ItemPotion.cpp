@@ -331,20 +331,17 @@ void PotionOfDescent::collide_(const Pos& pos, Actor* const actor) {
   if(actor != NULL) {quaff_(actor);}
 }
 
-void PotionNameHandler::setColorAndFalseName(ItemData* d) {
-  const unsigned int NR_NAMES = m_falseNames.size();
+void PotionNameHandler::setClrAndFalseName(ItemData* d) {
+  const int ELEMENT = eng.dice.range(0, potionLooks_.size() - 1);
 
-  const unsigned int ELEMENT = (unsigned int)(eng.dice(1, NR_NAMES) - 1);
+  PotionLook& look = potionLooks_.at(ELEMENT);
 
-  const string DESCRIPTION = m_falseNames.at(ELEMENT).str;
-  const SDL_Color clr = m_falseNames.at(ELEMENT).clr;
+  d->name.name        = look.namePlain + " potion";
+  d->name.name_plural = look.namePlain + " potions";
+  d->name.name_a      = look.nameA     + " potion";
+  d->clr              = look.clr;
 
-  m_falseNames.erase(m_falseNames.begin() + ELEMENT);
-
-  d->name.name = DESCRIPTION + " potion";
-  d->name.name_plural = DESCRIPTION + " potions";
-  d->name.name_a = "a " + DESCRIPTION + " potion";
-  d->color = clr;
+  potionLooks_.erase(potionLooks_.begin() + ELEMENT);
 }
 
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
@@ -354,9 +351,9 @@ void PotionNameHandler::addSaveLines(vector<string>& lines) const {
       lines.push_back(d->name.name);
       lines.push_back(d->name.name_plural);
       lines.push_back(d->name.name_a);
-      lines.push_back(toString(d->color.r));
-      lines.push_back(toString(d->color.g));
-      lines.push_back(toString(d->color.b));
+      lines.push_back(toString(d->clr.r));
+      lines.push_back(toString(d->clr.g));
+      lines.push_back(toString(d->clr.b));
     }
   }
 }
@@ -371,11 +368,11 @@ void PotionNameHandler::setParamsFromSaveLines(vector<string>& lines) {
       lines.erase(lines.begin());
       d->name.name_a = lines.front();
       lines.erase(lines.begin());
-      d->color.r = toInt(lines.front());
+      d->clr.r = toInt(lines.front());
       lines.erase(lines.begin());
-      d->color.g = toInt(lines.front());
+      d->clr.g = toInt(lines.front());
       lines.erase(lines.begin());
-      d->color.b = toInt(lines.front());
+      d->clr.b = toInt(lines.front());
       lines.erase(lines.begin());
     }
   }
@@ -413,7 +410,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
 
     if(PLAYER_SEE_CELL) {
       // TODO Use standard animation
-      eng.renderer->drawGlyph('*', panel_map, pos, data_->color);
+      eng.renderer->drawGlyph('*', panel_map, pos, data_->clr);
 
       if(actor != NULL) {
         if(actor->deadState == actorDeadState_alive) {

@@ -34,8 +34,8 @@ public:
   virtual bool isBottomless() const;
   virtual string getDescr(const bool DEFINITE_ARTICLE) const;
   virtual void hit(const int DMG, const DmgTypes dmgType);
-  virtual SDL_Color getColor() const;
-  virtual SDL_Color getColorBg() const;
+  virtual SDL_Color getClr() const;
+  virtual SDL_Color getClrBg() const;
   virtual char getGlyph() const;
   virtual TileId getTile() const;
   virtual void addLight(bool light[MAP_W][MAP_H]) const;

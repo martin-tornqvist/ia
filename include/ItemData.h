@@ -210,7 +210,7 @@ private:
   ItemName name;
 public:
   char glyph;
-  SDL_Color color;
+  SDL_Color clr;
   TileId tile;
   PrimaryAttackMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
@@ -237,7 +237,7 @@ public:
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   TileId rangedMissileTile;
-  SDL_Color rangedMissileColor;
+  SDL_Color rangedMissileClr;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttackMessages rangedAttackMessages;

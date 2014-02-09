@@ -34,7 +34,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIdentified = true;
       d->isTried = false;
       d->glyph = 'X';
-      d->color = clrWhite;
+      d->clr = clrWhite;
       d->tile = tile_empty;
       d->primaryAttackMode = primaryAttackMode_none;
       d->isScroll = d->isPotion = d->isEatable = false;
@@ -56,7 +56,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedHasInfiniteAmmo = false;
       d->rangedMissileGlyph = 'X';
       d->rangedMissileTile = tile_projectileStandardFrontSlash;
-      d->rangedMissileColor = clrWhite;
+      d->rangedMissileClr = clrWhite;
       d->rangedMissileLeavesTrail = false;
       d->rangedMissileLeavesSmoke = false;
       d->rangedSndMsg = "";
@@ -81,7 +81,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isStackable = false;
       d->itemWeight = itemWeight_medium;
       d->glyph = '(';
-      d->color = clrWhite;
+      d->clr = clrWhite;
       d->primaryAttackMode = primaryAttackMode_melee;
       d->isMeleeWeapon = true;
       d->meleeHitSmallSfx = sfxHitSmall;
@@ -104,13 +104,13 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isStackable = false;
       d->itemWeight = itemWeight_medium;
       d->glyph = '}';
-      d->color = clrWhite;
+      d->clr = clrWhite;
       d->isMeleeWeapon = true;
       d->meleeDmg = pair<int, int>(1, 6);
       d->primaryAttackMode = primaryAttackMode_ranged;
       d->isRangedWeapon = true;
       d->rangedMissileGlyph = '/';
-      d->rangedMissileColor = clrWhite;
+      d->rangedMissileClr = clrWhite;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
       d->meleeHitSmallSfx = sfxHitSmall;
       d->meleeHitMediumSfx = sfxHitMedium;
@@ -142,7 +142,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       resetData(d, itemData_general);
       d->itemWeight = itemWeight_extraLight;
       d->glyph = '{';
-      d->color = clrWhite;
+      d->clr = clrWhite;
       d->tile = tile_ammo;
       d->isAmmo = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
@@ -163,7 +163,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->itemWeight = itemWeight_none;
       d->isIdentified = false;
       d->glyph = '?';
-      d->color = clrWhite;
+      d->clr = clrWhite;
       d->tile = tile_scroll;
       d->isScroll = true;
       d->maxStackSizeAtSpawn = 1;
@@ -193,7 +193,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       addFeatureFoundIn(d, feature_tomb);
       addFeatureFoundIn(d, feature_cabinet, 25);
       addFeatureFoundIn(d, feature_cocoon, 25);
-      eng.potionNameHandler->setColorAndFalseName(d);
+      eng.potionNameHandler->setClrAndFalseName(d);
     } break;
 
     case itemData_device: {
@@ -258,7 +258,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMaxDLVL = -1;
   d->isStackable = false;
   d->glyph = '*';
-  d->color = clrRedLgt;
+  d->clr = clrRedLgt;
   d->tile = tile_trapezohedron;
   dataList[d->id] = d;
 
@@ -320,7 +320,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSndMsg = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
-  d->rangedMissileColor = clrRedLgt;
+  d->rangedMissileClr = clrRedLgt;
   d->spawnStandardMinDLVL = 10;
   d->rangedDmgLabelOverRide = "?";
   addFeatureFoundIn(d, feature_chest, 25);
@@ -427,7 +427,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
   d->rangedSndMsg = "I hear loud electric crackle.";
   d->rangedMissileGlyph = '*';
-  d->rangedMissileColor = clrYellow;
+  d->rangedMissileClr = clrYellow;
   d->spawnStandardMinDLVL = 7;
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
@@ -449,7 +449,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
   d->tile = tile_tommyGun;
-  d->color = clrBlueLgt;
+  d->clr = clrBlueLgt;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
   d->rangedHitChanceMod = 0;
@@ -461,7 +461,7 @@ void ItemDataHandler::initDataList() {
   d->rangedSndMsg = "I hear a very crude gun being fired.";
   d->rangedMakesRicochetSound = true;
   d->rangedMissileGlyph = '/';
-  d->rangedMissileColor = clrGray;
+  d->rangedMissileClr = clrGray;
   d->spawnStandardMinDLVL = 4;
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
@@ -473,7 +473,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
-  d->color = clrRedLgt;
+  d->clr = clrRedLgt;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -484,7 +484,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Flare", "Flares", "a Flare");
   d->itemWeight = itemWeight_light;
   d->tile = tile_flare;
-  d->color = clrGray;
+  d->clr = clrGray;
   d->isAmmo = true;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -496,7 +496,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
   d->itemWeight = itemWeight_light;
   d->tile = tile_molotov;
-  d->color = clrWhite;
+  d->clr = clrWhite;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -508,7 +508,7 @@ void ItemDataHandler::initDataList() {
   d->itemWeight = itemWeight_extraLight;
   d->tile = tile_dagger;
   d->glyph = '/';
-  d->color = clrWhite;
+  d->clr = clrWhite;
   d->missileHitChanceMod = 0;
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 8;
@@ -526,7 +526,7 @@ void ItemDataHandler::initDataList() {
   d->itemWeight = itemWeight_extraLight;
   d->tile = tile_rock;
   d->glyph = '*';
-  d->color = clrGray;
+  d->clr = clrGray;
   d->missileHitChanceMod = 10;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 6;
@@ -576,7 +576,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMaxDLVL = 999;
   d->itemWeight = itemWeight_medium;
   d->tile = tile_club;
-  d->color = clrBrown;
+  d->clr = clrBrown;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeHitChanceMod = 10;
@@ -658,7 +658,7 @@ void ItemDataHandler::initDataList() {
   d->itemWeight = itemWeight_extraLight;
   d->tile = tile_ironSpike;
   d->isStackable = true;
-  d->color = clrGray;
+  d->clr = clrGray;
   d->glyph = '/';
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 3);
@@ -729,7 +729,7 @@ void ItemDataHandler::initDataList() {
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_bloatedZombie]);
   d->rangedSndMsg = "I hear spitting.";
-  d->rangedMissileColor = clrGreenLgt;
+  d->rangedMissileClr = clrGreenLgt;
   d->rangedDmgType = dmgType_acid;
   d->rangedMissileGlyph = '*';
   dataList[d->id] = d;
@@ -808,7 +808,7 @@ void ItemDataHandler::initDataList() {
   d->rangedSndMsg = "I hear a burst of flames.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_fireHound]);
   d->propAppliedOnRanged = new PropBurning(eng, propTurnsStd);
-  d->rangedMissileColor = clrRedLgt;
+  d->rangedMissileClr = clrRedLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
@@ -827,7 +827,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("", "breaths frost at me");
   d->rangedSndMsg = "I hear a chilling sound.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_frostHound]);
-  d->rangedMissileColor = clrBlueLgt;
+  d->rangedMissileClr = clrBlueLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
@@ -904,7 +904,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_miGoElectricGun);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedMissileLeavesTrail = true;
-  d->rangedMissileColor = clrYellow;
+  d->rangedMissileClr = clrYellow;
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDmgType = dmgType_electric;
@@ -967,7 +967,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_deepOne]);
   d->rangedSndMsg = "";
-  d->rangedMissileColor = clrBrown;
+  d->rangedMissileClr = clrBrown;
   d->rangedMissileGlyph = '/';
   d->rangedSndVol = SndVol::low;
   dataList[d->id] = d;
@@ -1026,7 +1026,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_armor);
   d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
   d->itemWeight = itemWeight_light;
-  d->color = clrBrown;
+  d->clr = clrBrown;
   d->spawnStandardMinDLVL = 1;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
@@ -1038,7 +1038,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_armor);
   d->name = ItemName("Iron Suit", "", "an Iron Suit");
   d->itemWeight = itemWeight_heavy;
-  d->color = clrWhite;
+  d->clr = clrWhite;
   d->spawnStandardMinDLVL = 2;
   d->armorData.absorptionPoints = 4;
   d->armorData.dmgToDurabilityFactor = 0.5;
@@ -1050,7 +1050,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_armor);
   d->name = ItemName("Flak Jacket", "", "a Flak Jacket");
   d->itemWeight = itemWeight_heavy;
-  d->color = clrGreen;
+  d->clr = clrGreen;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 3;
   d->armorData.dmgToDurabilityFactor = 0.5;
@@ -1062,7 +1062,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_armor);
   d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
   d->itemWeight = itemWeight_medium;
-  d->color = clrRedLgt;
+  d->clr = clrRedLgt;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
@@ -1075,7 +1075,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_armor);
   d->name = ItemName("Heavy Coat", "", "a Heavy Coat");
   d->itemWeight = itemWeight_medium;
-  d->color = clrBlueLgt;
+  d->clr = clrBlueLgt;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
@@ -1215,7 +1215,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
-  d->color = clrGray;
+  d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
@@ -1226,7 +1226,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
   d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
-  d->color = clrGray;
+  d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
@@ -1237,7 +1237,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
   d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
-  d->color = clrGray;
+  d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
@@ -1248,7 +1248,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
   d->itemValue = itemValue_majorTreasure;
   d->isIdentified = false;
-  d->color = clrGray;
+  d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
@@ -1257,7 +1257,7 @@ void ItemDataHandler::initDataList() {
 //  d = new ItemData(item_deviceSpellReflector);
 //  resetData(d, itemData_device);
 //  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
-//  d->color = clrGray;
+//  d->clr = clrGray;
 //  d->featuresCanBeFoundIn.push_back(feature_chest);
 //  d->featuresCanBeFoundIn.push_back(feature_tomb);
 //  dataList[d->id] = d;
@@ -1270,7 +1270,7 @@ void ItemDataHandler::initDataList() {
   d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
   d->tile = tile_electricLantern;
-  d->color = clrYellow;
+  d->clr = clrYellow;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -1286,7 +1286,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LEVEL;
   d->isStackable = false;
   d->glyph = '~';
-  d->color = clrBrownDrk;
+  d->clr = clrBrownDrk;
   d->tile = tile_medicalBag;
 //  d->nativeRooms.resize(0);
   dataList[d->id] = d;

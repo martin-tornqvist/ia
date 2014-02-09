@@ -79,11 +79,11 @@ void Feature::hit(const int DMG, const DmgTypes dmgType) {
   (void)dmgType;
 }
 
-SDL_Color Feature::getColor() const {
+SDL_Color Feature::getClr() const {
   return data_->color;
 }
 
-SDL_Color Feature::getColorBg() const {
+SDL_Color Feature::getClrBg() const {
   return data_->colorBg;
 }
 

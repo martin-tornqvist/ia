@@ -23,7 +23,7 @@ void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y,
 }
 
 void drawItemSymbol(const Item& item, const Pos& pos, Engine& eng) {
-  const SDL_Color itemClr = item.getColor();
+  const SDL_Color itemClr = item.getClr();
   if(eng.config->isTilesMode) {
     eng.renderer->drawTile(item.getTile(), panel_screen, pos, itemClr);
   } else {

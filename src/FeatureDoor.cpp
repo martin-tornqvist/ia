@@ -113,7 +113,7 @@ bool Door::isSmokePassable() const {
   return isOpen_;
 }
 
-SDL_Color Door::getColor() const {
+SDL_Color Door::getClr() const {
   if(isSecret_) {
     return mimicFeature_->color;
   }

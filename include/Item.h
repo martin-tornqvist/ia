@@ -23,10 +23,10 @@ public:
 
   virtual void reset() {nrItems = 1;}
 
-  const ItemData& getData()     const {return *data_;}
-  virtual SDL_Color getColor()  const {return data_->color;}
-  char getGlyph()               const {return data_->glyph;}
-  TileId getTile()              const {return data_->tile;}
+  const ItemData& getData()   const {return *data_;}
+  virtual SDL_Color getClr()  const {return data_->clr;}
+  char getGlyph()             const {return data_->glyph;}
+  TileId getTile()            const {return data_->tile;}
 
   virtual void identify(const bool IS_SILENT_IDENTIFY) {
     (void)IS_SILENT_IDENTIFY;

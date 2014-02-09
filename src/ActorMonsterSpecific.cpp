@@ -551,7 +551,7 @@ void ColourOutOfSpace::spawnStartItems() {
     eng.itemFactory->spawnItem(item_colourOutOfSpaceTouch));
 }
 
-const SDL_Color& ColourOutOfSpace::getColor() {
+const SDL_Color& ColourOutOfSpace::getClr() {
   return currentColor;
 }
 

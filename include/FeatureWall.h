@@ -16,7 +16,7 @@ public:
   }
 
   string getDescr(const bool DEFINITE_ARTICLE) const override;
-  SDL_Color getColor() const;
+  SDL_Color getClr() const;
   char getGlyph() const;
 
   TileId getFrontWallTile() const;
