@@ -270,15 +270,15 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
                            "| enter to drop" + cancelInfoStr;
     eng.renderer->drawText(dropStr, panel_screen, Pos(0, 0), clrWhiteHigh);
     eng.renderer->updateScreen();
-    const int NR_TO_DROP = eng.query->number(
-                             Pos(20 + nrStr.size(), 1),
-                             clrWhiteHigh, 0, 3, item->nrItems, false);
+    const Pos nrQueryPos(20 + nrStr.size(), 0);
+    const int NR_TO_DROP = eng.query->number(nrQueryPos, clrWhiteHigh, 0, 3,
+                           item->nrItems, false);
     if(NR_TO_DROP <= 0) {
       trace << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
-      eng.itemDrop->dropItemFromInventory(
-        eng.player, GLOBAL_ELEMENT_NR, NR_TO_DROP);
+      eng.itemDrop->dropItemFromInventory(eng.player, GLOBAL_ELEMENT_NR,
+                                          NR_TO_DROP);
       return true;
     }
   } else {
