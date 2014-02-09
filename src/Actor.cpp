@@ -359,8 +359,8 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  onMonsterHit(dmg);
-  traceVerbose << "Actor: Damage after onMonsterHit(): " << dmg << endl;
+  hit_(dmg, ALLOW_WOUNDS);
+  traceVerbose << "Actor: Damage after hit_(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -400,8 +400,6 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
 
   propHandler_->onHit();
 
-  hit_(dmg, ALLOW_WOUNDS);
-
   //Damage to corpses
   if(deadState != actorDeadState_alive) {
     if(dmg >= getHpMax(true) / 2) {
@@ -426,7 +424,6 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
     die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
-    die_();
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
@@ -546,7 +543,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
 
   clr_ = clrRedLgt;
 
-  onMonsterDeath();
+  die_();
 
   propHandler_->onDeath(isPlayerSeeDyingActor);
 

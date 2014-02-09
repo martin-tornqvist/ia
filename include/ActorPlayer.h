@@ -46,11 +46,9 @@ public:
 
   void moveDir(Dir dir);
 
-  void spawnStartItems() override;
-
-  void onActorTurn();
-
-  void onStandardTurn_();
+  void spawnStartItems()  override;
+  void onActorTurn()      override;
+  void onStandardTurn()   override;
 
   void hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                  const Dir dirToOrigin,

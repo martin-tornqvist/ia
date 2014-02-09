@@ -38,16 +38,16 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
 
     switch(entityDescribed.entityType) {
       case entityActor:
-        describeBriefActor(*entityDescribed.actor, markerTask, itemThrown);
+        descrBriefActor(*entityDescribed.actor, markerTask, itemThrown);
         break;
       case entityFeatureStatic:
-        describeBriefFeatureStatic(*entityDescribed.feature);
+        descrBriefFeatureStatic(*entityDescribed.feature);
         break;
       case entityFeatureMob:
-        describeBriefFeatureMob(*entityDescribed.feature);
+        descrBriefFeatureMob(*entityDescribed.feature);
         break;
       case entityItem:
-        describeBriefItem(*entityDescribed.item);
+        descrBriefItem(*entityDescribed.item);
         break;
     }
   }
@@ -69,9 +69,8 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
   }
 }
 
-void Look::describeBriefActor(const Actor& actor,
-                              const MarkerTask markerTask,
-                              const Item* const itemThrown) const {
+void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
+                           const Item* const itemThrown) const {
   eng.log->addMsg(actor.getNameA() + ".");
 
   if(markerTask == markerTask_look) {
@@ -91,16 +90,16 @@ void Look::describeBriefActor(const Actor& actor,
   }
 }
 
-void Look::describeBriefFeatureMob(const Feature& feature) const {
+void Look::descrBriefFeatureMob(const Feature& feature) const {
   eng.log->addMsg(feature.getDescr(false) + ".");
 }
 
-void Look::describeBriefItem(const Item& item) const {
+void Look::descrBriefItem(const Item& item) const {
   eng.log->addMsg(
     eng.itemDataHandler->getItemInterfaceRef(item, true) + ".");
 }
 
-void Look::describeBriefFeatureStatic(const Feature& feature) const {
+void Look::descrBriefFeatureStatic(const Feature& feature) const {
   eng.log->addMsg(feature.getDescr(false) + ".");
 }
 
@@ -109,31 +108,26 @@ void Look::printExtraActorDescription(const Pos& pos) const {
   if(actor != NULL) {
     if(actor != eng.player) {
       //Add written description.
-      string description = actor->getData().description;
+      string descr = actor->getData().description;
 
       //Add auto-description.
       if(actor->getData().isAutoDescriptionAllowed) {
-        eng.autoDescribeActor->addAutoDescriptionLines(actor, description);
+        eng.autoDescribeActor->addAutoDescriptionLines(actor, descr);
       }
 
       vector<string> formattedText;
-      TextFormatting::lineToLines(
-        description, MAP_W - 2, formattedText);
+      TextFormatting::lineToLines(descr, MAP_W - 1, formattedText);
 
       const unsigned int NR_OF_LINES = formattedText.size();
 
-      const int START_X = 1;
-      const int START_Y = 2;
-
       eng.renderer->drawMapAndInterface(false);
       eng.marker->draw(markerTask_look);
-      eng.renderer->coverArea(panel_screen,
-                               Pos(START_X, START_Y),
-                               Pos(1, NR_OF_LINES));
+      eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(1, NR_OF_LINES));
 
-      for(unsigned int i = 0; i < NR_OF_LINES; i++) {
-        eng.renderer->drawText(formattedText.at(i), panel_screen,
-                                Pos(START_X, START_Y + i), clrWhiteHigh);
+      int y = 1;
+      for(string & s : formattedText) {
+        eng.renderer->drawText(s, panel_screen, Pos(0, y), clrWhiteHigh);
+        y++;
       }
 
       eng.renderer->updateScreen();
@@ -159,7 +153,7 @@ Entity Look::getEntityToDescribe(const Pos pos) {
   }
 
   //Describe mob feature
-  for(FeatureMob* mob : eng.gameTime->featureMobs_) {
+  for(FeatureMob * mob : eng.gameTime->featureMobs_) {
     if(mob->getPos() == pos) {return Entity(mob);}
   }
 

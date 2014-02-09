@@ -16,13 +16,9 @@ public:
     actor(NULL), item(NULL), feature(NULL),
     entityType(entityFeatureStatic) {}
 
-  Entity(Actor* actor_) :
-    actor(actor_), entityType(entityActor) {
-  }
+  Entity(Actor* actor_) : actor(actor_), entityType(entityActor) {}
 
-  Entity(Item* item_) :
-    item(item_), entityType(entityItem) {
-  }
+  Entity(Item* item_) : item(item_), entityType(entityItem) {}
 
   Entity(FeatureMob* feature_);
   Entity(FeatureStatic* feature_);
@@ -36,9 +32,7 @@ public:
 
 class Look {
 public:
-  Look(Engine& engine) :
-    eng(engine) {
-  }
+  Look(Engine& engine) : eng(engine) {}
 
   void markerAtPos(const Pos& pos, const MarkerTask markerTask,
                    const Item* const itemThrown);
@@ -47,11 +41,11 @@ public:
 private:
   Entity entityDescribed;
 
-  void describeBriefActor(const Actor& actor, const MarkerTask markerTask,
-                          const Item* const itemThrown) const;
-  void describeBriefFeatureMob(const Feature& feature) const;
-  void describeBriefFeatureStatic(const Feature& feature) const;
-  void describeBriefItem(const Item& item) const;
+  void descrBriefActor(const Actor& actor, const MarkerTask markerTask,
+                       const Item* const itemThrown) const;
+  void descrBriefFeatureMob(const Feature& feature) const;
+  void descrBriefFeatureStatic(const Feature& feature) const;
+  void descrBriefItem(const Item& item) const;
 
   Entity getEntityToDescribe(const Pos pos);
 

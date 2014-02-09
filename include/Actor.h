@@ -52,7 +52,7 @@ public:
            const bool ALLOW_DROP_ITEMS);
 
   virtual void onActorTurn() {}
-  virtual void onStandardTurn_() {}
+  virtual void onStandardTurn() {}
 
   virtual void moveDir(Dir dir) = 0;
 
@@ -104,14 +104,11 @@ protected:
   friend class PropDiseased;
 
   virtual void die_() {}
-  virtual void hit_(const int DMG, const bool ALLOW_WOUNDS) {
-    (void)DMG;
+  virtual void hit_(int& dmg, const bool ALLOW_WOUNDS) {
+    (void)dmg;
     (void)ALLOW_WOUNDS;
   }
   virtual void spawnStartItems() = 0;
-
-  virtual void onMonsterHit(int& dmg) {(void)dmg;}
-  virtual void onMonsterDeath() {}
 
   SDL_Color clr_;
   char glyph_;

@@ -198,7 +198,7 @@ void Zuul::spawnStartItems() {
     eng.itemFactory->spawnItem(item_zuulBite));
 }
 
-bool Vortex::monsterSpecificOnActorTurn() {
+bool Vortex::onActorTurn_() {
   if(pullCooldown > 0) {
     pullCooldown--;
   }
@@ -251,7 +251,7 @@ bool Vortex::monsterSpecificOnActorTurn() {
   return false;
 }
 
-void DustVortex::onMonsterDeath() {
+void DustVortex::die_() {
   Explosion::runExplosionAt(
     pos, eng, 0, endOfSfxId, false, new PropBlind(eng, propTurnsStd), true,
     clrGray);
@@ -262,7 +262,7 @@ void DustVortex::spawnStartItems() {
     eng.itemFactory->spawnItem(item_dustVortexEngulf));
 }
 
-void FireVortex::onMonsterDeath() {
+void FireVortex::die_() {
   Explosion::runExplosionAt(
     pos, eng, 0, endOfSfxId, false, new PropBurning(eng, propTurnsStd), true,
     clrRedLgt);
@@ -273,7 +273,7 @@ void FireVortex::spawnStartItems() {
     eng.itemFactory->spawnItem(item_fireVortexEngulf));
 }
 
-void FrostVortex::onMonsterDeath() {
+void FrostVortex::die_() {
   //TODO Add explosion with cold damage
 }
 
@@ -282,7 +282,7 @@ void FrostVortex::spawnStartItems() {
     eng.itemFactory->spawnItem(item_frostVortexEngulf));
 }
 
-bool Ghost::monsterSpecificOnActorTurn() {
+bool Ghost::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
 
@@ -296,8 +296,8 @@ bool Ghost::monsterSpecificOnActorTurn() {
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
           const AbilityRollResult rollResult = eng.abilityRoll->roll(
-              eng.player->getData().abilityVals.getVal(
-                ability_dodgeAttack, true, *this));
+                                                 eng.player->getData().abilityVals.getVal(
+                                                     ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
             eng.log->addMsg("I dodge!", clrMsgGood);
@@ -388,7 +388,7 @@ void MummyUnique::spawnStartItems() {
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
 
-bool Khephren::monsterSpecificOnActorTurn() {
+bool Khephren::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(hasSummonedLocusts == false) {
@@ -473,7 +473,7 @@ void HuntingHorror::spawnStartItems() {
     eng.itemFactory->spawnItem(item_huntingHorrorBite));
 }
 
-bool KeziahMason::monsterSpecificOnActorTurn() {
+bool KeziahMason::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(hasSummonedJenkin == false) {
@@ -522,7 +522,7 @@ void KeziahMason::spawnStartItems() {
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
 
-void Ooze::onStandardTurn_() {
+void Ooze::onStandardTurn() {
   restoreHp(1, false);
 }
 
@@ -555,7 +555,7 @@ const SDL_Color& ColourOutOfSpace::getClr() {
   return currentColor;
 }
 
-void ColourOutOfSpace::onStandardTurn_() {
+void ColourOutOfSpace::onStandardTurn() {
   currentColor.r = eng.dice.range(40, 255);
   currentColor.g = eng.dice.range(40, 255);
   currentColor.b = eng.dice.range(40, 255);
@@ -568,7 +568,7 @@ void ColourOutOfSpace::onStandardTurn_() {
   }
 }
 
-bool Spider::monsterSpecificOnActorTurn() {
+bool Spider::onActorTurn_() {
   return false;
 }
 
@@ -602,7 +602,7 @@ void Wolf::spawnStartItems() {
     eng.itemFactory->spawnItem(item_wolfBite));
 }
 
-bool WormMass::monsterSpecificOnActorTurn() {
+bool WormMass::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(eng.dice.percentile() < chanceToSpawnNew) {
@@ -637,7 +637,7 @@ void WormMass::spawnStartItems() {
     eng.itemFactory->spawnItem(item_wormMassBite));
 }
 
-bool GiantLocust::monsterSpecificOnActorTurn() {
+bool GiantLocust::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(eng.dice.percentile() < chanceToSpawnNew) {
@@ -672,8 +672,7 @@ void GiantLocust::spawnStartItems() {
     eng.itemFactory->spawnItem(item_giantLocustBite));
 }
 
-bool LordOfShadows::monsterSpecificOnActorTurn() {
-
+bool LordOfShadows::onActorTurn_() {
   return false;
 }
 
@@ -681,7 +680,7 @@ void LordOfShadows::spawnStartItems() {
 
 }
 
-bool LordOfSpiders::monsterSpecificOnActorTurn() {
+bool LordOfSpiders::onActorTurn_() {
   if(awareOfPlayerCounter_ > 0) {
 
     if(eng.dice.coinToss()) {
@@ -726,7 +725,7 @@ void LordOfSpiders::spawnStartItems() {
 
 }
 
-bool LordOfSpirits::monsterSpecificOnActorTurn() {
+bool LordOfSpirits::onActorTurn_() {
 
   return false;
 }
@@ -735,7 +734,7 @@ void LordOfSpirits::spawnStartItems() {
 
 }
 
-bool LordOfPestilence::monsterSpecificOnActorTurn() {
+bool LordOfPestilence::onActorTurn_() {
 
   return false;
 }
@@ -744,11 +743,11 @@ void LordOfPestilence::spawnStartItems() {
 
 }
 
-bool Zombie::monsterSpecificOnActorTurn() {
+bool Zombie::onActorTurn_() {
   return tryResurrect();
 }
 
-bool MajorClaphamLee::monsterSpecificOnActorTurn() {
+bool MajorClaphamLee::onActorTurn_() {
   if(tryResurrect()) {
     return true;
   }

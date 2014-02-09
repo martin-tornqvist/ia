@@ -797,7 +797,7 @@ void Player::onActorTurn() {
   }
 }
 
-void Player::onStandardTurn_() {
+void Player::onStandardTurn() {
   // Dynamite
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;

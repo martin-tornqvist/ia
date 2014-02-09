@@ -1495,11 +1495,11 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'F';
   d.color = clrWhite;
   d.tile = tile_deepOne;
-  d.hp = 8;
+  d.hp = 10;
   d.spi = 12;
-  d.dmgMelee = 3;
-  d.dmgRanged = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.dmgMelee = 5;
+  d.dmgRanged = 5;
+  d.abilityVals.setVal(ability_accuracyMelee, 50);
   d.abilityVals.setVal(ability_accuracyRanged, 40);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeHorde;

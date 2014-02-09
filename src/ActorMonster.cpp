@@ -105,7 +105,7 @@ void Monster::onActorTurn() {
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
   if(leader != eng.player/*TODO temporary restriction, allow this later(?)*/) {
-    if(monsterSpecificOnActorTurn()) {
+    if(onActorTurn_()) {
       return;
     }
   }
@@ -210,7 +210,9 @@ void Monster::onActorTurn() {
   eng.gameTime->actorDidAct();
 }
 
-void Monster::onMonsterHit(int& dmg) {
+void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
+  (void)ALLOW_WOUNDS;
+
   awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
 
   if(data_->monsterShockLevel != monsterShockLevel_none) {

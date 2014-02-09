@@ -45,7 +45,7 @@ public:
   Monster(Engine& engine);
   virtual ~Monster();
 
-  virtual void place_() {}
+  virtual void place_() override {}
 
   void moveDir(Dir dir);
 
@@ -53,7 +53,7 @@ public:
   BestAttack getBestAttack(const AttackOpport& attackOpport);
   bool tryAttack(Actor& defender);
 
-  virtual void spawnStartItems() = 0;
+  virtual void spawnStartItems() override = 0;
 
   void hearSound(const Snd& snd);
 
@@ -61,11 +61,9 @@ public:
 
   void playerBecomeAwareOfMe(const int DURATION_FACTOR = 1);
 
-  void onActorTurn();
-
-  virtual bool monsterSpecificOnActorTurn() {return false;}
-
-  virtual void onStandardTurn_() {}
+  void onActorTurn() override;
+  virtual bool onActorTurn_() {return false;}
+  virtual void onStandardTurn() override {}
 
   virtual string getAggroPhraseMonsterSeen() const {
     return data_->aggroTextMonsterSeen;
@@ -106,7 +104,7 @@ public:
   bool hasGivenXpForSpotting_;
 
 protected:
-  void onMonsterHit(int& dmg);
+  virtual void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
 };
 
 class Rat: public Monster {
@@ -133,7 +131,7 @@ class Spider: public Monster {
 public:
   Spider(Engine& engine) : Monster(engine) {}
   virtual ~Spider() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
 };
 
 class GreenSpider: public Spider {
@@ -178,8 +176,8 @@ public:
     hasResurrected = false;
   }
   virtual ~Zombie() {}
-  virtual bool monsterSpecificOnActorTurn();
-  void die_();
+  virtual bool onActorTurn_() override;
+  void die_() override;
 protected:
   bool tryResurrect();
   int deadTurnCounter;
@@ -215,7 +213,7 @@ public:
   }
   ~MajorClaphamLee() {}
 
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
 private:
   bool hasSummonedTombLegions;
 };
@@ -230,7 +228,7 @@ class KeziahMason: public Monster {
 public:
   KeziahMason(Engine& engine) : Monster(engine), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   void spawnStartItems() override;
 private:
   bool hasSummonedJenkin;
@@ -279,7 +277,7 @@ class LordOfShadows: public Monster {
 public:
   LordOfShadows(Engine& engine) : Monster(engine) {}
   ~LordOfShadows() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   void spawnStartItems() override;
 };
 
@@ -287,7 +285,7 @@ class LordOfSpiders: public Monster {
 public:
   LordOfSpiders(Engine& engine) : Monster(engine) {}
   ~LordOfSpiders() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   void spawnStartItems() override;
 };
 
@@ -295,7 +293,7 @@ class LordOfSpirits: public Monster {
 public:
   LordOfSpirits(Engine& engine) : Monster(engine) {}
   ~LordOfSpirits() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   void spawnStartItems() override;
 };
 
@@ -303,7 +301,7 @@ class LordOfPestilence: public Monster {
 public:
   LordOfPestilence(Engine& engine) : Monster(engine) {}
   ~LordOfPestilence() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   void spawnStartItems() override;
 };
 
@@ -335,7 +333,7 @@ class Ghost: public Monster {
 public:
   Ghost(Engine& engine) : Monster(engine) {}
   ~Ghost() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   virtual void spawnStartItems() override;
 };
 
@@ -442,7 +440,7 @@ public:
   Khephren(Engine& engine) : MummyUnique(engine) {}
   ~Khephren() {}
 
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
 private:
   bool hasSummonedLocusts;
 };
@@ -459,7 +457,7 @@ class WormMass: public Monster {
 public:
   WormMass(Engine& engine) : Monster(engine), chanceToSpawnNew(12) {}
   ~WormMass() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   virtual void spawnStartItems() override;
 private:
   int chanceToSpawnNew;
@@ -469,7 +467,7 @@ class GiantLocust: public Monster {
 public:
   GiantLocust(Engine& engine) : Monster(engine), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
   virtual void spawnStartItems() override;
 private:
   int chanceToSpawnNew;
@@ -480,10 +478,10 @@ public:
   Vortex(Engine& engine) : Monster(engine), pullCooldown(0) {}
   virtual ~Vortex() {}
 
-  bool monsterSpecificOnActorTurn();
+  bool onActorTurn_() override;
 
   virtual void spawnStartItems() = 0;
-  virtual void onMonsterDeath() = 0;
+  virtual void die_() = 0;
 private:
   int pullCooldown;
 };
@@ -493,7 +491,7 @@ public:
   DustVortex(Engine& engine) : Vortex(engine) {}
   ~DustVortex() {}
   void spawnStartItems() override;
-  void onMonsterDeath();
+  void die_();
 };
 
 class FireVortex: public Vortex {
@@ -501,7 +499,7 @@ public:
   FireVortex(Engine& engine) : Vortex(engine) {}
   ~FireVortex() {}
   void spawnStartItems() override;
-  void onMonsterDeath();
+  void die_();
 };
 
 class FrostVortex: public Vortex {
@@ -509,14 +507,14 @@ public:
   FrostVortex(Engine& engine) : Vortex(engine) {}
   ~FrostVortex() {}
   void spawnStartItems() override;
-  void onMonsterDeath();
+  void die_();
 };
 
 class Ooze: public Monster {
 public:
   Ooze(Engine& engine) : Monster(engine) {}
   ~Ooze() {}
-  virtual void onStandardTurn_();
+  virtual void onStandardTurn() override;
   virtual void spawnStartItems() = 0;
 };
 
@@ -553,8 +551,8 @@ public:
   ColourOutOfSpace(Engine& engine) : Ooze(engine),
     currentColor(clrMagentaLgt) {}
   ~ColourOutOfSpace() {}
-//  bool monsterSpecificOnActorTurn();
-  void onStandardTurn_();
+//  bool onActorTurn_() override;
+  void onStandardTurn() override;
   void spawnStartItems() override;
   const SDL_Color& getClr();
 private:
