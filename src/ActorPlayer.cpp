@@ -919,7 +919,9 @@ void Player::onStandardTurn_() {
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
     incrInsanity();
-    eng.gameTime->actorDidAct();
+    if(deadState == actorDeadState_alive) {
+      eng.gameTime->actorDidAct();
+    }
     return;
   }
 
