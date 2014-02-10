@@ -180,7 +180,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                                   curProj->attackData->dmg,
                                   wpn.getData().rangedDmgType, true);
               if(DIED == false) {
-                // Aply weapon hit properties
+                // Apply weapon hit properties
                 PropHandler& defenderPropHandler =
                   curProj->attackData->curDefender->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);

@@ -322,7 +322,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language.";
-  d.spellCastMessage = "The accolyte makes strange gestures in the air.";
+  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
@@ -359,7 +359,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Tesla Cannon.";
-  d.spellCastMessage = "The accolyte makes strange gestures in the air.";
+  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
@@ -396,7 +396,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
   d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Spike gun.";
-  d.spellCastMessage = "The accolyte makes strange gestures in the air.";
+  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_human);
@@ -430,7 +430,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  d.description = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familier; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
+  d.description = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familiar; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " chortles at me in a croaking voice.";
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
@@ -1228,7 +1228,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
+  d.description = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestrial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
@@ -1393,7 +1393,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description = "A mummified human being, possibly dating back millenia.";
+  d.description = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = monsterShockLevel_scary;

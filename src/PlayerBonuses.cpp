@@ -584,7 +584,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
 
       eng.player->changeMaxHp(-2, false);
 
-      //Player starts with a scroll of Darkbolt, and one other random srcoll
+      //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
       Item* scroll = eng.itemFactory->spawnItem(item_scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);

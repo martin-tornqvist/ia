@@ -647,7 +647,7 @@ void TrapSummonMonster::trigger(
     }
   }
 
-  trace << "TrapSummonMonster: Finding summon canidates" << endl;
+  trace << "TrapSummonMonster: Finding summon candidates" << endl;
   vector<ActorId> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorData& data = eng.actorDataHandler->dataList[i];
