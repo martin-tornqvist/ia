@@ -37,6 +37,7 @@ Spell* SpellHandler::getRandomSpellForMonster() {
 Spell* SpellHandler::getSpellFromId(const SpellId spellId) const {
   switch(spellId) {
     case spell_enfeeble:            return new SpellEnfeeble;
+    case spell_disease:             return new SpellDisease;
     case spell_darkbolt:            return new SpellDarkbolt;
     case spell_azathothsWrath:      return new SpellAzathothsWrath;
     case spell_summonRandom:        return new SpellSummonRandom;
@@ -677,6 +678,27 @@ PropId SpellEnfeeble::getPropId(Engine& eng) const {
     case 5: {return propTerrified;}
   }
   return endOfPropIds;
+}
+
+//------------------------------------------------------------ DISEASE
+SpellCastRetData SpellDisease::cast_(
+  Actor* const caster, Engine& eng) {
+  if(caster == eng.player) {
+    return SpellCastRetData(true);
+  } else {
+    eng.log->addMsg(
+      "A disease is starting to afflict my body!", clrMsgBad);
+    eng.player->getPropHandler().tryApplyProp(
+      new PropDiseased(eng, propTurnsStd));
+    return SpellCastRetData(false);
+  }
+}
+
+bool SpellDisease::isGoodForMonsterToCastNow(
+  Monster* const monster, Engine& eng) {
+  bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  return monster->isSeeingActor(*(eng.player), blockers);
 }
 
 //------------------------------------------------------------ SUMMON RANDOM

@@ -39,7 +39,8 @@ void DungeonMaster::playerGainLvl() {
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
 
-  if(clvl % 2 == 0) {
+  const int BON_EVERY_N_LVL = 2;
+  if(clvl % BON_EVERY_N_LVL == 0) {
     eng.player->changeMaxSpi(1, true);
   }
 }
@@ -99,7 +100,7 @@ void DungeonMaster::setParamsFromSaveLines(vector<string>& lines) {
 void DungeonMaster::winGame() {
   eng.highScore->gameOver(true);
 
-  string winMessage = "As I touch the crystal, there is a jolt of electricity. A surreal glow illuminates the area. ";
+  string winMessage = "As I touch the crystal, there is a jolt of electricity. A surreal glow suddenly illuminates the area. ";
   winMessage += "I feel as if I have stirred something. I notice a dark figure observing me from the edge of the light. ";
   winMessage += "It is the shape of a human. The figure approaches me, but still no light falls on it as it enters. ";
   winMessage += "There is no doubt in my mind concerning the nature of this entity; It is the Faceless God who dwells in the depths of ";
