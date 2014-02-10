@@ -18,7 +18,7 @@ enum SpellId {
   spell_azathothsWrath,
   spell_enfeeble,
   spell_teleport,
-  spell_bless, //TODO Add a curse spell as well, available for player
+  spell_bless,
 
   //Player only
   spell_mayhem,
@@ -35,7 +35,7 @@ enum SpellId {
   //Monsters only
   spell_disease,
   spell_summonRandom,
-  spell_healSelf, //TODO Make it heal over time, and avail for player too
+  spell_healSelf,
   spell_knockBack,
   spell_miGoHypnosis,
 

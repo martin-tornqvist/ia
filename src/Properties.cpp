@@ -443,8 +443,8 @@ void PropDataHandler::initDataList() {
   d.msg[propMsgOnEndMonster] = "is no longer infected.";
   d.msg[propMsgOnMorePlayer] = "I am more infected!";
   d.msg[propMsgOnMoreMonster] = "is more infected.";
-  d.msg[propMsgOnResPlayer] = "I resist infection.";
-  d.msg[propMsgOnResMonster] = "resists infection.";
+  d.msg[propMsgOnResPlayer] = "";
+  d.msg[propMsgOnResMonster] = "";
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -455,7 +455,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propDiseased;
-  d.stdRndTurns = Range(2000, 3000);
+  d.stdRndTurns = Range(400, 800);
   d.name = "Diseased";
   d.nameShort = "Diseased";
   d.msg[propMsgOnStartPlayer] = "I am diseased!";
@@ -476,7 +476,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propWeakened;
-  d.stdRndTurns = Range(100, 200);
+  d.stdRndTurns = Range(50, 100);
   d.name = "Weakened";
   d.nameShort = "Weakened";
   d.msg[propMsgOnStartPlayer] = "I feel weaker.";
@@ -1314,10 +1314,13 @@ void PropInfected::onNewTurn() {
 }
 
 void PropDiseased::onStart() {
-  //Actor::getHpMax() will now return a decreased value,
-  //cap current HP to the new, lower, maximum
   int& hp = owningActor_->hp_;
   hp = min(eng.player->getHpMax(true), hp);
+}
+
+bool PropDiseased::tryResistOtherProp(const PropId id) const {
+  //Getting infected while already diseased is just annoying
+  return id == propInfected;
 }
 
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {

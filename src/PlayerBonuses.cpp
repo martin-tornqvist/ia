@@ -373,6 +373,7 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
 
     case traitSharpShooter: {
       traitsRef.push_back(traitSteadyAimer);
+      bgRef = bgSoldier;
     } break;
 
     case traitDemolitionExpert: {

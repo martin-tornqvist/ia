@@ -32,6 +32,7 @@ void DungeonMaster::playerGainLvl() {
 
   eng.log->addMsg(
     "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+
   if(clvl % 2 != 0) {
     eng.playerCreateCharacter->pickNewTrait(false);
   }
@@ -39,8 +40,7 @@ void DungeonMaster::playerGainLvl() {
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
 
-  const int BON_EVERY_N_LVL = 2;
-  if(clvl % BON_EVERY_N_LVL == 0) {
+  if(clvl % 2 == 0) {
     eng.player->changeMaxSpi(1, true);
   }
 }

@@ -376,13 +376,18 @@ void Ghoul::spawnStartItems() {
 void Mummy::spawnStartItems() {
   inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
 
-  for(int i = eng.dice.range(1, 3); i > 0; i--) {
+  spellsKnown.push_back(eng.spellHandler->getSpellFromId(spell_disease));
+
+  for(int i = eng.dice.range(1, 2); i > 0; i--) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
 
 void MummyUnique::spawnStartItems() {
   inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
+
+  spellsKnown.push_back(eng.spellHandler->getSpellFromId(spell_disease));
+
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());

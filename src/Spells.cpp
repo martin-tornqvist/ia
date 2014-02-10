@@ -686,10 +686,9 @@ SpellCastRetData SpellDisease::cast_(
   if(caster == eng.player) {
     return SpellCastRetData(true);
   } else {
-    eng.log->addMsg(
-      "A disease is starting to afflict my body!", clrMsgBad);
+    eng.log->addMsg("A disease is starting to afflict my body!", clrMsgBad);
     eng.player->getPropHandler().tryApplyProp(
-      new PropDiseased(eng, propTurnsStd));
+      new PropDiseased(eng, propTurnsSpecified, 50));
     return SpellCastRetData(false);
   }
 }
@@ -698,7 +697,7 @@ bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
-  return monster->isSeeingActor(*(eng.player), blockers);
+  return eng.dice.coinToss() && monster->isSeeingActor(*eng.player, blockers);
 }
 
 //------------------------------------------------------------ SUMMON RANDOM

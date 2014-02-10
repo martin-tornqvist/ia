@@ -55,7 +55,6 @@ bool MapGenBsp::run_() {
   const int P_H = eng.config->cellH;
   const int P_M_O = eng.config->mainscreenOffsetY;
   const int P_S_W = eng.config->screenPixelW;
-//  const int P_S_H = eng.config->screenPixelH;
   const int P_C_O = eng.config->characterLinesOffsetY;
   const int P_M_H = P_C_O - P_M_O;
   eng.renderer->drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);

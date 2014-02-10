@@ -370,6 +370,8 @@ public:
     return (HP_MAX * 3) / 4;
   }
 
+  bool tryResistOtherProp(const PropId id) const override;
+
   void onStart() override;
 };
 
