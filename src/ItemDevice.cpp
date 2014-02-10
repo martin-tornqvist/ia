@@ -52,7 +52,7 @@ void Device::printToggleMessage() {
   const string name_a =
     eng.itemDataHandler->getItemRef(*this, itemRef_a, true);
   eng.log->addMsg(
-    (isActivated_ ? "I deactive " : "I activate ") + name_a + ".");
+    (isActivated_ ? "I deactivate " : "I activate ") + name_a + ".");
 }
 
 int Device::getRandomNrTurnsToNextGoodEffect() const {

@@ -493,7 +493,7 @@ bool KeziahMason::onActorTurn_() {
           for(int i = 0; i < LINE_SIZE; i++) {
             const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
-              //TODO Make a generalized summoning funtionality
+              //TODO Make a generalized summoning functionality
               eng.log->addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_brownJenkin, c);

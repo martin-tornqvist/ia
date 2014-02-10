@@ -708,7 +708,7 @@ SpellCastRetData SpellTeleport::cast_(
   if(caster != eng.player) {
     if(eng.player->checkIfSeeActor(*caster, NULL)) {
       eng.log->addMsg(
-        caster->getNameThe() + " dissapears in a blast of smoke!");
+        caster->getNameThe() + " disappears in a blast of smoke!");
     }
   }
 

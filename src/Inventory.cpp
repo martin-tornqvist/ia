@@ -532,11 +532,11 @@ bool Inventory::hasItemInSlot(SlotId slotName) const {
 }
 
 void Inventory::removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT) {
-  //If parameter element corresponds to equiped slots, remove item in that slot
+  //If parameter element corresponds to equipped slots, remove item in that slot
   if(GLOBAL_ELEMENT >= 0 && GLOBAL_ELEMENT < signed(slots_.size())) {
     slots_.at(GLOBAL_ELEMENT).item = NULL;
   } else {
-    //If paramater element corresponds to general slot, remove that slot
+    //If parameter element corresponds to general slot, remove that slot
     const int GENERAL_ELEMENT = GLOBAL_ELEMENT - slots_.size();
     if(GENERAL_ELEMENT >= 0 && GENERAL_ELEMENT < signed(general_.size())) {
       general_.erase(general_.begin() + GENERAL_ELEMENT);
