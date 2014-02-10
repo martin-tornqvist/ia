@@ -523,6 +523,7 @@ void Door::tryOpen(Actor* actorTrying) {
                             " fumbles blindly and fails to open a door.");
           }
         }
+        eng.gameTime->actorDidAct();
       }
     }
   }

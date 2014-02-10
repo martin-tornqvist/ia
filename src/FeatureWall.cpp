@@ -33,18 +33,9 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
 
   switch(wallType) {
     case wall_common:
-    case wall_alt1: {
-      return article + modStr + "stone wall";
-    }
-
-    case wall_cave: {
-      return article + modStr + "cavern wall";
-    }
-
-    case wall_egypt: {
-      return article + modStr + "stone wall";
-    }
-
+    case wall_alt1:   {return article + modStr + "stone wall";}
+    case wall_cave:   {return article + modStr + "cavern wall";}
+    case wall_egypt:  {return article + modStr + "stone wall";}
   }
   assert(false && "Failed to get door description");
 }

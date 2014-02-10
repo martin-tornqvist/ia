@@ -1,5 +1,7 @@
 #include "FeatureExaminable.h"
 
+#include <assert.h>
+
 #include "Engine.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -652,77 +654,113 @@ void Chest::triggerTrap(Actor& actor) {
 
 //--------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), fountainType(fountainTypeTepid) {
+  FeatureStatic(id, pos, engine), fountainType_(FountainType::tepid),
+  fountainMaterial_(FountainMaterial::stone) {
 
-  fountainType = FountainType(eng.dice.range(1, endOfFountainTypes - 1));
+  if(engine.dice.oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
+
+  switch(fountainMaterial_) {
+    case FountainMaterial::stone: {
+      const int NR_TYPES = int(FountainType::endOfFountainTypes);
+      fountainType_ = FountainType(engine.dice.range(1, NR_TYPES - 1));
+    } break;
+
+    case FountainMaterial::gold: {
+      vector<FountainType> typeCandidates {
+        FountainType::bless, FountainType::refreshing, FountainType::spirit,
+        FountainType::vitality
+      };
+      const int ELEMENT = engine.dice.range(0, typeCandidates.size() - 1);
+      fountainType_ = typeCandidates.at(ELEMENT);
+    } break;
+  }
+}
+
+SDL_Color Fountain::getClr() const {
+  switch(fountainMaterial_) {
+    case FountainMaterial::stone: return clrGray;
+    case FountainMaterial::gold:  return clrYellow;
+  }
+  assert("Failed to get fountain color" && false);
+}
+
+string Fountain::getDescr(const bool DEFINITE_ARTICLE) const {
+  string article = DEFINITE_ARTICLE ? "the" : "a";
+
+  switch(fountainMaterial_) {
+    case FountainMaterial::stone: return article + " stone fountain";
+    case FountainMaterial::gold:  return article + " golden fountain";
+  }
+  assert("Failed to get fountain description" && false);
 }
 
 void Fountain::bump(Actor& actorBumping) {
   if(&actorBumping == eng.player) {
 
-    if(fountainType == fountainTypeDry) {
+    if(fountainType_ == FountainType::dry) {
       eng.log->addMsg("The fountain is dried out.");
     } else {
       PropHandler& propHlr = eng.player->getPropHandler();
 
       eng.log->addMsg("I drink from the fountain.");
 
-      switch(fountainType) {
-        case fountainTypeDry: {} break;
+      switch(fountainType_) {
+        case FountainType::dry: {} break;
 
-        case fountainTypeTepid: {
+        case FountainType::tepid: {
           eng.log->addMsg("The water is tepid.");
         } break;
 
-        case fountainTypeRefreshing: {
+        case FountainType::refreshing: {
           eng.log->addMsg("It's very refreshing.");
           eng.player->restoreHp(1, false);
           eng.player->restoreSpi(1, false);
           eng.player->restoreShock(5, false);
         } break;
 
-        case fountainTypeBlessed: {
+        case FountainType::bless: {
           propHlr.tryApplyProp(
             new PropBlessed(eng, propTurnsStd));
         } break;
 
-        case fountainTypeCursed: {
+        case FountainType::curse: {
           propHlr.tryApplyProp(
             new PropCursed(eng, propTurnsStd));
         } break;
 
-        case fountainTypeSpirited: {
+        case FountainType::spirit: {
           eng.player->restoreSpi(2, true, true);
         } break;
 
-        case fountainTypeVitality: {
+        case FountainType::vitality: {
           eng.player->restoreHp(2, true, true);
         } break;
 
-        case fountainTypeDiseased: {
+        case FountainType::disease: {
           propHlr.tryApplyProp(
             new PropDiseased(eng, propTurnsStd));
         } break;
 
-        case fountainTypePoisoned: {
+        case FountainType::poison: {
           propHlr.tryApplyProp(
             new PropPoisoned(eng, propTurnsStd));
         } break;
 
-        case fountainTypeFrenzy: {
+        case FountainType::frenzy: {
           propHlr.tryApplyProp(
             new PropFrenzied(eng, propTurnsStd));
         } break;
 
-        case endOfFountainTypes: {} break;
+        case FountainType::endOfFountainTypes: {} break;
       }
 
       if(eng.dice.oneIn(5)) {
         eng.log->addMsg("The fountain dries out.");
-        fountainType = fountainTypeDry;
+        fountainType_ = FountainType::dry;
       }
     }
   }
+  eng.gameTime->actorDidAct();
 }
 
 

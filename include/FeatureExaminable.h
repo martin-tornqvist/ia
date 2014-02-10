@@ -121,31 +121,36 @@ private:
   bool isContentKnown_;
 };
 
-enum FountainType {
-  fountainTypeDry, //This must be kept as first position!
-  fountainTypeTepid,
-  fountainTypeRefreshing,
-  fountainTypeBlessed,
-  fountainTypeCursed,
-  fountainTypeSpirited,
-  fountainTypeVitality,
-  fountainTypeDiseased,
-  fountainTypePoisoned,
-  fountainTypeFrenzy,
+enum class FountainType {
+  dry, //This must be kept as first position!
+  tepid,
+  refreshing,
+  bless,
+  curse,
+  spirit,
+  vitality,
+  disease,
+  poison,
+  frenzy,
   endOfFountainTypes
 };
+
+enum class FountainMaterial {stone, gold};
 
 class Fountain: public FeatureStatic {
 public:
   ~Fountain() {}
 
-  void bump(Actor& actorBumping)  override;
+  void bump(Actor& actorBumping)                override;
+  SDL_Color getClr()                            const override;
+  string getDescr(const bool DEFINITE_ARTICLE)  const override;
 
 private:
   friend class FeatureFactory;
   Fountain(FeatureId id, Pos pos, Engine& engine);
 
-  FountainType fountainType;
+  FountainType fountainType_;
+  FountainMaterial fountainMaterial_;
 };
 
 class Cocoon: public FeatureStatic {
