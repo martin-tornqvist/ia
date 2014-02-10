@@ -71,14 +71,14 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
     if(data.attacker == eng.player) {
-      if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+      if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
         otherName = data.curDefender->getNameThe();
       } else {
         otherName = "It ";
       }
       eng.log->addMsg(otherName + " dodges my attack.");
     } else {
-      if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
+      if(eng.player->isSeeingActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -97,7 +97,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
         eng.log->addMsg("I miss completely.");
       }
     } else {
-      if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
+      if(eng.player->isSeeingActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -115,7 +115,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
     if(data.isEtherealDefenderMissed) {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
       if(data.attacker == eng.player) {
-        if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+        if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "It ";
@@ -123,7 +123,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
         eng.log->addMsg(
           "My attack passes right through " + otherName + "!");
       } else {
-        if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
+        if(eng.player->isSeeingActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
@@ -156,7 +156,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       if(data.attacker == eng.player) {
         const string wpnVerb = wpn.getData().meleeAttackMessages.player;
 
-        if(eng.player->checkIfSeeActor(*data.curDefender, NULL)) {
+        if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "it";
@@ -183,7 +183,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       } else {
         const string wpnVerb = wpn.getData().meleeAttackMessages.other;
 
-        if(eng.player->checkIfSeeActor(*data.attacker, NULL)) {
+        if(eng.player->isSeeingActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";

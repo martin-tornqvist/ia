@@ -25,16 +25,15 @@ const string Scroll::getRealTypeName() {
     case spell_detectTraps:         return "Detect Traps";
     case spell_detectMonsters:      return "Detect Monsters";
     case spell_opening:             return "Opening";
-    case spell_mthPower:            return "Thaumaturgic Alteration";
     case spell_sacrificeLife:       return "Sacrifice Life Force";
     case spell_sacrificeSpirit:     return "Sacrifice Spirit";
     case spell_disease:             return "";
     case spell_summonRandom:        return "";
     case spell_healSelf:            return "";
     case spell_knockBack:           return "";
-    case spell_rogueHide:           return "";
+    case spell_cloudMinds:          return "";
     case spell_miGoHypnosis:        return "";
-    case endOfSpells: {} break;
+    case endOfSpellId: {} break;
   }
   assert(false && "No spell found for scroll");
   return "";

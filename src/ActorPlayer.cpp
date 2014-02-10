@@ -46,7 +46,6 @@ Player::Player(Engine& engine) :
   shock_(0.0),
   shockTemp_(0.0),
   permShockTakenCurTurn_(0.0),
-  mth_(0),
   nrMovesUntilFreeAction_(-1),
   carryWeightBase(450) {}
 
@@ -134,7 +133,6 @@ void Player::addSaveLines(vector<string>& lines) const {
 
   lines.push_back(toString(insanity_));
   lines.push_back(toString(int(shock_)));
-  lines.push_back(toString(mth_));
   lines.push_back(toString(hp_));
   lines.push_back(toString(hpMax_));
   lines.push_back(toString(spi_));
@@ -173,8 +171,6 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   insanity_ = toInt(lines.front());
   lines.erase(lines.begin());
   shock_ = double(toInt(lines.front()));
-  lines.erase(lines.begin());
-  mth_ = toInt(lines.front());
   lines.erase(lines.begin());
   hp_ = toInt(lines.front());
   lines.erase(lines.begin());
@@ -329,14 +325,6 @@ void Player::restoreShock(const int amountRestored,
   shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
 }
 
-void Player::incrMth(const int VAL, const bool IS_MSG_ALLOWED) {
-  mth_ = max(0, min(100, mth_ + VAL));
-  insanity_ = max(0, min(100, insanity_ + VAL / 2));
-  if(IS_MSG_ALLOWED) {
-    eng.log->addMsg("I feel more insightful!");
-  }
-}
-
 void Player::incrInsanity() {
   trace << "Player: Increasing insanity" << endl;
   string msg = getInsanity() < 100 ? "Insanity draws nearer... " : "";
@@ -346,8 +334,6 @@ void Player::incrInsanity() {
   if(eng.config->isBotPlaying == false) {
     insanity_ += INS_INCR;
   }
-
-  mth_ = min(100, mth_ + INS_INCR / 2);
 
   restoreShock(70, false);
 
@@ -753,8 +739,6 @@ void Player::onActorTurn() {
     return;
   }
 
-  if(getMth() >= MTH_LVL_NEW_PWR) {grantMthPower();}
-
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
@@ -930,7 +914,7 @@ void Player::onStandardTurn() {
       if(actor->deadState == actorDeadState_alive) {
 
         Monster& monster = *dynamic_cast<Monster*>(actor);
-        const bool IS_MONSTER_SEEN = checkIfSeeActor(*actor, NULL);
+        const bool IS_MONSTER_SEEN = isSeeingActor(*actor, NULL);
         if(IS_MONSTER_SEEN) {
           if(monster.messageMonsterInViewPrinted == false) {
             if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
@@ -1109,7 +1093,7 @@ void Player::moveDir(Dir dir) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
               if(eng.config->useRangedWpnMeleeePrompt &&
-                  checkIfSeeActor(*actorAtDest, NULL)) {
+                  isSeeingActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
                     eng.itemDataHandler->getItemRef(*weapon, itemRef_a);
@@ -1211,7 +1195,7 @@ void Player::moveDir(Dir dir) {
 void Player::autoMelee() {
   if(target != NULL) {
     if(eng.basicUtils->isPosAdj(pos, target->pos, false)) {
-      if(checkIfSeeActor(*target, NULL)) {
+      if(isSeeingActor(*target, NULL)) {
         moveDir(DirConverter().getDir(target->pos - pos));
         return;
       }
@@ -1224,7 +1208,7 @@ void Player::autoMelee() {
       if(dx != 0 || dy != 0) {
         Actor* const actor = eng.basicUtils->getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
-          if(checkIfSeeActor(*actor, NULL)) {
+          if(isSeeingActor(*actor, NULL)) {
             target = actor;
             moveDir(DirConverter().getDir(Pos(dx, dy)));
             return;
@@ -1368,17 +1352,3 @@ void Player::FOVhack() {
     }
   }
 }
-
-void Player::grantMthPower() const {
-  if(eng.playerSpellsHandler->isSpellLearned(spell_mthPower) == false) {
-    eng.playerSpellsHandler->learnSpellIfNotKnown(spell_mthPower);
-    string str = "I have gained a deeper insight into the esoteric forces";
-    str += " acting behind our apparent reality. With this knowledge, I can";
-    str += " attempt to acquire hidden information or displace existence";
-    str += " according to my will. Gained spell: Thaumaturgic Alteration";
-    eng.popup->showMessage(str, true, "Thaumaturgic Alteration");
-  }
-}
-
-
-

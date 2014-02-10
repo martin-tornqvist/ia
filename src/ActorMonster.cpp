@@ -92,7 +92,7 @@ void Monster::onActorTurn() {
 
   const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
                                  ability_stealth, true, *this) > 0;
-  isStealth = eng.player->checkIfSeeActor(*this, NULL) == false &&
+  isStealth = eng.player->isSeeingActor(*this, NULL) == false &&
               HAS_SNEAK_SKILL;
 
   //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -212,12 +212,9 @@ void Monster::onActorTurn() {
 
 void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
   (void)ALLOW_WOUNDS;
+  (void)dmg;
 
   awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
-
-  if(data_->monsterShockLevel != monsterShockLevel_none) {
-    dmg = (dmg * (100 + eng.player->getMth())) / 100;
-  }
 }
 
 void Monster::moveDir(Dir dir) {
@@ -268,7 +265,7 @@ void Monster::hearSound(const Snd& snd) {
 }
 
 void Monster::speakPhrase() {
-  const bool IS_SEEN_BY_PLAYER = eng.player->checkIfSeeActor(*this, NULL);
+  const bool IS_SEEN_BY_PLAYER = eng.player->isSeeingActor(*this, NULL);
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonsterSeen() :
                      getAggroPhraseMonsterHidden();
@@ -303,7 +300,7 @@ bool Monster::tryAttack(Actor& defender) {
       bool blockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
-      if(checkIfSeeActor(*eng.player, blockers)) {
+      if(isSeeingActor(*eng.player, blockers)) {
         AttackOpport opport = getAttackOpport(defender);
         const BestAttack attack = getBestAttack(opport);
 

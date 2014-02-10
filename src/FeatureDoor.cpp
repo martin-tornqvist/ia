@@ -282,7 +282,7 @@ void Door::bash_(Actor& actorTrying) {
           }
         }
       } else {
-        if(eng.player->checkIfSeeActor(actorTrying, NULL)) {
+        if(eng.player->isSeeingActor(actorTrying, NULL)) {
           eng.log->addMsg("The door crashes open!");
         } else if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
           eng.log->addMsg("A door crashes open!");
@@ -305,7 +305,7 @@ void Door::bash_(Actor& actorTrying) {
                 sfxDoorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::no);
         eng.sndEmitter->emitSnd(snd);
-        if(eng.player->checkIfSeeActor(actorTrying, NULL)) {
+        if(eng.player->isSeeingActor(actorTrying, NULL)) {
           eng.log->addMsg(actorTrying.getNameThe() + " bashes at a door!");
         }
       }
@@ -324,7 +324,7 @@ void Door::tryClose(Actor* actorTrying) {
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
-    eng.player->checkIfSeeActor(*actorTrying, blockers);
+    eng.player->isSeeingActor(*actorTrying, blockers);
 
   bool isClosable = true;
 
@@ -445,7 +445,7 @@ void Door::tryOpen(Actor* actorTrying) {
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
   const bool PLAYER_SEE_TRYER =
-    IS_PLAYER ? true : eng.player->checkIfSeeActor(*actorTrying, blockers);
+    IS_PLAYER ? true : eng.player->isSeeingActor(*actorTrying, blockers);
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {

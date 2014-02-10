@@ -229,9 +229,9 @@ bool Vortex::onActorTurn_() {
             trace << playerPos.x << "," << playerPos.y << ")" << endl;
             bool visionBlockers[MAP_W][MAP_H];
             MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-            if(checkIfSeeActor(*(eng.player), visionBlockers)) {
+            if(isSeeingActor(*(eng.player), visionBlockers)) {
               trace << "Vortex: I am seeing the player" << endl;
-              if(eng.player->checkIfSeeActor(*this, NULL)) {
+              if(eng.player->isSeeingActor(*this, NULL)) {
                 eng.log->addMsg("The Vortex attempts to pull me in!");
               } else {
                 eng.log->addMsg("A powerful wind is pulling me!");
@@ -292,7 +292,7 @@ bool Ghost::onActorTurn_() {
           bool blockers[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksVision(eng), blockers);
           const bool PLAYER_SEES_ME =
-            eng.player->checkIfSeeActor(*this, blockers);
+            eng.player->isSeeingActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
           const AbilityRollResult rollResult = eng.abilityRoll->roll(
@@ -396,7 +396,7 @@ bool Khephren::onActorTurn_() {
         bool blockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
-        if(checkIfSeeActor(*(eng.player), blockers)) {
+        if(isSeeingActor(*(eng.player), blockers)) {
           MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
           const int SPAWN_AFTER_X =
@@ -481,7 +481,7 @@ bool KeziahMason::onActorTurn_() {
         bool blockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
-        if(checkIfSeeActor(*(eng.player), blockers)) {
+        if(isSeeingActor(*(eng.player), blockers)) {
 
           MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
@@ -562,7 +562,7 @@ void ColourOutOfSpace::onStandardTurn() {
 
   restoreHp(1, false);
 
-  if(eng.player->checkIfSeeActor(*this, NULL)) {
+  if(eng.player->isSeeingActor(*this, NULL)) {
     eng.player->getPropHandler().tryApplyProp(
       new PropConfused(eng, propTurnsStd));
   }
@@ -687,7 +687,7 @@ bool LordOfSpiders::onActorTurn_() {
 
       const Pos playerPos = eng.player->pos;
 
-      if(eng.player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->isSeeingActor(*this, NULL)) {
         eng.log->addMsg(data_->spellCastMessage);
       }
 
@@ -759,7 +759,7 @@ bool MajorClaphamLee::onActorTurn_() {
         bool visionBlockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
-        if(checkIfSeeActor(*(eng.player), visionBlockers)) {
+        if(isSeeingActor(*(eng.player), visionBlockers)) {
           eng.log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
           vector<ActorId> monsterIds;
           monsterIds.resize(0);

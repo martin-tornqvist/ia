@@ -75,8 +75,6 @@ public:
     permShockTakenCurTurn_ = 0.0;
   }
 
-  void incrMth(const int VAL, const bool IS_MSG_ALLOWED);
-  inline int getMth() const {return mth_;}
   void setTempShockFromFeatures();
 
   int getShockResistance(const ShockSrc shockSrc) const;
@@ -106,8 +104,6 @@ public:
 
   void addLight_(bool light[MAP_W][MAP_H]) const;
 
-  void grantMthPower() const;
-
 private:
   friend class DungeonMaster;
   friend class GameTime;
@@ -124,8 +120,6 @@ private:
 
   int insanity_;
   double shock_, shockTemp_, permShockTakenCurTurn_;
-
-  int mth_;
 
   int nrMovesUntilFreeAction_;
 

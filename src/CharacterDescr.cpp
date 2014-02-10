@@ -94,23 +94,6 @@ void CharacterDescr::makeLines() {
   lines.push_back(StrAndClr(" ", clrText));
 
 
-  lines.push_back(StrAndClr("Mythos knowledge effects", clrHeading));
-  const int MTH = eng.player->getMth();
-  if(MTH == 0) {
-    lines.push_back(StrAndClr(offset + "No effects", clrText));
-  } else {
-    lines.push_back(StrAndClr(
-                      offset + "+" + toString(MTH) +
-                      "% damage against all strange creatures", clrText));
-    const bool IS_SPI_BON = eng.player->getMth() >= MTH_LVL_SPELLS_SPI_BON;
-    if(IS_SPI_BON) {
-      lines.push_back(StrAndClr(
-                        offset + "-1 Spirit cost for all spells", clrText));
-    }
-  }
-  lines.push_back(StrAndClr(" ", clrText));
-
-
   lines.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
   if(eng.player->insanityPhobias[insanityPhobia_closedPlace])

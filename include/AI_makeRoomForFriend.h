@@ -14,7 +14,7 @@ public:
       bool visionBlockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(engine), visionBlockers);
 
-      if(monster.checkIfSeeActor(*engine.player, visionBlockers)) {
+      if(monster.isSeeingActor(*engine.player, visionBlockers)) {
 
         //Loop through all actors
         for(Actor * actor : engine.gameTime->actors_) {
@@ -29,7 +29,7 @@ public:
               //Other monster sees the player, or it's a neighbour that
               //does not see the player?
               if(
-                otherMonster->checkIfSeeActor(
+                otherMonster->isSeeingActor(
                   *engine.player, visionBlockers) ||
                 isOtherAdjWithoutVision) {
 
@@ -66,7 +66,7 @@ public:
                       if(actor2 != engine.player && actor2 != &monster) {
                         otherMonster = dynamic_cast<Monster*>(actor2);
                         if(
-                          otherMonster->checkIfSeeActor(
+                          otherMonster->isSeeingActor(
                             *engine.player, visionBlockers)) {
                           if(
                             checkIfBlockingMonster(
@@ -155,7 +155,7 @@ private:
     //If the pal is next to me
     if(engine.basicUtils->isPosAdj(self.pos, other.pos, false)) {
       //If pal does not see player
-      if(other.checkIfSeeActor(*engine.player, visionBlockers) == false) {
+      if(other.isSeeingActor(*engine.player, visionBlockers) == false) {
         return true;
       }
     }

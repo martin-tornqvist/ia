@@ -36,9 +36,7 @@ const int AUDIO_ALLOCATED_CHANNELS = 16;
 
 const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
 
-const int PLAYER_START_SPI                = 6;
-const int MTH_LVL_SPELLS_SPI_BON          = 20;
-const int MTH_LVL_NEW_PWR                 = 15;
+const int PLAYER_START_SPI        = 6;
 
 const int MIN_DLVL_NASTY_TRAPS = 6;
 

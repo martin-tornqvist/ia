@@ -102,7 +102,6 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.isEndedByMagicHealing = true;
   d.allowTestingOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
@@ -301,6 +300,7 @@ void PropDataHandler::initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = true;
   d.allowTestingOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
@@ -888,7 +888,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   prop->owningActor_    = owningActor_;
 
   const bool IS_PLAYER  = owningActor_ == eng.player;
-  bool playerSeeOwner   = eng.player->checkIfSeeActor(*owningActor_, NULL);
+  bool playerSeeOwner   = eng.player->isSeeingActor(*owningActor_, NULL);
 
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
@@ -902,7 +902,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
             eng.log->addMsg(msg, clrWhite, true);
           }
         } else {
-          if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+          if(eng.player->isSeeingActor(*owningActor_, NULL)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
             if(msg.empty() == false) {
@@ -1044,7 +1044,7 @@ bool PropHandler::endAppliedProp(
       prop->getMsg(propMsgOnEndPlayer, msg);
       eng.log->addMsg(msg, clrWhite);
     } else {
-      if(eng.player->checkIfSeeActor(*owningActor_, visionBlockers)) {
+      if(eng.player->isSeeingActor(*owningActor_, visionBlockers)) {
         string msg = "";
         prop->getMsg(propMsgOnEndMonster, msg);
         if(msg.empty() == false) {
@@ -1341,7 +1341,7 @@ void PropPoisoned::onNewTurn() {
     if(owningActor_ == eng.player) {
       eng.log->addMsg("I am suffering from the poison!", clrMsgBad, true);
     } else {
-      if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(
           owningActor_->getNameThe() + " suffers from poisoning!");
       }
@@ -1427,7 +1427,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
     if(owningActor_ == eng.player) {
       eng.log->addMsg("I struggle to tear out the spike!", clrMsgBad);
     } else {
-      if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() +  " struggles in pain!",
                         clrMsgGood);
       }
@@ -1445,7 +1445,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
           if(owningActor_ == eng.player) {
             eng.log->addMsg("I rip out a spike from my flesh!");
           } else {
-            if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+            if(eng.player->isSeeingActor(*owningActor_, NULL)) {
               eng.log->addMsg(
                 owningActor_->getNameThe() + " tears out a spike!");
             }
@@ -1677,7 +1677,7 @@ bool PropRAcid::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel a faint burning sensation.");
-      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1693,7 +1693,7 @@ bool PropRCold::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel chilly.");
-      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1709,7 +1709,7 @@ bool PropRElec::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel a faint tingle.");
-      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1754,7 +1754,7 @@ bool PropRPhys::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I resist harm.");
-      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1780,7 +1780,7 @@ bool PropRFire::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel hot.");
-      } else if(eng.player->checkIfSeeActor(*owningActor_, NULL)) {
+      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }

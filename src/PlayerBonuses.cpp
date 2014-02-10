@@ -597,7 +597,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
 
-        if(IS_AVAIL && id != spell_pestilence && id != spell_darkbolt) {
+        if(IS_AVAIL && id != spell_darkbolt) {
           dynamic_cast<Scroll*>(scroll)->identify(true);
           eng.player->getInv().putItemInGeneral(scroll);
           break;
@@ -616,7 +616,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
     } break;
 
     case bgRogue: {
-      eng.playerSpellsHandler->learnSpellIfNotKnown(spell_rogueHide);
+      eng.playerSpellsHandler->learnSpellIfNotKnown(spell_cloudMinds);
       pickTrait(traitObservant);
       pickTrait(traitStealthy);
     } break;

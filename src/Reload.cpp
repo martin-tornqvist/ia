@@ -74,7 +74,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
         }
         eng.renderer->drawMapAndInterface();
       } else {
-        if(eng.player->checkIfSeeActor(actorReloading, NULL)) {
+        if(eng.player->isSeeingActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + swiftStr + " reloads.");
         }
       }
@@ -84,7 +84,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
       if(IS_PLAYER) {
         eng.log->addMsg("I fumble with " + ammoName + ".");
       } else {
-        if(eng.player->checkIfSeeActor(actorReloading, NULL)) {
+        if(eng.player->isSeeingActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }

@@ -27,7 +27,7 @@ void PotionOfHealing::quaff_(Actor* const actor) {
     actor->changeMaxHp(1, true);
   }
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -44,7 +44,7 @@ void PotionOfSpirit::quaff_(Actor* const actor) {
     actor->changeMaxSpi(1, true);
   }
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -57,7 +57,7 @@ void PotionOfSpirit::collide_(const Pos& pos, Actor* const actor) {
 void PotionOfBlindness::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropBlind(eng, propTurnsStd));
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -70,7 +70,7 @@ void PotionOfBlindness::collide_(const Pos& pos, Actor* const actor) {
 void PotionOfParalyzation::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropParalyzed(eng, propTurnsStd));
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -84,7 +84,7 @@ void PotionOfParalyzation::collide_(const Pos& pos, Actor* const actor) {
 void PotionOfDisease::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropDiseased(eng, propTurnsStd));
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -92,7 +92,7 @@ void PotionOfDisease::quaff_(Actor* const actor) {
 void PotionOfConfusion::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropConfused(eng, propTurnsStd));
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -105,7 +105,7 @@ void PotionOfConfusion::collide_(const Pos& pos, Actor* const actor) {
 void PotionOfFrenzy::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropFrenzied(eng, propTurnsStd));
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -155,7 +155,7 @@ void PotionOfFortitude::quaff_(Actor* const actor) {
     eng.log->addMsg("I feel more at ease.");
   }
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -169,7 +169,7 @@ void PotionOfPoison::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropPoisoned(eng, propTurnsStd));
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -183,7 +183,7 @@ void PotionOfRFire::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRFire(eng, propTurnsStd));
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -199,7 +199,7 @@ void PotionOfAntidote::quaff_(Actor* const actor) {
   const bool IS_POISON_ENDED =
     actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 
-  if(IS_POISON_ENDED && eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(IS_POISON_ENDED && eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -213,7 +213,7 @@ void PotionOfRElec::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRElec(eng, propTurnsStd));
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -227,7 +227,7 @@ void PotionOfRAcid::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropRAcid(eng, propTurnsStd));
 
-  if(eng.player->checkIfSeeActor(*actor, NULL)) {
+  if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
@@ -242,48 +242,41 @@ void PotionOfInsight::quaff_(Actor* const actor) {
 
   Inventory& inv = eng.player->getInv();
 
-  vector<Item*> itemIdentifyCandidates;
+  vector<Item*> identifyCandidates;
 
   vector<InventorySlot>& slots = inv.getSlots();
   for(InventorySlot & slot : slots) {
     Item* const item = slot.item;
     if(item) {
       const ItemData& d = item->getData();
-      if(d.isIdentified == false) {
-        itemIdentifyCandidates.push_back(item);
-      }
+      if(d.isIdentified == false) {identifyCandidates.push_back(item);}
     }
   }
   vector<Item*>& general = inv.getGeneral();
   for(Item * item : general) {
     if(item->getData().id != item_potionOfInsight) {
       const ItemData& d = item->getData();
-      if(d.isIdentified == false) {
-        itemIdentifyCandidates.push_back(item);
-      }
+      if(d.isIdentified == false) {identifyCandidates.push_back(item);}
     }
   }
 
-  const unsigned int NR_ELEMENTS = itemIdentifyCandidates.size();
+  const unsigned int NR_ELEMENTS = identifyCandidates.size();
   if(NR_ELEMENTS > 0) {
-    Item* const item =
-      itemIdentifyCandidates.at(
-        eng.dice.range(0, NR_ELEMENTS - 1));
+    const int ELEMENT = eng.dice.range(0, NR_ELEMENTS - 1);
+
+    Item* const item = identifyCandidates.at(ELEMENT);
 
     const string itemNameBefore =
       eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
-
-    item->identify(true);
 
     const string itemNameAfter =
       eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
 
     eng.log->addMsg("I gain intuitions about " + itemNameBefore + "...");
     eng.log->addMsg("It is identified as " + itemNameAfter + "!");
-  }
 
-  eng.player->incrMth(4, true);
-  identify(false);
+    item->identify(true);
+  }
 }
 
 void PotionOfClairvoyance::quaff_(Actor* const actor) {

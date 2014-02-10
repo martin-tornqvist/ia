@@ -52,7 +52,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MONSTER == false ? true :
-            eng.player->checkIfSeeActor(defender, blockers);
+            eng.player->isSeeingActor(defender, blockers);
 
           if(i == 0) {
             if(IS_MSG_ALLOWED) {

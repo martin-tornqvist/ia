@@ -27,11 +27,10 @@ enum SpellId {
   spell_detectTraps,
   spell_detectMonsters,
   spell_opening,
-  spell_mthPower,
   spell_sacrificeLife,
   spell_sacrificeSpirit,
 
-  spell_rogueHide,
+  spell_cloudMinds,
 
   //Monsters only
   spell_disease,
@@ -40,7 +39,7 @@ enum SpellId {
   spell_knockBack,
   spell_miGoHypnosis,
 
-  endOfSpells
+  endOfSpellId
 };
 
 enum IntrSpellShock {
@@ -79,10 +78,10 @@ public:
     (void)eng;
     return false;
   }
-  virtual bool isAvailForAllMonsters() const = 0;
-  virtual bool isAvailForPlayer() const = 0;
-  virtual string getName() const = 0;
-  virtual SpellId getId() const = 0;
+  virtual bool isAvailForAllMonsters()  const = 0;
+  virtual bool isAvailForPlayer()       const = 0;
+  virtual string getName()              const = 0;
+  virtual SpellId getId()               const = 0;
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                    Engine& eng) const;
@@ -158,7 +157,7 @@ class SpellPestilence: public Spell {
 public:
   SpellPestilence() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
-  bool isAvailForPlayer()       const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Pestilence";}
   SpellId getId()               const override {return spell_pestilence;}
   IntrSpellShock getShockTypeIntrCast() const override {
@@ -259,39 +258,19 @@ private:
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 2;}
 };
 
-class SpellRogueHide: public Spell {
+class SpellCloudMinds: public Spell {
 public:
-  SpellRogueHide() : Spell() {}
+  SpellCloudMinds() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Cloud Minds";}
-  SpellId getId()               const override {return spell_rogueHide;}
+  SpellId getId()               const override {return spell_cloudMinds;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return intrSpellShockMild;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 1;}
-};
-
-class SpellMthPower: public Spell {
-public:
-  SpellMthPower() : Spell() {}
-  bool isAvailForAllMonsters()  const override {return false;}
-  bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {
-    return "Thaumaturgic Alteration";
-  }
-  SpellId getId()               const override {return spell_mthPower;}
-  IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
-  }
-private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
-
-  bool doSpecialAction(Engine& eng) const;
-  void castRandomOtherSpell(Engine& eng) const;
 };
 
 class SpellBless: public Spell {

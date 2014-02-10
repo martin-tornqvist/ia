@@ -129,7 +129,7 @@ void Trap::bump(Actor& actorBumping) {
           trace << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER =
-            actorBumping.eng.player->checkIfSeeActor(actorBumping, NULL);
+            actorBumping.eng.player->isSeeingActor(actorBumping, NULL);
 
           const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
           const AbilityRollResult result =
@@ -214,7 +214,7 @@ void Trap::triggerTrap(Actor& actor) {
   } else {
     traceVerbose << "Trap: Monster triggering trap" << endl;
     const bool IS_ACTOR_SEEN_BY_PLAYER =
-      eng.player->checkIfSeeActor(actor, NULL);
+      eng.player->isSeeingActor(actor, NULL);
     const AbilityRollResult dodgeResult = eng.abilityRoll->roll(DODGE_SKILL);
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
@@ -303,7 +303,7 @@ void TrapDart::trigger(
   traceVerbose << "TrapDart::trigger()..." << endl;
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -377,7 +377,7 @@ void TrapSpear::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -450,7 +450,7 @@ void TrapGasConfusion::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -480,7 +480,7 @@ void TrapGasParalyzation::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -510,7 +510,7 @@ void TrapGasFear::trigger(Actor& actor,
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -539,7 +539,7 @@ void TrapBlindingFlash::trigger(
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
   const bool CAN_PLAYER_SEE_ACTOR =
-    eng.player->checkIfSeeActor(actor, NULL);
+    eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -588,7 +588,7 @@ void TrapTeleport::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -624,7 +624,7 @@ void TrapSummonMonster::trigger(
   const bool CAN_SEE = actor.getPropHandler().allowSee();
   traceVerbose << "TrapSummonMonster: Actor can see: " << CAN_SEE << endl;
 
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   traceVerbose << "TrapSummonMonster: Player see actor: ";
   traceVerbose << CAN_PLAYER_SEE_ACTOR << endl;
 
@@ -680,7 +680,7 @@ void TrapSmoke::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -708,7 +708,7 @@ void TrapAlarm::trigger(
   (void)dodgeResult;
 
   const bool IS_PLAYER            = &actor == eng.player;
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName          = actor.getNameThe();
 
   eng.log->addMsg("An alarm sounds!");
@@ -733,7 +733,7 @@ void TrapSpiderWeb::trigger(
 
   const bool IS_PLAYER = &actor == eng.player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->checkIfSeeActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -778,7 +778,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
     const bool IS_PLAYER = &actor == eng.player;
     const bool PLAYER_CAN_SEE = eng.player->getPropHandler().allowSee();
     const bool PLAYER_CAN_SEE_ACTOR =
-      eng.player->checkIfSeeActor(actor, NULL);
+      eng.player->isSeeingActor(actor, NULL);
     const string actorName = actor.getNameThe();
 
     trace << "TrapSpiderWeb: Name of actor held: " << actorName << endl;

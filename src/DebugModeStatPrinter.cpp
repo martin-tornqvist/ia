@@ -36,7 +36,7 @@ void DebugModeStatPrinter::run() {
 
   printLine("SPELL MAX SPI COSTS");
   printLine(separator);
-  for(int i = 0; i < endOfSpells; i++) {
+  for(int i = 0; i < endOfSpellId; i++) {
     Spell* const spell = eng.spellHandler->getSpellFromId(SpellId(i));
     string name = spell->getName();
     name.insert(name.end(), 24 - name.size(), ' ');

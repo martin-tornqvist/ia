@@ -64,7 +64,7 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const {
   return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
 }
 
-bool Actor::checkIfSeeActor(
+bool Actor::isSeeingActor(
   const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const {
 
   if(other.deadState == actorDeadState_alive) {
@@ -121,7 +121,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
 
       if(IS_SELF_PLAYER) {
         if(dynamic_cast<Monster*>(actor)->leader != this) {
-          if(checkIfSeeActor(*actor, NULL)) {
+          if(isSeeingActor(*actor, NULL)) {
             vectorRef.push_back(actor);
           }
         }
@@ -138,7 +138,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
         if(
           (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
           (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
-          if(checkIfSeeActor(*actor, visionBlockers)) {
+          if(isSeeingActor(*actor, visionBlockers)) {
             vectorRef.push_back(actor);
           }
         }
@@ -241,7 +241,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
       if(this == eng.player) {
         eng.log->addMsg("I feel healthier!", clrMsgGood);
       } else {
-        if(eng.player->checkIfSeeActor(*this, NULL)) {
+        if(eng.player->isSeeingActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks healthier.");
         }
       }
@@ -285,7 +285,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
       if(this == eng.player) {
         eng.log->addMsg("I feel more spirited!", clrMsgGood);
       } else {
-        if(eng.player->checkIfSeeActor(*this, NULL)) {
+        if(eng.player->isSeeingActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks more spirited.");
         }
       }
@@ -309,7 +309,7 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES) {
         eng.log->addMsg("I feel frailer!");
       }
     } else {
-      if(eng.player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->isSeeingActor(*this, NULL)) {
         if(CHANGE > 0) {
           eng.log->addMsg(getNameThe() + " looks more vigorous.");
         }
@@ -334,7 +334,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
         eng.log->addMsg("My spirit is weaker!");
       }
     } else {
-      if(eng.player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->isSeeingActor(*this, NULL)) {
         if(CHANGE > 0) {
           eng.log->addMsg(getNameThe() + " appears to grow in spirit.");
         }
@@ -441,7 +441,7 @@ bool Actor::hitSpi(const int DMG) {
       eng.log->addMsg(
         "All my spirit is depleted, I am devoid of life!");
     } else {
-      if(eng.player->checkIfSeeActor(*this, NULL)) {
+      if(eng.player->isSeeingActor(*this, NULL)) {
         eng.log->addMsg(getNameThe() + " has no spirit left!");
       }
     }
@@ -478,7 +478,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   //Print death messages
   if(this != eng.player) {
     //Only print if visible
-    if(eng.player->checkIfSeeActor(*this, NULL)) {
+    if(eng.player->isSeeingActor(*this, NULL)) {
       isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride.empty() == false) {

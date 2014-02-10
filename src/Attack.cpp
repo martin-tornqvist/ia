@@ -38,7 +38,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
   } else {
     isDefenderAware =
-      eng.player->checkIfSeeActor(*attacker, NULL) ||
+      eng.player->isSeeingActor(*attacker, NULL) ||
       eng.playerBonHandler->hasTrait(traitVigilant);
   }
 
@@ -71,7 +71,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     bool isAttackerAware = true;
     if(attacker == eng.player) {
-      isAttackerAware = eng.player->checkIfSeeActor(*curDefender, NULL);
+      isAttackerAware = eng.player->isSeeingActor(*curDefender, NULL);
     } else {
       Monster* const monster = dynamic_cast<Monster*>(attacker);
       isAttackerAware = monster->awareOfPlayerCounter_ > 0;

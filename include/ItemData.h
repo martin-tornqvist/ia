@@ -145,8 +145,6 @@ enum ItemId {
   item_scrollOfSacrificeLife,
   item_scrollOfSacrificeSpirit,
 
-  item_thaumaturgicAlteration,
-
   item_potionOfHealing,
   item_potionOfSpirit,
   item_potionOfBlindness,

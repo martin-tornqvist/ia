@@ -40,7 +40,7 @@ public:
 
               // Cast spell with a certain chance if HP is low.
               if(CUR_HP < MAX_HP / 3 && engine.dice.percentile() <= 5) {
-                if(engine.player->checkIfSeeActor(*monsterActing, NULL)) {
+                if(engine.player->isSeeingActor(*monsterActing, NULL)) {
                   engine.log->addMsg(
                     monsterActing->getNameThe() + " looks desperate.");
                 }

@@ -856,7 +856,7 @@ void Renderer::drawMap() {
 
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
 
-        if(eng.player->checkIfSeeActor(*actor, NULL)) {
+        if(eng.player->isSeeingActor(*actor, NULL)) {
 
           if(
             actor->getTile()  != tile_empty &&

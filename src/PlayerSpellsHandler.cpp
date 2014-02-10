@@ -77,6 +77,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   string endLetter = "a";
   endLetter[0] += char(NR_SPELLS - 1);
 
+  eng.renderer->coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
+
   const string label =
     "Choose a power to evoke [a-" + endLetter + "]" +
     " | Space/esc to exit";

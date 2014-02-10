@@ -25,7 +25,7 @@ public:
       for(Actor * actor : spottedEnemies) {
         if(actor == engine.player) {
           if(monster.isSpottingHiddenActor(*actor)) {
-            if(engine.player->checkIfSeeActor(monster, NULL)) {
+            if(engine.player->isSeeingActor(monster, NULL)) {
               engine.player->updateFov();
               engine.renderer->drawMapAndInterface(true);
               engine.log->addMsg(monster.getNameThe() + " sees me!");

@@ -142,7 +142,7 @@ void ActorFactory::summonMonsters(
       monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
     }
 
-    if(eng.player->checkIfSeeActor(*actor, NULL)) {
+    if(eng.player->isSeeingActor(*actor, NULL)) {
       positionsToAnimate.push_back(pos);
     }
   }

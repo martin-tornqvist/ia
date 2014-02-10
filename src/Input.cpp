@@ -507,16 +507,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     }
     return;
   }
-  //----------------------------------- MTH CHEAT
-  else if(d.sdlKey_ == SDLK_F6) {
-    if(IS_DEBUG_MODE) {
-      eng.player->incrMth(8, false);
-      clearEvents();
-    }
-    return;
-  }
   //----------------------------------- DROP ALL SCROLLS AND POTIONS ON PLAYER
-  else if(d.sdlKey_ == SDLK_F7) {
+  else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       for(unsigned int i = 1; i < endOfItemIds; i++) {
         const ItemData* const data = eng.itemDataHandler->dataList[i];
@@ -531,7 +523,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------- TELEPORT
-  else if(d.sdlKey_ == SDLK_F8) {
+  else if(d.sdlKey_ == SDLK_F7) {
     if(IS_DEBUG_MODE) {
       eng.player->teleport(false);
       eng.log->clearLog();
@@ -540,7 +532,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------- INFECTED
-  else if(d.sdlKey_ == SDLK_F9) {
+  else if(d.sdlKey_ == SDLK_F8) {
     if(IS_DEBUG_MODE) {
       eng.player->getPropHandler().tryApplyProp(
         new PropInfected(eng, propTurnsStd));
@@ -550,7 +542,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
 
   //----------------------------------- POSSESSED BY ZUUL
-  else if(d.sdlKey_ == SDLK_F10) {
+  else if(d.sdlKey_ == SDLK_F9) {
     if(IS_DEBUG_MODE) {
       for(Actor * actor : eng.gameTime->actors_) {
         actor->getPropHandler().tryApplyProp(

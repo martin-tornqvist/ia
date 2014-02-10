@@ -2,9 +2,8 @@
 2. Movement and interaction
 3. The interface
 4. Insanity
-5. Mythos knowledge
-6. Hit Points, Wounds and healing
-7. Sneaking and backstabbing
+5. Hit Points, Wounds and healing
+6. Sneaking and backstabbing
 
 
 1. Command list
@@ -12,7 +11,7 @@
    @    Display character description
    TAB  Melee attack adjacent monster
    a    Examine something on the map
-   b    Bash door or kick monster
+   b    Bash or kick something on the map
    c    Close door
    d    Disarm trap
    e    Use item or throw held explosive
@@ -62,15 +61,15 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 ------------------------------------------------
 The following is an example of how The interface lines can look:
 
-   Player HP:9/16 INS:45%/12% MTH:6% ENC:40%    M1911 Colt 1d8+4 50% 5/7
-   DLVL:2 LVL:1 NXT:60 ARM:1                    7 Throwing Knives 2d4 50%
+   HP:9/16 INS:45%/12% ARM:1      M1911 Colt 1d8+4 50% 5/7
+   DLVL:2 LVL:1 NXT:60 ENC:40%    7 Throwing Knives 2d4 50%
    Blind Diseased Wound(1)
 
-From left to right, the first line displays player name, Hit Points (current/max), shock/insanity (see section 4: "Insanity"), Mythos knowledge (see section 5: "Mythos knowledge"), encumbrance from carrying items (100% or more means you cannot move), and your wielded weapon.
+From left to right, the first line displays Hit Points (current/max), shock/insanity (see section 4: "Insanity"), Armor Points (each point reduces your received physical damage by 1), and your wielded weapon.
 
-The second line displays the dungeon level, player level, experience points needed for next level, Armor Points (each point reduces your received physical damage by 1), and your thrown weapon.
+The second line displays the dungeon level, player level, experience points needed for next level, encumbrance from carrying items (100% or more means you cannot move), and your thrown weapon.
 
-The third line displays properties currently affecting you. This can be temporary properties (e.g. from potions), permanent intrinsic properties (such as resistance to fear), or properties granted by wearing or wielding items (e.g. an asbestos suit giving acid resistance).
+The third line displays properties currently affecting you. This can be temporary properties, permanent intrinsic properties, or properties granted by wearing or wielding items.
 
 
 4. Insanity
@@ -95,20 +94,7 @@ Each time you travel to the next dungeon level, shock is completely restored (yo
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 
-5. Mythos knowledge
-------------------------------------------------
-This trait describes your general insight about the mystical and hidden forces acting behind our apparent reality. It is represented by a percentage value:
-   MTH:X%
-
-Each event that primarily raises your Insanity (INS) also raises your MTH by half the amount. This works the other way too; an event that primarily raises your MTH also raises your INS by half the amount.
-
-The effects of increasing MTH includes:
-   * Increased damage to all extraordinary creatures
-   * Raised spell casting chances
-   * At a certain level of MTH, you gain a special spell
-
-
-6. Hit Points, Wounds and healing
+5. Hit Points, Wounds and healing
 ------------------------------------------------
 The state of your physical health is described in two ways:
    * Hit Points (HP)
@@ -128,7 +114,7 @@ This is used as a painkiller, and will restore your Hit Points. It is not good f
 This will heal a wound, although it requires many uninterrupted turns, and drains many supplies.
 
 
-7. Sneaking and backstabbing
+6. Sneaking and backstabbing
 ------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam around the map, but they will not actively search for you or purposefully attack you.
 

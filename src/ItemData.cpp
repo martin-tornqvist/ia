@@ -42,7 +42,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
       d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
       d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
-      d->spellCastFromScroll = endOfSpells;
+      d->spellCastFromScroll = endOfSpellId;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
       d->propAppliedOnMelee = NULL;
@@ -1146,12 +1146,6 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_scrollOfDetectMonsters);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_detectMonsters;
-  dataList[d->id] = d;
-
-  d = new ItemData(item_thaumaturgicAlteration);
-  resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_mthPower;
-  d->isIntrinsic = true;
   dataList[d->id] = d;
 
   d = new ItemData(item_potionOfHealing);

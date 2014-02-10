@@ -111,12 +111,19 @@ void drawInfoLines(Engine& eng) {
   eng.renderer->drawText(str, panel_char, pos, clrMagenta);
   pos.x += str.length() + 1;
 
-  const int MTH = player->getMth();
-  eng.renderer->drawText("MTH:", panel_char, pos, clrGenDrk);
+  //Armor
+  eng.renderer->drawText("ARM:", panel_char, pos, clrGenDrk);
   pos.x += 4;
-  str = toString(MTH) + "%";
-  eng.renderer->drawText(str, panel_char, pos, clrGenLgt);
-  pos.x += str.length() + 1;
+  const Item* const armor =
+    player->getInv().getItemInSlot(slot_armorBody);
+  if(armor == NULL) {
+    eng.renderer->drawText("N/A", panel_char, pos, clrGenLgt);
+    pos.x += 4;
+  } else {
+    str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
+    eng.renderer->drawText(str, panel_char, pos, clrGenLgt);
+    pos.x += str.length() + 1;
+  }
 
   //Wielded weapon
   pos.x += 6;
@@ -167,20 +174,6 @@ void drawInfoLines(Engine& eng) {
   eng.renderer->drawText(str, panel_char, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
-  //Armor
-  eng.renderer->drawText("ARM:", panel_char, pos, clrGenDrk);
-  pos.x += 4;
-  const Item* const armor =
-    player->getInv().getItemInSlot(slot_armorBody);
-  if(armor == NULL) {
-    eng.renderer->drawText("N/A", panel_char, pos, clrGenLgt);
-    pos.x += 4;
-  } else {
-    str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
-    eng.renderer->drawText(str, panel_char, pos, clrGenLgt);
-    pos.x += str.length() + 1;
-  }
-
   //Encumbrance
   eng.renderer->drawText("ENC:", panel_char, pos, clrGenDrk);
   pos.x += 4;
@@ -188,7 +181,8 @@ void drawInfoLines(Engine& eng) {
   const int MAX_W = player->getCarryWeightLimit();
   const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
   str = toString(ENC) + "%";
-  eng.renderer->drawText(str, panel_char, pos, ENC >= 100 ? clrRedLgt : clrGenLgt);
+  eng.renderer->drawText(str, panel_char, pos,
+                         ENC >= 100 ? clrRedLgt : clrGenLgt);
   pos.x += str.length() + 1;
 
   //Missile weapon
