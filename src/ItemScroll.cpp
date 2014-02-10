@@ -27,7 +27,6 @@ const string Scroll::getRealTypeName() {
     case spell_opening:             return "Opening";
     case spell_sacrificeLife:       return "Sacrifice Life Force";
     case spell_sacrificeSpirit:     return "Sacrifice Spirit";
-    case spell_disease:             return "";
     case spell_summonRandom:        return "";
     case spell_healSelf:            return "";
     case spell_knockBack:           return "";

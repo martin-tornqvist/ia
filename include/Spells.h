@@ -33,9 +33,8 @@ enum SpellId {
   spell_cloudMinds,
 
   //Monsters only
-  spell_disease,
   spell_summonRandom,
-  spell_healSelf, //TODO Make it heal over time, and avail for player too
+  spell_healSelf,
   spell_knockBack,
   spell_miGoHypnosis,
 
@@ -341,23 +340,6 @@ private:
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 
   PropId getPropId(Engine& eng) const;
-};
-
-class SpellDisease: public Spell {
-public:
-  SpellDisease() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster,
-                                 Engine& eng) override;
-  bool isAvailForAllMonsters()  const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Disease";}
-  SpellId getId()               const override {return spell_disease;}
-  IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
-  }
-private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellSummonRandom: public Spell {
