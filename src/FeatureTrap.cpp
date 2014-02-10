@@ -242,7 +242,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTitle();
-      eng.log->addMsg("I spot a " + name + ".", clrWhite, false, true);
+      eng.log->addMsg("I spot a " + name + ".", clrOrange, false, true);
     }
   }
   traceVerbose << "Trap::reveal() [DONE]" << endl;

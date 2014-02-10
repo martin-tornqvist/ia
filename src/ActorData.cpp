@@ -1254,7 +1254,7 @@ void ActorDataHandler::initDataList() {
   d.speed = actorSpeed_slow;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
-  d.color = clrGray;
+  d.color = clrMagenta;
   d.tile = tile_polyp;
   d.hp = 6;
   d.spi = 20;
