@@ -875,7 +875,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //-If it doesn't, then just add it to the buffer and return.
   //-If the buffer already contains the prop, it means it was requested to be
   //applied from the buffer to the applied props.
-  //This way, this function can be used both for requesting to appply props,
+  //This way, this function can be used both for requesting to apply props,
   //and for applying props from the buffer.
   if(prop->getTurnMode() == propTurnModeActor) {
     vector<Prop*>& buffer = actorTurnPropBuffer_;
@@ -918,7 +918,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   //This point reached means nothing is blocking the property.
 
-  //Actor already has property appplied?
+  //Actor already has property applied?
   for(Prop * oldProp : appliedProps_) {
     if(prop->getId() == oldProp->getId()) {
 

@@ -184,7 +184,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
 void FeatureStatic::bash_(Actor& actorTrying) {
   //Emitting the sound from the actor instead of the bashed object, because the
-  //sound mesage should be received even if the object is seen
+  //sound massage should be received even if the object is seen
   const AlertsMonsters alertsMonsters = &actorTrying == eng.player ?
                                         AlertsMonsters::yes :
                                         AlertsMonsters::no;

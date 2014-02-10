@@ -726,7 +726,7 @@ void MapGenBsp::getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const {
   trace << "MapGenBsp::getAllowedStairCells()..." << endl;
 
   //Stairs are only allowed in cells with - and completely surrounded by -
-  //stone flooor or cave floor
+  //stone floor or cave floor
 
   vector<FeatureId> featIdsOk {feature_stoneFloor, feature_caveFloor};
 

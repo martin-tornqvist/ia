@@ -59,7 +59,7 @@ public:
   virtual void updateColor();
 
   //Function taking into account FOV, invisibility, status, etc
-  //This is the final word on wether an actor can visually percieve
+  //This is the final word on whether an actor can visually perceive
   //another actor.
   bool checkIfSeeActor(
     const Actor& other,

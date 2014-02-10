@@ -242,7 +242,7 @@ public:
     potionLooks_.push_back(PotionLook {"Smoky",    "a Smoky",    clrWhite});
     potionLooks_.push_back(PotionLook {"Slimy",    "a Slimy",    clrGreen});
     potionLooks_.push_back(PotionLook {"Green",    "a Green",    clrGreenLgt});
-    potionLooks_.push_back(PotionLook {"Fiery",    "a Firey",    clrRedLgt});
+    potionLooks_.push_back(PotionLook {"Fiery",    "a Fiery",    clrRedLgt});
     potionLooks_.push_back(PotionLook {"Murky",    "a Murky",    clrBrownDrk});
     potionLooks_.push_back(PotionLook {"Muddy",    "a Muddy",    clrBrown});
     potionLooks_.push_back(PotionLook {"Violet",   "a Violet",   clrViolet});

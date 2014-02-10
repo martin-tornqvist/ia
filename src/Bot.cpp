@@ -48,7 +48,7 @@ void Bot::act() {
     eng.player->teleport(false);
   }
 
-  //Ocassionally send a TAB command to attack nearby monsters
+  //Occasionally send a TAB command to attack nearby monsters
   if(eng.dice.coinToss()) {
     eng.input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
     return;

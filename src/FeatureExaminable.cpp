@@ -320,7 +320,7 @@ void Tomb::examine() {
 //    if(IS_CURSED == false && (IS_BLESSED || eng.dice.fraction(4, 5))) {
 //      eng.log->addMsg("The curse is cleared.");
 //    } else {
-//      eng.log->addMsg("I make a misstake, the curse is doubled!");
+//      eng.log->addMsg("I make a mistake, the curse is doubled!");
 //      PropCursed* const curse =
 //        new PropCursed(eng, propTurnsStd);
 //      curse->turnsLeft_ *= 2;
