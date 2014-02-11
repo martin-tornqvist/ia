@@ -8,6 +8,8 @@
 
 1. Command list
 ------------------------------------------------
+   ?    Display manual
+   =    Options menu
    @    Display character description
    TAB  Melee attack adjacent monster
    a    Examine something on the map
@@ -29,7 +31,6 @@
    Q    Quit to main menu
    x    Cast memorized spell
    z    Swap to alternative weapon
-   ?    Display manual
 
 
 2. Movement and interaction

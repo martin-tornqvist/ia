@@ -432,6 +432,13 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
+  //----------------------------------- OPTIONS
+  else if(d.key_ == '=') {
+    eng.config->runOptionsMenu();
+    eng.renderer->drawMapAndInterface();
+    clearEvents();
+    return;
+  }
   //----------------------------------- CHARACTER INFO
   else if(d.key_ == '@') {
     eng.characterDescr->run();
