@@ -149,26 +149,13 @@ SpellCastRetData SpellDarkbolt::cast_(
 
   Actor* target = NULL;
 
-  //If player casting, try to use player's current target instead of random
-  const bool IS_PLAYER_CASTING = caster == eng.player;
-  if(IS_PLAYER_CASTING) {
-    if(eng.player->target != NULL) {
-      if(eng.player->isSeeingActor(*eng.player->target, NULL)) {
-        target = eng.player->target;
-      }
-    }
-  }
-
-  if(target == NULL) {
-    vector<Actor*> targetCandidates;
-    caster->getSpottedEnemies(targetCandidates);
-    if(targetCandidates.empty()) {
-      return SpellCastRetData(false);
-    } else {
-      const int ELEMENT = eng.dice.range(0, targetCandidates.size() - 1);
-      target = targetCandidates.at(ELEMENT);
-      if(IS_PLAYER_CASTING) {eng.player->target = target;}
-    }
+  vector<Actor*> targetCandidates;
+  caster->getSpottedEnemies(targetCandidates);
+  if(targetCandidates.empty()) {
+    return SpellCastRetData(false);
+  } else {
+    const int ELEMENT = eng.dice.range(0, targetCandidates.size() - 1);
+    target = targetCandidates.at(ELEMENT);
   }
 
   vector<Pos> line;
@@ -190,7 +177,7 @@ SpellCastRetData SpellDarkbolt::cast_(
     vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
-  if(IS_PLAYER_CASTING) {
+  if(caster == eng.player) {
     eng.log->addMsg(target->getNameThe() + " is" + msgCmn, clrMsgGood);
   } else {
     eng.log->addMsg("I am" + msgCmn, clrMsgBad);
