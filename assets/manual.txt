@@ -22,7 +22,7 @@
    i    Browse backpack
    j    Jam door with an iron spike
    l    Display descriptions of things in view
-   L    Display message history
+   m    Display message history
    r    Reload wielded firearm
    s    Wait and search for 10 turns
    t    Throw a missile from the missile slot

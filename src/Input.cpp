@@ -446,7 +446,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   }
   //----------------------------------- LOG HISTORY
-  else if(d.key_ == 'L') {
+  else if(d.key_ == 'm') {
     eng.log->displayHistory();
     clearEvents();
     return;
