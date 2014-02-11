@@ -62,7 +62,7 @@ private:
   bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
                       const bool blockers[MAP_W][MAP_H]) const;
 
-  bool isThemeExistInMap(const RoomThemeId theme) const;
+  int nrThemeInMap(const RoomThemeId theme) const;
 
   Engine& eng;
 };

@@ -43,11 +43,7 @@ enum ItemDataArchetypes {
   itemData_explosive
 };
 
-enum ItemValue {
-  itemValue_normal,
-  itemValue_minorTreasure,
-  itemValue_majorTreasure
-};
+enum class ItemValue {normal, minorTreasure, majorTreasure};
 
 enum ItemId {
   item_empty,

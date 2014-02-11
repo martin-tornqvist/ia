@@ -24,7 +24,7 @@ void ItemDataHandler::resetData(ItemData* const d,
                                 ItemDataArchetypes const archetype) const {
   switch(archetype) {
     case itemData_general: {
-      d->itemValue = itemValue_normal;
+      d->itemValue = ItemValue::normal;
       d->itemWeight = itemWeight_none;
       d->spawnStandardMinDLVL = 1;
       d->spawnStandardMaxDLVL = 999999;
@@ -158,7 +158,7 @@ void ItemDataHandler::resetData(ItemData* const d,
 
     case itemData_scroll: {
       resetData(d, itemData_general);
-      d->itemValue = itemValue_minorTreasure;
+      d->itemValue = ItemValue::minorTreasure;
       d->chanceToIncludeInSpawnList = 40;
       d->itemWeight = itemWeight_none;
       d->isIdentified = false;
@@ -177,7 +177,7 @@ void ItemDataHandler::resetData(ItemData* const d,
 
     case itemData_potion: {
       resetData(d, itemData_general);
-      d->itemValue = itemValue_minorTreasure;
+      d->itemValue = ItemValue::minorTreasure;
       d->chanceToIncludeInSpawnList = 55;
       d->itemWeight = itemWeight_light;
       d->isIdentified = false;
@@ -1207,7 +1207,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_deviceSentry);
   resetData(d, itemData_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
-  d->itemValue = itemValue_majorTreasure;
+  d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1218,7 +1218,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_deviceRepeller);
   resetData(d, itemData_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
-  d->itemValue = itemValue_majorTreasure;
+  d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1229,7 +1229,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_deviceRejuvenator);
   resetData(d, itemData_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
-  d->itemValue = itemValue_majorTreasure;
+  d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1240,7 +1240,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_deviceTranslocator);
   resetData(d, itemData_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
-  d->itemValue = itemValue_majorTreasure;
+  d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(d, feature_chest, 10);
@@ -1274,7 +1274,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_general);
   d->isMedicalBag = true;
   d->name = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
-  d->itemValue = itemValue_normal;
+  d->itemValue = ItemValue::normal;
   d->itemWeight = itemWeight_medium;
   d->spawnStandardMinDLVL = 1;
   d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LEVEL;

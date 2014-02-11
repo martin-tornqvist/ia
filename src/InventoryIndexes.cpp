@@ -7,7 +7,7 @@ void InventoryIndexes::setIndexes(const bool IS_SLOTS_INCLUDED, const unsigned i
                                   const vector<unsigned int>& generalSlotsShown) {
   char charIndex = 'a';
   if(IS_SLOTS_INCLUDED) {
-    charIndex += static_cast<char>(nrOfSlots);
+    charIndex += char(nrOfSlots);
   }
 
   const unsigned int NR_OF_GEN_SLOTS = generalSlotsShown.size();

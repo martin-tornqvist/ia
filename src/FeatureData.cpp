@@ -39,7 +39,7 @@ void FeatureDataHandler::resetData(FeatureData& d) {
   d.messageOnPlayerBlockedBlind = "I bump into something.";
   d.dodgeModifier = 0;
   d.shockWhenAdjacent = 0;
-  d.themedFeatureSpawnRules.reset();
+  d.featureThemeSpawnRules.reset();
   d.featuresOnDestroyed.resize(0);
 }
 
@@ -195,8 +195,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_ritual);
+  d.featureThemeSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_shallowWater;
@@ -364,9 +364,8 @@ void FeatureDataHandler::initDataList() {
   d.tile = tile_rubbleLow;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
-  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_plain, roomTheme_crypt,
-                                roomTheme_monster);
+  d.featureThemeSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_plain, roomTheme_crypt, roomTheme_monster});
   /*---------------------------------------------*/
   d.id = feature_statue;
   d.name_a = "a statue";
@@ -381,9 +380,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_plain, roomTheme_human,
-                                roomTheme_crypt);
+  d.featureThemeSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_plain, roomTheme_human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_ghoulStatue;
@@ -400,8 +398,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 8;
-  d.themedFeatureSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_plain, roomTheme_crypt);
+  d.featureThemeSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_plain, roomTheme_crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cocoon;
@@ -419,8 +417,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.themedFeatureSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_spider);
+  d.featureThemeSpawnRules.set(3, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_spider});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_chest;
@@ -435,8 +433,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls,
-                                roomTheme_plain, roomTheme_human);
+  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls, {roomTheme_human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_cabinet;
@@ -453,8 +450,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, placementRule_nextToWalls,
-                                roomTheme_plain, roomTheme_human);
+  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls, {roomTheme_human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_fountain;
@@ -471,8 +467,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls,
-                                roomTheme_plain);
+  d.featureThemeSpawnRules.set(1, placementRule_awayFromWalls,
+  {roomTheme_plain, roomTheme_human});
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = feature_pillarCarved;
@@ -490,7 +486,7 @@ void FeatureDataHandler::initDataList() {
 //  d.canHaveCorpse = false;
 //  d.canHaveStaticFeature = false;
 //  d.canHaveItem = false;
-////  d.themedFeatureSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
+////  d.featureThemeSpawnRules.set(1, placementRule_awayFromWalls, roomTheme_crypt, roomTheme_ritual, roomTheme_monster);
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pillar;
@@ -506,9 +502,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(4, placementRule_awayFromWalls,
-                                roomTheme_plain, roomTheme_crypt,
-                                roomTheme_ritual, roomTheme_monster);
+  d.featureThemeSpawnRules.set(3, placementRule_awayFromWalls,
+  {roomTheme_plain, roomTheme_crypt, roomTheme_ritual, roomTheme_monster});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pillarBroken;
@@ -524,9 +519,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themedFeatureSpawnRules.set(4, placementRule_awayFromWalls,
-                                roomTheme_plain, roomTheme_crypt,
-                                roomTheme_ritual, roomTheme_monster);
+  d.featureThemeSpawnRules.set(4, placementRule_awayFromWalls,
+  {roomTheme_plain, roomTheme_crypt, roomTheme_ritual, roomTheme_monster});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_altar;
@@ -542,8 +536,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.themedFeatureSpawnRules.set(1, placementRule_nextToWallsOrAwayFromWalls,
-                                roomTheme_ritual);
+  d.featureThemeSpawnRules.set(1, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_tomb;
@@ -561,8 +555,8 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.themedFeatureSpawnRules.set(3, placementRule_nextToWalls,
-                                roomTheme_plain, roomTheme_crypt);
+  d.featureThemeSpawnRules.set(2, placementRule_nextToWallsOrAwayFromWalls,
+  {roomTheme_crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = feature_pit;

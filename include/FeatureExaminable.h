@@ -24,17 +24,17 @@ public:
   vector<Item*> items_;
 };
 
-enum TombTraits {
-  tombTrait_stench,                 //Fumes, Ooze-type monster
-  tombTrait_auraOfUnrest,           //Ghost-type monster
-  tombTrait_forebodingCarvedSigns,  //Cursed
+enum class TombTrait {
+  stench,                 //Fumes, Ooze-type monster
+  auraOfUnrest,           //Ghost-type monster
+  forebodingCarvedSigns,  //Cursed
   endOfTombTraits
 };
 
-enum TombAppearance {
-  tombAppearance_common,
-  tombAppearance_impressive,  //Good items
-  tombAppearance_marvelous,   //Excellent items
+enum class TombAppearance {
+  common,
+  ornate,     //Good items
+  marvelous,  //Excellent items
   endOfTombAppearance
 };
 
@@ -44,8 +44,9 @@ public:
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
   void examine()                  override;
-//  void bash(Actor& actorTrying)   override;
-//  void disarm()                   override;
+
+  string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  SDL_Color getClr()                            const override;
 
 private:
   friend class FeatureFactory;
@@ -61,7 +62,7 @@ private:
 
   int pushLidOneInN_;
   TombAppearance appearance_;
-  TombTraits trait_;
+  TombTrait trait_;
 };
 
 enum ChestMtrl {

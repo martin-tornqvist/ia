@@ -102,7 +102,7 @@ void Inventory::setParamsFromSaveLines(
       slots_.at(i).item = NULL;
     }
 
-    const ItemId id = static_cast<ItemId>(toInt(lines.front()));
+    const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
     if(id != item_empty) {
       item = engine.itemFactory->spawnItem(id);
@@ -120,7 +120,7 @@ void Inventory::setParamsFromSaveLines(
   const unsigned int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(lines.begin());
   for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
-    const ItemId id = static_cast<ItemId>(toInt(lines.front()));
+    const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
@@ -705,7 +705,7 @@ void Inventory::getAllItems(vector<Item*>& itemList) const {
   itemList.resize(0);
   itemList.reserve(slots_.size() + general_.size());
 
-  for(const InventorySlot& slot : slots_) {
+  for(const InventorySlot & slot : slots_) {
     Item* const item = slot.item;
     if(item != NULL) {
       itemList.push_back(item);

@@ -73,9 +73,9 @@ enum MaterialType {
   materialType_empty, materialType_soft, materialType_hard, materialType_fluid
 };
 
-struct ThemedFeatureSpawnRules {
+struct FeatureThemeSpawnRules {
 public:
-  ThemedFeatureSpawnRules() :
+  FeatureThemeSpawnRules() :
     maxNrInRoom_(-1), placementRule_(placementRule_nextToWalls) {
     themesBelongingTo_.resize(0);
   }
@@ -89,43 +89,22 @@ public:
   void set(
     const int MAX_NR_IN_ROOM,
     const PlacementRule placementRule,
-    RoomThemeId theme1 = endOfRoomThemes,
-    RoomThemeId theme2 = endOfRoomThemes,
-    RoomThemeId theme3 = endOfRoomThemes,
-    RoomThemeId theme4 = endOfRoomThemes) {
+    std::initializer_list<RoomThemeId> roomThemes) {
     maxNrInRoom_ = MAX_NR_IN_ROOM;
     placementRule_ = placementRule;
     themesBelongingTo_.resize(0);
-    if(theme1 != endOfRoomThemes) {
-      themesBelongingTo_.push_back(theme1);
-    }
-    if(theme2 != endOfRoomThemes) {
-      themesBelongingTo_.push_back(theme2);
-    }
-    if(theme3 != endOfRoomThemes) {
-      themesBelongingTo_.push_back(theme3);
-    }
-    if(theme4 != endOfRoomThemes) {
-      themesBelongingTo_.push_back(theme4);
-    }
+    for(RoomThemeId id : roomThemes) {themesBelongingTo_.push_back(id);}
   }
 
   bool isBelongingToTheme(const RoomThemeId theme) const {
-    for(unsigned int i = 0; i < themesBelongingTo_.size(); i++) {
-      if(themesBelongingTo_.at(i) == theme) {
-        return true;
-      }
+    for(RoomThemeId idToCheck : themesBelongingTo_) {
+      if(idToCheck == theme) return true;
     }
     return false;
   }
 
-  PlacementRule getPlacementRule() const {
-    return placementRule_;
-  }
-
-  int getMaxNrInRoom() const {
-    return maxNrInRoom_;
-  }
+  inline PlacementRule getPlacementRule() const {return placementRule_;}
+  inline int getMaxNrInRoom() const {return maxNrInRoom_;}
 
 private:
   int maxNrInRoom_;
@@ -183,7 +162,7 @@ struct FeatureData {
   string messageOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
-  ThemedFeatureSpawnRules themedFeatureSpawnRules;
+  FeatureThemeSpawnRules featureThemeSpawnRules;
   vector<FeatureId> featuresOnDestroyed;
 };
 

@@ -129,9 +129,7 @@ bool MapGenBsp::run_() {
         eng.map->rooms.push_back(buildRoom(roomPoss));
         regions[x][y]->mainRoom = eng.map->rooms.back();
 
-        if(eng.dice.percentile() < 50) {
-          reshapeRoom(*(regions[x][y]->mainRoom));
-        }
+        if(eng.dice.oneIn(3)) {reshapeRoom(*(regions[x][y]->mainRoom));}
       }
     }
   }
@@ -500,9 +498,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(
     region1->regionsConnectedTo[regionIndex2.x][regionIndex2.y] = true;
     region2->regionsConnectedTo[regionIndex1.x][regionIndex1.y] = true;
 
-    if(eng.dice.percentile() < 33) {
-      reshapeRoom(*room);
-    }
+    if(eng.dice.oneIn(3)) {reshapeRoom(*room);}
   }
 }
 
@@ -1140,20 +1136,20 @@ void MapGenBsp::reshapeRoom(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
 
     vector<RoomReshapeType> reshapesToPerform;
-    if(eng.dice.percentile() < 75) {
+    if(eng.dice.fraction(3, 4)) {
       reshapesToPerform.push_back(roomReshape_trimCorners);
     }
-    if(eng.dice.percentile() < 75) {
+    if(eng.dice.fraction(3, 4)) {
       reshapesToPerform.push_back(roomReshape_pillarsRandom);
     }
 
-    for(unsigned int i = 0; i < reshapesToPerform.size(); i++) {
-      switch(reshapesToPerform.at(i)) {
+    for(RoomReshapeType reshapeType : reshapesToPerform) {
+      switch(reshapeType) {
         case roomReshape_trimCorners: {
           const int W_DIV =
-            3 + (eng.dice.coinToss() ? eng.dice(1, 2) - 1 : 0);
+            3 + (eng.dice.coinToss() ? eng.dice.range(0, 1) : 0);
           const int H_DIV =
-            3 + (eng.dice.coinToss() ? eng.dice(1, 2) - 1 : 0);
+            3 + (eng.dice.coinToss() ? eng.dice.range(0, 1) : 0);
 
           const int W = max(1, ROOM_W / W_DIV);
           const int H = max(1, ROOM_H / H_DIV);
@@ -1201,7 +1197,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
                 }
               }
               if(isNextToWall == false) {
-                if(eng.dice.percentile() < 20) {
+                if(eng.dice.oneIn(5)) {
                   eng.featureFactory->spawnFeatureAt(feature_stoneWall, c);
                 }
               }

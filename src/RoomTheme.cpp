@@ -56,28 +56,31 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
 
 int RoomThemeMaker::getRandomNrFeaturesForTheme(const RoomThemeId theme) const {
   switch(theme) {
-    case roomTheme_plain:     return eng.dice.oneIn(14) ?
-                                       2 : eng.dice.oneIn(5) ? 1 : 0;
-    case roomTheme_human:     return eng.dice.oneIn(7) ? 2 : 1;
-    case roomTheme_ritual:    return eng.dice.range(1, 3);
-    case roomTheme_spider:    return eng.dice.range(0, 2);
-    case roomTheme_crypt:     return eng.dice.oneIn(7) ? 2 : 1;
-    case roomTheme_monster:   return eng.dice.range(0, 6);
-    case roomTheme_flooded:   return 0;
-    case roomTheme_muddy:     return 0;
+    case roomTheme_plain:
+      return eng.dice.oneIn(14) ? 2 : eng.dice.oneIn(5) ? 1 : 0;
+    case roomTheme_human:
+      return eng.dice.range(3, 6);
+    case roomTheme_ritual:
+      return eng.dice.range(1, 5);
+    case roomTheme_spider:
+      return eng.dice.range(0, 3);
+    case roomTheme_crypt:
+      return eng.dice.range(3, 6);
+    case roomTheme_monster:
+      return eng.dice.range(0, 6);
+    case roomTheme_flooded:
+      return 0;
+    case roomTheme_muddy:
+      return 0;
     case endOfRoomThemes: {} break;
   }
   return -1;
 }
 
-bool RoomThemeMaker::isThemeExistInMap(const RoomThemeId theme) const {
-  vector<Room*>& rooms = eng.map->rooms;
-  for(unsigned int i = 0; i < rooms.size(); i++) {
-    if(rooms.at(i)->roomTheme == theme) {
-      return true;
-    }
-  }
-  return false;
+int RoomThemeMaker::nrThemeInMap(const RoomThemeId theme) const {
+  int nr = 0;
+  for(Room * r : eng.map->rooms) {if(r->roomTheme == theme) nr++;}
+  return nr;
 }
 
 bool RoomThemeMaker::isThemeAllowed(
@@ -95,13 +98,13 @@ bool RoomThemeMaker::isThemeAllowed(
     case roomTheme_plain: {return true;} break;
 
     case roomTheme_human: {
-      return MAX_DIM >= 5 && MIN_DIM >= 4 &&
-             isThemeExistInMap(roomTheme_human) == false;
+      return MAX_DIM >= 5 && MAX_DIM <= 8 && MIN_DIM >= 4 && MIN_DIM <= 7 &&
+             nrThemeInMap(roomTheme_human) < 2;
     } break;
 
     case roomTheme_ritual: {
       return MAX_DIM >= 4 && MIN_DIM >= 3 &&
-             isThemeExistInMap(roomTheme_ritual) == false;
+             nrThemeInMap(roomTheme_ritual) == 0;
     } break;
 
     case roomTheme_spider: {
@@ -109,30 +112,14 @@ bool RoomThemeMaker::isThemeAllowed(
     } break;
 
     case roomTheme_crypt: {
-      return MAX_DIM >= 5 && MIN_DIM >= 4;
+      return MAX_DIM >= 4 && MIN_DIM >= 3 &&
+             nrThemeInMap(roomTheme_crypt) < 2;
     } break;
 
     case roomTheme_monster: {
-      return MAX_DIM >= 5 && MIN_DIM >= 4;
+      return MAX_DIM >= 5 && MIN_DIM >= 4 &&
+             nrThemeInMap(roomTheme_crypt) < 3;
     } break;
-
-//    case roomTheme_dungeon: {
-//      return false;
-//    } break;
-
-//    case roomTheme_chasm: {
-//      if(MIN_DIM >= 5) {
-//        for(int y = room->getY0(); y <= room->getY1(); y++) {
-//          for(int x = room->getX0(); x <= room->getX1(); x++) {
-//            if(blockers[x][y]) {
-//              return false;
-//            }
-//          }
-//        }
-//        return true;
-//      }
-//      return false;
-//    } break;
 
     default: {} break;
   }
@@ -143,7 +130,6 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
-//  if(room.roomTheme == roomTheme_dungeon) {}
   switch(room.roomTheme) {
     case roomTheme_flooded:
     case roomTheme_muddy: {
@@ -158,14 +144,6 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         }
       }
     } break;
-
-//  if(room.roomTheme == roomTheme_chasm) {
-//    for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
-//      for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
-//        eng.featureFactory->spawnFeatureAt(feature_chasm, Pos(x, y));
-//      }
-//    }
-//  }
 
     case roomTheme_monster: {
       int nrBloodPut = 0;
@@ -183,9 +161,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
             }
           }
         }
-        if(nrBloodPut > 0) {
-          break;
-        }
+        if(nrBloodPut > 0) {break;}
       }
     } break;
 
@@ -252,7 +228,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
   for(unsigned int i = 0; i < endOfFeatureId; i++) {
     const FeatureData* const d =
       eng.featureDataHandler->getData((FeatureId)(i));
-    if(d->themedFeatureSpawnRules.isBelongingToTheme(room.roomTheme)) {
+    if(d->featureThemeSpawnRules.isBelongingToTheme(room.roomTheme)) {
       featureDataBelongingToTheme.push_back(d);
     }
   }
@@ -296,7 +272,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
       //if not, delete it from feature candidates
       if(
         featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >=
-        d->themedFeatureSpawnRules.getMaxNrInRoom()) {
+        d->featureThemeSpawnRules.getMaxNrInRoom()) {
         featuresSpawnCount.erase(
           featuresSpawnCount.begin() + FEATURE_CANDIDATE_ELEMENT);
         featureDataBelongingToTheme.erase(
@@ -326,8 +302,6 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       case roomTheme_monster:   chanceToMakeDark = 75;  break;
       case roomTheme_flooded:   chanceToMakeDark = 50;  break;
       case roomTheme_muddy:     chanceToMakeDark = 50;  break;
-//      case roomTheme_dungeon:   chanceToMakeDark = 50;  break;
-//      case roomTheme_chasm:     chanceToMakeDark = 50;  break;
       default: break;
     }
 
@@ -371,7 +345,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
       featureDataBelongingToTheme.at(FEATURE_DEF_ELEMENT);
 
     if(
-      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      dTemp->featureThemeSpawnRules.getPlacementRule() ==
       placementRule_nextToWalls) {
       if(IS_NEXT_TO_WALL_AVAIL) {
         const int POS_ELEMENT =
@@ -383,7 +357,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
     }
 
     if(
-      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      dTemp->featureThemeSpawnRules.getPlacementRule() ==
       placementRule_awayFromWalls) {
       if(IS_AWAY_FROM_WALLS_AVAIL) {
         const int POS_ELEMENT =
@@ -395,7 +369,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
     }
 
     if(
-      dTemp->themedFeatureSpawnRules.getPlacementRule() ==
+      dTemp->featureThemeSpawnRules.getPlacementRule() ==
       placementRule_nextToWallsOrAwayFromWalls) {
       if(eng.dice.coinToss()) {
         if(IS_NEXT_TO_WALL_AVAIL) {

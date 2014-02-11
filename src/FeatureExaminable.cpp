@@ -53,7 +53,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
               if(
                 engine.dice.percentile() <
                 curData->chanceToIncludeInSpawnList) {
-                itemCandidates.push_back(static_cast<ItemId>(i));
+                itemCandidates.push_back(ItemId(i));
                 break;
               }
             }
@@ -102,7 +102,7 @@ void ItemContainerFeature::destroySingleFragile(Engine& engine) {
 Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
   isTraitKnown_(false), pushLidOneInN_(engine.dice.range(6, 14)),
-  appearance_(tombAppearance_common), trait_(endOfTombTraits) {
+  appearance_(TombAppearance::common), trait_(TombTrait::endOfTombTraits) {
 
   //Contained items
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
@@ -113,18 +113,18 @@ Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   itemContainer_.setRandomItemsForFeature(
     feature_tomb, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
-  //Exterior appearance
+  //Appearance
   if(engine.dice.oneIn(5)) {
-    appearance_ =
-      TombAppearance(engine.dice.range(0, endOfTombAppearance - 1));
+    const TombAppearance lastAppearance = TombAppearance::endOfTombAppearance;
+    appearance_ = TombAppearance(engine.dice.range(0, int(lastAppearance) - 1));
   } else {
     for(Item * item : itemContainer_.items_) {
       const ItemValue itemValue = item->getData().itemValue;
-      if(itemValue == itemValue_majorTreasure) {
-        appearance_ = tombAppearance_marvelous;
+      if(itemValue == ItemValue::majorTreasure) {
+        appearance_ = TombAppearance::marvelous;
         break;
-      } else if(itemValue == itemValue_minorTreasure) {
-        appearance_ = tombAppearance_impressive;
+      } else if(itemValue == ItemValue::minorTreasure) {
+        appearance_ = TombAppearance::ornate;
       }
     }
   }
@@ -134,14 +134,36 @@ Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   if(IS_CONTAINING_ITEMS) {
     const int RND = engine.dice.percentile();
     if(RND < 15) {
-      trait_ = tombTrait_forebodingCarvedSigns;
+      trait_ = TombTrait::forebodingCarvedSigns;
     } else if(RND < 45) {
-      trait_ = tombTrait_stench;
+      trait_ = TombTrait::stench;
     } else if(RND < 75) {
-      trait_ = tombTrait_auraOfUnrest;
+      trait_ = TombTrait::auraOfUnrest;
     }
-    trace << "Tomb: Set trait (" << trait_ << ")" << endl;
   }
+}
+
+string Tomb::getDescr(const bool DEFINITE_ARTICLE) const {
+  switch(appearance_) {
+    case TombAppearance::common:
+      return string(DEFINITE_ARTICLE ? "the" : "a")  + " tomb";
+    case TombAppearance::ornate:
+      return string(DEFINITE_ARTICLE ? "the" : "an") + " ornate tomb";
+    case TombAppearance::marvelous:
+      return string(DEFINITE_ARTICLE ? "the" : "a")  + " marvelous tomb";
+    case TombAppearance::endOfTombAppearance: {} break;
+  }
+  assert("Failed to set Tomb description" && false);
+}
+
+SDL_Color Tomb::getClr() const {
+  switch(appearance_) {
+    case TombAppearance::common:    return clrGray;
+    case TombAppearance::ornate:    return clrWhite;
+    case TombAppearance::marvelous: return clrYellow;
+    case TombAppearance::endOfTombAppearance: {} break;
+  }
+  assert("Failed to set Tomb color" && false);
 }
 
 void Tomb::bump(Actor& actorBumping) {
@@ -230,23 +252,7 @@ void Tomb::examine() {
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     eng.log->addMsg("The tomb is empty.");
   } else {
-    switch(appearance_) {
-      case tombAppearance_common: {
-        eng.log->addMsg("It looks ordinary.");
-      } break;
-
-      case tombAppearance_impressive: {
-        eng.log->addMsg("It looks impressive.");
-      } break;
-
-      case tombAppearance_marvelous: {
-        eng.log->addMsg("It looks marvelous!");
-      } break;
-
-      case endOfTombAppearance: {} break;
-    }
-
-    if(isTraitKnown_ == false && trait_ != endOfTombTraits) {
+    if(isTraitKnown_ == false && trait_ != TombTrait::endOfTombTraits) {
       const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
       const int FIND_ONE_IN_N = bonHlr.hasTrait(traitPerceptive) ? 2 :
                                 (bonHlr.hasTrait(traitObservant) ? 3 : 6);
@@ -256,11 +262,11 @@ void Tomb::examine() {
 
     if(isTraitKnown_) {
       switch(trait_) {
-        case tombTrait_auraOfUnrest: {
+        case TombTrait::auraOfUnrest: {
           eng.log->addMsg("It has a certain aura of unrest about it.");
         } break;
 
-        case tombTrait_forebodingCarvedSigns: {
+        case TombTrait::forebodingCarvedSigns: {
           if(eng.playerBonHandler->getBg() == bgOccultist) {
             eng.log->addMsg("There is a curse carved on the box.");
           } else {
@@ -268,11 +274,11 @@ void Tomb::examine() {
           }
         } break;
 
-        case tombTrait_stench: {
+        case TombTrait::stench: {
           eng.log->addMsg("There is a pungent stench.");
         } break;
 
-        case endOfTombTraits: {} break;
+        case TombTrait::endOfTombTraits: {} break;
       }
     } else {
       eng.log->addMsg("I find nothing significant.");
@@ -338,22 +344,26 @@ void Tomb::triggerTrap(Actor& actor) {
   vector<ActorId> actorCandidates;
 
   switch(trait_) {
-    case tombTrait_auraOfUnrest: {
+    case TombTrait::auraOfUnrest: {
+      const int DLVL = eng.map->getDlvl();
+
       for(int i = 1; i < endOfActorIds; i++) {
         const ActorData& d = eng.actorDataHandler->dataList[i];
-        if(d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false) {
-          actorCandidates.push_back(static_cast<ActorId>(i));
+        if(
+          d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false &&
+          ((DLVL + 5) >= d.spawnMinDLVL || DLVL >= MIN_DLVL_NASTY_TRAPS)) {
+          actorCandidates.push_back(ActorId(i));
         }
       }
       eng.log->addMsg("Something rises from the tomb!");
     } break;
 
-    case tombTrait_forebodingCarvedSigns: {
+    case TombTrait::forebodingCarvedSigns: {
       eng.player->getPropHandler().tryApplyProp(
         new PropCursed(eng, propTurnsStd));
     } break;
 
-    case tombTrait_stench: {
+    case TombTrait::stench: {
       if(eng.dice.coinToss()) {
         eng.log->addMsg("Fumes burst out from the tomb!");
         Prop* prop = NULL;
@@ -372,13 +382,13 @@ void Tomb::triggerTrap(Actor& actor) {
         Explosion::runExplosionAt(
           pos_, eng, 0, endOfSfxId, false, prop, true, fumeClr);
       } else {
-        for(unsigned int i = 1; i < endOfActorIds; i++) {
+        for(int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
           if(
             d.intrProps[propOoze] &&
             d.isAutoSpawnAllowed  &&
             d.isUnique == false) {
-            actorCandidates.push_back(static_cast<ActorId>(i));
+            actorCandidates.push_back(ActorId(i));
           }
         }
         eng.log->addMsg("Something creeps up from the tomb!");

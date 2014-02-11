@@ -31,7 +31,7 @@ Door::Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
     ROLL < 75 ? doorSpawnState_open :
     doorSpawnState_closed;
 
-  switch(static_cast<DoorSpawnState>(doorState)) {
+  switch(DoorSpawnState(doorState)) {
     case doorSpawnState_broken: {
       isOpen_ = true;
       isBroken_ = true;
