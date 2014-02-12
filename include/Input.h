@@ -43,6 +43,7 @@ public:
 private:
   friend class Bot;
   void handleKeyPress(const KeyboardReadReturnData& d);
+  void queryQuit();
   SDL_Event event_;
   int* dungeonLevel_;
   Engine& eng;

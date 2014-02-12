@@ -132,7 +132,7 @@ void HighScore::runHighScoreScreen() {
   readFile(entries);
 
   if(entries.empty()) {
-    eng.popup->showMessage("No High Score entries found.", false);
+    eng.popup->showMsg("No High Score entries found.", false);
     return;
   }
 

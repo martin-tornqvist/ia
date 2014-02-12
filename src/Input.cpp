@@ -30,6 +30,7 @@
 #include "Disarm.h"
 #include "SdlWrapper.h"
 #include "Hide.h"
+#include "Popup.h"
 
 Input::Input(Engine& engine) : eng(engine)  {
   setKeyRepeatDelays();
@@ -44,7 +45,21 @@ void Input::setKeyRepeatDelays() {
 
 void Input::handleMapModeInputUntilFound() {
   const KeyboardReadReturnData& d = readKeysUntilFound();
-  handleKeyPress(d);
+  if(eng.quitToMainMenu_ == false) {
+    handleKeyPress(d);
+  }
+}
+
+void Input::queryQuit() {
+  const vector<string> quitChoices = vector<string> {"yes", "no"};
+  const int QUIT_CHOICE = eng.popup->showMenuMsg(
+                            "Save and highscore are not kept.",
+                            false, quitChoices, "Quit the current game?");
+  if(QUIT_CHOICE == 0) {
+    eng.quitToMainMenu_ = true;
+    eng.renderer->clearScreen();
+    eng.renderer->updateScreen();
+  }
 }
 
 void Input::handleKeyPress(const KeyboardReadReturnData& d) {
@@ -425,20 +440,6 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------- MANUAL
-  else if(d.key_ == '?') {
-    eng.manual->run();
-    eng.renderer->drawMapAndInterface();
-    clearEvents();
-    return;
-  }
-  //----------------------------------- OPTIONS
-  else if(d.key_ == '=') {
-    eng.config->runOptionsMenu();
-    eng.renderer->drawMapAndInterface();
-    clearEvents();
-    return;
-  }
   //----------------------------------- CHARACTER INFO
   else if(d.key_ == '@') {
     eng.characterDescr->run();
@@ -451,23 +452,34 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------- QUIT
-  else if(d.sdlKey_ == SDLK_ESCAPE || d.key_ == 'Q') {
+  //----------------------------------- MENU
+  else if(d.sdlKey_ == SDLK_ESCAPE) {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.log->addMsg(
-        "Quit the current game (y/n)? Save and highscore are not kept.",
-        clrWhiteHigh);
-      eng.renderer->drawMapAndInterface();
-      if(eng.query->yesOrNo() == YesNoAnswer::yes) {
-        eng.quitToMainMenu_ = true;
-      } else {
-        eng.log->clearLog();
+
+      const vector<string> choices {"Options", "Manual", "Quit", "Cancel"};
+      const int CHOICE = eng.popup->showMenuMsg("", true, choices);
+
+      if(CHOICE == 0) {
+        //---------------------------- Options
+        eng.config->runOptionsMenu();
         eng.renderer->drawMapAndInterface();
+      } else if(CHOICE == 1) {
+        //---------------------------- Manual
+        eng.manual->run();
+        eng.renderer->drawMapAndInterface();
+      } else if(CHOICE == 2) {
+        //---------------------------- Quit
+        queryQuit();
       }
     } else {
       eng.quitToMainMenu_ = true;
     }
+    clearEvents();
+    return;
+  } else if(d.key_ == 'Q' && IS_DEBUG_MODE) {
+    //----------------------------------- MENU
+    queryQuit();
     clearEvents();
     return;
   }
@@ -564,8 +576,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     string cmdTried = " ";
     cmdTried.at(0) = d.key_;
     eng.log->clearLog();
-    eng.log->addMsg(
-      "Unknown command '" + cmdTried + "'. Press '?' for commands.");
+    eng.log->addMsg("Unknown command '" + cmdTried + "'.");
     clearEvents();
     return;
   }
@@ -581,7 +592,6 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
     eng.sleep(1);
 
     while(SDL_PollEvent(&event_)) {
-      //Closing the window sends escape key event
       if(event_.type == SDL_QUIT) {
         return KeyboardReadReturnData(SDLK_ESCAPE);
       } else if(event_.type == SDL_KEYDOWN) {

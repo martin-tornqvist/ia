@@ -165,6 +165,10 @@ TEST(FormatText) {
   CHECK_EQUAL("one two", formattedLines.at(0));
   CHECK_EQUAL("three four", formattedLines.at(1));
   CHECK_EQUAL(int(formattedLines.size()), 2);
+
+  str = "";
+  TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+  CHECK(formattedLines.empty());
 }
 
 TEST_FIXTURE(BasicFixture, LineCalculation) {
@@ -525,8 +529,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfTeleportation]->isIdentified);
   CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfOpening]->isIdentified);
   CHECK_EQUAL(false, iHlr.dataList[item_scrollOfOpening]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfClairvoyance]->isIdentified);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfDetectMonsters]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfDetectMonsters]->isIdentified);
 
   //Bonus
   CHECK_EQUAL(bgRogue, eng.playerBonHandler->getBg());
@@ -692,53 +696,53 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //}
 
 //TODO See comment above CellPredCorridor test
-TEST_FIXTURE(BasicFixture, CellPredNook) {
-  // #####
-  // #...#
-  // #####
-  for(int x = 3; x <= 5; x++) {
-    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
-  }
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[2][7]));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[4][7]));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[5][7]));
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[6][7]));
-
-  // ##.
-  // #..
-  // ##.
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
-
-  // ###
-  // #.#
-  // #.#
-  // #.#
-  // ###
-  for(int y = 6; y <= 8; y++) {
-    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
-  }
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][5]));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][7]));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][8]));
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][9]));
-
-  // ###
-  // #.#
-  // ...
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
-  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
-
-  // ###
-  // #.#
-  // ###
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 12));
-  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][12]));
-}
+//TEST_FIXTURE(BasicFixture, CellPredNook) {
+//  // #####
+//  // #...#
+//  // #####
+//  for(int x = 3; x <= 5; x++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
+//  }
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[2][7]));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[4][7]));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[5][7]));
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[6][7]));
+//
+//  // ##.
+//  // #..
+//  // ##.
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[3][7]));
+//
+//  // ###
+//  // #.#
+//  // #.#
+//  // #.#
+//  // ###
+//  for(int y = 6; y <= 8; y++) {
+//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
+//  }
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][5]));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][7]));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][8]));
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][9]));
+//
+//  // ###
+//  // #.#
+//  // ...
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
+//  CHECK_EQUAL(true,  CellPred::Nook(eng).check(eng.map->cells[20][6]));
+//
+//  // ###
+//  // #.#
+//  // ###
+//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 12));
+//  CHECK_EQUAL(false, CellPred::Nook(eng).check(eng.map->cells[20][12]));
+//}
 
 TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   bool in[MAP_W][MAP_H];

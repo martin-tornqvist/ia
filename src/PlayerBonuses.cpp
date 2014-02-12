@@ -86,13 +86,13 @@ void PlayerBonHandler::getBgDescr(
   switch(id) {
     case bgOccultist: {
       linesRef.push_back("Can memorize spells cast from manuscripts");
-      linesRef.push_back("");
+      linesRef.push_back(" ");
 //      linesRef.push_back("Starts with some manuscripts and potions");
-//      linesRef.push_back("");
+//      linesRef.push_back(" ");
       linesRef.push_back("-2 Hit Points");
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitPotentSpirit, s); linesRef.push_back("* " + s);
       getTraitDescr(traitPotentSpirit, s); linesRef.push_back(s);
     } break;
@@ -101,33 +101,33 @@ void PlayerBonHandler::getBgDescr(
       s =  "Has an arcane ability to cloud the minds of enemies, causing ";
       s += "them to forget their pursuit (press [x])";
       linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       s = "+25% hit chance with ranged attacks vs unaware targets";
       linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       s = "Takes no shock from seeing monsters if they are unaware";
       linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitObservant, s);           linesRef.push_back("* " + s);
       getTraitDescr(traitObservant, s);           linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitStealthy, s);            linesRef.push_back("* " + s);
       getTraitDescr(traitStealthy, s);            linesRef.push_back(s);
     } break;
 
     case bgSoldier: {
 //      linesRef.push_back("Starts with more combat equipment");
-//      linesRef.push_back("");
+//      linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
       getTraitDescr(traitAdeptMarksman, s);       linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitAdeptMeleeFighter, s);   linesRef.push_back("* " + s);
       getTraitDescr(traitAdeptMeleeFighter, s);   linesRef.push_back(s);
-      linesRef.push_back("");
+      linesRef.push_back(" ");
       getTraitTitle(traitTough, s);               linesRef.push_back("* " + s);
       getTraitDescr(traitTough, s);               linesRef.push_back(s);
     } break;

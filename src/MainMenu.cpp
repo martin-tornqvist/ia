@@ -214,7 +214,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
             proceed = true;
             return gameEntry_load;
           } else {
-            eng.popup->showMessage("Starting a new character instead.", false,
+            eng.popup->showMsg("Starting a new character instead.", false,
                                    "No save available");
             proceed = true;
             return gameEntry_new;

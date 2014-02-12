@@ -24,7 +24,7 @@ public:
 
 class Input {
 public:
-  Input(Engine&, bool*) {}
+  Input(Engine&) {}
 
   void handleMapModeInputUntilFound() {}
 

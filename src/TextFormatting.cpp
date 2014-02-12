@@ -41,6 +41,8 @@ namespace TextFormatting {
 void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
   linesRef.resize(0);
 
+  if(line.empty()) return;
+
   int curRow = 0;
 
   string curWord;

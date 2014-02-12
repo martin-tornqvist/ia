@@ -10,6 +10,7 @@
 #include "DungeonClimb.h"
 #include "Query.h"
 #include "SaveHandler.h"
+#include "Popup.h"
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(FeatureId id, Pos pos, Engine& engine,
@@ -241,25 +242,22 @@ void Grave::bump(Actor& actorBumping) {
 //---------------------------------------------------------- STAIRS
 void Stairs::bump(Actor& actorBumping) {
   if(&actorBumping == eng.player) {
-    eng.log->clearLog();
-    eng.log->addMsg("Descend the stairs? (y/n) | s - save and quit");
-    eng.renderer->drawMapAndInterface();
-    YesNoAnswer answer = eng.query->yesOrNo('s');
-    switch(answer) {
-      case YesNoAnswer::yes: {
-        eng.player->pos = pos_;
-        trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
-        eng.dungeonClimb->tryUseDownStairs();
-      } break;
-      case YesNoAnswer::no: {
-        eng.log->clearLog();
-        eng.renderer->drawMapAndInterface();
-      } break;
-      case YesNoAnswer::special: {
-        eng.player->pos = pos_;
-        eng.saveHandler->save();
-        eng.quitToMainMenu_ = true;
-      } break;
+
+    const vector<string> choices {"Descend", "Save and quit", "Cancel"};
+    const int CHOICE = eng.popup->showMenuMsg("", true, choices,
+                       "A staircase leading downwards");
+
+    if(CHOICE == 0) {
+      eng.player->pos = pos_;
+      trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
+      eng.dungeonClimb->tryUseDownStairs();
+    } else if(CHOICE == 1) {
+      eng.player->pos = pos_;
+      eng.saveHandler->save();
+      eng.quitToMainMenu_ = true;
+    } else {
+      eng.log->clearLog();
+      eng.renderer->drawMapAndInterface();
     }
   }
 }

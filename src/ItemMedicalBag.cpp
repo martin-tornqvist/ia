@@ -117,12 +117,12 @@ MedicalBagAction MedicalBag::playerChooseAction() const {
   }
   choiceLabels.push_back("Cancel");
 
-  const string nrSuppliesMsg =
+  const string suppliesMsg =
     toString(nrSupplies_) + " medical supplies available.";
 
-  return MedicalBagAction(eng.popup->showMultiChoiceMessage(
-                              nrSuppliesMsg, true, choiceLabels,
-                              "Use medical bag"));
+  const int CHOICE_NR =
+    eng.popup->showMenuMsg(suppliesMsg, true, choiceLabels, "Use medical bag");
+  return MedicalBagAction(CHOICE_NR);
 }
 
 void MedicalBag::continueAction() {
