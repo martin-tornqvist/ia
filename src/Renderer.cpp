@@ -312,7 +312,8 @@ void Renderer::drawMarker(const vector<Pos>& trail,
 }
 
 void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
-                                    bool forbiddenCells[MAP_W][MAP_H], const SDL_Color& colorInner,
+                                    bool forbiddenCells[MAP_W][MAP_H],
+                                    const SDL_Color& colorInner,
                                     const SDL_Color& colorOuter) {
   trace << "Renderer::drawBlastAnimAtField()..." << endl;
 

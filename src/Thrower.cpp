@@ -150,8 +150,13 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           }
           const SDL_Color hitMessageClr =
             actorHere == eng.player ? clrMsgBad : clrMsgGood;
-          eng.log->addMsg(
-            actorHere->getNameThe() + " is hit.", hitMessageClr);
+
+          const bool CAN_SEE_ACTOR =
+            eng.player->isSeeingActor(*actorHere, NULL);
+          string defenderName = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
+
+          eng.log->addMsg(defenderName + " is hit.", hitMessageClr);
+
           actorHere->hit(data->dmg, dmgType_physical, true);
           isActorHit = true;
 
