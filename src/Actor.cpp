@@ -387,8 +387,10 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
         if(armor->isDestroyed()) {
           trace << "Actor: Armor was destroyed" << endl;
           if(this == eng.player) {
-            eng.log->addMsg("My " + eng.itemDataHandler->getItemRef(
-                              *armor, itemRef_plain) + " is torn apart!");
+            const string armorName =
+              eng.itemDataHandler->getItemRef(*armor, itemRef_plain);
+            eng.log->addMsg("My " + armorName + " is torn apart!",
+                            clrMsgImportant);
           }
           delete armor;
           armor = NULL;

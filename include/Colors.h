@@ -47,5 +47,6 @@ const SDL_Color clrBrownGray          = { 92,  84,  78, 0};
 
 const SDL_Color clrMsgGood            = clrGreenLgt;
 const SDL_Color clrMsgBad             = clrRedLgt;
+const SDL_Color clrMsgImportant       = clrOrange;
 
 #endif

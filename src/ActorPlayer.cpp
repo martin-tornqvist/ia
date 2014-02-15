@@ -934,7 +934,7 @@ void Player::onStandardTurn() {
                 updateFov();
                 eng.renderer->drawMapAndInterface();
                 eng.log->addMsg("I spot " + monster.getNameA() + "!",
-                                clrOrange, true, true);
+                                clrMsgImportant, true, true);
               }
             }
           }
