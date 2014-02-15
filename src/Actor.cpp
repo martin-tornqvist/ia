@@ -383,17 +383,17 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
 
       if(dmgType == dmgType_physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
-      }
 
-      if(armor->isDestroyed()) {
-        trace << "Actor: Armor was destroyed" << endl;
-        if(this == eng.player) {
-          eng.log->addMsg("My " + eng.itemDataHandler->getItemRef(
-                            *armor, itemRef_plain) + " is torn apart!");
+        if(armor->isDestroyed()) {
+          trace << "Actor: Armor was destroyed" << endl;
+          if(this == eng.player) {
+            eng.log->addMsg("My " + eng.itemDataHandler->getItemRef(
+                              *armor, itemRef_plain) + " is torn apart!");
+          }
+          delete armor;
+          armor = NULL;
+          inv_->getSlot(slot_armorBody)->item = NULL;
         }
-        delete armor;
-        armor = NULL;
-        inv_->getSlot(slot_armorBody)->item = NULL;
       }
     }
   }

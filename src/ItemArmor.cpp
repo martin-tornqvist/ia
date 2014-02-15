@@ -4,7 +4,7 @@
 #include "Log.h"
 
 Armor::Armor(ItemData* const itemData, Engine& engine) :
-  Item(itemData, engine), dur_(engine.dice.range(60, 100)) {}
+  Item(itemData, engine), dur_(engine.dice.range(80, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
