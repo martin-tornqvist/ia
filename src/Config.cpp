@@ -32,6 +32,9 @@ Config::Config(Engine& engine) :
   fontImageNames.push_back("images/12x24.png");
   fontImageNames.push_back("images/16x24_v1.png");
   fontImageNames.push_back("images/16x24_v2.png");
+  fontImageNames.push_back("images/16x24_v3.png");
+  fontImageNames.push_back("images/16x24_v4.png");
+  fontImageNames.push_back("images/16x24_v5.png");
   fontImageNames.push_back("images/16x24_DOS.png");
   fontImageNames.push_back("images/16x24_typewriter.png");
 
