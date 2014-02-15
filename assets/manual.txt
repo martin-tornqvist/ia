@@ -23,7 +23,7 @@
    l    Display descriptions of things in view
    m    Display message history
    r    Reload wielded firearm
-   s    Wait and search for 10 turns
+   s    Wait and search for 5 turns
    t    Throw a missile from the missile slot
    u    Unload or pick up ammunition from the ground
    w    Handle equipment (wear or wield items)
