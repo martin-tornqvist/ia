@@ -368,7 +368,7 @@ public:
   ~PropDiseased() override {}
 
   int getChangedMaxHp(const int HP_MAX) const override {
-    return (HP_MAX * 3) / 4;
+    return HP_MAX / 2;
   }
 
   bool tryResistOtherProp(const PropId id) const override;

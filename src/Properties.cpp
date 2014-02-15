@@ -1334,6 +1334,8 @@ void PropInfected::onNewTurn() {
 }
 
 void PropDiseased::onStart() {
+  //Actor::getHpMax() will now return a decreased value
+  //cap current HP to the new, lower, maximum
   int& hp = owningActor_->hp_;
   hp = min(eng.player->getHpMax(true), hp);
 }
