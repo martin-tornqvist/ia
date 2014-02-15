@@ -165,7 +165,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
     Prop* const prop = propHandler_->makePropFromId(
                          id, propTurnsSpecified, NR_TURNS);
-    propHandler_->tryApplyProp(prop, true, true, true);
+    propHandler_->tryApplyProp(prop, true, true, true, true);
   }
 
   insanity_ = toInt(lines.front());
@@ -344,7 +344,7 @@ void Player::incrInsanity() {
     msg += "My mind can no longer withstand what it has grasped.";
     msg += " I am hopelessly lost.";
     eng.popup->showMsg(msg, true, "Complete insanity!",
-                           sfxInsanityRising);
+                       sfxInsanityRising);
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
@@ -394,7 +394,7 @@ void Player::incrInsanity() {
         case 3: {
           msg += "I struggle to not fall into a stupor.";
           eng.popup->showMsg(msg, true, "Fainting!",
-                                 sfxInsanityRising);
+                             sfxInsanityRising);
           propHandler_->tryApplyProp(new PropFainted(eng, propTurnsStd));
           return;
         } break;
@@ -958,7 +958,7 @@ void Player::onStandardTurn() {
   if(activeMedicalBag == NULL) {
     if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
-      Prop* const propWnd = propHandler_->getAppliedProp(propWound);
+      Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
       if(propWnd != NULL) {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }

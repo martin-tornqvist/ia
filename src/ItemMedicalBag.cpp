@@ -147,7 +147,7 @@ void MedicalBag::finishCurAction() {
 
     case medicalBagAction_treatWound: {
       Prop* prop =
-        eng.player->getPropHandler().getAppliedProp(propWound);
+        eng.player->getPropHandler().getProp(propWound, PropSrc::applied);
       if(prop == NULL) {
         trace << "[WARNING] No wound prop found, ";
         trace << "in MedicalBag::finishCurAction()" << endl;

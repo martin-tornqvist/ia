@@ -824,19 +824,16 @@ PropHandler::~PropHandler() {
   for(Prop * prop : appliedProps_) {delete prop;}
 }
 
-void PropHandler::getPropsFromSource(vector<Prop*>& propList,
-                                     const PropSrc source) const {
+void PropHandler::getPropsFromSources(
+  vector<Prop*>& propList, bool sources[int(PropSrc::endOfPropSrc)]) const {
+
   propList.resize(0);
 
   //Get from applied properties
-  if(source == propSrcAppliedAndInv || source == propSrcApplied) {
-    propList = appliedProps_;
-  }
+  if(sources[int(PropSrc::applied)]) {propList = appliedProps_;}
 
   //Get from inventory if humanoid actor
-  if(
-    owningActor_->isHumanoid() &&
-    (source == propSrcAppliedAndInv || source == propSrcInv)) {
+  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
     vector<Item*> items;
     owningActor_->getInv().getAllItems(items);
     for(Item * item : items) {
@@ -850,7 +847,9 @@ void PropHandler::getPropsFromSource(vector<Prop*>& propList,
 
 void PropHandler::getAllActivePropIds(vector<PropId>& idVectorRef) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
 
   idVectorRef.resize(0);
   idVectorRef.reserve(propList.size());
@@ -869,7 +868,9 @@ bool PropHandler::tryResistDmg(
   const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
 
   for(Prop * p : propList) {
     if(p->tryResistDmg(dmgType, ALLOW_MSG_WHEN_TRUE)) return true;
@@ -879,7 +880,9 @@ bool PropHandler::tryResistDmg(
 
 bool PropHandler::allowSee() const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
 
   for(Prop * p : propList) {if(p->allowSee() == false) return false;}
   return true;
@@ -912,7 +915,9 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
-    getPropsFromSource(allProps, propSrcAppliedAndInv);
+    bool sources[int(PropSrc::endOfPropSrc)];
+    for(bool & v : sources) {v = true;}
+    getPropsFromSources(allProps, sources);
     if(tryResistProp(prop->getId(), allProps)) {
       if(NO_MESSAGES == false) {
         if(IS_PLAYER) {
@@ -1117,7 +1122,10 @@ void PropHandler::tick(const PropTurnMode turnMode,
   }
 
   vector<Prop*> invProps;
-  getPropsFromSource(invProps, propSrcInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = false;}
+  sources[int(PropSrc::inv)] = true;
+  getPropsFromSources(invProps, sources);
   for(Prop * prop : invProps) {
     if(owningActor_ != eng.player) {
       if(prop->isMakingMonsterAware()) {
@@ -1136,7 +1144,9 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
     eng.playerBonHandler->hasTrait(traitSelfAware);
 
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     const string propName = prop->getNameShort();
     if(propName.empty() == false) {
@@ -1155,7 +1165,9 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
 
 int PropHandler::getChangedMaxHp(const int HP_MAX) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   int newHpMax = HP_MAX;
   for(Prop * prop : propList) {newHpMax = prop->getChangedMaxHp(newHpMax);}
   return newHpMax;
@@ -1163,13 +1175,17 @@ int PropHandler::getChangedMaxHp(const int HP_MAX) const {
 
 void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {prop->changeMoveDir(actorPos, dir);}
 }
 
 bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     if(
       prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
@@ -1182,7 +1198,9 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     if(prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
@@ -1193,7 +1211,9 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     if(prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
@@ -1204,7 +1224,9 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 bool PropHandler::allowMove() const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     if(prop->allowMove() == false) {
       return false;
@@ -1215,7 +1237,9 @@ bool PropHandler::allowMove() const {
 
 bool PropHandler::allowAct() const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {
     if(prop->allowAct() == false) {
       return false;
@@ -1227,7 +1251,9 @@ bool PropHandler::allowAct() const {
 bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   traceVerbose << "PropHandler::allowRead()..." << endl;
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
     if(propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE) == false) {
@@ -1241,7 +1267,9 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
     if(propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE) == false) {
@@ -1253,19 +1281,25 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
 void PropHandler::onHit() {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {prop->onHit();}
 }
 
 void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
 }
 
 int PropHandler::getAbilityMod(const AbilityId ability) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   int modifier = 0;
   for(Prop * prop : propList) {
     modifier += prop->getAbilityMod(ability);
@@ -1273,14 +1307,28 @@ int PropHandler::getAbilityMod(const AbilityId ability) const {
   return modifier;
 }
 
-Prop* PropHandler::getAppliedProp(const PropId id) const {
-  for(Prop * prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
+Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
+
+  assert(source != PropSrc::endOfPropSrc);
+
+  if(source == PropSrc::applied) {
+    for(Prop * prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
+  } else if(source == PropSrc::inv) {
+    vector<Prop*> invProps;
+    bool sources[int(PropSrc::endOfPropSrc)];
+    for(bool & v : sources) {v = false;}
+    sources[int(PropSrc::inv)] = true;
+    getPropsFromSources(invProps, sources);
+    for(Prop * prop : invProps) {if(prop->getId() == id) {return prop;}}
+  }
   return NULL;
 }
 
 bool PropHandler::changeActorClr(SDL_Color& clr) const {
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(Prop * prop : propList) {if(prop->changeActorClr(clr)) return true;}
   return false;
 }
@@ -1289,7 +1337,9 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
   vector<Prop*> propList;
-  getPropsFromSource(propList, propSrcAppliedAndInv);
+  bool sources[int(PropSrc::endOfPropSrc)];
+  for(bool & v : sources) {v = true;}
+  getPropsFromSources(propList, sources);
   for(unsigned int i = 0; i < propList.size(); i++) {
     if(propList.at(i)->isEndedByMagicHealing()) {
       endAppliedProp(appliedProps_.at(i)->getId(), visionBlockers);

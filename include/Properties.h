@@ -87,11 +87,7 @@ enum PropAlignment {
   propAlignmentGood, propAlignmentBad, propAlignmentNeutral
 };
 
-enum PropSrc {
-  propSrcApplied,
-  propSrcInv,
-  propSrcAppliedAndInv
-};
+enum class PropSrc {applied, inv, endOfPropSrc};
 
 struct PropData {
   PropData() :
@@ -167,7 +163,7 @@ public:
 
   void getAllActivePropIds(vector<PropId>& idVectorRef) const;
 
-  Prop* getAppliedProp(const PropId id) const;
+  Prop* getProp(const PropId id, const PropSrc source) const;
 
   bool endAppliedProp(const PropId id,
                       const bool visionBlockers[MAP_W][MAP_H],
@@ -194,8 +190,8 @@ public:
                     const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
-  void getPropsFromSource(vector<Prop*>& propList,
-                          const PropSrc source) const;
+  void getPropsFromSources(vector<Prop*>& propList,
+                           bool sources[int(PropSrc::endOfPropSrc)]) const;
 
   bool tryResistProp(const PropId id, const vector<Prop*>& propList) const;
 

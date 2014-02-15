@@ -489,7 +489,12 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Player inventory
   Inventory& inv = eng.player->getInv();
   inv.moveItemToGeneral(inv.getSlot(slot_wielded));
-  inv.putItemInSlot(slot_wielded, eng.itemFactory->spawnItem(item_teslaCannon));
+  Item* item = eng.itemFactory->spawnItem(item_teslaCannon);
+  inv.putItemInSlot(slot_wielded, item);
+  //Wear asbestos suit to test properties from wearing items
+  inv.moveItemToGeneral(inv.getSlot(slot_armorBody));
+  item = eng.itemFactory->spawnItem(item_armorAsbestosSuit);
+  inv.putItemInSlot(slot_armorBody, item);
 
   //Player
   ActorData& def = eng.player->getData();
@@ -507,10 +512,11 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.playerSpellsHandler->learnSpellIfNotKnown(spell_bless);
   eng.playerSpellsHandler->learnSpellIfNotKnown(spell_enfeeble);
 
-  //Properties
+  //Applied properties
   PropHandler& propHlr = eng.player->getPropHandler();
-  propHlr.tryApplyProp(new PropRConfusion(eng, propTurnsIndefinite));
-  propHlr.tryApplyProp(new PropRAcid(eng, propTurnsSpecified, 3));
+  propHlr.tryApplyProp(new PropDiseased(eng, propTurnsIndefinite));
+  propHlr.tryApplyProp(new PropRSleep(eng, propTurnsSpecified, 3));
+  propHlr.tryApplyProp(new PropBlessed(eng, propTurnsStd));
 
   eng.saveHandler->save();
   CHECK(eng.saveHandler->isSaveAvailable());
@@ -519,7 +525,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK(eng.saveHandler->isSaveAvailable());
 
-  const int PLAYER_MAX_HP_BEFORE = eng.player->getHpMax(true);
+  const int PLAYER_MAX_HP_BEFORE_LOAD = eng.player->getHpMax(true);
 
   eng.saveHandler->load();
 
@@ -541,13 +547,16 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   //Player inventory
   Inventory& inv = eng.player->getInv();
   CHECK_EQUAL(item_teslaCannon, inv.getItemInSlot(slot_wielded)->getData().id);
+  CHECK_EQUAL(item_armorAsbestosSuit,
+              inv.getItemInSlot(slot_armorBody)->getData().id);
 
   //Player
   ActorData& def = eng.player->getData();
   def.name_a = def.name_the = "TEST PLAYER";
   CHECK_EQUAL("TEST PLAYER", def.name_a);
   CHECK_EQUAL("TEST PLAYER", def.name_the);
-  CHECK_EQUAL(PLAYER_MAX_HP_BEFORE + 5, eng.player->getHpMax(true));
+  //Check max HP (affected by disease)
+  CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, eng.player->getHpMax(true));
 
   //Map
   CHECK_EQUAL(7, eng.map->getDlvl());
@@ -564,12 +573,25 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Properties
   PropHandler& propHlr = eng.player->getPropHandler();
-  Prop* prop = propHlr.getAppliedProp(propRConfusion);
+  Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
   CHECK(prop != NULL);
   CHECK(prop->turnsLeft_ == -1);
-  prop = propHlr.getAppliedProp(propRAcid);
+  //Check currrent HP (affected by disease)
+  CHECK_EQUAL((eng.player->getData().hp + 5) / 2, eng.player->getHp());
+  prop = propHlr.getProp(propRSleep, PropSrc::applied);
   CHECK(prop != NULL);
   CHECK(prop->turnsLeft_ == 3);
+  prop = propHlr.getProp(propBlessed, PropSrc::applied);
+  CHECK(prop != NULL);
+  CHECK(prop->turnsLeft_ > 0);
+
+  //Properties from worn item
+  prop = propHlr.getProp(propRAcid, PropSrc::inv);
+  CHECK(prop != NULL);
+  CHECK(prop->turnsLeft_ == -1);
+  prop = propHlr.getProp(propRFire, PropSrc::inv);
+  CHECK(prop != NULL);
+  CHECK(prop->turnsLeft_ == -1);
 
   //Game time
   CHECK_EQUAL(0, eng.gameTime->getTurn());

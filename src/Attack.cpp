@@ -242,7 +242,7 @@ RangedAttackData::RangedAttackData(
       bool playerAimX3 = false;
       if(attacker == eng.player) {
         const Prop* const prop =
-          attacker->getPropHandler().getAppliedProp(propAiming);
+          attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop != NULL) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
@@ -327,7 +327,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
       bool playerAimX3 = false;
       if(attacker == eng.player) {
         const Prop* const prop =
-          attacker->getPropHandler().getAppliedProp(propAiming);
+          attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop != NULL) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }

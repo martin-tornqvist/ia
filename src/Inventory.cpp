@@ -91,15 +91,13 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Inventory::setParamsFromSaveLines(
-  vector<string>& lines, Engine& engine) {
-
-  for(unsigned int i = 0; i < slots_.size(); i++) {
+void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
+  for(InventorySlot & slot : slots_) {
     //Previous item is destroyed
-    Item* item = slots_.at(i).item;
+    Item* item = slot.item;
     if(item != NULL) {
       delete item;
-      slots_.at(i).item = NULL;
+      slot.item = NULL;
     }
 
     const ItemId id = ItemId(toInt(lines.front()));
@@ -109,7 +107,9 @@ void Inventory::setParamsFromSaveLines(
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
       item->setParamsFromSaveLines_(lines);
-      slots_.at(i).item = item;
+      slot.item = item;
+      //When loading the game, wear the item to apply properties from wearing
+      item->onWear();
     }
   }
 
@@ -117,9 +117,9 @@ void Inventory::setParamsFromSaveLines(
     deleteItemInGeneralWithElement(0);
   }
 
-  const unsigned int NR_OF_GENERAL = toInt(lines.front());
+  const int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(lines.begin());
-  for(unsigned int i = 0; i < NR_OF_GENERAL; i++) {
+  for(int i = 0; i < NR_OF_GENERAL; i++) {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = engine.itemFactory->spawnItem(id);

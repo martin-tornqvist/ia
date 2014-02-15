@@ -143,7 +143,8 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         int nrTurnsAimingOld = 0;
 
         if(bonHlr.hasTrait(traitSharpShooter)) {
-          Prop* const propAimingOld = propHlr.getAppliedProp(propAiming);
+          Prop* const propAimingOld =
+            propHlr.getProp(propAiming, PropSrc::applied);
           if(propAimingOld != NULL) {
             nrTurnsAimingOld =
               dynamic_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;

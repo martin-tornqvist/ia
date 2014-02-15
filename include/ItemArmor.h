@@ -32,8 +32,8 @@ public:
 
   void setMaxDurability() {dur_ = 100;}
 
-  virtual void onWear() {}
-  virtual void onTakeOff() {}
+  virtual void onWear()     override {}
+  virtual void onTakeOff()  override {}
 
 protected:
   int getAbsorptionPoints() const;
@@ -47,8 +47,8 @@ public:
     Armor(itemData, engine) {}
   ~ArmorAsbestosSuit() {}
 
-  void onWear();
-  void onTakeOff();
+  void onWear()     override;
+  void onTakeOff()  override;
 };
 
 class ArmorHeavyCoat: public Armor {
@@ -57,8 +57,8 @@ public:
     Armor(itemData, engine) {}
   ~ArmorHeavyCoat() {}
 
-  void onWear();
-  void onTakeOff();
+  void onWear()     override;
+  void onTakeOff()  override;
 };
 
 #endif
